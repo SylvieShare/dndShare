@@ -7,7 +7,9 @@
     role="button"
     tabindex="0"
     :aria-label="model.name"
-    :title="`${model.sourceCode} · ${model.sourceName}`"
+    :title="
+      showIdentifiers ? `${model.sourceCode} · ${model.sourceName}` : model.name
+    "
     @pointerdown="
       draggable &&
       !isSelectableText($event) &&
@@ -27,7 +29,7 @@
       draggable="false"
     />
     <span class="map-model-name">{{ model.name }}</span
-    ><small>{{ model.definitionId }}</small>
+    ><small v-if="showIdentifiers">{{ model.definitionId }}</small>
     <MapModelLightBadge
       class="map-card-light"
       :count="model.behaviour?.defaultLights?.length || 0"
@@ -48,6 +50,7 @@ defineProps({
   model: Object,
   selected: Boolean,
   draggable: Boolean,
+  showIdentifiers: Boolean,
 });
 const emit = defineEmits(["model", "drag-tile"]);
 </script>

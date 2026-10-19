@@ -88,18 +88,18 @@ for (const mode of ["editor", "board"]) {
         exact: true,
       });
     await expect(
-      section.getByRole("button", { name: "Погасить свет", exact: true }),
+      section.getByRole("button", {
+        name: "Погасить свет: Потухший факел",
+        exact: true,
+      }),
     ).toBeVisible();
     for (const name of ["Пол 1", "Угол стены"]) {
       await section
         .getByRole("button", { name: "Создать переход", exact: true })
         .click();
       const item = section.locator('[data-transition^="custom:"]').last();
-      await expect(
-        item.getByRole("button", { name: "Перейти", exact: true }),
-      ).toBeDisabled();
       await item
-        .getByRole("button", { name: "Выбрать тайл", exact: true })
+        .getByRole("button", { name: "Выбрать тайл для перехода", exact: true })
         .click();
       const picker = page.getByRole("dialog", {
         name: "Выбрать тайл для перехода",
@@ -116,24 +116,30 @@ for (const mode of ["editor", "board"]) {
     await expect(targets).toHaveCount(2);
     await targets
       .first()
-      .getByRole("button", { name: "Перейти", exact: true })
+      .getByRole("button", { name: "Перейти: Пол 1", exact: true })
       .click();
     await expect(
       panel.getByRole("heading", { name: "Пол 1", exact: true }),
     ).toBeVisible();
     await expect(
-      section.getByRole("button", { name: "Погасить свет", exact: true }),
+      section.getByRole("button", {
+        name: "Погасить свет: Потухший факел",
+        exact: true,
+      }),
     ).toBeVisible();
-    await expect(targets).toHaveCount(2);
+    await expect(targets).toHaveCount(1);
+    await expect(
+      section.getByText("Этот вариант уже выбран", { exact: true }),
+    ).toHaveCount(0);
     await targets
       .last()
-      .getByRole("button", { name: "Перейти", exact: true })
+      .getByRole("button", { name: "Перейти: Угол стены", exact: true })
       .click();
     await expect(
       panel.getByRole("heading", { name: "Угол стены", exact: true }),
     ).toBeVisible();
     await section
-      .getByRole("button", { name: "Вернуться", exact: true })
+      .getByRole("button", { name: "Вернуться: Стена 1", exact: true })
       .click();
     await expect(
       panel.getByRole("heading", { name: "Стена 1", exact: true }),
@@ -181,6 +187,85 @@ test("a tile without catalogue transitions still offers creating a transition", 
     .getByRole("button", { name: "Создать переход", exact: true })
     .click();
   await expect(
-    section.getByRole("button", { name: "Выбрать тайл", exact: true }),
+    section.getByRole("button", {
+      name: "Выбрать тайл для перехода",
+      exact: true,
+    }),
   ).toBeVisible();
 });
+
+for (const mode of ["editor", "board"])
+  test(`transition rows are whole-card buttons without duplicate goals or model identifiers (${mode})`, async ({
+    page,
+  }) => {
+    await ready(page, mode);
+    await tileFocus(page);
+    const panel = panelOf(page),
+      section = panel.getByRole("region", {
+        name: "Переходы модели",
+        exact: true,
+      });
+    await section
+      .getByRole("button", { name: "Создать переход", exact: true })
+      .click();
+    await section
+      .getByRole("button", { name: "Выбрать тайл для перехода", exact: true })
+      .click();
+    const picker = page.getByRole("dialog", {
+      name: "Выбрать тайл для перехода",
+      exact: true,
+    });
+    await picker
+      .getByRole("button", { name: "Прямые стены", exact: true })
+      .click();
+    await picker
+      .getByRole("button", { name: "Потухший факел", exact: true })
+      .click();
+    await expect(section.locator(".map-transition-item")).toHaveCount(1);
+    const custom = section.getByRole("button", {
+      name: "Перейти: Потухший факел",
+      exact: true,
+    });
+    await expect(custom.locator("em")).toHaveText("Перейти");
+    await expect(custom.locator("em")).toHaveCSS("font-style", "italic");
+    await expect(custom.locator("small")).toHaveCount(0);
+    await custom.press("Enter");
+    await expect(
+      panel.getByRole("heading", { name: "Потухший факел", exact: true }),
+    ).toBeVisible();
+    await expect(section.locator(".map-transition-item")).toHaveCount(1);
+    await expect(
+      section.getByText("Этот вариант уже выбран", { exact: true }),
+    ).toHaveCount(0);
+    await expect(
+      section.getByRole("button", { name: /^Вернуться:/ }),
+    ).toHaveCount(0);
+    await section
+      .getByRole("button", { name: "Зажечь свет: Стена 1", exact: true })
+      .click();
+    await expect(
+      panel.getByRole("heading", { name: "Стена 1", exact: true }),
+    ).toBeVisible();
+    await section
+      .getByRole("button", { name: "Изменить цель перехода", exact: true })
+      .click();
+    await picker.getByRole("button", { name: "Пол", exact: true }).click();
+    await picker.getByRole("button", { name: "Пол 1", exact: true }).click();
+    await expect(section.locator(".map-transition-item")).toHaveCount(2);
+    await section
+      .getByRole("button", { name: "Перейти: Пол 1", exact: true })
+      .click();
+    await expect(
+      panel.getByRole("heading", { name: "Пол 1", exact: true }),
+    ).toBeVisible();
+    await section
+      .getByRole("button", { name: "Вернуться: Стена 1", exact: true })
+      .click();
+    await expect(
+      panel.getByRole("heading", { name: "Стена 1", exact: true }),
+    ).toBeVisible();
+    await section
+      .getByRole("button", { name: "Удалить кастомный переход", exact: true })
+      .click();
+    await expect(section.locator(".map-transition-item")).toHaveCount(1);
+  });

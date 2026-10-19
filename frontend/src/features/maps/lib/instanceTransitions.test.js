@@ -1,6 +1,9 @@
 import { expect, it } from "vitest";
 import { newMap } from "./mapModel";
-import { instanceTransitions } from "./instanceTransitions";
+import {
+  instanceTransitions,
+  displayedTransitions,
+} from "./instanceTransitions";
 import { transitionDocument } from "./modelTransitions";
 const native = { id: "native", action: "open", toDefinitionId: "B" };
 const models = [
@@ -92,4 +95,49 @@ it("rejects an empty target, unlisted target, current variant and invalid footpr
   }
   expect(document.lights).toHaveLength(1);
   expect(document.tiles[0].modelId).toBe("a");
+});
+
+it("shows each target once, hides the current variant and preserves every configured edge", () => {
+  const document = newMap().document;
+  const catalogue = models.map((m) => ({ ...m }));
+  catalogue[1].behaviour = {
+    transitions: [
+      { id: "close", action: "close", toDefinitionId: "A" },
+      { id: "again", action: "fill", toDefinitionId: "A" },
+    ],
+  };
+  document.tiles = [
+    {
+      id: "tile",
+      modelId: "b",
+      transitions: {
+        originalModelId: "a",
+        targets: [
+          { id: "back", modelId: "a" },
+          { id: "current", modelId: "b" },
+          { id: "blank1" },
+          { id: "blank2" },
+        ],
+      },
+    },
+  ];
+  const before = JSON.stringify(document);
+  let rows = displayedTransitions(document, catalogue, "tile", "tile");
+  expect(rows.map((row) => row.key)).toEqual([
+    "custom:back",
+    "custom:blank1",
+    "custom:blank2",
+  ]);
+  expect(JSON.stringify(document)).toBe(before);
+  document.tiles[0].transitions.targets.shift();
+  rows = displayedTransitions(document, catalogue, "tile", "tile");
+  expect(
+    rows.filter((row) => row.modelId === "a").map((row) => row.id),
+  ).toEqual(["close"]);
+  catalogue[1].behaviour.transitions = [];
+  expect(
+    displayedTransitions(document, catalogue, "tile", "tile").find(
+      (row) => row.modelId === "a",
+    ).return,
+  ).toBe(true);
 });

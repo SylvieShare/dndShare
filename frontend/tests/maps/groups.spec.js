@@ -11,17 +11,23 @@ test("hover group card exposes all variants and permits dragging a concrete tile
 }) => {
   await ready(page);
   const group = page.getByRole("button", {
-    name: "Группа LC-ground",
+    name: "Группа Пол",
     exact: true,
   });
   await expect(group).toBeVisible();
+  await expect(group.locator(".map-group-meta small")).toHaveCount(0);
   await expect(group.locator(".map-group-thumbnails img")).toHaveCount(2);
   await group.hover();
   const popup = page.getByRole("region", {
-    name: "Варианты LC-ground",
+    name: "Варианты Пол",
     exact: true,
   });
   await expect(popup).toBeVisible();
+  await expect(popup.getByText("LC-ground", { exact: true })).toHaveCount(0);
+  await expect(popup.getByText("LC-008", { exact: true })).toHaveCount(0);
+  await expect(
+    popup.getByRole("button", { name: "Пол 2", exact: true }),
+  ).toHaveAttribute("title", "Пол 2");
   const variant = popup.getByRole("button", { name: "Пол 2", exact: true });
   await variant.hover();
   await expect(popup).toBeVisible();
@@ -57,11 +63,9 @@ test("embedded light badge marks only lit variants and grouped objects place the
     .getByRole("toolbar", { name: "Типы тайлов" })
     .getByRole("button", { name: "Прямые стены", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "Группа LC-wall", exact: true })
-    .hover();
+  await page.getByRole("button", { name: "Группа Стена", exact: true }).hover();
   const walls = page.getByRole("region", {
-    name: "Варианты LC-wall",
+    name: "Варианты Стена",
     exact: true,
   });
   await expect(
@@ -79,11 +83,9 @@ test("embedded light badge marks only lit variants and grouped objects place the
     .getByRole("toolbar", { name: "Типы тайлов" })
     .getByRole("button", { name: "Пол", exact: true })
     .click();
+  await page.getByRole("button", { name: "Группа Пол", exact: true }).hover();
   await page
-    .getByRole("button", { name: "Группа LC-ground", exact: true })
-    .hover();
-  await page
-    .getByRole("region", { name: "Варианты LC-ground", exact: true })
+    .getByRole("region", { name: "Варианты Пол", exact: true })
     .getByRole("button", { name: "Пол 1", exact: true })
     .press("Enter");
   const point = await mapPoint(page, 4.5, 4.5);
@@ -91,10 +93,10 @@ test("embedded light badge marks only lit variants and grouped objects place the
   await page.mouse.click(point.x, point.y);
   await page.getByRole("button", { name: "Объекты", exact: true }).click();
   await page
-    .getByRole("button", { name: "Группа MA-chest", exact: true })
+    .getByRole("button", { name: /^Группа .*сундук$/i, exact: true })
     .hover();
   const object = page
-    .getByRole("region", { name: "Варианты MA-chest", exact: true })
+    .getByRole("region", { name: /^Варианты .*сундук$/i, exact: true })
     .getByRole("button", { name: "Открытый сундук", exact: true });
   await object.press("Enter");
   await page.mouse.move(point.x, point.y);
@@ -129,6 +131,19 @@ test("catalogue ID is stable while uuid is an stable UUID and group code edits p
     exact: true,
   });
   await reference
+    .getByRole("button", { name: "Группа LC-ground", exact: true })
+    .hover();
+  const adminVariants = page.getByRole("region", {
+    name: "Варианты LC-ground",
+    exact: true,
+  });
+  await expect(
+    adminVariants.getByText("LC-007", { exact: true }),
+  ).toBeVisible();
+  await adminVariants
+    .getByRole("button", { name: "Пол 1", exact: true })
+    .click();
+  await reference
     .getByLabel("Код группы", { exact: true })
     .fill("LC-ground-special");
   await reference.getByLabel("Код группы", { exact: true }).blur();
@@ -147,7 +162,7 @@ test("the primary group preview drags the tile it currently shows", async ({
 }) => {
   await ready(page);
   const group = page.getByRole("button", {
-    name: "Группа LC-ground",
+    name: "Группа Пол",
     exact: true,
   });
   const image = group.locator(".map-group-primary");

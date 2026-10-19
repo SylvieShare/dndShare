@@ -1,16 +1,23 @@
 <template>
   <BaseTile
     class="map-entity-row"
-    :interactive="selectable"
+    :interactive="selectable && !disabled"
     :framed="selected"
     :tint="selected"
     :color="entry.color"
     :role="selectable ? 'button' : undefined"
-    :tabindex="selectable ? 0 : undefined"
+    :tabindex="selectable && !disabled ? 0 : undefined"
+    :aria-disabled="disabled || undefined"
     :aria-label="entry.name"
-    @click="selectable && !hasSelectedText() && emit('select', entry)"
-    @keydown.enter.self.prevent="selectable && emit('select', entry)"
-    @keydown.space.self.prevent="selectable && emit('select', entry)"
+    @click="
+      selectable && !disabled && !hasSelectedText() && emit('select', entry)
+    "
+    @keydown.enter.self.prevent="
+      selectable && !disabled && emit('select', entry)
+    "
+    @keydown.space.self.prevent="
+      selectable && !disabled && emit('select', entry)
+    "
     @dblclick.stop="entry.kind === 'light' && emit('focus', entry)"
   >
     <IconToggleButton
@@ -73,7 +80,7 @@
         >{{ entry.namePrefix ? entry.item.name : entry.name
         }}<template v-if="entry.areaName"> ({{ entry.areaName }})</template>
       </strong>
-      <small v-if="entry.code">{{ entry.code }}</small>
+      <small v-if="showIdentifiers && entry.code">{{ entry.code }}</small>
       <slot name="details" />
     </span>
     <strong v-if="entry.count" class="map-entity-count"
@@ -98,6 +105,8 @@ defineProps({
   entry: { type: Object, required: true },
   selected: Boolean,
   toggleLight: Boolean,
+  disabled: Boolean,
+  showIdentifiers: Boolean,
   selectable: { type: Boolean, default: true },
 });
 const emit = defineEmits(["select", "toggle", "visibility", "focus"]);
@@ -109,6 +118,10 @@ const emit = defineEmits(["select", "toggle", "visibility", "focus"]);
   gap: 9px;
   padding: 8px;
   min-width: 0;
+}
+.map-entity-row[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 .map-entity-thumbnail {
   width: 48px;

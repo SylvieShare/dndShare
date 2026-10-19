@@ -13,54 +13,49 @@
         v-for="transition in transitions"
         :key="transition.key"
         class="map-transition-item"
-        :class="{ 'map-transition-custom': transition.custom }"
         :data-transition="transition.key"
       >
         <MapEntityRow
           :entry="transition.entry"
-          :selectable="!!transition.custom"
-          @select="choosing = transition.id"
-        >
-          <template #actions>
-            <ActionButton
-              v-if="!transition.custom"
-              variant="secondary"
-              :disabled="!transition.valid"
-              :title="transition.reason"
-              @click.stop="
-                editor.applyTransition(entry.kind, entry.id, transition)
-              "
-            >
-              {{
-                transition.return
-                  ? "Вернуться"
-                  : transition.custom
-                    ? "Перейти"
-                    : transitionLabel(transition.action)
-              }}
-            </ActionButton>
-          </template>
-        </MapEntityRow>
-        <ActionButton
-          v-if="transition.custom"
-          icon-only
-          variant="quiet"
-          class="map-transition-delete"
-          aria-label="Удалить кастомный переход"
-          title="Удалить кастомный переход"
-          @click="editor.removeTransition(entry.id, transition.id)"
-          ><template #icon
-            ><Trash2 :size="18" :style="{ color: 'var(--danger)' }" /></template
-        ></ActionButton>
-        <ActionButton
-          v-if="transition.custom"
-          class="map-transition-go"
-          variant="secondary"
-          :disabled="!transition.valid"
+          :disabled="!transition.empty && !transition.valid"
+          :aria-label="
+            transition.empty
+              ? 'Выбрать тайл для перехода'
+              : `${transition.label}: ${transition.entry.name}`
+          "
           :title="transition.reason"
-          @click="editor.applyTransition(entry.kind, entry.id, transition)"
-          >Перейти</ActionButton
+          @select="activate(transition)"
         >
+          <template #details
+            ><span class="map-transition-action"
+              ><ArrowRight :size="16" aria-hidden="true" /><em>{{
+                transition.label
+              }}</em></span
+            ></template
+          >
+        </MapEntityRow>
+        <div v-if="transition.custom" class="map-transition-actions">
+          <ActionButton
+            v-if="transition.modelId"
+            icon-only
+            variant="quiet"
+            aria-label="Изменить цель перехода"
+            title="Изменить цель перехода"
+            @click="choosing = transition.id"
+            ><template #icon><Pencil :size="18" /></template
+          ></ActionButton>
+          <ActionButton
+            icon-only
+            variant="quiet"
+            aria-label="Удалить кастомный переход"
+            title="Удалить кастомный переход"
+            @click="editor.removeTransition(entry.id, transition.id)"
+            ><template #icon
+              ><Trash2
+                :size="18"
+                :style="{ color: 'var(--danger)' }" /></template
+          ></ActionButton>
+        </div>
         <p v-if="transition.reason" class="map-hint">{{ transition.reason }}</p>
       </div>
     </TransitionGroup>
@@ -85,10 +80,10 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import { ActionButton } from "@sylvieshare/share-ui";
-import { Plus, Trash2 } from "@lucide/vue";
+import { ArrowRight, Pencil, Plus, Trash2 } from "@lucide/vue";
 import { transitionDocument, transitionLabel } from "../lib/modelTransitions";
 import {
-  instanceTransitions,
+  displayedTransitions,
   MAX_TILE_TRANSITIONS,
 } from "../lib/instanceTransitions";
 import MapInspectorSection from "./MapInspectorSection.vue";
@@ -116,8 +111,13 @@ function pick(id) {
   props.editor.setTransitionTarget(props.entry.id, choosing.value, id);
   choosing.value = "";
 }
+function activate(transition) {
+  if (transition.empty) choosing.value = transition.id;
+  else if (transition.valid)
+    props.editor.applyTransition(props.entry.kind, props.entry.id, transition);
+}
 const transitions = computed(() =>
-  instanceTransitions(
+  displayedTransitions(
     props.editor.draft.document,
     props.editor.catalogue,
     props.entry.kind,
@@ -133,6 +133,14 @@ const transitions = computed(() =>
     return {
       ...transition,
       ...result,
+      empty: transition.custom && !transition.modelId,
+      label: transition.return
+        ? "Вернуться"
+        : transition.custom
+          ? transition.modelId
+            ? "Перейти"
+            : "Выбрать тайл"
+          : transitionLabel(transition.action),
       reason: transition.custom && !transition.modelId ? "" : result.reason,
       entry: {
         kind: props.entry.kind,
@@ -158,19 +166,32 @@ const transitions = computed(() =>
   display: none;
 }
 .map-transition-item {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 6px;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  gap: 6px;
+}
+.map-transition-item > .map-entity-row {
+  flex: 1;
+  min-width: 0;
 }
 .map-transition-item > p {
-  grid-column: 1 / -1;
+  width: 100%;
 }
-.map-transition-item > :first-child {
-  grid-column: 1;
+.map-transition-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
-.map-transition-item:not(.map-transition-custom) > :first-child {
-  grid-column: 1 / -1;
+.map-transition-action em {
+  font-style: italic;
+}
+.map-transition-action {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 12px;
 }
 .map-transition-enter-active,
 .map-transition-leave-active,
@@ -190,12 +211,5 @@ const transitions = computed(() =>
   .map-transition-move {
     transition: none;
   }
-}
-.map-transition-go {
-  grid-column: 1 / -1;
-}
-.map-transition-delete {
-  grid-column: 2;
-  grid-row: 1;
 }
 </style>

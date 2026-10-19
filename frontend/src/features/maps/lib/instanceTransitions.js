@@ -46,3 +46,25 @@ export function instanceTransitions(document, catalogue, kind, id) {
   }
   return result;
 }
+
+// Presentation only: keep every configured edge in the document. A custom edge
+// wins over a catalogue edge so its edit/delete controls remain reachable.
+export function displayedTransitions(document, catalogue, kind, id) {
+  const current = (kind === "tile" ? document.tiles : document.objects).find(
+    (item) => item.id === id,
+  )?.modelId;
+  const targets = new Map();
+  const priority = (edge) => (edge.return ? 0 : edge.custom ? 2 : 1);
+  for (const edge of instanceTransitions(document, catalogue, kind, id)) {
+    const target =
+      edge.modelId ||
+      (edge.toDefinitionId
+        ? catalogue.find((model) => model.definitionId === edge.toDefinitionId)
+            ?.id || edge.toDefinitionId
+        : edge.key);
+    if (target === current) continue;
+    if (!targets.has(target) || priority(edge) > priority(targets.get(target)))
+      targets.set(target, edge);
+  }
+  return [...targets.values()];
+}

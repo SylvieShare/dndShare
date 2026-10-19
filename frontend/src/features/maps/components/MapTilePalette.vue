@@ -46,6 +46,7 @@
           :group="group"
           :selected-id="selectedId || editor.selectedModel"
           :draggable="draggable"
+          :show-identifiers="mode === 'inspect'"
           @model="(id, event) => emit('model', id, event)"
           @drag-tile="(id, event) => emit('drag-tile', id, event)"
         />

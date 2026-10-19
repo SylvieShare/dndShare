@@ -30,7 +30,9 @@
         >{{ entry.namePrefix ? entry.item.name : entry.name }}</template
       >
     </h3>
-    <small v-if="entry.code">{{ entry.groupCode }} · {{ entry.code }}</small>
+    <small v-if="showIdentifiers && entry.code"
+      >{{ entry.groupCode }} · {{ entry.code }}</small
+    >
   </header>
 </template>
 <script setup>
@@ -45,7 +47,11 @@ import {
   Skull,
   UserRound,
 } from "@lucide/vue";
-const props = defineProps({ entry: Object, editable: Boolean });
+const props = defineProps({
+  entry: Object,
+  editable: Boolean,
+  showIdentifiers: Boolean,
+});
 const emit = defineEmits(["rename"]);
 const icon = computed(
   () =>

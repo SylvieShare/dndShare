@@ -100,7 +100,7 @@ test("transition deletes both kinds of bound lights, keeps placement and area, a
     )
     .toBe(false);
   await panel(page)
-    .getByRole("button", { name: "Погасить свет", exact: true })
+    .getByRole("button", { name: "Погасить свет: Потухший факел", exact: true })
     .click();
   await expect(
     panel(page).getByRole("heading", { name: "Потухший факел", exact: true }),
@@ -132,7 +132,7 @@ test("transition deletes both kinds of bound lights, keeps placement and area, a
     ),
   ).toBe(false);
   await panel(page)
-    .getByRole("button", { name: "Погасить свет", exact: true })
+    .getByRole("button", { name: "Погасить свет: Потухший факел", exact: true })
     .click();
   await expect(
     panel(page).getByRole("heading", { name: "Потухший факел", exact: true }),
@@ -141,7 +141,7 @@ test("transition deletes both kinds of bound lights, keeps placement and area, a
     .poll(() => page.evaluate(() => window.lastSaved?.document.lights.length))
     .toBe(0);
   await panel(page)
-    .getByRole("button", { name: "Зажечь свет", exact: true })
+    .getByRole("button", { name: "Зажечь свет: Стена 1", exact: true })
     .click();
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.document.lights.length))

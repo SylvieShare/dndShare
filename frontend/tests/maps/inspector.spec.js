@@ -27,9 +27,7 @@ test("category cells fill each row and single selection shows preview and identi
     panel.getByRole("heading", { name: "Пол 1", exact: true }),
   ).toBeVisible();
   await expect(panel.locator(".map-selection-preview")).toBeVisible();
-  await expect(panel.locator(".map-selected-heading small")).toContainText(
-    "LC-007",
-  );
+  await expect(panel.locator(".map-selected-heading small")).toHaveCount(0);
   await expect(panel.locator("table")).toHaveCount(0);
   const box = await panel.boundingBox(),
     canvas = await page.locator(".map-canvas").boundingBox();
@@ -45,9 +43,7 @@ test("category cells fill each row and single selection shows preview and identi
   await expect(
     panel.getByRole("heading", { name: "Сундук", exact: true }),
   ).toBeVisible();
-  await expect(panel.locator(".map-selected-heading small")).toContainText(
-    "MA-DungeonChest",
-  );
+  await expect(panel.locator(".map-selected-heading small")).toHaveCount(0);
 });
 test("area focus lists individual models and opening a row switches to the element inspector", async ({
   page,
@@ -185,9 +181,7 @@ test("single inspector has framed preview actions without coordinate fields, and
     panel.getByRole("status", { name: "Выбрано плиток" }),
   ).toHaveCount(0);
   await expect(panel.locator(".map-selected-frame")).toBeVisible();
-  await expect(panel.locator(".map-selected-heading small")).toHaveText(
-    /.+ · (LC-007|MA-DungeonChest)$/,
-  );
+  await expect(panel.locator(".map-selected-heading small")).toHaveCount(0);
   await expect(panel.locator("table")).toHaveCount(0);
   await expect(
     panel.getByRole("button", { name: "Удалить элемент", exact: true }),

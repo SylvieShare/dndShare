@@ -4,6 +4,7 @@
     :model="primary"
     :selected="selectedId === primary.id"
     :draggable="draggable"
+    :show-identifiers="showIdentifiers"
     @model="(id, event) => emit('model', id, event)"
     @drag-tile="(id, event) => emit('drag-tile', id, event)"
   />
@@ -22,7 +23,7 @@
       :tint="selected"
       role="button"
       tabindex="0"
-      :aria-label="`Группа ${group.code}`"
+      :aria-label="`Группа ${label}`"
       :aria-expanded="open"
       @click="show"
       @keydown.enter.prevent="focusVariants"
@@ -50,7 +51,11 @@
             v-for="model in group.models"
             :key="model.id"
             :src="model.previewUrl"
-            :title="`${model.definitionId} · ${model.name}`"
+            :title="
+              showIdentifiers
+                ? `${model.definitionId} · ${model.name}`
+                : model.name
+            "
             alt=""
             draggable="false"
           />
@@ -60,7 +65,7 @@
         primary.name.replace(/\s+\d+$/, "")
       }}</strong>
       <div class="map-group-meta">
-        <small>{{ group.code }}</small
+        <small v-if="showIdentifiers">{{ group.code }}</small
         ><span>×{{ group.models.length }}</span
         ><MapModelLightBadge :count="lights" />
       </div>
@@ -73,7 +78,7 @@
       :min-width="350"
       :z-index="3400"
       role="region"
-      :aria-label="`Варианты ${group.code}`"
+      :aria-label="`Варианты ${label}`"
       related
     >
       <div
@@ -85,7 +90,7 @@
         @keydown.esc.stop="close"
       >
         <header>
-          <strong>{{ group.code }}</strong
+          <strong>{{ label }}</strong
           ><span>{{ group.models.length }} вариантов</span>
         </header>
         <div class="map-group-variant-grid">
@@ -95,6 +100,7 @@
             :model="model"
             :selected="selectedId === model.id"
             :draggable="draggable"
+            :show-identifiers="showIdentifiers"
             @model="(id, event) => choose(id, event)"
             @drag-tile="(id, event) => drag(id, event)"
           />
@@ -112,6 +118,7 @@ const props = defineProps({
   group: Object,
   selectedId: String,
   draggable: Boolean,
+  showIdentifiers: Boolean,
 });
 const emit = defineEmits(["model", "drag-tile"]);
 const anchor = ref(null),
@@ -123,6 +130,11 @@ const primary = computed(
   () =>
     props.group.models.find((m) => m.id === props.selectedId) ||
     props.group.models[0],
+);
+const label = computed(() =>
+  props.showIdentifiers
+    ? props.group.code
+    : primary.value.name.replace(/\s+\d+$/, ""),
 );
 const selected = computed(() =>
   props.group.models.some((m) => m.id === props.selectedId),
