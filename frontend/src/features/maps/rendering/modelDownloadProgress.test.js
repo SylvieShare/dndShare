@@ -3,6 +3,21 @@ import {
   modelDownloadPlan,
   modelDownloadProgress,
 } from "./modelDownloadProgress";
+it("keeps moving previews at LOD without scheduling full geometry", () => {
+  const catalogue = new Map([
+    ["a", { lodUrl: "/lod", renderUrl: "/full", shadowUrl: "/shadow" }],
+  ]);
+  const plan = modelDownloadPlan(
+    catalogue,
+    new Set(["a"]),
+    "lod",
+    new Set(["a"]),
+    true,
+    new Set(["a"]),
+    "lod",
+  );
+  expect([...plan.keys()]).toEqual(["/lod", "/shadow"]);
+});
 it("counts only unique file URLs, including shared LOD/shadow assets and repeated placements", () => {
   const model = {
     id: "a",

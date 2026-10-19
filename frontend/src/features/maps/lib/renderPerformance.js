@@ -6,7 +6,8 @@ export const CPU_PARTS = [
   ["fog", "Туман", "var(--accent-soft)"],
   ["areas", "Области", "var(--success)"],
   ["draw", "Отправка в GPU", "var(--info)"],
-  ["overlays", "Превью и обводка", "var(--success)"],
+  ["overlays", "Обводка", "var(--success)"],
+  ["previews", "Превью", "var(--warning)"],
   ["other", "Прочее", "var(--text-muted)"],
 ].map(([id, label, color]) => ({ id, label, color }));
 export const GPU_PARTS = [
@@ -15,7 +16,8 @@ export const GPU_PARTS = [
   ["shadows", "Тени освещения", "var(--text-muted)"],
   ["effects", "Огонь", "var(--warning)"],
   ["fog", "Туман", "var(--accent-soft)"],
-  ["overlays", "Обводка и метки", "var(--success)"],
+  ["outline", "Обводка", "var(--success)"],
+  ["overlays", "Метки и подсказки", "var(--info)"],
   ["other", "Прочее", "var(--border-strong)"],
 ].map(([id, label, color]) => ({ id, label, color }));
 export const totalMs = (parts) =>

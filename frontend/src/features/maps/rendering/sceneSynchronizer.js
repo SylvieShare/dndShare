@@ -60,6 +60,7 @@ export function createSceneSynchronizer({
     runtime.tier = modelTier(
       view.getView().cellPixels,
       runtime.current === d && runtime.placedTiles.length ? runtime.tier : null,
+      opts.forceLod,
     );
     const ids = new Set([
       ...d.tiles.map((t) => t.modelId),
@@ -127,6 +128,7 @@ export function createSceneSynchronizer({
     runtime.tier = modelTier(
       view.getView().cellPixels,
       runtime.current === d && runtime.placedTiles.length ? runtime.tier : null,
+      opts.forceLod,
     );
     const nextFog = JSON.stringify([
       d.width,
@@ -147,7 +149,8 @@ export function createSceneSynchronizer({
       runtime.appearance.hiddenObjects.has(opts.previewObject.id)
     )
       previewOptions = { ...previewOptions, previewObject: null };
-    preview.update(previewOptions.previewTile, placed);
+    const detailTier = opts.forceLod ? "lod" : "render";
+    preview.update(previewOptions.previewTile, placed, detailTier);
     runtime.posedObjects = d.objects.map((o) =>
       resolvedSurfacePosition(o, d, assets.catalogue(), structure.context()),
     );
@@ -174,6 +177,7 @@ export function createSceneSynchronizer({
           assets.catalogue(),
           structure.context(),
         ),
+      detailTier,
     );
     areaPreview.update(d, placed, runtime.posedObjects);
     surfaceAnchors.update(

@@ -29,7 +29,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
     }
     root.clear();
   }
-  function update(tile, placed = []) {
+  function update(tile, placed = [], tier = "render") {
     if (tile) {
       if (!active && (!tile.id || tile.id !== target?.id)) {
         position = null;
@@ -56,7 +56,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
       if (
         !root.children.length ||
         (next.target.group || [next.target]).some(
-          (t) => !modelVisual(assets, t.modelId, "render"),
+          (t) => !modelVisual(assets, t.modelId, tier),
         )
       ) {
         target = null;
@@ -84,8 +84,9 @@ export function createTilePreview(assets, onSettled = () => {}) {
     const nextKey = JSON.stringify(
       group.map((t) => [
         t.modelId,
-        assets.metadata(t.modelId)?.renderUrl,
-        visualSignature(assets, new Set([t.modelId]), "render"),
+        tier,
+        assets.metadata(t.modelId)?.[`${tier}Url`],
+        visualSignature(assets, new Set([t.modelId]), tier),
         assets.metadata(t.modelId)?.behaviour?.waterAnimation,
       ]),
     );
@@ -101,7 +102,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
       for (const indices of buckets.values()) {
         const id = group[indices[0]].modelId;
         const metadata = assets.metadata(id),
-          model = modelVisual(assets, id, "render");
+          model = modelVisual(assets, id, tier);
         if (!metadata || !model) continue;
         for (const part of model.parts) {
           const materials = (

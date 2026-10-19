@@ -14,7 +14,7 @@ export function createTileOutline(gpu, assets) {
   const maskScene = new Scene(),
     root = new Group(),
     motion = new Group();
-  maskScene.userData.renderCategory = "overlays";
+  maskScene.userData.renderCategory = "outline";
   maskScene.add(root, motion);
   const hover = new MeshBasicMaterial({
     color: 0xff0000,

@@ -128,7 +128,7 @@ const keyboardPan = useCameraPan(
   () => props.tabletop,
   () => emit("camera-move"),
 );
-const { syncActive } = useCanvasUpdates(
+const { syncActive, options } = useCanvasUpdates(
   props,
   () => renderer,
   (message) => {
@@ -222,7 +222,7 @@ onMounted(async () => {
     renderer = r;
     syncActive(false);
     performanceBridge.attach(r);
-    await r.update(props.document, props.state, props);
+    await r.update(props.document, props.state, options());
     if (props.camera) r.camera(props.camera);
   } catch (cause) {
     error.value = `Не удалось запустить отрисовку WebGL: ${cause.message}`;

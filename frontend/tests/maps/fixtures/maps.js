@@ -432,6 +432,13 @@ const modelBody = (id) => {
 };
 const transfers = modelDownloadsFixture(params, modelBody);
 if (params.has("componentsExample")) componentExample(catalogue, source, FLOOR);
+if (params.has("sixFires"))
+  source.document.tiles = Array.from({ length: 6 }, (_, i) => ({
+    ...source.document.tiles[0],
+    id: `torch-${i}`,
+    x: 4 + (i % 3),
+    y: 4 + Math.floor(i / 3),
+  }));
 const nativeFetch = window.fetch.bind(window);
 const modelDto = ({ id, definitionId, ...model }) => ({
   ...model,

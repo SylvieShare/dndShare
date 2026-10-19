@@ -62,6 +62,9 @@ export function createMapEffects(
             mesh = new Mesh(geometry, material),
             uniforms = fireEffectMaterial(material, fireSeed(source.id));
           mesh.userData.lightId = source.id;
+          // Keep all flames after the opaque world, even when a recreated
+          // material receives a later ID. Timer boundaries must stay stable.
+          mesh.renderOrder = 1;
           mesh.frustumCulled = true;
           root.add(mesh);
           entry = { mesh, uniforms };

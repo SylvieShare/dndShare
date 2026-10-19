@@ -3,6 +3,36 @@ import { createRenderProfiler } from "./renderProfiler";
 import { fakeGpu } from "./gpuTimings.fixture";
 afterEach(() => vi.useRealTimers());
 
+it("classifies flames present before observation and separates outline passes from markers", () => {
+  vi.useFakeTimers();
+  const { gpu, queries } = fakeGpu();
+  let snapshot;
+  const profiler = createRenderProfiler(
+    gpu,
+    () => {},
+    () => 0,
+  );
+  const flames = {},
+    markers = {};
+  profiler.tag(flames, "effects");
+  profiler.tag(markers, "overlays");
+  const meshes = Array.from({ length: 6 }, () => ({ parent: flames }));
+  const stop = profiler.observe((value) => (snapshot = value));
+  profiler.begin();
+  gpu.render({ draws: meshes.map((object) => ({ object })) });
+  gpu.render({ overrideMaterial: {}, draws: [{ object: {} }] });
+  gpu.render({
+    userData: { renderCategory: "outline" },
+    draws: [{ object: {} }],
+  });
+  gpu.render({ draws: [{ object: { parent: markers } }] });
+  profiler.end();
+  queries.forEach((query) => (query.ready = true));
+  vi.advanceTimersByTime(500);
+  expect(snapshot.gpu).toMatchObject({ effects: 1, outline: 2, overlays: 1 });
+  stop();
+});
+
 it("has no GPU instrumentation without observers, retains the original sample bucket and stops on unsubscribe", () => {
   vi.useFakeTimers();
   const { gpu, queries } = fakeGpu();

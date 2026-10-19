@@ -1,9 +1,144 @@
 import { expect, test } from "@playwright/test";
+import { choosePack, pickTile } from "./editorHelpers";
+
+test("GPU accounts for all six flames before and after toggling without leaving extra passes", async ({
+  page,
+}) => {
+  await drawCounter(page);
+  await page.goto(
+    "/tests/maps/fixtures/maps.html?mode=editor&componentsExample&sixFires",
+  );
+  await expect(page.locator(".map-canvas canvas")).toBeVisible();
+  await page
+    .getByRole("button", { name: "Производительность", exact: true })
+    .click();
+  const panel = page.getByRole("region", { name: "Нагрузка", exact: true });
+  const gpu = panel.getByRole("option", {
+    name: "GPU · отрисовка",
+    exact: true,
+  });
+  test.skip(!(await gpu.isEnabled()), "GPU timer unavailable in this browser");
+  await expect(
+    panel.locator(".map-performance-parts").getByText("Огонь", { exact: true }),
+  ).toBeVisible();
+  const calls = async () =>
+    Number(
+      (
+        await panel
+          .locator(".map-performance-details > div")
+          .first()
+          .locator("dd")
+          .textContent()
+      ).replace(/\s/g, ""),
+    );
+  await expect.poll(calls).toBe(8);
+  await expect
+    .poll(() => page.evaluate(() => window.gpuQueryFrames.length))
+    .toBeGreaterThanOrEqual(3);
+  const initialSegments = await page.evaluate(() =>
+    window.gpuQueryFrames.at(-1),
+  );
+  await expect
+    .poll(() => page.evaluate(() => window.gpuQueryFrames.slice(-3)))
+    .toEqual([initialSegments, initialSegments, initialSegments]);
+  await page.getByRole("button", { name: "Освещение", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Пол 1 · Свет", exact: true })
+    .first()
+    .click();
+  const toggle = page.getByRole("switch", {
+    name: "Показывать пламя",
+    exact: true,
+  });
+  await toggle.click();
+  await expect(toggle).not.toBeChecked();
+  await toggle.click();
+  await expect(toggle).toBeChecked();
+  const previousSamples = await page.evaluate(
+    () => window.gpuQueryFrames.length,
+  );
+  await page
+    .getByRole("button", { name: "Производительность", exact: true })
+    .click();
+  await expect(
+    panel.locator(".map-performance-parts").getByText("Огонь", { exact: true }),
+  ).toBeVisible();
+  await expect.poll(calls).toBe(8);
+  await expect
+    .poll(() => page.evaluate(() => window.gpuQueryFrames.length))
+    .toBeGreaterThanOrEqual(previousSamples + 3);
+  await expect
+    .poll(() => page.evaluate(() => window.gpuQueryFrames.slice(-3)))
+    .toEqual([initialSegments, initialSegments, initialSegments]);
+});
+
+test("forced LOD persists, survives zoom and applies to moving previews without full downloads", async ({
+  page,
+}) => {
+  await page.addInitScript(() =>
+    localStorage.setItem("dndshare.maps.force-lod", "true"),
+  );
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto("/tests/maps/fixtures/maps.html?mode=editor");
+  await expect(page.locator(".map-canvas canvas")).toBeVisible();
+  await page
+    .getByRole("button", { name: "Производительность", exact: true })
+    .click();
+  const setting = page.getByRole("switch", {
+    name: "Всегда использовать LOD-модели",
+    exact: true,
+  });
+  await expect(setting).toBeChecked();
+  for (let i = 0; i < 6; i++)
+    await page.getByTitle("Увеличить", { exact: true }).click();
+  await page.getByRole("button", { name: "Плитки", exact: true }).click();
+  await choosePack(page, "ultimate-dungeon");
+  await pickTile(page, "Каменный пол");
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        window.loadedModels.filter((url) =>
+          url.includes("88888888-8888-4888-8888-888888888888"),
+        ),
+      ),
+    )
+    .toEqual(["/api/maps/models/88888888-8888-4888-8888-888888888888/lod"]);
+  expect(
+    await page.evaluate(() =>
+      window.loadedModels.some((url) => url.endsWith("/render")),
+    ),
+  ).toBe(false);
+  await page.keyboard.press("Escape");
+  await page
+    .getByRole("button", { name: "Производительность", exact: true })
+    .click();
+  await setting.click();
+  await expect(setting).not.toBeChecked();
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        window.loadedModels.some((url) => url.endsWith("/render")),
+      ),
+    )
+    .toBe(true);
+  expect(
+    await page.evaluate(() => localStorage.getItem("dndshare.maps.force-lod")),
+  ).toBe("false");
+  expect(await page.evaluate(() => window.requests)).toEqual([]);
+});
 
 async function drawCounter(page, disableGpu = false) {
   await page.addInitScript((disable) => {
     window.mainDrawCalls = 0;
     window.gpuQueries = 0;
+    window.gpuQueryFrames = [];
+    let frameQueries = 0;
+    function recordFrame() {
+      if (frameQueries) window.gpuQueryFrames.push(frameQueries);
+      frameQueries = 0;
+      requestAnimationFrame(recordFrame);
+    }
+    requestAnimationFrame(recordFrame);
     const original = HTMLCanvasElement.prototype.getContext,
       seen = new WeakSet();
     HTMLCanvasElement.prototype.getContext = function (...args) {
@@ -33,6 +168,7 @@ async function drawCounter(page, disableGpu = false) {
         const begin = gl.beginQuery;
         gl.beginQuery = function (...values) {
           window.gpuQueries++;
+          if (gl.canvas.closest(".map-canvas-surface")) frameQueries++;
           return begin.apply(this, values);
         };
       }

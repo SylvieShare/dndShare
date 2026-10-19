@@ -69,7 +69,7 @@ void main(){
     camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1),
     size = new Vector2();
   filterScene.userData.renderCategory = overlay.userData.renderCategory =
-    "overlays";
+    "outline";
   filterScene.add(new Mesh(geometry, shader));
   const quad = new Mesh(geometry, image);
   overlay.add(quad);

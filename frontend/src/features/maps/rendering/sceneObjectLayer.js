@@ -73,9 +73,11 @@ export function createSceneObjectLayer(assets, fog, portraits) {
         if (!item.modelId)
           applyAreaOpacity(node, appearance.objectOpacity(item.id));
         else {
-          const quality = options.renderObjects?.includes(item.id)
-            ? "render"
-            : tier;
+          const quality = options.forceLod
+            ? "lod"
+            : options.renderObjects?.includes(item.id)
+              ? "render"
+              : tier;
           const bucket = `${item.modelId}:${quality}:${Math.floor(item.x / 12)},${Math.floor(item.y / 12)}:${appearance.objectGroup(item.id)}`;
           if (!groups.has(bucket))
             groups.set(bucket, {

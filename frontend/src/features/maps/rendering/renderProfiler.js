@@ -18,7 +18,7 @@ export function createRenderProfiler(
   function classify(object, material, scene) {
     if (material?.isMeshDepthMaterial || material?.isMeshDistanceMaterial)
       return "shadows";
-    if (scene?.overrideMaterial) return "overlays";
+    if (scene?.overrideMaterial) return "outline";
     if (scene?.userData?.renderCategory) return scene.userData.renderCategory;
     for (let node = object; node; node = node.parent)
       if (tags.has(node)) return tags.get(node);

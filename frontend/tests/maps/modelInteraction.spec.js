@@ -39,15 +39,23 @@ test("content filter separates free tiles and tiles with built-in items", async 
   page,
 }) => {
   await ready(page);
-  const toggle = page.getByRole("radiogroup", { name: "Наполнение плиток" });
-  await expect(
-    toggle.getByRole("radio", { name: "Свободные", exact: true }),
-  ).toHaveAttribute("aria-checked", "true");
+  await page
+    .getByRole("button", { name: "Фильтры плиток", exact: true })
+    .click();
+  const filters = page.getByRole("dialog", {
+    name: "Фильтры плиток",
+    exact: true,
+  });
+  const toggle = filters.getByRole("combobox", { name: "Наполнение плиток" });
+  await expect(toggle).toHaveText(/Любое наполнение/);
+  await toggle.click();
+  await filters.getByRole("option", { name: "Свободные", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Пол с декором", exact: true }),
   ).toHaveCount(0);
-  await toggle
-    .getByRole("radio", { name: "С предметами", exact: true })
+  await toggle.click();
+  await filters
+    .getByRole("option", { name: "С предметами", exact: true })
     .click();
   await expect(
     page.getByRole("button", { name: "Пол с декором", exact: true }),
@@ -55,7 +63,8 @@ test("content filter separates free tiles and tiles with built-in items", async 
   await expect(
     page.getByRole("button", { name: "Пол 1", exact: true }),
   ).toHaveCount(0);
-  await toggle.getByRole("radio", { name: "Свободные", exact: true }).click();
+  await toggle.click();
+  await filters.getByRole("option", { name: "Свободные", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Пол 1", exact: true }),
   ).toBeVisible();

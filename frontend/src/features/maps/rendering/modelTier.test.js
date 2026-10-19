@@ -11,3 +11,9 @@ it("keeps geometry stable while zoom crosses the former single threshold", () =>
   expect(tier).toBe("lod");
   expect(modelTier(80, tier)).toBe("render");
 });
+
+it("keeps forced LOD at close range and restores automatic detail when disabled", () => {
+  expect(modelTier(400, "render", true)).toBe("lod");
+  expect(modelTier(400, "lod", true)).toBe("lod");
+  expect(modelTier(400, "lod", false)).toBe("render");
+});

@@ -1,6 +1,9 @@
 import { onMounted, onBeforeUnmount, watch } from "vue";
+import { useMapRenderSettings } from "./useMapRenderSettings";
 
 export function useCanvasUpdates(props, getRenderer, onError, onActive) {
+  const { forceLod } = useMapRenderSettings();
+  const options = () => ({ ...props, forceLod: forceLod.value });
   let frame = 0;
   const pendingChanges = new Set();
   function redraw(change = "structure") {
@@ -12,7 +15,7 @@ export function useCanvasUpdates(props, getRenderer, onError, onActive) {
       const sceneChanges = [...pendingChanges];
       pendingChanges.clear();
       getRenderer()
-        .update(props.document, props.state, { ...props, sceneChanges })
+        .update(props.document, props.state, { ...options(), sceneChanges })
         .catch((cause) => {
           onError(cause.message);
         });
@@ -32,6 +35,7 @@ export function useCanvasUpdates(props, getRenderer, onError, onActive) {
     () => props.active,
     () => syncActive(),
   );
+  watch(forceLod, () => redraw("quality"));
   watch(
     () => [
       props.document.tiles,
@@ -96,7 +100,7 @@ export function useCanvasUpdates(props, getRenderer, onError, onActive) {
       props.editLights,
       props.selectionColor,
     ],
-    () => getRenderer()?.updateSelection(props),
+    () => getRenderer()?.updateSelection(options()),
     { deep: true },
   );
   watch(
@@ -114,5 +118,5 @@ export function useCanvasUpdates(props, getRenderer, onError, onActive) {
     cancelAnimationFrame(frame);
     window.document.removeEventListener("visibilitychange", visibilityChanged);
   });
-  return { redraw, syncActive };
+  return { redraw, syncActive, options };
 }

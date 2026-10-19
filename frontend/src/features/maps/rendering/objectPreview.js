@@ -11,7 +11,7 @@ export function createObjectPreview(fog, assets) {
   let target = null,
     key = "",
     position = null;
-  function update(object) {
+  function update(object, tier = "render") {
     target = object;
     root.userData.outlineStyle =
       object?.valid === false || object?.invalidSurface
@@ -34,8 +34,9 @@ export function createObjectPreview(fog, assets) {
           o.modelId,
           o.scale,
           o.open,
-          assets.metadata?.(o.modelId)?.renderUrl,
-          visualSignature(assets, new Set([o.modelId]), "render"),
+          tier,
+          assets.metadata?.(o.modelId)?.[`${tier}Url`],
+          visualSignature(assets, new Set([o.modelId]), tier),
           assets.metadata?.(o.modelId)?.behaviour?.waterAnimation,
         ]),
       );
@@ -44,7 +45,7 @@ export function createObjectPreview(fog, assets) {
       root.clear();
       key = next;
       for (const o of group)
-        root.add(buildMapProp(o, o.open, fog, assets, "render"));
+        root.add(buildMapProp(o, o.open, fog, assets, tier));
     }
     position ||= { x: object.x, y: object.y, lift: 0 };
   }

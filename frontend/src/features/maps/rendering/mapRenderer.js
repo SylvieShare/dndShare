@@ -153,6 +153,7 @@ export async function createMapRenderer(
     framePreview,
     canvas: gpu.domElement,
     objectLayer,
+    profiler,
   });
   loop = createMapFrameLoop({
     transitions,
@@ -231,6 +232,7 @@ export async function createMapRenderer(
       runtime.movingIds,
       runtime.current.lightingEnabled,
       runtime.modelIds,
+      runtime.options.forceLod ? "lod" : "render",
     );
     modelTransitions.ready((id) => !!modelVisual(assets, id, runtime.tier));
     tiles.rebuild(
@@ -309,7 +311,11 @@ export async function createMapRenderer(
   function changeCamera(next) {
     const old = runtime.tier;
     view.update(next);
-    runtime.tier = modelTier(view.getView().cellPixels, runtime.tier);
+    runtime.tier = modelTier(
+      view.getView().cellPixels,
+      runtime.tier,
+      runtime.options.forceLod,
+    );
     lighting.selection(runtime.options, view.getView());
     if (
       runtime.current &&

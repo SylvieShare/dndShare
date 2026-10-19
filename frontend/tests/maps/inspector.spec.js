@@ -11,7 +11,7 @@ const selection = (page) =>
 test("category cells fill each row and single selection shows preview and identity without a coordinate table on the canvas", async ({
   page,
 }) => {
-  await ready(page);
+  await ready(page, "&catalogueFilters");
   const categories = page.getByRole("toolbar", { name: "Типы тайлов" });
   const bounds = await categories.boundingBox(),
     cells = await categories.getByRole("button").all();
@@ -285,7 +285,12 @@ test("tile and chest lights follow the moving preview before save, and attached 
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.document.lights.length))
     .toBe(2);
-  const savedBefore = await page.evaluate(() => window.requests.length);
+  const saves = () =>
+    page.evaluate(
+      () =>
+        window.requests.filter((r) => r.url === "/api/maps/test-map").length,
+    );
+  const savedBefore = await saves();
   const poses = () =>
     page.evaluate(() => {
       const result = {};
@@ -313,7 +318,7 @@ test("tile and chest lights follow the moving preview before save, and attached 
   const current = await poses();
   expect(current["tile-lamp"][1]).toBeGreaterThan(1);
   expect(current["area-chest"][1]).toBeGreaterThan(0.6);
-  expect(await page.evaluate(() => window.requests.length)).toBe(savedBefore);
+  expect(await saves()).toBe(savedBefore);
   await page.mouse.up();
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.document.tiles[0].x))

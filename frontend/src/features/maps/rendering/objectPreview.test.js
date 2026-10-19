@@ -62,6 +62,8 @@ it("uses a coarse object while full detail is pending and replaces it without po
   preview.update(item);
   preview.advance(16);
   expect(preview.root.children[0].children[0].geometry).toBe(full);
+  preview.update(item, "lod");
+  expect(preview.root.children[0].children[0].geometry).toBe(lod);
   expect(preview.root.children[0].position.x).toBe(5);
   preview.destroy();
   lod.dispose();

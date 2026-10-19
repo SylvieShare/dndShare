@@ -171,8 +171,17 @@ export function modelAssets(
     details = new Set(),
     shadows = false,
     shadowIds = ids,
+    detailTier = "render",
   ) {
-    plan = modelDownloadPlan(catalogue, ids, tier, details, shadows, shadowIds);
+    plan = modelDownloadPlan(
+      catalogue,
+      ids,
+      tier,
+      details,
+      shadows,
+      shadowIds,
+      detailTier,
+    );
     for (const [url, entry] of owned) {
       if (
         !plan.has(url) &&
@@ -205,7 +214,13 @@ export function modelAssets(
         })
         .catch(report);
     }
-    for (const id of details) request(id, "render", 2).catch(report);
+    for (const id of details)
+      request(id, detailTier, 2)
+        .catch((error) => {
+          if (detailTier === "lod") return request(id, "render", 2);
+          throw error;
+        })
+        .catch(report);
     if (shadows)
       for (const id of new Set([...shadowIds, ...details]))
         request(id, "shadow", -1).catch(report);

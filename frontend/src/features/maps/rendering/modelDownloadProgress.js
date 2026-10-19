@@ -16,6 +16,7 @@ export function modelDownloadPlan(
   details,
   shadows,
   shadowIds = ids,
+  detailTier = "render",
 ) {
   const plan = new Map();
   function add(id, kind) {
@@ -27,7 +28,7 @@ export function modelDownloadPlan(
     add(id, "lod");
     if (tier === "render") add(id, "render");
   }
-  for (const id of details) add(id, "render");
+  for (const id of details) add(id, detailTier);
   if (shadows)
     for (const id of new Set([...shadowIds, ...details])) add(id, "shadow");
   return plan;

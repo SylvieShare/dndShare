@@ -10,6 +10,7 @@ export function createMapFramePresentation({
   framePreview,
   canvas,
   objectLayer,
+  profiler,
 }) {
   return (objects, options, appearance) => {
     for (const object of objects.children) {
@@ -45,6 +46,7 @@ export function createMapFramePresentation({
       tiles.transform,
       lighting.excluded,
     );
+    profiler?.mark("previews");
     framePreview.copy(canvas, lighting.position);
   };
 }
