@@ -33,7 +33,7 @@ export async function openWaterReview(baseURL = "http://127.0.0.1:5194") {
       assert.ok(changed < 8, "Waves depend on model origin: " + changed);
       return changed;
     },
-    async review(row, output) {
+    async review(row, output, angle = 0) {
       assert.ok(row.profile);
       const { model, profile } = row;
       assert.match(model.sourceCode, /^[A-Z0-9]+-\d{3}$/);
@@ -49,17 +49,23 @@ export async function openWaterReview(baseURL = "http://127.0.0.1:5194") {
         paths.set(asset.sha256 + ".glb", file);
         errors.length = 0;
         let result = await page.evaluate(
-          ({ tier, model, profile }) =>
-            window.reviewWaterMaterials(tier, model, profile),
-          { tier, model, profile },
+          ({ tier, model, profile, angle }) =>
+            window.reviewWaterMaterials(tier, model, profile, angle),
+          { tier, model, profile, angle },
         );
+        if (angle) result.angleUsed = angle;
         if (result.wetPixels < 20) {
           result = await page.evaluate(
-            ({ tier, model, profile }) =>
-              window.reviewWaterMaterials(tier, model, profile, 180),
-            { tier, model, profile },
+            ({ tier, model, profile, angle }) =>
+              window.reviewWaterMaterials(
+                tier,
+                model,
+                profile,
+                (angle + 180) % 360,
+              ),
+            { tier, model, profile, angle },
           );
-          result.angleUsed = 180;
+          result.angleUsed = (angle + 180) % 360;
         }
         assert.equal(
           errors.length,
