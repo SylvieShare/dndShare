@@ -3,16 +3,13 @@ import path from "node:path";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
+import { lightBaseDirectory } from "./light_base_context.mjs";
+import { localModelAsset } from "./local_model_assets.mjs";
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json"),
   sharp = require("sharp"),
   code = process.argv[2];
-if (!/^MT1-\d{3}$/.test(code || "")) throw Error("One code required");
 const root = path.resolve(import.meta.dirname, "../.."),
-  directory = path.join(
-    root,
-    "models/collections/medieval-town-vol1/light-effects",
-    code,
-  ),
+  directory = lightBaseDirectory(code),
   report = JSON.parse(
     await fs.readFile(path.join(directory, "report.json"), "utf8"),
   );
@@ -53,7 +50,13 @@ for (const role of ["render", "lod", "shadow", "preview"]) {
     fileName: role + ext,
   };
 }
-const source = await fs.readFile(path.join(root, "models", report.sourcePath));
+const source = await fs.readFile(
+  report.sourcePath
+    ? path.isAbsolute(report.sourcePath)
+      ? report.sourcePath
+      : path.join(root, "models", report.sourcePath)
+    : await localModelAsset(assets.source),
+);
 assert.equal(
   createHash("sha256").update(source).digest("hex"),
   assets.source.sha256,

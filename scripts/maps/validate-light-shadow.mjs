@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
+import { lightBaseDirectory } from "./light_base_context.mjs";
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json"),
   { NodeIO } = require("@gltf-transform/core"),
   { ALL_EXTENSIONS } = require("@gltf-transform/extensions"),
@@ -19,21 +20,18 @@ const require = createRequire("/private/tmp/dndshare-model-tools/package.json"),
   } = require("three");
 await MeshoptDecoder.ready;
 const code = process.argv[2];
-assert.match(code, /^MT1-\d{3}$/);
-const directory = path.resolve(
-    import.meta.dirname,
-    "../../models/collections/medieval-town-vol1/light-effects",
-    code,
-  ),
+const directory = lightBaseDirectory(code),
   r = JSON.parse(
     await fs.readFile(path.join(directory, "report.json"), "utf8"),
   ),
-  recipe = JSON.parse(
-    await fs.readFile(
-      path.join(import.meta.dirname, "medieval-recipes", code + ".json"),
-      "utf8",
-    ),
-  );
+  recipe = !code.startsWith("MT1-")
+    ? r.recipe
+    : JSON.parse(
+        await fs.readFile(
+          path.join(import.meta.dirname, "medieval-recipes", code + ".json"),
+          "utf8",
+        ),
+      );
 const io = new NodeIO()
     .registerExtensions(ALL_EXTENSIONS)
     .registerDependencies({ "meshopt.decoder": MeshoptDecoder }),
@@ -62,6 +60,39 @@ for (const light of recipe.defaultLights) {
     light.position[2] + r.model.mountDepth,
     light.position[1] - r.model.height / 2,
   );
+  if (recipe.lightShadowChecks) {
+    const check = recipe.lightShadowChecks;
+    for (const direction of check.clearDirections) {
+      const hits = new Raycaster(
+        origin,
+        new Vector3(...direction).normalize(),
+        0.0001,
+        check.clearDistance,
+      ).intersectObject(root, true);
+      assert.equal(
+        hits.length,
+        0,
+        `Light is inside solid geometry: ${light.key} ${direction}`,
+      );
+    }
+    const body = new Raycaster(
+      origin,
+      new Vector3(...check.blockedDirection).normalize(),
+      0.0001,
+      check.blockedDistance,
+    ).intersectObject(root, true);
+    assert.ok(
+      body.length,
+      `Solid support disappeared below/behind ${light.key}`,
+    );
+    console.log(
+      "LIGHT_SHADOW_CHECK",
+      code,
+      light.key,
+      "source clear; solid support preserved",
+    );
+    continue;
+  }
   const forward = new Raycaster(
       origin,
       new Vector3(1, 0, 0),

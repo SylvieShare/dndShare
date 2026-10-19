@@ -469,5 +469,36 @@
     ]
   ],
   "emissionStrength": 0.9,
-  "quantizeTexcoord": 16
+  "quantizeTexcoord": 16,
+  "proceduralFire": true,
+  "defaultLights": [
+    {
+      "key": "campfire",
+      "name": "Костёр",
+      "kind": "torch",
+      "color": "#ffad58",
+      "position": [
+        0.57,
+        1.83,
+        0.6
+      ],
+      "intensity": 12,
+      "radius": 6,
+      "enabled": true,
+      "flicker": true,
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.85,
+          0.7
+        ],
+        "strength": 0.7,
+        "offset": [
+          0.001653,
+          -0.002327,
+          -0.364285
+        ]
+      }
+    }
+  ]
 }

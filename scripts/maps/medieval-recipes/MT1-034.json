@@ -1116,7 +1116,20 @@
       "intensity": 3,
       "radius": 2.5,
       "enabled": true,
-      "flicker": true
+      "flicker": true,
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.1,
+          0.1
+        ],
+        "strength": 0.7,
+        "offset": [
+          0,
+          0,
+          -0.038571
+        ]
+      }
     },
     {
       "key": "tavern-candle-2",
@@ -1131,9 +1144,23 @@
       "intensity": 3,
       "radius": 2.5,
       "enabled": true,
-      "flicker": true
+      "flicker": true,
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.1,
+          0.1
+        ],
+        "strength": 0.7,
+        "offset": [
+          0,
+          0,
+          -0.038571
+        ]
+      }
     }
   ],
   "renderUVIslandMargin": 0.0008,
-  "lodUVIslandMargin": 0.0012
+  "lodUVIslandMargin": 0.0012,
+  "proceduralFire": true
 }

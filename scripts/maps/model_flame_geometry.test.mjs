@@ -5,6 +5,7 @@ import {
   stripSculptedFlames,
   triangleFingerprint,
   materialImages,
+  stripMeasuredFlames,
 } from "./model_flame_geometry.mjs";
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json"),
   { Document } = require("@gltf-transform/core");
@@ -65,4 +66,48 @@ test("removes the measured flame, preserves body attributes and ignores cyclic i
   assert.equal(triangleFingerprint(doc), hash);
   assert.deepEqual(materialImages(doc), images);
   assert.deepEqual(material.getEmissiveFactor(), [0, 0, 0]);
+});
+
+test("source-centre offsets select only the measured flame and retain the original body", () => {
+  const doc = new Document(),
+    buffer = doc.createBuffer(),
+    material = doc.createMaterial();
+  const primitive = doc
+    .createPrimitive()
+    .setMaterial(material)
+    .setAttribute(
+      "POSITION",
+      doc
+        .createAccessor()
+        .setType("VEC3")
+        .setBuffer(buffer)
+        .setArray(
+          new Float32Array([
+            0, 0, 0, 0.1, 0, 0, 0, 0, 0.1, 0, 1, 0, 0.01, 1, 0, 0, 1, 0.01,
+          ]),
+        ),
+    )
+    .setIndices(
+      doc
+        .createAccessor()
+        .setType("SCALAR")
+        .setBuffer(buffer)
+        .setArray(new Uint16Array([0, 1, 2, 3, 4, 5])),
+    );
+  doc
+    .createScene()
+    .addChild(
+      doc.createNode().setMesh(doc.createMesh().addPrimitive(primitive)),
+    );
+  const result = stripMeasuredFlames(
+    doc,
+    (p) => p[0] >= 70 && p[1] <= -35 && p[2] > 50,
+    [70, -35, 17],
+  );
+  assert.equal(result.counts[0].removed, 1);
+  assert.equal(primitive.getAttribute("POSITION").getCount(), 3);
+  assert.deepEqual(
+    [...primitive.getAttribute("POSITION").getArray()],
+    [0, 0, 0, Math.fround(0.1), 0, 0, 0, 0, Math.fround(0.1)],
+  );
 });

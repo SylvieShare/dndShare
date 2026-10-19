@@ -262,6 +262,7 @@
     "reason": "Native sections.05=25.99/.5=26.76/2.5=30.20/4=32.78/datum5.25651=34.92/6=35mm confirm one native centred cell."
   },
   "albedoCodec": "uastc",
+  "proceduralFire": true,
   "torch": {
     "lit": true,
     "flameMinHeightMM": 40.55,
@@ -282,7 +283,8 @@
       "intensity": 8,
       "radius": 4.5,
       "enabled": true,
-      "flicker": true
+      "flicker": true,
+      "effect": {"kind":"fire","size":[0.19,0.2],"strength":0.7,"offset":[0,0,-0.098572]}
     }
   }
 }

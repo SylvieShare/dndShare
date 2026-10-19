@@ -1601,7 +1601,20 @@
       "intensity": 1.3,
       "radius": 2.4,
       "enabled": true,
-      "flicker": true
+      "flicker": true,
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.0828,
+          0.0949
+        ],
+        "strength": 0.7,
+        "offset": [
+          0.000699,
+          0.001797,
+          -0.051555
+        ]
+      }
     },
     {
       "key": "candle-2",
@@ -1616,7 +1629,20 @@
       "intensity": 1.3,
       "radius": 2.4,
       "enabled": true,
-      "flicker": true
+      "flicker": true,
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.0866,
+          0.1079
+        ],
+        "strength": 0.7,
+        "offset": [
+          0.000159,
+          -0.000255,
+          -0.059888
+        ]
+      }
     },
     {
       "key": "candle-3",
@@ -1631,7 +1657,20 @@
       "intensity": 1.3,
       "radius": 2.4,
       "enabled": true,
-      "flicker": true
+      "flicker": true,
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.0893,
+          0.1151
+        ],
+        "strength": 0.7,
+        "offset": [
+          0.00097,
+          -0.000693,
+          -0.062184
+        ]
+      }
     },
     {
       "key": "candle-4",
@@ -1646,7 +1685,20 @@
       "intensity": 1.3,
       "radius": 2.4,
       "enabled": true,
-      "flicker": true
+      "flicker": true,
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.0869,
+          0.1287
+        ],
+        "strength": 0.7,
+        "offset": [
+          0.001686,
+          -0.000518,
+          -0.066675
+        ]
+      }
     },
     {
       "key": "candle-5",
@@ -1661,7 +1713,20 @@
       "intensity": 1.3,
       "radius": 2.4,
       "enabled": true,
-      "flicker": true
+      "flicker": true,
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.0856,
+          0.1175
+        ],
+        "strength": 0.7,
+        "offset": [
+          0.002383,
+          -0.001005,
+          -0.061095
+        ]
+      }
     },
     {
       "key": "candle-6",
@@ -1676,7 +1741,20 @@
       "intensity": 1.3,
       "radius": 2.4,
       "enabled": true,
-      "flicker": true
+      "flicker": true,
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.0907,
+          0.1248
+        ],
+        "strength": 0.7,
+        "offset": [
+          0.00138,
+          0.001882,
+          -0.063792
+        ]
+      }
     },
     {
       "key": "candle-7",
@@ -1691,7 +1769,20 @@
       "intensity": 1.3,
       "radius": 2.4,
       "enabled": true,
-      "flicker": true
+      "flicker": true,
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.0909,
+          0.1512
+        ],
+        "strength": 0.7,
+        "offset": [
+          -0.002559,
+          -0.001069,
+          -0.069313
+        ]
+      }
     }
   ],
   "reviewNotes": "PDFpage10/full/front-back/+X/candles/top/underside andtemporarycut75.85inspected. Source540012tri/27000684bytes/SHAfbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73/maxZ88.198105. FloorY confirmednativeboards,front/backXrails;postZ/steppedfoot. Sixcurvedironbracesand6lowerbolts;bronzeannularframe6spokes/centralcollar,6measuredspokeheads. Sevenivorycandles,runoffoverringandspokes. Baremetalspokeplane74.865,collartop75.758,ringtop75.823;profilemasks/chamferenvelopesguardwetareas,needsactualmatchingcloseQA. CommonOff70distancesfloor/post/ring.000138/.001162/.001310mm;samplecommonmax.0303mm. SevenflamesuseSHA-boundaway70.08/project69,currentoriginalprojectionbeforeclassification,individualbbox/heightgradient/inset.015. Light7warmflickeringtorchtemplatesintensity1.3/radius2.4locatednativeflamemeans,APIlimit8. Noaddedwaxorflamegeometry. Sourcefloorraisedrim26.7823requiresdecorcut27.0forcontainment;trueupperdecorRmax18.089629→16gonR18.524026028046134clippedto±17.65mmtohonorfootprintbounds,fourverifiednative±14cornersstandclear25.3919..25.681/nZ>.932. Innerrayshituppercandles/ring,arenotfloorstands. Validatewax/metalboundaries,all7flames/noglowoutside,12heads,woodcontacts,6spokegaps,source/packedfootprintandbothcandidates/tiersbeforepub.",
@@ -1700,5 +1791,42 @@
       "toDefinitionId": "MT1-070",
       "action": "extinguish"
     }
-  ]
+  ],
+  "proceduralFire": true,
+  "lightShadowChecks": {
+    "clearDirections": [
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        -1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        -1
+      ],
+      [
+        0,
+        1,
+        0
+      ]
+    ],
+    "clearDistance": 0.04,
+    "blockedDirection": [
+      0,
+      -1,
+      0
+    ],
+    "blockedDistance": 3
+  }
 }

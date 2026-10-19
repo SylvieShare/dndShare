@@ -5,7 +5,38 @@
     "material": "torch",
     "variant": "basic",
     "lit": true,
-    "notes": "Cool stone wall on both faces; bounded charred timber grip and worn iron basket. Yellow flame roots, orange lobes and red tips, without painting surrounding bricks."
+    "notes": "Cool stone wall on both faces; bounded charred timber grip and worn iron basket. Yellow flame roots, orange lobes and red tips, without painting surrounding bricks.",
+    "proceduralFire": true,
+    "defaultLights": [
+      {
+        "key": "flame",
+        "name": "Факел",
+        "kind": "torch",
+        "color": "#ffc36a",
+        "position": [
+          0.72,
+          0.5,
+          1.1
+        ],
+        "intensity": 8,
+        "radius": 4.5,
+        "enabled": true,
+        "flicker": true,
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.2,
+            0.24
+          ],
+          "strength": 0.7,
+          "offset": [
+            0.001429,
+            0,
+            -0.090383
+          ]
+        }
+      }
+    ]
   },
   "UD-037": {
     "sourceName": "Torch Lit",
@@ -14,7 +45,38 @@
     "variant": "niche",
     "lit": true,
     "bareReference": "UD-038",
-    "notes": "Grey arch and paving; measured vertical grip, iron cup and stakes. Flame is isolated against the corresponding extinguished model, including the low roots inside the cup."
+    "notes": "Grey arch and paving; measured vertical grip, iron cup and stakes. Flame is isolated against the corresponding extinguished model, including the low roots inside the cup.",
+    "proceduralFire": true,
+    "defaultLights": [
+      {
+        "key": "flame",
+        "name": "Факел",
+        "kind": "torch",
+        "color": "#ffc36a",
+        "position": [
+          0.5,
+          0.7,
+          1.12
+        ],
+        "intensity": 8,
+        "radius": 4.5,
+        "enabled": true,
+        "flicker": true,
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.19,
+            0.24
+          ],
+          "strength": 0.7,
+          "offset": [
+            0.334286,
+            -0.2,
+            -0.347591
+          ]
+        }
+      }
+    ]
   },
   "UD-038": {
     "sourceName": "Torch Extinguished",

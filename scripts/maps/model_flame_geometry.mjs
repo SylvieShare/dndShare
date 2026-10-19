@@ -66,6 +66,14 @@ export function stripSculptedFlames(document, settings, nativeZShiftMM = 0) {
   if (!parts.length) throw Error("Measured flame domains required");
   if ((settings.surfaceParts || []).some((p) => p.kind === "liquid"))
     throw Error("Other emissive surfaces need a separate review");
+  return stripMeasuredFlames(
+    document,
+    (p) => parts.some((part) => structureDomain(p, part)),
+    [0, 0, nativeZShiftMM],
+  );
+}
+
+export function stripMeasuredFlames(document, matches, shiftMM = [0, 0, 0]) {
   const removedBounds = {
       min: [Infinity, Infinity, Infinity],
       max: [-Infinity, -Infinity, -Infinity],
@@ -88,7 +96,11 @@ export function stripSculptedFlames(document, settings, nativeZShiftMM = 0) {
               matrix[a + 8] * p[2] +
               matrix[a + 12],
           );
-        return [world[0] * 35, -world[2] * 35, world[1] * 35 + nativeZShiftMM];
+        return [
+          world[0] * 35 + shiftMM[0],
+          -world[2] * 35 + shiftMM[1],
+          world[1] * 35 + shiftMM[2],
+        ];
       });
       const keep = [];
       let removed = 0;
@@ -97,13 +109,7 @@ export function stripSculptedFlames(document, settings, nativeZShiftMM = 0) {
           center = [0, 1, 2].map((a) =>
             ids.reduce((s, id) => s + native[id][a] / 3, 0),
           );
-        if (
-          parts.some(
-            (part) =>
-              structureDomain(center, part) ||
-              ids.some((id) => structureDomain(native[id], part)),
-          )
-        ) {
+        if (matches(center) || ids.some((id) => matches(native[id]))) {
           removed++;
           for (const id of ids)
             for (let a = 0; a < 3; a++) {
