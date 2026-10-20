@@ -1,0 +1,267 @@
+{
+  "tileType": "stairs",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [0, 0],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [[0, 0]],
+  "standToleranceMM": 0.15,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "plainMountCollarMM": 0,
+  "name": "Stair Down",
+  "groupCode": "MED-stair-down",
+  "hasDecor": true,
+  "renderTriangles": 95000,
+  "lodTriangles": 35000,
+  "renderBakeSize": 1536,
+  "lodBakeSize": 1536,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1024,
+  "lodColourSize": 768,
+  "lodDataSize": 768,
+  "standRayTopMM": 80,
+  "standPointsMM": [
+    [-13.5, 0],
+    [-6.5, 0]
+  ],
+  "blockersMM": [
+    [
+      [-17.65, -17.65],
+      [17.65, -17.65],
+      [17.65, 17.65],
+      [-17.65, 17.65]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "stairs",
+    "wood",
+    "steps",
+    "handrail",
+    "balusters",
+    "recess"
+  ],
+  "weightBudget": {
+    "renderMiB": [3, 5.5],
+    "lodMiB": [1.2, 3],
+    "shadowKiB": [80, 180],
+    "previewKiB": [12, 40],
+    "basis": "One-cell descending wood stair with a functional well below its native datum, six visible upper posts, recessed treads, diagonal rails and separate hollow UD-016 outer envelope. Independent95000/35000 geometry with1536 bakes and1024/768 packed maps; compare compact while retaining every railing opening, worn tread edge and both upper placement heights and every lower visible tread."
+  },
+  "materials": {
+    "earthRGB": [0.28, 0.17, 0.075],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [0.34, 0.165, 0.055],
+    "woodLightRGB": [0.59, 0.35, 0.145],
+    "stoneDarkRGB": [0.34, 0.165, 0.055],
+    "stoneLightRGB": [0.59, 0.35, 0.145],
+    "woodParts": [
+      {
+        "name": "Z native well walls and boarding",
+        "minMM": [-17.65, -17.65, 7],
+        "maxMM": [17.65, 17.65, 46.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "darkRGB": [0.3, 0.14, 0.045],
+        "lightRGB": [0.52, 0.285, 0.1]
+      },
+      {
+        "name": "Y recessed treads and risers",
+        "minMM": [-17.65, -13.6, 7.5],
+        "maxMM": [11.8, 13.6, 25.2],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.87
+      },
+      {
+        "name": "X platform top",
+        "minMM": [-17.65, -17.65, 25.2],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "X south platform fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [17.65, -16, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "X north platform fascia",
+        "minMM": [-17.65, 16, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "Y rear end fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [-16.8, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "Y front end fascia",
+        "minMM": [12, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "-1 upper handrail",
+        "minMM": [-17.65, -17.65, 26.5],
+        "maxMM": [17.65, -12.0, 46.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.89,
+        "direction": [0.8126013672662699, 0.0, -0.5828198846273082],
+        "projection": {
+          "originMM": [0, 0, 33.66935221354167],
+          "axis": [0.5828198846273082, 0.0, 0.8126013672662699],
+          "rangeMM": [-3.3, 0.5]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "-1 lower diagonal stringer",
+        "minMM": [-17.65, -15.9, 7],
+        "maxMM": [17.65, -12.0, 46.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.89,
+        "direction": [0.8126013672662699, 0.0, -0.5828198846273082],
+        "projection": {
+          "originMM": [0, 0, 33.66935221354167],
+          "axis": [0.5828198846273082, 0.0, 0.8126013672662699],
+          "rangeMM": [-18.1, -12.5]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "1 upper handrail",
+        "minMM": [-17.65, 12.0, 26.5],
+        "maxMM": [17.65, 17.65, 46.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.89,
+        "direction": [0.8129193321830349, 0.0, -0.582376303916195],
+        "projection": {
+          "originMM": [0, 0, 33.65098190307617],
+          "axis": [0.582376303916195, 0.0, 0.8129193321830349],
+          "rangeMM": [-3.3, 0.5]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "1 lower diagonal stringer",
+        "minMM": [-17.65, 12.0, 7],
+        "maxMM": [17.65, 15.9, 46.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.89,
+        "direction": [0.8129193321830349, 0.0, -0.582376303916195],
+        "projection": {
+          "originMM": [0, 0, 33.65098190307617],
+          "axis": [0.582376303916195, 0.0, 0.8129193321830349],
+          "rangeMM": [-18.1, -12.5]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical rail post 1",
+        "minMM": [-2.602800045013428, -17.65, 26.5],
+        "maxMM": [1.4505999422073363, -12, 46.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical rail post 2",
+        "minMM": [-9.75689998626709, -17.65, 26.5],
+        "maxMM": [-5.7811001205444335, -12, 46.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical rail post 3",
+        "minMM": [-17.618999633789063, -17.65, 26.5],
+        "maxMM": [-14.159599151611328, -12, 46.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical rail post 4",
+        "minMM": [-2.609199914932251, 12.0, 26.5],
+        "maxMM": [1.4497000312805175, 17.65, 46.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical rail post 5",
+        "minMM": [-9.753700408935547, 12.0, 26.5],
+        "maxMM": [-5.778099861145019, 17.65, 46.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical rail post 6",
+        "minMM": [-17.61709991455078, 12.0, 26.5],
+        "maxMM": [-14.157700386047363, 17.65, 46.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      }
+    ],
+    "surfaceParts": [],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "Individually inspected PDFpage12/native full-back-top and measured80own rails/above-floorposts/centreheightprofile/rim. Source420024tri/21001284bytes/SHA1ac19313536eadeaa600c768fbe5c1799dbec50bf30c402bbb0a1830c1a53080,max46.033901. Functional well has visible native treads14.708/9.681mm BELOW17mm mountplane: nevercrop17oraddsolidpeg. Recess builder derives air from rawSTL,retainsalllowerstairsandhiddenclosedwall,UD016OUTER35top/25.96bottom/depth5.373095; functionalwellbodycanextendbelowouterbottom. Sourcecavity49567facecentres and258902upperfacecentres verified,closedtopology and pinned materialinterface. Body-specificmountProfileud016-recess-mt1-080-v1 needsmeasurednativeframe insertionRises,notanotherpackdepth. Two ABOVE-datum usable steps[-13.5,0]/[-6.5,0]; platformheight25.711586measuredat[13,0]separately. Four visible descending levels,frontX14rayhitsframelipnotafifthtread. Six sourceupper-strippostcomponentsabove26.8,partialfrontendsjoinfloor. OwnS/Nrailslopes-.7172273/-.7164011. Ytreads/risers,Zdarkwellwalls/boarding,Zwarmred-brownposts,measuredupper/lowerbeamgrain;perimeterfasciacolourdoesnotcoverlowersteps. Allwood,noinventedmetal/emission/lights. Validateactualpackednativecavityfirsthits includingbelowdatum,allgeometry/materials/railinggaps/standingheights/bothcandidates. Nativegeometrykeeps17mmcoordinateplaneuntilcustomUD016translation preservingallrawbuffers/UV/images. Finalrender/LOD/shadowandframefitsrequiredBEFOREMCP;transparentpreviewshowsfullstairwell.",
+  "renderColourSize": 1024,
+  "surfaceHeightMM": 25.711586,
+  "recessMount": {
+    "probeHalfMM": 16,
+    "envelopeTriangles": 2000,
+    "hiddenWallMM": 1
+  }
+}

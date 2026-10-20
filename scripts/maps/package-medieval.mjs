@@ -4,6 +4,7 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { currentModel } from './current_model.mjs';
+import { medievalCatalogue } from './medieval_catalogue.mjs';
 import { prepareMedievalShadow } from './medieval_shadow.mjs';
 import { rasterizeSurface, seedSurfaceGutters, extendUvGutters } from './uv_surface.mjs';
 import { uvSurfaceTracker } from './uv_surface_overlap.mjs';
@@ -224,7 +225,7 @@ if (!process.argv.includes('--publish-manifest')) {
       fileName: kind==='source' ? path.basename(file) : kind+ext };
   }
   const registry = JSON.parse(await fs.readFile(path.join(base, 'registry-snapshot.json'), 'utf8'));
-  report.model = currentModel(report.model, registry, assets);
+  report.model = currentModel(medievalCatalogue(report.model, registry), registry, assets);
   report.runtimeBytes = [...new Map(Object.entries(assets).filter(([kind]) => kind!=='source')
     .map(([, a]) => [a.sha256, a.size])).values()].reduce((a,b) => a+b, 0);
   await fs.writeFile(path.join(review, 'report.json'), JSON.stringify(report, null, 2)+'\n');

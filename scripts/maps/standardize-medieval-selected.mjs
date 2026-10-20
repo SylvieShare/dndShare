@@ -11,6 +11,11 @@ import {
 } from "./standard_mount.mjs";
 import { writeBlenderPreview } from "./review_glb_preview.mjs";
 import { prepareShadow } from "./shadow_model.mjs";
+import {
+  RECESS_MOUNT,
+  fitRecessMount,
+  validateRecessConstruction,
+} from "./recess_mount.mjs";
 const code = process.argv[2];
 assert.match(code ?? "", /^MT1-\d{3}$/);
 const base = path.resolve(
@@ -24,20 +29,25 @@ assert.ok(
   r.optimization?.selection && !r.optimization.selection.startsWith("pending"),
   "Select the visually reviewed candidate first",
 );
-if (r.mountStandard?.profile === STANDARD_MOUNT.name) {
+const recess = Boolean(r.recipe.recessMount);
+const profile = recess ? RECESS_MOUNT : STANDARD_MOUNT.name;
+if (recess) validateRecessConstruction(r.recessConstruction, r.sourceSHA256);
+if (r.mountStandard?.profile === profile) {
   console.log("MEDIEVAL_STANDARD_ALREADY_SELECTED", code);
   process.exit(0);
 }
 const originalModel = structuredClone(r.model),
   stage = {
-    profile: STANDARD_MOUNT.name,
+    profile,
     originalModel,
     inputs: {},
     proofs: {},
   };
 for (const tier of ["render", "lod"]) {
   const before = await fs.readFile(path.join(dir, tier + ".glb")),
-    result = await fitStandardMount(before, originalModel);
+    result = recess
+      ? await fitRecessMount(before, originalModel, r.recessConstruction)
+      : await fitStandardMount(before, originalModel);
   if (result.unchanged) {
     assert.equal(
       originalModel.mountDepth,

@@ -12,6 +12,13 @@ import { createRequire } from "node:module";
 import { initializeStructureReferences } from "./medieval_source_reference.mjs";
 import { addModelWaterMask } from "./model_water_mask.mjs";
 import {
+  RECESS_MOUNT,
+  RECESS_OUTER,
+  validateRecessMount,
+  validateRecessConstruction,
+  validateRecessFrameFit,
+} from "./recess_mount.mjs";
+import {
   stripSculptedFlames,
   triangleFingerprint,
   materialImages,
@@ -26,17 +33,22 @@ export async function reviewedMountAssetHash(report, tier, dir, expectedHash) {
     const glb = readGlb(after);
     assert.ok(
       !glb.json.meshes.some((m) =>
-        m.primitives.some((p) =>
-          /^(Insertion earth|Simple insertion pegs)/.test(
-            glb.json.materials?.[p.material]?.name ?? "",
-          ),
+        m.primitives.some(
+          (p) =>
+            /^(Insertion earth|Simple insertion pegs)/.test(
+              glb.json.materials?.[p.material]?.name ?? "",
+            ) || glb.json.materials?.[p.material]?.name === RECESS_OUTER,
         ),
       ),
       "Zero-depth native model contains a generated peg",
     );
     return expectedHash;
   }
-  await validateStandardMount(after, report.model);
+  if (report.recipe?.recessMount) {
+    validateRecessConstruction(report.recessConstruction, report.sourceSHA256);
+    await validateRecessMount(after, report.model, report.recessConstruction);
+    await validateRecessFrameFit(report, dir);
+  } else await validateStandardMount(after, report.model);
   let mountedBody = after;
   if (report.waterAnimation) {
     mountedBody = await fs.readFile(
@@ -146,7 +158,11 @@ export async function reviewedMountAssetHash(report, tier, dir, expectedHash) {
     );
   }
   let originalModel, input, inputHash;
-  if (report.mountStandard?.profile === STANDARD_MOUNT.name) {
+  if (
+    report.mountStandard?.profile === STANDARD_MOUNT.name ||
+    (report.recipe?.recessMount &&
+      report.mountStandard?.profile === RECESS_MOUNT)
+  ) {
     originalModel = report.mountStandard.originalModel;
     input = path.join(dir, report.mountStandard.inputs[tier].file);
     inputHash = report.mountStandard.inputs[tier].sha256;

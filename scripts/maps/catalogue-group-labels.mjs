@@ -28,6 +28,7 @@ MED-bed|Кровати|Beds
 MED-buffet|Буфеты|Buffets
 MED-fireplaces|Камины|Fireplaces
 MED-fountain|Фонтаны|Fountains
+MED-frames|Каркасы этажей|Level frames
 MED-ground|Грунт|Ground
 MED-ground-wood|Деревянный пол|Wooden ground
 MED-lights|Светильники|Lights

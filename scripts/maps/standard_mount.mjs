@@ -2,19 +2,13 @@ import assert from "node:assert/strict";
 import { createRequire } from "node:module";
 import { readGlb, replaceImages } from "./glb_textures.mjs";
 import { measurePads, pegPrimitive } from "./peg-geometry.mjs";
+import profile from "./standard-mount-profile.json" with { type: "json" };
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json");
 const { Document, NodeIO } = require("@gltf-transform/core");
 const { ALL_EXTENSIONS } = require("@gltf-transform/extensions");
 const { dequantize } = require("@gltf-transform/functions");
 const { MeshoptDecoder } = require("meshoptimizer");
-export const STANDARD_MOUNT = Object.freeze({
-  name: "ud016-standard-v1",
-  referenceDefinitionId: "UD-016",
-  depth: 0.153517,
-  topWidth: 1,
-  bottomWidth: 25.96 / 35,
-  tolerance: 0.02 / 35,
-});
+export const STANDARD_MOUNT = Object.freeze(profile);
 const isPeg = (name) =>
   name === "Insertion earth" || name?.startsWith("Simple insertion pegs");
 async function decode(bytes) {

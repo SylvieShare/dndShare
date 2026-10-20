@@ -2,7 +2,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { isDeepStrictEqual } from 'node:util';
+import { matchesPreparedPublication } from './medieval_publication.mjs';
 const base = path.resolve(import.meta.dirname, '../../models/collections/medieval-town-vol1');
 const code = process.argv[2];
 if (!/^MT1-\d{3}$/.test(code || '')) throw new Error('One source code required');
@@ -32,7 +32,7 @@ const progress = [];
 for (const row of inventory) {
   const r = JSON.parse(await fs.readFile(path.join(base, 'review', row.code, 'report.json'), 'utf8').catch(() => '{}'));
   const current = registry.find(m => m.collection===row.collection && m.sourceCode===row.code);
-  const published = current && r.publication?.assetsVerified && isDeepStrictEqual(r.model, current);
+  const published = current && r.publication?.assetsVerified && matchesPreparedPublication(r.model, current);
   progress.push({ code: row.code, sourceName: row.sourceName, status: published ? 'published' : 'pending', uuid: published ? current.id : null });
 }
 await fs.writeFile(path.join(base, 'progress.json'), JSON.stringify(progress, null, 2)+'\n');

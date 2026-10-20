@@ -16,6 +16,8 @@ from tile_mesh import activate, crop, shade
 import tile_bake
 from medieval_material import paint, material
 from medieval_placement import placement_samples, model_blockers
+from medieval_recess import assert_no_recess, prepare_recess, pin_recess, verify_recess_collapse
+from recess_frame_profiles import apply_recess_profiles
 
 
 def support_points(obj, recipe):
@@ -77,13 +79,19 @@ def prepare(code, tier, force):
     bpy.ops.wm.stl_import(filepath=str(source_path))
     source = bpy.context.object; source.name = code+' sculpt'
     datum = recipe['mountDepthMM']
-    crop(source, datum)
-    for v in source.data.vertices:
-        v.co.z += datum
-    bm = bmesh.new(); bm.from_mesh(source.data)
-    if bm.calc_volume(signed=True)<0:
-        bmesh.ops.reverse_faces(bm, faces=list(bm.faces)); bm.to_mesh(source.data)
-    bm.free(); source.data.update()
+    recess_review, recess_aux, recess_protected = None, [], set()
+    if recipe.get('recessMount'):
+        source, recess_aux, recess_protected, recess_review = prepare_recess(source, recipe, row['sourceSHA256'])
+    else:
+        assert_no_recess(source, recipe)
+        crop(source, datum)
+        for v in source.data.vertices:
+            v.co.z += datum
+    if not recess_review:
+        bm = bmesh.new(); bm.from_mesh(source.data)
+        if bm.calc_volume(signed=True)<0:
+            bmesh.ops.reverse_faces(bm, faces=list(bm.faces)); bm.to_mesh(source.data)
+        bm.free(); source.data.update()
     shade(source); paint(source, recipe); source.data.materials.append(material(recipe))
     original_points = support_points(source, recipe)
     target = bpy.data.objects.new(code+' '+tier, source.data.copy())
@@ -91,7 +99,13 @@ def prepare(code, tier, force):
     budget = recipe[tier+'Triangles']
     modifier = target.modifiers.new('Measured '+tier+' budget', 'DECIMATE')
     modifier.ratio = min(1, budget/len(target.data.polygons)); modifier.use_collapse_triangulate = True
+    if recess_review:
+        group, before_interface = pin_recess(target, recess_protected)
+        modifier.vertex_group = group
+        modifier.vertex_group_factor = 1
     bpy.ops.object.modifier_apply(modifier=modifier.name); shade(target)
+    if recess_review:
+        recess_review['simplification'] = verify_recess_collapse(target, before_interface)
     collar = plain_mount_collar(target, recipe)
     detail_uv = None
     if recipe.get('uvDetailRegions'):
@@ -116,12 +130,14 @@ def prepare(code, tier, force):
         raise ValueError('Simplification changed the measured stand surface')
     maximum = max(v.co.z for v in source.data.vertices)/35
     source.hide_render = source.hide_viewport = True
-    objects = [target]
+    objects = [target]+recess_aux
+    for aux in recess_aux:
+        aux.hide_render = aux.hide_viewport = False
     if collar is not None:
         collar.hide_render = collar.hide_viewport = False
         objects.append(collar)
     center = recipe['mountCenterMM']
-    if datum:
+    if datum and not recess_review:
         bottom, top = recipe['pegBottomHalfMM'], recipe['pegTopHalfMM']
         faces = [(0, 2, 1), (0, 3, 2), (4, 5, 6), (4, 6, 7)]
         for i in range(4):
@@ -154,6 +170,10 @@ def prepare(code, tier, force):
              'placementOffset': [0, 0], 'mountDepth': round(datum/35, 6),
              'surfaceHeight': round(recipe['surfaceHeightMM']/35, 6) if 'surfaceHeightMM' in recipe else max([p['elevation'] for p in points], default=datum/35), 'maxHeight': round(maximum, 6),
              'blockers': model_blockers(recipe), 'tags': recipe['tags'], 'supportSlots': recipe['supportSlots']}
+    if recess_review:
+        model['mountProfile'] = 'ud016-recess-'+code.lower()+'-v1'
+    if recipe['tileType']=='frame':
+        model['supportSlots'] = apply_recess_profiles(model['supportSlots'], row)
     report = {'model': model, 'sourcePath': row['sourcePath'], 'sourceSHA256': row['sourceSHA256'],
               'sourceTriangles': row['triangles'], 'triangles': sum(len(o.data.polygons) for o in objects),
               'mountCollarTriangles': len(collar.data.polygons) if collar is not None else 0,
@@ -161,6 +181,8 @@ def prepare(code, tier, force):
               'standDeviationsMM': deviations, 'seconds': round(time.monotonic()-start, 2)}
     if detail_uv is not None:
         report['detailUVReview'] = detail_uv
+    if recess_review:
+        report['recessConstruction'] = recess_review
     (out/'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n')
     print('MEDIEVAL_PREPARED', code, tier, report['seconds'], quality, flush=True)
 
