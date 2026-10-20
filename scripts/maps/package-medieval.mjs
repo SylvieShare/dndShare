@@ -16,6 +16,7 @@ import { reviewedMountAssetHash } from './reviewed_mount_asset.mjs';
 import { stripSculptedFlames } from './model_flame_geometry.mjs';
 import { addLightEffectPreview } from './light_effect_preview.mjs';
 import { addModelWaterMask } from './model_water_mask.mjs';
+import { validateReceiverReport } from './receiver_frame_review.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const base = path.join(root, 'models/collections/medieval-town-vol1');
@@ -226,6 +227,7 @@ if (!process.argv.includes('--publish-manifest')) {
   }
   const registry = JSON.parse(await fs.readFile(path.join(base, 'registry-snapshot.json'), 'utf8'));
   report.model = currentModel(medievalCatalogue(report.model, registry), registry, assets);
+  if (report.model.tileType==='frame') await validateReceiverReport(report,review,registry);
   report.runtimeBytes = [...new Map(Object.entries(assets).filter(([kind]) => kind!=='source')
     .map(([, a]) => [a.sha256, a.size])).values()].reduce((a,b) => a+b, 0);
   await fs.writeFile(path.join(review, 'report.json'), JSON.stringify(report, null, 2)+'\n');

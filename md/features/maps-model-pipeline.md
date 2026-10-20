@@ -29,8 +29,14 @@
 с GLB устанавливаются во временную папку:
 
 ```bash
-npm install --prefix /private/tmp/dndshare-model-tools @gltf-transform/core @gltf-transform/extensions @gltf-transform/functions meshoptimizer sharp
+bash scripts/maps/setup-model-tools.sh
 ```
+
+Скрипт фиксирует версии библиотек и хранит runtime в игнорируемом
+`models/.map-model-tools-runtime`. Прежний путь `/private/tmp/dndshare-model-tools`
+остаётся ссылкой на этот каталог. Это сохраняет зависимости при очистке
+временных файлов; повторный запуск восстанавливает ссылку и сохраняет прежний
+временный каталог отдельно.
 
 Для KTX2 нужен официальный CLI KTX-Software; KTX_TOOLS указывает каталог
 с toktx и ktx. Версия энкодера фиксируется в рецепте.

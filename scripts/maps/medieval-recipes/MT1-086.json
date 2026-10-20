@@ -1,0 +1,1371 @@
+{
+  "tileType": "frame",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [0, 0],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "edge",
+  "wallMask": 85,
+  "supportSlots": [
+    {
+      "x": 0,
+      "y": 0,
+      "width": 1,
+      "height": 1,
+      "elevation": 1.1656885419573102
+    }
+  ],
+  "plainMountCollarMM": 0.5,
+  "name": "Level",
+  "groupCode": "MED-level",
+  "hasDecor": false,
+  "renderTriangles": 100000,
+  "lodTriangles": 40000,
+  "renderBakeSize": 1536,
+  "lodBakeSize": 1536,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1024,
+  "lodColourSize": 768,
+  "lodDataSize": 768,
+  "standRayTopMM": 100,
+  "standPointsMM": [[0.75, 0]],
+  "blockersMM": [
+    [
+      [-17.65, -17.65],
+      [-13.4, -17.65],
+      [-13.4, 17.65],
+      [-17.65, 17.65]
+    ],
+    [
+      [13.4, -17.65],
+      [17.65, -17.65],
+      [17.65, 17.65],
+      [13.4, 17.65]
+    ],
+    [
+      [-13.4, -17.65],
+      [13.4, -17.65],
+      [13.4, -13.4],
+      [-13.4, -13.4]
+    ],
+    [
+      [-13.4, 13.4],
+      [13.4, 13.4],
+      [13.4, 17.65],
+      [-13.4, 17.65]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": ["town", "frame", "level", "wood", "plaster", "socket"],
+  "weightBudget": {
+    "renderMiB": [3.5, 6],
+    "lodMiB": [1.6, 3.4],
+    "shadowKiB": [120, 240],
+    "previewKiB": [18, 50],
+    "basis": "Single-cell receiving level with lower ordinary peg and native upper socket:four plaster walls,eight outer timber uprights,wooden frame/fascia and Y floor. Preserve27mm straight socket,upper tapered entrance and actual seating ofUD016 plus published recessed stairs.100000/40000 independent triangles,1536 bakes,1024/768 maps;compare compact only after socket and material QA."
+  },
+  "materials": {
+    "earthRGB": [0.28, 0.17, 0.075],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [0.34, 0.165, 0.055],
+    "woodLightRGB": [0.59, 0.35, 0.145],
+    "stoneDarkRGB": [0.34, 0.165, 0.055],
+    "stoneLightRGB": [0.59, 0.35, 0.145],
+    "woodParts": [
+      {
+        "name": "X lower frame and north south fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "Y native inner floor",
+        "minMM": [-13.45, -13.45, 23.5],
+        "maxMM": [13.45, 13.45, 26.3],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west Y lower border and fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [-14.3, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y lower border and fascia",
+        "minMM": [14.3, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "outer upright [0, -1, 0]",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-16.0, -10.6, 39.6],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "outer upright [0, -1, 1]",
+        "minMM": [-17.65, -1.7, 26.1],
+        "maxMM": [-16.0, 2.6, 39.6],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "outer upright [0, -1, 2]",
+        "minMM": [-17.65, 11.5, 26.1],
+        "maxMM": [-16.0, 17.65, 39.6],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "thin outer top rim [0, -1]",
+        "minMM": [-17.65, -17.65, 39.0],
+        "maxMM": [-17.0, 17.65, 41],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "outer upright [0, 1, 0]",
+        "minMM": [16.0, -17.65, 26.1],
+        "maxMM": [17.65, -11.5, 39.6],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "outer upright [0, 1, 1]",
+        "minMM": [16.0, -2.6, 26.1],
+        "maxMM": [17.65, 1.7, 39.6],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "outer upright [0, 1, 2]",
+        "minMM": [16.0, 10.6, 26.1],
+        "maxMM": [17.65, 17.65, 39.6],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "thin outer top rim [0, 1]",
+        "minMM": [17.0, -17.65, 39.0],
+        "maxMM": [17.65, 17.65, 41],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "outer upright [1, -1, 0]",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-10.6, -16.0, 39.6],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "outer upright [1, -1, 1]",
+        "minMM": [-3.3, -17.65, 26.1],
+        "maxMM": [0.6, -16.0, 39.6],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "outer upright [1, -1, 2]",
+        "minMM": [9.5, -17.65, 26.1],
+        "maxMM": [17.65, -16.0, 39.6],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "thin outer top rim [1, -1]",
+        "minMM": [-17.65, -17.65, 39.0],
+        "maxMM": [17.65, -17.0, 41],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "outer upright [1, 1, 0]",
+        "minMM": [-17.65, 16.0, 26.1],
+        "maxMM": [-9.5, 17.65, 39.6],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "outer upright [1, 1, 1]",
+        "minMM": [-0.6, 16.0, 26.1],
+        "maxMM": [3.3, 17.65, 39.6],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "outer upright [1, 1, 2]",
+        "minMM": [10.6, 16.0, 26.1],
+        "maxMM": [17.65, 17.65, 39.6],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "thin outer top rim [1, 1]",
+        "minMM": [-17.65, 17.0, 39.0],
+        "maxMM": [17.65, 17.65, 41],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "main wall and bevel [0, -1]",
+        "minMM": [-17.65, -17.65, 26.65],
+        "maxMM": [-13.4, 17.65, 41],
+        "kind": "plaster",
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "outer upright [0, -1, 0]",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-16.0, -10.6, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, -1, 1]",
+            "minMM": [-17.65, -1.7, 26.1],
+            "maxMM": [-16.0, 2.6, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, -1, 2]",
+            "minMM": [-17.65, 11.5, 26.1],
+            "maxMM": [-16.0, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [0, -1]",
+            "minMM": [-17.65, -17.65, 39.0],
+            "maxMM": [-17.0, 17.65, 41],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 0]",
+            "minMM": [16.0, -17.65, 26.1],
+            "maxMM": [17.65, -11.5, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 1]",
+            "minMM": [16.0, -2.6, 26.1],
+            "maxMM": [17.65, 1.7, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 2]",
+            "minMM": [16.0, 10.6, 26.1],
+            "maxMM": [17.65, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [0, 1]",
+            "minMM": [17.0, -17.65, 39.0],
+            "maxMM": [17.65, 17.65, 41],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 0]",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.6, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 1]",
+            "minMM": [-3.3, -17.65, 26.1],
+            "maxMM": [0.6, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 2]",
+            "minMM": [9.5, -17.65, 26.1],
+            "maxMM": [17.65, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [1, -1]",
+            "minMM": [-17.65, -17.65, 39.0],
+            "maxMM": [17.65, -17.0, 41],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 0]",
+            "minMM": [-17.65, 16.0, 26.1],
+            "maxMM": [-9.5, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 1]",
+            "minMM": [-0.6, 16.0, 26.1],
+            "maxMM": [3.3, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 2]",
+            "minMM": [10.6, 16.0, 26.1],
+            "maxMM": [17.65, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [1, 1]",
+            "minMM": [-17.65, 17.0, 39.0],
+            "maxMM": [17.65, 17.65, 41],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "lower inner socket wall [0, -1]",
+        "minMM": [-14.2, -17.65, 25.02],
+        "maxMM": [-13.45, 17.65, 26.65],
+        "kind": "plaster",
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "outer upright [0, -1, 0]",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-16.0, -10.6, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, -1, 1]",
+            "minMM": [-17.65, -1.7, 26.1],
+            "maxMM": [-16.0, 2.6, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, -1, 2]",
+            "minMM": [-17.65, 11.5, 26.1],
+            "maxMM": [-16.0, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [0, -1]",
+            "minMM": [-17.65, -17.65, 39.0],
+            "maxMM": [-17.0, 17.65, 41],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 0]",
+            "minMM": [16.0, -17.65, 26.1],
+            "maxMM": [17.65, -11.5, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 1]",
+            "minMM": [16.0, -2.6, 26.1],
+            "maxMM": [17.65, 1.7, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 2]",
+            "minMM": [16.0, 10.6, 26.1],
+            "maxMM": [17.65, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [0, 1]",
+            "minMM": [17.0, -17.65, 39.0],
+            "maxMM": [17.65, 17.65, 41],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 0]",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.6, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 1]",
+            "minMM": [-3.3, -17.65, 26.1],
+            "maxMM": [0.6, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 2]",
+            "minMM": [9.5, -17.65, 26.1],
+            "maxMM": [17.65, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [1, -1]",
+            "minMM": [-17.65, -17.65, 39.0],
+            "maxMM": [17.65, -17.0, 41],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 0]",
+            "minMM": [-17.65, 16.0, 26.1],
+            "maxMM": [-9.5, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 1]",
+            "minMM": [-0.6, 16.0, 26.1],
+            "maxMM": [3.3, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 2]",
+            "minMM": [10.6, 16.0, 26.1],
+            "maxMM": [17.65, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [1, 1]",
+            "minMM": [-17.65, 17.0, 39.0],
+            "maxMM": [17.65, 17.65, 41],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "main wall and bevel [0, 1]",
+        "minMM": [13.4, -17.65, 26.65],
+        "maxMM": [17.65, 17.65, 41],
+        "kind": "plaster",
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "outer upright [0, -1, 0]",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-16.0, -10.6, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, -1, 1]",
+            "minMM": [-17.65, -1.7, 26.1],
+            "maxMM": [-16.0, 2.6, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, -1, 2]",
+            "minMM": [-17.65, 11.5, 26.1],
+            "maxMM": [-16.0, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [0, -1]",
+            "minMM": [-17.65, -17.65, 39.0],
+            "maxMM": [-17.0, 17.65, 41],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 0]",
+            "minMM": [16.0, -17.65, 26.1],
+            "maxMM": [17.65, -11.5, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 1]",
+            "minMM": [16.0, -2.6, 26.1],
+            "maxMM": [17.65, 1.7, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 2]",
+            "minMM": [16.0, 10.6, 26.1],
+            "maxMM": [17.65, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [0, 1]",
+            "minMM": [17.0, -17.65, 39.0],
+            "maxMM": [17.65, 17.65, 41],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 0]",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.6, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 1]",
+            "minMM": [-3.3, -17.65, 26.1],
+            "maxMM": [0.6, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 2]",
+            "minMM": [9.5, -17.65, 26.1],
+            "maxMM": [17.65, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [1, -1]",
+            "minMM": [-17.65, -17.65, 39.0],
+            "maxMM": [17.65, -17.0, 41],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 0]",
+            "minMM": [-17.65, 16.0, 26.1],
+            "maxMM": [-9.5, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 1]",
+            "minMM": [-0.6, 16.0, 26.1],
+            "maxMM": [3.3, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 2]",
+            "minMM": [10.6, 16.0, 26.1],
+            "maxMM": [17.65, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [1, 1]",
+            "minMM": [-17.65, 17.0, 39.0],
+            "maxMM": [17.65, 17.65, 41],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "lower inner socket wall [0, 1]",
+        "minMM": [13.45, -17.65, 25.02],
+        "maxMM": [14.2, 17.65, 26.65],
+        "kind": "plaster",
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "outer upright [0, -1, 0]",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-16.0, -10.6, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, -1, 1]",
+            "minMM": [-17.65, -1.7, 26.1],
+            "maxMM": [-16.0, 2.6, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, -1, 2]",
+            "minMM": [-17.65, 11.5, 26.1],
+            "maxMM": [-16.0, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [0, -1]",
+            "minMM": [-17.65, -17.65, 39.0],
+            "maxMM": [-17.0, 17.65, 41],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 0]",
+            "minMM": [16.0, -17.65, 26.1],
+            "maxMM": [17.65, -11.5, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 1]",
+            "minMM": [16.0, -2.6, 26.1],
+            "maxMM": [17.65, 1.7, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 2]",
+            "minMM": [16.0, 10.6, 26.1],
+            "maxMM": [17.65, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [0, 1]",
+            "minMM": [17.0, -17.65, 39.0],
+            "maxMM": [17.65, 17.65, 41],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 0]",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.6, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 1]",
+            "minMM": [-3.3, -17.65, 26.1],
+            "maxMM": [0.6, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 2]",
+            "minMM": [9.5, -17.65, 26.1],
+            "maxMM": [17.65, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [1, -1]",
+            "minMM": [-17.65, -17.65, 39.0],
+            "maxMM": [17.65, -17.0, 41],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 0]",
+            "minMM": [-17.65, 16.0, 26.1],
+            "maxMM": [-9.5, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 1]",
+            "minMM": [-0.6, 16.0, 26.1],
+            "maxMM": [3.3, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 2]",
+            "minMM": [10.6, 16.0, 26.1],
+            "maxMM": [17.65, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [1, 1]",
+            "minMM": [-17.65, 17.0, 39.0],
+            "maxMM": [17.65, 17.65, 41],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "main wall and bevel [1, -1]",
+        "minMM": [-17.65, -17.65, 26.65],
+        "maxMM": [17.65, -13.4, 41],
+        "kind": "plaster",
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "outer upright [0, -1, 0]",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-16.0, -10.6, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, -1, 1]",
+            "minMM": [-17.65, -1.7, 26.1],
+            "maxMM": [-16.0, 2.6, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, -1, 2]",
+            "minMM": [-17.65, 11.5, 26.1],
+            "maxMM": [-16.0, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [0, -1]",
+            "minMM": [-17.65, -17.65, 39.0],
+            "maxMM": [-17.0, 17.65, 41],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 0]",
+            "minMM": [16.0, -17.65, 26.1],
+            "maxMM": [17.65, -11.5, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 1]",
+            "minMM": [16.0, -2.6, 26.1],
+            "maxMM": [17.65, 1.7, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 2]",
+            "minMM": [16.0, 10.6, 26.1],
+            "maxMM": [17.65, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [0, 1]",
+            "minMM": [17.0, -17.65, 39.0],
+            "maxMM": [17.65, 17.65, 41],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 0]",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.6, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 1]",
+            "minMM": [-3.3, -17.65, 26.1],
+            "maxMM": [0.6, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 2]",
+            "minMM": [9.5, -17.65, 26.1],
+            "maxMM": [17.65, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [1, -1]",
+            "minMM": [-17.65, -17.65, 39.0],
+            "maxMM": [17.65, -17.0, 41],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 0]",
+            "minMM": [-17.65, 16.0, 26.1],
+            "maxMM": [-9.5, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 1]",
+            "minMM": [-0.6, 16.0, 26.1],
+            "maxMM": [3.3, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 2]",
+            "minMM": [10.6, 16.0, 26.1],
+            "maxMM": [17.65, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [1, 1]",
+            "minMM": [-17.65, 17.0, 39.0],
+            "maxMM": [17.65, 17.65, 41],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "lower inner socket wall [1, -1]",
+        "minMM": [-17.65, -14.2, 25.02],
+        "maxMM": [17.65, -13.45, 26.65],
+        "kind": "plaster",
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "outer upright [0, -1, 0]",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-16.0, -10.6, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, -1, 1]",
+            "minMM": [-17.65, -1.7, 26.1],
+            "maxMM": [-16.0, 2.6, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, -1, 2]",
+            "minMM": [-17.65, 11.5, 26.1],
+            "maxMM": [-16.0, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [0, -1]",
+            "minMM": [-17.65, -17.65, 39.0],
+            "maxMM": [-17.0, 17.65, 41],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 0]",
+            "minMM": [16.0, -17.65, 26.1],
+            "maxMM": [17.65, -11.5, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 1]",
+            "minMM": [16.0, -2.6, 26.1],
+            "maxMM": [17.65, 1.7, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 2]",
+            "minMM": [16.0, 10.6, 26.1],
+            "maxMM": [17.65, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [0, 1]",
+            "minMM": [17.0, -17.65, 39.0],
+            "maxMM": [17.65, 17.65, 41],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 0]",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.6, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 1]",
+            "minMM": [-3.3, -17.65, 26.1],
+            "maxMM": [0.6, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 2]",
+            "minMM": [9.5, -17.65, 26.1],
+            "maxMM": [17.65, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [1, -1]",
+            "minMM": [-17.65, -17.65, 39.0],
+            "maxMM": [17.65, -17.0, 41],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 0]",
+            "minMM": [-17.65, 16.0, 26.1],
+            "maxMM": [-9.5, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 1]",
+            "minMM": [-0.6, 16.0, 26.1],
+            "maxMM": [3.3, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 2]",
+            "minMM": [10.6, 16.0, 26.1],
+            "maxMM": [17.65, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [1, 1]",
+            "minMM": [-17.65, 17.0, 39.0],
+            "maxMM": [17.65, 17.65, 41],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "main wall and bevel [1, 1]",
+        "minMM": [-17.65, 13.4, 26.65],
+        "maxMM": [17.65, 17.65, 41],
+        "kind": "plaster",
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "outer upright [0, -1, 0]",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-16.0, -10.6, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, -1, 1]",
+            "minMM": [-17.65, -1.7, 26.1],
+            "maxMM": [-16.0, 2.6, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, -1, 2]",
+            "minMM": [-17.65, 11.5, 26.1],
+            "maxMM": [-16.0, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [0, -1]",
+            "minMM": [-17.65, -17.65, 39.0],
+            "maxMM": [-17.0, 17.65, 41],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 0]",
+            "minMM": [16.0, -17.65, 26.1],
+            "maxMM": [17.65, -11.5, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 1]",
+            "minMM": [16.0, -2.6, 26.1],
+            "maxMM": [17.65, 1.7, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 2]",
+            "minMM": [16.0, 10.6, 26.1],
+            "maxMM": [17.65, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [0, 1]",
+            "minMM": [17.0, -17.65, 39.0],
+            "maxMM": [17.65, 17.65, 41],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 0]",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.6, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 1]",
+            "minMM": [-3.3, -17.65, 26.1],
+            "maxMM": [0.6, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 2]",
+            "minMM": [9.5, -17.65, 26.1],
+            "maxMM": [17.65, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [1, -1]",
+            "minMM": [-17.65, -17.65, 39.0],
+            "maxMM": [17.65, -17.0, 41],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 0]",
+            "minMM": [-17.65, 16.0, 26.1],
+            "maxMM": [-9.5, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 1]",
+            "minMM": [-0.6, 16.0, 26.1],
+            "maxMM": [3.3, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 2]",
+            "minMM": [10.6, 16.0, 26.1],
+            "maxMM": [17.65, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [1, 1]",
+            "minMM": [-17.65, 17.0, 39.0],
+            "maxMM": [17.65, 17.65, 41],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "lower inner socket wall [1, 1]",
+        "minMM": [-17.65, 13.45, 25.02],
+        "maxMM": [17.65, 14.2, 26.65],
+        "kind": "plaster",
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "outer upright [0, -1, 0]",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-16.0, -10.6, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, -1, 1]",
+            "minMM": [-17.65, -1.7, 26.1],
+            "maxMM": [-16.0, 2.6, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, -1, 2]",
+            "minMM": [-17.65, 11.5, 26.1],
+            "maxMM": [-16.0, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [0, -1]",
+            "minMM": [-17.65, -17.65, 39.0],
+            "maxMM": [-17.0, 17.65, 41],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 0]",
+            "minMM": [16.0, -17.65, 26.1],
+            "maxMM": [17.65, -11.5, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 1]",
+            "minMM": [16.0, -2.6, 26.1],
+            "maxMM": [17.65, 1.7, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [0, 1, 2]",
+            "minMM": [16.0, 10.6, 26.1],
+            "maxMM": [17.65, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [0, 1]",
+            "minMM": [17.0, -17.65, 39.0],
+            "maxMM": [17.65, 17.65, 41],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 0]",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.6, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 1]",
+            "minMM": [-3.3, -17.65, 26.1],
+            "maxMM": [0.6, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, -1, 2]",
+            "minMM": [9.5, -17.65, 26.1],
+            "maxMM": [17.65, -16.0, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [1, -1]",
+            "minMM": [-17.65, -17.65, 39.0],
+            "maxMM": [17.65, -17.0, 41],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 0]",
+            "minMM": [-17.65, 16.0, 26.1],
+            "maxMM": [-9.5, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 1]",
+            "minMM": [-0.6, 16.0, 26.1],
+            "maxMM": [3.3, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "outer upright [1, 1, 2]",
+            "minMM": [10.6, 16.0, 26.1],
+            "maxMM": [17.65, 17.65, 39.6],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "thin outer top rim [1, 1]",
+            "minMM": [-17.65, 17.0, 39.0],
+            "maxMM": [17.65, 17.65, 41],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "PDFpage12 and actual native full/inside/back/top plus horizontal cavity sections inspected. Source419940tri/20997084bytes/SHAe7a6670a12b37c105e93ea24c01db8ab02cc2a29d6337990b33e6894a192ed25,max40.799099mm. This is a receiving LEVEL,not a solid crate:retain27mm square vertical socket toZ36.8 and upper bevel to40.8mm. Lower ordinary17mm peg is separately standardized toUD016. Source exact triangle-projection fits at all four90degree rotations requireUD016 .835224mm rise,StairDown80 up to.986891mm,LadderDown82 .835305mm over highest rim;separate per-receiver receipt is mandatory since bonus-frame tables do not include86. Recheck actual render/LOD/shadow and profile-specific insertionRises before publishing. Inner floorY confirmed by6972normals nx2.270963/ny2.009928. Nativecentre groove24.705063 is lower;stand at[.75,0]flatZ25.074203/normalZ1,with room inside27mm walls. Frame and fasciaX/Y,outer uprightsZ with individually measured shifted middle bands,thin outer upper rims along sides,ochre plaster on flat inner socket/bevel and eight exterior panels. No invented metal or lights. Four wall blockers/edge85,one upper support slot atnative40.799099/35;actor point and upper insertion slot are distinct. Native painting/socketQA before lowerUD016 normalization;supportslot elevation shifts with body while rises remain physicalclearances. Check all wood/plaster boundaries,colour/ORM,socket surfaces and both texture candidates.",
+  "surfaceHeightMM": 25.074203491210938,
+  "renderColourSize": 1024,
+  "receiverFit": {
+    "receipt": "receiver-frame-fits/MT1-086.json"
+  }
+}

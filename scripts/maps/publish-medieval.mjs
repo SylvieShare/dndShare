@@ -8,6 +8,7 @@ import { promisify } from "node:util";
 import { mapTool } from "./mcp_maps_client.mjs";
 import { applyBehaviour } from "./apply-medieval-behaviour.mjs";
 import { reviewedMountAssetHash } from "./reviewed_mount_asset.mjs";
+import { validateReceiverReport } from "./receiver_frame_review.mjs";
 const run = promisify(execFile);
 const code = process.argv[2];
 if (!/^MT1-\d{3}$/.test(code || ""))
@@ -28,6 +29,8 @@ assert.deepEqual(
   "Publication manifest differs from reviewed resources",
 );
 const nativeQAHashes = {};
+if (expected.tileType === "frame")
+  await validateReceiverReport(report, path.join(base, "review", code), await mapTool("map_tile_models_list"));
 for (const tier of ["render", "lod"])
   nativeQAHashes[tier] = await reviewedMountAssetHash(
     report,
