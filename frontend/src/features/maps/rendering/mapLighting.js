@@ -20,13 +20,14 @@ export function createMapLighting(
   onSettled,
   sharedSources,
   camera,
+  { shadowSize = 512, sunShadowSize = 1024 } = {},
 ) {
   const ambient = new HemisphereLight(0xcbd5ee, 0x695641, 0.6),
     sun = new DirectionalLight(0xfff2df, 2.8),
     fill = new DirectionalLight(0xbdcfff, 0.18);
   sun.castShadow = true;
   sun.shadow.autoUpdate = false;
-  sun.shadow.mapSize.set(1024, 1024);
+  sun.shadow.mapSize.set(sunShadowSize, sunShadowSize);
   sun.shadow.normalBias = 0.025;
   sun.shadow.bias = -0.0002;
   fill.position.set(20, 12, 25);
@@ -42,7 +43,7 @@ export function createMapLighting(
     if (lastUpdate) update(...lastUpdate);
     onSettled?.();
   });
-  const pool = createLightPool(scene, gpu);
+  const pool = createLightPool(scene, gpu, shadowSize);
   const frustum = new Frustum(),
     projection = new Matrix4(),
     influence = new Sphere();

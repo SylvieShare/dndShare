@@ -37,11 +37,87 @@ it("deduplicates uploads and renders the current server catalogue", async () => 
   ]);
   expect(results).toEqual(["/stored", "/stored"]);
   expect(state.snapshot).toHaveBeenCalledOnce();
-  expect(state.snapshot).toHaveBeenCalledWith({ tiles: [] }, undefined, {
-    catalogue: [{ id: "current" }],
-    key: "new",
-  });
+  expect(state.snapshot).toHaveBeenCalledWith(
+    { tiles: [] },
+    expect.any(AbortSignal),
+    {
+      catalogue: [{ id: "current" }],
+      key: "new",
+    },
+  );
   expect(state.upload).toHaveBeenCalledOnce();
+});
+it("keeps only the newest version of a map and never uploads an obsolete capture", async () => {
+  let finish;
+  state.context.mockResolvedValueOnce({
+    document: {},
+    models: [],
+    signature: "old",
+  });
+  state.snapshot.mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  const old = ensureStoredMapPreview({ id: "latest", previewSignature: "old" });
+  const cancelled = expect(old).rejects.toMatchObject({ name: "AbortError" });
+  await vi.waitFor(() => expect(finish).toBeTypeOf("function"));
+  const next = ensureStoredMapPreview({
+    id: "latest",
+    previewSignature: "new",
+  });
+  await cancelled;
+  expect(await next).toBe("/stored");
+  finish(new Blob(["obsolete"]));
+  await Promise.resolve();
+  expect(state.upload.mock.calls.map((call) => call[1])).toEqual(["new"]);
+});
+it("cancels work when its last observer leaves, but retains a shared card's request", async () => {
+  let finish;
+  state.context.mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  const controller = new AbortController();
+  const first = ensureStoredMapPreview(
+    { id: "shared" },
+    { signal: controller.signal },
+  );
+  const cancelled = expect(first).rejects.toMatchObject({ name: "AbortError" });
+  const second = ensureStoredMapPreview({ id: "shared" });
+  const signal = state.context.mock.calls[0][1];
+  controller.abort();
+  await cancelled;
+  expect(signal.aborted).toBe(false);
+  finish({ document: {}, models: [], signature: "shared" });
+  expect(await second).toBe("/stored");
+  const leaving = new AbortController();
+  state.context.mockImplementationOnce(() => new Promise(() => {}));
+  const stopped = ensureStoredMapPreview(
+    { id: "leaving" },
+    { signal: leaving.signal },
+  );
+  const rejection = expect(stopped).rejects.toMatchObject({
+    name: "AbortError",
+  });
+  leaving.abort();
+  await rejection;
+  expect(state.context.mock.calls.at(-1)[1].aborted).toBe(true);
+});
+it("refreshes stale URLs and reuses a preview published by another generator", async () => {
+  state.context.mockResolvedValueOnce({ previewUrl: "/already-published" });
+  expect(
+    await ensureStoredMapPreview({
+      id: "stale",
+      previewUrl: "/old",
+      previewStale: true,
+    }),
+  ).toBe("/already-published");
+  expect(state.snapshot).not.toHaveBeenCalled();
+  expect(state.upload).not.toHaveBeenCalled();
 });
 it("rebuilds a screenshot if the map changed during upload", async () => {
   state.upload.mockRejectedValueOnce(

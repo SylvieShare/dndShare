@@ -17,9 +17,10 @@ import (
 )
 
 type mapPreviewContext struct {
-	Document  battlemap.Document `json:"document"`
-	Models    []mapModelView     `json:"models"`
-	Signature string             `json:"signature"`
+	Document   battlemap.Document `json:"document"`
+	Models     []mapModelView     `json:"models"`
+	Signature  string             `json:"signature"`
+	PreviewURL string             `json:"previewUrl,omitempty"`
 }
 
 func buildMapPreviewContext(d battlemap.Document, models []battlemap.Model, behaviours map[string]battlemap.ModelBehaviour) (mapPreviewContext, error) {
@@ -44,22 +45,11 @@ func buildMapPreviewContext(d battlemap.Document, models []battlemap.Model, beha
 	if len(views) != len(ids) {
 		return mapPreviewContext{}, store.ErrInvalidMapModels
 	}
-	scene := d
-	scene.Tags = nil
-	scene.Lights = append([]battlemap.Light{}, d.Lights...)
-	for i := range scene.Lights {
-		scene.Lights[i].Flicker = false
-	}
-	// Transfer metadata does not change the rendered scene or its saved preview.
-	signatureModels := append([]mapModelView{}, views...)
-	for i := range signatureModels {
-		signatureModels[i].AssetBytes = nil
-	}
 	raw, err := json.Marshal(struct {
 		Renderer string
 		Document battlemap.Document
 		Models   []mapModelView
-	}{"map-scene-fog-stable-grid", scene, signatureModels})
+	}{"map-preview-single-frame-shadows-256", mapPreviewScene(d), mapPreviewModels(views)})
 	if err != nil {
 		return mapPreviewContext{}, err
 	}
@@ -75,6 +65,7 @@ func (s *Server) attachMapPreview(r *http.Request, m *store.BattleMap, models []
 	}
 	m.PreviewSignature = data.Signature
 	m.PreviewURL = ""
+	m.PreviewStale = false
 	p, err := s.store.GetMapPreview(r.Context(), m.ID, m.System)
 	if errors.Is(err, store.ErrNotFound) {
 		return nil
@@ -82,10 +73,12 @@ func (s *Server) attachMapPreview(r *http.Request, m *store.BattleMap, models []
 	if err != nil {
 		return err
 	}
-	if p.Signature == data.Signature {
-		m.PreviewURL = mapPreviewURL(m.ID, data.Signature)
-	}
+	applyMapPreview(m, data.Signature, p)
 	return nil
+}
+func applyMapPreview(m *store.BattleMap, signature string, p store.MapPreview) {
+	m.PreviewURL = mapPreviewURL(m.ID, p.Signature)
+	m.PreviewStale = p.Signature != signature
 }
 func (s *Server) loadMapPreviewContext(r *http.Request, uid int64) (store.BattleMap, mapPreviewContext, error) {
 	m, err := s.findMap(r, uid, r.PathValue("mapId"))

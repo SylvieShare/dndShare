@@ -46,6 +46,7 @@ it("deduplicates visual snapshots across tags, queues distinct scenes and releas
   ]);
   expect(results[0]).toBe(results[1]);
   expect(state.create).toHaveBeenCalledTimes(1);
+  expect(state.create.mock.calls[0][4]).toEqual({ snapshotOnly: true });
   expect(state.renderer.update).toHaveBeenCalledTimes(2);
   expect(state.renderer.snapshot).toHaveBeenCalledTimes(2);
   expect(state.renderer.camera.mock.calls[0][0]).toMatchObject({
@@ -55,6 +56,35 @@ it("deduplicates visual snapshots across tags, queues distinct scenes and releas
   });
   vi.advanceTimersByTime(15000);
   expect(state.renderer.destroy).toHaveBeenCalledOnce();
+});
+it("skips obsolete queued scenes and does not wait for an abandoned readback", async () => {
+  const { requestMapSnapshot } = await import("./mapSnapshots");
+  let finish;
+  state.renderer.snapshot.mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  const first = new AbortController(),
+    queued = new AbortController();
+  const a = requestMapSnapshot(newMap().document, first.signal, {
+    key: "first",
+  });
+  const cancelledA = expect(a).rejects.toMatchObject({ name: "AbortError" });
+  await vi.waitFor(() => expect(finish).toBeTypeOf("function"));
+  const b = requestMapSnapshot(newMap().document, queued.signal, {
+    key: "obsolete",
+  });
+  const cancelledB = expect(b).rejects.toMatchObject({ name: "AbortError" });
+  queued.abort();
+  const c = requestMapSnapshot(newMap().document, undefined, { key: "latest" });
+  first.abort();
+  await Promise.all([cancelledA, cancelledB]);
+  await expect(c).resolves.toMatchObject({ type: "image/webp" });
+  expect(state.renderer.snapshot).toHaveBeenCalledTimes(2);
+  expect(state.renderer.destroy).not.toHaveBeenCalled();
+  finish(new Blob(["obsolete"]));
 });
 it("cancelled cards never create a renderer and a failed job does not block retry", async () => {
   const { requestMapSnapshot } = await import("./mapSnapshots");

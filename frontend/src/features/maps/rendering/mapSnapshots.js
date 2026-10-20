@@ -1,5 +1,6 @@
 import { getMapModels } from "@/shared/api/mapsApi";
 import { ISOMETRIC_AZIMUTH, ISOMETRIC_TILT } from "./mapCamera";
+import { previewTask } from "../lib/previewTask";
 
 const cache = new Map(),
   queue = [];
@@ -8,6 +9,7 @@ let running = false,
   host,
   idle;
 export async function requestMapSnapshot(document, signal, options = {}) {
+  signal?.throwIfAborted();
   const catalogue = options.catalogue || (await getMapModels());
   const ids = new Set([
     ...document.tiles.map((t) => t.modelId),
@@ -31,10 +33,13 @@ export async function requestMapSnapshot(document, signal, options = {}) {
   }
   if (signal?.aborted) throw new DOMException("Cancelled", "AbortError");
   if (cache.has(key)) return cache.get(key);
-  return new Promise((resolve, reject) => {
-    queue.push({ key, document: scene, catalogue, signal, resolve, reject });
-    pump();
-  });
+  return previewTask(
+    new Promise((resolve, reject) => {
+      queue.push({ key, document: scene, catalogue, signal, resolve, reject });
+      pump();
+    }),
+    signal,
+  );
 }
 function destroy() {
   renderer?.destroy();
@@ -65,8 +70,17 @@ async function pump() {
             "position:fixed;left:-10000px;top:0;width:420px;height:280px;pointer-events:none;visibility:hidden";
           window.document.body.append(host);
           const { createMapRenderer } = await import("./mapRenderer");
-          renderer = await createMapRenderer(host, () => {});
+          renderer = await createMapRenderer(
+            host,
+            () => {},
+            undefined,
+            undefined,
+            {
+              snapshotOnly: true,
+            },
+          );
         }
+        job.signal?.throwIfAborted();
         // The initial editor view, without selection, controls or light markers.
         const document = {
           ...job.document,
@@ -78,18 +92,23 @@ async function pump() {
           animate: false,
           catalogue: job.catalogue,
         });
+        job.signal?.throwIfAborted();
         renderer.camera({
           fit: true,
           rotation: 0,
           azimuth: ISOMETRIC_AZIMUTH,
           tilt: ISOMETRIC_TILT,
         });
-        const blob = await renderer.snapshot();
+        const blob = await previewTask(
+          renderer.snapshot(job.signal),
+          job.signal,
+        );
+        job.signal?.throwIfAborted();
         cache.set(job.key, blob);
         if (cache.size > 64) cache.delete(cache.keys().next().value);
         job.resolve(blob);
       } catch (error) {
-        destroy();
+        if (!job.signal?.aborted) destroy();
         job.reject(error);
       }
     }

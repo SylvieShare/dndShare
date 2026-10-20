@@ -42,12 +42,14 @@ import { createTileOutline } from "./tileOutline";
 import { structureView } from "./structureView";
 import { createObjectPreview } from "./objectPreview";
 import { createPlacementAnchors } from "./placementAnchors";
+import { createMapSnapshot } from "./mapRendererSnapshot";
 
 export async function createMapRenderer(
   host,
   onError,
   onPreviewLoading,
   onDownloadProgress,
+  { snapshotOnly = false } = {},
 ) {
   const gpu = new WebGLRenderer({ antialias: false, depth: false });
   gpu.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
@@ -90,6 +92,7 @@ export async function createMapRenderer(
       assetsChanged,
       lightSources,
       camera,
+      snapshotOnly ? { shadowSize: 256, sunShadowSize: 512 } : undefined,
     ),
     loadingPreview = createLoadingPreview(assets, onPreviewLoading),
     fog = createMapFog(),
@@ -126,7 +129,8 @@ export async function createMapRenderer(
     surfaceAnchors.root,
   );
   function assetsChanged() {
-    if (dead || !active || assetFrame || !runtime.current) return;
+    if (snapshotOnly || dead || !active || assetFrame || !runtime.current)
+      return;
     assetFrame = requestAnimationFrame(() => {
       assetFrame = 0;
       if (!dead && runtime.current)
@@ -137,7 +141,7 @@ export async function createMapRenderer(
     });
   }
   function render() {
-    loop?.request();
+    if (!snapshotOnly) loop?.request();
   }
   const framePreview = createMapFramePreview(camera, render);
   const areaPreview = createMapAreaPreview(gpu, assets, render);
@@ -340,7 +344,7 @@ export async function createMapRenderer(
         onError(error.message),
       );
   });
-  observer.observe(host);
+  if (!snapshotOnly) observer.observe(host);
   const stopModelRefresh = startModelRefresh(
     () =>
       active && runtime.current && !runtime.options.catalogue
@@ -359,7 +363,7 @@ export async function createMapRenderer(
     updateSelection,
     setActive(value) {
       active = value;
-      loop.setActive(value);
+      if (!snapshotOnly) loop.setActive(value);
     },
     observeLightFrame: framePreview.observe,
     observeAreaFrame: areaPreview.observe,
@@ -367,47 +371,22 @@ export async function createMapRenderer(
       assets.retryFailed();
       return update(runtime.current, runtime.state, runtime.options);
     },
-    async snapshot() {
-      const ids = new Set([
-        ...runtime.current.tiles.map((t) => t.modelId),
-        ...runtime.current.objects.map((o) => o.modelId).filter(Boolean),
-      ]);
-      await assets.ensure(ids, runtime.tier, runtime.options);
-      if (runtime.current.lightingEnabled)
-        await assets.ensure(ids, "shadow", runtime.options);
-      await update(runtime.current, runtime.state, {
-        ...runtime.options,
-        capture: true,
-      });
-
-      tiles.advance(1000);
-      objectMotion.advance(1000, objects);
-      lighting.advance(
-        0,
-        (id) => tiles.transform(id),
-        objects,
-        objectPreview.root,
-      );
-      effects.advance(
-        0,
-        1000,
-        (id) => tiles.transform(id),
-        objects,
-        objectPreview.root,
-      );
-      water.advance(0, false);
-      volumeFog.render(scene, camera);
-      return new Promise((resolve, reject) =>
-        gpu.domElement.toBlob(
-          (blob) =>
-            blob
-              ? resolve(blob)
-              : reject(new Error("Не удалось создать превью карты")),
-          "image/webp",
-          0.88,
-        ),
-      );
-    },
+    snapshot: createMapSnapshot({
+      runtime,
+      assets,
+      update,
+      tiles,
+      objectMotion,
+      objects,
+      lighting,
+      objectPreview,
+      effects,
+      water,
+      volumeFog,
+      scene,
+      camera,
+      gpu,
+    }),
     observePerformance: profiler.observe,
     camera: changeCamera,
     getView: view.getView,

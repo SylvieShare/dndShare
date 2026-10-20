@@ -26,10 +26,18 @@ func (s *Server) handleMapPreviewContext(w http.ResponseWriter, r *http.Request)
 	if !ok {
 		return
 	}
-	_, data, err := s.loadMapPreviewContext(r, uid)
+	m, data, err := s.loadMapPreviewContext(r, uid)
 	if err != nil {
 		mapError(w, err)
 		return
+	}
+	p, err := s.store.GetMapPreview(r.Context(), m.ID, m.System)
+	if err != nil && !errors.Is(err, store.ErrNotFound) {
+		mapError(w, err)
+		return
+	}
+	if err == nil && p.Signature == data.Signature {
+		data.PreviewURL = mapPreviewURL(m.ID, data.Signature)
 	}
 	w.Header().Set("Cache-Control", "no-store")
 	writeJSON(w, http.StatusOK, data)

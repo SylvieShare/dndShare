@@ -63,19 +63,21 @@ export async function saveMapModelMetadata(id, metadata) {
   return runtimeModel(model);
 }
 
-export async function getMapPreviewContext(id) {
+export async function getMapPreviewContext(id, signal) {
   const context = await fetchGet(
     `/maps/${encodeURIComponent(id)}/preview-context`,
+    { signal },
   );
   return { ...context, models: catalogueModels(context.models) };
 }
-export async function uploadMapPreview(id, signature, blob) {
+export async function uploadMapPreview(id, signature, blob, signal) {
   const response = await fetch(
     `/api/maps/${encodeURIComponent(id)}/preview?signature=${encodeURIComponent(signature)}`,
     {
       method: "POST",
       headers: { "Content-Type": "image/webp" },
       body: blob,
+      signal,
     },
   );
   if (!response.ok) {

@@ -4,6 +4,7 @@ import { clone } from "../lib/mapModel";
 import { syncSurfaceObjects } from "../lib/surfacePlacement";
 import { pruneAreas } from "../lib/mapAreas";
 import { syncLights } from "../lib/mapLighting";
+import { useStoredMapPreview } from "./useStoredMapPreview";
 
 export function useMapPersistence({
   draft,
@@ -22,6 +23,15 @@ export function useMapPersistence({
     saveError = ref(""),
     conflict = ref(false);
   const lastSavedAt = ref(source?.system ? null : source?.changedAt || null);
+  const preview = useStoredMapPreview({
+    source,
+    session: options.session,
+    journal,
+    gesturing,
+    loadingModels,
+    saving,
+    conflict,
+  });
   let timer,
     stopped = false;
   // Document history never rolls the server's compare-and-swap version back.
@@ -57,12 +67,7 @@ export function useMapPersistence({
       journal.acknowledge(savedVersion);
       lastSavedAt.value = result.changedAt;
       onSaved?.(result);
-      if (!options.session && !result.previewUrl)
-        import("../lib/mapStoredPreviews")
-          .then(({ ensureStoredMapPreview }) => ensureStoredMapPreview(result))
-          .catch(() => {
-            // Document saving succeeds independently; missing images retry in the library.
-          });
+      preview.saved(result);
     } catch (cause) {
       error.value = cause.message;
       saveError.value = cause.message;
@@ -99,6 +104,7 @@ export function useMapPersistence({
     record = { id: model.id, revision: model.revision };
     journal.accept();
     lastSavedAt.value = model.changedAt;
+    preview.saved(model);
   }
   watch(loadingModels, (loading) => {
     if (

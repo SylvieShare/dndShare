@@ -33,7 +33,9 @@ async function load() {
   const request = new AbortController();
   controller = request;
   try {
-    const stored = await ensureStoredMapPreview(props.map);
+    const stored = await ensureStoredMapPreview(props.map, {
+      signal: request.signal,
+    });
     if (!request.signal.aborted) url.value = stored;
   } catch {
     /* The card stays usable when GPU or model loading fails. */
@@ -47,7 +49,7 @@ onMounted(() => {
       if (entries.some((e) => e.isIntersecting)) {
         visible = true;
         observer.disconnect();
-        if (!url.value) load();
+        if (!props.map.previewUrl || props.map.previewStale) load();
       }
     },
     { rootMargin: "200px" },
@@ -55,12 +57,18 @@ onMounted(() => {
   observer.observe(host.value);
 });
 watch(
-  () => [props.map.id, props.map.previewSignature, props.map.previewUrl],
-  () => {
+  () => [
+    props.map.id,
+    props.map.previewSignature,
+    props.map.previewUrl,
+    props.map.previewStale,
+  ],
+  (next, previous) => {
     clear();
-    url.value = props.map.previewUrl || "";
-    loading.value = !url.value;
-    if (visible && !url.value) load();
+    url.value =
+      props.map.previewUrl || (next[0] === previous[0] ? url.value : "");
+    loading.value = !props.map.previewUrl || !!props.map.previewStale;
+    if (visible && loading.value) load();
   },
 );
 onBeforeUnmount(() => {

@@ -1,7 +1,7 @@
 import { PointLight } from "three";
 
 // Each light keeps its shadow texture when another source enters or leaves view.
-export function createLightPool(scene, gpu) {
+export function createLightPool(scene, gpu, shadowSize = 512) {
   const lights = new Map();
   function invalidate(light) {
     light.shadow.needsUpdate = true;
@@ -24,7 +24,7 @@ export function createLightPool(scene, gpu) {
           light = new PointLight();
           light.userData.sourceId = source.id;
           light.shadow.autoUpdate = false;
-          light.shadow.mapSize.set(512, 512);
+          light.shadow.mapSize.set(shadowSize, shadowSize);
           light.shadow.bias = -0.0002;
           light.shadow.normalBias = 0.025;
           light.shadow.camera.near = 0.05;

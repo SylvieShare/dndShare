@@ -21,6 +21,7 @@ type BattleMap struct {
 	System           bool               `json:"system"`
 	PreviewURL       string             `json:"previewUrl,omitempty"`
 	PreviewSignature string             `json:"previewSignature,omitempty"`
+	PreviewStale     bool               `json:"previewStale,omitempty"`
 }
 
 func scanBattleMap(row pgx.Row) (BattleMap, error) {

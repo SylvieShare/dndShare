@@ -39,7 +39,7 @@
 | `GET /api/maps/models/{modelId}/{variant}` | Авторизованный пользователь: source/render/lod/shadow/preview из S3; ETag и immutable cache |
 | `GET /api/maps` | Свои и системные карты авторизованного пользователя |
 | `POST /api/maps` | Создать `{name,document}` |
-| `GET /api/maps/{mapId}/preview-context` | Авторизованный пользователь: свой/системный документ, актуальные используемые модели и SHA-256 подписи сцены |
+| `GET /api/maps/{mapId}/preview-context` | Авторизованный пользователь: свой/системный документ, актуальные используемые модели, SHA-256 подписи сцены; previewUrl, если снимок этой подписи уже готов |
 | `POST /api/maps/{mapId}/preview?signature=...` | Авторизованный пользователь: WebP 64–1024 px, до 1 МБ → сохранённый в S3 снимок; устаревшая сцена получает 409 |
 | `GET /api/maps/{mapId}/preview?signature=...` | Авторизованный пользователь: сохранённый WebP из S3; проверка владельца и подписи, immutable cache |
 | `PUT /api/maps/{mapId}` | Заменить свой документ `{name,document,revision}` |
@@ -70,7 +70,11 @@
 шаблоном. Overrides у ручного источника запрещён. Число источников с тенями не
 ограничено двумя; сохраняются до 32 ручных источников плюс встроенные.
 
-Карта содержит `id,name,document,revision,changedAt,system,previewSignature` и `previewUrl`, если сохранён актуальный снимок. Сессионная копия
+Карта содержит `id,name,document,revision,changedAt,system,previewSignature` и
+`previewUrl`, если сохранён снимок. Устаревший снимок сохраняет URL своей подписи и
+получает `previewStale: true`, пока готовится замена; `previewSignature` описывает
+текущую сцену. Названия, теги, зоны и служебные маркеры не сбрасывают снимок.
+Сессионная копия
 добавляет `state` и неизменяемый `source: {id,name,system}`. Единственный формат документа `tiles` описан
 в [картах](features/maps.md). Состояние содержит туман, видимость зон,
 состояния объектов и жетоны; камера — `x,y,cellPixels,rotation,fit`.

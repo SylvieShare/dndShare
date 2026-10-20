@@ -4,6 +4,16 @@ export function previewFixture(catalogue, dto) {
   async function signature(map) {
     const doc = structuredClone(map.document);
     delete doc.tags;
+    delete doc.zones;
+    for (const area of doc.areas) {
+      delete area.name;
+      delete area.color;
+    }
+    for (const light of doc.lights) {
+      delete light.name;
+      delete light.showMarker;
+      light.flicker = false;
+    }
     const ids = new Set([...doc.tiles, ...doc.objects].map((m) => m.modelId));
     const models = catalogue.filter((m) => ids.has(m.id));
     const hash = await crypto.subtle.digest(
@@ -22,10 +32,8 @@ export function previewFixture(catalogue, dto) {
     return {
       ...map,
       previewSignature: sig,
-      previewUrl:
-        stored?.signature === sig
-          ? `data:image/webp;base64,${stored.b64}`
-          : undefined,
+      previewUrl: stored ? `data:image/webp;base64,${stored.b64}` : undefined,
+      previewStale: !!stored && stored.signature !== sig,
     };
   }
   async function handle(rawUrl, options) {
@@ -41,16 +49,23 @@ export function previewFixture(catalogue, dto) {
         headers: { "Content-Type": "application/json" },
       });
     if (kind === "preview-context") {
+      if (window.holdPreviewContexts)
+        await new Promise((resolve) =>
+          (window.pendingPreviewContexts ||= []).push(resolve),
+        );
+      options.signal?.throwIfAborted();
       const maps = await (await fetch("/api/maps")).json();
       const map =
         window.lastSaved?.id === id
           ? window.lastSaved
           : maps.find((m) => m.id === id);
       if (!map) return response({}, 404);
+      const decorated = await decorate(map);
       return response({
         document: map.document,
         models: catalogue.map(dto),
-        signature: await signature(map),
+        signature: decorated.previewSignature,
+        previewUrl: !decorated.previewStale ? decorated.previewUrl : undefined,
       });
     }
     if (options.method === "POST") {
