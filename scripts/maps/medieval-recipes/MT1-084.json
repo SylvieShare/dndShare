@@ -1,0 +1,289 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [0, 0],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "edge",
+  "wallMask": 65,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Balcony Angle",
+  "groupCode": "MED-balcony-angle",
+  "hasDecor": false,
+  "renderTriangles": 100000,
+  "lodTriangles": 40000,
+  "renderBakeSize": 1536,
+  "lodBakeSize": 1536,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1024,
+  "lodColourSize": 768,
+  "lodDataSize": 768,
+  "standRayTopMM": 100,
+  "standPointsMM": [[0, 0]],
+  "blockersMM": [
+    [
+      [-17.65, -17.65],
+      [-13.5, -17.65],
+      [-13.5, 17.65],
+      [-17.65, 17.65]
+    ],
+    [
+      [-17.65, 13.1],
+      [17.65, 13.1],
+      [17.65, 17.65],
+      [-17.65, 17.65]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "floor",
+    "balcony",
+    "wood",
+    "railing",
+    "braces",
+    "iron",
+    "corner"
+  ],
+  "weightBudget": {
+    "renderMiB": [3, 5.5],
+    "lodMiB": [1.4, 3.2],
+    "shadowKiB": [110, 220],
+    "previewKiB": [15, 45],
+    "basis": "One-cell W/N corner balcony:five posts,four individually measured diagonal braces,eight triangular openings,two visible free-end iron caps and two crossing top rails.100000/40000 independent triangles,1536 bakes,1024/768 maps;compare compact while preserving per-face cap masks and all open triangles."
+  },
+  "materials": {
+    "earthRGB": [0.28, 0.17, 0.075],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [0.34, 0.165, 0.055],
+    "woodLightRGB": [0.59, 0.35, 0.145],
+    "stoneDarkRGB": [0.34, 0.165, 0.055],
+    "stoneLightRGB": [0.59, 0.35, 0.145],
+    "woodParts": [
+      {
+        "name": "X floor boards and north south fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west Y floor border and fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [-14.3, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y floor border and fascia",
+        "minMM": [14.3, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "wall0 diagonal brace -1",
+        "minMM": [-17.65, -13.1, 26.4],
+        "maxMM": [-13.3, -1.5, 44.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.0, 0.6993321135985627, 0.7147968906547978],
+        "projection": {
+          "originMM": [
+            -15.54682229178901, -8.020965658174022, 36.686635452432384
+          ],
+          "axis": [0.0, -0.7147968906547978, 0.6993321135985627],
+          "rangeMM": [-1.7806334399320882, 2.552029261168905]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "wall0 diagonal brace 1",
+        "minMM": [-17.65, 1.5, 26.4],
+        "maxMM": [-13.3, 13.1, 44.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.0, -0.5738419239294299, 0.818966083754981],
+        "projection": {
+          "originMM": [
+            -15.707697818799517, 7.417085202597911, 37.57853361900816
+          ],
+          "axis": [0.0, -0.818966083754981, -0.5738419239294299],
+          "rangeMM": [-2.9197581047777748, 2.467721442877927]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "wall0 vertical negative post",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-13.3, -12.8, 44.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "wall0 vertical centre post",
+        "minMM": [-17.65, -2.1, 26.1],
+        "maxMM": [-13.3, 2.1, 44.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "wall0 vertical positive post",
+        "minMM": [-17.65, 12.8, 26.1],
+        "maxMM": [-13.3, 17.65, 44.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "wall0 horizontal top rail",
+        "minMM": [-17.65, -17.65, 42.6],
+        "maxMM": [-13.3, 17.65, 46],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "wall1 diagonal brace -1",
+        "minMM": [-13.1, 13.1, 26.4],
+        "maxMM": [-1.5, 17.65, 44.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.7385388836395661, 0.0, 0.6742108849257951],
+        "projection": {
+          "originMM": [
+            -7.544889839614821, 15.475079180678604, 37.318104400156436
+          ],
+          "axis": [-0.6742108849257951, 0.0, 0.7385388836395661],
+          "rangeMM": [-2.22380047446528, 2.534305007283939]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "wall1 diagonal brace 1",
+        "minMM": [1.5, 13.1, 26.4],
+        "maxMM": [13.1, 17.65, 44.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [-0.5950691233409197, 0.0, 0.8036745227057216],
+        "projection": {
+          "originMM": [
+            7.505029296448829, 15.385550406151992, 37.55802221023575
+          ],
+          "axis": [-0.8036745227057216, 0.0, -0.5950691233409197],
+          "rangeMM": [-2.7889549611554147, 2.4555948375026047]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "wall1 vertical centre post",
+        "minMM": [-2.1, 13.1, 26.1],
+        "maxMM": [2.1, 17.65, 44.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "wall1 vertical positive post",
+        "minMM": [12.8, 13.1, 26.1],
+        "maxMM": [17.65, 17.65, 44.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "wall1 horizontal top rail",
+        "minMM": [-17.65, 13.1, 42.6],
+        "maxMM": [17.65, 17.65, 46],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "wall0 exposed free-end iron cap",
+        "minMM": [-14.55, -16.141399536132813, 43.47210010528565],
+        "maxMM": [-13.880600357055664, -14.692800369262695, 44.92069927215576],
+        "radialShell": {
+          "originMM": [-14.55, -15.417099952697754, 44.1963996887207],
+          "axis": [1, 0.0, 0.0],
+          "rangeMM": [0, 0.6693996429443363],
+          "radiusAtOriginMM": 0.7242995834350586,
+          "radiusSlope": 0,
+          "thicknessMM": 0.7242995834350586,
+          "allowanceMM": 0
+        },
+        "kind": "paint",
+        "rgb": [0.2, 0.21, 0.2],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.02
+      },
+      {
+        "name": "wall1 exposed free-end iron cap",
+        "minMM": [14.910051193237305, 13.301800155639649, 43.476299133300785],
+        "maxMM": [16.259149703979492, 13.85, 44.825397644042965],
+        "radialShell": {
+          "originMM": [15.584600448608398, 13.85, 44.150848388671875],
+          "axis": [0.0, -1, 0.0],
+          "rangeMM": [0, 0.5481998443603509],
+          "radiusAtOriginMM": 0.6745492553710938,
+          "radiusSlope": 0,
+          "thicknessMM": 0.6745492553710938,
+          "allowanceMM": 0
+        },
+        "kind": "paint",
+        "rgb": [0.2, 0.21, 0.2],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.02
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "PDFpage12 and actual native inside/back/front/top inspected. Source380028tri/19001484bytes/SHA878b189e9578c845ec4df715098cf51c51ad2c3daa0279718a59e3316e25d1a8,max45.837898mm. Perpendicular railings occupy WEST Xnegative and NORTH Ypositive(nativeYmapsdownwardtoeditor),wallMask65,not80. Five posts share one corner;four asymmetric brace axes are measured independently on this source. Y west top rail/X north top rail,Z posts,X floor/Y fascia. Only two FREE-END caps are exposed:W cutX>-14.3 component322verts,N cut-Y>-13.6 component214verts. Crossing corner rails occlude the two putative corner heads;do not invent metal there or on backs. Native cap centres/radii derive from each measured component,not copied83. Eight triangles require finite source/render/LOD/shadow probes. Sourcefreecentre[0,0]Z24.700966 withnormalZ.9943,hasDecorfalse. North blocker startsY13.1 to include its more protruding face,weststrip endsX-13.5. Red-brown timber versus medium floor,rough iron. Native17mm prep then UD016 normalization preserving body/UV/images;final transparent preview and GoManifest before MCP,complete fresh identity/assets/catalogue/behaviour verification. No plaster,fabric,emission or built-in lights.",
+  "surfaceHeightMM": 24.700965881347656,
+  "renderColourSize": 1024
+}
