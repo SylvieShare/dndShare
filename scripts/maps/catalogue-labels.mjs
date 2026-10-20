@@ -121,6 +121,7 @@ Bridge|Мост
 Bridge key|Соединитель моста
 Bridge Broken|Разрушенный мост
 Stair|Лестница
+Ladder|Приставная лестница
 Stair 1|Лестница 1
 Stair 2|Лестница 2
 Stair Angle|Угловая лестница
