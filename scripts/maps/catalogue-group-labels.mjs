@@ -21,6 +21,7 @@ LC-water|Вода|Water
 LC-wells|Колодцы|Wells
 MA-ma-dungeonchest-full-prop|Сундуки|Chests
 MED-bar|Барные стойки|Bars
+MED-balcony|Балконы|Balconies
 MED-barrel|Бочки|Barrels
 MED-bath|Ванны|Baths
 MED-bath-objects|Принадлежности для купания|Bath accessories

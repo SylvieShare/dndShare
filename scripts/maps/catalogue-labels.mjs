@@ -123,6 +123,7 @@ Bridge Broken|Разрушенный мост
 Stair|Лестница
 Ladder|Приставная лестница
 Ladder Down|Приставная лестница вниз
+Balcony|Балкон
 Stair 1|Лестница 1
 Stair 2|Лестница 2
 Stair Angle|Угловая лестница

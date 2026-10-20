@@ -2,6 +2,7 @@
 // except known geometry families that previously combined different tile shapes.
 const sectionRules = {
   MED: [
+    [/^balcony(?:-|$)/, "balcony"],
     [/^ground-wood/, "ground-wood"],
     [/^ground(?:-|$)/, "ground"],
     [/^path(?:-|$)/, "path"],

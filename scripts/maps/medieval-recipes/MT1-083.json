@@ -1,0 +1,208 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [0, 0],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Balcony",
+  "groupCode": "MED-balcony",
+  "hasDecor": false,
+  "renderTriangles": 85000,
+  "lodTriangles": 30000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 1024,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 768,
+  "lodColourSize": 768,
+  "lodDataSize": 768,
+  "standRayTopMM": 100,
+  "standPointsMM": [[0, 0]],
+  "blockersMM": [
+    [
+      [-17.65, -17.65],
+      [-13.5, -17.65],
+      [-13.5, 17.65],
+      [-17.65, 17.65]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": ["town", "floor", "balcony", "wood", "railing", "braces", "iron"],
+  "weightBudget": {
+    "renderMiB": [2.5, 4.5],
+    "lodMiB": [1, 2.5],
+    "shadowKiB": [70, 160],
+    "previewKiB": [12, 40],
+    "basis": "One-cell wooden balcony with three posts,two asymmetrical diagonal braces,four triangular apertures and two small front iron caps. Independent85000/30000 geometry,1024 bakes,1024/768 colour and768 normal/ORM for round caps;compare compact while preserving all openings,grain directions and metal/wood boundaries."
+  },
+  "materials": {
+    "earthRGB": [0.28, 0.17, 0.075],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [0.34, 0.165, 0.055],
+    "woodLightRGB": [0.59, 0.35, 0.145],
+    "stoneDarkRGB": [0.34, 0.165, 0.055],
+    "stoneLightRGB": [0.59, 0.35, 0.145],
+    "woodParts": [
+      {
+        "name": "X floor boards and north south fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west Y floor border and fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [-14.3, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y floor border and fascia",
+        "minMM": [14.3, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "measured diagonal brace -1",
+        "minMM": [-17.65, -13.1, 26.4],
+        "maxMM": [-13.5, -1.5, 44.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.0, 0.7098606088152174, 0.7043421867618672],
+        "projection": {
+          "originMM": [
+            -15.563910869202301, -7.5942446870179054, 37.1905370860813
+          ],
+          "axis": [0.0, -0.7043421867618672, 0.7098606088152174],
+          "rangeMM": [-1.8406691358666751, 2.4587814270656163]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "measured diagonal brace 1",
+        "minMM": [-17.65, 1.5, 26.4],
+        "maxMM": [-13.5, 13.1, 44.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.0, -0.5961103832109812, 0.8029024916065819],
+        "projection": {
+          "originMM": [
+            -15.396942671607523, 7.574951092945731, 37.60113266293882
+          ],
+          "axis": [0.0, -0.8029024916065819, -0.5961103832109812],
+          "rangeMM": [-2.697419312322333, 2.538365927189734]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical south railing post",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-13.5, -12.8, 44.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical centre railing post",
+        "minMM": [-17.65, -2.1, 26.1],
+        "maxMM": [-13.5, 2.1, 44.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical north railing post",
+        "minMM": [-17.65, 12.8, 26.1],
+        "maxMM": [-13.5, 17.65, 44.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "Y top rail and end caps",
+        "minMM": [-17.65, -17.65, 42.6],
+        "maxMM": [-13.5, 17.65, 46],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "front iron cap -15.313",
+        "minMM": [-14.4, -16.03255006790161, 43.20770004272461],
+        "maxMM": [-13.65, -14.59255006790161, 44.64770004272461],
+        "radialShell": {
+          "originMM": [-14.4, -15.312550067901611, 43.92770004272461],
+          "axis": [1, 0, 0],
+          "rangeMM": [0, 0.75],
+          "radiusAtOriginMM": 0.71,
+          "radiusSlope": 0,
+          "thicknessMM": 0.71,
+          "allowanceMM": 0
+        },
+        "kind": "paint",
+        "rgb": [0.2, 0.21, 0.2],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.02
+      },
+      {
+        "name": "front iron cap 15.153",
+        "minMM": [-14.4, 14.432950286865234, 43.17385032653809],
+        "maxMM": [-13.65, 15.872950286865235, 44.613850326538085],
+        "radialShell": {
+          "originMM": [-14.4, 15.152950286865234, 43.893850326538086],
+          "axis": [1, 0, 0],
+          "rangeMM": [0, 0.75],
+          "radiusAtOriginMM": 0.71,
+          "radiusSlope": 0,
+          "thicknessMM": 0.71,
+          "allowanceMM": 0
+        },
+        "kind": "paint",
+        "rgb": [0.2, 0.21, 0.2],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.02
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "Individually inspected PDFpage12 and native full/NEinside/back/top. Source320012tri/16000684bytes/SHA1ab36fa0b42faeb51f3d6a272df2fc1a85a3316c39ccde0b0391a9a6aaecf3b8,max45.838299mm. West railing occupiesX-17.458..-13.6023;three vertical posts,two independently fitted asymmetrical braces(S[0,.709861,.704342],N[0,-.596110,.802902]),Y top rail,two front-only circular caps. NativeX>-14.1 components isolate207/182 cap vertices,YZbounds measured;large2524-vertex component is wood and must not become metal. Cap cylindersR.71,X-14.4..-13.65 atY-15.31255/15.15295,Z43.92770/43.89385. Keep back and adjacent wood nonmetal. X floor and Y end fascia,red-brown railing versus medium-brown floor;four triangular native openings require finite rays in render/LOD/shadow. Free centre[0,0] floorZ24.700211,nativewestedge64;structural railing is not an embedded prop(hasDecorfalse). Check source heights,blocker,metal caps and surrounding wood,all grain axes,both packed candidates and close views. Ordinary17mm native prep then selected UD016 normalization,preserve body/UV/images and regenerate transparent preview before manifest. No plaster,fabric,emission or built-in lights.",
+  "surfaceHeightMM": 24.700210571289062,
+  "renderColourSize": 1024
+}
