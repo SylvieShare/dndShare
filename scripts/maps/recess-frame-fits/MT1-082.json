@@ -1,0 +1,2184 @@
+{
+  "schemaVersion": 1,
+  "profile": "ud016-recess-mt1-082-v1",
+  "sourceCode": "MT1-082",
+  "sourceSHA256": "e61a4aef32c5dec4fc8f8442e74d9ef567396836ffd4f9d8a4040d1d0461dcf1",
+  "reference": {
+    "name": "ud016-standard-v1",
+    "referenceDefinitionId": "UD-016",
+    "depth": 0.153517,
+    "topWidth": 1,
+    "bottomWidth": 0.7417142857142857,
+    "tolerance": 0.0005714285714285715
+  },
+  "assets": {
+    "render": "96d73e49d29d43a4c027ba6803cf9b3f82a28caea28bd2ac7eaac9212e7eb9ce",
+    "lod": "cfc13f199bcf094bf8a47c46fe94d148b47d850aabaa6504868f097467d0fbce",
+    "shadow": "b1c50c2b98ab72cd50c26187a568fd92216f785272007ed0864808c98c2bd9db"
+  },
+  "lowerSurfaceSHA256": "26dbeb628488f33c8e5c19785ba1ce9e3968950c8cd2d7a5d7e137f20807c267",
+  "lowerTriangles": 26887,
+  "method": "Maximum of frameZ-bodyZ+nativeDatum over all XY triangle intersections; actual render/LOD/shadow lower surfaces;0.02mm clearance; native frame SHA verified",
+  "frames": [
+    {
+      "code": "MT1-711",
+      "sourceSHA256": "f9badd9a320c3f17d8bf6f78a9c0d69f9701f70752ffa02bd3d209aefb0f18d7",
+      "slots": [
+        {
+          "x": 0,
+          "y": 0,
+          "centerMM": [
+            0,
+            0
+          ],
+          "frameTopMM": 25.156400680541992,
+          "insertionRiseMM": 2.7584118755146783,
+          "minimumSeatMM": 27.89481255605667,
+          "verifiedSeatMM": 27.91481255605667,
+          "contact": {
+            "pointMM": [
+              -13.536146151198226,
+              13.536050783766585,
+              23.18269603068246
+            ],
+            "bodyNativeZ": 12.287883474625792,
+            "bodyTriangle": 19155,
+            "frameTriangle": 24473
+          },
+          "overlaps": 4595662
+        }
+      ]
+    },
+    {
+      "code": "MT1-712",
+      "sourceSHA256": "428a31c4ae4e6bb7ce0362ca25914073c5e9247d616cb2b8b141f2299f88b81e",
+      "slots": [
+        {
+          "x": 0,
+          "y": 0,
+          "centerMM": [
+            -17.5,
+            0
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 2.889639589956552,
+          "minimumSeatMM": 27.963439181021005,
+          "verifiedSeatMM": 27.983439181021005,
+          "contact": {
+            "pointMM": [
+              -4.0191595575908154,
+              -13.480840442409184,
+              23.18570441382712
+            ],
+            "bodyNativeZ": 12.222265232806116,
+            "bodyTriangle": 101,
+            "frameTriangle": 781259
+          },
+          "overlaps": 3589964
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "centerMM": [
+            17.5,
+            0
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 2.8897657591503503,
+          "minimumSeatMM": 27.963565350214804,
+          "verifiedSeatMM": 27.983565350214803,
+          "contact": {
+            "pointMM": [
+              4.019157881283403,
+              13.480746751284958,
+              23.18570605664196
+            ],
+            "bodyNativeZ": 12.222140706427155,
+            "bodyTriangle": 19155,
+            "frameTriangle": 160572
+          },
+          "overlaps": 3669153
+        }
+      ]
+    },
+    {
+      "code": "MT1-713",
+      "sourceSHA256": "469c1f2e5b8bf507a85c093b2fcb7d6b25634b4891c08255ae244686375a8a9c",
+      "slots": [
+        {
+          "x": 0,
+          "y": 0,
+          "centerMM": [
+            -35,
+            0
+          ],
+          "frameTopMM": 25.229700088500977,
+          "insertionRiseMM": 2.6861309411064838,
+          "minimumSeatMM": 27.89583102960746,
+          "verifiedSeatMM": 27.91583102960746,
+          "contact": {
+            "pointMM": [
+              -48.52480514750091,
+              13.524709780069276,
+              23.1702328656663
+            ],
+            "bodyNativeZ": 12.27440183605884,
+            "bodyTriangle": 19155,
+            "frameTriangle": 241054
+          },
+          "overlaps": 3040146
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "centerMM": [
+            0,
+            0
+          ],
+          "frameTopMM": 25.229700088500977,
+          "insertionRiseMM": 2.6863466723808855,
+          "minimumSeatMM": 27.896046760881863,
+          "verifiedSeatMM": 27.916046760881862,
+          "contact": {
+            "pointMM": [
+              -13.53615967457783,
+              13.536064307146189,
+              23.18394631144951
+            ],
+            "bodyNativeZ": 12.287899550567648,
+            "bodyTriangle": 19155,
+            "frameTriangle": 305015
+          },
+          "overlaps": 2717546
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "centerMM": [
+            35,
+            0
+          ],
+          "frameTopMM": 25.229700088500977,
+          "insertionRiseMM": 2.7443249055866197,
+          "minimumSeatMM": 27.954024994087597,
+          "verifiedSeatMM": 27.974024994087596,
+          "contact": {
+            "pointMM": [
+              48.562473003790274,
+              -13.562473003790275,
+              23.27332715407308
+            ],
+            "bodyNativeZ": 12.319302159985483,
+            "bodyTriangle": 101,
+            "frameTriangle": 676237
+          },
+          "overlaps": 2838681
+        }
+      ]
+    },
+    {
+      "code": "MT1-722",
+      "sourceSHA256": "976f9ea9cdce28790614acf2306d7b266121bbf551fc534cc26456014351c008",
+      "slots": [
+        {
+          "x": 0,
+          "y": 0,
+          "centerMM": [
+            -17.5,
+            17.5
+          ],
+          "frameTopMM": 25.135799407958984,
+          "insertionRiseMM": 2.922960441049227,
+          "minimumSeatMM": 28.038759849008212,
+          "verifiedSeatMM": 28.05875984900821,
+          "contact": {
+            "pointMM": [
+              -30.966289945580556,
+              4.033710054419442,
+              23.243728852499757
+            ],
+            "bodyNativeZ": 12.204969003491545,
+            "bodyTriangle": 292,
+            "frameTriangle": 363706
+          },
+          "overlaps": 2449136
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "centerMM": [
+            17.5,
+            17.5
+          ],
+          "frameTopMM": 25.135799407958984,
+          "insertionRiseMM": 2.9229604410492307,
+          "minimumSeatMM": 28.038759849008215,
+          "verifiedSeatMM": 28.058759849008215,
+          "contact": {
+            "pointMM": [
+              30.966289945580556,
+              4.033710054419442,
+              23.243728852499757
+            ],
+            "bodyNativeZ": 12.204969003491543,
+            "bodyTriangle": 190,
+            "frameTriangle": 974340
+          },
+          "overlaps": 2452274
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "centerMM": [
+            -17.5,
+            -17.5
+          ],
+          "frameTopMM": 25.135799407958984,
+          "insertionRiseMM": 2.8302830073158702,
+          "minimumSeatMM": 27.946082415274855,
+          "verifiedSeatMM": 27.966082415274855,
+          "contact": {
+            "pointMM": [
+              -30.979917017453328,
+              -30.979917017453328,
+              23.167249969425775
+            ],
+            "bodyNativeZ": 12.22116755415092,
+            "bodyTriangle": 112,
+            "frameTriangle": 245086
+          },
+          "overlaps": 2099283
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "centerMM": [
+            17.5,
+            -17.5
+          ],
+          "frameTopMM": 25.135799407958984,
+          "insertionRiseMM": 2.8302830073158702,
+          "minimumSeatMM": 27.946082415274855,
+          "verifiedSeatMM": 27.966082415274855,
+          "contact": {
+            "pointMM": [
+              30.979917017453328,
+              -30.979917017453328,
+              23.167249969425775
+            ],
+            "bodyNativeZ": 12.22116755415092,
+            "bodyTriangle": 101,
+            "frameTriangle": 791533
+          },
+          "overlaps": 2085404
+        }
+      ]
+    },
+    {
+      "code": "MT1-723",
+      "sourceSHA256": "67513593654be1e19c2b53c9e8d6505571dac10b1ea9bb93eb73d4c38ab52687",
+      "slots": [
+        {
+          "x": 0,
+          "y": 0,
+          "centerMM": [
+            -35,
+            17.5
+          ],
+          "frameTopMM": 25.230499267578125,
+          "insertionRiseMM": 2.8292348284478557,
+          "minimumSeatMM": 28.03973409602598,
+          "verifiedSeatMM": 28.05973409602598,
+          "contact": {
+            "pointMM": [
+              -48.466629762085304,
+              4.033370237914695,
+              23.245107040651646
+            ],
+            "bodyNativeZ": 12.205372944625667,
+            "bodyTriangle": 112,
+            "frameTriangle": 937708
+          },
+          "overlaps": 2416374
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "centerMM": [
+            0,
+            17.5
+          ],
+          "frameTopMM": 25.230499267578125,
+          "insertionRiseMM": 2.742948490768125,
+          "minimumSeatMM": 27.95344775834625,
+          "verifiedSeatMM": 27.97344775834625,
+          "contact": {
+            "pointMM": [
+              -13.485712573273394,
+              4.0142874267266055,
+              23.181504511103228
+            ],
+            "bodyNativeZ": 12.228056752756979,
+            "bodyTriangle": 112,
+            "frameTriangle": 423152
+          },
+          "overlaps": 1612535
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "centerMM": [
+            35,
+            17.5
+          ],
+          "frameTopMM": 25.230499267578125,
+          "insertionRiseMM": 2.835264047689556,
+          "minimumSeatMM": 28.04576331526768,
+          "verifiedSeatMM": 28.06576331526768,
+          "contact": {
+            "pointMM": [
+              48.46644291038813,
+              4.033557089611867,
+              23.250914148590883
+            ],
+            "bodyNativeZ": 12.205150833323202,
+            "bodyTriangle": 190,
+            "frameTriangle": 631471
+          },
+          "overlaps": 2223697
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "centerMM": [
+            -35,
+            -17.5
+          ],
+          "frameTopMM": 25.230499267578125,
+          "insertionRiseMM": 2.7366778012482804,
+          "minimumSeatMM": 27.947177068826406,
+          "verifiedSeatMM": 27.967177068826405,
+          "contact": {
+            "pointMM": [
+              -48.48027419726542,
+              -30.980274197265423,
+              23.168769203939014
+            ],
+            "bodyNativeZ": 12.221592135112607,
+            "bodyTriangle": 112,
+            "frameTriangle": 633985
+          },
+          "overlaps": 2073186
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "centerMM": [
+            0,
+            -17.5
+          ],
+          "frameTopMM": 25.230499267578125,
+          "insertionRiseMM": 2.7382043853272044,
+          "minimumSeatMM": 27.94870365290533,
+          "verifiedSeatMM": 27.96870365290533,
+          "contact": {
+            "pointMM": [
+              -13.484487241224954,
+              -30.984487241224954,
+              23.17530384893123
+            ],
+            "bodyNativeZ": 12.226600196025899,
+            "bodyTriangle": 112,
+            "frameTriangle": 860122
+          },
+          "overlaps": 1502498
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "centerMM": [
+            35,
+            -17.5
+          ],
+          "frameTopMM": 25.230499267578125,
+          "insertionRiseMM": 2.813374564051184,
+          "minimumSeatMM": 28.02387383162931,
+          "verifiedSeatMM": 28.04387383162931,
+          "contact": {
+            "pointMM": [
+              48.45410867785221,
+              -30.95410867785221,
+              23.214362917187255
+            ],
+            "bodyNativeZ": 12.190489085557944,
+            "bodyTriangle": 101,
+            "frameTriangle": 602272
+          },
+          "overlaps": 1975449
+        }
+      ]
+    },
+    {
+      "code": "MT1-733",
+      "sourceSHA256": "24125ef2629333022e1e147fddc14bbb42e0113aa47c2ca8b27766ff179ba401",
+      "slots": [
+        {
+          "x": 0,
+          "y": 0,
+          "centerMM": [
+            -35,
+            35
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.8124308504445175,
+          "minimumSeatMM": 28.0222301210744,
+          "verifiedSeatMM": 28.0422301210744,
+          "contact": {
+            "pointMM": [
+              -48.43249668412378,
+              48.432401316692136,
+              23.1869001050736
+            ],
+            "bodyNativeZ": 12.1646699839992,
+            "bodyTriangle": 19155,
+            "frameTriangle": 182863
+          },
+          "overlaps": 2064114
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "centerMM": [
+            0,
+            35
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.812018719788391,
+          "minimumSeatMM": 28.021817990418274,
+          "verifiedSeatMM": 28.041817990418274,
+          "contact": {
+            "pointMM": [
+              -13.42584686655,
+              48.42575149911836,
+              23.178582991802305
+            ],
+            "bodyNativeZ": 12.15676500138403,
+            "bodyTriangle": 19155,
+            "frameTriangle": 129170
+          },
+          "overlaps": 1448094
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "centerMM": [
+            35,
+            35
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.8997148949054115,
+          "minimumSeatMM": 28.109514165535295,
+          "verifiedSeatMM": 28.129514165535294,
+          "contact": {
+            "pointMM": [
+              48.39878745932079,
+              48.3990970819084,
+              23.234593680464315
+            ],
+            "bodyNativeZ": 12.125079514929022,
+            "bodyTriangle": 19441,
+            "frameTriangle": 412406
+          },
+          "overlaps": 1927271
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "centerMM": [
+            -35,
+            0
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.8120935892253023,
+          "minimumSeatMM": 28.021892859855186,
+          "verifiedSeatMM": 28.041892859855185,
+          "contact": {
+            "pointMM": [
+              -48.42582416947459,
+              13.425728802042949,
+              23.17863088004995
+            ],
+            "bodyNativeZ": 12.156738020194764,
+            "bodyTriangle": 19155,
+            "frameTriangle": 1076185
+          },
+          "overlaps": 1369349
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "centerMM": [
+            0,
+            0
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.679404363335319,
+          "minimumSeatMM": 27.889203633965202,
+          "verifiedSeatMM": 27.909203633965202,
+          "contact": {
+            "pointMM": [
+              -13.517055858105437,
+              13.516960490673796,
+              23.154393488301004
+            ],
+            "bodyNativeZ": 12.265189854335802,
+            "bodyTriangle": 19155,
+            "frameTriangle": 1233527
+          },
+          "overlaps": 517569
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "centerMM": [
+            35,
+            0
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.8119836710607053,
+          "minimumSeatMM": 28.02178294169059,
+          "verifiedSeatMM": 28.041782941690588,
+          "contact": {
+            "pointMM": [
+              48.42578783429647,
+              -13.425787834296475,
+              23.178606935926126
+            ],
+            "bodyNativeZ": 12.15682399423554,
+            "bodyTriangle": 101,
+            "frameTriangle": 542332
+          },
+          "overlaps": 1360192
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "centerMM": [
+            -35,
+            -35
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 3.2238641148551146,
+          "minimumSeatMM": 28.433663385484998,
+          "verifiedSeatMM": 28.453663385484997,
+          "contact": {
+            "pointMM": [
+              -49.324786698414876,
+              -49.32462531549841,
+              24.659044730721476
+            ],
+            "bodyNativeZ": 13.225381345236478,
+            "bodyTriangle": 19248,
+            "frameTriangle": 1659327
+          },
+          "overlaps": 1914774
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "centerMM": [
+            0,
+            -35
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.811963241244502,
+          "minimumSeatMM": 28.021762511874385,
+          "verifiedSeatMM": 28.041762511874385,
+          "contact": {
+            "pointMM": [
+              13.425826401161936,
+              -48.425826401161935,
+              23.178632350685323
+            ],
+            "bodyNativeZ": 12.156869838810938,
+            "bodyTriangle": 101,
+            "frameTriangle": 1489312
+          },
+          "overlaps": 1426982
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "centerMM": [
+            35,
+            -35
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.81239180101117,
+          "minimumSeatMM": 28.022191071641053,
+          "verifiedSeatMM": 28.042191071641053,
+          "contact": {
+            "pointMM": [
+              48.432440490099,
+              -48.432440490099,
+              23.186923102397035
+            ],
+            "bodyNativeZ": 12.16473203075598,
+            "bodyTriangle": 101,
+            "frameTriangle": 1284665
+          },
+          "overlaps": 1965017
+        }
+      ]
+    },
+    {
+      "code": "MT1-736",
+      "sourceSHA256": "65be2ec6855a595f07131a613334bd909c718e2b55a220a9813b9bd13c2b1062",
+      "slots": [
+        {
+          "x": 0,
+          "y": 0,
+          "centerMM": [
+            -35,
+            87.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 3.0916546765274973,
+          "minimumSeatMM": 28.30145394715738,
+          "verifiedSeatMM": 28.32145394715738,
+          "contact": {
+            "pointMM": [
+              -48.237502053888036,
+              100.7374066864564,
+              23.23432371333655
+            ],
+            "bodyNativeZ": 11.93286976617917,
+            "bodyTriangle": 19155,
+            "frameTriangle": 2519865
+          },
+          "overlaps": 1824020
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "centerMM": [
+            0,
+            87.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.9973947886236054,
+          "minimumSeatMM": 28.20719405925349,
+          "verifiedSeatMM": 28.22719405925349,
+          "contact": {
+            "pointMM": [
+              13.245229579276401,
+              100.74556379117466,
+              23.149760598355016
+            ],
+            "bodyNativeZ": 11.942566539101527,
+            "bodyTriangle": 19441,
+            "frameTriangle": 2235577
+          },
+          "overlaps": 1249041
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "centerMM": [
+            35,
+            87.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.9988416617799807,
+          "minimumSeatMM": 28.208640932409864,
+          "verifiedSeatMM": 28.228640932409863,
+          "contact": {
+            "pointMM": [
+              48.23856306484387,
+              100.73889834425489,
+              23.143283909483017
+            ],
+            "bodyNativeZ": 11.934642977073153,
+            "bodyTriangle": 19442,
+            "frameTriangle": 2141303
+          },
+          "overlaps": 1871634
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "centerMM": [
+            -35,
+            52.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.847933309802393,
+          "minimumSeatMM": 28.057732580432276,
+          "verifiedSeatMM": 28.077732580432276,
+          "contact": {
+            "pointMM": [
+              -48.37894086248842,
+              65.87884549505678,
+              23.158737985024352
+            ],
+            "bodyNativeZ": 12.101005404592076,
+            "bodyTriangle": 19155,
+            "frameTriangle": 1808351
+          },
+          "overlaps": 1342516
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "centerMM": [
+            0,
+            52.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.798658941929606,
+          "minimumSeatMM": 28.00845821255949,
+          "verifiedSeatMM": 28.02845821255949,
+          "contact": {
+            "pointMM": [
+              13.427920782605844,
+              65.92792078260584,
+              23.167817650327258
+            ],
+            "bodyNativeZ": 12.159359437767769,
+            "bodyTriangle": 254,
+            "frameTriangle": 2511336
+          },
+          "overlaps": 504317
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "centerMM": [
+            35,
+            52.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.878921944242233,
+          "minimumSeatMM": 28.088721214872116,
+          "verifiedSeatMM": 28.108721214872116,
+          "contact": {
+            "pointMM": [
+              48.37404326331964,
+              65.87404326331963,
+              23.18403624649693
+            ],
+            "bodyNativeZ": 12.095315031624814,
+            "bodyTriangle": 254,
+            "frameTriangle": 1596716
+          },
+          "overlaps": 1399478
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "centerMM": [
+            -35,
+            17.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.846347935176553,
+          "minimumSeatMM": 28.056147205806436,
+          "verifiedSeatMM": 28.076147205806436,
+          "contact": {
+            "pointMM": [
+              -48.398202220069294,
+              30.898106852637657,
+              23.180049583906747
+            ],
+            "bodyNativeZ": 12.123902378100311,
+            "bodyTriangle": 19155,
+            "frameTriangle": 1849058
+          },
+          "overlaps": 1235334
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "centerMM": [
+            0,
+            17.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.6792637393224865,
+          "minimumSeatMM": 27.88906300995237,
+          "verifiedSeatMM": 27.90906300995237,
+          "contact": {
+            "pointMM": [
+              -13.517176879458315,
+              31.017081512026675,
+              23.15439672863933
+            ],
+            "bodyNativeZ": 12.26533371868696,
+            "bodyTriangle": 19155,
+            "frameTriangle": 1349473
+          },
+          "overlaps": 451334
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "centerMM": [
+            35,
+            17.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.8744512578116534,
+          "minimumSeatMM": 28.084250528441537,
+          "verifiedSeatMM": 28.104250528441536,
+          "contact": {
+            "pointMM": [
+              48.36449739684482,
+              4.135502603155179,
+              23.16821835333525
+            ],
+            "bodyNativeZ": 12.083967824893714,
+            "bodyTriangle": 101,
+            "frameTriangle": 2577320
+          },
+          "overlaps": 1209371
+        },
+        {
+          "x": 0,
+          "y": 3,
+          "centerMM": [
+            -35,
+            -17.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.846349119548311,
+          "minimumSeatMM": 28.056148390178194,
+          "verifiedSeatMM": 28.076148390178194,
+          "contact": {
+            "pointMM": [
+              -48.39820138660995,
+              -4.101893980821693,
+              23.180049777502205
+            ],
+            "bodyNativeZ": 12.123901387324013,
+            "bodyTriangle": 19155,
+            "frameTriangle": 1291802
+          },
+          "overlaps": 1241115
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "centerMM": [
+            0,
+            -17.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.6792637393224865,
+          "minimumSeatMM": 27.88906300995237,
+          "verifiedSeatMM": 27.90906300995237,
+          "contact": {
+            "pointMM": [
+              -13.517176879458315,
+              -3.982918487973325,
+              23.15439672863933
+            ],
+            "bodyNativeZ": 12.26533371868696,
+            "bodyTriangle": 19155,
+            "frameTriangle": 1181706
+          },
+          "overlaps": 454778
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "centerMM": [
+            35,
+            -17.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.8744529107611214,
+          "minimumSeatMM": 28.084252181391005,
+          "verifiedSeatMM": 28.104252181391004,
+          "contact": {
+            "pointMM": [
+              48.364495997770426,
+              -4.135504002229572,
+              23.16821834319982
+            ],
+            "bodyNativeZ": 12.083966161808814,
+            "bodyTriangle": 211,
+            "frameTriangle": 1231315
+          },
+          "overlaps": 1204711
+        },
+        {
+          "x": 0,
+          "y": 4,
+          "centerMM": [
+            -35,
+            -52.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.847826590527905,
+          "minimumSeatMM": 28.05762586115779,
+          "verifiedSeatMM": 28.077625861157788,
+          "contact": {
+            "pointMM": [
+              -48.37891482552977,
+              -65.87891482552976,
+              23.158731736772257
+            ],
+            "bodyNativeZ": 12.10110587561447,
+            "bodyTriangle": 112,
+            "frameTriangle": 485395
+          },
+          "overlaps": 1364836
+        },
+        {
+          "x": 1,
+          "y": 4,
+          "centerMM": [
+            0,
+            -52.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.798595103549946,
+          "minimumSeatMM": 28.00839437417983,
+          "verifiedSeatMM": 28.02839437417983,
+          "contact": {
+            "pointMM": [
+              13.427972157014171,
+              -65.92797215701417,
+              23.167814880896504
+            ],
+            "bodyNativeZ": 12.159420506716673,
+            "bodyTriangle": 101,
+            "frameTriangle": 1165331
+          },
+          "overlaps": 507763
+        },
+        {
+          "x": 2,
+          "y": 4,
+          "centerMM": [
+            35,
+            -52.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.8788857768289517,
+          "minimumSeatMM": 28.088685047458835,
+          "verifiedSeatMM": 28.108685047458835,
+          "contact": {
+            "pointMM": [
+              48.3740754642397,
+              -65.87407546423971,
+              23.18403835643625
+            ],
+            "bodyNativeZ": 12.095353308977415,
+            "bodyTriangle": 190,
+            "frameTriangle": 250706
+          },
+          "overlaps": 1305355
+        },
+        {
+          "x": 0,
+          "y": 5,
+          "centerMM": [
+            -35,
+            -87.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 3.0916277995490695,
+          "minimumSeatMM": 28.301427070178953,
+          "verifiedSeatMM": 28.321427070178952,
+          "contact": {
+            "pointMM": [
+              -48.237408404753005,
+              -100.737408404753,
+              23.23432374083874
+            ],
+            "bodyNativeZ": 11.932896670659787,
+            "bodyTriangle": 112,
+            "frameTriangle": 1173860
+          },
+          "overlaps": 1766288
+        },
+        {
+          "x": 1,
+          "y": 5,
+          "centerMM": [
+            0,
+            -87.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.997370355138166,
+          "minimumSeatMM": 28.20716962576805,
+          "verifiedSeatMM": 28.22716962576805,
+          "contact": {
+            "pointMM": [
+              13.2455636530601,
+              -100.7455636530601,
+              23.149760470207482
+            ],
+            "bodyNativeZ": 11.942590844439433,
+            "bodyTriangle": 190,
+            "frameTriangle": 889572
+          },
+          "overlaps": 1170748
+        },
+        {
+          "x": 2,
+          "y": 5,
+          "centerMM": [
+            35,
+            -87.5
+          ],
+          "frameTopMM": 25.229799270629883,
+          "insertionRiseMM": 2.998816385714388,
+          "minimumSeatMM": 28.20861565634427,
+          "verifiedSeatMM": 28.22861565634427,
+          "contact": {
+            "pointMM": [
+              48.238898788849056,
+              -100.73889878884906,
+              23.143283952082967
+            ],
+            "bodyNativeZ": 11.934668295738698,
+            "bodyTriangle": 101,
+            "frameTriangle": 1023358
+          },
+          "overlaps": 1783975
+        }
+      ]
+    },
+    {
+      "code": "MT1-744",
+      "sourceSHA256": "effda1a332601ac784c103effdbb1928f9859c0a8f7eac113d7b3fd756251a08",
+      "slots": [
+        {
+          "x": 0,
+          "y": 0,
+          "centerMM": [
+            -52.5,
+            52.5
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 3.0543055709106532,
+          "minimumSeatMM": 28.128105161975107,
+          "verifiedSeatMM": 28.148105161975106,
+          "contact": {
+            "pointMM": [
+              -65.9137346077598,
+              65.91363924032817,
+              23.270471693911723
+            ],
+            "bodyNativeZ": 12.142366531936617,
+            "bodyTriangle": 19155,
+            "frameTriangle": 2137662
+          },
+          "overlaps": 1934191
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "centerMM": [
+            -17.5,
+            52.5
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 2.9580856755859735,
+          "minimumSeatMM": 28.031885266650427,
+          "verifiedSeatMM": 28.051885266650427,
+          "contact": {
+            "pointMM": [
+              -30.889342409240033,
+              65.88924704180839,
+              23.14525552867357
+            ],
+            "bodyNativeZ": 12.11337026202314,
+            "bodyTriangle": 19833,
+            "frameTriangle": 2124191
+          },
+          "overlaps": 1378759
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "centerMM": [
+            17.5,
+            52.5
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 2.958003600957145,
+          "minimumSeatMM": 28.0318031920216,
+          "verifiedSeatMM": 28.051803192021598,
+          "contact": {
+            "pointMM": [
+              30.889300644497887,
+              65.88930064449788,
+              23.14525472899787
+            ],
+            "bodyNativeZ": 12.113451536976271,
+            "bodyTriangle": 254,
+            "frameTriangle": 876971
+          },
+          "overlaps": 1360892
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "centerMM": [
+            52.5,
+            52.5
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 3.0542251178252187,
+          "minimumSeatMM": 28.128024708889672,
+          "verifiedSeatMM": 28.148024708889672,
+          "contact": {
+            "pointMM": [
+              65.91368632903315,
+              65.91368632903315,
+              23.270463599128345
+            ],
+            "bodyNativeZ": 12.142438890238672,
+            "bodyTriangle": 211,
+            "frameTriangle": 890410
+          },
+          "overlaps": 1938795
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "centerMM": [
+            -52.5,
+            17.5
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 3.0479005416223934,
+          "minimumSeatMM": 28.121700132686847,
+          "verifiedSeatMM": 28.141700132686847,
+          "contact": {
+            "pointMM": [
+              -65.90434526703245,
+              30.904249899600817,
+              23.252905068926413
+            ],
+            "bodyNativeZ": 12.131204936239566,
+            "bodyTriangle": 19155,
+            "frameTriangle": 1969488
+          },
+          "overlaps": 1224931
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "centerMM": [
+            -17.5,
+            17.5
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 2.957763108536138,
+          "minimumSeatMM": 28.03156269960059,
+          "verifiedSeatMM": 28.05156269960059,
+          "contact": {
+            "pointMM": [
+              -30.911498968568996,
+              30.911403601137355,
+              23.17127161142341
+            ],
+            "bodyNativeZ": 12.139708911822819,
+            "bodyTriangle": 19833,
+            "frameTriangle": 2131963
+          },
+          "overlaps": 461259
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "centerMM": [
+            17.5,
+            17.5
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 2.957706749051237,
+          "minimumSeatMM": 28.03150634011569,
+          "verifiedSeatMM": 28.05150634011569,
+          "contact": {
+            "pointMM": [
+              30.911467234450836,
+              30.911467234450836,
+              23.171307384429337
+            ],
+            "bodyNativeZ": 12.139801044313646,
+            "bodyTriangle": 211,
+            "frameTriangle": 884726
+          },
+          "overlaps": 440843
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "centerMM": [
+            52.5,
+            17.5
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 3.04782711693095,
+          "minimumSeatMM": 28.121626707995404,
+          "verifiedSeatMM": 28.141626707995403,
+          "contact": {
+            "pointMM": [
+              65.9042968518604,
+              30.904296851860394,
+              23.252904292043866
+            ],
+            "bodyNativeZ": 12.131277584048462,
+            "bodyTriangle": 211,
+            "frameTriangle": 916011
+          },
+          "overlaps": 1201952
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "centerMM": [
+            -52.5,
+            -17.5
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 3.04782711693095,
+          "minimumSeatMM": 28.121626707995404,
+          "verifiedSeatMM": 28.141626707995403,
+          "contact": {
+            "pointMM": [
+              -65.9042968518604,
+              -30.904296851860394,
+              23.252904292043866
+            ],
+            "bodyNativeZ": 12.131277584048464,
+            "bodyTriangle": 112,
+            "frameTriangle": 1347194
+          },
+          "overlaps": 1213324
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "centerMM": [
+            -17.5,
+            -17.5
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 2.957706749051237,
+          "minimumSeatMM": 28.03150634011569,
+          "verifiedSeatMM": 28.05150634011569,
+          "contact": {
+            "pointMM": [
+              -30.911467234450836,
+              -30.911467234450836,
+              23.171307384429337
+            ],
+            "bodyNativeZ": 12.139801044313646,
+            "bodyTriangle": 112,
+            "frameTriangle": 1374442
+          },
+          "overlaps": 461793
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "centerMM": [
+            17.5,
+            -17.5
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 2.957706749051237,
+          "minimumSeatMM": 28.03150634011569,
+          "verifiedSeatMM": 28.05150634011569,
+          "contact": {
+            "pointMM": [
+              30.911467234450836,
+              -30.911467234450836,
+              23.171307384429337
+            ],
+            "bodyNativeZ": 12.139801044313646,
+            "bodyTriangle": 101,
+            "frameTriangle": 262436
+          },
+          "overlaps": 435941
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "centerMM": [
+            52.5,
+            -17.5
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 3.04782711693095,
+          "minimumSeatMM": 28.121626707995404,
+          "verifiedSeatMM": 28.141626707995403,
+          "contact": {
+            "pointMM": [
+              65.9042968518604,
+              -30.904296851860394,
+              23.252904292043866
+            ],
+            "bodyNativeZ": 12.131277584048464,
+            "bodyTriangle": 101,
+            "frameTriangle": 99958
+          },
+          "overlaps": 1187774
+        },
+        {
+          "x": 0,
+          "y": 3,
+          "centerMM": [
+            -52.5,
+            -52.5
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 3.0542251178252187,
+          "minimumSeatMM": 28.128024708889672,
+          "verifiedSeatMM": 28.148024708889672,
+          "contact": {
+            "pointMM": [
+              -65.91368632903315,
+              -65.91368632903315,
+              23.270463599128345
+            ],
+            "bodyNativeZ": 12.142438890238672,
+            "bodyTriangle": 292,
+            "frameTriangle": 1515355
+          },
+          "overlaps": 1938590
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "centerMM": [
+            -17.5,
+            -52.5
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 2.958003600957145,
+          "minimumSeatMM": 28.0318031920216,
+          "verifiedSeatMM": 28.051803192021598,
+          "contact": {
+            "pointMM": [
+              -30.889300644497887,
+              -65.88930064449788,
+              23.14525472899787
+            ],
+            "bodyNativeZ": 12.11345153697627,
+            "bodyTriangle": 112,
+            "frameTriangle": 1501916
+          },
+          "overlaps": 1296588
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "centerMM": [
+            17.5,
+            -52.5
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 2.958003600957145,
+          "minimumSeatMM": 28.0318031920216,
+          "verifiedSeatMM": 28.051803192021598,
+          "contact": {
+            "pointMM": [
+              30.889300644497887,
+              -65.88930064449788,
+              23.14525472899787
+            ],
+            "bodyNativeZ": 12.11345153697627,
+            "bodyTriangle": 101,
+            "frameTriangle": 254681
+          },
+          "overlaps": 1253217
+        },
+        {
+          "x": 3,
+          "y": 3,
+          "centerMM": [
+            52.5,
+            -52.5
+          ],
+          "frameTopMM": 25.093799591064453,
+          "insertionRiseMM": 3.054225117825215,
+          "minimumSeatMM": 28.12802470888967,
+          "verifiedSeatMM": 28.14802470888967,
+          "contact": {
+            "pointMM": [
+              65.91368632903315,
+              -65.91368632903315,
+              23.270463599128345
+            ],
+            "bodyNativeZ": 12.142438890238674,
+            "bodyTriangle": 101,
+            "frameTriangle": 268120
+          },
+          "overlaps": 1849837
+        }
+      ]
+    },
+    {
+      "code": "MT1-811",
+      "sourceSHA256": "4a91f540758617914e86406e8913aa03f83e6a986768b0d6acda80c9cb5837be",
+      "slots": [
+        {
+          "x": 0,
+          "y": 0,
+          "centerMM": [
+            0,
+            0
+          ],
+          "frameTopMM": 25.229698181152344,
+          "insertionRiseMM": 2.6306961324081506,
+          "minimumSeatMM": 27.840394313560495,
+          "verifiedSeatMM": 27.860394313560494,
+          "contact": {
+            "pointMM": [
+              -13.620904842325167,
+              13.620809474893527,
+              23.229034834888616
+            ],
+            "bodyNativeZ": 12.388640521328119,
+            "bodyTriangle": 19155,
+            "frameTriangle": 87446
+          },
+          "overlaps": 3524446
+        }
+      ]
+    },
+    {
+      "code": "MT1-812",
+      "sourceSHA256": "c543cf3c9b4e0f03ff86132e5a87cdab68d2d51c66295f0a7d6f535135b4ba99",
+      "slots": [
+        {
+          "x": 0,
+          "y": 0,
+          "centerMM": [
+            -17.5,
+            0
+          ],
+          "frameTopMM": 25.229700088500977,
+          "insertionRiseMM": 2.732801589401422,
+          "minimumSeatMM": 27.9425016779024,
+          "verifiedSeatMM": 27.9625016779024,
+          "contact": {
+            "pointMM": [
+              -3.9918443582290504,
+              -13.50815564177095,
+              23.197236589063742
+            ],
+            "bodyNativeZ": 12.254734911161345,
+            "bodyTriangle": 101,
+            "frameTriangle": 530273
+          },
+          "overlaps": 2849670
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "centerMM": [
+            17.5,
+            0
+          ],
+          "frameTopMM": 25.229700088500977,
+          "insertionRiseMM": 2.7328927139213803,
+          "minimumSeatMM": 27.942592802422357,
+          "verifiedSeatMM": 27.962592802422357,
+          "contact": {
+            "pointMM": [
+              3.9917751787981297,
+              13.508129453770229,
+              23.197284745736976
+            ],
+            "bodyNativeZ": 12.254691943314619,
+            "bodyTriangle": 19155,
+            "frameTriangle": 19322
+          },
+          "overlaps": 2932025
+        }
+      ]
+    },
+    {
+      "code": "MT1-823",
+      "sourceSHA256": "bec294bb4d415d20cdc09c353c8a4d8c92769410c462b90584b1b5be34be67ee",
+      "slots": [
+        {
+          "x": 0,
+          "y": 0,
+          "centerMM": [
+            -35,
+            17.5
+          ],
+          "frameTopMM": 25.230300903320312,
+          "insertionRiseMM": 2.73669105928008,
+          "minimumSeatMM": 27.946991962600393,
+          "verifiedSeatMM": 27.966991962600392,
+          "contact": {
+            "pointMM": [
+              -48.480369276980994,
+              30.980273909549354,
+              23.1685705775629
+            ],
+            "bodyNativeZ": 12.221578614962509,
+            "bodyTriangle": 19155,
+            "frameTriangle": 971730
+          },
+          "overlaps": 2095733
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "centerMM": [
+            0,
+            17.5
+          ],
+          "frameTopMM": 25.230300903320312,
+          "insertionRiseMM": 2.738212415889702,
+          "minimumSeatMM": 27.948513319210015,
+          "verifiedSeatMM": 27.968513319210015,
+          "contact": {
+            "pointMM": [
+              -13.484583876022219,
+              30.984488508590577,
+              23.175102046372015
+            ],
+            "bodyNativeZ": 12.226588727162,
+            "bodyTriangle": 19833,
+            "frameTriangle": 865039
+          },
+          "overlaps": 1528916
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "centerMM": [
+            35,
+            17.5
+          ],
+          "frameTopMM": 25.230300903320312,
+          "insertionRiseMM": 2.8133910743040857,
+          "minimumSeatMM": 28.0236919776244,
+          "verifiedSeatMM": 28.0436919776244,
+          "contact": {
+            "pointMM": [
+              48.45406329696515,
+              30.95406329696515,
+              23.214127118754302
+            ],
+            "bodyNativeZ": 12.190435141129903,
+            "bodyTriangle": 254,
+            "frameTriangle": 936954
+          },
+          "overlaps": 2037015
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "centerMM": [
+            -35,
+            -17.5
+          ],
+          "frameTopMM": 25.230300903320312,
+          "insertionRiseMM": 2.7366241150144717,
+          "minimumSeatMM": 27.946925018334785,
+          "verifiedSeatMM": 27.966925018334784,
+          "contact": {
+            "pointMM": [
+              -48.48031689804342,
+              -30.98031689804342,
+              23.16856791201989
+            ],
+            "bodyNativeZ": 12.221642893685104,
+            "bodyTriangle": 112,
+            "frameTriangle": 297539
+          },
+          "overlaps": 2084533
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "centerMM": [
+            0,
+            -17.5
+          ],
+          "frameTopMM": 25.230300903320312,
+          "insertionRiseMM": 2.73815993392639,
+          "minimumSeatMM": 27.948460837246703,
+          "verifiedSeatMM": 27.968460837246703,
+          "contact": {
+            "pointMM": [
+              -13.484496474427837,
+              -30.984496474427836,
+              23.175072008814965
+            ],
+            "bodyNativeZ": 12.226611171568262,
+            "bodyTriangle": 112,
+            "frameTriangle": 210813
+          },
+          "overlaps": 1505084
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "centerMM": [
+            35,
+            -17.5
+          ],
+          "frameTopMM": 25.230300903320312,
+          "insertionRiseMM": 2.8133910743040857,
+          "minimumSeatMM": 28.0236919776244,
+          "verifiedSeatMM": 28.0436919776244,
+          "contact": {
+            "pointMM": [
+              48.45406329696515,
+              -30.95406329696515,
+              23.214127118754302
+            ],
+            "bodyNativeZ": 12.190435141129903,
+            "bodyTriangle": 101,
+            "frameTriangle": 282700
+          },
+          "overlaps": 1985047
+        }
+      ]
+    },
+    {
+      "code": "MT1-833",
+      "sourceSHA256": "43612c293878457c0a5672389a7dff115a8ddc4910d307016b84cc7601479240",
+      "slots": [
+        {
+          "x": 0,
+          "y": 0,
+          "centerMM": [
+            -35,
+            35
+          ],
+          "frameTopMM": 25.137300491333008,
+          "insertionRiseMM": 2.8768995124137042,
+          "minimumSeatMM": 27.994200003746712,
+          "verifiedSeatMM": 28.014200003746712,
+          "contact": {
+            "pointMM": [
+              -48.50449394840701,
+              21.495506051592994,
+              23.24458224648386
+            ],
+            "bodyNativeZ": 12.250382242737144,
+            "bodyTriangle": 112,
+            "frameTriangle": 529061
+          },
+          "overlaps": 2377652
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "centerMM": [
+            0,
+            35
+          ],
+          "frameTopMM": 25.137300491333008,
+          "insertionRiseMM": 2.7808737561626344,
+          "minimumSeatMM": 27.898174247495643,
+          "verifiedSeatMM": 27.918174247495642,
+          "contact": {
+            "pointMM": [
+              -13.524523952077942,
+              21.475476047922058,
+              23.1723662295664
+            ],
+            "bodyNativeZ": 12.274191982070757,
+            "bodyTriangle": 292,
+            "frameTriangle": 462073
+          },
+          "overlaps": 1576436
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "centerMM": [
+            35,
+            35
+          ],
+          "frameTopMM": 25.137300491333008,
+          "insertionRiseMM": 2.8673979815670094,
+          "minimumSeatMM": 27.984698472900018,
+          "verifiedSeatMM": 28.004698472900017,
+          "contact": {
+            "pointMM": [
+              48.504165562448954,
+              21.495834437551046,
+              23.23469036203611
+            ],
+            "bodyNativeZ": 12.24999188913609,
+            "bodyTriangle": 101,
+            "frameTriangle": 364351
+          },
+          "overlaps": 2203536
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "centerMM": [
+            -35,
+            0
+          ],
+          "frameTopMM": 25.137300491333008,
+          "insertionRiseMM": 2.772341499672322,
+          "minimumSeatMM": 27.88964199100533,
+          "verifiedSeatMM": 27.90964199100533,
+          "contact": {
+            "pointMM": [
+              -48.54598354303048,
+              13.545888175598838,
+              23.189219682885927
+            ],
+            "bodyNativeZ": 12.299577691880597,
+            "bodyTriangle": 19833,
+            "frameTriangle": 291024
+          },
+          "overlaps": 1318112
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "centerMM": [
+            0,
+            0
+          ],
+          "frameTopMM": 25.137300491333008,
+          "insertionRiseMM": 2.772808413161485,
+          "minimumSeatMM": 27.890108904494493,
+          "verifiedSeatMM": 27.910108904494493,
+          "contact": {
+            "pointMM": [
+              -13.516856039551014,
+              13.516760672119373,
+              23.155061224163912
+            ],
+            "bodyNativeZ": 12.264952319669419,
+            "bodyTriangle": 19155,
+            "frameTriangle": 167908
+          },
+          "overlaps": 431753
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "centerMM": [
+            35,
+            0
+          ],
+          "frameTopMM": 25.137300491333008,
+          "insertionRiseMM": 2.8323163247420915,
+          "minimumSeatMM": 27.9496168160751,
+          "verifiedSeatMM": 27.9696168160751,
+          "contact": {
+            "pointMM": [
+              48.549237393257314,
+              -13.549237393257313,
+              23.253185756941487
+            ],
+            "bodyNativeZ": 12.30356894086639,
+            "bodyTriangle": 101,
+            "frameTriangle": 1256084
+          },
+          "overlaps": 1280040
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "centerMM": [
+            -35,
+            -35
+          ],
+          "frameTopMM": 25.137300491333008,
+          "insertionRiseMM": 2.8769775819078696,
+          "minimumSeatMM": 27.994278073240878,
+          "verifiedSeatMM": 28.014278073240877,
+          "contact": {
+            "pointMM": [
+              -48.50453724856838,
+              -21.495558118863258,
+              23.244586407947217
+            ],
+            "bodyNativeZ": 12.25030833470634,
+            "bodyTriangle": 19155,
+            "frameTriangle": 1431998
+          },
+          "overlaps": 2395558
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "centerMM": [
+            0,
+            -35
+          ],
+          "frameTopMM": 25.137300491333008,
+          "insertionRiseMM": 2.780954002557028,
+          "minimumSeatMM": 27.898254493890036,
+          "verifiedSeatMM": 27.918254493890036,
+          "contact": {
+            "pointMM": [
+              -13.524565939004187,
+              -21.475529428427453,
+              23.17237197041765
+            ],
+            "bodyNativeZ": 12.274117476527614,
+            "bodyTriangle": 19155,
+            "frameTriangle": 1177198
+          },
+          "overlaps": 1518526
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "centerMM": [
+            35,
+            -35
+          ],
+          "frameTopMM": 25.137300491333008,
+          "insertionRiseMM": 2.8673979815670094,
+          "minimumSeatMM": 27.984698472900018,
+          "verifiedSeatMM": 28.004698472900017,
+          "contact": {
+            "pointMM": [
+              48.504165562448954,
+              -21.495834437551046,
+              23.23469036203611
+            ],
+            "bodyNativeZ": 12.24999188913609,
+            "bodyTriangle": 211,
+            "frameTriangle": 1271196
+          },
+          "overlaps": 2188115
+        }
+      ]
+    },
+    {
+      "code": "MT1-911",
+      "sourceSHA256": "fe1a1db33d963b9e19f2f72203d95ae9769771b0da107c4a318d99f7232fd3fb",
+      "slots": [
+        {
+          "x": 0,
+          "y": 0,
+          "centerMM": [
+            0,
+            0
+          ],
+          "frameTopMM": 25.074199676513672,
+          "insertionRiseMM": 2.8971883591730823,
+          "minimumSeatMM": 27.951388035686755,
+          "verifiedSeatMM": 27.971388035686754,
+          "contact": {
+            "pointMM": [
+              -13.528995648723404,
+              13.528900281291763,
+              23.230771337619675
+            ],
+            "bodyNativeZ": 12.27938330193292,
+            "bodyTriangle": 19155,
+            "frameTriangle": 361291
+          },
+          "overlaps": 3621802
+        }
+      ]
+    },
+    {
+      "code": "MT1-913",
+      "sourceSHA256": "9b16079c560e9ecdd07e2f8e441785719ad73d229b42211ed7338e8712277ff4",
+      "slots": [
+        {
+          "x": 0,
+          "y": 0,
+          "centerMM": [
+            -35,
+            0
+          ],
+          "frameTopMM": 25.074499130249023,
+          "insertionRiseMM": 2.9279173107133687,
+          "minimumSeatMM": 27.982416440962393,
+          "verifiedSeatMM": 28.002416440962392,
+          "contact": {
+            "pointMM": [
+              -48.49707358448387,
+              13.496978217052233,
+              23.223852331548432
+            ],
+            "bodyNativeZ": 12.24143589058604,
+            "bodyTriangle": 19155,
+            "frameTriangle": 550131
+          },
+          "overlaps": 2568706
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "centerMM": [
+            0,
+            0
+          ],
+          "frameTopMM": 25.074499130249023,
+          "insertionRiseMM": 2.9349989344287657,
+          "minimumSeatMM": 27.98949806467779,
+          "verifiedSeatMM": 28.00949806467779,
+          "contact": {
+            "pointMM": [
+              -13.493517466860133,
+              13.493422099428493,
+              23.226706614035102
+            ],
+            "bodyNativeZ": 12.237208549357312,
+            "bodyTriangle": 19155,
+            "frameTriangle": 632207
+          },
+          "overlaps": 1706779
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "centerMM": [
+            35,
+            0
+          ],
+          "frameTopMM": 25.074499130249023,
+          "insertionRiseMM": 2.8987472828427094,
+          "minimumSeatMM": 27.953246413091733,
+          "verifiedSeatMM": 27.973246413091733,
+          "contact": {
+            "pointMM": [
+              48.52756862682462,
+              -13.527568626824618,
+              23.23105761127772
+            ],
+            "bodyNativeZ": 12.277811198185988,
+            "bodyTriangle": 101,
+            "frameTriangle": 189951
+          },
+          "overlaps": 2658402
+        }
+      ]
+    },
+    {
+      "code": "MT1-933",
+      "sourceSHA256": "dbc88178e966b66be008235a9217bc6dc4415772feb2425f86cfe56682ee3660",
+      "slots": [
+        {
+          "x": 0,
+          "y": 0,
+          "centerMM": [
+            -35,
+            35
+          ],
+          "frameTopMM": 25.07469940185547,
+          "insertionRiseMM": 2.9531473434142974,
+          "minimumSeatMM": 28.007846745269767,
+          "verifiedSeatMM": 28.027846745269766,
+          "contact": {
+            "pointMM": [
+              -48.4979069041488,
+              21.5020930958512,
+              23.250398944171497
+            ],
+            "bodyNativeZ": 12.24255219890173,
+            "bodyTriangle": 112,
+            "frameTriangle": 246697
+          },
+          "overlaps": 1671381
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "centerMM": [
+            0,
+            35
+          ],
+          "frameTopMM": 25.07469940185547,
+          "insertionRiseMM": 2.9370500053437887,
+          "minimumSeatMM": 27.991749407199258,
+          "verifiedSeatMM": 28.011749407199257,
+          "contact": {
+            "pointMM": [
+              -13.501807322402861,
+              48.50171195497122,
+              23.23881253726055
+            ],
+            "bodyNativeZ": 12.247063130061292,
+            "bodyTriangle": 19155,
+            "frameTriangle": 646581
+          },
+          "overlaps": 910514
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "centerMM": [
+            35,
+            35
+          ],
+          "frameTopMM": 25.07469940185547,
+          "insertionRiseMM": 2.90680241443804,
+          "minimumSeatMM": 27.96150181629351,
+          "verifiedSeatMM": 27.98150181629351,
+          "contact": {
+            "pointMM": [
+              21.484927999708844,
+              48.514976632859515,
+              23.224333356080248
+            ],
+            "bodyNativeZ": 12.262831539786738,
+            "bodyTriangle": 19155,
+            "frameTriangle": 586007
+          },
+          "overlaps": 1837859
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "centerMM": [
+            -35,
+            0
+          ],
+          "frameTopMM": 25.07469940185547,
+          "insertionRiseMM": 2.92804942836473,
+          "minimumSeatMM": 27.9827488302202,
+          "verifiedSeatMM": 28.0027488302202,
+          "contact": {
+            "pointMM": [
+              -48.50944909792275,
+              13.509353730491108,
+              23.23889613469132
+            ],
+            "bodyNativeZ": 12.25614730447112,
+            "bodyTriangle": 19155,
+            "frameTriangle": 622895
+          },
+          "overlaps": 748566
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "centerMM": [
+            0,
+            0
+          ],
+          "frameTopMM": 25.07469940185547,
+          "insertionRiseMM": 2.8482157094445277,
+          "minimumSeatMM": 27.902915111299997,
+          "verifiedSeatMM": 27.922915111299996,
+          "contact": {
+            "pointMM": [
+              -13.508823361492022,
+              -13.508823361492022,
+              23.15844374335964
+            ],
+            "bodyNativeZ": 12.255528632059644,
+            "bodyTriangle": 112,
+            "frameTriangle": 274768
+          },
+          "overlaps": 113726
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "centerMM": [
+            35,
+            0
+          ],
+          "frameTopMM": 25.07469940185547,
+          "insertionRiseMM": 2.8924947459403363,
+          "minimumSeatMM": 27.947194147795805,
+          "verifiedSeatMM": 27.967194147795805,
+          "contact": {
+            "pointMM": [
+              48.53941476794817,
+              -13.539414767948177,
+              23.239086897682675
+            ],
+            "bodyNativeZ": 12.291892749886872,
+            "bodyTriangle": 101,
+            "frameTriangle": 373919
+          },
+          "overlaps": 955473
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "centerMM": [
+            -35,
+            -35
+          ],
+          "frameTopMM": 25.07469940185547,
+          "insertionRiseMM": 2.926934855641594,
+          "minimumSeatMM": 27.981634257497063,
+          "verifiedSeatMM": 28.001634257497063,
+          "contact": {
+            "pointMM": [
+              -48.49762596037471,
+              -48.49733210252562,
+              23.223726785918004
+            ],
+            "bodyNativeZ": 12.242092528420942,
+            "bodyTriangle": 19917,
+            "frameTriangle": 440155
+          },
+          "overlaps": 1678844
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "centerMM": [
+            0,
+            -35
+          ],
+          "frameTopMM": 25.07469940185547,
+          "insertionRiseMM": 2.9340450220267478,
+          "minimumSeatMM": 27.988744423882217,
+          "verifiedSeatMM": 28.008744423882217,
+          "contact": {
+            "pointMM": [
+              -13.494053464550184,
+              -48.49375903454368,
+              23.226590141458747
+            ],
+            "bodyNativeZ": 12.23784571757653,
+            "bodyTriangle": 19248,
+            "frameTriangle": 476447
+          },
+          "overlaps": 902473
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "centerMM": [
+            35,
+            -35
+          ],
+          "frameTopMM": 25.07469940185547,
+          "insertionRiseMM": 2.9326552589242993,
+          "minimumSeatMM": 27.98735466077977,
+          "verifiedSeatMM": 28.007354660779768,
+          "contact": {
+            "pointMM": [
+              48.50404480699047,
+              -21.49595519300953,
+              23.237203007456415
+            ],
+            "bodyNativeZ": 12.249848346676647,
+            "bodyTriangle": 254,
+            "frameTriangle": 232943
+          },
+          "overlaps": 1799465
+        }
+      ]
+    }
+  ]
+}

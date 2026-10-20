@@ -1,0 +1,871 @@
+{
+  "tileType": "stairs",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [0, 0],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.2,
+  "wallMode": "edge",
+  "wallMask": 80,
+  "supportSlots": [],
+  "plainMountCollarMM": 0,
+  "name": "Ladder Down",
+  "groupCode": "MED-ladder-down",
+  "hasDecor": true,
+  "renderTriangles": 110000,
+  "lodTriangles": 45000,
+  "renderBakeSize": 1536,
+  "lodBakeSize": 1536,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1024,
+  "lodColourSize": 768,
+  "lodDataSize": 768,
+  "standRayTopMM": 100,
+  "standPointsMM": [],
+  "blockersMM": [
+    [
+      [-17.65, -17.65],
+      [17.65, -17.65],
+      [17.65, 17.65],
+      [-17.65, 17.65]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "stairs",
+    "ladder",
+    "wood",
+    "rungs",
+    "plaster",
+    "corner",
+    "recess"
+  ],
+  "weightBudget": {
+    "renderMiB": [3.5, 6],
+    "lodMiB": [1.5, 3.5],
+    "shadowKiB": [120, 260],
+    "previewKiB": [15, 45],
+    "basis": "One-cell descending ladder with two recessed rungs,individually measured stiles,two plaster/timber corner walls and a native well floor near3.33mm. Preserve every visible surface below17mm through the hollow UD016 builder; start110000/45000 independent triangles,1536 bakes and1024/768 packed maps,compare compact and measure actual final frame support."
+  },
+  "materials": {
+    "earthRGB": [0.28, 0.17, 0.075],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [0.34, 0.165, 0.055],
+    "woodLightRGB": [0.59, 0.35, 0.145],
+    "stoneDarkRGB": [0.34, 0.165, 0.055],
+    "stoneLightRGB": [0.59, 0.35, 0.145],
+    "woodParts": [
+      {
+        "name": "Z native recessed well boarding",
+        "minMM": [-17.65, -17.65, 3.2],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "darkRGB": [0.3, 0.14, 0.045],
+        "lightRGB": [0.52, 0.285, 0.1]
+      },
+      {
+        "name": "X native well bottom floor",
+        "minMM": [-13.5, -13.5, 3.2],
+        "maxMM": [13.5, 13.5, 3.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "X platform planks and north south fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "excludeParts": [
+          {
+            "name": "recessed opening",
+            "minMM": [-11.7, -11.7, 0],
+            "maxMM": [11.7, 11.7, 25.0]
+          }
+        ]
+      },
+      {
+        "name": "west Y platform border and fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [-14.3, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y platform border and fascia",
+        "minMM": [14.3, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west south post",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-10.1, -13.6, 50],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west north post",
+        "minMM": [-17.65, 13.6, 26.1],
+        "maxMM": [-10.1, 17.65, 50],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south west post",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-13.6, -10.1, 50],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south east post",
+        "minMM": [13.6, -17.65, 26.1],
+        "maxMM": [17.65, -10.1, 50],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "central corner timber post",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-10.1, -10.1, 50],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west front diagonal brace",
+        "minMM": [-13.5, -15.2, 25.7],
+        "maxMM": [-10.1, 15.2, 49.9],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.0, 0.8163477847040801, 0.5775606413258622],
+        "projection": {
+          "originMM": [
+            -10.64819319114778, 3.851246343991309, 36.97269147794032
+          ],
+          "axis": [0.0, -0.5775606413258622, 0.8163477847040801],
+          "rangeMM": [-2.9174264973773956, 2.965367639124699]
+        }
+      },
+      {
+        "name": "west rear diagonal brace",
+        "minMM": [-17.65, -15.2, 25.7],
+        "maxMM": [-13.9, 15.2, 49.9],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.0, 0.880930325762576, 0.4732459837672602],
+        "projection": {
+          "originMM": [
+            -17.262164108227225, 3.4124882524561633, 33.93295392206902
+          ],
+          "axis": [0.0, -0.4732459837672602, 0.880930325762576],
+          "rangeMM": [-2.9097843780155097, 3.6749181862161553]
+        }
+      },
+      {
+        "name": "south front diagonal brace",
+        "minMM": [-15.2, -13.5, 25.7],
+        "maxMM": [15.2, -10.1, 49.9],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.790306268526401, 0.0, 0.6127120056991509],
+        "projection": {
+          "originMM": [
+            3.9153338328028924, -10.657629729491736, 36.70975115107394
+          ],
+          "axis": [-0.6127120056991509, 0.0, 0.790306268526401],
+          "rangeMM": [-2.779893855688522, 3.099515179736674]
+        }
+      },
+      {
+        "name": "south rear diagonal brace",
+        "minMM": [-15.2, -17.65, 25.7],
+        "maxMM": [15.2, -13.9, 49.9],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.8365095281093144, 0.0, 0.5479523787541504],
+        "projection": {
+          "originMM": [
+            3.335206692211911, -17.238768341517684, 34.37015593405997
+          ],
+          "axis": [-0.5479523787541504, 0.0, 0.8365095281093144],
+          "rangeMM": [-2.8747184803630956, 2.5582634903417403]
+        }
+      },
+      {
+        "name": "recessed ladder transverse rung 1",
+        "minMM": [-13.4, -13.4, 5.2],
+        "maxMM": [13.4, 13.4, 10.7],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.6689730059021285, -0.7432866993120963, 0.0],
+        "projection": {
+          "originMM": [
+            0.0004737442442785955, -0.4594308869144075, 26.954713562155867
+          ],
+          "axis": [0.6689730059021285, -0.7432866993120963, 0.0],
+          "rangeMM": [-9.5, 9.5]
+        },
+        "includeParts": [
+          {
+            "name": "rung depth",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [
+                0.0004737442442785955, -0.4594308869144075, 26.954713562155867
+              ],
+              "axis": [-0.7432866993120963, -0.6689730059021285, 0.0],
+              "rangeMM": [-7, 3]
+            }
+          }
+        ],
+        "darkRGB": [0.37, 0.17, 0.055],
+        "lightRGB": [0.64, 0.35, 0.13]
+      },
+      {
+        "name": "recessed ladder transverse rung 2",
+        "minMM": [-13.4, -13.4, 15.6],
+        "maxMM": [13.4, 13.4, 20.5],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.6689730059021285, -0.7432866993120963, 0.0],
+        "projection": {
+          "originMM": [
+            0.0004737442442785955, -0.4594308869144075, 26.954713562155867
+          ],
+          "axis": [0.6689730059021285, -0.7432866993120963, 0.0],
+          "rangeMM": [-9.5, 9.5]
+        },
+        "includeParts": [
+          {
+            "name": "rung depth",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [
+                0.0004737442442785955, -0.4594308869144075, 26.954713562155867
+              ],
+              "axis": [-0.7432866993120963, -0.6689730059021285, 0.0],
+              "rangeMM": [-7, 3]
+            }
+          }
+        ],
+        "darkRGB": [0.37, 0.17, 0.055],
+        "lightRGB": [0.64, 0.35, 0.13]
+      },
+      {
+        "name": "descending ladder stile -1",
+        "minMM": [-13.4, -13.4, 3.2],
+        "maxMM": [13.4, 13.4, 27.7],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          -0.15377056648476795, -0.22080430065721246, 0.9631199684848368
+        ],
+        "projection": {
+          "originMM": [-6.5174477010004015, 8.481091502551706, 20.0],
+          "axis": [
+            0.6796680565285589, -0.7311347262069151, -0.05910452663739869
+          ],
+          "rangeMM": [-2.7381386581593774, 2.7969068918638658]
+        },
+        "includeParts": [
+          {
+            "name": "stile depth",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-6.5174477010004015, 8.481091502551706, 20.0],
+              "axis": [
+                -0.7172209881324202, -0.645513340641089, -0.26250063092635817
+              ],
+              "rangeMM": [-2.5513047147223564, 2.9948522380082174]
+            }
+          }
+        ],
+        "darkRGB": [0.37, 0.17, 0.055],
+        "lightRGB": [0.64, 0.35, 0.13]
+      },
+      {
+        "name": "descending ladder stile 1",
+        "minMM": [-13.4, -13.4, 3.2],
+        "maxMM": [13.4, 13.4, 27.7],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          -0.31327191784993125, -0.16844053861623093, 0.9346060616309418
+        ],
+        "projection": {
+          "originMM": [8.140806877193285, -7.2536188145969565, 20.0],
+          "axis": [
+            0.6448412202329188, -0.7602087521812756, 0.07913566702510343
+          ],
+          "rangeMM": [-2.2663323673878333, 3.343467267980579]
+        },
+        "includeParts": [
+          {
+            "name": "stile depth",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [8.140806877193285, -7.2536188145969565, 20.0],
+              "axis": [
+                -0.6971660535160517, -0.6274634953984669, -0.3467694562201118
+              ],
+              "rangeMM": [-2.0741283045954924, 2.982069139673653]
+            }
+          }
+        ],
+        "darkRGB": [0.37, 0.17, 0.055],
+        "lightRGB": [0.64, 0.35, 0.13]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "west ochre plaster",
+        "minMM": [-17.65, -13.6, 26.6],
+        "maxMM": [-10.1, 13.6, 50],
+        "kind": "plaster",
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "west south post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.1, -13.6, 50],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "west north post",
+            "minMM": [-17.65, 13.6, 26.1],
+            "maxMM": [-10.1, 17.65, 50],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "south west post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-13.6, -10.1, 50],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "south east post",
+            "minMM": [13.6, -17.65, 26.1],
+            "maxMM": [17.65, -10.1, 50],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "central corner timber post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.1, -10.1, 50],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "west front diagonal brace",
+            "minMM": [-13.5, -15.2, 25.7],
+            "maxMM": [-10.1, 15.2, 49.9],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.0, 0.8163477847040801, 0.5775606413258622],
+            "projection": {
+              "originMM": [
+                -10.64819319114778, 3.851246343991309, 36.97269147794032
+              ],
+              "axis": [0.0, -0.5775606413258622, 0.8163477847040801],
+              "rangeMM": [-2.9174264973773956, 2.965367639124699]
+            }
+          },
+          {
+            "name": "west rear diagonal brace",
+            "minMM": [-17.65, -15.2, 25.7],
+            "maxMM": [-13.9, 15.2, 49.9],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.0, 0.880930325762576, 0.4732459837672602],
+            "projection": {
+              "originMM": [
+                -17.262164108227225, 3.4124882524561633, 33.93295392206902
+              ],
+              "axis": [0.0, -0.4732459837672602, 0.880930325762576],
+              "rangeMM": [-2.9097843780155097, 3.6749181862161553]
+            }
+          },
+          {
+            "name": "south front diagonal brace",
+            "minMM": [-15.2, -13.5, 25.7],
+            "maxMM": [15.2, -10.1, 49.9],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.790306268526401, 0.0, 0.6127120056991509],
+            "projection": {
+              "originMM": [
+                3.9153338328028924, -10.657629729491736, 36.70975115107394
+              ],
+              "axis": [-0.6127120056991509, 0.0, 0.790306268526401],
+              "rangeMM": [-2.779893855688522, 3.099515179736674]
+            }
+          },
+          {
+            "name": "south rear diagonal brace",
+            "minMM": [-15.2, -17.65, 25.7],
+            "maxMM": [15.2, -13.9, 49.9],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.8365095281093144, 0.0, 0.5479523787541504],
+            "projection": {
+              "originMM": [
+                3.335206692211911, -17.238768341517684, 34.37015593405997
+              ],
+              "axis": [-0.5479523787541504, 0.0, 0.8365095281093144],
+              "rangeMM": [-2.8747184803630956, 2.5582634903417403]
+            }
+          },
+          {
+            "name": "recessed ladder transverse rung 1",
+            "minMM": [-13.4, -13.4, 5.2],
+            "maxMM": [13.4, 13.4, 10.7],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.6689730059021285, -0.7432866993120963, 0.0],
+            "projection": {
+              "originMM": [
+                0.0004737442442785955, -0.4594308869144075, 26.954713562155867
+              ],
+              "axis": [0.6689730059021285, -0.7432866993120963, 0.0],
+              "rangeMM": [-9.5, 9.5]
+            },
+            "includeParts": [
+              {
+                "name": "rung depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [
+                    0.0004737442442785955, -0.4594308869144075,
+                    26.954713562155867
+                  ],
+                  "axis": [-0.7432866993120963, -0.6689730059021285, 0.0],
+                  "rangeMM": [-7, 3]
+                }
+              }
+            ],
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "recessed ladder transverse rung 2",
+            "minMM": [-13.4, -13.4, 15.6],
+            "maxMM": [13.4, 13.4, 20.5],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.6689730059021285, -0.7432866993120963, 0.0],
+            "projection": {
+              "originMM": [
+                0.0004737442442785955, -0.4594308869144075, 26.954713562155867
+              ],
+              "axis": [0.6689730059021285, -0.7432866993120963, 0.0],
+              "rangeMM": [-9.5, 9.5]
+            },
+            "includeParts": [
+              {
+                "name": "rung depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [
+                    0.0004737442442785955, -0.4594308869144075,
+                    26.954713562155867
+                  ],
+                  "axis": [-0.7432866993120963, -0.6689730059021285, 0.0],
+                  "rangeMM": [-7, 3]
+                }
+              }
+            ],
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "descending ladder stile -1",
+            "minMM": [-13.4, -13.4, 3.2],
+            "maxMM": [13.4, 13.4, 27.7],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.15377056648476795, -0.22080430065721246, 0.9631199684848368
+            ],
+            "projection": {
+              "originMM": [-6.5174477010004015, 8.481091502551706, 20.0],
+              "axis": [
+                0.6796680565285589, -0.7311347262069151, -0.05910452663739869
+              ],
+              "rangeMM": [-2.7381386581593774, 2.7969068918638658]
+            },
+            "includeParts": [
+              {
+                "name": "stile depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [-6.5174477010004015, 8.481091502551706, 20.0],
+                  "axis": [
+                    -0.7172209881324202, -0.645513340641089,
+                    -0.26250063092635817
+                  ],
+                  "rangeMM": [-2.5513047147223564, 2.9948522380082174]
+                }
+              }
+            ],
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "descending ladder stile 1",
+            "minMM": [-13.4, -13.4, 3.2],
+            "maxMM": [13.4, 13.4, 27.7],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.31327191784993125, -0.16844053861623093, 0.9346060616309418
+            ],
+            "projection": {
+              "originMM": [8.140806877193285, -7.2536188145969565, 20.0],
+              "axis": [
+                0.6448412202329188, -0.7602087521812756, 0.07913566702510343
+              ],
+              "rangeMM": [-2.2663323673878333, 3.343467267980579]
+            },
+            "includeParts": [
+              {
+                "name": "stile depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [8.140806877193285, -7.2536188145969565, 20.0],
+                  "axis": [
+                    -0.6971660535160517, -0.6274634953984669,
+                    -0.3467694562201118
+                  ],
+                  "rangeMM": [-2.0741283045954924, 2.982069139673653]
+                }
+              }
+            ],
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          }
+        ]
+      },
+      {
+        "name": "south ochre plaster",
+        "minMM": [-13.6, -17.65, 26.6],
+        "maxMM": [13.6, -10.1, 50],
+        "kind": "plaster",
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "west south post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.1, -13.6, 50],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "west north post",
+            "minMM": [-17.65, 13.6, 26.1],
+            "maxMM": [-10.1, 17.65, 50],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "south west post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-13.6, -10.1, 50],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "south east post",
+            "minMM": [13.6, -17.65, 26.1],
+            "maxMM": [17.65, -10.1, 50],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "central corner timber post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.1, -10.1, 50],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "west front diagonal brace",
+            "minMM": [-13.5, -15.2, 25.7],
+            "maxMM": [-10.1, 15.2, 49.9],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.0, 0.8163477847040801, 0.5775606413258622],
+            "projection": {
+              "originMM": [
+                -10.64819319114778, 3.851246343991309, 36.97269147794032
+              ],
+              "axis": [0.0, -0.5775606413258622, 0.8163477847040801],
+              "rangeMM": [-2.9174264973773956, 2.965367639124699]
+            }
+          },
+          {
+            "name": "west rear diagonal brace",
+            "minMM": [-17.65, -15.2, 25.7],
+            "maxMM": [-13.9, 15.2, 49.9],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.0, 0.880930325762576, 0.4732459837672602],
+            "projection": {
+              "originMM": [
+                -17.262164108227225, 3.4124882524561633, 33.93295392206902
+              ],
+              "axis": [0.0, -0.4732459837672602, 0.880930325762576],
+              "rangeMM": [-2.9097843780155097, 3.6749181862161553]
+            }
+          },
+          {
+            "name": "south front diagonal brace",
+            "minMM": [-15.2, -13.5, 25.7],
+            "maxMM": [15.2, -10.1, 49.9],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.790306268526401, 0.0, 0.6127120056991509],
+            "projection": {
+              "originMM": [
+                3.9153338328028924, -10.657629729491736, 36.70975115107394
+              ],
+              "axis": [-0.6127120056991509, 0.0, 0.790306268526401],
+              "rangeMM": [-2.779893855688522, 3.099515179736674]
+            }
+          },
+          {
+            "name": "south rear diagonal brace",
+            "minMM": [-15.2, -17.65, 25.7],
+            "maxMM": [15.2, -13.9, 49.9],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.8365095281093144, 0.0, 0.5479523787541504],
+            "projection": {
+              "originMM": [
+                3.335206692211911, -17.238768341517684, 34.37015593405997
+              ],
+              "axis": [-0.5479523787541504, 0.0, 0.8365095281093144],
+              "rangeMM": [-2.8747184803630956, 2.5582634903417403]
+            }
+          },
+          {
+            "name": "recessed ladder transverse rung 1",
+            "minMM": [-13.4, -13.4, 5.2],
+            "maxMM": [13.4, 13.4, 10.7],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.6689730059021285, -0.7432866993120963, 0.0],
+            "projection": {
+              "originMM": [
+                0.0004737442442785955, -0.4594308869144075, 26.954713562155867
+              ],
+              "axis": [0.6689730059021285, -0.7432866993120963, 0.0],
+              "rangeMM": [-9.5, 9.5]
+            },
+            "includeParts": [
+              {
+                "name": "rung depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [
+                    0.0004737442442785955, -0.4594308869144075,
+                    26.954713562155867
+                  ],
+                  "axis": [-0.7432866993120963, -0.6689730059021285, 0.0],
+                  "rangeMM": [-7, 3]
+                }
+              }
+            ],
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "recessed ladder transverse rung 2",
+            "minMM": [-13.4, -13.4, 15.6],
+            "maxMM": [13.4, 13.4, 20.5],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.6689730059021285, -0.7432866993120963, 0.0],
+            "projection": {
+              "originMM": [
+                0.0004737442442785955, -0.4594308869144075, 26.954713562155867
+              ],
+              "axis": [0.6689730059021285, -0.7432866993120963, 0.0],
+              "rangeMM": [-9.5, 9.5]
+            },
+            "includeParts": [
+              {
+                "name": "rung depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [
+                    0.0004737442442785955, -0.4594308869144075,
+                    26.954713562155867
+                  ],
+                  "axis": [-0.7432866993120963, -0.6689730059021285, 0.0],
+                  "rangeMM": [-7, 3]
+                }
+              }
+            ],
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "descending ladder stile -1",
+            "minMM": [-13.4, -13.4, 3.2],
+            "maxMM": [13.4, 13.4, 27.7],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.15377056648476795, -0.22080430065721246, 0.9631199684848368
+            ],
+            "projection": {
+              "originMM": [-6.5174477010004015, 8.481091502551706, 20.0],
+              "axis": [
+                0.6796680565285589, -0.7311347262069151, -0.05910452663739869
+              ],
+              "rangeMM": [-2.7381386581593774, 2.7969068918638658]
+            },
+            "includeParts": [
+              {
+                "name": "stile depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [-6.5174477010004015, 8.481091502551706, 20.0],
+                  "axis": [
+                    -0.7172209881324202, -0.645513340641089,
+                    -0.26250063092635817
+                  ],
+                  "rangeMM": [-2.5513047147223564, 2.9948522380082174]
+                }
+              }
+            ],
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "descending ladder stile 1",
+            "minMM": [-13.4, -13.4, 3.2],
+            "maxMM": [13.4, 13.4, 27.7],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.31327191784993125, -0.16844053861623093, 0.9346060616309418
+            ],
+            "projection": {
+              "originMM": [8.140806877193285, -7.2536188145969565, 20.0],
+              "axis": [
+                0.6448412202329188, -0.7602087521812756, 0.07913566702510343
+              ],
+              "rangeMM": [-2.2663323673878333, 3.343467267980579]
+            },
+            "includeParts": [
+              {
+                "name": "stile depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [8.140806877193285, -7.2536188145969565, 20.0],
+                  "axis": [
+                    -0.6971660535160517, -0.6274634953984669,
+                    -0.3467694562201118
+                  ],
+                  "rangeMM": [-2.0741283045954924, 2.982069139673653]
+                }
+              }
+            ],
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          }
+        ]
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "PDFpage12/native full/top/NE-lit inside inspected individually. Source579978tri/28998984bytes/SHAe61a4aef32c5dec4fc8f8442e74d9ef567396836ffd4f9d8a4040d1d0461dcf1/max49.837101mm. Functional cavity first-hit floor near3.3336mm,lower rung5.4..10.5 and upper rung15.8..20.3,with two stile caps26.65..27.438; nevercrop17oraddsolidpeg. Two sourcecap components define transverseV[.668973,-.743287,0];each descending stile has its own3Dfit from clean well sections. X platform/well floor,Y end fascia,Z well boarding/posts,measured rung/rail beamgrain and four actual wall brace fits. Ochre plaster confined to upper wall panels,excluding timber. No actor point on the narrow rim or recessed ladder;separate surfaceHeightMM25.415672 atnative[14,14]. Native17mm coordinates until selected UD016 translation;source-derived hollow well and hidden underside preserve every visible lower surface. Final render/LOD/shadow must pass all90 nativeframe cells before MCP. Allwood/plaster,no invented metal/emission/lights;verify well surfaces,lower rung,open gap,geometry,actual packed colour/ORM and both texture candidates. Final NE transparent preview must show the cavity.",
+  "surfaceHeightMM": 25.415672302246094,
+  "renderColourSize": 1024,
+  "recessMount": {
+    "probeHalfMM": 16,
+    "envelopeTriangles": 2000,
+    "hiddenWallMM": 1
+  }
+}
