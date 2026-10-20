@@ -54,11 +54,10 @@ export function previewFixture(catalogue, dto) {
           (window.pendingPreviewContexts ||= []).push(resolve),
         );
       options.signal?.throwIfAborted();
-      const maps = await (await fetch("/api/maps")).json();
       const map =
         window.lastSaved?.id === id
           ? window.lastSaved
-          : maps.find((m) => m.id === id);
+          : await (await fetch(`/api/maps/${id}`)).json();
       if (!map) return response({}, 404);
       const decorated = await decorate(map);
       return response({

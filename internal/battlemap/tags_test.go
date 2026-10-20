@@ -7,7 +7,7 @@ import (
 )
 
 func TestMapTagNormalization(t *testing.T) {
-	d := Presets()[0].Document
+	d := testPresets()[0].Document
 	d.Tags = []string{" Лес ", "лес", "", "темная  пещера"}
 	if err := ValidateDocument(&d); err != nil {
 		t.Fatal(err)
@@ -27,13 +27,13 @@ func TestMapTagNormalization(t *testing.T) {
 	}
 }
 func TestOnly3DMapsAreAvailable(t *testing.T) {
-	for _, p := range Presets() {
+	for _, p := range testPresets() {
 		if p.Document.Kind != "tiles" {
 			t.Fatal("image preset remains", p.ID)
 		}
 	}
 	for _, kind := range []string{"image", "image-grid"} {
-		d := Presets()[0].Document
+		d := testPresets()[0].Document
 		d.Kind = kind
 		if ValidateDocument(&d) == nil {
 			t.Fatal("image map accepted", kind)

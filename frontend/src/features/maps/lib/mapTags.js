@@ -15,7 +15,7 @@ export function normalizedMapTags(values) {
   return result;
 }
 export function availableMapTags(maps) {
-  return normalizedMapTagsUnlimited(maps.flatMap((m) => m.document.tags));
+  return normalizedMapTagsUnlimited(maps.flatMap((m) => m.tags));
 }
 function normalizedMapTagsUnlimited(values) {
   const tags = new Map();
@@ -25,7 +25,7 @@ function normalizedMapTagsUnlimited(values) {
   return [...tags.values()].sort((a, b) => a.localeCompare(b, "ru"));
 }
 export function matchesMapTags(map, query, selected) {
-  const tags = new Set(map.document.tags.map((tag) => tag.toLocaleLowerCase()));
+  const tags = new Set(map.tags.map((tag) => tag.toLocaleLowerCase()));
   const needle = query.trim().toLocaleLowerCase();
   return (
     selected.every((tag) => tags.has(tag.toLocaleLowerCase())) &&

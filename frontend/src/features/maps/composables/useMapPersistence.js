@@ -22,7 +22,7 @@ export function useMapPersistence({
     error = ref(""),
     saveError = ref(""),
     conflict = ref(false);
-  const lastSavedAt = ref(source?.system ? null : source?.changedAt || null);
+  const lastSavedAt = ref(source?.changedAt || null);
   const preview = useStoredMapPreview({
     source,
     session: options.session,
@@ -32,6 +32,7 @@ export function useMapPersistence({
     saving,
     conflict,
   });
+
   let timer,
     stopped = false;
   // Document history never rolls the server's compare-and-swap version back.

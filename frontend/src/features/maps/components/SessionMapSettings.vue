@@ -1,7 +1,7 @@
 <template>
   <MapInspectorSection title="Основа карты">
     <BaseTile class="session-map-source" framed>
-      <MapThumbnail v-if="sourceMap?.document" :map="sourceMap" :height="120" />
+      <MapThumbnail v-if="sourceMap" :map="sourceMap" :height="120" />
       <Map v-else :size="56" class="session-map-source-icon" />
       <strong>{{
         sourceMap?.name || editor.draft.source?.name || editor.draft.name

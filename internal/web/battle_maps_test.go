@@ -16,7 +16,8 @@ func TestPrivateMapRoutesRequireAuthentication(t *testing.T) {
 	s.routesMapModelEditing(mux)
 	s.routesMapPreviews(mux)
 	for _, route := range []string{
-		"GET /api/maps", "POST /api/maps", "PUT /api/maps/system-dungeon", "DELETE /api/maps/system-dungeon",
+		"GET /api/maps/invalid", "POST /api/maps/invalid/publish", "POST /api/maps/invalid/copy", "PUT /api/maps/subscriptions/invalid", "DELETE /api/maps/subscriptions/invalid", "PUT /api/maps/ratings/invalid", "DELETE /api/maps/ratings/invalid",
+		"GET /api/maps", "POST /api/maps", "PUT /api/maps/invalid-map", "DELETE /api/maps/invalid-map",
 		"GET /api/sessions/test/maps", "POST /api/sessions/test/maps", "PUT /api/sessions/test/maps/test-map",
 		"DELETE /api/sessions/test/maps/test-map", "PUT /api/sessions/test/map-display", "GET /api/sessions/test/map-events",
 		"GET /api/maps/models", "GET /api/maps/models/test/render", "PUT /api/maps/models/test",
@@ -33,13 +34,13 @@ func TestPrivateMapRoutesRequireAuthentication(t *testing.T) {
 	}
 }
 
-func TestSystemMapCannotBeOverwrittenOrDeleted(t *testing.T) {
+func TestNonUUIDMapCannotBeOverwrittenOrDeleted(t *testing.T) {
 	s := &Server{}
 	mux := http.NewServeMux()
 	mux.HandleFunc("PUT /api/maps/{mapId}", s.handleSaveMap)
 	mux.HandleFunc("DELETE /api/maps/{mapId}", s.handleDeleteMap)
 	for _, method := range []string{"PUT", "DELETE"} {
-		r := httptest.NewRequest(method, "/api/maps/system-dungeon", strings.NewReader(`{"name":"replacement"}`))
+		r := httptest.NewRequest(method, "/api/maps/invalid-map", strings.NewReader(`{"name":"replacement"}`))
 		r = r.WithContext(context.WithValue(r.Context(), userIDKey, int64(1)))
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, r)

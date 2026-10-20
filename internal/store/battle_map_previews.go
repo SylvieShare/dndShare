@@ -12,13 +12,9 @@ type MapPreview struct {
 	FileSize  int64
 }
 
-func (s *Store) GetMapPreview(ctx context.Context, mapID string, system bool) (MapPreview, error) {
+func (s *Store) GetMapPreview(ctx context.Context, mapID string) (MapPreview, error) {
 	var p MapPreview
-	column := "map_id::text"
-	if system {
-		column = "system_id"
-	}
-	err := s.pool.QueryRow(ctx, `SELECT signature,object_key,file_size FROM dndshare.battle_map_preview WHERE `+column+`=$1`, mapID).Scan(&p.Signature, &p.ObjectKey, &p.FileSize)
+	err := s.pool.QueryRow(ctx, `SELECT signature,object_key,file_size FROM dndshare.battle_map_preview WHERE map_id=$1::uuid`, mapID).Scan(&p.Signature, &p.ObjectKey, &p.FileSize)
 	if errors.Is(err, pgx.ErrNoRows) {
 		err = ErrNotFound
 	}
@@ -32,7 +28,7 @@ func (s *Store) SaveMapPreview(ctx context.Context, owner int64, m BattleMap, p 
 		return "", err
 	}
 	defer tx.Rollback(ctx)
-	if !m.System {
+	{
 		var revision int64
 		err = tx.QueryRow(ctx, `SELECT revision FROM dndshare.battle_map WHERE id=$1::uuid AND owner_user_id=$2 FOR UPDATE`, m.ID, owner).Scan(&revision)
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -44,22 +40,13 @@ func (s *Store) SaveMapPreview(ctx context.Context, owner int64, m BattleMap, p 
 		if revision != m.Revision {
 			return "", ErrMapConflict
 		}
-	} else {
-		// System documents are shared; serialize concurrent first-time generation too.
-		if _, err = tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1,0))`, "map-preview:"+m.ID); err != nil {
-			return "", err
-		}
-	}
-	column, value := "map_id", "CAST($1 AS uuid)"
-	if m.System {
-		column, value = "system_id", "$1"
 	}
 	var old string
-	err = tx.QueryRow(ctx, `SELECT object_key FROM dndshare.battle_map_preview WHERE `+column+`::text=$1`, m.ID).Scan(&old)
+	err = tx.QueryRow(ctx, `SELECT object_key FROM dndshare.battle_map_preview WHERE map_id=$1::uuid`, m.ID).Scan(&old)
 	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 		return "", err
 	}
-	_, err = tx.Exec(ctx, `INSERT INTO dndshare.battle_map_preview (`+column+`,signature,object_key,file_size) VALUES (`+value+`,$2,$3,$4) ON CONFLICT (`+column+`) DO UPDATE SET signature=EXCLUDED.signature,object_key=EXCLUDED.object_key,file_size=EXCLUDED.file_size,changed_at=now()`, m.ID, p.Signature, p.ObjectKey, p.FileSize)
+	_, err = tx.Exec(ctx, `INSERT INTO dndshare.battle_map_preview (map_id,signature,object_key,file_size) VALUES ($1::uuid,$2,$3,$4) ON CONFLICT (map_id) DO UPDATE SET signature=EXCLUDED.signature,object_key=EXCLUDED.object_key,file_size=EXCLUDED.file_size,changed_at=now()`, m.ID, p.Signature, p.ObjectKey, p.FileSize)
 	if err != nil {
 		return "", err
 	}
@@ -72,12 +59,16 @@ func (s *Store) DeleteBattleMapWithPreview(ctx context.Context, owner int64, id 
 	}
 	defer tx.Rollback(ctx)
 	var found string
-	err = tx.QueryRow(ctx, `SELECT id::text FROM dndshare.battle_map WHERE id=$1::uuid AND owner_user_id=$2 FOR UPDATE`, id, owner).Scan(&found)
+	var published bool
+	err = tx.QueryRow(ctx, `SELECT id::text,published_at IS NOT NULL FROM dndshare.battle_map WHERE id=$1::uuid AND owner_user_id=$2 FOR UPDATE`, id, owner).Scan(&found, &published)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return "", ErrNotFound
 	}
 	if err != nil {
 		return "", err
+	}
+	if published {
+		return "", ErrMapPublished
 	}
 	var key string
 	err = tx.QueryRow(ctx, `SELECT object_key FROM dndshare.battle_map_preview WHERE map_id=$1::uuid`, id).Scan(&key)

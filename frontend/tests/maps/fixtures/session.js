@@ -59,7 +59,8 @@ export function sessionAPI(initial, initialDisplay, getSource) {
         map = {
           ...structuredClone(base),
           id: `opened-${maps.length}`,
-          source: { id: base.id, name: base.name, system: false },
+          source: { id: base.id, name: base.name },
+          publishedAt: null,
           revision: 1,
           state: {
             fog: false,

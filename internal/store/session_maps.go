@@ -16,9 +16,8 @@ type SessionMap struct {
 }
 
 type MapSource struct {
-	ID     string `json:"id,omitempty"`
-	Name   string `json:"name"`
-	System bool   `json:"system"`
+	ID   string `json:"id,omitempty"`
+	Name string `json:"name"`
 }
 
 type MapDisplay struct {
@@ -77,7 +76,7 @@ func (s *Store) AddSessionMap(ctx context.Context, sessionID int64, m BattleMap)
 	initial := battlemap.InitialState()
 	initial.Fog = false
 	state, _ := json.Marshal(initial)
-	source, _ := json.Marshal(MapSource{ID: m.ID, Name: m.Name, System: m.System})
+	source, _ := json.Marshal(MapSource{ID: m.ID, Name: m.Name})
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return SessionMap{}, err

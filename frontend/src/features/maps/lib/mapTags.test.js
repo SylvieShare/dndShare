@@ -1,8 +1,8 @@
 import { expect, it } from "vitest";
 import { availableMapTags, matchesMapTags, normalizedMapTags } from "./mapTags";
 const maps = [
-  { name: "Башня", document: { tags: ["Лес", "подземелье"] } },
-  { name: "Поляна", document: { tags: ["лес", "улица"] } },
+  { name: "Башня", tags: ["Лес", "подземелье"] },
+  { name: "Поляна", tags: ["лес", "улица"] },
 ];
 it("normalizes whitespace and case duplicates while retaining the first spelling and limiting tag size", () => {
   expect(normalizedMapTags([" Лес ", "лес", "", "темная  пещера"])).toEqual([

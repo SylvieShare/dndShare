@@ -3,16 +3,18 @@
     <header>
       <span>МАСТЕРСКАЯ</span>
       <h1>Карты</h1>
-      <p>Подготовьте место для следующей истории. Рисуйте свои карты или начните с готовой.</p>
+      <p>Собирайте свои карты и делитесь ими в бесплатном каталоге.</p>
     </header>
     <MapLibrary v-if="account.authStatus === 'success'" />
-    <p v-else-if="account.authStatus === 'none'" role="status">Войдите, чтобы открыть карты.</p>
+    <p v-else-if="account.authStatus === 'none'" role="status">
+      Войдите, чтобы открыть карты.
+    </p>
   </main>
 </template>
 <script setup>
-import { onMounted } from 'vue';
-import MapLibrary from '../components/MapLibrary.vue';
-import { useAccountStore } from '@/stores/account';
+import { onMounted } from "vue";
+import MapLibrary from "../components/MapLibrary.vue";
+import { useAccountStore } from "@/stores/account";
 const account = useAccountStore();
 onMounted(() => account.ensureAuth());
 </script>

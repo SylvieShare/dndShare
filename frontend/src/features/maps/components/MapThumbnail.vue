@@ -29,6 +29,10 @@ function clear() {
 }
 async function load() {
   clear();
+  if (props.map.owned === false) {
+    loading.value = false;
+    return;
+  }
   loading.value = true;
   const request = new AbortController();
   controller = request;

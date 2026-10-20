@@ -31,7 +31,7 @@ func (s *Server) handleMapPreviewContext(w http.ResponseWriter, r *http.Request)
 		mapError(w, err)
 		return
 	}
-	p, err := s.store.GetMapPreview(r.Context(), m.ID, m.System)
+	p, err := s.store.GetMapPreview(r.Context(), m.ID)
 	if err != nil && !errors.Is(err, store.ErrNotFound) {
 		mapError(w, err)
 		return
@@ -56,6 +56,10 @@ func (s *Server) handleSaveMapPreview(w http.ResponseWriter, r *http.Request) {
 		mapError(w, err)
 		return
 	}
+	if !m.Owned {
+		apiError(w, http.StatusForbidden, "FORBIDDEN", "Превью обновляет автор карты")
+		return
+	}
 	if r.URL.Query().Get("signature") != data.Signature {
 		conflict(w, "Карта или модели изменились; обновите превью")
 		return
@@ -70,7 +74,7 @@ func (s *Server) handleSaveMapPreview(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Duplicate generators reuse an already published image.
-	existing, err := s.store.GetMapPreview(r.Context(), m.ID, m.System)
+	existing, err := s.store.GetMapPreview(r.Context(), m.ID)
 	if err == nil && existing.Signature == data.Signature {
 		writeJSON(w, http.StatusOK, map[string]string{"previewUrl": mapPreviewURL(m.ID, data.Signature)})
 		return
@@ -113,7 +117,7 @@ func (s *Server) handleMapPreview(w http.ResponseWriter, r *http.Request) {
 		mapError(w, err)
 		return
 	}
-	p, err := s.store.GetMapPreview(r.Context(), m.ID, m.System)
+	p, err := s.store.GetMapPreview(r.Context(), m.ID)
 	if err != nil {
 		mapError(w, err)
 		return

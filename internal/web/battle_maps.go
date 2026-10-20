@@ -12,6 +12,13 @@ import (
 func init() { registerRoutes((*Server).routesBattleMaps) }
 func (s *Server) routesBattleMaps(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/maps", s.mapUserOnly(s.handleListMaps))
+	mux.HandleFunc("GET /api/maps/{mapId}", s.mapUserOnly(s.handleGetMap))
+	mux.HandleFunc("POST /api/maps/{mapId}/publish", s.mapUserOnly(s.handlePublishMap))
+	mux.HandleFunc("POST /api/maps/{mapId}/copy", s.mapUserOnly(s.handleCopyMap))
+	mux.HandleFunc("PUT /api/maps/subscriptions/{mapId}", s.mapUserOnly(s.handleMapSubscription))
+	mux.HandleFunc("DELETE /api/maps/subscriptions/{mapId}", s.mapUserOnly(s.handleMapSubscription))
+	mux.HandleFunc("PUT /api/maps/ratings/{mapId}", s.mapUserOnly(s.handleMapRating))
+	mux.HandleFunc("DELETE /api/maps/ratings/{mapId}", s.mapUserOnly(s.handleMapRating))
 	mux.HandleFunc("POST /api/maps", s.mapUserOnly(s.handleSaveMap))
 	mux.HandleFunc("PUT /api/maps/{mapId}", s.mapUserOnly(s.handleSaveMap))
 	mux.HandleFunc("DELETE /api/maps/{mapId}", s.mapUserOnly(s.handleDeleteMap))
@@ -31,21 +38,23 @@ func mapError(w http.ResponseWriter, err error) {
 		notFound(w, "")
 	case errors.Is(err, store.ErrMapConflict):
 		conflict(w, "Карта изменена в другой вкладке. Перезагрузите данные перед сохранением.")
+	case errors.Is(err, store.ErrMapPublished):
+		conflict(w, "Опубликованная карта недоступна для изменений. Создайте личную копию.")
+	case errors.Is(err, store.ErrMapSubscriptionRequired):
+		apiError(w, http.StatusForbidden, "FORBIDDEN", "Подпишитесь на карту в каталоге, чтобы использовать её.")
+	case errors.Is(err, store.ErrMapAction):
+		badRequest(w, "Это действие недоступно для карты")
 	default:
 		serverError(w, err)
 	}
 }
 
 func (s *Server) findMap(r *http.Request, userID int64, id string) (store.BattleMap, error) {
-	for _, p := range battlemap.Presets() {
-		if p.ID == id {
-			return store.BattleMap{ID: p.ID, Name: p.Name, Document: p.Document, System: true, Revision: 1}, nil
-		}
-	}
 	if !isUUID(id) {
 		return store.BattleMap{}, store.ErrNotFound
 	}
-	return s.store.GetBattleMap(r.Context(), userID, id)
+	m, err := s.store.GetReadableBattleMap(r.Context(), userID, id)
+	return m.BattleMap, err
 }
 
 func (s *Server) handleListMaps(w http.ResponseWriter, r *http.Request) {
@@ -53,13 +62,18 @@ func (s *Server) handleListMaps(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	maps, err := s.store.ListBattleMaps(r.Context(), uid)
+	scope := r.URL.Query().Get("scope")
+	if scope == "" {
+		scope = "own"
+	}
+	if scope != "own" && scope != "subscriptions" && scope != "catalogue" {
+		badRequest(w, "Некорректная вкладка карт")
+		return
+	}
+	maps, err := s.store.ListMapCatalogue(r.Context(), uid, scope)
 	if err != nil {
 		mapError(w, err)
 		return
-	}
-	for _, p := range battlemap.Presets() {
-		maps = append(maps, store.BattleMap{ID: p.ID, Name: p.Name, Document: p.Document, System: true, Revision: 1})
 	}
 	documents := make([]*battlemap.Document, 0, len(maps))
 	for i := range maps {
@@ -71,13 +85,17 @@ func (s *Server) handleListMaps(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	for i := range maps {
-		if err := s.attachMapPreview(r, &maps[i], models, behaviours); err != nil {
+		if err := s.attachMapPreview(r, &maps[i].BattleMap, models, behaviours); err != nil {
 			serverError(w, err)
 			return
 		}
 	}
 	w.Header().Set("Cache-Control", "no-store")
-	writeJSON(w, http.StatusOK, maps)
+	result := make([]store.MapSummary, 0, len(maps))
+	for _, m := range maps {
+		result = append(result, m.Summary())
+	}
+	writeJSON(w, http.StatusOK, result)
 }
 
 func (s *Server) handleSaveMap(w http.ResponseWriter, r *http.Request) {

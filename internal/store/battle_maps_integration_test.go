@@ -38,12 +38,15 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	exec(`CREATE SCHEMA dndshare; CREATE TABLE dndshare.users(id bigint PRIMARY KEY); CREATE TABLE dndshare.session(id bigint PRIMARY KEY); CREATE TABLE dndshare.storage_image(id bigint PRIMARY KEY); INSERT INTO dndshare.users VALUES(1),(2); INSERT INTO dndshare.session VALUES(10),(20);`)
+	exec(`CREATE SCHEMA dndshare; CREATE TABLE dndshare.users(id bigint PRIMARY KEY,login text NOT NULL DEFAULT 'tester'); CREATE TABLE dndshare.session(id bigint PRIMARY KEY); CREATE TABLE dndshare.storage_image(id bigint PRIMARY KEY); INSERT INTO dndshare.users(id) VALUES(1),(2); INSERT INTO dndshare.session VALUES(10),(20);`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
-	exec(testSchemaTables(t, "battle_map", "battle_map_model", "battle_map_preview", "map_model", "map_model_definition", "map_model_group", "map_model_transition", "session_map", "session_map_model", "session_map_display"))
+	exec(testSchemaTables(t, "battle_map", "battle_map_model", "map_subscription", "map_rating", "battle_map_preview", "map_model", "map_model_definition", "map_model_group", "map_model_transition", "session_map", "session_map_model", "session_map_display"))
 	s := &Store{pool: pool}
 	seedMapModelsForTest(t, s)
-	preset := battlemap.Presets()[0]
+	preset := struct {
+		Name     string
+		Document battlemap.Document
+	}{Name: "Тестовая карта", Document: battlemap.Document{Version: battlemap.DocumentVersion, Kind: "tiles", Width: 20, Height: 14, Tags: []string{}, Grid: battlemap.Grid{Visible: true}, Tiles: []battlemap.Tile{{ID: "floor", ModelID: battlemap.InitialModelID("LC-007"), X: 2, Y: 2}}, Objects: []battlemap.Object{}, Areas: []battlemap.Area{}, Sun: battlemap.DefaultSun(), Lights: []battlemap.Light{}}}
 	preset.Document.Areas = []battlemap.Area{{ID: "room", Name: "Вход", Color: "#22c55e", Hidden: true, TileIDs: []string{preset.Document.Tiles[0].ID}, ObjectIDs: []string{}}}
 	preset.Document.Tags = []string{"подземелье", "лес"}
 	preset.Document.LightingEnabled = true
@@ -136,4 +139,5 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	if _, err := s.GetSessionMap(ctx, 20, b.ID); err != nil {
 		t.Fatal("other session changed", err)
 	}
+	testMapCatalogue(t, ctx, s, m)
 }

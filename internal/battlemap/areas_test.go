@@ -6,7 +6,7 @@ import (
 )
 
 func TestMapAreasReferenceExistingModelsOnce(t *testing.T) {
-	d := Presets()[0].Document
+	d := testPresets()[0].Document
 	d.Objects = []Object{{ID: "chest", Kind: "chest", X: 3, Y: 3, Scale: 1}}
 	d.Areas = []Area{{ID: "hall", Name: "Зал", Hidden: true, TileIDs: []string{d.Tiles[0].ID}, ObjectIDs: []string{"chest"}}}
 	if err := ValidateDocument(&d); err != nil {
@@ -33,7 +33,7 @@ func TestMapAreasReferenceExistingModelsOnce(t *testing.T) {
 }
 
 func TestAreaColorsDefaultAndSurviveRoundTrip(t *testing.T) {
-	d := Presets()[0].Document
+	d := testPresets()[0].Document
 	d.Areas = []Area{{ID: "empty", Name: "Пустая"}, {ID: "custom", Name: "Зал", Color: "#22c55e"}}
 	if err := ValidateDocument(&d); err != nil {
 		t.Fatal(err)

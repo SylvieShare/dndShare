@@ -2,6 +2,7 @@ import { paint, lineCells } from "./mapBuilders";
 import { modelDownloadsFixture, downloadMapExample } from "./downloads";
 import { componentExample } from "./components";
 import { sessionFixture, sessionAPI, tokenPortraitExample } from "./session";
+import { mapCatalogueFixture } from "./mapCatalogue";
 import { previewFixture } from "./previews";
 import { attachmentExample } from "./attachments";
 import { groupExamples } from "./groups";
@@ -411,8 +412,13 @@ if (params.get("mode") === "library" && params.has("tagsExample")) {
   if (stored) source.document = JSON.parse(stored);
   else sessionStorage.setItem(key, JSON.stringify(source.document));
 }
-const sessionHandler = sessionAPI(board, display, (id) =>
-  window.lastSaved?.id === id ? window.lastSaved : source,
+let libraryAPI;
+const sessionHandler = sessionAPI(
+  board,
+  display,
+  (id) =>
+    libraryAPI?.find(id) ||
+    (window.lastSaved?.id === id ? window.lastSaved : source),
 );
 const modelAssetAliases = new Map();
 window.loadedModels = [];
@@ -447,10 +453,13 @@ const modelDto = ({ id, definitionId, ...model }) => ({
   assetBytes: transfers.sizes(id),
 });
 const previews = previewFixture(catalogue, modelDto);
+libraryAPI = mapCatalogueFixture(source, params, previews);
 window.fetch = async (url, options = {}) => {
   const rawUrl = typeof url === "string" ? url : url.url;
   const endpoint = new URL(rawUrl, location.origin).pathname;
   if (!endpoint.startsWith("/api/")) return nativeFetch(url, options);
+  const libraryResponse = await libraryAPI.handle(rawUrl, options);
+  if (libraryResponse) return libraryResponse;
   const preview = await previews.handle(rawUrl, options);
   if (preview) return preview;
   url = endpoint;
@@ -596,6 +605,7 @@ account.user = {
   login: "tester",
   roles: params.has("noAdmin") ? [] : ["ADMIN"],
 };
+window.mapRouter = router;
 await router.push(
   mode === "library"
     ? "/maps"

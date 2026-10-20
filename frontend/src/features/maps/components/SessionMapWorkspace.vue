@@ -188,9 +188,9 @@ const screenPath = computed(
   () => `/map-screen/${props.session?.displayCode || ""}`,
 );
 onMounted(() =>
-  getMaps()
+  Promise.all([getMaps("own"), getMaps("subscriptions")])
     .then((maps) => {
-      templates.value = maps;
+      templates.value = maps.flat();
     })
     .catch(() => {}),
 );

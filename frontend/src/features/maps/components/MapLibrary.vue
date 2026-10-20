@@ -1,275 +1,281 @@
 <template>
   <div class="map-library">
+    <div class="map-library-heading">
+      <SlidingTabs
+        v-model="c.scope"
+        :tabs="TABS"
+        aria-label="Разделы карт"
+      /><ActionButton v-if="!picker" @click="c.create"
+        ><template #icon><Plus :size="17" /></template>Создать
+        карту</ActionButton
+      >
+    </div>
     <div class="map-library-toolbar">
       <FormTextInput
-        v-model:value="query"
+        v-model:value="c.query"
         placeholder="Название или тег…"
         aria-label="Поиск карт"
-      />
-      <MultiToggle
-        v-model="filter"
-        :options="[
-          { value: 'all', label: 'Все' },
-          { value: 'own', label: 'Мои' },
-          { value: 'system', label: 'Системные' },
-        ]"
-        aria-label="Источник карт"
-      />
-      <SearchMultiSelect
-        v-model="selectedTags"
-        :options="tagOptions"
+      /><SearchMultiSelect
+        v-model="c.selectedTags"
+        :options="c.tagOptions"
         label="Теги карт"
         placeholder="Найти тег…"
         empty-label="Теги не найдены"
         remove-label="Убрать тег"
       />
-      <ActionButton v-if="!picker" @click="create"
-        ><Plus :size="17" />Создать карту</ActionButton
+      <div
+        class="map-library-layout"
+        role="group"
+        aria-label="Отображение карт"
       >
+        <ActionButton
+          v-for="option in LAYOUTS"
+          :key="option.key"
+          icon-only
+          variant="secondary"
+          :aria-pressed="c.layout === option.key"
+          :aria-label="option.label"
+          :title="option.label"
+          @click="c.layout = option.key"
+          ><template #icon><component :is="option.icon" :size="18" /></template
+        ></ActionButton>
+      </div>
     </div>
-    <div v-if="error" class="map-error" role="alert">
-      {{ error }}
-      <ActionButton variant="quiet" @click="load">Повторить</ActionButton>
+    <div
+      v-if="c.error && !c.preview && !c.pending"
+      class="map-error"
+      role="alert"
+    >
+      {{ c.error
+      }}<ActionButton variant="quiet" @click="c.load()">Повторить</ActionButton>
     </div>
-    <LoadingState v-if="loading" label="Загружаем карты…" />
-    <div v-else-if="!filtered.length" class="map-empty">
-      <Map :size="40" /><strong>Карт пока нет</strong
-      ><span>Создайте карту или выберите системную.</span>
-    </div>
-    <div v-else class="map-library-grid">
-      <BaseTile
-        v-for="map in filtered"
-        :key="map.id"
-        padding="12px"
-        class="map-library-card"
+    <Transition
+      name="map-library-content"
+      mode="out-in"
+      @before-leave="retireEntry"
+      @before-enter="reviveEntry"
+      @leave-cancelled="reviveEntry"
+    >
+      <LoadingState v-if="c.loading" key="loading" label="Загружаем карты…" />
+      <div
+        v-else-if="!c.filtered.length"
+        :key="`empty-${c.scope}`"
+        class="map-empty"
       >
-        <button
-          class="map-library-preview"
-          type="button"
-          :aria-label="`${picker ? 'Выбрать' : 'Открыть'} карту ${map.name}`"
-          @click="open(map)"
-        >
-          <MapThumbnail :map="map" /><span class="map-library-name">{{
-            map.name
-          }}</span>
-        </button>
-        <span class="map-library-meta"
-          >3D-карта · {{ map.document.width }} × {{ map.document.height }} ·
-          {{ map.document.tiles.length }} плиток</span
-        >
-        <div class="map-library-tags" aria-label="Теги карты">
-          <span v-for="tag in map.document.tags" :key="tag">{{ tag }}</span>
-        </div>
-        <div class="map-library-actions">
-          <span class="map-library-badge">{{
-            map.system ? "Системная" : "Моя карта"
-          }}</span>
-          <ActionButton
-            v-if="!picker"
-            variant="quiet"
-            :title="map.system ? 'Создать свою копию' : 'Дублировать карту'"
-            @click="duplicate(map)"
-            ><Copy :size="15"
-          /></ActionButton>
-          <ActionButton
-            v-if="!picker && !map.system"
-            variant="quiet"
-            title="Удалить карту"
-            @click="pendingDelete = map"
-            ><Trash2 :size="15"
-          /></ActionButton>
-          <ActionButton
-            v-if="picker"
-            variant="secondary"
-            @click="emit('select', map)"
-            >Выбрать</ActionButton
-          >
-        </div>
-      </BaseTile>
-    </div>
+        <Map :size="40" /><strong>{{
+          c.query || c.selectedTags.length
+            ? "Ничего не найдено"
+            : EMPTY[c.scope].title
+        }}</strong
+        ><span>{{
+          c.query || c.selectedTags.length
+            ? "Попробуйте изменить поиск и теги."
+            : EMPTY[c.scope].text
+        }}</span>
+      </div>
+      <TransitionGroup
+        v-else
+        :key="c.scope"
+        name="map-library-entry"
+        @before-leave="retireEntry"
+        @before-enter="reviveEntry"
+        @leave-cancelled="reviveEntry"
+        tag="div"
+        class="map-library-entries"
+        :class="{ 'map-library-entries--grid': c.layout === 'grid' }"
+        ><MapLibraryEntry
+          v-for="map in c.filtered"
+          :key="map.id"
+          :map="map"
+          :layout="c.layout"
+          :picker="picker"
+          :busy="c.busy.has(map.id)"
+          @open="c.open"
+          @select="emit('select', $event)"
+          @copy="c.duplicate"
+          @subscribe="c.subscription"
+          @rate="c.rate"
+          @publish="c.confirm('publish', $event)"
+          @delete="c.confirm('delete', $event)"
+      /></TransitionGroup>
+    </Transition>
     <AppModalFrame
-      v-if="preview"
-      :title="preview.name"
+      v-if="c.preview"
+      :title="c.preview.name"
       fullscreen
       :padded="false"
       :body-scroll="false"
-      close-label="Закрыть"
-      @close="preview = null"
+      close-label="Закрыть просмотр карты"
+      @close="c.preview = null"
     >
       <template #header-actions
         ><ActionButton
+          v-if="!c.preview.owned"
+          :disabled="c.busy.has(c.preview.id)"
+          variant="secondary"
+          @click="c.subscription(c.preview)"
+          ><template #icon><BookmarkPlus :size="16" /></template
+          >{{
+            c.preview.subscribed ? "Отписаться" : "Подписаться"
+          }}</ActionButton
+        ><ActionButton
+          v-if="c.preview.owned || c.preview.subscribed"
+          :disabled="c.busy.has(c.preview.id)"
+          @click="c.duplicate(c.preview)"
+          ><template #icon><Copy :size="16" /></template>Создать
+          копию</ActionButton
+        ><ActionButton
+          v-if="picker && (c.preview.owned || c.preview.subscribed)"
           @click="
-            duplicate(preview);
-            preview = null;
+            emit('select', c.preview);
+            c.preview = null;
           "
-          ><Copy :size="16" />Создать свою копию</ActionButton
+          >Выбрать</ActionButton
         ></template
       >
-      <MapCanvas :document="preview.document" master />
+      <div v-if="c.error" class="map-error" role="alert">
+        {{ c.error
+        }}<ActionButton variant="quiet" @click="c.open(c.preview)"
+          >Повторить</ActionButton
+        >
+      </div>
+      <MapCanvas
+        v-if="c.preview.document"
+        :document="c.preview.document"
+        master
+        readonly
+      /><LoadingState v-else-if="!c.error" label="Открываем карту…" />
     </AppModalFrame>
     <ConfirmDialog
-      v-if="pendingDelete"
-      title="Удалить карту?"
-      :message="`«${pendingDelete.name}» исчезнет из библиотеки. Копии в сессиях сохранятся.`"
-      confirm-label="Удалить"
-      :loading="deleting"
-      @confirm="remove"
-      @cancel="pendingDelete = null"
+      v-if="c.pending"
+      :title="
+        c.pending.kind === 'publish' ? 'Опубликовать карту?' : 'Удалить карту?'
+      "
+      :message="
+        c.error ||
+        (c.pending.kind === 'publish'
+          ? `«${c.pending.map.name}» появится в бесплатном каталоге. Изменять и удалять опубликованную заготовку нельзя; для доработки создайте копию.`
+          : `«${c.pending.map.name}» исчезнет из ваших карт. Копии в сессиях сохранятся.`)
+      "
+      :confirm-label="c.pending.kind === 'publish' ? 'Опубликовать' : 'Удалить'"
+      :loading="c.confirming"
+      :variant="c.pending.kind === 'publish' ? 'warning' : 'danger'"
+      @confirm="c.apply"
+      @cancel="c.pending = null"
     />
   </div>
 </template>
 <script setup>
 import "../styles/maps.css";
-import { computed, defineAsyncComponent, onMounted, ref, watch } from "vue";
-import { useRouter } from "vue-router";
+import { defineAsyncComponent, reactive } from "vue";
 import {
   ActionButton,
   AppModalFrame,
-  BaseTile,
   ConfirmDialog,
   FormTextInput,
   LoadingState,
-  MultiToggle,
   SearchMultiSelect,
+  SlidingTabs,
 } from "@sylvieshare/share-ui";
-import { Copy, Map, Plus, Trash2 } from "@lucide/vue";
-import { deleteMap, getMaps } from "@/shared/api/mapsApi";
-import { availableMapTags, matchesMapTags } from "../lib/mapTags";
-import MapThumbnail from "./MapThumbnail.vue";
+import { BookmarkPlus, Copy, LayoutGrid, List, Map, Plus } from "@lucide/vue";
+import { useMapLibrary } from "../composables/useMapLibrary";
+import MapLibraryEntry from "./MapLibraryEntry.vue";
 const MapCanvas = defineAsyncComponent(() => import("./MapCanvas.vue"));
 const props = defineProps({ picker: Boolean }),
   emit = defineEmits(["select"]);
-const maps = ref([]),
-  loading = ref(true),
-  error = ref(""),
-  query = ref(""),
-  filter = ref("all"),
-  selectedTags = ref([]),
-  preview = ref(null),
-  pendingDelete = ref(null),
-  deleting = ref(false);
-const router = useRouter();
-const filtered = computed(() =>
-  maps.value.filter(
-    (m) =>
-      (filter.value === "all" || m.system === (filter.value === "system")) &&
-      matchesMapTags(m, query.value, selectedTags.value),
-  ),
-);
-const tags = computed(() => availableMapTags(maps.value));
-const tagOptions = computed(() =>
-  tags.value.map((tag) => ({ value: tag, label: tag })),
-);
-watch(tags, (values) => {
-  selectedTags.value = selectedTags.value.filter((tag) => values.includes(tag));
-});
-async function load() {
-  loading.value = true;
-  error.value = "";
-  try {
-    maps.value = await getMaps();
-  } catch (cause) {
-    error.value =
-      cause.status === 401
-        ? "Войдите в аккаунт, чтобы работать с картами"
-        : cause.message;
-  } finally {
-    loading.value = false;
-  }
+const c = reactive(useMapLibrary(props, emit));
+const TABS = [
+  { key: "own", title: "Мои" },
+  { key: "subscriptions", title: "Подписки" },
+  { key: "catalogue", title: "Каталог" },
+];
+const LAYOUTS = [
+  { key: "grid", label: "Плитки", icon: LayoutGrid },
+  { key: "list", label: "Список", icon: List },
+];
+function retireEntry(element) {
+  element.inert = true;
+  element.setAttribute("aria-hidden", "true");
 }
-function open(map) {
-  if (props.picker) emit("select", map);
-  else if (map.system) preview.value = map;
-  else router.push({ name: "MapEditor", query: { id: map.id } });
+function reviveEntry(element) {
+  element.inert = false;
+  element.removeAttribute("aria-hidden");
 }
-function duplicate(map) {
-  router.push({ name: "MapEditor", query: { copy: map.id } });
-}
-function create() {
-  router.push({ name: "MapEditor" });
-}
-async function remove() {
-  deleting.value = true;
-  try {
-    await deleteMap(pendingDelete.value.id);
-    maps.value = maps.value.filter((m) => m.id !== pendingDelete.value.id);
-    pendingDelete.value = null;
-  } catch (cause) {
-    error.value = cause.message;
-  } finally {
-    deleting.value = false;
-  }
-}
-onMounted(load);
+const EMPTY = {
+  own: {
+    title: "Своих карт пока нет",
+    text: "Создайте карту или сделайте личную копию карты из подписок.",
+  },
+  subscriptions: {
+    title: "Пока нет подписок",
+    text: "Откройте каталог и подпишитесь на карты для своих сессий.",
+  },
+  catalogue: {
+    title: "Каталог пока пуст",
+    text: "Опубликуйте свою карту — другие смогут бесплатно использовать её.",
+  },
+};
 </script>
 <style scoped>
 .map-library {
-  min-height: 0;
   display: flex;
   flex-direction: column;
+  min-height: 0;
   gap: 22px;
 }
+.map-library-heading,
 .map-library-toolbar {
   display: flex;
   align-items: center;
-  gap: 12px;
   flex-wrap: wrap;
+  gap: 12px;
+}
+.map-library-heading {
+  justify-content: space-between;
 }
 .map-library-toolbar > input {
   max-width: 300px;
 }
-.map-library-toolbar > .share-action-button {
+.map-library-layout {
+  display: flex;
+  gap: 4px;
   margin-left: auto;
 }
-.map-library-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 18px;
-}
-.map-library-card {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.map-library-preview {
-  border: 0;
-  padding: 0;
-  background: transparent;
-  color: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-.map-library-preview:hover .map-library-name {
+.map-library-layout [aria-pressed="true"] {
   color: var(--accent);
 }
-.map-library-name {
-  display: block;
-  margin-top: 15px;
-  font-family: var(--font-display);
-  font-size: 20px;
-  color: var(--text-1);
+.map-library-entries {
+  display: grid;
+  gap: 18px;
 }
-.map-library-meta {
-  color: var(--text-muted);
-  font-size: 11px;
+.map-library-entries--grid {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }
-.map-library-actions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+.map-library-content-enter-active,
+.map-library-content-leave-active,
+.map-library-entry-enter-active,
+.map-library-entry-leave-active {
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
 }
-.map-library-badge {
-  margin-right: auto;
-  color: var(--text-muted);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+.map-library-content-enter-from,
+.map-library-content-leave-to,
+.map-library-entry-enter-from,
+.map-library-entry-leave-to {
+  opacity: 0;
+  transform: translateY(5px);
 }
-.map-library-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  color: var(--text-muted);
-  font-size: 11px;
+.map-library-entry-move {
+  transition: transform 180ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .map-library-content-enter-active,
+  .map-library-content-leave-active,
+  .map-library-entry-enter-active,
+  .map-library-entry-leave-active,
+  .map-library-entry-move {
+    transition: none;
+  }
 }
 </style>

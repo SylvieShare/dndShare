@@ -2,12 +2,12 @@ package battlemap
 
 import "fmt"
 
-type Preset struct {
+type testPreset struct {
 	ID, Name string
 	Document Document
 }
 
-func Presets() []Preset {
+func testPresets() []testPreset {
 	makeDocument := func(width, height float64) Document {
 		return Document{Version: DocumentVersion, Kind: "tiles", Width: width, Height: height,
 			Tags: []string{}, Grid: Grid{Visible: true}, Tiles: []Tile{}, Objects: []Object{}, Zones: []Zone{}, Areas: []Area{}, Sun: DefaultSun(), Lights: []Light{}}
@@ -44,5 +44,5 @@ func Presets() []Preset {
 	cave.Tags = []string{"пещера", "подземелье"}
 	empty := makeDocument(24, 18)
 	empty.Tags = []string{"пещера"}
-	return []Preset{{"system-cave", "Пещерные залы", cave}, {"system-stalagmites", "Пустая пещера", empty}}
+	return []testPreset{{"fixture-cave", "Пещерные залы", cave}, {"fixture-empty", "Пустая пещера", empty}}
 }

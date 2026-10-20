@@ -3,7 +3,7 @@ package battlemap
 import "testing"
 
 func TestPresetsAreValidIndependentDocuments(t *testing.T) {
-	for _, p := range Presets() {
+	for _, p := range testPresets() {
 		t.Run(p.ID, func(t *testing.T) {
 			if err := ValidateDocument(&p.Document); err != nil {
 				t.Fatal(err)
@@ -14,7 +14,7 @@ func TestPresetsAreValidIndependentDocuments(t *testing.T) {
 			}
 		})
 	}
-	a, b := Presets(), Presets()
+	a, b := testPresets(), testPresets()
 	a[0].Document.Tiles[0].Rotation = 90
 	if b[0].Document.Tiles[0].Rotation == 90 {
 		t.Fatal("presets share mutable state")
@@ -22,7 +22,7 @@ func TestPresetsAreValidIndependentDocuments(t *testing.T) {
 }
 
 func TestVisibilityAndPublicProjection(t *testing.T) {
-	d := Presets()[0].Document
+	d := testPresets()[0].Document
 	d.Zones = []Zone{{ID: "room", Name: "Secret", Rects: []Rect{{0, 0, 8, 8}}}, {ID: "window", Rects: []Rect{{3, 3, 2, 2}}}}
 	s := InitialState()
 	s.Zones["room"] = "explored"
@@ -57,13 +57,13 @@ func TestInvalidDocumentsAndState(t *testing.T) {
 		func(d *Document) { d.Tiles = append(d.Tiles, d.Tiles[0]) },
 		func(d *Document) { d.Version = 1 },
 	} {
-		d := Presets()[0].Document
+		d := testPresets()[0].Document
 		change(&d)
 		if ValidateDocument(&d) == nil {
 			t.Fatal("accepted invalid document")
 		}
 	}
-	d := Presets()[0].Document
+	d := testPresets()[0].Document
 	s := InitialState()
 	s.Objects["nonexistent"] = true
 	if ValidateState(&s, d) == nil {
@@ -77,7 +77,7 @@ func TestInvalidDocumentsAndState(t *testing.T) {
 }
 
 func TestNegativeGridColumnDoesNotWrapZoneCells(t *testing.T) {
-	d := Presets()[0].Document
+	d := testPresets()[0].Document
 	d.Zones = []Zone{{ID: "last", Cells: []int{29}}}
 	s := InitialState()
 	s.Zones["last"] = "visible"

@@ -66,7 +66,8 @@ func (s *Server) attachMapPreview(r *http.Request, m *store.BattleMap, models []
 	m.PreviewSignature = data.Signature
 	m.PreviewURL = ""
 	m.PreviewStale = false
-	p, err := s.store.GetMapPreview(r.Context(), m.ID, m.System)
+	p, err := s.store.GetMapPreview(r.Context(), m.ID)
+
 	if errors.Is(err, store.ErrNotFound) {
 		return nil
 	}

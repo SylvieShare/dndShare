@@ -31,7 +31,7 @@ export function useStoredMapPreview({
       if (
         session ||
         !map?.id ||
-        map.system ||
+        map.owned === false ||
         (map.previewUrl && !map.previewStale) ||
         journal.dirty.value ||
         gesturing.value ||

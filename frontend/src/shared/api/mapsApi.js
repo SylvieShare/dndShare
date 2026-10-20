@@ -1,5 +1,19 @@
 import { fetchGet, fetchPost, fetchPut, fetchDelete } from "./http";
-export const getMaps = () => fetchGet("/maps");
+export const getMaps = (scope = "own") =>
+  fetchGet(`/maps?scope=${encodeURIComponent(scope)}`);
+export const getMap = (id) => fetchGet(`/maps/${encodeURIComponent(id)}`);
+export const copyMap = (id) =>
+  fetchPost(`/maps/${encodeURIComponent(id)}/copy`, {});
+export const publishMap = (id, revision) =>
+  fetchPost(`/maps/${encodeURIComponent(id)}/publish`, { revision });
+export const subscribeMap = (id, subscribed) =>
+  subscribed
+    ? fetchPut(`/maps/subscriptions/${encodeURIComponent(id)}`, {})
+    : fetchDelete(`/maps/subscriptions/${encodeURIComponent(id)}`);
+export const rateMap = (id, rating) =>
+  rating
+    ? fetchPut(`/maps/ratings/${encodeURIComponent(id)}`, { rating })
+    : fetchDelete(`/maps/ratings/${encodeURIComponent(id)}`);
 let modelCatalogue;
 const runtimeModel = ({ id, uuid, ...model }) => ({
   ...model,
@@ -31,9 +45,7 @@ export const resetMapModels = () => {
   modelCatalogue = null;
 };
 export const saveMap = (map) =>
-  map.id && !map.system
-    ? fetchPut(`/maps/${map.id}`, map)
-    : fetchPost("/maps", map);
+  map.id ? fetchPut(`/maps/${map.id}`, map) : fetchPost("/maps", map);
 export const deleteMap = (id) => fetchDelete(`/maps/${id}`);
 export const getSessionMaps = (uuid) => fetchGet(`/sessions/${uuid}/maps`);
 export const addSessionMap = (uuid, mapId) =>

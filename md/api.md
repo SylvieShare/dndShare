@@ -37,7 +37,7 @@
 | `GET /api/maps/models` | Авторизованный пользователь: каталог метаданных моделей, постоянный id, code/name, постоянный UUID uuid, behaviour (revision/defaultLights/transitions/waterAnimation?), textureDetail (basic/detailed) текущей модели и renderUrl/lodUrl/shadowUrl/previewUrl; assetBytes {render,lod,shadow,preview} — размеры файлов в байтах для плана загрузки |
 | `PUT /api/maps/models/{modelId}` | ADMIN: поля каталога с id/uuid, редактируемый code и необязательный behaviour → обновление текущей модели с прежним UUID во всех картах; поведение сохраняется в той же транзакции; устаревшая behaviour.revision получает 409 |
 | `GET /api/maps/models/{modelId}/{variant}` | Авторизованный пользователь: source/render/lod/shadow/preview из S3; ETag и immutable cache |
-| `GET /api/maps` | Свои и системные карты авторизованного пользователя |
+| `GET /api/maps` | Компактный список карт: scope=own/subscriptions/catalogue |
 | `POST /api/maps` | Создать `{name,document}` |
 | `GET /api/maps/{mapId}/preview-context` | Авторизованный пользователь: свой/системный документ, актуальные используемые модели, SHA-256 подписи сцены; previewUrl, если снимок этой подписи уже готов |
 | `POST /api/maps/{mapId}/preview?signature=...` | Авторизованный пользователь: WebP 64–1024 px, до 1 МБ → сохранённый в S3 снимок; устаревшая сцена получает 409 |
@@ -128,3 +128,7 @@ groupName/groupNameEn — общие имена группы collection/code. ca
 вариантов внутри раздела; пустая строка означает отсутствие семейства.
 PUT метаданных требует явного variantCode и оба языка модели/группы,
 возвращает текущую запись с сохранёнными UUID и assets.
+
+Карты: три scope списка, неизменяемая публикация, подписки и рейтинг описаны
+в [каталоге карт](features/maps-catalogue.md#http-и-хранение). Список отдаёт
+компактные карточки; документ загружается отдельным GET по UUID.

@@ -32,7 +32,7 @@ const known = ref([]),
 const options = computed(() =>
   availableMapTags([
     {
-      document: { tags: [...props.editor.draft.document.tags, ...known.value] },
+      tags: [...props.editor.draft.document.tags, ...known.value],
     },
   ]).map((tag) => ({ value: tag, label: tag })),
 );
@@ -49,7 +49,9 @@ function update(values) {
 }
 onMounted(async () => {
   try {
-    known.value = availableMapTags(await getMaps());
+    known.value = availableMapTags(
+      (await Promise.all([getMaps("own"), getMaps("subscriptions")])).flat(),
+    );
   } catch {
     /* New tags remain available when suggestions cannot be loaded. */
   }

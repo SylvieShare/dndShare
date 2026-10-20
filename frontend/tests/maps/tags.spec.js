@@ -7,17 +7,15 @@ test("available tags are searchable, intersected, and ordinary search also match
   page,
 }) => {
   await ready(page);
-  await expect(page.locator(".map-library-card")).toHaveCount(3);
+  await expect(page.locator(".map-library-entry")).toHaveCount(3);
   const tags = page.getByRole("combobox", { name: "Теги карт", exact: true });
   await tags.fill("лес");
   await page.getByRole("option", { name: "лес", exact: true }).click();
-  await expect(page.locator(".map-library-card")).toHaveCount(2);
+  await expect(page.locator(".map-library-entry")).toHaveCount(2);
   await tags.fill("подзем");
   await page.getByRole("option", { name: "подземелье", exact: true }).click();
-  await expect(page.locator(".map-library-card")).toHaveCount(1);
-  await expect(page.locator(".map-library-name")).toHaveText(
-    "Заброшенный храм",
-  );
+  await expect(page.locator(".map-library-entry")).toHaveCount(1);
+  await expect(page.locator(".map-entry-name")).toHaveText("Заброшенный храм");
   await page
     .getByRole("button", { name: "Убрать тег: лес", exact: true })
     .click();
@@ -25,7 +23,8 @@ test("available tags are searchable, intersected, and ordinary search also match
     .getByRole("button", { name: "Убрать тег: подземелье", exact: true })
     .click();
   await page.getByLabel("Поиск карт", { exact: true }).fill("улица");
-  await expect(page.locator(".map-library-name")).toHaveText("Лесная поляна");
+  await expect(page.locator(".map-library-entry")).toHaveCount(1);
+  await expect(page.locator(".map-entry-name")).toHaveText("Лесная поляна");
 });
 test("settings choose existing tags, create string tags, and autosave their removal", async ({
   page,

@@ -16,7 +16,7 @@ func testMapPreviewPersistence(t *testing.T, ctx context.Context, s *Store, m Ba
 	if old, err := s.SaveMapPreview(ctx, 1, m, p); err != nil || old != "" {
 		t.Fatal("first preview", old, err)
 	}
-	loaded, err := s.GetMapPreview(ctx, m.ID, false)
+	loaded, err := s.GetMapPreview(ctx, m.ID)
 	if err != nil || loaded != p {
 		t.Fatal("preview readback", loaded, err)
 	}
@@ -33,13 +33,5 @@ func testMapPreviewPersistence(t *testing.T, ctx context.Context, s *Store, m Ba
 	current, err := s.GetBattleMap(ctx, 1, m.ID)
 	if err != nil || current.Revision != m.Revision {
 		t.Fatal("preview advanced document revision", err)
-	}
-	system := BattleMap{ID: "cave-small", System: true}
-	p.ObjectKey = "map-previews/system.webp"
-	if _, err = s.SaveMapPreview(ctx, 1, system, p); err != nil {
-		t.Fatal(err)
-	}
-	if got, err := s.GetMapPreview(ctx, system.ID, true); err != nil || got != p {
-		t.Fatal("system preview", got, err)
 	}
 }

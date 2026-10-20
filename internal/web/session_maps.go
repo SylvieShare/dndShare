@@ -55,7 +55,11 @@ func (s *Server) handleAddSessionMap(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "")
 		return
 	}
-	m, err := s.findMap(r, uid, req.MapID)
+	if !isUUID(req.MapID) {
+		notFound(w, "")
+		return
+	}
+	m, err := s.store.GetUsableBattleMap(r.Context(), uid, req.MapID)
 	if err != nil {
 		mapError(w, err)
 		return

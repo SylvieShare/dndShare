@@ -1,6 +1,7 @@
 <template>
+  <MapPublishedView v-if="map?.publishedAt" :map="map" @update="map = $event" />
   <MapEditor
-    v-if="map"
+    v-else-if="map"
     :key="generation"
     ref="editor"
     :map="map"
@@ -33,9 +34,10 @@ import {
 import { ActionButton, LoadingState } from "@sylvieshare/share-ui";
 import { ArrowLeft } from "@lucide/vue";
 import { useAccountStore } from "@/stores/account";
-import { getMaps } from "@/shared/api/mapsApi";
-import { clone, newMap } from "../lib/mapModel";
+import { getMap, copyMap } from "@/shared/api/mapsApi";
+import { newMap } from "../lib/mapModel";
 import MapEditor from "../components/MapEditor.vue";
+import MapPublishedView from "../components/MapPublishedView.vue";
 
 const route = useRoute(),
   router = useRouter(),
@@ -57,20 +59,13 @@ async function load(target) {
     if (account.authStatus !== "success") return;
     const id = target.query.id || target.query.copy;
     if (id) {
-      const source = (await getMaps()).find((m) => m.id === id);
-      if (!source) throw new Error("Карта не найдена");
-      const draft = clone(source);
-      if (target.query.copy || draft.system) {
-        delete draft.id;
-        draft.system = false;
-        draft.revision = 0;
-        draft.name += " · копия";
-      }
-      map.value = draft;
+      map.value = target.query.copy ? await copyMap(id) : await getMap(id);
     } else {
       map.value = newMap();
     }
     recordId = map.value.id;
+    if (target.query.copy)
+      router.replace({ name: "MapEditor", query: { id: recordId } });
   } catch (cause) {
     error.value = cause.message;
   } finally {

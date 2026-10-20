@@ -52,13 +52,7 @@ export function useMapEditor(source, onSaved, options = {}) {
     setTileSelection,
     setObjectSelection,
   } = useEditorSelection();
-  if (draft.value.system) {
-    delete draft.value.id;
-    draft.value.system = false;
-    draft.value.name += " · копия";
-    draft.value.revision = 0;
-  }
-  const journal = useEditorJournal(draft, !!source?.id && !source.system);
+  const journal = useEditorJournal(draft, !!source?.id);
   const { history, future, dirty } = journal;
   const checkpoint = journal.checkpoint;
   const {

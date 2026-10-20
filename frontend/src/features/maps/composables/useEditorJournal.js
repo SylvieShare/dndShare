@@ -18,12 +18,7 @@ export function useEditorJournal(draft, clean) {
     });
   }
   watch(
-    () => [
-      draft.value.name,
-      draft.value.document,
-      draft.value.state,
-      draft.value.system,
-    ],
+    () => [draft.value.name, draft.value.document, draft.value.state],
     () => {
       if (acceptedRoot === draft.value) {
         acceptedRoot = null;

@@ -7,7 +7,7 @@ import (
 )
 
 func TestTileTransitionsSurviveDocumentRoundTrip(t *testing.T) {
-	d := Presets()[0].Document
+	d := testPresets()[0].Document
 	a, b := d.Tiles[0].ModelID, "00000000-0000-4000-8000-000000000001"
 	d.Tiles[0].Transitions = &TileTransitions{OriginalModelID: a, Targets: []TileTransition{{ID: "draft"}, {ID: "chosen", ModelID: b}}}
 	if err := ValidateDocument(&d); err != nil {
