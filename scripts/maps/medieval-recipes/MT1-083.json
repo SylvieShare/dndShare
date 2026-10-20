@@ -57,10 +57,18 @@
     "stoneLightRGB": [0.59, 0.35, 0.145],
     "woodParts": [
       {
-        "name": "X floor boards and north south fascia",
+        "name": "X perimeter frame and north south fascia",
         "minMM": [-17.65, -17.65, 17.5],
         "maxMM": [17.65, 17.65, 26.65],
         "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "Y measured inner floor boards",
+        "minMM": [-14.3, -14.3, 23],
+        "maxMM": [14.3, 14.3, 26.65],
+        "axis": "y",
         "physicalPigment": true,
         "roughness": 0.9
       },
@@ -202,7 +210,7 @@
     "fabricParts": [],
     "hardware": []
   },
-  "reviewNotes": "Individually inspected PDFpage12 and native full/NEinside/back/top. Source320012tri/16000684bytes/SHA1ab36fa0b42faeb51f3d6a272df2fc1a85a3316c39ccde0b0391a9a6aaecf3b8,max45.838299mm. West railing occupiesX-17.458..-13.6023;three vertical posts,two independently fitted asymmetrical braces(S[0,.709861,.704342],N[0,-.596110,.802902]),Y top rail,two front-only circular caps. NativeX>-14.1 components isolate207/182 cap vertices,YZbounds measured;large2524-vertex component is wood and must not become metal. Cap cylindersR.71,X-14.4..-13.65 atY-15.31255/15.15295,Z43.92770/43.89385. Keep back and adjacent wood nonmetal. X floor and Y end fascia,red-brown railing versus medium-brown floor;four triangular native openings require finite rays in render/LOD/shadow. Free centre[0,0] floorZ24.700211,nativewestedge64;structural railing is not an embedded prop(hasDecorfalse). Check source heights,blocker,metal caps and surrounding wood,all grain axes,both packed candidates and close views. Ordinary17mm native prep then selected UD016 normalization,preserve body/UV/images and regenerate transparent preview before manifest. No plaster,fabric,emission or built-in lights.",
+  "reviewNotes": "Individually inspected PDFpage12 and native full/NEinside/back/top. Source320012tri/16000684bytes/SHA1ab36fa0b42faeb51f3d6a272df2fc1a85a3316c39ccde0b0391a9a6aaecf3b8,max45.838299mm. West railing occupiesX-17.458..-13.6023;three vertical posts,two independently fitted asymmetrical braces(S[0,.709861,.704342],N[0,-.596110,.802902]),Y top rail,two front-only circular caps. NativeX>-14.1 components isolate207/182 cap vertices,YZbounds measured;large2524-vertex component is wood and must not become metal. Cap cylindersR.71,X-14.4..-13.65 atY-15.31255/15.15295,Z43.92770/43.89385. Keep back and adjacent wood nonmetal. X floor and Y end fascia,red-brown railing versus medium-brown floor;four triangular native openings require finite rays in render/LOD/shadow. Free centre[0,0] floorZ24.700211,nativewestedge64;structural railing is not an embedded prop(hasDecorfalse). Check source heights,blocker,metal caps and surrounding wood,all grain axes,both packed candidates and close views. Ordinary17mm native prep then selected UD016 normalization,preserve body/UV/images and regenerate transparent preview before manifest. No plaster,fabric,emission or built-in lights. Floor grain correction: raw source normals independently measured in8/10/12mm core regions,mean nx2~.327/ny2~.101 over24490/25885points at12mm confirm Y-running inner boards. PreviousXcolourgrain was transverse to the sculpt. Restrict newYpigment toXY\u00b114.3/Z23..26.65;Xnorth/south frame/fascia and Ywest/east borders retain their own axes. Preserve UUID,source,placement,geometry/UV and packed normal/ORM;recheck every original probe before republishing.",
   "surfaceHeightMM": 24.700210571289062,
   "renderColourSize": 1024
 }

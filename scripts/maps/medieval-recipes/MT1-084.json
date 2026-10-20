@@ -72,10 +72,18 @@
     "stoneLightRGB": [0.59, 0.35, 0.145],
     "woodParts": [
       {
-        "name": "X floor boards and north south fascia",
+        "name": "X perimeter frame and north south fascia",
         "minMM": [-17.65, -17.65, 17.5],
         "maxMM": [17.65, 17.65, 26.65],
         "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "Y measured inner floor boards",
+        "minMM": [-14.3, -14.3, 23],
+        "maxMM": [14.3, 14.3, 26.65],
+        "axis": "y",
         "physicalPigment": true,
         "roughness": 0.9
       },
@@ -283,7 +291,7 @@
     "fabricParts": [],
     "hardware": []
   },
-  "reviewNotes": "PDFpage12 and actual native inside/back/front/top inspected. Source380028tri/19001484bytes/SHA878b189e9578c845ec4df715098cf51c51ad2c3daa0279718a59e3316e25d1a8,max45.837898mm. Perpendicular railings occupy WEST Xnegative and NORTH Ypositive(nativeYmapsdownwardtoeditor),wallMask65,not80. Five posts share one corner;four asymmetric brace axes are measured independently on this source. Y west top rail/X north top rail,Z posts,X floor/Y fascia. Only two FREE-END caps are exposed:W cutX>-14.3 component322verts,N cut-Y>-13.6 component214verts. Crossing corner rails occlude the two putative corner heads;do not invent metal there or on backs. Native cap centres/radii derive from each measured component,not copied83. Eight triangles require finite source/render/LOD/shadow probes. Sourcefreecentre[0,0]Z24.700966 withnormalZ.9943,hasDecorfalse. North blocker startsY13.1 to include its more protruding face,weststrip endsX-13.5. Red-brown timber versus medium floor,rough iron. Native17mm prep then UD016 normalization preserving body/UV/images;final transparent preview and GoManifest before MCP,complete fresh identity/assets/catalogue/behaviour verification. No plaster,fabric,emission or built-in lights.",
+  "reviewNotes": "PDFpage12 and actual native inside/back/front/top inspected. Source380028tri/19001484bytes/SHA878b189e9578c845ec4df715098cf51c51ad2c3daa0279718a59e3316e25d1a8,max45.837898mm. Perpendicular railings occupy WEST Xnegative and NORTH Ypositive(nativeYmapsdownwardtoeditor),wallMask65,not80. Five posts share one corner;four asymmetric brace axes are measured independently on this source. Y west top rail/X north top rail,Z posts,X floor/Y fascia. Only two FREE-END caps are exposed:W cutX>-14.3 component322verts,N cut-Y>-13.6 component214verts. Crossing corner rails occlude the two putative corner heads;do not invent metal there or on backs. Native cap centres/radii derive from each measured component,not copied83. Eight triangles require finite source/render/LOD/shadow probes. Sourcefreecentre[0,0]Z24.700966 withnormalZ.9943,hasDecorfalse. North blocker startsY13.1 to include its more protruding face,weststrip endsX-13.5. Red-brown timber versus medium floor,rough iron. Native17mm prep then UD016 normalization preserving body/UV/images;final transparent preview and GoManifest before MCP,complete fresh identity/assets/catalogue/behaviour verification. No plaster,fabric,emission or built-in lights. Floor grain correction: raw source normals independently measured in8/10/12mm core regions,mean nx2~.327/ny2~.101 over24490/25885points at12mm confirm Y-running inner boards. PreviousXcolourgrain was transverse to the sculpt. Restrict newYpigment toXY\u00b114.3/Z23..26.65;Xnorth/south frame/fascia and Ywest/east borders retain their own axes. Preserve UUID,source,placement,geometry/UV and packed normal/ORM;recheck every original probe before republishing.",
   "surfaceHeightMM": 24.700965881347656,
   "renderColourSize": 1024
 }
