@@ -1,0 +1,345 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [0, 0],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "edge",
+  "wallMask": 68,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Balcony Corridor",
+  "groupCode": "MED-balcony-corridor",
+  "hasDecor": false,
+  "renderTriangles": 100000,
+  "lodTriangles": 40000,
+  "renderBakeSize": 1536,
+  "lodBakeSize": 1536,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1024,
+  "lodColourSize": 768,
+  "lodDataSize": 768,
+  "standRayTopMM": 100,
+  "standPointsMM": [[0, 0]],
+  "blockersMM": [
+    [
+      [-17.65, -17.65],
+      [-13.3, -17.65],
+      [-13.3, 17.65],
+      [-17.65, 17.65]
+    ],
+    [
+      [13.3, -17.65],
+      [17.65, -17.65],
+      [17.65, 17.65],
+      [13.3, 17.65]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "floor",
+    "balcony",
+    "wood",
+    "railing",
+    "braces",
+    "iron",
+    "corridor"
+  ],
+  "weightBudget": {
+    "renderMiB": [3.5, 6],
+    "lodMiB": [1.5, 3.3],
+    "shadowKiB": [110, 230],
+    "previewKiB": [15, 45],
+    "basis": "One-cell corridor balcony with opposed W/E rails,six posts,four independently fitted braces,eight triangular apertures and four exposed iron caps.100000/40000 independent triangles,1536 bakes,1024/768 maps;compare compact while preserving every cap and open triangle. Source normals prove Y floor grain independently of the rail axes."
+  },
+  "materials": {
+    "earthRGB": [0.28, 0.17, 0.075],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [0.34, 0.165, 0.055],
+    "woodLightRGB": [0.59, 0.35, 0.145],
+    "stoneDarkRGB": [0.34, 0.165, 0.055],
+    "stoneLightRGB": [0.59, 0.35, 0.145],
+    "woodParts": [
+      {
+        "name": "X perimeter frame and north south fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "Y measured inner floor boards",
+        "minMM": [-14.3, -14.3, 23],
+        "maxMM": [14.3, 14.3, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west Y floor border and fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [-14.3, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y floor border and fascia",
+        "minMM": [14.3, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west diagonal brace -1",
+        "minMM": [-17.65, -13.1, 26.4],
+        "maxMM": [-13.3, -1.5, 44.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.0, 0.6885087397475878, 0.7252280436464028],
+        "projection": {
+          "originMM": [
+            -15.71299231620062, -7.690632523396315, 36.9074753971843
+          ],
+          "axis": [0.0, -0.7252280436464028, 0.6885087397475878],
+          "rangeMM": [-1.7496092869887236, 2.6907361458527923]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "west diagonal brace 1",
+        "minMM": [-17.65, 1.5, 26.4],
+        "maxMM": [-13.3, 13.1, 44.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.0, -0.5908783737859241, 0.8067606506220428],
+        "projection": {
+          "originMM": [
+            -15.580434993741267, 7.6730118980907225, 37.52807646895342
+          ],
+          "axis": [0.0, -0.8067606506220428, -0.5908783737859241],
+          "rangeMM": [-2.7083402683861535, 2.607234251594899]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "west south vertical post",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-13.3, -12.8, 44.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "west centre vertical post",
+        "minMM": [-17.65, -2.1, 26.1],
+        "maxMM": [-13.3, 2.1, 44.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "west north vertical post",
+        "minMM": [-17.65, 12.8, 26.1],
+        "maxMM": [-13.3, 17.65, 44.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "west Y top rail",
+        "minMM": [-17.65, -17.65, 42.6],
+        "maxMM": [-13.3, 17.65, 46],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "east diagonal brace -1",
+        "minMM": [13.3, -13.1, 26.4],
+        "maxMM": [17.65, -1.5, 44.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.0, 0.5746357807973819, 0.8184092615723404],
+        "projection": {
+          "originMM": [
+            15.435116713387625, -7.600868661352929, 37.43535475339571
+          ],
+          "axis": [0.0, -0.8184092615723404, 0.5746357807973819],
+          "rangeMM": [-2.5463420436203172, 2.9113836855349327]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "east diagonal brace 1",
+        "minMM": [13.3, 1.5, 26.4],
+        "maxMM": [17.65, 13.1, 44.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.0, -0.7074941152501039, 0.7067192348354987],
+        "projection": {
+          "originMM": [
+            15.584444967865643, 7.6670471760127645, 37.129093094496646
+          ],
+          "axis": [0.0, -0.7067192348354987, -0.7074941152501039],
+          "rangeMM": [-2.4424694944266334, 1.8218337006069214]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "east south vertical post",
+        "minMM": [13.3, -17.65, 26.1],
+        "maxMM": [17.65, -12.8, 44.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "east centre vertical post",
+        "minMM": [13.3, -2.1, 26.1],
+        "maxMM": [17.65, 2.1, 44.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "east north vertical post",
+        "minMM": [13.3, 12.8, 26.1],
+        "maxMM": [17.65, 17.65, 44.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "east Y top rail",
+        "minMM": [13.3, -17.65, 42.6],
+        "maxMM": [17.65, 17.65, 46],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "west exposed iron cap -1",
+        "minMM": [-14.45, -16.074649963378906, 43.20550092697144],
+        "maxMM": [-13.768900299072266, -14.624750938415527, 44.65539995193481],
+        "radialShell": {
+          "originMM": [-14.45, -15.349700450897217, 43.930450439453125],
+          "axis": [1, 0, 0],
+          "rangeMM": [0, 0.6810997009277333],
+          "radiusAtOriginMM": 0.7249495124816895,
+          "radiusSlope": 0,
+          "thicknessMM": 0.7249495124816895,
+          "allowanceMM": 0
+        },
+        "kind": "paint",
+        "rgb": [0.2, 0.21, 0.2],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.02
+      },
+      {
+        "name": "west exposed iron cap 1",
+        "minMM": [-14.4, 14.459349479675293, 43.22369750976563],
+        "maxMM": [-13.83690013885498, 15.829249534606934, 44.59359756469726],
+        "radialShell": {
+          "originMM": [-14.4, 15.144299507141113, 43.908647537231445],
+          "axis": [1, 0, 0],
+          "rangeMM": [0, 0.5630998611450195],
+          "radiusAtOriginMM": 0.6849500274658203,
+          "radiusSlope": 0,
+          "thicknessMM": 0.6849500274658203,
+          "allowanceMM": 0
+        },
+        "kind": "paint",
+        "rgb": [0.2, 0.21, 0.2],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.02
+      },
+      {
+        "name": "east exposed iron cap -1",
+        "minMM": [13.761200332641602, -15.862250957489014, 43.199199523925785],
+        "maxMM": [14.35, -14.45275053024292, 44.60869995117187],
+        "radialShell": {
+          "originMM": [14.35, -15.157500743865967, 43.90394973754883],
+          "axis": [-1, 0, 0],
+          "rangeMM": [0, 0.5887996673583977],
+          "radiusAtOriginMM": 0.7047502136230469,
+          "radiusSlope": 0,
+          "thicknessMM": 0.7047502136230469,
+          "allowanceMM": 0
+        },
+        "kind": "paint",
+        "rgb": [0.2, 0.21, 0.2],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.02
+      },
+      {
+        "name": "east exposed iron cap 1",
+        "minMM": [13.691199684143067, 14.575949516296387, 43.18679937362671],
+        "maxMM": [14.4, 16.054149780273438, 44.664999637603756],
+        "radialShell": {
+          "originMM": [14.4, 15.315049648284912, 43.925899505615234],
+          "axis": [-1, 0, 0],
+          "rangeMM": [0, 0.7088003158569336],
+          "radiusAtOriginMM": 0.7391001319885254,
+          "radiusSlope": 0,
+          "thicknessMM": 0.7391001319885254,
+          "allowanceMM": 0
+        },
+        "kind": "paint",
+        "rgb": [0.2, 0.21, 0.2],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.02
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "PDFpage12 and actual source inside/back/front/top inspected individually. Source380026tri/19001384bytes/SHAf2cafe9e73f1846d8e2297eaec0511530a63c8c213b9a905312a14ade8f74485,max45.840199mm. Opposed WEST/EAST rails,wallMask68,six vertical posts,four independently measured asymmetric braces,eight triangular apertures and four exposed INNER-face iron heads. Select each head from its own native connected component at the earliest isolating depth cut;no metal on backs or surrounding wood. Source floor normal squares over25352vertices nx2.325501/ny2.101699/nz2.572800 and8/10/12mm core agreement prove Y-running inner boards. Xnorth/south frame/fascia,Ywest/east borders,Ytoprails,Zposts and measured beam grain. Nativefreecentre[0,0]Z24.702690/normalZ.993157,hasDecorfalse;both railing strips blockXoutside\u00b113.3. Check source/render/LOD/shadow surfaces,all eight holes,all four caps plus adjacent/back wood,actual colour/ORM,both candidates and close views. Ordinary17mm native prep then selected UD016 normalization preserving body/UV/images;full transparent preview and GoManifest before MCP. No plaster,fabric,emission or built-in lights.",
+  "surfaceHeightMM": 24.70269012451172,
+  "renderColourSize": 1024
+}
