@@ -30,10 +30,35 @@ export function routePath(points, width, height) {
   return joinSegments(routeSegments(points, width, height))
 }
 
-export function movePoint(route, id, delta) {
-  const indices = route.points.map((point, index) => point.control ? -1 : index).filter(index => index >= 0)
-  const position = indices.findIndex(index => route.points[index].id === id), next = position + delta
-  if (position < 0 || next < 0 || next >= indices.length) return
-  const a = indices[position], b = indices[next]
-  ;[route.points[a], route.points[b]] = [route.points[b], route.points[a]]
+// Each leg owns its geometry and dash phase; neighbouring stops cannot reshape it.
+export function routeLegs(points, width, height) {
+  const legs = []
+  let start = 0
+  for (let end = 1; end < points.length; end++) {
+    if (points[end].control) continue
+    const segments = routeSegments(points.slice(start, end + 1), width, height)
+      .map(segment => ({ ...segment, index: segment.index + start }))
+    legs.push({ id: `${points[start].id}:${points[end].id}`, path: joinSegments(segments), segments })
+    start = end
+  }
+  return legs
+}
+
+// Keep bends only between visits that stay adjacent, reversing them for a return leg.
+export function reorderVisits(route, ids) {
+  const visits = route.points.filter(point => !point.control)
+  if (ids.length !== visits.length || new Set(ids).size !== ids.length) return
+  const byId = new Map(visits.map(point => [point.id, point]))
+  if (ids.some(id => !byId.has(id))) return
+  const bends = new Map()
+  let previous, pending = []
+  for (const point of route.points) {
+    if (point.control) { pending.push(point); continue }
+    if (previous) {
+      bends.set(`${previous.id}:${point.id}`, pending)
+      bends.set(`${point.id}:${previous.id}`, pending.toReversed())
+    }
+    previous = point; pending = []
+  }
+  route.points = ids.flatMap((id, index) => [...(index ? bends.get(`${ids[index - 1]}:${id}`) || [] : []), byId.get(id)])
 }

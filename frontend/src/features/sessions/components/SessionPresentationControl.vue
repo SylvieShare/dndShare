@@ -1,7 +1,7 @@
 <template>
   <div v-if="isDm" class="presentation-control">
     <button
-      ref="trigger"
+      v-if="showTrigger" ref="trigger"
       type="button"
       class="chapter-tool-btn chapter-tool-btn--presentation"
       :class="{ 'chapter-tool-btn--connected': hasConnectedScreens }"
@@ -12,7 +12,7 @@
     >
       <MonitorUp :size="24" /><span class="session-tool-label">Экран</span><span class="presentation-control-dot" :class="{ connected: hasConnectedScreens }" />
     </button>
-    <BasePopover v-model:open="open" :anchor="trigger" min-width="min(360px, calc(100vw - 16px))" placement="right-start" transition-preset="action-menu">
+    <BasePopover v-model:open="open" :anchor="anchor || trigger" min-width="min(360px, calc(100vw - 16px))" :placement="anchor ? 'bottom-end' : 'right-start'" transition-preset="action-menu">
       <div class="presentation-menu">
         <header>
           <div>
@@ -142,7 +142,7 @@ import { computed, ref, watch } from 'vue'
 import { ArrowLeft, Ban, CloudFog, CloudLightning, CloudRain, Copy, ExternalLink, Eye, EyeOff, Flame, HeartPulse, Image, Maximize2, MonitorUp, ScrollText, Settings2, Skull, Snowflake, Swords, Video, Volume2, X } from '@lucide/vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 
-const props = defineProps({
+const props = defineProps({ showTrigger: { type: Boolean, default: true }, anchor: Object,
   sessionUuid: { type: String, required: true }, isDm: { type: Boolean, default: false },
   presentation: { type: Object, required: true },
 })
@@ -200,6 +200,7 @@ function setHealthDisplay(mode) { run(() => props.presentation.setHealthDisplay(
 function updateScaleDraft(event) { scaleDraft.value = normalizeScale(event.target.value) }
 function commitDisplayScale() { run(() => props.presentation.setDisplayScale(scaleDraft.value), false) }
 function resetDisplayScale() { scaleDraft.value = 100; commitDisplayScale() }
+defineExpose({ toggle: () => { open.value = !open.value } })
 </script>
 
 <style scoped>

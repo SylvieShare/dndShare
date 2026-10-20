@@ -1,8 +1,8 @@
 <template>
-  <button ref="trigger" type="button" class="inventory-trigger" :class="{ active: open }" title="Инвентарь" aria-label="Инвентарь" :aria-expanded="open" @click="open = !open">
+  <button v-if="showTrigger" ref="trigger" type="button" class="inventory-trigger" :class="{ active: open }" title="Инвентарь" aria-label="Инвентарь" :aria-expanded="open" @click="open = !open">
     <Backpack :size="24" /><span>Инвентарь</span>
   </button>
-  <BasePopover :open="open" :anchor="trigger" :min-width="0" placement="right-start" :close-on-scroll="false" :close-on-resize="false" role="dialog" aria-label="Инвентарь сессии" transition-preset="action-menu" @update:open="!state.busy && (open = $event)">
+  <BasePopover :open="open" :anchor="anchor || trigger" :min-width="0" :placement="anchor ? 'bottom-end' : 'right-start'" :close-on-scroll="false" :close-on-resize="false" role="dialog" aria-label="Инвентарь сессии" transition-preset="action-menu" @update:open="!state.busy && (open = $event)">
     <section class="session-inventory" :aria-busy="state.busy">
       <header><strong>Инвентарь сессии</strong><RemoveButton label="Закрыть инвентарь" :disabled="state.busy" @click="open = false" /></header>
       <p v-if="state.error" role="alert" class="inventory-error">{{ state.error }} <ActionButton v-if="state.retry" variant="quiet" :disabled="state.busy" @click="state.retry()">Повторить</ActionButton></p>
@@ -44,7 +44,7 @@ import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import TransferPerson from '@/features/item-transfers/components/TransferPerson.vue'
 import TransferDecisionActions from '@/features/item-transfers/components/TransferDecisionActions.vue'
-const props = defineProps({ sessionUuid: { type: String, required: true } })
+const props = defineProps({ showTrigger: { type: Boolean, default: true }, anchor: Object, sessionUuid: { type: String, required: true } })
 const controller = useSessionInventory(toRef(props, 'sessionUuid'))
 const state = controller.state
 const iconPresetsStore = useInventoryIconPresetsStore()
@@ -68,6 +68,7 @@ function viewItem(row) {
   view.value = { id, typeId, item: id ? art(row) || null : { name: row.name, typeId, data: row.entry?.override || {} } }
   open.value = false
 }
+defineExpose({ toggle: () => { open.value = !open.value } })
 </script>
 <style scoped>
 .inventory-trigger { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; min-height: 54px; padding: 5px 0; border: 0; background: transparent; color: var(--text-muted); cursor: pointer; }

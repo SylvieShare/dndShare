@@ -1,7 +1,7 @@
 <template>
   <div class="session-timer-control">
     <button
-      ref="trigger"
+      v-if="showTrigger" ref="trigger"
       type="button"
       class="session-timer-trigger"
       :class="{
@@ -17,7 +17,7 @@
       <span v-if="activeCount" class="session-timer-badge">{{ activeCount }}</span>
     </button>
 
-    <BasePopover v-model:open="open" :anchor="trigger" min-width="min(350px, calc(100vw - 16px))" placement="right-start" transition-preset="action-menu">
+    <BasePopover v-model:open="open" :anchor="anchor || trigger" min-width="min(350px, calc(100vw - 16px))" :placement="anchor ? 'bottom-end' : 'right-start'" transition-preset="action-menu">
       <form class="session-timer-menu" @submit.prevent="submit">
         <header>
           <span class="session-timer-menu-icon"><TimerReset :size="18" /></span>
@@ -67,7 +67,7 @@ import { computed, ref } from 'vue'
 import { Layers3, MonitorUp, Play, Timer, TimerReset } from '@lucide/vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 
-const props = defineProps({ timers: { type: Object, required: true } })
+const props = defineProps({ showTrigger: { type: Boolean, default: true }, anchor: Object, timers: { type: Object, required: true } })
 const trigger = ref(null)
 const open = ref(false)
 const description = ref('')
@@ -114,6 +114,7 @@ async function submit() {
     broadcast.value = false
   } catch { /* the composable exposes a localized error */ }
 }
+defineExpose({ toggle: () => { open.value = !open.value } })
 </script>
 
 <style scoped>

@@ -26,9 +26,8 @@ export function useGlobalMaps(uuid) {
   }
   const { connected } = useMapSync(`/api/sessions/${uuid}/global-map-events`, load)
 
-  function persist() {
-    if (!selected.value || conflict.value) return
-    const id = selected.value.id
+  function persist(id = selectedId.value) {
+    if (!maps.value.some(map => map.id === id) || conflict.value) return
     versions.set(id, (versions.get(id) || 0) + 1)
     pending.add(id)
     pendingCount.value = pending.size
@@ -39,6 +38,12 @@ export function useGlobalMaps(uuid) {
     if (!selected.value || conflict.value || busy.value) return
     fn(selected.value)
     persist()
+  }
+  function rename(id, name) {
+    const map = maps.value.find(map => map.id === id)
+    if (!map || !name || conflict.value || busy.value) return
+    map.name = name
+    persist(id)
   }
   async function savePending() {
     if (conflict.value || editing.value) return
@@ -110,5 +115,5 @@ export function useGlobalMaps(uuid) {
   function unload(event) { if (hasPending()) { event.preventDefault(); event.returnValue = '' } }
   window.addEventListener('beforeunload', unload)
   onBeforeUnmount(() => { stopped = true; clearTimeout(timer); window.removeEventListener('beforeunload', unload) })
-  return { maps, selectedId, selected, loading, saving, busy, editing, error, conflict, connected, hasPending, load, change, persist, flush, upload, activate, remove }
+  return { maps, selectedId, selected, loading, saving, busy, editing, error, conflict, connected, hasPending, load, change, persist, flush, upload, activate, remove, rename }
 }

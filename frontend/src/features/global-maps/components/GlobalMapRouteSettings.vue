@@ -8,25 +8,26 @@
         <div v-for="player in participants" :key="player.charId" class="global-route-player">
           <img v-if="pvAvatar(player)" :src="pvAvatar(player)" alt="" />
           <UserRound v-else :size="24" />
+          <span class="global-route-player-name">{{ pvName(player) || 'Игрок' }}</span>
           <CompactCheckbox :model-value="route.playerIds.includes(player.charId)" :label="pvName(player) || 'Игрок'" :disabled="disabled"
             @update:model-value="toggle(player.charId, $event)" />
         </div>
       </DetailSection>
-      <ActionButton variant="quiet" :disabled="disabled" @click="emit('delete')"><template #icon><Trash2 :size="15" /></template>Удалить маршрут</ActionButton>
     </div>
   </DetailSection>
 </template>
 <script setup>
-import { ActionButton, ColorPresetPicker, CompactCheckbox, DetailSection, FormField, FormTextInput } from '@sylvieshare/share-ui'
-import { Trash2, UserRound } from '@lucide/vue'
+import { ColorPresetPicker, CompactCheckbox, DetailSection, FormField, FormTextInput } from '@sylvieshare/share-ui'
+import { UserRound } from '@lucide/vue'
 import { pvAvatar, pvName } from '@/features/sessions/lib/participantView'
 import { ROUTE_COLORS } from '../lib/routes'
 const props = defineProps({ route: Object, participants: Array, disabled: Boolean })
-const emit = defineEmits(['change', 'delete'])
+const emit = defineEmits(['change'])
 function toggle(id, selected) { emit('change', { playerIds: selected ? [...props.route.playerIds, id] : props.route.playerIds.filter(value => value !== id) }) }
 </script>
 <style scoped>
 .global-route-settings { display: flex; flex-direction: column; gap: 10px; }
 .global-route-player { display: flex; gap: 8px; align-items: center; padding-block: 5px; }
+.global-route-player-name { flex: 1; min-width: 0; overflow-wrap: anywhere; font-size: 12px; color: var(--text-1); }
 .global-route-player img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
 </style>

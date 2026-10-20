@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { open, setup } from './helpers'
+import { open, openRoute, setup } from './helpers'
 
 async function ready(page, prepare = () => {}, mobile = false) {
   await page.setViewportSize(mobile ? { width: 430, height: 932 } : { width: 1600, height: 1000 })
@@ -60,7 +60,7 @@ test('Cmd previews and cancels continuation, reuses a shared point and retains i
   await page.keyboard.up('Meta')
   await expect.poll(() => state.maps[0].routes[0].points.length).toBe(6)
   await expect(source.locator('..').getByRole('img', { name: 'Последняя точка маршрута' })).toHaveCount(0)
-  await page.getByRole('button', { name: 'Маршруты', exact: true }).click()
+  await openRoute(page)
   await page.getByLabel('Добавить существующую точку', { exact: true }).selectOption('b')
   await expect.poll(() => state.maps[0].routes[0].points.at(-1).refId).toBe('b')
   await page.getByRole('textbox', { name: 'Название точки', exact: true }).fill('Общий привал')
@@ -68,7 +68,7 @@ test('Cmd previews and cancels continuation, reuses a shared point and retains i
   expect(state.maps[0].routes[0].points.at(-1).name).toBeUndefined()
   await page.reload()
   await expect(page.locator('button[data-source-id="b"]')).toHaveText('2·7')
-  await page.getByRole('button', { name: 'Маршруты', exact: true }).click()
+  await openRoute(page)
   await page.getByRole('button', { name: '2. Общий привал', exact: true }).click()
   await page.getByRole('button', { name: 'Удалить точку', exact: true }).click()
   await page.getByRole('dialog').getByRole('button', { name: 'Удалить', exact: true }).click()
@@ -110,11 +110,9 @@ test('a point shared with another route survives deletion of its original route'
   await page.getByRole('button', { name: 'Маршруты', exact: true }).click()
   await page.getByRole('button', { name: 'Добавить маршрут', exact: true }).click()
   await page.getByLabel('Добавить существующую точку', { exact: true }).selectOption('a')
-  await page.getByRole('button', { name: 'Обзор', exact: true }).click()
   await page.getByRole('textbox', { name: 'Название точки', exact: true }).fill('Общий старт')
   await expect.poll(() => state.maps[0].routes[0].points[0].name).toBe('Общий старт')
-  await page.getByRole('button', { name: 'Путь · 3', exact: true }).click()
-  await page.getByRole('button', { name: 'Удалить маршрут', exact: true }).click()
+  await page.locator('.global-map-sidebar').getByRole('button', { name: 'Удалить маршрут Путь', exact: true }).click()
   await page.getByRole('dialog').getByRole('button', { name: 'Удалить', exact: true }).click()
   await expect.poll(() => state.maps[0].routes.length).toBe(1)
   expect(state.maps[0].routes[0].points[0]).toMatchObject({ id: 'a', name: 'Общий старт', note: 'Общая заметка', x: .2, y: .45 })
@@ -192,7 +190,7 @@ for (const mobile of [false, true]) test(`multiple chapter and location links pe
   await expect(page.getByRole('button', { name: 'Удалить связь: Лесная тропа', exact: true })).toBeVisible()
   if (mobile) return
   await page.getByRole('button', { name: 'Закрыть настройки точки', exact: true }).click()
-  await page.getByRole('button', { name: 'Маршруты', exact: true }).click()
+  await openRoute(page)
   await page.getByLabel('Добавить существующую точку', { exact: true }).selectOption('a')
   await page.getByRole('button', { name: 'Удалить связь: Долина', exact: true }).click()
   await expect.poll(() => state.maps[0].routes[0].points[0].chapterId).toBe(null)

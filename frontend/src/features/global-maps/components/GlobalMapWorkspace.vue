@@ -1,8 +1,8 @@
 <template>
   <section class="global-map-workspace" :style="{ '--world-navigation-width': `${navigationWidth}px` }" data-tutorial="session-global-map">
-    <GlobalMapSidebar ref="sidebar" :controller="c" :selected-route="routeId" :selected-point="pointId" :participants="participants" :chapters="chapters" :add-mode="addMode"
-      @add-route="addRoute" @select-route="selectRoute" @select-point="selectPoint" @route-change="changeRoute"
-      @delete-map="map => pending = { kind: 'map', item: map }" @delete-route="route => pending = { kind: 'route', item: route }" @add-mode="startAdding" @navigation-width="navigationWidth = $event" @browse="addMode = false" @reuse-point="addPoint(null, $event)" />
+    <GlobalMapSidebar ref="sidebar" :controller="c" :selected-route="routeId"
+      @add-route="addRoute" @select-route="selectRoute" @navigation-width="navigationWidth = $event"
+      @delete-map="map => pending = { kind: 'map', item: map }" @delete-route="route => pending = { kind: 'route', item: route }" />
     <div class="global-map-main">
       <LoadingState v-if="c.loading" label="Открываем мир…" fill />
       <template v-else-if="c.selected">
@@ -13,9 +13,11 @@
           @remove-point="requestPointDelete" @chapter="emit('open-chapter', $event)" @location="emit('open-location', $event)" @cancel-add="addMode = false" />
         <WorkspaceCanvasControls class="global-map-zoom" zoom-out-label="Уменьшить карту мира" fit-label="Вписать карту мира" zoom-in-label="Увеличить карту мира"
           @zoom="canvas?.zoom($event)" @fit="canvas?.fit()" />
-        <p v-if="addMode && route" class="global-map-instruction">{{ route.name }} · нажмите на карту или существующую точку · Esc — обзор</p>
-        <GlobalMapPointInspector :visible="!addMode && !continuing" :point="point" :route="inspectorRoute" :index="index" :chapters="chapters" :locations="locations"
-          :disabled="c.conflict || c.busy" @close="pointId = ''" @change="patchPoint" @reorder="reorder" @delete="requestPointDelete(route.id, point.id)" @chapter="emit('open-chapter', $event)" @location="emit('open-location', $event)" />
+        <div v-if="addMode && route" class="global-map-instruction">{{ route.name }} · нажмите на карту или точку · Esc — обзор<ActionButton variant="quiet" @click="addMode = false; selectRoute(routeId)">Готово</ActionButton></div>
+        <GlobalMapPointInspector :visible="!routeFocus && !addMode && !continuing" :point="point" :route="inspectorRoute" :index="index" :chapters="chapters" :locations="locations"
+          :disabled="c.conflict || c.busy" @close="pointId = ''" @change="patchPoint" @route="selectRoute(routeId)" @delete="requestPointDelete(route.id, point.id)" @chapter="emit('open-chapter', $event)" @location="emit('open-location', $event)" />
+        <GlobalMapRouteInspector :visible="routeFocus && !addMode && !continuing" :route="route" :routes="c.selected.routes" :participants="participants" :chapters="chapters" :disabled="c.conflict || c.busy"
+          @close="routeFocus = false" @change="changeRoute" @reorder="reorder" @select-point="selectPoint" @delete-point="requestPointDelete(routeId, $event)" @add-mode="startAdding" @reuse-point="addPoint(null, $event)" />
       </template>
       <div v-else class="global-map-empty"><Globe :size="56" :stroke-width="1.2" /><h2>Путь вашей истории</h2><p>Загрузите карту мира, региона или города слева.<br />Создавайте маршруты, отмечайте главы и оставляйте заметки прямо на карте.</p></div>
       <div v-if="c.error" class="global-map-error" role="alert">{{ c.error }}
@@ -38,6 +40,7 @@ import { useGlobalMapEditing } from '../composables/useGlobalMapEditing'
 import { pointIndex, resolvePoint } from '../lib/routePoints'
 import GlobalMapSidebar from './GlobalMapSidebar.vue'
 import GlobalMapCanvas from './GlobalMapCanvas.vue'
+import GlobalMapRouteInspector from './GlobalMapRouteInspector.vue'
 import GlobalMapPointInspector from './GlobalMapPointInspector.vue'
 import WorkspaceCanvasControls from '@/shared/ui/WorkspaceCanvasControls.vue'
 const props = defineProps({ sessionUuid: { type: String, required: true }, participants: { type: Array, default: () => [] }, chapters: { type: Array, default: () => [] }, locations: { type: Array, default: () => [] }, currentChapterId: Number })
@@ -45,7 +48,7 @@ const emit = defineEmits(['open-chapter', 'open-location'])
 const c = reactive(useGlobalMaps(props.sessionUuid))
 const sidebar = ref(null), canvas = ref(null), navigationWidth = ref(48), continuing = ref(false)
 const pending = ref(null), reloadConfirm = ref(false), leaveConfirm = ref(false), mobile = useIsMobile(760)
-const { routeId, pointId, addMode, route, point, inspectorRoute, index, select, selectRoute, selectPoint, startAdding, addRoute, addPoint, move,
+const { routeId, pointId, addMode, routeFocus, route, point, inspectorRoute, index, select, selectRoute, selectPoint, startAdding, addRoute, addPoint, move,
   insertControl, cancelControl, endDrag, patchPoint, reorder, deletePoint, deleteRoute } = useGlobalMapEditing(c, canvas, sidebar, mobile, props)
 function changeRoute(patch) { c.change(() => Object.assign(route.value, patch)) }
 function requestPointDelete(routeId, pointId) {

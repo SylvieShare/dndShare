@@ -2,7 +2,7 @@
   <div ref="host" class="global-map-canvas" :class="{ 'global-map-canvas--adding': addMode && !readonly }"
     tabindex="0" aria-label="Мир. Колесо — масштаб, перетаскивание — перемещение, точки можно перетаскивать."
     @pointerdown="down" @pointermove="movePointer" @pointerenter="continuation.track" @pointerleave="leavePointer" @contextmenu.prevent @pointerup="endPointer" @pointercancel="v.end($event, true)"
-    @lostpointercapture="v.end($event, true)" @wheel.prevent="hidePreview(); v.zoom(Math.exp(-$event.deltaY * .001), $event)" @keydown.stop="key">
+    @lostpointercapture="v.end($event, true)" @wheel.prevent="hidePreview(); v.zoom(Math.exp(-$event.deltaY * .001), $event)" @keydown="key">
     <div class="global-map-world" :style="v.style">
       <img :key="imageGeneration" class="global-map-image" :src="imageUrl" alt="Карта мира" draggable="false" @load="v.load" @error="v.imageError = true" />
       <GlobalMapPaths :routes="routes" :width="v.image.width" :height="v.image.height" :unit="routeUnit" :selected-route="selectedRoute" :preview="continuation.preview.value" :readonly="readonly" />
@@ -14,7 +14,7 @@
           :aria-label="marker.control ? `Узел изгиба: ${marker.routeName}` : `${marker.routeName}, точка ${marker.numbers.join(', ')}${marker.name ? ': ' + marker.name : ''}`"
           :aria-pressed="marker.id === selectedPoint" :aria-haspopup="marker.control ? undefined : 'dialog'" :aria-expanded="preview?.id === marker.id"
           @pointerenter="showPreview($event, marker.routeId, marker)" @pointerleave="queueClose" @focus="showPreview($event, marker.routeId, marker)"
-          @blur="queueClose" @click.stop="clickMarker($event, marker)" @keydown.stop="pointKey($event, marker.routeId, marker)">
+          @blur="queueClose" @click.stop="clickMarker($event, marker)" @keydown="pointKey($event, marker.routeId, marker)">
           <template v-if="!marker.control">{{ marker.numbers.length <= 2 ? marker.numbers.join('·') : `${marker.number}↻` }}</template>
         </button>
         <span v-if="marker.last" class="global-map-endpoint" role="img" aria-label="Последняя точка маршрута" title="Последняя точка · Cmd/Ctrl — продолжить маршрут"><FlagTriangleRight :size="13" /></span>
@@ -103,9 +103,9 @@ function key(event) {
   const route = props.routes.find(route => route.points.some(point => point.id === props.selectedPoint))
   const point = route && routePoints(route, props.routes).find(point => point.id === props.selectedPoint)
   if (point) pointKey(event, route.id, point)
-  if (event.key === 'Escape') { v.cancelDrag(); continuation.cancel(); hidePreview(); emit('select', props.selectedRoute, ''); emit('cancel-add') }
-  if (event.key === '+' || event.key === '=') { event.preventDefault(); v.zoom(1.2) }
-  if (event.key === '-') { event.preventDefault(); v.zoom(1 / 1.2) }
+  if (event.key === 'Escape') { event.stopPropagation(); v.cancelDrag(); continuation.cancel(); hidePreview(); emit('select', props.selectedRoute, ''); emit('cancel-add') }
+  if (event.key === '+' || event.key === '=') { event.preventDefault(); event.stopPropagation(); v.zoom(1.2) }
+  if (event.key === '-') { event.preventDefault(); event.stopPropagation(); v.zoom(1 / 1.2) }
 }
 function down(event) {
   hidePreview(); hoverLeg(event.target)
@@ -130,12 +130,12 @@ function clickMarker(event, marker) {
   emit('select', marker.routeId, marker.id)
 }
 function pointKey(event, routeId, point) {
-  if (event.key === 'Escape') { v.cancelDrag(); continuation.cancel(); hidePreview(); emit('select', routeId, ''); emit('cancel-add'); return }
+  if (event.key === 'Escape') { event.stopPropagation(); v.cancelDrag(); continuation.cancel(); hidePreview(); emit('select', routeId, ''); emit('cancel-add'); return }
   if (props.readonly) return
-  if (event.key === 'Delete' || event.key === 'Backspace') { event.preventDefault(); emit('remove-point', routeId, point.id) }
+  if (event.key === 'Delete' || event.key === 'Backspace') { event.preventDefault(); event.stopPropagation(); emit('remove-point', routeId, point.id) }
   const delta = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[event.key]
   if (!delta) return
-  event.preventDefault()
+  event.preventDefault(); event.stopPropagation()
   emit('drag-start')
   const step = event.shiftKey ? 20 : 5
   emit('move', routeId, point.id, { x: clamp(point.x + delta[0] * step / (v.image.width * v.view.scale)), y: clamp(point.y + delta[1] * step / (v.image.height * v.view.scale)) })

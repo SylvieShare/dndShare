@@ -35,7 +35,7 @@ describe('chapter graph workspace', () => {
   })
 
   it('opens dice from a tool rail popover and keeps music playback in its tab', () => {
-    expect(readFileSync(fileURLToPath(new URL('./SessionToolsRail.vue', import.meta.url)), 'utf8')).toContain('<SessionDiceControl')
+    expect(readFileSync(fileURLToPath(new URL('./SessionToolbarTools.vue', import.meta.url)), 'utf8')).toContain('<SessionDiceControl')
     expect(diceControl).toContain('aria-label="Кубики"')
     expect(diceControl).toContain('<BasePopover')
     expect(diceControl).toContain('<DicePanel :controller="controller"')

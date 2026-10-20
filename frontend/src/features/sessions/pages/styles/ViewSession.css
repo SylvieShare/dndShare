@@ -10,9 +10,9 @@
 .session-loading > :first-child { align-self: flex-start; }
 
 .campaign-workspace {
-  --workspace-tools-width: 84px;
-  --workspace-tools-offset: 10px;
-  --workspace-tools-clearance: calc(var(--workspace-tools-width) + var(--workspace-tools-offset) + 12px);
+  --workspace-tools-width: 0px;
+  --workspace-tools-offset: 0px;
+  --workspace-tools-clearance: 0px;
   --participant-rail-width: 264px;
   --participant-selection-width: 36px;
   --participant-card-gap: 9px;

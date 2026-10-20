@@ -14,8 +14,7 @@ export function useGlobalMapContinuation(host, props, viewport, emit) {
   const engaged = computed(() => modifier.value && !cancelled.value && !props.readonly && !!cursor.value && !!end.value)
   const preview = computed(() => {
     if (!target.value) return null
-    const index = pointIndex(props.routes)
-    const points = [...route.value.points.slice(-2).map(entry => resolvePoint(entry, index)), target.value]
+    const points = [end.value, target.value]
     return { ...target.value, color: route.value.color, path: routeSegments(points, viewport.image.width, viewport.image.height).at(-1)?.path || '' }
   })
   function track(event) {

@@ -1,7 +1,7 @@
 <template>
   <div class="session-dice-control">
     <button
-      ref="trigger"
+      v-if="showTrigger" ref="trigger"
       type="button"
       class="session-dice-trigger"
       :class="{ 'session-dice-trigger--active': open }"
@@ -16,7 +16,7 @@
       <kbd v-if="showShortcutHints && !open" class="session-dice-hint session-dice-hint--rolls" aria-hidden="true">{{ shortcutLabels.dice }}+1…7 · d4…d100</kbd>
     </button>
 
-    <BasePopover v-model:open="open" :anchor="trigger" min-width="min(328px, calc(100vw - 16px))" placement="right-start" transition-preset="action-menu">
+    <BasePopover v-model:open="open" :anchor="anchor || trigger" min-width="min(328px, calc(100vw - 16px))" :placement="anchor ? 'bottom-end' : 'right-start'" transition-preset="action-menu">
       <DicePanel :controller="controller" :show-shortcut-hints="showShortcutHints" />
     </BasePopover>
   </div>
@@ -30,7 +30,7 @@ import { BasePopover } from '@sylvieshare/share-ui'
 import DicePanel from '@/features/sessions/components/DicePanel.vue'
 import { sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
 
-defineProps({ showShortcutHints: { type: Boolean, default: false } })
+defineProps({ showTrigger: { type: Boolean, default: true }, anchor: Object, showShortcutHints: { type: Boolean, default: false } })
 
 const trigger = ref(null)
 const controller = reactive(useSessionDice())

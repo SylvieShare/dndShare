@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { appendVisit, lastWaypoint, mapMarkers, removeEntries, routePoints, routeVisits, routeLegKey } from './routePoints'
-import { movePoint } from './routes'
+import { reorderVisits } from './routes'
 
 const fixture = () => [{ id: 'route', name: 'Путь', color: '#ffffff', points: [
   { id: 'a', x: .1, y: .2, name: 'Начало', note: 'Заметка', chapterId: 11 },
@@ -37,7 +37,7 @@ describe('shared world route points', () => {
   })
   it('reorders visits while keeping their bend handles between stops', () => {
     const routes = fixture(), route = routes[0]
-    movePoint(route, 'b', -1)
+    reorderVisits(route, ['b', 'a'])
     expect(route.points.map(point => point.id)).toEqual(['b', 'bend', 'a'])
     expect(routeVisits(route, routes).map(point => point.id)).toEqual(['b', 'a'])
   })

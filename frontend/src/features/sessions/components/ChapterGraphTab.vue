@@ -21,11 +21,11 @@
       @edit-session="emit('edit-session')"
       @session-updated="emit('session-updated', $event)"
       @open-combat="openCombat"
-    />
+    >
+      <template #tools><SessionToolbarTools v-if="isDm" ref="toolsRail" :session-uuid="sessionUuid" :presentation="presentation" :timers="timers" :show-shortcut-hints="showShortcutHints" /></template>
+    </ChapterGraphToolbar>
 
     <div class="chapter-canvas-stage share-app-canvas" data-tutorial="session-content">
-      <SessionToolsRail v-if="isDm" ref="toolsRail" :session-uuid="sessionUuid"
-        :presentation="presentation" :timers="timers" :show-shortcut-hints="showShortcutHints" />
       <div v-if="actionError" class="chapter-action-error" role="alert">{{ actionError }}</div>
       <LoadingState v-if="primaryView === 'story' && graph.loading.value" class="chapter-graph-loading" label="Загружаем карту кампании…" compact />
       <SessionGraphCanvas
@@ -184,7 +184,7 @@
 </template>
 
 <script setup>
-import SessionToolsRail from './SessionToolsRail.vue'
+import SessionToolbarTools from './SessionToolbarTools.vue'
 import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, ref, watch } from 'vue'
 import { ArrowLeft, ArrowLeftRight, Check, Circle, CircleDot, FolderInput, GitBranchPlus, ListChecks, Repeat2 } from '@lucide/vue'

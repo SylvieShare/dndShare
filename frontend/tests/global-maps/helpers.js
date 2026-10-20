@@ -72,3 +72,9 @@ export async function upload(page, name) {
   await expect(page.locator('.global-map-thumbnail--selected')).toContainText(name)
   await expect(page.getByText('Загружаем изображение…', { exact: true })).toHaveCount(0)
 }
+
+export async function openRoute(page, name = 'Путь') {
+  await page.getByRole('button', { name: 'Маршруты', exact: true }).click()
+  await page.locator('.global-map-sidebar').getByRole('button', { name: `Открыть маршрут ${name}`, exact: true }).click()
+  await expect(page.getByRole('complementary', { name: 'Настройки маршрута', exact: true })).toHaveCSS('opacity', '1')
+}
