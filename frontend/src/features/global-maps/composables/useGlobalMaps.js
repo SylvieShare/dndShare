@@ -3,6 +3,7 @@ const content=map=>({name:map.name,routes:map.routes})
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { activateGlobalMap, createGlobalMap, deleteGlobalMap, getGlobalMaps, saveGlobalMap } from '@/shared/api/globalMapsApi'
 import { useMapSync } from '@/features/maps/composables/useMapSync'
+import { prepareImageUpload, IMAGE_UPLOAD_MAX_BYTES } from '@/shared/lib/imageUpload'
 
 export function useGlobalMaps(uuid) {
   const maps = ref([]), selectedId = ref(''), loading = ref(true), saving = ref(false)
@@ -77,13 +78,11 @@ export function useGlobalMaps(uuid) {
   }
   async function upload(file) {
     if (!file || busy.value) return
-    if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type) || file.size > 15 * 1024 * 1024) {
-      error.value = 'Выберите PNG, JPG или WebP до 15 МБ'; return
-    }
     if (maps.value.length >= 32) { error.value = 'В сессии может быть до 32 карт мира'; return }
     busy.value = true; error.value = ''
     try {
-      const form = new FormData(); form.append('file', file)
+      const prepared = await prepareImageUpload(file, { maxBytes: IMAGE_UPLOAD_MAX_BYTES })
+      const form = new FormData(); form.append('file', prepared)
       const response = await fetch('/api/storage/images', { method: 'POST', body: form })
       if (!response.ok) throw new Error('Не удалось загрузить изображение')
       const asset = await response.json()

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"strconv"
 	"strings"
@@ -15,8 +16,30 @@ import (
 func init() { registerRoutes((*Server).routesStorageImages) }
 
 // maxImageBytes — предел размера загружаемого изображения (защита от заливки гигабайтов в S3).
-const maxImageBytes int64 = 15 << 20
+const maxImageBytes int64 = 30 << 20
 const maxVideoBytes int64 = 100 << 20
+
+// Spool large maps to disk rather than retaining the entire upload in memory.
+// The caller must close the file and remove the request's multipart form.
+func readImageUpload(w http.ResponseWriter, r *http.Request) (multipart.File, *multipart.FileHeader, error) {
+	r.Body = http.MaxBytesReader(w, r.Body, maxImageBytes+1<<20)
+	if err := r.ParseMultipartForm(1 << 20); err != nil {
+		var tooLarge *http.MaxBytesError
+		if errors.As(err, &tooLarge) {
+			return nil, nil, errors.New("file too large")
+		}
+		return nil, nil, errors.New("file is required")
+	}
+	file, header, err := r.FormFile("file")
+	if err != nil {
+		return nil, nil, errors.New("file is required")
+	}
+	if header.Size > maxImageBytes {
+		file.Close()
+		return nil, nil, errors.New("file too large")
+	}
+	return file, header, nil
+}
 
 func (s *Server) routesStorageImages(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/storage/images", s.handleUploadImage)
@@ -94,17 +117,15 @@ func (s *Server) handleUploadImage(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	r.Body = http.MaxBytesReader(w, r.Body, maxImageBytes+1<<20)
-	file, header, err := r.FormFile("file")
+	file, header, err := readImageUpload(w, r)
+	if r.MultipartForm != nil {
+		defer r.MultipartForm.RemoveAll()
+	}
 	if err != nil {
-		badRequest(w, "file is required")
+		badRequest(w, err.Error())
 		return
 	}
 	defer file.Close()
-	if header.Size > maxImageBytes {
-		badRequest(w, "file too large")
-		return
-	}
 	if ct := header.Header.Get("Content-Type"); ct != "" && !strings.HasPrefix(ct, "image/") {
 		badRequest(w, "not an image")
 		return

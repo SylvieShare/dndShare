@@ -51,7 +51,7 @@
     <input
       ref="iconFileInput"
       type="file"
-      accept=".png,.webp,image/png,image/webp"
+      accept="image/*"
       style="display:none"
       @change="onIconFileChange"
     />
@@ -82,6 +82,7 @@ import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 import AvatarCropModal from '@/features/character-editor/components/AvatarCropModal.vue'
+import { prepareImageUpload, validateImageFile, PORTRAIT_IMAGE_MAX_BYTES } from '@/shared/lib/imageUpload'
 
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
@@ -175,8 +176,10 @@ function setCropSource(blob, fileName = 'portrait.webp') {
 function openFileCrop(file) {
   actionsOpen.value = false
   uploadError.value = ''
-  if (file.size > 8 * 1024 * 1024) {
-    uploadError.value = 'Файл слишком большой (максимум 8 МБ)'
+  try {
+    validateImageFile(file, PORTRAIT_IMAGE_MAX_BYTES)
+  } catch (error) {
+    uploadError.value = error.message
     return
   }
   setCropSource(file, file.name || 'portrait.webp')
@@ -230,24 +233,21 @@ function clearImage() {
 
 async function upload(file) {
   uploadError.value = ''
-  if (file.size > 8 * 1024 * 1024) {
-    uploadError.value = 'Файл слишком большой (максимум 8 МБ)'
-    return
-  }
   uploading.value = true
   imageUrl.value = null
   try {
+    const prepared = await prepareImageUpload(file, { maxBytes: PORTRAIT_IMAGE_MAX_BYTES })
     const formData = new FormData()
-    formData.append('file', file)
+    formData.append('file', prepared)
     if (props.value?.upload_id) formData.append('old_upload_id', props.value.upload_id)
     const res = await fetch('/api/storage/images', { method: 'POST', body: formData })
-    if (!res.ok) throw new Error(res.status)
+    if (!res.ok) throw new Error('Не удалось загрузить изображение')
     const data = await res.json()
     imageUrl.value = data.url
     emit('update:value', props.block.id, { url: data.url, upload_id: data.upload_id })
-  } catch {
+  } catch (error) {
     imageUrl.value = resolveImageUrl(props.value)
-    uploadError.value = 'Не удалось загрузить изображение'
+    uploadError.value = error.message || 'Не удалось загрузить изображение'
   } finally {
     uploading.value = false
   }

@@ -1,6 +1,12 @@
 import { expect, test, vi } from 'vitest'
 import { characterSteps } from './character'
 for (const mobile of [false, true]) {
+  test(`image upload guidance matches the device (${mobile ? 'mobile' : 'desktop'})`, () => {
+    const step = characterSteps({ mobile, dnd: true, action: vi.fn(), target: vi.fn() }).find(s => s.id === 'stats')
+    expect(step.body).toContain(mobile ? 'портрет до 8 МБ' : 'до 5 и 8 МБ')
+    expect(step.body).toContain('преобразуются в WebP')
+    expect(step.body).toContain(mobile ? 'При создании персонажа' : 'портрет на вкладке «Личность»')
+  })
   test(`weapon tutorial explains bonus action damage (${mobile ? 'mobile' : 'desktop'})`, () => {
     const step = characterSteps({ mobile, dnd: true, action: vi.fn(), target: vi.fn() }).find(s => s.id === 'weapons')
     expect(step.body).toContain('Урон бонусным действием')

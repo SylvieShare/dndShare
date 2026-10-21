@@ -4,8 +4,8 @@
     <p v-if="controller.selected" class="global-map-save-status" role="status">{{ controller.saving ? 'Сохраняем…' : controller.hasPending() ? 'Есть несохранённые изменения' : 'Сохранено' }}</p>
     <template v-if="tab === 'maps'">
       <AddButton block label="Загрузить карту" :disabled="controller.busy || controller.maps.length >= 32" @click="file?.click()" />
-      <input ref="file" type="file" accept="image/png,image/jpeg,image/webp" aria-label="Изображение карты мира" hidden @change="upload" />
-      <p class="map-hint">PNG, JPG или WebP до 15 МБ. У каждой карты свои маршруты.</p>
+      <input ref="file" type="file" accept="image/*" aria-label="Изображение карты мира" hidden @change="upload" />
+      <p class="map-hint">Изображения до 30 МБ. Другие форматы преобразуются в WebP. У каждой карты свои маршруты.</p>
       <LoadingState v-if="controller.busy" label="Обрабатываем карту…" compact />
       <BaseTile v-for="map in controller.maps" :key="map.id" framed class="global-map-thumbnail" :class="{ 'global-map-thumbnail--selected': map.id === controller.selectedId }" @click="controller.selectedId = map.id">
         <button type="button" class="global-map-map-image" :aria-label="`Открыть карту ${map.name}`" :aria-pressed="map.id === controller.selectedId" @click.stop="controller.selectedId = map.id"><img :src="map.imageUrl" alt="" loading="lazy" decoding="async" /></button>

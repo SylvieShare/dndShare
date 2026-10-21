@@ -104,6 +104,7 @@ import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { CircleUserRound, Crop, ImagePlus, Trash2, Upload } from '@lucide/vue'
 import AvatarCropModal from '@/features/character-editor/components/AvatarCropModal.vue'
+import { prepareImageUpload, validateImageFile, PORTRAIT_IMAGE_MAX_BYTES, CHARACTER_ICON_MAX_BYTES } from '@/shared/lib/imageUpload'
 
 const props = defineProps({
   portrait: { type: Object, default: null },
@@ -148,9 +149,10 @@ function clearCropObjectUrl() {
 
 function openCrop(kind, file) {
   error.value = ''
-  const maxBytes = kind === 'icon' ? 5 * 1024 * 1024 : 8 * 1024 * 1024
-  if (file.size > maxBytes) {
-    error.value = kind === 'icon' ? 'Иконка должна быть не больше 5 МБ' : 'Портрет должен быть не больше 8 МБ'
+  try {
+    validateImageFile(file, kind === 'icon' ? CHARACTER_ICON_MAX_BYTES : PORTRAIT_IMAGE_MAX_BYTES)
+  } catch (cause) {
+    error.value = cause.message
     return
   }
   clearCropObjectUrl()
@@ -177,38 +179,10 @@ function closeCrop() {
   clearCropObjectUrl()
 }
 
-async function resizeIcon(blob) {
-  const sourceUrl = URL.createObjectURL(blob)
-  try {
-    const image = await new Promise((resolve, reject) => {
-      const element = new Image()
-      element.onload = () => resolve(element)
-      element.onerror = reject
-      element.src = sourceUrl
-    })
-    const canvas = document.createElement('canvas')
-    canvas.width = 256
-    canvas.height = 256
-    const context = canvas.getContext('2d')
-    if (!context) throw new Error('canvas unavailable')
-    context.drawImage(image, 0, 0, 256, 256)
-    return await new Promise((resolve, reject) => {
-      canvas.toBlob(value => value ? resolve(value) : reject(new Error('icon resize failed')), 'image/webp', 0.9)
-    })
-  } finally {
-    URL.revokeObjectURL(sourceUrl)
-  }
-}
-
 async function uploadCrop(blob) {
   const kind = cropKind.value
   closeCrop()
-  try {
-    const prepared = kind === 'icon' ? await resizeIcon(blob) : blob
-    await upload(kind, new File([prepared], `${kind}.webp`, { type: 'image/webp' }))
-  } catch {
-    error.value = 'Не удалось подготовить изображение'
-  }
+  await upload(kind, new File([blob], `${kind}.webp`, { type: blob.type }))
 }
 
 async function upload(kind, file) {
@@ -216,8 +190,12 @@ async function upload(kind, file) {
   uploading.value = kind
   const previous = kind === 'icon' ? props.icon : props.portrait
   try {
+    const prepared = await prepareImageUpload(file, {
+      maxBytes: kind === 'icon' ? CHARACTER_ICON_MAX_BYTES : PORTRAIT_IMAGE_MAX_BYTES,
+      maxDimension: kind === 'icon' ? 256 : undefined,
+    })
     const formData = new FormData()
-    formData.append('file', file)
+    formData.append('file', prepared)
     if (kind === 'icon') formData.append('purpose', 'character_icon')
     if (previous?.upload_id) formData.append('old_upload_id', previous.upload_id)
     const response = await fetch('/api/storage/images', { method: 'POST', body: formData })

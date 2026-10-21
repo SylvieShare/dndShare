@@ -46,6 +46,7 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { AppModalFrame, FormActionButtons } from '@sylvieshare/share-ui'
+import { canvasToWebp } from '@/shared/lib/imageUpload'
 
 const props = defineProps({
   src: { type: String, required: true },
@@ -164,9 +165,7 @@ async function applyCrop() {
     const context = canvas.getContext('2d')
     if (!context) throw new Error('canvas unavailable')
     context.drawImage(image.value, source.x, source.y, source.width, source.height, 0, 0, outputWidth, outputHeight)
-    const blob = await new Promise((resolve, reject) => {
-      canvas.toBlob(value => value ? resolve(value) : reject(new Error('crop failed')), 'image/webp', 0.9)
-    })
+    const blob = await canvasToWebp(canvas)
     emit('crop', blob)
   } catch {
     loadError.value = true

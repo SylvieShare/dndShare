@@ -42,7 +42,12 @@ values, including when multiclass is reduced to one class.
 
 Clicking the editable portrait opens actions for upload, crop, clear and a
 separate character-icon upload. An icon is uploaded directly without the crop
-workspace; PNG/WebP dimensions must not exceed 256×256. It is stored outside
+workspace; its original file is limited to 5 MiB and dimensions must not exceed
+256×256. Browser-readable formats (including JPEG/PNG) are converted to WebP
+through the shared `imageUpload` pipeline before sending; existing WebP is not
+re-encoded. The portrait's original limit remains 8 MiB; the crop editor uses the
+same WebP encoder (quality 0.9, transparency retained). The creation wizard uses
+this pipeline too and bounds its cropped icon to 256×256. It is stored outside
 character JSON, while the portrait keeps its existing crop flow and sheet aspect.
 The desktop summary prefers that icon and falls back to the portrait; the full
 portrait block is rendered in the **Личность** tab.

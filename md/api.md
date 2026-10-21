@@ -100,7 +100,12 @@ CRUD tracks/albums/tags, track-to-album/tag links и album order только д
 связать с личным альбомом или тегом. В `albumIds`/`tags` ответа такие связи
 фильтруются по текущему пользователю. Личное и системное аудио получает signed S3 playback URL.
 Image upload: `POST
-/api/storage/images`; item icons используют item-специфичный маршрут выше.
+/api/storage/images` (multipart `file`, до 30 МБ / 30×1024² байт).
+Большие изображения разбираются через временный файл с очисткой после запроса.
+Для `purpose=character_icon` сохраняются предел 5 МБ и проверка PNG/WebP
+256×256. Карты мира и изображения персонажа преобразуются в WebP в браузере
+перед отправкой; API хранит переданные байты. Item icons используют
+item-специфичный маршрут выше.
 Video upload: `POST /api/storage/videos`. SVG read: `GET /api/svg/{id}`.
 Uploads пишут byte-size, исходное имя, MIME и id владельца в соответствующий
 registry; эти же metadata используются `GET /api/account/storage`.

@@ -20,7 +20,7 @@
     <input
       ref="fileInput"
       type="file"
-      accept=".png,.webp,image/png,image/webp"
+      accept="image/*"
       hidden
       @change="onFileChange"
     />

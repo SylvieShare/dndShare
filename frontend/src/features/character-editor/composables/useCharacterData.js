@@ -1,4 +1,5 @@
 import {copyDocument} from '@/shared/lib/documentPatch'
+import { prepareImageUpload, CHARACTER_ICON_MAX_BYTES } from '@/shared/lib/imageUpload'
 import { statusValueProjection } from '../lib/statusValueProjection'
 import { ref, shallowRef, reactive, computed, provide } from 'vue'
 import { consumeCharSeed } from '@/shared/lib/charSeed'
@@ -280,8 +281,9 @@ export function useCharacterData(uuid, isMobile) {
   }
 
   async function uploadCharacterIcon(file) {
+    const prepared = await prepareImageUpload(file, { maxBytes: CHARACTER_ICON_MAX_BYTES })
     const formData = new FormData()
-    formData.append('file', file)
+    formData.append('file', prepared)
     const response = await fetch(`/api/char/${uuid}/icon-image`, { method: 'POST', body: formData })
     if (!response.ok) {
       const payload = await response.json().catch(() => ({}))

@@ -44,8 +44,7 @@ describe('character portrait UI', () => {
 
   it('renders a draggable crop workspace and exports WebP', () => {
     expect(cropSource).toContain('@pointerdown="startDrag"')
-    expect(cropSource).toContain("canvas.toBlob")
-    expect(cropSource).toContain("'image/webp'")
+    expect(cropSource).toContain('await canvasToWebp(canvas)')
   })
 
   it('records browser snapshots after sheet changes without a global undo handler', () => {

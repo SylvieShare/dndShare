@@ -17,6 +17,8 @@ for (const mobile of [false, true]) {
     expect(action).not.toHaveBeenCalled();
     expect(sessionSteps({ ...options, dm: false }).some((s) => s.id === 'map')).toBe(false);
     const global = sessionSteps({ ...options, dm: true }).find(s => s.id === 'global-map');
+    expect(global.body).toContain('до 30 МБ');
+    expect(global.body).toContain('преобразуются в WebP');
     await global.enter(context);
     expect(showView).toHaveBeenCalledWith('globalMaps', context);
     expect(sessionSteps({ ...options, dm: false }).some(s => s.id === 'global-map')).toBe(false);
