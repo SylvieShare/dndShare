@@ -131,3 +131,30 @@ it("rebuilds a screenshot if the map changed during upload", async () => {
   expect(await ensureStoredMapPreview({ id: "changing" })).toBe("/stored");
   expect(state.upload.mock.calls.map((c) => c[1])).toEqual(["old", "new"]);
 });
+it("uploads an editor snapshot with one request and fetches context only after a conflict", async () => {
+  const hash = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode("[]"),
+  );
+  const map = {
+    id: "local",
+    document: { tiles: [], objects: [] },
+    previewSignature: "saved",
+    previewModelsSignature: [...new Uint8Array(hash)]
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join(""),
+  };
+  expect(await ensureStoredMapPreview(map, { catalogue: [] })).toBe("/stored");
+  expect(state.context).not.toHaveBeenCalled();
+  expect(state.upload.mock.calls[0][1]).toBe("saved");
+  state.upload.mockRejectedValueOnce(
+    Object.assign(new Error("stale"), { status: 409 }),
+  );
+  expect(await ensureStoredMapPreview(map, { catalogue: [] })).toBe("/stored");
+  expect(state.context).toHaveBeenCalledOnce();
+  expect(state.upload.mock.calls.map((call) => call[1])).toEqual([
+    "saved",
+    "saved",
+    "new",
+  ]);
+});

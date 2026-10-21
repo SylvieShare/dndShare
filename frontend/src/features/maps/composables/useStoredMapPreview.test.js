@@ -11,6 +11,7 @@ beforeEach(() => {
   state.generate.mockReset().mockResolvedValue("/new");
   input = {
     source: { id: "map", previewSignature: "a" },
+    catalogue: ref([]),
     journal: { revision: ref(0), dirty: ref(false) },
     gesturing: ref(false),
     loadingModels: ref(false),

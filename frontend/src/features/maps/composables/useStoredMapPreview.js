@@ -2,6 +2,7 @@ import { onScopeDispose, shallowRef, watch } from "vue";
 
 export function useStoredMapPreview({
   source,
+  catalogue,
   session,
   journal,
   gesturing,
@@ -48,7 +49,10 @@ export function useStoredMapPreview({
             "../lib/mapStoredPreviews"
           );
           request.signal.throwIfAborted();
-          await ensureStoredMapPreview(map, { signal: request.signal });
+          await ensureStoredMapPreview(map, {
+            signal: request.signal,
+            catalogue: catalogue.value,
+          });
         } catch {
           // A missing preview retries on the next save or library visit.
         }

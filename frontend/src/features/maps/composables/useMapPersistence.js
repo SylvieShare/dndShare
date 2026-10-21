@@ -25,6 +25,7 @@ export function useMapPersistence({
   const lastSavedAt = ref(source?.changedAt || null);
   const preview = useStoredMapPreview({
     source,
+    catalogue,
     session: options.session,
     journal,
     gesturing,

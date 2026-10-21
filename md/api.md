@@ -34,12 +34,12 @@
 
 | Endpoint | Контракт |
 | --- | --- |
-| `GET /api/maps/models` | Авторизованный пользователь: каталог метаданных моделей, постоянный id, code/name, постоянный UUID uuid, behaviour (revision/defaultLights/transitions/waterAnimation?), textureDetail (basic/detailed) текущей модели и renderUrl/lodUrl/shadowUrl/previewUrl; assetBytes {render,lod,shadow,preview} — размеры файлов в байтах для плана загрузки |
+| `GET /api/maps/models` | Авторизованный пользователь: каталог метаданных моделей, постоянный id, code/name, постоянный UUID uuid, behaviour (revision/defaultLights/transitions/waterAnimation?), textureDetail (basic/detailed) текущей модели и renderUrl/lodUrl/shadowUrl/previewUrl; assetBytes {render,lod,shadow,preview} — размеры файлов в байтах для плана загрузки; previewSignature — подпись визуальных данных модели для локальной сверки при создании снимка |
 | `PUT /api/maps/models/{modelId}` | ADMIN: поля каталога с id/uuid, редактируемый code и необязательный behaviour → обновление текущей модели с прежним UUID во всех картах; поведение сохраняется в той же транзакции; устаревшая behaviour.revision получает 409 |
 | `GET /api/maps/models/{modelId}/{variant}` | Авторизованный пользователь: source/render/lod/shadow/preview из S3; ETag и immutable cache |
 | `GET /api/maps` | Компактный список карт: scope=own/subscriptions/catalogue |
 | `POST /api/maps` | Создать `{name,document}` |
-| `GET /api/maps/{mapId}/preview-context` | Авторизованный пользователь: свой/системный документ, актуальные используемые модели, SHA-256 подписи сцены; previewUrl, если снимок этой подписи уже готов |
+| `GET /api/maps/{mapId}/preview-context` | Авторизованный пользователь: доступный документ, актуальные используемые модели, SHA-256 подписи сцены и modelsSignature; previewUrl, если снимок этой подписи уже готов; нужен при отсутствии локального контекста или конфликте |
 | `POST /api/maps/{mapId}/preview?signature=...` | Авторизованный пользователь: WebP 64–1024 px, до 1 МБ → сохранённый в S3 снимок; устаревшая сцена получает 409 |
 | `GET /api/maps/{mapId}/preview?signature=...` | Авторизованный пользователь: сохранённый WebP из S3; проверка владельца и подписи, immutable cache |
 | `PUT /api/maps/{mapId}` | Заменить свой документ `{name,document,revision}` |
@@ -70,10 +70,12 @@
 шаблоном. Overrides у ручного источника запрещён. Число источников с тенями не
 ограничено двумя; сохраняются до 32 ручных источников плюс встроенные.
 
-Карта содержит `id,name,document,revision,changedAt,system,previewSignature` и
+Полная карта содержит `id,name,document,revision,changedAt,owned,publishedAt,previewSignature,previewModelsSignature` и
 `previewUrl`, если сохранён снимок. Устаревший снимок сохраняет URL своей подписи и
 получает `previewStale: true`, пока готовится замена; `previewSignature` описывает
-текущую сцену. Названия, теги, зоны и служебные маркеры не сбрасывают снимок.
+текущую сцену. previewModelsSignature позволяет сверить уже загруженные модели
+локально и отправить WebP одним POST без предварительного preview-context.
+Названия, теги, зоны и служебные маркеры не сбрасывают снимок.
 Сессионная копия
 добавляет `state` и неизменяемый `source: {id,name,system}`. Единственный формат документа `tiles` описан
 в [картах](features/maps.md). Состояние содержит туман, видимость зон,

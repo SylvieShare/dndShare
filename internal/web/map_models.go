@@ -20,12 +20,13 @@ func (s *Server) routesMapModels(mux *http.ServeMux) {
 
 type mapModelView struct {
 	battlemap.ModelMetadata
-	Behaviour  battlemap.ModelBehaviour `json:"behaviour"`
-	RenderURL  string                   `json:"renderUrl"`
-	LODURL     string                   `json:"lodUrl"`
-	PreviewURL string                   `json:"previewUrl"`
-	ShadowURL  string                   `json:"shadowUrl"`
-	AssetBytes map[string]int64         `json:"assetBytes,omitempty"`
+	Behaviour        battlemap.ModelBehaviour `json:"behaviour"`
+	RenderURL        string                   `json:"renderUrl"`
+	LODURL           string                   `json:"lodUrl"`
+	PreviewURL       string                   `json:"previewUrl"`
+	ShadowURL        string                   `json:"shadowUrl"`
+	AssetBytes       map[string]int64         `json:"assetBytes,omitempty"`
+	PreviewSignature string                   `json:"previewSignature,omitempty"`
 }
 
 func modelView(model battlemap.Model, base string) mapModelView {
@@ -62,6 +63,10 @@ func (s *Server) handleMapModels(w http.ResponseWriter, r *http.Request) {
 	for _, m := range models {
 		view := modelView(m, "/api/maps/models")
 		view.Behaviour = behaviours[m.DefinitionID]
+		if err := signMapPreviewModel(&view); err != nil {
+			serverError(w, err)
+			return
+		}
 		result = append(result, view)
 	}
 	w.Header().Set("Cache-Control", "no-store")

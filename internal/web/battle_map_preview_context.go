@@ -17,10 +17,11 @@ import (
 )
 
 type mapPreviewContext struct {
-	Document   battlemap.Document `json:"document"`
-	Models     []mapModelView     `json:"models"`
-	Signature  string             `json:"signature"`
-	PreviewURL string             `json:"previewUrl,omitempty"`
+	Document        battlemap.Document `json:"document"`
+	Models          []mapModelView     `json:"models"`
+	Signature       string             `json:"signature"`
+	PreviewURL      string             `json:"previewUrl,omitempty"`
+	ModelsSignature string             `json:"modelsSignature"`
 }
 
 func buildMapPreviewContext(d battlemap.Document, models []battlemap.Model, behaviours map[string]battlemap.ModelBehaviour) (mapPreviewContext, error) {
@@ -38,6 +39,9 @@ func buildMapPreviewContext(d battlemap.Document, models []battlemap.Model, beha
 		if ids[m.ID] {
 			view := modelView(m, "/api/maps/models")
 			view.Behaviour = behaviours[m.DefinitionID]
+			if err := signMapPreviewModel(&view); err != nil {
+				return mapPreviewContext{}, err
+			}
 			views = append(views, view)
 		}
 	}
@@ -53,7 +57,7 @@ func buildMapPreviewContext(d battlemap.Document, models []battlemap.Model, beha
 	if err != nil {
 		return mapPreviewContext{}, err
 	}
-	return mapPreviewContext{Document: d, Models: views, Signature: fmt.Sprintf("%x", sha256.Sum256(raw))}, nil
+	return mapPreviewContext{Document: d, Models: views, Signature: fmt.Sprintf("%x", sha256.Sum256(raw)), ModelsSignature: mapPreviewModelsSignature(views)}, nil
 }
 func mapPreviewURL(id, signature string) string {
 	return "/api/maps/" + url.PathEscape(id) + "/preview?signature=" + url.QueryEscape(signature)
@@ -64,6 +68,7 @@ func (s *Server) attachMapPreview(r *http.Request, m *store.BattleMap, models []
 		return err
 	}
 	m.PreviewSignature = data.Signature
+	m.PreviewModelsSignature = data.ModelsSignature
 	m.PreviewURL = ""
 	m.PreviewStale = false
 	p, err := s.store.GetMapPreview(r.Context(), m.ID)

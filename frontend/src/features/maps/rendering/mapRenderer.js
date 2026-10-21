@@ -12,8 +12,6 @@ import { createVolumeFog } from "./volumeFogRenderer";
 import { pickMapScene, visibleSceneHits } from "./mapScenePicking";
 import { createMapAreaPreview } from "./mapAreaPreview";
 import { createMapFramePreview } from "./mapFramePreview";
-import { startModelRefresh } from "../lib/currentModelRefresh";
-import { getMapModels } from "@/shared/api/mapsApi";
 import { createLightSourceState } from "./lightSourceState";
 import { createMapLighting } from "./mapLighting";
 import { createMapEffects } from "./mapEffects";
@@ -345,19 +343,6 @@ export async function createMapRenderer(
       );
   });
   if (!snapshotOnly) observer.observe(host);
-  const stopModelRefresh = startModelRefresh(
-    () =>
-      active && runtime.current && !runtime.options.catalogue
-        ? getMapModels(runtime.options.publicCode)
-        : null,
-    async (models) => {
-      assets.replaceCatalogue(models);
-      await update(runtime.current, runtime.state, {
-        ...runtime.options,
-        sceneChanges: ["structure", "assets"],
-      });
-    },
-  );
   return {
     update,
     updateSelection,
@@ -416,7 +401,6 @@ export async function createMapRenderer(
       }),
     destroy() {
       cancelAnimationFrame(assetFrame);
-      stopModelRefresh();
       dead = true;
       synchronizer.destroy();
       observer.disconnect();

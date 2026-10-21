@@ -1,6 +1,23 @@
 // Persist server preview metadata and bytes across browser reloads in this fixture.
 export function previewFixture(catalogue, dto) {
   const prefix = "map-preview:";
+  async function digest(value) {
+    const hash = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(JSON.stringify(value)),
+    );
+    return [...new Uint8Array(hash)]
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("");
+  }
+  async function models(selected = catalogue) {
+    return Promise.all(
+      selected.map(async (model) => {
+        const { previewSignature, ...visual } = model;
+        return { ...dto(model), previewSignature: await digest(visual) };
+      }),
+    );
+  }
   async function signature(map) {
     const doc = structuredClone(map.document);
     delete doc.tags;
@@ -26,12 +43,21 @@ export function previewFixture(catalogue, dto) {
   }
   async function decorate(map) {
     const sig = await signature(map);
+    const ids = new Set(
+      [...map.document.tiles, ...map.document.objects]
+        .map((item) => item.modelId)
+        .filter(Boolean),
+    );
+    const pairs = (await models(catalogue.filter((model) => ids.has(model.id))))
+      .map((model) => [model.uuid, model.previewSignature])
+      .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
     const stored = JSON.parse(
       sessionStorage.getItem(prefix + map.id) || "null",
     );
     return {
       ...map,
       previewSignature: sig,
+      previewModelsSignature: await digest(pairs),
       previewUrl: stored ? `data:image/webp;base64,${stored.b64}` : undefined,
       previewStale: !!stored && stored.signature !== sig,
     };
@@ -62,7 +88,7 @@ export function previewFixture(catalogue, dto) {
       const decorated = await decorate(map);
       return response({
         document: map.document,
-        models: catalogue.map(dto),
+        models: await models(),
         signature: decorated.previewSignature,
         previewUrl: !decorated.previewStale ? decorated.previewUrl : undefined,
       });
@@ -90,5 +116,5 @@ export function previewFixture(catalogue, dto) {
       { headers: { "Content-Type": "image/webp" } },
     );
   }
-  return { handle, decorate };
+  return { handle, decorate, models };
 }

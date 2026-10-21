@@ -399,6 +399,7 @@ let display = {
   camera: { x: 6, y: 5, cellPixels: 64, rotation: 0, fit: true },
 };
 window.requests = [];
+window.mapReadRequests = [];
 window.latestBoard = clone(board);
 window.EventSource = class {
   constructor() {
@@ -458,6 +459,8 @@ window.fetch = async (url, options = {}) => {
   const rawUrl = typeof url === "string" ? url : url.url;
   const endpoint = new URL(rawUrl, location.origin).pathname;
   if (!endpoint.startsWith("/api/")) return nativeFetch(url, options);
+  if (!options.method || options.method === "GET")
+    window.mapReadRequests.push(endpoint);
   const libraryResponse = await libraryAPI.handle(rawUrl, options);
   if (libraryResponse) return libraryResponse;
   const preview = await previews.handle(rawUrl, options);
@@ -480,7 +483,7 @@ window.fetch = async (url, options = {}) => {
     url === "/api/maps/models" ||
     url === "/api/public/sessions/ABC-123/map-models"
   )
-    return transfers.catalogue(catalogue.map(modelDto));
+    return transfers.catalogue(await previews.models());
   let data = options.body ? JSON.parse(options.body) : null;
   if (data && /^\/api\/maps\/models\/[^/]+$/.test(url)) {
     const { id, uuid, ...fields } = data;
@@ -517,7 +520,7 @@ window.fetch = async (url, options = {}) => {
     const saved = { ...old, ...data, id: old.id };
     catalogue.splice(catalogue.indexOf(old), 1, saved);
     window.lastModelSaved = saved;
-    return new Response(JSON.stringify(modelDto(saved)), {
+    return new Response(JSON.stringify((await previews.models([saved]))[0]), {
       headers: { "Content-Type": "application/json" },
     });
   }

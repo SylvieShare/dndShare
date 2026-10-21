@@ -1,5 +1,70 @@
 import { test, expect } from "@playwright/test";
 
+test("editor saves a preview without fetching context and never polls the model catalogue", async ({
+  page,
+}) => {
+  await page.clock.install();
+  await page.goto("/tests/maps/fixtures/maps.html?mode=editor");
+  await expect(page.locator(".map-canvas-surface canvas")).toBeVisible();
+  await page.getByRole("button", { name: "Настройки", exact: true }).click();
+  await page
+    .getByRole("switch", { name: "Показывать сетку", exact: true })
+    .click();
+  await page.clock.runFor(1300);
+  await expect.poll(() => page.evaluate(() => !!window.lastSaved)).toBe(true);
+  await page.clock.runFor(8100);
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () => window.requests.filter((r) => r.data?.preview).length,
+      ),
+    )
+    .toBe(1);
+  const reads = await page.evaluate(
+    () =>
+      window.mapReadRequests.filter((url) => url === "/api/maps/models").length,
+  );
+  expect(
+    await page.evaluate(
+      () =>
+        window.mapReadRequests.filter((url) => url.endsWith("/preview-context"))
+          .length,
+    ),
+  ).toBe(0);
+  await page.clock.runFor(120000);
+  expect(
+    await page.evaluate(
+      () =>
+        window.mapReadRequests.filter((url) => url === "/api/maps/models")
+          .length,
+    ),
+  ).toBe(reads);
+});
+
+test("public map does not periodically reload model metadata", async ({
+  page,
+}) => {
+  await page.clock.install();
+  await page.goto("/tests/maps/fixtures/maps.html?mode=screen");
+  await expect(page.locator(".map-canvas-surface canvas")).toBeVisible();
+  await expect
+    .poll(() => page.evaluate(() => window.loadedModels.length))
+    .toBeGreaterThan(0);
+  const count = await page.evaluate(
+    () =>
+      window.mapReadRequests.filter((url) => url.endsWith("/map-models"))
+        .length,
+  );
+  await page.clock.runFor(120000);
+  expect(
+    await page.evaluate(
+      () =>
+        window.mapReadRequests.filter((url) => url.endsWith("/map-models"))
+          .length,
+    ),
+  ).toBe(count);
+});
+
 test("stale cards keep their saved picture while a new preview is being generated", async ({
   page,
 }) => {

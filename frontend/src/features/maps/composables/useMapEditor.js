@@ -1,6 +1,5 @@
 import { useEditorSelection } from "./useEditorSelection";
 import { useMapPersistence } from "./useMapPersistence";
-import { startModelRefresh } from "../lib/currentModelRefresh";
 import { useEditorJournal } from "./useEditorJournal";
 import { documentIndex } from "../lib/documentIndex";
 import { structureContext } from "../lib/tileStructure";
@@ -202,24 +201,12 @@ export function useMapEditor(source, onSaved, options = {}) {
     resetMapModels();
     return loadModels();
   }
-  let stopModelRefresh;
-  onMounted(() => {
-    loadModels();
-    stopModelRefresh = startModelRefresh(
-      () =>
-        gesturing.value || options.active?.() === false ? null : getMapModels(),
-      (models) => {
-        if (JSON.stringify(models) !== JSON.stringify(catalogue.value))
-          catalogue.value = models;
-      },
-    );
-  });
+  onMounted(loadModels);
   watch(catalogue, () => {
     if (catalogue.value.length)
       syncLights(draft.value.document, catalogue.value);
   });
   onBeforeUnmount(() => {
-    stopModelRefresh?.();
     lighting.finishLightEdit();
   });
   return {

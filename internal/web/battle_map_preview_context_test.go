@@ -75,6 +75,9 @@ func TestMapPreviewIgnoresLabelsButTracksVisibleLightAndAreas(t *testing.T) {
 	if build().Signature != original.Signature {
 		t.Fatal("labels or animation invalidated a static capture")
 	}
+	if build().ModelsSignature != original.ModelsSignature {
+		t.Fatal("labels invalidated the cached model catalogue")
+	}
 	d.Lights[0].Overrides = &battlemap.LightOverrides{Flicker: new(bool), ShowMarker: new(bool)}
 	if build().Signature != original.Signature {
 		t.Fatal("marker override invalidated a static capture")
@@ -88,6 +91,55 @@ func TestMapPreviewIgnoresLabelsButTracksVisibleLightAndAreas(t *testing.T) {
 	d.Areas[0].Hidden = true
 	if build().Signature == original.Signature {
 		t.Fatal("hidden area retained a stale capture")
+	}
+}
+
+func TestMapPreviewModelsSignatureMatchesBrowserAndTracksGeometry(t *testing.T) {
+	views := []mapModelView{
+		{ModelMetadata: battlemap.ModelMetadata{ID: "b"}, PreviewSignature: "second"},
+		{ModelMetadata: battlemap.ModelMetadata{ID: "a"}, PreviewSignature: "first"},
+	}
+	if got := mapPreviewModelsSignature(views); got != "97a69a4a628203bdf6ceb5088c9e623a6e96e7a4ce49f01367c44f3e247edd2d" {
+		t.Fatal("browser/Go catalogue signatures differ", got)
+	}
+	model := battlemap.InitialCatalogue()[0]
+	d := battlemap.Document{Tiles: []battlemap.Tile{{ID: "tile", ModelID: model.ID}}}
+	before, err := buildMapPreviewContext(d, []battlemap.Model{model}, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	view := modelView(model, "/api/maps/models")
+	view.Behaviour = battlemap.ModelBehaviour{}
+	if err := signMapPreviewModel(&view); err != nil {
+		t.Fatal(err)
+	}
+	if view.PreviewSignature != before.Models[0].PreviewSignature {
+		t.Fatal("catalogue/context model identity differs")
+	}
+	raw, err := json.Marshal(view)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var wire map[string]any
+	if err := json.Unmarshal(raw, &wire); err != nil {
+		t.Fatal(err)
+	}
+	if wire["previewSignature"] != view.PreviewSignature {
+		t.Fatal("model identity was omitted from the catalogue response")
+	}
+	if err := signMapPreviewModel(&view); err != nil {
+		t.Fatal(err)
+	}
+	if view.PreviewSignature != before.Models[0].PreviewSignature {
+		t.Fatal("signing the same model changed its identity")
+	}
+	model.Width++
+	after, err := buildMapPreviewContext(d, []battlemap.Model{model}, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if before.ModelsSignature == after.ModelsSignature {
+		t.Fatal("changed model geometry matched the cached catalogue")
 	}
 }
 

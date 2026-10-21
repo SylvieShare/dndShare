@@ -1,6 +1,33 @@
 package web
 
-import "dndshare/internal/battlemap"
+import (
+	"crypto/sha256"
+	"dndshare/internal/battlemap"
+	"encoding/json"
+	"fmt"
+	"sort"
+)
+
+func signMapPreviewModel(view *mapModelView) error {
+	raw, err := json.Marshal(mapPreviewModels([]mapModelView{*view})[0])
+	if err != nil {
+		return err
+	}
+	view.PreviewSignature = fmt.Sprintf("%x", sha256.Sum256(raw))
+	return nil
+}
+
+// The client can compare these already delivered signatures locally, without
+// fetching model metadata again or duplicating the Go visual projection.
+func mapPreviewModelsSignature(views []mapModelView) string {
+	pairs := make([][2]string, 0, len(views))
+	for _, view := range views {
+		pairs = append(pairs, [2]string{view.ModelMetadata.ID, view.PreviewSignature})
+	}
+	sort.Slice(pairs, func(i, j int) bool { return pairs[i][0] < pairs[j][0] })
+	raw, _ := json.Marshal(pairs)
+	return fmt.Sprintf("%x", sha256.Sum256(raw))
+}
 
 // Hash only data used by the fixed camera capture, without changing the context
 // returned to the renderer or the persisted document/catalogue.
@@ -32,6 +59,7 @@ func mapPreviewModels(views []mapModelView) []mapModelView {
 		view := &result[i]
 		view.AssetBytes, view.Tags = nil, nil
 		view.PreviewURL = ""
+		view.PreviewSignature = ""
 		view.Name, view.NameEn, view.SourceName = "", "", ""
 		view.Code, view.VariantCode, view.CollectionName = "", "", ""
 		view.GroupName, view.GroupNameEn = "", ""

@@ -91,5 +91,9 @@ func (s *Server) handleEditMapModel(w http.ResponseWriter, r *http.Request) {
 	}
 	view := modelView(saved, "/api/maps/models")
 	view.Behaviour = behaviours[saved.DefinitionID]
+	if err := signMapPreviewModel(&view); err != nil {
+		serverError(w, err)
+		return
+	}
 	writeJSON(w, http.StatusOK, view)
 }

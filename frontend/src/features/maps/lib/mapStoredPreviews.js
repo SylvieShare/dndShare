@@ -1,8 +1,9 @@
 import { getMapPreviewContext, uploadMapPreview } from "@/shared/api/mapsApi";
 import { requestMapSnapshot } from "../rendering/mapSnapshots";
 import { previewTask } from "./previewTask";
+import { localPreviewContext } from "./localPreviewContext";
 const pending = new Map();
-export function ensureStoredMapPreview(map, { signal } = {}) {
+export function ensureStoredMapPreview(map, { signal, catalogue } = {}) {
   if (signal?.aborted) return Promise.reject(signal.reason);
   let job = pending.get(map.id);
   if (job && job.signature !== map.previewSignature) {
@@ -19,7 +20,7 @@ export function ensureStoredMapPreview(map, { signal } = {}) {
     };
     const current = job;
     job.promise = previewTask(
-      generate(map.id, job.controller.signal),
+      generate(map, catalogue, job.controller.signal),
       job.controller.signal,
     ).finally(() => {
       if (pending.get(map.id) === current) pending.delete(map.id);
@@ -31,9 +32,12 @@ export function ensureStoredMapPreview(map, { signal } = {}) {
     if (!--job.users) job.controller.abort();
   });
 }
-async function generate(id, signal) {
+async function generate(map, catalogue, signal) {
+  let local = catalogue ? await localPreviewContext(map, catalogue) : null;
+  signal.throwIfAborted();
   for (let attempt = 0; attempt < 2; attempt++) {
-    const context = await getMapPreviewContext(id, signal);
+    const context = local || (await getMapPreviewContext(map.id, signal));
+    local = null;
     signal.throwIfAborted();
     if (context.previewUrl) return context.previewUrl;
     const blob = await requestMapSnapshot(context.document, signal, {
@@ -42,7 +46,7 @@ async function generate(id, signal) {
     });
     signal.throwIfAborted();
     try {
-      return (await uploadMapPreview(id, context.signature, blob, signal))
+      return (await uploadMapPreview(map.id, context.signature, blob, signal))
         .previewUrl;
     } catch (error) {
       if (error.status !== 409 || attempt === 1) throw error;

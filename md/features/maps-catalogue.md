@@ -53,7 +53,9 @@ MapLibraryEntry — одна композиция BaseTile для плиточн
   По умолчанию own. DTO: id, name, width/height, tileCount/objectCount, tags,
   revision, changedAt, publishedAt, owned, subscribed, author, rating,
   ratingCount, myRating и previewUrl/previewSignature/previewStale.
-- GET `/api/maps/{id}`: полный документ владельцу или опубликованную карту.
+- GET `/api/maps/{id}`: полный документ владельцу или опубликованную карту;
+  previewModelsSignature позволяет использовать загруженный каталог для снимка
+  без отдельного запроса preview-context.
 - POST `/api/maps/{id}/publish` с revision: публикация владельцем.
 - POST `/api/maps/{id}/copy`: новая личная копия владельцу или подписчику.
 - PUT/DELETE `/api/maps/subscriptions/{id}`: подписаться/отписаться.

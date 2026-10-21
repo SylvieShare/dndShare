@@ -15,19 +15,20 @@ var ErrMapPublished = errors.New("published map is immutable")
 var ErrMapSubscriptionRequired = errors.New("map subscription required")
 
 type BattleMap struct {
-	ID               string             `json:"id"`
-	Name             string             `json:"name"`
-	Document         battlemap.Document `json:"document"`
-	Revision         int64              `json:"revision"`
-	ChangedAt        time.Time          `json:"changedAt"`
-	PublishedAt      *time.Time         `json:"publishedAt"`
-	OwnerUserID      int64              `json:"-"`
-	Owned            bool               `json:"owned"`
-	Subscribed       bool               `json:"subscribed"`
-	Author           string             `json:"author"`
-	PreviewURL       string             `json:"previewUrl,omitempty"`
-	PreviewSignature string             `json:"previewSignature,omitempty"`
-	PreviewStale     bool               `json:"previewStale,omitempty"`
+	ID                     string             `json:"id"`
+	Name                   string             `json:"name"`
+	Document               battlemap.Document `json:"document"`
+	Revision               int64              `json:"revision"`
+	ChangedAt              time.Time          `json:"changedAt"`
+	PublishedAt            *time.Time         `json:"publishedAt"`
+	OwnerUserID            int64              `json:"-"`
+	Owned                  bool               `json:"owned"`
+	Subscribed             bool               `json:"subscribed"`
+	Author                 string             `json:"author"`
+	PreviewURL             string             `json:"previewUrl,omitempty"`
+	PreviewSignature       string             `json:"previewSignature,omitempty"`
+	PreviewStale           bool               `json:"previewStale,omitempty"`
+	PreviewModelsSignature string             `json:"previewModelsSignature,omitempty"`
 }
 
 func scanBattleMap(row pgx.Row) (BattleMap, error) {
