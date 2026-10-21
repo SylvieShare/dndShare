@@ -1,9 +1,6 @@
 <template>
   <DetailSection label="Точки маршрута">
     <div class="global-route-points">
-      <AddButton block label="Добавить точки на карту" :disabled="disabled" @click="emit('add-mode')" />
-      <FormField label="Добавить существующую точку" vertical><FormSelect value="" :disabled="disabled || !choices.length" aria-label="Добавить существующую точку" @change="reuse"><option value="">Выберите точку…</option><option v-for="point in choices" :key="point.sourceId" :value="point.sourceId">{{ point.name || `Точка ${point.number}` }} · {{ point.routeName }}</option></FormSelect></FormField>
-      <p class="map-hint">Перетащите за ручку, чтобы изменить порядок. С клавиатуры: выберите ручку и нажмите ↑ или ↓.</p>
       <div data-sortable-container="points" role="list" aria-label="Порядок точек маршрута">
         <BaseTile v-for="(point, index) in displayed" :key="point.id" framed class="global-route-point-row" :class="{ 'global-route-point-row--source': sortable.isSource(point) }" :data-sortable-key="point.id" role="listitem">
           <button type="button" class="global-route-point-handle" :disabled="disabled" :aria-label="`Переместить точку ${index + 1}: ${point.name || 'Точка маршрута'}`" @pointerdown="!disabled && sortable.startDrag($event, point, 'points', index)" @keydown="moveKey($event, point.id)"><GripVertical :size="16" /></button>
@@ -11,26 +8,22 @@
           <RemoveButton icon="trash" :label="`Удалить посещение ${index + 1}`" :disabled="disabled" @click="emit('delete-point', point.id)" />
         </BaseTile>
       </div>
+      <AddButton block label="Добавить точку на карту" :disabled="disabled" @click="emit('add-mode')" />
     </div>
   </DetailSection>
 </template>
 <script setup>
 import { computed } from 'vue'
-import { ActionButton, AddButton, BaseTile, DetailSection, FormField, FormSelect, RemoveButton, reorderByDrop, useSortable } from '@sylvieshare/share-ui'
+import { ActionButton, AddButton, BaseTile, DetailSection, RemoveButton, reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 import { FlagTriangleRight, GripVertical, Link2 } from '@lucide/vue'
-import { lastWaypoint, mapMarkers, routeVisits } from '../lib/routePoints'
+import { routeVisits } from '../lib/routePoints'
 const props = defineProps({ route: Object, routes: Array, chapters: Array, disabled: Boolean })
-const emit = defineEmits(['reorder', 'select-point', 'delete-point', 'add-mode', 'reuse-point'])
+const emit = defineEmits(['reorder', 'select-point', 'delete-point', 'add-mode'])
 const visits = computed(() => routeVisits(props.route, props.routes))
-const choices = computed(() => {
-  const tail = lastWaypoint(props.route)
-  return mapMarkers(props.routes, props.route.id, '').filter(point => !point.control && point.sourceId !== (tail?.refId || tail?.id))
-})
 const sortable = useSortable({ groups: { points: { items: visits } }, getKey: point => point.id,
   onDrop: ({ fromIndex, toIndex }) => { if (!props.disabled && fromIndex !== toIndex) emit('reorder', reorderByDrop(visits.value, fromIndex, toIndex).map(point => point.id)) },
 })
 const displayed = computed(() => sortable.displayItems('points'))
-function reuse(id) { if (id) emit('reuse-point', id) }
 function moveKey(event, id) {
   if (props.disabled || !['ArrowUp', 'ArrowDown'].includes(event.key)) return
   event.preventDefault()

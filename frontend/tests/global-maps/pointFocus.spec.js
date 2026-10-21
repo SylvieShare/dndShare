@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { open, setup } from './helpers'
+import { open, setup, dismissWorldFocus } from './helpers'
 async function ready(page, mobile) {
   await page.setViewportSize(mobile ? { width: 430, height: 932 } : { width: 1600, height: 1000 })
   const state = await setup(page)
@@ -35,12 +35,14 @@ for (const mobile of [false, true]) test(`point focus shares framed reference an
     expect(m.previewScale).toBeCloseTo(m.canvasScale * 2)
     expect(m.point.x).toBeCloseTo(m.centre.x, 1)
     expect(m.point.y).toBeCloseTo(m.centre.y, 1)
-    expect(m.pointRatio).toBeCloseTo(2, 2)
+    expect(m.pointRatio).toBeCloseTo(1, 2)
     await page.getByRole('button', { name: 'Увеличить карту мира', exact: true }).click()
   }
   const trash = await focus.getByRole('button', { name: 'Удалить точку', exact: true }).boundingBox()
-  const name = await focus.getByRole('textbox', { name: 'Название точки', exact: true }).boundingBox()
-  expect(trash.y).toBeLessThan(name.y)
+  const routeBounds = await focus.getByRole('button', { name: 'Открыть маршрут Путь', exact: true }).boundingBox()
+  expect(trash.y).toBeLessThan(routeBounds.y)
+  await expect(focus.getByText(/Точка \d+ из \d+/)).toHaveCount(0)
+  await expect(focus.getByRole('button', { name: 'Закрыть настройки точки', exact: true })).toHaveCount(0)
   const route = focus.getByRole('button', { name: 'Открыть маршрут Путь', exact: true })
   await expect(route).toHaveClass(/inspector-reference/)
   await route.focus(); await page.keyboard.press('Enter')
@@ -49,7 +51,7 @@ for (const mobile of [false, true]) test(`point focus shares framed reference an
 
 for (const mobile of [false, true]) test(`world sidebar overlays a stable canvas like the map editor (${mobile})`, async ({ page }) => {
   await ready(page, mobile)
-  await page.getByRole('button', { name: 'Закрыть настройки точки', exact: true }).click()
+  await dismissWorldFocus(page)
   await page.getByRole('button', { name: 'Карты мира', exact: true }).click()
   await expect(page.locator('.global-map-sidebar')).toHaveClass(/map-sidebar--overlay/)
   const canvas = await page.locator('.global-map-canvas').boundingBox()

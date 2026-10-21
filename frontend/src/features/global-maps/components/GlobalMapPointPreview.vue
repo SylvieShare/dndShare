@@ -1,9 +1,9 @@
 <template>
   <div ref="host" class="global-map-point-preview" role="figure" :aria-label="`Точка на карте: ${point.name || 'Точка маршрута'}. Увеличение ×2`" :data-preview-state="state">
     <div v-if="viewport?.loaded && bounds.width" class="global-map-preview-scene" :style="scene" aria-hidden="true">
-      <img :key="imageUrl" :src="imageUrl" alt="" draggable="false" @load="imageReady = true" @error="failed = true" />
+      <img :key="imageUrl" :src="imageUrl" alt="" draggable="false" @load="imageReady = true; failed = false" @error="failed = true" />
       <GlobalMapPaths :routes="routes" :width="viewport.width" :height="viewport.height" :unit="drawing.route" :selected-route="routeId" readonly />
-      <GlobalMapMarker v-for="marker in markers" :key="marker.sourceId" :marker="marker" :interactive="false" :selected="marker.id === point.id" :style="mapPointAnchor(marker, viewport, drawing.marker, marker.color)" />
+      <GlobalMapMarker v-for="marker in markers" :key="marker.sourceId" :marker="marker" :interactive="false" :selected="marker.id === point.id" :style="mapPointAnchor(marker, viewport, drawing.marker / 2, marker.color)" />
     </div>
     <span class="global-map-preview-zoom" aria-hidden="true">×2</span>
     <LoadingState v-if="state === 'loading'" class="global-map-preview-message" label="Загружаем превью точки…" compact />

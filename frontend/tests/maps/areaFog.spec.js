@@ -41,7 +41,7 @@ test("area focus has an isolated cached preview, icon controls and Cmd membershi
   await expect(
     focus.getByRole("button", { name: "Снять фокус области", exact: true }),
   ).toHaveCount(0);
-  const frame = await focus.locator(".map-selected-frame").boundingBox(),
+  const frame = await focus.locator(".inspector-preview-frame").boundingBox(),
     trash = await focus
       .getByRole("button", { name: "Удалить область «Зал»", exact: true })
       .boundingBox();
@@ -124,7 +124,7 @@ for (const mode of ["editor", "board"])
     await expect
       .poll(() =>
         page.evaluate(
-          () => (window.lastSaved || window.latestBoard)?.document.areas[0].fog,
+          () => Boolean((window.lastSaved || window.latestBoard)?.document.areas[0].fog),
         ),
       )
       .toBe(false);

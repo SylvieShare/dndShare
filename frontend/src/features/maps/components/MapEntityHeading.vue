@@ -1,52 +1,12 @@
 <template>
-  <header class="map-selected-heading">
-    <component
-      :is="icon"
-      :size="20"
-      class="map-entity-type"
-      :style="{ color: entry.color || 'var(--text-muted)' }"
-      aria-hidden="true"
-    />
-    <MapPackIcon
-      v-if="entry.model?.collection"
-      :pack="entry.model.collection"
-      :size="28"
-      aria-hidden="false"
-      role="img"
-      :aria-label="entry.model.collectionName"
-      :title="entry.model.collectionName"
-    />
-    <h3 :aria-label="entry.name">
-      <InlineEdit
-        v-if="editable"
-        :model-value="entry.item.name"
-        :display-value="entry.name"
-        :label="nameLabel"
-        :edit-label="`Изменить ${nameLabel.toLowerCase()}`"
-        confirm-label="Сохранить название"
-        cancel-label="Отменить изменение названия"
-        required
-        :maxlength="100"
-        @confirm="emit('rename', String($event).trim())"
-      >
-        <span v-if="entry.namePrefix" class="map-entity-prefix"
-          >{{ entry.namePrefix }} · </span
-        >{{ entry.item.name }}
-      </InlineEdit>
-      <template v-else
-        ><span v-if="entry.namePrefix" class="map-entity-prefix"
-          >{{ entry.namePrefix }} · </span
-        >{{ entry.namePrefix ? entry.item.name : entry.name }}</template
-      >
-    </h3>
-    <small v-if="showIdentifiers && entry.code"
-      >{{ entry.groupCode }} · {{ entry.code }}</small
-    >
-  </header>
+  <InspectorHeading :name="entry.name" :value="entry.item?.name" :prefix="entry.namePrefix" :icon="icon" :color="entry.color" :editable="editable" :label="nameLabel" @rename="emit('rename', $event)">
+    <template #before-name><MapPackIcon v-if="entry.model?.collection" :pack="entry.model.collection" :size="28" aria-hidden="false" role="img" :aria-label="entry.model.collectionName" :title="entry.model.collectionName" /></template>
+    <template #metadata><small v-if="showIdentifiers && entry.code">{{ entry.groupCode }} · {{ entry.code }}</small></template>
+  </InspectorHeading>
 </template>
 <script setup>
 import { computed } from "vue";
-import { InlineEdit } from "@sylvieshare/share-ui";
+import InspectorHeading from "@/shared/ui/InspectorHeading.vue";
 import MapPackIcon from "./MapPackIcon.vue";
 import {
   Box,
@@ -81,30 +41,5 @@ const nameLabel = computed(() =>
 );
 </script>
 <style scoped>
-.map-selected-heading {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.map-entity-type {
-  flex: none;
-}
-h3 {
-  margin: 0;
-  font-size: 18px;
-  min-width: 0;
-  max-width: calc(100% - 28px);
-  overflow-wrap: anywhere;
-  --inline-edit-min-width: 0;
-  --inline-edit-height: 30px;
-}
-small {
-  font: 11px var(--font-mono);
-  color: var(--text-muted);
-  overflow-wrap: anywhere;
-}
-.map-entity-prefix {
-  color: var(--text-muted);
-}
+small { font: 11px var(--font-mono); color: var(--text-muted); overflow-wrap: anywhere; }
 </style>

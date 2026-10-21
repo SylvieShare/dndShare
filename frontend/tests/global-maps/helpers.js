@@ -4,6 +4,7 @@ import { expect } from '@playwright/test'
 export const copy = value => JSON.parse(JSON.stringify(value))
 export async function setup(page) {
   const maps = [], writes = []
+  const encounter = { version: 0, data: { active: false, round: 0, turnIndex: 0, combatants: [] } }
   const chapters = [
     { id: 11, arcId: 1, number: '1', name: 'Перевал', status: 'planned', imageUrl: '/test-global-world.svg', positionX: 100, positionY: 100 },
     { id: 12, arcId: 1, number: '2', name: 'Долина', status: 'planned', positionX: 300, positionY: 100 },
@@ -31,7 +32,15 @@ export async function setup(page) {
     else if (path === '/api/templates') json = { templates: [{ id: 1, name: 'DND5' }] }
     else if (path.endsWith('/chapter-graph')) json = { arcs: [{ id: 1, order: 1, name: 'Путь' }], chapters, edges: [] }
     else if (path === '/api/sessions/test/world') json = { locations, npcs: [], quests: [], materials: [], relations: [] }
-    else if (path.endsWith('/encounter')) json = {version:0,data:{active:false,round:0,turnIndex:0,combatants:[]}}
+    else if (path === '/api/sessions/test/encounter') {
+      if (method === 'PATCH') {
+        const body = route.request().postDataJSON()
+        encounter.data = applyDocumentPatches(encounter.data, body.patches)
+        encounter.version++
+        json = { version: encounter.version, patches: body.patches }
+      } else json = copy(encounter)
+    }
+    else if (path === '/api/sessions/test/encounter/changes') json = copy(encounter)
     else if (path === '/api/account/tutorials') json = { tutorials: ['desktop', 'mobile'].map(device => ({ flowId: 'session-dm', sourceKey: 'source:1', device, status: 'completed', revision: 1 })) }
     else if (path === '/api/sources') json = { sources: [{ id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }] }] }
     else if (path === '/api/storage/images') json = { upload_id: nextId, url: image }

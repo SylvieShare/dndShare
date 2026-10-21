@@ -142,15 +142,17 @@ describe('ViewSession participant rail', () => {
     expect(musicWorkspaceSource).toContain('musicStore.ensureLibrary()')
   })
 
-  it('moves hotkey help out of settings and keeps handbook HP rolling as a shared session preference', () => {
+  it('keeps global hotkey help in settings and handbook HP rolling as a shared session preference', () => {
     expect(source).toContain('useSessionSettings({ sessionUuid, session })')
     expect(source).toContain('autoRollNpcHp: computed(() => sessionSettings.combat.autoRollNpcHp)')
     expect(sessionSettingsSource).not.toContain('localStorage')
     expect(sessionSettingsControlSource).not.toContain('Спрятать легенду на холсте')
     expect(sessionSettingsControlSource).toContain('Автоматически бросать HP существ')
-    expect(source).toContain('<SessionShortcutHelp :active="showShortcutHints"')
-    expect(shortcutHelpSource).toContain('<kbd>?</kbd>')
-    expect(sessionGraphSource).toContain("workspaceMode !== 'combat' && showHotkeyLegend")
+    expect(source).toContain(':shortcut-hints="showShortcutHints"')
+    expect(source).not.toContain('<SessionShortcutHelp')
+    expect(sessionSettingsControlSource).toContain('<SessionShortcutHelp')
+    expect(shortcutHelpSource).toContain('aria-keyshortcuts="?"')
+    expect(sessionGraphSource).toContain("<CanvasHotkeyHints v-if=\"isDm && workspaceMode !== 'combat'\"")
     expect(encounterNpcsSource).toContain('resolveStartHp(item, unref(autoRollHp) === true)')
     expect(encounterNpcsSource).toContain('rollDiceExpression')
   })

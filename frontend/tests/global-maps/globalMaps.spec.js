@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-import { copy, open, openRoute, setup, upload, dismissWorldFocus, renameWorldPoint, reuseWorldPoint } from './helpers'
+import { copy, open, openRoute, setup, upload, dismissWorldFocus } from './helpers'
 
 for (const mobile of [false, true]) test(`world maps, curved routes and annotations persist ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
   await page.setViewportSize(mobile ? { width: 430, height: 932 } : { width: 1680, height: 1050 })

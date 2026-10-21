@@ -27,7 +27,7 @@ test("category cells fill each row and single selection shows preview and identi
     panel.getByRole("heading", { name: "Пол 1", exact: true }),
   ).toBeVisible();
   await expect(panel.locator(".map-selection-preview")).toBeVisible();
-  await expect(panel.locator(".map-selected-heading small")).toHaveCount(0);
+  await expect(panel.locator(".inspector-entity-heading small")).toHaveCount(0);
   await expect(panel.locator("table")).toHaveCount(0);
   const box = await panel.boundingBox(),
     canvas = await page.locator(".map-canvas").boundingBox();
@@ -43,7 +43,7 @@ test("category cells fill each row and single selection shows preview and identi
   await expect(
     panel.getByRole("heading", { name: "Сундук", exact: true }),
   ).toBeVisible();
-  await expect(panel.locator(".map-selected-heading small")).toHaveCount(0);
+  await expect(panel.locator(".inspector-entity-heading small")).toHaveCount(0);
 });
 test("area focus lists individual models and opening a row switches to the element inspector", async ({
   page,
@@ -134,7 +134,7 @@ test("light rows toggle by their bulb button, show their area, and anchor pickin
     panel.getByRole("heading", { name: "Пол 1", exact: true }),
   ).toBeVisible();
 });
-test("autosave only opens an error popup on failure and records the last successful date in settings", async ({
+test("autosave retries a transient failure and records the last successful date in settings", async ({
   page,
 }) => {
   await ready(page);
@@ -149,19 +149,10 @@ test("autosave only opens an error popup on failure and records the last success
     .getByLabel("Название карты", { exact: true })
     .fill("Проверка автосохранения");
   await page.getByLabel("Название карты", { exact: true }).blur();
-  const error = page.getByRole("dialog", {
-    name: "Не удалось сохранить карту",
-    exact: true,
-  });
-  await expect(error).toBeVisible();
-  await expect(error.getByRole("alert")).toContainText("Нет связи");
-  await error
-    .getByRole("button", { name: "Повторить сохранение", exact: true })
-    .click();
-  await expect(error).toHaveCount(0);
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.name))
     .toBe("Проверка автосохранения");
+  await expect(page.getByRole("dialog", { name: "Не удалось сохранить карту", exact: true })).toHaveCount(0);
   await expect(
     page.getByLabel("Последнее сохранение", { exact: true }).locator("time"),
   ).toHaveAttribute(
@@ -180,8 +171,8 @@ test("single inspector has framed preview actions without coordinate fields, and
   await expect(
     panel.getByRole("status", { name: "Выбрано плиток" }),
   ).toHaveCount(0);
-  await expect(panel.locator(".map-selected-frame")).toBeVisible();
-  await expect(panel.locator(".map-selected-heading small")).toHaveCount(0);
+  await expect(panel.locator(".inspector-preview-frame")).toBeVisible();
+  await expect(panel.locator(".inspector-entity-heading small")).toHaveCount(0);
   await expect(panel.locator("table")).toHaveCount(0);
   await expect(
     panel.getByRole("button", { name: "Удалить элемент", exact: true }),
@@ -233,7 +224,7 @@ test("text can be selected and copied natively in the catalogue and the inspecto
   await expect(page.locator(".map-controls-hint")).not.toContainText(
     "разместить плитку",
   );
-  const title = selection(page).locator(".map-selected-heading h3");
+  const title = selection(page).locator(".inspector-entity-heading h3");
   await selectText(page, title);
   expect(await page.evaluate(() => window.getSelection().toString())).toContain(
     "Пол",

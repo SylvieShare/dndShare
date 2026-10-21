@@ -107,7 +107,7 @@
         </template>
         <template #primary-workspace>
           <SessionSettingsWorkspace v-if="primaryView === 'settings'" :session-uuid="sessionUuid" :settings="sessionSettings"
-            :saving="settingsSaving" :error="settingsError" @update-setting="updateSessionSetting" />
+            :saving="settingsSaving" :error="settingsError" :shortcut-hints="showShortcutHints" @toggle-shortcuts="showShortcutHints = !showShortcutHints" @update-setting="updateSessionSetting" />
           <SessionMusicWorkspace v-else-if="primaryView === 'music'" :is-dm="isDm" />
           <SessionJournalWorkspace v-else-if="primaryView === 'journal'" :session-uuid="sessionUuid" :is-dm="isDm" :occurrence-id="requestedOccurrenceId" />
           <SessionChronicleWorkspace v-else-if="primaryView === 'events'" :live-status="liveStatus" />
@@ -153,7 +153,6 @@
 
       <div v-if="combatWorkspaceError" class="combat-import-error" role="alert">{{ combatWorkspaceError }}</div>
 
-      <SessionShortcutHelp :active="showShortcutHints" @toggle="showShortcutHints = !showShortcutHints" />
 
       <aside v-show="!mapVisible && primaryView !== 'globalMaps'" data-tutorial="session-players" class="workspace-dock workspace-dock--left">
         <div class="col-section-title">
@@ -308,7 +307,6 @@ import SessionCenterWorkspace from '@/features/sessions/components/SessionCenter
 import SessionParticipantCard from '@/features/sessions/components/SessionParticipantCard'
 import SessionPlayerView from '@/features/sessions/components/SessionPlayerView.vue'
 import SessionBackButton from '@/features/sessions/components/SessionBackButton.vue'
-import SessionShortcutHelp from '@/features/sessions/components/SessionShortcutHelp.vue'
 import SessionTimerStack from '@/features/sessions/components/SessionTimerStack.vue'
 import SessionSettingsWorkspace from '@/features/sessions/components/SessionSettingsWorkspace.vue'
 import SessionMusicWorkspace from '@/features/sessions/components/SessionMusicWorkspace.vue'

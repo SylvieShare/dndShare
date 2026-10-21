@@ -50,7 +50,7 @@ export function useGlobalMapViewport(host, props, emit) {
     const segment = !id && !event.altKey && event.button === 0 && event.target.closest('[data-segment-index]')
     if (selected) emit('select', route.id, id)
     drag = { pointerId: event.pointerId, id, routeId: route?.id || segment?.dataset.routeId,
-      segment: segment ? Number(segment.dataset.segmentIndex) : null, created: false,
+      segment: segment ? Number(segment.dataset.segmentIndex) : null, created: false, deselect: !id && !segment && !event.altKey && event.button === 0 && !props.addMode,
       before: selected && { x: selected.x, y: selected.y }, x: event.clientX, y: event.clientY,
       viewX: view.x, viewY: view.y, moved: false, pan: !id && !segment && (!props.addMode || event.altKey || event.button === 1) }
     dragging.value = true
@@ -79,6 +79,7 @@ export function useGlobalMapViewport(host, props, emit) {
       const p = point(event, false)
       if (p.x >= 0 && p.x <= 1 && p.y >= 0 && p.y <= 1) emit('add', p)
     }
+    if (!cancel && !drag.moved && drag.deselect) emit('select', props.selectedRoute, '')
     const id = drag.pointerId
     drag = null
     dragging.value = false

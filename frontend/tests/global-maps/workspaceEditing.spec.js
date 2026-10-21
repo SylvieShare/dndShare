@@ -57,7 +57,7 @@ for (const mobile of [false, true]) test(`route focus owns ordering and point fo
   await expect.poll(() => state.maps[0].routes[0].points.map(point => point.id)).toEqual(['b', 'c', 'a'])
   await expect(routeFocus.getByRole('listitem')).toHaveCount(3)
   await routeFocus.getByRole('button', { name: '3. Начало', exact: true }).click()
-  await expect(pointFocus.getByRole('textbox', { name: 'Название точки', exact: true })).toHaveValue('Начало')
+  await expect(pointFocus.getByRole('heading', { name: 'Начало', exact: true })).toBeVisible()
   await page.reload()
   await openRoute(page)
   await expect(page.locator('.global-route-point-open').first()).toContainText('Привал')

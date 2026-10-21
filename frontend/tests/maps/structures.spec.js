@@ -18,7 +18,7 @@ test("collection filters and selecting a side wall without layout controls", asy
   await dragTile(page, await mapPoint(page, 4.5, 4.5), {
     name: "Боковая стена",
   });
-  await expect(page.locator(".map-selected-heading h3")).toHaveText(
+  await expect(page.locator(".inspector-entity-heading h3")).toHaveText(
     "Боковая стена",
   );
   await expect(page.locator(".map-tile-connections")).toHaveCount(0);

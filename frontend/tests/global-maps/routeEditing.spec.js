@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { open, openRoute, setup } from './helpers'
+import { open, openRoute, setup, dismissWorldFocus, renameWorldPoint, reuseWorldPoint } from './helpers'
 
 async function ready(page, prepare = () => {}, mobile = false) {
   await page.setViewportSize(mobile ? { width: 430, height: 932 } : { width: 1600, height: 1000 })
@@ -39,7 +39,7 @@ test('Cmd previews and cancels continuation, reuses a shared point and retains i
   await page.mouse.click(candidate.x, candidate.y)
   await page.keyboard.up('Meta')
   await expect.poll(() => state.maps[0].routes[0].points.length).toBe(4)
-  await page.getByRole('button', { name: 'Закрыть настройки точки', exact: true }).click()
+  await dismissWorldFocus(page)
   await page.locator(`button[data-source-id="${state.maps[0].routes[0].points[3].id}"]`).hover()
   await expect(page.locator('.global-map-callout')).toContainText('Точка 4')
   const source = page.locator('button[data-source-id="a"]'), position = await center(source)
@@ -61,9 +61,9 @@ test('Cmd previews and cancels continuation, reuses a shared point and retains i
   await expect.poll(() => state.maps[0].routes[0].points.length).toBe(6)
   await expect(source.locator('..').getByRole('img', { name: 'Последняя точка маршрута' })).toHaveCount(0)
   await openRoute(page)
-  await page.getByLabel('Добавить существующую точку', { exact: true }).selectOption('b')
+  await reuseWorldPoint(page, 'b')
   await expect.poll(() => state.maps[0].routes[0].points.at(-1).refId).toBe('b')
-  await page.getByRole('textbox', { name: 'Название точки', exact: true }).fill('Общий привал')
+  await renameWorldPoint(page, 'Общий привал')
   await expect.poll(() => state.maps[0].routes[0].points[1].name).toBe('Общий привал')
   expect(state.maps[0].routes[0].points.at(-1).name).toBeUndefined()
   await page.reload()
@@ -109,8 +109,8 @@ test('a point shared with another route survives deletion of its original route'
   const state = await ready(page)
   await page.getByRole('button', { name: 'Маршруты', exact: true }).click()
   await page.getByRole('button', { name: 'Добавить маршрут', exact: true }).click()
-  await page.getByLabel('Добавить существующую точку', { exact: true }).selectOption('a')
-  await page.getByRole('textbox', { name: 'Название точки', exact: true }).fill('Общий старт')
+  await reuseWorldPoint(page, 'a')
+  await renameWorldPoint(page, 'Общий старт')
   await expect.poll(() => state.maps[0].routes[0].points[0].name).toBe('Общий старт')
   await page.locator('.global-map-sidebar').getByRole('button', { name: 'Удалить маршрут Путь', exact: true }).click()
   await page.getByRole('dialog').getByRole('button', { name: 'Удалить', exact: true }).click()
@@ -179,7 +179,7 @@ for (const mobile of [false, true]) test(`multiple chapter and location links pe
   await expect.poll(() => state.maps[0].routes[0].points[0].locationIds).toEqual([21, 22])
   await page.getByRole('button', { name: 'Удалить связь: Северная башня', exact: true }).click()
   await expect.poll(() => state.maps[0].routes[0].points[0].locationIds).toEqual([22])
-  await page.getByRole('button', { name: 'Закрыть настройки точки', exact: true }).click()
+  await dismissWorldFocus(page)
   await page.locator('[data-source-id="a"]').hover()
   await expect(page.locator('.global-map-callout')).toContainText('Долина')
   await expect(page.locator('.global-map-callout')).toContainText('Лесная тропа')
@@ -189,9 +189,9 @@ for (const mobile of [false, true]) test(`multiple chapter and location links pe
   await expect(page.getByRole('button', { name: 'Удалить связь: Долина', exact: true })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Удалить связь: Лесная тропа', exact: true })).toBeVisible()
   if (mobile) return
-  await page.getByRole('button', { name: 'Закрыть настройки точки', exact: true }).click()
+  await dismissWorldFocus(page)
   await openRoute(page)
-  await page.getByLabel('Добавить существующую точку', { exact: true }).selectOption('a')
+  await reuseWorldPoint(page, 'a')
   await page.getByRole('button', { name: 'Удалить связь: Долина', exact: true }).click()
   await expect.poll(() => state.maps[0].routes[0].points[0].chapterId).toBe(null)
   expect(state.maps[0].routes[0].points.at(-1).refId).toBe('a')
@@ -211,7 +211,7 @@ test('new points inherit the chapter selected in the story, shared visits keep t
   await page.getByRole('button', { name: 'Открыть: Долина', exact: true }).click()
   await expect(page.locator('.global-map-workspace')).toBeHidden()
   await page.getByRole('button', { name: 'Мир', exact: true }).click()
-  await page.getByRole('button', { name: 'Закрыть настройки точки', exact: true }).click()
+  await dismissWorldFocus(page)
   const next = await atImage(page, .6, .75)
   await page.mouse.move(next.x, next.y)
   await page.keyboard.down('Meta')

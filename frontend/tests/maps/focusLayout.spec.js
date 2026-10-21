@@ -23,7 +23,7 @@ test("focus scrolls inside its frame, retains the heading, and uses compact mute
   await expect(body).toHaveCSS("overflow-y", "auto");
   await expect(panel).toHaveCSS("overflow-y", "hidden");
   await expect(body).toHaveCSS("gap", "25px");
-  await expect(panel.locator(".map-selected-heading")).toHaveCSS(
+  await expect(panel.locator(".inspector-entity-heading")).toHaveCSS(
     "border-top-width",
     "0px",
   );

@@ -2,6 +2,11 @@
     <section class="session-settings" data-tutorial="session-settings">
       <header><h1>Настройки сессии</h1><p>Общие настройки игроков, боя и взаимодействий. Сохраняются для всей сессии.</p></header>
       <BaseTile class="session-settings-section">
+        <h2>Горячие клавиши</h2>
+        <SessionShortcutHelp :active="shortcutHints" @toggle="emit('toggle-shortcuts')" />
+        <p>Показывает сочетания клавиш на кнопках всей сессии. Клавиша ? также переключает эти подсказки. Управление текущим холстом находится в его легенде снизу слева.</p>
+      </BaseTile>
+      <BaseTile class="session-settings-section">
         <h2>Игроки</h2>
         <FormField v-for="option in playerOptions" :key="option.key" :label="option.label">
           <ToggleSwitch :model-value="settings.players[option.key] === true" :disabled="saving" :aria-label="option.label"
@@ -40,10 +45,11 @@
 </template>
 <script setup>
 import { BaseTile, FormField, ToggleSwitch } from '@sylvieshare/share-ui'
+import SessionShortcutHelp from './SessionShortcutHelp.vue'
 import TutorialRestart from '@/features/tutorials/components/TutorialRestart.vue'
 import SessionKarmicDiceSettings from './SessionKarmicDiceSettings.vue'
-defineProps({ sessionUuid: { type: String, required: true }, settings: { type: Object, required: true }, saving: Boolean, error: String })
-const emit = defineEmits(['update-setting'])
+defineProps({ sessionUuid: { type: String, required: true }, settings: { type: Object, required: true }, saving: Boolean, error: String, shortcutHints: Boolean })
+const emit = defineEmits(['update-setting', 'toggle-shortcuts'])
 const acceptanceOptions = [
   { key: 'items', label: 'Передача предметов' },
   { key: 'potions', label: 'Применение расходуемых предметов' },

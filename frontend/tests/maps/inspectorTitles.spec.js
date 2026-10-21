@@ -17,11 +17,11 @@ test("area uses inline rename, the shared preview frame and a delete button besi
     .click();
   const focus = panel(page);
   await expect(focus.getByRole("textbox")).toHaveCount(0);
-  await expect(focus.locator(".map-entity-type")).toBeVisible();
+  await expect(focus.locator(".inspector-entity-icon")).toBeVisible();
   await expect(
     focus.getByRole("button", { name: "Снять фокус области", exact: true }),
   ).toHaveCount(0);
-  const preview = await focus.locator(".map-selected-frame").boundingBox(),
+  const preview = await focus.locator(".inspector-preview-frame").boundingBox(),
     remove = await focus
       .getByRole("button", { name: "Удалить область «Зал»", exact: true })
       .boundingBox();
@@ -66,7 +66,7 @@ test("ordinary lights rename from the heading without a persistent name field", 
     .click();
   const focus = panel(page);
   await expect(focus.getByRole("textbox")).toHaveCount(0);
-  await expect(focus.locator(".map-entity-type")).toBeVisible();
+  await expect(focus.locator(".inspector-entity-icon")).toBeVisible();
   await focus
     .getByRole("button", {
       name: "Изменить название источника света",

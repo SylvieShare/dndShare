@@ -42,7 +42,6 @@
         :workspace-level="workspaceLevel"
         :workspace-layout-mode="workspaceLayoutMode"
         :chapter-linking-from="linkingFrom"
-        :show-hotkey-legend="showShortcutHints"
         @node-click="openNodeMenu"
         @node-double-click="openScenes"
         @edge-click="openEdgeMenu"

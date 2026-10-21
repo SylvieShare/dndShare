@@ -120,7 +120,7 @@
       @action="runCanvasAction"
     />
 
-    <CanvasHotkeyHints v-if="isDm && workspaceMode !== 'combat' && showHotkeyLegend" />
+    <CanvasHotkeyHints v-if="isDm && workspaceMode !== 'combat'" />
 
     <SceneBlockMenus
       ref="blockMenus"
@@ -243,7 +243,6 @@ const props = defineProps({
   workspaceLayoutMode: { type: String, default: null },
   currentChapterId: { type: [Number, String], default: null },
   chapterLinkingFrom: { type: Object, default: null },
-  showHotkeyLegend: { type: Boolean, default: true },
 })
 const emit = defineEmits([
   'node-click', 'node-double-click', 'edge-click', 'start-link', 'finish-link',

@@ -202,16 +202,11 @@ describe('chapter graph workspace', () => {
     expect(tab).toContain('graph.updateChapterStatuses(ids, status)')
   })
 
-  it('shows contextual desktop canvas shortcuts only while session help is active', () => {
+  it('keeps the shared canvas legend independent from session-wide shortcut hints', () => {
     expect(sessionCanvas).toContain('<CanvasHotkeyHints')
-    expect(sessionCanvas).toContain("workspaceMode !== 'combat' && showHotkeyLegend")
-    expect(hotkeyHints).toContain('bottom: 42px;')
-    expect(hotkeyHints).toContain('left: calc(var(--chapter-safe-left, 0px) + 8px);')
-    expect(hotkeyHints).toContain('{{ modifier }} + клик')
-    expect(hotkeyHints).toContain('{{ modifier }} + A')
-    expect(hotkeyHints).toContain('<kbd>Двойной клик</kbd><span>открыть вложенный холст</span>')
-    expect(hotkeyHints).toContain('<kbd>+ / −</kbd>')
-    expect(hotkeyHints).toContain('(pointer: coarse)')
+    expect(sessionCanvas).not.toContain('showHotkeyLegend')
+    expect(hotkeyHints).toContain('WorkspaceControlsHint')
+    expect(hotkeyHints).toContain('--workspace-hint-inset: var(--chapter-safe-left, 0px)')
     expect(hotkeys).toContain("event.code === 'KeyA'")
     expect(hotkeys).toContain("deleteSelection(selectedNodes.value.map(node => node.id))")
     expect(hotkeys).toContain('zoomBy(1.15)')

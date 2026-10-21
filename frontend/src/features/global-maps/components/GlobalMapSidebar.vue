@@ -1,6 +1,6 @@
 <template>
   <MapSidebar ref="sidebar" v-model:tab="tab" class="global-map-sidebar" :tabs="tabs" aria-label="Карты мира и маршруты"
-    @resize="(_, width) => { if (width > 0) emit('navigation-width', width) }">
+    @resize="(width, rail) => { if (rail > 0) emit('navigation-width', rail); emit('sidebar-width', width) }">
     <p v-if="controller.selected" class="global-map-save-status" role="status">{{ controller.saving ? 'Сохраняем…' : controller.hasPending() ? 'Есть несохранённые изменения' : 'Сохранено' }}</p>
     <template v-if="tab === 'maps'">
       <AddButton block label="Загрузить карту" :disabled="controller.busy || controller.maps.length >= 32" @click="file?.click()" />
@@ -37,7 +37,7 @@ import { Check, Images, Route } from '@lucide/vue'
 import MapSidebar from '@/features/maps/components/MapSidebar.vue'
 import { waypointEntries } from '../lib/routePoints'
 const props = defineProps({ controller: Object, selectedRoute: String })
-const emit = defineEmits(['delete-map', 'add-route', 'select-route', 'delete-route', 'navigation-width'])
+const emit = defineEmits(['delete-map', 'add-route', 'select-route', 'delete-route', 'navigation-width', 'sidebar-width'])
 const sidebar = ref(null), file = ref(null), tab = ref('maps')
 const tabs = [{ key: 'maps', label: 'Карты мира', icon: Images }, { key: 'routes', label: 'Маршруты', icon: Route }]
 const locked = computed(() => props.controller.conflict || props.controller.busy)

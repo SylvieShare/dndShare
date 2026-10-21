@@ -308,6 +308,11 @@ reduced motion отключает переходы. `bounds()` сохраняе�
 камеры редактора. `InspectorContent.vue` отделяет неподвижный заголовок от
 прокручиваемого тела. MapSelectionPanel и MapFocusContent остаются адаптерами
 предметной модели карт, GlobalMapPointInspector и GlobalMapRouteInspector используют те же общие компоненты.
+`InspectorHeading.vue` обобщает заголовок фокуса: иконка, название, InlineEdit
+с карандашом, ограничение длины и slots перед именем/для метаданных.
+MapEntityHeading остаётся тонким адаптером типов редактора, паков и кодов;
+окна точки и маршрута «Мира» используют тот же заголовок напрямую, без
+локальных h3 и крестиков. События rename/dismiss остаются в предметном контроллере.
 `InspectorReference.vue` — общая интерактивная плитка-ссылка (BaseTile framed):
 MapSelectionActions передаёт область, GlobalMapPointInspector — маршрут. Иконка,
 имя, цвет и доступное название передаются пропсами; Enter/Space активируют цель.
@@ -546,7 +551,7 @@ MapLightPreview — доменный 2D-canvas внутри общего BaseTil
 копирует исходный framebuffer после основного/контурного проходов по позиции
 PointLight. Вне кадра он сохраняет последний снимок с пометкой; подписка очищается
 при смене выбранного элемента и уничтожении renderer. Отдельной 3D-сцены нет.
-MapControlsHint компонует BaseTile и ActionButton: раскрытый список без заголовка,
+WorkspaceControlsHint компонует BaseTile и ActionButton: раскрытый список без заголовка,
 свёрнутая кнопка «Управление». Native Web Animations меняет размеры оболочки и
 opacity содержимого; max-height/прокрутка остаются привязанными к холсту. Это
 композиция подсказок карты, а не новый базовый floating-примитив. Клавиатура,
@@ -688,3 +693,11 @@ MapLibraryEntry — единый вид карты плиткой или стр�
 share-ui/StarRating. Права, запросы, статистика и публикация остаются в
 useMapLibrary; StarRating содержит только представление и клавиатуру.
 MapPublishedView показывает опубликованную заготовку без редакторских контролов.
+
+
+`WorkspaceControlsHint.vue` — единая сворачиваемая легенда редактора карт,
+«Мира» и сюжета: BaseTile/ActionButton, анимация размера и прозрачности,
+клавиатурный возврат фокуса, reduced motion, подписи через props и slot действий.
+MapControlsHint и CanvasHotkeyHints — адаптеры текста и safe-area, собственной
+геометрии/стилей легенды у них нет. Легенда сюжета не зависит от глобальных
+подсказок клавиш; SessionShortcutHelp расположен в SessionSettingsWorkspace.
