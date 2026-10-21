@@ -99,11 +99,21 @@ def prepare(code, tier, force):
     budget = recipe[tier+'Triangles']
     modifier = target.modifiers.new('Measured '+tier+' budget', 'DECIMATE')
     modifier.ratio = min(1, budget/len(target.data.polygons)); modifier.use_collapse_triangulate = True
+    collapse_group = None
     if recess_review:
         group, before_interface = pin_recess(target, recess_protected)
-        modifier.vertex_group = group
+        collapse_group = group
+    detail_geometry = None
+    if recipe.get('geometryDetailRegions'):
+        from medieval_geometry_details import pin_details, verify_details
+        collapse_group, detail_triangles, detail_geometry = pin_details(
+            target, recipe['geometryDetailRegions'], collapse_group)
+    if collapse_group:
+        modifier.vertex_group = collapse_group
         modifier.vertex_group_factor = 1
     bpy.ops.object.modifier_apply(modifier=modifier.name); shade(target)
+    if detail_geometry is not None:
+        detail_geometry = verify_details(target, detail_triangles, detail_geometry)
     if recess_review:
         recess_review['simplification'] = verify_recess_collapse(target, before_interface)
     collar = plain_mount_collar(target, recipe)
@@ -181,6 +191,8 @@ def prepare(code, tier, force):
               'standDeviationsMM': deviations, 'seconds': round(time.monotonic()-start, 2)}
     if detail_uv is not None:
         report['detailUVReview'] = detail_uv
+    if detail_geometry is not None:
+        report['geometryDetailReview'] = detail_geometry
     if recess_review:
         report['recessConstruction'] = recess_review
     (out/'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n')

@@ -127,6 +127,7 @@ Tall Ladder Down|Высокая лестница вниз
 Tall Angle|Высокий угол
 Tall Angle Half Wall|Высокий угол с полустенами
 Tall Wall 1|Высокая стена 1
+Tall Wall 2|Высокая стена 2
 Ladder Down|Приставная лестница вниз
 Balcony|Балкон
 Balcony Angle|Угловой балкон
