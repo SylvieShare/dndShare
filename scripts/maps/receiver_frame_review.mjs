@@ -6,6 +6,39 @@ import { createHash } from "node:crypto";
 import standard from "./standard-mount-profile.json" with { type: "json" };
 const tiers = ["render", "lod", "shadow"],
   rotations = [0, 90, 180, 270];
+// Refresh a published receiver after measuring an additional recessed body.
+// Geometry stays fixed; earlier declared rises can only remain or increase.
+export function refreshReceiverSupportSlots(model, record, fits) {
+  assert.equal(model.tileType, "frame");
+  assert.equal(model.supportSlots.length, 1);
+  assert.equal(record.cells.length, 1);
+  const slot = model.supportSlots[0];
+  assert.deepEqual([slot.x, slot.y, slot.width, slot.height], [0, 0, 1, 1]);
+  const bias = record.nativeDatumMM - model.mountDepth * 35;
+  for (const p of record.profiles) {
+    const rows = fits.filter((f) => f.profile === p.profile);
+    assert.equal(rows.length, rotations.length * (tiers.length + 1));
+    const cases = new Set(rows.map((r) => r.receiverTier + ":" + r.rotation));
+    for (const tier of ["source", ...tiers])
+      for (const rotation of rotations)
+        assert.ok(cases.has(tier + ":" + rotation));
+    assert.ok(rows.every((r) => Number.isFinite(r.verifiedSeatMM)));
+    const seat =
+      Math.max(...rows.map((r) => r.verifiedSeatMM)) +
+      record.quantizationReserveMM;
+    const previous =
+      p.profile === standard.name
+        ? slot.insertionRise
+        : (slot.insertionRises?.[p.profile] ?? 0);
+    const needed = (seat - bias) / 35 - slot.elevation;
+    const rise =
+      needed <= previous + 1e-12 ? previous : Math.ceil(needed * 1e6) / 1e6;
+    assert.ok(Number.isFinite(rise) && rise >= 0 && rise <= 0.15);
+    if (p.profile === standard.name) slot.insertionRise = rise;
+    else (slot.insertionRises ??= {})[p.profile] = rise;
+    record.cells[0].seatsMM[p.profile] = slot.elevation * 35 + bias + rise * 35;
+  }
+}
 // A ray can cross a different side of a quantized boundary while the physical
 // surface remains within the same 20 micrometre native-profile tolerance.
 export function validateReceiverRayDrift(

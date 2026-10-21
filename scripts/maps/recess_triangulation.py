@@ -21,11 +21,12 @@ def triangulate_recess(bm):
         forbidden = {frozenset((vertex, edge.other_vert(vertex)))
                      for vertex in vertices for edge in vertex.link_edges
                      if edge not in border and edge.other_vert(vertex) in members}
-        if not forbidden:
-            bmesh.ops.triangulate(bm, faces=[face], ngon_method='EAR_CLIP')
-            continue
-        constrained += 1
-        protected.update(vertices)
+        if forbidden:
+            constrained += 1
+            protected.update(vertices)
+        # A BMesh operator scans the whole mesh even for one supplied face.
+        # Triangulate this polygon separately, then insert its triangles into
+        # the original topology so later faces still see occupied diagonals.
         temporary = bmesh.new()
         copies = [temporary.verts.new(vertex.co) for vertex in vertices]
         temporary.verts.index_update()

@@ -6,6 +6,7 @@ import {
   validateReceiverReferences,
   validateReceiverSocketEvidence,
   validateReceiverRayDrift,
+  refreshReceiverSupportSlots,
 } from "./receiver_frame_review.mjs";
 const recess = "ud016-recess-mt1-080-v1",
   assets = {
@@ -118,6 +119,49 @@ function fixture() {
 }
 const check = (f) =>
   validateReceiverEvidence(f.model, f.source, f.record, assets, [recess]);
+
+test("a new recess fit refreshes only seating and retains earlier clearances", () => {
+  const { model, record } = fixture();
+  record.quantizationReserveMM = 0.02;
+  const before = structuredClone(model),
+    next = "ud016-recess-mt1-088-v1";
+  const extra = record.final.fits
+    .filter((f) => f.profile === recess)
+    .map((f) => ({
+      ...f,
+      profile: next,
+      verifiedSeatMM: f.verifiedSeatMM + 0.25,
+    }));
+  record.profiles.push({ profile: next });
+  const fits = [...record.final.fits, ...extra];
+  refreshReceiverSupportSlots(model, record, fits);
+  const { insertionRises, ...slot } = model.supportSlots[0];
+  assert.deepEqual(
+    slot,
+    (({ insertionRises, ...rest }) => rest)(before.supportSlots[0]),
+  );
+  assert.equal(
+    insertionRises[recess],
+    before.supportSlots[0].insertionRises[recess],
+  );
+  const bias = record.nativeDatumMM - model.mountDepth * 35;
+  const declared =
+    model.supportSlots[0].elevation * 35 + bias + insertionRises[next] * 35;
+  assert.ok(declared >= Math.max(...extra.map((f) => f.verifiedSeatMM)) + 0.02);
+  const stable = structuredClone(model);
+  refreshReceiverSupportSlots(model, record, fits);
+  assert.deepEqual(model, stable);
+  assert.throws(() =>
+    refreshReceiverSupportSlots(model, record, fits.slice(1)),
+  );
+  assert.throws(() =>
+    refreshReceiverSupportSlots(
+      model,
+      record,
+      fits.map((f) => ({ ...f, verifiedSeatMM: 1000 })),
+    ),
+  );
+});
 test("receiver evidence covers the source,three meshes,all profiles and cardinal rotations", () => {
   const f = fixture();
   assert.equal(check(f), f.record);
@@ -160,7 +204,9 @@ test("fresh registry must retain insertion geometry and placement metadata", () 
     assert.throws(() => validateReceiverReferences(f.record, [f.child]));
   }
   const f = fixture();
+  f.record.profiles[1].referenceStage = "prepared";
   assert.throws(() => validateReceiverReferences(f.record, []));
+  assert.doesNotThrow(() => validateReceiverReferences(f.record, [f.child]));
 });
 
 test("socket QA remains bound to the final coordinate transform and resources", () => {

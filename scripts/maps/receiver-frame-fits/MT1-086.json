@@ -125,6 +125,7 @@
           "sha256": "cc939cf6d66bd06a2e7cb5874adcba1eaa29ed0cb98b7a7cddc552a04ffca18c"
         }
       ],
+      "referenceStage": "published",
       "sourceSHA256": "1ac19313536eadeaa600c768fbe5c1799dbec50bf30c402bbb0a1830c1a53080",
       "referenceMetadata": {
         "mountDepth": 0.153517,
@@ -243,6 +244,7 @@
           "sha256": "b1c50c2b98ab72cd50c26187a568fd92216f785272007ed0864808c98c2bd9db"
         }
       ],
+      "referenceStage": "published",
       "sourceSHA256": "e61a4aef32c5dec4fc8f8442e74d9ef567396836ffd4f9d8a4040d1d0461dcf1",
       "referenceMetadata": {
         "mountDepth": 0.153517,
@@ -342,6 +344,125 @@
         }
       ],
       "verifiedSeatMM": 41.63440399055347
+    },
+    {
+      "profile": "ud016-recess-mt1-088-v1",
+      "definitionId": "MT1-088",
+      "id": "7ed8cf2e-393d-4ffa-9168-ec31bb9eb237",
+      "references": [
+        {
+          "tier": "render",
+          "sha256": "9506a27bf9dd8f937309cdf99944eefb61d6afb05b35d17323cd2af9049d30c4"
+        },
+        {
+          "tier": "lod",
+          "sha256": "8d9a54f1cca3d30f3d1622e691e0325c5515bdbf8f92bfe099c2c280372cfd97"
+        },
+        {
+          "tier": "shadow",
+          "sha256": "e700db09daedf269c3048ef0bc87c8d649e14ef11b3cfef7667ac75eca8521aa"
+        }
+      ],
+      "referenceStage": "published",
+      "sourceSHA256": "1d284bbbdfa954649eb866d2f51e8b09e2260ef6bb4e00d3dba12c28586a5722",
+      "referenceMetadata": {
+        "mountDepth": 0.153517,
+        "width": 1,
+        "height": 1,
+        "placementOffset": [
+          0,
+          0
+        ]
+      },
+      "lowerSurfaceSHA256": "06b51e84bd051f34973c666b1d786db94ffb0077b4a534bdee7602a71936be81",
+      "lowerTriangles": 29013,
+      "fits": [
+        {
+          "x": 0,
+          "y": 0,
+          "profile": "ud016-recess-mt1-088-v1",
+          "rotation": 0,
+          "minimumSeatMM": 41.61433246521923,
+          "verifiedSeatMM": 41.63433246521923,
+          "contact": {
+            "pointMM": [
+              13.520026651602375,
+              -13.520026651602375,
+              36.88317848960634
+            ],
+            "bodyNativeZ": 12.268846024387107,
+            "bodyTriangle": 43,
+            "frameTriangle": 123437
+          },
+          "overlaps": 3771238,
+          "receiverTier": "source",
+          "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594"
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "profile": "ud016-recess-mt1-088-v1",
+          "rotation": 90,
+          "minimumSeatMM": 41.61433246521923,
+          "verifiedSeatMM": 41.63433246521923,
+          "contact": {
+            "pointMM": [
+              13.520026651602375,
+              -13.520026651602375,
+              36.88317848960634
+            ],
+            "bodyNativeZ": 12.26884602438711,
+            "bodyTriangle": 48,
+            "frameTriangle": 123437
+          },
+          "overlaps": 3883705,
+          "receiverTier": "source",
+          "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594"
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "profile": "ud016-recess-mt1-088-v1",
+          "rotation": 180,
+          "minimumSeatMM": 41.61433246521923,
+          "verifiedSeatMM": 41.63433246521923,
+          "contact": {
+            "pointMM": [
+              13.520026651602375,
+              -13.520026651602375,
+              36.88317848960634
+            ],
+            "bodyNativeZ": 12.268846024387107,
+            "bodyTriangle": 918,
+            "frameTriangle": 123437
+          },
+          "overlaps": 3834547,
+          "receiverTier": "source",
+          "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594"
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "profile": "ud016-recess-mt1-088-v1",
+          "rotation": 270,
+          "minimumSeatMM": 41.61433246521923,
+          "verifiedSeatMM": 41.63433246521923,
+          "contact": {
+            "pointMM": [
+              13.520026651602375,
+              -13.520026651602375,
+              36.88317848960634
+            ],
+            "bodyNativeZ": 12.268846024387107,
+            "bodyTriangle": 578,
+            "frameTriangle": 123437
+          },
+          "overlaps": 3941360,
+          "receiverTier": "source",
+          "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594"
+        }
+      ],
+      "verifiedSeatMM": 41.63433246521923
     }
   ],
   "cells": [
@@ -353,1792 +474,13 @@
         0
       ],
       "seatsMM": {
-        "ud016-standard-v1": 41.655276487483434,
-        "ud016-recess-mt1-080-v1": 41.81342689379747,
-        "ud016-recess-mt1-082-v1": 41.65535576851131
+        "ud016-standard-v1": 41.655330000000006,
+        "ud016-recess-mt1-080-v1": 41.813460000000006,
+        "ud016-recess-mt1-082-v1": 41.6554,
+        "ud016-recess-mt1-088-v1": 41.655295
       }
     }
   ],
-  "nativeCandidateReview": {
-    "cases": [
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.614322510925675,
-        "verifiedSeatMM": 41.63432251092568,
-        "contact": {
-          "pointMM": [
-            13.520026651602375,
-            -13.520026651602375,
-            36.88317848960634
-          ],
-          "bodyNativeZ": 12.268855978680664,
-          "bodyTriangle": 2,
-          "frameTriangle": 123437
-        },
-        "overlaps": 430260,
-        "receiverTier": "source",
-        "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.614322510925675,
-        "verifiedSeatMM": 41.63432251092568,
-        "contact": {
-          "pointMM": [
-            13.520026651602375,
-            -13.520026651602375,
-            36.88317848960634
-          ],
-          "bodyNativeZ": 12.268855978680664,
-          "bodyTriangle": 3,
-          "frameTriangle": 123437
-        },
-        "overlaps": 430035,
-        "receiverTier": "source",
-        "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.614322510925675,
-        "verifiedSeatMM": 41.63432251092568,
-        "contact": {
-          "pointMM": [
-            13.520026651602375,
-            -13.520026651602375,
-            36.88317848960634
-          ],
-          "bodyNativeZ": 12.268855978680664,
-          "bodyTriangle": 6,
-          "frameTriangle": 123437
-        },
-        "overlaps": 430260,
-        "receiverTier": "source",
-        "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.614322510925675,
-        "verifiedSeatMM": 41.63432251092568,
-        "contact": {
-          "pointMM": [
-            13.520026651602375,
-            -13.520026651602375,
-            36.88317848960634
-          ],
-          "bodyNativeZ": 12.268855978680664,
-          "bodyTriangle": 4,
-          "frameTriangle": 123437
-        },
-        "overlaps": 430035,
-        "receiverTier": "source",
-        "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.755748241501905,
-        "verifiedSeatMM": 41.77574824150191,
-        "contact": {
-          "pointMM": [
-            8.809699215019862,
-            13.530839105278437,
-            36.857762486749124
-          ],
-          "bodyNativeZ": 12.102014245247219,
-          "bodyTriangle": 8379,
-          "frameTriangle": 57832
-        },
-        "overlaps": 3801166,
-        "receiverTier": "source",
-        "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.74437639776048,
-        "verifiedSeatMM": 41.764376397760486,
-        "contact": {
-          "pointMM": [
-            -13.547288665193035,
-            8.81140084263259,
-            36.865514189170874
-          ],
-          "bodyNativeZ": 12.121137791410389,
-          "bodyTriangle": 8379,
-          "frameTriangle": 168361
-        },
-        "overlaps": 3826527,
-        "receiverTier": "source",
-        "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.75664075339385,
-        "verifiedSeatMM": 41.776640753393856,
-        "contact": {
-          "pointMM": [
-            -8.810364828624545,
-            -13.53727356296372,
-            36.86613542056229
-          ],
-          "bodyNativeZ": 12.109494667168432,
-          "bodyTriangle": 8379,
-          "frameTriangle": 139683
-        },
-        "overlaps": 3786269,
-        "receiverTier": "source",
-        "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.765989907127185,
-        "verifiedSeatMM": 41.78598990712719,
-        "contact": {
-          "pointMM": [
-            13.52905187501393,
-            -8.80951433467144,
-            36.86592639584809
-          ],
-          "bodyNativeZ": 12.099936488720907,
-          "bodyTriangle": 8379,
-          "frameTriangle": 55901
-        },
-        "overlaps": 3860501,
-        "receiverTier": "source",
-        "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.61433246521923,
-        "verifiedSeatMM": 41.63433246521923,
-        "contact": {
-          "pointMM": [
-            13.520026651602375,
-            -13.520026651602375,
-            36.88317848960634
-          ],
-          "bodyNativeZ": 12.268846024387107,
-          "bodyTriangle": 101,
-          "frameTriangle": 123437
-        },
-        "overlaps": 3645672,
-        "receiverTier": "source",
-        "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.61433246521923,
-        "verifiedSeatMM": 41.63433246521923,
-        "contact": {
-          "pointMM": [
-            13.520026651602375,
-            -13.520026651602375,
-            36.88317848960634
-          ],
-          "bodyNativeZ": 12.268846024387107,
-          "bodyTriangle": 112,
-          "frameTriangle": 123437
-        },
-        "overlaps": 3658796,
-        "receiverTier": "source",
-        "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.61440399055347,
-        "verifiedSeatMM": 41.63440399055347,
-        "contact": {
-          "pointMM": [
-            13.520074381902088,
-            -13.519979014470447,
-            36.883182120488
-          ],
-          "bodyNativeZ": 12.268778129934535,
-          "bodyTriangle": 19155,
-          "frameTriangle": 123437
-        },
-        "overlaps": 3629525,
-        "receiverTier": "source",
-        "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.61433246521923,
-        "verifiedSeatMM": 41.63433246521923,
-        "contact": {
-          "pointMM": [
-            13.520026651602375,
-            -13.520026651602375,
-            36.88317848960634
-          ],
-          "bodyNativeZ": 12.26884602438711,
-          "bodyTriangle": 211,
-          "frameTriangle": 123437
-        },
-        "overlaps": 3740979,
-        "receiverTier": "source",
-        "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.61527648748343,
-        "verifiedSeatMM": 41.63527648748343,
-        "contact": {
-          "pointMM": [
-            13.524011028915536,
-            13.524011028915536,
-            36.88886884534397
-          ],
-          "bodyNativeZ": 12.273592357860547,
-          "bodyTriangle": 4,
-          "frameTriangle": 87831
-        },
-        "overlaps": 104763,
-        "receiverTier": "balanced-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.61527648748343,
-        "verifiedSeatMM": 41.63527648748343,
-        "contact": {
-          "pointMM": [
-            13.524011028915536,
-            13.524011028915536,
-            36.88886884534397
-          ],
-          "bodyNativeZ": 12.273592357860547,
-          "bodyTriangle": 2,
-          "frameTriangle": 87831
-        },
-        "overlaps": 104745,
-        "receiverTier": "balanced-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.61527648748343,
-        "verifiedSeatMM": 41.63527648748343,
-        "contact": {
-          "pointMM": [
-            13.524011028915536,
-            13.524011028915536,
-            36.88886884534397
-          ],
-          "bodyNativeZ": 12.273592357860547,
-          "bodyTriangle": 3,
-          "frameTriangle": 87831
-        },
-        "overlaps": 104763,
-        "receiverTier": "balanced-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.61527648748343,
-        "verifiedSeatMM": 41.63527648748343,
-        "contact": {
-          "pointMM": [
-            13.524011028915536,
-            13.524011028915536,
-            36.88886884534397
-          ],
-          "bodyNativeZ": 12.273592357860547,
-          "bodyTriangle": 6,
-          "frameTriangle": 87831
-        },
-        "overlaps": 104745,
-        "receiverTier": "balanced-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.7571966154156,
-        "verifiedSeatMM": 41.777196615415605,
-        "contact": {
-          "pointMM": [
-            8.809142743184147,
-            13.525459716313481,
-            36.85295701595603
-          ],
-          "bodyNativeZ": 12.095760400540426,
-          "bodyTriangle": 8379,
-          "frameTriangle": 1262
-        },
-        "overlaps": 1533046,
-        "receiverTier": "balanced-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.747495155898875,
-        "verifiedSeatMM": 41.76749515589888,
-        "contact": {
-          "pointMM": [
-            -13.544960878346942,
-            8.811160044313704,
-            36.86592676310492
-          ],
-          "bodyNativeZ": 12.118431607206045,
-          "bodyTriangle": 8379,
-          "frameTriangle": 1112
-        },
-        "overlaps": 1539167,
-        "receiverTier": "balanced-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.758832494030756,
-        "verifiedSeatMM": 41.77883249403076,
-        "contact": {
-          "pointMM": [
-            -8.810412607227573,
-            -13.537735436635296,
-            36.868864115532666
-          ],
-          "bodyNativeZ": 12.110031621501909,
-          "bodyTriangle": 8379,
-          "frameTriangle": 51121
-        },
-        "overlaps": 1529191,
-        "receiverTier": "balanced-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.77010416587645,
-        "verifiedSeatMM": 41.79010416587645,
-        "contact": {
-          "pointMM": [
-            13.533158872830992,
-            -8.809939183781522,
-            36.87481527244454
-          ],
-          "bodyNativeZ": 12.104711106568095,
-          "bodyTriangle": 8379,
-          "frameTriangle": 1416
-        },
-        "overlaps": 1562299,
-        "receiverTier": "balanced-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.61528657693057,
-        "verifiedSeatMM": 41.635286576930575,
-        "contact": {
-          "pointMM": [
-            13.524011028915536,
-            13.524011028915536,
-            36.88886884534397
-          ],
-          "bodyNativeZ": 12.273582268413403,
-          "bodyTriangle": 211,
-          "frameTriangle": 87831
-        },
-        "overlaps": 1427011,
-        "receiverTier": "balanced-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.61528657693057,
-        "verifiedSeatMM": 41.635286576930575,
-        "contact": {
-          "pointMM": [
-            13.524011028915536,
-            13.524011028915536,
-            36.88886884534397
-          ],
-          "bodyNativeZ": 12.273582268413403,
-          "bodyTriangle": 101,
-          "frameTriangle": 87831
-        },
-        "overlaps": 1394536,
-        "receiverTier": "balanced-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.61528657693057,
-        "verifiedSeatMM": 41.635286576930575,
-        "contact": {
-          "pointMM": [
-            13.524011028915536,
-            13.524011028915536,
-            36.88886884534397
-          ],
-          "bodyNativeZ": 12.273582268413403,
-          "bodyTriangle": 112,
-          "frameTriangle": 87831
-        },
-        "overlaps": 1420059,
-        "receiverTier": "balanced-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.61535576851131,
-        "verifiedSeatMM": 41.63535576851131,
-        "contact": {
-          "pointMM": [
-            13.523986768654947,
-            13.524082136086587,
-            36.88889812344944
-          ],
-          "bodyNativeZ": 12.273542354938131,
-          "bodyTriangle": 19155,
-          "frameTriangle": 87831
-        },
-        "overlaps": 1447775,
-        "receiverTier": "balanced-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.60831173644651,
-        "verifiedSeatMM": 41.62831173644651,
-        "contact": {
-          "pointMM": [
-            13.518453331541261,
-            13.518453331541261,
-            36.87529745039192
-          ],
-          "bodyNativeZ": 12.26698571394541,
-          "bodyTriangle": 4,
-          "frameTriangle": 31230
-        },
-        "overlaps": 42981,
-        "receiverTier": "balanced-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.60831173644651,
-        "verifiedSeatMM": 41.62831173644651,
-        "contact": {
-          "pointMM": [
-            13.518453331541261,
-            13.518453331541261,
-            36.87529745039192
-          ],
-          "bodyNativeZ": 12.26698571394541,
-          "bodyTriangle": 2,
-          "frameTriangle": 31230
-        },
-        "overlaps": 42961,
-        "receiverTier": "balanced-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.60831173644651,
-        "verifiedSeatMM": 41.62831173644651,
-        "contact": {
-          "pointMM": [
-            13.518453331541261,
-            13.518453331541261,
-            36.87529745039192
-          ],
-          "bodyNativeZ": 12.26698571394541,
-          "bodyTriangle": 3,
-          "frameTriangle": 31230
-        },
-        "overlaps": 42981,
-        "receiverTier": "balanced-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.60831173644651,
-        "verifiedSeatMM": 41.62831173644651,
-        "contact": {
-          "pointMM": [
-            13.518453331541261,
-            13.518453331541261,
-            36.87529745039192
-          ],
-          "bodyNativeZ": 12.26698571394541,
-          "bodyTriangle": 6,
-          "frameTriangle": 31230
-        },
-        "overlaps": 42961,
-        "receiverTier": "balanced-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.75994043120804,
-        "verifiedSeatMM": 41.77994043120804,
-        "contact": {
-          "pointMM": [
-            8.809953577766851,
-            13.533298018859385,
-            36.86481330292433
-          ],
-          "bodyNativeZ": 12.104872871716294,
-          "bodyTriangle": 8379,
-          "frameTriangle": 768
-        },
-        "overlaps": 953075,
-        "receiverTier": "balanced-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.74804353514077,
-        "verifiedSeatMM": 41.76804353514078,
-        "contact": {
-          "pointMM": [
-            -13.518337535037416,
-            8.2647097345433,
-            36.83559801848257
-          ],
-          "bodyNativeZ": 12.087554483341798,
-          "bodyTriangle": 27880,
-          "frameTriangle": 722
-        },
-        "overlaps": 957947,
-        "receiverTier": "balanced-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.77192799529198,
-        "verifiedSeatMM": 41.791927995291985,
-        "contact": {
-          "pointMM": [
-            -8.809186441260461,
-            -13.525882143711287,
-            36.86817949163585
-          ],
-          "bodyNativeZ": 12.096251496343868,
-          "bodyTriangle": 8379,
-          "frameTriangle": 23251
-        },
-        "overlaps": 955517,
-        "receiverTier": "balanced-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.77323942565649,
-        "verifiedSeatMM": 41.793239425656495,
-        "contact": {
-          "pointMM": [
-            13.530496577109446,
-            -8.809663782133297,
-            36.874855462484405
-          ],
-          "bodyNativeZ": 12.101616036827911,
-          "bodyTriangle": 8379,
-          "frameTriangle": 871
-        },
-        "overlaps": 975780,
-        "receiverTier": "balanced-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.60832163737166,
-        "verifiedSeatMM": 41.62832163737166,
-        "contact": {
-          "pointMM": [
-            13.518453331541261,
-            13.518453331541261,
-            36.87529745039192
-          ],
-          "bodyNativeZ": 12.266975813020256,
-          "bodyTriangle": 211,
-          "frameTriangle": 31230
-        },
-        "overlaps": 881183,
-        "receiverTier": "balanced-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.60832163737166,
-        "verifiedSeatMM": 41.62832163737166,
-        "contact": {
-          "pointMM": [
-            13.518453331541261,
-            13.518453331541261,
-            36.87529745039192
-          ],
-          "bodyNativeZ": 12.266975813020256,
-          "bodyTriangle": 101,
-          "frameTriangle": 31230
-        },
-        "overlaps": 864270,
-        "receiverTier": "balanced-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.60832163737166,
-        "verifiedSeatMM": 41.62832163737166,
-        "contact": {
-          "pointMM": [
-            13.518453331541261,
-            13.518453331541261,
-            36.87529745039192
-          ],
-          "bodyNativeZ": 12.266975813020256,
-          "bodyTriangle": 112,
-          "frameTriangle": 31230
-        },
-        "overlaps": 872463,
-        "receiverTier": "balanced-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.60837450279697,
-        "verifiedSeatMM": 41.62837450279697,
-        "contact": {
-          "pointMM": [
-            13.518416752763587,
-            13.518512120195227,
-            36.875295491314304
-          ],
-          "bodyNativeZ": 12.266920988517336,
-          "bodyTriangle": 19155,
-          "frameTriangle": 31230
-        },
-        "overlaps": 893826,
-        "receiverTier": "balanced-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.60828801134541,
-        "verifiedSeatMM": 41.62828801134541,
-        "contact": {
-          "pointMM": [
-            13.51852996924634,
-            13.51852996924634,
-            36.87536482741348
-          ],
-          "bodyNativeZ": 12.267076816068073,
-          "bodyTriangle": 4,
-          "frameTriangle": 2176
-        },
-        "overlaps": 42967,
-        "receiverTier": "balanced-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.60828801134541,
-        "verifiedSeatMM": 41.62828801134541,
-        "contact": {
-          "pointMM": [
-            13.51852996924634,
-            13.51852996924634,
-            36.87536482741348
-          ],
-          "bodyNativeZ": 12.267076816068073,
-          "bodyTriangle": 2,
-          "frameTriangle": 2176
-        },
-        "overlaps": 42950,
-        "receiverTier": "balanced-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.60828801134541,
-        "verifiedSeatMM": 41.62828801134541,
-        "contact": {
-          "pointMM": [
-            13.51852996924634,
-            13.51852996924634,
-            36.87536482741348
-          ],
-          "bodyNativeZ": 12.267076816068073,
-          "bodyTriangle": 3,
-          "frameTriangle": 2176
-        },
-        "overlaps": 42967,
-        "receiverTier": "balanced-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.60828801134541,
-        "verifiedSeatMM": 41.62828801134541,
-        "contact": {
-          "pointMM": [
-            13.51852996924634,
-            13.51852996924634,
-            36.87536482741348
-          ],
-          "bodyNativeZ": 12.267076816068073,
-          "bodyTriangle": 6,
-          "frameTriangle": 2176
-        },
-        "overlaps": 42950,
-        "receiverTier": "balanced-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.75958422092926,
-        "verifiedSeatMM": 41.779584220929266,
-        "contact": {
-          "pointMM": [
-            8.809981511209081,
-            13.533568050227075,
-            36.86477101942246
-          ],
-          "bodyNativeZ": 12.1051867984932,
-          "bodyTriangle": 8379,
-          "frameTriangle": 2159
-        },
-        "overlaps": 952949,
-        "receiverTier": "balanced-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.74817682876044,
-        "verifiedSeatMM": 41.768176828760446,
-        "contact": {
-          "pointMM": [
-            -13.518152459338143,
-            8.2651671268232,
-            36.835516013324735
-          ],
-          "bodyNativeZ": 12.087339184564293,
-          "bodyTriangle": 27883,
-          "frameTriangle": 2150
-        },
-        "overlaps": 957758,
-        "receiverTier": "balanced-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.77170365939783,
-        "verifiedSeatMM": 41.79170365939783,
-        "contact": {
-          "pointMM": [
-            -8.809198461501317,
-            -13.525998342855377,
-            36.8680902438357
-          ],
-          "bodyNativeZ": 12.096386584437875,
-          "bodyTriangle": 8379,
-          "frameTriangle": 5347
-        },
-        "overlaps": 955219,
-        "receiverTier": "balanced-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.77342689379746,
-        "verifiedSeatMM": 41.79342689379747,
-        "contact": {
-          "pointMM": [
-            13.530329355704422,
-            -8.809646483885702,
-            36.874848526259846
-          ],
-          "bodyNativeZ": 12.101421632462381,
-          "bodyTriangle": 8379,
-          "frameTriangle": 2184
-        },
-        "overlaps": 975576,
-        "receiverTier": "balanced-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.60829791487018,
-        "verifiedSeatMM": 41.62829791487018,
-        "contact": {
-          "pointMM": [
-            13.51852996924634,
-            13.51852996924634,
-            36.87536482741348
-          ],
-          "bodyNativeZ": 12.267066912543301,
-          "bodyTriangle": 211,
-          "frameTriangle": 2176
-        },
-        "overlaps": 881030,
-        "receiverTier": "balanced-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.60829791487018,
-        "verifiedSeatMM": 41.62829791487018,
-        "contact": {
-          "pointMM": [
-            13.51852996924634,
-            13.51852996924634,
-            36.87536482741348
-          ],
-          "bodyNativeZ": 12.267066912543301,
-          "bodyTriangle": 101,
-          "frameTriangle": 2176
-        },
-        "overlaps": 864025,
-        "receiverTier": "balanced-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.608297990213174,
-        "verifiedSeatMM": 41.62829799021318,
-        "contact": {
-          "pointMM": [
-            13.518640633957714,
-            13.51835014173919,
-            36.87537174969708
-          ],
-          "bodyNativeZ": 12.267073759483907,
-          "bodyTriangle": 19248,
-          "frameTriangle": 2176
-        },
-        "overlaps": 872264,
-        "receiverTier": "balanced-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.60835016832227,
-        "verifiedSeatMM": 41.62835016832227,
-        "contact": {
-          "pointMM": [
-            13.518493638464914,
-            13.518589005896555,
-            36.875362554855506
-          ],
-          "bodyNativeZ": 12.267012386533239,
-          "bodyTriangle": 19155,
-          "frameTriangle": 2176
-        },
-        "overlaps": 893528,
-        "receiverTier": "balanced-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.61527648748343,
-        "verifiedSeatMM": 41.63527648748343,
-        "contact": {
-          "pointMM": [
-            13.524011028915536,
-            13.524011028915536,
-            36.88886884534397
-          ],
-          "bodyNativeZ": 12.273592357860547,
-          "bodyTriangle": 4,
-          "frameTriangle": 87831
-        },
-        "overlaps": 104763,
-        "receiverTier": "compact-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.61527648748343,
-        "verifiedSeatMM": 41.63527648748343,
-        "contact": {
-          "pointMM": [
-            13.524011028915536,
-            13.524011028915536,
-            36.88886884534397
-          ],
-          "bodyNativeZ": 12.273592357860547,
-          "bodyTriangle": 2,
-          "frameTriangle": 87831
-        },
-        "overlaps": 104745,
-        "receiverTier": "compact-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.61527648748343,
-        "verifiedSeatMM": 41.63527648748343,
-        "contact": {
-          "pointMM": [
-            13.524011028915536,
-            13.524011028915536,
-            36.88886884534397
-          ],
-          "bodyNativeZ": 12.273592357860547,
-          "bodyTriangle": 3,
-          "frameTriangle": 87831
-        },
-        "overlaps": 104763,
-        "receiverTier": "compact-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.61527648748343,
-        "verifiedSeatMM": 41.63527648748343,
-        "contact": {
-          "pointMM": [
-            13.524011028915536,
-            13.524011028915536,
-            36.88886884534397
-          ],
-          "bodyNativeZ": 12.273592357860547,
-          "bodyTriangle": 6,
-          "frameTriangle": 87831
-        },
-        "overlaps": 104745,
-        "receiverTier": "compact-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.7571966154156,
-        "verifiedSeatMM": 41.777196615415605,
-        "contact": {
-          "pointMM": [
-            8.809142743184147,
-            13.525459716313481,
-            36.85295701595603
-          ],
-          "bodyNativeZ": 12.095760400540426,
-          "bodyTriangle": 8379,
-          "frameTriangle": 1262
-        },
-        "overlaps": 1533046,
-        "receiverTier": "compact-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.747495155898875,
-        "verifiedSeatMM": 41.76749515589888,
-        "contact": {
-          "pointMM": [
-            -13.544960878346942,
-            8.811160044313704,
-            36.86592676310492
-          ],
-          "bodyNativeZ": 12.118431607206045,
-          "bodyTriangle": 8379,
-          "frameTriangle": 1112
-        },
-        "overlaps": 1539167,
-        "receiverTier": "compact-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.758832494030756,
-        "verifiedSeatMM": 41.77883249403076,
-        "contact": {
-          "pointMM": [
-            -8.810412607227573,
-            -13.537735436635296,
-            36.868864115532666
-          ],
-          "bodyNativeZ": 12.110031621501909,
-          "bodyTriangle": 8379,
-          "frameTriangle": 51121
-        },
-        "overlaps": 1529191,
-        "receiverTier": "compact-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.77010416587645,
-        "verifiedSeatMM": 41.79010416587645,
-        "contact": {
-          "pointMM": [
-            13.533158872830992,
-            -8.809939183781522,
-            36.87481527244454
-          ],
-          "bodyNativeZ": 12.104711106568095,
-          "bodyTriangle": 8379,
-          "frameTriangle": 1416
-        },
-        "overlaps": 1562299,
-        "receiverTier": "compact-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.61528657693057,
-        "verifiedSeatMM": 41.635286576930575,
-        "contact": {
-          "pointMM": [
-            13.524011028915536,
-            13.524011028915536,
-            36.88886884534397
-          ],
-          "bodyNativeZ": 12.273582268413403,
-          "bodyTriangle": 211,
-          "frameTriangle": 87831
-        },
-        "overlaps": 1427011,
-        "receiverTier": "compact-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.61528657693057,
-        "verifiedSeatMM": 41.635286576930575,
-        "contact": {
-          "pointMM": [
-            13.524011028915536,
-            13.524011028915536,
-            36.88886884534397
-          ],
-          "bodyNativeZ": 12.273582268413403,
-          "bodyTriangle": 101,
-          "frameTriangle": 87831
-        },
-        "overlaps": 1394536,
-        "receiverTier": "compact-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.61528657693057,
-        "verifiedSeatMM": 41.635286576930575,
-        "contact": {
-          "pointMM": [
-            13.524011028915536,
-            13.524011028915536,
-            36.88886884534397
-          ],
-          "bodyNativeZ": 12.273582268413403,
-          "bodyTriangle": 112,
-          "frameTriangle": 87831
-        },
-        "overlaps": 1420059,
-        "receiverTier": "compact-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.61535576851131,
-        "verifiedSeatMM": 41.63535576851131,
-        "contact": {
-          "pointMM": [
-            13.523986768654947,
-            13.524082136086587,
-            36.88889812344944
-          ],
-          "bodyNativeZ": 12.273542354938131,
-          "bodyTriangle": 19155,
-          "frameTriangle": 87831
-        },
-        "overlaps": 1447775,
-        "receiverTier": "compact-render",
-        "receiverGeometrySHA256": "c2c78d8a5cad4dc5dac77e423458b334a94bce36ad71bd52399380dcf47e6154"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.60831173644651,
-        "verifiedSeatMM": 41.62831173644651,
-        "contact": {
-          "pointMM": [
-            13.518453331541261,
-            13.518453331541261,
-            36.87529745039192
-          ],
-          "bodyNativeZ": 12.26698571394541,
-          "bodyTriangle": 4,
-          "frameTriangle": 31230
-        },
-        "overlaps": 42981,
-        "receiverTier": "compact-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.60831173644651,
-        "verifiedSeatMM": 41.62831173644651,
-        "contact": {
-          "pointMM": [
-            13.518453331541261,
-            13.518453331541261,
-            36.87529745039192
-          ],
-          "bodyNativeZ": 12.26698571394541,
-          "bodyTriangle": 2,
-          "frameTriangle": 31230
-        },
-        "overlaps": 42961,
-        "receiverTier": "compact-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.60831173644651,
-        "verifiedSeatMM": 41.62831173644651,
-        "contact": {
-          "pointMM": [
-            13.518453331541261,
-            13.518453331541261,
-            36.87529745039192
-          ],
-          "bodyNativeZ": 12.26698571394541,
-          "bodyTriangle": 3,
-          "frameTriangle": 31230
-        },
-        "overlaps": 42981,
-        "receiverTier": "compact-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.60831173644651,
-        "verifiedSeatMM": 41.62831173644651,
-        "contact": {
-          "pointMM": [
-            13.518453331541261,
-            13.518453331541261,
-            36.87529745039192
-          ],
-          "bodyNativeZ": 12.26698571394541,
-          "bodyTriangle": 6,
-          "frameTriangle": 31230
-        },
-        "overlaps": 42961,
-        "receiverTier": "compact-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.75994043120804,
-        "verifiedSeatMM": 41.77994043120804,
-        "contact": {
-          "pointMM": [
-            8.809953577766851,
-            13.533298018859385,
-            36.86481330292433
-          ],
-          "bodyNativeZ": 12.104872871716294,
-          "bodyTriangle": 8379,
-          "frameTriangle": 768
-        },
-        "overlaps": 953075,
-        "receiverTier": "compact-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.74804353514077,
-        "verifiedSeatMM": 41.76804353514078,
-        "contact": {
-          "pointMM": [
-            -13.518337535037416,
-            8.2647097345433,
-            36.83559801848257
-          ],
-          "bodyNativeZ": 12.087554483341798,
-          "bodyTriangle": 27880,
-          "frameTriangle": 722
-        },
-        "overlaps": 957947,
-        "receiverTier": "compact-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.77192799529198,
-        "verifiedSeatMM": 41.791927995291985,
-        "contact": {
-          "pointMM": [
-            -8.809186441260461,
-            -13.525882143711287,
-            36.86817949163585
-          ],
-          "bodyNativeZ": 12.096251496343868,
-          "bodyTriangle": 8379,
-          "frameTriangle": 23251
-        },
-        "overlaps": 955517,
-        "receiverTier": "compact-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.77323942565649,
-        "verifiedSeatMM": 41.793239425656495,
-        "contact": {
-          "pointMM": [
-            13.530496577109446,
-            -8.809663782133297,
-            36.874855462484405
-          ],
-          "bodyNativeZ": 12.101616036827911,
-          "bodyTriangle": 8379,
-          "frameTriangle": 871
-        },
-        "overlaps": 975780,
-        "receiverTier": "compact-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.60832163737166,
-        "verifiedSeatMM": 41.62832163737166,
-        "contact": {
-          "pointMM": [
-            13.518453331541261,
-            13.518453331541261,
-            36.87529745039192
-          ],
-          "bodyNativeZ": 12.266975813020256,
-          "bodyTriangle": 211,
-          "frameTriangle": 31230
-        },
-        "overlaps": 881183,
-        "receiverTier": "compact-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.60832163737166,
-        "verifiedSeatMM": 41.62832163737166,
-        "contact": {
-          "pointMM": [
-            13.518453331541261,
-            13.518453331541261,
-            36.87529745039192
-          ],
-          "bodyNativeZ": 12.266975813020256,
-          "bodyTriangle": 101,
-          "frameTriangle": 31230
-        },
-        "overlaps": 864270,
-        "receiverTier": "compact-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.60832163737166,
-        "verifiedSeatMM": 41.62832163737166,
-        "contact": {
-          "pointMM": [
-            13.518453331541261,
-            13.518453331541261,
-            36.87529745039192
-          ],
-          "bodyNativeZ": 12.266975813020256,
-          "bodyTriangle": 112,
-          "frameTriangle": 31230
-        },
-        "overlaps": 872463,
-        "receiverTier": "compact-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.60837450279697,
-        "verifiedSeatMM": 41.62837450279697,
-        "contact": {
-          "pointMM": [
-            13.518416752763587,
-            13.518512120195227,
-            36.875295491314304
-          ],
-          "bodyNativeZ": 12.266920988517336,
-          "bodyTriangle": 19155,
-          "frameTriangle": 31230
-        },
-        "overlaps": 893826,
-        "receiverTier": "compact-lod",
-        "receiverGeometrySHA256": "4a740bb339c629edcacabd79d44b4677be332668173839964a0196ab6161f712"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.60828801134541,
-        "verifiedSeatMM": 41.62828801134541,
-        "contact": {
-          "pointMM": [
-            13.51852996924634,
-            13.51852996924634,
-            36.87536482741348
-          ],
-          "bodyNativeZ": 12.267076816068073,
-          "bodyTriangle": 4,
-          "frameTriangle": 2176
-        },
-        "overlaps": 42967,
-        "receiverTier": "compact-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.60828801134541,
-        "verifiedSeatMM": 41.62828801134541,
-        "contact": {
-          "pointMM": [
-            13.51852996924634,
-            13.51852996924634,
-            36.87536482741348
-          ],
-          "bodyNativeZ": 12.267076816068073,
-          "bodyTriangle": 2,
-          "frameTriangle": 2176
-        },
-        "overlaps": 42950,
-        "receiverTier": "compact-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.60828801134541,
-        "verifiedSeatMM": 41.62828801134541,
-        "contact": {
-          "pointMM": [
-            13.51852996924634,
-            13.51852996924634,
-            36.87536482741348
-          ],
-          "bodyNativeZ": 12.267076816068073,
-          "bodyTriangle": 3,
-          "frameTriangle": 2176
-        },
-        "overlaps": 42967,
-        "receiverTier": "compact-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-standard-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.60828801134541,
-        "verifiedSeatMM": 41.62828801134541,
-        "contact": {
-          "pointMM": [
-            13.51852996924634,
-            13.51852996924634,
-            36.87536482741348
-          ],
-          "bodyNativeZ": 12.267076816068073,
-          "bodyTriangle": 6,
-          "frameTriangle": 2176
-        },
-        "overlaps": 42950,
-        "receiverTier": "compact-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.75958422092926,
-        "verifiedSeatMM": 41.779584220929266,
-        "contact": {
-          "pointMM": [
-            8.809981511209081,
-            13.533568050227075,
-            36.86477101942246
-          ],
-          "bodyNativeZ": 12.1051867984932,
-          "bodyTriangle": 8379,
-          "frameTriangle": 2159
-        },
-        "overlaps": 952949,
-        "receiverTier": "compact-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.74817682876044,
-        "verifiedSeatMM": 41.768176828760446,
-        "contact": {
-          "pointMM": [
-            -13.518152459338143,
-            8.2651671268232,
-            36.835516013324735
-          ],
-          "bodyNativeZ": 12.087339184564293,
-          "bodyTriangle": 27883,
-          "frameTriangle": 2150
-        },
-        "overlaps": 957758,
-        "receiverTier": "compact-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.77170365939783,
-        "verifiedSeatMM": 41.79170365939783,
-        "contact": {
-          "pointMM": [
-            -8.809198461501317,
-            -13.525998342855377,
-            36.8680902438357
-          ],
-          "bodyNativeZ": 12.096386584437875,
-          "bodyTriangle": 8379,
-          "frameTriangle": 5347
-        },
-        "overlaps": 955219,
-        "receiverTier": "compact-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-080-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.77342689379746,
-        "verifiedSeatMM": 41.79342689379747,
-        "contact": {
-          "pointMM": [
-            13.530329355704422,
-            -8.809646483885702,
-            36.874848526259846
-          ],
-          "bodyNativeZ": 12.101421632462381,
-          "bodyTriangle": 8379,
-          "frameTriangle": 2184
-        },
-        "overlaps": 975576,
-        "receiverTier": "compact-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 0,
-        "minimumSeatMM": 41.60829791487018,
-        "verifiedSeatMM": 41.62829791487018,
-        "contact": {
-          "pointMM": [
-            13.51852996924634,
-            13.51852996924634,
-            36.87536482741348
-          ],
-          "bodyNativeZ": 12.267066912543301,
-          "bodyTriangle": 211,
-          "frameTriangle": 2176
-        },
-        "overlaps": 881030,
-        "receiverTier": "compact-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 90,
-        "minimumSeatMM": 41.60829791487018,
-        "verifiedSeatMM": 41.62829791487018,
-        "contact": {
-          "pointMM": [
-            13.51852996924634,
-            13.51852996924634,
-            36.87536482741348
-          ],
-          "bodyNativeZ": 12.267066912543301,
-          "bodyTriangle": 101,
-          "frameTriangle": 2176
-        },
-        "overlaps": 864025,
-        "receiverTier": "compact-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 180,
-        "minimumSeatMM": 41.608297990213174,
-        "verifiedSeatMM": 41.62829799021318,
-        "contact": {
-          "pointMM": [
-            13.518640633957714,
-            13.51835014173919,
-            36.87537174969708
-          ],
-          "bodyNativeZ": 12.267073759483907,
-          "bodyTriangle": 19248,
-          "frameTriangle": 2176
-        },
-        "overlaps": 872264,
-        "receiverTier": "compact-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      },
-      {
-        "x": 0,
-        "y": 0,
-        "profile": "ud016-recess-mt1-082-v1",
-        "rotation": 270,
-        "minimumSeatMM": 41.60835016832227,
-        "verifiedSeatMM": 41.62835016832227,
-        "contact": {
-          "pointMM": [
-            13.518493638464914,
-            13.518589005896555,
-            36.875362554855506
-          ],
-          "bodyNativeZ": 12.267012386533239,
-          "bodyTriangle": 19155,
-          "frameTriangle": 2176
-        },
-        "overlaps": 893528,
-        "receiverTier": "compact-shadow",
-        "receiverGeometrySHA256": "0df5f5c45f77c2e7c4070c873504f402ff96128a85bd3f26f589bd064821b1e6"
-      }
-    ],
-    "assets": [
-      {
-        "render": "64373256812fdf23966bd263f53de05c70cdc0eb930470c752f35d23d4eaf88d",
-        "lod": "2a7ea0e3a0c45af57deb4582f68d9f31662cc38b8f5dedb276c6a752aa585e45",
-        "shadow": "f285b3e95d48d9e47d52287edd300d2849f0866ded0684af5f1a6d14425736b4"
-      },
-      {
-        "render": "d9c878c7f68936ba8147cb3fff4bf9030e203587df201a9160d3c8bcb2ce0bea",
-        "lod": "03f232ab52c7c78d762f5bf7bcef388a5f2e5bfad5fdde33569b6990d7a10b8a",
-        "shadow": "f285b3e95d48d9e47d52287edd300d2849f0866ded0684af5f1a6d14425736b4"
-      }
-    ]
-  },
   "socketProbes": [
     {
       "origin": [
@@ -14046,6 +12388,7 @@
       ]
     }
   ],
+  "socketProbeVersion": 2,
   "final": {
     "assets": {
       "render": "6648166065f10816711425dddc160112bbe6ef1a2812633ab8f95a2390048a2f",
@@ -14063,7 +12406,8 @@
         "insertionRise": 0.024463,
         "insertionRises": {
           "ud016-recess-mt1-080-v1": 0.028981,
-          "ud016-recess-mt1-082-v1": 0.024465
+          "ud016-recess-mt1-082-v1": 0.024465,
+          "ud016-recess-mt1-088-v1": 0.024462
         }
       }
     ],
@@ -14341,6 +12685,94 @@
       {
         "x": 0,
         "y": 0,
+        "profile": "ud016-recess-mt1-088-v1",
+        "rotation": 0,
+        "minimumSeatMM": 41.61433246521923,
+        "verifiedSeatMM": 41.63433246521923,
+        "contact": {
+          "pointMM": [
+            13.520026651602375,
+            -13.520026651602375,
+            36.88317848960634
+          ],
+          "bodyNativeZ": 12.268846024387107,
+          "bodyTriangle": 43,
+          "frameTriangle": 123437
+        },
+        "overlaps": 3771238,
+        "receiverTier": "source",
+        "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594",
+        "publishedSeatMM": 41.655295
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "profile": "ud016-recess-mt1-088-v1",
+        "rotation": 90,
+        "minimumSeatMM": 41.61433246521923,
+        "verifiedSeatMM": 41.63433246521923,
+        "contact": {
+          "pointMM": [
+            13.520026651602375,
+            -13.520026651602375,
+            36.88317848960634
+          ],
+          "bodyNativeZ": 12.26884602438711,
+          "bodyTriangle": 48,
+          "frameTriangle": 123437
+        },
+        "overlaps": 3883705,
+        "receiverTier": "source",
+        "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594",
+        "publishedSeatMM": 41.655295
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "profile": "ud016-recess-mt1-088-v1",
+        "rotation": 180,
+        "minimumSeatMM": 41.61433246521923,
+        "verifiedSeatMM": 41.63433246521923,
+        "contact": {
+          "pointMM": [
+            13.520026651602375,
+            -13.520026651602375,
+            36.88317848960634
+          ],
+          "bodyNativeZ": 12.268846024387107,
+          "bodyTriangle": 918,
+          "frameTriangle": 123437
+        },
+        "overlaps": 3834547,
+        "receiverTier": "source",
+        "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594",
+        "publishedSeatMM": 41.655295
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "profile": "ud016-recess-mt1-088-v1",
+        "rotation": 270,
+        "minimumSeatMM": 41.61433246521923,
+        "verifiedSeatMM": 41.63433246521923,
+        "contact": {
+          "pointMM": [
+            13.520026651602375,
+            -13.520026651602375,
+            36.88317848960634
+          ],
+          "bodyNativeZ": 12.268846024387107,
+          "bodyTriangle": 578,
+          "frameTriangle": 123437
+        },
+        "overlaps": 3941360,
+        "receiverTier": "source",
+        "receiverGeometrySHA256": "25f7d0c84fae53dd0fe639d620236566cc0ebc18a00e4f5328118776fc942594",
+        "publishedSeatMM": 41.655295
+      },
+      {
+        "x": 0,
+        "y": 0,
         "profile": "ud016-standard-v1",
         "rotation": 0,
         "minimumSeatMM": 41.61527648748343,
@@ -14601,6 +13033,94 @@
         "receiverTier": "render",
         "receiverGeometrySHA256": "d9c00e34d98ec38192ee98baa5602e6362a6c4d9d01b010da32f3563e4ebf5c9",
         "publishedSeatMM": 41.6554
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "profile": "ud016-recess-mt1-088-v1",
+        "rotation": 0,
+        "minimumSeatMM": 41.61528657693057,
+        "verifiedSeatMM": 41.635286576930575,
+        "contact": {
+          "pointMM": [
+            13.524011028915536,
+            13.524011028915536,
+            36.88886884534397
+          ],
+          "bodyNativeZ": 12.273582268413403,
+          "bodyTriangle": 578,
+          "frameTriangle": 87831
+        },
+        "overlaps": 1515403,
+        "receiverTier": "render",
+        "receiverGeometrySHA256": "d9c00e34d98ec38192ee98baa5602e6362a6c4d9d01b010da32f3563e4ebf5c9",
+        "publishedSeatMM": 41.655295
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "profile": "ud016-recess-mt1-088-v1",
+        "rotation": 90,
+        "minimumSeatMM": 41.61528657693057,
+        "verifiedSeatMM": 41.635286576930575,
+        "contact": {
+          "pointMM": [
+            13.524011028915536,
+            13.524011028915536,
+            36.88886884534397
+          ],
+          "bodyNativeZ": 12.273582268413403,
+          "bodyTriangle": 43,
+          "frameTriangle": 87831
+        },
+        "overlaps": 1528164,
+        "receiverTier": "render",
+        "receiverGeometrySHA256": "d9c00e34d98ec38192ee98baa5602e6362a6c4d9d01b010da32f3563e4ebf5c9",
+        "publishedSeatMM": 41.655295
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "profile": "ud016-recess-mt1-088-v1",
+        "rotation": 180,
+        "minimumSeatMM": 41.61528657693057,
+        "verifiedSeatMM": 41.635286576930575,
+        "contact": {
+          "pointMM": [
+            13.524011028915536,
+            13.524011028915536,
+            36.88886884534397
+          ],
+          "bodyNativeZ": 12.273582268413403,
+          "bodyTriangle": 48,
+          "frameTriangle": 87831
+        },
+        "overlaps": 1551989,
+        "receiverTier": "render",
+        "receiverGeometrySHA256": "d9c00e34d98ec38192ee98baa5602e6362a6c4d9d01b010da32f3563e4ebf5c9",
+        "publishedSeatMM": 41.655295
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "profile": "ud016-recess-mt1-088-v1",
+        "rotation": 270,
+        "minimumSeatMM": 41.61528657693057,
+        "verifiedSeatMM": 41.635286576930575,
+        "contact": {
+          "pointMM": [
+            13.524011028915536,
+            13.524011028915536,
+            36.88886884534397
+          ],
+          "bodyNativeZ": 12.273582268413403,
+          "bodyTriangle": 918,
+          "frameTriangle": 87831
+        },
+        "overlaps": 1576376,
+        "receiverTier": "render",
+        "receiverGeometrySHA256": "d9c00e34d98ec38192ee98baa5602e6362a6c4d9d01b010da32f3563e4ebf5c9",
+        "publishedSeatMM": 41.655295
       },
       {
         "x": 0,
@@ -14869,6 +13389,94 @@
       {
         "x": 0,
         "y": 0,
+        "profile": "ud016-recess-mt1-088-v1",
+        "rotation": 0,
+        "minimumSeatMM": 41.60832163737166,
+        "verifiedSeatMM": 41.62832163737166,
+        "contact": {
+          "pointMM": [
+            13.518453331541261,
+            13.518453331541261,
+            36.87529745039192
+          ],
+          "bodyNativeZ": 12.266975813020256,
+          "bodyTriangle": 578,
+          "frameTriangle": 31230
+        },
+        "overlaps": 947951,
+        "receiverTier": "lod",
+        "receiverGeometrySHA256": "e47875d3c56ef2f8634aa1ca67275ae983fa55899f4a7c38f426b9247dc11885",
+        "publishedSeatMM": 41.655295
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "profile": "ud016-recess-mt1-088-v1",
+        "rotation": 90,
+        "minimumSeatMM": 41.60832163737166,
+        "verifiedSeatMM": 41.62832163737166,
+        "contact": {
+          "pointMM": [
+            13.518453331541261,
+            13.518453331541261,
+            36.87529745039192
+          ],
+          "bodyNativeZ": 12.266975813020256,
+          "bodyTriangle": 43,
+          "frameTriangle": 31230
+        },
+        "overlaps": 956553,
+        "receiverTier": "lod",
+        "receiverGeometrySHA256": "e47875d3c56ef2f8634aa1ca67275ae983fa55899f4a7c38f426b9247dc11885",
+        "publishedSeatMM": 41.655295
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "profile": "ud016-recess-mt1-088-v1",
+        "rotation": 180,
+        "minimumSeatMM": 41.60832163737166,
+        "verifiedSeatMM": 41.62832163737166,
+        "contact": {
+          "pointMM": [
+            13.518453331541261,
+            13.518453331541261,
+            36.87529745039192
+          ],
+          "bodyNativeZ": 12.266975813020256,
+          "bodyTriangle": 48,
+          "frameTriangle": 31230
+        },
+        "overlaps": 967790,
+        "receiverTier": "lod",
+        "receiverGeometrySHA256": "e47875d3c56ef2f8634aa1ca67275ae983fa55899f4a7c38f426b9247dc11885",
+        "publishedSeatMM": 41.655295
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "profile": "ud016-recess-mt1-088-v1",
+        "rotation": 270,
+        "minimumSeatMM": 41.60832163737166,
+        "verifiedSeatMM": 41.62832163737166,
+        "contact": {
+          "pointMM": [
+            13.518453331541261,
+            13.518453331541261,
+            36.87529745039192
+          ],
+          "bodyNativeZ": 12.266975813020256,
+          "bodyTriangle": 918,
+          "frameTriangle": 31230
+        },
+        "overlaps": 983631,
+        "receiverTier": "lod",
+        "receiverGeometrySHA256": "e47875d3c56ef2f8634aa1ca67275ae983fa55899f4a7c38f426b9247dc11885",
+        "publishedSeatMM": 41.655295
+      },
+      {
+        "x": 0,
+        "y": 0,
         "profile": "ud016-standard-v1",
         "rotation": 0,
         "minimumSeatMM": 41.60809477288274,
@@ -15129,9 +13737,95 @@
         "receiverTier": "shadow",
         "receiverGeometrySHA256": "29be211e785e0eb9927cf90f8e87931d0a8c2f6f01a606b63cfd914c672019f9",
         "publishedSeatMM": 41.6554
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "profile": "ud016-recess-mt1-088-v1",
+        "rotation": 0,
+        "minimumSeatMM": 41.60810467930075,
+        "verifiedSeatMM": 41.628104679300755,
+        "contact": {
+          "pointMM": [
+            13.518615262873354,
+            13.518615262873354,
+            36.87527298069347
+          ],
+          "bodyNativeZ": 12.267168301392719,
+          "bodyTriangle": 578,
+          "frameTriangle": 2176
+        },
+        "overlaps": 947355,
+        "receiverTier": "shadow",
+        "receiverGeometrySHA256": "29be211e785e0eb9927cf90f8e87931d0a8c2f6f01a606b63cfd914c672019f9",
+        "publishedSeatMM": 41.655295
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "profile": "ud016-recess-mt1-088-v1",
+        "rotation": 90,
+        "minimumSeatMM": 41.608104679300745,
+        "verifiedSeatMM": 41.62810467930075,
+        "contact": {
+          "pointMM": [
+            13.518615262873354,
+            13.518615262873354,
+            36.87527298069347
+          ],
+          "bodyNativeZ": 12.26716830139272,
+          "bodyTriangle": 43,
+          "frameTriangle": 2176
+        },
+        "overlaps": 955865,
+        "receiverTier": "shadow",
+        "receiverGeometrySHA256": "29be211e785e0eb9927cf90f8e87931d0a8c2f6f01a606b63cfd914c672019f9",
+        "publishedSeatMM": 41.655295
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "profile": "ud016-recess-mt1-088-v1",
+        "rotation": 180,
+        "minimumSeatMM": 41.60810467930075,
+        "verifiedSeatMM": 41.628104679300755,
+        "contact": {
+          "pointMM": [
+            13.518615262873354,
+            13.518615262873354,
+            36.87527298069347
+          ],
+          "bodyNativeZ": 12.267168301392719,
+          "bodyTriangle": 48,
+          "frameTriangle": 2176
+        },
+        "overlaps": 966559,
+        "receiverTier": "shadow",
+        "receiverGeometrySHA256": "29be211e785e0eb9927cf90f8e87931d0a8c2f6f01a606b63cfd914c672019f9",
+        "publishedSeatMM": 41.655295
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "profile": "ud016-recess-mt1-088-v1",
+        "rotation": 270,
+        "minimumSeatMM": 41.60810467930075,
+        "verifiedSeatMM": 41.628104679300755,
+        "contact": {
+          "pointMM": [
+            13.518615262873354,
+            13.518615262873354,
+            36.87527298069347
+          ],
+          "bodyNativeZ": 12.267168301392719,
+          "bodyTriangle": 918,
+          "frameTriangle": 2176
+        },
+        "overlaps": 982866,
+        "receiverTier": "shadow",
+        "receiverGeometrySHA256": "29be211e785e0eb9927cf90f8e87931d0a8c2f6f01a606b63cfd914c672019f9",
+        "publishedSeatMM": 41.655295
       }
     ]
-  },
-  "socketProbeVersion": 2,
-  "method": "Exact maximum vertical separation over XY triangle intersections for the immutable source and actual receiver render/LOD/shadow;UD016 nominal frustum plus actual published recessed insert meshes;four cardinal rotations;0.02mm contact clearance and0.02mm pre-normalization packing reserve"
+  }
 }

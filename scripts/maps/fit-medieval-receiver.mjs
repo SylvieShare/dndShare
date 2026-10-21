@@ -11,6 +11,8 @@ import {
 import { nativeSeatSupport } from "./native_seat_support.mjs";
 import { STANDARD_MOUNT as S } from "./standard_mount.mjs";
 import { matchesPreparedPublication } from "./medieval_publication.mjs";
+import { refreshReceiverSupportSlots } from "./receiver_frame_review.mjs";
+import { recessProfileID, validateRecessMount } from "./recess_mount.mjs";
 const req = createRequire("/private/tmp/dndshare-model-tools/package.json"),
   { NodeIO } = req("@gltf-transform/core"),
   { ALL_EXTENSIONS } = req("@gltf-transform/extensions"),
@@ -28,6 +30,12 @@ const io = new NodeIO()
   hash = (b) => createHash("sha256").update(b).digest("hex");
 assert.match(code ?? "", /^MT1-\d{3}$/);
 assert.ok(["source", "native", "final"].includes(mode));
+const preparedInsertion = process.argv
+  .find((a) => a.startsWith("--prepared-insertion="))
+  ?.split("=")[1];
+if (preparedInsertion) assert.match(preparedInsertion, /^MT1-\d{3}$/);
+const refreshSlots = process.argv.includes("--refresh-slots");
+if (refreshSlots) assert.equal(mode, "final");
 const inv = JSON.parse(await fs.readFile(base + "/inventory.json", "utf8")),
   row = inv.find((v) => v.code === code),
   index = JSON.parse(
@@ -155,10 +163,25 @@ for (const p of receipt.profiles) {
         ),
       ),
       live = registry.find((m) => m.id === p.id);
-    assert.ok(
-      matchesPreparedPublication(r.model, live),
-      "Refresh insertion reference " + p.definitionId,
-    );
+    const published = matchesPreparedPublication(r.model, live);
+    if (!published) {
+      assert.equal(
+        p.definitionId,
+        preparedInsertion,
+        "Refresh insertion reference " + p.definitionId,
+      );
+      assert.equal(
+        r.sourceSHA256,
+        inv.find((v) => v.code === p.definitionId)?.sourceSHA256,
+      );
+      assert.equal(r.model.assets.source.sha256, r.sourceSHA256);
+      assert.equal(r.model.mountProfile, recessProfileID(p.definitionId));
+      assert.ok(
+        r.optimization?.selection && r.mountStandard,
+        "Select and standardize the prepared insertion before fitting",
+      );
+    }
+    p.referenceStage = published ? "published" : "prepared";
     assert.equal(r.model.mountProfile, p.profile);
     p.sourceSHA256 = r.sourceSHA256;
     p.referenceMetadata = {
@@ -173,7 +196,10 @@ for (const p of receipt.profiles) {
         base + "/review/" + p.definitionId + "/" + ref.tier + ".glb",
       );
       assert.equal(hash(bytes), ref.sha256);
-      assert.equal(live.assets[ref.tier].sha256, ref.sha256);
+      assert.equal(r.model.assets[ref.tier].sha256, ref.sha256);
+      if (published) assert.equal(live.assets[ref.tier].sha256, ref.sha256);
+      else if (ref.tier !== "shadow")
+        await validateRecessMount(bytes, r.model, r.recessConstruction);
       const arr = triangles(
         await io.readBinary(bytes),
         17 - r.model.mountDepth * 35,
@@ -332,6 +358,7 @@ if (mode === "source") {
   const item = reports[0],
     slot = item.r.model.supportSlots[0],
     bias = receipt.nativeDatumMM - item.r.model.mountDepth * 35;
+  if (refreshSlots) refreshReceiverSupportSlots(item.r.model, receipt, fits);
   for (const fit of fits) {
     const rise =
       fit.profile === S.name

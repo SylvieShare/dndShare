@@ -36,4 +36,30 @@ def fixture(points, chord, area):
 fixture([(0, 0), (2, 0), (2, 1), (0, 1)], (0, 2), 2)
 fixture([(0, 1), (2, 1), (2, 0), (0, 0)], (0, 2), 2)
 fixture([(0, 0), (2, 0), (2, 1), (1, 1), (1, 2), (0, 2)], (0, 3), 3)
+
+
+def unconstrained(points):
+    meshes = [bmesh.new(), bmesh.new()]
+    for bm in meshes:
+        vertices = [bm.verts.new((x, y, 0)) for x, y in points]
+        face = bm.faces.new(vertices)
+        face.material_index = 3
+        bm.normal_update()
+    bmesh.ops.triangulate(meshes[0], faces=list(meshes[0].faces), ngon_method='EAR_CLIP')
+    review = triangulate_recess(meshes[1])
+    assert review['constrainedFaces'] == 0 and review['steinerVertices'] == 0
+    def triangles(bm):
+        return {frozenset(tuple(v.co) for v in f.verts) for f in bm.faces}
+    assert triangles(meshes[0]) == triangles(meshes[1]), 'Ear clipping diagonals changed'
+    assert all(f.material_index == 3 for f in meshes[1].faces)
+    assert sum(e.is_boundary for e in meshes[1].edges) == len(points)
+    reference_normal = next(iter(meshes[0].faces)).normal.z
+    assert all(f.normal.z * reference_normal > .999 for f in meshes[1].faces)
+    for bm in meshes:
+        bm.free()
+
+
+unconstrained([(0, 0), (2, 0), (2, 1), (0, 1)])
+unconstrained([(0, 1), (2, 1), (2, 0), (0, 0)])
+unconstrained([(0, 0), (2, 0), (2, 1), (1, 1), (1, 2), (0, 2)])
 print('RECESS_TRIANGULATION_TESTS_PASS', flush=True)
