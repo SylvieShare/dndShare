@@ -93,7 +93,7 @@ if (!process.argv.includes('--publish-manifest')) {
             data[i*3+c] = Math.round((v<=.0031308 ? v*12.92 : 1.055*v**(1/2.4)-.055)*255);
           }
         };
-        if (recipe.materials.woodParts?.some(p => p.physicalPigment) || recipe.materials.fabricParts?.length || recipe.materials.produceParts?.length || recipe.materials.surfaceParts?.some(p => ['liquid','flame','glass','ceramic','paint','foam'].includes(p.kind))) {
+        if (recipe.materials.woodParts?.some(p => p.physicalPigment) || recipe.materials.fabricParts?.length || recipe.materials.produceParts?.length || recipe.materials.surfaceParts?.some(p => ['liquid','flame','glass','ceramic','paint','foam','plaster'].includes(p.kind))) {
           rasterizeSurface(doc,pixels,pixels,(i,p,n,rgba) => {
             if (structureWoodPigment(p,n,recipe.materials) || structureLiquid(p,recipe.materials) || structureFlame(p,recipe.materials) || structureGlass(p,recipe.materials) || structureSurfacePigment(p,recipe.materials) || structureFabricPigment(p,recipe.materials) || shouldRepairGreenSpill(data.subarray(i*3,i*3+3),rgba,p,recipe.materials)) pigment(i,p,n,rgba);
           },slot,'COLOR_1');

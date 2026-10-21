@@ -105,7 +105,7 @@ export function structureGlass(p, settings) {
 
 export function structureSurfacePigment(p, settings) {
   const part = (settings.surfaceParts || []).findLast(part => structureDomain(p, part));
-  if (!['ceramic','paint','foam'].includes(part?.kind)) return null;
+  if (!['ceramic','paint','foam','plaster'].includes(part?.kind)) return null;
   let rgb = part.rgb;
   if (part.centersMM) {
     const dimensions=part.centerDimensions ?? 2;

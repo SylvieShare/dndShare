@@ -54,6 +54,20 @@ test('stacked surface colours can use height while existing planar centres keep 
   assert.deepEqual(structureSurfacePigment([0,0,6],{surfaceParts:[part]}),part.colorsRGB[0]);
 });
 
+test('plaster repaint restores its palette while preserving timber and overlaid finishes', () => {
+  const timber = { minMM: [-1,-5,0], maxMM: [1,5,10] };
+  const plaster = {
+    kind: 'plaster', minMM: [-5,-5,0], maxMM: [5,5,10],
+    rgb: [.74,.535,.275], variation: 0, excludeParts: [timber],
+  };
+  assert.deepEqual(structureSurfacePigment([3,0,2], {surfaceParts:[plaster]}), plaster.rgb);
+  assert.equal(structureSurfacePigment([0,0,2], {surfaceParts:[plaster]}), null);
+  const finish = {
+    kind: 'paint', minMM: [2,-1,1], maxMM: [4,1,3], rgb: [.27,.24,.19], variation: 0,
+  };
+  assert.deepEqual(structureSurfacePigment([3,0,2], {surfaceParts:[plaster,finish]}), finish.rgb);
+});
+
 test('physical wood pigment restores a frame while preserving upholstery and metal', () => {
   const timber={minMM:[-5,-5,-1],maxMM:[5,5,2],axis:'x',physicalPigment:true,darkRGB:[.3,.15,.05],lightRGB:[.55,.32,.12]};
   const settings={stoneStartMM:0,stoneBlendMM:1,woodParts:[timber],surfaceParts:[{name:'cushion',kind:'paint',minMM:[-2,-2,.8],maxMM:[2,2,2],rgb:[.65,.56,.145],roughness:.85}]};

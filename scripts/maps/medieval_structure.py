@@ -76,6 +76,12 @@ def domain(p, part):
         points = p if not degrees else np.column_stack([
             p[:, 0]*np.cos(angle)-p[:, 1]*np.sin(angle),
             p[:, 0]*np.sin(angle)+p[:, 1]*np.cos(angle), p[:, 2]])
+        mirror = ref.get('mirrorY', False)
+        if not isinstance(mirror, bool):
+            raise ValueError('Boolean source mirror required')
+        if mirror:
+            points = points.copy()
+            points[:, 1] *= -1
         candidates = np.flatnonzero(mask)
         for i in candidates:
             mask[i] = tree.find_nearest(tuple(points[i]),ref['matchMM'])[0] is None

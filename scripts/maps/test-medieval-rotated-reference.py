@@ -1,4 +1,4 @@
-"""Blender and packed-GLB matching share the same inverse reference rotation."""
+"""Blender and packed-GLB matching share inverse rotation and reflection."""
 import sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).parent))
@@ -15,4 +15,14 @@ assert domain(np.array([[-.2,.2,0],[.2,.2,0],[-.2,.2,.2]]),part).tolist()==[Fals
 try:domain(np.array([[0.,0.,0.]]),{**part,'awayFromSource':{**ref,'rotationZDeg':float('nan')}})
 except ValueError:pass
 else:raise AssertionError('Invalid reference rotation was accepted')
+points=np.array([[.2,-.2,0],[.2,.2,0],[-.2,.2,0]])
+original=points.copy()
+mirrored={**part,'awayFromSource':{**ref,'rotationZDeg':0,'mirrorY':True}}
+assert domain(points,mirrored).tolist()==[False,True,True]
+composed={**part,'awayFromSource':{**ref,'mirrorY':True}}
+assert domain(points,composed).tolist()==[True,False,True]
+assert np.array_equal(points,original), 'Reference matching mutated source positions'
+try:domain(points,{**part,'awayFromSource':{**ref,'mirrorY':'yes'}})
+except ValueError:pass
+else:raise AssertionError('Invalid reference reflection was accepted')
 print('ROTATED_SOURCE_REFERENCE_BLENDER_PASS',flush=True)

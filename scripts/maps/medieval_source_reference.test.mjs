@@ -134,6 +134,24 @@ test("a rotated reference protects the aligned wall and retains added geometry",
       initializeStructureReferences({ woodParts: [invalid] }, inventory),
       /Finite source rotation/,
     );
+    const reflected = {
+      ...part,
+      awayFromSource: { ...part.awayFromSource, rotationZDeg: 0, mirrorY: true },
+    };
+    await initializeStructureReferences({ woodParts: [reflected] }, inventory);
+    assert.equal(structureDomain([0.2, -0.2, 0], reflected), false);
+    assert.equal(structureDomain([0.2, 0.2, 0], reflected), true);
+    const composed = {
+      ...part,
+      awayFromSource: { ...part.awayFromSource, mirrorY: true },
+    };
+    await initializeStructureReferences({ woodParts: [composed] }, inventory);
+    assert.equal(structureDomain([0.2, 0.2, 0], composed), false,
+      'Undo rotation before undoing the source reflection');
+    assert.equal(structureDomain([-0.2, 0.2, 0], composed), true);
+    await assert.rejects(initializeStructureReferences({ woodParts: [{
+      ...reflected, awayFromSource: { ...reflected.awayFromSource, mirrorY: 'yes' },
+    }] }, inventory), /Boolean source mirror/);
   } finally {
     await fs.rm(directory, { recursive: true, force: true });
   }

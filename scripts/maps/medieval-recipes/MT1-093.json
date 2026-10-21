@@ -1,0 +1,305 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [0, 0],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Tall Wall 3",
+  "groupCode": "MED-tall-wall",
+  "hasDecor": false,
+  "renderTriangles": 120000,
+  "lodTriangles": 45000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1536,
+  "renderUVAngleLimitRad": 0.18,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1024,
+  "lodColourSize": 1024,
+  "lodDataSize": 768,
+  "standRayTopMM": 120,
+  "standPointsMM": [[0, 0]],
+  "blockersMM": [
+    [
+      [-17.65, -17.65],
+      [-10.38560001373291, -17.65],
+      [-10.38560001373291, 17.65],
+      [-17.65, 17.65]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": ["town", "floor", "tall", "wall", "wood", "plaster", "braces"],
+  "weightBudget": {
+    "renderMiB": [3.5, 7],
+    "lodMiB": [1.5, 3.4],
+    "shadowKiB": [110, 240],
+    "previewKiB": [12, 35],
+    "basis": "One35mm cell and89mm tall westwall,four independently measured diagonal timbers,two end posts,Xfloor,Yfascia. No circularnailheads or middlecrossbar. Source559930tri/27.997MB.120000/45000 independent triangles,2048/1536 bakes,1536/1024 colour and1024/768 data;compare compact at timber/plaster boundaries,beam grain and wall relief."
+  },
+  "materials": {
+    "earthRGB": [0.28, 0.17, 0.075],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [0.34, 0.165, 0.055],
+    "woodLightRGB": [0.59, 0.35, 0.145],
+    "stoneDarkRGB": [0.34, 0.165, 0.055],
+    "stoneLightRGB": [0.59, 0.35, 0.145],
+    "woodParts": [
+      {
+        "name": "X floor and north south fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west Y floor border and fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [-14.3, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y floor border and fascia",
+        "minMM": [14.3, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south tall post",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-10.1, -13.6, 89.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "north tall post",
+        "minMM": [-17.65, 13.6, 26.1],
+        "maxMM": [-10.1, 17.65, 89.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "front measured diagonal 1",
+        "minMM": [-14, -13.8, 26.6],
+        "maxMM": [-10.1, 13.8, 89.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0, 0.7385779711400171, -0.6741680655049571],
+        "projection": {
+          "originMM": [
+            -11.310380311736633, 0.2744368890777731, 41.28633659158521
+          ],
+          "axis": [0, 0.6741680655049571, 0.7385779711400171],
+          "rangeMM": [-4.379213613026204, 3.4558203774142426]
+        },
+        "awayFromSource": {
+          "code": "MT1-091",
+          "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+          "mirrorY": true,
+          "matchMM": 0.22,
+          "projectTo": {
+            "code": "MT1-093",
+            "sourceSHA256": "3b3f90c77f73c530a37b2eee344529f434508deba5f469691859435efdd14b43"
+          }
+        }
+      },
+      {
+        "name": "front measured diagonal 2",
+        "minMM": [-14, -13.8, 26.6],
+        "maxMM": [-10.1, 13.8, 89.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0, 0.8338155478474146, 0.5520431433936265],
+        "projection": {
+          "originMM": [
+            -11.150442670858226, 0.1171648987463838, 71.31256027000964
+          ],
+          "axis": [0, -0.5520431433936265, 0.8338155478474146],
+          "rangeMM": [-4.785154236729656, 4.918010457138998]
+        },
+        "awayFromSource": {
+          "code": "MT1-091",
+          "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+          "mirrorY": true,
+          "matchMM": 0.22,
+          "projectTo": {
+            "code": "MT1-093",
+            "sourceSHA256": "3b3f90c77f73c530a37b2eee344529f434508deba5f469691859435efdd14b43"
+          }
+        }
+      },
+      {
+        "name": "rear measured diagonal 1",
+        "minMM": [-17.65, -13.8, 26.6],
+        "maxMM": [-14, 13.8, 89.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0, 0.7142981320735676, 0.6998415381471812],
+        "projection": {
+          "originMM": [
+            -17.017304336658007, 0.4199623352165725, 39.72206528562461
+          ],
+          "axis": [0, -0.6998415381471812, 0.7142981320735676],
+          "rangeMM": [-3.4105899726967697, 3.2462040390041853]
+        }
+      },
+      {
+        "name": "rear measured diagonal 2",
+        "minMM": [-17.65, -13.8, 26.6],
+        "maxMM": [-14, 13.8, 89.2],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0, 0.8699589586656482, -0.4931241326860619],
+        "projection": {
+          "originMM": [
+            -17.037914990610187, -0.29215022566086396, 76.91650548033527
+          ],
+          "axis": [0, 0.4931241326860619, 0.8699589586656482],
+          "rangeMM": [-3.88754212756893, 3.8208325324675547]
+        }
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "ochre plaster on both tall faces and top",
+        "kind": "plaster",
+        "minMM": [-17.65, -13.6, 26.6],
+        "maxMM": [-10.1, 13.6, 89.2],
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "south tall post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.1, -13.6, 89.2],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "north tall post",
+            "minMM": [-17.65, 13.6, 26.1],
+            "maxMM": [-10.1, 17.65, 89.2],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "front measured diagonal 1",
+            "minMM": [-14, -13.8, 26.6],
+            "maxMM": [-10.1, 13.8, 89.2],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0, 0.7385779711400171, -0.6741680655049571],
+            "projection": {
+              "originMM": [
+                -11.310380311736633, 0.2744368890777731, 41.28633659158521
+              ],
+              "axis": [0, 0.6741680655049571, 0.7385779711400171],
+              "rangeMM": [-4.379213613026204, 3.4558203774142426]
+            },
+            "awayFromSource": {
+              "code": "MT1-091",
+              "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+              "mirrorY": true,
+              "matchMM": 0.22,
+              "projectTo": {
+                "code": "MT1-093",
+                "sourceSHA256": "3b3f90c77f73c530a37b2eee344529f434508deba5f469691859435efdd14b43"
+              }
+            }
+          },
+          {
+            "name": "front measured diagonal 2",
+            "minMM": [-14, -13.8, 26.6],
+            "maxMM": [-10.1, 13.8, 89.2],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0, 0.8338155478474146, 0.5520431433936265],
+            "projection": {
+              "originMM": [
+                -11.150442670858226, 0.1171648987463838, 71.31256027000964
+              ],
+              "axis": [0, -0.5520431433936265, 0.8338155478474146],
+              "rangeMM": [-4.785154236729656, 4.918010457138998]
+            },
+            "awayFromSource": {
+              "code": "MT1-091",
+              "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+              "mirrorY": true,
+              "matchMM": 0.22,
+              "projectTo": {
+                "code": "MT1-093",
+                "sourceSHA256": "3b3f90c77f73c530a37b2eee344529f434508deba5f469691859435efdd14b43"
+              }
+            }
+          },
+          {
+            "name": "rear measured diagonal 1",
+            "minMM": [-17.65, -13.8, 26.6],
+            "maxMM": [-14, 13.8, 89.2],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0, 0.7142981320735676, 0.6998415381471812],
+            "projection": {
+              "originMM": [
+                -17.017304336658007, 0.4199623352165725, 39.72206528562461
+              ],
+              "axis": [0, -0.6998415381471812, 0.7142981320735676],
+              "rangeMM": [-3.4105899726967697, 3.2462040390041853]
+            }
+          },
+          {
+            "name": "rear measured diagonal 2",
+            "minMM": [-17.65, -13.8, 26.6],
+            "maxMM": [-14, 13.8, 89.2],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0, 0.8699589586656482, -0.4931241326860619],
+            "projection": {
+              "originMM": [
+                -17.037914990610187, -0.29215022566086396, 76.91650548033527
+              ],
+              "axis": [0, 0.4931241326860619, 0.8699589586656482],
+              "rangeMM": [-3.88754212756893, 3.8208325324675547]
+            }
+          }
+        ]
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "PDFpage14 and nativeinside/back/front/top inspected. Source559930tri/27996584bytes/SHA3b3f90c77f73c530a37b2eee344529f434508deba5f469691859435efdd14b43,max89.014099mm. Wwall64,freecentre[0,0]Z24.708000 normalZ.989203;local[.5,.5]. Floor3981 normals nx2.044860/ny2.102093 prove Xgrain,Yfascia,Zposts. Orthographic spatial samples reveal four diagonal timbers,not an upperhorizontalcrossbar;no circularfasteners,do not copy92iron/pinregions. Frontreference91 must reflectY:9845/18053 common points protected versus5759 without reflection. Source matching mirrorY is applied after inverseZrotation inNode/Blender;queryp is not mutated. Frontstablefits3219/3066 samples;rear3186/3102,each measured origin/direction/width. Protect shared plaster with mirrored91 match.22/projectTo93. Reartimbers use own source profiles;no substitution of othergeometry. Both faces/top ochreplaster,wood posts/beamgrain/floor;no inventedmetal,lights,emission,decor orsupportSlots. Check source/render/LOD/shadow,packedcolourORM,sharedplaster,free floor/blocker and both texturecandidates. Renderangle.18 avoids knownroundedpostUVoverlap;LOD.25 must passphysicalUVtest. Native17mm prep then lowerUD0165.373095mm selectednormalization preservingbody/UV/images/worldheight;fullNEtransparentpreview,Go manifest beforeMCP andfreshidentity/source/assets/placement/behaviour confirmation. Axisfit used original.12mm sourcefilter;paint protection uses.22mm after verifying five plasterpatch points above the upperbeam:actual reference differences.1484..1944mm caused falsewood. Recompute canonicalplaster perpackedpixel to avoid decimated vertexcolour blending. Add explicit patchprobes and retain all material/geometry tolerances.",
+  "surfaceHeightMM": 24.70800018310547,
+  "renderColourSize": 1536
+}
