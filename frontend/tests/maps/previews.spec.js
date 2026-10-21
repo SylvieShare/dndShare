@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test("opening a saved map with anchored flames does not PUT the document", async ({
+test("opening a saved map with anchored flames does not save until an actual edit", async ({
   page,
 }) => {
   await page.clock.install();
@@ -32,6 +32,10 @@ test("opening a saved map with anchored flames does not PUT the document", async
       ),
     )
     .toBe(1);
+  expect(await page.evaluate(() => window.requests.find(request => request.url === "/api/maps/test-map").data)).toMatchObject({
+    baseVersion: 1,
+    patches: [{op:"set",path:["document","grid","visible"],value:false}],
+  });
 });
 
 test("editor saves a preview without fetching context and never polls the model catalogue", async ({

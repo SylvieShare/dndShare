@@ -100,7 +100,9 @@ export function mapCatalogueFixture(source, params, previews) {
     if(method==='PATCH' && /^\/api\/maps\/[^/]+$/.test(path)) {
       const id=path.split('/')[3],map=find(id)
       if(!map)return response({},404)
-      const result=mutate(map,JSON.parse(options.body))
+      const packet=JSON.parse(options.body)
+      window.requests.push({url:path,data:packet})
+      const result=mutate(map,packet)
       if(result.record)window.lastSaved=result.record
       return response(result.response,result.status||200)
     }
