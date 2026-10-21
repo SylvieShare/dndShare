@@ -1,0 +1,303 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [0, 0],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Tall Window With Glass",
+  "groupCode": "MED-tall-window",
+  "hasDecor": false,
+  "renderTriangles": 110000,
+  "lodTriangles": 45000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1536,
+  "renderUVAngleLimitRad": 0.18,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1536,
+  "lodColourSize": 1024,
+  "lodDataSize": 1536,
+  "standRayTopMM": 120,
+  "standPointsMM": [[0, 0]],
+  "blockersMM": [
+    [
+      [-17.65, -17.65],
+      [-9.559699935913086, -17.65],
+      [-9.559699935913086, 17.65],
+      [-17.65, 17.65]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "floor",
+    "tall",
+    "window",
+    "wood",
+    "plaster",
+    "glass",
+    "iron"
+  ],
+  "weightBudget": {
+    "renderMiB": [3.5, 8],
+    "lodMiB": [1.5, 4],
+    "shadowKiB": [120, 250],
+    "previewKiB": [12, 40],
+    "basis": "One35mm cell,89mm tall westwall with four sculpted colouredglass panes,woodenframe/stile/rails/sill/lintel,two measured roundcentralfasteners andXfloor. Source539984tri/26.999MB.110000/45000 independent triangles,2048/1536 bakes,1536/1024 colour and1536/1536 data;preserve tinycentreheads and compare compact onbothpanesides,frameedges,ironcores,rims andplaster."
+  },
+  "materials": {
+    "earthRGB": [0.28, 0.17, 0.075],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [0.34, 0.165, 0.055],
+    "woodLightRGB": [0.59, 0.35, 0.145],
+    "stoneDarkRGB": [0.34, 0.165, 0.055],
+    "stoneLightRGB": [0.59, 0.35, 0.145],
+    "woodParts": [
+      {
+        "name": "X floor and north south fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west Y floor border and fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [-14.3, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y floor border and fascia",
+        "minMM": [14.3, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south tall post",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-10.1, -13.6, 89.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "north tall post",
+        "minMM": [-17.65, 13.6, 26.1],
+        "maxMM": [-10.1, 17.65, 89.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "vertical window frame and central stile",
+        "minMM": [-17.65, -17.65, 40.9],
+        "maxMM": [-9.3, 17.65, 72.6],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "wide lower sill",
+        "minMM": [-17.65, -17.65, 40.9],
+        "maxMM": [-9.3, 17.65, 46.4],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "inner bottom rail",
+        "minMM": [-17.65, -10.6, 46.4],
+        "maxMM": [-11, 10.6, 48.4],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "window horizontal crossbar",
+        "minMM": [-17.65, -10.6, 56.25],
+        "maxMM": [-11, 10.6, 58.8],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "upper lintel and bevels",
+        "minMM": [-17.65, -17.65, 67.1],
+        "maxMM": [-9.3, 17.65, 72.6],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "lower ochre wall",
+        "kind": "plaster",
+        "minMM": [-17.65, -13.6, 26.6],
+        "maxMM": [-10.1, 13.6, 40.9],
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065
+      },
+      {
+        "name": "upper ochre wall",
+        "kind": "plaster",
+        "minMM": [-17.65, -13.6, 72.6],
+        "maxMM": [-10.1, 13.6, 89.2],
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065
+      },
+      {
+        "name": "green sculpted glass 1",
+        "kind": "glass",
+        "minMM": [-14.65, 0.975, 47.975],
+        "maxMM": [-12.55, 8.525, 56.525],
+        "rgb": [0.46, 0.6, 0.16],
+        "roughness": 0.18,
+        "variation": 0.035,
+        "awayFromSource": {
+          "code": "MT1-095",
+          "sourceSHA256": "cbeb39056caca029596d54e966befdaa7694d69faf4dc0d48f214aa5fa0567c4",
+          "matchMM": 0.12,
+          "projectTo": {
+            "code": "MT1-094",
+            "sourceSHA256": "186bbe833d0a3c3b42b70d188e3557549a7fb10175f255fa9f3377ea64ceb0be"
+          }
+        }
+      },
+      {
+        "name": "green sculpted glass 2",
+        "kind": "glass",
+        "minMM": [-14.65, -8.525, 47.975],
+        "maxMM": [-12.55, -0.975, 56.775],
+        "rgb": [0.48, 0.59, 0.17],
+        "roughness": 0.18,
+        "variation": 0.035,
+        "awayFromSource": {
+          "code": "MT1-095",
+          "sourceSHA256": "cbeb39056caca029596d54e966befdaa7694d69faf4dc0d48f214aa5fa0567c4",
+          "matchMM": 0.12,
+          "projectTo": {
+            "code": "MT1-094",
+            "sourceSHA256": "186bbe833d0a3c3b42b70d188e3557549a7fb10175f255fa9f3377ea64ceb0be"
+          }
+        }
+      },
+      {
+        "name": "green sculpted glass 3",
+        "kind": "glass",
+        "minMM": [-14.65, -8.525, 58.475],
+        "maxMM": [-12.55, -0.975, 67.275],
+        "rgb": [0.51, 0.62, 0.2],
+        "roughness": 0.18,
+        "variation": 0.035,
+        "awayFromSource": {
+          "code": "MT1-095",
+          "sourceSHA256": "cbeb39056caca029596d54e966befdaa7694d69faf4dc0d48f214aa5fa0567c4",
+          "matchMM": 0.12,
+          "projectTo": {
+            "code": "MT1-094",
+            "sourceSHA256": "186bbe833d0a3c3b42b70d188e3557549a7fb10175f255fa9f3377ea64ceb0be"
+          }
+        }
+      },
+      {
+        "name": "green sculpted glass 4",
+        "kind": "glass",
+        "minMM": [-14.65, 0.975, 58.475],
+        "maxMM": [-12.55, 8.525, 67.275],
+        "rgb": [0.5, 0.61, 0.18],
+        "roughness": 0.18,
+        "variation": 0.035,
+        "awayFromSource": {
+          "code": "MT1-095",
+          "sourceSHA256": "cbeb39056caca029596d54e966befdaa7694d69faf4dc0d48f214aa5fa0567c4",
+          "matchMM": 0.12,
+          "projectTo": {
+            "code": "MT1-094",
+            "sourceSHA256": "186bbe833d0a3c3b42b70d188e3557549a7fb10175f255fa9f3377ea64ceb0be"
+          }
+        }
+      },
+      {
+        "name": "front dark iron centre fastener",
+        "kind": "paint",
+        "minMM": [-11.814338264613939, -0.689836520251603, 56.912909752842474],
+        "maxMM": [-10.61433826461394, 0.8974986571998735, 58.50024493029395],
+        "rgb": [0.21, 0.185, 0.145],
+        "metallic": 0.8,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -11.21433826461394, 0.10383106847413524, 57.70657734156821
+          ],
+          "axis": [1, 0, 0],
+          "rangeMM": [-0.45, 0.08],
+          "radiusAtOriginMM": 0.7636675887257383,
+          "radiusSlope": 0,
+          "thicknessMM": 1.7636675887257383,
+          "allowanceMM": 0.02
+        }
+      },
+      {
+        "name": "rear dark iron centre fastener",
+        "kind": "paint",
+        "minMM": [-16.569258869154346, -0.7923698003140514, 56.84408779100426],
+        "maxMM": [-15.369258869154347, 0.8151568103182556, 58.45161440163657],
+        "rgb": [0.21, 0.185, 0.145],
+        "metallic": 0.8,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -15.969258869154347, 0.0113935050021021, 57.647851096320416
+          ],
+          "axis": [-1, 0, 0],
+          "rangeMM": [-0.45, 0.08],
+          "radiusAtOriginMM": 0.7737633053161534,
+          "radiusSlope": 0,
+          "thicknessMM": 1.7737633053161534,
+          "allowanceMM": 0.02
+        }
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "PDFpage14 and native94/empty95 fullinside/back/front/top inspected. Source539984tri/26999284bytes/SHA186bbe833d0a3c3b42b70d188e3557549a7fb10175f255fa9f3377ea64ceb0be,max89.012299mm. Wedge64,freecentre[0,0]Z24.705673 normalZ.985121;local[.5,.5]. Floor5091 normals nx2.041091/ny2.099070 proveXgrain,Yfascia,Zposts/stile,Ysill/rails/crossbar/lintel. Four actual95apertures isolated by.25mm sourcegrid;94addedpanebounds andbothsidehits measured individually. Glassfront~X-12.73/back~-14.29,depthbox[-14.65,-12.55]protectsforegroundwood,awayFromSource95 match.12/projectTo94 preserves allsharedframe. Use opaquegreen/ochrepaintedglass withrough.18/noemission matchingauthor/currentpipeline,not inventedtransmission. Lowerwall26.6..40.9,windowband40.9..72.6,upperplaster72.6..89.2;measureduppersill~69.75..71.5/lowersill~41.5..45.75. Two centralroundcaps measured as visiblesphere patches:front222samples radius.954584/maxresidual.008753,rear301 radius.967204/maxresidual.014302. Metalcore.8*radius,normaldepth[-.45,.08] fromoutertip preservesgroovedwoodrim;pin sourcegeometry atbothheads. HighmaxX-9.639700 is widewindowrail,not thehead;blocker usesmeasuredmax+.08. Do notreuse93mirrorY. Checkbothglass sides with8SHA-boundprobes pertier,allwood/plaster/metalinterfaces,frame geometry,source/render/LOD/shadow andbothtexturecandidates. Ordinarylower17mm input datum→selectedUD0165.373095mm preservingbody/UV/images/worldheight. No lights/decor/supportSlots. FullheightNEtransparentpreview,freshregistry,Go manifest beforeMCP andfreshidentity/assets/placement/behaviour confirmation. Native pixel QA rejected compact at frame boundaries (LOD roughness up to .319 vs intended .18) and the 1024 data balanced LOD at one near-frame sample (.23039). Increase balanced LOD data to1536; reprepare and recheck both tiers without relaxing glass interiors.",
+  "surfaceHeightMM": 24.705673217773438,
+  "renderColourSize": 1536,
+  "geometryDetailRegions": [
+    {
+      "name": "front round fastener and rim",
+      "minMM": [-11.86433826461394, -1.0007534174330375, 56.601992855661045],
+      "maxMM": [-10.96433826461394, 1.208415554381308, 58.81116182747538]
+    },
+    {
+      "name": "rear round fastener and rim",
+      "minMM": [-16.619258869154347, -1.1058106266430896, 56.53064696467523],
+      "maxMM": [-15.719258869154347, 1.1285976366472938, 58.765055227965604]
+    }
+  ]
+}

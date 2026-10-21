@@ -69,6 +69,7 @@ test("Medieval tall walls and corners share the wall section with distinct famil
     ["Tall Angle", "MED-tall-angle"],
     ["Tall Angle Half Wall", "MED-tall-angle-half-wall"],
     ["Tall Wall 1", "MED-tall-wall"],
+    ["Tall Window With Glass", "MED-tall-window"],
   ]) {
     const item = model(name, code);
     assert.deepEqual(groupingFor(item, [item]), {

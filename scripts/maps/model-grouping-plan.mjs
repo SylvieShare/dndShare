@@ -9,7 +9,7 @@ const sectionRules = {
     [/^bar(?:-|$)/, "bar"],
     [/^bed(?:-|$)/, "bed"],
     [/^(?:wall|window|door|wooden-arch)(?:-|$)/, "walls"],
-    [/^tall-(?:angle|wall)(?:-|$)/, "walls"],
+    [/^tall-(?:angle|wall|window)(?:-|$)/, "walls"],
     [/^(?:pig|skull)-fireplace$/, "fireplaces"],
     [
       /^(?:food|bread|breads|potion|potions|rare-spice|rare-spices)(?:-|$)/,
