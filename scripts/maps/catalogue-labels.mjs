@@ -122,6 +122,7 @@ Bridge key|Соединитель моста
 Bridge Broken|Разрушенный мост
 Stair|Лестница
 Ladder|Приставная лестница
+Tall Ladder|Высокая лестница
 Ladder Down|Приставная лестница вниз
 Balcony|Балкон
 Balcony Angle|Угловой балкон

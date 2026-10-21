@@ -1,0 +1,1432 @@
+{
+  "tileType": "stairs",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [0, 0],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "edge",
+  "wallMask": 80,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Tall Ladder",
+  "groupCode": "MED-tall-ladder",
+  "hasDecor": true,
+  "renderTriangles": 150000,
+  "lodTriangles": 60000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1536,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1024,
+  "lodColourSize": 1024,
+  "lodDataSize": 768,
+  "standRayTopMM": 120,
+  "standPointsMM": [[8.75, 8.75]],
+  "blockersMM": [
+    [
+      [-17.65, -17.65],
+      [-10.0, -17.65],
+      [-10.0, 17.65],
+      [-17.65, 17.65]
+    ],
+    [
+      [-17.65, -17.65],
+      [17.65, -17.65],
+      [17.65, -10.0],
+      [-17.65, -10.0]
+    ],
+    [
+      [-10.0599, 2.1956],
+      [-10.0593, -5.6923],
+      [-10.0585, -7.0791],
+      [-10.0468, -9.8058],
+      [-10.0274, -10.0507],
+      [-9.0753, -10.0586],
+      [-0.3073, -10.0599],
+      [-0.1873, -10.0599],
+      [6.1169, -10.0598],
+      [7.0106, -10.0592],
+      [10.0305, -10.0512],
+      [10.1696, -9.2378],
+      [10.1696, -9.1178],
+      [9.6258, -7.8289],
+      [-5.1719, 12.4233],
+      [-5.6724, 13.0145],
+      [-7.2944, 14.6269],
+      [-7.591, 14.6899],
+      [-7.6334, 14.6924],
+      [-7.7534, 14.6924],
+      [-7.7902, 14.6873],
+      [-7.8245, 14.6726],
+      [-8.7707, 13.7901],
+      [-8.8313, 13.7334],
+      [-9.5722, 12.9902],
+      [-9.8522, 12.6223],
+      [-10.0234, 11.1503],
+      [-10.0511, 10.4878],
+      [-10.0587, 9.7027],
+      [-10.0599, 2.3156]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "stairs",
+    "ladder",
+    "tall",
+    "wood",
+    "plaster",
+    "shield",
+    "cross",
+    "iron"
+  ],
+  "weightBudget": {
+    "renderMiB": [4.5, 8],
+    "lodMiB": [2, 4.2],
+    "shadowKiB": [160, 320],
+    "previewKiB": [15, 45],
+    "basis": "Tall35mm two-wall corner89mm high,five ladder rungs,twisted/splayed stiles and a13mm relief metal plate with recessed orange cross above a wooden backing.150000/60000 independent triangles,2048/1536 bakes,1536/1024 colour and1024/768 normal/ORM. Compare compact on shield relief,all rung gaps and wall/timber boundaries."
+  },
+  "materials": {
+    "earthRGB": [0.28, 0.17, 0.075],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [0.34, 0.165, 0.055],
+    "woodLightRGB": [0.59, 0.35, 0.145],
+    "stoneDarkRGB": [0.34, 0.165, 0.055],
+    "stoneLightRGB": [0.59, 0.35, 0.145],
+    "woodParts": [
+      {
+        "name": "X floor and north south fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west Y floor border and fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [-14.3, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y floor border and fascia",
+        "minMM": [14.3, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west south post",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-10.1, -13.6, 89.3],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west north post",
+        "minMM": [-17.65, 13.6, 26.1],
+        "maxMM": [-10.1, 17.65, 89.3],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south west post",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-13.6, -10.1, 89.3],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south east post",
+        "minMM": [13.6, -17.65, 26.1],
+        "maxMM": [17.65, -10.1, 89.3],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "central corner post",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-10.1, -10.1, 89.3],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "back measured crossbar 0",
+        "minMM": [-17.65, -13.8, 72],
+        "maxMM": [-14.0, 13.8, 81],
+        "axis": "beam",
+        "direction": [0.0, 0.9999861793394281, -0.0052574832508497996],
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "projection": {
+          "originMM": [
+            -17.29465882577629, -2.4227711783019923, 76.36099973423087
+          ],
+          "axis": [0.0, 0.0052574832508497996, 0.9999861793394281],
+          "rangeMM": [-2.568669047519033, 2.7911316199437244]
+        }
+      },
+      {
+        "name": "back short middle post 0",
+        "minMM": [-17.65, -0.8347930169105531, 26.1],
+        "maxMM": [-14.0, 3.17859902381897, 74.5],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "back measured crossbar 1",
+        "minMM": [-13.8, -17.65, 67],
+        "maxMM": [13.8, -14.0, 77],
+        "axis": "beam",
+        "direction": [0.998105910479415, 0.0, -0.06151903336413919],
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "projection": {
+          "originMM": [
+            1.716736238910103, -17.29431712607772, 71.69361245219751
+          ],
+          "axis": [0.06151903336413919, 0.0, 0.998105910479415],
+          "rangeMM": [-2.6132826408404752, 2.625217064894555]
+        }
+      },
+      {
+        "name": "back short middle post 1",
+        "minMM": [-2.538951978683472, -17.65, 26.1],
+        "maxMM": [1.9528080224990807, -14.0, 69.5],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "measured rung 1",
+        "minMM": [-17.65, -17.65, 31.5],
+        "maxMM": [17.65, 17.65, 37.8],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.4838090299423014, -0.8744634460083817, -0.0352491722092342
+        ],
+        "projection": {
+          "originMM": [
+            -2.768259065591285, -0.17945453870426062, 55.474999738761134
+          ],
+          "axis": [0.5889036728875081, -0.8082032319037105, 0.0],
+          "rangeMM": [-17, 17]
+        },
+        "includeParts": [
+          {
+            "name": "ladder depth",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [
+                -2.768259065591285, -0.17945453870426062, 55.474999738761134
+              ],
+              "axis": [
+                0.8071505314146018, 0.5881366143556753, 0.05102296043322179
+              ],
+              "rangeMM": [-4.054563964172813, 4.002400317956729]
+            }
+          }
+        ],
+        "awayFromSource": {
+          "code": "MT1-089",
+          "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+          "rotationZDeg": 90,
+          "matchMM": 0.08
+        },
+        "darkRGB": [0.37, 0.17, 0.055],
+        "lightRGB": [0.64, 0.35, 0.13]
+      },
+      {
+        "name": "measured rung 2",
+        "minMM": [-17.65, -17.65, 42],
+        "maxMM": [17.65, 17.65, 48.8],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.5137638851025917, -0.8578195120101317, 0.013869216956643938
+        ],
+        "projection": {
+          "originMM": [
+            -2.768259065591285, -0.17945453870426062, 55.474999738761134
+          ],
+          "axis": [0.5889036728875081, -0.8082032319037105, 0.0],
+          "rangeMM": [-17, 17]
+        },
+        "includeParts": [
+          {
+            "name": "ladder depth",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [
+                -2.768259065591285, -0.17945453870426062, 55.474999738761134
+              ],
+              "axis": [
+                0.8071505314146018, 0.5881366143556753, 0.05102296043322179
+              ],
+              "rangeMM": [-4.054563964172813, 4.002400317956729]
+            }
+          }
+        ],
+        "awayFromSource": {
+          "code": "MT1-089",
+          "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+          "rotationZDeg": 90,
+          "matchMM": 0.08
+        },
+        "darkRGB": [0.37, 0.17, 0.055],
+        "lightRGB": [0.64, 0.35, 0.13]
+      },
+      {
+        "name": "measured rung 3",
+        "minMM": [-17.65, -17.65, 53],
+        "maxMM": [17.65, 17.65, 59.5],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.5420307982087144, -0.8401625993641897, 0.01814994277766868
+        ],
+        "projection": {
+          "originMM": [
+            -2.768259065591285, -0.17945453870426062, 55.474999738761134
+          ],
+          "axis": [0.5889036728875081, -0.8082032319037105, 0.0],
+          "rangeMM": [-17, 17]
+        },
+        "includeParts": [
+          {
+            "name": "ladder depth",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [
+                -2.768259065591285, -0.17945453870426062, 55.474999738761134
+              ],
+              "axis": [
+                0.8071505314146018, 0.5881366143556753, 0.05102296043322179
+              ],
+              "rangeMM": [-4.054563964172813, 4.002400317956729]
+            }
+          }
+        ],
+        "awayFromSource": {
+          "code": "MT1-089",
+          "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+          "rotationZDeg": 90,
+          "matchMM": 0.08
+        },
+        "darkRGB": [0.37, 0.17, 0.055],
+        "lightRGB": [0.64, 0.35, 0.13]
+      },
+      {
+        "name": "measured rung 4",
+        "minMM": [-17.65, -17.65, 64],
+        "maxMM": [17.65, 17.65, 70.8],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.5656054234717045, -0.8246681517437285, 0.0035978380975812308
+        ],
+        "projection": {
+          "originMM": [
+            -2.768259065591285, -0.17945453870426062, 55.474999738761134
+          ],
+          "axis": [0.5889036728875081, -0.8082032319037105, 0.0],
+          "rangeMM": [-17, 17]
+        },
+        "includeParts": [
+          {
+            "name": "ladder depth",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [
+                -2.768259065591285, -0.17945453870426062, 55.474999738761134
+              ],
+              "axis": [
+                0.8071505314146018, 0.5881366143556753, 0.05102296043322179
+              ],
+              "rangeMM": [-4.054563964172813, 4.002400317956729]
+            }
+          }
+        ],
+        "awayFromSource": {
+          "code": "MT1-089",
+          "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+          "rotationZDeg": 90,
+          "matchMM": 0.08
+        },
+        "darkRGB": [0.37, 0.17, 0.055],
+        "lightRGB": [0.64, 0.35, 0.13]
+      },
+      {
+        "name": "measured rung 5",
+        "minMM": [-17.65, -17.65, 75],
+        "maxMM": [17.65, 17.65, 81.8],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.6937035736010378, -0.7202377227152251, 0.0057423645944950415
+        ],
+        "projection": {
+          "originMM": [
+            -2.768259065591285, -0.17945453870426062, 55.474999738761134
+          ],
+          "axis": [0.5889036728875081, -0.8082032319037105, 0.0],
+          "rangeMM": [-17, 17]
+        },
+        "includeParts": [
+          {
+            "name": "ladder depth",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [
+                -2.768259065591285, -0.17945453870426062, 55.474999738761134
+              ],
+              "axis": [
+                0.8071505314146018, 0.5881366143556753, 0.05102296043322179
+              ],
+              "rangeMM": [-4.054563964172813, 4.002400317956729]
+            }
+          }
+        ],
+        "awayFromSource": {
+          "code": "MT1-089",
+          "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+          "rotationZDeg": 90,
+          "matchMM": 0.08
+        },
+        "darkRGB": [0.37, 0.17, 0.055],
+        "lightRGB": [0.64, 0.35, 0.13]
+      },
+      {
+        "name": "measured stile -1",
+        "minMM": [-17.65, -17.65, 26.3],
+        "maxMM": [17.65, 17.65, 89.4],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          -0.01332604836559019, -0.03512589263034212, 0.9992940448646134
+        ],
+        "projection": {
+          "originMM": [-8.872974760056126, 8.857995504631937, 60.0],
+          "axis": [
+            0.5893017417674582, -0.8076521144569827, -0.020530931859145313
+          ],
+          "rangeMM": [-2.9774570919529406, 2.080814374221076]
+        },
+        "includeParts": [
+          {
+            "name": "stile depth",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-8.872974760056126, 8.857995504631937, 60.0],
+              "axis": [
+                -0.8078031156072611, -0.5886121249856195, -0.03146256084802227
+              ],
+              "rangeMM": [-3.3343979187825603, 4.19329886752331]
+            }
+          }
+        ],
+        "awayFromSource": {
+          "code": "MT1-089",
+          "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+          "rotationZDeg": 90,
+          "matchMM": 0.08
+        },
+        "darkRGB": [0.37, 0.17, 0.055],
+        "lightRGB": [0.64, 0.35, 0.13]
+      },
+      {
+        "name": "measured stile 1",
+        "minMM": [-17.65, -17.65, 26.3],
+        "maxMM": [17.65, 17.65, 89.4],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          -0.034597611683822034, -0.0025948097035117055, 0.9993979548850288
+        ],
+        "projection": {
+          "originMM": [4.282427796682489, -9.460739163548414, 60.0],
+          "axis": [
+            0.5883696000407131, -0.808385697781134, 0.018269575004375694
+          ],
+          "rangeMM": [-2.3374521918660878, 3.670585500323614]
+        },
+        "includeParts": [
+          {
+            "name": "stile depth",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [4.282427796682489, -9.460739163548414, 60.0],
+              "axis": [
+                -0.8078516070502719, -0.5886474586588409, -0.029494921610024132
+              ],
+              "rangeMM": [-3.7789338026587096, 4.852191512310373]
+            }
+          }
+        ],
+        "awayFromSource": {
+          "code": "MT1-089",
+          "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+          "rotationZDeg": 90,
+          "matchMM": 0.08
+        },
+        "darkRGB": [0.37, 0.17, 0.055],
+        "lightRGB": [0.64, 0.35, 0.13]
+      },
+      {
+        "name": "vertical wooden shield backing and cap",
+        "minMM": [-10, -10, 82],
+        "maxMM": [10, 10, 101],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.17, 0.055],
+        "lightRGB": [0.64, 0.35, 0.13]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "west tall ochre plaster",
+        "minMM": [-17.65, -13.6, 26.6],
+        "maxMM": [-10.1, 13.6, 89.3],
+        "kind": "plaster",
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "west south post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.1, -13.6, 89.3],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "west north post",
+            "minMM": [-17.65, 13.6, 26.1],
+            "maxMM": [-10.1, 17.65, 89.3],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "south west post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-13.6, -10.1, 89.3],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "south east post",
+            "minMM": [13.6, -17.65, 26.1],
+            "maxMM": [17.65, -10.1, 89.3],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "central corner post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.1, -10.1, 89.3],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "back measured crossbar 0",
+            "minMM": [-17.65, -13.8, 72],
+            "maxMM": [-14.0, 13.8, 81],
+            "axis": "beam",
+            "direction": [0.0, 0.9999861793394281, -0.0052574832508497996],
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                -17.29465882577629, -2.4227711783019923, 76.36099973423087
+              ],
+              "axis": [0.0, 0.0052574832508497996, 0.9999861793394281],
+              "rangeMM": [-2.568669047519033, 2.7911316199437244]
+            }
+          },
+          {
+            "name": "back short middle post 0",
+            "minMM": [-17.65, -0.8347930169105531, 26.1],
+            "maxMM": [-14.0, 3.17859902381897, 74.5],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "back measured crossbar 1",
+            "minMM": [-13.8, -17.65, 67],
+            "maxMM": [13.8, -14.0, 77],
+            "axis": "beam",
+            "direction": [0.998105910479415, 0.0, -0.06151903336413919],
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                1.716736238910103, -17.29431712607772, 71.69361245219751
+              ],
+              "axis": [0.06151903336413919, 0.0, 0.998105910479415],
+              "rangeMM": [-2.6132826408404752, 2.625217064894555]
+            }
+          },
+          {
+            "name": "back short middle post 1",
+            "minMM": [-2.538951978683472, -17.65, 26.1],
+            "maxMM": [1.9528080224990807, -14.0, 69.5],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "measured rung 1",
+            "minMM": [-17.65, -17.65, 31.5],
+            "maxMM": [17.65, 17.65, 37.8],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.4838090299423014, -0.8744634460083817, -0.0352491722092342
+            ],
+            "projection": {
+              "originMM": [
+                -2.768259065591285, -0.17945453870426062, 55.474999738761134
+              ],
+              "axis": [0.5889036728875081, -0.8082032319037105, 0.0],
+              "rangeMM": [-17, 17]
+            },
+            "includeParts": [
+              {
+                "name": "ladder depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [
+                    -2.768259065591285, -0.17945453870426062, 55.474999738761134
+                  ],
+                  "axis": [
+                    0.8071505314146018, 0.5881366143556753, 0.05102296043322179
+                  ],
+                  "rangeMM": [-4.054563964172813, 4.002400317956729]
+                }
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-089",
+              "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+              "rotationZDeg": 90,
+              "matchMM": 0.08
+            },
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "measured rung 2",
+            "minMM": [-17.65, -17.65, 42],
+            "maxMM": [17.65, 17.65, 48.8],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.5137638851025917, -0.8578195120101317, 0.013869216956643938
+            ],
+            "projection": {
+              "originMM": [
+                -2.768259065591285, -0.17945453870426062, 55.474999738761134
+              ],
+              "axis": [0.5889036728875081, -0.8082032319037105, 0.0],
+              "rangeMM": [-17, 17]
+            },
+            "includeParts": [
+              {
+                "name": "ladder depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [
+                    -2.768259065591285, -0.17945453870426062, 55.474999738761134
+                  ],
+                  "axis": [
+                    0.8071505314146018, 0.5881366143556753, 0.05102296043322179
+                  ],
+                  "rangeMM": [-4.054563964172813, 4.002400317956729]
+                }
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-089",
+              "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+              "rotationZDeg": 90,
+              "matchMM": 0.08
+            },
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "measured rung 3",
+            "minMM": [-17.65, -17.65, 53],
+            "maxMM": [17.65, 17.65, 59.5],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.5420307982087144, -0.8401625993641897, 0.01814994277766868
+            ],
+            "projection": {
+              "originMM": [
+                -2.768259065591285, -0.17945453870426062, 55.474999738761134
+              ],
+              "axis": [0.5889036728875081, -0.8082032319037105, 0.0],
+              "rangeMM": [-17, 17]
+            },
+            "includeParts": [
+              {
+                "name": "ladder depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [
+                    -2.768259065591285, -0.17945453870426062, 55.474999738761134
+                  ],
+                  "axis": [
+                    0.8071505314146018, 0.5881366143556753, 0.05102296043322179
+                  ],
+                  "rangeMM": [-4.054563964172813, 4.002400317956729]
+                }
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-089",
+              "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+              "rotationZDeg": 90,
+              "matchMM": 0.08
+            },
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "measured rung 4",
+            "minMM": [-17.65, -17.65, 64],
+            "maxMM": [17.65, 17.65, 70.8],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.5656054234717045, -0.8246681517437285, 0.0035978380975812308
+            ],
+            "projection": {
+              "originMM": [
+                -2.768259065591285, -0.17945453870426062, 55.474999738761134
+              ],
+              "axis": [0.5889036728875081, -0.8082032319037105, 0.0],
+              "rangeMM": [-17, 17]
+            },
+            "includeParts": [
+              {
+                "name": "ladder depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [
+                    -2.768259065591285, -0.17945453870426062, 55.474999738761134
+                  ],
+                  "axis": [
+                    0.8071505314146018, 0.5881366143556753, 0.05102296043322179
+                  ],
+                  "rangeMM": [-4.054563964172813, 4.002400317956729]
+                }
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-089",
+              "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+              "rotationZDeg": 90,
+              "matchMM": 0.08
+            },
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "measured rung 5",
+            "minMM": [-17.65, -17.65, 75],
+            "maxMM": [17.65, 17.65, 81.8],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.6937035736010378, -0.7202377227152251, 0.0057423645944950415
+            ],
+            "projection": {
+              "originMM": [
+                -2.768259065591285, -0.17945453870426062, 55.474999738761134
+              ],
+              "axis": [0.5889036728875081, -0.8082032319037105, 0.0],
+              "rangeMM": [-17, 17]
+            },
+            "includeParts": [
+              {
+                "name": "ladder depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [
+                    -2.768259065591285, -0.17945453870426062, 55.474999738761134
+                  ],
+                  "axis": [
+                    0.8071505314146018, 0.5881366143556753, 0.05102296043322179
+                  ],
+                  "rangeMM": [-4.054563964172813, 4.002400317956729]
+                }
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-089",
+              "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+              "rotationZDeg": 90,
+              "matchMM": 0.08
+            },
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "measured stile -1",
+            "minMM": [-17.65, -17.65, 26.3],
+            "maxMM": [17.65, 17.65, 89.4],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.01332604836559019, -0.03512589263034212, 0.9992940448646134
+            ],
+            "projection": {
+              "originMM": [-8.872974760056126, 8.857995504631937, 60.0],
+              "axis": [
+                0.5893017417674582, -0.8076521144569827, -0.020530931859145313
+              ],
+              "rangeMM": [-2.9774570919529406, 2.080814374221076]
+            },
+            "includeParts": [
+              {
+                "name": "stile depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [-8.872974760056126, 8.857995504631937, 60.0],
+                  "axis": [
+                    -0.8078031156072611, -0.5886121249856195,
+                    -0.03146256084802227
+                  ],
+                  "rangeMM": [-3.3343979187825603, 4.19329886752331]
+                }
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-089",
+              "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+              "rotationZDeg": 90,
+              "matchMM": 0.08
+            },
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "measured stile 1",
+            "minMM": [-17.65, -17.65, 26.3],
+            "maxMM": [17.65, 17.65, 89.4],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.034597611683822034, -0.0025948097035117055, 0.9993979548850288
+            ],
+            "projection": {
+              "originMM": [4.282427796682489, -9.460739163548414, 60.0],
+              "axis": [
+                0.5883696000407131, -0.808385697781134, 0.018269575004375694
+              ],
+              "rangeMM": [-2.3374521918660878, 3.670585500323614]
+            },
+            "includeParts": [
+              {
+                "name": "stile depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [4.282427796682489, -9.460739163548414, 60.0],
+                  "axis": [
+                    -0.8078516070502719, -0.5886474586588409,
+                    -0.029494921610024132
+                  ],
+                  "rangeMM": [-3.7789338026587096, 4.852191512310373]
+                }
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-089",
+              "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+              "rotationZDeg": 90,
+              "matchMM": 0.08
+            },
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "vertical wooden shield backing and cap",
+            "minMM": [-10, -10, 82],
+            "maxMM": [10, 10, 101],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          }
+        ]
+      },
+      {
+        "name": "south tall ochre plaster",
+        "minMM": [-13.6, -17.65, 26.6],
+        "maxMM": [13.6, -10.1, 89.3],
+        "kind": "plaster",
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "west south post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.1, -13.6, 89.3],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "west north post",
+            "minMM": [-17.65, 13.6, 26.1],
+            "maxMM": [-10.1, 17.65, 89.3],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "south west post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-13.6, -10.1, 89.3],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "south east post",
+            "minMM": [13.6, -17.65, 26.1],
+            "maxMM": [17.65, -10.1, 89.3],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "central corner post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.1, -10.1, 89.3],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "back measured crossbar 0",
+            "minMM": [-17.65, -13.8, 72],
+            "maxMM": [-14.0, 13.8, 81],
+            "axis": "beam",
+            "direction": [0.0, 0.9999861793394281, -0.0052574832508497996],
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                -17.29465882577629, -2.4227711783019923, 76.36099973423087
+              ],
+              "axis": [0.0, 0.0052574832508497996, 0.9999861793394281],
+              "rangeMM": [-2.568669047519033, 2.7911316199437244]
+            }
+          },
+          {
+            "name": "back short middle post 0",
+            "minMM": [-17.65, -0.8347930169105531, 26.1],
+            "maxMM": [-14.0, 3.17859902381897, 74.5],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "back measured crossbar 1",
+            "minMM": [-13.8, -17.65, 67],
+            "maxMM": [13.8, -14.0, 77],
+            "axis": "beam",
+            "direction": [0.998105910479415, 0.0, -0.06151903336413919],
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                1.716736238910103, -17.29431712607772, 71.69361245219751
+              ],
+              "axis": [0.06151903336413919, 0.0, 0.998105910479415],
+              "rangeMM": [-2.6132826408404752, 2.625217064894555]
+            }
+          },
+          {
+            "name": "back short middle post 1",
+            "minMM": [-2.538951978683472, -17.65, 26.1],
+            "maxMM": [1.9528080224990807, -14.0, 69.5],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "measured rung 1",
+            "minMM": [-17.65, -17.65, 31.5],
+            "maxMM": [17.65, 17.65, 37.8],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.4838090299423014, -0.8744634460083817, -0.0352491722092342
+            ],
+            "projection": {
+              "originMM": [
+                -2.768259065591285, -0.17945453870426062, 55.474999738761134
+              ],
+              "axis": [0.5889036728875081, -0.8082032319037105, 0.0],
+              "rangeMM": [-17, 17]
+            },
+            "includeParts": [
+              {
+                "name": "ladder depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [
+                    -2.768259065591285, -0.17945453870426062, 55.474999738761134
+                  ],
+                  "axis": [
+                    0.8071505314146018, 0.5881366143556753, 0.05102296043322179
+                  ],
+                  "rangeMM": [-4.054563964172813, 4.002400317956729]
+                }
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-089",
+              "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+              "rotationZDeg": 90,
+              "matchMM": 0.08
+            },
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "measured rung 2",
+            "minMM": [-17.65, -17.65, 42],
+            "maxMM": [17.65, 17.65, 48.8],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.5137638851025917, -0.8578195120101317, 0.013869216956643938
+            ],
+            "projection": {
+              "originMM": [
+                -2.768259065591285, -0.17945453870426062, 55.474999738761134
+              ],
+              "axis": [0.5889036728875081, -0.8082032319037105, 0.0],
+              "rangeMM": [-17, 17]
+            },
+            "includeParts": [
+              {
+                "name": "ladder depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [
+                    -2.768259065591285, -0.17945453870426062, 55.474999738761134
+                  ],
+                  "axis": [
+                    0.8071505314146018, 0.5881366143556753, 0.05102296043322179
+                  ],
+                  "rangeMM": [-4.054563964172813, 4.002400317956729]
+                }
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-089",
+              "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+              "rotationZDeg": 90,
+              "matchMM": 0.08
+            },
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "measured rung 3",
+            "minMM": [-17.65, -17.65, 53],
+            "maxMM": [17.65, 17.65, 59.5],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.5420307982087144, -0.8401625993641897, 0.01814994277766868
+            ],
+            "projection": {
+              "originMM": [
+                -2.768259065591285, -0.17945453870426062, 55.474999738761134
+              ],
+              "axis": [0.5889036728875081, -0.8082032319037105, 0.0],
+              "rangeMM": [-17, 17]
+            },
+            "includeParts": [
+              {
+                "name": "ladder depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [
+                    -2.768259065591285, -0.17945453870426062, 55.474999738761134
+                  ],
+                  "axis": [
+                    0.8071505314146018, 0.5881366143556753, 0.05102296043322179
+                  ],
+                  "rangeMM": [-4.054563964172813, 4.002400317956729]
+                }
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-089",
+              "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+              "rotationZDeg": 90,
+              "matchMM": 0.08
+            },
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "measured rung 4",
+            "minMM": [-17.65, -17.65, 64],
+            "maxMM": [17.65, 17.65, 70.8],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.5656054234717045, -0.8246681517437285, 0.0035978380975812308
+            ],
+            "projection": {
+              "originMM": [
+                -2.768259065591285, -0.17945453870426062, 55.474999738761134
+              ],
+              "axis": [0.5889036728875081, -0.8082032319037105, 0.0],
+              "rangeMM": [-17, 17]
+            },
+            "includeParts": [
+              {
+                "name": "ladder depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [
+                    -2.768259065591285, -0.17945453870426062, 55.474999738761134
+                  ],
+                  "axis": [
+                    0.8071505314146018, 0.5881366143556753, 0.05102296043322179
+                  ],
+                  "rangeMM": [-4.054563964172813, 4.002400317956729]
+                }
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-089",
+              "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+              "rotationZDeg": 90,
+              "matchMM": 0.08
+            },
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "measured rung 5",
+            "minMM": [-17.65, -17.65, 75],
+            "maxMM": [17.65, 17.65, 81.8],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.6937035736010378, -0.7202377227152251, 0.0057423645944950415
+            ],
+            "projection": {
+              "originMM": [
+                -2.768259065591285, -0.17945453870426062, 55.474999738761134
+              ],
+              "axis": [0.5889036728875081, -0.8082032319037105, 0.0],
+              "rangeMM": [-17, 17]
+            },
+            "includeParts": [
+              {
+                "name": "ladder depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [
+                    -2.768259065591285, -0.17945453870426062, 55.474999738761134
+                  ],
+                  "axis": [
+                    0.8071505314146018, 0.5881366143556753, 0.05102296043322179
+                  ],
+                  "rangeMM": [-4.054563964172813, 4.002400317956729]
+                }
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-089",
+              "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+              "rotationZDeg": 90,
+              "matchMM": 0.08
+            },
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "measured stile -1",
+            "minMM": [-17.65, -17.65, 26.3],
+            "maxMM": [17.65, 17.65, 89.4],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.01332604836559019, -0.03512589263034212, 0.9992940448646134
+            ],
+            "projection": {
+              "originMM": [-8.872974760056126, 8.857995504631937, 60.0],
+              "axis": [
+                0.5893017417674582, -0.8076521144569827, -0.020530931859145313
+              ],
+              "rangeMM": [-2.9774570919529406, 2.080814374221076]
+            },
+            "includeParts": [
+              {
+                "name": "stile depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [-8.872974760056126, 8.857995504631937, 60.0],
+                  "axis": [
+                    -0.8078031156072611, -0.5886121249856195,
+                    -0.03146256084802227
+                  ],
+                  "rangeMM": [-3.3343979187825603, 4.19329886752331]
+                }
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-089",
+              "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+              "rotationZDeg": 90,
+              "matchMM": 0.08
+            },
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "measured stile 1",
+            "minMM": [-17.65, -17.65, 26.3],
+            "maxMM": [17.65, 17.65, 89.4],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.034597611683822034, -0.0025948097035117055, 0.9993979548850288
+            ],
+            "projection": {
+              "originMM": [4.282427796682489, -9.460739163548414, 60.0],
+              "axis": [
+                0.5883696000407131, -0.808385697781134, 0.018269575004375694
+              ],
+              "rangeMM": [-2.3374521918660878, 3.670585500323614]
+            },
+            "includeParts": [
+              {
+                "name": "stile depth",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [4.282427796682489, -9.460739163548414, 60.0],
+                  "axis": [
+                    -0.8078516070502719, -0.5886474586588409,
+                    -0.029494921610024132
+                  ],
+                  "rangeMM": [-3.7789338026587096, 4.852191512310373]
+                }
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-089",
+              "sourceSHA256": "d2387d357fe5329d21459dac1547896fee74d08592b9f708d79a0f3b5f468092",
+              "rotationZDeg": 90,
+              "matchMM": 0.08
+            },
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          },
+          {
+            "name": "vertical wooden shield backing and cap",
+            "minMM": [-10, -10, 82],
+            "maxMM": [10, 10, 101],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "darkRGB": [0.37, 0.17, 0.055],
+            "lightRGB": [0.64, 0.35, 0.13]
+          }
+        ]
+      },
+      {
+        "name": "weathered metal plate and cut bevels",
+        "minMM": [-18, -18, 82],
+        "maxMM": [18, 18, 101],
+        "projection": {
+          "originMM": [
+            -1.4456446953037565, 1.0002811957267572, 92.5818369545078
+          ],
+          "axis": [
+            0.7675599666186469, 0.6408740979788137, 0.011492962378072324
+          ],
+          "rangeMM": [-0.9490010295933254, 0.15983175235256009]
+        },
+        "includeParts": [
+          {
+            "name": "plaque horizontal bounds",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [
+                -2.005828078010528, 0.5325561505078589, 92.5734491192607
+              ],
+              "axis": [0.6754191824722886, -0.7374340159963231, 0.0],
+              "rangeMM": [-6.12, 7.319999999999999]
+            },
+            "includeParts": [
+              {
+                "name": "plaque vertical bounds",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [
+                    -2.005828078010528, 0.5325561505078589, 92.5734491192607
+                  ],
+                  "axis": [
+                    -0.007364563056634541, -0.006745236931140592,
+                    0.9999501312514177
+                  ],
+                  "rangeMM": [-8.819999999999999, 4.5200000000000005]
+                }
+              }
+            ]
+          }
+        ],
+        "kind": "paint",
+        "rgb": [0.48, 0.49, 0.47],
+        "metallic": 0.8,
+        "roughness": 0.62,
+        "variation": 0.025
+      },
+      {
+        "name": "recessed orange cross backing",
+        "minMM": [-18, -18, 82],
+        "maxMM": [18, 18, 101],
+        "projection": {
+          "originMM": [
+            -1.4456446953037565, 1.0002811957267572, 92.5818369545078
+          ],
+          "axis": [
+            0.7675599666186469, 0.6408740979788137, 0.011492962378072324
+          ],
+          "rangeMM": [-0.6792849474983804, -0.3296529892271552]
+        },
+        "includeParts": [
+          {
+            "name": "plaque horizontal bounds",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [
+                -2.005828078010528, 0.5325561505078589, 92.5734491192607
+              ],
+              "axis": [0.6754191824722886, -0.7374340159963231, 0.0],
+              "rangeMM": [-4.58, 5.6800000000000015]
+            },
+            "includeParts": [
+              {
+                "name": "plaque vertical bounds",
+                "minMM": [-100, -100, -100],
+                "maxMM": [100, 100, 100],
+                "projection": {
+                  "originMM": [
+                    -2.005828078010528, 0.5325561505078589, 92.5734491192607
+                  ],
+                  "axis": [
+                    -0.007364563056634541, -0.006745236931140592,
+                    0.9999501312514177
+                  ],
+                  "rangeMM": [-7.38, 2.880000000000001]
+                }
+              }
+            ]
+          }
+        ],
+        "kind": "paint",
+        "rgb": [0.62, 0.18, 0.035],
+        "metallic": 0,
+        "roughness": 0.88,
+        "variation": 0.02
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "PDFpage13 and actual full/inside/back/top plus shield front/back inspected. Source899948tri/44997484bytes/SHA5303d8bb6e6833432d29358732ab5fd26be96e6d03687d196b89bb05633d413e,max99.953102mm. Five rungs,not a sixth:shared shield geometry polluted initial height bins. ReferenceTallAngle89 must rotate+90deg(W/N toW/S);wall distance quantiles.000378/.001924/.005533/.016873mm validate alignment. Per-rung3Dgrain and both stile fits derive from added geometry and horizontal source sections;awayFromSource89 rotation90 match.08 protects unchanged plaster and timber from broad rung/stile domains. Tall walls have no diagonal braces. Source floor normals16570vertices nx2.111617/ny2.315303 prove Xboards;Yend borders,Zposts/backing. Shield is weathered grey metal with a recessed orange cross,not a medical box. Front plane fit2055samples;normal[.767560,.640874,.011493],local residual separates .51mm-deep cross from silver bevels;connected depth components bound plate and flared cross. Grey metallic.8/rough.62,orange nonmetal/rough.88,wooden back/cap remains brown. Free NE floor native[8.75,8.75]Z25.405746/normalZ1,edge80;refine source hull blocker and check all5rungs/4gaps,shield front/back/cut edges,actual packed colour/ORM and body/source/render/LOD/shadow. Native17mm prep then lowerUD0165.373095mm selected normalization preserving body/UV/images;full-height NE transparent preview,GoManifest before MCP,fresh identity/assets/placement/behaviour verification. No emission or built-in lights. Exterior source views additionally identify two high back crossbars and two lower middle posts;theirown raised core PCA/widths determinewooddomains. SourceHull of all decoration outside the W/S strips plus.06mm XYmargin replaces the provisional polygon;freeNEpoint must remain outside.",
+  "surfaceHeightMM": 25.405746459960938,
+  "renderColourSize": 1536
+}

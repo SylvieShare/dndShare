@@ -52,6 +52,9 @@ export async function initializeStructureReferences(settings, inventoryPath) {
     return tree;
   }
   for (const reference of references) {
+    const degrees = reference.rotationZDeg ?? 0;
+    if (!Number.isFinite(degrees)) throw new Error('Finite source rotation required');
+    const angle = -degrees*Math.PI/180, cosine = Math.cos(angle), sine = Math.sin(angle);
     const tree = await load(reference.code,reference.sourceSHA256,reference);
     const sculpt = reference.projectTo ? await load(reference.projectTo.code,reference.projectTo.sourceSHA256) : null;
     const point = new Vector3(), projected = {}, nearest = {};
@@ -61,6 +64,10 @@ export async function initializeStructureReferences(settings, inventoryPath) {
         const hit = sculpt.closestPointToPoint(point,projected);
         if (!hit) throw new Error('Missing source projection');
         point.copy(hit.point);
+      }
+      if (degrees) {
+        const x = point.x, y = point.y;
+        point.set(x*cosine-y*sine, x*sine+y*cosine, point.z);
       }
       const hit = tree.closestPointToPoint(point,nearest,0,reference.matchMM);
       // A BVH leaf intersecting the threshold can contain farther triangles.

@@ -69,9 +69,16 @@ def domain(p, part):
         mask &= ~domain(p, excluded)
     if part.get('awayFromSource'):
         ref = part['awayFromSource']; tree = REFERENCE_TREES[reference_key(ref)]
+        degrees = ref.get('rotationZDeg', 0)
+        if not np.isfinite(degrees):
+            raise ValueError('Finite source rotation required')
+        angle = np.deg2rad(-degrees)
+        points = p if not degrees else np.column_stack([
+            p[:, 0]*np.cos(angle)-p[:, 1]*np.sin(angle),
+            p[:, 0]*np.sin(angle)+p[:, 1]*np.cos(angle), p[:, 2]])
         candidates = np.flatnonzero(mask)
         for i in candidates:
-            mask[i] = tree.find_nearest(tuple(p[i]),ref['matchMM'])[0] is None
+            mask[i] = tree.find_nearest(tuple(points[i]),ref['matchMM'])[0] is None
     return mask
 
 
