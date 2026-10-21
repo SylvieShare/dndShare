@@ -3,6 +3,7 @@ package documentpatch
 import (
 	"encoding/json"
 	"os"
+	"strconv"
 	"testing"
 )
 
@@ -84,5 +85,36 @@ func TestSharedBrowserContract(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func BenchmarkApplyLargeCollection(b *testing.B) {
+	before := json.RawMessage(`{"items":[]}`)
+	items := make([]map[string]any, 4096)
+	for i := range items {
+		items[i] = map[string]any{"id": "tile-" + strconv.Itoa(i), "count": 1}
+	}
+	after, _ := json.Marshal(map[string]any{"items": items})
+	patches, err := Diff(before, after)
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		if _, err := Apply(before, patches); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+func TestNumericEqualityPreservesJSONSemantics(t *testing.T) {
+	for _, pair := range [][2]string{{"1", "1.0"}, {"1000", "1e3"}, {"0", "-0"}, {"123456789012345678901234567890", "123456789012345678901234567890"}} {
+		if !Equal(json.Number(pair[0]), json.Number(pair[1])) {
+			t.Fatalf("numbers differ: %v", pair)
+		}
+	}
+	if Equal("1", json.Number("1")) || Equal(json.Number("1"), json.Number("2")) || Equal(true, false) {
+		t.Fatal("different JSON values matched")
 	}
 }

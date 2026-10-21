@@ -41,6 +41,14 @@ func Decode(raw []byte) (any, error) {
 }
 func Equal(a, b any) bool {
 	switch a := a.(type) {
+	case nil:
+		return b == nil
+	case string:
+		other, ok := b.(string)
+		return ok && a == other
+	case bool:
+		other, ok := b.(bool)
+		return ok && a == other
 	case map[string]any:
 		b, ok := b.(map[string]any)
 		if !ok || len(a) != len(b) {
@@ -68,6 +76,9 @@ func Equal(a, b any) bool {
 		b, ok := b.(json.Number)
 		if !ok {
 			return false
+		}
+		if a == b {
+			return true
 		}
 		x, xOK := new(big.Rat).SetString(string(a))
 		y, yOK := new(big.Rat).SetString(string(b))
