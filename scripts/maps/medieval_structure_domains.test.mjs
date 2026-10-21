@@ -77,6 +77,32 @@ test('measured beam pigment agrees with straight grain on the same side face', (
   assert.deepEqual(structureWoodPigment([-1.3,2.1,.7],[0,1,0],settings),expected,'A rotated mask keeps the measured global beam direction');
 });
 
+test('curved timber uses arc length and radius consistently on both wall planes', () => {
+  const timber = {
+    minMM: [-100, -100, -100], maxMM: [100, 100, 100], physicalPigment: true,
+    darkRGB: [.3, .15, .05], lightRGB: [.55, .32, .12],
+  };
+  const settings = part => ({ stoneStartMM: 0, stoneBlendMM: 1, woodParts: [part] });
+  const centre = [3, 12], radiusMM = 17, angle = .8, radius = 14.2;
+  const expected = structureWoodPigment(
+    [angle * radiusMM, radius, 0], [0, 0, 1], settings({ ...timber, axis: 'x' }),
+  );
+  for (const axis of ['arc-xz', 'arc-yz']) {
+    const field = axis === 'arc-xz' ? 'centerXZMM' : 'centerYZMM';
+    const part = { ...timber, axis, radiusMM, [field]: centre };
+    const lateral = centre[0] + radius * Math.cos(angle);
+    const height = centre[1] + radius * Math.sin(angle);
+    const point = axis === 'arc-xz' ? [lateral, 7, height] : [7, lateral, height];
+    const actual = structureWoodPigment(point, [0, 0, 1], settings(part));
+    actual.forEach((c, i) => assert.ok(Math.abs(c - expected[i]) < 1e-12));
+    for (const invalid of [{ radiusMM: 0 }, { [field]: [0, NaN] }])
+      assert.throws(
+        () => structureWoodPigment(point, [0, 0, 1], settings({ ...part, ...invalid })),
+        /Measured timber arc/,
+      );
+  }
+});
+
 test('a tapered hoop follows its tilted axis without painting an outer wooden support', () => {
   const shell = { originMM:[3,4,5], axis:[.6,.8,0], rangeMM:[-2,2], radiusAtOriginMM:8, radiusSlope:.2, thicknessMM:1, allowanceMM:.04 };
   const part = {minMM:[-20,-20,-20],maxMM:[20,20,20],radialShell:shell};

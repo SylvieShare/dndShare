@@ -139,6 +139,12 @@ export function structureWoodPigment(p, n, settings) {
   else if (part.axis==='beam') {
     const d=unit(part.direction), t=unit(cross(d,Math.abs(d[0])<.8 ? [1,0,0] : [0,1,0])), other=cross(d,t);
     u=dot(p,d); v=Math.abs(dot(n,t))>Math.abs(dot(n,other)) ? dot(p,other) : dot(p,t);
+  } else if (part.axis==='arc-xz' || part.axis==='arc-yz') {
+    const centre=part.axis==='arc-xz' ? part.centerXZMM : part.centerYZMM;
+    if (!Array.isArray(centre) || centre.length!==2 || !centre.every(Number.isFinite) ||
+        !Number.isFinite(part.radiusMM) || part.radiusMM<=0) throw new Error('Measured timber arc required');
+    const dx=p[part.axis==='arc-xz' ? 0 : 1]-centre[0], dz=p[2]-centre[1];
+    u=Math.atan2(dz,dx)*part.radiusMM; v=Math.hypot(dx,dz);
   } else throw new Error('Unsupported physical timber grain');
   const grain=Math.max(.1,Math.min(.9,.5+.22*Math.sin(v*6.8+.12*Math.sin(u*.4))+.1*Math.sin(v*18+.04*Math.sin(u*.7))));
   const dark=part.darkRGB || settings.woodDarkRGB, light=part.lightRGB || settings.woodLightRGB;

@@ -1,0 +1,543 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [0, 0],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "edge",
+  "wallMask": 80,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Tall Angle Half Wall",
+  "groupCode": "MED-tall-angle-half-wall",
+  "hasDecor": false,
+  "renderTriangles": 150000,
+  "lodTriangles": 60000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1536,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1024,
+  "lodColourSize": 1024,
+  "lodDataSize": 768,
+  "standRayTopMM": 120,
+  "standPointsMM": [[8.75, 8.75]],
+  "blockersMM": [
+    [
+      [-17.65, -17.65],
+      [-10, -17.65],
+      [-10, 17.65],
+      [-17.65, 17.65]
+    ],
+    [
+      [-17.65, -17.65],
+      [17.65, -17.65],
+      [17.65, -10],
+      [-17.65, -10]
+    ],
+    [
+      [-10.0599, 1.419],
+      [-10.0597, -7.3891],
+      [-10.0582, -7.9783],
+      [-10.0434, -9.8477],
+      [-10.0382, -9.9991],
+      [-9.3717, -10.0437],
+      [-8.9914, -10.0564],
+      [-8.5174, -10.0599],
+      [-8.3974, -10.0599],
+      [13.757, -10.0598],
+      [17.5121, -10.0522],
+      [17.5252, -10.0183],
+      [17.5263, -0.0608],
+      [17.5263, 0.0592],
+      [17.5261, 0.1955],
+      [17.5248, 0.4459],
+      [17.521, 0.5141],
+      [17.5149, 0.5851],
+      [17.5073, 0.6291],
+      [17.4493, 0.9339],
+      [17.4401, 0.9788],
+      [17.4287, 1.0281],
+      [17.4177, 1.0609],
+      [17.3901, 1.1058],
+      [17.2857, 1.2001],
+      [-0.9958, 15.7502],
+      [-1.4644, 16.1226],
+      [-1.5499, 16.1904],
+      [-1.6822, 16.2946],
+      [-2.4216, 16.7583],
+      [-3.7718, 17.5492],
+      [-3.8166, 17.5665],
+      [-3.8738, 17.5725],
+      [-3.9175, 17.5731],
+      [-4.1895, 17.5739],
+      [-5.591, 17.5739],
+      [-9.978, 17.5737],
+      [-10.0426, 17.5724],
+      [-10.0527, 17.5539],
+      [-10.0589, 13.2791],
+      [-10.0593, 12.6006],
+      [-10.0599, 1.539]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "floor",
+    "tall",
+    "corner",
+    "half-wall",
+    "wood",
+    "plaster",
+    "arches",
+    "roof",
+    "stone"
+  ],
+  "weightBudget": {
+    "renderMiB": [4, 8],
+    "lodMiB": [1.8, 4.2],
+    "shadowKiB": [150, 300],
+    "previewKiB": [12, 45],
+    "basis": "One35mm cell,100mm tall with two50mm plaster/timber halfwalls,four measured diagonal braces,two upper wooden arch openings,upperYroof and separate sculpted brown stone block. Source819914tri/40.996MB. Start150000/60000 independent triangles,2048/1536 bakes,1536/1024 colour and1024/768 data;compare compact at plaster/timber edges,curved grain,carved fasteners,roof diagonal and stone dents."
+  },
+  "materials": {
+    "earthRGB": [0.28, 0.17, 0.075],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [0.34, 0.165, 0.055],
+    "woodLightRGB": [0.59, 0.35, 0.145],
+    "stoneDarkRGB": [0.34, 0.165, 0.055],
+    "stoneLightRGB": [0.59, 0.35, 0.145],
+    "woodParts": [
+      {
+        "name": "X floor and north south fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west Y floor border and fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [-14.3, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y floor border and fascia",
+        "minMM": [14.3, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west upper timber framework",
+        "minMM": [-17.65, -17.65, 49.5],
+        "maxMM": [-9.8, 17.65, 82.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south upper timber framework",
+        "minMM": [-17.65, -17.65, 49.5],
+        "maxMM": [17.65, -9.8, 82.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "central southwest post",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-10.1, -10.1, 82.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "northwest outer post",
+        "minMM": [-17.65, 11.5, 26.1],
+        "maxMM": [-9.8, 17.65, 82.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "southeast outer post",
+        "minMM": [12, -17.65, 26.1],
+        "maxMM": [17.65, -9.8, 82.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west front measured diagonal brace",
+        "minMM": [-13.4, -15.2, 25.7],
+        "maxMM": [-10.1, 15.2, 49.9],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.0, 0.7900466082212263, 0.613046781932779],
+        "projection": {
+          "originMM": [
+            -10.906907394787991, 2.160770508766113, 35.051107756352174
+          ],
+          "axis": [0.0, -0.613046781932779, 0.7900466082212263],
+          "rangeMM": [-2.6991828389394223, 3.359618553361477]
+        }
+      },
+      {
+        "name": "west rear measured diagonal brace",
+        "minMM": [-17.65, -15.2, 25.7],
+        "maxMM": [-14, 15.2, 49.9],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.0, 0.8551135417708459, 0.5184407687288104],
+        "projection": {
+          "originMM": [
+            -17.141930550156655, 4.1037244263956465, 34.103736160167614
+          ],
+          "axis": [0.0, -0.5184407687288104, 0.8551135417708459],
+          "rangeMM": [-2.447325980308942, 3.4314014368418335]
+        }
+      },
+      {
+        "name": "south front measured diagonal brace",
+        "minMM": [-15.2, -13.4, 25.7],
+        "maxMM": [15.2, -10.1, 49.9],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.7891255172521403, 0.0, 0.614231974112014],
+        "projection": {
+          "originMM": [
+            2.175863866734097, -10.874806221845226, 34.57502363656313
+          ],
+          "axis": [-0.614231974112014, 0.0, 0.7891255172521403],
+          "rangeMM": [-2.2516691357999044, 3.7056525340272195]
+        }
+      },
+      {
+        "name": "south rear measured diagonal brace",
+        "minMM": [-15.2, -17.65, 25.7],
+        "maxMM": [15.2, -14, 49.9],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.8559338883164055, 0.0, 0.5170852723019279],
+        "projection": {
+          "originMM": [
+            4.026546952218905, -17.1368942004913, 33.897155341021886
+          ],
+          "axis": [-0.5170852723019279, 0.0, 0.8559338883164055],
+          "rangeMM": [-2.2916621207630437, 3.545525891979335]
+        }
+      },
+      {
+        "name": "west left measured curved brace",
+        "minMM": [-17.65, -10.6, 64.3],
+        "maxMM": [-9.8, 1, 82.2],
+        "axis": "arc-yz",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "radiusMM": 33.355847478438285,
+        "centerYZMM": [21.086626654393534, 53.561777070246876]
+      },
+      {
+        "name": "west right measured curved brace",
+        "minMM": [-17.65, 1, 65.3],
+        "maxMM": [-9.8, 12.3, 82.2],
+        "axis": "arc-yz",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "radiusMM": 20.67788809707262,
+        "centerYZMM": [-8.838829786885626, 62.6621702129069]
+      },
+      {
+        "name": "south left measured curved brace",
+        "minMM": [-10.6, -17.65, 63.7],
+        "maxMM": [1, -9.8, 82.2],
+        "axis": "arc-xz",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "radiusMM": 21.038329968407854,
+        "centerXZMM": [10.322506649066803, 60.59330826878851]
+      },
+      {
+        "name": "south right measured curved brace",
+        "minMM": [1, -17.65, 65.3],
+        "maxMM": [12.3, -9.8, 82.2],
+        "axis": "arc-xz",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "radiusMM": 21.5368098582133,
+        "centerXZMM": [-9.160994798565504, 62.35276098487181]
+      },
+      {
+        "name": "Y upper roof planks and west east fascia",
+        "minMM": [-17.65, -17.65, 82],
+        "maxMM": [17.65, 17.65, 89.4],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "north X upper roof border",
+        "minMM": [-17.65, 14.2, 82],
+        "maxMM": [17.65, 17.65, 89.4],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south X upper roof border",
+        "minMM": [-17.65, -17.65, 82],
+        "maxMM": [17.65, -14.2, 89.4],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "measured diagonal chamfer fascia",
+        "minMM": [-5, -2, 82],
+        "maxMM": [17.65, 17.65, 89.4],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0.7824342634222476, -0.6227331879889532, 0.0],
+        "projection": {
+          "originMM": [0, 0, 0],
+          "axis": [0.6227331879889532, 0.7824342634222476, 0],
+          "rangeMM": [8.603378427153686, 11.803378427153685]
+        }
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "west ochre lower halfwall",
+        "minMM": [-17.65, -10.1, 26.6],
+        "maxMM": [-10.1, 11.5, 49.9],
+        "kind": "plaster",
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "central southwest post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.1, -10.1, 82.2],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "northwest outer post",
+            "minMM": [-17.65, 11.5, 26.1],
+            "maxMM": [-9.8, 17.65, 82.2],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "southeast outer post",
+            "minMM": [12, -17.65, 26.1],
+            "maxMM": [17.65, -9.8, 82.2],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "west front measured diagonal brace",
+            "minMM": [-13.4, -15.2, 25.7],
+            "maxMM": [-10.1, 15.2, 49.9],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.0, 0.7900466082212263, 0.613046781932779],
+            "projection": {
+              "originMM": [
+                -10.906907394787991, 2.160770508766113, 35.051107756352174
+              ],
+              "axis": [0.0, -0.613046781932779, 0.7900466082212263],
+              "rangeMM": [-2.6991828389394223, 3.359618553361477]
+            }
+          },
+          {
+            "name": "west rear measured diagonal brace",
+            "minMM": [-17.65, -15.2, 25.7],
+            "maxMM": [-14, 15.2, 49.9],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.0, 0.8551135417708459, 0.5184407687288104],
+            "projection": {
+              "originMM": [
+                -17.141930550156655, 4.1037244263956465, 34.103736160167614
+              ],
+              "axis": [0.0, -0.5184407687288104, 0.8551135417708459],
+              "rangeMM": [-2.447325980308942, 3.4314014368418335]
+            }
+          },
+          {
+            "name": "south front measured diagonal brace",
+            "minMM": [-15.2, -13.4, 25.7],
+            "maxMM": [15.2, -10.1, 49.9],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.7891255172521403, 0.0, 0.614231974112014],
+            "projection": {
+              "originMM": [
+                2.175863866734097, -10.874806221845226, 34.57502363656313
+              ],
+              "axis": [-0.614231974112014, 0.0, 0.7891255172521403],
+              "rangeMM": [-2.2516691357999044, 3.7056525340272195]
+            }
+          },
+          {
+            "name": "south rear measured diagonal brace",
+            "minMM": [-15.2, -17.65, 25.7],
+            "maxMM": [15.2, -14, 49.9],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.8559338883164055, 0.0, 0.5170852723019279],
+            "projection": {
+              "originMM": [
+                4.026546952218905, -17.1368942004913, 33.897155341021886
+              ],
+              "axis": [-0.5170852723019279, 0.0, 0.8559338883164055],
+              "rangeMM": [-2.2916621207630437, 3.545525891979335]
+            }
+          }
+        ]
+      },
+      {
+        "name": "south ochre lower halfwall",
+        "minMM": [-10.1, -17.65, 26.6],
+        "maxMM": [12, -10.1, 49.9],
+        "kind": "plaster",
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "central southwest post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.1, -10.1, 82.2],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "northwest outer post",
+            "minMM": [-17.65, 11.5, 26.1],
+            "maxMM": [-9.8, 17.65, 82.2],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "southeast outer post",
+            "minMM": [12, -17.65, 26.1],
+            "maxMM": [17.65, -9.8, 82.2],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "west front measured diagonal brace",
+            "minMM": [-13.4, -15.2, 25.7],
+            "maxMM": [-10.1, 15.2, 49.9],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.0, 0.7900466082212263, 0.613046781932779],
+            "projection": {
+              "originMM": [
+                -10.906907394787991, 2.160770508766113, 35.051107756352174
+              ],
+              "axis": [0.0, -0.613046781932779, 0.7900466082212263],
+              "rangeMM": [-2.6991828389394223, 3.359618553361477]
+            }
+          },
+          {
+            "name": "west rear measured diagonal brace",
+            "minMM": [-17.65, -15.2, 25.7],
+            "maxMM": [-14, 15.2, 49.9],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.0, 0.8551135417708459, 0.5184407687288104],
+            "projection": {
+              "originMM": [
+                -17.141930550156655, 4.1037244263956465, 34.103736160167614
+              ],
+              "axis": [0.0, -0.5184407687288104, 0.8551135417708459],
+              "rangeMM": [-2.447325980308942, 3.4314014368418335]
+            }
+          },
+          {
+            "name": "south front measured diagonal brace",
+            "minMM": [-15.2, -13.4, 25.7],
+            "maxMM": [15.2, -10.1, 49.9],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.7891255172521403, 0.0, 0.614231974112014],
+            "projection": {
+              "originMM": [
+                2.175863866734097, -10.874806221845226, 34.57502363656313
+              ],
+              "axis": [-0.614231974112014, 0.0, 0.7891255172521403],
+              "rangeMM": [-2.2516691357999044, 3.7056525340272195]
+            }
+          },
+          {
+            "name": "south rear measured diagonal brace",
+            "minMM": [-15.2, -17.65, 25.7],
+            "maxMM": [15.2, -14, 49.9],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0.8559338883164055, 0.0, 0.5170852723019279],
+            "projection": {
+              "originMM": [
+                4.026546952218905, -17.1368942004913, 33.897155341021886
+              ],
+              "axis": [-0.5170852723019279, 0.0, 0.8559338883164055],
+              "rangeMM": [-2.2916621207630437, 3.545525891979335]
+            }
+          }
+        ]
+      }
+    ],
+    "stoneParts": [
+      {
+        "name": "sculpted brown upper stone block",
+        "minMM": [-8.3, -8.3, 89],
+        "maxMM": [8.3, 8.3, 100.1],
+        "darkRGB": [0.42, 0.31, 0.185],
+        "lightRGB": [0.56, 0.425, 0.24]
+      }
+    ],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "PDFpage13 and actual full,lower-inside,lower-back,upper-inside and roof inspected individually. Source819914tri/40995784bytes/SHA95ac80152cbefc7b91aa0272f0e2377f68cfe44fc8ade44950a233bd257ca756,max99.955795mm. W/S halfwalls end near49.8mm,not60;front plaster around-12.6mm and rear-15.8mm,with separate post and brace protrusions. Own brace fits use2296/1654/3537/671 source samples;quantile crossgrain ranges exclude isolated carved-fastener outliers. Lower floor5936 normals nx2.039887/ny2.106104 prove Xgrain;roof3919 normals nx2.101534/ny2.030188 prove Ygrain. Free NE floor[8.75,8.75]Z25.425575/normalZ1 is visible from120mm;under roof centre floor24.730227 is not used as actor point. Source-derived roof hull leaves NE point free and contains all high geometry with two wall strips. Upper arches have asymmetric measured grain circles,21 continuous65..75mm opening boundary samples per side,max radial fit.04985..18920mm;orientation only,does not approximate geometry. Later ray components above80mm are excluded from fitting. Node packed physical arc grain must match Python arc length/radius projection. Upper roof fascia direction from longest hull edge;round carved pegs remain wood. Brown stone block style follows author reference and18palette;source18 geometry differs up to.504mm and is never substituted. Upper block and roof are visible body,not the lower insertion. Native17mm prep then selected lowerUD0165.373095mm transformation preserves body/UV/images/worldheight. No supportSlots,emission or default lights. Verify both candidates,source/render/LOD/shadow,actual packed material channels,open arches,free NE point,full transparent NE preview and Go manifest before MCP.",
+  "surfaceHeightMM": 25.425575256347656,
+  "renderColourSize": 1536
+}
