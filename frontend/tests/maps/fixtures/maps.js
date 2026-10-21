@@ -517,11 +517,14 @@ window.fetch = async (url, options = {}) => {
     const { id, uuid, ...fields } = data;
     data = { ...fields, id: uuid, definitionId: id };
   }
-  if (options.method === "PUT" || options.method === "POST")
+  if (options.method === "PUT" || options.method === "POST" || options.method === "PATCH")
     window.requests.push({ url, data });
-  if (options.method === "PUT" && window.failNextSave) {
+  if (["PUT","PATCH"].includes(options.method) && window.failNextSave) {
     const status = window.failNextSave;
     window.failNextSave = 0;
+    if(status===409 && options.method==='PATCH') {
+      window.concurrentMapName='Имя в другой вкладке';
+    }
     return new Response(
       JSON.stringify({
         type: "ERROR",

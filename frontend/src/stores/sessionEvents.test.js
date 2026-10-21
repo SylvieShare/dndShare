@@ -108,3 +108,17 @@ it('updates a transfer status in place without losing the next-event cursor', as
   expect(store.events[0].data.status).toBe('accepted')
   expect(api.getSessionEvents).toHaveBeenLastCalledWith('game', { after: 4, limit: 100 })
 })
+
+it('restores the visible stream baseline quietly and accepts late commits below the cursor',async()=>{
+ setActivePinia(createPinia());api.getSessionEvents.mockReset()
+ api.getSessionEvents.mockResolvedValue({events:[{id:5,type:'dice_roll'}]})
+ const store=useSessionEventsStore();await store.setContext({uuid:'live-game'})
+ await store.receiveLive({baseline:[{id:3,type:'dice_roll'},{id:5,type:'dice_roll'}],events:[],updates:[]},'live-game')
+ expect(store.newEventIds.size).toBe(0)
+ await store.receiveLive({events:[{id:4,type:'dice_roll'}],updates:[]},'live-game')
+ expect(store.events.map(event=>event.id)).toEqual([3,4,5])
+ expect(store.latestId()).toBe(5)
+ expect(store.newEventIds.has(4)).toBe(true)
+ expect(api.getSessionEvents).toHaveBeenCalledOnce()
+ store.clearContext()
+})

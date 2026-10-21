@@ -12,13 +12,14 @@ func TestPrivateMapRoutesRequireAuthentication(t *testing.T) {
 	s := &Server{}
 	mux := http.NewServeMux()
 	s.routesBattleMaps(mux)
+ s.routesMapMutations(mux)
 	s.routesMapModels(mux)
 	s.routesMapModelEditing(mux)
 	s.routesMapPreviews(mux)
 	for _, route := range []string{
 		"GET /api/maps/invalid", "POST /api/maps/invalid/publish", "POST /api/maps/invalid/copy", "PUT /api/maps/subscriptions/invalid", "DELETE /api/maps/subscriptions/invalid", "PUT /api/maps/ratings/invalid", "DELETE /api/maps/ratings/invalid",
-		"GET /api/maps", "POST /api/maps", "PUT /api/maps/invalid-map", "DELETE /api/maps/invalid-map",
-		"GET /api/sessions/test/maps", "POST /api/sessions/test/maps", "PUT /api/sessions/test/maps/test-map",
+		"GET /api/maps", "POST /api/maps", "PATCH /api/maps/invalid-map", "DELETE /api/maps/invalid-map",
+		"GET /api/sessions/test/maps", "POST /api/sessions/test/maps", "PATCH /api/sessions/test/maps/test-map",
 		"DELETE /api/sessions/test/maps/test-map", "PUT /api/sessions/test/map-display", "GET /api/sessions/test/map-events",
 		"GET /api/maps/models", "GET /api/maps/models/test/render", "PUT /api/maps/models/test",
 		"GET /api/maps/test/preview-context", "GET /api/maps/test/preview", "POST /api/maps/test/preview",
@@ -37,9 +38,9 @@ func TestPrivateMapRoutesRequireAuthentication(t *testing.T) {
 func TestNonUUIDMapCannotBeOverwrittenOrDeleted(t *testing.T) {
 	s := &Server{}
 	mux := http.NewServeMux()
-	mux.HandleFunc("PUT /api/maps/{mapId}", s.handleSaveMap)
+	mux.HandleFunc("PATCH /api/maps/{mapId}", s.handleMapMutation)
 	mux.HandleFunc("DELETE /api/maps/{mapId}", s.handleDeleteMap)
-	for _, method := range []string{"PUT", "DELETE"} {
+	for _, method := range []string{"PATCH", "DELETE"} {
 		r := httptest.NewRequest(method, "/api/maps/invalid-map", strings.NewReader(`{"name":"replacement"}`))
 		r = r.WithContext(context.WithValue(r.Context(), userIDKey, int64(1)))
 		w := httptest.NewRecorder()
@@ -73,12 +74,13 @@ func TestNonAdminMapRoutesReachTheirValidation(t *testing.T) {
 	s := &Server{}
 	mux := http.NewServeMux()
 	s.routesBattleMaps(mux)
+ s.routesMapMutations(mux)
 	s.routesMapModels(mux)
 	s.routesMapPreviews(mux)
 	for _, route := range []string{
-		"POST /api/maps", "PUT /api/maps/invalid", "DELETE /api/maps/invalid",
+		"POST /api/maps", "PATCH /api/maps/invalid", "DELETE /api/maps/invalid",
 		"GET /api/sessions/invalid/maps", "POST /api/sessions/invalid/maps",
-		"PUT /api/sessions/invalid/maps/invalid", "DELETE /api/sessions/invalid/maps/invalid",
+		"PATCH /api/sessions/invalid/maps/invalid", "DELETE /api/sessions/invalid/maps/invalid",
 		"PUT /api/sessions/invalid/map-display", "GET /api/sessions/invalid/map-events",
 		"GET /api/maps/models/invalid/render", "GET /api/maps/invalid/preview-context",
 		"GET /api/maps/invalid/preview", "POST /api/maps/invalid/preview",

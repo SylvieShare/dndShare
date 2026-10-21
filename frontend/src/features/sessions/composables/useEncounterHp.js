@@ -196,8 +196,10 @@ export function useEncounterHp({
       { path: `${hpPath}.ds_success`, value: Number(hp.ds_success) || 0 },
       { path: `${hpPath}.ds_failure`, value: Number(hp.ds_failure) || 0 },
     ]
+    const saving = charactersApi.patchData(p.charUuid, updates, p)
     applyLocalPatches(c.charId, updates)
-    await charactersApi.patchData(p.charUuid, updates)
+    const result = await saving
+    if (result?.version > p.version) p.version = result.version
   }
 
   async function applyDamageToSelected(rawAmount) {
@@ -221,8 +223,10 @@ export function useEncounterHp({
       { path: `${hpPath}.ds_success`, value: Number(hp.ds_success) || 0 },
       { path: `${hpPath}.ds_failure`, value: Number(hp.ds_failure) || 0 },
     ]
+    const saving = charactersApi.patchData(p.charUuid, updates, p)
     applyLocalPatches(c.charId, updates)
-    await charactersApi.patchData(p.charUuid, updates)
+    const result = await saving
+    if (result?.version > p.version) p.version = result.version
   }
 
   async function revivePlayer(c, hpAmount) {
@@ -235,8 +239,9 @@ export function useEncounterHp({
       { path: `${hpPath}.ds_success`, value: 0 },
       { path: `${hpPath}.ds_failure`, value: 0 },
     ]
-    await charactersApi.patchData(p.charUuid, updates)
+    const result = await charactersApi.patchData(p.charUuid, updates, p)
     applyLocalPatches(c.charId, updates)
+    if (result?.version > p.version) p.version = result.version
   }
 
   function npcHpFormula(c) {

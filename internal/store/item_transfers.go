@@ -115,7 +115,7 @@ func saveTransferDocument(ctx context.Context, tx pgx.Tx, charID int64, doc tran
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec(ctx, `UPDATE dndshare."char" SET data=CAST($2 AS jsonb), version=version+1, changed_at=now() WHERE id=$1`, charID, json.RawMessage(raw))
+	_, err = persistCharacterDocument(ctx, tx, charID, json.RawMessage(raw), nil)
 	return err
 }
 

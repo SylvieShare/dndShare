@@ -123,10 +123,20 @@ block schema or know storage paths independently.
 
 ## Сохранение и синхронизация
 
-Character documents have technical `char.version`. Full updates and data
-patches are owner-authorized. Poll/version endpoints detect remote changes;
-pending local changes are saved by the editor's serialized save orchestration. Full saves require the loaded technical version and return the next one; stale writes receive HTTP 409. A conflicting draft stays local and shows a message asking the player to copy needed edits before reloading. Dismissing the message does not let polling replace that draft. Transfers flush local changes before mutating inventory and refresh the server document afterward. The
-technical revision is unrelated to character level or rules edition.
+Лист использует `char.version` и [общую очередь патчей](../../document-sync.md).
+Сервер принимает изменённые узлы по стабильным ID и хранит прямые и обратные
+изменения персонажа вместе с автором и транзакцией. Ввод сохраняется через
+400 мс, HP и состояния — сразу. Потеря ответа повторяет тот же пакет;
+независимые изменения объединяются после 409, конфликт одного узла сохраняет
+черновик. Закрытие предупреждения не разблокирует конфликт. Явная загрузка с
+сервера после подтверждения очищает очередь. Ctrl/Cmd+Z вне текстового поля
+отменяет локальное JSON-действие, Ctrl/Cmd+Shift+Z повторяет его.
+
+В контексте сессии общий SSE передаёт состав и хронику; открытый лист получает
+свою разрешённую проекцию без отдельного периодического запроса версии.
+Передачи и другие предметные команды сначала дожидаются сохранения локальных
+правок, затем обновляют серверное состояние. Техническая версия не является
+уровнем персонажа или редакцией правил. Отдельного окна истории пока нет.
 
 ## Связанные страницы
 

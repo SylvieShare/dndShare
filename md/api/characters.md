@@ -8,7 +8,7 @@
 
 Сохранение персонажа с удалёнными пользовательскими плитками отклоняется с
 HTTP 400 и сообщением «Обновите страницу: плитки больше не поддерживаются».
-Это относится к созданию, полному сохранению и изменениям по путям. Содержимое
+Это относится к созданию и пакетам изменений документа. Содержимое
 плиток в актуальных ответах персонажа отсутствует.
 
 `PUT /api/char/{uuid}/edition` — только владелец неудалённого персонажа.
@@ -19,8 +19,7 @@ HTTP 400 и сообщением «Обновите страницу: плитк
 содержимое листа не конвертируется. Выбор текущей редакции не увеличивает версию.
 Ответ — полный документ в формате `GET /api/char/{uuid}` с новой редакцией и
 версией. Событие изменения листа уведомляет сессию, а открытые листы
-с контекстом сессии обновляют и документ, и профиль расчётов через обычный
-polling. Без контекста сессии устаревшее окно защищено проверкой версии при
+с контекстом сессии получают документ и профиль расчётов через общий SSE. Без контекста сессии устаревшее окно защищено проверкой версии при
 сохранении и требует обновления страницы.
 
 - Public `GET /api/templates` → `{templates:[{id,name}]}`. Он используется
@@ -52,8 +51,9 @@ polling. Без контекста сессии устаревшее окно з
   `PUT /api/char/{uuid}/journal-source` selects an eligible personal or session
   journal by UUID. Personal choices are restricted to this character, not other
   characters of the same owner; session choices exclude deleted sessions;
-- `PUT /api/char/{uuid}/data`
-- `PATCH /api/char/{uuid}/data-patch`
+- `PATCH /api/char/{uuid}/data` — пакет `{baseVersion,mutationId,patches,metadata?}`.
+- `GET /api/char/{uuid}/changes?after=N` — патчи после версии либо текущий снимок.
+- `GET /api/char/{uuid}/history?before=id` — до 50 записей истории, только владельцу или мастеру его сессии.
 - `PUT /api/char/{uuid}/public`
 - `POST /api/char/{uuid}/icon-image` принимает PNG/WebP-иконку до 5 МБ и
   разрешением не более 256×256 от владельца персонажа либо мастера сессии, в
@@ -74,15 +74,19 @@ to `POST /api/storage/images` with `purpose=character_icon` accepts only PNG/Web
 up to 256×256 and records a staged icon that can be consumed by character create.
 
 Editor определяет schema по `templateName` через frontend setting registry.
-`PUT /api/char/{uuid}/data` accepts `{data,version,events?}` and returns `{version}`;
-`version` is the loaded technical revision. A stale full save returns HTTP 409
-without modifying the document or appending events. Each optional event has
-`{sessionUuid,type,action,data,visibility,clientActionId}`; the character update
-and authorized timeline inserts commit in one database transaction. For a
-participant the route binds the actor to this owned session character; for a
-DM editing a participant sheet it binds that character while retaining the DM
-as the event author. Character-sheet event types include `feature_state` for
-ability toggles and `status_effect` for adding or removing linked effects.
+`PATCH /api/char/{uuid}/data` использует [общий протокол](../document-sync.md).
+Ответ `{fromVersion,version,mutationId,patches}` подтверждает атомарный пакет.
+События передаются в `metadata[].events`, каждое содержит
+`{sessionUuid,type,action,data,visibility,clientActionId}`. Проверки участника,
+автора и видимости выполняются в той же транзакции. Повтор `mutationId` с тем
+же содержимым возвращает прежнее подтверждение без повторной хроники;
+другое содержимое — 400. Устаревшая база — 409. Неавторизованный читатель
+публичного листа получает из `/changes` только текущий снимок.
+
+История содержит `{id,fromVersion,version,mutationId,authorUserId,
+transactionId,metadata,patches,inverse,createdAt}`. `before` — ID последней
+прочитанной строки для следующей страницы, порядок обратный. Для metadata
+изменений JSON-патчи пусты; прежнее и новое значение находятся в metadata.
 
 ## Связанные страницы
 

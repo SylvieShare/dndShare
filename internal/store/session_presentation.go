@@ -292,9 +292,9 @@ func (s *Store) SaveSessionPresentation(
 	return s.GetSessionPresentation(ctx, sessionID)
 }
 
-func (s *Store) SetCombatPresentationActive(ctx context.Context, sessionID int64, active bool) error {
+func setCombatPresentationActive(ctx context.Context, tx pgx.Tx, sessionID int64, active bool) error {
 	if active {
-		_, err := s.pool.Exec(ctx, `
+		_, err := tx.Exec(ctx, `
 			INSERT INTO dndshare.session_presentation_state
 			    (session_id, mode, visible, effect, transition, revision)
 			VALUES ($1, 'combat', true, 'none', 'fade', 1)
@@ -305,7 +305,7 @@ func (s *Store) SetCombatPresentationActive(ctx context.Context, sessionID int64
 			    changed_at = now()`, sessionID)
 		return err
 	}
-	_, err := s.pool.Exec(ctx, `
+	_, err := tx.Exec(ctx, `
 		UPDATE dndshare.session_presentation_state
 		SET visible = false, revision = revision + 1, changed_at = now()
 		WHERE session_id = $1 AND mode = 'combat'`, sessionID)

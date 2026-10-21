@@ -346,6 +346,7 @@ async function prepareLeave() {
 }
 function finishLeave(leave) {
   confirmClose.value = false;
+  if (leave) e.discard();
   resolveLeave?.(leave);
 }
 defineExpose({ prepareLeave, editor: e, canvas, openReference, focusEntries });

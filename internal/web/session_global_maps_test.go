@@ -12,7 +12,7 @@ func TestGlobalMapEndpointsRequireAuthentication(t *testing.T) {
 	s.routesGlobalMaps(mux)
 	for _, endpoint := range []struct{ method, path string }{
 		{"GET", "/api/sessions/test/global-maps"}, {"POST", "/api/sessions/test/global-maps"},
-		{"PUT", "/api/sessions/test/global-maps/map"}, {"DELETE", "/api/sessions/test/global-maps/map"},
+		{"PATCH", "/api/sessions/test/global-maps/map"}, {"GET", "/api/sessions/test/global-maps/map/changes"}, {"DELETE", "/api/sessions/test/global-maps/map"},
 		{"POST", "/api/sessions/test/global-maps/map/activate"}, {"GET", "/api/sessions/test/global-map-events"},
 	} {
 		rec := httptest.NewRecorder()

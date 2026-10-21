@@ -54,7 +54,10 @@ func (s *Store) ChangeCharacterEdition(ctx context.Context, userID int64, uuid s
 		return CharacterItem{}, ErrCharacterEdition
 	}
 	if current.SourceVersionID == nil || *current.SourceVersionID != targetID {
-		if _, err = tx.Exec(ctx, `UPDATE dndshare."char" SET source_version_id=$1,changed_at=now(),"version"="version"+1 WHERE id=$2`, targetID, current.ID); err != nil {
+		if _, err = tx.Exec(ctx, `UPDATE dndshare."char" SET source_version_id=$1,changed_at=now() WHERE id=$2`, targetID, current.ID); err != nil {
+			return CharacterItem{}, err
+		}
+		if err = bumpCharacterVersion(ctx, tx, current.ID, "sourceVersionId", current.SourceVersionID, targetID); err != nil {
 			return CharacterItem{}, err
 		}
 	}

@@ -133,7 +133,7 @@ func (s *Server) handleResolveItemTransfer(w http.ResponseWriter, r *http.Reques
 func (s *Server) publishTransferChange(t store.ItemTransfer) {
 	var target store.ApplicationTarget
 	_ = json.Unmarshal(t.ResolvedTarget, &target)
-	s.sessionLive.publish(t.SessionID, sessionLiveUpdate{Journal: true, CharacterIDs: []int64{t.SenderCharID, t.RecipientCharID, target.CharID}})
+	s.sessionLive.publish(t.SessionID, sessionLiveUpdate{Inventory: t.SenderCharID == 0 || t.RecipientCharID == 0, Journal: true, CharacterIDs: []int64{t.SenderCharID, t.RecipientCharID, target.CharID}})
 	if target.Kind == "npc" {
 		s.displayEvents.publish(t.SessionID)
 	}

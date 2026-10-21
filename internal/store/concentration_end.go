@@ -191,7 +191,7 @@ func endConcentrationTx(ctx context.Context, tx pgx.Tx, charID int64, castID str
 	}
 	_, err = tx.Exec(ctx, `DELETE FROM dndshare.character_concentration WHERE char_id=$1 AND cast_id=$2::uuid`, charID, castID)
 	if err == nil {
-		_, err = tx.Exec(ctx, `UPDATE dndshare."char" SET version=version+1,changed_at=now() WHERE id=$1`, charID)
+		err = bumpCharacterVersion(ctx, tx, charID, "concentration", map[string]any{"castId": castID}, nil)
 	}
 	return err
 }

@@ -67,6 +67,9 @@ func (s *Store) SetCharacterIconImage(ctx context.Context, charID, actorUserID i
 	); err != nil {
 		return 0, nil, err
 	}
+	if err := bumpCharacterVersion(ctx, tx, charID, "iconImageId", oldImageID, imageID); err != nil {
+		return 0, nil, err
+	}
 	if err := tx.Commit(ctx); err != nil {
 		return 0, nil, err
 	}
@@ -93,6 +96,11 @@ func (s *Store) ClearCharacterIconImage(ctx context.Context, charID, actorUserID
 	}
 	if _, err := tx.Exec(ctx, clearCharacterIconSQL, charID); err != nil {
 		return nil, err
+	}
+	if oldImageID != nil {
+		if err := bumpCharacterVersion(ctx, tx, charID, "iconImageId", oldImageID, nil); err != nil {
+			return nil, err
+		}
 	}
 	if err := tx.Commit(ctx); err != nil {
 		return nil, err

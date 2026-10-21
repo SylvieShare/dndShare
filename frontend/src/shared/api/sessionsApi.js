@@ -60,8 +60,11 @@ export function getEncounter(uuid) {
   return fetchGet(`/sessions/${uuid}/encounter`)
 }
 
-export function saveEncounter(uuid, data) {
-  return fetchPut(`/sessions/${uuid}/encounter`, data)
+export function saveEncounter(uuid, mutation) {
+  return fetchPatch(`/sessions/${uuid}/encounter`, mutation)
+}
+export function getEncounterChanges(uuid, after) {
+  return fetchGet(`/sessions/${uuid}/encounter/changes?after=${after}`)
 }
 
 export function getPublicEncounter(code, options) {

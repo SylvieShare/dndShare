@@ -21,13 +21,19 @@
   It returns `myRole`, optional `myCharUuid`, the current chapter and participant
   snapshots with `publicVisible` plus a technical `version` next to each character
   payload. `GET /api/sessions/{uuid}/live` is
-  the authenticated SSE invalidation stream shared by the session page. Its
-  coalesced `update` events contain only changed domains:
-  `{session?,participants?,characterIds?,journal?,connectedScreens?}`. Mutations remain
-  ordinary REST requests, and clients reload the corresponding authoritative
-  projections. Every reconnect performs a catch-up read because the in-process
-  stream deliberately keeps no durable event backlog. DM access is permanent;
-  participant access is revalidated after membership changes and on heartbeat;
+  the authenticated shared SSE stream. `update` includes authorized
+  `roster: {fromSequence,sequence,data?,patches}` and
+  `chronicle: {events,updates,baseline?}`; initial connection supplies the roster snapshot.
+  `?after=<eventId>` restores the chronicle cursor. The client applies data
+  directly and shares one connection per window/session. `session?` requests an
+  overview refresh, `inventory?` refreshes the DM inventory, and
+  `connectedScreens?` is DM-only. Membership and heartbeat recheck access.
+  See [document synchronization](../document-sync.md).
+- `GET /api/sessions/{uuid}/encounter` returns `{data,version}`; DM-only.
+  `PATCH` on the same URL accepts the common mutation batch; `GET
+  /api/sessions/{uuid}/encounter/changes?after=N` returns a delta or snapshot.
+  The encounter's technical history and receipts are in memory, with snapshot
+  recovery after restart. Domain spell/effect commands remain transactional.
 - Session DTOs in list/detail responses include `status`: `active`, `stopped` or
   `completed`. New sessions default to `stopped`.
 - `PATCH /api/sessions/{uuid}/status` accepts `{status}` and returns 204;

@@ -30,7 +30,7 @@ export function useSessionMaps(uuid) {
       return;
     }
     try {
-      const result = await getSessionMaps(uuid);
+      const result = await getSessionMaps(uuid, force);
       if (stopped) return;
       if (!force && busy()) {
         refreshPending = true;

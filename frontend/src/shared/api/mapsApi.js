@@ -1,9 +1,10 @@
 import { fetchGet, fetchPost, fetchPut, fetchDelete } from "./http";
+import { seedMapDocument, writeMapDocument } from "./mapDocuments";
 export const getMaps = (scope = "own") =>
   fetchGet(`/maps?scope=${encodeURIComponent(scope)}`);
-export const getMap = (id) => fetchGet(`/maps/${encodeURIComponent(id)}`);
+export const getMap = (id) => fetchGet(`/maps/${encodeURIComponent(id)}`).then(map=>seedMapDocument(map));
 export const copyMap = (id) =>
-  fetchPost(`/maps/${encodeURIComponent(id)}/copy`, {});
+  fetchPost(`/maps/${encodeURIComponent(id)}/copy`, {}).then(map=>seedMapDocument(map));
 export const publishMap = (id, revision) =>
   fetchPost(`/maps/${encodeURIComponent(id)}/publish`, { revision });
 export const subscribeMap = (id, subscribed) =>
@@ -44,19 +45,13 @@ export function getMapModels(publicCode) {
 export const resetMapModels = () => {
   modelCatalogue = null;
 };
-export const saveMap = (map) =>
-  map.id ? fetchPut(`/maps/${map.id}`, map) : fetchPost("/maps", map);
+export const saveMap = (map) => map.id ? writeMapDocument(map) : fetchPost("/maps", map).then(map=>seedMapDocument(map));
 export const deleteMap = (id) => fetchDelete(`/maps/${id}`);
-export const getSessionMaps = (uuid) => fetchGet(`/sessions/${uuid}/maps`);
+export const getSessionMaps = (uuid, reset = false) => fetchGet(`/sessions/${uuid}/maps`).then(response=>({...response,maps:response.maps.map(map=>seedMapDocument(map,uuid,reset))}));
 export const addSessionMap = (uuid, mapId) =>
-  fetchPost(`/sessions/${uuid}/maps`, { mapId });
+  fetchPost(`/sessions/${uuid}/maps`, { mapId }).then(map=>seedMapDocument(map,uuid));
 export const saveSessionMap = (uuid, map) =>
-  fetchPut(`/sessions/${uuid}/maps/${map.id}`, {
-    revision: map.revision,
-    name: map.name,
-    document: map.document,
-    state: map.state,
-  });
+  writeMapDocument(map,uuid);
 export const deleteSessionMap = (uuid, id) =>
   fetchDelete(`/sessions/${uuid}/maps/${id}`);
 export const saveMapDisplay = (uuid, display) =>

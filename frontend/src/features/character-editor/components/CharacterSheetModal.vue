@@ -55,7 +55,7 @@
       <CharacterSaveErrorToast
         :visible="saveStatus === 'error' && !!saveError"
         :message="saveError"
-        @retry="retrySave"
+        @retry="retrySave" @reload="reloadSave"
         @dismiss="dismissSaveError"
       />
     </div>
@@ -72,6 +72,7 @@ import TemplateBlockInner from '@/features/character-editor/components/TemplateB
 import { useCharacterData } from '@/features/character-editor/composables/useCharacterData'
 import CharacterEditionDialog from './CharacterEditionDialog.vue'
 import { useCharacterEdition } from '@/features/character-editor/composables/useCharacterEdition'
+import { useCharacterLive } from '@/features/character-editor/composables/useCharacterLive'
 import { useSaveDebounce } from '@/features/character-editor/composables/useSaveDebounce'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 
@@ -87,18 +88,20 @@ const previewMode = computed(() => Boolean(props.draft))
 const isMobile = ref(false)
 
 const {
-  loading, loadError, template, data, charCtx, isOwner, publicVisible, version, sourceVersionId, applyCharacter,
+  loading, loadError, template, data, charCtx, isOwner, publicVisible, version, serverDocument, sourceVersionId, applyCharacter, applyMetadata,
   toolbarTabs, charName, charSub, toolbarBlocksList,
   load, loadPreview, blocksForTab, containerWidthForTab, getInitialTabs,
   updateValue, updateValues, updateVar, onPublicToggle: updatePublicVisible,
 } = useCharacterData(props.uuid, isMobile)
 
 const pendingSessionEvents = []
-const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError, flushSave } = useSaveDebounce(props.uuid, data, {
-  version,
+const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError, reloadSave, flushSave, sync: documentSync } = useSaveDebounce(props.uuid, data, {
+  version, serverDocument, canSave:()=>!previewMode.value && (isOwner.value || props.isDm),
   takeEvents: () => pendingSessionEvents.splice(0),
-  restoreEvents: events => pendingSessionEvents.unshift(...events),
+  onMetadata: applyMetadata,
 })
+
+useCharacterLive({ uuid: computed(() => props.uuid), sessionUuid: computed(() => previewMode.value ? null : sessionEventsStore.sessionUuid), sync: documentSync, onMetadata: applyMetadata })
 
 const edition = useCharacterEdition({ uuid: props.uuid, isOwner: computed(() => isOwner.value && !previewMode.value), sourceVersionId, version, flushSave, applyCharacter })
 charCtx.edition = edition

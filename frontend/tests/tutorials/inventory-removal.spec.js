@@ -1,3 +1,4 @@
+import {applyDocumentPatches} from '../../src/shared/lib/documentPatch.js'
 import { test, expect } from '@playwright/test'
 import { TUTORIAL_REVISION } from '../../src/features/tutorials/lib/tutorialIdentity.js'
 
@@ -21,13 +22,15 @@ for (const mobile of [false, true]) test(`inventory removal and HP calculator sa
     else if (path === '/api/sources') json = { sources: [{ id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }] }] }
     else if (path === '/api/char/hero') json = char
     else if (path === '/api/char/hero/sessions') json = { sessions: [session] }
+    else if (path.endsWith('/changes')) json = {version:char.version,data:char.data,patches:[]}
     else if (path.endsWith('/version')) json = { version: char.version }
     else if (path.startsWith('/api/items')) json = { items: [{ id: 42, name: 'Факел', typeId: 2, data: {} }] }
     else if (path === '/api/char/hero/data') {
       const body = request.postDataJSON()
-      saves.push(body)
-      char.data = body.data
-      json = { version: ++char.version }
+      char.data = applyDocumentPatches(char.data,body.patches)
+      const events=body.metadata.flatMap(row=>row.events||[])
+      if(events.length)saves.push({...body,data:structuredClone(char.data),events})
+      json = { version: ++char.version, patches:body.patches }
     } else if (path.endsWith('/events')) json = { events: [], updates: [] }
     else if (path === `/api/sessions/${session.uuid}`) json = { session, participants: [] }
     await route.fulfill({ json })

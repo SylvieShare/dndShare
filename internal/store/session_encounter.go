@@ -43,21 +43,36 @@ func (s *Store) GetEncounterData(ctx context.Context, sessionID int64) (*string,
 // Один statement под транзакцией, чтобы конкурентные сохранения не плодили дубли (у таблицы нет
 // UNIQUE по session_id, поэтому используем UPDATE-затем-INSERT в tx с блокировкой строки).
 func (s *Store) SaveEncounterData(ctx context.Context, sessionID int64, status string, round int, data string) error {
+	return s.saveEncounterData(ctx, sessionID, status, round, data, nil)
+}
+func (s *Store) SaveEncounterDocument(ctx context.Context, sessionID int64, status string, round int, data string, version int64) error {
+	return s.saveEncounterData(ctx, sessionID, status, round, data, &version)
+}
+func (s *Store) saveEncounterData(ctx context.Context, sessionID int64, status string, round int, data string, expected *int64) error {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback(ctx)
 
+	// Serialize initial creation as well as updates.
+	var sessionLock int64
+	if err := tx.QueryRow(ctx, `SELECT id FROM dndshare."session" WHERE id=$1 FOR UPDATE`, sessionID).Scan(&sessionLock); err != nil {
+		return err
+	}
+	var version int64
 	var existing int64
 	var previous json.RawMessage
 	err = tx.QueryRow(ctx,
-		`SELECT id,data FROM dndshare.session_encounter
+		`SELECT id,data,revision FROM dndshare.session_encounter
 		 WHERE session_id = $1 AND deleted = false ORDER BY id DESC LIMIT 1 FOR UPDATE`,
 		sessionID,
-	).Scan(&existing, &previous)
+	).Scan(&existing, &previous, &version)
 	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 		return err
+	}
+	if expected != nil && version != *expected {
+		return ErrCharacterVersion
 	}
 	if errors.Is(err, pgx.ErrNoRows) {
 		var doc map[string]any
@@ -109,6 +124,11 @@ func (s *Store) SaveEncounterData(ctx context.Context, sessionID int64, status s
 			 WHERE id = $1`,
 			existing, status, round, data,
 		); err != nil {
+			return err
+		}
+	}
+	if expected != nil {
+		if err = commitEncounterEffects(ctx, tx, sessionID, previous, json.RawMessage(data), round); err != nil {
 			return err
 		}
 	}

@@ -131,35 +131,16 @@ test("standalone map display renders without master controls", async ({
   await expect(page.getByRole("radio")).toHaveCount(0);
 });
 
-test("failed full-scene saves retry the same revision and retain the draft", async ({
-  page,
-}) => {
+test("failed patch batches retry automatically with the same mutation id", async ({page}) => {
   await ready(page);
-  await page
-    .locator(".map-sidebar")
-    .getByRole("button", { name: "Настройки", exact: true })
-    .click();
-  await page.evaluate(() => {
-    window.failNextSave = 500;
-  });
-  await page.getByRole("switch", { name: "Туман войны", exact: true }).click();
-  const dialog = page.getByRole("dialog", {
-    name: "Не удалось сохранить карту",
-  });
-  await expect(dialog.getByRole("alert")).toContainText("Нет связи");
-  await dialog
-    .getByRole("button", { name: "Повторить сохранение", exact: true })
-    .click();
-  await expect
-    .poll(() => page.evaluate(() => window.latestBoard.state.fog))
-    .toBe(false);
-  expect(
-    await page.evaluate(() =>
-      window.requests
-        .filter((r) => r.url === "/api/sessions/test/maps/test-map")
-        .map((r) => r.data.revision),
-    ),
-  ).toEqual([1, 1]);
+  await page.locator('.map-sidebar').getByRole('button',{name:'Настройки',exact:true}).click();
+  await page.evaluate(()=>{window.failNextSave=500});
+  await page.getByRole('switch',{name:'Туман войны',exact:true}).click();
+  await expect.poll(()=>page.evaluate(()=>window.latestBoard.state.fog)).toBe(false);
+  const packets=await page.evaluate(()=>window.requests.filter(r=>r.url==='/api/sessions/test/maps/test-map').map(r=>r.data));
+  expect(packets).toHaveLength(2);
+  expect(packets[1]).toEqual(packets[0]);
+  expect(packets[0]).toMatchObject({baseVersion:1,patches:[{op:'set',path:['state','fog'],value:false}]});
 });
 test("scene conflicts require explicit server reload before replacing local changes", async ({
   page,
@@ -172,7 +153,8 @@ test("scene conflicts require explicit server reload before replacing local chan
   await page.evaluate(() => {
     window.failNextSave = 409;
   });
-  await page.getByRole("switch", { name: "Туман войны", exact: true }).click();
+  await page.getByRole("textbox", {name:"Название карты",exact:true}).fill("Моё имя");
+  await page.getByRole("textbox", {name:"Название карты",exact:true}).blur();
   const dialog = page.getByRole("dialog", {
     name: "Не удалось сохранить карту",
   });
@@ -188,9 +170,7 @@ test("scene conflicts require explicit server reload before replacing local chan
     .locator(".map-sidebar")
     .getByRole("button", { name: "Настройки", exact: true })
     .click();
-  await expect(
-    page.getByRole("switch", { name: "Туман войны", exact: true }),
-  ).toBeChecked();
+  await expect(page.getByRole("textbox", {name:"Название карты",exact:true})).toHaveValue("Имя в другой вкладке");
   await expect(page.getByRole("alert")).toHaveCount(0);
 });
 

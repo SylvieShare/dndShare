@@ -115,7 +115,7 @@ func beginConcentrationTx(ctx context.Context, tx pgx.Tx, charID, spellID int64,
 	}
 	_, err = tx.Exec(ctx, `INSERT INTO dndshare.character_concentration(char_id,cast_id,spell_id,spell_name) VALUES($1,$2::uuid,$3,$4)`, charID, castID, spellID, name)
 	if err == nil {
-		_, err = tx.Exec(ctx, `UPDATE dndshare."char" SET version=version+1,changed_at=now() WHERE id=$1`, charID)
+		err = bumpCharacterVersion(ctx, tx, charID, "concentration", nil, map[string]any{"castId": castID, "spellId": spellID, "name": name})
 	}
 	return castID, err
 }

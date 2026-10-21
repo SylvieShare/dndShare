@@ -1,5 +1,6 @@
+import {copyDocument} from '@/shared/lib/documentPatch'
 import { statusValueProjection } from '../lib/statusValueProjection'
-import { ref, reactive, computed, provide } from 'vue'
+import { ref, shallowRef, reactive, computed, provide } from 'vue'
 import { consumeCharSeed } from '@/shared/lib/charSeed'
 import { fetchGet, fetchPut } from '@/shared/api/http'
 import { useAccountStore } from '@/stores/account'
@@ -35,6 +36,7 @@ export function useCharacterData(uuid, isMobile) {
   const isOwner = ref(false)
   const publicVisible = ref(false)
   const version = ref(0)
+  const serverDocument = shallowRef(null)
   const iconImageId = ref(null)
   const iconImageUrl = ref(null)
   const sessions = ref([])
@@ -78,11 +80,13 @@ export function useCharacterData(uuid, isMobile) {
       throw new Error('Empty character response')
     }
 
+    const snapshot={data:copyDocument(res.data),version:Number(res.version)||0}
     template.value = settingRenderSchema(res.templateName)
     if (!template.value) throw new Error(`Unsupported character template: ${res.templateName}`)
     accessors.value = settingAccessors(res.templateName)
     data.value = { values: {}, var: {}, ...res.data }
     publicVisible.value = res.publicVisible
+    serverDocument.value = snapshot
     version.value = Number(res.version) || 0
     iconImageId.value = res.iconImageId ?? null
     iconImageUrl.value = res.iconImageUrl ?? null
@@ -266,22 +270,13 @@ export function useCharacterData(uuid, isMobile) {
   const topSession = computed(() => sessions.value[0] || null)
   const hasSessionContext = computed(() => sessions.value.length > 0)
 
-  async function pollVersion() {
-    try {
-      const res = await fetchGet('/char/' + uuid + '/version')
-      return Number(res?.version) || 0
-    } catch { return version.value }
-  }
-
-  async function refreshFromServer(canApply = () => true) {
-    const snapshot = data.value
-    try {
-      const res = await fetchGet('/char/' + uuid)
-      if (!res || data.value !== snapshot || !canApply() || Number(res.version) < version.value) return false
-      if (Number(res.version) === version.value) return true
-      apply(res)
-      return true
-    } catch { return false }
+  function applyMetadata(metadata) {
+    if (!metadata) return
+    if ('sourceVersionId' in metadata) sourceVersionId.value = metadata.sourceVersionId
+    if (metadata.sourceVersion) rulesVersion.value = metadata.sourceVersion
+    if ('iconImageId' in metadata) iconImageId.value = metadata.iconImageId
+    if ('iconImageUrl' in metadata) iconImageUrl.value = metadata.iconImageUrl
+    if ('publicVisible' in metadata) publicVisible.value = metadata.publicVisible
   }
 
   async function uploadCharacterIcon(file) {
@@ -323,15 +318,15 @@ export function useCharacterData(uuid, isMobile) {
     isOwner,
     publicVisible,
     version,
+    serverDocument,
     iconImageId,
     iconImageUrl,
     sessions,
     topSession,
     hasSessionContext,
     loadSessions,
-    pollVersion,
-    refreshFromServer,
     applyCharacter: apply,
+    applyMetadata,
     activeTabs,
     toolbarTabs,
     mobileTabs,

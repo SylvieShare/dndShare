@@ -50,7 +50,7 @@ func TestItemTransfersPostgres(t *testing.T) {
  CREATE TABLE dndshare."session"(id bigint PRIMARY KEY,uuid uuid DEFAULT gen_random_uuid(),owner_user_id bigint,settings jsonb DEFAULT '{}',deleted bool DEFAULT false);
  CREATE TABLE dndshare."char"(id bigint PRIMARY KEY,uuid uuid DEFAULT gen_random_uuid(),user_id bigint,template_id bigint,icon_image_id bigint,source_version_id bigint DEFAULT 1,
  data jsonb DEFAULT '{"values":{}}',version bigint DEFAULT 1,changed_at timestamptz DEFAULT now(),deleted bool DEFAULT false);
- CREATE TABLE dndshare.session_encounter(id bigserial PRIMARY KEY,session_id bigint,data jsonb,status text,round int,changed_at timestamptz DEFAULT now(),deleted bool DEFAULT false);
+ CREATE TABLE dndshare.session_encounter(id bigserial PRIMARY KEY,session_id bigint,revision bigint NOT NULL DEFAULT 1,data jsonb,status text,round int,changed_at timestamptz DEFAULT now(),deleted bool DEFAULT false);
  CREATE TABLE dndshare.session_participant(session_id bigint,char_id bigint PRIMARY KEY,user_id bigint);
  CREATE TABLE dndshare.session_event(id bigserial PRIMARY KEY,session_id bigint,author_user_id bigint,actor_char_id bigint,actor_item_id bigint,
  actor_name text,event_type text,action text,data jsonb,visibility text,created_at timestamptz DEFAULT now(),deleted bool DEFAULT false,client_action_id uuid);
@@ -63,8 +63,9 @@ func TestItemTransfersPostgres(t *testing.T) {
  (2,2,'{"values":{"name":"Торин","hp":{"current":10}}}'),(3,3,'{"values":{"name":"Чужой"}}');
  INSERT INTO dndshare.session_participant VALUES(1,1,1),(1,2,2),(2,3,3);`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
-	exec(testSchemaTables(t, "item_transfer", "session_interaction", "item_application", "character_concentration", "concentration_effect", "spell_cast_receipt", "session_karmic_scale", "session_d20_roll", "session_inventory"))
+	exec(testSchemaTables(t, "character_change", "item_transfer", "session_interaction", "item_application", "character_concentration", "concentration_effect", "spell_cast_receipt", "session_karmic_scale", "session_d20_roll", "session_inventory"))
 	exec(testSchemaTriggers(t, "guard_pending_item_transfers"))
+	exec(testSchemaTriggers(t, "bump_session_encounter_revision"))
 	if _, err := pool.Exec(ctx, `UPDATE dndshare.session SET settings=$1::jsonb`, testSessionSettingsJSON(t)); err != nil {
 		t.Fatal(err)
 	}
@@ -80,6 +81,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	exec(`INSERT INTO dndshare.storage_image(id,url) VALUES(1,'/sender.png'),(2,'/recipient.png');
  UPDATE dndshare."char" SET icon_image_id=id WHERE id IN (1,2);`)
 	s := &Store{pool: pool}
+	t.Run("document history", func(t *testing.T) { testCharacterDocumentHistory(t, s) })
 
 	t.Run("session impacts", func(t *testing.T) { testSessionImpacts(t, s, pool) })
 	t.Run("session saves", func(t *testing.T) { testSessionSaves(t, s, pool) })

@@ -42,11 +42,13 @@
 | `GET /api/maps/{mapId}/preview-context` | Авторизованный пользователь: доступный документ, актуальные используемые модели, SHA-256 подписи сцены и modelsSignature; previewUrl, если снимок этой подписи уже готов; нужен при отсутствии локального контекста или конфликте |
 | `POST /api/maps/{mapId}/preview?signature=...` | Авторизованный пользователь: WebP 64–1024 px, до 1 МБ → сохранённый в S3 снимок; устаревшая сцена получает 409 |
 | `GET /api/maps/{mapId}/preview?signature=...` | Авторизованный пользователь: сохранённый WebP из S3; проверка владельца и подписи, immutable cache |
-| `PUT /api/maps/{mapId}` | Заменить свой документ `{name,document,revision}` |
+| `PATCH /api/maps/{mapId}` | Пакет `{baseVersion,mutationId,patches,metadata?}` своего документа |
+| `GET /api/maps/{mapId}/changes?after=N` | Патчи после версии или текущий снимок |
 | `DELETE /api/maps/{mapId}` | Удалить свою карту; копии сессий сохраняются |
 | `GET /api/sessions/{uuid}/maps` | Владелец: `{maps,display}` |
 | `POST /api/sessions/{uuid}/maps` | Владелец: добавить независимую копию `{mapId}` |
-| `PUT /api/sessions/{uuid}/maps/{mapId}` | Владелец: атомарно сохранить `{name,document,state,revision}` и ссылки моделей |
+| `PATCH /api/sessions/{uuid}/maps/{mapId}` | Владелец: атомарно применить общий пакет к `{name,document,state}` и ссылкам моделей |
+| `GET /api/sessions/{uuid}/maps/{mapId}/changes?after=N` | Владелец: патчи после версии или снимок |
 | `DELETE /api/sessions/{uuid}/maps/{mapId}` | Владелец: удалить копию и погасить её экран |
 | `PUT /api/sessions/{uuid}/map-display` | Владелец: `{mapId,visible,camera,revision}` |
 | `GET /api/sessions/{uuid}/map-events` | Владелец: SSE invalidations |

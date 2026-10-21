@@ -85,7 +85,7 @@ func (s *Server) session(next http.Handler) http.Handler {
 		// Статике и SPA-фолбэку личность не нужна — не ходим в БД на каждый JS/CSS/картинку.
 		if isAPIPath(r.URL.Path) {
 			if uid, ok := s.resolveUser(r); ok {
-				r = r.WithContext(context.WithValue(r.Context(), userIDKey, uid))
+				r = r.WithContext(store.WithDocumentActor(context.WithValue(r.Context(), userIDKey, uid), uid))
 			}
 		}
 		next.ServeHTTP(w, r)

@@ -4,7 +4,6 @@ import (
 	"dndshare/internal/battlemap"
 	"dndshare/internal/store"
 	"net/http"
-	"strings"
 )
 
 func (s *Server) mapSession(w http.ResponseWriter, r *http.Request) (int64, int64, bool) {
@@ -75,70 +74,6 @@ func (s *Server) handleAddSessionMap(w http.ResponseWriter, r *http.Request) {
 	}
 	s.mapEvents.publish(sid)
 	writeJSON(w, http.StatusOK, result)
-}
-
-func (s *Server) handleSaveSessionMap(w http.ResponseWriter, r *http.Request) {
-	_, sid, ok := s.mapSession(w, r)
-	if !ok {
-		return
-	}
-	id := r.PathValue("mapId")
-	if !isUUID(id) {
-		notFound(w, "")
-		return
-	}
-	var req struct {
-		Revision int64               `json:"revision"`
-		State    battlemap.State     `json:"state"`
-		Name     string              `json:"name"`
-		Document *battlemap.Document `json:"document"`
-	}
-	if decodeJSON(r, &req) != nil {
-		badRequest(w, "")
-		return
-	}
-	m, err := s.store.GetSessionMap(r.Context(), sid, id)
-	if err != nil {
-		mapError(w, err)
-		return
-	}
-	req.Name = strings.TrimSpace(req.Name)
-	if req.Document == nil || req.Name == "" || len([]rune(req.Name)) > 160 {
-		badRequest(w, "Некорректная карта сессии")
-		return
-	}
-	m.Name, m.Document, m.State, m.Revision = req.Name, *req.Document, req.State, req.Revision
-	if err := s.store.PrepareMapDocument(r.Context(), &m.Document); err != nil {
-		mapError(w, err)
-		return
-	}
-	if err := battlemap.ValidateState(&req.State, m.Document); err != nil {
-		badRequest(w, err.Error())
-		return
-	}
-	m.State = req.State
-	models, err := s.store.MapModelsForDocument(r.Context(), m.Document)
-	if err != nil {
-		mapError(w, err)
-		return
-	}
-	for _, token := range req.State.Tokens {
-		if err := battlemap.ValidateSurfaceAnchor(m.Document, models, token.Placement, token.X, token.Y); err != nil {
-			badRequest(w, err.Error())
-			return
-		}
-	}
-	m, err = s.store.SaveSessionMap(r.Context(), sid, m)
-	if err != nil {
-		mapError(w, err)
-		return
-	}
-	if err := s.store.HydrateSessionMapLights(r.Context(), &m); err != nil {
-		serverError(w, err)
-		return
-	}
-	s.mapEvents.publish(sid)
-	writeJSON(w, http.StatusOK, m)
 }
 
 func (s *Server) handleDeleteSessionMap(w http.ResponseWriter, r *http.Request) {

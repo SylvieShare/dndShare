@@ -1,4 +1,5 @@
-import { fetchDelete, fetchGet, fetchPatch, fetchPost, fetchPut } from '@/shared/api/http'
+import { patchCharacterData } from './characterDocuments'
+import { fetchDelete, fetchGet, fetchPost, fetchPut } from '@/shared/api/http'
 
 export const charactersApi = {
   list() {
@@ -13,9 +14,7 @@ export const charactersApi = {
   update(uuid, payload) {
     return fetchPut('/char/' + uuid, payload)
   },
-  patchData(uuid, updates) {
-    return fetchPatch('/char/' + uuid + '/data-patch', { updates })
-  },
+  patchData: patchCharacterData,
   delete(uuid) {
     return fetchDelete('/char/' + uuid)
   },

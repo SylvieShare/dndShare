@@ -61,6 +61,8 @@ export function useMapEditor(source, onSaved, options = {}) {
     conflict,
     lastSavedAt,
     save,
+    reload,
+    discard,
     receive,
     pauseSave,
   } = useMapPersistence({
@@ -90,7 +92,7 @@ export function useMapEditor(source, onSaved, options = {}) {
   }
   function undo() {
     lighting.finishLightEdit();
-    if (!journal.undo()) return;
+    if (!journal.undo()) {if(journal.conflict.value)error.value=journal.conflict.value.message;return;}
     gestures.resetGesture();
     lighting.reset();
     lighting.driver.cancel();
@@ -108,7 +110,7 @@ export function useMapEditor(source, onSaved, options = {}) {
   }
   function redo() {
     lighting.finishLightEdit();
-    if (!journal.redo()) return;
+    if (!journal.redo()) {if(journal.conflict.value)error.value=journal.conflict.value.message;return;}
     gestures.resetGesture();
     lighting.reset();
     lighting.driver.cancel();
@@ -256,6 +258,8 @@ export function useMapEditor(source, onSaved, options = {}) {
     history,
     future,
     save,
+    reload,
+    discard,
     pauseSave,
     change,
     undo,

@@ -1,3 +1,5 @@
+import {copyDocument,documentDiff,rebaseDocumentChanges,applyDocumentPatches} from '@/shared/lib/documentPatch'
+const content=map=>({name:map.name,routes:map.routes})
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { activateGlobalMap, createGlobalMap, deleteGlobalMap, getGlobalMaps, saveGlobalMap } from '@/shared/api/globalMapsApi'
 import { useMapSync } from '@/features/maps/composables/useMapSync'
@@ -14,7 +16,7 @@ export function useGlobalMaps(uuid) {
   async function load(force = false) {
     if (!force && hasPending()) { reloadQueued = true; return }
     try {
-      const result = await getGlobalMaps(uuid)
+      const result = await getGlobalMaps(uuid,force)
       if (stopped) return
       if (!force && hasPending()) { reloadQueued = true; return }
       maps.value = result.maps
@@ -54,7 +56,10 @@ export function useGlobalMaps(uuid) {
         const id = pending.values().next().value, map = maps.value.find(map => map.id === id)
         if (!map) { pending.delete(id); pendingCount.value = pending.size; continue }
         const version = versions.get(id)
+        const before=copyDocument(content(map))
         const result = await saveGlobalMap(uuid, JSON.parse(JSON.stringify(map)))
+        const next=rebaseDocumentChanges(before,content(result),documentDiff(before,content(map))).data
+        applyDocumentPatches(map,documentDiff(content(map),next))
         map.revision = result.revision
         if (versions.get(id) === version) pending.delete(id)
         pendingCount.value = pending.size

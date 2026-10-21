@@ -1,3 +1,4 @@
+import {applyDocumentPatches} from '../../src/shared/lib/documentPatch.js'
 import { test, expect } from '@playwright/test'
 import { TUTORIAL_REVISION } from '../../src/features/tutorials/lib/tutorialIdentity.js'
 
@@ -21,9 +22,10 @@ for (const mobile of [false, true]) test(`concentration links and self applicati
     else if (path === '/api/sources') json = { sources: [{ id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }] }] }
     else if (path === '/api/char/hero') json = char
     else if (path.endsWith('/sessions')) json = { sessions: [] }
+    else if (path.endsWith('/changes')) json = {version:char.version,data:char.data,patches:[]}
     else if (path.endsWith('/version')) json = { version: char.version }
     else if (path.startsWith('/api/items')) json = { items: [spell, effect] }
-    else if (path.endsWith('/data')) { char.data = req.postDataJSON().data; char.version++; json = { version: char.version } }
+    else if (path.endsWith('/data')) { const body=req.postDataJSON();char.data = applyDocumentPatches(char.data,body.patches); char.version++; json = { version: char.version,patches:body.patches } }
     else if (path.endsWith('/concentration')) {
       if (req.method() === 'POST') { writes.push(req.postDataJSON()); concentration = null; char.version++ }
       json = { concentration }

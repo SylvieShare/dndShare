@@ -125,6 +125,18 @@ export const useSessionEventsStore = defineStore('session-events', () => {
     while (signatures.size > 600) signatures.delete(signatures.keys().next().value)
   }
   function latestId() { return lastReadId }
+  async function receiveLive(payload, expectedUuid) {
+    if (sessionUuid.value !== expectedUuid) return
+    const token = generation
+    if (loading.value && initialPromise) await initialPromise
+    if (token !== generation) return
+    merge(payload.updates, { updates: true, quiet: !initialized })
+    merge(payload.events, { fromRead: true, quiet: !initialized })
+    merge(payload.baseline,{quiet:true,fromRead:true})
+    notifyInitialOffers(payload.baseline)
+    initialized = true
+    syncError.value = false
+  }
 
   function refresh() {
     if (!sessionUuid.value) return Promise.resolve()
@@ -226,5 +238,5 @@ export const useSessionEventsStore = defineStore('session-events', () => {
   }
   onScopeDispose(() => { clearContext(); readers.clear() })
   return { sessionUuid, actorCharUuid, events, loading, syncError, newEventIds, setContext, setActor, clearContext,
-    publish, pendingCharacterEvent, refresh, registerReader, markLocalRoll, notifyTransferOffers, notifyInteractionOffers }
+    publish, pendingCharacterEvent, refresh, receiveLive, latestId, registerReader, markLocalRoll, notifyTransferOffers, notifyInteractionOffers }
 })

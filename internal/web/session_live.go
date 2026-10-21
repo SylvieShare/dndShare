@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"sort"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -15,18 +16,21 @@ const (
 	sessionLiveWriteLimit = 10 * time.Second
 )
 
-// sessionLiveUpdate is an invalidation batch. Durable session state always
-// remains in the REST projections; the stream only tells clients what to
-// refresh and can therefore safely coalesce bursts.
+// Producers coalesce committed changes. Each subscriber receives patches of
+// its own authorized roster and the changed chronicle rows.
 type sessionLiveUpdate struct {
-	Session          bool    `json:"session,omitempty"`
-	Participants     bool    `json:"participants,omitempty"`
-	CharacterIDs     []int64 `json:"characterIds,omitempty"`
-	Journal          bool    `json:"journal,omitempty"`
-	ConnectedScreens *int    `json:"connectedScreens,omitempty"`
+	Inventory        bool                   `json:"inventory,omitempty"`
+	Session          bool                   `json:"session,omitempty"`
+	Participants     bool                   `json:"participants,omitempty"`
+	CharacterIDs     []int64                `json:"characterIds,omitempty"`
+	Journal          bool                   `json:"journal,omitempty"`
+	ConnectedScreens *int                   `json:"connectedScreens,omitempty"`
+	Roster           *sessionRosterUpdate   `json:"roster,omitempty"`
+	Chronicle        *sessionEventsResponse `json:"chronicle,omitempty"`
 }
 
 type sessionLivePending struct {
+	inventory        bool
 	eventID          uint64
 	session          bool
 	participants     bool
@@ -73,7 +77,7 @@ func (h *sessionLiveHub) subscribe(sessionID int64) (*sessionLiveSubscription, f
 }
 
 func (h *sessionLiveHub) publish(sessionID int64, update sessionLiveUpdate) {
-	if !update.Session && !update.Participants && len(update.CharacterIDs) == 0 && !update.Journal && update.ConnectedScreens == nil {
+	if !update.Inventory && !update.Session && !update.Participants && len(update.CharacterIDs) == 0 && !update.Journal && update.ConnectedScreens == nil {
 		return
 	}
 	h.mu.Lock()
@@ -81,6 +85,7 @@ func (h *sessionLiveHub) publish(sessionID int64, update sessionLiveUpdate) {
 	for subscription := range h.subscribers[sessionID] {
 		pending := &subscription.pending
 		pending.eventID = h.nextID
+		pending.inventory = pending.inventory || update.Inventory
 		pending.session = pending.session || update.Session
 		pending.participants = pending.participants || update.Participants
 		pending.journal = pending.journal || update.Journal
@@ -113,7 +118,7 @@ func (h *sessionLiveHub) drain(subscription *sessionLiveSubscription) (uint64, s
 	}
 	sort.Slice(characterIDs, func(i, j int) bool { return characterIDs[i] < characterIDs[j] })
 	return pending.eventID, sessionLiveUpdate{
-		Session: pending.session, Participants: pending.participants, CharacterIDs: characterIDs,
+		Inventory: pending.inventory, Session: pending.session, Participants: pending.participants, CharacterIDs: characterIDs,
 		Journal: pending.journal, ConnectedScreens: pending.connectedScreens,
 	}
 }
@@ -134,6 +139,10 @@ func (s *Server) publishCharacterChange(ctx context.Context, characterID int64) 
 	if sessionID, attached, err := s.store.SessionIDForCharacter(ctx, characterID); err == nil && attached {
 		s.publishSessionCharacter(sessionID, characterID)
 	}
+}
+
+func (s *Server) publishSessionInventory(sessionID int64, journal bool) {
+	s.sessionLive.publish(sessionID, sessionLiveUpdate{Inventory: true, Journal: journal})
 }
 
 func (s *Server) publishSessionJournal(sessionID int64) {
@@ -158,6 +167,43 @@ func (s *Server) handleSessionLive(w http.ResponseWriter, r *http.Request) {
 
 	subscription, unsubscribe := s.sessionLive.subscribe(session.ID)
 	defer unsubscribe()
+	cursor, _ := strconv.ParseInt(r.URL.Query().Get("after"), 10, 64)
+	projection := sessionLiveProjection{journalCursor: cursor}
+	project := func(update sessionLiveUpdate) (sessionLiveUpdate, error) {
+		if update.Session || update.Participants {
+			fresh, err := s.store.GetGameSessionByUUID(r.Context(), session.UUID)
+			if err != nil {
+				return update, err
+			}
+			session = fresh
+		}
+		var err error
+		if update.Participants || update.Session || len(update.CharacterIDs) > 0 {
+			update.Roster, err = projection.participants(r.Context(), s, session, userID)
+			if err != nil {
+				return update, err
+			}
+		}
+		if update.Journal {
+			update.Chronicle, err = projection.chronicle(r.Context(), s, session.ID, userID)
+			if err != nil {
+				return update, err
+			}
+		}
+		update.Participants = false
+		update.CharacterIDs = nil
+		update.Journal = false
+		return update, nil
+	}
+	initial, err := project(sessionLiveUpdate{Participants: true, Journal: true})
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	if session.OwnerUserID == userID {
+		count := s.displayEvents.count(session.ID)
+		initial.ConnectedScreens = &count
+	}
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-cache, no-transform")
 	w.Header().Set("Connection", "keep-alive")
@@ -173,6 +219,10 @@ func (s *Server) handleSessionLive(w http.ResponseWriter, r *http.Request) {
 		return nil
 	}
 	if write("retry: 3000\n\n") != nil {
+		return
+	}
+	initialData, _ := json.Marshal(initial)
+	if write(fmt.Sprintf("event: update\ndata: %s\n\n", initialData)) != nil {
 		return
 	}
 
@@ -194,8 +244,13 @@ func (s *Server) handleSessionLive(w http.ResponseWriter, r *http.Request) {
 			}
 			if session.OwnerUserID != userID {
 				update.ConnectedScreens = nil
+				update.Inventory = false
 			}
-			if !update.Participants && len(update.CharacterIDs) == 0 && !update.Journal && update.ConnectedScreens == nil {
+			update, err = project(update)
+			if err != nil {
+				return
+			}
+			if !update.Inventory && !update.Session && update.Roster == nil && update.Chronicle == nil && update.ConnectedScreens == nil {
 				continue
 			}
 			data, err := json.Marshal(update)

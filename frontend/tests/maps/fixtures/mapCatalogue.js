@@ -1,5 +1,7 @@
+import {documentMutationFixture} from './documentMutations'
 export function mapCatalogueFixture(source, params, previews) {
   const maps = [source];
+  const mutate=documentMutationFixture(['name','document']);
   if (params.has("tagsExample"))
     maps.push(
       {
@@ -92,6 +94,15 @@ export function mapCatalogueFixture(source, params, previews) {
           )
           .map(summary),
       );
+    }
+    const changes=path.match(/^\/api\/maps\/([^/]+)\/changes$/)
+    if(changes){const map=find(changes[1]);return response({fromVersion:Number(url.searchParams.get('after')),version:map.revision,data:{name:map.name,document:map.document},metadata:await decorate(map)})}
+    if(method==='PATCH' && /^\/api\/maps\/[^/]+$/.test(path)) {
+      const id=path.split('/')[3],map=find(id)
+      if(!map)return response({},404)
+      const result=mutate(map,JSON.parse(options.body))
+      if(result.record)window.lastSaved=result.record
+      return response(result.response,result.status||200)
     }
     let match = path.match(/^\/api\/maps\/(?:subscriptions|ratings)\/([^/]+)$/);
     if (match) {

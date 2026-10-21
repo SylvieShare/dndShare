@@ -1,3 +1,4 @@
+import {applyDocumentPatches} from '../../src/shared/lib/documentPatch.js'
 import { test, expect } from "@playwright/test";
 import { initialState, newMap } from "../../src/features/maps/lib/mapModel";
 
@@ -64,12 +65,14 @@ for (const mobile of [false, true])
         },
       ],
     };
+    let encounterVersion=1;
     await page.route("**/api/**", async (route) => {
       const path = new URL(route.request().url()).pathname;
       if (!path.startsWith("/api/")) return route.continue();
-      if (route.request().method() === "PUT" && path.endsWith("/encounter")) {
-        encounter = route.request().postDataJSON();
-        return route.fulfill({ json: encounter });
+      if (route.request().method() === "PATCH" && path.endsWith("/encounter")) {
+        const packet=route.request().postDataJSON();
+        encounter=applyDocumentPatches(encounter,packet.patches);
+        return route.fulfill({json:{version:++encounterVersion,patches:packet.patches}});
       }
       let json = {};
       if (path === "/api/sessions/test")
@@ -85,7 +88,7 @@ for (const mobile of [false, true])
           participants: [],
           myRole: "gm",
         };
-      else if (path.endsWith("/encounter")) json = encounter;
+      else if (path.endsWith("/encounter")) json = {data:encounter,version:encounterVersion};
       else if (path === "/api/maps/models" || path === "/api/maps") json = [];
       else if (path === "/api/sessions/test/maps")
         json = { maps: [map], display };

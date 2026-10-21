@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import DiceRollNotification from '../../notifications/components/DiceRollNotification.vue'
 import ViewSession from './ViewSession.vue'
 
-const source = readFileSync(fileURLToPath(new URL('./ViewSession.vue', import.meta.url)), 'utf8') + '\n' + readFileSync(fileURLToPath(new URL('../composables/useSessionPage.js', import.meta.url)), 'utf8')
+const source = readFileSync(fileURLToPath(new URL('./ViewSession.vue', import.meta.url)), 'utf8') + '\n' + readFileSync(fileURLToPath(new URL('../composables/useSessionPage.js', import.meta.url)), 'utf8') + readFileSync(fileURLToPath(new URL('../composables/useSessionRealtime.js',import.meta.url)),'utf8')
 const styles = readFileSync(fileURLToPath(new URL('./styles/ViewSession.css', import.meta.url)), 'utf8')
 const selectionSource = readFileSync(fileURLToPath(new URL('../composables/useSessionSelection.js', import.meta.url)), 'utf8')
 const workspaceSource = readFileSync(fileURLToPath(new URL('../composables/useSessionWorkspace.js', import.meta.url)), 'utf8')
@@ -81,10 +81,9 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain('participants.value = fresh.participants')
     expect(source).toContain('createModalRef.value?.clearDraft()')
     expect(source).not.toContain('if (res?.uuid) sheetUuid.value = res.uuid')
-    expect(participantSyncSource).toContain('pendingCharacterIds')
     expect(participantSyncSource).toContain('await refreshParticipants()')
     expect(participantSyncSource).not.toContain('setInterval')
-    expect(sessionLiveSource).toContain('new EventSource')
+    expect(sessionLiveSource).toContain('subscribeSessionLive')
     expect(sessionLiveSource).toContain('runCatchUp()')
   })
 

@@ -33,7 +33,12 @@ const indicators = computed(() => [
 const tooltip = shallowRef(null)
 function showTooltip(event, indicator) { tooltip.value = { ...indicator, anchor: event.currentTarget } }
 
-watch(() => props.participant.data, async (_, __, onCleanup) => {
+const referenceKey = computed(() => JSON.stringify([
+  [...new Set([...featureItemIds(values.value), ...(values.value.states || []).map(state => state.effect_id)].filter(Boolean))].sort(),
+  inventoryEntries(values.value).map(({entry}) => [entry.magic_item_id, entry.item_id, entry.params?.base_item_id]),
+  props.participant.sourceVersion,
+]))
+watch(referenceKey, async (_, __, onCleanup) => {
   let cancelled = false
   onCleanup(() => { cancelled = true })
   loading.value = true; error.value = ''

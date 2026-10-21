@@ -19,8 +19,6 @@ func (s *Server) routesCharacters(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/char/{uuid}", s.handleGetChar)
 	mux.HandleFunc("GET /api/char/{uuid}/version", s.handleGetCharVersion)
 	mux.HandleFunc("GET /api/char/{uuid}/sessions", s.handleGetCharSessions)
-	mux.HandleFunc("PUT /api/char/{uuid}/data", s.handleUpdateDataChar)
-	mux.HandleFunc("PATCH /api/char/{uuid}/data-patch", s.handlePatchCharData)
 	mux.HandleFunc("PUT /api/char/{uuid}/public", s.handleUpdatePublicChar)
 	mux.HandleFunc("DELETE /api/char/{uuid}", s.handleDeleteChar)
 	mux.HandleFunc("POST /api/char/{uuid}/clone", s.handleCloneChar)
@@ -228,113 +226,6 @@ func (s *Server) handleGetCharSessions(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, charSessionsResponse{Sessions: nonNil(sessions)})
-}
-
-// --- PUT /api/char/{uuid}/data ---
-
-type characterUpdateRequest struct {
-	Version *int64                         `json:"version"`
-	Data    json.RawMessage                `json:"data"`
-	Events  []characterSessionEventRequest `json:"events"`
-}
-
-type characterUpdateResponse struct {
-	Version int64 `json:"version"`
-}
-
-func (s *Server) handleUpdateDataChar(w http.ResponseWriter, r *http.Request) {
-	userID, char, ok := s.loadCharWritable(w, r)
-	if !ok {
-		return
-	}
-	var req characterUpdateRequest
-	if err := decodeJSON(r, &req); err != nil {
-		badRequest(w, "Некорректный запрос")
-		return
-	}
-	if !json.Valid(req.Data) {
-		badRequest(w, "Некорректные данные персонажа")
-		return
-	}
-	if req.Version == nil || *req.Version < 0 {
-		badRequest(w, "Укажите версию листа")
-		return
-	}
-	char.Version = *req.Version
-	if len(req.Events) > 50 {
-		badRequest(w, "Слишком много событий персонажа")
-		return
-	}
-	events := make([]store.CharacterSessionEvent, 0, len(req.Events))
-	for _, event := range req.Events {
-		normalized, valid := normalizeCharacterSessionEvent(event)
-		if !valid {
-			badRequest(w, "Некорректное событие персонажа")
-			return
-		}
-		events = append(events, normalized)
-	}
-	if err := s.store.UpdateCharacterDataWithEvents(r.Context(), userID, char, req.Data, events); err != nil {
-		if errors.Is(err, store.ErrCharacterVersion) {
-			conflict(w, err.Error())
-			return
-		}
-		if errors.Is(err, store.ErrNotFound) {
-			forbidden(w)
-			return
-		}
-		serverError(w, err)
-		return
-	}
-	s.publishCharacterChange(r.Context(), char.ID)
-	publishedSessions := make(map[int64]struct{}, len(events))
-	for _, event := range events {
-		session, err := s.store.GetGameSessionByUUID(r.Context(), event.SessionUUID)
-		if err == nil {
-			publishedSessions[session.ID] = struct{}{}
-		}
-	}
-	for sessionID := range publishedSessions {
-		s.publishSessionJournal(sessionID)
-	}
-	writeJSON(w, http.StatusOK, characterUpdateResponse{Version: char.Version + 1})
-}
-
-// --- PATCH /api/char/{uuid}/data-patch ---
-
-type characterPathUpdate struct {
-	Path  string          `json:"path"`
-	Value json.RawMessage `json:"value"`
-}
-
-type characterPatchRequest struct {
-	Updates []characterPathUpdate `json:"updates"`
-}
-
-func (s *Server) handlePatchCharData(w http.ResponseWriter, r *http.Request) {
-	_, char, ok := s.loadCharWritable(w, r)
-	if !ok {
-		return
-	}
-	var req characterPatchRequest
-	if err := decodeJSON(r, &req); err != nil {
-		badRequest(w, "Некорректный запрос")
-		return
-	}
-	if len(req.Updates) == 0 {
-		w.WriteHeader(http.StatusNoContent)
-		return
-	}
-	updates := make([]store.PathUpdate, 0, len(req.Updates))
-	for _, u := range req.Updates {
-		updates = append(updates, store.PathUpdate{Path: u.Path, Value: u.Value})
-	}
-	if err := s.store.UpdateDataByPaths(r.Context(), char.UUID, updates); err != nil {
-		serverError(w, err)
-		return
-	}
-	s.publishCharacterChange(r.Context(), char.ID)
-	w.WriteHeader(http.StatusNoContent)
 }
 
 // --- PUT /api/char/{uuid}/public ---

@@ -12,89 +12,12 @@ import (
 )
 
 func (s *Server) handleGetEncounter(w http.ResponseWriter, r *http.Request) {
-	userID, ok := mustUser(w, r)
+	_, _, snapshot, ok := s.encounterSnapshot(w, r)
 	if !ok {
 		return
 	}
-	session, err := s.lookupSession(w, r)
-	if err != nil {
-		return
-	}
-	if session.OwnerUserID != userID {
-		forbidden(w)
-		return
-	}
-	data, err := s.store.GetEncounterData(r.Context(), session.ID)
-	if err != nil {
-		serverError(w, err)
-		return
-	}
-	writeRawJSON(w, data)
-}
-
-func (s *Server) handleSaveEncounter(w http.ResponseWriter, r *http.Request) {
-	userID, ok := mustUser(w, r)
-	if !ok {
-		return
-	}
-	session, err := s.lookupSession(w, r)
-	if err != nil {
-		return
-	}
-	if session.OwnerUserID != userID {
-		forbidden(w)
-		return
-	}
-	raw, err := io.ReadAll(http.MaxBytesReader(w, r.Body, maxJSONBody))
-	if err != nil {
-		badRequest(w, "Некорректный запрос")
-		return
-	}
-	if !json.Valid(raw) {
-		badRequest(w, "Некорректный запрос")
-		return
-	}
-	var meta struct {
-		Active bool `json:"active"`
-		Round  int  `json:"round"`
-	}
-	_ = json.Unmarshal(raw, &meta)
-	wasActive := false
-	if previous, previousErr := s.store.GetEncounterData(r.Context(), session.ID); previousErr == nil && previous != nil {
-		var previousMeta struct {
-			Active bool `json:"active"`
-		}
-		_ = json.Unmarshal([]byte(*previous), &previousMeta)
-		wasActive = previousMeta.Active
-	}
-	status := "pending"
-	if meta.Active {
-		status = "active"
-	}
-	if err := s.store.SaveEncounterData(r.Context(), session.ID, status, meta.Round, string(raw)); err != nil {
-		if errors.Is(err, store.ErrCharacterVersion) {
-			conflict(w, "К участнику боя применён эффект. Обновите состояние боя перед редактированием.")
-			return
-		}
-		serverError(w, err)
-		return
-	}
-	if meta.Active != wasActive {
-		if err := s.store.SetCombatPresentationActive(r.Context(), session.ID, meta.Active); err != nil {
-			serverError(w, err)
-			return
-		}
-		eventType := "encounter_finished"
-		title := "Бой завершён"
-		if meta.Active {
-			eventType = "encounter_started"
-			title = "Бой начался"
-		}
-		s.appendSessionEvent(r.Context(), session.ID, userID, eventType, title, map[string]any{"round": meta.Round})
-	}
-	s.displayEvents.publish(session.ID)
-	s.publishSessionJournal(session.ID)
-	writeJSON(w, http.StatusNoContent, nil)
+	w.Header().Set("Cache-Control", "no-store")
+	writeJSON(w, http.StatusOK, snapshot)
 }
 
 func (s *Server) handleGetMusicState(w http.ResponseWriter, r *http.Request) {

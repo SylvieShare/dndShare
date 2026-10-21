@@ -2,7 +2,7 @@ import { useSessionTutorial } from '@/features/tutorials/composables/useSessionT
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { reorderByDrop, useSortable } from '@sylvieshare/share-ui'
-import { useParticipantSync } from '@/features/sessions/composables/useParticipantSync'
+import {useSessionRealtime} from './useSessionRealtime'
 import { useChapterGraph } from '@/features/sessions/composables/useChapterGraph'
 import { useEncounter } from '@/features/sessions/composables/useEncounter'
 import { useSessionSelection } from '@/features/sessions/composables/useSessionSelection'
@@ -15,7 +15,6 @@ import { useSessionPresentation } from '@/features/sessions/composables/useSessi
 import { useSessionTimers } from '@/features/sessions/composables/useSessionTimers'
 import { useSessionSettings } from '@/features/sessions/composables/useSessionSettings'
 import { useSessionHotkeys } from '@/features/sessions/composables/useSessionHotkeys'
-import { useSessionLive } from '@/features/sessions/composables/useSessionLive'
 import { sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
 import { useAccountStore } from '@/stores/account'
 import { useMusicStore } from '@/stores/music'
@@ -353,74 +352,11 @@ export function useSessionPage() {
     toggle: togglePlayersRail,
   } = useSessionParticipantRail({ sessionUuid, workspaceMotionMode: visibleWorkspaceMotionMode })
 
-  async function refreshParticipants() {
-    const fresh = await getSession(sessionUuid)
-    if (!Array.isArray(fresh?.participants)) return
-    session.value = fresh.session ?? session.value
-    if (!isDm.value) {
-      currentChapter.value = fresh.currentChapter ?? null
-      sessionRole.value = fresh.myRole || 'player'
-      myCharUuid.value = fresh.myCharUuid || myCharUuid.value
-    }
-    const localById = new Map(participants.value.map(participant => [String(participant.charId), participant]))
-    const serverById = new Map(fresh.participants.map(participant => [String(participant.charId), participant]))
-    const withPendingColor = participant => coloringIds.value.has(participant.charId)
-      ? { ...participant, color: localById.get(String(participant.charId))?.color ?? null }
-      : participant
-    participants.value = participantOrderSaving.value
-      ? [
-          ...participants.value.map(participant => serverById.get(String(participant.charId))).filter(Boolean),
-          ...fresh.participants.filter(participant => !localById.has(String(participant.charId))),
-        ].map(withPendingColor)
-      : fresh.participants.map(withPendingColor)
-  }
-
-  async function refreshSessionOverview() {
-    const fresh = await getSession(sessionUuid)
-    if (fresh?.session) session.value = fresh.session
-    if (Array.isArray(fresh?.participants)) participants.value = fresh.participants
-    currentChapter.value = fresh?.currentChapter ?? null
-    sessionRole.value = fresh?.myRole || sessionRole.value
-    myCharUuid.value = fresh?.myCharUuid || myCharUuid.value
-    syncVersions()
-  }
-
-  const {
-    syncStatus, syncRunning, syncVersions,
-    requestParticipants, requestCharacters, forgetVersion,
-  } = useParticipantSync({ participants, refreshParticipants })
-
-  const {
-    status: liveStatus,
-    catchingUp: liveCatchingUp,
-    start: startSessionLive,
-  } = useSessionLive({
-    sessionUuid,
-    onUpdate(update) {
-      const tasks = []
-      if (update?.session) tasks.push(refreshSessionOverview())
-      if (update?.participants) tasks.push(requestParticipants())
-      else if (Array.isArray(update?.characterIds) && update.characterIds.length) {
-        tasks.push(isDm.value ? requestCharacters(update.characterIds) : requestParticipants())
-      }
-      if (update?.journal) tasks.push(sessionEventsStore.refresh())
-      if (update?.connectedScreens != null && isDm.value) {
-        presentation.setConnectedScreens(update.connectedScreens)
-      }
-      return Promise.all(tasks)
-    },
-    onCatchUp() {
-      const tasks = [requestParticipants(), sessionEventsStore.refresh()]
-      if (isDm.value) {
-        tasks.push(presentation.loadConnections())
-      }
-      return Promise.all(tasks)
-    },
-  })
+  const {syncStatus,syncRunning,refreshParticipants,liveStatus,liveCatchingUp,startSessionLive} = useSessionRealtime({sessionUuid,session,participants,currentChapter,sessionRole,myCharUuid,isDm,coloringIds,participantOrderSaving,presentation,sessionEventsStore})
 
   const {
     kickingIds, kickError, kickParticipant,
-  } = useSessionSelection({ sessionUuid, participants, forgetVersion })
+  } = useSessionSelection({ sessionUuid, participants })
 
   function openParticipant(charId) {
     const p = participants.value.find(x => x.charId === charId)
@@ -469,7 +405,6 @@ export function useSessionPage() {
   async function handleOwnCharacterJoined() {
     joinOwnOpen.value = false
     await refreshParticipants().catch(() => {})
-    syncVersions()
   }
 
   function closeCreate() {
@@ -492,7 +427,6 @@ export function useSessionPage() {
       const fresh = await getSession(sessionUuid).catch(() => null)
       if (fresh?.participants) {
         participants.value = fresh.participants
-        syncVersions()
       }
 
       createModalRef.value?.clearDraft()
@@ -536,7 +470,6 @@ export function useSessionPage() {
       currentChapter.value = res?.currentChapter ?? null
       sessionRole.value = res?.myRole || ''
       myCharUuid.value = res?.myCharUuid || ''
-      syncVersions()
       await sessionEventsStore.setContext({ uuid: sessionUuid, actorUuid: isDm.value ? sheetUuid.value : myCharUuid.value })
       if (isDm.value) {
         await encounter.load()

@@ -51,8 +51,8 @@ const sessionEventSelect = `
 	SELECT e.id, e.session_id, e.author_user_id, event_author.login,
 	       event_session.owner_user_id = e.author_user_id,
 	       e.actor_char_id, c.uuid::text, c.template_id,
-	       CASE WHEN e.event_type='money_transfer' THEN jsonb_build_object('values',
-	         jsonb_build_object('name',c.data#>'{values,name}','char_name',c.data#>'{values,char_name}','ava',c.data#>'{values,ava}')) ELSE c.data END,
+	       CASE WHEN c.id IS NOT NULL THEN jsonb_build_object('values',
+             jsonb_build_object('name',c.data#>'{values,name}','char_name',c.data#>'{values,char_name}','ava',c.data#>'{values,ava}')) ELSE NULL END,
 	       e.actor_item_id,
 	       COALESCE(character_icon.url, actor_icon.url, actor_cover.url), actor_svg.data,
 	       e.actor_name, e.event_type, e.action, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at, e.client_action_id::text, event_session.owner_user_id, COALESCE(transfer_recipient.user_id, interaction_recipient.user_id, money_recipient.user_id, CASE WHEN event_transfer.id IS NOT NULL AND event_transfer.recipient_char_id IS NULL THEN event_session.owner_user_id END), COALESCE(recipient_icon.url, interaction_recipient_icon.url, interaction_recipient.data #>> '{values,ava,url}', transfer_recipient.data #>> '{values,ava,url}', money_recipient_icon.url, money_recipient.data #>> '{values,ava,url}')
@@ -241,15 +241,9 @@ func (s *Store) UpdateCharacterDataWithEvents(ctx context.Context, userID int64,
 	}
 	defer tx.Rollback(ctx)
 
-	result, err := tx.Exec(ctx, `
-		UPDATE dndshare."char"
-		SET data = CAST($2 AS jsonb), changed_at = now(), version = version + 1
-		WHERE id = $1 AND deleted = false AND version = $3`, character.ID, data, character.Version)
+	_, err = persistCharacterDocument(ctx, tx, character.ID, data, &character.Version)
 	if err != nil {
 		return err
-	}
-	if result.RowsAffected() == 0 {
-		return ErrCharacterVersion
 	}
 
 	for _, event := range events {

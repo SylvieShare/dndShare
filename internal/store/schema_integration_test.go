@@ -127,8 +127,16 @@ func TestSchemaAdoptsExistingStructureWithoutDataChangesPostgres(t *testing.T) {
 		if err := applySchema(t.Context(), pool); err != nil {
 			t.Fatal(err)
 		}
-		if after := businessTableDigests(t, pool); !reflect.DeepEqual(after, before) {
-			t.Fatal("adopting or reopening the baseline changed business data")
+		after := businessTableDigests(t, pool)
+		for name, digest := range before {
+			if after[name] != digest {
+				t.Fatalf("adoption changed business data in %s", name)
+			}
+		}
+		for name, digest := range after {
+			if _, existed := before[name]; !existed && digest != "d41d8cd98f00b204e9800998ecf8427e" {
+				t.Fatalf("new table %s was populated by a migration", name)
+			}
 		}
 		var count int
 		if err := pool.QueryRow(t.Context(), `SELECT count(*) FROM dndshare.schema_migration`).Scan(&count); err != nil || count != len(schemaParts)+2 {
@@ -139,6 +147,7 @@ func TestSchemaAdoptsExistingStructureWithoutDataChangesPostgres(t *testing.T) {
 	if err := pool.QueryRow(t.Context(), `SELECT checksum FROM dndshare.schema_migration WHERE code='foundation'`).Scan(&historical); err != nil || historical != "historical-checksum" {
 		t.Fatal("historical ledger entry changed", err)
 	}
+	before = businessTableDigests(t, pool)
 	schemaTestExec(t, pool, `UPDATE dndshare.schema_migration SET checksum='changed' WHERE code=$1`, schemaParts[0].name)
 	if err := applySchema(t.Context(), pool); err == nil || !strings.Contains(err.Error(), "changed after") {
 		t.Fatal("changed applied migration accepted", err)

@@ -1,8 +1,10 @@
+import {createLiveRoster} from '@/features/sessions/lib/liveRoster'
+import {isInteraction} from '@/features/sessions/lib/sessionInteractions'
 import { useSpellConcentration } from './useSpellConcentration'
 import { fetchPost } from '@/shared/api/http'
 import { notifyApplication } from '@/features/notifications/lib/notifyApplication'
 import { useUsableApplications } from './useUsableApplications'
-import { computed, onBeforeUnmount, reactive, shallowRef, watch } from 'vue'
+import { computed, onBeforeUnmount, reactive, shallowRef, toRef, watch } from 'vue'
 import * as api from '@/shared/api/itemTransfersApi'
 import { getSession } from '@/shared/api/sessionsApi'
 import { useTemplateStore } from '@/stores/template'
@@ -141,15 +143,17 @@ export function useCharacterTransfers({ uuid, data, session, isOwner, version, f
     await loadPlayers()
     if (!state.busy && saveStatus.value === 'idle') await refreshFromServer(() => !state.busy && saveStatus.value === 'idle')
   }
+  const receiveRoster=createLiveRoster(toRef(state,'participants'))
   const live = useSessionLive({
     sessionUuid: computed(() => session.value?.uuid),
     onCatchUp: catchUp,
+    getChronicleCursor:()=>events.latestId(),
     onUpdate: async update => {
-      if (update.journal) await Promise.all([refresh(), events.refresh()])
-      if (update.participants || update.session) { await loadSessions(); await loadPlayers() }
-      if (update.characterIds?.length) await loadPlayers()
-      if (update.characterIds?.length && !state.busy && saveStatus.value === 'idle') {
-        await refreshFromServer(() => !state.busy && saveStatus.value === 'idle')
+      if(update.roster){receiveRoster(update.roster);state.playersLoaded=true}
+      if(update.session){await loadSessions();await loadPlayers()}
+      if(update.chronicle){
+        await events.receiveLive(update.chronicle,session.value?.uuid)
+        if([...(update.chronicle.baseline||[]),...(update.chronicle.events||[]),...(update.chronicle.updates||[])].some(event=>event.type==='item_transfer'||isInteraction(event)))await refresh()
       }
     },
   })

@@ -1,3 +1,4 @@
+import {documentMutationFixture} from './documentMutations'
 import { useTemplateStore } from "../../../src/stores/template";
 export function sessionFixture(pinia, source, params) {
   useTemplateStore(pinia).templates = [{ id: 41, name: "DND5" }];
@@ -46,6 +47,7 @@ export function sessionFixture(pinia, source, params) {
   return { participants, encounter };
 }
 export function sessionAPI(initial, initialDisplay, getSource) {
+  const mutate=documentMutationFixture(['name','document','state']);
   let maps = [initial],
     display = initialDisplay;
   const response = (data, status = 200) =>
@@ -75,6 +77,9 @@ export function sessionAPI(initial, initialDisplay, getSource) {
       return response(map);
     }
     if (url === "/api/sessions/test/maps") return response({ maps, display });
+    if(window.concurrentMapName){maps[0].name=window.concurrentMapName;maps[0].revision++;window.concurrentMapName=''}
+    const changes=url.match(/^\/api\/sessions\/test\/maps\/([^/]+)\/changes/)
+    if(changes){const map=maps.find(m=>m.id===changes[1]);return response({version:map.revision,data:{name:map.name,document:map.document,state:map.state},metadata:{id:map.id,revision:map.revision}})}
     const match = url.match(/^\/api\/sessions\/test\/maps\/([^/]+)$/);
     if (match) {
       const index = maps.findIndex((m) => m.id === match[1]);
@@ -84,18 +89,12 @@ export function sessionAPI(initial, initialDisplay, getSource) {
         return new Response(null, { status: 204 });
       }
       const current = maps[index];
-      if (data.revision !== current.revision) return response({}, 409);
-      if (!data.document || !data.name) return response({}, 400);
-      maps[index] = {
-        ...current,
-        name: data.name,
-        document: data.document,
-        state: data.state,
-        revision: data.revision + 1,
-        changedAt: new Date().toISOString(),
-      };
-      window.latestBoard = structuredClone(maps[index]);
-      return response(maps[index]);
+      if(options.method==='PATCH') {
+        const result=mutate(current,data)
+        if(result.record){maps[index]=result.record;window.latestBoard=structuredClone(result.record)}
+        return response(result.response,result.status||200)
+      }
+      return response({},405);
     }
     if (url === "/api/sessions/test/map-display") {
       display = { ...data, revision: display.revision + 1 };

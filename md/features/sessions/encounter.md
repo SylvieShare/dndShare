@@ -148,18 +148,19 @@ animation. Closing combat opened from a nested canvas immediately persists that
 return context, so even a reload during the exit animation restores the scenario
 or block canvas instead of combat.
 
-Encounter hydration and saving are fail-safe: a failed initial GET never turns
-into an empty PUT, writes are snapshotted and serialized after the debounce, a
-failed latest write is retried, and a pending snapshot is flushed on unmount.
+Encounter uses the [shared patch queue](../../document-sync.md) and
+`session_encounter.revision`. A failed initial GET never enables saving;
+PATCH batches serialize edits and retry the same mutation after network errors.
+Disjoint edits rebase, overlapping edits preserve the local draft. Pending
+changes start flushing on unmount and remain in the account-scoped outbox.
 `ViewSession` hydrates its participant list before loading and reconciling the
 encounter, so persisted player positions and initiative survive reload just as
 NPC combat state does.
 The same flush starts when the tab becomes hidden or receives `pagehide`, which
 keeps the debounce window from dropping the latest change during navigation.
-The participant list is periodically refreshed while the page is visible;
-joining players are added to the encounter reserve and players removed from the
-session are removed from encounter state. Polling pauses in hidden tabs and an
-in-flight request cannot restart it after unmount.
+The shared session SSE supplies authorized roster changes directly. Joining
+players are added to reserve and departing players are removed from encounter
+state. REST recovery only runs while the stream is disconnected.
 Hydration also normalizes missing or obsolete combatant positions to `reserve`,
 canonicalizes player character identifiers from the current participant list
 and removes duplicate legacy player entries. This prevents combatants from

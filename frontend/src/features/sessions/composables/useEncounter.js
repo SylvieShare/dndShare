@@ -1,3 +1,5 @@
+import {useAccountStore} from '@/stores/account'
+import { copyDocument } from '@/shared/lib/documentPatch'
 import { encounterEventData } from '../lib/encounterEventData'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useEncounterFlow } from '@/features/sessions/composables/useEncounterFlow'
@@ -25,7 +27,7 @@ import {
   sideOf,
 } from '@/features/sessions/lib/encounterHelpers'
 import { getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
-import { getEncounter, saveEncounter } from '@/shared/api/sessionsApi'
+import { getEncounter, saveEncounter, getEncounterChanges } from '@/shared/api/sessionsApi'
 import { useSortable } from '@sylvieshare/share-ui'
 import { useSuggestStore } from '@/stores/suggest'
 
@@ -38,7 +40,9 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
   const persistence = useEncounterPersistence({
     source: encounter,
     debounceMs: SAVE_DEBOUNCE_MS,
-    save: data => saveEncounter(sessionUuid, data),
+    send: packet => saveEncounter(sessionUuid, packet),
+    load: version => getEncounterChanges(sessionUuid, version),
+    storageKey: () => {const actor=useAccountStore().user?.id;return actor?`dndshare.document-pending.v1.encounter:${actor}:${sessionUuid}`:null},
   })
   let disposed = false
 
@@ -67,9 +71,12 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
       return
     }
     if (disposed) return
+    const baseline = raw
+    raw = raw?.data
     const enc = (raw && typeof raw === 'object' && !Array.isArray(raw))
       ? raw
       : { active: false, round: 0, turnIndex: 0, combatants: [] }
+    const original = copyDocument(enc)
     if (!Array.isArray(enc.combatants)) enc.combatants = []
     if (enc.active == null) enc.active = false
     if (enc.round == null) enc.round = 0
@@ -86,13 +93,13 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     encounter.value = enc
     npcData.ensureNpcItems(enc.combatants)
     loaded.value = true
-    persistence.markReady()
+    persistence.markReady({data: original, version: baseline?.version || 0})
     if (positionsChanged || participantsChanged) persistence.scheduleSave()
   }
 
   watch(encounter, persistence.scheduleSave, { deep: true, flush: 'sync' })
 
-  watch(participants, () => {
+  watch(() => participants.value.map(participant=>participant.charId).join(','), () => {
     if (!loaded.value) return
     if (!reconcileParticipants(encounter.value)) return
     encounter.value = { ...encounter.value, combatants: [...encounter.value.combatants] }

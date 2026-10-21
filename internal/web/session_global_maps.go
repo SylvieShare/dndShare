@@ -12,7 +12,8 @@ func init() { registerRoutes((*Server).routesGlobalMaps) }
 func (s *Server) routesGlobalMaps(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/sessions/{uuid}/global-maps", s.handleListGlobalMaps)
 	mux.HandleFunc("POST /api/sessions/{uuid}/global-maps", s.handleCreateGlobalMap)
-	mux.HandleFunc("PUT /api/sessions/{uuid}/global-maps/{mapId}", s.handleSaveGlobalMap)
+	mux.HandleFunc("PATCH /api/sessions/{uuid}/global-maps/{mapId}", s.handleGlobalMapMutation)
+	mux.HandleFunc("GET /api/sessions/{uuid}/global-maps/{mapId}/changes", s.handleGlobalMapChanges)
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/global-maps/{mapId}", s.handleDeleteGlobalMap)
 	mux.HandleFunc("POST /api/sessions/{uuid}/global-maps/{mapId}/activate", s.handleActivateGlobalMap)
 	mux.HandleFunc("GET /api/sessions/{uuid}/global-map-events", s.handlePrivateMapEvents)
@@ -67,41 +68,6 @@ func (s *Server) handleCreateGlobalMap(w http.ResponseWriter, r *http.Request) {
 	}
 	s.mapEvents.publish(sid)
 	writeJSON(w, http.StatusOK, m)
-}
-func (s *Server) handleSaveGlobalMap(w http.ResponseWriter, r *http.Request) {
-	_, sid, ok := s.mapSession(w, r)
-	if !ok {
-		return
-	}
-	var m store.GlobalMap
-	if decodeJSON(r, &m) != nil {
-		badRequest(w, "")
-		return
-	}
-	m.ID = r.PathValue("mapId")
-	m.Name = strings.TrimSpace(m.Name)
-	if !isUUID(m.ID) {
-		notFound(w, "")
-		return
-	}
-	if err := globalmap.Validate(m.Name, m.Routes); err != nil {
-		badRequest(w, err.Error())
-		return
-	}
-	if m.Routes == nil {
-		m.Routes = []globalmap.Route{}
-	}
-	saved, err := s.store.SaveGlobalMap(r.Context(), sid, m)
-	if err != nil {
-		if errors.Is(err, store.ErrInvalidWorldReference) {
-			conflict(w, "Состав игроков, главы или локации сессии изменились. Загрузите актуальную карту и проверьте привязки.")
-			return
-		}
-		globalMapError(w, err)
-		return
-	}
-	s.mapEvents.publish(sid)
-	writeJSON(w, http.StatusOK, saved)
 }
 func (s *Server) handleActivateGlobalMap(w http.ResponseWriter, r *http.Request) {
 	_, sid, ok := s.mapSession(w, r)

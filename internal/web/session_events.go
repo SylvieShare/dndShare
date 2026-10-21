@@ -55,8 +55,9 @@ type sessionEventResponse struct {
 }
 
 type sessionEventsResponse struct {
-	Updates []store.SessionEvent `json:"updates"`
-	Events  []store.SessionEvent `json:"events"`
+	Baseline []store.SessionEvent `json:"baseline,omitempty"`
+	Updates  []store.SessionEvent `json:"updates"`
+	Events   []store.SessionEvent `json:"events"`
 }
 
 func (s *Server) appendSessionEvent(ctx context.Context, sessionID, userID int64, eventType, action string, data any) {

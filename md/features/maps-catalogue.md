@@ -60,7 +60,7 @@ MapLibraryEntry — одна композиция BaseTile для плиточн
 - POST `/api/maps/{id}/copy`: новая личная копия владельцу или подписчику.
 - PUT/DELETE `/api/maps/subscriptions/{id}`: подписаться/отписаться.
 - PUT `/api/maps/ratings/{id}` с rating 1–5; DELETE снимает оценку.
-- PUT/DELETE `/api/maps/{id}` работают только с личным неопубликованным черновиком.
+- PATCH/DELETE `/api/maps/{id}` работают только с личным неопубликованным черновиком.
 - POST `/api/sessions/{uuid}/maps` проверяет право использовать заготовку,
   затем создаёт независимый слепок сессии.
 

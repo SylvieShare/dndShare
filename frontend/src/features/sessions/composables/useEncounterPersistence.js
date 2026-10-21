@@ -1,83 +1,73 @@
 import { ref } from 'vue'
+import { createDocumentSync } from '@/shared/lib/documentSync'
+import { applyDocumentPatches, documentDiff } from '@/shared/lib/documentPatch'
 
-const RETRY_DELAY_MS = 2000
-
-function snapshot(value) {
-  return JSON.parse(JSON.stringify(value))
-}
-
-export function useEncounterPersistence({ source, save, debounceMs }) {
-  const loadError = ref('')
-  const saveError = ref('')
-  let ready = false
-  let stopped = false
-  let dirty = false
-  let revision = 0
-  let saveTimer = null
-  let saveChain = Promise.resolve()
-
-  function clearSaveTimer() {
-    if (saveTimer != null) clearTimeout(saveTimer)
-    saveTimer = null
+export function useEncounterPersistence({
+  source,
+  send,
+  load,
+  storageKey,
+  debounceMs,
+}) {
+  const loadError = ref(''),
+    saveError = ref('')
+  let sync,
+    timer,
+    stopped = false
+  function markReady(snapshot = { data: source.value, version: 0 }) {
+    sync?.stop()
+    loadError.value = saveError.value = ''
+    sync = createDocumentSync({
+      ...snapshot,
+      send,
+      load,
+      storageKey,
+      onData: (next) => {
+        const current = source.value
+        const result = applyDocumentPatches(
+          current,
+          documentDiff(current, next),
+        )
+        if (current !== result) source.value = result
+      },
+      onStatus: (state) => {
+        saveError.value =
+          state.status === 'retrying'
+            ? 'Не удалось сохранить состояние боя. Повторяем попытку…'
+            : state.error
+              ? state.status === 'conflict'
+                ? 'Одни и те же данные боя изменились на сервере. Несохранённые правки остались в этом браузере.'
+                : state.error.message || 'Не удалось сохранить состояние боя.'
+              : ''
+      },
+    })
+    if (sync.pending) void sync.flush()
   }
-
-  function markReady() {
-    ready = true
-    saveError.value = ''
-    dirty = false
-    loadError.value = ''
-  }
-
   function markLoadFailed() {
-    ready = false
-    loadError.value = 'Не удалось загрузить состояние боя. Изменения не сохраняются.'
+    sync?.stop()
+    sync = null
+    loadError.value =
+      'Не удалось загрузить состояние боя. Изменения не сохраняются.'
   }
-
   function scheduleSave() {
-    if (!ready || stopped) return
-    dirty = true
-    revision += 1
-    clearSaveTimer()
-    saveTimer = setTimeout(flushSave, debounceMs)
+    if (!sync || stopped || sync.applying) return
+    sync.edit(source.value, {}, { record: false })
+    clearTimeout(timer)
+    timer = setTimeout(flushSave, debounceMs)
   }
-
-  function enqueueSave(data, savedRevision, retryOnFailure) {
-    saveChain = saveChain
-      .catch(() => {})
-      .then(() => save(data))
-      .then(() => {
-        if (savedRevision === revision) dirty = false
-        saveError.value = ''
-      })
-      .catch(error => {
-        if (error?.status === 409) { ready = false; dirty = false; clearSaveTimer(); saveError.value = 'Состояние боя изменилось на сервере. Обновите страницу, чтобы загрузить применённые эффекты.'; return }
-        if (savedRevision !== revision || stopped || !retryOnFailure) return
-        dirty = true
-        saveError.value = 'Не удалось сохранить состояние боя. Повторяем попытку…'
-        clearSaveTimer()
-        saveTimer = setTimeout(flushSave, RETRY_DELAY_MS)
-      })
-    return saveChain
-  }
-
   function flushSave() {
-    clearSaveTimer()
-    if (!ready || !dirty) return saveChain
-    const savedRevision = revision
-    dirty = false
-    return enqueueSave(snapshot(source.value), savedRevision, true)
+    clearTimeout(timer)
+    return sync?.flush() || Promise.resolve(false)
   }
-
   function stop() {
-    clearSaveTimer()
-    if (ready && dirty) {
-      const savedRevision = revision
-      dirty = false
-      enqueueSave(snapshot(source.value), savedRevision, false)
+    clearTimeout(timer)
+    if (sync) {
+      sync.edit(source.value, {}, { record: false })
+      void sync.flush()
+      sync.stop()
     }
     stopped = true
   }
-
   return {
     loadError,
     saveError,

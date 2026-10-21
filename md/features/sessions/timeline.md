@@ -17,7 +17,10 @@
 
 ## Уведомления событий
 
-Страница сессии (мастер и игрок) и собственный лист слушают общий SSE-поток.
+Страница сессии (мастер и игрок), собственный лист и панели разделяют один
+SSE-поток на сессию в окне. Он передаёт готовые изменения состава и строки
+хроники; повторные REST-запросы на каждую правку не нужны. Восстановление после
+разрыва описано в [общем контракте](../../document-sync.md).
 У мастера вне открытой хроники чужие события и изменения их игровых данных
 показываются в общей очереди уведомлений внизу справа, вместе с бросками кубиков.
 Собственные действия не вызывают уведомлений, в том числе из другой вкладки
@@ -69,7 +72,7 @@ character's attached session. Player session cards open that character context i
 of the DM workspace.
 
 State-changing character actions are queued by the sheet and sent in the next
-`PUT /char/{uuid}/data`; backend character data and its events commit in one
+`PATCH /char/{uuid}/data`; backend character data and its events commit in one
 transaction. A cantrip still schedules this semantic save, but the character
 version advances with each successful version-checked save, including event-only saves. Dice rolls use the direct
 event endpoint because they do not mutate character state. Pending debounced
@@ -96,7 +99,7 @@ snapshot retain their original text; their original color was not stored.
 количеством: статус этой же записи обновляется `pending` → `accepted`/`rejected`.
 В UI это «Ожидает» / «Приняли» / «Отказали», включая отзыв. Событие относится
 к фильтру «Персонаж», справочный предмет открывается обычной ссылкой хроники.
-Изменение статуса и соответствующего инвентаря публикует SSE journal/characterIds.
+Изменение статуса и соответствующего инвентаря публикует SSE с разрешёнными roster-патчами и строками chronicle.
 Инкрементальная загрузка хроники возвращает изменяемые передачи отдельным
 массивом `updates`, чтобы сохранить ID, порядок и курсор новых событий.
 

@@ -1,41 +1,27 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { expect, it, vi } from 'vitest'
 import { ref } from 'vue'
-
-vi.mock('@/shared/api/sessionsApi', () => ({ pollChars: vi.fn() }))
-
-import { pollChars } from '@/shared/api/sessionsApi'
 import { useParticipantSync } from './useParticipantSync'
-
-describe('session participant live synchronization', () => {
-  beforeEach(() => vi.clearAllMocks())
-
-  it('refreshes only invalidated character versions', async () => {
-    const participants = ref([
-      { charId: 1, version: 3, data: { hp: 10 } },
-      { charId: 2, version: 7, data: { hp: 8 } },
-    ])
-    pollChars.mockResolvedValue([{ charId: 2, changed: true, version: 8, data: { hp: 4 } }])
-    const refreshParticipants = vi.fn()
-    const sync = useParticipantSync({ participants, refreshParticipants })
-
-    await sync.requestCharacters([2])
-
-    expect(pollChars).toHaveBeenCalledWith([{ charId: 2, version: 7 }])
-    expect(refreshParticipants).not.toHaveBeenCalled()
-    expect(participants.value[1]).toEqual(expect.objectContaining({ version: 8, data: { hp: 4 } }))
-  })
-
-  it('uses one authoritative participant snapshot for a membership invalidation', async () => {
-    const participants = ref([{ charId: 1, version: 3, data: {} }])
-    const refreshParticipants = vi.fn(async () => {
-      participants.value = [{ charId: 2, version: 1, data: {} }]
+it('serializes recovery snapshots and coalesces requests received during a read', async () => {
+  const participants = ref([{ charId: 1, version: 3, data: { hp: 10 } }])
+  let release
+  const refreshParticipants = vi
+    .fn()
+    .mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          release = resolve
+        }),
+    )
+    .mockImplementationOnce(async () => {
+      participants.value = [{ charId: 2, version: 7, data: { hp: 8 } }]
     })
-    const sync = useParticipantSync({ participants, refreshParticipants })
-
-    await sync.requestParticipants()
-
-    expect(refreshParticipants).toHaveBeenCalledOnce()
-    expect(pollChars).not.toHaveBeenCalled()
-    expect(sync.versions.value).toEqual({ 2: 1 })
-  })
+  const sync = useParticipantSync({ participants, refreshParticipants })
+  const first = sync.requestParticipants()
+  sync.requestParticipants()
+  sync.requestParticipants()
+  expect(refreshParticipants).toHaveBeenCalledOnce()
+  release()
+  await first
+  expect(refreshParticipants).toHaveBeenCalledTimes(2)
+  expect(participants.value[0].version).toBe(7)
 })

@@ -4,8 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
-	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -29,12 +27,6 @@ type CharacterItem struct {
 	CreatedAt       time.Time       `json:"createdAt"`
 	ChangedAt       time.Time       `json:"changedAt"`
 	Version         int64           `json:"version"`
-}
-
-// PathUpdate — одно точечное изменение data по пути (порт CharacterRepository.PathUpdate).
-type PathUpdate struct {
-	Path  string
-	Value json.RawMessage
 }
 
 // PollItem — запрос опроса версии персонажа (порт CharacterRepository.PollItem).
@@ -155,41 +147,28 @@ func (s *Store) CreateCharacter(ctx context.Context, userID, templateID int64, s
 	return uuid, err
 }
 
-// UpdateDataByPaths точечно правит data через jsonb_set по каждому пути (порт updateDataByPaths).
-func (s *Store) UpdateDataByPaths(ctx context.Context, uuid string, updates []PathUpdate) error {
-	if len(updates) == 0 {
-		return nil
+// UpdatePublicVisible records visibility changes in the character's version stream.
+func (s *Store) UpdatePublicVisible(ctx context.Context, uuid string, visible bool) error {
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
 	}
-	params := []any{uuid}
-	expr := "data::jsonb"
-	arg := 1
-	for _, u := range updates {
-		keys := strings.Split(u.Path, ".")
-		keyPlaceholders := make([]string, len(keys))
-		for i, k := range keys {
-			arg++
-			params = append(params, k)
-			keyPlaceholders[i] = fmt.Sprintf("$%d", arg)
-		}
-		arg++
-		val := "null"
-		if len(u.Value) > 0 {
-			val = string(u.Value)
-		}
-		params = append(params, val)
-		expr = fmt.Sprintf("jsonb_set(%s, ARRAY[%s]::text[], $%d::jsonb, true)", expr, strings.Join(keyPlaceholders, ", "), arg)
+	defer tx.Rollback(ctx)
+	var id int64
+	var before bool
+	if err = tx.QueryRow(ctx, `SELECT id,public_visible FROM dndshare."char" WHERE uuid=$1::uuid AND NOT deleted FOR UPDATE`, uuid).Scan(&id, &before); err != nil {
+		return err
 	}
-	sql := fmt.Sprintf(
-		`UPDATE dndshare."char" SET data = (%s)::json, changed_at = now(), version = version + 1 WHERE uuid = $1::uuid`, expr)
-	_, err := s.pool.Exec(ctx, sql, params...)
-	return err
-}
-
-// UpdatePublicVisible переключает публичность (без bump версии — как в оригинале).
-func (s *Store) UpdatePublicVisible(ctx context.Context, uuid string, publicVisible bool) error {
-	_, err := s.pool.Exec(ctx,
-		`UPDATE dndshare."char" SET public_visible = $2 WHERE uuid = $1::uuid`, uuid, publicVisible)
-	return err
+	if before == visible {
+		return tx.Commit(ctx)
+	}
+	if _, err = tx.Exec(ctx, `UPDATE dndshare."char" SET public_visible=$2 WHERE id=$1`, id, visible); err != nil {
+		return err
+	}
+	if err = bumpCharacterVersion(ctx, tx, id, "publicVisible", before, visible); err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
 }
 
 // DeleteCharacter — мягкое удаление.

@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { kickParticipant as apiKick } from '@/shared/api/sessionsApi'
 
-export function useSessionSelection({ sessionUuid, participants, forgetVersion }) {
+export function useSessionSelection({ sessionUuid, participants }) {
   const kickingIds = ref(new Set())
   const kickError = ref('')
 
@@ -12,7 +12,6 @@ export function useSessionSelection({ sessionUuid, participants, forgetVersion }
     try {
       await apiKick(sessionUuid, charId)
       participants.value = participants.value.filter(p => p.charId !== charId)
-      forgetVersion?.(charId)
       return true
     } catch {
       kickError.value = 'Не удалось выгнать участника'

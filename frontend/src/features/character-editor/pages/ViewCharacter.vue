@@ -165,7 +165,7 @@
     <CharacterSaveErrorToast
       :visible="saveStatus === 'error' && !!saveError"
       :message="saveError"
-      @retry="retrySave"
+      @retry="retrySave" @reload="reloadSave"
       @dismiss="dismissSaveError"
     />
   </div>
@@ -186,6 +186,7 @@ import CharacterSaveErrorToast from '@/features/character-editor/components/Char
 import { useCharacterData } from '@/features/character-editor/composables/useCharacterData'
 import CharacterEditionDialog from '@/features/character-editor/components/CharacterEditionDialog.vue'
 import { useCharacterEdition } from '@/features/character-editor/composables/useCharacterEdition'
+import { useCharacterLive } from '@/features/character-editor/composables/useCharacterLive'
 import { useSaveDebounce } from '@/features/character-editor/composables/useSaveDebounce'
 import { useTabSwipe } from '@/features/character-editor/composables/useTabSwipe'
 import { useScrollHide } from '@/features/character-editor/composables/useScrollHide'
@@ -225,8 +226,8 @@ const TabPane = CharacterTabPane
 
 const {
   loading, loadError, template, data, charCtx, isOwner, publicVisible,
-  version, sourceVersionId, contentSources, sessions, topSession, hasSessionContext,
-  loadSessions, pollVersion, refreshFromServer, applyCharacter,
+  version, serverDocument, sourceVersionId, contentSources, sessions, topSession, hasSessionContext,
+  loadSessions, applyCharacter, applyMetadata,
   activeTabs, toolbarTabs, mobileTabs,
   headerTitle, charName, charSub, toolbarBlocksList, commonMobileBlockNode, commonMobileScrollHide,
   load, loadSync, blocksForTab, containerWidthForTab, getInitialTabs,
@@ -252,13 +253,15 @@ const snapshotRecorder = createCharacterSnapshotRecorder(uuid, () => isOwner.val
 onBeforeUnmount(() => snapshotRecorder.dispose())
 
 const pendingSessionEvents = []
-const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError, flushSave } = useSaveDebounce(uuid, data, {
-  version,
+const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError, reloadSave, flushSave, sync: documentSync } = useSaveDebounce(uuid, data, {
+  version, serverDocument, canSave:()=>isOwner.value,
   takeEvents: () => pendingSessionEvents.splice(0),
-  restoreEvents: events => pendingSessionEvents.unshift(...events),
+  onMetadata: applyMetadata,
 })
 
-const transfers = useCharacterTransfers({ uuid, data, session: activeSession, isOwner, version, flushSave, refreshFromServer, saveStatus, loadSessions })
+useCharacterLive({ uuid, sessionUuid: computed(() => activeSession.value?.uuid), sync: documentSync, onMetadata: applyMetadata })
+
+const transfers = useCharacterTransfers({ uuid, data, session: activeSession, isOwner, version, flushSave, refreshFromServer: async()=>{try{await documentSync.catchUp();return true}catch{return false}}, saveStatus, loadSessions })
 charCtx.itemTransfers = transfers
 const edition = useCharacterEdition({ uuid, isOwner, sourceVersionId, version, flushSave, applyCharacter, canStart: () => !transfers.busy })
 charCtx.edition = edition
@@ -447,9 +450,6 @@ let ready = false
 let syncingTabFromRoute = false
 
 // ── Polling сессий / версии ───────────────────────────────────────────
-const VERSION_POLL_MS = 5000
-let versionPollTimer = null
-let versionPollInFlight = false
 let activeEventSessionUuid = null
 
 async function syncEventSessionContext(requested = route.query.session) {
@@ -466,30 +466,6 @@ async function syncEventSessionContext(requested = route.query.session) {
   }
   await sessionEventsStore.setContext({ uuid: selected.uuid, actorUuid: uuid })
   activeEventSessionUuid = selected.uuid
-}
-
-async function tickVersionPoll() {
-  if (versionPollInFlight) return
-  if (saveStatus.value !== 'idle' || transfers.busy || edition.busy) return
-  if (!hasSessionContext.value) return
-  versionPollInFlight = true
-  try {
-    const remote = await pollVersion()
-    if (remote > version.value && saveStatus.value === 'idle') {
-      await refreshFromServer(() => saveStatus.value === 'idle' && !transfers.busy && !edition.busy)
-    }
-  } finally {
-    versionPollInFlight = false
-  }
-}
-
-function startVersionPolling() {
-  stopVersionPolling()
-  versionPollTimer = setInterval(tickVersionPoll, VERSION_POLL_MS)
-}
-
-function stopVersionPolling() {
-  if (versionPollTimer) { clearInterval(versionPollTimer); versionPollTimer = null }
 }
 
 function pushQueryState() {
@@ -544,11 +520,9 @@ async function initializeCharacter() {
 
   await loadSessions()
   await syncEventSessionContext()
-  startVersionPolling()
 }
 
 onBeforeUnmount(() => {
-  stopVersionPolling()
   document.body.classList.remove('character-view-active')
   stopViewportHeightSync()
   mediaQuery?.removeEventListener('change', onMediaQueryChange)

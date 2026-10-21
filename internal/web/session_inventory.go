@@ -61,7 +61,7 @@ func (s *Server) handleAddSessionInventory(w http.ResponseWriter, r *http.Reques
 		itemTransferError(w, err)
 		return
 	}
-	s.publishSessionJournal(session.ID)
+	s.publishSessionInventory(session.ID, true)
 	writeJSON(w, http.StatusOK, map[string]bool{"ok": true})
 }
 func (s *Server) handleDeleteSessionInventory(w http.ResponseWriter, r *http.Request) {
@@ -78,7 +78,7 @@ func (s *Server) handleDeleteSessionInventory(w http.ResponseWriter, r *http.Req
 		itemTransferError(w, err)
 		return
 	}
-	s.publishSessionJournal(session.ID)
+	s.publishSessionInventory(session.ID, true)
 	writeJSON(w, http.StatusOK, map[string]bool{"ok": true})
 }
 func (s *Server) handleSendSessionInventory(w http.ResponseWriter, r *http.Request) {
@@ -128,6 +128,6 @@ func (s *Server) handleMoveSessionInventory(w http.ResponseWriter, r *http.Reque
 		itemTransferError(w, err)
 		return
 	}
-	s.publishSessionJournal(session.ID)
+	s.publishSessionInventory(session.ID, false)
 	writeJSON(w, http.StatusOK, map[string]bool{"ok": true})
 }

@@ -1,66 +1,74 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 import { useEncounterPersistence } from './useEncounterPersistence'
-
-async function settle() {
-  for (let index = 0; index < 6; index += 1) await Promise.resolve()
-}
-
-describe('encounter persistence', () => {
-  it('does not save before a successful hydration and snapshots debounced data', async () => {
-    vi.useFakeTimers()
-    const source = ref({ round: 0 })
-    const save = vi.fn().mockResolvedValue(undefined)
-    const persistence = useEncounterPersistence({ source, save, debounceMs: 500 })
-
-    source.value.round = 1
-    persistence.scheduleSave()
-    await vi.advanceTimersByTimeAsync(500)
-    expect(save).not.toHaveBeenCalled()
-
-    persistence.markReady()
-    persistence.scheduleSave()
-    source.value.round = 2
-    await vi.advanceTimersByTimeAsync(500)
-    await settle()
-    expect(save).toHaveBeenCalledWith({ round: 2 })
-    vi.useRealTimers()
+afterEach(() => vi.useRealTimers())
+it('waits for hydration and captures the newest debounced state as patches', async () => {
+  vi.useFakeTimers()
+  const source = ref({ round: 0 }),
+    send = vi.fn(async (packet) => ({
+      version: packet.baseVersion + 1,
+      patches: packet.patches,
+    }))
+  const persistence = useEncounterPersistence({ source, send, debounceMs: 500 })
+  source.value.round = 1
+  persistence.scheduleSave()
+  await vi.advanceTimersByTimeAsync(500)
+  expect(send).not.toHaveBeenCalled()
+  persistence.markReady({ data: { round: 1 }, version: 2 })
+  source.value.round = 2
+  persistence.scheduleSave()
+  source.value.round = 3
+  persistence.scheduleSave()
+  await vi.advanceTimersByTimeAsync(500)
+  expect(send.mock.calls[0][0]).toMatchObject({
+    baseVersion: 2,
+    patches: [
+      { op: 'set', path: ['round'], value: 2 },
+      { op: 'set', path: ['round'], value: 3 },
+    ],
   })
-
-  it('serializes writes so an older request cannot finish after a newer one', async () => {
-    vi.useFakeTimers()
-    const source = ref({ round: 1 })
-    const releases = []
-    const save = vi.fn(() => new Promise(resolve => releases.push(resolve)))
-    const persistence = useEncounterPersistence({ source, save, debounceMs: 100 })
-    persistence.markReady()
-
-    persistence.scheduleSave()
-    await vi.advanceTimersByTimeAsync(100)
-    await settle()
-    source.value.round = 2
-    persistence.scheduleSave()
-    await vi.advanceTimersByTimeAsync(100)
-    await settle()
-    expect(save).toHaveBeenCalledTimes(1)
-
-    releases.shift()()
-    await settle()
-    expect(save).toHaveBeenCalledTimes(2)
-    expect(save.mock.calls[1][0]).toEqual({ round: 2 })
-    releases.shift()()
-    await settle()
-    vi.useRealTimers()
+  persistence.stop()
+})
+it('serializes changes while a previous request is in flight', async () => {
+  vi.useFakeTimers()
+  const source = ref({ round: 1 }),
+    releases = []
+  const send = vi.fn(
+    (packet) =>
+      new Promise((resolve) =>
+        releases.push(() =>
+          resolve({ version: packet.baseVersion + 1, patches: packet.patches }),
+        ),
+      ),
+  )
+  const persistence = useEncounterPersistence({ source, send, debounceMs: 100 })
+  persistence.markReady({ data: { round: 0 }, version: 1 })
+  persistence.scheduleSave()
+  await vi.advanceTimersByTimeAsync(100)
+  source.value.round = 2
+  persistence.scheduleSave()
+  await vi.advanceTimersByTimeAsync(100)
+  expect(send).toHaveBeenCalledOnce()
+  releases.shift()()
+  await vi.advanceTimersByTimeAsync(0)
+  expect(send).toHaveBeenCalledTimes(2)
+  expect(send.mock.calls[1][0]).toMatchObject({
+    baseVersion: 2,
+    patches: [{ op: 'set', path: ['round'], value: 2 }],
   })
-
-  it('flushes pending changes when the owner unmounts', async () => {
-    const source = ref({ active: true })
-    const save = vi.fn().mockResolvedValue(undefined)
-    const persistence = useEncounterPersistence({ source, save, debounceMs: 500 })
-    persistence.markReady()
-    persistence.scheduleSave()
-    persistence.stop()
-    await settle()
-    expect(save).toHaveBeenCalledWith({ active: true })
-  })
+  releases.shift()()
+  await vi.advanceTimersByTimeAsync(0)
+  persistence.stop()
+})
+it('flushes an unsent change when unmounted', async () => {
+  const source = ref({ active: false }),
+    send = vi.fn(async (packet) => ({ version: 2, patches: packet.patches }))
+  const persistence = useEncounterPersistence({ source, send, debounceMs: 500 })
+  persistence.markReady({ data: { active: false }, version: 1 })
+  source.value.active = true
+  persistence.scheduleSave()
+  persistence.stop()
+  expect(send.mock.calls[0][0].patches).toEqual([
+    { op: 'set', path: ['active'], value: true },
+  ])
 })

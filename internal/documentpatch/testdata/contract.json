@@ -1,0 +1,296 @@
+[
+  {
+    "name": "numeric character identity",
+    "before": {
+      "participants": [
+        {
+          "charId": 1,
+          "data": {
+            "hp": 10
+          },
+          "version": 1
+        },
+        {
+          "charId": 2,
+          "data": {
+            "hp": 20
+          },
+          "version": 1
+        }
+      ]
+    },
+    "after": {
+      "participants": [
+        {
+          "charId": 1,
+          "data": {
+            "hp": 9
+          },
+          "version": 2
+        },
+        {
+          "charId": 2,
+          "data": {
+            "hp": 20
+          },
+          "version": 1
+        }
+      ]
+    },
+    "patches": [
+      {
+        "op": "set",
+        "path": [
+          "participants",
+          {
+            "idField": "charId",
+            "id": 1
+          },
+          "data",
+          "hp"
+        ],
+        "value": 9
+      },
+      {
+        "op": "set",
+        "path": [
+          "participants",
+          {
+            "idField": "charId",
+            "id": 1
+          },
+          "version"
+        ],
+        "value": 2
+      }
+    ]
+  },
+  {
+    "name": "nested reorder insertion removal",
+    "before": {
+      "bags": [
+        {
+          "id": "s",
+          "items": [
+            {
+              "uid": "a",
+              "count": 1
+            },
+            {
+              "uid": "b",
+              "count": 2
+            },
+            {
+              "uid": "c",
+              "count": 3
+            }
+          ]
+        }
+      ]
+    },
+    "after": {
+      "bags": [
+        {
+          "id": "s",
+          "items": [
+            {
+              "uid": "c",
+              "count": 3
+            },
+            {
+              "uid": "d",
+              "count": 4
+            },
+            {
+              "uid": "a",
+              "count": 8
+            }
+          ]
+        }
+      ]
+    },
+    "patches": [
+      {
+        "op": "remove",
+        "path": [
+          "bags",
+          {
+            "idField": "id",
+            "id": "s"
+          },
+          "items",
+          {
+            "idField": "uid",
+            "id": "b"
+          }
+        ]
+      },
+      {
+        "op": "set",
+        "path": [
+          "bags",
+          {
+            "idField": "id",
+            "id": "s"
+          },
+          "items",
+          {
+            "idField": "uid",
+            "id": "a"
+          },
+          "count"
+        ],
+        "value": 8
+      },
+      {
+        "op": "insert",
+        "path": [
+          "bags",
+          {
+            "idField": "id",
+            "id": "s"
+          },
+          "items",
+          {
+            "idField": "uid",
+            "id": "d"
+          }
+        ],
+        "value": {
+          "uid": "d",
+          "count": 4
+        },
+        "beforeId": "a"
+      },
+      {
+        "op": "order",
+        "path": [
+          "bags",
+          {
+            "idField": "id",
+            "id": "s"
+          },
+          "items"
+        ],
+        "idField": "uid",
+        "value": [
+          "c",
+          "d",
+          "a"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "missing and null",
+    "before": {
+      "old": null,
+      "value": 1
+    },
+    "after": {
+      "value": null,
+      "new": false
+    },
+    "patches": [
+      {
+        "op": "set",
+        "path": [
+          "new"
+        ],
+        "value": false
+      },
+      {
+        "op": "remove",
+        "path": [
+          "old"
+        ]
+      },
+      {
+        "op": "set",
+        "path": [
+          "value"
+        ],
+        "value": null
+      }
+    ]
+  },
+  {
+    "name": "scalar collection",
+    "before": {
+      "ids": [
+        1,
+        2
+      ]
+    },
+    "after": {
+      "ids": [
+        2,
+        1,
+        3
+      ]
+    },
+    "patches": [
+      {
+        "op": "set",
+        "path": [
+          "ids"
+        ],
+        "value": [
+          2,
+          1,
+          3
+        ]
+      }
+    ]
+  },
+  {
+    "name": "empty document",
+    "before": null,
+    "after": {
+      "items": []
+    },
+    "patches": [
+      {
+        "op": "set",
+        "path": [],
+        "value": {
+          "items": []
+        }
+      }
+    ]
+  },
+  {
+    "name": "explicit arbitrary identity field",
+    "before": {
+      "list": [
+        {
+          "instance": "x",
+          "n": 1
+        }
+      ]
+    },
+    "after": {
+      "list": [
+        {
+          "instance": "x",
+          "n": 2
+        }
+      ]
+    },
+    "patches": [
+      {
+        "op": "set",
+        "path": [
+          "list",
+          {
+            "idField": "instance",
+            "id": "x"
+          },
+          "n"
+        ],
+        "value": 2
+      }
+    ],
+    "applyOnly": true
+  }
+]

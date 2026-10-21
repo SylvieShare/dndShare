@@ -1,3 +1,4 @@
+import {applyDocumentPatches} from '../../src/shared/lib/documentPatch.js'
 import { expect } from '@playwright/test'
 
 export const copy = value => JSON.parse(JSON.stringify(value))
@@ -30,7 +31,7 @@ export async function setup(page) {
     else if (path === '/api/templates') json = { templates: [{ id: 1, name: 'DND5' }] }
     else if (path.endsWith('/chapter-graph')) json = { arcs: [{ id: 1, order: 1, name: 'Путь' }], chapters, edges: [] }
     else if (path === '/api/sessions/test/world') json = { locations, npcs: [], quests: [], materials: [], relations: [] }
-    else if (path.endsWith('/encounter')) json = { active: false, round: 0, turnIndex: 0, combatants: [] }
+    else if (path.endsWith('/encounter')) json = {version:0,data:{active:false,round:0,turnIndex:0,combatants:[]}}
     else if (path === '/api/account/tutorials') json = { tutorials: ['desktop', 'mobile'].map(device => ({ flowId: 'session-dm', sourceKey: 'source:1', device, status: 'completed', revision: 1 })) }
     else if (path === '/api/sources') json = { sources: [{ id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }] }] }
     else if (path === '/api/storage/images') json = { upload_id: nextId, url: image }
@@ -49,12 +50,13 @@ export async function setup(page) {
         if (!maps.some(map => map.current) && maps.length) maps[0].current = true
         return route.fulfill({ status: 204 })
       }
-      if (method === 'PUT') {
+      if(path.endsWith('/changes'))return route.fulfill({json:{version:map.revision,data:{name:map.name,routes:map.routes},metadata:{id:map.id,current:map.current}}})
+      if (method === 'PATCH') {
         const body = route.request().postDataJSON()
         writes.push(copy(body))
-        if (fail) { const status = fail; fail = 0; return route.fulfill({ status, json: { desc: status === 409 ? 'Карта изменена в другом окне' : 'Нет связи' } }) }
-        if (body.revision !== map.revision) return route.fulfill({ status: 409, json: { desc: 'Конфликт версии' } })
-        Object.assign(map, body, { revision: map.revision + 1 }); json = copy(map)
+        if (fail) { const status = fail; fail = 0; if(status===409){map.routes[0].points[0].note='Серверная заметка';map.revision++}; return route.fulfill({ status, json: { desc: status === 409 ? 'Карта изменена в другом окне' : 'Нет связи' } }) }
+        if (body.baseVersion !== map.revision) return route.fulfill({ status: 409, json: { desc: 'Конфликт версии' } })
+        Object.assign(map,applyDocumentPatches({name:map.name,routes:copy(map.routes)},body.patches),{revision:map.revision+1});json={version:map.revision,patches:body.patches,metadata:{id:map.id,current:map.current}}
       }
     }
     await route.fulfill({ json })
@@ -77,4 +79,21 @@ export async function openRoute(page, name = 'Путь') {
   await page.getByRole('button', { name: 'Маршруты', exact: true }).click()
   await page.locator('.global-map-sidebar').getByRole('button', { name: `Открыть маршрут ${name}`, exact: true }).click()
   await expect(page.getByRole('complementary', { name: 'Настройки маршрута', exact: true })).toHaveCSS('opacity', '1')
+}
+
+export async function dismissWorldFocus(page) {
+  await page.locator('.global-map-canvas').focus()
+  await page.keyboard.press('Escape')
+}
+export async function renameWorldPoint(page, name) {
+  const focus = page.getByRole('complementary', { name: 'Настройки точки', exact: true })
+  await focus.getByRole('button', { name: 'Изменить название точки', exact: true }).click()
+  await focus.getByRole('textbox', { name: 'Название точки', exact: true }).fill(name)
+  await page.keyboard.press('Enter')
+}
+export async function reuseWorldPoint(page, id) {
+  await page.getByRole('button', { name: 'Добавить точку на карту', exact: true }).click()
+  await page.locator(`button[data-source-id="${id}"]`).click()
+  await page.getByRole('button', { name: 'Готово', exact: true }).click()
+  await page.locator('.global-route-point-open').last().click()
 }
