@@ -10,22 +10,7 @@
         @rename="rename"
         @keydown.esc.capture="escape"
     /></template>
-    <div class="map-selected-visual">
-      <BaseTile
-        class="map-selected-frame"
-        framed
-        :role="entry.kind === 'light' ? 'button' : undefined"
-        :tabindex="entry.kind === 'light' ? 0 : undefined"
-        :aria-label="
-          entry.kind === 'light'
-            ? `Приблизить источник: ${entry.name}`
-            : undefined
-        "
-        @dblclick.stop="entry.kind === 'light' && editor.focusLight(entry.id)"
-        @keydown.enter.self.prevent="
-          entry.kind === 'light' && editor.focusLight(entry.id)
-        "
-      >
+    <InspectorPreview :interactive="entry.kind === 'light'" :label="`Приблизить источник: ${entry.name}`" @activate="editor.focusLight(entry.id)">
         <slot name="preview"
           ><MapLightPreview
             v-if="entry.kind === 'light'"
@@ -50,8 +35,7 @@
             :style="{ color: entry.color }"
           />
         </slot>
-      </BaseTile>
-      <div class="map-selected-buttons">
+      <template #actions>
         <ActionButton
           v-if="copyable"
           icon-only
@@ -82,14 +66,15 @@
             ><Trash2 :size="18" :style="{ color: 'var(--danger)' }"
           /></template>
         </ActionButton>
-      </div>
-    </div>
+      </template>
+    </InspectorPreview>
     <slot name="after-preview" />
     <slot />
   </MapFocusContent>
 </template>
 <script setup>
-import { ActionButton, BaseTile } from "@sylvieshare/share-ui";
+import { ActionButton } from "@sylvieshare/share-ui";
+import InspectorPreview from "@/shared/ui/InspectorPreview.vue";
 import MapEntityHeading from "./MapEntityHeading.vue";
 import MapLightPreview from "./MapLightPreview.vue";
 import MapFocusContent from "./MapFocusContent.vue";
@@ -118,27 +103,9 @@ function escape(event) {
 }
 </script>
 <style scoped>
-.map-selected-visual {
-  display: flex;
-  gap: 8px;
-}
-.map-selected-frame {
-  --surface: var(--map-model-preview-bg);
-  flex: 1;
-  min-width: 0;
-  height: 150px;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-}
 .map-selection-preview {
   width: 100%;
   height: 150px;
   object-fit: contain;
-}
-.map-selected-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
 }
 </style>

@@ -6,22 +6,12 @@
     <div class="global-map-world" :style="v.style">
       <img :key="imageGeneration" class="global-map-image" :src="imageUrl" alt="Карта мира" draggable="false" @load="v.load" @error="v.imageError = true" />
       <GlobalMapPaths :routes="routes" :width="v.image.width" :height="v.image.height" :unit="routeUnit" :selected-route="selectedRoute" :preview="continuation.preview.value" :readonly="readonly" />
-      <div v-for="marker in markers" :key="marker.sourceId" v-memo="[marker, v.view.scale, preview?.id, selectedPoint, hoveredLeg]" class="global-map-anchor"
-        :class="{ 'global-map-anchor--control': marker.control, 'global-map-anchor--hidden': marker.control && !controlVisible(marker) }" :style="anchor(marker, marker.color)">
-        <button type="button" :class="[marker.control ? 'global-map-control' : 'global-map-point', { 'global-map-point--selected': marker.id === selectedPoint }]"
-          :data-point-id="marker.id" :data-route-id="marker.routeId" :data-source-id="marker.sourceId" :data-control="marker.control || undefined" :data-position="marker.position"
-          :tabindex="marker.control && !controlVisible(marker) ? -1 : 0" :aria-hidden="marker.control && !controlVisible(marker) || undefined"
-          :aria-label="marker.control ? `Узел изгиба: ${marker.routeName}` : `${marker.routeName}, точка ${marker.numbers.join(', ')}${marker.name ? ': ' + marker.name : ''}`"
-          :aria-pressed="marker.id === selectedPoint" :aria-haspopup="marker.control ? undefined : 'dialog'" :aria-expanded="preview?.id === marker.id"
-          @pointerenter="showPreview($event, marker.routeId, marker)" @pointerleave="queueClose" @focus="showPreview($event, marker.routeId, marker)"
-          @blur="queueClose" @click.stop="clickMarker($event, marker)" @keydown="pointKey($event, marker.routeId, marker)">
-          <template v-if="!marker.control">{{ marker.numbers.length <= 2 ? marker.numbers.join('·') : `${marker.number}↻` }}</template>
-        </button>
-        <span v-if="marker.last" class="global-map-endpoint" role="img" aria-label="Последняя точка маршрута" title="Последняя точка · Cmd/Ctrl — продолжить маршрут"><FlagTriangleRight :size="13" /></span>
-      </div>
-      <div v-if="continuation.preview.value" class="global-map-anchor global-map-ghost" :style="anchor(continuation.preview.value, continuation.preview.value.color)">
-        <span class="global-map-point">{{ continuation.preview.value.sourceId ? '↻' : '+' }}</span>
-      </div>
+      <GlobalMapMarker v-for="marker in markers" :key="marker.sourceId" v-memo="[marker, v.image.width, v.image.height, v.view.scale, preview?.id, selectedPoint, hoveredLeg]"
+        :marker="marker" :selected="marker.id === selectedPoint" :expanded="preview?.id === marker.id" :hidden="marker.control && !controlVisible(marker)" :style="anchor(marker, marker.color)"
+        @enter="showPreview($event, marker.routeId, marker)" @leave="queueClose" @focus="showPreview($event, marker.routeId, marker)" @blur="queueClose"
+        @activate="clickMarker($event, marker)" @key="pointKey($event, marker.routeId, marker)" />
+      <GlobalMapMarker v-if="continuation.preview.value" class="global-map-ghost" :interactive="false"
+        :marker="{ ...continuation.preview.value, numbers: [continuation.preview.value.sourceId ? '↻' : '+'] }" :style="anchor(continuation.preview.value, continuation.preview.value.color)" />
       <template v-for="route in routes" :key="route.id">
         <div v-if="route.points.length && route.playerIds.length" class="global-map-party" :style="partyStyle(route)">
           <span class="global-map-route-name">{{ route.name }}</span>
@@ -47,9 +37,11 @@
 </template>
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref, shallowRef, watch } from 'vue'
-import { FlagTriangleRight, UserRound } from '@lucide/vue'
+import { UserRound } from '@lucide/vue'
 import { ActionButton, BasePopover, LoadingState, useIsMobile } from '@sylvieshare/share-ui'
 import { pvAvatar, pvName } from '@/features/sessions/lib/participantView'
+import GlobalMapMarker from './GlobalMapMarker.vue'
+import { mapDrawingUnits, mapPointAnchor } from '../lib/mapDrawing'
 import { clamp } from '../lib/routes'
 import { useGlobalMapViewport } from '../composables/useGlobalMapViewport'
 import GlobalMapCallout from './GlobalMapCallout.vue'
@@ -66,10 +58,10 @@ const v = reactive(useGlobalMapViewport(host, props, emit))
 const continuation = useGlobalMapContinuation(host, props, v, emit)
 watch(continuation.engaged, active => { emit('continuation-active', active); if (active) hidePreview() })
 const markers = computed(() => mapMarkers(props.routes, props.selectedRoute, props.selectedPoint))
-const baseUnit = computed(() => Math.max(v.image.width, v.image.height) / 1200)
-const drawingScale = computed(() => Math.min(2.2, .4 + baseUnit.value * v.view.scale))
-const routeUnit = computed(() => .64 * drawingScale.value / v.view.scale)
-const anchor = (p, color) => ({ left: `${p.x * v.image.width}px`, top: `${p.y * v.image.height}px`, '--route-color': color, transform: `scale(${.64 * Math.max(1, drawingScale.value) / v.view.scale}) translate(-50%, -50%)` })
+const drawing = computed(() => mapDrawingUnits(v.image, v.view.scale))
+const routeUnit = computed(() => drawing.value.route)
+const anchor = (point, color) => mapPointAnchor(point, v.image, drawing.value.marker, color)
+const viewport = computed(() => ({ width: v.image.width, height: v.image.height, scale: v.view.scale, loaded: v.loaded, error: v.imageError }))
 const routePlayers = route => props.participants.filter(player => route.playerIds.includes(player.charId))
 const preview = shallowRef(null)
 const previewData = computed(() => {
@@ -141,6 +133,6 @@ function pointKey(event, routeId, point) {
   emit('move', routeId, point.id, { x: clamp(point.x + delta[0] * step / (v.image.width * v.view.scale)), y: clamp(point.y + delta[1] * step / (v.image.height * v.view.scale)) })
   emit('drag-end', true)
 }
-defineExpose({ fit: v.fit, zoom: v.zoom, focusPoint: v.focusPoint })
+defineExpose({ viewport, fit: v.fit, zoom: v.zoom, focusPoint: v.focusPoint })
 </script>
 <style scoped src="../styles/globalMapCanvas.css"></style>

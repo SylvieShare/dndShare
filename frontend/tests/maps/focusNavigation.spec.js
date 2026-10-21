@@ -295,3 +295,16 @@ for (const mode of ["editor", "board"])
       .click();
     await expect(section.locator(".map-transition-item")).toHaveCount(1);
   });
+
+for (const mode of ['editor', 'board']) test(`area reference shares the framed inspector card and keyboard activation (${mode})`, async ({ page }) => {
+  await ready(page, mode)
+  await tileFocus(page)
+  const panel = panelOf(page)
+  await expect(panel.locator('.workspace-focus-content')).toHaveClass(/base-tile--framed/)
+  await expect(panel.locator('.inspector-preview-frame')).toBeVisible()
+  const link = panel.getByRole('button', { name: 'Перейти к области «Комната»', exact: true })
+  await expect(link).toHaveClass(/inspector-reference/)
+  await link.focus()
+  await page.keyboard.press('Space')
+  await expect(panel.getByRole('heading', { name: 'Комната', exact: true })).toBeVisible()
+})

@@ -1,25 +1,6 @@
 <template>
   <MapInspectorSection v-if="boundLight || !builtin || area" title="Область">
-    <BaseTile
-      v-if="area"
-      class="map-selection-area"
-      framed
-      interactive
-      role="button"
-      tabindex="0"
-      :aria-label="`Перейти к области «${area.name}»`"
-      :color="area.color"
-      @click="!hasSelectedText() && emit('area', area.id)"
-      @keydown.enter.self.prevent="emit('area', area.id)"
-      @keydown.space.self.prevent="emit('area', area.id)"
-    >
-      <Group
-        :size="20"
-        :style="{ color: area.color }"
-        aria-hidden="true"
-      /><strong>{{ area.name }}</strong
-      ><ArrowUpRight :size="18" aria-hidden="true" />
-    </BaseTile>
+    <InspectorReference v-if="area" class="map-selection-area" :name="area.name" :color="area.color" :icon="Group" :label="`Перейти к области «${area.name}»`" @activate="emit('area', area.id)" />
     <p v-else-if="boundLight" class="map-hint">Без области</p>
     <FormSelect
       v-if="unboundLight && area"
@@ -82,16 +63,15 @@
 import { computed } from "vue";
 import {
   ActionButton,
-  BaseTile,
   ActionMenu,
   ActionMenuItem,
   RemoveButton,
   FormSelect,
 } from "@sylvieshare/share-ui";
-import { hasSelectedText } from "../lib/textSelection";
+import InspectorReference from "@/shared/ui/InspectorReference.vue";
 import { lightArea } from "../lib/mapLighting";
 import MapInspectorSection from "./MapInspectorSection.vue";
-import { ArrowUpRight, Group, Plus } from "@lucide/vue";
+import { Group, Plus } from "@lucide/vue";
 const props = defineProps({ editor: Object, entry: Object });
 const boundLight = computed(
   () => props.entry?.kind === "light" && !!props.entry.item.anchor,
@@ -127,19 +107,6 @@ function create() {
 }
 </script>
 <style scoped>
-.map-selection-area {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  cursor: pointer;
-  gap: 8px;
-}
-.map-selection-area strong {
-  flex: 1;
-  min-width: 0;
-  overflow-wrap: anywhere;
-  font-size: 13px;
-}
 .map-selection-actions {
   display: flex;
   flex-wrap: wrap;

@@ -1,7 +1,7 @@
 <template>
   <Transition name="workspace-focus" appear @before-leave="disableLeaving" @before-enter="enableEntering">
     <aside v-if="open" ref="element" class="workspace-focus-panel" v-bind="$attrs">
-      <BaseTile class="workspace-focus-content">
+      <BaseTile class="workspace-focus-content" framed>
         <slot name="navigation" />
         <Transition name="workspace-focus-swap" mode="out-in" @before-leave="holdHeight" @enter="resizeFrame">
           <div :key="focusKey" class="workspace-focus-view"><slot /></div>
@@ -45,7 +45,7 @@ onBeforeUnmount(() => { heightAnimation?.cancel(); reduced.removeEventListener('
   max-height: calc(100% - 100px); display: flex; flex-direction: column; overflow: hidden;
   user-select: text; border-radius: var(--r-lg);
 }
-.workspace-focus-panel > .workspace-focus-content { padding: 0; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+.workspace-focus-panel > .workspace-focus-content { background-color: var(--surface); padding: 0; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
 .workspace-focus-view { min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
 .workspace-focus-enter-active, .workspace-focus-leave-active { transition: opacity 180ms ease; }
 .workspace-focus-enter-from, .workspace-focus-leave-to { opacity: 0; }

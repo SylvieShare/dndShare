@@ -1,7 +1,7 @@
 <template>
   <aside
     ref="element"
-    class="map-sidebar"
+    class="map-sidebar map-sidebar--overlay"
     :style="{
       '--map-sidebar-panel-width':
         panelWidth == null ? undefined : `${panelWidth}px`,
@@ -9,7 +9,6 @@
     :class="{
       'map-sidebar--collapsed': collapsed,
       'map-sidebar--opening': opening,
-      'map-sidebar--overlay': overlay,
     }"
   >
     <nav ref="navigation" class="map-sidebar-tabs" :aria-label="tabsLabel">
@@ -92,7 +91,6 @@ const props = defineProps({
   tab: { type: String, required: true },
   tabsLabel: { type: String, default: "Вкладки карты" },
   collapseAt: { type: Number, default: 760 },
-  overlay: Boolean,
 });
 const emit = defineEmits(["update:tab", "select", "resize"]);
 const element = ref(null);

@@ -14,7 +14,7 @@
         <WorkspaceCanvasControls class="global-map-zoom" zoom-out-label="Уменьшить карту мира" fit-label="Вписать карту мира" zoom-in-label="Увеличить карту мира"
           @zoom="canvas?.zoom($event)" @fit="canvas?.fit()" />
         <div v-if="addMode && route" class="global-map-instruction">{{ route.name }} · нажмите на карту или точку · Esc — обзор<ActionButton variant="quiet" @click="addMode = false; selectRoute(routeId)">Готово</ActionButton></div>
-        <GlobalMapPointInspector :visible="!routeFocus && !addMode && !continuing" :point="point" :route="inspectorRoute" :index="index" :chapters="chapters" :locations="locations"
+        <GlobalMapPointInspector :visible="!routeFocus && !addMode && !continuing" :point="point" :route="inspectorRoute" :routes="c.selected.routes" :image-url="c.selected.imageUrl" :viewport="canvas?.viewport" :index="index" :chapters="chapters" :locations="locations"
           :disabled="c.conflict || c.busy" @close="pointId = ''" @change="patchPoint" @route="selectRoute(routeId)" @delete="requestPointDelete(route.id, point.id)" @chapter="emit('open-chapter', $event)" @location="emit('open-location', $event)" />
         <GlobalMapRouteInspector :visible="routeFocus && !addMode && !continuing" :route="route" :routes="c.selected.routes" :participants="participants" :chapters="chapters" :disabled="c.conflict || c.busy"
           @close="routeFocus = false" @change="changeRoute" @reorder="reorder" @select-point="selectPoint" @delete-point="requestPointDelete(routeId, $event)" @add-mode="startAdding" @reuse-point="addPoint(null, $event)" />
@@ -46,7 +46,7 @@ import WorkspaceCanvasControls from '@/shared/ui/WorkspaceCanvasControls.vue'
 const props = defineProps({ sessionUuid: { type: String, required: true }, participants: { type: Array, default: () => [] }, chapters: { type: Array, default: () => [] }, locations: { type: Array, default: () => [] }, currentChapterId: Number })
 const emit = defineEmits(['open-chapter', 'open-location'])
 const c = reactive(useGlobalMaps(props.sessionUuid))
-const sidebar = ref(null), canvas = ref(null), navigationWidth = ref(48), continuing = ref(false)
+const sidebar = ref(null), canvas = ref(null), navigationWidth = ref(60), continuing = ref(false)
 const pending = ref(null), reloadConfirm = ref(false), leaveConfirm = ref(false), mobile = useIsMobile(760)
 const { routeId, pointId, addMode, routeFocus, route, point, inspectorRoute, index, select, selectRoute, selectPoint, startAdding, addRoute, addPoint, move,
   insertControl, cancelControl, endDrag, patchPoint, reorder, deletePoint, deleteRoute } = useGlobalMapEditing(c, canvas, sidebar, mobile, props)
