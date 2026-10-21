@@ -63,3 +63,19 @@ test("reviewed classification is not overwritten and grid sizes are not variants
     groupingFor(frames[1], frames).variantCode,
   );
 });
+
+test("Medieval tall walls and corners share the wall section with distinct families", () => {
+  for (const [name, code] of [
+    ["Tall Angle", "MED-tall-angle"],
+    ["Tall Angle Half Wall", "MED-tall-angle-half-wall"],
+    ["Tall Wall 1", "MED-tall-wall"],
+  ]) {
+    const item = model(name, code);
+    assert.deepEqual(groupingFor(item, [item]), {
+      code: "MED-walls",
+      variantCode: code,
+    });
+  }
+  const ladder = model("Tall Ladder", "MED-tall-ladder");
+  assert.equal(groupingFor(ladder, [ladder]).code, ladder.code);
+});
