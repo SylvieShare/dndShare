@@ -1,0 +1,185 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [0, 0],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Tall Wall 1",
+  "groupCode": "MED-tall-wall",
+  "hasDecor": false,
+  "renderTriangles": 110000,
+  "lodTriangles": 40000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1536,
+  "renderUVAngleLimitRad": 0.18,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1024,
+  "lodColourSize": 1024,
+  "lodDataSize": 768,
+  "standRayTopMM": 120,
+  "standPointsMM": [[0, 0]],
+  "blockersMM": [
+    [
+      [-17.65, -17.65],
+      [-10.386400146484375, -17.65],
+      [-10.386400146484375, 17.65],
+      [-17.65, 17.65]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": ["town", "floor", "tall", "wall", "wood", "plaster"],
+  "weightBudget": {
+    "renderMiB": [3.3, 6.5],
+    "lodMiB": [1.4, 3.2],
+    "shadowKiB": [110, 220],
+    "previewKiB": [12, 35],
+    "basis": "One35mm cell,one89mm high wall with sculpted plaster on both faces,two end posts,a separately measured rear crossbar/middle post andXfloor. Source539996tri/26.999MB.110000/40000 independent triangles,2048/1536 bakes,1536/1024 colour and1024/768 data;compare compact on plaster,timber boundaries,rear beam and floor grain."
+  },
+  "materials": {
+    "earthRGB": [0.28, 0.17, 0.075],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [0.34, 0.165, 0.055],
+    "woodLightRGB": [0.59, 0.35, 0.145],
+    "stoneDarkRGB": [0.34, 0.165, 0.055],
+    "stoneLightRGB": [0.59, 0.35, 0.145],
+    "woodParts": [
+      {
+        "name": "X floor and north south fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west Y floor border and fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [-14.3, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y floor border and fascia",
+        "minMM": [14.3, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south tall post",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-10.1, -13.6, 89.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "north tall post",
+        "minMM": [-17.65, 13.6, 26.1],
+        "maxMM": [-10.1, 17.65, 89.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "measured rear crossbar",
+        "minMM": [-17.65, -13.8, 67],
+        "maxMM": [-14, 13.8, 77],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0, 0.9999317754102179, -0.011680947092146237],
+        "projection": {
+          "originMM": [
+            -17.324998489228804, -0.09264290403611589, 71.52099023195777
+          ],
+          "axis": [0, 0.011680947092146237, 0.9999317754102179],
+          "rangeMM": [-2.2821408035258326, 2.6620868927809846]
+        }
+      },
+      {
+        "name": "measured rear middle post",
+        "minMM": [-17.65, -2.6439000606536864, 26.1],
+        "maxMM": [-14, 2.436099910736084, 69.63882522307836],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "ochre plaster on both tall faces and top",
+        "kind": "plaster",
+        "minMM": [-17.65, -13.6, 26.6],
+        "maxMM": [-10.1, 13.6, 89.2],
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "south tall post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.1, -13.6, 89.2],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "north tall post",
+            "minMM": [-17.65, 13.6, 26.1],
+            "maxMM": [-10.1, 17.65, 89.2],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "measured rear crossbar",
+            "minMM": [-17.65, -13.8, 67],
+            "maxMM": [-14, 13.8, 77],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0, 0.9999317754102179, -0.011680947092146237],
+            "projection": {
+              "originMM": [
+                -17.324998489228804, -0.09264290403611589, 71.52099023195777
+              ],
+              "axis": [0, 0.011680947092146237, 0.9999317754102179],
+              "rangeMM": [-2.2821408035258326, 2.6620868927809846]
+            }
+          },
+          {
+            "name": "measured rear middle post",
+            "minMM": [-17.65, -2.6439000606536864, 26.1],
+            "maxMM": [-14, 2.436099910736084, 69.63882522307836],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "PDFpage13 and native inside/back/front/top inspected. Source539996tri/26999884bytes/SHA5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd,max89.012894mm. Single westwall edge64. Lower floor4886 source normals nx2.041474/ny2.098011 prove Xgrain;Ywest/eastfascia,Zposts. Native centre[0,0]Z24.704712/normalZ.993113 is clear;local[.5,.5]. Rear beam differs from87:1010 own source samples givecentreZ71.520990 anddirection[0,.999932,-.011681]. Connected rear post1466verts atX<-16.5 spansY[-2.493900,2.286100];do not copy87crossbar76mm or its offcentrepost. Plaster excludes only real timbers,including their rear depth bounds. Source high geometrymaxX-10.466400 plus.08mm gives conservativeWblocker,free floor stays accessible. No decor,lights,emission,supportSlots or inventedmetal. Individually verify source/render/LOD/shadow,both sides of wall,packedcolour/ORM and both texture candidates;select lightest visually acceptable,then normalize only ordinary lower17mm insertion toUD0165.373095mm preservingbody/UV/images/worldheight. Full-height NE transparent preview andGo manifest before MCP;fresh identity,source,all5resources,placement and behaviour confirmation. InitialrenderUVangle.25 overlapped a roundednorthpost atUVpixel[10,1475]/2048:sourcepositions[-10.781342,16.857312,55.346640]and[-11.016950,16.571273,55.354604],distance.371mm. Use renderangle.18 and rebake;retain physical overlap tolerance.1mm and validate both tiers/candidates.",
+  "surfaceHeightMM": 24.7047119140625,
+  "renderColourSize": 1536
+}
