@@ -131,6 +131,7 @@ Tall Wall 2|Высокая стена 2
 Tall Wall 3|Высокая стена 3
 Tall Window With Glass|Высокое окно со стеклом
 Tall Window Without Glass|Высокое окно без стекла
+Tall Door|Высокая дверь
 Ladder Down|Приставная лестница вниз
 Balcony|Балкон
 Balcony Angle|Угловой балкон
