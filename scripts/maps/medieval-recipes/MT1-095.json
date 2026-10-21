@@ -1,0 +1,222 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [0, 0],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Tall Window Without Glass",
+  "groupCode": "MED-tall-window",
+  "hasDecor": false,
+  "renderTriangles": 110000,
+  "lodTriangles": 45000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1536,
+  "renderUVAngleLimitRad": 0.18,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1536,
+  "lodColourSize": 1024,
+  "lodDataSize": 1024,
+  "standRayTopMM": 120,
+  "standPointsMM": [[0, 0]],
+  "blockersMM": [
+    [
+      [-17.65, -17.65],
+      [-9.559300346374512, -17.65],
+      [-9.559300346374512, 17.65],
+      [-17.65, 17.65]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": ["town", "floor", "tall", "window", "wood", "plaster", "iron"],
+  "weightBudget": {
+    "renderMiB": [3.5, 8],
+    "lodMiB": [1.5, 4],
+    "shadowKiB": [120, 250],
+    "previewKiB": [12, 40],
+    "basis": "One 35 mm cell with an 89.0121 mm west wall, four open window apertures, wooden frame, rails, sill and lintel, ochre plaster and two measured iron caps. Source 539930 triangles / 26996584 bytes. Compare 110000/45000 independent geometry tiers and balanced/compact textures; check aperture interior surfaces, tiny fasteners, floor grain and plaster boundaries."
+  },
+  "materials": {
+    "earthRGB": [0.28, 0.17, 0.075],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [0.34, 0.165, 0.055],
+    "woodLightRGB": [0.59, 0.35, 0.145],
+    "stoneDarkRGB": [0.34, 0.165, 0.055],
+    "stoneLightRGB": [0.59, 0.35, 0.145],
+    "woodParts": [
+      {
+        "name": "X floor and north south fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west Y floor border and fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [-14.3, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y floor border and fascia",
+        "minMM": [14.3, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south tall post",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-10.1, -13.6, 89.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "north tall post",
+        "minMM": [-17.65, 13.6, 26.1],
+        "maxMM": [-10.1, 17.65, 89.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "vertical window frame and central stile",
+        "minMM": [-17.65, -17.65, 40.9],
+        "maxMM": [-9.3, 17.65, 72.6],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "wide lower sill",
+        "minMM": [-17.65, -17.65, 40.9],
+        "maxMM": [-9.3, 17.65, 46.4],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "inner bottom rail",
+        "minMM": [-17.65, -10.6, 46.4],
+        "maxMM": [-11, 10.6, 48.4],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "window horizontal crossbar",
+        "minMM": [-17.65, -10.6, 56.25],
+        "maxMM": [-11, 10.6, 58.8],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "upper lintel and bevels",
+        "minMM": [-17.65, -17.65, 67.1],
+        "maxMM": [-9.3, 17.65, 72.6],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "lower ochre wall",
+        "kind": "plaster",
+        "minMM": [-17.65, -13.6, 26.6],
+        "maxMM": [-10.1, 13.6, 40.9],
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065
+      },
+      {
+        "name": "upper ochre wall",
+        "kind": "plaster",
+        "minMM": [-17.65, -13.6, 72.6],
+        "maxMM": [-10.1, 13.6, 89.2],
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065
+      },
+      {
+        "name": "front dark iron centre fastener",
+        "kind": "paint",
+        "minMM": [-11.814099040481583, -0.6921622268704272, 56.91322789830812],
+        "maxMM": [-10.614099040481584, 0.896047248828303, 58.501437374006855],
+        "rgb": [0.21, 0.185, 0.145],
+        "metallic": 0.8,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -11.214099040481583, 0.10194251097893789, 57.70733263615749
+          ],
+          "axis": [1, 0, 0],
+          "rangeMM": [-0.45, 0.08],
+          "radiusAtOriginMM": 0.7641047378493651,
+          "radiusSlope": 0,
+          "thicknessMM": 1.764104737849365,
+          "allowanceMM": 0.02
+        }
+      },
+      {
+        "name": "rear dark iron centre fastener",
+        "kind": "paint",
+        "minMM": [-16.569115324134334, -0.7950502462616824, 56.842456354588236],
+        "maxMM": [-15.369115324134333, 0.8154795959564696, 58.45298619680639],
+        "rgb": [0.21, 0.185, 0.145],
+        "metallic": 0.8,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -15.969115324134332, 0.010214674847393598, 57.647721275697315
+          ],
+          "axis": [-1, 0, 0],
+          "rangeMM": [-0.45, 0.08],
+          "radiusAtOriginMM": 0.775264921109076,
+          "radiusSlope": 0,
+          "thicknessMM": 1.775264921109076,
+          "allowanceMM": 0.02
+        }
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "Native source front, back, inside and top inspected. Source SHA cbeb39056caca029596d54e966befdaa7694d69faf4dc0d48f214aa5fa0567c4; maximum height 89.012100 mm. Floor centre Z24.704201, normalZ0.987837; 5252 floor normals (nx²0.042711 / ny²0.100310) confirm X grain and Y border. Four independent connected aperture components have 948/945/928/975 open rays on a0.25mm source grid. Preserve open geometry in render, LOD and shadow; sample frame interiors separately. Own sphere fits: front223 points radius0.955131/residual0.008592; rear297 points radius0.969081/residual0.014935. Protect source cap/rim topology and paint iron core at0.8 radius. Wooden vertical frame/stile/posts, Y rails/sill/lintel; lower and upper ochre plaster. High maxX-9.639300 defines wall blocker with0.08mm margin, free centre remains available. No glass, lights, decor or support slots. Input mount datum17mm; final UD-016 depth5.373095mm preserves body, UV, images and world placement. Select only after per-tier geometry, colour, aperture and material QA, then standardize, regenerate transparent preview, Go manifest and publish with fresh MCP confirmation.",
+  "surfaceHeightMM": 24.704200744628906,
+  "renderColourSize": 1536,
+  "geometryDetailRegions": [
+    {
+      "name": "front round fastener and rim",
+      "minMM": [-11.864099040481584, -1.0031884113327683, 56.60220171384579],
+      "maxMM": [-10.964099040481583, 1.207073433290644, 58.81246355846919]
+    },
+    {
+      "name": "rear round fastener and rim",
+      "minMM": [-16.61911532413433, -1.1088664765389513, 56.52864012431097],
+      "maxMM": [-15.719115324134332, 1.1292958262337385, 58.76680242708366]
+    }
+  ]
+}
