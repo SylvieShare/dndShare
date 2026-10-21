@@ -446,6 +446,34 @@ if (params.has("sixFires"))
     x: 4 + (i % 3),
     y: 4 + Math.floor(i / 3),
   }));
+if (params.has("serverLights")) {
+  // API serialization omits an empty areaId on anchored sources.
+  source.document.lights = source.document.tiles.map((tile, i) => ({
+    id: `builtin-server-${i}`,
+    builtinKey: "lamp",
+    name: "Свет",
+    kind: "torch",
+    color: "#ffb04a",
+    x: tile.x + 0.5,
+    y: tile.y + 0.5,
+    elevation: 0,
+    height: 1,
+    intensity: 8,
+    radius: 4,
+    enabled: true,
+    flicker: true,
+    showMarker: false,
+    shadows: false,
+    offset: [0, 0],
+    anchor: { kind: "tile", id: tile.id },
+    effect: {
+      kind: "fire",
+      size: [0.22, 0.35],
+      strength: 0.7,
+      offset: [0, 0, -0.4],
+    },
+  }));
+}
 const nativeFetch = window.fetch.bind(window);
 const modelDto = ({ id, definitionId, ...model }) => ({
   ...model,

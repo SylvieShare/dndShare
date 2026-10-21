@@ -147,9 +147,10 @@ export function syncLights(document, catalogue) {
   );
   if (remaining.length !== document.lights?.length) document.lights = remaining;
   for (const light of document.lights) {
-    if (light.areaId && !areas.has(light.areaId)) light.areaId = "";
+    // Match the API's omitted empty areaId instead of dirtying every loaded map.
+    if (light.anchor || (light.areaId && !areas.has(light.areaId)))
+      delete light.areaId;
     if (light.anchor) {
-      light.areaId = "";
       const pose = lightPose(light, document, catalogue, context);
       light.x = pose.x;
       light.y = pose.y;

@@ -1,5 +1,39 @@
 import { test, expect } from "@playwright/test";
 
+test("opening a saved map with anchored flames does not PUT the document", async ({
+  page,
+}) => {
+  await page.clock.install();
+  await page.goto(
+    "/tests/maps/fixtures/maps.html?mode=editor&componentsExample&sixFires&serverLights",
+  );
+  await expect(page.locator(".map-canvas-surface canvas")).toBeVisible();
+  await expect
+    .poll(() => page.evaluate(() => window.loadedModels.length))
+    .toBeGreaterThan(0);
+  await page.clock.runFor(3000);
+  expect(
+    await page.evaluate(() =>
+      window.requests.filter((request) => request.url === "/api/maps/test-map"),
+    ),
+  ).toEqual([]);
+  await page.getByRole("button", { name: "Настройки", exact: true }).click();
+  await page
+    .getByRole("switch", { name: "Показывать сетку", exact: true })
+    .click();
+  await page.clock.runFor(1300);
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          window.requests.filter(
+            (request) => request.url === "/api/maps/test-map",
+          ).length,
+      ),
+    )
+    .toBe(1);
+});
+
 test("editor saves a preview without fetching context and never polls the model catalogue", async ({
   page,
 }) => {
