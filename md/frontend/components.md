@@ -722,3 +722,8 @@ MapControlsHint и CanvasHotkeyHints — адаптеры текста и safe-a
 декали использует общий InspectorHeading/InlineEdit. MapPickupPing — предметная
 обратная связь холста при срабатывании удержания (с учётом reduced motion);
 [декали](../features/maps-decals.md) используют общий проход обводки с альфа-маской.
+
+MapLoadingErrorDialog — доменное содержимое общего AppModalFrame: ошибки загрузки
+с этапом, моделью и затронутыми экземплярами. Собственной модальной оболочки нет;
+MapCanvas использует useMapLoadingErrors и общий менеджер ресурсов. Ошибки фонового
+удаления слепка используют существующий AppNotifications(type=error).

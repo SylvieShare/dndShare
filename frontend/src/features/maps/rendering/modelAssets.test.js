@@ -53,3 +53,23 @@ it("replaces GLB resources at the same model ID and frees obsolete geometry", as
   await Promise.resolve();
   expect(disposed).toEqual(["/old", "/new"]);
 });
+it("confirms missing IDs only against a successfully refreshed catalogue, not a stale editor list", async () => {
+  const a = { id: "a", renderUrl: "/a", lodUrl: "/a" },
+    b = { id: "b", renderUrl: "/b", lodUrl: "/b" };
+  state.models = [a, b];
+  const assets = modelAssets(() => {});
+  await assets.prepare(new Set(["a", "b"]), { catalogue: [a] });
+  expect(assets.metadata("b")).toEqual(b);
+  assets.destroy();
+  const absent = modelAssets(() => {});
+  state.models = [a];
+  await expect(
+    absent.prepare(new Set(["b"]), { catalogue: [a] }),
+  ).rejects.toMatchObject({
+    name: "ModelLoadError",
+    kind: "model-missing",
+    modelIds: ["b"],
+    retryable: false,
+  });
+  absent.destroy();
+});

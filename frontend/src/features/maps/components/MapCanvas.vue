@@ -32,14 +32,19 @@
       }"
       aria-hidden="true"
     />
-    <div v-if="error" class="map-canvas-message" role="alert">
-      {{ error
-      }}<ActionButton variant="secondary" @click="retry"
-        >Повторить загрузку</ActionButton
-      >
-    </div>
+    <MapLoadingErrorDialog
+      v-if="loadingErrors.open.value"
+      :issues="loadingErrors.issues.value"
+      :document="document"
+      @close="loadingErrors.open.value = false"
+      @retry="retry"
+    />
     <div class="map-canvas-corner">
-      <MapDownloadManager :progress="downloads" @retry="retry" />
+      <MapDownloadManager
+        :progress="downloads"
+        @retry="retry"
+        @details="loadingErrors.open.value = true"
+      />
       <MapCanvasControls
         v-if="!readonly"
         :top-view="topView"
@@ -53,8 +58,9 @@
   </div>
 </template>
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { ActionButton } from "@sylvieshare/share-ui";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import MapLoadingErrorDialog from "./MapLoadingErrorDialog.vue";
+import { useMapLoadingErrors } from "../composables/useMapLoadingErrors";
 import { createMapRenderer } from "../rendering/mapRenderer";
 import { ISOMETRIC_AZIMUTH, ISOMETRIC_TILT } from "../rendering/mapCamera";
 import {
@@ -78,6 +84,7 @@ const props = defineProps({
   forceLod: Boolean,
   placementCamera: Boolean,
   state: Object,
+  loadError: Object,
   master: Boolean,
   active: { type: Boolean, default: true },
   readonly: Boolean,
@@ -109,6 +116,7 @@ const props = defineProps({
   previewObject: Object,
   showAnchors: Boolean,
   catalogue: Array,
+  catalogueRequest: Object,
   placementModel: String,
   placementObject: String,
   surfacePlacement: Boolean,
@@ -126,16 +134,31 @@ const props = defineProps({
 const hintLines = computed(() =>
   Array.isArray(props.hint) ? props.hint : (props.hint || "").split(/\s*·\s*/),
 );
-const emit = defineEmits(["gesture", "view", "camera-move", "resources"]);
+const emit = defineEmits([
+  "gesture",
+  "view",
+  "camera-move",
+  "resources",
+  "retry-catalogue",
+  "catalogue",
+]);
 const host = ref(null),
   downloads = ref(null),
-  error = ref(""),
   topView = ref(false),
   pickupPing = ref(null);
 let pickupSequence = 0;
 const performanceBridge = createPerformanceBridge();
+const loadingErrors = useMapLoadingErrors(downloads);
+watch(
+  () => props.loadError,
+  (error) => {
+    if (error) loadingErrors.report(error);
+  },
+  { immediate: true },
+);
 let renderer,
-  dead = false;
+  dead = false,
+  starting = false;
 const pointer = useMapCanvasPointer(
   host,
   props,
@@ -152,9 +175,7 @@ const keyboardPan = useCameraPan(
 const { syncActive, options } = useCanvasUpdates(
   props,
   () => renderer,
-  (message) => {
-    error.value = message;
-  },
+  loadingErrors.report,
   (active) => {
     if (!active) {
       cameraFocus.stop();
@@ -192,11 +213,16 @@ function fit() {
   if (view) setView({ ...view, fit: true });
 }
 async function retry() {
-  error.value = "";
+  const catalogueError = loadingErrors.issues.value.some(
+    (issue) => issue.stage === "catalogue" || issue.kind === "file-missing",
+  );
+  loadingErrors.reset();
+  if (catalogueError || props.loadError) emit("retry-catalogue");
   try {
-    await renderer?.retry();
+    if (renderer) await renderer.retry(catalogueError || !!props.loadError);
+    else await initialize();
   } catch (cause) {
-    error.value = cause.message;
+    loadingErrors.report(cause);
   }
 }
 function toggleView() {
@@ -234,18 +260,19 @@ function wheel(event) {
 function panArrow(key) {
   keyboardPan.down(key);
 }
-onMounted(async () => {
+async function initialize() {
+  if (starting) return;
+  starting = true;
   try {
     const r = await createMapRenderer(
       host.value,
-      (message) => {
-        error.value = message;
-      },
+      loadingErrors.report,
       undefined,
       (progress) => {
         downloads.value = progress;
         emit("resources", progress.memory);
       },
+      { onCatalogue: (models) => emit("catalogue", models) },
     );
     if (dead) {
       r.destroy();
@@ -257,9 +284,12 @@ onMounted(async () => {
     await r.update(props.document, props.state, options());
     if (props.camera) r.camera(props.camera);
   } catch (cause) {
-    error.value = `Не удалось запустить отрисовку WebGL: ${cause.message}`;
+    loadingErrors.report(cause, { stage: renderer ? "scene" : "webgl" });
+  } finally {
+    starting = false;
   }
-});
+}
+onMounted(initialize);
 onBeforeUnmount(() => {
   dead = true;
   cameraFocus.stop();
@@ -363,15 +393,5 @@ defineExpose({
 }
 .map-canvas-corner > * {
   pointer-events: auto;
-}
-.map-canvas-message {
-  position: absolute;
-  inset: 20%;
-  display: grid;
-  place-items: center;
-  padding: 20px;
-  background: var(--surface);
-  color: var(--text-1);
-  border-radius: 12px;
 }
 </style>

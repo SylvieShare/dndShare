@@ -5,7 +5,7 @@
   >
     <LoadingState v-if="editor.loadingModels" label="Загружаем плитки…" />
     <div v-else-if="editor.modelError" class="map-error" role="alert">
-      {{ editor.modelError }}
+      Не удалось получить каталог. Подробности — в окне ошибок загрузки.
       <ActionButton variant="secondary" @click="editor.retryModels"
         >Повторить</ActionButton
       >

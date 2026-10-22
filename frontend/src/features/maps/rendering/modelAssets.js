@@ -1,3 +1,4 @@
+import { missingModels, modelLoadError } from "../lib/modelLoadError";
 import { acquireModelLoader } from "./modelLoader";
 import { getMapModels } from "@/shared/api/mapsApi";
 import {
@@ -17,6 +18,7 @@ export function modelAssets(
   renderer,
   onChange = () => {},
   onProgress = () => {},
+  onCatalogue = () => {},
 ) {
   const loader = acquireModelLoader(renderer),
     owned = new Map(),
@@ -32,7 +34,9 @@ export function modelAssets(
     memoryVersion = 0,
     memoryAt = -1,
     memory,
-    queuedProgress = false;
+    queuedProgress = false,
+    catalogueFile,
+    refreshing = false;
   function progress() {
     if (dead || queuedProgress) return;
     queuedProgress = true;
@@ -53,7 +57,11 @@ export function modelAssets(
         ),
     );
     const snapshot = sessionProgress(files, (url) => {
-      const state = modelDownloads.get(resourceKey(url, loader));
+      const file = plan.get(url);
+      const state =
+        file?.state ||
+        modelDownloads.get(file?.key || resourceKey(url, loader));
+      if (file?.kind === "catalogue") return state;
       const entry = owned.get(url);
       return entry?.value || cachedModel(url, loader)
         ? { ...state, status: "ready" }
@@ -68,6 +76,24 @@ export function modelAssets(
       memoryAt = memoryVersion;
     }
     snapshot.memory = memory;
+    snapshot.errors = files.flatMap((file) => {
+      const state =
+        file.state ||
+        modelDownloads.get(file.key || resourceKey(file.url, loader));
+      return state?.error
+        ? [
+            {
+              ...state.error,
+              message: state.error.message,
+              key: file.key || resourceKey(file.url, loader),
+              attempt: state.attempt,
+              nextRetryAt: state.nextRetryAt,
+              statusCode: state.error.status,
+              status: state.status,
+            },
+          ]
+        : [];
+    });
     const key = JSON.stringify(snapshot);
     if (key !== lastProgress) {
       lastProgress = key;
@@ -76,26 +102,59 @@ export function modelAssets(
   }
   const unsubscribe = modelDownloads.subscribe(progress);
   async function prepare(ids, options = {}) {
+    if (
+      options.catalogueRequest &&
+      options.catalogueRequest !== catalogueFile
+    ) {
+      catalogueFile = options.catalogueRequest;
+      plan.set(catalogueFile.url, catalogueFile);
+      progress();
+    }
     const key = options.publicCode
       ? `${options.publicCode}:${[...ids].sort().join(",")}`
       : "private";
     if (
+      !refreshing &&
       catalogueKey === key &&
       catalogue.size &&
-      (!options.catalogue || options.catalogue === sourceCatalogue)
+      (!options.catalogue || options.catalogue === sourceCatalogue) &&
+      [...ids].every((id) => catalogue.has(id))
     )
       return;
     if (preparing?.key === key && preparing.source === options.catalogue)
       return preparing.promise;
-    const task = { key, source: options.catalogue, promise: null };
+    const task = {
+      key,
+      source: options.catalogue,
+      promise: null,
+      controller: new AbortController(),
+    };
+    preparing?.controller.abort();
     preparing = task;
     const promise = (async () => {
-      const models =
-        options.catalogue?.length || !ids.size
-          ? options.catalogue || []
-          : await getMapModels(options.publicCode);
+      let models = options.catalogue || [];
+      if (
+        ids.size &&
+        (refreshing ||
+          !models.length ||
+          [...ids].some((id) => !models.some((m) => m.id === id)))
+      ) {
+        models = await getMapModels(options.publicCode, {
+          signal: task.controller.signal,
+          onRequest: (file) => {
+            catalogueFile = file;
+            plan.set(file.url, file);
+            progress();
+          },
+        });
+      }
       if (dead || preparing !== task) return;
-      catalogue = new Map(models.map((m) => [m.id, m]));
+      const next = new Map(models.map((m) => [m.id, m]));
+      const missing = [...ids].filter((id) => !next.has(id));
+      if (missing.length) throw missingModels(missing);
+      refreshing = false;
+      catalogue = next;
+      if (models !== options.catalogue) onCatalogue(models);
       memoryVersion++;
       catalogueKey = key;
       sourceCatalogue = options.catalogue;
@@ -109,11 +168,21 @@ export function modelAssets(
   }
   function request(id, tier, priority = 0) {
     const metadata = catalogue.get(id);
-    if (!metadata)
-      return Promise.reject(new Error("Модель плитки отсутствует в каталоге"));
+    if (!metadata) return Promise.reject(missingModels([id]));
     const url = metadata[`${tier}Url`];
     if (!url)
-      return Promise.reject(new Error("У модели отсутствует файл " + tier));
+      return Promise.reject(
+        modelLoadError(null, {
+          message: "В каталоге не задан файл модели",
+          stage: "catalogue",
+          kind: "file-missing",
+          modelId: id,
+          definitionId: metadata.definitionId,
+          modelName: metadata.name,
+          assetKind: tier,
+          retryable: false,
+        }),
+      );
     if (!plan.has(url)) plan.set(url, modelFile(metadata, tier));
     let entry = owned.get(url);
     if (!entry) {
@@ -124,6 +193,13 @@ export function modelAssets(
         loader,
         priority,
         metadata.assetBytes?.[tier] || 0,
+        {
+          modelId: id,
+          definitionId: metadata.definitionId,
+          modelName: metadata.name,
+          assetKind: tier,
+          resource: true,
+        },
       )
         .then((value) => {
           if (!dead && owned.get(url) === entry) {
@@ -163,7 +239,7 @@ export function modelAssets(
     return model(id, other) ? other : "";
   }
   function report(error) {
-    if (!dead && error.name !== "AbortError") onError(error.message);
+    if (!dead && error.name !== "AbortError" && !error.resource) onError(error);
   }
   function progressive(
     ids,
@@ -182,12 +258,15 @@ export function modelAssets(
       shadowIds,
       detailTier,
     );
+    if (catalogueFile) plan.set(catalogueFile.url, catalogueFile);
     for (const [url, entry] of owned) {
       if (
         !plan.has(url) &&
         !entry.value &&
         !entry.error &&
-        modelDownloads.get(resourceKey(url, loader))?.status === "queued"
+        ["queued", "retrying"].includes(
+          modelDownloads.get(resourceKey(url, loader))?.status,
+        )
       ) {
         owned.delete(url);
         release(url, loader);
@@ -197,7 +276,7 @@ export function modelAssets(
     for (const id of ids) {
       const metadata = catalogue.get(id);
       if (!metadata) {
-        report(new Error("Модель плитки отсутствует в каталоге"));
+        report(missingModels([id]));
         continue;
       }
       request(id, "lod", 1)
@@ -233,7 +312,13 @@ export function modelAssets(
       if (dead) return;
       await Promise.all([...ids].map((id) => request(id, tier)));
     },
-    retryFailed() {
+    retryFailed(refreshCatalogue = false) {
+      if (refreshCatalogue) {
+        refreshing = true;
+        catalogueKey = "";
+      }
+      for (const file of plan.values())
+        modelDownloads.retry(file.key || resourceKey(file.url, loader));
       for (const [url, entry] of owned)
         if (entry.error) {
           owned.delete(url);
@@ -278,6 +363,7 @@ export function modelAssets(
     destroy() {
       if (dead) return;
       dead = true;
+      preparing?.controller.abort();
       unsubscribe();
       owned.forEach((_, url) => release(url, loader));
       owned.clear();

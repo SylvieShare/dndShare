@@ -50,9 +50,22 @@
         · Подготовка {{ progress.processing }}</template
       >
     </small>
-    <ActionButton v-if="progress.failed" variant="quiet" @click="emit('retry')">
+    <small v-if="progress.retrying" class="map-download-status" role="status"
+      >Повторяем загрузку: {{ progress.retrying }} · с задержкой до 30 с</small
+    >
+    <ActionButton
+      v-if="progress.errors?.length"
+      variant="quiet"
+      @click="emit('details')"
+      >Подробности ошибок ({{ progress.errors.length }})</ActionButton
+    >
+    <ActionButton
+      v-if="progress.failed || progress.retrying"
+      variant="quiet"
+      @click="emit('retry')"
+    >
       <template #icon><RotateCw :size="13" /></template>Повторить загрузку ({{
-        progress.failed
+        progress.failed + progress.retrying
       }})
     </ActionButton>
   </BaseTile>
@@ -62,12 +75,13 @@ import { ActionButton, BaseTile } from "@sylvieshare/share-ui";
 import { Download, RotateCw } from "@lucide/vue";
 import { formatBytes } from "@/shared/lib/storageUsage";
 defineProps({ progress: Object });
-const emit = defineEmits(["retry"]);
+const emit = defineEmits(["retry", "details"]);
 const labels = {
   render: "Основные",
   lod: "LOD",
   shadow: "Тени",
   other: "Другое",
+  catalogue: "Каталог",
 };
 function bytes(progress) {
   if (progress.unknown)

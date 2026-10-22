@@ -130,3 +130,70 @@ it("a failure releases the queue slot for the next file", async () => {
   await expect(next).resolves.toBe("ok");
   expect(manager.get("bad").status).toBe("failed");
 });
+it("retries indefinitely with backoff, freeing slots while waiting and resetting transfer bytes", async () => {
+  vi.useFakeTimers();
+  try {
+    const manager = createModelDownloadManager(1),
+      state = {},
+      run = vi
+        .fn()
+        .mockRejectedValueOnce(
+          Object.assign(new Error("network"), { retryable: true }),
+        )
+        .mockRejectedValueOnce(
+          Object.assign(new Error("network"), { retryable: true }),
+        )
+        .mockResolvedValue("loaded");
+    const pending = manager.schedule("retry", run, () => 0, state, {
+      retry: (error) => error.retryable,
+    });
+    await flush();
+    expect(state.status).toBe("retrying");
+    expect(state.attempt).toBe(1);
+    await expect(
+      manager.schedule(
+        "other",
+        async () => 1,
+        () => 0,
+        {},
+      ),
+    ).resolves.toBe(1);
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(state.status).toBe("retrying");
+    expect(run).toHaveBeenCalledTimes(2);
+    await vi.advanceTimersByTimeAsync(2000);
+    await expect(pending).resolves.toBe("loaded");
+    expect(state.status).toBe("ready");
+    expect(state.error).toBeNull();
+  } finally {
+    vi.useRealTimers();
+  }
+});
+it("cancels a waiting retry without making any further requests", async () => {
+  vi.useFakeTimers();
+  try {
+    const manager = createModelDownloadManager(),
+      run = vi
+        .fn()
+        .mockRejectedValue(
+          Object.assign(new Error("offline"), { retryable: true }),
+        );
+    const promise = manager.schedule(
+      "cancel",
+      run,
+      () => 0,
+      {},
+      { retry: (error) => error.retryable },
+    );
+    const rejected = expect(promise).rejects.toMatchObject({
+      name: "AbortError",
+    });
+    await flush();
+    manager.remove("cancel");
+    await rejected;
+    await vi.advanceTimersByTimeAsync(60000);
+    expect(run).toHaveBeenCalledTimes(1);
+  } finally {
+    vi.useRealTimers();
+  }
+});

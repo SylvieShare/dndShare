@@ -33,7 +33,7 @@ export function modelDownloadPlan(
     for (const id of new Set([...shadowIds, ...details])) add(id, "shadow");
   return plan;
 }
-const kinds = ["render", "lod", "shadow", "other"];
+const kinds = ["render", "lod", "shadow", "catalogue", "other"];
 export function modelDownloadProgress(files, stateFor) {
   const result = {
     total: 0,
@@ -43,6 +43,7 @@ export function modelDownloadProgress(files, stateFor) {
     queued: 0,
     processing: 0,
     failed: 0,
+    retrying: 0,
     totalBytes: 0,
     loadedBytes: 0,
     remainingBytes: 0,
@@ -60,7 +61,7 @@ export function modelDownloadProgress(files, stateFor) {
     );
     const loaded = ready
       ? total
-      : state.status === "failed"
+      : ["failed", "retrying"].includes(state.status)
         ? 0
         : Math.min(total, state.loaded || 0);
     const row = {
@@ -71,10 +72,11 @@ export function modelDownloadProgress(files, stateFor) {
       queued: +["queued", "cancelled"].includes(state.status),
       processing: +(state.status === "processing"),
       failed: +(state.status === "failed"),
+      retrying: +(state.status === "retrying"),
       totalBytes: total,
       loadedBytes: loaded,
       remainingBytes: total - loaded,
-      unknown: +(!ready && !total),
+      unknown: +(!ready && !(file.bytes || state.total)),
     };
     const group = groups.get(file.kind) || groups.get("other");
     for (const key of Object.keys(result)) {

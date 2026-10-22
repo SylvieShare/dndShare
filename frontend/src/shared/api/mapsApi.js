@@ -1,4 +1,5 @@
 import { fetchGet, fetchPost, fetchPut, fetchDelete } from "./http";
+import { loadModelCatalogue, resetModelCatalogue } from "./mapModelCatalogue";
 import { seedMapDocument, writeMapDocument } from "./mapDocuments";
 export const getMaps = (scope = "own") =>
   fetchGet(`/maps?scope=${encodeURIComponent(scope)}`);
@@ -20,36 +21,14 @@ export const rateMap = (id, rating) =>
   rating
     ? fetchPut(`/maps/ratings/${encodeURIComponent(id)}`, { rating })
     : fetchDelete(`/maps/ratings/${encodeURIComponent(id)}`);
-let modelCatalogue;
 const runtimeModel = ({ id, uuid, ...model }) => ({
   ...model,
   id: uuid,
   definitionId: id,
 });
 const catalogueModels = (models) => models.map(runtimeModel);
-export function getMapModels(publicCode) {
-  if (publicCode)
-    return fetchGet(
-      `/public/sessions/${encodeURIComponent(publicCode)}/map-models`,
-    ).then(catalogueModels);
-  if (!modelCatalogue)
-    modelCatalogue = fetchGet("/maps/models")
-      .then(catalogueModels)
-      .catch((error) => {
-        modelCatalogue = null;
-        throw error;
-      });
-  const pending = modelCatalogue;
-  pending
-    .finally(() => {
-      if (modelCatalogue === pending) modelCatalogue = null;
-    })
-    .catch(() => {});
-  return pending;
-}
-export const resetMapModels = () => {
-  modelCatalogue = null;
-};
+export const getMapModels = loadModelCatalogue;
+export const resetMapModels = resetModelCatalogue;
 export const saveMap = (map) =>
   map.id
     ? writeMapDocument(map)

@@ -9,26 +9,52 @@ export function createModelDownloadManager(limit = 3) {
     notifying = true;
     queueMicrotask(() => {
       notifying = false;
-      for (const listener of listeners) listener();
+      for (const fn of listeners) fn();
     });
+  }
+  function enqueue(job) {
+    job.state.status = "queued";
+    queue.push(job);
+    drain();
   }
   function drain() {
     while (active < limit && queue.length) {
       queue.sort((a, b) => b.priority() - a.priority());
       const job = queue.shift();
-      job.state.status = "loading";
+      if (job.removed) continue;
+      const state = job.state;
+      state.status = "loading";
+      state.attempt = (state.attempt || 0) + 1;
+      state.nextRetryAt = 0;
+      job.controller = new AbortController();
       active++;
       Promise.resolve()
-        .then(job.run)
+        .then(() => job.run(job.controller.signal))
         .then(
           (value) => {
-            job.state.status = "ready";
+            state.status = "ready";
+            state.error = null;
             job.resolve(value);
           },
           (error) => {
-            job.state.status =
-              error.name === "AbortError" ? "cancelled" : "failed";
-            job.reject(error);
+            state.error = error;
+            if (!job.removed && job.options.retry?.(error)) {
+              const delay = Math.min(
+                30000,
+                1000 * 2 ** Math.min(state.attempt - 1, 5),
+              );
+              state.status = "retrying";
+              state.loaded = 0;
+              state.nextRetryAt = Date.now() + delay;
+              job.timer = setTimeout(() => {
+                job.timer = null;
+                if (!job.removed) enqueue(job);
+              }, delay);
+            } else {
+              state.status =
+                error.name === "AbortError" ? "cancelled" : "failed";
+              job.reject(error);
+            }
           },
         )
         .finally(() => {
@@ -40,14 +66,22 @@ export function createModelDownloadManager(limit = 3) {
     notify();
   }
   return {
-    schedule(key, run, priority, state) {
-      return new Promise((resolve, reject) => {
-        state.status = "queued";
-        const job = { key, run, priority, state, resolve, reject };
-        jobs.set(key, job);
-        queue.push(job);
-        drain();
-      });
+    schedule(key, run, priority, state, options = {}) {
+      const existing = jobs.get(key);
+      if (
+        existing &&
+        ["queued", "loading", "processing", "retrying"].includes(
+          existing.state.status,
+        )
+      )
+        return existing.promise;
+      const job = { key, run, priority, state, options };
+      job.promise = new Promise((resolve, reject) =>
+        Object.assign(job, { resolve, reject }),
+      );
+      jobs.set(key, job);
+      enqueue(job);
+      return job.promise;
     },
     progress(state, event) {
       state.loaded = Math.max(state.loaded || 0, event.loaded || 0);
@@ -60,22 +94,32 @@ export function createModelDownloadManager(limit = 3) {
       state.status = "failed";
       notify();
     },
+    retry(key) {
+      const job = jobs.get(key);
+      if (job?.state.status !== "retrying") return;
+      clearTimeout(job.timer);
+      job.timer = null;
+      enqueue(job);
+    },
     get: (key) => jobs.get(key)?.state,
     remove(key) {
       const job = jobs.get(key);
       if (!job) return;
       jobs.delete(key);
+      job.removed = true;
+      clearTimeout(job.timer);
+      job.controller?.abort();
       const index = queue.indexOf(job);
-      if (index >= 0) {
-        queue.splice(index, 1);
+      if (index >= 0) queue.splice(index, 1);
+      if (["queued", "retrying"].includes(job.state.status)) {
         job.state.status = "cancelled";
         job.reject(new DOMException("Cancelled", "AbortError"));
       }
       notify();
     },
-    subscribe(listener) {
-      listeners.add(listener);
-      return () => listeners.delete(listener);
+    subscribe(fn) {
+      listeners.add(fn);
+      return () => listeners.delete(fn);
     },
   };
 }

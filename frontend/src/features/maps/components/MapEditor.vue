@@ -51,8 +51,12 @@
         @object="(id, event) => beginPlacement('placeObject', id, event)"
         @drag-object="(id, event) => beginPlacement('dragObject', id, event)"
         @tab="placement.cancel"
-        @place-decal="(image, event) => beginPlacement('placeDecal', image, event)"
-        @drag-decal="(image, event) => beginPlacement('dragDecal', image, event)"
+        @place-decal="
+          (image, event) => beginPlacement('placeDecal', image, event)
+        "
+        @drag-decal="
+          (image, event) => beginPlacement('dragDecal', image, event)
+        "
         @place-light="(id, event) => beginPlacement('placeLight', id, event)"
       >
         <template v-for="tab in extraTabs" :key="tab.key" #[tab.key]>
@@ -68,6 +72,9 @@
           :active="active"
           :occlusions="canvasOcclusions"
           :document="e.draft.document"
+          :load-error="e.modelError || null"
+          @retry-catalogue="e.retryModels"
+          @catalogue="e.catalogue = $event"
           :state="canvasState || e.draft.state"
           :area-mode="playerPreview ? 'hide' : 'ghost'"
           :selection-color="e.areaSelectionColor"
@@ -104,6 +111,7 @@
           :placement-light="e.tool === 'light'"
           :hint="editorHints(e.tool, e.draggingTile)"
           :catalogue="e.catalogue"
+          :catalogue-request="e.modelCatalogueRequest"
           :placement-model="
             e.draggingTile || e.tool === 'paste' ? e.selectedModel : ''
           "

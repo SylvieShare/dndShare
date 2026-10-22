@@ -39,6 +39,7 @@ export function useMapEditor(source, onSaved, options = {}) {
     previewObject = ref(null),
     showAnchors = ref(true),
     catalogue = shallowRef([]),
+    modelCatalogueRequest = shallowRef(null),
     modelMemory = shallowRef(null),
     loadingModels = ref(true),
     modelError = ref(""),
@@ -210,6 +211,7 @@ export function useMapEditor(source, onSaved, options = {}) {
     },
     { deep: true },
   );
+  const catalogueAbort = new AbortController();
   async function loadModels() {
     if (draft.value.document.kind === "image") {
       catalogue.value = [];
@@ -219,7 +221,10 @@ export function useMapEditor(source, onSaved, options = {}) {
     loadingModels.value = true;
     modelError.value = "";
     try {
-      catalogue.value = await getMapModels();
+      catalogue.value = await getMapModels(undefined, {
+        signal: catalogueAbort.signal,
+        onRequest: (file) => (modelCatalogueRequest.value = file),
+      });
       syncLights(draft.value.document, catalogue.value);
       if (!selectedModel.value) {
         collection.value =
@@ -232,7 +237,7 @@ export function useMapEditor(source, onSaved, options = {}) {
           "";
       }
     } catch (cause) {
-      modelError.value = cause.message;
+      if (cause.name !== "AbortError") modelError.value = cause;
     } finally {
       loadingModels.value = false;
     }
@@ -247,10 +252,12 @@ export function useMapEditor(source, onSaved, options = {}) {
       syncLights(draft.value.document, catalogue.value);
   });
   onBeforeUnmount(() => {
+    catalogueAbort.abort();
     lighting.finishLightEdit();
     decals.finishDecalEdit();
   });
   return {
+    modelCatalogueRequest,
     draft,
     documentIndex: computed(() =>
       documentIndex(

@@ -51,7 +51,7 @@ export async function createMapRenderer(
   onError,
   onPreviewLoading,
   onDownloadProgress,
-  { snapshotOnly = false } = {},
+  { snapshotOnly = false, onCatalogue } = {},
 ) {
   const gpu = new WebGLRenderer({ antialias: false, depth: false });
   gpu.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
@@ -87,7 +87,13 @@ export async function createMapRenderer(
   const annotations = createMapAnnotations(scene);
   const cameras = createCameraMarkers(scene),
     backdrop = createMapBackdrop(scene, render);
-  const assets = modelAssets(onError, gpu, assetsChanged, onDownloadProgress),
+  const assets = modelAssets(
+      onError,
+      gpu,
+      assetsChanged,
+      onDownloadProgress,
+      onCatalogue,
+    ),
     lightSources = createLightSourceState(assets),
     lighting = createMapLighting(
       scene,
@@ -151,7 +157,7 @@ export async function createMapRenderer(
         update(runtime.current, runtime.state, {
           ...runtime.options,
           sceneChanges: ["assets"],
-        }).catch((error) => onError(error.message));
+        }).catch((error) => onError(error));
     });
   }
   function render() {
@@ -365,7 +371,7 @@ export async function createMapRenderer(
     view.update();
     if (runtime.current)
       update(runtime.current, runtime.state, runtime.options).catch((error) =>
-        onError(error.message),
+        onError(error),
       );
   });
   if (!snapshotOnly) observer.observe(host);
@@ -378,8 +384,8 @@ export async function createMapRenderer(
     },
     observeLightFrame: framePreview.observe,
     observeAreaFrame: areaPreview.observe,
-    retry() {
-      assets.retryFailed();
+    retry(refreshCatalogue = false) {
+      assets.retryFailed(refreshCatalogue);
       return update(runtime.current, runtime.state, runtime.options);
     },
     snapshot: createMapSnapshot({

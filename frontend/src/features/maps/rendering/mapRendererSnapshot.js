@@ -1,3 +1,4 @@
+import { previewTask } from "../lib/previewTask";
 export function createMapSnapshot({
   runtime,
   assets,
@@ -21,10 +22,13 @@ export function createMapSnapshot({
       ...runtime.current.tiles.map((t) => t.modelId),
       ...runtime.current.objects.map((o) => o.modelId).filter(Boolean),
     ]);
-    await assets.ensure(ids, runtime.tier, runtime.options);
+    await previewTask(
+      assets.ensure(ids, runtime.tier, runtime.options),
+      signal,
+    );
     signal?.throwIfAborted();
     if (runtime.current.lightingEnabled)
-      await assets.ensure(ids, "shadow", runtime.options);
+      await previewTask(assets.ensure(ids, "shadow", runtime.options), signal);
     signal?.throwIfAborted();
     await update(runtime.current, runtime.state, {
       ...runtime.options,

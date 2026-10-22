@@ -10,7 +10,8 @@ let running = false,
   idle;
 export async function requestMapSnapshot(document, signal, options = {}) {
   signal?.throwIfAborted();
-  const catalogue = options.catalogue || (await getMapModels());
+  const catalogue =
+    options.catalogue || (await getMapModels(undefined, { signal }));
   const ids = new Set([
     ...document.tiles.map((t) => t.modelId),
     ...document.objects.map((o) => o.modelId).filter(Boolean),

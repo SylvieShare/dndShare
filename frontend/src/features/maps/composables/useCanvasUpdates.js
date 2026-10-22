@@ -20,7 +20,7 @@ export function useCanvasUpdates(props, getRenderer, onError, onActive) {
       getRenderer()
         .update(props.document, props.state, { ...options(), sceneChanges })
         .catch((cause) => {
-          onError(cause.message);
+          onError(cause);
         });
     });
   }
@@ -50,6 +50,7 @@ export function useCanvasUpdates(props, getRenderer, onError, onActive) {
       props.document.width,
       props.document.height,
       props.catalogue,
+      props.catalogueRequest,
     ],
     () => redraw("structure"),
     { deep: true },

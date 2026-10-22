@@ -1,11 +1,19 @@
 import { beforeEach, expect, it, vi } from "vitest";
-const api = vi.hoisted(() => ({ get: vi.fn(), save: vi.fn() }));
+const api = vi.hoisted(() => ({
+  get: vi.fn(),
+  save: vi.fn(),
+  remove: vi.fn(),
+  notify: vi.fn(),
+}));
 vi.mock("@/shared/api/mapsApi", () => ({
   getSessionMaps: api.get,
   saveSessionMap: api.save,
   addSessionMap: vi.fn(),
-  deleteSessionMap: vi.fn(),
+  deleteSessionMap: api.remove,
   saveMapDisplay: vi.fn(),
+}));
+vi.mock("@/stores/notifications", () => ({
+  useNotificationsStore: () => ({ notify: api.notify }),
 }));
 vi.mock("./useMapSync", () => ({ useMapSync: () => ({ connected: true }) }));
 import { useSessionMaps } from "./useSessionMaps";
@@ -69,4 +77,43 @@ it("a stale write is reported without replacing the current scene", async () => 
   expect(c.conflict.value).toBe(true);
   expect(c.saving.value).toBe(false);
   expect(c.selected.value.document.width).toBe(10);
+});
+it("a slow delete hides the map immediately and a stale concurrent list cannot resurrect it", async () => {
+  const c = useSessionMaps("session");
+  await c.load();
+  let finishRead, finishDelete;
+  api.get.mockImplementationOnce(
+    () => new Promise((resolve) => (finishRead = resolve)),
+  );
+  const read = c.load();
+  api.remove.mockImplementationOnce(
+    () => new Promise((resolve) => (finishDelete = resolve)),
+  );
+  expect(c.remove("map")).toBe(true);
+  expect(c.maps.value).toEqual([]);
+  await Promise.resolve();
+  finishRead({ maps: [map()], display: { mapId: "map" } });
+  await read;
+  expect(c.maps.value).toEqual([]);
+  api.get.mockResolvedValue({ maps: [], display: { mapId: null } });
+  finishDelete();
+  for (let n = 0; n < 20; n++) await Promise.resolve();
+  expect(c.maps.value).toEqual([]);
+  expect(api.notify).not.toHaveBeenCalled();
+});
+it("failed deletion restores the last map and uses the global error notification", async () => {
+  const c = useSessionMaps("session");
+  await c.load();
+  api.remove.mockRejectedValueOnce(new Error("offline"));
+  expect(c.remove("map")).toBe(true);
+  expect(c.maps.value).toEqual([]);
+  for (let n = 0; n < 20; n++) await Promise.resolve();
+  expect(c.selected.value.id).toBe("map");
+  expect(api.notify).toHaveBeenCalledWith(
+    expect.objectContaining({
+      type: "error",
+      title: expect.stringContaining("template"),
+      data: { message: "offline" },
+    }),
+  );
 });

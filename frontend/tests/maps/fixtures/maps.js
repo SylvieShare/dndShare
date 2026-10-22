@@ -2,6 +2,7 @@ import { paint, lineCells } from "./mapBuilders";
 import { decalFixture } from "./decals";
 import { modelDownloadsFixture, downloadMapExample } from "./downloads";
 import { componentExample } from "./components";
+import AppNotifications from "../../../src/features/notifications/components/AppNotifications.vue";
 import { sessionFixture, sessionAPI, tokenPortraitExample } from "./session";
 import { mapCatalogueFixture } from "./mapCatalogue";
 import { previewFixture } from "./previews";
@@ -359,6 +360,11 @@ if (params.has("transitions")) {
 if (params.has("downloadExample"))
   downloadMapExample(source.document, catalogue);
 let templateRevision = 1;
+if (params.has("emptyScene")) {
+  source.document.tiles = [];
+  source.document.objects = [];
+  source.document.zones = [];
+}
 let board = {
   ...clone(source),
   source: { id: source.id, name: source.name, system: false },
@@ -423,6 +429,15 @@ if (params.has("imageMap")) {
   };
   board.state.tokens = [];
 }
+if (params.has("missingModel"))
+  board.document.tiles.push({
+    id: "missing-tile",
+    modelId: "deadbeef-0000-4000-8000-000000000001",
+    x: 9,
+    y: 7,
+    rotation: 0,
+    level: 0,
+  });
 window.latestBoard = clone(board);
 window.EventSource = class {
   constructor() {
@@ -523,6 +538,33 @@ window.fetch = async (url, options = {}) => {
   if (
     /^\/api\/(maps\/models|public\/sessions\/ABC-123\/map-models)\/[^/]+\/(render|lod|shadow)$/.test(
       url,
+    ) &&
+    params.has("modelRetry")
+  ) {
+    window.assetAttempts ||= {};
+    window.assetAttempts[url] = (window.assetAttempts[url] || 0) + 1;
+    if (window.assetAttempts[url] <= 2)
+      throw new TypeError("GLB: соединение прервалось");
+  }
+
+  if (
+    options.method === "DELETE" &&
+    /^\/api\/sessions\/test\/maps\//.test(url) &&
+    params.has("slowDelete")
+  ) {
+    await new Promise((resolve) => {
+      window.finishMapDelete = resolve;
+    });
+    if (window.failMapDelete)
+      return new Response(
+        JSON.stringify({ desc: "Сервер не подтвердил удаление" }),
+        { status: 500, headers: { "Content-Type": "application/json" } },
+      );
+  }
+
+  if (
+    /^\/api\/(maps\/models|public\/sessions\/ABC-123\/map-models)\/[^/]+\/(render|lod|shadow)$/.test(
+      url,
     )
   ) {
     window.loadedModels.push(url);
@@ -532,6 +574,15 @@ window.fetch = async (url, options = {}) => {
       );
     if (params.has("realModels")) return nativeFetch(rawUrl, options);
     return transfers.response(url, url.split("/").at(-2));
+  }
+  if (
+    (url === "/api/maps/models" ||
+      url === "/api/public/sessions/ABC-123/map-models") &&
+    params.has("catalogueRetry")
+  ) {
+    window.catalogueAttempts = (window.catalogueAttempts || 0) + 1;
+    if (window.catalogueAttempts <= 2)
+      throw new TypeError("Каталог: соединение прервалось");
   }
   if (
     url === "/api/maps/models" ||
@@ -702,6 +753,7 @@ createApp({
               "div",
               { style: "height:95vh;padding:16px;box-sizing:border-box" },
               [
+                h(AppNotifications),
                 h(SessionMapWorkspace, {
                   sessionUuid: "test",
                   session: { displayCode: "ABC-123" },

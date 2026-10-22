@@ -191,7 +191,7 @@ async function add(map) {
   if ((await prepareLeave()) && (await c.add(map))) picker.value = false;
 }
 async function remove() {
-  if ((await prepareLeave()) && (await c.remove(pendingDelete.value.id)))
+  if ((await prepareLeave()) && c.remove(pendingDelete.value.id))
     pendingDelete.value = null;
 }
 async function reload() {
