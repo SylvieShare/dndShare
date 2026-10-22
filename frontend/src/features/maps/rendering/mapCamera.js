@@ -59,6 +59,8 @@ export function mapCamera(camera, gpu, host, render) {
       sizedWidth = width;
       sizedHeight = height;
     }
+    camera.near = 0.01;
+    camera.far = 2000;
     camera.left = -width / 2 / pixels;
     camera.right = width / 2 / pixels;
     camera.top = height / 2 / pixels;

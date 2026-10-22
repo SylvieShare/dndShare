@@ -35,9 +35,9 @@ test("session uses the full editor, writes its own scene and retains the templat
   ).toEqual([
     "Существа",
     "Плитки",
-    "Освещение",
     "Объекты",
     "Декали",
+    "Освещение",
     "Области",
     "Камеры",
     "Настройки",

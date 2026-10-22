@@ -532,6 +532,8 @@ MapReferenceButton открывает справочник только из ш�
 Настройки одинаковы; новый MapCamerasPanel/MapCameraFocus с LOD-превью общие
 для 3D. MapImageSettings калибрует изображение 2D. Панели выбора карты и
 трансляции — доменная композиция BaseTile, InlineEdit и ActionButton над холстом.
+Высота 64 px задаётся компоновкой SessionMapToolbar; полупрозрачный фон и blur —
+общим BaseTile(surface="glass"). Геометрия кнопок и селектора не переопределяется.
 Игроки не резервируют дополнительную колонку на карте.
 
 MapLightingControls, MapSunSettings и MapLightingPanel общие для обеих страниц;

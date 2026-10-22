@@ -169,3 +169,35 @@ it("a decal hold arms dragging after 500 ms and keeps querying the actual model 
   expect(emit.mock.calls.every((c) => c[1].point.decalSurface)).toBe(true);
   expect(setView).not.toHaveBeenCalled();
 });
+it("picks and drags camera bodies on their exact height plane instead of geometry or floor", () => {
+  const world = vi.fn((event, height) => ({
+    x: event.clientX / 10 + height * 2,
+    y: event.clientY / 10 + height,
+  }));
+  const { pointer, event, emit } = setup(
+    { cameraId: "camera", point: { x: 1, y: 2, elevation: 7.43 } },
+    {
+      document: {
+        kind: "tiles",
+        cameras: [{ id: "camera", view: { position: [2.2, 3.3, 7.3] } }],
+      },
+    },
+    {
+      world,
+      lightPoint: () => {
+        throw new Error("camera must not use light/floor picking");
+      },
+    },
+  );
+  pointer.down(event);
+  vi.advanceTimersByTime(500);
+  pointer.move({ ...event, clientX: 20.37, clientY: 30.62 });
+  pointer.up({ ...event, clientX: 20.37, clientY: 30.62 });
+  const start = emit.mock.calls.find((c) => c[1].phase === "start")[1].point;
+  const end = emit.mock.calls.find((c) => c[1].phase === "end")[1].point;
+  expect(start.elevation).toBe(7.3);
+  expect(end.elevation).toBe(7.3);
+  expect(end.x - start.x).toBeCloseTo(0.037);
+  expect(end.y - start.y).toBeCloseTo(0.062);
+  expect(world.mock.calls.every((call) => call[1] === 7.3)).toBe(true);
+});

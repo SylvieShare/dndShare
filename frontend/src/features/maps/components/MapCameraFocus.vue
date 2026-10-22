@@ -27,7 +27,7 @@
           vertical
           ><FormNumberInput
             :value="camera.view.position[index]"
-            :step="0.5"
+            :step="0.1"
             :min="-200"
             :max="200"
             :aria-label="`Камера: ${label}`"
@@ -48,7 +48,7 @@
           vertical
           ><FormNumberInput
             :value="camera.view.target[index]"
-            :step="0.5"
+            :step="0.1"
             :min="-200"
             :max="200"
             :aria-label="`Фокус: ${label}`"
@@ -62,7 +62,7 @@
           :value="camera.view.width"
           :min="0.5"
           :max="300"
-          :step="0.5"
+          :step="0.1"
           aria-label="Ширина кадра"
           @change="editor.updateCamera((c) => (c.view.width = $event))"
       /></FormField>

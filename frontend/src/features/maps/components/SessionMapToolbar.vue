@@ -1,6 +1,6 @@
 <template>
   <div class="session-map-toolbars" data-tutorial="session-map-toolbar">
-    <BaseTile framed class="session-map-toolbar">
+    <BaseTile surface="glass" framed class="session-map-toolbar">
       <Map :size="18" />
       <InlineEdit
         :model-value="editor.draft.name"
@@ -16,6 +16,7 @@
       >
     </BaseTile>
     <BaseTile
+      surface="glass"
       framed
       v-if="controller.display"
       class="session-map-toolbar"
@@ -25,6 +26,7 @@
         icon-only
         :variant="controller.display.visible ? 'primary' : 'quiet'"
         :disabled="controller.displaySaving"
+        :aria-pressed="controller.display.visible"
         :aria-label="
           controller.display.visible
             ? 'Остановить трансляцию'
@@ -36,15 +38,13 @@
             visible: !controller.display.visible,
           })
         "
-        ><template #icon
-          ><Radio v-if="controller.display.visible" :size="18" /><RadioTower
-            v-else
-            :size="18" /></template
+        ><template #icon><MonitorUp :size="20" /></template
       ></ActionButton>
       <ValueSelect
         :model-value="source"
         :options="sources"
         :disabled="controller.displaySaving"
+        class="session-map-camera-select"
         aria-label="Камера трансляции"
         @update:model-value="emit('source', $event)"
       />
@@ -52,24 +52,14 @@
         v-if="editor.draft.document.kind === 'tiles'"
         variant="quiet"
         :disabled="controller.displaySaving"
+        aria-label="Отобразить текущий вид"
+        title="Отобразить текущий вид"
         @click="emit('capture')"
-        ><template #icon><Focus :size="17" /></template>Отобразить текущий
-        вид</ActionButton
+        ><template #icon><Focus :size="17" /></template
+        ><span class="session-map-capture-label"
+          >Отобразить текущий вид</span
+        ></ActionButton
       >
-      <ActionButton
-        icon-only
-        variant="quiet"
-        aria-label="Экран карты"
-        @click="openScreen"
-        ><template #icon><ExternalLink :size="17" /></template
-      ></ActionButton>
-      <ActionButton
-        icon-only
-        variant="quiet"
-        :aria-label="playerPreview ? 'Вид ведущего' : 'Вид игроков'"
-        @click="emit('preview', !playerPreview)"
-        ><template #icon><Eye :size="17" /></template
-      ></ActionButton>
       <ActionButton
         v-if="editor.draft.document.kind === 'image'"
         icon-only
@@ -104,25 +94,15 @@ import {
   InlineEdit,
   ValueSelect,
 } from "@sylvieshare/share-ui";
-import {
-  ArrowLeftRight,
-  Map,
-  Radio,
-  RadioTower,
-  Focus,
-  ExternalLink,
-  Eye,
-  Settings,
-} from "@lucide/vue";
+import { ArrowLeftRight, Map, MonitorUp, Focus, Settings } from "@lucide/vue";
 import MapDisplaySettings from "./MapDisplaySettings.vue";
 const calibration = ref(false);
 const props = defineProps({
   editor: Object,
   controller: Object,
   screenPath: String,
-  playerPreview: Boolean,
 });
-const emit = defineEmits(["switch", "source", "capture", "preview"]);
+const emit = defineEmits(["switch", "source", "capture"]);
 const source = computed(
   () =>
     props.controller.display.camera.sceneId ||
@@ -138,9 +118,6 @@ const sources = computed(() => [
     ? [{ value: "virtual", label: "Зафиксированный вид" }]
     : []),
 ]);
-function openScreen() {
-  window.open(props.screenPath, "_blank", "noopener,noreferrer");
-}
 </script>
 <style scoped>
 .session-map-toolbars {
@@ -161,19 +138,32 @@ function openScreen() {
   align-items: center;
   gap: 8px;
   padding: 6px 10px;
+  box-sizing: border-box;
+  height: 64px;
+  flex-shrink: 0;
   pointer-events: auto;
   max-width: 100%;
 }
 .session-map-toolbar-divider {
   height: 22px;
   width: 1px;
-  background: var(--border-color);
+  background: var(--border);
+  flex-shrink: 0;
 }
-.session-map-toolbar :deep(.inline-edit) {
+.session-map-toolbar :deep(.share-inline-edit) {
+  min-width: 0;
+  flex-shrink: 1;
   max-width: 260px;
 }
-.session-map-toolbar :deep(select) {
+.session-map-camera-select {
+  min-width: 100px;
+  flex-shrink: 1;
   max-width: 180px;
+}
+@media (max-width: 760px) {
+  .session-map-capture-label {
+    display: none;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .session-map-toolbars {

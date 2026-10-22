@@ -1,6 +1,10 @@
 import { Vector3 } from "three";
 export const worldVector = ([x, y, z]) => new Vector3(x, z, y);
 export function applySceneCamera(camera, view) {
+  // Orthographic rays remain parallel behind the marker as well. The editable
+  // eye is near the focus, while the whole map must retain the captured framing.
+  camera.near = -500;
+  camera.far = 2000;
   camera.position.copy(worldVector(view.position));
   camera.up.copy(worldVector(view.up));
   camera.lookAt(worldVector(view.target));

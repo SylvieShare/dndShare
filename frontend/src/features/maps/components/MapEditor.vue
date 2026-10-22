@@ -91,7 +91,7 @@
           edit-cameras
           :selected-camera="e.selectedCamera"
           :preview-camera="e.previewCamera"
-          :placement-camera="['camera', 'camera-focus'].includes(e.tool)"
+          :placement-camera="e.tool === 'camera-focus'"
           :broadcast-view="broadcastView"
           edit-lights
           :selected-light="e.selectedLight"
@@ -197,7 +197,10 @@ const core = useMapEditor(props.map, (map) => emit("saved", map), {
   session: props.sessionMode,
   active: () => props.active,
 });
-const cameras = editorCameras(() => e);
+const cameras = editorCameras(
+  () => e,
+  () => canvas.value?.captureCamera(),
+);
 const e = reactive({
   ...cameras,
   ...core,

@@ -46,13 +46,15 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
           invalidSurface: true,
         }
       );
+    if (drag?.cameraHeight !== undefined && !drag.pan && !drag.orbit)
+      return {
+        ...getRenderer().world(event, drag.cameraHeight),
+        elevation: drag.cameraHeight,
+      };
     if (
       props.placementCamera ||
       props.placementLight ||
-      ((props.selectedLight || props.selectedCamera) &&
-        drag &&
-        !drag.pan &&
-        !drag.orbit)
+      (props.selectedLight && drag && !drag.pan && !drag.orbit)
     )
       return getRenderer().lightPoint(event);
     if (
@@ -89,6 +91,16 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     host.value.focus({ preventScroll: true });
     host.value.setPointerCapture(event.pointerId);
     const hit = props.placementDecal ? null : getRenderer().pick(event);
+    const cameraHeight = props.document.cameras?.find(
+      (c) => c.id === hit?.cameraId,
+    )?.view.position[2];
+    const cameraPoint =
+      cameraHeight === undefined
+        ? null
+        : {
+            ...getRenderer().world(event, cameraHeight),
+            elevation: cameraHeight,
+          };
     const additive = event.metaKey || event.ctrlKey;
     const delayed =
       props.holdToDrag &&
@@ -100,6 +112,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     drag = {
       id: event.pointerId,
       hit,
+      cameraHeight,
       delayed,
       started: false,
       moved: false,
@@ -119,18 +132,20 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
         !additive &&
         (!hit || hit.anchor),
       screen: { x: event.clientX, y: event.clientY },
-      point: hit?.decalId
-        ? getRenderer().decalPoint(event) || hit.point
-        : props.tool === "paste" ||
-            props.placementObject ||
-            props.surfacePlacement ||
-            props.placementLight ||
-            props.placementDecal ||
-            props.placementCamera ||
-            hit?.cameraId ||
-            hit?.lightId
-          ? pointAt(event)
-          : hit?.point || pointAt(event),
+      point:
+        cameraPoint ||
+        (hit?.decalId
+          ? getRenderer().decalPoint(event) || hit.point
+          : props.tool === "paste" ||
+              props.placementObject ||
+              props.surfacePlacement ||
+              props.placementLight ||
+              props.placementDecal ||
+              props.placementCamera ||
+              hit?.cameraId ||
+              hit?.lightId
+            ? pointAt(event)
+            : hit?.point || pointAt(event)),
       view: getRenderer().getView(),
       region: !!props.selectedTiles && props.tool === "select" && additive,
     };

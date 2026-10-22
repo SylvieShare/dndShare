@@ -1,6 +1,7 @@
 import { computed, ref } from "vue";
+import { cameraFromEditor, translatedCamera } from "../lib/sceneCameras";
 import { uid, clone } from "../lib/mapModel";
-export function editorCameras(getEditor) {
+export function editorCameras(getEditor, captureView) {
   const selectedCamera = ref(""),
     previewCamera = ref(null);
   let drag;
@@ -22,22 +23,21 @@ export function editorCameras(getEditor) {
     getEditor().tool = "select";
   }
   function start() {
-    clear();
-    getEditor().dismissFocus();
-    getEditor().tool = "camera";
-  }
-  function pose(point) {
-    return {
-      position: [
-        Math.floor(point.x) + 0.5,
-        Math.floor(point.y) + 0.5,
-        (point.elevation || 0.44) + 3,
-      ],
-      target: [Math.floor(point.x) + 0.5, Math.floor(point.y) + 3.5, 0.44],
-      up: [0, 0, 1],
-      width: 8,
-      aspect: 16 / 9,
+    const view = captureView();
+    if (!view) {
+      getEditor().error = "Текущий вид камеры ещё загружается";
+      return;
+    }
+    if ((getEditor().draft.document.cameras?.length || 0) >= 64) return;
+    const camera = {
+      id: uid(),
+      name: `Камера ${(getEditor().draft.document.cameras?.length || 0) + 1}`,
+      view: cameraFromEditor(view),
     };
+    getEditor().dismissFocus();
+    getEditor().change((m) => (m.document.cameras ||= []).push(camera));
+    selectedCamera.value = camera.id;
+    getEditor().tool = "select";
   }
   function update(fn) {
     if (!focusedCamera.value) return;
@@ -45,7 +45,16 @@ export function editorCameras(getEditor) {
       const camera = m.document.cameras.find(
         (c) => c.id === selectedCamera.value,
       );
+      const direction = camera.view.target.map(
+        (n, i) => n - camera.view.position[i],
+      );
       fn(camera);
+      if (
+        camera.view.target.every(
+          (n, i) => Math.abs(n - camera.view.position[i] - direction[i]) < 1e-8,
+        )
+      )
+        return;
       const [x, y] = camera.view.target;
       const [px, py] = camera.view.position;
       camera.view.up =
@@ -67,62 +76,27 @@ export function editorCameras(getEditor) {
       previewCamera.value = null;
       drag = null;
       getEditor().pauseSave(false);
-      if (["camera", "camera-focus"].includes(getEditor().tool))
-        getEditor().tool = "select";
+      if (getEditor().tool === "camera-focus") getEditor().tool = "select";
       return false;
     }
     if (getEditor().tool === "camera-focus") {
       if (phase === "start" && point) {
         update(
-          (c) => (c.view.target = [point.x, point.y, point.elevation || 0.44]),
+          (c) => (c.view.target = [point.x, point.y, point.elevation ?? 0.44]),
         );
-        getEditor().tool = "select";
-      }
-      return true;
-    }
-    if (getEditor().tool === "camera") {
-      if (phase === "hover" && point)
-        previewCamera.value = {
-          id: "preview-camera",
-          name: "Камера",
-          view: pose(point),
-        };
-      if (phase === "start" && point) {
-        const camera = {
-          id: uid(),
-          name: `Камера ${(getEditor().draft.document.cameras?.length || 0) + 1}`,
-          view: pose(point),
-        };
-        getEditor().change((m) => (m.document.cameras ||= []).push(camera));
-        selectedCamera.value = camera.id;
-        previewCamera.value = null;
         getEditor().tool = "select";
       }
       return true;
     }
     if (phase === "start" && hit?.cameraId) {
       focus(hit.cameraId);
-      drag = clone(focusedCamera.value);
+      if (point)
+        drag = { camera: clone(focusedCamera.value), origin: { ...point } };
       return true;
     }
     if (!drag) return false;
     if (phase === "move" && point) {
-      const x = Math.floor(point.x) + 0.5,
-        y = Math.floor(point.y) + 0.5,
-        dx = x - drag.view.position[0],
-        dy = y - drag.view.position[1];
-      previewCamera.value = {
-        ...drag,
-        view: {
-          ...drag.view,
-          position: [x, y, drag.view.position[2]],
-          target: [
-            drag.view.target[0] + dx,
-            drag.view.target[1] + dy,
-            drag.view.target[2],
-          ],
-        },
-      };
+      previewCamera.value = translatedCamera(drag.camera, drag.origin, point);
       getEditor().pauseSave(true);
     }
     if (phase === "end") {

@@ -1,12 +1,14 @@
 <template>
   <section class="map-cameras-panel">
-    <ActionButton @click="editor.placeCamera"
+    <ActionButton
+      :disabled="editor.draft.document.cameras?.length >= 64"
+      @click="editor.placeCamera"
       ><template #icon><Plus :size="17" /></template>Добавить
       камеру</ActionButton
     >
     <p class="map-hint">
-      Поставьте камеру на поле. Направление и размер кадра меняются в её
-      настройках.
+      Сохраните текущий ракурс и масштаб. Камера свободно перемещается в
+      плоскости своей высоты.
     </p>
     <BaseTile
       v-for="camera in editor.draft.document.cameras || []"

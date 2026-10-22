@@ -26,7 +26,6 @@
       :selected-token="tokens.selected"
       :surface-placement="tokens.surface"
       :canvas-state="tokens.canvasState"
-      :player-preview="playerPreview"
       :token-gesture="tokens.gesture"
       :remove-token="removeToken"
       @working="c.working"
@@ -38,11 +37,9 @@
           :editor="editor"
           :controller="c"
           :screen-path="screenPath"
-          :player-preview="playerPreview"
           @switch="picker = true"
           @source="source"
           @capture="capture"
-          @preview="playerPreview = $event"
       /></template>
       <template #creatures="{ editor }"
         ><SessionMapCreatures
@@ -133,7 +130,6 @@ const c = reactive(useSessionMaps(props.sessionUuid)),
   workspace = ref(null),
   picker = ref(false),
   generation = ref(0),
-  playerPreview = ref(false),
   pendingDelete = ref(null),
   reloadConfirm = ref(false);
 const candidates = computed(() =>
@@ -159,7 +155,6 @@ watch(
   () => c.selectedID,
   (id) => {
     tokens.reset();
-    playerPreview.value = false;
     if (id && c.display && c.display.mapId !== id)
       c.updateDisplay({
         mapId: id,
