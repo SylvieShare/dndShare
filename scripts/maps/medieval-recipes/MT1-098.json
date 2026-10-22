@@ -1,0 +1,388 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [0, 0],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Tall Pig Wall",
+  "groupCode": "MED-tall-pig-wall",
+  "hasDecor": true,
+  "renderTriangles": 120000,
+  "lodTriangles": 50000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1536,
+  "renderUVAngleLimitRad": 0.18,
+  "lodUVAngleLimitRad": 0.18,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1536,
+  "lodColourSize": 1536,
+  "lodDataSize": 1536,
+  "standRayTopMM": 120,
+  "standPointsMM": [
+    [8.75, -8.75],
+    [8.75, 0],
+    [8.75, 8.75]
+  ],
+  "blockersMM": [
+    [
+      [-17.65, -17.65],
+      [1.9718000459671021, -17.65],
+      [1.9718000459671021, 17.65],
+      [-17.65, 17.65]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": ["town", "floor", "tall", "wall", "pig", "wood", "plaster", "iron"],
+  "weightBudget": {
+    "renderMiB": [3.5, 9],
+    "lodMiB": [1.5, 6],
+    "shadowKiB": [120, 270],
+    "previewKiB": [12, 40],
+    "basis": "35mm cell with89.0112mm wall, wooden plaque and projecting pig head with two hexagonal ear fixings, small eyes, nostrils and mouth. Source559996tri/27999884bytes.120000/50000 independent geometry,2048/1536 bakes,1536/1536 colour and1536/1536 data. Compare compact; preserve small features and three verified front floor points."
+  },
+  "materials": {
+    "earthRGB": [0.28, 0.17, 0.075],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [0.34, 0.165, 0.055],
+    "woodLightRGB": [0.59, 0.35, 0.145],
+    "stoneDarkRGB": [0.34, 0.165, 0.055],
+    "stoneLightRGB": [0.59, 0.35, 0.145],
+    "woodParts": [
+      {
+        "name": "X floor and north south fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west Y floor border and fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [-14.3, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y floor border and fascia",
+        "minMM": [14.3, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south tall post",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-10.1, -13.6, 89.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "north tall post",
+        "minMM": [-17.65, 13.6, 26.1],
+        "maxMM": [-10.1, 17.65, 89.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "measured rear crossbar",
+        "minMM": [-17.65, -13.8, 67],
+        "maxMM": [-14, 13.8, 77],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0, 0.9998397196392433, -0.017903492165479012],
+        "projection": {
+          "originMM": [
+            -17.308928781085545, 0.44069140487247044, 71.3932975903906
+          ],
+          "axis": [0, 0.017903492165479012, 0.9998397196392433],
+          "rangeMM": [-2.2693436465379784, 2.8108826114433616]
+        }
+      },
+      {
+        "name": "measured rear middle post",
+        "minMM": [-17.65, -2.6444000244140624, 26.1],
+        "maxMM": [-14, 2.450299882888794, 69.52395394385263],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "vertical wooden pig trophy plaque and rim",
+        "minMM": [-13, -11.6, 47.8],
+        "maxMM": [-9.1, 11.6, 78.5],
+        "axis": "z",
+        "physicalPigment": true,
+        "darkRGB": [0.29, 0.135, 0.045],
+        "lightRGB": [0.57, 0.32, 0.11],
+        "roughness": 0.9,
+        "awayFromSource": {
+          "code": "MT1-091",
+          "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+          "matchMM": 0.04,
+          "projectTo": {
+            "code": "MT1-098",
+            "sourceSHA256": "78a4aeaefb09d22710a88f5970af6f4482a756e2a7188995af3a315ea9c1fbca"
+          }
+        }
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "ochre plaster on both tall faces and top",
+        "kind": "plaster",
+        "minMM": [-17.65, -13.6, 26.6],
+        "maxMM": [-10.1, 13.6, 89.2],
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "south tall post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.1, -13.6, 89.2],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "north tall post",
+            "minMM": [-17.65, 13.6, 26.1],
+            "maxMM": [-10.1, 17.65, 89.2],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "measured rear crossbar",
+            "minMM": [-17.65, -13.8, 67],
+            "maxMM": [-14, 13.8, 77],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0, 0.9998397196392433, -0.017903492165479012],
+            "projection": {
+              "originMM": [
+                -17.308928781085545, 0.44069140487247044, 71.3932975903906
+              ],
+              "axis": [0, 0.017903492165479012, 0.9998397196392433],
+              "rangeMM": [-2.2693436465379784, 2.8108826114433616]
+            }
+          },
+          {
+            "name": "measured rear middle post",
+            "minMM": [-17.65, -2.6444000244140624, 26.1],
+            "maxMM": [-14, 2.450299882888794, 69.52395394385263],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "vertical wooden pig trophy plaque and rim",
+            "minMM": [-13, -11.6, 47.8],
+            "maxMM": [-9.1, 11.6, 78.5],
+            "axis": "z",
+            "physicalPigment": true,
+            "darkRGB": [0.29, 0.135, 0.045],
+            "lightRGB": [0.57, 0.32, 0.11],
+            "roughness": 0.9,
+            "awayFromSource": {
+              "code": "MT1-091",
+              "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+              "matchMM": 0.04,
+              "projectTo": {
+                "code": "MT1-098",
+                "sourceSHA256": "78a4aeaefb09d22710a88f5970af6f4482a756e2a7188995af3a315ea9c1fbca"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "warm pink pig head and ear membranes",
+        "kind": "paint",
+        "minMM": [-9.1, -9.2, 52],
+        "maxMM": [2.3, 9.2, 71.5],
+        "rgb": [0.76, 0.43, 0.37],
+        "roughness": 0.72,
+        "variation": 0.018
+      },
+      {
+        "name": "pink snout and nose rim",
+        "kind": "paint",
+        "minMM": [-1.2, -2.3, 59.2],
+        "maxMM": [2.8, 2.3, 63.2],
+        "ellipsoid": {
+          "centerMM": [0.8, 0, 61.2],
+          "radiiMM": [2, 2.3, 2]
+        },
+        "rgb": [0.85, 0.38, 0.3],
+        "roughness": 0.68,
+        "variation": 0.015
+      },
+      {
+        "name": "deep nostril left",
+        "kind": "paint",
+        "minMM": [-0.8, -1.98, 61.15],
+        "maxMM": [0.55, -0.82, 62.050000000000004],
+        "ellipsoid": {
+          "centerMM": [-0.03, -1.4, 61.6],
+          "radiiMM": [0.7, 0.58, 0.45]
+        },
+        "rgb": [0.22, 0.075, 0.055],
+        "roughness": 0.85,
+        "variation": 0.01
+      },
+      {
+        "name": "deep nostril right",
+        "kind": "paint",
+        "minMM": [-0.8, 0.21999999999999997, 61.099999999999994],
+        "maxMM": [0.55, 1.26, 62.0],
+        "ellipsoid": {
+          "centerMM": [-0.02, 0.74, 61.55],
+          "radiiMM": [0.7, 0.52, 0.45]
+        },
+        "rgb": [0.22, 0.075, 0.055],
+        "roughness": 0.85,
+        "variation": 0.01
+      },
+      {
+        "name": "small dark eye left",
+        "kind": "paint",
+        "minMM": [-4.67, -4.08, 64.67999999999999],
+        "maxMM": [-3.5700000000000003, -3.2199999999999998, 65.52],
+        "ellipsoid": {
+          "centerMM": [-4.12, -3.65, 65.1],
+          "radiiMM": [0.55, 0.43, 0.42]
+        },
+        "rgb": [0.075, 0.05, 0.04],
+        "roughness": 0.48,
+        "variation": 0.01
+      },
+      {
+        "name": "small dark eye right",
+        "kind": "paint",
+        "minMM": [-4.58, 2.75, 64.58],
+        "maxMM": [-3.4800000000000004, 3.59, 65.42],
+        "ellipsoid": {
+          "centerMM": [-4.03, 3.17, 65],
+          "radiiMM": [0.55, 0.42, 0.42]
+        },
+        "rgb": [0.075, 0.05, 0.04],
+        "roughness": 0.48,
+        "variation": 0.01
+      },
+      {
+        "name": "pig mouth crease",
+        "kind": "paint",
+        "minMM": [-0.45, -2.1, 59.07],
+        "maxMM": [1.35, 2.1, 59.43],
+        "ellipsoid": {
+          "centerMM": [0.45, 0, 59.25],
+          "radiiMM": [0.9, 2.1, 0.18]
+        },
+        "rgb": [0.3, 0.11, 0.075],
+        "roughness": 0.82,
+        "variation": 0.01
+      },
+      {
+        "name": "dark iron hex left",
+        "kind": "paint",
+        "minMM": [-9.133414957258436, -6.996349961669357, 65.13130159731264],
+        "maxMM": [-7.133414957258436, -4.996349961669357, 67.13130159731264],
+        "radialShell": {
+          "originMM": [
+            -8.133414957258436, -5.996349961669357, 66.13130159731264
+          ],
+          "axis": [
+            0.9630860686302185, -0.26225757598876953, -0.06071287393569946
+          ],
+          "rangeMM": [-0.35, 0.06],
+          "radiusAtOriginMM": 0.7108489519237255,
+          "radiusSlope": 0,
+          "thicknessMM": 1.7108489519237255,
+          "allowanceMM": 0.02
+        },
+        "rgb": [0.21, 0.185, 0.145],
+        "roughness": 0.6,
+        "metallic": 0.8,
+        "variation": 0.02
+      },
+      {
+        "name": "dark iron hex right",
+        "kind": "paint",
+        "minMM": [-8.964433336257935, 4.798259925842285, 64.8571403503418],
+        "maxMM": [-6.964433336257935, 6.798259925842285, 66.8571403503418],
+        "radialShell": {
+          "originMM": [-7.964433336257935, 5.798259925842285, 65.8571403503418],
+          "axis": [0.9709094762802124, 0.229119673371315, -0.06956293433904648],
+          "rangeMM": [-0.35, 0.06],
+          "radiusAtOriginMM": 0.6362828355251299,
+          "radiusSlope": 0,
+          "thicknessMM": 1.63628283552513,
+          "allowanceMM": 0.02
+        },
+        "rgb": [0.21, 0.185, 0.145],
+        "roughness": 0.6,
+        "metallic": 0.8,
+        "variation": 0.02
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "Native full/front/back, head front/both angles/underside inspected. Own centre top ray hits pigZ64.299042, so centre cannot be a stand point. Three native free pointsX8.75,Y[-8.75,0,8.75] have heights25.517021/24.718407/25.398262 andnormZ>=.997865;local[.75,.75/.5/.25]. Blocker reaches highmaxX1.891800+.08 andcontains centre.4559 floor normals(nx².041940,ny².102912) confirmX boards,Yfascia. Own rearbar792samples centreZ71.393298,direction[0,.999840,-.017903];own middlepostY[-2.4944,2.3003]. Plain91 unmirrored comparison2968/2968 samples within.12mm,median.000568/p99.002579;mirror rejected. Own plaque extends to crest[-9.289379,0,74.18];skin depth>=-9.1 protects wood. Warm pink head/ear membranes, coral nose rim, two separately measured deep nostrils, small dark eye hollows, thin mouth crease. Two actual raised hex faces inside ears measured54/60 surface samples,radii.685849/.611283 andindependent normals;restrict iron to.35mm behind front planes,not broad ear rectangles. Pin native eyes/nose/lips/hexes. No fire/lights/emission/supportSlots or inventedtusks. Verify complete source-domain coverage, coloured boundaries, actualORM, three standpoints andfull source/render/LOD/shadow. Normalize selected ordinary17mm input mount toUD-0165.373095mm preservingbody/UV/images/worldheights;transparent trophy preview,Go manifest andfresh MCP identity/assets/placement/behaviour confirmation. Initial explicit coverage found3 samples on the wooden crest atZ77mm above first76.5mm mask; extend plaque to78.5mm while preserving common plaster through the verified source91 comparison. Native colour QA found pure dark-nostril LOD samples mixed with the pink rim at1024 colour resolution; raise LOD colour to1536 and repeat pixel checks with unchanged thresholds. The larger LOD budget reflects the measured need for small eyes/nostrils. AtLOD1536 JPEG94 produced a nearly black eye gutter atpixel[1310,2]:originalRGB[13,8,6] became[3,2,0]. Raise the dark-eye pigment slightly toRGB[.075,.05,.04] to retain a stable dark-brown eye after compression; black-pixel rejection remains unchanged.",
+  "surfaceHeightMM": 24.718406677246094,
+  "renderColourSize": 1536,
+  "geometryDetailRegions": [
+    {
+      "name": "left eye socket",
+      "minMM": [-5, -4.4, 64.3],
+      "maxMM": [-2.8, -2.9, 65.8]
+    },
+    {
+      "name": "right eye socket",
+      "minMM": [-5, 2.5, 64.2],
+      "maxMM": [-2.8, 3.9, 65.8]
+    },
+    {
+      "name": "nostrils and nose rim",
+      "minMM": [-0.9, -2.3, 60.1],
+      "maxMM": [2.1, 2.3, 62.5]
+    },
+    {
+      "name": "mouth crease and lips",
+      "minMM": [-0.7, -2.5, 58.7],
+      "maxMM": [1.9, 2.5, 59.6]
+    },
+    {
+      "name": "hex left and ear contact",
+      "minMM": [-8.657900428771972, -6.954100227355957, 65.14539947509766],
+      "maxMM": [-7.84940013885498, -5.346399879455566, 66.74529876708985]
+    },
+    {
+      "name": "hex right and ear contact",
+      "minMM": [-8.44409999847412, 4.871199989318848, 64.94840087890626],
+      "maxMM": [-7.670400238037109, 6.4240998268127445, 66.558203125]
+    }
+  ]
+}

@@ -133,6 +133,7 @@ Tall Window With Glass|Высокое окно со стеклом
 Tall Window Without Glass|Высокое окно без стекла
 Tall Door|Высокая дверь
 Tall Skull Wall|Высокая стена с черепом
+Tall Pig Wall|Высокая стена с поросёнком
 Ladder Down|Приставная лестница вниз
 Balcony|Балкон
 Balcony Angle|Угловой балкон

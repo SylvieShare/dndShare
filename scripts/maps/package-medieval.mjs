@@ -147,7 +147,20 @@ if (!process.argv.includes('--publish-manifest')) {
       const bytes = await (colour.has(texture) ? pipeline.jpeg({ quality: 94, chromaSubsampling: '4:4:4' }) : pipeline.png()).toBuffer();
       const decoded = await sharp(bytes).removeAlpha().raw().toBuffer();
       for (let i = 0; i < coverage.length; i++) if (coverage[i]) {
-        if (colour.has(texture) && Math.max(...decoded.subarray(i*3, i*3+3))<4) throw new Error('Black compressed surface');
+        if (colour.has(texture) && Math.max(...decoded.subarray(i*3, i*3+3))<4) {
+          let surface;
+          rasterizeSurface(doc, pixels, pixels, (index, pointMM) => {
+            if (index===i) surface=pointMM;
+          }, slot);
+          throw new Error('Black compressed surface: '+JSON.stringify({
+            code, tier,
+            pixel: [i%pixels, Math.floor(i/pixels)],
+            surface: surface ? 'triangle' : 'gutter',
+            pointMM: surface,
+            originalRGB: [...data.subarray(i*3, i*3+3)],
+            decodedRGB: [...decoded.subarray(i*3, i*3+3)],
+          }));
+        }
         if (normal.has(texture) && decoded[i*3+2]<128) throw new Error('Invalid compressed normal');
       }
       texture.setImage(bytes).setMimeType(colour.has(texture) ? 'image/jpeg' : 'image/png');
