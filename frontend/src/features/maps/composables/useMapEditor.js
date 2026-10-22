@@ -1,4 +1,5 @@
 import { editorDecals } from "./editorDecals";
+import { canonicalMapData } from "@/shared/api/mapDocumentData";
 import { pruneDecals } from "../lib/mapDecals";
 import { useEditorSelection } from "./useEditorSelection";
 import { useMapPersistence } from "./useMapPersistence";
@@ -87,6 +88,7 @@ export function useMapEditor(source, onSaved, options = {}) {
     checkpoint();
     try {
       fn(draft.value);
+      draft.value.document = canonicalMapData(draft.value).document;
       pruneAreas(draft.value.document);
       pruneDecals(draft.value.document);
       if (catalogue.value.length)

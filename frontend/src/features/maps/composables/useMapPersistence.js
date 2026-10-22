@@ -1,4 +1,5 @@
 import { pruneDecals } from "../lib/mapDecals";
+import { canonicalMapData } from '@/shared/api/mapDocumentData'
 import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { saveMap } from '@/shared/api/mapsApi'
 import { clone } from '../lib/mapModel'
@@ -54,7 +55,7 @@ export function useMapPersistence({
     clearTimeout(timer)
     await nextTick()
     if (
-      (saving.value && !draft.value.id) ||
+      saving.value ||
       loadingModels.value ||
       conflict.value ||
       !dirty.value ||
@@ -68,6 +69,7 @@ export function useMapPersistence({
     pruneAreas(draft.value.document)
     syncLights(draft.value.document, catalogue.value)
     options.normalize?.(draft.value, catalogue.value)
+    draft.value.document = canonicalMapData(draft.value).document
     pruneDecals(draft.value.document)
     finishLightEdit()
     journal.commit()
@@ -81,6 +83,7 @@ export function useMapPersistence({
         content(snapshot),
         content(result),
         documentDiff(content(snapshot), content(draft.value)),
+        canonicalMapData,
       ).data
       const canonical = documentDiff(content(draft.value), next)
       if (canonical.length) journal.applyRemote(canonical)

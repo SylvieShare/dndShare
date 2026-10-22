@@ -4,6 +4,7 @@ import { tilePose, tilePoseTransform } from "./tileTransform";
 import { createRotationMotion } from "./rotationMotion";
 import { landingTarget } from "./tileLanding";
 import { modelWaterMaterial } from "./modelWater";
+import { reflectedModelMaterial } from "./reflectedModelMaterial";
 
 export function createTilePreview(assets, onSettled = () => {}) {
   const root = new Group(),
@@ -131,6 +132,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
             copy.userData.baseOpacity = copy.opacity;
             copy.userData.baseTransparent = copy.transparent;
             copy.userData.baseDepthWrite = copy.depthWrite;
+            reflectedModelMaterial(copy, visualMirror(group[indices[0]]));
             return modelWaterMaterial(
               copy,
               part,

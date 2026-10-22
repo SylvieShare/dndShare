@@ -3,6 +3,7 @@ import { modelVisual } from "./modelVisual";
 import { modelWaterMaterial } from "./modelWater";
 import { applyAreaOpacity } from "./areaOpacity";
 import { modelRaycast } from "./modelPicking";
+import { reflectedModelMaterial } from "./reflectedModelMaterial";
 
 const matrix = new Matrix4(),
   previous = new Matrix4(),
@@ -91,6 +92,7 @@ export function createModelBatches(root, assets, fog, kind) {
             ).map((original) => {
               const copy = fog.material(original.clone());
               copy.userData.borrowedTextures = true;
+              reflectedModelMaterial(copy, group.reflected);
               return modelWaterMaterial(copy, part, settings);
             });
             const mesh = new InstancedMesh(

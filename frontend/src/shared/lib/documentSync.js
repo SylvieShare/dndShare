@@ -12,7 +12,8 @@ import {
 // One instance owns one document. A request remains immutable until acknowledged;
 // edits made while it is in flight stay in a separate ordered queue.
 export function createDocumentSync(options) {
-  let base = copyDocument(options.data),
+  const canonicalize = options.canonicalize || (data => data)
+  let base = canonicalize(copyDocument(options.data)),
     desired = copyDocument(base),
     version = options.version || 0
   let queue = [],
@@ -62,17 +63,17 @@ export function createDocumentSync(options) {
     )
   }
   function render(next) {
-    desired = next
+    desired = canonicalize(next)
     applying = true
     try {
-      options.onData?.(copyDocument(next))
+      options.onData?.(copyDocument(desired))
     } finally {
       applying = false
     }
   }
   function edit(next, metadata = {}, { record = true } = {}) {
     if (applying || stopped) return false
-    next = copyDocument(next)
+    next = canonicalize(copyDocument(next))
     const patches = documentDiff(desired, next)
     if (!patches.length && !metadata.events?.length) return false
     queue.push({ patches, metadata: copyDocument(metadata) })
@@ -93,13 +94,13 @@ export function createDocumentSync(options) {
       current = copyDocument(next)
     const retained = []
     for (const group of groups) {
-      const result = rebaseDocumentChanges(old, current, group.patches)
+      const result = rebaseDocumentChanges(old, current, group.patches, options.canonicalize)
       old = applyDocumentPatches(old, group.patches)
       current = result.data
       if (result.patches.length || group.metadata.events?.length)
         retained.push({ ...group, patches: result.patches })
     }
-    base = copyDocument(next)
+    base = canonicalize(copyDocument(next))
     version = nextVersion
     queue = retained
     flight = null
@@ -274,8 +275,8 @@ export function createDocumentSync(options) {
       ]
   }
   function reset(data, nextVersion, { preserveOutbox = false } = {}) {
-    base = copyDocument(data)
-    desired = copyDocument(data)
+    base = canonicalize(copyDocument(data))
+    desired = copyDocument(base)
     version = nextVersion
     queue = []
     flight = null

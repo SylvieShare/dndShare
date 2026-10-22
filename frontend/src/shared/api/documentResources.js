@@ -10,11 +10,13 @@ import { useAccountStore } from '@/stores/account'
 const documents = new Map()
 const actor = () => useAccountStore().user?.id
 const scoped = (key) => `${actor() || 'anonymous'}:${key}`
-const content = (record, fields) =>
-  Object.fromEntries(fields.map((field) => [field, record[field]]))
+const content = (record, config) => {
+  const data = Object.fromEntries(config.fields.map((field) => [field, record[field]]))
+  return config.canonicalize ? config.canonicalize(data) : data
+}
 
 export function seedDocumentResource(record, config) {
-  const { key, url, fields } = config
+  const { key, url } = config
   const identity = scoped(key)
   let entry = documents.get(identity)
   if (!entry) {
@@ -38,7 +40,8 @@ export function seedDocumentResource(record, config) {
         entry.versions.delete(entry.versions.keys().next().value)
     }
     entry.sync = createDocumentSync({
-      data: content(record, fields),
+      data: content(record, config),
+      canonicalize: config.canonicalize,
       version: record.revision,
       storageKey:
         actor() && record.owned !== false
@@ -51,21 +54,25 @@ export function seedDocumentResource(record, config) {
     })
     documents.set(identity, entry)
   } else {
-    if (config.reset) entry.sync.reset(content(record, fields), record.revision)
+    if (config.reset) entry.sync.reset(content(record, config), record.revision)
     if (record.revision >= entry.sync.version)
       entry.record = copyDocument(record)
     entry.sync.receive({
-      data: content(record, fields),
+      data: content(record, config),
       version: record.revision,
     })
   }
-  entry.versions.set(record.revision, copyDocument(content(record, fields)))
+  entry.versions.set(record.revision, copyDocument(content(record, config)))
   if (entry.sync.pending && record.owned !== false) void entry.sync.flush()
-  return { ...record, ...entry.sync.data, revision: entry.sync.version }
+  const data = entry.sync.data, revision = entry.sync.version
+  // A restored queue can return an optimistic DTO at the current version.
+  // Its caller must diff against the snapshot it actually received.
+  entry.versions.set(revision, copyDocument(data))
+  return { ...record, ...data, revision }
 }
 
 export async function writeDocumentResource(record, config) {
-  const { key, url, fields } = config
+  const { key, url } = config
   let entry = documents.get(scoped(key))
   if (!entry) {
     const snapshot = await fetchGet(`${url}/changes?after=-1`)
@@ -93,7 +100,8 @@ export async function writeDocumentResource(record, config) {
   const next = rebaseDocumentChanges(
     previous,
     entry.sync.data,
-    documentDiff(previous, content(record, fields)),
+    documentDiff(previous, content(record, config)),
+    config.canonicalize,
   ).data
   entry.sync.edit(next, {}, { record: false })
   const wait = entry.sync.whenIdle()

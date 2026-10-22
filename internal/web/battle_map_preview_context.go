@@ -53,6 +53,12 @@ func buildMapPreviewContext(d battlemap.Document, models []battlemap.Model, beha
 	if len(d.Decals) > 0 {
 		renderer += ":decal-relief-v2"
 	}
+	for _, tile := range d.Tiles {
+		if tile.Mirrored {
+			renderer += ":mirror-lighting-v2"
+			break
+		}
+	}
 	raw, err := json.Marshal(struct {
 		Renderer string
 		Document battlemap.Document

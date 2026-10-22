@@ -39,7 +39,8 @@ export function lightEffectPose(light, document, posed) {
       (x) => x.id === light.anchor.id,
     );
   const angle = ((owner?.rotation || 0) * Math.PI) / 180;
-  const [x, y, height] = light.effect.offset;
+  const [localX, y, height] = light.effect.offset;
+  const x = light.anchor?.kind === "tile" && owner?.mirrored ? -localX : localX;
   return {
     ...posed,
     size: light.effect.size,

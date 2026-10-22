@@ -206,8 +206,14 @@ export function applyDocumentPatches(root, patches) {
 
 // Rebase only independent local edits. Changes already present after a lost
 // acknowledgement are treated as applied; overlapping edits stay explicit.
-export function rebaseDocumentChanges(previousBase, nextBase, localPatches) {
+export function rebaseDocumentChanges(previousBase, nextBase, localPatches, canonicalize) {
   try {
+    if (canonicalize) {
+      const desired = applyDocumentPatches(copyDocument(previousBase), localPatches)
+      previousBase = canonicalize(copyDocument(previousBase))
+      nextBase = canonicalize(copyDocument(nextBase))
+      localPatches = documentDiff(previousBase, canonicalize(desired))
+    }
     return rebaseChanges(previousBase, nextBase, localPatches)
   } catch (error) {
     throw Object.assign(error, { status: 409 })

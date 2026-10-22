@@ -4,7 +4,9 @@ import {
   reloadDocumentResource,
   discardDocumentResource,
 } from './documentResources'
+import { canonicalMapData } from './mapDocumentData'
 const config = (map, session) => ({
+  canonicalize: canonicalMapData,
   key: session ? `session-map:${session}:${map.id}` : `map:${map.id}`,
   url: session
     ? `/sessions/${encodeURIComponent(session)}/maps/${encodeURIComponent(map.id)}`
