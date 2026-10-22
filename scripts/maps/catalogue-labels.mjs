@@ -137,6 +137,7 @@ Tall Pig Wall|Высокая стена с поросёнком
 Tall Pig Fireplace|Высокий камин с поросёнком
 Tall Skull Fireplace|Высокий камин с черепом
 Tall Buffet|Высокий буфет
+Tall Big Barrel|Высокая большая бочка
 Ladder Down|Приставная лестница вниз
 Balcony|Балкон
 Balcony Angle|Угловой балкон

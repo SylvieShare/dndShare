@@ -99,3 +99,11 @@ test("tall buffet keeps its family in the existing buffet section", () => {
     variantCode: "MED-tall-buffet",
   });
 });
+
+test("tall barrel keeps its family in the existing barrel section", () => {
+  const item = model("Tall Big Barrel", "MED-tall-barrel");
+  assert.deepEqual(groupingFor(item, [item]), {
+    code: "MED-barrel",
+    variantCode: "MED-tall-barrel",
+  });
+});
