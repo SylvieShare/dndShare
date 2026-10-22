@@ -6,6 +6,7 @@
         :editable="
           entry.kind === 'area' ||
           entry.kind === 'decal' ||
+          entry.kind === 'camera' ||
           (entry.kind === 'light' && !entry.item.builtinKey)
         "
         @rename="rename"
@@ -58,12 +59,16 @@
           :aria-label="
             entry.kind === 'area'
               ? `Удалить область «${entry.name}»`
-              : 'Удалить элемент'
+              : entry.kind === 'camera'
+                ? 'Удалить камеру'
+                : 'Удалить элемент'
           "
           :title="
             entry.kind === 'area'
               ? `Удалить область «${entry.name}»`
-              : 'Удалить элемент'
+              : entry.kind === 'camera'
+                ? 'Удалить камеру'
+                : 'Удалить элемент'
           "
           @click="editor.removeSelected()"
         >
@@ -94,6 +99,8 @@ function rename(value) {
   const { entry, editor } = props;
   if (!value) return;
   if (entry.kind === "area") editor.renameArea(entry.id, value);
+  else if (entry.kind === "camera")
+    editor.updateCamera((c) => (c.name = value));
   else if (entry.kind === "decal") {
     editor.finishDecalEdit();
     editor.updateDecal("name", value);

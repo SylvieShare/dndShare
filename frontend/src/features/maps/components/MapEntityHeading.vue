@@ -32,6 +32,7 @@ import InspectorHeading from "@/shared/ui/InspectorHeading.vue";
 import MapPackIcon from "./MapPackIcon.vue";
 import {
   Box,
+  Camera,
   Group,
   Layers,
   Lightbulb,
@@ -50,6 +51,7 @@ const icon = computed(
   () =>
     ({
       tile: Layers,
+      camera: Camera,
       decal: Sticker,
       object: Box,
       light: Lightbulb,
@@ -61,11 +63,13 @@ const icon = computed(
     })[props.entry.kind] || Box,
 );
 const nameLabel = computed(() =>
-  props.entry.kind === "decal"
-    ? "Название декали"
-    : props.entry.kind === "area"
-      ? "Название области"
-      : "Название источника света",
+  props.entry.kind === "camera"
+    ? "Название камеры"
+    : props.entry.kind === "decal"
+      ? "Название декали"
+      : props.entry.kind === "area"
+        ? "Название области"
+        : "Название источника света",
 );
 </script>
 <style scoped>

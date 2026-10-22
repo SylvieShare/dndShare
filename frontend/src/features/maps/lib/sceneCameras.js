@@ -30,3 +30,23 @@ export function translatedCamera(camera, origin, point) {
     },
   };
 }
+
+export function cameraWithView(camera, view) {
+  const direction = view.target.map((n, i) => n - view.position[i]);
+  if (Math.hypot(...direction) <= 0.01) return null;
+  const unchanged = direction.every(
+    (n, i) =>
+      Math.abs(n - camera.view.target[i] + camera.view.position[i]) < 1e-8,
+  );
+  return {
+    ...camera,
+    view: {
+      ...view,
+      up: unchanged
+        ? view.up
+        : Math.hypot(direction[0], direction[1]) < 0.01
+          ? [0, -1, 0]
+          : [0, 0, 1],
+    },
+  };
+}

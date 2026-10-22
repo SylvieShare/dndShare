@@ -30,8 +30,12 @@ test("camera placement and focus save a pose; broadcasting a captured view stays
   created.up.forEach((n, i) => expect(n).toBeCloseTo(expectedView.up[i]));
   expect(created.width).toBeCloseTo(expectedView.width);
   expect(created.aspect).toBeCloseTo(expectedView.aspect);
-  await focus.locator('[aria-label="Ширина кадра"] input').fill("12");
-  await focus.locator('[aria-label="Ширина кадра"] input').press("Enter");
+  await focus
+    .getByRole("slider", { name: "Ширина кадра", exact: true })
+    .fill("12");
+  await focus
+    .getByRole("slider", { name: "Ширина кадра", exact: true })
+    .press("Enter");
   await page
     .getByRole("button", { name: "Отобразить текущий вид", exact: true })
     .click();

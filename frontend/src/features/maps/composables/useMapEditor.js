@@ -57,7 +57,10 @@ export function useMapEditor(source, onSaved, options = {}) {
   } = useEditorSelection();
   const journal = useEditorJournal(draft, !!source?.id);
   const { history, future, dirty } = journal;
-  const checkpoint = journal.checkpoint;
+  const checkpoint = () => {
+    options.finishEdit?.();
+    journal.checkpoint();
+  };
   const {
     saving,
     error,
@@ -79,6 +82,7 @@ export function useMapEditor(source, onSaved, options = {}) {
     onSaved,
     source,
     finishLightEdit: () => {
+      options.finishEdit?.();
       lighting.finishLightEdit();
       decals.finishDecalEdit();
     },
@@ -101,6 +105,7 @@ export function useMapEditor(source, onSaved, options = {}) {
     }
   }
   function undo() {
+    options.finishEdit?.();
     lighting.finishLightEdit();
     decals.finishDecalEdit();
     if (!journal.undo()) {
@@ -125,6 +130,7 @@ export function useMapEditor(source, onSaved, options = {}) {
     );
   }
   function redo() {
+    options.finishEdit?.();
     lighting.finishLightEdit();
     decals.finishDecalEdit();
     if (!journal.redo()) {
@@ -252,6 +258,7 @@ export function useMapEditor(source, onSaved, options = {}) {
       syncLights(draft.value.document, catalogue.value);
   });
   onBeforeUnmount(() => {
+    options.finishEdit?.();
     catalogueAbort.abort();
     lighting.finishLightEdit();
     decals.finishDecalEdit();
@@ -310,6 +317,8 @@ export function useMapEditor(source, onSaved, options = {}) {
     change,
     undo,
     redo,
+    checkpoint,
+    commitEdit: journal.commit,
     resize,
     ...areas,
     ...editorTransitions(state),

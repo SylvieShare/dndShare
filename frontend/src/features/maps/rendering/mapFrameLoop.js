@@ -14,6 +14,7 @@ export function createMapFrameLoop({
   effects,
   decals,
   water,
+  cameras,
   scene,
   camera,
   presentFrame,
@@ -41,6 +42,8 @@ export function createMapFrameLoop({
         profiler.mark("areas");
         let moving =
           transitions.advance(delta) | modelTransitions.advance(delta);
+        profiler.mark("overlays");
+        const markersMoving = cameras?.advance(delta);
         profiler.mark("tiles");
         moving |= preview.advance(delta) | tiles.advance(delta);
         const loading = loadingPreview.advance(delta);
@@ -97,7 +100,13 @@ export function createMapFrameLoop({
         const frameDepth = volumeFog.render(scene, camera);
         profiler.mark("overlays");
         presentFrame(objects, options, appearance, frameDepth);
-        if (moving || lighting.isFading() || effectFrame.moving) request();
+        if (
+          moving ||
+          markersMoving ||
+          lighting.isFading() ||
+          effectFrame.moving
+        )
+          request();
         else if (
           (flickering || mistMoving || Number.isFinite(fireDelay)) &&
           !timer

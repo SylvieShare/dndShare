@@ -43,16 +43,17 @@ export function useCanvasUpdates(props, getRenderer, onError, onActive) {
     () => [
       props.document.tiles,
       props.document.image,
-      props.document.cameras,
-      props.broadcastView,
-      props.previewCamera,
-      props.selectedCamera,
       props.document.width,
       props.document.height,
       props.catalogue,
       props.catalogueRequest,
     ],
     () => redraw("structure"),
+    { deep: true },
+  );
+  watch(
+    () => [props.document.cameras, props.broadcastView, props.previewCamera],
+    () => getRenderer()?.updateCameras(props.document, options()),
     { deep: true },
   );
   watch(
@@ -106,6 +107,11 @@ export function useCanvasUpdates(props, getRenderer, onError, onActive) {
       props.hoveredTile,
       props.hoveredObject,
       props.selectedLight,
+      props.selectedCamera,
+      props.hoveredCamera,
+      props.hoveredCameraPart,
+      props.draggingCameraPart,
+      props.editCameras,
       props.selectedDecal,
       props.hoveredDecal,
       props.hoveredLight,

@@ -98,7 +98,9 @@
           edit-cameras
           :selected-camera="e.selectedCamera"
           :preview-camera="e.previewCamera"
-          :placement-camera="e.tool === 'camera-focus'"
+          :hovered-camera="e.hoveredCamera"
+          :hovered-camera-part="e.hoveredCameraPart"
+          :dragging-camera-part="e.draggingCameraPart"
           :broadcast-view="broadcastView"
           edit-lights
           :selected-light="e.selectedLight"
@@ -154,7 +156,7 @@
 import { useMapFocusHistory } from "../composables/useMapFocusHistory";
 import { mapEntity } from "../lib/editorEntities";
 import "../styles/maps.css";
-import { computed, nextTick, reactive, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, reactive, ref, watch } from "vue";
 import {
   ActionButton,
   AppModalFrame,
@@ -204,11 +206,13 @@ const core = useMapEditor(props.map, (map) => emit("saved", map), {
   normalize: props.normalize,
   session: props.sessionMode,
   active: () => props.active,
+  finishEdit: () => cameras.finishCameraEdit(),
 });
 const cameras = editorCameras(
   () => e,
   () => canvas.value?.captureCamera(),
 );
+onBeforeUnmount(cameras.disposeCameras);
 const e = reactive({
   ...cameras,
   ...core,

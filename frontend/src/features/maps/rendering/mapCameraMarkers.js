@@ -1,129 +1,152 @@
-import {
-  BoxGeometry,
-  BufferGeometry,
-  CylinderGeometry,
-  Group,
-  LineBasicMaterial,
-  LineSegments,
-  Mesh,
-  MeshBasicMaterial,
-  SphereGeometry,
-} from "three";
+import { Color, Group } from "three";
 import { cameraFrame, worldVector } from "./sceneCameraView";
+import { createCameraMarkerGeometry } from "./cameraMarkerGeometry";
+import { reducedMapMotion } from "./scalarMotion";
+
 export function createCameraMarkers(scene) {
-  const root = new Group();
+  const root = new Group(),
+    records = new Map(),
+    geometry = createCameraMarkerGeometry();
   scene.add(root);
-  let key = "";
-  function clear() {
-    root.traverse((o) => {
-      o.geometry?.dispose();
-      if (o.material) o.material.dispose();
-    });
-    root.clear();
+  function pose(record, camera) {
+    const key = JSON.stringify(camera.view);
+    if (record.pose === key) return;
+    record.pose = key;
+    const target = worldVector(camera.view.target),
+      position = worldVector(camera.view.position);
+    if (camera.virtual)
+      position
+        .copy(target)
+        .add(
+          worldVector(camera.view.position)
+            .sub(target)
+            .normalize()
+            .multiplyScalar(4),
+        );
+    record.body.position.copy(position);
+    record.body.lookAt(target);
+    record.focus.position.copy(target);
+    const corners = cameraFrame(camera.view),
+      points = [];
+    for (const corner of corners) points.push(position, corner);
+    for (const [a, b] of [
+      [0, 1],
+      [1, 3],
+      [3, 2],
+      [2, 0],
+    ])
+      points.push(corners[a], corners[b]);
+    const buffer = record.frame.geometry.attributes.position;
+    points.forEach((point, i) => buffer.setXYZ(i, point.x, point.y, point.z));
+    buffer.needsUpdate = true;
+    record.frame.geometry.computeBoundingSphere();
+  }
+  function style(record, camera, options) {
+    const selected = options.selectedCamera === camera.id;
+    const hover =
+      options.hoveredCamera === camera.id ? options.hoveredCameraPart : "";
+    const active = selected ? options.draggingCameraPart : "";
+    const base = camera.virtual ? 0x43d3db : selected ? 0xa78bfa : 0xf6b451;
+    for (const [material, part] of [
+      [record.bodyMaterial, "body"],
+      [record.focusMaterial, "target"],
+    ]) {
+      const colour =
+        active === part ? 0xc4b5fd : hover === part ? 0xffffff : base;
+      material.userData.targetColour = new Color(colour);
+      if (!record.styled || reducedMapMotion())
+        material.color.copy(material.userData.targetColour);
+    }
+    record.halo.visible = selected || hover === "target" || active === "target";
+    record.haloMaterial.color.set(
+      active === "target" ? 0xffffff : hover === "target" ? 0xa78bfa : 0x17131f,
+    );
+    record.frame.material.color.set(base);
+    record.frame.material.opacity = selected || camera.virtual ? 0.85 : 0.35;
+    record.styled = true;
   }
   return {
     root,
     update(document, options) {
-      const values = (document.cameras || []).map((c) =>
-        options.previewCamera?.id === c.id ? options.previewCamera : c,
+      root.visible =
+        !!options.editCameras &&
+        options.master !== false &&
+        document.kind === "tiles";
+      const values = (document.cameras || []).map((camera) =>
+        options.previewCamera?.id === camera.id
+          ? options.previewCamera
+          : camera,
       );
-      if (
-        options.previewCamera &&
-        !values.some((c) => c.id === options.previewCamera.id)
-      )
-        values.push(options.previewCamera);
       if (options.broadcastView)
         values.push({
           id: "virtual-camera",
           view: options.broadcastView,
           virtual: true,
         });
-      const next = JSON.stringify([
-        options.editCameras,
-        options.selectedCamera,
-        values,
-      ]);
-      if (next === key) return;
-      key = next;
-      clear();
-      root.visible = !!options.editCameras && document.kind === "tiles";
-      if (!root.visible) return;
-      for (const c of values) {
-        const colour = c.virtual
-          ? 0x43d3db
-          : c.id === options.selectedCamera
-            ? 0xa78bfa
-            : 0xf6b451;
-        const target = worldVector(c.view.target),
-          position = worldVector(c.view.position);
-        if (c.virtual)
-          position
-            .copy(target)
-            .add(
-              worldVector(c.view.position)
-                .sub(target)
-                .normalize()
-                .multiplyScalar(4),
-            );
-        const body = new Group();
-        body.position.copy(position);
-        body.lookAt(target);
-        const material = new MeshBasicMaterial({ color: colour });
-        const box = new Mesh(new BoxGeometry(0.38, 0.26, 0.3), material);
-        body.add(box);
-        const lens = new Mesh(
-          new CylinderGeometry(0.1, 0.14, 0.22, 12),
-          material.clone(),
-        );
-        lens.rotation.x = Math.PI / 2;
-        lens.position.z = 0.22;
-        body.add(lens);
-        if (!c.virtual) body.userData.cameraId = c.id;
-        root.add(body);
-        const corners = cameraFrame(c.view),
-          points = [];
-        for (const p of corners) points.push(position, p);
-        for (const [a, b] of [
-          [0, 1],
-          [1, 3],
-          [3, 2],
-          [2, 0],
-        ])
-          points.push(corners[a], corners[b]);
-        const lines = new LineSegments(
-          new BufferGeometry().setFromPoints(points),
-          new LineBasicMaterial({
-            color: colour,
-            transparent: true,
-            opacity: c.id === options.selectedCamera || c.virtual ? 0.85 : 0.35,
-            depthWrite: false,
-          }),
-        );
-        lines.raycast = () => {};
-        root.add(lines);
-        const focus = new Mesh(
-          new SphereGeometry(0.08, 10, 8),
-          material.clone(),
-        );
-        focus.position.copy(target);
-        focus.raycast = () => {};
-        root.add(focus);
+      const keep = new Set();
+      for (const camera of values) {
+        keep.add(camera.id);
+        let record = records.get(camera.id);
+        if (!record) {
+          record = geometry.create(camera.id, camera.virtual);
+          records.set(camera.id, record);
+          root.add(record.root);
+        }
+        pose(record, camera);
+        style(record, camera, options);
       }
+      for (const [id, record] of records)
+        if (!keep.has(id)) {
+          record.dispose();
+          records.delete(id);
+        }
+      root.updateMatrixWorld(true);
+    },
+    advance(delta) {
+      if (!root.visible) return false;
+      let moving = false;
+      const blend = reducedMapMotion() ? 1 : 1 - Math.exp(-delta / 40);
+      for (const record of records.values())
+        for (const material of [record.bodyMaterial, record.focusMaterial]) {
+          const target = material.userData.targetColour,
+            colour = material.color;
+          if (
+            Math.max(
+              Math.abs(colour.r - target.r),
+              Math.abs(colour.g - target.g),
+              Math.abs(colour.b - target.b),
+            ) < 0.001
+          )
+            colour.copy(target);
+          else {
+            colour.lerp(target, blend);
+            moving = true;
+          }
+        }
+      return moving;
     },
     pick(ray) {
+      if (!root.visible) return null;
       for (const hit of ray.intersectObject(root, true)) {
-        let n = hit.object;
-        while (n) {
-          if (n.userData.cameraId)
-            return { cameraId: n.userData.cameraId, distance: hit.distance };
-          n = n.parent;
+        let node = hit.object;
+        while (node) {
+          if (node.userData.cameraId)
+            return {
+              cameraId: node.userData.cameraId,
+              cameraPart: node.userData.cameraPart,
+              distance: hit.distance,
+              point: { x: hit.point.x, y: hit.point.z, elevation: hit.point.y },
+            };
+          node = node.parent;
         }
       }
       return null;
     },
     destroy() {
-      clear();
-      scene.remove(root);
+      for (const record of records.values()) record.dispose();
+      records.clear();
+      geometry.dispose();
+      root.removeFromParent();
     },
   };
 }

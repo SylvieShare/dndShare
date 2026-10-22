@@ -58,10 +58,8 @@ onBeforeUnmount(() => {
 </script>
 <style scoped>
 .map-camera-preview {
-  aspect-ratio: 16/9;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   display: grid;
   place-items: center;

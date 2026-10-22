@@ -1,103 +1,53 @@
 <template>
-  <MapFocusContent
-    ><template #heading
-      ><Camera :size="20" /><InlineEdit
-        :model-value="camera.name"
-        label="Название камеры"
-        :maxlength="100"
-        required
-        @confirm="editor.updateCamera((c) => (c.name = String($event).trim()))"
+  <MapSelectedEntity :entry="entry" :editor="editor" :copyable="false">
+    <template #preview
+      ><MapCameraPreview :editor="editor" :camera="camera"
     /></template>
-    <div class="camera-preview-row">
-      <MapCameraPreview :editor="editor" :camera="camera" /><ActionButton
-        icon-only
-        variant="quiet"
-        class="camera-delete"
-        aria-label="Удалить камеру"
-        @click="editor.removeCamera"
-        ><template #icon><Trash2 :size="18" /></template
-      ></ActionButton>
-    </div>
-    <MapInspectorSection title="Положение камеры"
-      ><div class="camera-coordinates">
-        <FormField
-          v-for="(label, index) in ['X', 'Y', 'Z']"
-          :key="label"
-          :label="label"
-          vertical
-          ><FormNumberInput
-            :value="camera.view.position[index]"
-            :step="0.1"
-            :min="-200"
-            :max="200"
-            :aria-label="`Камера: ${label}`"
-            @change="
-              editor.updateCamera((c) => (c.view.position[index] = $event))
-            "
-        /></FormField></div></MapInspectorSection
-    ><MapInspectorSection title="Точка взгляда"
-      ><ActionButton variant="secondary" @click="editor.tool = 'camera-focus'"
-        ><template #icon><Crosshair :size="16" /></template>Выбрать на
-        карте</ActionButton
+    <MapInspectorSection title="Положение камеры">
+      <FormField
+        :label="`Высота (Z): ${camera.view.position[2].toFixed(1)}`"
+        vertical
       >
-      <div class="camera-coordinates">
-        <FormField
-          v-for="(label, index) in ['X', 'Y', 'Z']"
-          :key="label"
-          :label="label"
-          vertical
-          ><FormNumberInput
-            :value="camera.view.target[index]"
-            :step="0.1"
-            :min="-200"
-            :max="200"
-            :aria-label="`Фокус: ${label}`"
-            @change="
-              editor.updateCamera((c) => (c.view.target[index] = $event))
-            "
-        /></FormField></div></MapInspectorSection
-    ><MapInspectorSection title="Кадр"
-      ><FormField label="Ширина, клеток" vertical
-        ><FormNumberInput
-          :value="camera.view.width"
-          :min="0.5"
-          :max="300"
+        <AppSlider
+          :model-value="camera.view.position[2]"
+          :min="Math.min(0, camera.view.position[2])"
+          :max="Math.max(32, camera.view.position[2])"
           :step="0.1"
-          aria-label="Ширина кадра"
-          @change="editor.updateCamera((c) => (c.view.width = $event))"
-      /></FormField>
-      <p class="map-hint">
-        Меньше ширина — крупнее масштаб. Превью использует LOD-модели.
-      </p></MapInspectorSection
-    ></MapFocusContent
-  >
+          label="Высота камеры"
+          @update:model-value="editor.editCamera('height', $event)"
+          @change="editor.finishCameraEdit"
+        />
+      </FormField>
+    </MapInspectorSection>
+    <MapInspectorSection title="Кадр">
+      <FormField
+        :label="`Ширина, клеток: ${camera.view.width.toFixed(1)}`"
+        vertical
+      >
+        <AppSlider
+          :model-value="camera.view.width"
+          :min="0.5"
+          :max="Math.max(300, camera.view.width)"
+          :step="0.1"
+          label="Ширина кадра"
+          @update:model-value="editor.editCamera('width', $event)"
+          @change="editor.finishCameraEdit"
+        />
+      </FormField>
+    </MapInspectorSection>
+  </MapSelectedEntity>
 </template>
 <script setup>
-import {
-  ActionButton,
-  FormField,
-  FormNumberInput,
-  InlineEdit,
-} from "@sylvieshare/share-ui";
-import { Camera, Crosshair, Trash2 } from "@lucide/vue";
-import MapFocusContent from "./MapFocusContent.vue";
+import { computed } from "vue";
+import { AppSlider, FormField } from "@sylvieshare/share-ui";
+import MapSelectedEntity from "./MapSelectedEntity.vue";
 import MapInspectorSection from "./MapInspectorSection.vue";
 import MapCameraPreview from "./MapCameraPreview.vue";
-defineProps({ editor: Object, camera: Object });
+const props = defineProps({ editor: Object, camera: Object });
+const entry = computed(() => ({
+  kind: "camera",
+  id: props.camera.id,
+  name: props.camera.name,
+  item: props.camera,
+}));
 </script>
-<style scoped>
-.camera-preview-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 40px;
-  gap: 8px;
-  align-items: start;
-}
-.camera-coordinates {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-}
-.camera-delete {
-  color: var(--danger);
-}
-</style>

@@ -195,6 +195,7 @@ export async function createMapRenderer(
     effects,
     decals,
     water,
+    cameras,
     scene,
     camera,
     presentFrame,
@@ -215,6 +216,7 @@ export async function createMapRenderer(
     loadingPreview.root,
     anchors.root,
     surfaceAnchors.root,
+    cameras.root,
     ...lighting.excluded,
   ])
     profiler.tag(root, "overlays");
@@ -240,6 +242,15 @@ export async function createMapRenderer(
     }
     selection.update(runtime.options, view.getView());
     decals.selection(runtime.options);
+    if (runtime.current)
+      cameras.update(opts.document || runtime.current, runtime.options);
+    render();
+  }
+  function updateCameras(document, options) {
+    if (runtime.current)
+      runtime.current = { ...runtime.current, cameras: document.cameras };
+    runtime.options = { ...runtime.options, ...options };
+    cameras.update(document, runtime.options);
     render();
   }
   function refreshVisible() {
@@ -377,6 +388,7 @@ export async function createMapRenderer(
   if (!snapshotOnly) observer.observe(host);
   return {
     update,
+    updateCameras,
     updateSelection,
     setActive(value) {
       active = value;

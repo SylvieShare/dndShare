@@ -240,3 +240,41 @@ it("picks and drags camera bodies on their exact height plane instead of geometr
   expect(end.y - start.y).toBeCloseTo(0.062);
   expect(world.mock.calls.every((call) => call[1] === 7.3)).toBe(true);
 });
+
+it("projects camera focus moves and release onto surfaces instead of the starting height plane", () => {
+  const world = vi.fn((e) => ({ x: e.clientX / 10, y: e.clientY / 10 }));
+  const lightPoint = vi.fn((e) => ({
+    x: e.clientX / 10,
+    y: e.clientY / 10,
+    elevation: e.clientX / 20,
+  }));
+  const { pointer, event, emit } = setup(
+    {
+      cameraId: "camera",
+      cameraPart: "target",
+      point: { x: 2, y: 3, elevation: 0.44 },
+    },
+    {
+      document: {
+        kind: "tiles",
+        cameras: [{ id: "camera", view: { position: [2, 3, 7] } }],
+      },
+    },
+    { world, lightPoint },
+  );
+  pointer.down(event);
+  world.mockClear();
+  vi.advanceTimersByTime(500);
+  pointer.move({ ...event, clientX: 80 });
+  pointer.up({ ...event, clientX: 100 });
+  expect(world).not.toHaveBeenCalled();
+  expect(emit.mock.calls.find(([, e]) => e.phase === "move")[1].point).toEqual({
+    x: 8,
+    y: 3,
+    elevation: 4,
+  });
+  expect(emit.mock.calls.at(-1)[1]).toMatchObject({
+    phase: "end",
+    point: { x: 10, y: 3, elevation: 5 },
+  });
+});

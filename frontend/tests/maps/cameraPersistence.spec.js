@@ -25,7 +25,10 @@ for (const mode of ['editor', 'board'])
     const focus = page.getByRole('complementary', {
       name: 'Выбранные элементы',
     })
-    const width = focus.locator('[aria-label="Ширина кадра"] input')
+    const width = focus.getByRole('slider', {
+      name: 'Ширина кадра',
+      exact: true,
+    })
     await page.evaluate(() => {
       const original = window.fetch
       window.fetch = async (url, options = {}) => {
@@ -50,15 +53,18 @@ for (const mode of ['editor', 'board'])
     await page.waitForFunction(() => window.releaseCameraSave)
     await width.fill('13')
     await width.press('Enter')
-    const x = focus.locator('[aria-label="Камера: X"] input')
-    await x.fill('8.25')
-    await x.press('Enter')
+    const height = focus.getByRole('slider', {
+      name: 'Высота камеры',
+      exact: true,
+    })
+    await height.fill('8.3')
+    await height.press('Enter')
     await page.waitForTimeout(1400)
     await page.evaluate(() => window.releaseCameraSave())
     await expect
       .poll(async () => (await saved())?.document.cameras?.[0]?.view.width)
       .toBe(13)
-    expect((await saved()).document.cameras[0].view.position[0]).toBe(8.25)
+    expect((await saved()).document.cameras[0].view.position[2]).toBe(8.3)
     await page.evaluate(() => {
       delete window.releaseCameraSave
       window.holdCameraSave = true
