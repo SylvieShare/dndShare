@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { navigationCaptionMetrics } from '../iconNavigation';
 
 async function ready(page, mobile = false) {
   await page.setViewportSize(
@@ -26,6 +27,24 @@ test("short map navigation scrolls on keyboard focus without scrolling the page"
   expect(await page.evaluate(()=>scrollY)).toBe(0);
   await page.keyboard.press('Home');
   await expect(nav.getByRole('button',{name:'Плитки',exact:true})).toBeFocused();
+});
+test('captions fit their buttons and grow back when more width is available', async ({page}) => {
+  const nav = await ready(page);
+  async function fits() {
+    await expect.poll(async () => (await navigationCaptionMetrics(nav)).every(label => label.width <= label.available + .02)).toBe(true);
+  }
+  await fits();
+  expect((await navigationCaptionMetrics(nav)).find(label => label.name === 'Плитки').font).toBe(10);
+  const narrow = await page.addStyleTag({content:'.map-sidebar-tabs { --icon-navigation-size: 48px !important; }'});
+  await fits();
+  const small = (await navigationCaptionMetrics(nav)).find(label => label.name === 'Освещение').font;
+  expect(small).toBeLessThan(10);
+  await narrow.evaluate(node => node.remove());
+  const wide = await page.addStyleTag({content:'.map-sidebar-tabs { --icon-navigation-size: 80px !important; }'});
+  await fits();
+  await expect.poll(async () => (await navigationCaptionMetrics(nav)).find(label => label.name === 'Освещение').font).toBe(10);
+  await wide.evaluate(node => node.remove());
+  await fits();
 });
 
 test("tab hover uses an outline and cannot cover the travelling selection square", async ({

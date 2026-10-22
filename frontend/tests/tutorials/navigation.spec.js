@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { navigationCaptionMetrics } from '../iconNavigation'
 
 for (const mobile of [false,true]) for (const role of ['dm','player']) {
   test(`session icon navigation retains role boundaries and one moving square ${role} ${mobile}`, async ({page}) => {
@@ -8,6 +9,7 @@ for (const mobile of [false,true]) for (const role of ['dm','player']) {
     const nav=page.getByRole('navigation',{name:'Раздел сессии'})
     const story=nav.getByRole('button',{name:'Сюжет',exact:true})
     await expect(story).toHaveAttribute('aria-current','page')
+    await expect.poll(async () => (await navigationCaptionMetrics(nav)).every(label => label.width <= label.available + .02)).toBe(true)
     const caption=await story.evaluate(node=>{
       const icon=node.querySelector('svg').getBoundingClientRect(),label=node.querySelector('.share-icon-navigation__label').getBoundingClientRect()
       return label.y>=icon.bottom
