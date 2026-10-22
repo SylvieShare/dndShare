@@ -6,7 +6,8 @@ import {
 } from "../lib/sceneCameras";
 import { uid, clone } from "../lib/mapModel";
 export function editorCameras(getEditor, captureView) {
-  const selectedCamera = ref(""),
+  const showCameras = ref(true),
+    selectedCamera = ref(""),
     previewCamera = ref(null),
     hoveredCamera = ref(""),
     hoveredCameraPart = ref(""),
@@ -158,6 +159,7 @@ export function editorCameras(getEditor, captureView) {
     return true;
   }
   return {
+    showCameras,
     selectedCamera,
     previewCamera,
     focusedCamera,

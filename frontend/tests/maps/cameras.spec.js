@@ -53,9 +53,34 @@ test("camera placement and focus save a pose; broadcasting a captured view stays
     frozen,
   );
   await page
-    .getByRole("combobox", { name: "Камера трансляции", exact: true })
+    .getByRole("button", {
+      name: "Перейти к виду камеры трансляции",
+      exact: true,
+    })
     .click();
-  await page.getByRole("option", { name: "Камера 1", exact: true }).click();
+  await expect
+    .poll(
+      async () =>
+        (
+          await page
+            .locator(".map-canvas")
+            .evaluate((el) => el.__vueParentComponent.exposed.captureCamera())
+        ).width,
+    )
+    .toBeCloseTo(frozen.width);
+  await expect
+    .poll(
+      async () =>
+        (
+          await page
+            .locator(".map-canvas")
+            .evaluate((el) => el.__vueParentComponent.exposed.captureCamera())
+        ).target[0],
+    )
+    .toBeCloseTo(frozen.target[0]);
+  await focus
+    .getByRole("button", { name: "Транслировать вид камеры", exact: true })
+    .click();
   await expect
     .poll(() => page.evaluate(() => !!window.latestDisplay?.camera.sceneId))
     .toBe(true);
@@ -123,14 +148,14 @@ test("2D image mode hides 3D tools and places creatures at logical grid centres"
 });
 
 for (const mobile of [false, true])
-  test(`map bars share glass surfaces and height ${mobile ? "mobile" : "desktop"}`, async ({
+  test(`the unified map toolbar keeps glass and captions below icons ${mobile ? "mobile" : "desktop"}`, async ({
     page,
   }) => {
     await page.setViewportSize(
       mobile ? { width: 430, height: 932 } : { width: 1440, height: 1000 },
     );
     await page.goto("/tests/maps/fixtures/maps.html?mode=board");
-    await expect(page.locator(".session-map-toolbar")).toHaveCount(2);
+    await expect(page.locator(".session-map-toolbar")).toHaveCount(1);
     const bars = await page
       .locator(".session-map-toolbar")
       .evaluateAll((nodes) =>
@@ -143,7 +168,10 @@ for (const mobile of [false, true])
           overflow: node.scrollWidth > node.clientWidth,
         })),
       );
-    expect(bars.map((b) => b.height)).toEqual([64, 64]);
+    if (mobile) {
+      expect(bars[0].height).toBeGreaterThan(64);
+      expect(bars[0].height).toBeLessThan(140);
+    } else expect(bars[0].height).toBe(64);
     expect(
       bars.every(
         (b) => b.blur.includes("blur") && b.background.includes("0.76"),
@@ -151,6 +179,19 @@ for (const mobile of [false, true])
       JSON.stringify(bars),
     ).toBe(true);
     expect(bars.some((b) => b.overflow)).toBe(false);
+    for (const name of ["Сменить", "Отобразить текущий вид"]) {
+      const button = page.getByRole("button", { name, exact: true });
+      expect(
+        await button.evaluate((el) => {
+          const icon = el.querySelector("svg").getBoundingClientRect();
+          const text = el.querySelector("span").getBoundingClientRect();
+          return text.top >= icon.bottom;
+        }),
+      ).toBe(true);
+    }
+    await expect(
+      page.getByRole("combobox", { name: "Камера трансляции" }),
+    ).toHaveCount(0);
     const toolbar = page.locator(".session-map-toolbars");
     await expect(
       toolbar.getByRole("button", { name: "Вид игроков", exact: true }),
@@ -209,3 +250,47 @@ test("camera body moves freely with a stable height and look direction", async (
   ).toBeGreaterThan(0.001);
   expect(errors).toEqual([]);
 });
+
+for (const mode of ["editor", "board"]) {
+  test(`camera visibility is local and the active sidebar icon collapses and reopens in ${mode}`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.goto(`/tests/maps/fixtures/maps.html?mode=${mode}`);
+    await expect(page.locator(".map-canvas canvas")).toBeVisible();
+    const tab = page.getByRole("button", { name: "Камеры", exact: true });
+    await tab.click();
+    const toggle = page.getByRole("switch", {
+      name: "Отображать камеры",
+      exact: true,
+    });
+    await expect(toggle).toBeChecked();
+    await toggle.click();
+    await expect(toggle).not.toBeChecked();
+    await expect
+      .poll(() =>
+        page
+          .locator(".map-canvas")
+          .evaluate((el) => el.__vueParentComponent.props.editCameras),
+      )
+      .toBe(false);
+    await tab.click();
+    await expect(page.locator(".map-sidebar")).toHaveClass(/collapsed/);
+    await expect(page.locator(".map-sidebar-panel")).toHaveAttribute(
+      "inert",
+      "",
+    );
+    await tab.click();
+    await expect(page.locator(".map-sidebar")).not.toHaveClass(/collapsed/);
+    await expect(toggle).not.toBeChecked();
+    await toggle.click();
+    await expect
+      .poll(() =>
+        page
+          .locator(".map-canvas")
+          .evaluate((el) => el.__vueParentComponent.props.editCameras),
+      )
+      .toBe(true);
+    await expect(page.locator(".map-sidebar-content")).toHaveCount(1);
+  });
+}

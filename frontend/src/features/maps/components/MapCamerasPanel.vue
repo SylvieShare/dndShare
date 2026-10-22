@@ -1,5 +1,6 @@
 <template>
   <section class="map-cameras-panel">
+    <ToggleSwitch v-model="editor.showCameras" label="Отображать камеры" />
     <ActionButton
       :disabled="editor.draft.document.cameras?.length >= 64"
       @click="editor.placeCamera"
@@ -30,7 +31,7 @@
   </section>
 </template>
 <script setup>
-import { ActionButton, BaseTile } from "@sylvieshare/share-ui";
+import { ActionButton, BaseTile, ToggleSwitch } from "@sylvieshare/share-ui";
 import { Camera, Plus } from "@lucide/vue";
 defineProps({ editor: Object });
 </script>

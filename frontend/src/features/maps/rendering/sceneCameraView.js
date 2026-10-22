@@ -30,3 +30,26 @@ export function cameraFrame(view) {
     ),
   );
 }
+
+// Return to ordinary editor controls after visiting a saved orthographic pose.
+export function editorViewFromScene(view, viewportWidth) {
+  const delta = view.position.map((n, i) => n - view.target[i]);
+  const horizontal = Math.hypot(delta[0], delta[1]);
+  return {
+    x: view.target[0],
+    y: view.target[1],
+    elevation: view.target[2],
+    azimuth:
+      (Math.atan2(
+        ...(horizontal > 1e-8
+          ? [delta[0], delta[1]]
+          : [-view.up[0], -view.up[1]]),
+      ) *
+        180) /
+      Math.PI,
+    tilt: (Math.atan2(delta[2], horizontal) * 180) / Math.PI,
+    cellPixels: viewportWidth / view.width,
+    view: null,
+    fit: false,
+  };
+}

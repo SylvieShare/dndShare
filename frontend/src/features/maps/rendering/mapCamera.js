@@ -35,6 +35,7 @@ export function mapCamera(camera, gpu, host, render) {
       180;
     let pixels = view.cellPixels;
     if (document && view.fit) {
+      view.elevation = FLOOR;
       view.x = document.width / 2;
       view.y = document.height / 2;
       const c = Math.abs(Math.cos(yaw)),
@@ -67,11 +68,12 @@ export function mapCamera(camera, gpu, host, render) {
     camera.bottom = -height / 2 / pixels;
     camera.position.set(
       view.x + Math.sin(yaw) * Math.cos(pitch) * 500,
-      FLOOR + Math.sin(pitch) * 500,
+      (view.elevation ?? FLOOR) + Math.sin(pitch) * 500,
       view.y + Math.cos(yaw) * Math.cos(pitch) * 500,
     );
     camera.up.set(-Math.sin(yaw), 0, -Math.cos(yaw));
-    camera.lookAt(view.x, FLOOR, view.y);
+    if (pitch < 0 && Math.abs(Math.cos(pitch)) > 1e-8) camera.up.negate();
+    camera.lookAt(view.x, view.elevation ?? FLOOR, view.y);
     camera.updateProjectionMatrix();
     camera.updateMatrixWorld(true);
     if (view.view) {
@@ -122,7 +124,7 @@ export function mapCamera(camera, gpu, host, render) {
         ? structuredClone(view.view)
         : {
             position: [camera.position.x, camera.position.z, camera.position.y],
-            target: [view.x, view.y, FLOOR],
+            target: [view.x, view.y, view.elevation ?? FLOOR],
             up: [camera.up.x, camera.up.z, camera.up.y],
             width: camera.right - camera.left,
             aspect: (camera.right - camera.left) / (camera.top - camera.bottom),

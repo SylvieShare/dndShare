@@ -3,6 +3,14 @@
     <template #preview
       ><MapCameraPreview :editor="editor" :camera="camera"
     /></template>
+    <MapInspectorSection v-if="editor.broadcastCamera" title="Трансляция">
+      <ActionButton
+        variant="secondary"
+        @click="editor.broadcastCamera(camera.id)"
+        ><template #icon><MonitorUp :size="18" /></template>Транслировать вид
+        камеры</ActionButton
+      >
+    </MapInspectorSection>
     <MapInspectorSection title="Положение камеры">
       <FormField
         :label="`Высота (Z): ${camera.view.position[2].toFixed(1)}`"
@@ -39,7 +47,8 @@
 </template>
 <script setup>
 import { computed } from "vue";
-import { AppSlider, FormField } from "@sylvieshare/share-ui";
+import { MonitorUp } from "@lucide/vue";
+import { ActionButton, AppSlider, FormField } from "@sylvieshare/share-ui";
 import MapSelectedEntity from "./MapSelectedEntity.vue";
 import MapInspectorSection from "./MapInspectorSection.vue";
 import MapCameraPreview from "./MapCameraPreview.vue";

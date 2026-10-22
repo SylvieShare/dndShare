@@ -531,9 +531,14 @@ MapReferenceButton открывает справочник только из ш�
 В сессии первыми стоят «Существа», затем разделитель и общие вкладки редактора.
 Настройки одинаковы; новый MapCamerasPanel/MapCameraFocus с LOD-превью общие
 для 3D. MapImageSettings калибрует изображение 2D. Панели выбора карты и
-трансляции — доменная композиция BaseTile, InlineEdit и ActionButton над холстом.
+трансляции — одна доменная композиция BaseTile(surface="glass"), InlineEdit
+и ActionButton над холстом. Кнопки смены и захвата используют общий
+ActionButton(layout="stacked") из share-ui 0.39.0. Название камеры — обычная
+ActionButton, которая посещает её вид; трансляция сохранённой камеры запускается
+в MapCameraFocus. ToggleSwitch «Отображать камеры» в MapCamerasPanel меняет
+только локальную видимость маркеров.
 Высота 64 px задаётся компоновкой SessionMapToolbar; полупрозрачный фон и blur —
-общим BaseTile(surface="glass"). Геометрия кнопок и селектора не переопределяется.
+общим BaseTile(surface="glass"). Геометрия кнопок не переопределяется; селектора камеры в баре нет.
 Игроки не резервируют дополнительную колонку на карте.
 
 MapLightingControls, MapSunSettings и MapLightingPanel общие для обеих страниц;

@@ -23,7 +23,8 @@ export function focusViewportOffset(bounds, obstacle) {
 export function cameraFocusTarget(view, point, screenOffset = { x: 0, y: 0 }) {
   const pitch = ((view.tilt ?? 35.2643897) * Math.PI) / 180;
   const yaw = ((view.azimuth ?? view.rotation ?? 0) * Math.PI) / 180;
-  const offset = ((point.elevation ?? FLOOR) - FLOOR) / Math.tan(pitch);
+  const offset =
+    ((point.elevation ?? FLOOR) - (view.elevation ?? FLOOR)) / Math.tan(pitch);
   const horizontal = (screenOffset.x || 0) / (view.cellPixels || 1),
     vertical =
       (screenOffset.y || 0) / ((view.cellPixels || 1) * Math.sin(pitch));
@@ -42,17 +43,29 @@ export function cameraFocusTarget(view, point, screenOffset = { x: 0, y: 0 }) {
       Math.cos(yaw) * vertical,
   };
 }
-export function useCameraFocus(getView, applyView) {
+export function useCameraFocus(getView, applyView, beforeFocus = () => {}) {
   let frame = 0;
   function stop() {
     cancelAnimationFrame(frame);
     frame = 0;
   }
   function focusAt(point, screenOffset) {
+    const start = getView();
+    if (start && point)
+      focusView(cameraFocusTarget(start, point, screenOffset));
+  }
+  function focusView(next) {
+    beforeFocus();
     stop();
     const start = getView();
-    if (!start || !point) return;
-    const end = cameraFocusTarget(start, point, screenOffset);
+    if (!start || !next) return;
+    start.elevation ??= FLOOR;
+    const end = { ...start, ...next, fit: false };
+    if (Number.isFinite(end.azimuth) && Number.isFinite(start.azimuth))
+      end.azimuth =
+        start.azimuth +
+        ((((end.azimuth - start.azimuth) % 360) + 540) % 360) -
+        180;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       applyView(end);
       return;
@@ -61,14 +74,21 @@ export function useCameraFocus(getView, applyView) {
     function step(time) {
       const t = Math.max(0, Math.min(1, (time - began) / 360)),
         ease = 1 - (1 - t) ** 3;
-      applyView({
-        ...end,
-        x: start.x + (end.x - start.x) * ease,
-        y: start.y + (end.y - start.y) * ease,
-      });
+      const value = { ...end };
+      for (const key of [
+        "x",
+        "y",
+        "elevation",
+        "azimuth",
+        "tilt",
+        "cellPixels",
+      ])
+        if (Number.isFinite(start[key]) && Number.isFinite(end[key]))
+          value[key] = start[key] + (end[key] - start[key]) * ease;
+      applyView(value);
       frame = t < 1 ? requestAnimationFrame(step) : 0;
     }
     frame = requestAnimationFrame(step);
   }
-  return { focusAt, stop };
+  return { focusAt, focusView, stop };
 }

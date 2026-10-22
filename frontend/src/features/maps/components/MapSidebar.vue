@@ -21,7 +21,7 @@
       :label="tabsLabel"
       :active="!collapsed"
       :animate="!opening"
-      @select="openTab"
+      @select="toggleTab"
     />
     <div
       class="map-sidebar-panel"
@@ -129,6 +129,10 @@ function leavePage(node) {
 }
 function enterPage(node) {
   node.style.setProperty("--map-tab-offset", `${direction * 18}px`);
+}
+function toggleTab(key) {
+  if (!collapsed.value && key === props.tab) collapse();
+  else openTab(key);
 }
 function openTab(key) {
   const reveal = collapsed.value;

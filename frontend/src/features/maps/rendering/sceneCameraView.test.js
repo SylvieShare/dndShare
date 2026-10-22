@@ -1,6 +1,11 @@
 import { expect, it } from "vitest";
 import { OrthographicCamera } from "three";
-import { applySceneCamera, cameraFrame, worldVector } from "./sceneCameraView";
+import {
+  applySceneCamera,
+  cameraFrame,
+  worldVector,
+  editorViewFromScene,
+} from "./sceneCameraView";
 import { mapCamera } from "./mapCamera";
 const pose = {
   position: [3, 2, 5],
@@ -70,4 +75,41 @@ it("creating a nearby camera preserves the complete orthographic frame, includin
   expect(
     Math.hypot(...saved.position.map((n, i) => n - saved.target[i])),
   ).toBeCloseTo(5);
+});
+
+it("visits saved and elevated camera views with the same framing and keeps ordinary pan controls", () => {
+  for (const view of [
+    pose,
+    { ...pose, target: [4, 5, 3] },
+    {
+      ...pose,
+      position: [4, 5, 10],
+      target: [4, 5, 2],
+      up: [-0.70710678, -0.70710678, 0],
+    },
+  ]) {
+    const reference = new OrthographicCamera(),
+      target = new OrthographicCamera();
+    applySceneCamera(reference, view);
+    const controller = mapCamera(
+      target,
+      { setSize() {} },
+      { clientWidth: 800, clientHeight: 800 / view.aspect },
+      () => {},
+    );
+    controller.update(editorViewFromScene(view, 800));
+    for (const point of [
+      [0, 0, 0],
+      [4, 5, 3],
+      [10, 8, 32],
+    ]) {
+      const a = worldVector(point).project(reference),
+        b = worldVector(point).project(target);
+      expect(b.x).toBeCloseTo(a.x, 7);
+      expect(b.y).toBeCloseTo(a.y, 7);
+    }
+    const before = controller.capture();
+    controller.update({ x: controller.getView().x + 2 });
+    expect(controller.capture().target[0]).toBeCloseTo(before.target[0] + 2);
+  }
 });

@@ -61,6 +61,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import MapLoadingErrorDialog from "./MapLoadingErrorDialog.vue";
 import { useMapLoadingErrors } from "../composables/useMapLoadingErrors";
+import { editorViewFromScene } from "../rendering/sceneCameraView";
 import { createMapRenderer } from "../rendering/mapRenderer";
 import { ISOMETRIC_AZIMUTH, ISOMETRIC_TILT } from "../rendering/mapCamera";
 import {
@@ -185,7 +186,11 @@ const { syncActive, options } = useCanvasUpdates(
     }
   },
 );
-const cameraFocus = useCameraFocus(() => renderer?.getView(), applyView);
+const cameraFocus = useCameraFocus(
+  () => renderer?.getView(),
+  applyView,
+  keyboardPan.stop,
+);
 function pointerEvent(name, payload) {
   if (name === "gesture" && payload.phase === "hold") {
     const rect = host.value.getBoundingClientRect();
@@ -321,6 +326,8 @@ defineExpose({
   fit,
   getView: () => renderer?.getView(),
   setView,
+  lookThrough: (view) =>
+    cameraFocus.focusView(editorViewFromScene(view, host.value.clientWidth)),
   pointAt: (event) => {
     const target =
       event && document.elementFromPoint(event.clientX, event.clientY);

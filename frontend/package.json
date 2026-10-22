@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@lucide/vue": "^1.46.0",
-    "@sylvieshare/share-ui": "https://github.com/SylvieShare/share-ui/archive/refs/tags/v0.38.0.tar.gz",
+    "@sylvieshare/share-ui": "https://github.com/SylvieShare/share-ui/archive/refs/tags/v0.39.0.tar.gz",
     "pinia": "^3.0.4",
     "three": "0.186.1",
     "three-mesh-bvh": "0.9.16",

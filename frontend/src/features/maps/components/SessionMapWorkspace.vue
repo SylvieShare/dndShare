@@ -29,6 +29,7 @@
       :token-gesture="tokens.gesture"
       :remove-token="removeToken"
       @working="c.working"
+      @broadcast-camera="source"
       @selection="tokens.clear"
       @sidebar-resize="emit('inspector-resize', $event)"
     >
@@ -38,7 +39,7 @@
           :controller="c"
           :screen-path="screenPath"
           @switch="picker = true"
-          @source="source"
+          @view="showBroadcastView"
           @capture="capture"
       /></template>
       <template #creatures="{ editor }"
@@ -220,6 +221,15 @@ async function source(id) {
       view: camera?.view || null,
     },
   });
+}
+function showBroadcastView() {
+  const camera = c.display?.camera;
+  const saved = c.selected.document.cameras?.find(
+    (item) => item.id === camera?.sceneId,
+  );
+  const view = saved?.view || camera?.view;
+  if (view) workspace.value?.canvas?.lookThrough(view);
+  else workspace.value?.canvas?.fit();
 }
 async function capture() {
   const view = workspace.value?.canvas?.captureCamera();

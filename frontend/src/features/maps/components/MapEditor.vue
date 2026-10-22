@@ -95,7 +95,7 @@
           :preview-tile="e.previewTile"
           :preview-object="e.previewObject"
           :show-anchors="e.showAnchors"
-          edit-cameras
+          :edit-cameras="e.showCameras"
           :selected-camera="e.selectedCamera"
           :preview-camera="e.previewCamera"
           :hovered-camera="e.hoveredCamera"
@@ -199,6 +199,7 @@ const props = defineProps({
     "working",
     "selection",
     "sidebar-resize",
+    "broadcast-camera",
   ]),
   confirmClose = ref(false);
 const core = useMapEditor(props.map, (map) => emit("saved", map), {
@@ -217,6 +218,9 @@ const e = reactive({
   ...cameras,
   ...core,
   handle: handleGesture,
+  broadcastCamera: props.sessionMode
+    ? (id) => emit("broadcast-camera", id)
+    : undefined,
   removeSelected() {
     if (!cameras.removeCamera() && !props.removeToken?.())
       core.removeSelected();

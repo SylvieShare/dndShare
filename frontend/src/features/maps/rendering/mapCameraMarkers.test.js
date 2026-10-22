@@ -102,3 +102,21 @@ it("updates target previews in place and releases deleted marker materials", () 
   expect(dispose).toHaveBeenCalledOnce();
   markers.destroy();
 });
+
+it("fades hidden camera markers but stops hit testing them immediately", () => {
+  const markers = createCameraMarkers(new Scene());
+  markers.update(document, { editCameras: true });
+  const material = markers.root.children[0].children[0].children[0].material;
+  markers.update(document, { editCameras: false });
+  expect(markers.pick(rayAt(camera.view.position))).toBeNull();
+  expect(markers.advance(110)).toBe(true);
+  expect(material.opacity).toBeGreaterThan(0);
+  expect(material.opacity).toBeLessThan(1);
+  markers.advance(220);
+  expect(markers.root.visible).toBe(false);
+  markers.update(document, { editCameras: true });
+  markers.advance(220);
+  expect(material.opacity).toBe(1);
+  expect(markers.pick(rayAt(camera.view.position))).toBeTruthy();
+  markers.destroy();
+});

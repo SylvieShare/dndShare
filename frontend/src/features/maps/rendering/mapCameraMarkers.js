@@ -1,12 +1,13 @@
 import { Color, Group } from "three";
 import { cameraFrame, worldVector } from "./sceneCameraView";
 import { createCameraMarkerGeometry } from "./cameraMarkerGeometry";
-import { reducedMapMotion } from "./scalarMotion";
+import { createScalarMotion, reducedMapMotion } from "./scalarMotion";
 
 export function createCameraMarkers(scene) {
   const root = new Group(),
     records = new Map(),
-    geometry = createCameraMarkerGeometry();
+    geometry = createCameraMarkerGeometry(),
+    visibility = createScalarMotion();
   scene.add(root);
   function pose(record, camera) {
     const key = JSON.stringify(camera.view);
@@ -62,16 +63,34 @@ export function createCameraMarkers(scene) {
       active === "target" ? 0xffffff : hover === "target" ? 0xa78bfa : 0x17131f,
     );
     record.frame.material.color.set(base);
-    record.frame.material.opacity = selected || camera.virtual ? 0.85 : 0.35;
+    record.frame.material.userData.cameraOpacity =
+      selected || camera.virtual ? 0.85 : 0.35;
     record.styled = true;
+  }
+  function applyVisibility() {
+    const opacity = visibility.value("cameras", 0);
+    root.visible = opacity > 0;
+    root.traverse((node) => {
+      if (!node.material) return;
+      node.material.transparent = true;
+      node.material.opacity =
+        (node.material.userData.cameraOpacity ?? 1) * opacity;
+    });
   }
   return {
     root,
     update(document, options) {
-      root.visible =
+      const visible =
         !!options.editCameras &&
         options.master !== false &&
         document.kind === "tiles";
+      visibility.set("cameras", +visible, {
+        duration: 220,
+        immediate:
+          reducedMapMotion() ||
+          options.master === false ||
+          document.kind !== "tiles",
+      });
       const values = (document.cameras || []).map((camera) =>
         options.previewCamera?.id === camera.id
           ? options.previewCamera
@@ -100,11 +119,14 @@ export function createCameraMarkers(scene) {
           record.dispose();
           records.delete(id);
         }
+      applyVisibility();
       root.updateMatrixWorld(true);
     },
     advance(delta) {
-      if (!root.visible) return false;
-      let moving = false;
+      let moving = visibility.isMoving();
+      visibility.advance(delta, reducedMapMotion());
+      applyVisibility();
+      if (!root.visible) return moving;
       const blend = reducedMapMotion() ? 1 : 1 - Math.exp(-delta / 40);
       for (const record of records.values())
         for (const material of [record.bodyMaterial, record.focusMaterial]) {
@@ -126,7 +148,7 @@ export function createCameraMarkers(scene) {
       return moving;
     },
     pick(ray) {
-      if (!root.visible) return null;
+      if (!root.visible || !visibility.target("cameras")) return null;
       for (const hit of ray.intersectObject(root, true)) {
         let node = hit.object;
         while (node) {
