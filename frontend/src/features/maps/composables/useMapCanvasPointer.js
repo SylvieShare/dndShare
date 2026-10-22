@@ -36,7 +36,10 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
       event.clientY > r.bottom
     )
       return null;
-    if (props.placementDecal)
+    if (
+      props.placementDecal ||
+      (drag?.hit?.decalId && !drag.pan && !drag.orbit)
+    )
       return (
         getRenderer().decalPoint(event) || {
           ...getRenderer().world(event),
@@ -116,15 +119,16 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
         !additive &&
         (!hit || hit.anchor),
       screen: { x: event.clientX, y: event.clientY },
-      point:
-        props.tool === "paste" ||
-        props.placementObject ||
-        props.surfacePlacement ||
-        props.placementLight ||
-        props.placementDecal ||
-        props.placementCamera ||
-        hit?.cameraId ||
-        hit?.lightId
+      point: hit?.decalId
+        ? getRenderer().decalPoint(event) || hit.point
+        : props.tool === "paste" ||
+            props.placementObject ||
+            props.surfacePlacement ||
+            props.placementLight ||
+            props.placementDecal ||
+            props.placementCamera ||
+            hit?.cameraId ||
+            hit?.lightId
           ? pointAt(event)
           : hit?.point || pointAt(event),
       view: getRenderer().getView(),
@@ -136,7 +140,8 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
         hit?.objectId ||
         hit?.lightId ||
         hit?.tokenId ||
-        hit?.cameraId)
+        hit?.cameraId ||
+        hit?.decalId)
     ) {
       holdTimer = setTimeout(() => {
         if (!drag || drag.moved) return;
@@ -157,6 +162,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
       !props.selectedLight &&
       !props.surfacePlacement &&
       !props.placementDecal &&
+      !(drag?.hit?.decalId && !drag.pan && !drag.orbit) &&
       !(props.previewObject?.modelId && props.previewObject.moving) &&
       drag?.point?.elevation !== undefined &&
       (!props.placementModel || drag.pan || drag.orbit || drag.region)
@@ -235,7 +241,8 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
         drag.point?.elevation !== undefined &&
         !props.placementModel &&
         !props.surfacePlacement &&
-        !props.placementDecal
+        !props.placementDecal &&
+        !drag.hit?.decalId
           ? {
               ...getRenderer().world(event, drag.point.elevation),
               elevation: drag.point.elevation,

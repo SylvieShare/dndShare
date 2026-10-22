@@ -706,3 +706,9 @@ MapControlsHint и CanvasHotkeyHints — адаптеры текста и safe-a
 ActionButton и BaseTile; `MapDecalFields` использует FormField, FormTextInput
 и AppSlider внутри MapInspectorSection. Наложение и локальная привязка к 3D-модели
 — предметный слой [декалей](../features/maps-decals.md).
+
+`MapModelDecals` показывает существующие наложения модели строками MapEntityRow
+в MapInspectorSection, с переходом и удалением на ActionButton. Переименование
+декали использует общий InspectorHeading/InlineEdit. MapPickupPing — предметная
+обратная связь холста при срабатывании удержания (с учётом reduced motion);
+[декали](../features/maps-decals.md) используют общий проход обводки с альфа-маской.

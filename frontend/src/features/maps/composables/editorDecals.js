@@ -1,9 +1,11 @@
+import { editorDecalDrag } from "./editorDecalDrag";
 import { onBeforeUnmount, ref } from "vue";
 import { clone, uid } from "../lib/mapModel";
 import { createDecal } from "../lib/mapDecals";
 
 export function editorDecals(e) {
   const selectedDecal = ref(""),
+    hoveredDecal = ref(""),
     previewDecal = ref(null),
     copiedDecal = ref(null);
   let template,
@@ -27,11 +29,13 @@ export function editorDecals(e) {
   function selectDecal(id) {
     finishDecalEdit();
     clearSelection();
+    hoveredDecal.value = "";
     selectedDecal.value = id;
     e.tool.value = "select";
   }
   function beginDecal(image, moving = false) {
     finishDecalEdit();
+    drag.reset();
     clearSelection();
     selectedDecal.value = "";
     template = moving
@@ -45,6 +49,8 @@ export function editorDecals(e) {
   }
   function reset() {
     finishDecalEdit();
+    drag.reset();
+    hoveredDecal.value = "";
     template = null;
     previewDecal.value = null;
     selecting = false;
@@ -56,11 +62,15 @@ export function editorDecals(e) {
         ? { ...template, ...point.decalSurface, preview: true }
         : null;
   }
+  const drag = editorDecalDrag(e, previewDecal);
   function handle({ phase, point, hit, event }) {
+    if (phase === "hover")
+      hoveredDecal.value = e.tool.value === "select" ? hit?.decalId || "" : "";
     if (phase === "cancel") {
       reset();
       return false;
     }
+    if (drag.handle({ phase, point, event })) return true;
     if (e.tool.value === "decal") {
       preview(point);
       if (phase === "start" && previewDecal.value) {
@@ -103,8 +113,10 @@ export function editorDecals(e) {
     if (phase === "start") {
       finishDecalEdit();
       if (hit?.decalId) {
+        const item = items().find((d) => d.id === hit.decalId);
+        if (!item) return false;
         selectDecal(hit.decalId);
-        selecting = true;
+        drag.start(item, point, event);
         return true;
       }
       selectedDecal.value = "";
@@ -127,6 +139,7 @@ export function editorDecals(e) {
   onBeforeUnmount(finishDecalEdit);
   return {
     selectedDecal,
+    hoveredDecal,
     previewDecal,
     copiedDecal,
     beginDecal,
@@ -142,18 +155,16 @@ export function editorDecals(e) {
       copiedDecal.value = clone(decal);
       return true;
     },
-    remove() {
-      if (!selectedDecal.value) return false;
-      if (!items().some((d) => d.id === selectedDecal.value)) {
-        selectedDecal.value = "";
+    remove(id = selectedDecal.value) {
+      if (!id) return false;
+      if (!items().some((d) => d.id === id)) {
+        if (id === selectedDecal.value) selectedDecal.value = "";
         return true;
       }
       e.change((m) => {
-        m.document.decals = m.document.decals.filter(
-          (d) => d.id !== selectedDecal.value,
-        );
+        m.document.decals = m.document.decals.filter((d) => d.id !== id);
       });
-      selectedDecal.value = "";
+      if (id === selectedDecal.value) selectedDecal.value = "";
       return true;
     },
     rotate() {

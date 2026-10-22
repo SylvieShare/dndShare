@@ -96,6 +96,7 @@
           :selected-light="e.selectedLight"
           :hovered-light="e.hoveredLight"
           :selected-decal="e.selectedDecal"
+          :hovered-decal="e.hoveredDecal"
           :preview-decal="e.previewDecal"
           :placement-decal="e.tool === 'decal'"
           :preview-light="e.previewLight"

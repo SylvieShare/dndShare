@@ -16,6 +16,7 @@ function fixture() {
     setObjectSelection: vi.fn(),
     checkpoint: journal.checkpoint,
     commitEdit: journal.commit,
+    pauseSave: vi.fn(),
     change(fn) {
       journal.checkpoint();
       fn(draft.value);
@@ -90,4 +91,69 @@ it("cancels relocation without changing the saved decal", () => {
   });
   decals.handle({ phase: "cancel" });
   expect(JSON.stringify(e.draft.value.document.decals)).toBe(original);
+});
+it("holds and drags without saving intermediate positions, preserving the grab point and one undo", () => {
+  const { e, journal, decals } = fixture();
+  decals.beginDecal(image);
+  decals.handle({ phase: "start", point });
+  decals.handle({ phase: "end", point });
+  const source = e.draft.value.document.decals[0],
+    id = source.id;
+  const grab = {
+    decalSurface: { ...point.decalSurface, position: [0.2, 1, 0.1] },
+  };
+  const target = {
+    decalSurface: { ...point.decalSurface, position: [0.7, 1.4, 0.4] },
+  };
+  decals.handle({
+    phase: "start",
+    point: grab,
+    hit: { decalId: id },
+    event: { clientX: 20, clientY: 30 },
+  });
+  decals.handle({ phase: "hold", point: grab });
+  expect(e.pauseSave).toHaveBeenLastCalledWith(true);
+  decals.handle({
+    phase: "move",
+    point: target,
+    event: { clientX: 70, clientY: 60 },
+  });
+  expect(source.position).toEqual([0, 1, 0]);
+  expect(decals.previewDecal.value.position[0]).toBeCloseTo(0.5);
+  expect(decals.previewDecal.value.position[1]).toBe(1);
+  expect(decals.previewDecal.value.position[2]).toBeCloseTo(0.3);
+  decals.handle({ phase: "end", point: target });
+  expect(journal.history.value).toHaveLength(2);
+  expect(source.position[0]).toBeCloseTo(0.5);
+  expect(e.pauseSave).toHaveBeenLastCalledWith(false);
+  journal.undo();
+  expect(e.draft.value.document.decals[0].position).toEqual([0, 1, 0]);
+});
+it("restores a held decal on cancellation and deleting from the owner keeps that focus", () => {
+  const { e, journal, decals } = fixture();
+  decals.beginDecal(image);
+  decals.handle({ phase: "start", point });
+  decals.handle({ phase: "end", point });
+  const item = e.draft.value.document.decals[0];
+  decals.handle({
+    phase: "start",
+    point,
+    hit: { decalId: item.id },
+    event: { clientX: 20, clientY: 20 },
+  });
+  decals.handle({ phase: "hold", point });
+  decals.handle({
+    phase: "move",
+    point: { decalSurface: { ...point.decalSurface, position: [1, 1, 1] } },
+    event: { clientX: 80, clientY: 80 },
+  });
+  decals.handle({ phase: "cancel" });
+  expect(item.position).toEqual([0, 1, 0]);
+  expect(decals.previewDecal.value).toBeNull();
+  expect(journal.history.value).toHaveLength(1);
+  decals.selectedDecal.value = "";
+  e.setTileSelection.mockClear();
+  decals.remove(item.id);
+  expect(e.setTileSelection).not.toHaveBeenCalled();
+  expect(e.draft.value.document.decals).toBeUndefined();
 });

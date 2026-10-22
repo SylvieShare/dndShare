@@ -307,6 +307,8 @@ export function useMapEditor(source, onSaved, options = {}) {
     ...gestures,
     ...lighting,
     selectedDecal: decals.selectedDecal,
+    hoveredDecal: decals.hoveredDecal,
+    removeDecal: decals.remove,
     previewDecal: decals.previewDecal,
     copiedDecal: decals.copiedDecal,
     beginDecal: decals.beginDecal,

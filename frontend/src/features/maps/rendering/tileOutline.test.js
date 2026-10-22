@@ -10,8 +10,10 @@ import {
   OrthographicCamera,
   PointLight,
   Scene,
+  Texture,
 } from "three";
 import { createTileOutline } from "./tileOutline";
+import { decalOutlineMaterial } from "./decalOutline";
 
 function setup() {
   let target = null,
@@ -186,4 +188,26 @@ it("does not composite a previous selection after clearing it and disposes the c
   expect(disposed.every((listener) => listener.mock.calls.length === 1)).toBe(
     true,
   );
+});
+it("reuses the frame depth with an alpha mask and invalidates only for contour-affecting changes", () => {
+  const f = setup(),
+    mesh = f.object.children[0],
+    mask = decalOutlineMaterial(new Texture());
+  mesh.userData.outlineMaterial = mask;
+  expect(f.draw()).toBe(3);
+  const maskScene = f.gpu.render.mock.calls[0][0];
+  expect(maskScene.children[1].children[0].material).toBe(mask);
+  expect(f.draw()).toBe(1);
+  f.material.color.set("#abcdef");
+  expect(f.draw()).toBe(1);
+  mask.color.setRGB(0, 0, 0.55);
+  expect(f.draw()).toBe(3);
+  expect(f.draw()).toBe(1);
+  mask.map.needsUpdate = true;
+  expect(f.draw()).toBe(3);
+  expect(f.draw()).toBe(1);
+  mask.opacity = 0.4;
+  expect(f.draw()).toBe(3);
+  f.outline.destroy();
+  mask.dispose();
 });

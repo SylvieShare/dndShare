@@ -106,6 +106,14 @@ export function outlineState(
   values.push("selected");
   for (const source of sources) {
     values.push(source.material);
+    if (source.material.map)
+      values.push(
+        source.material.map,
+        source.material.map.version,
+        source.material.opacity,
+        source.material.alphaTest,
+        ...source.material.color.toArray(),
+      );
     geometryState(values, source.mesh, true);
   }
   return values;

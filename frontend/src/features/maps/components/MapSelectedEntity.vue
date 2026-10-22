@@ -5,36 +5,41 @@
         :entry="entry"
         :editable="
           entry.kind === 'area' ||
+          entry.kind === 'decal' ||
           (entry.kind === 'light' && !entry.item.builtinKey)
         "
         @rename="rename"
         @keydown.esc.capture="escape"
     /></template>
-    <InspectorPreview :interactive="entry.kind === 'light'" :label="`Приблизить источник: ${entry.name}`" @activate="editor.focusLight(entry.id)">
-        <slot name="preview"
-          ><MapLightPreview
-            v-if="entry.kind === 'light'"
-            :entry="entry"
-            :editor="editor"
-          />
-          <img
-            v-else-if="entry.previewUrl"
-            class="map-selection-preview"
-            :src="entry.previewUrl"
-            alt=""
-            draggable="false"
-          />
-          <component
-            v-else
-            :is="
-              ['player', 'creature', 'marker'].includes(entry.kind)
-                ? UserRound
-                : Box
-            "
-            :size="64"
-            :style="{ color: entry.color }"
-          />
-        </slot>
+    <InspectorPreview
+      :interactive="entry.kind === 'light'"
+      :label="`Приблизить источник: ${entry.name}`"
+      @activate="editor.focusLight(entry.id)"
+    >
+      <slot name="preview"
+        ><MapLightPreview
+          v-if="entry.kind === 'light'"
+          :entry="entry"
+          :editor="editor"
+        />
+        <img
+          v-else-if="entry.previewUrl"
+          class="map-selection-preview"
+          :src="entry.previewUrl"
+          alt=""
+          draggable="false"
+        />
+        <component
+          v-else
+          :is="
+            ['player', 'creature', 'marker'].includes(entry.kind)
+              ? UserRound
+              : Box
+          "
+          :size="64"
+          :style="{ color: entry.color }"
+        />
+      </slot>
       <template #actions>
         <ActionButton
           v-if="copyable"
@@ -89,7 +94,11 @@ function rename(value) {
   const { entry, editor } = props;
   if (!value) return;
   if (entry.kind === "area") editor.renameArea(entry.id, value);
-  else {
+  else if (entry.kind === "decal") {
+    editor.finishDecalEdit();
+    editor.updateDecal("name", value);
+    editor.finishDecalEdit();
+  } else {
     editor.finishLightEdit();
     editor.updateLight(entry.id, "name", value);
     editor.finishLightEdit();

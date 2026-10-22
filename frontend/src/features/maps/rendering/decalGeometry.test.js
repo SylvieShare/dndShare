@@ -21,6 +21,21 @@ const stamp = (extra = {}) => ({
   rotation: 0,
   ...extra,
 });
+it("includes raised relief in front of the clicked plane, while limiting depth behind it", () => {
+  const source = new BoxGeometry(0.4, 0.4, 0.2);
+  const raised = projectedDecalGeometry(
+    { geometry: source, matrix: new Matrix4().makeTranslation(0, 0, 0.5) },
+    stamp({ position: [0, 0, 0], depth: 0.1 }),
+  );
+  expect(raised.attributes.position.count).toBeGreaterThan(0);
+  for (let i = 0; i < raised.attributes.position.count; i++)
+    expect(raised.attributes.position.getZ(i)).toBeCloseTo(0.6);
+  const below = projectedDecalGeometry(
+    { geometry: source, matrix: new Matrix4().makeTranslation(0, 0, -0.5) },
+    stamp({ position: [0, 0, 0], depth: 0.1 }),
+  );
+  expect(below.attributes.position.count).toBe(0);
+});
 it("clips a thin wall to the visible face, preserving source buffers", () => {
   const source = new BoxGeometry(2, 2, 0.1),
     positions = source.attributes.position.array.slice();

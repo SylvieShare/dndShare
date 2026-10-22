@@ -74,6 +74,11 @@
           "
         />
         <MapModelTransitions :editor="editor" :entry="single" />
+        <MapModelDecals
+          :editor="editor"
+          :entry="single"
+          @focus="emit('focus', $event)"
+        />
         <MapModelLights
           :editor="editor"
           :entry="single"
@@ -133,6 +138,7 @@ import MapDecalFields from "./MapDecalFields.vue";
 import MapLightFields from "./MapLightFields.vue";
 import MapSelectionActions from "./MapSelectionActions.vue";
 import MapModelTransitions from "./MapModelTransitions.vue";
+import MapModelDecals from "./MapModelDecals.vue";
 import MapModelLights from "./MapModelLights.vue";
 const panel = ref(null);
 defineExpose({ bounds: () => panel.value?.bounds() });

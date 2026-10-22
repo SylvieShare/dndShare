@@ -88,3 +88,28 @@ it("rebuilds for a new LOD source, hides with its owner and disposes removed res
   expect(layer.root.children).toHaveLength(0);
   layer.destroy();
 });
+it("outlines selected and hovered paint using the same geometry and texture alpha, without a rectangular helper", () => {
+  const { layer, decal, appearance } = fixture();
+  layer.update({ decals: [decal] }, appearance, {
+    master: true,
+    hoveredDecal: decal.id,
+  });
+  const group = layer.outlineSources()[0],
+    mesh = group.children[0],
+    mask = mesh.userData.outlineMaterial;
+  expect(group.children).toHaveLength(1);
+  expect(mask.map).toBe(mesh.material.map);
+  expect(mask.alphaTest).toBeGreaterThan(0);
+  expect(mask.depthWrite).toBe(false);
+  expect(mask.polygonOffset).toBe(true);
+  const shader = { fragmentShader: "#include <map_fragment>" };
+  mask.onBeforeCompile(shader);
+  expect(shader.fragmentShader).toContain("diffuseColor.rgb = diffuse");
+  expect(mask.color.b).toBe(0.55);
+  layer.selection({ master: true, selectedDecal: decal.id });
+  expect(mask.color.b).toBe(1);
+  expect(layer.outlineSources()[0]).toBe(group);
+  layer.selection({ master: false });
+  expect(layer.outlineSources()).toEqual([]);
+  layer.destroy();
+});

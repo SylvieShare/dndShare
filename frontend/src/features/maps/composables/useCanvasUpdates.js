@@ -106,6 +106,7 @@ export function useCanvasUpdates(props, getRenderer, onError, onActive) {
       props.hoveredObject,
       props.selectedLight,
       props.selectedDecal,
+      props.hoveredDecal,
       props.hoveredLight,
       props.editLights,
       props.selectionColor,

@@ -30,6 +30,7 @@ export function createMapFramePresentation({
       [
         preview.root,
         objectPreview.root,
+        ...(decals?.outlineSources() || []),
         ...objectLayer.outlineSources(
           objects.children.filter(
             (o) =>

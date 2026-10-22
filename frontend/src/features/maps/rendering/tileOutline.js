@@ -117,7 +117,8 @@ export function createTileOutline(gpu, assets) {
             source.push({
               mesh,
               material:
-                preview.userData.outlineStyle === "invalid"
+                mesh.userData.outlineMaterial ||
+                (preview.userData.outlineStyle === "invalid"
                   ? invalid
                   : preview.userData.outlineType === "object"
                     ? preview.userData.outlineStyle === "hover"
@@ -125,7 +126,7 @@ export function createTileOutline(gpu, assets) {
                       : objectSelected
                     : preview.userData.outlineStyle === "hover"
                       ? hover
-                      : selected,
+                      : selected),
             });
         });
       }

@@ -4,7 +4,7 @@
     :class="{
       'map-canvas--draw': !['pan', 'select'].includes(tool) && !readonly,
       'map-canvas--select': tool === 'select' && !readonly,
-      'map-canvas--hover': !!hoveredTile || !!hoveredObject,
+      'map-canvas--hover': !!hoveredTile || !!hoveredObject || !!hoveredDecal,
     }"
     @contextmenu.prevent
   >
@@ -20,6 +20,7 @@
       @pointerleave="pointer.leave"
       @wheel.prevent="wheel"
     />
+    <MapPickupPing :point="pickupPing" @done="pickupPing = null" />
     <div
       v-if="screenSelection"
       class="map-selection-marquee"
@@ -61,6 +62,7 @@ import {
   useCameraFocus,
 } from "../composables/useCameraFocus";
 import { createPerformanceBridge } from "../lib/performanceBridge";
+import MapPickupPing from "./MapPickupPing.vue";
 import MapControlsHint from "./MapControlsHint.vue";
 import MapCanvasControls from "./MapCanvasControls.vue";
 import MapDownloadManager from "./MapDownloadManager.vue";
@@ -88,6 +90,7 @@ const props = defineProps({
   selectedObjects: Array,
   selectedLight: String,
   selectedDecal: String,
+  hoveredDecal: String,
   previewDecal: Object,
   placementDecal: Boolean,
   hoveredLight: String,
@@ -127,11 +130,19 @@ const emit = defineEmits(["gesture", "view", "camera-move", "resources"]);
 const host = ref(null),
   downloads = ref(null),
   error = ref(""),
-  topView = ref(false);
+  topView = ref(false),
+  pickupPing = ref(null);
+let pickupSequence = 0;
 const performanceBridge = createPerformanceBridge();
 let renderer,
   dead = false;
-const pointer = useMapCanvasPointer(host, props, () => renderer, emit, setView);
+const pointer = useMapCanvasPointer(
+  host,
+  props,
+  () => renderer,
+  pointerEvent,
+  setView,
+);
 const keyboardPan = useCameraPan(
   () => renderer?.getView(),
   setView,
@@ -152,6 +163,17 @@ const { syncActive, options } = useCanvasUpdates(
   },
 );
 const cameraFocus = useCameraFocus(() => renderer?.getView(), applyView);
+function pointerEvent(name, payload) {
+  if (name === "gesture" && payload.phase === "hold") {
+    const rect = host.value.getBoundingClientRect();
+    pickupPing.value = {
+      x: payload.event.clientX - rect.left,
+      y: payload.event.clientY - rect.top,
+      key: ++pickupSequence,
+    };
+  }
+  emit(name, payload);
+}
 function pointerDown(event) {
   cameraFocus.stop();
   pointer.down(event);

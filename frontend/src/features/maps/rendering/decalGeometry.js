@@ -36,12 +36,24 @@ export function projectedDecalGeometry(part, decal) {
     .makeRotationFromEuler(orientation)
     .setPosition(position)
     .invert();
-  const localProjector = projector.clone().multiply(part.matrix);
+  let localProjector = projector.clone().multiply(part.matrix);
   const normalMatrix = new Matrix3().getNormalMatrix(part.matrix);
   const source = part.geometry,
     index = source.index,
     vertices = source.attributes.position,
     normals = source.attributes.normal;
+  // The clicked plane is the back-depth reference, not the front clipping
+  // plane. Include the owner's raised relief in front of it automatically.
+  if (!source.boundingBox) source.computeBoundingBox();
+  const front = Math.max(
+    decal.depth / 2,
+    source.boundingBox.clone().applyMatrix4(localProjector).max.z + 0.00001,
+  );
+  const back = -decal.depth / 2,
+    depth = front - back;
+  position.addScaledVector(normal, (front + back) / 2);
+  projector.makeRotationFromEuler(orientation).setPosition(position).invert();
+  localProjector = projector.clone().multiply(part.matrix);
   const positions = [],
     directions = [],
     a = new Vector3(),
@@ -49,7 +61,7 @@ export function projectedDecalGeometry(part, decal) {
     c = new Vector3(),
     face = new Vector3(),
     edge = new Vector3();
-  const half = new Vector3(decal.width / 2, decal.height / 2, decal.depth / 2);
+  const half = new Vector3(decal.width / 2, decal.height / 2, depth / 2);
   const points = [new Vector3(), new Vector3(), new Vector3()];
   const count = index?.count ?? vertices.count;
   function collect(i) {
@@ -109,7 +121,7 @@ export function projectedDecalGeometry(part, decal) {
     mesh,
     position,
     orientation,
-    new Vector3(decal.width, decal.height, decal.depth),
+    new Vector3(decal.width, decal.height, depth),
   );
   candidate.dispose();
   return geometry;

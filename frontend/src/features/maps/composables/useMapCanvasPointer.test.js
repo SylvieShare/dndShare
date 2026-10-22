@@ -56,10 +56,25 @@ function setup(
   return { pointer, event, emit, setView };
 }
 it("decal placement preserves the projected surface through pointer start and end", () => {
-  const surface = {x:2,y:3,elevation:.4,decalSurface:{anchor:{kind:"tile",id:"tile"},position:[0,.4,0],normal:[0,1,0]}};
-  const {pointer,event,emit} = setup(undefined,{tool:"decal",placementDecal:true},{decalPoint:()=>surface});
-  pointer.down(event); pointer.up(event);
-  for (const [, payload] of emit.mock.calls) expect(payload.point.decalSurface).toEqual(surface.decalSurface);
+  const surface = {
+    x: 2,
+    y: 3,
+    elevation: 0.4,
+    decalSurface: {
+      anchor: { kind: "tile", id: "tile" },
+      position: [0, 0.4, 0],
+      normal: [0, 1, 0],
+    },
+  };
+  const { pointer, event, emit } = setup(
+    undefined,
+    { tool: "decal", placementDecal: true },
+    { decalPoint: () => surface },
+  );
+  pointer.down(event);
+  pointer.up(event);
+  for (const [, payload] of emit.mock.calls)
+    expect(payload.point.decalSurface).toEqual(surface.decalSurface);
   expect(emit).toHaveBeenCalledTimes(2);
 });
 it("a quick drag over a model pans, cancels the hold and never starts an edit", () => {
@@ -121,4 +136,36 @@ it("session canvas retains immediate token dragging", () => {
   );
   pointer.down(event);
   expect(emit.mock.calls[0][1].phase).toBe("start");
+});
+it("a decal hold arms dragging after 500 ms and keeps querying the actual model surface", () => {
+  const surface = {
+    x: 2,
+    y: 3,
+    elevation: 0.4,
+    decalSurface: {
+      anchor: { kind: "tile", id: "tile" },
+      position: [0, 0.4, 0],
+      normal: [0, 1, 0],
+    },
+  };
+  const { pointer, event, emit, setView } = setup(
+    { decalId: "decal", point: surface },
+    {},
+    { decalPoint: () => surface },
+  );
+  pointer.down(event);
+  vi.advanceTimersByTime(499);
+  expect(emit).not.toHaveBeenCalled();
+  vi.advanceTimersByTime(1);
+  expect(emit.mock.calls.map((c) => c[1].phase)).toEqual(["start", "hold"]);
+  pointer.move({ ...event, clientX: 40 });
+  pointer.up({ ...event, clientX: 40 });
+  expect(emit.mock.calls.map((c) => c[1].phase)).toEqual([
+    "start",
+    "hold",
+    "move",
+    "end",
+  ]);
+  expect(emit.mock.calls.every((c) => c[1].point.decalSurface)).toBe(true);
+  expect(setView).not.toHaveBeenCalled();
 });

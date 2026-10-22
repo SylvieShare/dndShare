@@ -49,11 +49,15 @@ func buildMapPreviewContext(d battlemap.Document, models []battlemap.Model, beha
 	if len(views) != len(ids) {
 		return mapPreviewContext{}, store.ErrInvalidMapModels
 	}
+	renderer := "map-preview-single-frame-shadows-256"
+	if len(d.Decals) > 0 {
+		renderer += ":decal-relief-v2"
+	}
 	raw, err := json.Marshal(struct {
 		Renderer string
 		Document battlemap.Document
 		Models   []mapModelView
-	}{"map-preview-single-frame-shadows-256", mapPreviewScene(d), mapPreviewModels(views)})
+	}{renderer, mapPreviewScene(d), mapPreviewModels(views)})
 	if err != nil {
 		return mapPreviewContext{}, err
 	}

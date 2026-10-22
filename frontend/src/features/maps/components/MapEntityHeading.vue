@@ -1,7 +1,29 @@
 <template>
-  <InspectorHeading :name="entry.name" :value="entry.item?.name" :prefix="entry.namePrefix" :icon="icon" :color="entry.color" :editable="editable" :label="nameLabel" @rename="emit('rename', $event)">
-    <template #before-name><MapPackIcon v-if="entry.model?.collection" :pack="entry.model.collection" :size="28" aria-hidden="false" role="img" :aria-label="entry.model.collectionName" :title="entry.model.collectionName" /></template>
-    <template #metadata><small v-if="showIdentifiers && entry.code">{{ entry.groupCode }} · {{ entry.code }}</small></template>
+  <InspectorHeading
+    :name="entry.name"
+    :value="entry.item?.name"
+    :prefix="entry.namePrefix"
+    :icon="icon"
+    :color="entry.color"
+    :editable="editable"
+    :label="nameLabel"
+    @rename="emit('rename', $event)"
+  >
+    <template #before-name
+      ><MapPackIcon
+        v-if="entry.model?.collection"
+        :pack="entry.model.collection"
+        :size="28"
+        aria-hidden="false"
+        role="img"
+        :aria-label="entry.model.collectionName"
+        :title="entry.model.collectionName"
+    /></template>
+    <template #metadata
+      ><small v-if="showIdentifiers && entry.code"
+        >{{ entry.groupCode }} · {{ entry.code }}</small
+      ></template
+    >
   </InspectorHeading>
 </template>
 <script setup>
@@ -39,9 +61,17 @@ const icon = computed(
     })[props.entry.kind] || Box,
 );
 const nameLabel = computed(() =>
-  props.entry.kind === "area" ? "Название области" : "Название источника света",
+  props.entry.kind === "decal"
+    ? "Название декали"
+    : props.entry.kind === "area"
+      ? "Название области"
+      : "Название источника света",
 );
 </script>
 <style scoped>
-small { font: 11px var(--font-mono); color: var(--text-muted); overflow-wrap: anywhere; }
+small {
+  font: 11px var(--font-mono);
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
 </style>

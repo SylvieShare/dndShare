@@ -1,15 +1,12 @@
+import { decalOutlineMaterial, styleDecalOutline } from "./decalOutline";
 import {
-  BufferGeometry,
   Group,
-  LineBasicMaterial,
-  LineLoop,
   Mesh,
   MeshStandardMaterial,
   SRGBColorSpace,
   TextureLoader,
-  Vector3,
 } from "three";
-import { decalOrientation, projectedDecalGeometry } from "./decalGeometry";
+import { projectedDecalGeometry } from "./decalGeometry";
 import { visibleDecalPixel } from "./decalHit";
 
 export function createMapDecals(
@@ -62,7 +59,7 @@ export function createMapDecals(
       node.geometry?.dispose();
     });
     record.material.dispose();
-    record.frame.material.dispose();
+    record.mask.dispose();
     records.delete(id);
   }
   function sync() {
@@ -108,6 +105,8 @@ export function createMapDecals(
             alphaTest: 0.01,
           }),
         );
+        const mask = decalOutlineMaterial(material.map);
+        group.userData.outlineType = "object";
         for (const part of owner.source.parts) {
           const geometry = projectedDecalGeometry(part, decal);
           if (!geometry.attributes.position.count) {
@@ -119,43 +118,16 @@ export function createMapDecals(
           mesh.receiveShadow = true;
           mesh.renderOrder = 2;
           mesh.userData.decalId = decal.id;
+          mesh.userData.outlineMaterial = mask;
           group.add(mesh);
         }
-        const orientation = decalOrientation(
-          new Vector3(...decal.normal),
-          decal.rotation,
-        );
-        const frameGeometry = new BufferGeometry().setFromPoints(
-          [
-            [-0.5, -0.5],
-            [0.5, -0.5],
-            [0.5, 0.5],
-            [-0.5, 0.5],
-          ].map(([x, y]) =>
-            new Vector3(x * decal.width, y * decal.height, 0.004)
-              .applyEuler(orientation)
-              .add(new Vector3(...decal.position)),
-          ),
-        );
-        const frame = new LineLoop(
-          frameGeometry,
-          new LineBasicMaterial({
-            color: 0xe9b95b,
-            depthTest: false,
-            transparent: true,
-            opacity: 0.85,
-          }),
-        );
-        frame.renderOrder = 3;
-        frame.raycast = () => {};
-        group.add(frame);
         record = {
           root: group,
           source: owner.source,
           shape,
           url: decal.imageUrl,
           material,
-          frame,
+          mask,
         };
         records.set(decal.id, record);
         root.add(group);
@@ -163,9 +135,8 @@ export function createMapDecals(
       record.decal = decal;
       record.root.matrix.copy(owner.matrix);
       record.material.color.set(decal.color);
-      record.frame.visible =
-        decal.preview || options.selectedDecal === decal.id;
       record.material.opacity = decal.opacity * opacity(decal);
+      styleDecalOutline(record, options);
       record.root.visible =
         owner.visible !== false && record.material.opacity > 0.001;
     }
@@ -199,10 +170,22 @@ export function createMapDecals(
       sync();
     },
     selection(nextOptions) {
-      options = { ...options, selectedDecal: nextOptions.selectedDecal };
-      for (const record of records.values())
-        record.frame.visible =
-          record.decal.preview || options.selectedDecal === record.decal.id;
+      options = { ...options, ...nextOptions };
+      for (const record of records.values()) styleDecalOutline(record, options);
+    },
+    outlineSources() {
+      return options.master
+        ? [...records.values()]
+            .filter(
+              (record) =>
+                record.root.visible &&
+                (record.decal.preview ||
+                  [options.selectedDecal, options.hoveredDecal].includes(
+                    record.decal.id,
+                  )),
+            )
+            .map((record) => record.root)
+        : [];
     },
     advance() {
       for (const record of records.values()) {
@@ -212,6 +195,7 @@ export function createMapDecals(
         );
         if (owner?.matrix) record.root.matrix.copy(owner.matrix);
         record.material.opacity = record.decal.opacity * opacity(record.decal);
+        styleDecalOutline(record, options);
         record.root.visible =
           !!owner && owner.visible !== false && record.material.opacity > 0.001;
       }

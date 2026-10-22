@@ -1,22 +1,5 @@
 <template>
   <MapInspectorSection title="Изображение">
-    <FormField label="Название" vertical
-      ><FormTextInput
-        :value="decal.name"
-        maxlength="100"
-        @change="update('name', $event)"
-    /></FormField>
-    <FormField label="Категория" vertical>
-      <FormSelect :value="decal.category" @change="update('category', $event)">
-        <option
-          v-for="item in DECAL_CATEGORIES"
-          :key="item.id"
-          :value="item.id"
-        >
-          {{ item.name }}
-        </option>
-      </FormSelect>
-    </FormField>
     <FormField
       v-for="field in fields"
       :key="field.key"
@@ -53,10 +36,8 @@ import {
   ActionButton,
   AppSlider,
   FormField,
-  FormSelect,
   FormTextInput,
 } from "@sylvieshare/share-ui";
-import { DECAL_CATEGORIES } from "../lib/mapDecals";
 import { mapEntity } from "../lib/editorEntities";
 import MapInspectorSection from "./MapInspectorSection.vue";
 import MapEntityRow from "./MapEntityRow.vue";
