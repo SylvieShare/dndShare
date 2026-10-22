@@ -84,7 +84,7 @@ func TestSuggestImagesPostgres(t *testing.T) {
         CREATE TABLE dndshare.item_icon_preset(image_id bigint);
         CREATE TABLE dndshare.item(icon_image_id bigint,cover_image_id bigint);
         CREATE TABLE dndshare."char"(icon_image_id bigint);`)
-	for _, table := range []string{"session_image_catalog", "session_chapter", "session_scene", "session_location", "session_npc", "session_global_map"} {
+	for _, table := range []string{"map_decal_image", "session_image_catalog", "session_chapter", "session_scene", "session_location", "session_npc", "session_global_map"} {
 		exec("CREATE TABLE dndshare." + table + "(image_id bigint)")
 	}
 	for _, table := range []string{"session_material", "battle_map", "session_map"} {

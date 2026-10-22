@@ -15,6 +15,7 @@ import {
   Lightbulb,
   MapPin,
   Skull,
+  Sticker,
   UserRound,
 } from "@lucide/vue";
 const props = defineProps({
@@ -27,6 +28,7 @@ const icon = computed(
   () =>
     ({
       tile: Layers,
+      decal: Sticker,
       object: Box,
       light: Lightbulb,
       area: Group,

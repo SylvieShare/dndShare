@@ -25,6 +25,11 @@
       @object="(id, event) => emit('object', id, event)"
       @drag-object="(id, event) => emit('drag-object', id, event)"
     />
+    <MapDecalPalette
+      v-else-if="tab === 'decals'"
+      :editor="editor"
+      @place="emit('place-decal', $event)"
+    />
     <MapAreasPanel
       v-else-if="tab === 'areas'"
       :editor="editor"
@@ -41,8 +46,17 @@
   </MapSidebar>
 </template>
 <script setup>
+import MapDecalPalette from "./MapDecalPalette.vue";
 import { computed, ref } from "vue";
-import { Layers, Box, Group, Lightbulb, Settings, Gauge } from "@lucide/vue";
+import {
+  Layers,
+  Box,
+  Group,
+  Lightbulb,
+  Settings,
+  Gauge,
+  Sticker,
+} from "@lucide/vue";
 import MapSidebar from "./MapSidebar.vue";
 import MapPropertiesPanel from "./MapPropertiesPanel.vue";
 import MapPerformancePanel from "./MapPerformancePanel.vue";
@@ -63,6 +77,7 @@ const emit = defineEmits([
   "drag-object",
   "tab",
   "place-light",
+  "place-decal",
   "resize",
 ]);
 const sidebar = ref(null);
@@ -89,6 +104,7 @@ const tabs = computed(() => [
   },
   { key: "lights", label: "Освещение", icon: Lightbulb },
   { key: "objects", label: "Объекты", icon: Box },
+  { key: "decals", label: "Декали", icon: Sticker },
   { key: "areas", label: "Области", icon: Group },
   ...(!props.sessionMode
     ? [{ key: "settings", label: "Настройки", icon: Settings }]

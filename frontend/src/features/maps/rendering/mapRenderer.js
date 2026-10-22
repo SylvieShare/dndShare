@@ -1,3 +1,5 @@
+import { createMapDecals } from "./mapDecals";
+import { createDecalOwners } from "./decalOwners";
 import { createSceneSynchronizer } from "./sceneSynchronizer";
 import { createAreaTransitions } from "./areaTransitions";
 import { createModelTransitions } from "./modelTransitions";
@@ -117,8 +119,18 @@ export async function createMapRenderer(
     objectPreview = createObjectPreview(fog, assets),
     surfaceAnchors = objectPlacementAnchors(),
     anchors = createPlacementAnchors();
+  const decalOwners = createDecalOwners(
+    assets,
+    runtime,
+    tiles,
+    preview,
+    objects,
+    objectPreview,
+  );
+  const decals = createMapDecals(fog, render, onError, decalOwners.get);
   scene.add(
     objects,
+    decals.root,
     tiles.root,
     loadingPreview.root,
     preview.root,
@@ -157,6 +169,7 @@ export async function createMapRenderer(
     objectLayer,
     profiler,
     effects,
+    decals,
   });
   loop = createMapFrameLoop({
     transitions,
@@ -170,6 +183,7 @@ export async function createMapRenderer(
     volumeFog,
     lighting,
     effects,
+    decals,
     water,
     scene,
     camera,
@@ -185,6 +199,7 @@ export async function createMapRenderer(
   profiler.tag(objects, "objects");
   profiler.tag(objectPreview.root, "objects");
   profiler.tag(effects.root, "effects");
+  profiler.tag(decals.root, "decals");
   for (const root of [
     annotations.root,
     loadingPreview.root,
@@ -214,6 +229,7 @@ export async function createMapRenderer(
         refreshVisible();
     }
     selection.update(runtime.options, view.getView());
+    decals.selection(runtime.options);
     render();
   }
   function refreshVisible() {
@@ -267,6 +283,8 @@ export async function createMapRenderer(
       objectOpacity: runtime.appearance.objectOpacity,
       tileGroup: runtime.appearance.tileGroup,
     });
+    decalOwners.update();
+    decals.update(runtime.current, runtime.appearance, runtime.options);
     water.update([tiles.root, preview.root, objects, objectPreview.root]);
     assets.prune();
   }
@@ -366,6 +384,7 @@ export async function createMapRenderer(
       lighting,
       objectPreview,
       effects,
+      decals,
       water,
       volumeFog,
       scene,
@@ -378,6 +397,7 @@ export async function createMapRenderer(
     world: view.world,
     placementPoint: structure.point,
     ...queries,
+    decalPoint: (event) => decalOwners.surface(view.ray(event)),
     lightPoint(event) {
       const ray = view.ray(event),
         hits = visibleSceneHits(ray, [tiles.root, objects], runtime.appearance);
@@ -394,6 +414,7 @@ export async function createMapRenderer(
         preview,
         lighting,
         effects,
+        decals,
         surfaceAnchors,
         anchors,
         objects,
@@ -423,6 +444,7 @@ export async function createMapRenderer(
       fog.destroy();
       lighting.destroy();
       effects.destroy();
+      decals.destroy();
       areaPreview.destroy();
       assets.destroy();
       framePreview.destroy();

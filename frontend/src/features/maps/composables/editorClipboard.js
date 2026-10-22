@@ -1,3 +1,4 @@
+import { copiedDecals } from "../lib/mapDecals";
 import {
   nearestSurface,
   resolvedSurfacePosition,
@@ -41,6 +42,13 @@ export function editorClipboard(e) {
     };
     const level = tiles.length ? Math.min(...tiles.map((t) => t.level)) : 0;
     clipboard = {
+      decals: clone(
+        (d.decals || []).filter((decal) =>
+          (decal.anchor.kind === "tile" ? tiles : objects).some(
+            (owner) => owner.id === decal.anchor.id,
+          ),
+        ),
+      ),
       tiles: tiles.map((t) => ({
         ...clone(t),
         originalId: t.id,
@@ -236,6 +244,8 @@ export function editorClipboard(e) {
       m.document.tiles.push(...tiles);
       m.document.objects.push(...objects);
       if (lights.length) (m.document.lights ||= []).push(...lights);
+      const decals = copiedDecals(clipboard.decals, copiedOwners);
+      if (decals.length) (m.document.decals ||= []).push(...decals);
     });
     e.setTileSelection(tiles.map((t) => t.id));
     e.setObjectSelection(objects.map((o) => o.id));

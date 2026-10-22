@@ -12,6 +12,27 @@ export function mapEntity(
   context,
   index = documentIndex(document, catalogue, context),
 ) {
+  if (kind === "decal") {
+    const item = document.decals?.find((d) => d.id === id);
+    if (!item) return null;
+    const owner = mapEntity(
+      document,
+      catalogue,
+      item.anchor.kind,
+      item.anchor.id,
+      context,
+      index,
+    );
+    return {
+      kind,
+      id,
+      item,
+      name: item.name,
+      position: owner?.position || { x: 0, y: 0 },
+      previewUrl: item.imageUrl,
+      groupKey: `decal:${item.imageUrl}`,
+    };
+  }
   const list =
     kind === "tile"
       ? index.tiles
@@ -82,6 +103,18 @@ export function selectedMapEntities(editor) {
     index = editor.documentIndex || documentIndex(d, editor.catalogue),
     c = index.structure;
   return [
+    ...(editor.selectedDecal
+      ? [
+          mapEntity(
+            d,
+            editor.catalogue,
+            "decal",
+            editor.selectedDecal,
+            c,
+            index,
+          ),
+        ]
+      : []),
     ...editor.selectedTiles.map((id) =>
       mapEntity(d, editor.catalogue, "tile", id, c, index),
     ),

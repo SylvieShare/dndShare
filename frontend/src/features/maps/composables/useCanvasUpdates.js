@@ -47,7 +47,7 @@ export function useCanvasUpdates(props, getRenderer, onError, onActive) {
     { deep: true },
   );
   watch(
-    () => [props.document.objects, props.state],
+    () => [props.document.objects, props.document.decals, props.state],
     () => redraw("entities"),
     { deep: true },
   );
@@ -78,6 +78,7 @@ export function useCanvasUpdates(props, getRenderer, onError, onActive) {
       props.placementObject,
       props.surfacePlacement,
       props.previewLight,
+      props.previewDecal,
       props.showAnchors,
     ],
     () => redraw("preview"),
@@ -96,6 +97,7 @@ export function useCanvasUpdates(props, getRenderer, onError, onActive) {
       props.hoveredTile,
       props.hoveredObject,
       props.selectedLight,
+      props.selectedDecal,
       props.hoveredLight,
       props.editLights,
       props.selectionColor,

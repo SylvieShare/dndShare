@@ -37,6 +37,18 @@ function setup() {
   };
   return { e, clipboard: editorClipboard(e) };
 }
+it("copies a tile's decals with new IDs and unchanged local projection", () => {
+  const { e, clipboard } = setup();
+  const decal = { id: "paint", anchor: { kind: "tile", id: "old" }, position: [.1,.4,.2], normal: [0,1,0], rotation: 35 };
+  e.draft.value.document.decals = [decal];
+  clipboard.copy(); clipboard.begin({x:4.5,y:4.5}); clipboard.paste({x:4.5,y:4.5});
+  const copy = e.draft.value.document.decals[1];
+  expect(copy.anchor.id).toBe(e.draft.value.document.tiles[1].id);
+  expect(copy.id).not.toBe(decal.id);
+  expect(copy.position).toEqual(decal.position);
+  expect(copy.normal).toEqual(decal.normal);
+  expect(copy.rotation).toBe(decal.rotation);
+});
 it("copies a model's disabled light and fire overrides with a fresh owner", () => {
   const { e, clipboard } = setup();
   const effect = { kind: "fire", size: [.4,.6], strength: .8, offset: [0,0,-.2] };

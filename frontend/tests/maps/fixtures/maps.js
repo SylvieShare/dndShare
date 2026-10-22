@@ -1,4 +1,5 @@
 import { paint, lineCells } from "./mapBuilders";
+import { decalFixture } from "./decals";
 import { modelDownloadsFixture, downloadMapExample } from "./downloads";
 import { componentExample } from "./components";
 import { sessionFixture, sessionAPI, tokenPortraitExample } from "./session";
@@ -483,10 +484,13 @@ const modelDto = ({ id, definitionId, ...model }) => ({
 });
 const previews = previewFixture(catalogue, modelDto);
 libraryAPI = mapCatalogueFixture(source, params, previews);
+const decalAPI = decalFixture();
 window.fetch = async (url, options = {}) => {
   const rawUrl = typeof url === "string" ? url : url.url;
   const endpoint = new URL(rawUrl, location.origin).pathname;
   if (!endpoint.startsWith("/api/")) return nativeFetch(url, options);
+  const decalResponse = decalAPI(endpoint, options);
+  if (decalResponse) return decalResponse;
   if (!options.method || options.method === "GET")
     window.mapReadRequests.push(endpoint);
   const libraryResponse = await libraryAPI.handle(rawUrl, options);

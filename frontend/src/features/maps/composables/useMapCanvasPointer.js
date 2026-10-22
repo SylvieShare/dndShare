@@ -36,6 +36,13 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
       event.clientY > r.bottom
     )
       return null;
+    if (props.placementDecal)
+      return (
+        getRenderer().decalPoint(event) || {
+          ...getRenderer().world(event),
+          invalidSurface: true,
+        }
+      );
     if (
       props.placementLight ||
       (props.selectedLight && drag && !drag.pan && !drag.orbit)
@@ -67,14 +74,14 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
   function down(event) {
     flushMove();
     if (props.readonly || !getRenderer() || drag) return;
-    if (props.tool === "paste" && event.button === 2) {
+    if (["paste", "decal"].includes(props.tool) && event.button === 2) {
       event.preventDefault();
       emit("gesture", { phase: "cancel", event });
       return;
     }
     host.value.focus({ preventScroll: true });
     host.value.setPointerCapture(event.pointerId);
-    const hit = getRenderer().pick(event);
+    const hit = props.placementDecal ? null : getRenderer().pick(event);
     const additive = event.metaKey || event.ctrlKey;
     const delayed =
       props.holdToDrag &&
@@ -110,6 +117,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
         props.placementObject ||
         props.surfacePlacement ||
         props.placementLight ||
+        props.placementDecal ||
         hit?.lightId
           ? pointAt(event)
           : hit?.point || pointAt(event),
@@ -138,6 +146,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     const point =
       !props.selectedLight &&
       !props.surfacePlacement &&
+      !props.placementDecal &&
       !(props.previewObject?.modelId && props.previewObject.moving) &&
       drag?.point?.elevation !== undefined &&
       (!props.placementModel || drag.pan || drag.orbit || drag.region)
@@ -150,7 +159,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
       emit("gesture", {
         phase: "hover",
         point,
-        hit: getRenderer().pick(event),
+        hit: props.placementDecal ? null : getRenderer().pick(event),
         event,
       });
       return;
@@ -215,7 +224,8 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
         inside &&
         drag.point?.elevation !== undefined &&
         !props.placementModel &&
-        !props.surfacePlacement
+        !props.surfacePlacement &&
+        !props.placementDecal
           ? {
               ...getRenderer().world(event, drag.point.elevation),
               elevation: drag.point.elevation,

@@ -46,7 +46,8 @@ export function useMapEditorKeys(
     }
     if (command && event.code === "KeyV") {
       event.preventDefault();
-      if (editor.copiedLight)
+      if (editor.copiedDecal) placement.placeDecal(editor.copiedDecal);
+      else if (editor.copiedLight)
         placement.placeLight(
           editor.copiedLight,
           placement.cursor.pointerEvent(),

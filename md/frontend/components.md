@@ -701,3 +701,8 @@ MapPublishedView показывает опубликованную загото�
 MapControlsHint и CanvasHotkeyHints — адаптеры текста и safe-area, собственной
 геометрии/стилей легенды у них нет. Легенда сюжета не зависит от глобальных
 подсказок клавиш; SessionShortcutHelp расположен в SessionSettingsWorkspace.
+
+`MapDecalPalette` собирает категории и библиотеку на общих FormSelect,
+ActionButton и BaseTile; `MapDecalFields` использует FormField, FormTextInput
+и AppSlider внутри MapInspectorSection. Наложение и локальная привязка к 3D-модели
+— предметный слой [декалей](../features/maps-decals.md).

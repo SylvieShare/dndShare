@@ -12,6 +12,7 @@ export function createMapFramePresentation({
   objectLayer,
   profiler,
   effects,
+  decals,
 }) {
   return (objects, options, appearance, frameDepth) => {
     for (const object of objects.children) {
@@ -45,7 +46,7 @@ export function createMapFramePresentation({
         ),
       ],
       tiles.transform,
-      lighting.excluded,
+      [...lighting.excluded, ...(decals ? [decals.root] : [])],
       frameDepth,
       effects.outlineOccluders(),
     );

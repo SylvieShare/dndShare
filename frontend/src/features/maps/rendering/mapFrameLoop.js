@@ -12,6 +12,7 @@ export function createMapFrameLoop({
   volumeFog,
   lighting,
   effects,
+  decals,
   water,
   scene,
   camera,
@@ -70,6 +71,8 @@ export function createMapFrameLoop({
         applySceneAreaAppearance(objects, appearance);
         objectLayer.applyAppearance();
         loadingPreview.applyAppearance(appearance);
+        profiler.mark("decals");
+        decals?.advance();
         profiler.mark("effects");
         const effectFrame = effects.advance(
             time,

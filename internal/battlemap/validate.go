@@ -60,6 +60,9 @@ func ValidateDocument(d *Document) error {
 	if err := validateAreas(d, tileIDs, ids); err != nil {
 		return err
 	}
+	if err := validateDecals(d, tileIDs, ids); err != nil {
+		return err
+	}
 	if err := validateLighting(d, tileIDs, ids); err != nil {
 		return err
 	}

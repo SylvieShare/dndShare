@@ -39,6 +39,7 @@ export function pickMapScene(
     preview,
     lighting,
     effects,
+    decals,
     surfaceAnchors,
     anchors,
     objects,
@@ -71,6 +72,13 @@ export function pickMapScene(
     (!hits[0] || pending.distance < hits[0].distance)
   )
     return pending;
+  const decal = decals?.pick(ray);
+  if (
+    decal &&
+    (!tile || decal.distance <= tile.distance + 0.01) &&
+    (!hits[0] || decal.distance <= hits[0].distance + 0.01)
+  )
+    return decal;
   const lamp = lighting.pick(ray);
   if (lamp) return lamp;
   const effect = effects?.pick(ray);

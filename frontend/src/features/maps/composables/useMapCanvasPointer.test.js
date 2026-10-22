@@ -22,6 +22,7 @@ afterEach(() => {
 function setup(
   hit = { tileId: "tile", point: { x: 2, y: 3, elevation: 0.4 } },
   extra = {},
+  rendererOverrides = {},
 ) {
   const host = {
     value: {
@@ -42,6 +43,7 @@ function setup(
     pick: () => hit,
     world: (e) => ({ x: e.clientX / 10, y: e.clientY / 10 }),
     getView: () => ({ x: 0, y: 0, azimuth: 0, tilt: 45 }),
+    ...rendererOverrides,
   };
   const pointer = useMapCanvasPointer(
     host,
@@ -53,6 +55,13 @@ function setup(
   const event = { pointerId: 1, button: 0, clientX: 20, clientY: 30 };
   return { pointer, event, emit, setView };
 }
+it("decal placement preserves the projected surface through pointer start and end", () => {
+  const surface = {x:2,y:3,elevation:.4,decalSurface:{anchor:{kind:"tile",id:"tile"},position:[0,.4,0],normal:[0,1,0]}};
+  const {pointer,event,emit} = setup(undefined,{tool:"decal",placementDecal:true},{decalPoint:()=>surface});
+  pointer.down(event); pointer.up(event);
+  for (const [, payload] of emit.mock.calls) expect(payload.point.decalSurface).toEqual(surface.decalSurface);
+  expect(emit).toHaveBeenCalledTimes(2);
+});
 it("a quick drag over a model pans, cancels the hold and never starts an edit", () => {
   const { pointer, event, emit, setView } = setup();
   pointer.down(event);

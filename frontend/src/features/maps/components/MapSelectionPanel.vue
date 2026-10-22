@@ -24,6 +24,12 @@
       <template v-if="single.kind === 'light'" #after-preview
         ><MapLightActions :editor="editor" :light="single.item" primary
       /></template>
+      <MapDecalFields
+        v-if="single.kind === 'decal'"
+        :editor="editor"
+        :decal="single.item"
+        @focus="emit('focus', $event)"
+      />
       <MapLightFields
         v-if="single.kind === 'light'"
         :editor="editor"
@@ -37,7 +43,7 @@
         :entry="single"
         @area="emit('area', $event)"
       />
-      <template v-else>
+      <template v-else-if="single.kind !== 'decal'">
         <MapSelectionActions
           :editor="editor"
           :entry="single"
@@ -117,6 +123,7 @@ import MapAreaFocus from "./MapAreaFocus.vue";
 import MapSelectedEntity from "./MapSelectedEntity.vue";
 import MapEntityRow from "./MapEntityRow.vue";
 import MapLightActions from "./MapLightActions.vue";
+import MapDecalFields from "./MapDecalFields.vue";
 import MapLightFields from "./MapLightFields.vue";
 import MapSelectionActions from "./MapSelectionActions.vue";
 import MapModelTransitions from "./MapModelTransitions.vue";

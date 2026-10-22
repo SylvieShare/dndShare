@@ -33,6 +33,10 @@ func mapPreviewModelsSignature(views []mapModelView) string {
 // returned to the renderer or the persisted document/catalogue.
 func mapPreviewScene(d battlemap.Document) battlemap.Document {
 	d.Tags, d.Zones = nil, nil
+	d.Decals = append([]battlemap.Decal(nil), d.Decals...)
+	for i := range d.Decals {
+		d.Decals[i].Name, d.Decals[i].Category = "", ""
+	}
 	d.Areas = append([]battlemap.Area{}, d.Areas...)
 	for i := range d.Areas {
 		d.Areas[i].Name, d.Areas[i].Color = "", ""

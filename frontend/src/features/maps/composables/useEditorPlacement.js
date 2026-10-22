@@ -35,6 +35,10 @@ export function useEditorPlacement(editor, canvas) {
       editor.selectedLight = "";
       objects.begin(id, event);
     },
+    placeDecal(image) {
+      cancel();
+      editor.beginDecal(image);
+    },
     placeModel(id, event) {
       cancel();
       editor.selectedLight = "";

@@ -75,6 +75,7 @@ type Document struct {
 	Grid            Grid      `json:"grid"`
 	Tiles           []Tile    `json:"tiles"`
 	Objects         []Object  `json:"objects"`
+	Decals          []Decal   `json:"decals,omitempty"`
 	Zones           []Zone    `json:"zones"`
 	Areas           []Area    `json:"areas"`
 	LightingEnabled bool      `json:"lightingEnabled"`

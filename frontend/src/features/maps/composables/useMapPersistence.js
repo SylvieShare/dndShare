@@ -1,3 +1,4 @@
+import { pruneDecals } from "../lib/mapDecals";
 import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { saveMap } from '@/shared/api/mapsApi'
 import { clone } from '../lib/mapModel'
@@ -67,6 +68,7 @@ export function useMapPersistence({
     pruneAreas(draft.value.document)
     syncLights(draft.value.document, catalogue.value)
     options.normalize?.(draft.value, catalogue.value)
+    pruneDecals(draft.value.document)
     finishLightEdit()
     journal.commit()
     await nextTick()

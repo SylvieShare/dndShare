@@ -51,6 +51,7 @@
         @object="(id, event) => beginPlacement('placeObject', id, event)"
         @drag-object="(id, event) => beginPlacement('dragObject', id, event)"
         @tab="placement.cancel"
+        @place-decal="(image) => beginPlacement('placeDecal', image)"
         @place-light="(id, event) => beginPlacement('placeLight', id, event)"
       >
         <template v-for="tab in extraTabs" :key="tab.key" #[tab.key]>
@@ -89,6 +90,9 @@
           edit-lights
           :selected-light="e.selectedLight"
           :hovered-light="e.hoveredLight"
+          :selected-decal="e.selectedDecal"
+          :preview-decal="e.previewDecal"
+          :placement-decal="e.tool === 'decal'"
           :preview-light="e.previewLight"
           :placement-light="e.tool === 'light'"
           :hint="editorHints(e.tool, e.draggingTile)"
@@ -213,7 +217,13 @@ watch(
   { immediate: true },
 );
 watch(
-  () => [e.selectedTile, e.selectedObject, e.selectedLight, e.focusedArea],
+  () => [
+    e.selectedTile,
+    e.selectedObject,
+    e.selectedLight,
+    e.selectedDecal,
+    e.focusedArea,
+  ],
   (ids) => {
     if (ids.some(Boolean)) emit("selection");
   },
@@ -247,6 +257,7 @@ function dismissFocus() {
   e.setTileSelection([]);
   e.setObjectSelection([]);
   e.selectedLight = "";
+  e.selectedDecal = "";
   e.selection = null;
   emit("selection");
 }
@@ -293,11 +304,14 @@ function beginBinding(id) {
 function focusEntries(entries) {
   placement.cancel();
   e.clearAreaFocus();
-  if (entries[0]?.kind === "light") {
+  if (entries[0]?.kind === "decal") {
+    e.selectDecal(entries[0].id);
+  } else if (entries[0]?.kind === "light") {
     e.focusLight(entries[0].id);
     return;
   } else {
     e.selectedLight = "";
+    e.selectedDecal = "";
     e.setTileSelection(
       entries.filter((x) => x.kind === "tile").map((x) => x.id),
     );

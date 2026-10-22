@@ -1,3 +1,5 @@
+import { editorDecals } from "./editorDecals";
+import { pruneDecals } from "../lib/mapDecals";
 import { useEditorSelection } from "./useEditorSelection";
 import { useMapPersistence } from "./useMapPersistence";
 import { useEditorJournal } from "./useEditorJournal";
@@ -74,14 +76,19 @@ export function useMapEditor(source, onSaved, options = {}) {
     options,
     onSaved,
     source,
-    finishLightEdit: () => lighting.finishLightEdit(),
+    finishLightEdit: () => {
+      lighting.finishLightEdit();
+      decals.finishDecalEdit();
+    },
   });
   function change(fn) {
     lighting.finishLightEdit();
+    decals.finishDecalEdit();
     checkpoint();
     try {
       fn(draft.value);
       pruneAreas(draft.value.document);
+      pruneDecals(draft.value.document);
       if (catalogue.value.length)
         syncLights(draft.value.document, catalogue.value);
       journal.commit();
@@ -92,9 +99,15 @@ export function useMapEditor(source, onSaved, options = {}) {
   }
   function undo() {
     lighting.finishLightEdit();
-    if (!journal.undo()) {if(journal.conflict.value)error.value=journal.conflict.value.message;return;}
+    decals.finishDecalEdit();
+    if (!journal.undo()) {
+      if (journal.conflict.value) error.value = journal.conflict.value.message;
+      return;
+    }
     gestures.resetGesture();
     lighting.reset();
+    decals.reset();
+    decals.selectedDecal.value = "";
     lighting.driver.cancel();
     setTileSelection(
       selectedTiles.value.filter((id) =>
@@ -110,9 +123,15 @@ export function useMapEditor(source, onSaved, options = {}) {
   }
   function redo() {
     lighting.finishLightEdit();
-    if (!journal.redo()) {if(journal.conflict.value)error.value=journal.conflict.value.message;return;}
+    decals.finishDecalEdit();
+    if (!journal.redo()) {
+      if (journal.conflict.value) error.value = journal.conflict.value.message;
+      return;
+    }
     gestures.resetGesture();
     lighting.reset();
+    decals.reset();
+    decals.selectedDecal.value = "";
     lighting.driver.cancel();
     setTileSelection(
       selectedTiles.value.filter((id) =>
@@ -165,13 +184,25 @@ export function useMapEditor(source, onSaved, options = {}) {
   const tileDrag = editorTileDrag(state);
   const gestures = editorGestures({ ...state, tileDrag });
   const lighting = editorLighting(state);
+  const decals = editorDecals({
+    ...state,
+    selectedLight: lighting.selectedLight,
+    clearAreaFocus: () => areas.clearAreaFocus(),
+    finishOtherEdit: lighting.finishLightEdit,
+  });
   const areas = editorAreas({
     ...state,
     selectedLight: lighting.selectedLight,
   });
   watch(
-    [selectedTiles, selectedObjects],
+    [selectedTiles, selectedObjects, lighting.selectedLight],
     () => {
+      if (
+        selectedTiles.value.length ||
+        selectedObjects.value.length ||
+        lighting.selectedLight.value
+      )
+        decals.selectedDecal.value = "";
       if (selectedTiles.value.length || selectedObjects.value.length)
         lighting.selectedLight.value = "";
     },
@@ -210,6 +241,7 @@ export function useMapEditor(source, onSaved, options = {}) {
   });
   onBeforeUnmount(() => {
     lighting.finishLightEdit();
+    decals.finishDecalEdit();
   });
   return {
     draft,
@@ -269,12 +301,29 @@ export function useMapEditor(source, onSaved, options = {}) {
     ...editorTransitions(state),
     ...gestures,
     ...lighting,
+    selectedDecal: decals.selectedDecal,
+    previewDecal: decals.previewDecal,
+    copiedDecal: decals.copiedDecal,
+    beginDecal: decals.beginDecal,
+    moveDecal: decals.moveDecal,
+    selectDecal: decals.selectDecal,
+    updateDecal: decals.updateDecal,
+    finishDecalEdit: decals.finishDecalEdit,
+    rotate() {
+      if (!decals.rotate()) gestures.rotate();
+    },
     lightDrag: lighting.driver,
     copy() {
+      if (decals.copy()) {
+        lighting.copiedLight.value = null;
+        return;
+      }
+      decals.copiedDecal.value = null;
       if (lighting.copyLight()) return;
       if (gestures.copy()) lighting.copiedLight.value = null;
     },
     handle(event) {
+      if (decals.handle(event)) return;
       if (areas.handleMembership(event)) return;
       if (event.phase === "start" || event.phase === "cancel")
         areas.clearAreaFocus(event.phase === "cancel");
@@ -284,10 +333,13 @@ export function useMapEditor(source, onSaved, options = {}) {
     },
     resetGesture() {
       lighting.reset();
+      decals.reset();
+      decals.selectedDecal.value = "";
       lighting.driver.cancel();
       gestures.resetGesture();
     },
     removeSelected() {
+      if (decals.remove()) return;
       if (areas.focusedArea.value) {
         areas.removeArea(areas.focusedArea.value);
         return;

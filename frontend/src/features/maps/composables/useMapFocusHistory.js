@@ -11,6 +11,7 @@ export function useMapFocusHistory(editor, { focusEntries, openArea }) {
       ? { areaId: editor.focusedArea }
       : {
           entries: [
+            ...(editor.selectedDecal ? [{kind: "decal", id: editor.selectedDecal}] : []),
             ...editor.selectedTiles.map((id) => ({ kind: "tile", id })),
             ...editor.selectedObjects.map((id) => ({ kind: "object", id })),
             ...(editor.selectedLight

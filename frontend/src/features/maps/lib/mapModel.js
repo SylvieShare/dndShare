@@ -1,3 +1,4 @@
+import { pruneDecals } from "./mapDecals";
 export const OBJECTS = [{ id: "chest", name: "Сундук" }];
 export const clone = (value) => JSON.parse(JSON.stringify(value));
 export const uid = () => crypto.randomUUID();
@@ -116,5 +117,6 @@ export function resized(d, width, height) {
         height: Math.min(r.height, height - r.y),
       })),
   }));
+  pruneDecals(next);
   return next;
 }

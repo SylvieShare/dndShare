@@ -8,6 +8,7 @@ export function createMapSnapshot({
   lighting,
   objectPreview,
   effects,
+  decals,
   water,
   volumeFog,
   scene,
@@ -45,6 +46,9 @@ export function createMapSnapshot({
       objects,
       objectPreview.root,
     );
+    await decals?.ready();
+    signal?.throwIfAborted();
+    decals?.advance();
     water.advance(0, false);
     volumeFog.render(scene, camera);
     return new Promise((resolve, reject) =>

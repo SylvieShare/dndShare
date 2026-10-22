@@ -9,6 +9,14 @@ export function editorHints(tool, dragging) {
     "Колесо — масштаб",
     "ЛКМ + перенос — камера",
   ];
+  if (tool === "decal")
+    return [
+      "ЛКМ — наложить на поверхность",
+      "Cmd/Ctrl + клик — поставить ещё",
+      "R — повернуть на 15°",
+      "ПКМ/Esc — отмена",
+      ...camera,
+    ];
   if (tool === "paste")
     return [
       "ЛКМ — вставить участок",
