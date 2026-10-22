@@ -1,6 +1,7 @@
 import { Plane, Raycaster, Vector2, Vector3 } from "three";
 import { FLOOR } from "./annotations";
 import { renderPixelRatio } from "./renderQuality";
+import { applySceneCamera } from "./sceneCameraView";
 
 export const ISOMETRIC_TILT = (Math.atan(1 / Math.sqrt(2)) * 180) / Math.PI;
 export const ISOMETRIC_AZIMUTH = 45;
@@ -71,6 +72,10 @@ export function mapCamera(camera, gpu, host, render) {
     camera.lookAt(view.x, FLOOR, view.y);
     camera.updateProjectionMatrix();
     camera.updateMatrixWorld(true);
+    if (view.view) {
+      applySceneCamera(camera, view.view);
+      view.cellPixels = width / view.view.width;
+    }
     render();
   }
   function cast(event) {
@@ -90,7 +95,7 @@ export function mapCamera(camera, gpu, host, render) {
       document = d;
       if (options.sceneHeight !== undefined)
         sceneHeight = options.sceneHeight || 1;
-      readonly = !!options.tabletop;
+      readonly = !!options.tabletop || d.kind === "image";
       update();
     },
     world(event, elevation = FLOOR) {
@@ -106,6 +111,19 @@ export function mapCamera(camera, gpu, host, render) {
         y: ((1 - p.y) * host.clientHeight) / 2,
       };
     },
-    getView: () => ({ ...view }),
+    getView: () => ({
+      ...view,
+      ...(readonly ? { tilt: 90, azimuth: view.rotation } : {}),
+    }),
+    capture: () =>
+      view.view
+        ? structuredClone(view.view)
+        : {
+            position: [camera.position.x, camera.position.z, camera.position.y],
+            target: [view.x, view.y, FLOOR],
+            up: [camera.up.x, camera.up.z, camera.up.y],
+            width: camera.right - camera.left,
+            aspect: (camera.right - camera.left) / (camera.top - camera.bottom),
+          },
   };
 }

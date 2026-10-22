@@ -46,11 +46,14 @@
 | `GET /api/maps/{mapId}/changes?after=N` | Патчи после версии или текущий снимок |
 | `DELETE /api/maps/{mapId}` | Удалить свою карту; копии сессий сохраняются |
 | `GET /api/sessions/{uuid}/maps` | Владелец: `{maps,display}` |
+| `POST /api/sessions/{uuid}/map-images` | Владелец: `{name,imageId,width}` → 2D карта из собственного storage image |
+| `GET /api/sessions/{uuid}/map-images/{mapId}` | Владелец сессии: исходное изображение карты из S3 |
+| `GET /api/public/sessions/{code}/map-images/{mapId}` | Только активное изображение транслируемой карты |
 | `POST /api/sessions/{uuid}/maps` | Владелец: добавить независимую копию `{mapId}` |
 | `PATCH /api/sessions/{uuid}/maps/{mapId}` | Владелец: атомарно применить общий пакет к `{name,document,state}` и ссылкам моделей |
 | `GET /api/sessions/{uuid}/maps/{mapId}/changes?after=N` | Владелец: патчи после версии или снимок |
 | `DELETE /api/sessions/{uuid}/maps/{mapId}` | Владелец: удалить копию и погасить её экран |
-| `PUT /api/sessions/{uuid}/map-display` | Владелец: `{mapId,visible,camera,revision}` |
+| `PUT /api/sessions/{uuid}/map-display` | Владелец: `{mapId,visible,camera,revision}`; camera.sceneId выбирает камеру документа, camera.view фиксирует ракурс (position/target/up/width/aspect) |
 | `GET /api/sessions/{uuid}/map-events` | Владелец: SSE invalidations |
 | `GET /api/public/sessions/{code}/map` | Публичный `{display,map}`; map=null при выключенном экране |
 | `GET /api/public/sessions/{code}/map-events` | Публичный SSE отдельного экрана карты |

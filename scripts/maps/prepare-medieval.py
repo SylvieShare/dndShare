@@ -16,6 +16,7 @@ from tile_mesh import activate, crop, shade
 import tile_bake
 from medieval_material import paint, material
 from medieval_placement import placement_samples, model_blockers
+from placement_cells import placement_cells
 from medieval_recess import assert_no_recess, prepare_recess, pin_recess, verify_recess_collapse
 from recess_frame_profiles import apply_recess_profiles
 
@@ -29,7 +30,7 @@ def support_points(obj, recipe):
         if p is None or normal.z<.5 or p.z<recipe['mountDepthMM']+.1:
             raise ValueError(f'Invalid stand cell {x},{y}')
         points.append({'x': x, 'y': y, 'elevation': round(p.z/35, 6)})
-    return points
+    return placement_cells(points, recipe)
 
 
 def plain_mount_collar(target, recipe):

@@ -67,20 +67,22 @@ type TileTransition struct {
 }
 
 type Document struct {
-	Tags            []string  `json:"tags"`
-	Version         int       `json:"version"`
-	Kind            string    `json:"kind"`
-	Width           float64   `json:"width"`
-	Height          float64   `json:"height"`
-	Grid            Grid      `json:"grid"`
-	Tiles           []Tile    `json:"tiles"`
-	Objects         []Object  `json:"objects"`
-	Decals          []Decal   `json:"decals,omitempty"`
-	Zones           []Zone    `json:"zones"`
-	Areas           []Area    `json:"areas"`
-	LightingEnabled bool      `json:"lightingEnabled"`
-	Sun             *SunLight `json:"sun"`
-	Lights          []Light   `json:"lights"`
+	Cameras         []SceneCamera `json:"cameras,omitempty"`
+	Image           *MapImage     `json:"image,omitempty"`
+	Tags            []string      `json:"tags"`
+	Version         int           `json:"version"`
+	Kind            string        `json:"kind"`
+	Width           float64       `json:"width"`
+	Height          float64       `json:"height"`
+	Grid            Grid          `json:"grid"`
+	Tiles           []Tile        `json:"tiles"`
+	Decals          []Decal       `json:"decals,omitempty"`
+	Objects         []Object      `json:"objects"`
+	Zones           []Zone        `json:"zones"`
+	Areas           []Area        `json:"areas"`
+	LightingEnabled bool          `json:"lightingEnabled"`
+	Sun             *SunLight     `json:"sun"`
+	Lights          []Light       `json:"lights"`
 }
 
 type Token struct {
@@ -107,11 +109,13 @@ type State struct {
 }
 
 type Camera struct {
-	X          float64 `json:"x"`
-	Y          float64 `json:"y"`
-	CellPixels float64 `json:"cellPixels"`
-	Rotation   int     `json:"rotation"`
-	Fit        bool    `json:"fit"`
+	SceneID    string      `json:"sceneId,omitempty"`
+	View       *CameraView `json:"view,omitempty"`
+	X          float64     `json:"x"`
+	Y          float64     `json:"y"`
+	CellPixels float64     `json:"cellPixels"`
+	Rotation   int         `json:"rotation"`
+	Fit        bool        `json:"fit"`
 }
 
 func InitialState() State {

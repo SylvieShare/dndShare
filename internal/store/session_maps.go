@@ -69,7 +69,13 @@ func (s *Store) GetSessionMap(ctx context.Context, sessionID int64, id string) (
 }
 
 func (s *Store) AddSessionMap(ctx context.Context, sessionID int64, m BattleMap) (SessionMap, error) {
-	doc, err := json.Marshal(m.Document)
+	document := m.Document
+	if document.Image != nil {
+		image := *document.Image
+		image.URL = ""
+		document.Image = &image
+	}
+	doc, err := json.Marshal(document)
 	if err != nil {
 		return SessionMap{}, err
 	}
@@ -82,7 +88,11 @@ func (s *Store) AddSessionMap(ctx context.Context, sessionID int64, m BattleMap)
 		return SessionMap{}, err
 	}
 	defer tx.Rollback(ctx)
-	result, err := scanSessionMap(tx.QueryRow(ctx, `INSERT INTO dndshare.session_map(session_id,name,document,state,source) VALUES($1,$2,CAST($3 AS jsonb),CAST($4 AS jsonb),CAST($5 AS jsonb)) RETURNING id::text,name,document,state,revision,changed_at,source`, sessionID, m.Name, json.RawMessage(doc), json.RawMessage(state), json.RawMessage(source)))
+	var imageID *int64
+	if m.Document.Image != nil {
+		imageID = &m.Document.Image.ID
+	}
+	result, err := scanSessionMap(tx.QueryRow(ctx, `INSERT INTO dndshare.session_map(session_id,name,document,state,source,image_id) VALUES($1,$2,CAST($3 AS jsonb),CAST($4 AS jsonb),CAST($5 AS jsonb),$6) RETURNING id::text,name,document,state,revision,changed_at,source`, sessionID, m.Name, json.RawMessage(doc), json.RawMessage(state), json.RawMessage(source), imageID))
 	if err != nil {
 		return result, err
 	}
@@ -93,7 +103,13 @@ func (s *Store) AddSessionMap(ctx context.Context, sessionID int64, m BattleMap)
 }
 
 func (s *Store) SaveSessionMap(ctx context.Context, sessionID int64, m SessionMap) (SessionMap, error) {
-	doc, err := json.Marshal(m.Document)
+	document := m.Document
+	if document.Image != nil {
+		image := *document.Image
+		image.URL = ""
+		document.Image = &image
+	}
+	doc, err := json.Marshal(document)
 	if err != nil {
 		return m, err
 	}

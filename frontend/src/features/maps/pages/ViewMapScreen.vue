@@ -1,15 +1,20 @@
 <template>
   <main class="map-screen" @pointermove="showControls">
-    <MapCanvas
+    <div
       v-if="snapshot?.map && snapshot.display.visible"
-      :key="snapshot.map.id"
-      :document="snapshot.map.document"
-      :state="snapshot.map.state"
-      :camera="snapshot.display.camera"
-      readonly
-      tabletop
-      :public-code="code"
-    />
+      class="map-screen-frame"
+      :style="frameStyle"
+    >
+      <MapCanvas
+        :key="snapshot.map.id"
+        :document="snapshot.map.document"
+        :state="snapshot.map.state"
+        :camera="snapshot.display.camera"
+        readonly
+        tabletop
+        :public-code="code"
+      />
+    </div>
     <div v-else-if="error && !snapshot" class="map-screen-error" role="alert">
       {{ error }}
     </div>
@@ -30,7 +35,7 @@
   </main>
 </template>
 <script setup>
-import { onBeforeUnmount, ref } from "vue";
+import { computed, onBeforeUnmount, ref } from "vue";
 import { useRoute } from "vue-router";
 import { ActionButton } from "@sylvieshare/share-ui";
 import { Maximize } from "@lucide/vue";
@@ -41,6 +46,15 @@ const code = String(useRoute().params.code),
   snapshot = ref(null),
   error = ref(""),
   controls = ref(false);
+const frameStyle = computed(() => {
+  const aspect = snapshot.value?.display.camera.view?.aspect;
+  return aspect
+    ? {
+        width: `min(100vw, ${100 * aspect}vh)`,
+        height: `min(100vh, ${100 / aspect}vw)`,
+      }
+    : { width: "100%", height: "100%" };
+});
 let timer;
 const { connected } = useMapSync(
   `/api/public/sessions/${encodeURIComponent(code)}/map-events`,
@@ -80,6 +94,9 @@ onBeforeUnmount(() => clearTimeout(timer));
   position: fixed;
   inset: 0;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: var(--map-screen-void);
 }
 .map-screen :deep(.map-canvas) {

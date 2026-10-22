@@ -44,8 +44,12 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
         }
       );
     if (
+      props.placementCamera ||
       props.placementLight ||
-      (props.selectedLight && drag && !drag.pan && !drag.orbit)
+      ((props.selectedLight || props.selectedCamera) &&
+        drag &&
+        !drag.pan &&
+        !drag.orbit)
     )
       return getRenderer().lightPoint(event);
     if (
@@ -118,6 +122,8 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
         props.surfacePlacement ||
         props.placementLight ||
         props.placementDecal ||
+        props.placementCamera ||
+        hit?.cameraId ||
         hit?.lightId
           ? pointAt(event)
           : hit?.point || pointAt(event),
@@ -126,7 +132,11 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     };
     if (
       delayed &&
-      (hit?.tileId || hit?.objectId || hit?.lightId || hit?.tokenId)
+      (hit?.tileId ||
+        hit?.objectId ||
+        hit?.lightId ||
+        hit?.tokenId ||
+        hit?.cameraId)
     ) {
       holdTimer = setTimeout(() => {
         if (!drag || drag.moved) return;

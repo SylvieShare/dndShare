@@ -243,7 +243,11 @@
       {
         "x": 0.25,
         "y": 0.25,
-        "elevation": 0.480917
+        "elevation": 0.480917,
+        "cell": {
+          "x": 0,
+          "y": 0
+        }
       }
     ],
     "nameEn": "Wall 1",
@@ -507,7 +511,11 @@
       {
         "x": 0.25,
         "y": 0.25,
-        "elevation": 0.464426
+        "elevation": 0.464426,
+        "cell": {
+          "x": 0,
+          "y": 0
+        }
       }
     ],
     "nameEn": "Wall 2",
@@ -755,7 +763,11 @@
       {
         "x": 0.75,
         "y": 0.25,
-        "elevation": 0.419288
+        "elevation": 0.419288,
+        "cell": {
+          "x": 0,
+          "y": 0
+        }
       }
     ],
     "nameEn": "Wall Angle",
@@ -1083,7 +1095,11 @@
       {
         "x": 0.25,
         "y": 0.25,
-        "elevation": 0.441354
+        "elevation": 0.441354,
+        "cell": {
+          "x": 0,
+          "y": 0
+        }
       }
     ],
     "nameEn": "Wall T-Shaped",
@@ -1641,7 +1657,11 @@
       {
         "x": 0.25,
         "y": 0.25,
-        "elevation": 0.419829
+        "elevation": 0.419829,
+        "cell": {
+          "x": 0,
+          "y": 0
+        }
       }
     ],
     "nameEn": "Wall Corner",
@@ -1718,7 +1738,11 @@
       {
         "x": 0.5,
         "y": 0.5,
-        "elevation": 0.420753
+        "elevation": 0.420753,
+        "cell": {
+          "x": 0,
+          "y": 0
+        }
       }
     ],
     "nameEn": "Ground 1",
@@ -1795,7 +1819,11 @@
       {
         "x": 0.5,
         "y": 0.5,
-        "elevation": 0.384191
+        "elevation": 0.384191,
+        "cell": {
+          "x": 0,
+          "y": 0
+        }
       }
     ],
     "nameEn": "Ground 2",
@@ -1872,7 +1900,11 @@
       {
         "x": 0.5,
         "y": 0.5,
-        "elevation": 0.396027
+        "elevation": 0.396027,
+        "cell": {
+          "x": 0,
+          "y": 0
+        }
       }
     ],
     "nameEn": "Ground 3",
@@ -2139,7 +2171,11 @@
       {
         "x": 0.5,
         "y": 0.5,
-        "elevation": 0.38282
+        "elevation": 0.38282,
+        "cell": {
+          "x": 0,
+          "y": 0
+        }
       }
     ],
     "nameEn": "Stalagmite Ground 1",
@@ -2308,7 +2344,11 @@
       {
         "x": 0.5,
         "y": 0.5,
-        "elevation": 0.394623
+        "elevation": 0.394623,
+        "cell": {
+          "x": 0,
+          "y": 0
+        }
       }
     ],
     "nameEn": "Stalagmite Ground 2",
@@ -2621,7 +2661,11 @@
       {
         "x": 0.75,
         "y": 0.25,
-        "elevation": 0.450599
+        "elevation": 0.450599,
+        "cell": {
+          "x": 0,
+          "y": 0
+        }
       }
     ],
     "nameEn": "Stalagmite Wall 1",
@@ -3259,7 +3303,11 @@
       {
         "x": 0.25,
         "y": 0.75,
-        "elevation": 0.441568
+        "elevation": 0.441568,
+        "cell": {
+          "x": 0,
+          "y": 0
+        }
       }
     ],
     "nameEn": "Stalagmite Angle",
@@ -3574,7 +3622,11 @@
       {
         "x": 0.25,
         "y": 0.25,
-        "elevation": 0.419969
+        "elevation": 0.419969,
+        "cell": {
+          "x": 0,
+          "y": 0
+        }
       }
     ],
     "nameEn": "Stalagmite Corner",

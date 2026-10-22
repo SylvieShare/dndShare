@@ -14,7 +14,7 @@ it("keeps placement sphere geometry alive and finite while editing incomplete co
     wallMask: 0,
     supportSlots: [],
     canStand: true,
-    placementPoints: [{ x: 0.5, y: 0.5, elevation: 0.5 }],
+    placementPoints: [{ cell: { x: 0, y: 0 }, x: 0.5, y: 0.5, elevation: 0.5 }],
   };
   guides.update(model, { max: { y: 1 } }, {});
   const sphere = guides.root.children.find((n) => n.userData.point === 0);

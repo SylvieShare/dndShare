@@ -2,9 +2,14 @@ import { fetchGet, fetchPost, fetchPut, fetchDelete } from "./http";
 import { seedMapDocument, writeMapDocument } from "./mapDocuments";
 export const getMaps = (scope = "own") =>
   fetchGet(`/maps?scope=${encodeURIComponent(scope)}`);
-export const getMap = (id) => fetchGet(`/maps/${encodeURIComponent(id)}`).then(map=>seedMapDocument(map));
+export const getMap = (id) =>
+  fetchGet(`/maps/${encodeURIComponent(id)}`).then((map) =>
+    seedMapDocument(map),
+  );
 export const copyMap = (id) =>
-  fetchPost(`/maps/${encodeURIComponent(id)}/copy`, {}).then(map=>seedMapDocument(map));
+  fetchPost(`/maps/${encodeURIComponent(id)}/copy`, {}).then((map) =>
+    seedMapDocument(map),
+  );
 export const publishMap = (id, revision) =>
   fetchPost(`/maps/${encodeURIComponent(id)}/publish`, { revision });
 export const subscribeMap = (id, subscribed) =>
@@ -45,13 +50,21 @@ export function getMapModels(publicCode) {
 export const resetMapModels = () => {
   modelCatalogue = null;
 };
-export const saveMap = (map) => map.id ? writeMapDocument(map) : fetchPost("/maps", map).then(map=>seedMapDocument(map));
+export const saveMap = (map) =>
+  map.id
+    ? writeMapDocument(map)
+    : fetchPost("/maps", map).then((map) => seedMapDocument(map));
 export const deleteMap = (id) => fetchDelete(`/maps/${id}`);
-export const getSessionMaps = (uuid, reset = false) => fetchGet(`/sessions/${uuid}/maps`).then(response=>({...response,maps:response.maps.map(map=>seedMapDocument(map,uuid,reset))}));
+export const getSessionMaps = (uuid, reset = false) =>
+  fetchGet(`/sessions/${uuid}/maps`).then((response) => ({
+    ...response,
+    maps: response.maps.map((map) => seedMapDocument(map, uuid, reset)),
+  }));
 export const addSessionMap = (uuid, mapId) =>
-  fetchPost(`/sessions/${uuid}/maps`, { mapId }).then(map=>seedMapDocument(map,uuid));
-export const saveSessionMap = (uuid, map) =>
-  writeMapDocument(map,uuid);
+  fetchPost(`/sessions/${uuid}/maps`, { mapId }).then((map) =>
+    seedMapDocument(map, uuid),
+  );
+export const saveSessionMap = (uuid, map) => writeMapDocument(map, uuid);
 export const deleteSessionMap = (uuid, id) =>
   fetchDelete(`/sessions/${uuid}/maps/${id}`);
 export const saveMapDisplay = (uuid, display) =>
@@ -93,4 +106,20 @@ export async function uploadMapPreview(id, signature, blob, signal) {
     throw error;
   }
   return response.json();
+}
+
+export async function uploadSessionMapImage(uuid, file, name, width) {
+  const body = new FormData();
+  body.append("file", file);
+  const response = await fetch("/api/storage/images", { method: "POST", body });
+  if (!response.ok) {
+    const payload = await response.json().catch(() => ({}));
+    throw new Error(payload.desc || "Не удалось загрузить изображение");
+  }
+  const uploaded = await response.json();
+  return fetchPost(`/sessions/${uuid}/map-images`, {
+    name,
+    width,
+    imageId: uploaded.upload_id,
+  }).then((map) => seedMapDocument(map, uuid));
 }

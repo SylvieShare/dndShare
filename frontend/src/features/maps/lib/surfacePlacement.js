@@ -13,6 +13,14 @@ export function surfacePosition(tile, model, point, elevation = 0) {
     elevation: elevation + point.elevation - (model.mountDepth || 0),
   };
 }
+export function surfaceCell(tile, model, point) {
+  let { x, y } = point.cell;
+  if (tile.rotation === 90) [x, y] = [model.height - 1 - y, x];
+  if (tile.rotation === 180)
+    [x, y] = [model.width - 1 - x, model.height - 1 - y];
+  if (tile.rotation === 270) [x, y] = [y, model.width - 1 - x];
+  return { x: tile.x + x, y: tile.y + y };
+}
 export function surfacePoints(
   document,
   catalogue,
@@ -40,6 +48,7 @@ export function surfacePoints(
                 point,
                 context.placements.get(tile.id)?.elevation || 0,
               ),
+              cell: surfaceCell(tile, model, point),
               placement: { tileId: tile.id, point: index },
               level: tile.level,
             },

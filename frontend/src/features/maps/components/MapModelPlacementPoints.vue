@@ -4,8 +4,9 @@
     collapsible
   >
     <p class="map-hint">
-      Общие точки для предметов и персонажей. X/Z — внутри площади тайла, высота
-      — от нижней точки модели.
+      Общие точки для предметов и персонажей. X/Y — внутри площади тайла, высота
+      — от нижней точки модели. Ячейка — отдельная логическая привязка,
+      нумерация с нуля.
     </p>
     <BaseTile
       v-for="(point, index) in model.placementPoints"
@@ -33,6 +34,18 @@
           @update:value="point[field.key] = Number($event)"
         />
       </FormField>
+      <FormField
+        v-for="axis in ['x', 'y']"
+        :key="axis"
+        :label="`Ячейка ${axis.toUpperCase()}`"
+        vertical
+        ><FormNumberInput
+          :value="point.cell[axis]"
+          :min="0"
+          :max="model[axis === 'x' ? 'width' : 'height'] - 1"
+          :aria-label="`Место ${index + 1}: ячейка ${axis}`"
+          @change="point.cell[axis] = $event"
+      /></FormField>
       <RemoveButton
         icon="trash"
         :label="`Удалить место ${index + 1}`"
@@ -54,6 +67,7 @@ import {
   DetailSection,
   FormField,
   FormTextInput,
+  FormNumberInput,
   RemoveButton,
 } from "@sylvieshare/share-ui";
 import { Plus } from "@lucide/vue";
@@ -61,11 +75,15 @@ const props = defineProps({ model: Object, selectedPoint: Number });
 const emit = defineEmits(["select"]);
 const fields = [
   { key: "x", label: "X" },
-  { key: "y", label: "Z" },
+  { key: "y", label: "Y" },
   { key: "elevation", label: "Высота" },
 ];
 function add() {
   props.model.placementPoints.push({
+    cell: {
+      x: Math.floor((props.model.width - 1) / 2),
+      y: Math.floor((props.model.height - 1) / 2),
+    },
     x: props.model.width / 2,
     y: props.model.height / 2,
     elevation: props.model.surfaceHeight,

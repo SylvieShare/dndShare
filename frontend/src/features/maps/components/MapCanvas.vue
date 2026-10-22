@@ -42,6 +42,7 @@
       <MapCanvasControls
         v-if="!readonly"
         :top-view="topView"
+        :flat="document.kind === 'image'"
         @zoom="zoom"
         @fit="fit"
         @toggle-view="toggleView"
@@ -68,6 +69,12 @@ import { useCanvasUpdates } from "../composables/useCanvasUpdates";
 import { useCameraPan } from "../composables/useCameraPan";
 const props = defineProps({
   document: { type: Object, required: true },
+  editCameras: Boolean,
+  selectedCamera: String,
+  previewCamera: Object,
+  broadcastView: Object,
+  forceLod: Boolean,
+  placementCamera: Boolean,
   state: Object,
   master: Boolean,
   active: { type: Boolean, default: true },
@@ -238,6 +245,7 @@ onBeforeUnmount(() => {
   renderer?.destroy();
 });
 defineExpose({
+  captureCamera: () => renderer?.captureCamera(),
   observePerformance: performanceBridge.observe,
   panArrow,
   focusAt: (point, obstacle) => {

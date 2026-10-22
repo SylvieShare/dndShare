@@ -46,6 +46,22 @@ export function mapScreenQueries(
     surfacePoint(event, ignored = "") {
       const document = getDocument();
       if (!document) return null;
+      if (document.kind === "image") {
+        const p = view.world(event);
+        if (
+          p.x < 0 ||
+          p.y < 0 ||
+          p.x >= document.width ||
+          p.y >= document.height
+        )
+          return null;
+        return {
+          x: Math.floor(p.x) + 0.5,
+          y: Math.floor(p.y) + 0.5,
+          elevation: 0.44,
+          grid: true,
+        };
+      }
       const context = structure.context();
       if (context !== cachedContext) {
         surfaces.clear();

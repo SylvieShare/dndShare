@@ -62,7 +62,7 @@ func TestInventoryIconPresetsPostgres(t *testing.T) {
 		exec("CREATE TABLE dndshare." + table + "(image_id bigint)")
 	}
 	for _, table := range []string{"session_material", "battle_map", "session_map"} {
-		exec("CREATE TABLE dndshare." + table + "(asset_id bigint)")
+		exec("CREATE TABLE dndshare." + table + "(asset_id bigint,image_id bigint)")
 	}
 	key, err := s.MarkStorageImageDeletedIfUnreferenced(t.Context(), next.ImageID)
 	if err != nil || key != nil {

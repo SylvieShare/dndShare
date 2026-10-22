@@ -5,7 +5,7 @@ it("creatures attached to a tile follow its live lift transform like model objec
   const model = {
     width: 1,
     height: 1,
-    placementPoints: [{ x: 0.5, y: 0.5, elevation: 0.4 }],
+    placementPoints: [{ cell: { x: 0, y: 0 }, x: 0.5, y: 0.5, elevation: 0.4 }],
   };
   const motion = createObjectMotion({ metadata: () => model }, () =>
     new Matrix4().makeTranslation(3, 1, 5),

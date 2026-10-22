@@ -401,6 +401,28 @@ let display = {
 };
 window.requests = [];
 window.mapReadRequests = [];
+if (params.has("imageMap")) {
+  board.document = {
+    ...board.document,
+    kind: "image",
+    tiles: [],
+    objects: [],
+    lights: [],
+    areas: [],
+    zones: [],
+    cameras: [],
+    image: {
+      id: 1,
+      url: "/tests/maps/fixtures/preview.svg",
+      pixelWidth: 1200,
+      pixelHeight: 1000,
+      cellPixels: 100,
+      offsetX: 0,
+      offsetY: 0,
+    },
+  };
+  board.state.tokens = [];
+}
 window.latestBoard = clone(board);
 window.EventSource = class {
   constructor() {
@@ -516,18 +538,22 @@ window.fetch = async (url, options = {}) => {
     url === "/api/public/sessions/ABC-123/map-models"
   )
     return transfers.catalogue(await previews.models());
-  let data = options.body ? JSON.parse(options.body) : null;
+  let data = typeof options.body === "string" ? JSON.parse(options.body) : null;
   if (data && /^\/api\/maps\/models\/[^/]+$/.test(url)) {
     const { id, uuid, ...fields } = data;
     data = { ...fields, id: uuid, definitionId: id };
   }
-  if (options.method === "PUT" || options.method === "POST" || options.method === "PATCH")
+  if (
+    options.method === "PUT" ||
+    options.method === "POST" ||
+    options.method === "PATCH"
+  )
     window.requests.push({ url, data });
-  if (["PUT","PATCH"].includes(options.method) && window.failNextSave) {
+  if (["PUT", "PATCH"].includes(options.method) && window.failNextSave) {
     const status = window.failNextSave;
     window.failNextSave = 0;
-    if(status===409 && options.method==='PATCH') {
-      window.concurrentMapName='Имя в другой вкладке';
+    if (status === 409 && options.method === "PATCH") {
+      window.concurrentMapName = "Имя в другой вкладке";
     }
     return new Response(
       JSON.stringify({

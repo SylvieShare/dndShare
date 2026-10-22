@@ -43,10 +43,16 @@ type ModelMetadata struct {
 	SupportSlots    []SupportSlot    `json:"supportSlots"`
 }
 
+type GridCell struct {
+	X int `json:"x"`
+	Y int `json:"y"`
+}
+
 type PlacementPoint struct {
-	X         float64 `json:"x"`
-	Y         float64 `json:"y"`
-	Elevation float64 `json:"elevation"`
+	Cell      *GridCell `json:"cell"`
+	X         float64   `json:"x"`
+	Y         float64   `json:"y"`
+	Elevation float64   `json:"elevation"`
 }
 
 type SupportSlot struct {

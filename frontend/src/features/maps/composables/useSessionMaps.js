@@ -128,6 +128,10 @@ export function useSessionMaps(uuid) {
     write,
     working,
     add,
+    addImage(map) {
+      maps.value.push(map);
+      selectedID.value = map.id;
+    },
     remove,
     updateDisplay,
   };

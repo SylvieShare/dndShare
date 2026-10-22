@@ -65,3 +65,17 @@ func ValidateObjectModels(d Document, models map[string]ModelMetadata) error {
 	}
 	return nil
 }
+
+// SurfaceCell returns the logical occupied cell, independent of the physical point.
+func SurfaceCell(tile Tile, model ModelMetadata, point PlacementPoint) GridCell {
+	x, y := point.Cell.X, point.Cell.Y
+	switch tile.Rotation {
+	case 90:
+		x, y = model.Height-1-y, x
+	case 180:
+		x, y = model.Width-1-x, model.Height-1-y
+	case 270:
+		x, y = y, model.Width-1-x
+	}
+	return GridCell{X: tile.X + x, Y: tile.Y + y}
+}

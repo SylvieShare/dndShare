@@ -3,7 +3,10 @@ import { useMapRenderSettings } from "./useMapRenderSettings";
 
 export function useCanvasUpdates(props, getRenderer, onError, onActive) {
   const { forceLod } = useMapRenderSettings();
-  const options = () => ({ ...props, forceLod: forceLod.value });
+  const options = () => ({
+    ...props,
+    forceLod: props.forceLod || forceLod.value,
+  });
   let frame = 0;
   const pendingChanges = new Set();
   function redraw(change = "structure") {
@@ -39,6 +42,11 @@ export function useCanvasUpdates(props, getRenderer, onError, onActive) {
   watch(
     () => [
       props.document.tiles,
+      props.document.image,
+      props.document.cameras,
+      props.broadcastView,
+      props.previewCamera,
+      props.selectedCamera,
       props.document.width,
       props.document.height,
       props.catalogue,

@@ -8,6 +8,7 @@
       <span v-else>Ещё не сохранялась</span>
     </div>
     <ToggleSwitch
+      v-if="d.kind === 'tiles'"
       label="Показывать точки в пазах"
       :model-value="editor.showAnchors"
       @update:model-value="editor.showAnchors = $event"
@@ -51,6 +52,7 @@
         })
       "
     />
+    <MapImageSettings v-if="d.kind === 'image'" :editor="editor" />
     <ConfirmDialog
       v-if="pendingSize"
       title="Уменьшить карту?"
@@ -74,6 +76,7 @@ import {
   FormTextInput,
   ToggleSwitch,
 } from "@sylvieshare/share-ui";
+import MapImageSettings from "./MapImageSettings.vue";
 import MapTagsField from "./MapTagsField.vue";
 const props = defineProps({ editor: { type: Object, required: true } });
 const savedTime = computed(

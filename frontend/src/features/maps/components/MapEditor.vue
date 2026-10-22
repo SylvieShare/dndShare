@@ -87,6 +87,11 @@
           :preview-tile="e.previewTile"
           :preview-object="e.previewObject"
           :show-anchors="e.showAnchors"
+          edit-cameras
+          :selected-camera="e.selectedCamera"
+          :preview-camera="e.previewCamera"
+          :placement-camera="['camera', 'camera-focus'].includes(e.tool)"
+          :broadcast-view="broadcastView"
           edit-lights
           :selected-light="e.selectedLight"
           :hovered-light="e.hoveredLight"
@@ -107,6 +112,7 @@
           @gesture="handleGesture"
           @camera-move="placement.cursor.moved"
         />
+        <slot name="canvas-overlay" :editor="e" :canvas="canvas" />
         <MapSelectionPanel
           ref="selectionPanel"
           :editor="e"
@@ -153,6 +159,7 @@ import MapTileSidebar from "./MapTileSidebar.vue";
 import { useAccountStore } from "@/stores/account";
 import { editorHints } from "../lib/editorHints";
 import MapCanvas from "./MapCanvas.vue";
+import { editorCameras } from "../composables/editorCameras";
 import { useMapEditor } from "../composables/useMapEditor";
 import { useEditorPlacement } from "../composables/useEditorPlacement";
 import { useMapEditorKeys } from "../composables/useMapEditorKeys";
@@ -169,6 +176,7 @@ const props = defineProps({
     customFocus: Boolean,
     customFocusKey: String,
     playerPreview: Boolean,
+    broadcastView: Object,
     tokenGesture: Function,
     removeToken: Function,
     active: { type: Boolean, default: true },
@@ -187,11 +195,14 @@ const core = useMapEditor(props.map, (map) => emit("saved", map), {
   session: props.sessionMode,
   active: () => props.active,
 });
+const cameras = editorCameras(() => e);
 const e = reactive({
+  ...cameras,
   ...core,
   handle: handleGesture,
   removeSelected() {
-    if (!props.removeToken?.()) core.removeSelected();
+    if (!cameras.removeCamera() && !props.removeToken?.())
+      core.removeSelected();
   },
   dismissFocus,
   focusLight,
@@ -223,15 +234,17 @@ watch(
     e.selectedLight,
     e.selectedDecal,
     e.focusedArea,
+    e.selectedCamera,
   ],
   (ids) => {
+    if (ids.slice(0, 5).some(Boolean)) cameras.clearCamera();
     if (ids.some(Boolean)) emit("selection");
   },
 );
 function handleGesture(event) {
   if (props.tokenGesture?.(event, e, canvas.value)) return;
   if (event.phase === "start") emit("selection");
-  core.handle(event);
+  if (!cameras.cameraGesture(event)) core.handle(event);
 }
 const account = useAccountStore(),
   isAdmin = computed(() => account.hasRole("ADMIN"));
@@ -253,6 +266,7 @@ function canvasOcclusions() {
   return [sidebar.value?.bounds(), selectionPanel.value?.bounds()];
 }
 function dismissFocus() {
+  cameras.clearCamera();
   e.clearAreaFocus(true);
   e.setTileSelection([]);
   e.setObjectSelection([]);

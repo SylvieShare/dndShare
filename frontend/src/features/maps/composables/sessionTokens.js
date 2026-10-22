@@ -39,6 +39,8 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
     preview.value = null;
   }
   function clearMapSelection(e) {
+    e.clearCamera?.();
+    e.selectedDecal = "";
     e.clearAreaFocus();
     e.setTileSelection([]);
     e.setObjectSelection([]);
@@ -68,7 +70,16 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
     pending.value = c;
   }
   function position(point) {
-    return point?.placement && !point.invalidSurface ? point : null;
+    return (point?.placement || point?.grid) && !point.invalidSurface
+      ? {
+          x: point.x,
+          y: point.y,
+          elevation: point.elevation,
+          ...(point.placement
+            ? { placement: point.placement }
+            : { placement: undefined }),
+        }
+      : null;
   }
   function gesture(event, e) {
     const { phase, point, hit } = event;

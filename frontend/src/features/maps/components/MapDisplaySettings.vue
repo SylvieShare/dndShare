@@ -101,7 +101,9 @@ const desired = ref(25),
   copyLabel = ref("Скопировать ссылку");
 function camera(patch) {
   if (!props.busy)
-    emit("update", { camera: { ...props.display.camera, ...patch } });
+    emit("update", {
+      camera: { ...props.display.camera, sceneId: "", view: null, ...patch },
+    });
 }
 async function copy() {
   try {

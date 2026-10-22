@@ -88,7 +88,7 @@ func TestSuggestImagesPostgres(t *testing.T) {
 		exec("CREATE TABLE dndshare." + table + "(image_id bigint)")
 	}
 	for _, table := range []string{"session_material", "battle_map", "session_map"} {
-		exec("CREATE TABLE dndshare." + table + "(asset_id bigint)")
+		exec("CREATE TABLE dndshare." + table + "(asset_id bigint,image_id bigint)")
 	}
 	if key, err := s.MarkStorageImageDeletedIfUnreferenced(t.Context(), second); err != nil || key != nil {
 		t.Fatalf("referenced image must remain active: %v %v", key, err)

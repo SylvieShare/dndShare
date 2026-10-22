@@ -521,13 +521,16 @@ overflow скрывает раскрываемый край, collapsed сраз�
 горизонтальные текстовые SlidingTabs не заменяют её сворачивание и группы
 сессионных и редакторских вкладок; геометрия ActionButton не переопределяется.
 MapSidebar рисует разделитель между группами. SessionMapWorkspace добавляет
-SessionMapSettings и SessionMapCreatures; использует тот же MapEditor с внешним
+SessionMapToolbar, SessionMapPicker и SessionMapCreatures; использует тот же MapEditor с внешним
 save/normalize и рабочими горячими клавишами только при активной вкладке.
 MapSelectionPanel предоставляет слот фокуса для SessionMapCreatureFocus;
 MapSelectedEntity показывает общие имя/превью с отключаемыми действиями.
 MapEntityRow имеет слот details для переиспользуемого SessionHpBar.
 MapReferenceButton открывает справочник только из шапки редактора заготовок.
-В сессии первыми стоят «Настройки» и «Существа», затем разделитель и вкладки редактора.
+В сессии первыми стоят «Существа», затем разделитель и общие вкладки редактора.
+Настройки одинаковы; новый MapCamerasPanel/MapCameraFocus с LOD-превью общие
+для 3D. MapImageSettings калибрует изображение 2D. Панели выбора карты и
+трансляции — доменная композиция BaseTile, InlineEdit и ActionButton над холстом.
 Игроки не резервируют дополнительную колонку на карте.
 
 MapLightingControls, MapSunSettings и MapLightingPanel общие для обеих страниц;

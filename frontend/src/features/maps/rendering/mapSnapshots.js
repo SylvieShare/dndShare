@@ -17,10 +17,16 @@ export async function requestMapSnapshot(document, signal, options = {}) {
   ]);
   const scene = JSON.parse(JSON.stringify(document));
   delete scene.tags;
+  delete scene.cameras;
+  const cameraView = options.view
+    ? JSON.parse(JSON.stringify(options.view))
+    : null;
   let key = options.key;
   if (!key) {
     const data = JSON.stringify([
       scene,
+      cameraView,
+      options.forceLod,
       catalogue.filter((m) => ids.has(m.id)),
     ]);
     const hash = await crypto.subtle.digest(
@@ -35,7 +41,16 @@ export async function requestMapSnapshot(document, signal, options = {}) {
   if (cache.has(key)) return cache.get(key);
   return previewTask(
     new Promise((resolve, reject) => {
-      queue.push({ key, document: scene, catalogue, signal, resolve, reject });
+      queue.push({
+        key,
+        document: scene,
+        catalogue,
+        signal,
+        resolve,
+        reject,
+        view: cameraView,
+        forceLod: options.forceLod,
+      });
       pump();
     }),
     signal,
@@ -80,6 +95,7 @@ async function pump() {
             },
           );
         }
+        host.style.height = `${420 / (job.view?.aspect || 1.5)}px`;
         job.signal?.throwIfAborted();
         // The initial editor view, without selection, controls or light markers.
         const document = {
@@ -88,13 +104,15 @@ async function pump() {
         };
         await renderer.update(document, null, {
           master: true,
+          forceLod: !!job.forceLod,
           showAnchors: false,
           animate: false,
           catalogue: job.catalogue,
         });
         job.signal?.throwIfAborted();
         renderer.camera({
-          fit: true,
+          view: job.view || null,
+          fit: !job.view,
           rotation: 0,
           azimuth: ISOMETRIC_AZIMUTH,
           tilt: ISOMETRIC_TILT,

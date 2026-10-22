@@ -61,6 +61,9 @@ func validateMapModel(m battlemap.Model) error {
 		return errors.New("too many placement points")
 	}
 	for _, point := range m.PlacementPoints {
+		if point.Cell == nil || point.Cell.X < 0 || point.Cell.Y < 0 || point.Cell.X >= m.Width || point.Cell.Y >= m.Height {
+			return errors.New("placement point requires a local grid cell inside footprint")
+		}
 		if math.IsNaN(point.X) || math.IsInf(point.X, 0) || math.IsNaN(point.Y) || math.IsInf(point.Y, 0) || math.IsNaN(point.Elevation) || math.IsInf(point.Elevation, 0) || point.X < 0 || point.X > float64(m.Width) || point.Y < 0 || point.Y > float64(m.Height) || point.Elevation < m.MountDepth || point.Elevation > m.MaxHeight+.001 {
 			return errors.New("invalid placement point")
 		}

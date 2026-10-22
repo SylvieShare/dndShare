@@ -209,6 +209,11 @@ export function useMapEditor(source, onSaved, options = {}) {
     { deep: true },
   );
   async function loadModels() {
+    if (draft.value.document.kind === "image") {
+      catalogue.value = [];
+      loadingModels.value = false;
+      return;
+    }
     loadingModels.value = true;
     modelError.value = "";
     try {

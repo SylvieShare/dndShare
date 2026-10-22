@@ -265,3 +265,10 @@ expectedName,expectedNameEn,name,nameEn}]. До 1000 записей каждог
 Повторная публикация сохраняет эти поля из текущего реестра; новая модель в
 существующей группе не переименовывает её. Названия меняет явное редактирование
 справочника или пакет catalogue_update.
+
+`map_tile_model_placement_cells_update` принимает `models:[{definitionId,width,
+height,expected,cells}]`, до 1000 моделей. `expected` — свежий полный список
+placementPoints; `cells` — соответствующие целые `{x,y}` внутри footprint.
+Меняются только клетки, под блокировкой модели и с CAS; повтор идентичной записи
+допустим. Геометрические позиции, ресурсы и behaviour сохраняются. Требуется
+MCP_WRITE_ENABLED. [Координатный контракт](maps-cameras-and-images.md#логическая-клетка-точки).

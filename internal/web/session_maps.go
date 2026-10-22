@@ -27,6 +27,7 @@ func (s *Server) handleListSessionMaps(w http.ResponseWriter, r *http.Request) {
 	}
 	presentations := make([]*store.SessionMap, 0, len(maps))
 	for i := range maps {
+		hydrateMapImage(&maps[i], "/api/sessions/"+r.PathValue("uuid"))
 		presentations = append(presentations, &maps[i])
 	}
 	if err := s.store.HydrateSessionMapLights(r.Context(), presentations...); err != nil {
@@ -109,9 +110,11 @@ func (s *Server) handleSaveMapDisplay(w http.ResponseWriter, r *http.Request) {
 			badRequest(w, "Некорректная карта")
 			return
 		}
-		if _, err := s.store.GetSessionMap(r.Context(), sid, *m.MapID); err != nil {
+		if selected, err := s.store.GetSessionMap(r.Context(), sid, *m.MapID); err != nil {
 			mapError(w, err)
 			return
+		} else {
+			m.Camera = battlemap.ResolveDisplayCamera(selected.Document, m.Camera)
 		}
 	}
 	m, err := s.store.SaveMapDisplay(r.Context(), sid, m)
@@ -144,6 +147,9 @@ func (s *Server) handlePublicMap(w http.ResponseWriter, r *http.Request) {
 			serverError(w, err)
 			return
 		}
+		display.Camera = battlemap.ResolveDisplayCamera(value.Document, display.Camera)
+		value.Document.Cameras = nil
+		hydrateMapImage(&value, "/api/public/sessions/"+r.PathValue("code"))
 		value.Source = nil
 		value.State = battlemap.PublicState(value.Document, value.State)
 		value.Document.Tags = []string{}

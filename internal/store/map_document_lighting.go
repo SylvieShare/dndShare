@@ -7,6 +7,9 @@ import (
 )
 
 func (s *Store) PrepareMapDocument(ctx context.Context, d *battlemap.Document) error {
+	if d.Kind == "image" {
+		return battlemap.ValidateDocument(d)
+	}
 	models, err := s.MapModelsForDocument(ctx, *d)
 	if err != nil {
 		return err

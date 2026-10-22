@@ -109,6 +109,10 @@ func (s *Server) handleMapMutation(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Укажите название карты")
 		return
 	}
+	if data.Document.Kind != "tiles" {
+		badRequest(w, "Заготовка должна быть 3D-картой")
+		return
+	}
 	if err = battlemap.ValidateDocument(&data.Document); err != nil {
 		badRequest(w, err.Error())
 		return
@@ -167,6 +171,7 @@ func (s *Server) handleSessionMapChanges(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	w.Header().Set("Cache-Control", "no-store")
+	hydrateMapImage(&m, "/api/sessions/"+r.PathValue("uuid"))
 	writeJSON(w, http.StatusOK, documentUpdates.Since("session-map:"+id, documentVersion(r), sessionMapSnapshot(m)))
 }
 func (s *Server) handleSessionMapMutation(w http.ResponseWriter, r *http.Request) {
@@ -204,6 +209,7 @@ func (s *Server) handleSessionMapMutation(w http.ResponseWriter, r *http.Request
 		mapError(w, err)
 		return
 	}
+	hydrateMapImage(&m, "/api/sessions/"+r.PathValue("uuid"))
 	before := sessionMapSnapshot(m)
 	updated, err := documentpatch.Apply(before.Data, mutation.Patches)
 	if err != nil {
@@ -218,6 +224,10 @@ func (s *Server) handleSessionMapMutation(w http.ResponseWriter, r *http.Request
 	data.Name = strings.TrimSpace(data.Name)
 	if data.Name == "" || len([]rune(data.Name)) > 160 {
 		badRequest(w, "Укажите название карты")
+		return
+	}
+	if data.Document.Kind != m.Document.Kind || data.Document.Kind == "image" && (data.Document.Image == nil || m.Document.Image == nil || data.Document.Image.ID != m.Document.Image.ID || data.Document.Image.PixelWidth != m.Document.Image.PixelWidth || data.Document.Image.PixelHeight != m.Document.Image.PixelHeight) {
+		badRequest(w, "Тип карты и исходное изображение не изменяются")
 		return
 	}
 	if err = s.store.PrepareMapDocument(r.Context(), &data.Document); err != nil {
@@ -252,6 +262,7 @@ func (s *Server) handleSessionMapMutation(w http.ResponseWriter, r *http.Request
 		mapError(w, err)
 		return
 	}
+	hydrateMapImage(&m, "/api/sessions/"+r.PathValue("uuid"))
 	result, err := documentUpdates.Record(key, mutation, before, sessionMapSnapshot(m))
 	if err != nil {
 		serverError(w, err)

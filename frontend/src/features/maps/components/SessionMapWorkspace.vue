@@ -7,7 +7,7 @@
         >Выберите заготовку и редактируйте её независимую копию в этой
         сессии.</span
       >
-      <ActionButton @click="picker = 'library'">Открыть новую</ActionButton>
+      <ActionButton @click="picker = true">Открыть новую</ActionButton>
     </div>
     <MapEditor
       v-else
@@ -19,6 +19,7 @@
       session-mode
       :embedded="integratedHeader"
       :active="active"
+      :broadcast-view="broadcastView"
       :extra-tabs="tabs"
       :custom-focus="!!tokens.candidate"
       :custom-focus-key="tokens.focused"
@@ -32,21 +33,17 @@
       @selection="tokens.clear"
       @sidebar-resize="emit('inspector-resize', $event)"
     >
-      <template #session-settings="{ editor }">
-        <SessionMapSettings
+      <template #canvas-overlay="{ editor }"
+        ><SessionMapToolbar
           :editor="editor"
           :controller="c"
-          :source-map="sourceMap"
           :screen-path="screenPath"
           :player-preview="playerPreview"
-          @switch="picker = 'session'"
-          @open="picker = 'library'"
+          @switch="picker = true"
+          @source="source"
+          @capture="capture"
           @preview="playerPreview = $event"
-          @frame="frame"
-          @remove="pendingDelete = c.selected"
-          @reload="reloadConfirm = true"
-        />
-      </template>
+      /></template>
       <template #creatures="{ editor }"
         ><SessionMapCreatures
           :editor="editor"
@@ -66,36 +63,17 @@
           @participant="emit('participant', $event)"
       /></template>
     </MapEditor>
-    <AppModalFrame
+    <SessionMapPicker
       v-if="picker"
-      :title="
-        picker === 'library' ? 'Открыть новую карту' : 'Переключить карту'
-      "
-      :width="1100"
-      close-label="Закрыть выбор карты"
-      @close="picker = ''"
-    >
-      <MapLibrary v-if="picker === 'library'" picker @select="add" />
-      <div v-else class="session-map-choices">
-        <BaseTile
-          v-for="map in c.maps"
-          :key="map.id"
-          interactive
-          framed
-          :tint="map.id === c.selectedID"
-          role="button"
-          tabindex="0"
-          :aria-label="map.name"
-          @click="select(map.id)"
-          @keydown.enter="select(map.id)"
-        >
-          <MapEntityRow
-            :entry="{ kind: 'map', name: map.name }"
-            :selectable="false"
-          /><small class="map-hint">{{ map.source?.name }}</small>
-        </BaseTile>
-      </div>
-    </AppModalFrame>
+      :uuid="sessionUuid"
+      :maps="c.maps"
+      :selected="c.selectedID"
+      @close="picker = false"
+      @add="add"
+      @created="created"
+      @select="select"
+      @remove="pendingDelete = $event"
+    />
     <ConfirmDialog
       v-if="pendingDelete"
       title="Убрать карту из сессии?"
@@ -123,16 +101,13 @@
 </template>
 <script setup>
 import "../styles/maps.css";
-import { computed, onMounted, reactive, ref, watch } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 import {
   ActionButton,
-  AppModalFrame,
-  BaseTile,
   ConfirmDialog,
   LoadingState,
 } from "@sylvieshare/share-ui";
-import { Map, Settings, UsersRound } from "@lucide/vue";
-import { getMaps } from "@/shared/api/mapsApi";
+import { Map, UsersRound } from "@lucide/vue";
 import { useSessionMaps } from "../composables/useSessionMaps";
 import { sessionTokens } from "../composables/sessionTokens";
 import {
@@ -141,11 +116,10 @@ import {
 } from "../lib/sessionCreatures";
 import { normalizeSessionMap } from "../lib/sessionMapState";
 import MapEditor from "./MapEditor.vue";
-import MapLibrary from "./MapLibrary.vue";
-import MapEntityRow from "./MapEntityRow.vue";
 import SessionMapCreatures from "./SessionMapCreatures.vue";
 import SessionMapCreatureFocus from "./SessionMapCreatureFocus.vue";
-import SessionMapSettings from "./SessionMapSettings.vue";
+import SessionMapToolbar from "./SessionMapToolbar.vue";
+import SessionMapPicker from "./SessionMapPicker.vue";
 const props = defineProps({
   sessionUuid: { type: String, required: true },
   session: Object,
@@ -157,8 +131,7 @@ const props = defineProps({
 const emit = defineEmits(["inspector-resize", "participant"]);
 const c = reactive(useSessionMaps(props.sessionUuid)),
   workspace = ref(null),
-  picker = ref(""),
-  templates = ref([]),
+  picker = ref(false),
   generation = ref(0),
   playerPreview = ref(false),
   pendingDelete = ref(null),
@@ -173,26 +146,14 @@ const tokens = reactive(
     () => workspace.value?.canvas,
   ),
 );
-const tabs = [
-  {
-    key: "session-settings",
-    label: "Настройки",
-    icon: Settings,
-  },
-  { key: "creatures", label: "Существа", icon: UsersRound },
-];
-const sourceMap = computed(() =>
-  templates.value.find((m) => m.id === c.selected?.source?.id),
+const tabs = [{ key: "creatures", label: "Существа", icon: UsersRound }];
+const broadcastView = computed(() =>
+  c.display?.mapId === c.selectedID && !c.display.camera.sceneId
+    ? c.display.camera.view
+    : null,
 );
 const screenPath = computed(
   () => `/map-screen/${props.session?.displayCode || ""}`,
-);
-onMounted(() =>
-  Promise.all([getMaps("own"), getMaps("subscriptions")])
-    .then((maps) => {
-      templates.value = maps.flat();
-    })
-    .catch(() => {}),
 );
 watch(
   () => c.selectedID,
@@ -204,6 +165,9 @@ watch(
         mapId: id,
         camera: {
           ...c.display.camera,
+          sceneId: "",
+          view: null,
+          fit: true,
           x: c.selected.document.width / 2,
           y: c.selected.document.height / 2,
         },
@@ -225,11 +189,11 @@ async function prepareLeave() {
 async function select(id) {
   if (await prepareLeave()) {
     c.selectedID = id;
-    picker.value = "";
+    picker.value = false;
   }
 }
 async function add(map) {
-  if ((await prepareLeave()) && (await c.add(map))) picker.value = "";
+  if ((await prepareLeave()) && (await c.add(map))) picker.value = false;
 }
 async function remove() {
   if ((await prepareLeave()) && (await c.remove(pendingDelete.value.id)))
@@ -242,11 +206,32 @@ async function reload() {
   generation.value++;
   tokens.reset();
 }
-function frame() {
-  const view = workspace.value?.canvas?.getView();
-  if (view)
+async function created(map) {
+  if (await prepareLeave()) {
+    c.addImage(map);
+    picker.value = false;
+  }
+}
+async function source(id) {
+  if (!(await prepareLeave())) return;
+  const camera = c.selected.document.cameras?.find((c) => c.id === id);
+  if (id === "virtual") return;
+  c.updateDisplay({
+    mapId: c.selectedID,
+    camera: {
+      ...c.display.camera,
+      fit: !camera,
+      sceneId: camera?.id || "",
+      view: camera?.view || null,
+    },
+  });
+}
+async function capture() {
+  const view = workspace.value?.canvas?.captureCamera();
+  if (view && (await prepareLeave()))
     c.updateDisplay({
-      camera: { ...c.display.camera, x: view.x, y: view.y, fit: false },
+      mapId: c.selectedID,
+      camera: { ...c.display.camera, fit: false, sceneId: "", view },
     });
 }
 defineExpose({

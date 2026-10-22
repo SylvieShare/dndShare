@@ -54,7 +54,7 @@ export function buildAnnotations(d, options) {
   const group = new Group();
   if (d.grid.visible) {
     const p = [];
-    const elevation = -0.003;
+    const elevation = d.kind === "image" ? FLOOR - 0.015 : -0.003;
     for (let x = 0; x <= d.width; x++)
       if (x >= 0) p.push(x, elevation, 0, x, elevation, d.height);
     for (let y = 0; y <= d.height; y++)

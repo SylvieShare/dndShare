@@ -1,7 +1,7 @@
 <template>
   <WorkspaceFocusPanel
     ref="panel"
-    :open="!!(customFocus || area || entries.length)"
+    :open="!!(customFocus || editor.focusedCamera || area || entries.length)"
     :focus-key="focusKey"
     class="map-selection-panel"
     aria-label="Выбранные элементы"
@@ -10,6 +10,11 @@
       ><MapFocusBack :entry="backEntry" @back="emit('back')"
     /></template>
     <slot v-if="customFocus" name="focus" />
+    <MapCameraFocus
+      v-else-if="editor.focusedCamera"
+      :editor="editor"
+      :camera="editor.focusedCamera"
+    />
     <MapAreaFocus
       v-else-if="area"
       :editor="editor"
@@ -111,6 +116,7 @@
   </WorkspaceFocusPanel>
 </template>
 <script setup>
+import MapCameraFocus from "./MapCameraFocus.vue";
 import MapFocusBack from "./MapFocusBack.vue";
 import WorkspaceFocusPanel from "@/shared/ui/WorkspaceFocusPanel.vue";
 import { interactive } from "../lib/mapModel";
@@ -148,11 +154,13 @@ const single = computed(() => entries.value[0]);
 const focusKey = computed(() =>
   props.customFocus
     ? `custom:${props.customFocusKey || "focus"}`
-    : area.value
-      ? `area:${area.value.id}`
-      : entries.value.length === 1
-        ? `${single.value.kind}:${single.value.id}`
-        : "group",
+    : props.editor.focusedCamera
+      ? `camera:${props.editor.focusedCamera.id}`
+      : area.value
+        ? `area:${area.value.id}`
+        : entries.value.length === 1
+          ? `${single.value.kind}:${single.value.id}`
+          : "group",
 );
 </script>
 <style scoped>

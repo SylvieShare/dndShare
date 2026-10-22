@@ -30,6 +30,12 @@ export function currentModel(model, registry, assets) {
           hidden: current.hidden,
         }
       : {}),
+    placementPoints: (metadata.placementPoints || []).map(point => {
+      const registered=current?.placementPoints?.find(p=>p.x===point.x && p.y===point.y);
+      const cell=registered?.cell || point.cell;
+      if(!cell) throw new Error("Placement point needs an explicit local cell");
+      return {...point,cell:{...cell}};
+    }),
     assets,
   };
 }

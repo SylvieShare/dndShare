@@ -86,7 +86,7 @@ def support_points(obj, centre, recipe, datum):
             if hit[0] is None or hit[0].z<datum+.5 or hit[1].z<=0:
                 invalid.append([x,y])
             else:
-                points.append({'x':round(x+.5+offset[0]/35,6),'y':round(y+.5-offset[1]/35,6),'elevation':round(hit[0].z/35,6)})
+                points.append({'cell':{'x':x,'y':y},'x':round(x+.5+offset[0]/35,6),'y':round(y+.5-offset[1]/35,6),'elevation':round(hit[0].z/35,6)})
     if invalid: raise ValueError(f'Cells {invalid} have no standable surface; review occupied cells before baking')
     return points
 

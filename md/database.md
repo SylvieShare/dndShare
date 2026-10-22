@@ -64,3 +64,8 @@ CREATE TABLE AS и materialized view без WITH NO DATA не допускают
 ## Связанные страницы
 
 [Оглавление wiki](README.md) · [HTTP API](api.md) · [Архитектура DnD Share](architecture.md)
+
+Карта сессии `session_map` также поддерживает kind=image. `image_id` с FK на
+storage_image и CHECK согласуется с document.image.id; файл защищён от удаления,
+URL не сохраняется. Камеры хранятся в document.cameras, источник трансляции — в
+JSON camera существующей session_map_display. [Контракт](features/maps-cameras-and-images.md).

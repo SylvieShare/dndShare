@@ -33,12 +33,14 @@ test("session uses the full editor, writes its own scene and retains the templat
         buttons.map((b) => b.getAttribute("aria-label")),
       ),
   ).toEqual([
-    "Настройки",
     "Существа",
     "Плитки",
     "Освещение",
     "Объекты",
+    "Декали",
     "Области",
+    "Камеры",
+    "Настройки",
     "Производительность",
   ]);
   await expect(
@@ -76,8 +78,10 @@ test("session uses the full editor, writes its own scene and retains the templat
     window.requests.filter((r) => r.url === "/api/sessions/test/maps/test-map"),
   );
   expect(writes.length).toBeGreaterThan(0);
-  expect(writes.at(-1).data).toHaveProperty("document");
-  expect(writes.at(-1).data).toHaveProperty("state");
+  expect(writes.at(-1).data).toHaveProperty("baseVersion");
+  expect(writes.at(-1).data.patches.some((p) => p.path[0] === "document")).toBe(
+    true,
+  );
 });
 test("players and creatures have HP and a shared right focus, and placement is durable", async ({
   page,
@@ -126,41 +130,29 @@ test("players and creatures have HP and a shared right focus, and placement is d
     )
     .toBe(true);
 });
-test("session settings show the source and open and switch independent copies", async ({
+test("session toolbar opens independent snapshots while settings match the editor", async ({
   page,
 }) => {
   await ready(page);
-  await page
-    .locator(".map-sidebar")
-    .getByRole("button", { name: "Настройки", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Настройки", exact: true }).click();
   await expect(
-    page.getByRole("region", { name: "Основа карты" }),
-  ).toContainText("Крепость на переправе");
+    page.getByRole("region", { name: "Свойства карты" }),
+  ).toBeVisible();
+  await expect(page.getByRole("region", { name: "Основа карты" })).toHaveCount(
+    0,
+  );
+  await page.getByRole("button", { name: "Сменить", exact: true }).click();
   await page
-    .getByRole("button", { name: "Открыть новую", exact: true })
+    .getByRole("button", { name: "Добавить новую 3D карту", exact: true })
     .click();
-  const picker = page.getByRole("dialog", { name: "Открыть новую карту" });
-  await picker
+  await page
+    .getByRole("dialog")
     .getByRole("button", { name: "Выбрать", exact: true })
     .first()
     .click();
-  await expect(picker).toHaveCount(0);
-  await page
-    .locator(".map-sidebar")
-    .getByRole("button", { name: "Настройки", exact: true })
-    .click();
-  await page
-    .getByRole("button", { name: "Переключить карту", exact: true })
-    .click();
-  const choices = page.getByRole("dialog", { name: "Переключить карту" });
-  await expect(
-    choices.getByRole("button", { name: "Крепость на переправе", exact: true }),
-  ).toHaveCount(2);
-  await choices
-    .getByRole("button", { name: "Крепость на переправе", exact: true })
-    .first()
-    .click();
-  await expect(choices).toHaveCount(0);
-  await expect(page.getByRole("alert")).toHaveCount(0);
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await page.getByRole("button", { name: "Сменить", exact: true }).click();
+  await expect(page.locator(".session-map-choice-main")).toHaveCount(2);
+  await page.locator(".session-map-choice-main").first().click();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
 });

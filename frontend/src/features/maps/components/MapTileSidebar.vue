@@ -35,6 +35,7 @@
       :editor="editor"
       @focus="selectArea"
     />
+    <MapCamerasPanel v-else-if="tab === 'cameras'" :editor="editor" />
     <MapPropertiesPanel v-else-if="tab === 'settings'" :editor="editor" />
     <MapPerformancePanel v-else-if="tab === 'performance'" :editor="editor" />
     <MapLightingPanel
@@ -47,7 +48,7 @@
 </template>
 <script setup>
 import MapDecalPalette from "./MapDecalPalette.vue";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import {
   Layers,
   Box,
@@ -56,7 +57,9 @@ import {
   Settings,
   Gauge,
   Sticker,
+  Camera,
 } from "@lucide/vue";
+import MapCamerasPanel from "./MapCamerasPanel.vue";
 import MapSidebar from "./MapSidebar.vue";
 import MapPropertiesPanel from "./MapPropertiesPanel.vue";
 import MapPerformancePanel from "./MapPerformancePanel.vue";
@@ -92,23 +95,30 @@ defineExpose({
     props.editor.selectArea(id);
   },
 });
-const tab = ref("tiles");
+const image = computed(() => props.editor.draft.document.kind === "image");
+const tab = ref(image.value ? "settings" : "tiles");
 const tabs = computed(() => [
   ...props.extraTabs,
-  {
-    key: "tiles",
-    label: "Плитки",
-    icon: Layers,
-    divider: props.extraTabs.length > 0,
-    dividerLabel: "Вкладки редактора",
-  },
-  { key: "lights", label: "Освещение", icon: Lightbulb },
-  { key: "objects", label: "Объекты", icon: Box },
-  { key: "decals", label: "Декали", icon: Sticker },
-  { key: "areas", label: "Области", icon: Group },
-  ...(!props.sessionMode
-    ? [{ key: "settings", label: "Настройки", icon: Settings }]
+  ...(!image.value
+    ? [
+        {
+          key: "tiles",
+          label: "Плитки",
+          icon: Layers,
+          divider: props.extraTabs.length > 0,
+          dividerLabel: "Вкладки редактора",
+        },
+        { key: "lights", label: "Освещение", icon: Lightbulb },
+        { key: "objects", label: "Объекты", icon: Box },
+        { key: "decals", label: "Декали", icon: Sticker },
+        { key: "areas", label: "Области", icon: Group },
+        { key: "cameras", label: "Камеры", icon: Camera },
+      ]
     : []),
+  { key: "settings", label: "Настройки", icon: Settings },
   { key: "performance", label: "Производительность", icon: Gauge },
 ]);
+watch(tabs, (list) => {
+  if (!list.some((t) => t.key === tab.value)) tab.value = list[0].key;
+});
 </script>

@@ -116,4 +116,5 @@ func TestCurrentMapModelPersistence(t *testing.T) {
 	testTileTransitionPersistence(t, ctx, s)
 	testMapModelGrouping(t, ctx, s)
 	testMapModelCatalogue(t, ctx, s)
+	testModelPlacementCells(t, ctx, s)
 }

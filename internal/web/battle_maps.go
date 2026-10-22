@@ -118,6 +118,10 @@ func (s *Server) handleSaveMap(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+	if m.Document.Kind != "tiles" {
+		badRequest(w, "Заготовка должна быть 3D-картой")
+		return
+	}
 	if err := battlemap.ValidateDocument(&m.Document); err != nil {
 		badRequest(w, err.Error())
 		return

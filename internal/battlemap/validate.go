@@ -17,7 +17,7 @@ func bounded(n, lo, hi float64) bool {
 func visibility(s string) bool { return s == "hidden" || s == "explored" || s == "visible" }
 
 func ValidateDocument(d *Document) error {
-	if d.Version != DocumentVersion || d.Kind != "tiles" {
+	if d.Version != DocumentVersion || (d.Kind != "tiles" && d.Kind != "image") {
 		return fmt.Errorf("Неизвестный формат карты")
 	}
 	if !bounded(d.Width, 2, 160) || !bounded(d.Height, 2, 160) || d.Width*d.Height > 16000 {
@@ -30,6 +30,9 @@ func ValidateDocument(d *Document) error {
 		return fmt.Errorf("Слишком много элементов карты")
 	}
 	if err := validateMapTags(d); err != nil {
+		return err
+	}
+	if err := validateSceneFormat(d); err != nil {
 		return err
 	}
 	tileIDs := map[string]bool{}
@@ -141,7 +144,7 @@ func ValidateState(s *State, d Document) error {
 }
 
 func ValidateCamera(c Camera) bool {
-	return bounded(c.X, -160, 320) && bounded(c.Y, -160, 320) && bounded(c.CellPixels, 8, 400) && (c.Rotation == 0 || c.Rotation == 90 || c.Rotation == 180 || c.Rotation == 270)
+	return (c.SceneID == "" || identifier.MatchString(c.SceneID)) && (c.View == nil || ValidCameraView(*c.View)) && bounded(c.X, -160, 320) && bounded(c.Y, -160, 320) && bounded(c.CellPixels, 8, 400) && (c.Rotation == 0 || c.Rotation == 90 || c.Rotation == 180 || c.Rotation == 270)
 }
 
 func SafeURL(raw string) bool {

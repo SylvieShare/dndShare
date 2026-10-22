@@ -14,6 +14,7 @@ export function newMap() {
       width: 30,
       height: 22,
       grid: { visible: true },
+      cameras: [],
       tiles: [],
       objects: [],
       zones: [],

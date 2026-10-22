@@ -1,5 +1,7 @@
 import { createMapDecals } from "./mapDecals";
 import { createDecalOwners } from "./decalOwners";
+import { createCameraMarkers } from "./mapCameraMarkers";
+import { createMapBackdrop } from "./mapBackdrop";
 import { createSceneSynchronizer } from "./sceneSynchronizer";
 import { createAreaTransitions } from "./areaTransitions";
 import { createModelTransitions } from "./modelTransitions";
@@ -83,6 +85,8 @@ export async function createMapRenderer(
   };
   const profiler = createRenderProfiler(gpu, render);
   const annotations = createMapAnnotations(scene);
+  const cameras = createCameraMarkers(scene),
+    backdrop = createMapBackdrop(scene, render);
   const assets = modelAssets(onError, gpu, assetsChanged, onDownloadProgress),
     lightSources = createLightSourceState(assets),
     lighting = createMapLighting(
@@ -328,7 +332,11 @@ export async function createMapRenderer(
     render,
     isDead: () => dead,
   });
-  const update = synchronizer.update;
+  async function update(document, state, options) {
+    cameras.update(document, options || {});
+    await backdrop.update(document);
+    return synchronizer.update(document, state, options);
+  }
   function changeCamera(next) {
     const old = runtime.tier;
     view.update(next);
@@ -394,6 +402,7 @@ export async function createMapRenderer(
     observePerformance: profiler.observe,
     camera: changeCamera,
     getView: view.getView,
+    captureCamera: view.capture,
     world: view.world,
     placementPoint: structure.point,
     ...queries,
@@ -407,6 +416,7 @@ export async function createMapRenderer(
         : { ...view.world(event, 0), elevation: 0 };
     },
     pick: (event) =>
+      (cameras.root.visible && cameras.pick(view.ray(event))) ||
       pickMapScene(event, {
         view,
         tiles,
@@ -424,6 +434,8 @@ export async function createMapRenderer(
       cancelAnimationFrame(assetFrame);
       dead = true;
       synchronizer.destroy();
+      cameras.destroy();
+      backdrop.destroy();
       observer.disconnect();
       loop.destroy();
       profiler.destroy();

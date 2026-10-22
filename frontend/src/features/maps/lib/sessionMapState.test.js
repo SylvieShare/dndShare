@@ -10,7 +10,7 @@ it("scene edits move attached creatures and prune removed links without changing
     height: 1,
     mountDepth: 0,
     surfaceHeight: 0.4,
-    placementPoints: [{ x: 0.5, y: 0.5, elevation: 0.4 }],
+    placementPoints: [{ cell: { x: 0, y: 0 }, x: 0.5, y: 0.5, elevation: 0.4 }],
     supportSlots: [],
     canStand: true,
   };

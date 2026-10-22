@@ -146,7 +146,9 @@ it("copies attached objects with their tile, preserving the new anchor and previ
   Object.assign(e.catalogue.value[0], {
     canStand: true,
     mountDepth: 0.2,
-    placementPoints: [{ x: 0.25, y: 0.75, elevation: 0.9 }],
+    placementPoints: [
+      { cell: { x: 0, y: 0 }, x: 0.25, y: 0.75, elevation: 0.9 },
+    ],
   });
   d.objects.push({
     id: "chest",
@@ -181,7 +183,7 @@ it("pastes an object alone onto a free shared point instead of retaining the sou
   d.kind = "tiles";
   Object.assign(e.catalogue.value[0], {
     canStand: true,
-    placementPoints: [{ x: 0.5, y: 0.5, elevation: 0.6 }],
+    placementPoints: [{ cell: { x: 0, y: 0 }, x: 0.5, y: 0.5, elevation: 0.6 }],
   });
   d.tiles.push({ ...d.tiles[0], id: "target", x: 4, y: 4 });
   d.objects.push({

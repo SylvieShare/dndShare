@@ -84,11 +84,13 @@ it("repositions attached objects to distinct target points and rejects a target 
   const { d, models } = setup();
   Object.assign(models[0], {
     canStand: true,
-    placementPoints: [{ x: 0.25, y: 0.25, elevation: 0.8 }],
+    placementPoints: [
+      { cell: { x: 0, y: 0 }, x: 0.25, y: 0.25, elevation: 0.8 },
+    ],
   });
   Object.assign(models[1], {
     canStand: true,
-    placementPoints: [{ x: 0.5, y: 0.5, elevation: 0.6 }],
+    placementPoints: [{ cell: { x: 0, y: 0 }, x: 0.5, y: 0.5, elevation: 0.6 }],
   });
   models.push({ id: "chest", tileType: "object" });
   d.objects = [

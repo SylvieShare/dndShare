@@ -56,6 +56,9 @@ func (s *Store) GetMapModel(ctx context.Context, id string) (battlemap.Model, er
 }
 
 func (s *Store) MapModelsForDocument(ctx context.Context, d battlemap.Document) (map[string]battlemap.ModelMetadata, error) {
+	if d.Kind == "image" {
+		return map[string]battlemap.ModelMetadata{}, nil
+	}
 	models, err := s.ListMapModels(ctx)
 	if err != nil {
 		return nil, err

@@ -140,4 +140,5 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 		t.Fatal("other session changed", err)
 	}
 	testMapCatalogue(t, ctx, s, m)
+	testSessionImageMap(t, ctx, s)
 }

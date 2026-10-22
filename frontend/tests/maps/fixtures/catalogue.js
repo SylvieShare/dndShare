@@ -267,3 +267,10 @@ export {
   bridgeGlb,
   pegGlb,
 };
+
+for (const model of catalogue)
+  for (const p of model.placementPoints)
+    p.cell = {
+      x: Math.min(model.width - 1, Math.floor(p.x)),
+      y: Math.min(model.height - 1, Math.floor(p.y)),
+    };
