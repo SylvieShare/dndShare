@@ -106,4 +106,9 @@ test("tall barrel keeps its family in the existing barrel section", () => {
     code: "MED-barrel",
     variantCode: "MED-tall-barrel",
   });
+  const small = model("Tall Little Barrels", "MED-tall-little-barrels");
+  assert.deepEqual(groupingFor(small, [small]), {
+    code: "MED-barrel",
+    variantCode: "MED-tall-little-barrels",
+  });
 });
