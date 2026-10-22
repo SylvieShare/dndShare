@@ -18,34 +18,14 @@
     ]
   ],
   "standToleranceMM": 0.35,
-  "renderTriangles": 78000,
-  "lodTriangles": 25000,
-  "renderBakeSize": 1024,
-  "lodBakeSize": 512,
+  "renderTriangles": 100000,
+  "lodTriangles": 55000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1536,
   "uvAngleLimitRad": 0.35,
   "hasDecor": true,
   "wallMode": "edge",
   "wallMask": 64,
-  "blockers": [
-    [
-      [
-        0,
-        0
-      ],
-      [
-        0.22,
-        0
-      ],
-      [
-        0.22,
-        1
-      ],
-      [
-        0,
-        1
-      ]
-    ]
-  ],
   "supportSlots": [],
   "tags": [
     "town",
@@ -88,7 +68,8 @@
           17.6,
           26.65
         ],
-        "axis": "x"
+        "axis": "x",
+        "physicalPigment": true
       },
       {
         "name": "west floor frame and fascia",
@@ -102,7 +83,8 @@
           17.6,
           26.65
         ],
-        "axis": "y"
+        "axis": "y",
+        "physicalPigment": true
       },
       {
         "name": "east floor frame and fascia",
@@ -116,7 +98,8 @@
           17.6,
           26.65
         ],
-        "axis": "y"
+        "axis": "y",
+        "physicalPigment": true
       },
       {
         "name": "lower timber post -1",
@@ -130,7 +113,8 @@
           -13.6,
           50
         ],
-        "axis": "z"
+        "axis": "z",
+        "physicalPigment": true
       },
       {
         "name": "broad upper timber post -1",
@@ -144,7 +128,8 @@
           -8.45,
           64.8
         ],
-        "axis": "z"
+        "axis": "z",
+        "physicalPigment": true
       },
       {
         "name": "lower timber post 1",
@@ -158,7 +143,8 @@
           17.6,
           50
         ],
-        "axis": "z"
+        "axis": "z",
+        "physicalPigment": true
       },
       {
         "name": "broad upper timber post 1",
@@ -172,7 +158,8 @@
           17.6,
           64.8
         ],
-        "axis": "z"
+        "axis": "z",
+        "physicalPigment": true
       }
     ],
     "woodDarkRGB": [
@@ -186,48 +173,7 @@
       0.145
     ],
     "fabricParts": [],
-    "ironParts": [
-      {
-        "name": "candle shield bracket and cup -1",
-        "minMM": [
-          -6.65,
-          -17.23,
-          46.5
-        ],
-        "maxMM": [
-          3.25,
-          -8.73,
-          56.8
-        ],
-        "rgb": [
-          0.225,
-          0.195,
-          0.135
-        ],
-        "roughness": 0.5,
-        "metallic": 0.8
-      },
-      {
-        "name": "candle shield bracket and cup 1",
-        "minMM": [
-          -6.65,
-          8.78,
-          46.5
-        ],
-        "maxMM": [
-          3.25,
-          17.28,
-          56.8
-        ],
-        "rgb": [
-          0.225,
-          0.195,
-          0.135
-        ],
-        "roughness": 0.5,
-        "metallic": 0.8
-      }
-    ],
+    "ironParts": [],
     "hardware": [],
     "stoneParts": [],
     "surfaceParts": [
@@ -283,16 +229,60 @@
         ]
       },
       {
+        "name": "candle shield bracket and cup -1",
+        "minMM": [
+          -6.65,
+          -17.23,
+          46.5
+        ],
+        "maxMM": [
+          3.25,
+          -8.73,
+          56.8
+        ],
+        "rgb": [
+          0.225,
+          0.195,
+          0.135
+        ],
+        "roughness": 0.5,
+        "metallic": 0.8,
+        "kind": "paint",
+        "variation": 0.04
+      },
+      {
+        "name": "candle shield bracket and cup 1",
+        "minMM": [
+          -6.65,
+          8.78,
+          46.5
+        ],
+        "maxMM": [
+          3.25,
+          17.28,
+          56.8
+        ],
+        "rgb": [
+          0.225,
+          0.195,
+          0.135
+        ],
+        "roughness": 0.5,
+        "metallic": 0.8,
+        "kind": "paint",
+        "variation": 0.04
+      },
+      {
         "name": "melted beeswax -1",
-        "kind": "wax",
+        "kind": "paint",
         "minMM": [
           -3.4,
-          -17.18,
+          -17.3,
           56.8
         ],
         "maxMM": [
           3.35,
-          -8.780000000000001,
+          -8.6,
           62.55
         ],
         "rgb": [
@@ -304,18 +294,74 @@
         "variation": 0.03
       },
       {
-        "name": "wall candle flame -1",
+        "name": "own candle flame -1",
         "kind": "flame",
         "minMM": [
-          -1.6400000000000001,
-          -14.48,
-          62.5
+          -1.5347000312805177,
+          -14.344699974060058,
+          61.51779815673829
         ],
         "maxMM": [
-          1.3599999999999999,
-          -11.48,
-          65.9716
+          1.248999948501587,
+          -11.534399871826173,
+          65.9716015625
         ],
+        "rgb": [
+          1,
+          0.62,
+          0.075
+        ],
+        "roughness": 0.86,
+        "variation": 0.03,
+        "nearSource": {
+          "code": "MT1-039",
+          "sourceSHA256": "70610b1cf1cd40701af8e573a2a4df0e536e755fa50c491c3feef65b9d17c9d3",
+          "matchMM": 0.04,
+          "componentAboveMM": 62.5,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              -3.5,
+              -17.5,
+              62.5
+            ],
+            "maxMM": [
+              3.5,
+              17.5,
+              66.2
+            ]
+          },
+          "projectTo": {
+            "code": "MT1-039",
+            "sourceSHA256": "70610b1cf1cd40701af8e573a2a4df0e536e755fa50c491c3feef65b9d17c9d3"
+          }
+        }
+      },
+      {
+        "name": "measured flame root wall-candle-1",
+        "kind": "flame",
+        "minMM": [
+          -1.4262869021735165,
+          -14.009267721590872,
+          61.51779815673829
+        ],
+        "maxMM": [
+          0.8405096657060707,
+          -11.646978958000028,
+          62.6
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.2928886182337229,
+            -12.82812333979545,
+            61.51779815673829
+          ],
+          "radiiMM": [
+            1.1333982839397936,
+            1.1811443817954217,
+            100
+          ]
+        },
         "rgb": [
           1,
           0.62,
@@ -326,15 +372,15 @@
       },
       {
         "name": "melted beeswax 1",
-        "kind": "wax",
+        "kind": "paint",
         "minMM": [
           -3.4,
-          8.829999999999998,
+          8.6,
           56.8
         ],
         "maxMM": [
           3.35,
-          17.23,
+          17.3,
           62.55
         ],
         "rgb": [
@@ -346,18 +392,74 @@
         "variation": 0.03
       },
       {
-        "name": "wall candle flame 1",
+        "name": "own candle flame 1",
         "kind": "flame",
         "minMM": [
-          -1.78,
-          11.53,
-          62.5
+          -1.660500044822693,
+          11.692800407409669,
+          61.53539916992188
         ],
         "maxMM": [
-          1.22,
-          14.53,
-          65.6529
+          1.0784000110626222,
+          14.387200469970702,
+          65.65289886474609
         ],
+        "rgb": [
+          1,
+          0.62,
+          0.075
+        ],
+        "roughness": 0.86,
+        "variation": 0.03,
+        "nearSource": {
+          "code": "MT1-039",
+          "sourceSHA256": "70610b1cf1cd40701af8e573a2a4df0e536e755fa50c491c3feef65b9d17c9d3",
+          "matchMM": 0.04,
+          "componentAboveMM": 62.5,
+          "componentIndex": 1,
+          "componentBoundsMM": {
+            "minMM": [
+              -3.5,
+              -17.5,
+              62.5
+            ],
+            "maxMM": [
+              3.5,
+              17.5,
+              66.2
+            ]
+          },
+          "projectTo": {
+            "code": "MT1-039",
+            "sourceSHA256": "70610b1cf1cd40701af8e573a2a4df0e536e755fa50c491c3feef65b9d17c9d3"
+          }
+        }
+      },
+      {
+        "name": "measured flame root wall-candle-2",
+        "kind": "flame",
+        "minMM": [
+          -1.4240488038365342,
+          11.88105384062343,
+          61.53539916992188
+        ],
+        "maxMM": [
+          0.7964937317454136,
+          14.126215457912188,
+          62.6
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.31377753604556025,
+            13.00363464926781,
+            61.53539916992188
+          ],
+          "radiiMM": [
+            1.1102712677909738,
+            1.1225808086443783,
+            100
+          ]
+        },
         "rgb": [
           1,
           0.62,
@@ -367,45 +469,83 @@
         "variation": 0.03
       }
     ],
-    "emissionStrength": 1.6
+    "emissionStrength": 1.6,
+    "preservePhysicalWoodShade": true,
+    "flameBoundaryClip": {
+      "toleranceMM": 0.025,
+      "lodToleranceMM": 0.04,
+      "preserveRegions": [
+        {
+          "minMM": [
+            -3.5,
+            -17.3,
+            56.5
+          ],
+          "maxMM": [
+            3.5,
+            -8.6,
+            62.55
+          ]
+        },
+        {
+          "minMM": [
+            -3.5,
+            8.6,
+            56.5
+          ],
+          "maxMM": [
+            3.5,
+            17.3,
+            62.55
+          ]
+        }
+      ]
+    }
   },
   "weightBudget": {
     "renderMiB": [
-      1.7,
-      3.9
+      3,
+      8
     ],
     "lodMiB": [
-      0.55,
-      1.35
+      1.5,
+      5
     ],
     "shadowKiB": [
-      55,
-      130
+      90,
+      250
     ],
     "previewKiB": [
       10,
       40
     ],
-    "basis": "35mm floor with low plaster wall, two much broader upper posts, shield brackets, two cup holders, melted wax and individually shaped flames.78000/25000 separate pre-UV geometry/bakes retain candle silhouettes, dripping wax and timber carvings. Compare1024/512 with768/384 colour/emission textures."
+    "basis": "Repair own480000tri/24000084byte source. Preserve lowwall/posts/wax/agedmetal palette,2light sourcepositions/color/intensity/radius/flicker;clearremainingflameroot andrestore2closed.1mmwaxsurfacesbelowmeasuredrim.100k/55kindependentgeometry,2048/1536bakes,1536rendercolour/data,1024LODcolour/1536data;comparecompact."
   },
-  "reviewNotes": "PDF page7 and source front/back/direct+X views. Source480000triangles/24000084bytes,max65.891602mm. Centre floor24.728069mm; native17mm datum andwest edge64 family footprint. Floor boards X,rails Y,posts Z. Broad upper posts reachx=-6.83 andinnerY8.575/8.615,startingz34.832..35.06 in measured core; protect both posts from plaster instead of copying narrow35 columns. Centre plaster reaches49.543mm. Candle-only x>-5.5 point slices exclude posts: wax caps broad until62.5mm, narrow flames above62.5. NegativeY flameboundsX[-1.4147,1.1290],Y[-14.2247,-11.6544],top65.8916; positiveY X[-1.5405,.9584],Y[11.8128,14.2672],top65.5729. Separate each metal shield/bracket/cup through56.8mm, rough beeswax56.8..62.55 and orange flame; keep metal volumeforward ofwood face withminX-6.65. Emissive1.6 is bounded per flame and gated by actual packed per-part pixel checks/SHA. Two defaultLights use own measured centres andheightabove17mm datum. Inspect wax/cup and flame/wood boundaries from both sides in both tiers and compare texture candidates before publication.",
+  "reviewNotes": "PDF page7 and source front/back/direct+X views. Source480000triangles/24000084bytes,max65.891602mm. Centre floor24.728069mm; native17mm datum andwest edge64 family footprint. Floor boards X,rails Y,posts Z. Broad upper posts reachx=-6.83 andinnerY8.575/8.615,startingz34.832..35.06 in measured core; protect both posts from plaster instead of copying narrow35 columns. Centre plaster reaches49.543mm. Candle-only x>-5.5 point slices exclude posts: wax caps broad until62.5mm, narrow flames above62.5. NegativeY flameboundsX[-1.4147,1.1290],Y[-14.2247,-11.6544],top65.8916; positiveY X[-1.5405,.9584],Y[11.8128,14.2672],top65.5729. Separate each metal shield/bracket/cup through56.8mm, rough beeswax56.8..62.55 and orange flame; keep metal volumeforward ofwood face withminX-6.65. Emissive1.6 is bounded per flame and gated by actual packed per-part pixel checks/SHA. Two defaultLights use own measured centres andheightabove17mm datum. Inspect wax/cup and flame/wood boundaries from both sides in both tiers and compare texture candidates before publication. Publishedcandleauditconfirmedownrender/LOD/shadowdownraysfromlightsourcesreachedholderundersideZ52.4345..52.5327withnegativeZnormals. All5publishedassets/model/behaviour/recipe/QAbackedundercandle-wax-repair/039/before,UUID6aae8925-eba0-4423-bc1f-472bf885deed/sourceSHA70610b1cf1cd40701af8e573a2a4df0e536e755fa50c491c3feef65b9d17c9d3unchanged. Own1098/981upperfirevertices and2251/2018touchingfaces. Own188/158upwardrimprobesminZ61.547798/61.565399;2closed.1mmwaxcaps.05belowrim,sourcemeasurementsnotcopiedfrom104. Clearmeasuredrootellipse,keepouterwax/postgeometry;2light sourcepositions/color/intensity/radius/flickerretainedexactly,onlyeffectbase/heightadjusttocap+.01. Ownfreefloor[0,0]Z24.728073/nZ.991584. Updateoldnarrowwallblockertomeasuredsidefixtures(maxX3.0771+.15),leavingcentrestandpointfree;geometrycorrectionmustcompareprevioussnapshotandrecordreason. Rebuildnativeandvalidatebothcandidates/bodyoff-on/materials/sourcegeometry/clear-down/fire/capsbeforeUD-016/finalreceipt/GoMF/MCP. Preservecurrentcatalogueandlogicalcell.",
   "uvIslandMargin": 0.0012,
   "plainMountCollarMM": 0.5,
-  "standPoints": [
-    [
-      0.5,
-      0.5
-    ]
-  ],
   "standRayTopMM": 30,
-  "renderUVAngleLimitRad": 0.25,
-  "renderUVIslandMargin": 0.0008,
-  "lodUVAngleLimitRad": 0.25,
-  "lodUVIslandMargin": 0.0008,
+  "renderUVAngleLimitRad": 0.2,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVAngleLimitRad": 0.2,
+  "lodUVIslandMargin": 0.0012,
   "defaultLights": [
     {
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.1,
+          0.125252
+        ],
+        "strength": 0.7,
+        "offset": [
+          -0.004368,
+          -0.004339,
+          -0.0768
+        ]
+      },
       "key": "wall-candle-1",
-      "name": "Свеча стены 1",
+      "name": "\u0421\u0432\u0435\u0447\u0430 \u0441\u0442\u0435\u043d\u044b 1",
       "kind": "candle",
       "color": "#ffd899",
       "position": [
@@ -416,24 +556,24 @@
       "intensity": 3,
       "radius": 2.5,
       "enabled": true,
-      "flicker": true,
+      "flicker": true
+    },
+    {
       "effect": {
         "kind": "fire",
         "size": [
           0.1,
-          0.09
+          0.115643
         ],
         "strength": 0.7,
         "offset": [
-          0,
-          0,
-          -0.048451
+          -0.000965,
+          0.000754,
+          -0.071745
         ]
-      }
-    },
-    {
+      },
       "key": "wall-candle-2",
-      "name": "Свеча стены 2",
+      "name": "\u0421\u0432\u0435\u0447\u0430 \u0441\u0442\u0435\u043d\u044b 2",
       "kind": "candle",
       "color": "#ffd899",
       "position": [
@@ -444,21 +584,202 @@
       "intensity": 3,
       "radius": 2.5,
       "enabled": true,
-      "flicker": true,
-      "effect": {
-        "kind": "fire",
-        "size": [
-          0.1,
-          0.083
-        ],
-        "strength": 0.7,
-        "offset": [
-          0,
-          0,
-          -0.043899
-        ]
-      }
+      "flicker": true
     }
   ],
-  "proceduralFire": true
+  "proceduralFire": true,
+  "renderColourSize": 1536,
+  "renderDataSize": 1536,
+  "lodColourSize": 1024,
+  "lodDataSize": 1536,
+  "standPointsMM": [
+    [
+      0,
+      0
+    ]
+  ],
+  "placementCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "surfaceHeightMM": 24.728073120117188,
+  "blockersMM": [
+    [
+      [
+        -17.65,
+        -17.65
+      ],
+      [
+        -9.6,
+        -17.65
+      ],
+      [
+        -9.6,
+        17.65
+      ],
+      [
+        -17.65,
+        17.65
+      ]
+    ],
+    [
+      [
+        -9.6,
+        -17.65
+      ],
+      [
+        3.2271,
+        -17.65
+      ],
+      [
+        3.2271,
+        -8.2
+      ],
+      [
+        -9.6,
+        -8.2
+      ]
+    ],
+    [
+      [
+        -9.6,
+        8.2
+      ],
+      [
+        3.2271,
+        8.2
+      ],
+      [
+        3.2271,
+        17.65
+      ],
+      [
+        -9.6,
+        17.65
+      ]
+    ]
+  ],
+  "candleWaxCaps": [
+    {
+      "key": "wall-candle-1",
+      "centreMM": [
+        -0.2928886182337229,
+        -12.82812333979545
+      ],
+      "cutRadiiMM": [
+        1.1333982839397936,
+        1.1811443817954217
+      ],
+      "radiiMM": [
+        1.1933982839397936,
+        1.2411443817954217
+      ],
+      "measuredWaxRimMinMM": 61.54779815673828,
+      "measuredRimSamples": 188,
+      "topMM": 61.497798156738284,
+      "bottomMM": 61.39779815673828,
+      "rgb": [
+        0.82,
+        0.75,
+        0.48
+      ],
+      "roughness": 0.86,
+      "measurementSourceSHA256": "70610b1cf1cd40701af8e573a2a4df0e536e755fa50c491c3feef65b9d17c9d3"
+    },
+    {
+      "key": "wall-candle-2",
+      "centreMM": [
+        -0.31377753604556025,
+        13.00363464926781
+      ],
+      "cutRadiiMM": [
+        1.1102712677909738,
+        1.1225808086443783
+      ],
+      "radiiMM": [
+        1.170271267790974,
+        1.1825808086443783
+      ],
+      "measuredWaxRimMinMM": 61.565399169921875,
+      "measuredRimSamples": 158,
+      "topMM": 61.51539916992188,
+      "bottomMM": 61.415399169921876,
+      "rgb": [
+        0.82,
+        0.75,
+        0.48
+      ],
+      "roughness": 0.86,
+      "measurementSourceSHA256": "70610b1cf1cd40701af8e573a2a4df0e536e755fa50c491c3feef65b9d17c9d3"
+    }
+  ],
+  "geometryDetailRegions": [
+    {
+      "name": "native mounting rim",
+      "minMM": [
+        -17.7,
+        -17.7,
+        17
+      ],
+      "maxMM": [
+        17.7,
+        17.7,
+        17.51
+      ]
+    },
+    {
+      "name": "wax top rim and wick contact -1",
+      "minMM": [
+        -3.5,
+        -17.3,
+        61.7
+      ],
+      "maxMM": [
+        3.5,
+        -8.6,
+        62.55
+      ]
+    },
+    {
+      "name": "wax runoff over cup rim -1",
+      "minMM": [
+        -3.5,
+        -17.3,
+        56.65
+      ],
+      "maxMM": [
+        3.5,
+        -8.6,
+        57.25
+      ]
+    },
+    {
+      "name": "wax top rim and wick contact 1",
+      "minMM": [
+        -3.5,
+        8.6,
+        61.7
+      ],
+      "maxMM": [
+        3.5,
+        17.3,
+        62.55
+      ]
+    },
+    {
+      "name": "wax runoff over cup rim 1",
+      "minMM": [
+        -3.5,
+        8.6,
+        56.65
+      ],
+      "maxMM": [
+        3.5,
+        17.3,
+        57.25
+      ]
+    }
+  ]
 }
