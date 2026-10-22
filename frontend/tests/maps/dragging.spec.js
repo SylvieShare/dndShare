@@ -69,9 +69,10 @@ test("hover outlines actual geometry and selection strengthens it with actions i
     .getByRole("button", { name: "Свернуть панель карты", exact: true })
     .click();
   await page.waitForFunction(
-    () =>
-      document.querySelector(".map-sidebar").getBoundingClientRect().width ===
-      60,
+    () => {
+      const sidebar = document.querySelector(".map-sidebar"), rail = sidebar.querySelector(".map-sidebar-tabs");
+      return sidebar.classList.contains("map-sidebar--collapsed") && Math.abs(sidebar.getBoundingClientRect().width - rail.getBoundingClientRect().width) < 2;
+    },
   );
   await page.mouse.move(0, 0);
   const baseline = await bluePixels(page);
