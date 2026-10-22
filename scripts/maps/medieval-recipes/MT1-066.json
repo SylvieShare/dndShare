@@ -18,10 +18,10 @@
     ]
   ],
   "standToleranceMM": 0.35,
-  "renderTriangles": 125000,
-  "lodTriangles": 46000,
-  "renderBakeSize": 1024,
-  "lodBakeSize": 1024,
+  "renderTriangles": 140000,
+  "lodTriangles": 60000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1536,
   "uvAngleLimitRad": 0.35,
   "hasDecor": true,
   "wallMode": "none",
@@ -485,7 +485,8 @@
           0.37,
           0.145
         ],
-        "endRoughness": 0.94
+        "endRoughness": 0.94,
+        "physicalPigment": true
       },
       {
         "name": "charred log shaft 2",
@@ -622,7 +623,8 @@
           0.37,
           0.145
         ],
-        "endRoughness": 0.94
+        "endRoughness": 0.94,
+        "physicalPigment": true
       },
       {
         "name": "side charred fuel piece",
@@ -727,7 +729,8 @@
           0.37,
           0.145
         ],
-        "endRoughness": 0.94
+        "endRoughness": 0.94,
+        "physicalPigment": true
       }
     ],
     "woodDarkRGB": [
@@ -1062,9 +1065,9 @@
           ]
         },
         "rgb": [
-          0.055,
-          0.035,
-          0.025
+          0.075,
+          0.05,
+          0.04
         ],
         "roughness": 0.48,
         "variation": 0.01
@@ -1095,9 +1098,9 @@
           ]
         },
         "rgb": [
-          0.055,
-          0.035,
-          0.025
+          0.075,
+          0.05,
+          0.04
         ],
         "roughness": 0.48,
         "variation": 0.01
@@ -1231,36 +1234,213 @@
         ],
         "roughness": 0.9,
         "variation": 0.025
+      },
+      {
+        "name": "dark iron hex left",
+        "kind": "paint",
+        "minMM": [
+          0.1680871951274383,
+          -6.212146208836482,
+          69.53072963616786
+        ],
+        "maxMM": [
+          2.1680871951274385,
+          -4.212146208836482,
+          71.53072963616786
+        ],
+        "radialShell": {
+          "originMM": [
+            1.1680871951274383,
+            -5.212146208836482,
+            70.53072963616786
+          ],
+          "axis": [
+            0.957270085811615,
+            -0.2485591620206833,
+            0.14782574772834778
+          ],
+          "rangeMM": [
+            -0.35,
+            0.06
+          ],
+          "radiusAtOriginMM": 0.5621210883332939,
+          "radiusSlope": 0,
+          "thicknessMM": 1.5621210883332939,
+          "allowanceMM": 0.02
+        },
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ],
+        "roughness": 0.6,
+        "metallic": 0.8,
+        "variation": 0.02
+      },
+      {
+        "name": "dark iron hex right",
+        "kind": "paint",
+        "minMM": [
+          0.16314288264229182,
+          4.236799841835385,
+          69.44496427263532
+        ],
+        "maxMM": [
+          2.163142882642292,
+          6.236799841835385,
+          71.44496427263532
+        ],
+        "radialShell": {
+          "originMM": [
+            1.1631428826422918,
+            5.236799841835385,
+            70.44496427263532
+          ],
+          "axis": [
+            0.9576118588447571,
+            0.24875953793525696,
+            0.14525221288204193
+          ],
+          "rangeMM": [
+            -0.35,
+            0.06
+          ],
+          "radiusAtOriginMM": 0.5848275939732293,
+          "radiusSlope": 0,
+          "thicknessMM": 1.5848275939732293,
+          "allowanceMM": 0.02
+        },
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ],
+        "roughness": 0.6,
+        "metallic": 0.8,
+        "variation": 0.02
+      },
+      {
+        "name": "upper fire identified by its own sculpt component",
+        "kind": "flame",
+        "minMM": [
+          -3.2,
+          -6,
+          34.15
+        ],
+        "maxMM": [
+          3.1,
+          6,
+          44.05
+        ],
+        "rgb": [
+          1,
+          0.5,
+          0.05
+        ],
+        "emissionInsetMM": 0.015,
+        "gradientZMM": [
+          30,
+          43.9
+        ],
+        "gradientRGB": [
+          [
+            1,
+            0.72,
+            0.09
+          ],
+          [
+            1,
+            0.23,
+            0.025
+          ]
+        ],
+        "roughness": 0.9,
+        "variation": 0.025,
+        "nearSource": {
+          "code": "MT1-066",
+          "sourceSHA256": "62ecc62490eeb2196c6350b61404f5fcb3de1d28aa37527f8d25024fac0ad31e",
+          "matchMM": 0.04,
+          "componentAboveMM": 34.3,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              -3,
+              -17.65,
+              34.3
+            ],
+            "maxMM": [
+              3.1,
+              17.65,
+              43.8
+            ]
+          },
+          "projectTo": {
+            "code": "MT1-066",
+            "sourceSHA256": "62ecc62490eeb2196c6350b61404f5fcb3de1d28aa37527f8d25024fac0ad31e"
+          }
+        }
       }
     ],
-    "emissionStrength": 1.2
+    "emissionStrength": 1.2,
+    "flameBoundaryClip": {
+      "toleranceMM": 0.025,
+      "preserveRegions": [
+        {
+          "minMM": [
+            -7.1,
+            -10.7,
+            27.8
+          ],
+          "maxMM": [
+            7.6,
+            8.8,
+            33.5
+          ]
+        },
+        {
+          "minMM": [
+            -9,
+            -9.4,
+            27.9
+          ],
+          "maxMM": [
+            -5.8,
+            9.4,
+            47.2
+          ]
+        }
+      ],
+      "lodToleranceMM": 0.05
+    },
+    "physicalStonePigment": true,
+    "preservePhysicalWoodShade": true
   },
   "weightBudget": {
     "renderMiB": [
-      3.8,
-      7.0
+      4,
+      11
     ],
     "lodMiB": [
-      1.4,
-      3.2
+      2,
+      6.5
     ],
     "shadowKiB": [
       100,
-      250
+      300
     ],
     "previewKiB": [
-      16,
-      60
+      10,
+      50
     ],
-    "basis": "82mmstonefireplaceon35mmwoodfloor,tallchimney,mantel/pillars,tiltedwoodplaque,pigsculptwitheyes/earcups/nosecavities,2mainlogs/sidefuelandlargegradedemissiveflame.125000/46000independenttris,1024/1024colourbakes,LODdata512preservessmallfacepigments.Comparecompactmaps."
+    "basis": "Own source599850tri/29992584bytes,82.146202mm high. Independently decimated140k/60k; compare render1536/LOD1152 with compact. Pin own pig/hex details, retain wood/AO and log endgrain. Thin measured inner backing closes the void exposed by procedural-fire removal."
   },
-  "reviewNotes": "PDFpage10,full/front-back,+X/top,pighead/fireboxclose inspected. Source599850tri/29992584bytes/maxZ82.146202. Floor1276raysnx².001779/ny².135088confirmsXgrain;edgeYrails,rearYboards/Zposts. PlaquetiltmeasuredprojectionX+.23Z:inner16.27/rim15.05;headprojection≥16.5hasnativeboundsX[-.5155,10.8714],Y[-8.5724,8.5111],Z[59.3919,74.4012],preservingwoodplaqueupperpointatZ78.Headskin,inner-earmembranes(skin,notmetal),2smalleyeholes,nostrilsandmouthseparate.NostrilnativepointsX8.84/8.95arebehindnosefront10.28soholddeepcolouratX≤9.55,keepnaserimpink.Sourcelogcutplanesmeasured;charredbeamshafts/tanproceduralgrowthringsandseparatesidefuel. CommonSTL67distanceslogs.0003..0015/stone.0003..0021versusknownflames.905..4.205mm;SHA-boundawayreference.10/projectTo66isolatesfireandprotectscommonwood/stone,sidefuelexplicitlyexcluded. PlaquetopshapeZ+.44absY≤79.85excludesstoneaboveit;charredlogouterradii3.2withinnercutrings2.85/2.75andminZ27.8;sidecutphysicalpigmentprotectssmallfragment. WoodplaquepeakmeasuredZ79.4208(maskmax79.65);largerlogdomainsandfuelbedprotectallcutfaces;UVangle.4/gaps.0012reduceemissivebleed,emissioninset.015protectsagainstquantisation;flameheight29.9..44.1excludeshearth/roof. Flamehighestthin-tipprobe[-1.1074,-.3416,43.7148];continuousheightgradient30..43.9yellow→orangeandemission1.2,onewarmdefaulttorchlightnative[2,0,35.5]heightabove17mount. Standraysmuststart110above82mmchimney;3nativefrontpointsX14/Y-8.75,0,8.75free25.736931/24.778160/25.735420.Nativesource/packeddecorboundedwestrectangleX≤11.2,Y±17.65,frontpointsoutside. Verifyeye/nostril/ear/plaque/log/stoneboundaries,flamereferenceedges/gradient/emissionmask,fireboxvoids,actualsourceprobegeometryandcolour,bothcandidates,defaultlightandallmetadatafreshbeforepublication.",
+  "reviewNotes": "PDFpage10,full/front-back,+X/top,pighead/fireboxclose inspected. Source599850tri/29992584bytes/maxZ82.146202. Floor1276raysnx\u00b2.001779/ny\u00b2.135088confirmsXgrain;edgeYrails,rearYboards/Zposts. PlaquetiltmeasuredprojectionX+.23Z:inner16.27/rim15.05;headprojection\u226516.5hasnativeboundsX[-.5155,10.8714],Y[-8.5724,8.5111],Z[59.3919,74.4012],preservingwoodplaqueupperpointatZ78.Headskin,inner-earmembranes(skin,notmetal),2smalleyeholes,nostrilsandmouthseparate.NostrilnativepointsX8.84/8.95arebehindnosefront10.28soholddeepcolouratX\u22649.55,keepnaserimpink.Sourcelogcutplanesmeasured;charredbeamshafts/tanproceduralgrowthringsandseparatesidefuel. CommonSTL67distanceslogs.0003..0015/stone.0003..0021versusknownflames.905..4.205mm;SHA-boundawayreference.10/projectTo66isolatesfireandprotectscommonwood/stone,sidefuelexplicitlyexcluded. PlaquetopshapeZ+.44absY\u226479.85excludesstoneaboveit;charredlogouterradii3.2withinnercutrings2.85/2.75andminZ27.8;sidecutphysicalpigmentprotectssmallfragment. WoodplaquepeakmeasuredZ79.4208(maskmax79.65);largerlogdomainsandfuelbedprotectallcutfaces;UVangle.4/gaps.0012reduceemissivebleed,emissioninset.015protectsagainstquantisation;flameheight29.9..44.1excludeshearth/roof. Flamehighestthin-tipprobe[-1.1074,-.3416,43.7148];continuousheightgradient30..43.9yellow\u2192orangeandemission1.2,onewarmdefaulttorchlightnative[2,0,35.5]heightabove17mount. Standraysmuststart110above82mmchimney;3nativefrontpointsX14/Y-8.75,0,8.75free25.736931/24.778160/25.735420.Nativesource/packeddecorboundedwestrectangleX\u226411.2,Y\u00b117.65,frontpointsoutside. Verifyeye/nostril/ear/plaque/log/stoneboundaries,flamereferenceedges/gradient/emissionmask,fireboxvoids,actualsourceprobegeometryandcolour,bothcandidates,defaultlightandallmetadatafreshbeforepublication. Repair of previously published procedural-fire body: current rear ray reachesX-16.202737(backface),showing rear wood through missing inner wall. Own5179 stone-front samples overY\u00b19.4,Z27.9..47.2 have minimumX-9.040081mm;add closed0.2mm sooty panel0.05mm behind it. Own bounded upper-fire component3304vertices/6983touchingfaces,not tall99 mask. Own hex planes39/42samples,radii.537121/.559828mm;metal only plane front0.35mm;pin own feature bounds. Native placement rays verified. Rebuild source assets,validate source geometry/physical channels/fuel and both candidates before UD-016;preserve UUID/source/catalogue/behaviour and archive all previous evidence.",
   "uvIslandMargin": 0.0012,
   "plainMountCollarMM": 0.5,
   "standRayTopMM": 110,
-  "renderUVAngleLimitRad": 0.4,
+  "renderUVAngleLimitRad": 0.18,
   "renderUVIslandMargin": 0.0012,
-  "lodUVAngleLimitRad": 0.4,
+  "lodUVAngleLimitRad": 0.18,
   "lodUVIslandMargin": 0.0012,
   "standPointsMM": [
     [
@@ -1296,12 +1476,12 @@
       ]
     ]
   ],
-  "lodDataSize": 512,
-  "lodColourSize": 1024,
+  "lodDataSize": 1152,
+  "lodColourSize": 1152,
   "defaultLights": [
     {
       "key": "fireplace-fire",
-      "name": "Огонь камина",
+      "name": "\u041e\u0433\u043e\u043d\u044c \u043a\u0430\u043c\u0438\u043d\u0430",
       "kind": "torch",
       "color": "#ffb45a",
       "position": [
@@ -1328,5 +1508,113 @@
       }
     }
   ],
-  "proceduralFire": true
+  "proceduralFire": true,
+  "renderColourSize": 1536,
+  "renderDataSize": 1536,
+  "lodColourQuality": 98,
+  "geometryDetailRegions": [
+    {
+      "name": "left eye and rim",
+      "minMM": [
+        3.5,
+        -3.9,
+        69.7
+      ],
+      "maxMM": [
+        5.9,
+        -2.2,
+        71.2
+      ]
+    },
+    {
+      "name": "right eye and rim",
+      "minMM": [
+        3.7,
+        2.4,
+        69.6
+      ],
+      "maxMM": [
+        6.1,
+        4.2,
+        71.2
+      ]
+    },
+    {
+      "name": "nostrils and snout",
+      "minMM": [
+        7.6,
+        -2.6,
+        66.6
+      ],
+      "maxMM": [
+        11.3,
+        2.6,
+        70.5
+      ]
+    },
+    {
+      "name": "mouth crease",
+      "minMM": [
+        8.7,
+        -2.4,
+        66
+      ],
+      "maxMM": [
+        11.3,
+        2.4,
+        67.2
+      ]
+    },
+    {
+      "name": "hex left and ear contact",
+      "minMM": [
+        0.717300009727478,
+        -5.989299583435058,
+        69.74609680175782
+      ],
+      "maxMM": [
+        1.6037999868392945,
+        -4.474199962615967,
+        71.29729919433593
+      ]
+    },
+    {
+      "name": "hex right and ear contact",
+      "minMM": [
+        0.720400047302246,
+        4.414099884033203,
+        69.73489685058594
+      ],
+      "maxMM": [
+        1.5999001741409302,
+        5.968700218200683,
+        71.24869995117187
+      ]
+    }
+  ],
+  "fireboxBackstop": {
+    "minMM": [
+      -9.290081024169922,
+      -9.4,
+      27.9
+    ],
+    "maxMM": [
+      -9.090081024169923,
+      9.4,
+      47.2
+    ],
+    "measuredInnerWallMinXMM": -9.040081024169922,
+    "rgb": [
+      0.16,
+      0.145,
+      0.12
+    ],
+    "roughness": 0.91,
+    "measurementReference": {
+      "code": "MT1-066",
+      "sourceSHA256": "62ecc62490eeb2196c6350b61404f5fcb3de1d28aa37527f8d25024fac0ad31e",
+      "samples": 5179,
+      "clearanceMM": 0.05
+    }
+  }
 }
