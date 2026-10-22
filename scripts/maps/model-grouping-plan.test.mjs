@@ -83,3 +83,11 @@ test("Medieval tall walls and corners share the wall section with distinct famil
   const ladder = model("Tall Ladder", "MED-tall-ladder");
   assert.equal(groupingFor(ladder, [ladder]).code, ladder.code);
 });
+
+test("tall fireplaces keep a distinct family within the fireplace section", () => {
+  const item = model("Tall Pig Fireplace", "MED-tall-pig-fireplace");
+  assert.deepEqual(groupingFor(item, [item]), {
+    code: "MED-fireplaces",
+    variantCode: "MED-tall-pig-fireplace",
+  });
+});

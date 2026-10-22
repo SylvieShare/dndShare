@@ -75,6 +75,9 @@ for (const tier of ["render", "lod"]) {
       dir,
       tier === "render" ? "preview-model.glb" : "lod-preview-model.glb",
     ),
+    r.recipe.proceduralFire
+      ? { model: result.model, lights: r.recipe.defaultLights || [] }
+      : undefined,
   );
   r.model = result.model;
   r.tiers[tier] = {

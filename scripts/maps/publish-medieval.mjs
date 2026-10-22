@@ -40,6 +40,20 @@ for (const tier of ["render", "lod"])
   );
 const flames =
   report.recipe.materials.surfaceParts?.filter((p) => p.kind === "flame") || [];
+if (report.recipe.proceduralFire) {
+  for (const tier of ['render','lod']) {
+    assert.equal(report.fireRemovalReview?.[tier]?.sha256,nativeQAHashes[tier],'Native procedural-fire QA changed');
+    assert.ok(report.fireRemovalReview[tier].forwardClear && report.fireRemovalReview[tier].removedFlameRays?.length);
+    assert.equal(report.materialChannelAssets?.[tier],nativeQAHashes[tier],'Procedural body material QA changed');
+    assert.equal(report.materialChannelReview?.[tier]?.metalDomainMismatches,0);
+    assert.equal(report.materialChannelReview?.[tier]?.roughnessDomainMismatches,0);
+    assert.equal(report.materialChannelReview?.[tier]?.emissionOutsideFlame,0);
+  }
+  for (const tier of ['render','lod','shadow']) {
+    assert.equal(report.finalFireReview?.[tier]?.sha256,expected.assets[tier].sha256,'Validate procedural fire after final mounting');
+    assert.ok(report.finalFireReview[tier].forwardClear && report.finalFireReview[tier].removedFlameRays?.length);
+  }
+}
 if (flames.length && !report.recipe.proceduralFire)
   for (const tier of ["render", "lod"]) {
     const evidence = report.materialChannelReview?.[tier];

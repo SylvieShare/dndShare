@@ -21,9 +21,12 @@ const directory = path.resolve(import.meta.dirname, '../../models/collections/me
 const reportPath = path.join(directory, 'report.json');
 const report = JSON.parse(await fs.readFile(reportPath, 'utf8'));
 const settings = report.recipe.materials;
+const bodySettings=report.recipe.proceduralFire
+  ? {...settings,surfaceParts:(settings.surfaceParts||[]).filter(part=>part.kind!=='flame')}
+  : settings;
 await initializeStructureReferences(settings,path.resolve(directory,'../'.repeat(candidate ? 4 : 2),'inventory.json'));
 assert.ok(['torch','structure'].includes(settings.kind));
-const surfaceAt = p => settings.kind==='structure' ? structureMetal(p, settings) : torchSurface(p, settings);
+const surfaceAt = p => settings.kind==='structure' ? structureMetal(p, bodySettings) : torchSurface(p, bodySettings);
 const evidence = {};
 for (const tier of ['render', 'lod']) {
   const doc = await io.read(path.join(directory, tier+'.glb'));

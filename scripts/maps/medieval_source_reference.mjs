@@ -17,6 +17,7 @@ export async function initializeStructureReferences(settings, inventoryPath) {
   const references = [];
   function visit(part) {
     if (part.awayFromSource) references.push(part.awayFromSource);
+    if (part.nearSource) references.push(part.nearSource);
     for (const child of [...(part.includeParts || []), ...(part.excludeParts || [])]) visit(child);
   }
   for (const key of ['woodParts','stoneParts','fabricParts','produceParts','surfaceParts','ironParts'])
@@ -29,9 +30,10 @@ export async function initializeStructureReferences(settings, inventoryPath) {
   const models = path.resolve(path.dirname(inventoryPath),'../..');
   const trees = new Map();
   async function load(code, hash, selection = {}) {
+    if (selection.componentBoundsMM !== undefined && selection.componentAboveMM === undefined) throw new Error('Component bounds require a finite sampling height');
     const row = inventory.find(row => row.code===code);
     if (!row || row.sourceSHA256!==hash) throw new Error('Source reference identity changed');
-    const key = `${code}:${selection.componentAboveMM ?? 'full'}:${selection.componentIndex ?? 0}`;
+    const key = `${code}:${selection.componentAboveMM ?? 'full'}:${selection.componentIndex ?? 0}:${JSON.stringify(selection.componentBoundsMM ?? null)}`;
     if (trees.has(key)) return trees.get(key);
     const bytes = await fs.readFile(path.join(models,row.sourcePath));
     if (createHash('sha256').update(bytes).digest('hex')!==hash) throw new Error('Source reference bytes changed');
@@ -41,7 +43,7 @@ export async function initializeStructureReferences(settings, inventoryPath) {
     for (let t=0;t<count;t++) for (let c=0;c<9;c++) positions[t*9+c]=bytes.readFloatLE(84+t*50+12+c*4);
     let selected = positions;
     if (selection.componentAboveMM !== undefined) {
-      const component = selectSourceComponent(positions, selection.componentAboveMM, selection.componentIndex ?? 0);
+      const component = selectSourceComponent(positions, selection.componentAboveMM, selection.componentIndex ?? 0, selection.componentBoundsMM);
       selected = component.positions;
       console.log('MEDIEVAL_SOURCE_COMPONENT', code, component.components, component.vertices, component.triangles);
     }

@@ -1,8 +1,9 @@
 // Select an upper connected sculpt component without altering source coordinates.
-export function selectSourceComponent(positions, aboveMM, componentIndex = 0) {
+export function selectSourceComponent(positions, aboveMM, componentIndex = 0, boundsMM) {
   if (!Number.isFinite(aboveMM) || !Number.isInteger(componentIndex) || componentIndex < 0)
     throw new Error('Finite component height and nonnegative integer rank required');
   if (positions.length % 9) throw new Error('Unindexed source triangles required');
+  if (boundsMM && (!Array.isArray(boundsMM.minMM) || !Array.isArray(boundsMM.maxMM) || boundsMM.minMM.length!==3 || boundsMM.maxMM.length!==3 || !boundsMM.minMM.every((v,i)=>Number.isFinite(v)&&Number.isFinite(boundsMM.maxMM[i])&&v<boundsMM.maxMM[i]))) throw new Error('Finite component bounds required');
   const ids = new Int32Array(positions.length / 3).fill(-1);
   const unique = new Map(), parent = [];
   function find(i) {
@@ -12,6 +13,7 @@ export function selectSourceComponent(positions, aboveMM, componentIndex = 0) {
   for (let i = 0; i < ids.length; i++) {
     const offset = i * 3;
     if (positions[offset + 2] <= aboveMM) continue;
+    if (boundsMM && [0,1,2].some(a=>positions[offset+a]<boundsMM.minMM[a]||positions[offset+a]>boundsMM.maxMM[a])) continue;
     const key = `${positions[offset]},${positions[offset + 1]},${positions[offset + 2]}`;
     let id = unique.get(key);
     if (id === undefined) {

@@ -12,7 +12,7 @@ const { ALL_EXTENSIONS } = require("@gltf-transform/extensions");
 const { dequantize } = require("@gltf-transform/functions");
 const { MeshoptDecoder } = require("meshoptimizer");
 
-export async function writeBlenderPreview(bytes, target) {
+export async function writeBlenderPreview(bytes, target, lightPreview) {
   await MeshoptDecoder.ready;
   const io = new NodeIO()
     .registerExtensions(ALL_EXTENSIONS)
@@ -64,6 +64,11 @@ export async function writeBlenderPreview(bytes, target) {
     for (const extension of doc.getRoot().listExtensionsUsed())
       if (extension.extensionName === "EXT_meshopt_compression")
         extension.dispose();
+    if (lightPreview) {
+      const { addLightEffectPreview } =
+        await import("./light_effect_preview.mjs");
+      addLightEffectPreview(doc, lightPreview.model, lightPreview.lights);
+    }
     await io.write(target, doc);
   } finally {
     await fs.rm(temporary, { recursive: true });

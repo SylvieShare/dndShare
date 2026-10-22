@@ -4,7 +4,11 @@ import numpy as np
 REFERENCE_TREES = {}
 
 def reference_key(ref):
-    return (ref['code'], ref.get('componentAboveMM'), ref.get('componentIndex', 0))
+    bounds = ref.get('componentBoundsMM')
+    bounded = bounds is not None
+    bounds = bounds or {}
+    return (ref['code'], ref.get('componentAboveMM'), ref.get('componentIndex', 0),
+            bounded, tuple(bounds.get('minMM', [])), tuple(bounds.get('maxMM', [])))
 
 def initialize_references(settings):
     import bpy, json, hashlib
@@ -12,24 +16,31 @@ def initialize_references(settings):
     from mathutils.bvhtree import BVHTree
     root = Path(__file__).resolve().parents[2]
     inventory = json.loads((root/'models/collections/medieval-town-vol1/inventory.json').read_text())
+    def load_ref(ref):
+        if not ref:
+            return
+        if 'componentBoundsMM' in ref and 'componentAboveMM' not in ref:
+            raise ValueError('Component bounds require a finite sampling height')
+        if reference_key(ref) in REFERENCE_TREES:
+            return
+        row = next(r for r in inventory if r['code']==ref['code'])
+        filename = root/'models'/row['sourcePath']
+        with filename.open('rb') as stream:
+            if row['sourceSHA256']!=ref['sourceSHA256'] or hashlib.file_digest(stream,'sha256').hexdigest()!=ref['sourceSHA256']:
+                raise ValueError('Source reference changed')
+        bpy.ops.wm.stl_import(filepath=str(filename))
+        other = bpy.context.object
+        if 'componentAboveMM' in ref:
+            from source_component_regions import source_component_tree
+            tree, stats = source_component_tree(other, ref['componentAboveMM'], ref.get('componentIndex', 0), ref.get('componentBoundsMM'))
+            print('MEDIEVAL_SOURCE_COMPONENT', ref['code'], stats, flush=True)
+        else:
+            tree = BVHTree.FromObject(other,bpy.context.evaluated_depsgraph_get())
+        REFERENCE_TREES[reference_key(ref)] = tree
+        bpy.data.objects.remove(other,do_unlink=True)
     def visit(part):
-        ref = part.get('awayFromSource')
-        if ref and reference_key(ref) not in REFERENCE_TREES:
-            row = next(r for r in inventory if r['code']==ref['code'])
-            filename = root/'models'/row['sourcePath']
-            with filename.open('rb') as stream:
-                if row['sourceSHA256']!=ref['sourceSHA256'] or hashlib.file_digest(stream,'sha256').hexdigest()!=ref['sourceSHA256']:
-                    raise ValueError('Source reference changed')
-            bpy.ops.wm.stl_import(filepath=str(filename))
-            other = bpy.context.object
-            if 'componentAboveMM' in ref:
-                from source_component_regions import source_component_tree
-                tree, stats = source_component_tree(other, ref['componentAboveMM'], ref.get('componentIndex', 0))
-                print('MEDIEVAL_SOURCE_COMPONENT', ref['code'], stats, flush=True)
-            else:
-                tree = BVHTree.FromObject(other,bpy.context.evaluated_depsgraph_get())
-            REFERENCE_TREES[reference_key(ref)] = tree
-            bpy.data.objects.remove(other,do_unlink=True)
+        load_ref(part.get('awayFromSource'))
+        load_ref(part.get('nearSource'))
         for child in part.get('includeParts', [])+part.get('excludeParts', []): visit(child)
     for key in ['woodParts','stoneParts','fabricParts','produceParts','surfaceParts','ironParts']:
         for part in settings.get(key, []): visit(part)
@@ -67,8 +78,11 @@ def domain(p, part):
         mask &= included
     for excluded in part.get('excludeParts', []):
         mask &= ~domain(p, excluded)
-    if part.get('awayFromSource'):
-        ref = part['awayFromSource']; tree = REFERENCE_TREES[reference_key(ref)]
+    for relation in ('awayFromSource', 'nearSource'):
+        ref = part.get(relation)
+        if not ref:
+            continue
+        tree = REFERENCE_TREES[reference_key(ref)]
         degrees = ref.get('rotationZDeg', 0)
         if not np.isfinite(degrees):
             raise ValueError('Finite source rotation required')
@@ -84,7 +98,8 @@ def domain(p, part):
             points[:, 1] *= -1
         candidates = np.flatnonzero(mask)
         for i in candidates:
-            mask[i] = tree.find_nearest(tuple(points[i]),ref['matchMM'])[0] is None
+            hit = tree.find_nearest(tuple(points[i]),ref['matchMM'])[0]
+            mask[i] = (hit is None) if relation=='awayFromSource' else (hit is not None)
     return mask
 
 

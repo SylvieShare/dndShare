@@ -7,6 +7,68 @@ import { createHash } from "node:crypto";
 import { initializeStructureReferences } from "./medieval_source_reference.mjs";
 import { structureDomain } from "./medieval_structure_domains.mjs";
 
+test("near-source component references select the sculpt without selecting neighbouring stone", async () => {
+  const directory = await fs.mkdtemp(
+    path.join(os.tmpdir(), "medieval-near-component-"),
+  );
+  try {
+    const base = path.join(directory, "models/collections/test");
+    await fs.mkdir(base, { recursive: true });
+    const triangles = [
+      [
+        [-1, -1, 2],
+        [1, -1, 2],
+        [0, 1, 2],
+      ],
+      [
+        [9, -1, 2],
+        [11, -1, 2],
+        [9, 1, 2],
+      ],
+      [
+        [11, -1, 2],
+        [11, 1, 2],
+        [9, 1, 2],
+      ],
+    ];
+    const bytes = Buffer.alloc(84 + triangles.length * 50);
+    bytes.writeUInt32LE(triangles.length, 80);
+    triangles.forEach((t, i) =>
+      t
+        .flat()
+        .forEach((v, c) => bytes.writeFloatLE(v, 84 + i * 50 + 12 + c * 4)),
+    );
+    const sourceSHA256 = createHash("sha256").update(bytes).digest("hex"),
+      sourcePath = "collections/test/source.stl";
+    await fs.writeFile(path.join(directory, "models", sourcePath), bytes);
+    const inventory = path.join(base, "inventory.json");
+    await fs.writeFile(
+      inventory,
+      JSON.stringify([{ code: "source", sourcePath, sourceSHA256 }]),
+    );
+    const part = {
+      minMM: [-2, -2, 0],
+      maxMM: [12, 2, 3],
+      nearSource: {
+        code: "source",
+        sourceSHA256,
+        matchMM: 0.01,
+        componentAboveMM: 1,
+        componentIndex: 0,
+        componentBoundsMM: { minMM: [-2, -2, 1], maxMM: [2, 2, 3] },
+        projectTo: { code: "source", sourceSHA256 },
+      },
+    };
+    await initializeStructureReferences({ surfaceParts: [part] }, inventory);
+    const sample = [0, 0, 1.97];
+    assert.equal(structureDomain(sample, part), true);
+    assert.deepEqual(sample, [0, 0, 1.97]);
+    assert.equal(structureDomain([10, 0, 2], part), false);
+  } finally {
+    await fs.rm(directory, { recursive: true, force: true });
+  }
+});
+
 test("source projection preserves displaced stone while identifying added water", async () => {
   const directory = await fs.mkdtemp(
     path.join(os.tmpdir(), "medieval-reference-"),
@@ -136,7 +198,11 @@ test("a rotated reference protects the aligned wall and retains added geometry",
     );
     const reflected = {
       ...part,
-      awayFromSource: { ...part.awayFromSource, rotationZDeg: 0, mirrorY: true },
+      awayFromSource: {
+        ...part.awayFromSource,
+        rotationZDeg: 0,
+        mirrorY: true,
+      },
     };
     await initializeStructureReferences({ woodParts: [reflected] }, inventory);
     assert.equal(structureDomain([0.2, -0.2, 0], reflected), false);
@@ -146,12 +212,26 @@ test("a rotated reference protects the aligned wall and retains added geometry",
       awayFromSource: { ...part.awayFromSource, mirrorY: true },
     };
     await initializeStructureReferences({ woodParts: [composed] }, inventory);
-    assert.equal(structureDomain([0.2, 0.2, 0], composed), false,
-      'Undo rotation before undoing the source reflection');
+    assert.equal(
+      structureDomain([0.2, 0.2, 0], composed),
+      false,
+      "Undo rotation before undoing the source reflection",
+    );
     assert.equal(structureDomain([-0.2, 0.2, 0], composed), true);
-    await assert.rejects(initializeStructureReferences({ woodParts: [{
-      ...reflected, awayFromSource: { ...reflected.awayFromSource, mirrorY: 'yes' },
-    }] }, inventory), /Boolean source mirror/);
+    await assert.rejects(
+      initializeStructureReferences(
+        {
+          woodParts: [
+            {
+              ...reflected,
+              awayFromSource: { ...reflected.awayFromSource, mirrorY: "yes" },
+            },
+          ],
+        },
+        inventory,
+      ),
+      /Boolean source mirror/,
+    );
   } finally {
     await fs.rm(directory, { recursive: true, force: true });
   }

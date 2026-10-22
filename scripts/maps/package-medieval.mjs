@@ -6,18 +6,19 @@ import { createRequire } from 'node:module';
 import { currentModel } from './current_model.mjs';
 import { medievalCatalogue } from './medieval_catalogue.mjs';
 import { prepareMedievalShadow } from './medieval_shadow.mjs';
-import { rasterizeSurface, seedSurfaceGutters, extendUvGutters } from './uv_surface.mjs';
+import { rasterizeSurface, seedSurfaceGutters, extendUvGutters, clearUnusedTexturePixels } from './uv_surface.mjs';
 import { uvSurfaceTracker } from './uv_surface_overlap.mjs';
 import { torchSurface, torchFlameDomain } from './medieval_torch_domains.mjs';
-import { structureMetal, structureLiquid, structureFlame, structureEmissionFlame, structureGlass, structureSurfacePigment, structureWoodPigment, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
+import { structureMetal, structureLiquid, structureFlame, structureEmissionFlame, structureGlass, structureSurfacePigment, structureWoodPigment, structureStonePigment, bakedColourShade, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
 import { initializeStructureReferences } from './medieval_source_reference.mjs';
-import { medievalTextureSizes } from './medieval_texture_sizes.mjs';
+import { medievalTextureSizes, medievalColourQuality } from './medieval_texture_sizes.mjs';
 import { reviewedMountAssetHash } from './reviewed_mount_asset.mjs';
-import { stripSculptedFlames } from './model_flame_geometry.mjs';
+import { stripSculptedFlames, retainPaintForFlameClipping } from './model_flame_geometry.mjs';
 import { addLightEffectPreview } from './light_effect_preview.mjs';
 import { addModelWaterMask } from './model_water_mask.mjs';
 import { validateReceiverReport } from './receiver_frame_review.mjs';
 import { reviewedMedievalPreview } from './medieval_preview_review.mjs';
+import { addFireboxBackstop } from './firebox_backstop.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const base = path.join(root, 'models/collections/medieval-town-vol1');
@@ -54,6 +55,14 @@ if (!process.argv.includes('--publish-manifest')) {
       uvSurfaceTracker(report.recipe[tier+'BakeSize'], report.recipe[tier+'BakeSize']));
     const packedCoverage = rasterizeSurface(doc, size, size, uvSurfaceTracker(size, size));
     if (!bakedCoverage.some(Boolean) || !packedCoverage.some(Boolean)) throw new Error('UV has no physical surface pixels: '+tier);
+    if (recipe.proceduralFire) {
+      retainPaintForFlameClipping(doc);
+      report.flameRemovalGeometryReview = stripSculptedFlames(doc, recipe.materials, 0, tier);
+      await doc.transform(prune({ keepAttributes: true }));
+    }
+    const paintSettings=recipe.proceduralFire
+      ? { ...recipe.materials, surfaceParts: (recipe.materials.surfaceParts || []).filter(part=>part.kind!=='flame') }
+      : recipe.materials;
     const materials = doc.getRoot().listMaterials();
     const normal = new Set(materials.map(m => m.getNormalTexture()));
     const colour = new Set(materials.map(m => m.getBaseColorTexture()));
@@ -73,14 +82,24 @@ if (!process.argv.includes('--publish-manifest')) {
       }
       let coverage = rasterizeSurface(doc, pixels, pixels, () => {}, slot);
       if (colour.has(texture)) {
+        const bakedColour = recipe.materials.physicalStonePigment || recipe.materials.preservePhysicalWoodShade ? Buffer.from(data) : null;
         const pigment = (i,p,n,rgba) => {
           if (!rgba) throw new Error('Measured Paint attribute required for colour gutters');
-          const wood = structureWoodPigment(p,n,recipe.materials);
-          if (wood) rgba = wood.map(v => v<=.04045 ? v/12.92 : ((v+.055)/1.055)**2.4);
-          const liquid = structureLiquid(p, recipe.materials) || structureFlame(p, recipe.materials) || structureGlass(p, recipe.materials);
-          const fabric = structureFabricPigment(p, recipe.materials);
+          const originalColour=rgba;
+          const stone = structureStonePigment(p,paintSettings);
+          if (stone) {
+            const shade=bakedColourShade(bakedColour.subarray(i*3,i*3+3),rgba);
+            rgba=stone.map(v=>(v<=.04045?v/12.92:((v+.055)/1.055)**2.4)*shade);
+          }
+          const wood = structureWoodPigment(p,n,paintSettings);
+          if (wood) {
+            const shade=recipe.materials.preservePhysicalWoodShade ? bakedColourShade(bakedColour.subarray(i*3,i*3+3),originalColour) : 1;
+            rgba = wood.map(v => (v<=.04045 ? v/12.92 : ((v+.055)/1.055)**2.4)*shade);
+          }
+          const liquid = structureLiquid(p, paintSettings) || structureFlame(p, paintSettings) || structureGlass(p, paintSettings);
+          const fabric = structureFabricPigment(p, paintSettings);
           if (fabric) rgba = fabric.map(v => v<=.04045 ? v/12.92 : ((v+.055)/1.055)**2.4);
-          const surfacePigment = structureSurfacePigment(p, recipe.materials);
+          const surfacePigment = structureSurfacePigment(p, paintSettings);
           if (surfacePigment) rgba = surfacePigment.map(v => v<=.04045 ? v/12.92 : ((v+.055)/1.055)**2.4);
           if (liquid) {
             const variation = 1+(liquid.variation ?? .025)*Math.sin(p[0]*1.73+p[1]*2.31+p[2]*1.17);
@@ -94,9 +113,9 @@ if (!process.argv.includes('--publish-manifest')) {
             data[i*3+c] = Math.round((v<=.0031308 ? v*12.92 : 1.055*v**(1/2.4)-.055)*255);
           }
         };
-        if (recipe.materials.woodParts?.some(p => p.physicalPigment) || recipe.materials.fabricParts?.length || recipe.materials.produceParts?.length || recipe.materials.surfaceParts?.some(p => ['liquid','flame','glass','ceramic','paint','foam','plaster'].includes(p.kind))) {
+        if (recipe.materials.physicalStonePigment || recipe.materials.woodParts?.some(p => p.physicalPigment) || recipe.materials.fabricParts?.length || recipe.materials.produceParts?.length || recipe.materials.surfaceParts?.some(p => ['liquid','flame','glass','ceramic','paint','foam','plaster'].includes(p.kind))) {
           rasterizeSurface(doc,pixels,pixels,(i,p,n,rgba) => {
-            if (structureWoodPigment(p,n,recipe.materials) || structureLiquid(p,recipe.materials) || structureFlame(p,recipe.materials) || structureGlass(p,recipe.materials) || structureSurfacePigment(p,recipe.materials) || structureFabricPigment(p,recipe.materials) || shouldRepairGreenSpill(data.subarray(i*3,i*3+3),rgba,p,recipe.materials)) pigment(i,p,n,rgba);
+            if (structureStonePigment(p,paintSettings) || structureWoodPigment(p,n,paintSettings) || structureLiquid(p,paintSettings) || structureFlame(p,paintSettings) || structureGlass(p,paintSettings) || structureSurfacePigment(p,paintSettings) || structureFabricPigment(p,paintSettings) || shouldRepairGreenSpill(data.subarray(i*3,i*3+3),rgba,p,paintSettings)) pigment(i,p,n,rgba);
           },slot,'COLOR_1');
         }
         coverage = seedSurfaceGutters(doc,pixels,pixels,coverage,pigment,1,slot,'COLOR_1');
@@ -111,13 +130,13 @@ if (!process.argv.includes('--publish-manifest')) {
           }
           if (!used) data[i*3] = 255;
           if (recipe.materials.kind==='structure') {
-            const channels = structureMetal(p, recipe.materials);
+            const channels = structureMetal(p, paintSettings);
             data[i*3+1] = Math.round(channels.roughness*255);
             data[i*3+2] = Math.round(channels.metallic*255);
             return;
           }
           if (recipe.materials.kind==='torch') {
-            const channels = torchSurface(p, recipe.materials);
+            const channels = torchSurface(p, paintSettings);
             data[i*3+1] = Math.round(channels.roughness*255);
             data[i*3+2] = Math.round(channels.metallic*255);
             return;
@@ -135,17 +154,20 @@ if (!process.argv.includes('--publish-manifest')) {
       }
       if (emissive.has(texture) && recipe.materials.kind==='structure') {
         coverage = rasterizeSurface(doc,pixels,pixels,(i,p) => {
-          const flame = structureEmissionFlame(p,recipe.materials);
+          const flame = structureEmissionFlame(p,paintSettings);
           for (let c=0;c<3;c++) data[i*3+c]=flame ? Math.round(flame.rgb[c]*255) : 0;
         },slot);
         coverage = seedSurfaceGutters(doc,pixels,pixels,coverage,(i,p) => {
-          const flame = structureEmissionFlame(p,recipe.materials);
+          const flame = structureEmissionFlame(p,paintSettings);
           for (let c=0;c<3;c++) data[i*3+c]=flame ? Math.round(flame.rgb[c]*255) : 0;
         },1,slot);
       }
-      extendUvGutters(data, info.channels, coverage.slice(), pixels, pixels, 4);
+      const paddedCoverage=coverage.slice();
+      extendUvGutters(data, info.channels, paddedCoverage, pixels, pixels, 4);
+      if (recipe.proceduralFire) clearUnusedTexturePixels(data, info.channels, paddedCoverage,
+        colour.has(texture) ? [0,0,0] : normal.has(texture) ? [128,128,255] : orm.has(texture) ? [255,255,0] : [0,0,0]);
       const pipeline = sharp(data, { raw: info });
-      const bytes = await (colour.has(texture) ? pipeline.jpeg({ quality: 94, chromaSubsampling: '4:4:4' }) : pipeline.png()).toBuffer();
+      const bytes = await (colour.has(texture) ? pipeline.jpeg({ quality: medievalColourQuality(recipe,tier), chromaSubsampling: '4:4:4' }) : pipeline.png()).toBuffer();
       const decoded = await sharp(bytes).removeAlpha().raw().toBuffer();
       for (let i = 0; i < coverage.length; i++) if (coverage[i]) {
         if (colour.has(texture) && Math.max(...decoded.subarray(i*3, i*3+3))<4) {
@@ -166,12 +188,12 @@ if (!process.argv.includes('--publish-manifest')) {
       }
       texture.setImage(bytes).setMimeType(colour.has(texture) ? 'image/jpeg' : 'image/png');
     }
-    if (recipe.proceduralFire) {
-      stripSculptedFlames(doc, recipe.materials);
-      await doc.transform(prune({ keepAttributes: true }));
-    }
     for (const mesh of doc.getRoot().listMeshes()) for (const p of mesh.listPrimitives()) {
       for (const semantic of p.listSemantics()) if (semantic.startsWith('COLOR_')) p.setAttribute(semantic, null);
+    }
+    if (recipe.fireboxBackstop) {
+      if (!recipe.proceduralFire) throw new Error('Firebox backstop requires reviewed procedural fire');
+      report.fireboxBackstopReview = addFireboxBackstop(doc, recipe.fireboxBackstop, recipe);
     }
     const before = getBounds(doc.getRoot().listScenes()[0]);
     if (recipe.waterAnimation) addModelWaterMask(doc, recipe.materials);
@@ -187,7 +209,7 @@ if (!process.argv.includes('--publish-manifest')) {
     for (const side of ['min', 'max']) for (let i = 0; i < 3; i++) {
       if (Math.abs(before[side][i]-after[side][i])>.0002) throw new Error('Packaging changed bounds');
     }
-    tiers[tier] = { bytes: final.length, triangles: report.triangles, colourSize: size, normalORMSize: dataSize,
+    tiers[tier] = { bytes: final.length, triangles: report.triangles, colourSize: size, colourQuality: medievalColourQuality(recipe,tier), normalORMSize: dataSize,
       ...(recipe.materials.torch?.flameReference || recipe.materials.surfaceParts?.some(p => p.kind==='flame') ? { emissiveSize: size, emissiveFormat: 'PNG sRGB' } : {}),
       blackSurfacePixels: 0, invalidNormalPixels: 0, bounds: after, quality: report.quality };
     console.log('MEDIEVAL_PACKAGED', code, tier, tiers[tier].triangles, final.length);

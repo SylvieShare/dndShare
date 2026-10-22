@@ -21,11 +21,22 @@ if (glassCount) for (const tier of ['render','lod']) {
   for (const pane of selected.glassPixelReview[tier]) assert.ok(pane.greenRatio>=1.1 && pane.deviationMM<=.15 && pane.normalFacing>=.5,'Glass pane lost colour or shape');
 }
 const flames = selected.recipe.materials.surfaceParts?.filter(p => p.kind==='flame') || [];
-if (flames.length) for (const tier of ['render','lod']) {
+if (flames.length && !selected.recipe.proceduralFire) for (const tier of ['render','lod']) {
   const evidence = selected.materialChannelReview?.[tier];
   assert.equal(selected.materialChannelAssets?.[tier],createHash('sha256').update(await fs.readFile(path.join(source,tier+'.glb'))).digest('hex'),'Flame QA differs from selected resources');
   assert.equal(evidence?.emissionOutsideFlame,0,'Unverified flame boundaries');
   for (const part of flames) assert.ok(evidence?.flamePartSamples?.[part.name]>=10,'Unverified flame: '+part.name);
+}
+if (selected.recipe.proceduralFire) for (const tier of ['render','lod','shadow']) {
+  const review=selected.fireRemovalReview?.[tier];
+  assert.equal(review?.sha256,createHash('sha256').update(await fs.readFile(path.join(source,tier+'.glb'))).digest('hex'),'Procedural fire QA differs from selected resources');
+  assert.ok(review.forwardClear && review.removedFlameRays?.length,'Verify sculpted-fire removal and light clearance before selection');
+  if (tier!=='shadow') {
+    assert.equal(selected.materialChannelAssets?.[tier],review.sha256,'Procedural body material QA is stale');
+    assert.equal(selected.materialChannelReview?.[tier]?.metalDomainMismatches,0);
+    assert.equal(selected.materialChannelReview?.[tier]?.roughnessDomainMismatches,0);
+    assert.equal(selected.materialChannelReview?.[tier]?.emissionOutsideFlame,0);
+  }
 }
 if (liquidCount) for (const tier of ['render','lod']) {
   assert.equal(selected.liquidPixelReview?.[tier]?.length,liquidCount,'Validate every liquid floor before selection');

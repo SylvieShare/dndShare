@@ -233,3 +233,10 @@ export function extendUvGutters(
     coverage.set(next);
   }
 }
+
+export function clearUnusedTexturePixels(data, channels, coverage, value) {
+  if (!Number.isInteger(channels) || channels<1 || data.length!==coverage.length*channels || value.length!==channels || !value.every(v=>Number.isInteger(v)&&v>=0&&v<=255)) throw new Error('Valid texture dimensions and neutral pixel required');
+  let cleared=0;
+  for(let i=0;i<coverage.length;i++)if(!coverage[i]){for(let c=0;c<channels;c++)data[i*channels+c]=value[c];cleared++;}
+  return cleared;
+}

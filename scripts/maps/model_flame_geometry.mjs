@@ -2,8 +2,32 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { structureDomain } from "./medieval_structure_domains.mjs";
+import { clipMeasuredFlameBoundaries } from "./flame_boundary_clip.mjs";
 
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
+
+export function retainPaintForFlameClipping(document) {
+  for (const mesh of document.getRoot().listMeshes())
+    for (const primitive of mesh.listPrimitives()) {
+      for (const semantic of primitive.listSemantics()) {
+        if (!semantic.startsWith("COLOR_")) continue;
+        if (semantic !== "COLOR_1") {
+          primitive.setAttribute(semantic, null);
+          continue;
+        }
+        const old = primitive.getAttribute(semantic);
+        if (old.getArray() instanceof Float32Array && !old.getNormalized())
+          continue;
+        const values = [];
+        for (let i = 0; i < old.getCount(); i++)
+          values.push(...old.getElement(i, []));
+        primitive.setAttribute(
+          semantic,
+          old.clone().setArray(new Float32Array(values)).setNormalized(false),
+        );
+      }
+    }
+}
 export function materialImages(document) {
   return document
     .getRoot()
@@ -61,11 +85,31 @@ export function triangleFingerprint(document, exclude = []) {
   return digest.digest("hex");
 }
 
-export function stripSculptedFlames(document, settings, nativeZShiftMM = 0) {
+export function stripSculptedFlames(
+  document,
+  settings,
+  nativeZShiftMM = 0,
+  tier,
+) {
   const parts = (settings.surfaceParts || []).filter((p) => p.kind === "flame");
   if (!parts.length) throw Error("Measured flame domains required");
   if ((settings.surfaceParts || []).some((p) => p.kind === "liquid"))
     throw Error("Other emissive surfaces need a separate review");
+  if (settings.flameBoundaryClip)
+    return clipMeasuredFlameBoundaries(
+      document,
+      (p) => parts.some((part) => structureDomain(p, part)),
+      [0, 0, nativeZShiftMM],
+      {
+        ...settings.flameBoundaryClip,
+        toleranceMM:
+          tier === "lod"
+            ? (settings.flameBoundaryClip.lodToleranceMM ??
+              settings.flameBoundaryClip.toleranceMM)
+            : settings.flameBoundaryClip.toleranceMM,
+        boundsMM: parts,
+      },
+    );
   return stripMeasuredFlames(
     document,
     (p) => parts.some((part) => structureDomain(p, part)),

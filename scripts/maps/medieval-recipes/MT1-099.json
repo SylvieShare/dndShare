@@ -1,0 +1,1762 @@
+{
+  "name": "Tall Pig Fireplace",
+  "groupCode": "MED-tall-pig-fireplace",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 140000,
+  "lodTriangles": 60000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1536,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "floor",
+    "tall",
+    "wall",
+    "fireplace",
+    "pig",
+    "stone",
+    "wood",
+    "plaster",
+    "iron",
+    "fire",
+    "logs"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.31,
+      0.3,
+      0.265
+    ],
+    "stoneLightRGB": [
+      0.58,
+      0.55,
+      0.48
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor X boards and north south rails",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          26.65
+        ],
+        "axis": "x",
+        "darkRGB": [
+          0.34,
+          0.165,
+          0.055
+        ],
+        "lightRGB": [
+          0.59,
+          0.35,
+          0.145
+        ],
+        "roughness": 0.9,
+        "physicalPigment": true
+      },
+      {
+        "name": "floor Y edge rail -17.7",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.7,
+          26.65
+        ],
+        "axis": "y",
+        "darkRGB": [
+          0.34,
+          0.165,
+          0.055
+        ],
+        "lightRGB": [
+          0.59,
+          0.35,
+          0.145
+        ],
+        "roughness": 0.9,
+        "physicalPigment": true
+      },
+      {
+        "name": "floor Y edge rail 14.3",
+        "minMM": [
+          14.3,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          26.65
+        ],
+        "axis": "y",
+        "darkRGB": [
+          0.34,
+          0.165,
+          0.055
+        ],
+        "lightRGB": [
+          0.59,
+          0.35,
+          0.145
+        ],
+        "roughness": 0.9,
+        "physicalPigment": true
+      },
+      {
+        "name": "south tall post",
+        "minMM": [
+          -17.65,
+          -17.65,
+          26.1
+        ],
+        "maxMM": [
+          -10.1,
+          -13.6,
+          89.2
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "north tall post",
+        "minMM": [
+          -17.65,
+          13.6,
+          26.1
+        ],
+        "maxMM": [
+          -10.1,
+          17.65,
+          89.2
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "measured rear crossbar",
+        "minMM": [
+          -17.65,
+          -13.8,
+          67
+        ],
+        "maxMM": [
+          -14,
+          13.8,
+          77
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0,
+          0.9997795798429648,
+          -0.020995040581641602
+        ],
+        "projection": {
+          "originMM": [
+            -17.305620075967074,
+            0.8328758152363613,
+            71.29757829036382
+          ],
+          "axis": [
+            0,
+            0.020995040581641602,
+            0.9997795798429648
+          ],
+          "rangeMM": [
+            -2.2412476034407582,
+            2.8985500205412773
+          ]
+        }
+      },
+      {
+        "name": "measured rear middle post",
+        "minMM": [
+          -17.65,
+          -2.6421000003814696,
+          26.1
+        ],
+        "maxMM": [
+          -14,
+          2.4397000312805175,
+          69.45633068692307
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "tilted vertical wooden trophy plaque",
+        "minMM": [
+          -4,
+          -10.6,
+          54.8
+        ],
+        "maxMM": [
+          4.5,
+          10.6,
+          79.65
+        ],
+        "axis": "beam",
+        "darkRGB": [
+          0.29,
+          0.135,
+          0.045
+        ],
+        "lightRGB": [
+          0.57,
+          0.32,
+          0.11
+        ],
+        "roughness": 0.9,
+        "direction": [
+          -0.23,
+          0,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            1,
+            0,
+            0.23
+          ],
+          "rangeMM": [
+            14.45,
+            16.55
+          ]
+        },
+        "excludeParts": [
+          {
+            "minMM": [
+              -5,
+              -11,
+              54
+            ],
+            "maxMM": [
+              5,
+              11,
+              80
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                -0.44,
+                1
+              ],
+              "rangeMM": [
+                79.85,
+                1000
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -5,
+              -11,
+              54
+            ],
+            "maxMM": [
+              5,
+              11,
+              80
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                0.44,
+                1
+              ],
+              "rangeMM": [
+                79.85,
+                1000
+              ]
+            }
+          }
+        ],
+        "physicalPigment": true
+      },
+      {
+        "name": "charred fuel bed and small fragments",
+        "minMM": [
+          -7.1,
+          -10.5,
+          28.05
+        ],
+        "maxMM": [
+          7.6,
+          8.8,
+          33.4
+        ],
+        "axis": "beam",
+        "darkRGB": [
+          0.07,
+          0.05,
+          0.03
+        ],
+        "lightRGB": [
+          0.16,
+          0.09,
+          0.035
+        ],
+        "roughness": 0.98,
+        "direction": [
+          1,
+          0,
+          0
+        ],
+        "physicalPigment": true
+      },
+      {
+        "name": "charred log shaft 1",
+        "minMM": [
+          -7.0,
+          -10.7,
+          27.8
+        ],
+        "maxMM": [
+          7.5,
+          8.3,
+          33.5
+        ],
+        "axis": "beam",
+        "darkRGB": [
+          0.105,
+          0.065,
+          0.028
+        ],
+        "lightRGB": [
+          0.29,
+          0.16,
+          0.065
+        ],
+        "roughness": 0.97,
+        "direction": [
+          0.8543914627969588,
+          -0.5196298955022439,
+          0.0
+        ],
+        "radialShell": {
+          "originMM": [
+            5.605068330710891,
+            -8.707580226962849,
+            30.797765505515923
+          ],
+          "axis": [
+            0.8543914627969588,
+            -0.5196298955022439,
+            0.0
+          ],
+          "rangeMM": [
+            -13,
+            1.7
+          ],
+          "radiusAtOriginMM": 3.2,
+          "radiusSlope": 0,
+          "thicknessMM": 3.2,
+          "allowanceMM": 0
+        },
+        "physicalPigment": true
+      },
+      {
+        "name": "log cut growth rings 1",
+        "minMM": [
+          -7.0,
+          -10.7,
+          27.8
+        ],
+        "maxMM": [
+          7.5,
+          8.3,
+          33.5
+        ],
+        "axis": "log-x",
+        "darkRGB": [
+          0.3,
+          0.18,
+          0.07
+        ],
+        "lightRGB": [
+          0.53,
+          0.34,
+          0.13
+        ],
+        "roughness": 0.94,
+        "radialShell": {
+          "originMM": [
+            5.605068330710891,
+            -8.707580226962849,
+            30.797765505515923
+          ],
+          "axis": [
+            0.8543914627969588,
+            -0.5196298955022439,
+            0.0
+          ],
+          "rangeMM": [
+            -13,
+            1.7
+          ],
+          "radiusAtOriginMM": 2.85,
+          "radiusSlope": 0,
+          "thicknessMM": 2.85,
+          "allowanceMM": 0
+        },
+        "projection": {
+          "originMM": [
+            5.605068330710891,
+            -8.707580226962849,
+            30.797765505515923
+          ],
+          "axis": [
+            0.7487967330607331,
+            -0.5917474076735239,
+            0.29856064387195724
+          ],
+          "rangeMM": [
+            -0.6,
+            0.6
+          ]
+        },
+        "capCentersMM": [
+          [
+            5.605068330710891,
+            -8.707580226962849,
+            30.797765505515923
+          ]
+        ],
+        "grainRadiusMM": 2.85,
+        "endRangesMM": [
+          [
+            -20,
+            20
+          ]
+        ],
+        "endDarkRGB": [
+          0.28,
+          0.155,
+          0.06
+        ],
+        "endLightRGB": [
+          0.57,
+          0.37,
+          0.145
+        ],
+        "endRoughness": 0.94,
+        "physicalPigment": true
+      },
+      {
+        "name": "charred log shaft 2",
+        "minMM": [
+          -7.0,
+          -10.7,
+          27.8
+        ],
+        "maxMM": [
+          7.5,
+          8.3,
+          33.5
+        ],
+        "axis": "beam",
+        "darkRGB": [
+          0.105,
+          0.065,
+          0.028
+        ],
+        "lightRGB": [
+          0.29,
+          0.16,
+          0.065
+        ],
+        "roughness": 0.97,
+        "direction": [
+          0.9003489528419438,
+          -0.43516866054027287,
+          0.0
+        ],
+        "radialShell": {
+          "originMM": [
+            3.9884422639725914,
+            -1.5199419006075658,
+            30.65691088958525
+          ],
+          "axis": [
+            0.9003489528419438,
+            -0.43516866054027287,
+            0.0
+          ],
+          "rangeMM": [
+            -13,
+            1.7
+          ],
+          "radiusAtOriginMM": 3.2,
+          "radiusSlope": 0,
+          "thicknessMM": 3.2,
+          "allowanceMM": 0
+        },
+        "physicalPigment": true
+      },
+      {
+        "name": "log cut growth rings 2",
+        "minMM": [
+          -7.0,
+          -10.7,
+          27.8
+        ],
+        "maxMM": [
+          7.5,
+          8.3,
+          33.5
+        ],
+        "axis": "log-x",
+        "darkRGB": [
+          0.3,
+          0.18,
+          0.07
+        ],
+        "lightRGB": [
+          0.53,
+          0.34,
+          0.13
+        ],
+        "roughness": 0.94,
+        "radialShell": {
+          "originMM": [
+            3.9884422639725914,
+            -1.5199419006075658,
+            30.65691088958525
+          ],
+          "axis": [
+            0.9003489528419438,
+            -0.43516866054027287,
+            0.0
+          ],
+          "rangeMM": [
+            -13,
+            1.7
+          ],
+          "radiusAtOriginMM": 2.75,
+          "radiusSlope": 0,
+          "thicknessMM": 2.75,
+          "allowanceMM": 0
+        },
+        "projection": {
+          "originMM": [
+            3.9884422639725914,
+            -1.5199419006075658,
+            30.65691088958525
+          ],
+          "axis": [
+            0.75314974943991,
+            -0.3417455390709826,
+            0.5621169286222254
+          ],
+          "rangeMM": [
+            -0.6,
+            0.6
+          ]
+        },
+        "capCentersMM": [
+          [
+            3.9884422639725914,
+            -1.5199419006075658,
+            30.65691088958525
+          ]
+        ],
+        "grainRadiusMM": 2.75,
+        "endRangesMM": [
+          [
+            -20,
+            20
+          ]
+        ],
+        "endDarkRGB": [
+          0.28,
+          0.155,
+          0.06
+        ],
+        "endLightRGB": [
+          0.57,
+          0.37,
+          0.145
+        ],
+        "endRoughness": 0.94,
+        "physicalPigment": true
+      },
+      {
+        "name": "side charred fuel piece",
+        "minMM": [
+          -6.8,
+          2.5,
+          28.2
+        ],
+        "maxMM": [
+          2.5,
+          8.2,
+          33.3
+        ],
+        "axis": "beam",
+        "darkRGB": [
+          0.12,
+          0.07,
+          0.03
+        ],
+        "lightRGB": [
+          0.31,
+          0.17,
+          0.065
+        ],
+        "roughness": 0.97,
+        "direction": [
+          0.92,
+          -0.35,
+          0.02
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -1.8,
+            5.0,
+            30.5
+          ],
+          "radiiMM": [
+            5.2,
+            2.8,
+            2.75
+          ]
+        },
+        "physicalPigment": true
+      },
+      {
+        "name": "small side fuel cut rings",
+        "minMM": [
+          2.2,
+          1.9,
+          28.05
+        ],
+        "maxMM": [
+          4.2,
+          4.5,
+          30.5
+        ],
+        "axis": "log-x",
+        "darkRGB": [
+          0.3,
+          0.18,
+          0.07
+        ],
+        "lightRGB": [
+          0.53,
+          0.34,
+          0.13
+        ],
+        "roughness": 0.94,
+        "ellipsoid": {
+          "centerMM": [
+            3.0,
+            3.3,
+            29.2
+          ],
+          "radiiMM": [
+            1.4,
+            1.2,
+            1.2
+          ]
+        },
+        "capCentersMM": [
+          [
+            3.0,
+            3.3,
+            29.2
+          ]
+        ],
+        "grainRadiusMM": 1.2,
+        "endRangesMM": [
+          [
+            -20,
+            20
+          ]
+        ],
+        "endDarkRGB": [
+          0.28,
+          0.155,
+          0.06
+        ],
+        "endLightRGB": [
+          0.57,
+          0.37,
+          0.145
+        ],
+        "endRoughness": 0.94,
+        "physicalPigment": true
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [],
+    "stoneParts": [
+      {
+        "name": "sooty firebox back stone",
+        "minMM": [
+          -9,
+          -9.4,
+          27.9
+        ],
+        "maxMM": [
+          -5.8,
+          9.4,
+          47.2
+        ],
+        "darkRGB": [
+          0.1,
+          0.09,
+          0.075
+        ],
+        "lightRGB": [
+          0.26,
+          0.24,
+          0.21
+        ]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "ochre plaster on both tall faces and top",
+        "kind": "plaster",
+        "minMM": [
+          -17.65,
+          -13.6,
+          26.6
+        ],
+        "maxMM": [
+          -10.1,
+          13.6,
+          89.2
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "south tall post",
+            "minMM": [
+              -17.65,
+              -17.65,
+              26.1
+            ],
+            "maxMM": [
+              -10.1,
+              -13.6,
+              89.2
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "north tall post",
+            "minMM": [
+              -17.65,
+              13.6,
+              26.1
+            ],
+            "maxMM": [
+              -10.1,
+              17.65,
+              89.2
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "measured rear crossbar",
+            "minMM": [
+              -17.65,
+              -13.8,
+              67
+            ],
+            "maxMM": [
+              -14,
+              13.8,
+              77
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0,
+              0.9997795798429648,
+              -0.020995040581641602
+            ],
+            "projection": {
+              "originMM": [
+                -17.305620075967074,
+                0.8328758152363613,
+                71.29757829036382
+              ],
+              "axis": [
+                0,
+                0.020995040581641602,
+                0.9997795798429648
+              ],
+              "rangeMM": [
+                -2.2412476034407582,
+                2.8985500205412773
+              ]
+            }
+          },
+          {
+            "name": "measured rear middle post",
+            "minMM": [
+              -17.65,
+              -2.6421000003814696,
+              26.1
+            ],
+            "maxMM": [
+              -14,
+              2.4397000312805175,
+              69.45633068692307
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "added fireplace stone preserves its own material",
+            "minMM": [
+              -17.7,
+              -17.7,
+              26.5
+            ],
+            "maxMM": [
+              12,
+              17.7,
+              89.5
+            ],
+            "awayFromSource": {
+              "code": "MT1-091",
+              "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+              "matchMM": 0.12,
+              "projectTo": {
+                "code": "MT1-099",
+                "sourceSHA256": "7b4052e093d61422c2bb87eb146407ebe74b336857312f4fb0c4c82a959e5963"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "warm exposed side fuel cut",
+        "kind": "paint",
+        "minMM": [
+          2.2,
+          1.9,
+          28.05
+        ],
+        "maxMM": [
+          4.2,
+          4.5,
+          30.5
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            3.0,
+            3.3,
+            29.2
+          ],
+          "radiiMM": [
+            1.55,
+            1.35,
+            1.3
+          ]
+        },
+        "rgb": [
+          0.42,
+          0.27,
+          0.12
+        ],
+        "roughness": 0.94,
+        "variation": 0.02
+      },
+      {
+        "name": "warm pink pig head including ear membranes",
+        "kind": "paint",
+        "minMM": [
+          -1,
+          -8.9,
+          59.1
+        ],
+        "maxMM": [
+          11.2,
+          8.9,
+          74.65
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            1,
+            0,
+            0.23
+          ],
+          "rangeMM": [
+            16.5,
+            100
+          ]
+        },
+        "rgb": [
+          0.76,
+          0.43,
+          0.37
+        ],
+        "roughness": 0.72,
+        "variation": 0.018
+      },
+      {
+        "name": "inner ear -1",
+        "kind": "paint",
+        "minMM": [
+          -1,
+          -9.4,
+          68.7
+        ],
+        "maxMM": [
+          3.3,
+          -4.199999999999999,
+          74.0
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            1.0,
+            -6.8,
+            71.3
+          ],
+          "radiiMM": [
+            2.0,
+            2.4,
+            2.5
+          ]
+        },
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            1,
+            0,
+            0.23
+          ],
+          "rangeMM": [
+            16.5,
+            100
+          ]
+        },
+        "rgb": [
+          0.58,
+          0.25,
+          0.23
+        ],
+        "roughness": 0.8,
+        "variation": 0.015
+      },
+      {
+        "name": "inner ear 1",
+        "kind": "paint",
+        "minMM": [
+          -1,
+          4.199999999999999,
+          68.7
+        ],
+        "maxMM": [
+          3.3,
+          9.4,
+          74.0
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            1.0,
+            6.8,
+            71.3
+          ],
+          "radiiMM": [
+            2.0,
+            2.4,
+            2.5
+          ]
+        },
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            1,
+            0,
+            0.23
+          ],
+          "rangeMM": [
+            16.5,
+            100
+          ]
+        },
+        "rgb": [
+          0.58,
+          0.25,
+          0.23
+        ],
+        "roughness": 0.8,
+        "variation": 0.015
+      },
+      {
+        "name": "pig snout and nose rim",
+        "kind": "paint",
+        "minMM": [
+          8.4,
+          -2.25,
+          66.8
+        ],
+        "maxMM": [
+          11.2,
+          2.25,
+          70.3
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            9.5,
+            0,
+            68.35
+          ],
+          "radiiMM": [
+            2,
+            2.1,
+            1.55
+          ]
+        },
+        "rgb": [
+          0.85,
+          0.38,
+          0.3
+        ],
+        "roughness": 0.68,
+        "variation": 0.015
+      },
+      {
+        "name": "deep nostril -1",
+        "kind": "paint",
+        "minMM": [
+          7.9,
+          -1.62,
+          67.45
+        ],
+        "maxMM": [
+          9.55,
+          -0.31999999999999995,
+          68.65
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            8.9,
+            -0.97,
+            68.05
+          ],
+          "radiiMM": [
+            1.1,
+            0.55,
+            0.48
+          ]
+        },
+        "rgb": [
+          0.22,
+          0.075,
+          0.055
+        ],
+        "roughness": 0.85,
+        "variation": 0.01
+      },
+      {
+        "name": "deep nostril 1",
+        "kind": "paint",
+        "minMM": [
+          7.9,
+          0.31999999999999995,
+          67.45
+        ],
+        "maxMM": [
+          9.55,
+          1.62,
+          68.65
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            8.9,
+            0.97,
+            68.05
+          ],
+          "radiiMM": [
+            1.1,
+            0.55,
+            0.48
+          ]
+        },
+        "rgb": [
+          0.22,
+          0.075,
+          0.055
+        ],
+        "roughness": 0.85,
+        "variation": 0.01
+      },
+      {
+        "name": "small dark pig eye left",
+        "kind": "paint",
+        "minMM": [
+          3.9013999999999998,
+          -3.6749,
+          69.9221
+        ],
+        "maxMM": [
+          5.501399999999999,
+          -2.5748999999999995,
+          70.9221
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            4.7014,
+            -3.1249,
+            70.4221
+          ],
+          "radiiMM": [
+            0.7,
+            0.42,
+            0.42
+          ]
+        },
+        "rgb": [
+          0.075,
+          0.05,
+          0.04
+        ],
+        "roughness": 0.48,
+        "variation": 0.01
+      },
+      {
+        "name": "small dark pig eye right",
+        "kind": "paint",
+        "minMM": [
+          4.0816,
+          2.7924999999999995,
+          69.8747
+        ],
+        "maxMM": [
+          5.6815999999999995,
+          3.8925,
+          70.8747
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            4.8816,
+            3.3425,
+            70.3747
+          ],
+          "radiiMM": [
+            0.7,
+            0.42,
+            0.42
+          ]
+        },
+        "rgb": [
+          0.075,
+          0.05,
+          0.04
+        ],
+        "roughness": 0.48,
+        "variation": 0.01
+      },
+      {
+        "name": "pig mouth crease",
+        "kind": "paint",
+        "minMM": [
+          9.2,
+          -2,
+          66.35
+        ],
+        "maxMM": [
+          10.9,
+          2,
+          66.9
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            10,
+            0,
+            66.6
+          ],
+          "radiiMM": [
+            1,
+            1.9,
+            0.22
+          ]
+        },
+        "rgb": [
+          0.3,
+          0.11,
+          0.075
+        ],
+        "roughness": 0.82,
+        "variation": 0.01
+      },
+      {
+        "name": "fireplace flames yellow base to orange tips",
+        "kind": "flame",
+        "minMM": [
+          -7,
+          -9.8,
+          29.9
+        ],
+        "maxMM": [
+          3.0,
+          8.6,
+          44.1
+        ],
+        "excludeParts": [
+          {
+            "minMM": [
+              -6.8,
+              2.5,
+              28.2
+            ],
+            "maxMM": [
+              2.5,
+              8.2,
+              33.3
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -1.8,
+                5.0,
+                30.5
+              ],
+              "radiiMM": [
+                5.2,
+                2.8,
+                2.75
+              ]
+            }
+          },
+          {
+            "minMM": [
+              2.2,
+              1.9,
+              28.05
+            ],
+            "maxMM": [
+              4.2,
+              4.5,
+              30.5
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                3.0,
+                3.3,
+                29.2
+              ],
+              "radiiMM": [
+                1.55,
+                1.35,
+                1.3
+              ]
+            }
+          }
+        ],
+        "awayFromSource": {
+          "code": "MT1-067",
+          "sourceSHA256": "6cf450b2421699c0820e81eb914fe0bbaa3a18ee0fe96fd03d61467080ba93e6",
+          "matchMM": 0.12,
+          "projectTo": {
+            "code": "MT1-099",
+            "sourceSHA256": "7b4052e093d61422c2bb87eb146407ebe74b336857312f4fb0c4c82a959e5963"
+          }
+        },
+        "rgb": [
+          1,
+          0.5,
+          0.05
+        ],
+        "emissionInsetMM": 0.015,
+        "gradientZMM": [
+          30,
+          43.9
+        ],
+        "gradientRGB": [
+          [
+            1,
+            0.72,
+            0.09
+          ],
+          [
+            1,
+            0.23,
+            0.025
+          ]
+        ],
+        "roughness": 0.9,
+        "variation": 0.025
+      },
+      {
+        "name": "dark iron hex left",
+        "kind": "paint",
+        "minMM": [
+          0.18445454583023535,
+          -6.340803016315807,
+          69.47169679583925
+        ],
+        "maxMM": [
+          2.1844545458302354,
+          -4.340803016315807,
+          71.47169679583925
+        ],
+        "radialShell": {
+          "originMM": [
+            1.1844545458302354,
+            -5.340803016315807,
+            70.47169679583925
+          ],
+          "axis": [
+            0.9576560258865356,
+            -0.2485906034708023,
+            0.14525042474269867
+          ],
+          "rangeMM": [
+            -0.35,
+            0.06
+          ],
+          "radiusAtOriginMM": 0.5761909952973578,
+          "radiusSlope": 0,
+          "thicknessMM": 1.5761909952973578,
+          "allowanceMM": 0.02
+        },
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ],
+        "roughness": 0.6,
+        "metallic": 0.8,
+        "variation": 0.02
+      },
+      {
+        "name": "dark iron hex right",
+        "kind": "paint",
+        "minMM": [
+          0.18421555360158282,
+          4.258717812432183,
+          69.45484381781684
+        ],
+        "maxMM": [
+          2.184215553601583,
+          6.258717812432183,
+          71.45484381781684
+        ],
+        "radialShell": {
+          "originMM": [
+            1.1842155536015828,
+            5.258717812432183,
+            70.45484381781684
+          ],
+          "axis": [
+            0.9579106569290161,
+            0.24895600974559784,
+            0.1429266333580017
+          ],
+          "rangeMM": [
+            -0.35,
+            0.06
+          ],
+          "radiusAtOriginMM": 0.6110763566441465,
+          "radiusSlope": 0,
+          "thicknessMM": 1.6110763566441464,
+          "allowanceMM": 0.02
+        },
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ],
+        "roughness": 0.6,
+        "metallic": 0.8,
+        "variation": 0.02
+      },
+      {
+        "name": "upper fire identified by its own sculpt component",
+        "kind": "flame",
+        "minMM": [
+          -3.2,
+          -6,
+          34.15
+        ],
+        "maxMM": [
+          3.1,
+          6,
+          44.05
+        ],
+        "rgb": [
+          1,
+          0.5,
+          0.05
+        ],
+        "emissionInsetMM": 0.015,
+        "gradientZMM": [
+          30,
+          43.9
+        ],
+        "gradientRGB": [
+          [
+            1,
+            0.72,
+            0.09
+          ],
+          [
+            1,
+            0.23,
+            0.025
+          ]
+        ],
+        "roughness": 0.9,
+        "variation": 0.025,
+        "nearSource": {
+          "code": "MT1-099",
+          "sourceSHA256": "7b4052e093d61422c2bb87eb146407ebe74b336857312f4fb0c4c82a959e5963",
+          "matchMM": 0.04,
+          "componentAboveMM": 34.3,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              -3,
+              -17.65,
+              34.3
+            ],
+            "maxMM": [
+              3.1,
+              17.65,
+              43.8
+            ]
+          },
+          "projectTo": {
+            "code": "MT1-099",
+            "sourceSHA256": "7b4052e093d61422c2bb87eb146407ebe74b336857312f4fb0c4c82a959e5963"
+          }
+        }
+      }
+    ],
+    "emissionStrength": 1.2,
+    "flameBoundaryClip": {
+      "toleranceMM": 0.025,
+      "preserveRegions": [
+        {
+          "minMM": [
+            -7.1,
+            -10.7,
+            27.8
+          ],
+          "maxMM": [
+            7.6,
+            8.8,
+            33.5
+          ]
+        },
+        {
+          "minMM": [
+            -9,
+            -9.4,
+            27.9
+          ],
+          "maxMM": [
+            -5.8,
+            9.4,
+            47.2
+          ]
+        }
+      ],
+      "lodToleranceMM": 0.05
+    },
+    "physicalStonePigment": true,
+    "preservePhysicalWoodShade": true
+  },
+  "weightBudget": {
+    "renderMiB": [
+      4,
+      11
+    ],
+    "lodMiB": [
+      2,
+      6.5
+    ],
+    "shadowKiB": [
+      140,
+      300
+    ],
+    "previewKiB": [
+      15,
+      50
+    ],
+    "basis": "35mm cell with89.0117mm wall and stone fireplace, tilted pig trophy, two measured hex fixings, small face details, charred logs and procedural fire. Source680008tri/34000484bytes.140000/60000 independent geometry,2048/1536 bakes and1536 render colour/data and1152 LOD colour/data; compare compact. Pin face features, preserve logs and remove only sculpted fire."
+  },
+  "reviewNotes": "Native full/front/back and close head/front/angle/under/firebox/chimney inspected. Source SHA7b4052e093d61422c2bb87eb146407ebe74b336857312f4fb0c4c82a959e5963,max89.011696mm. Three free native pointsX14,Y[-8.75,0,8.75] floorZ25.517372/24.645744/25.398003,normalZ>=.938957;centre andX8.75 centre are under the head. HighmaxX10.905800+.15 defines blocker;full westwall64. Own rearbar633samples centre71.297578,direction[0,.999780,-.020995],own middlepost1150samplesY[-2.4921,2.2897]. Head1136 samples andplaque1311 match66 within.043687/.046035mm;reuse measured tilted beam/log/face domains,not old rearwood boards. Common91 plaster protected from added fireplace through SHA-bound surface comparison;stone keeps66 palette andsooty firebox. Candidate100 reference rejected: known-solid distances reach.6409mm. Flame keeps proven raw67 counterpart,match.12/projectTo99 to cover small source drift;sidefuel excluded. Native hex planes measured33/45 surface samples withown normals,radii.551191/.586076;metal onlyfront.35mm depth,earmembranes remain skin. Slightly brighter dark eyes avoid prior JPEG black gutters. Pin eyes/nose/lips/hex geometry. proceduralFire removes sculpture from actualrender/LOD/shadow;defaultfire light/effect uses verified66 sizes/height,preview sample must survive mount normalization. Check body without fire andpreview with fire,actual packedchannels,clear light-forward ray,solid rearwall,firebox/logs,standpoints andbothcandidates beforefinalUD-0165.373095mm/receipt-bound transparentpreview/Go manifest/MCP confirmation. Body-off inspection proves sculptural fire is united with the rear volume,so removing it opens a view of the rear wooden post. Paired100 lacks a complete central inner wall as well. Reconstruct a closed,.2mm thin,nonemissive sooty backing slab behind all measured common-wall front surfaces:36666 source91 rays overY±9.4/Z27.9..47.2,with.05mm clearance. This preserves existing stone in front andfull recess depth rather than covering the front opening. Validate12 outward closed triangles,unchanged body attributes,closed rear rays andclear light-forward rays in render/LOD/shadow. Recheck66 for the same legacy defect after99. A static fuel point[-.100702,-5,31] is preserved in prepared geometry(.00060mm render drift) but whole-triangle flame deletion removes it(18.76mm ray drift). Opt into boundary clipping at.025mm in fuel/sooty-wall regions,retaining interpolated POSITION/NORMAL/UV on the nonflame portion;fully unaffected triangles retain original values. Packed stone samples at[5,78]/[1,81] show interpolated wood hue on actual stone. Opt into physical stone pigment at each texture pixel while retaining the baked luminance/vertex-colour shading ratio;wood/skin/iron domains stay excluded. Render flame boundary tolerance.025mm,LOD.05mm reduces surplus subdivision while remaining below native surface tolerances. A right-log cut sample[5.276493,-1,29] became grey in compact while its source domain is endgrain. Enable physical log-x growth rings using measured cap centres/end palettes andpreserve baked wood shading. Dark fuel channel ratios include4/255 JPEG absolute tolerance,avoiding unstable ratio-only checks on near-black pixels. Compact LOD JPEG94 turned a valid dark wood gutterRGB[12,6,3] atpixel[1059,82] into[3,0,0];use JPEG100 forLOD colour instead of changing its pigment or lowering the black-pixel gate. Render stays JPEG94. The counter-sculpt shares some coincident surfaces with real upper fire,so distance-only separation misses actual flame atY-1/Z42. Add own-source near-component mask:ROI X>-3,Z34.3..43.8 isolates3548 upper-fire vertices from separate3285/3180-vertex pillars;full touching source faces preserved,queries bounded to the measured central cavity. Verify Node/Blender component agreement. JPEG recompression probe foundquality98 withzero black covered pixels,minMax9,andlower size than100;validate direct encoding again. Full render1536 passes all pixel checks;uniform compact render1152 mixes skin at an eye boundary. ItsLOD1152 independently passes1627 pixel probes,so select an independent tier budget:render1536 andLOD1152 colour/data. Rebuild and validate the combined plan rather than copying QA hashes.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standRayTopMM": 110,
+  "renderUVAngleLimitRad": 0.18,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVAngleLimitRad": 0.18,
+  "lodUVIslandMargin": 0.0012,
+  "standPointsMM": [
+    [
+      14,
+      -8.75
+    ],
+    [
+      14,
+      0
+    ],
+    [
+      14,
+      8.75
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        -17.65,
+        -17.65
+      ],
+      [
+        11.055799865722657,
+        -17.65
+      ],
+      [
+        11.055799865722657,
+        17.65
+      ],
+      [
+        -17.65,
+        17.65
+      ]
+    ]
+  ],
+  "lodDataSize": 1152,
+  "lodColourSize": 1152,
+  "defaultLights": [
+    {
+      "key": "fireplace-fire",
+      "name": "Огонь камина",
+      "kind": "torch",
+      "color": "#ffb45a",
+      "position": [
+        0.557143,
+        0.5,
+        0.528571
+      ],
+      "intensity": 5,
+      "radius": 4,
+      "enabled": true,
+      "flicker": true,
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.46,
+          0.37
+        ],
+        "strength": 0.7,
+        "offset": [
+          -0.108572,
+          0,
+          -0.157142
+        ]
+      }
+    }
+  ],
+  "proceduralFire": true,
+  "renderColourSize": 1536,
+  "renderDataSize": 1536,
+  "surfaceHeightMM": 24.64574432373047,
+  "geometryDetailRegions": [
+    {
+      "name": "left eye and rim",
+      "minMM": [
+        3.5,
+        -3.9,
+        69.7
+      ],
+      "maxMM": [
+        5.9,
+        -2.2,
+        71.2
+      ]
+    },
+    {
+      "name": "right eye and rim",
+      "minMM": [
+        3.7,
+        2.4,
+        69.6
+      ],
+      "maxMM": [
+        6.1,
+        4.2,
+        71.2
+      ]
+    },
+    {
+      "name": "nostrils and snout",
+      "minMM": [
+        7.6,
+        -2.6,
+        66.6
+      ],
+      "maxMM": [
+        11.3,
+        2.6,
+        70.5
+      ]
+    },
+    {
+      "name": "mouth crease",
+      "minMM": [
+        8.7,
+        -2.4,
+        66
+      ],
+      "maxMM": [
+        11.3,
+        2.4,
+        67.2
+      ]
+    },
+    {
+      "name": "hex left and ear contact",
+      "minMM": [
+        0.7098000288009644,
+        -6.113799667358398,
+        69.6791976928711
+      ],
+      "maxMM": [
+        1.487599992752075,
+        -4.6897002220153805,
+        71.09149780273438
+      ]
+    },
+    {
+      "name": "hex right and ear contact",
+      "minMM": [
+        0.705400013923645,
+        4.362900161743164,
+        69.68160095214844
+      ],
+      "maxMM": [
+        1.4832999944686889,
+        5.812199974060059,
+        71.13149871826172
+      ]
+    }
+  ],
+  "fireboxBackstop": {
+    "minMM": [
+      -12.653091430664062,
+      -9.4,
+      27.9
+    ],
+    "maxMM": [
+      -12.453091430664063,
+      9.4,
+      47.2
+    ],
+    "measuredInnerWallMinXMM": -12.403091430664062,
+    "rgb": [
+      0.16,
+      0.145,
+      0.12
+    ],
+    "roughness": 0.91,
+    "measurementReference": {
+      "code": "MT1-091",
+      "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+      "samples": 36666,
+      "clearanceMM": 0.05
+    }
+  },
+  "lodColourQuality": 98
+}

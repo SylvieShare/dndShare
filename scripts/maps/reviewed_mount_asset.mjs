@@ -135,6 +135,7 @@ export async function reviewedMountAssetHash(report, tier, dir, expectedHash) {
       original,
       report.recipe.materials,
       report.recipe.mountDepthMM - report.model.mountDepth * 35,
+      tier,
     );
     assert.equal(
       triangleFingerprint(actual),

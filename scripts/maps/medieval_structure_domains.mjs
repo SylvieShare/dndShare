@@ -27,6 +27,7 @@ export function structureDomain(p, part) {
   if (part.includeParts?.length && !part.includeParts.some(child => structureDomain(p,child))) return false;
   if ((part.excludeParts || []).some(excluded => structureDomain(p,excluded))) return false;
   if (part.awayFromSource && !awayFromSource(p,part.awayFromSource)) return false;
+  if (part.nearSource && awayFromSource(p,part.nearSource)) return false;
   return true;
 }
 
@@ -121,6 +122,26 @@ export function structureSurfacePigment(p, settings) {
   return rgb.map(c => c*variation);
 }
 
+export function structureStonePigment(p, settings) {
+  if (!settings.physicalStonePigment) return null;
+  if (['fabricParts','produceParts','surfaceParts','ironParts'].some(key => (settings[key] || []).some(part => structureDomain(p,part))) || structureMetal(p,settings).metallic>.01) return null;
+  const part=(settings.stoneParts || []).findLast(part => structureDomain(p,part));
+  if (part) {
+    const variation=.5+.2*Math.sin(p[0]*.25+p[1]*.35+p[2]*.12);
+    return part.darkRGB.map((v,i)=>v*(1-variation)+part.lightRGB[i]*variation);
+  }
+  if (p[2]<settings.stoneStartMM+settings.stoneBlendMM || (settings.woodParts || []).some(part=>structureDomain(p,part))) return null;
+  const patch=.5+.23*Math.sin(p[0]*.23+p[1]*.31)+.16*Math.sin(p[0]*.49-p[1]*.19),grain=1+.035*Math.sin(p[0]*1.77+p[1]*1.39+p[2]*.53);
+  return settings.stoneDarkRGB.map((v,i)=>(v*(1-patch)+settings.stoneLightRGB[i]*patch)*grain);
+}
+
+export function bakedColourShade(bytes, vertexLinear) {
+  const linear=Array.from(bytes,v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});
+  const luminance=v=>v[0]*.2126+v[1]*.7152+v[2]*.0722;
+  const baked=luminance(linear),vertex=luminance(vertexLinear);
+  return baked>1e-8&&vertex>1e-8 ? Math.max(.45,Math.min(1.2,baked/vertex)) : 1;
+}
+
 export function structureWoodPigment(p, n, settings) {
   if (!settings.woodParts?.some(part => part.physicalPigment)) return null;
   const part = (settings.woodParts || []).findLast(part => structureDomain(p,part));
@@ -133,7 +154,17 @@ export function structureWoodPigment(p, n, settings) {
   const dot = (a,b) => a.reduce((sum,x,i) => sum+x*b[i],0);
   const cross = (a,b) => [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
   const unit = a => { const length=Math.hypot(...a); return a.map(x => x/length); };
-  if (part.axis==='x') { u=p[0]; v=Math.abs(n[1])>Math.abs(n[2]) ? p[2] : p[1]; }
+  if (part.axis==='log-x') {
+    assertLogCaps(part);
+    const centre=part.capCentersMM.reduce((best,c)=>Math.hypot(p[1]-c[1],p[2]-c[2])<Math.hypot(p[1]-best[1],p[2]-best[2])?c:best);
+    const dy=p[1]-centre[1],dz=p[2]-centre[2],angle=Math.atan2(dz,dy);
+    if (Math.abs(n[0])>.55 && part.endRangesMM.some(([lo,hi])=>p[0]>=lo&&p[0]<=hi)) {
+      const rings=.5+.24*Math.sin(Math.hypot(dy,dz)*5.8+.1*Math.sin(angle*3));
+      return part.endDarkRGB.map((c,i)=>c*(1-rings)+part.endLightRGB[i]*rings);
+    }
+    u=p[0];v=angle*part.grainRadiusMM;
+  }
+  else if (part.axis==='x') { u=p[0]; v=Math.abs(n[1])>Math.abs(n[2]) ? p[2] : p[1]; }
   else if (part.axis==='y') { u=p[1]; v=Math.abs(n[0])>Math.abs(n[2]) ? p[2] : p[0]; }
   else if (part.axis==='z') { u=p[2]; v=Math.abs(n[0])>Math.abs(n[1]) ? p[1] : p[0]; }
   else if (part.axis==='beam') {
@@ -152,6 +183,10 @@ export function structureWoodPigment(p, n, settings) {
   const endAxis={x:0,y:1,z:2}[part.axis];
   if (endAxis!==undefined && Math.abs(n[endAxis])>.75) variation*=.85+.15*Math.sin(Math.hypot(v,((u%4)+4)%4)*7);
   return dark.map((c,i) => (c*(1-grain)+light[i]*grain)*variation);
+}
+
+function assertLogCaps(part) {
+  if (!part.capCentersMM?.length || !part.capCentersMM.every(c=>c.length===3&&c.every(Number.isFinite)) || !Number.isFinite(part.grainRadiusMM) || part.grainRadiusMM<=0 || !part.endRangesMM?.length || !part.endDarkRGB || !part.endLightRGB) throw new Error('Measured log cap centres and palette required');
 }
 
 export function structureFabricPigment(p, settings) {
