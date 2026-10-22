@@ -8,6 +8,7 @@ export function documentMutationFixture(fields) {
   const before=content(record),next=applyDocumentPatches(copyDocument(before),packet.patches)
   // The real map DTO omits optional false fields when it is marshalled by Go.
   for(const tile of next.document?.tiles || []) if(tile.mirrored===false) delete tile.mirrored
+  if(Array.isArray(next.document?.cameras) && !next.document.cameras.length) delete next.document.cameras
   const saved={...record,...next,revision:record.revision+1,changedAt:new Date().toISOString()}
   const {name,document,state,routes,...metadata}=saved
   const response={fromVersion:record.revision,version:saved.revision,patches:documentDiff(before,next),metadata}

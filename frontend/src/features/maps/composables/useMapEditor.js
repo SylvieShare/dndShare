@@ -25,7 +25,7 @@ import { editorGestures } from "./editorGestures";
 import { editorTileDrag } from "./editorTileDrag";
 
 export function useMapEditor(source, onSaved, options = {}) {
-  const draft = ref(clone(source || newMap())),
+  const draft = ref(canonicalMapData(clone(source || newMap()))),
     tool = ref("select"),
     selectedModel = ref(""),
     placementRotation = ref(0),

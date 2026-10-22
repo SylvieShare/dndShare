@@ -1,9 +1,30 @@
 package battlemap
 
 import (
+	"encoding/json"
 	"math"
 	"testing"
 )
+
+func TestSceneCameraJSONRoundTrip(t *testing.T) {
+	for _, cameras := range [][]SceneCamera{nil, {}} {
+		raw, err := json.Marshal(Document{Cameras: cameras})
+		var fields map[string]json.RawMessage
+		if err != nil || json.Unmarshal(raw, &fields) != nil {
+			t.Fatalf("marshal empty cameras: %v", err)
+		}
+		if _, exists := fields["cameras"]; exists {
+			t.Fatal("empty cameras must be omitted")
+		}
+	}
+	want := SceneCamera{ID: "camera", Name: "Вход", View: testSceneView()}
+	want.View.Position = [3]float64{0, 1.23456789, 5}
+	raw, err := json.Marshal(Document{Cameras: []SceneCamera{want}})
+	var got Document
+	if err != nil || json.Unmarshal(raw, &got) != nil || len(got.Cameras) != 1 || got.Cameras[0] != want {
+		t.Fatalf("camera changed after JSON round trip: %+v, %v", got.Cameras, err)
+	}
+}
 
 func testSceneView() CameraView {
 	return CameraView{Position: [3]float64{4, 2, 5}, Target: [3]float64{4, 6, .44}, Up: [3]float64{0, 0, 1}, Width: 8, Aspect: 16.0 / 9}
