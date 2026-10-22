@@ -5,7 +5,8 @@ import { applyAreaOpacity } from "./areaOpacity";
 import { modelRaycast } from "./modelPicking";
 
 const matrix = new Matrix4(),
-  previous = new Matrix4();
+  previous = new Matrix4(),
+  reflection = new Matrix4().makeScale(-1, 1, 1);
 export function writeInstances(mesh, pose, indices) {
   let first = Infinity,
     last = 0;
@@ -16,6 +17,7 @@ export function writeInstances(mesh, pose, indices) {
   ) {
     const i = indices ? indices[n] : n;
     matrix.copy(pose(i)).multiply(mesh.userData.partMatrix);
+    if (mesh.userData.reflected) matrix.premultiply(reflection);
     mesh.getMatrixAt(i, previous);
     if (
       matrix.elements.every((v, n) => Math.fround(v) === previous.elements[n])
@@ -97,6 +99,8 @@ export function createModelBatches(root, assets, fog, kind) {
               capacity,
             );
             mesh.matrixAutoUpdate = false;
+            mesh.userData.reflected = !!group.reflected;
+            if (group.reflected) mesh.matrix.copy(reflection);
             mesh.raycast = modelRaycast;
             mesh.receiveShadow = true;
             mesh.instanceMatrix.setUsage(DynamicDrawUsage);

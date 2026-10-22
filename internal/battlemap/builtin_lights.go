@@ -15,12 +15,13 @@ func SyncBuiltinLights(d *Document, models map[string]ModelMetadata, behaviours 
 	}
 	type owner struct {
 		kind, id                    string
+		mirrored                    bool
 		model                       ModelMetadata
 		x, y, base, rotation, scale float64
 	}
 	owners := []owner{}
 	for _, t := range d.Tiles {
-		owners = append(owners, owner{"tile", t.ID, models[t.ModelID], float64(t.X), float64(t.Y), poses[t.ID].Elevation, float64(t.Rotation), 1})
+		owners = append(owners, owner{"tile", t.ID, t.Mirrored, models[t.ModelID], float64(t.X), float64(t.Y), poses[t.ID].Elevation, float64(t.Rotation), 1})
 	}
 	for _, o := range d.Objects {
 		base := .44
@@ -35,7 +36,7 @@ func SyncBuiltinLights(d *Document, models map[string]ModelMetadata, behaviours 
 				}
 			}
 		}
-		owners = append(owners, owner{"object", o.ID, models[o.ModelID], o.X, o.Y, base, o.Rotation, o.Scale})
+		owners = append(owners, owner{"object", o.ID, false, models[o.ModelID], o.X, o.Y, base, o.Rotation, o.Scale})
 	}
 	previous := map[string]Light{}
 	manual := []Light{}
@@ -72,7 +73,7 @@ func SyncBuiltinLights(d *Document, models map[string]ModelMetadata, behaviours 
 			if o.kind == "tile" {
 				x += o.model.PlacementOffset[0]
 				y += o.model.PlacementOffset[1]
-				x, y, _ = SurfacePosition(Tile{X: int(o.x), Y: int(o.y), Rotation: int(o.rotation)}, o.model, PlacementPoint{X: x, Y: y}, 0)
+				x, y, _ = SurfacePosition(Tile{X: int(o.x), Y: int(o.y), Rotation: int(o.rotation), Mirrored: o.mirrored}, o.model, PlacementPoint{X: x, Y: y}, 0)
 			} else {
 				x = (x - float64(o.model.Width)/2) * o.scale
 				y = (y - float64(o.model.Height)/2) * o.scale

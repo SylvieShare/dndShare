@@ -8,6 +8,9 @@ import (
 // Surface coordinates are local footprint cells; elevations include mounting depth.
 func SurfacePosition(tile Tile, model ModelMetadata, point PlacementPoint, elevation float64) (float64, float64, float64) {
 	x, y := point.X, point.Y
+	if tile.Mirrored {
+		x = float64(model.Width) - x
+	}
 	switch tile.Rotation {
 	case 90:
 		x, y = float64(model.Height)-y, x
@@ -69,6 +72,9 @@ func ValidateObjectModels(d Document, models map[string]ModelMetadata) error {
 // SurfaceCell returns the logical occupied cell, independent of the physical point.
 func SurfaceCell(tile Tile, model ModelMetadata, point PlacementPoint) GridCell {
 	x, y := point.Cell.X, point.Cell.Y
+	if tile.Mirrored {
+		x = model.Width - 1 - x
+	}
 	switch tile.Rotation {
 	case 90:
 		x, y = model.Height-1-y, x

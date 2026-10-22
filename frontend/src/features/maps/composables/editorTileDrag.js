@@ -6,6 +6,7 @@ import {
 import { dependentTiles, structureContext } from "../lib/tileStructure";
 import { groupRotationPivot, rotateMapGroup } from "../lib/mapGroupRotation";
 import { syncSurfaceObjects } from "../lib/surfacePlacement";
+import { mirrorTileGroup } from "../lib/mapGroupMirror";
 import { uid } from "../lib/mapModel";
 import { enclosedEmptyCells } from "../lib/enclosedTiles";
 
@@ -206,7 +207,8 @@ export function editorTileDrag(e) {
             old.x !== tile.x ||
             old.y !== tile.y ||
             old.level !== tile.level ||
-            old.rotation !== tile.rotation
+            old.rotation !== tile.rotation ||
+            !!old.mirrored !== !!tile.mirrored
           );
         });
         if (changed)
@@ -216,7 +218,10 @@ export function editorTileDrag(e) {
               if (old) {
                 const turn = tile.rotation - old.rotation;
                 for (const object of m.document.objects)
-                  if (object.placement?.tileId === tile.id)
+                  if (
+                    object.placement?.tileId === tile.id &&
+                    !!old.mirrored === !!tile.mirrored
+                  )
                     object.rotation = (object.rotation + turn + 360) % 360;
                 Object.assign(old, tile);
               } else m.document.tiles.push(tile);
@@ -265,5 +270,15 @@ export function editorTileDrag(e) {
     move(drag.point, { fill: drag.fill });
     return true;
   }
-  return { begin, move, drop, cancel, rotate };
+  function mirror() {
+    if (!drag) return false;
+    const id = drag.tile.id,
+      rootId = drag.root.id;
+    drag.tiles = mirrorTileGroup(drag.tiles, e.catalogue.value);
+    drag.tile = drag.tiles.find((t) => t.id === id);
+    drag.root = drag.tiles.find((t) => t.id === rootId);
+    move(drag.point, { fill: drag.fill });
+    return true;
+  }
+  return { begin, move, drop, cancel, rotate, mirror };
 }

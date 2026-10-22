@@ -1,3 +1,4 @@
+import { mirrorTileGroup } from "../lib/mapGroupMirror";
 import { copiedDecals } from "../lib/mapDecals";
 import {
   nearestSurface,
@@ -281,5 +282,22 @@ export function editorClipboard(e) {
     preview(lastPoint);
     return true;
   }
-  return { copy, preview, begin, paste, cancel, rotate };
+  function mirror() {
+    if (e.tool.value !== "paste" || !payload?.tiles.length) return false;
+    const tiles = mirrorTileGroup(payload.tiles, e.catalogue.value);
+    const model = new Map(e.catalogue.value.map((m) => [m.id, m]));
+    const first = payload.tiles[0],
+      next = tiles[0],
+      size = tileSize(first, model.get(first.modelId));
+    const axis = first.x + next.x + size.width;
+    payload = {
+      ...payload,
+      tiles,
+      objects: payload.objects.map((o) => ({ ...o, x: axis - o.x })),
+    };
+    e.placementHint.value = placementContext().hint;
+    preview(lastPoint);
+    return true;
+  }
+  return { copy, preview, begin, paste, cancel, rotate, mirror };
 }

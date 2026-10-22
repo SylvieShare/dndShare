@@ -1,5 +1,12 @@
 const poseKey = (tile) =>
-  [tile.modelId, tile.x, tile.y, tile.level, tile.rotation].join(":");
+  [
+    tile.modelId,
+    tile.x,
+    tile.y,
+    tile.level,
+    tile.rotation,
+    !!tile.mirrored,
+  ].join(":");
 
 // A committed catalogue tile receives a UUID only on drop. Existing UUIDs also
 // let cancellation animate back to the unchanged document rather than teleport.

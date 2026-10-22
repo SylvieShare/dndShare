@@ -47,6 +47,7 @@ type PlacementAnchor struct {
 }
 
 type Tile struct {
+	Mirrored    bool             `json:"mirrored,omitempty"`
 	ID          string           `json:"id"`
 	ModelID     string           `json:"modelId"`
 	X           int              `json:"x"`

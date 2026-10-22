@@ -84,3 +84,20 @@ describe("tile geometry picking", () => {
     expect(disposeMaterial).not.toHaveBeenCalled();
   });
 });
+it("mirrors an asymmetric tile with correct winding, picking and positive instance scales throughout the flip", () => {
+  const { layer, ray, tile } = setup();
+  layer.rebuild([{ ...tile, mirrored: true }], "lod");
+  const matrix = new Matrix4();
+  for (let i = 0; i < 12; i++) {
+    layer.advance(30);
+    for (const mesh of layer.root.children) {
+      mesh.getMatrixAt(0, matrix);
+      expect(matrix.determinant()).toBeGreaterThan(0);
+    }
+  }
+  expect(layer.hit(ray(1.9, 1.5))?.tileId).toBe("wall");
+  expect(layer.hit(ray(1.1, 1.5))).toBeNull();
+  const mesh = layer.root.children[0];
+  expect(mesh.matrixWorld.determinant()).toBeLessThan(0);
+  layer.destroy();
+});

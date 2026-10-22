@@ -4,6 +4,7 @@ import { hiddenAreaMembers } from "./mapAreas";
 export function surfacePosition(tile, model, point, elevation = 0) {
   let x = point.x,
     y = point.y;
+  if (tile.mirrored) x = model.width - x;
   if (tile.rotation === 90) [x, y] = [model.height - y, x];
   if (tile.rotation === 180) [x, y] = [model.width - x, model.height - y];
   if (tile.rotation === 270) [x, y] = [y, model.width - x];
@@ -15,6 +16,7 @@ export function surfacePosition(tile, model, point, elevation = 0) {
 }
 export function surfaceCell(tile, model, point) {
   let { x, y } = point.cell;
+  if (tile.mirrored) x = model.width - 1 - x;
   if (tile.rotation === 90) [x, y] = [model.height - 1 - y, x];
   if (tile.rotation === 180)
     [x, y] = [model.width - 1 - x, model.height - 1 - y];

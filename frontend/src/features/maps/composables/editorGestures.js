@@ -4,12 +4,14 @@ import { tileGroupStatus } from "../lib/tilePlacement";
 import { dependentTiles } from "../lib/tileStructure";
 import { editorClipboard } from "./editorClipboard";
 import { visibleModels } from "../lib/visibleModels";
+import { editorGroupMirror } from "./editorGroupMirror";
 import { editorGroupRotation } from "./editorGroupRotation";
 
 export function editorGestures(e) {
   let gesture = null;
   const clipboard = editorClipboard(e);
-  const rotateGroup = editorGroupRotation(e);
+  const rotateGroup = editorGroupRotation(e),
+    mirrorGroup = editorGroupMirror(e);
   const doc = () => e.draft.value.document;
   function resetGesture() {
     gesture = null;
@@ -304,6 +306,10 @@ export function editorGestures(e) {
   }
   return {
     handle,
+    mirror() {
+      if (clipboard.mirror() || e.tileDrag.mirror()) return;
+      mirrorGroup();
+    },
     copy: clipboard.copy,
     beginPaste: clipboard.begin,
     previewPaste: clipboard.preview,

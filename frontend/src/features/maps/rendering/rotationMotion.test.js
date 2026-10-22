@@ -77,3 +77,36 @@ it("writes an intermediate angle into the actual tile instance while preserving 
   geometry.dispose();
   material.dispose();
 });
+it("squeezes and unfolds a reflection without restarting on repeated preview updates", () => {
+  const motion = createRotationMotion();
+  const tile = { x: 2, y: 3, elevation: 0, rotation: 90 };
+  motion.set("a", tile);
+  const target = { ...tile, rotation: 270, mirrored: true };
+  motion.set("a", target);
+  motion.advance(30);
+  expect(motion.pose("a").mirrorScale).toBeLessThan(1);
+  for (let n = 0; n < 12; n++) {
+    motion.set("a", target);
+    motion.advance(30);
+  }
+  expect(motion.isMoving()).toBe(false);
+  expect(motion.pose("a")).toMatchObject({ mirrored: true, mirrorScale: 1 });
+  motion.set("a", tile);
+  motion.advance(280);
+  expect(motion.pose("a").mirrored).toBe(false);
+});
+
+it("finishes reflection immediately for reduced motion", () => {
+  const original = globalThis.matchMedia;
+  globalThis.matchMedia = () => ({ matches: true });
+  try {
+    const m = createRotationMotion();
+    m.set("a", { x: 0, y: 0, rotation: 0 });
+    m.set("a", { x: 0, y: 0, rotation: 0, mirrored: true });
+    expect(m.advance(16)).toBe(false);
+    expect(m.pose("a").mirrored).toBe(true);
+    expect(m.pose("a").mirrorScale).toBe(1);
+  } finally {
+    globalThis.matchMedia = original;
+  }
+});

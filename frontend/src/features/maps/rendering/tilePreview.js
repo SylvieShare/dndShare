@@ -7,9 +7,11 @@ import { modelWaterMaterial } from "./modelWater";
 
 export function createTilePreview(assets, onSettled = () => {}) {
   const root = new Group(),
-    matrix = new Matrix4();
+    matrix = new Matrix4(),
+    reflection = new Matrix4().makeScale(-1, 1, 1);
   const rotation = createRotationMotion();
-  let key = "",
+  let currentTier = "render",
+    key = "",
     target = null,
     position = null,
     active = false,
@@ -30,6 +32,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
     root.clear();
   }
   function update(tile, placed = [], tier = "render") {
+    currentTier = tier;
     if (tile) {
       if (!active && (!tile.id || tile.id !== target?.id)) {
         position = null;
@@ -81,9 +84,25 @@ export function createTilePreview(assets, onSettled = () => {}) {
           ? "hover"
           : "selected";
     const group = tile?.group || (tile ? [tile] : []);
+    rebuild(group, tier);
+    root.visible = !!tile;
+    if (!tile) {
+      position = null;
+      return;
+    }
+    position ||= { x: tile.x, y: tile.y, elevation: tile.elevation || 0 };
+  }
+  function visualMirror(tile) {
+    return (
+      rotation.pose(tile.id || (target?.group || [target]).indexOf(tile))
+        ?.mirrored ?? !!tile.mirrored
+    );
+  }
+  function rebuild(group, tier) {
     const nextKey = JSON.stringify(
       group.map((t) => [
         t.modelId,
+        visualMirror(t),
         tier,
         assets.metadata(t.modelId)?.[`${tier}Url`],
         visualSignature(assets, new Set([t.modelId]), tier),
@@ -95,7 +114,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
       key = nextKey;
       const buckets = new Map();
       group.forEach((tile, index) => {
-        const bucket = tile.modelId;
+        const bucket = `${tile.modelId}:${visualMirror(tile)}`;
         if (!buckets.has(bucket)) buckets.set(bucket, []);
         buckets.get(bucket).push(index);
       });
@@ -123,19 +142,21 @@ export function createTilePreview(assets, onSettled = () => {}) {
             Array.isArray(part.material) ? materials : materials[0],
             indices.length,
           );
+          mesh.matrixAutoUpdate = false;
+          const reflected = visualMirror(group[indices[0]]);
+          if (reflected) mesh.matrix.copy(reflection);
           mesh.receiveShadow = true;
           mesh.frustumCulled = false;
-          mesh.userData = { partMatrix: part.matrix, metadata, indices };
+          mesh.userData = {
+            partMatrix: part.matrix,
+            metadata,
+            indices,
+            reflected,
+          };
           root.add(mesh);
         }
       }
     }
-    root.visible = !!tile;
-    if (!tile) {
-      position = null;
-      return;
-    }
-    position ||= { x: tile.x, y: tile.y, elevation: tile.elevation || 0 };
   }
   function advance(delta) {
     if (!target || !root.children.length) return false;
@@ -184,6 +205,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
         );
     });
     moving = rotation.advance(delta) || moving;
+    if (rotation.flipped.size) rebuild(group, currentTier);
     for (const node of root.children) {
       node.userData.indices.forEach((index, slot) => {
         const tile = group[index];
@@ -191,10 +213,9 @@ export function createTilePreview(assets, onSettled = () => {}) {
           rotation.pose(tile.id || index),
           node.userData.metadata,
         );
-        node.setMatrixAt(
-          slot,
-          matrix.multiplyMatrices(placement, node.userData.partMatrix),
-        );
+        matrix.multiplyMatrices(placement, node.userData.partMatrix);
+        if (node.userData.reflected) matrix.premultiply(reflection);
+        node.setMatrixAt(slot, matrix);
       });
       node.instanceMatrix.needsUpdate = true;
       for (const material of Array.isArray(node.material)

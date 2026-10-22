@@ -1,6 +1,7 @@
 import { modelVisual } from "./modelVisual";
 import {
   Group,
+  DoubleSide,
   InstancedMesh,
   Matrix4,
   Mesh,
@@ -23,6 +24,7 @@ export function createTileOutline(gpu, assets) {
     polygonOffsetFactor: -1,
     polygonOffsetUnits: -1,
     depthWrite: false,
+    side: DoubleSide,
   });
   const selected = new MeshBasicMaterial({
     color: 0x00ff00,
@@ -31,11 +33,13 @@ export function createTileOutline(gpu, assets) {
     polygonOffsetFactor: -1,
     polygonOffsetUnits: -1,
     depthWrite: false,
+    side: DoubleSide,
   });
   const invalid = new MeshBasicMaterial({
     color: 0xffffff,
     toneMapped: false,
     depthWrite: false,
+    side: DoubleSide,
   });
   const objectHover = hover.clone();
   objectHover.color.setRGB(0, 0, 0.55);

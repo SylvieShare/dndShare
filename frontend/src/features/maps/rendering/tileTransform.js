@@ -1,6 +1,5 @@
-import { Box3, Matrix4, Quaternion, Vector3 } from "three";
+import { Box3, Matrix4 } from "three";
 import { tileSize } from "../lib/tilePlacement";
-const up = new Vector3(0, 1, 0);
 const localBounds = new WeakMap();
 export function tileTransform(tile, model) {
   return tilePoseTransform(tilePose(tile, model), model);
@@ -12,21 +11,23 @@ export function tilePose(tile, model) {
     y: tile.y + height / 2,
     elevation: tile.elevation || 0,
     rotation: tile.rotation,
+    mirrored: !!tile.mirrored,
   };
 }
 export function tilePoseTransform(pose, model) {
   const [offsetX, offsetZ] = model.placementOffset || [0, 0];
-  return new Matrix4()
-    .compose(
-      new Vector3(
-        pose.x,
-        (pose.elevation || 0) - (model.mountDepth || 0),
-        pose.y,
-      ),
-      new Quaternion().setFromAxisAngle(up, (-pose.rotation * Math.PI) / 180),
-      new Vector3(1, 1, 1),
-    )
-    .multiply(new Matrix4().makeTranslation(offsetX, 0, offsetZ));
+  const matrix = new Matrix4().makeRotationY((-pose.rotation * Math.PI) / 180);
+  const values = matrix.elements,
+    sign = pose.mirrored ? -1 : 1;
+  // Local reflection flips column X; the animation squeezes world row X.
+  values[0] *= sign * (pose.mirrorScale ?? 1);
+  values[2] *= sign;
+  values[8] *= pose.mirrorScale ?? 1;
+  values[12] = pose.x + values[0] * offsetX + values[8] * offsetZ;
+  values[13] = (pose.elevation || 0) - (model.mountDepth || 0);
+  values[14] = pose.y + values[2] * offsetX + values[10] * offsetZ;
+  matrix.mirroring = !!pose.mirroring;
+  return matrix;
 }
 export function tileBounds(tile, metadata, model, transform) {
   let bounds = localBounds.get(model);

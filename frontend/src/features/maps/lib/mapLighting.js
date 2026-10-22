@@ -40,7 +40,8 @@ export function lightPose(light, document, catalogue, context) {
   let x = light.x,
     y = light.y,
     elevation = light.elevation || 0,
-    angle = 0;
+    angle = 0,
+    mirrored = false;
   const anchor = light.anchor;
   if (anchor?.kind === "tile") {
     const tile =
@@ -55,6 +56,7 @@ export function lightPose(light, document, catalogue, context) {
       x = tile.x + size.width / 2;
       y = tile.y + size.height / 2;
       angle = tile.rotation;
+      mirrored = !!tile.mirrored;
       elevation =
         (c.placements.get(tile.id)?.elevation || 0) +
         model.surfaceHeight -
@@ -81,7 +83,8 @@ export function lightPose(light, document, catalogue, context) {
     }
   }
   const a = (angle * Math.PI) / 180,
-    [ox, oy] = light.offset || [0, 0];
+    [localX, oy] = light.offset || [0, 0],
+    ox = mirrored ? -localX : localX;
   if (anchor) {
     x += ox * Math.cos(a) - oy * Math.sin(a);
     y += ox * Math.sin(a) + oy * Math.cos(a);

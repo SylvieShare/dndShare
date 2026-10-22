@@ -81,3 +81,30 @@ it("uses the loaded LOD immediately and forgets motion when released before eith
   geometry.dispose();
   material.dispose();
 });
+it("reflects the placement preview without negative instance scales and settles after repeated pointer updates", () => {
+  const geometry = new BoxGeometry(1, 0.4, 1),
+    material = new MeshStandardMaterial();
+  const assets = {
+    metadata: () => ({ width: 1, height: 1 }),
+    model: () => ({ parts: [{ geometry, material, matrix: new Matrix4() }] }),
+  };
+  const preview = createTilePreview(assets),
+    tile = { id: "a", modelId: "floor", x: 2, y: 3, rotation: 0, elevation: 0 };
+  preview.update(tile);
+  preview.advance(16);
+  const target = { ...tile, mirrored: true };
+  preview.update(target);
+  const matrix = new Matrix4();
+  for (let n = 0; n < 24; n++) {
+    preview.update(target);
+    preview.advance(20);
+    const mesh = preview.root.children[0];
+    mesh.getMatrixAt(0, matrix);
+    expect(matrix.determinant()).toBeGreaterThan(0);
+  }
+  expect(preview.transform("a").determinant()).toBeCloseTo(-1);
+  expect(preview.root.children[0].matrixWorld.determinant()).toBe(-1);
+  preview.destroy();
+  geometry.dispose();
+  material.dispose();
+});

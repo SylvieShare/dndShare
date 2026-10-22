@@ -41,9 +41,15 @@ export function createObjectMotion(assets, tileMatrix) {
         const anchor = model?.placementPoints?.[object.placement?.point],
           matrix = parent && tileMatrix(parent.id);
         if (anchor && matrix) {
-          child.rotation.y +=
-            Math.atan2(matrix.elements[8], matrix.elements[0]) +
-            (parent.rotation * Math.PI) / 180;
+          if (!matrix.mirroring) {
+            const values = matrix.elements,
+              sign = matrix.determinant() < 0 ? -1 : 1;
+            const angle = Math.atan2(
+              values[8] / Math.hypot(values[8], values[9], values[10]),
+              values[0] / (sign * Math.hypot(values[0], values[1], values[2])),
+            );
+            child.rotation.y += angle + (parent.rotation * Math.PI) / 180;
+          }
           child.position.copy(
             point
               .set(

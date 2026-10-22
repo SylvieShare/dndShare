@@ -59,6 +59,11 @@ export function useMapEditorKeys(
           canvas.value?.focus();
         });
     }
+    if (event.code === "KeyT" && !command && !event.altKey && !event.repeat) {
+      event.preventDefault();
+      editor.mirror();
+      nextTick(placement.cursor.moved);
+    }
     if (event.code === "KeyR") {
       event.preventDefault();
       editor.rotate();

@@ -60,7 +60,9 @@ export function structureContext(document, catalogue) {
               elevation:
                 slot.elevation +
                 ((model.mountDepth || 0) > 0
-                  ? slot.insertionRises?.[model.mountProfile] ?? slot.insertionRise ?? 0
+                  ? (slot.insertionRises?.[model.mountProfile] ??
+                    slot.insertionRise ??
+                    0)
                   : 0),
             };
             found.push(seat);
@@ -88,7 +90,10 @@ export function structureContext(document, catalogue) {
       for (let x = tile.x; x < tile.x + size.width; x++)
         cells.set(structureCellKey(x, y, tile.level), tile.id);
     for (const raw of model.supportSlots || []) {
-      const slot = rotatedSlot(raw, model, tile.rotation);
+      const local = tile.mirrored
+        ? { ...raw, x: model.width - raw.x - raw.width }
+        : raw;
+      const slot = rotatedSlot(local, model, tile.rotation);
       for (let y = slot.y; y < slot.y + slot.height; y++)
         for (let x = slot.x; x < slot.x + slot.width; x++)
           supportsMap.set(

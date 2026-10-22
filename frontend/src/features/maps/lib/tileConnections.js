@@ -46,9 +46,16 @@ export function rotateConnections(mask, rotation) {
   const shift = (((rotation / 45) % 8) + 8) % 8;
   return ((mask << shift) | (mask >> (8 - shift))) & 255;
 }
+export function mirrorConnections(mask) {
+  let result = 0;
+  for (let i = 0; i < 8; i++) if (mask & (1 << i)) result |= 1 << (8 - i) % 8;
+  return result;
+}
 export function tileConnections(tile, catalogue) {
   return rotateConnections(
-    modelConnections(catalogue.find((m) => m.id === tile.modelId)),
+    (tile.mirrored ? mirrorConnections : (mask) => mask)(
+      modelConnections(catalogue.find((m) => m.id === tile.modelId)),
+    ),
     tile.rotation,
   );
 }
@@ -74,7 +81,14 @@ export function connectionVariant(tile, mask, catalogue) {
       const width = rotation % 180 ? model.height : model.width,
         height = rotation % 180 ? model.width : model.height;
       if (width !== currentWidth || height !== currentHeight) continue;
-      if (rotateConnections(modelConnections(model), rotation) !== mask)
+      if (
+        rotateConnections(
+          tile.mirrored
+            ? mirrorConnections(modelConnections(model))
+            : modelConnections(model),
+          rotation,
+        ) !== mask
+      )
         continue;
       const score =
         (model.id === current.id ? 100 : 0) +

@@ -1,17 +1,23 @@
+import { reducedMapMotion } from "./scalarMotion";
 // Animate visual poses only. Saved rotations and footprints stay on the grid.
 const turn = (from, to) => ((((to - from) % 360) + 540) % 360) - 180;
 export function createRotationMotion() {
   const states = new Map(),
     active = new Map(),
-    changed = new Set();
+    changed = new Set(),
+    flipped = new Set();
   function set(id, pose) {
+    pose = { ...pose, mirrored: !!pose.mirrored, mirrorScale: 1 };
     const state = states.get(id);
     if (!state) {
       states.set(id, { pose: { ...pose }, target: { ...pose }, elapsed: 280 });
       return;
     }
     const delta = turn(state.target.rotation, pose.rotation);
-    if (delta) {
+    const mirrorChanged = state.target.mirrored !== pose.mirrored;
+    const flipping =
+      mirrorChanged || (delta && active.has(id) && state.flipping);
+    if (delta || mirrorChanged) {
       const target = { ...pose, rotation: state.target.rotation + delta };
       const start = { ...state.pose },
         angle = ((target.rotation - start.rotation) * Math.PI) / 180;
@@ -24,6 +30,7 @@ export function createRotationMotion() {
       Object.assign(state, {
         start,
         target,
+        flipping,
         elapsed: 0,
         pivot:
           det > 1e-8
@@ -52,25 +59,45 @@ export function createRotationMotion() {
     }
   }
   function advance(delta) {
+    if (reducedMapMotion()) delta = 280;
     changed.clear();
+    flipped.clear();
     for (const [id, state] of active) {
       changed.add(id);
       state.elapsed = Math.min(280, state.elapsed + delta);
-      const t = 1 - Math.pow(1 - state.elapsed / 280, 3),
+      const progress = state.elapsed / 280;
+      const t = state.flipping
+          ? 0.5 - 0.5 * Math.cos(Math.PI * progress)
+          : 1 - Math.pow(1 - progress, 3),
         { start, target, pivot } = state;
-      const angle = ((target.rotation - start.rotation) * t * Math.PI) / 180;
-      state.pose.rotation =
-        start.rotation + (target.rotation - start.rotation) * t;
-      if (pivot) {
-        const x = start.x - pivot.x,
-          y = start.y - pivot.y;
-        state.pose.x = pivot.x + x * Math.cos(angle) - y * Math.sin(angle);
-        state.pose.y = pivot.y + x * Math.sin(angle) + y * Math.cos(angle);
-      } else {
+      const before = state.pose.mirrored;
+      if (state.flipping) {
+        state.pose.mirrored = t < 0.5 ? start.mirrored : target.mirrored;
+        state.pose.rotation = t < 0.5 ? start.rotation : target.rotation;
+        const initialScale = start.mirrorScale ?? 1;
+        state.pose.mirrorScale =
+          start.mirrored === target.mirrored
+            ? initialScale + (1 - initialScale) * t
+            : Math.max(0.001, t < 0.5 ? initialScale * (1 - 2 * t) : 2 * t - 1);
+        state.pose.mirroring = true;
         state.pose.x = start.x + (target.x - start.x) * t;
         state.pose.y = start.y + (target.y - start.y) * t;
+      } else {
+        const angle = ((target.rotation - start.rotation) * t * Math.PI) / 180;
+        state.pose.rotation =
+          start.rotation + (target.rotation - start.rotation) * t;
+        if (pivot) {
+          const x = start.x - pivot.x,
+            y = start.y - pivot.y;
+          state.pose.x = pivot.x + x * Math.cos(angle) - y * Math.sin(angle);
+          state.pose.y = pivot.y + x * Math.sin(angle) + y * Math.cos(angle);
+        } else {
+          state.pose.x = start.x + (target.x - start.x) * t;
+          state.pose.y = start.y + (target.y - start.y) * t;
+        }
       }
       if (state.elapsed === 280) state.pose = { ...target };
+      if (before !== state.pose.mirrored) flipped.add(id);
       if (state.elapsed === 280) active.delete(id);
     }
     return active.size > 0;
@@ -79,6 +106,7 @@ export function createRotationMotion() {
     set,
     advance,
     changed,
+    flipped,
     pose: (id) => states.get(id)?.pose,
     isMoving: () => active.size > 0,
     retain: (ids) => {
@@ -92,6 +120,7 @@ export function createRotationMotion() {
       states.clear();
       active.clear();
       changed.clear();
+      flipped.clear();
     },
   };
 }

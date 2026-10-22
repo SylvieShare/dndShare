@@ -345,3 +345,15 @@ it("a hold lifts without motion and moving a rotated tile carries its attached o
     rotation: 30,
   });
 });
+it("mirrors a catalogue drag and commits it, then mirrors a selected group without losing attached points", () => {
+  const e = setup();
+  e.tileDrag.begin("wide", { x: 3, y: 3 });
+  e.tileDrag.mirror();
+  e.tileDrag.drop({ x: 3, y: 3 });
+  expect(e.draft.value.document.tiles[0]).toMatchObject({
+    mirrored: true,
+    rotation: 0,
+  });
+  e.gestures.mirror();
+  expect(e.draft.value.document.tiles[0].mirrored).toBe(false);
+});

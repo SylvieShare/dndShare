@@ -25,6 +25,11 @@ func TestMapPreviewSignatureTracksSceneAndCurrentAssets(t *testing.T) {
 	if sig(d, models) != original {
 		t.Fatal("tags invalidated screenshot")
 	}
+	d.Tiles[0].Mirrored = true
+	if sig(d, models) == original {
+		t.Fatal("reflection did not invalidate screenshot")
+	}
+	d.Tiles[0].Mirrored = false
 	d.Tiles[0].X = 2
 	if sig(d, models) == original {
 		t.Fatal("placement did not invalidate screenshot")
