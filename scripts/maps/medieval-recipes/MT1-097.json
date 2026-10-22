@@ -1,0 +1,528 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [0, 0],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Tall Skull Wall",
+  "groupCode": "MED-tall-skull-wall",
+  "hasDecor": true,
+  "renderTriangles": 120000,
+  "lodTriangles": 50000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1536,
+  "renderUVAngleLimitRad": 0.18,
+  "lodUVAngleLimitRad": 0.18,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1536,
+  "lodColourSize": 1024,
+  "lodDataSize": 1536,
+  "standRayTopMM": 120,
+  "standPointsMM": [[0, 0]],
+  "blockersMM": [
+    [
+      [-17.65, -17.65],
+      [-4.924700183868408, -17.65],
+      [-4.924700183868408, 17.65],
+      [-17.65, 17.65]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "floor",
+    "tall",
+    "wall",
+    "skull",
+    "horn",
+    "wood",
+    "plaster",
+    "iron"
+  ],
+  "weightBudget": {
+    "renderMiB": [3.5, 9],
+    "lodMiB": [1.5, 4.5],
+    "shadowKiB": [120, 260],
+    "previewKiB": [12, 40],
+    "basis": "35mm cell with89.012mm tall wall, wooden trophy plaque, aged skull, two ridged horns andfive visible iron studs. Source559964tri/27998284bytes.120000/50000 geometry,2048/1536 bakes,1536/1024 colour and1536/1536 data; compare compact on bone/wood/horn/metal boundaries and horn tips."
+  },
+  "materials": {
+    "earthRGB": [0.28, 0.17, 0.075],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [0.34, 0.165, 0.055],
+    "woodLightRGB": [0.59, 0.35, 0.145],
+    "stoneDarkRGB": [0.34, 0.165, 0.055],
+    "stoneLightRGB": [0.59, 0.35, 0.145],
+    "woodParts": [
+      {
+        "name": "X floor and north south fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west Y floor border and fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [-14.3, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y floor border and fascia",
+        "minMM": [14.3, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south tall post",
+        "minMM": [-17.65, -17.65, 26.1],
+        "maxMM": [-10.1, -13.6, 89.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "north tall post",
+        "minMM": [-17.65, 13.6, 26.1],
+        "maxMM": [-10.1, 17.65, 89.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "measured rear crossbar",
+        "minMM": [-17.65, -13.8, 67],
+        "maxMM": [-14, 13.8, 77],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [0, 0.9998501410932548, -0.01731171152135416],
+        "projection": {
+          "originMM": [
+            -17.308394995240448, 0.3191807774780188, 71.37532180531112
+          ],
+          "axis": [0, 0.01731171152135416, 0.9998501410932548],
+          "rangeMM": [-2.246343395243067, 2.8315313611760082]
+        }
+      },
+      {
+        "name": "measured rear middle post",
+        "minMM": [-17.65, -2.6397000789642333, 26.1],
+        "maxMM": [-14, 2.439099931716919, 69.52897841006805],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "vertical wooden trophy plaque and rim",
+        "minMM": [-13, -11, 48],
+        "maxMM": [-9.7, 11, 72.3],
+        "axis": "z",
+        "physicalPigment": true,
+        "darkRGB": [0.29, 0.135, 0.045],
+        "lightRGB": [0.57, 0.32, 0.11],
+        "roughness": 0.9,
+        "awayFromSource": {
+          "code": "MT1-091",
+          "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+          "matchMM": 0.12,
+          "projectTo": {
+            "code": "MT1-097",
+            "sourceSHA256": "6b66bcc1eb6dbb550f78bd474351ad8432c735f0eb1e2cd34fe649edc7aba5d3"
+          }
+        }
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "ochre plaster on both tall faces and top",
+        "kind": "plaster",
+        "minMM": [-17.65, -13.6, 26.6],
+        "maxMM": [-10.1, 13.6, 89.2],
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "south tall post",
+            "minMM": [-17.65, -17.65, 26.1],
+            "maxMM": [-10.1, -13.6, 89.2],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "north tall post",
+            "minMM": [-17.65, 13.6, 26.1],
+            "maxMM": [-10.1, 17.65, 89.2],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "measured rear crossbar",
+            "minMM": [-17.65, -13.8, 67],
+            "maxMM": [-14, 13.8, 77],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [0, 0.9998501410932548, -0.01731171152135416],
+            "projection": {
+              "originMM": [
+                -17.308394995240448, 0.3191807774780188, 71.37532180531112
+              ],
+              "axis": [0, 0.01731171152135416, 0.9998501410932548],
+              "rangeMM": [-2.246343395243067, 2.8315313611760082]
+            }
+          },
+          {
+            "name": "measured rear middle post",
+            "minMM": [-17.65, -2.6397000789642333, 26.1],
+            "maxMM": [-14, 2.439099931716919, 69.52897841006805],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "vertical wooden trophy plaque and rim",
+            "minMM": [-13, -11, 48],
+            "maxMM": [-9.7, 11, 72.3],
+            "axis": "z",
+            "physicalPigment": true,
+            "darkRGB": [0.29, 0.135, 0.045],
+            "lightRGB": [0.57, 0.32, 0.11],
+            "roughness": 0.9,
+            "awayFromSource": {
+              "code": "MT1-091",
+              "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+              "matchMM": 0.12,
+              "projectTo": {
+                "code": "MT1-097",
+                "sourceSHA256": "6b66bcc1eb6dbb550f78bd474351ad8432c735f0eb1e2cd34fe649edc7aba5d3"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "aged ivory skull and bone arches",
+        "kind": "paint",
+        "minMM": [-9.65, -6.9, 49],
+        "maxMM": [-4.7, 6.9, 71],
+        "includeParts": [
+          {
+            "minMM": [-9.65, -6.9, 49],
+            "maxMM": [-4.7, 6.9, 71],
+            "ellipsoid": {
+              "centerMM": [-6.8, 0, 60],
+              "radiiMM": [2.8, 3.1, 8.8]
+            }
+          },
+          {
+            "minMM": [-9.65, -6.9, 49],
+            "maxMM": [-4.7, 6.9, 71],
+            "ellipsoid": {
+              "centerMM": [-7.55, 0, 67],
+              "radiiMM": [3.4, 6.4, 4.8]
+            }
+          },
+          {
+            "minMM": [-9.65, -6.9, 49],
+            "maxMM": [-4.7, 6.9, 71],
+            "ellipsoid": {
+              "centerMM": [-7.65, -3.5, 60.8],
+              "radiiMM": [2.3, 2.2, 5.7]
+            }
+          },
+          {
+            "minMM": [-9.65, -6.9, 49],
+            "maxMM": [-4.7, 6.9, 71],
+            "ellipsoid": {
+              "centerMM": [-7.65, 3.5, 60.8],
+              "radiiMM": [2.3, 2.2, 5.7]
+            }
+          },
+          {
+            "minMM": [-9.65, -6.9, 49],
+            "maxMM": [-4.7, 6.9, 71],
+            "ellipsoid": {
+              "centerMM": [-7.5, 0, 52.3],
+              "radiiMM": [2.4, 3.2, 4.2]
+            }
+          }
+        ],
+        "rgb": [0.8, 0.74, 0.54],
+        "roughness": 0.83,
+        "variation": 0.03,
+        "awayFromSource": {
+          "code": "MT1-091",
+          "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+          "matchMM": 0.12,
+          "projectTo": {
+            "code": "MT1-097",
+            "sourceSHA256": "6b66bcc1eb6dbb550f78bd474351ad8432c735f0eb1e2cd34fe649edc7aba5d3"
+          }
+        }
+      },
+      {
+        "name": "ridged brown horn -1",
+        "kind": "paint",
+        "minMM": [-12.3, -15.7, 65.0],
+        "maxMM": [-5.8, -1.0, 84.0],
+        "includeParts": [
+          {
+            "minMM": [-12.3, -15.7, 65.0],
+            "maxMM": [-5.8, -1.0, 84.0],
+            "ellipsoid": {
+              "centerMM": [-8.7, -7.3, 68],
+              "radiiMM": [3, 5.2, 4]
+            },
+            "projection": {
+              "originMM": [0, 0, 0],
+              "axis": [1, 0, 0],
+              "rangeMM": [-10.2, 0]
+            }
+          },
+          {
+            "minMM": [-12.3, -15.7, 65.0],
+            "maxMM": [-5.8, -1.0, 84.0],
+            "ellipsoid": {
+              "centerMM": [-10.1, -11.8, 75],
+              "radiiMM": [3.1, 3.4, 7.2]
+            }
+          },
+          {
+            "minMM": [-12.3, -15.7, 65.0],
+            "maxMM": [-5.8, -1.0, 84.0],
+            "ellipsoid": {
+              "centerMM": [-10.5, -7.5, 80.5],
+              "radiiMM": [2.0, 6.5, 2.7]
+            }
+          }
+        ],
+        "rgb": [0.38, 0.16, 0.065],
+        "roughness": 0.79,
+        "variation": 0.035,
+        "awayFromSource": {
+          "code": "MT1-091",
+          "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+          "matchMM": 0.04,
+          "projectTo": {
+            "code": "MT1-097",
+            "sourceSHA256": "6b66bcc1eb6dbb550f78bd474351ad8432c735f0eb1e2cd34fe649edc7aba5d3"
+          }
+        }
+      },
+      {
+        "name": "ridged brown horn 1",
+        "kind": "paint",
+        "minMM": [-12.3, 1.0, 65.0],
+        "maxMM": [-5.8, 15.7, 84.0],
+        "includeParts": [
+          {
+            "minMM": [-12.3, 1.0, 65.0],
+            "maxMM": [-5.8, 15.7, 84.0],
+            "ellipsoid": {
+              "centerMM": [-8.7, 7.3, 68],
+              "radiiMM": [3, 5.2, 4]
+            },
+            "projection": {
+              "originMM": [0, 0, 0],
+              "axis": [1, 0, 0],
+              "rangeMM": [-10.2, 0]
+            }
+          },
+          {
+            "minMM": [-12.3, 1.0, 65.0],
+            "maxMM": [-5.8, 15.7, 84.0],
+            "ellipsoid": {
+              "centerMM": [-10.1, 11.8, 75],
+              "radiiMM": [3.1, 3.4, 7.2]
+            }
+          },
+          {
+            "minMM": [-12.3, 1.0, 65.0],
+            "maxMM": [-5.8, 15.7, 84.0],
+            "ellipsoid": {
+              "centerMM": [-10.5, 7.5, 80.5],
+              "radiiMM": [2.0, 6.5, 2.7]
+            }
+          }
+        ],
+        "rgb": [0.38, 0.16, 0.065],
+        "roughness": 0.79,
+        "variation": 0.035,
+        "awayFromSource": {
+          "code": "MT1-091",
+          "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+          "matchMM": 0.04,
+          "projectTo": {
+            "code": "MT1-097",
+            "sourceSHA256": "6b66bcc1eb6dbb550f78bd474351ad8432c735f0eb1e2cd34fe649edc7aba5d3"
+          }
+        }
+      },
+      {
+        "name": "iron plaque stud top",
+        "kind": "paint",
+        "minMM": [-9.753249933966455, -0.4695336268810385, 69.32570308569673],
+        "maxMM": [-9.303249933966455, 0.38809236195062624, 70.1833290745284],
+        "radialShell": {
+          "originMM": [
+            -9.403249933966455, -0.04072063246520614, 69.75451608011257
+          ],
+          "axis": [1, 0, 0],
+          "rangeMM": [-0.22, 0.06],
+          "radiusAtOriginMM": 0.39881299441583234,
+          "radiusSlope": 0,
+          "thicknessMM": 1.3988129944158323,
+          "allowanceMM": 0.02
+        },
+        "rgb": [0.225, 0.235, 0.22],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "iron plaque stud L1",
+        "kind": "paint",
+        "minMM": [-9.842148516307976, -7.934077695999034, 64.45858135737537],
+        "maxMM": [-9.392148516307977, -7.109445593447968, 65.28321345992644],
+        "radialShell": {
+          "originMM": [
+            -9.492148516307976, -7.521761644723501, 64.8708974086509
+          ],
+          "axis": [1, 0, 0],
+          "rangeMM": [-0.22, 0.06],
+          "radiusAtOriginMM": 0.38231605127553214,
+          "radiusSlope": 0,
+          "thicknessMM": 1.3823160512755321,
+          "allowanceMM": 0.02
+        },
+        "rgb": [0.225, 0.235, 0.22],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "iron plaque stud L3",
+        "kind": "paint",
+        "minMM": [-9.787579198401593, -3.7829408433869065, 52.13260134087197],
+        "maxMM": [-9.337579198401594, -2.9469241543622755, 52.968618029896604],
+        "radialShell": {
+          "originMM": [
+            -9.437579198401593, -3.364932498874591, 52.55060968538429
+          ],
+          "axis": [1, 0, 0],
+          "rangeMM": [-0.22, 0.06],
+          "radiusAtOriginMM": 0.38800834451231586,
+          "radiusSlope": 0,
+          "thicknessMM": 1.388008344512316,
+          "allowanceMM": 0.02
+        },
+        "rgb": [0.225, 0.235, 0.22],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "iron plaque stud R1",
+        "kind": "paint",
+        "minMM": [-9.915046173188069, 7.16726084674344, 64.2594336573998],
+        "maxMM": [-9.46504617318807, 7.98240249493565, 65.07457530559202],
+        "radialShell": {
+          "originMM": [
+            -9.565046173188069, 7.574831670839545, 64.66700448149591
+          ],
+          "axis": [1, 0, 0],
+          "rangeMM": [-0.22, 0.06],
+          "radiusAtOriginMM": 0.3775708240961049,
+          "radiusSlope": 0,
+          "thicknessMM": 1.3775708240961049,
+          "allowanceMM": 0.02
+        },
+        "rgb": [0.225, 0.235, 0.22],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "iron plaque stud R3",
+        "kind": "paint",
+        "minMM": [-9.930999340945435, 2.9060872746442787, 52.2893248662696],
+        "maxMM": [-9.480999340945436, 3.7723749346616837, 53.15561252628701],
+        "radialShell": {
+          "originMM": [
+            -9.580999340945436, 3.3392311046529812, 52.722468696278305
+          ],
+          "axis": [1, 0, 0],
+          "rangeMM": [-0.22, 0.06],
+          "radiusAtOriginMM": 0.40314383000870263,
+          "radiusSlope": 0,
+          "thicknessMM": 1.4031438300087027,
+          "allowanceMM": 0.02
+        },
+        "rgb": [0.225, 0.235, 0.22],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "Native full/front/back and direct wall details inspected. Own centre floor24.704185mm,normalZ.987749;4311 normals confirmX grain(nx².043009,ny².100020). HighmaxX-5.004700 requires blocker+.08 with freecentre. Own rear crossbar718samples centreZ71.375322,direction[0,.999850,-.017312],own middlepost1167samples Y[-2.4897,2.2891]. Plain91 comparison confirms all1961 lower and477 upper samples within.12mm(max.005521/.003572); added trophy separately isolated with SHA-bound reference91/projectTo97. Pig98 comparison rejected as plaque reference because surfaces differ; do not use it. Native image rays locate ivory forehead/bridge/jaw, open orbits behind bone, ridged brown horns and wood plaque. Five visible studs measured separately;R1 sphere fit excludes neighbouring horn. Preserve original horn tips and stud/rim triangles. Paint metal only at measured core; retain wooden rims and empty orbital/nasal geometry. No added eyeballs, fill planes, lights or supportSlots. Both candidates must pass native geometry, source-boundary colours, actual ORM, open floor and footprint checks before selection; then UD-016 lower mount preserves body/UV/images/world placement, transparent preview, Go manifest and fresh MCP confirmation. Initial LOD UV overlap at1536 pixel[613,889] maps two north-post points0.293mm apart at source[-10.922,16.441,69.084]/[-10.744,16.673,69.083]. Reduce LOD smart-UV angle.25 to.18; retain overlap rejection. First full trophy view revealed unpainted horn tips and small root patches. Extend each horn domain inward toabsY1mm and its distal ellipsoid; lower horn-only source match to.04mm (measured common wall max.005521mm) and expand shaft/root coverage. Rebuild and inspect rather than accepting exposed ochre on horn surfaces. Native source point[-9.143822,3,57] is a lower cheek arch missed by the first bone ellipsoids; extend both cheek volumes rather than treating its interpolated bone colour as valid wood. Visibility rays require sourceFacing>=.75 andabsY<13 to avoid tangent north-post hits; both orbital backplates and horn gaps remain covered. Explicit source-domain coverage found8 further narrow gaps at lower jaw, pedicles and mid-horns; extend measured unions until no sampled surface is unassigned.",
+  "surfaceHeightMM": 24.704185485839844,
+  "renderColourSize": 1536,
+  "geometryDetailRegions": [
+    {
+      "name": "left and right horn tips",
+      "minMM": [-12.5, -15.7, 79.3],
+      "maxMM": [-8, 15.7, 84.1]
+    },
+    {
+      "name": "plaque stud top and rim",
+      "minMM": [-9.853249933966454, -0.6520193432547348, 69.14321736932304],
+      "maxMM": [-9.253249933966455, 0.5705780783243225, 70.36581479090209]
+    },
+    {
+      "name": "plaque stud L1 and rim",
+      "minMM": [-9.942148516307975, -8.11191042841008, 64.28074862496433],
+      "maxMM": [-9.342148516307976, -6.931612861036921, 65.46104619233748]
+    },
+    {
+      "name": "plaque stud L3 and rim",
+      "minMM": [-9.887579198401593, -3.962379094403201, 51.95316308985568],
+      "maxMM": [-9.287579198401593, -2.767485903345981, 53.1480562809129]
+    },
+    {
+      "name": "plaque stud R1 and rim",
+      "minMM": [-10.015046173188068, 6.990766511741976, 64.08293932239835],
+      "maxMM": [-9.415046173188069, 8.158896829937115, 65.25106964059347]
+    },
+    {
+      "name": "plaque stud R3 and rim",
+      "minMM": [-10.030999340945435, 2.7223800405392597, 52.10561763216458],
+      "maxMM": [-9.430999340945435, 3.9560821687667027, 53.33931976039203]
+    }
+  ]
+}
