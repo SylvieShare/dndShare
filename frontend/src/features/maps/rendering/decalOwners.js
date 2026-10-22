@@ -12,10 +12,12 @@ export function createDecalOwners(
 ) {
   let tileItems = new Map(),
     objectItems = new Map(),
-    nodes = new Map();
+    nodes = new Map(),
+    previewNodes = new Set();
   function update() {
     tileItems = new Map(runtime.placedTiles.map((item) => [item.id, item]));
     objectItems = new Map(runtime.posedObjects.map((item) => [item.id, item]));
+    previewNodes = new Set(objectPreview.root.children);
     nodes = new Map(
       [...objects.children, ...objectPreview.root.children]
         .filter((node) => node.userData.objectId)
@@ -39,7 +41,11 @@ export function createDecalOwners(
       if (node) {
         node.updateMatrixWorld(true);
         matrix = node.matrixWorld;
-        tier = node.userData.tier || tier;
+        tier = previewNodes.has(node)
+          ? runtime.options.forceLod
+            ? "lod"
+            : "render"
+          : node.userData.tier || tier;
       }
       visible = node?.visible && !runtime.appearance.hiddenObjects.has(id);
     }
