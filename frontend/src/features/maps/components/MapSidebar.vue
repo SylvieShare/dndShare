@@ -11,33 +11,18 @@
       'map-sidebar--opening': opening,
     }"
   >
-    <nav ref="navigation" class="map-sidebar-tabs" :aria-label="tabsLabel">
-      <span
-        class="map-sidebar-indicator"
-        :style="indicatorStyle"
-        aria-hidden="true"
-      />
-      <template v-for="item in tabs" :key="item.key">
-        <span
-          v-if="item.divider"
-          class="map-sidebar-divider"
-          role="separator"
-          :aria-label="item.dividerLabel || 'Группы вкладок'"
-        />
-        <ActionButton
-          :ref="(button) => setButton(item.key, button)"
-          class="map-sidebar-tab"
-          icon-only
-          variant="quiet"
-          :aria-label="item.label"
-          :title="item.label"
-          :aria-pressed="tab === item.key && !collapsed"
-          @click="openTab(item.key)"
-        >
-          <template #icon><component :is="item.icon" :size="22" /></template>
-        </ActionButton>
-      </template>
-    </nav>
+    <IconNavigation
+      ref="navigation"
+      class="map-sidebar-tabs"
+      :items="tabs"
+      :model-value="tab"
+      orientation="vertical"
+      :size="64"
+      :label="tabsLabel"
+      :active="!collapsed"
+      :animate="!opening"
+      @select="openTab"
+    />
     <div
       class="map-sidebar-panel"
       :inert="collapsed"
@@ -76,15 +61,8 @@
   </aside>
 </template>
 <script setup>
-import {
-  computed,
-  nextTick,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-  watch,
-} from "vue";
-import { ActionButton } from "@sylvieshare/share-ui";
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { ActionButton, IconNavigation } from "@sylvieshare/share-ui";
 import { PanelLeftClose } from "@lucide/vue";
 const props = defineProps({
   tabs: { type: Array, required: true },
@@ -94,15 +72,7 @@ const props = defineProps({
 });
 const emit = defineEmits(["update:tab", "select", "resize"]);
 const element = ref(null);
-const navigation = ref(null),
-  buttons = new Map(),
-  indicator = ref(null);
-const indicatorStyle = computed(() => ({
-  transform: `translateY(${indicator.value?.y || 0}px)`,
-  width: `${indicator.value?.width || 0}px`,
-  height: `${indicator.value?.height || 0}px`,
-  opacity: indicator.value && !collapsed.value ? 1 : 0,
-}));
+const navigation = ref(null);
 const collapsed = ref(
   window.matchMedia(`(max-width: ${props.collapseAt}px)`).matches,
 );
@@ -133,22 +103,13 @@ function measurePanel() {
     pointerEvents: "none",
   });
   parent.append(probe);
-  panelWidth.value = Math.max(0, probe.getBoundingClientRect().width - 61);
+  panelWidth.value = Math.max(
+    0,
+    probe.getBoundingClientRect().width -
+      (navigation.value?.element?.getBoundingClientRect().width || 77) -
+      1,
+  );
   probe.remove();
-}
-function setButton(key, button) {
-  if (button) buttons.set(key, button.$el);
-  else buttons.delete(key);
-}
-function updateIndicator() {
-  const button = buttons.get(props.tab);
-  indicator.value = button
-    ? {
-        y: button.offsetTop,
-        width: button.offsetWidth,
-        height: button.offsetHeight,
-      }
-    : null;
 }
 watch(
   () => props.tab,
@@ -160,9 +121,6 @@ watch(
         : -1;
   },
   { flush: "sync" },
-);
-watch([() => props.tab, () => props.tabs, collapsed], () =>
-  nextTick(updateIndicator),
 );
 function leavePage(node) {
   node.inert = true;
@@ -192,18 +150,16 @@ function collapse() {
 }
 onMounted(() => {
   measurePanel();
-  updateIndicator();
   observer = new ResizeObserver(() => {
     measurePanel();
     emit(
       "resize",
       element.value.getBoundingClientRect().width,
-      navigation.value.getBoundingClientRect().width,
+      navigation.value.element.getBoundingClientRect().width,
     );
-    updateIndicator();
   });
   observer.observe(element.value);
-  observer.observe(navigation.value);
+  observer.observe(navigation.value.element);
   observer.observe(element.value.parentElement);
 });
 onBeforeUnmount(() => {
@@ -218,7 +174,7 @@ defineExpose({
 </script>
 <style scoped>
 .map-sidebar {
-  --map-sidebar-width: 334px;
+  --map-sidebar-width: 350px;
   width: var(--map-sidebar-width);
   flex: none;
   min-height: 0;
@@ -229,15 +185,8 @@ defineExpose({
   transition: width 260ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .map-sidebar-tabs {
-  position: relative;
   z-index: 1;
-  isolation: isolate;
-  width: 60px;
-  flex: none;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 6px 5px 6px 6px;
+  height: 100%;
   border-right: 1px solid var(--border-strong);
   background: var(--surface);
 }
@@ -255,19 +204,7 @@ defineExpose({
 .map-sidebar--overlay.map-sidebar--collapsed > .map-sidebar-panel {
   pointer-events: none;
 }
-.map-sidebar-indicator {
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  left: 6px;
-  border-radius: 8px;
-  background: var(--accent);
-  pointer-events: none;
-  transition:
-    transform 260ms cubic-bezier(0.2, 0.7, 0.2, 1),
-    opacity 150ms ease;
-}
-.map-sidebar--opening .map-sidebar-indicator,
+
 .map-sidebar--opening .map-sidebar-page-enter-active,
 .map-sidebar--opening .map-sidebar-page-leave-active,
 .map-sidebar--opening .map-sidebar-title-enter-active,
@@ -282,28 +219,10 @@ defineExpose({
 .map-sidebar--opening .map-sidebar-title-leave-active {
   visibility: hidden;
 }
-.map-sidebar-tab {
-  position: relative;
-  z-index: 1;
-}
-.map-sidebar-tab[aria-pressed="false"]:hover:not(:disabled) {
-  background: transparent;
-  border-color: var(--border-strong);
-}
-.map-sidebar-tab[aria-pressed="true"],
-.map-sidebar-tab[aria-pressed="true"]:hover:not(:disabled) {
-  color: var(--text-on-accent);
-  background: transparent;
-  border-color: transparent;
-}
-.map-sidebar-divider {
-  border-top: 1px solid var(--border-strong);
-  margin: 4px 8px;
-}
 .map-sidebar-panel {
   background: var(--surface);
   flex: none;
-  width: var(--map-sidebar-panel-width, calc(var(--map-sidebar-width) - 61px));
+  width: var(--map-sidebar-panel-width, calc(var(--map-sidebar-width) - 78px));
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -313,7 +232,7 @@ defineExpose({
     transform 260ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .map-sidebar--collapsed {
-  width: 60px;
+  width: 77px;
 }
 .map-sidebar--collapsed .map-sidebar-panel {
   opacity: 0;
@@ -381,7 +300,6 @@ defineExpose({
 @media (prefers-reduced-motion: reduce) {
   .map-sidebar,
   .map-sidebar-panel,
-  .map-sidebar-indicator,
   .map-sidebar-page-enter-active,
   .map-sidebar-page-leave-active,
   .map-sidebar-title-enter-active,
@@ -396,7 +314,7 @@ defineExpose({
 }
 @media (max-width: 760px) {
   .map-sidebar {
-    --map-sidebar-width: min(334px, calc(100vw - 100px));
+    --map-sidebar-width: min(350px, calc(100vw - 100px));
   }
 }
 </style>

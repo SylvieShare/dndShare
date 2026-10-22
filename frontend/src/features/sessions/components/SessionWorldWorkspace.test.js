@@ -7,7 +7,7 @@ import SessionWorldLayer from './SessionWorldLayer.vue'
 import SessionQuestsWorkspace from './SessionQuestsWorkspace.vue'
 
 const read = path => readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8')
-const toolbar = read('./ChapterGraphToolbar.vue')
+const toolbar = read('../lib/sessionNavigation.js') + read('./ChapterGraphToolbar.vue')
 const graphTab = read('./ChapterGraphTab.vue')
 const layer = read('./SessionWorldLayer.vue')
 const tabWorkspace = read('./SessionTabWorkspace.vue')
@@ -45,7 +45,7 @@ describe('session world workspaces', () => {
   })
 
   it('switches the central workspace from the semantic session header', () => {
-    expect(toolbar).toContain('aria-label="Раздел сессии"')
+    expect(toolbar).toContain('label="Раздел сессии"')
     expect(toolbar).toContain("{ key: 'story', label: 'Сюжет'")
     expect(toolbar).toContain("{ key: 'locations', label: 'Локации'")
     expect(toolbar).toContain("{ key: 'npcs', label: 'NPC'")
@@ -57,8 +57,8 @@ describe('session world workspaces', () => {
     expect(graphTab).toMatch(/<SessionTabWorkspace mode="full" v-show="mapBackground \|\| fullWorkspace">\s*<slot name="full-workspace" \/>\s*<\/SessionTabWorkspace>/)
     expect(sessionView).toContain('v-if="mapVisited && isDm"')
     expect(sessionView).toContain(':map-background="mapVisible"')
-    expect(toolbar.indexOf('<span>Бой</span>')).toBeLessThan(toolbar.indexOf('<span>Карта</span>'))
-    expect(toolbar.indexOf('<span>Карта</span>')).toBeLessThan(toolbar.indexOf('v-for="view in visibleLibraryViews"'))
+    expect(toolbar.indexOf("key: 'combat'")).toBeLessThan(toolbar.indexOf("key: 'maps'"))
+    expect(toolbar.indexOf("key: 'maps'")).toBeLessThan(toolbar.indexOf("key: 'locations'"))
     expect(sessionView).toContain('<SessionCenterWorkspace')
     expect(sessionView).toContain('v-show="primaryView === \'story\'"')
     expect(sessionView).toContain("'campaign-workspace--combat': primaryView === 'story' && workspaceMotionMode === 'combat'")

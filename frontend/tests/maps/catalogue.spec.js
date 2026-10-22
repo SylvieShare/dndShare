@@ -54,10 +54,10 @@ test("sidebar offers populated categories and drags tiles directly onto the map,
   await picker.getByRole("button", { name: "Пол", exact: true }).click();
   const before = await page.locator(".map-canvas").boundingBox();
   await page.getByRole("button", { name: "Свернуть панель карты" }).click();
-  await expect.poll(async () => (await sidebar.boundingBox()).width).toBe(60);
+  await expect.poll(async () => (await sidebar.boundingBox()).width).toBe(77);
   expect(await page.locator(".map-canvas").boundingBox()).toEqual(before);
   await page.getByRole("button", { name: "Плитки", exact: true }).click();
-  await expect.poll(async () => (await sidebar.boundingBox()).width).toBe(334);
+  await expect.poll(async () => (await sidebar.boundingBox()).width).toBe(350);
   const card = await sidebar
     .getByRole("button", { name: "Пол 1", exact: true })
     .boundingBox();

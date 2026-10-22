@@ -8,6 +8,25 @@ async function ready(page, mobile = false) {
   await expect(page.getByText("Подготавливаем карту…")).toHaveCount(0);
   return page.getByRole("navigation", { name: "Боковые вкладки редактора" });
 }
+test("map navigation groups content, scene and tools with visible captions", async ({page}) => {
+  const nav = await ready(page);
+  expect(await nav.getByRole('button').evaluateAll(nodes => nodes.map(node => node.getAttribute('aria-label')))).toEqual([
+    'Плитки','Объекты','Декали','Освещение','Области','Камеры','Настройки','Производительность',
+  ]);
+  expect(await nav.getByRole('separator').evaluateAll(nodes => nodes.map(node => node.getAttribute('aria-label')))).toEqual(['Сцена','Инструменты']);
+  await expect(nav.getByRole('button',{name:'Производительность',exact:true})).toHaveText('Нагрузка');
+});
+test("short map navigation scrolls on keyboard focus without scrolling the page", async ({page}) => {
+  const nav = await ready(page);
+  await page.setViewportSize({width:1440,height:440});
+  await nav.getByRole('button',{name:'Плитки',exact:true}).focus();
+  await page.keyboard.press('End');
+  await expect(nav.getByRole('button',{name:'Производительность',exact:true})).toBeFocused();
+  expect(await nav.evaluate(node => node.scrollTop)).toBeGreaterThan(0);
+  expect(await page.evaluate(()=>scrollY)).toBe(0);
+  await page.keyboard.press('Home');
+  await expect(nav.getByRole('button',{name:'Плитки',exact:true})).toBeFocused();
+});
 
 test("tab hover uses an outline and cannot cover the travelling selection square", async ({
   page,
@@ -38,7 +57,7 @@ test("tab hover uses an outline and cannot cover the travelling selection square
   await expect(hovered).toHaveCSS("border-top-color", outlined);
   // Hold the active square underneath a different, hovered tab.
   await hovered.evaluate(async (button) => {
-    const indicator = document.querySelector(".map-sidebar-indicator");
+    const indicator = document.querySelector(".share-icon-navigation__indicator");
     await new Promise((resolve) => {
       function hold(event) {
         if (event.propertyName !== "transform") return;
@@ -93,7 +112,7 @@ test("tab hover uses an outline and cannot cover the travelling selection square
       Math.abs(colours.actual[i] - colours.expected[i]),
     ).toBeLessThanOrEqual(1);
   await page
-    .locator(".map-sidebar-indicator")
+    .locator(".share-icon-navigation__indicator")
     .evaluate((node) => node.getAnimations().forEach((a) => a.finish()));
 });
 
@@ -111,7 +130,7 @@ for (const [mobile, reduced] of [
     const nav = await ready(page, mobile),
       sidebar = page.locator(".map-sidebar");
     await nav.getByRole("button", { name: "Настройки", exact: true }).click();
-    const expandedWidth = mobile ? 330 : 334;
+    const expandedWidth = mobile ? 330 : 350;
     await expect
       .poll(async () => (await sidebar.boundingBox()).width)
       .toBe(expandedWidth);
@@ -145,16 +164,16 @@ for (const [mobile, reduced] of [
       });
     expect(collapse.animated).toBe(!reduced);
     if (!reduced) {
-      expect(collapse.during).toBeGreaterThan(60);
+      expect(collapse.during).toBeGreaterThan(77);
       expect(collapse.during).toBeLessThan(expandedWidth);
       expect(collapse.inert).toBe(true);
     }
-    await expect.poll(async () => (await sidebar.boundingBox()).width).toBe(60);
+    await expect.poll(async () => (await sidebar.boundingBox()).width).toBe(77);
     const reveal = await nav
       .getByRole("button", { name: "Освещение", exact: true })
       .evaluate(async (button) => {
         const sidebar = button.closest(".map-sidebar"),
-          indicator = sidebar.querySelector(".map-sidebar-indicator");
+          indicator = sidebar.querySelector(".share-icon-navigation__indicator");
         let flights = 0;
         const record = (event) => {
           if (event.propertyName === "transform") flights++;

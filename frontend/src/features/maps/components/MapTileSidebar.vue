@@ -108,15 +108,32 @@ const tabs = computed(() => [
           divider: props.extraTabs.length > 0,
           dividerLabel: "Вкладки редактора",
         },
-        { key: "lights", label: "Освещение", icon: Lightbulb },
         { key: "objects", label: "Объекты", icon: Box },
         { key: "decals", label: "Декали", icon: Sticker },
+        {
+          key: "lights",
+          label: "Освещение",
+          icon: Lightbulb,
+          divider: true,
+          dividerLabel: "Сцена",
+        },
         { key: "areas", label: "Области", icon: Group },
         { key: "cameras", label: "Камеры", icon: Camera },
       ]
     : []),
-  { key: "settings", label: "Настройки", icon: Settings },
-  { key: "performance", label: "Производительность", icon: Gauge },
+  {
+    key: "settings",
+    label: "Настройки",
+    icon: Settings,
+    divider: !image.value || props.extraTabs.length > 0,
+    dividerLabel: "Инструменты",
+  },
+  {
+    key: "performance",
+    label: "Производительность",
+    shortLabel: "Нагрузка",
+    icon: Gauge,
+  },
 ]);
 watch(tabs, (list) => {
   if (!list.some((t) => t.key === tab.value)) tab.value = list[0].key;

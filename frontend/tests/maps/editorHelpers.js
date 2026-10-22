@@ -22,7 +22,7 @@ export async function uncoverMapPoint(page, point) {
   await page.waitForFunction(
     () =>
       document.querySelector(".map-sidebar").getBoundingClientRect().width ===
-      60,
+      77,
   );
 }
 

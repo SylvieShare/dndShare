@@ -254,9 +254,9 @@ const reference = ref(null),
   selectionPanel = ref(null),
   sidebar = ref(null);
 const sidebarWidth = ref(
-  window.matchMedia("(max-width: 760px)").matches ? 60 : 334,
+  window.matchMedia("(max-width: 760px)").matches ? 77 : 350,
 );
-const railWidth = ref(60);
+const railWidth = ref(77);
 function resizeSidebar(width, navigationWidth) {
   sidebarWidth.value = width;
   railWidth.value = navigationWidth;

@@ -49,7 +49,7 @@ import WorkspaceCanvasControls from '@/shared/ui/WorkspaceCanvasControls.vue'
 const props = defineProps({ sessionUuid: { type: String, required: true }, participants: { type: Array, default: () => [] }, chapters: { type: Array, default: () => [] }, locations: { type: Array, default: () => [] }, currentChapterId: Number })
 const emit = defineEmits(['open-chapter', 'open-location'])
 const c = reactive(useGlobalMaps(props.sessionUuid))
-const sidebar = ref(null), canvas = ref(null), navigationWidth = ref(60), sidebarWidth = ref(60), continuing = ref(false)
+const sidebar = ref(null), canvas = ref(null), navigationWidth = ref(77), sidebarWidth = ref(77), continuing = ref(false)
 const pending = ref(null), reloadConfirm = ref(false), leaveConfirm = ref(false), mobile = useIsMobile(760)
 const { routeId, pointId, addMode, routeFocus, route, point, inspectorRoute, index, select, selectRoute, selectPoint, startAdding, addRoute, addPoint, move,
   insertControl, cancelControl, endDrag, patchPoint, reorder, deletePoint, deleteRoute } = useGlobalMapEditing(c, canvas, sidebar, mobile, props)

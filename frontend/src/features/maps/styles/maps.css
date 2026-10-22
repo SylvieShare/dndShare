@@ -174,7 +174,7 @@
 }
 .map-editor-workspace .map-editor-main {
   position: absolute;
-  inset: 0 0 0 var(--map-sidebar-rail, 60px);
+  inset: 0 0 0 var(--map-sidebar-rail, 77px);
   gap: 0;
   padding: 0;
 }

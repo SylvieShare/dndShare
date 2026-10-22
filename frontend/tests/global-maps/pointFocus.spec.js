@@ -58,7 +58,7 @@ for (const mobile of [false, true]) test(`world sidebar overlays a stable canvas
   const rail = await page.locator('.map-sidebar-tabs').boundingBox()
   expect(canvas.x).toBeCloseTo(rail.x + rail.width)
   await page.getByRole('button', { name: 'Свернуть панель карты', exact: true }).click()
-  await expect.poll(async () => (await page.locator('.global-map-sidebar').boundingBox()).width).toBe(60)
+  await expect.poll(async () => (await page.locator('.global-map-sidebar').boundingBox()).width).toBe(77)
   expect(await page.locator('.global-map-canvas').boundingBox()).toEqual(canvas)
 })
 
@@ -79,7 +79,7 @@ test('point preview follows edits and reports its image failure without affectin
 })
 
 test('markers use the loaded image aspect before selection when fit keeps scale one', async ({ page }) => {
-  await page.setViewportSize({ width: 1324, height: 1000 })
+  await page.setViewportSize({ width: 1341, height: 1000 })
   const state = await setup(page)
   await page.route('**/test-global-world.svg', route => route.fulfill({ contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600"><rect width="1200" height="600" fill="#d6c7a3"/></svg>' }))
   state.maps.push({ id: 'world', name: 'Мир', imageId: 1, imageUrl: '/test-global-world.svg', current: true, revision: 1, routes: [{ id: 'route', name: 'Путь', color: '#b397df', playerIds: [], points: [{ id: 'a', name: 'Начало', x: .5, y: .75 }] }] })
