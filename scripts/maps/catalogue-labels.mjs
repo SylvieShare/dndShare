@@ -139,6 +139,7 @@ Tall Skull Fireplace|Высокий камин с черепом
 Tall Buffet|Высокий буфет
 Tall Big Barrel|Высокая большая бочка
 Tall Little Barrels|Высокая стена с малыми бочками
+Tall Wall Light|Высокая стена со свечами
 Ladder Down|Приставная лестница вниз
 Balcony|Балкон
 Balcony Angle|Угловой балкон

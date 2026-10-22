@@ -19,6 +19,7 @@ import { addModelWaterMask } from './model_water_mask.mjs';
 import { validateReceiverReport } from './receiver_frame_review.mjs';
 import { reviewedMedievalPreview } from './medieval_preview_review.mjs';
 import { addFireboxBackstop } from './firebox_backstop.mjs';
+import { addCandleWaxCaps } from './candle_wax_cap.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const base = path.join(root, 'models/collections/medieval-town-vol1');
@@ -194,6 +195,10 @@ if (!process.argv.includes('--publish-manifest')) {
     if (recipe.fireboxBackstop) {
       if (!recipe.proceduralFire) throw new Error('Firebox backstop requires reviewed procedural fire');
       report.fireboxBackstopReview = addFireboxBackstop(doc, recipe.fireboxBackstop, recipe);
+    }
+    if (recipe.candleWaxCaps?.length) {
+      if (!recipe.proceduralFire) throw new Error('Candle wax caps require reviewed procedural fire');
+      report.candleWaxCapReview = addCandleWaxCaps(doc, recipe.candleWaxCaps, { ...recipe, sourceSHA256: report.sourceSHA256 });
     }
     const before = getBounds(doc.getRoot().listScenes()[0]);
     if (recipe.waterAnimation) addModelWaterMask(doc, recipe.materials);

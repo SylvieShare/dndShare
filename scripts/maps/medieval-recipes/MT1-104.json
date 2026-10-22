@@ -1,0 +1,1105 @@
+{
+  "name": "Tall Wall Light",
+  "groupCode": "MED-tall-wall-light",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 120000,
+  "lodTriangles": 60000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1536,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "wood",
+    "plaster",
+    "wall",
+    "candle",
+    "light",
+    "tall",
+    "procedural-fire"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor boards and north south fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x",
+        "physicalPigment": true
+      },
+      {
+        "name": "west floor frame and fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.6,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true
+      },
+      {
+        "name": "east floor frame and fascia",
+        "minMM": [
+          14.3,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true
+      },
+      {
+        "name": "south tall post",
+        "minMM": [
+          -17.65,
+          -17.65,
+          26.1
+        ],
+        "maxMM": [
+          -10.1,
+          -13.6,
+          89.2
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "north tall post",
+        "minMM": [
+          -17.65,
+          13.6,
+          26.1
+        ],
+        "maxMM": [
+          -10.1,
+          17.65,
+          89.2
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "measured rear crossbar",
+        "minMM": [
+          -17.65,
+          -13.8,
+          67
+        ],
+        "maxMM": [
+          -14,
+          13.8,
+          77
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0,
+          0.9997028356791956,
+          -0.02437704524701419
+        ],
+        "projection": {
+          "originMM": [
+            -17.31695924194074,
+            0.3637572392203095,
+            71.49217833162889
+          ],
+          "axis": [
+            0,
+            0.02437704524701419,
+            0.9997028356791956
+          ],
+          "rangeMM": [
+            -2.3985412653719838,
+            2.7344103916671956
+          ]
+        }
+      },
+      {
+        "name": "measured rear middle post",
+        "minMM": [
+          -17.65,
+          -2.6370998859405517,
+          26.1
+        ],
+        "maxMM": [
+          -14,
+          2.40600004196167,
+          69.0929240935008
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "broad upper timber post -1",
+        "minMM": [
+          -9.15,
+          -17.6,
+          34.7
+        ],
+        "maxMM": [
+          -6.3,
+          -8.45,
+          64.8
+        ],
+        "axis": "z",
+        "physicalPigment": true
+      },
+      {
+        "name": "broad upper timber post 1",
+        "minMM": [
+          -9.15,
+          8.45,
+          34.7
+        ],
+        "maxMM": [
+          -6.3,
+          17.6,
+          64.8
+        ],
+        "axis": "z",
+        "physicalPigment": true
+      },
+      {
+        "name": "front upper beam 1",
+        "minMM": [
+          -14,
+          -13.8,
+          26.6
+        ],
+        "maxMM": [
+          -10.1,
+          13.8,
+          89.2
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0,
+          0.827048821999643,
+          -0.5621300970673984
+        ],
+        "projection": {
+          "originMM": [
+            -11.471348740260307,
+            -1.7101559844558263,
+            74.36203084479892
+          ],
+          "axis": [
+            0,
+            0.5621300970673984,
+            0.827048821999643
+          ],
+          "rangeMM": [
+            -4.628743692620704,
+            2.8953838020841403
+          ]
+        },
+        "awayFromSource": {
+          "code": "MT1-091",
+          "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+          "matchMM": 0.12,
+          "projectTo": {
+            "code": "MT1-104",
+            "sourceSHA256": "5bcec6a728ef2710fd89ceebad945e776c5c014ecf32f3e8ce6113ede73703d2"
+          }
+        }
+      },
+      {
+        "name": "front upper beam 2",
+        "minMM": [
+          -14,
+          -13.8,
+          26.6
+        ],
+        "maxMM": [
+          -10.1,
+          13.8,
+          89.2
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0,
+          0.8548114379441514,
+          0.5189387300634365
+        ],
+        "projection": {
+          "originMM": [
+            -11.526781578991551,
+            3.009477104894296,
+            77.78874243182614
+          ],
+          "axis": [
+            0,
+            -0.5189387300634365,
+            0.8548114379441514
+          ],
+          "rangeMM": [
+            -3.0409868154323174,
+            3.0020046645329153
+          ]
+        },
+        "awayFromSource": {
+          "code": "MT1-091",
+          "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+          "matchMM": 0.12,
+          "projectTo": {
+            "code": "MT1-104",
+            "sourceSHA256": "5bcec6a728ef2710fd89ceebad945e776c5c014ecf32f3e8ce6113ede73703d2"
+          }
+        }
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "ochre plaster on both tall faces and top",
+        "kind": "plaster",
+        "minMM": [
+          -17.65,
+          -13.6,
+          26.6
+        ],
+        "maxMM": [
+          -10.1,
+          13.6,
+          89.2
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "south tall post",
+            "minMM": [
+              -17.65,
+              -17.65,
+              26.1
+            ],
+            "maxMM": [
+              -10.1,
+              -13.6,
+              89.2
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "north tall post",
+            "minMM": [
+              -17.65,
+              13.6,
+              26.1
+            ],
+            "maxMM": [
+              -10.1,
+              17.65,
+              89.2
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "measured rear crossbar",
+            "minMM": [
+              -17.65,
+              -13.8,
+              67
+            ],
+            "maxMM": [
+              -14,
+              13.8,
+              77
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0,
+              0.9997028356791956,
+              -0.02437704524701419
+            ],
+            "projection": {
+              "originMM": [
+                -17.31695924194074,
+                0.3637572392203095,
+                71.49217833162889
+              ],
+              "axis": [
+                0,
+                0.02437704524701419,
+                0.9997028356791956
+              ],
+              "rangeMM": [
+                -2.3985412653719838,
+                2.7344103916671956
+              ]
+            }
+          },
+          {
+            "name": "measured rear middle post",
+            "minMM": [
+              -17.65,
+              -2.6370998859405517,
+              26.1
+            ],
+            "maxMM": [
+              -14,
+              2.40600004196167,
+              69.0929240935008
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "front upper beam 1",
+            "minMM": [
+              -14,
+              -13.8,
+              26.6
+            ],
+            "maxMM": [
+              -10.1,
+              13.8,
+              89.2
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0,
+              0.827048821999643,
+              -0.5621300970673984
+            ],
+            "projection": {
+              "originMM": [
+                -11.471348740260307,
+                -1.7101559844558263,
+                74.36203084479892
+              ],
+              "axis": [
+                0,
+                0.5621300970673984,
+                0.827048821999643
+              ],
+              "rangeMM": [
+                -4.628743692620704,
+                2.8953838020841403
+              ]
+            },
+            "awayFromSource": {
+              "code": "MT1-091",
+              "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+              "matchMM": 0.12,
+              "projectTo": {
+                "code": "MT1-104",
+                "sourceSHA256": "5bcec6a728ef2710fd89ceebad945e776c5c014ecf32f3e8ce6113ede73703d2"
+              }
+            }
+          },
+          {
+            "name": "front upper beam 2",
+            "minMM": [
+              -14,
+              -13.8,
+              26.6
+            ],
+            "maxMM": [
+              -10.1,
+              13.8,
+              89.2
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0,
+              0.8548114379441514,
+              0.5189387300634365
+            ],
+            "projection": {
+              "originMM": [
+                -11.526781578991551,
+                3.009477104894296,
+                77.78874243182614
+              ],
+              "axis": [
+                0,
+                -0.5189387300634365,
+                0.8548114379441514
+              ],
+              "rangeMM": [
+                -3.0409868154323174,
+                3.0020046645329153
+              ]
+            },
+            "awayFromSource": {
+              "code": "MT1-091",
+              "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+              "matchMM": 0.12,
+              "projectTo": {
+                "code": "MT1-104",
+                "sourceSHA256": "5bcec6a728ef2710fd89ceebad945e776c5c014ecf32f3e8ce6113ede73703d2"
+              }
+            }
+          },
+          {
+            "name": "added front structure keeps its material",
+            "minMM": [
+              -17.7,
+              -17.7,
+              26.5
+            ],
+            "maxMM": [
+              -10.1,
+              17.7,
+              89.5
+            ],
+            "awayFromSource": {
+              "code": "MT1-091",
+              "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+              "matchMM": 0.12,
+              "projectTo": {
+                "code": "MT1-104",
+                "sourceSHA256": "5bcec6a728ef2710fd89ceebad945e776c5c014ecf32f3e8ce6113ede73703d2"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "candle shield bracket and cup -1",
+        "minMM": [
+          -6.65,
+          -17.23,
+          46.5
+        ],
+        "maxMM": [
+          3.25,
+          -8.73,
+          56.8
+        ],
+        "rgb": [
+          0.225,
+          0.195,
+          0.135
+        ],
+        "roughness": 0.5,
+        "metallic": 0.8,
+        "kind": "paint",
+        "variation": 0.04
+      },
+      {
+        "name": "candle shield bracket and cup 1",
+        "minMM": [
+          -6.65,
+          8.78,
+          46.5
+        ],
+        "maxMM": [
+          3.25,
+          17.28,
+          56.8
+        ],
+        "rgb": [
+          0.225,
+          0.195,
+          0.135
+        ],
+        "roughness": 0.5,
+        "metallic": 0.8,
+        "kind": "paint",
+        "variation": 0.04
+      },
+      {
+        "name": "melted beeswax -1",
+        "kind": "paint",
+        "minMM": [
+          -3.4,
+          -17.3,
+          56.8
+        ],
+        "maxMM": [
+          3.35,
+          -8.6,
+          62.55
+        ],
+        "rgb": [
+          0.82,
+          0.75,
+          0.48
+        ],
+        "roughness": 0.86,
+        "variation": 0.03
+      },
+      {
+        "name": "own candle flame -1",
+        "kind": "flame",
+        "minMM": [
+          -1.484799976348877,
+          -14.361200447082519,
+          61.52119705200196
+        ],
+        "maxMM": [
+          1.297199959754944,
+          -11.551600341796876,
+          65.97179992675781
+        ],
+        "rgb": [
+          1,
+          0.62,
+          0.075
+        ],
+        "roughness": 0.86,
+        "variation": 0.03,
+        "nearSource": {
+          "code": "MT1-104",
+          "sourceSHA256": "5bcec6a728ef2710fd89ceebad945e776c5c014ecf32f3e8ce6113ede73703d2",
+          "matchMM": 0.04,
+          "componentAboveMM": 62.5,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              -3.5,
+              -17.5,
+              62.5
+            ],
+            "maxMM": [
+              3.5,
+              17.5,
+              66.2
+            ]
+          },
+          "projectTo": {
+            "code": "MT1-104",
+            "sourceSHA256": "5bcec6a728ef2710fd89ceebad945e776c5c014ecf32f3e8ce6113ede73703d2"
+          }
+        }
+      },
+      {
+        "name": "melted beeswax 1",
+        "kind": "paint",
+        "minMM": [
+          -3.4,
+          8.6,
+          56.8
+        ],
+        "maxMM": [
+          3.35,
+          17.3,
+          62.55
+        ],
+        "rgb": [
+          0.82,
+          0.75,
+          0.48
+        ],
+        "roughness": 0.86,
+        "variation": 0.03
+      },
+      {
+        "name": "own candle flame 1",
+        "kind": "flame",
+        "minMM": [
+          -1.612799997329712,
+          11.674199943542481,
+          61.53549835205079
+        ],
+        "maxMM": [
+          1.1272000026702882,
+          14.36940013885498,
+          65.65440185546875
+        ],
+        "rgb": [
+          1,
+          0.62,
+          0.075
+        ],
+        "roughness": 0.86,
+        "variation": 0.03,
+        "nearSource": {
+          "code": "MT1-104",
+          "sourceSHA256": "5bcec6a728ef2710fd89ceebad945e776c5c014ecf32f3e8ce6113ede73703d2",
+          "matchMM": 0.04,
+          "componentAboveMM": 62.5,
+          "componentIndex": 1,
+          "componentBoundsMM": {
+            "minMM": [
+              -3.5,
+              -17.5,
+              62.5
+            ],
+            "maxMM": [
+              3.5,
+              17.5,
+              66.2
+            ]
+          },
+          "projectTo": {
+            "code": "MT1-104",
+            "sourceSHA256": "5bcec6a728ef2710fd89ceebad945e776c5c014ecf32f3e8ce6113ede73703d2"
+          }
+        }
+      },
+      {
+        "name": "measured flame root wall-candle-1",
+        "kind": "flame",
+        "minMM": [
+          -1.42511707325543,
+          -14.008702197582187,
+          61.52119705200196
+        ],
+        "maxMM": [
+          0.893305698282646,
+          -11.646734956610638,
+          62.6
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.265905687486392,
+            -12.827718577096412,
+            61.52119705200196
+          ],
+          "radiiMM": [
+            1.159211385769038,
+            1.1809836204857742,
+            100
+          ]
+        },
+        "rgb": [
+          1,
+          0.62,
+          0.075
+        ],
+        "roughness": 0.86,
+        "variation": 0.03
+      },
+      {
+        "name": "measured flame root wall-candle-2",
+        "kind": "flame",
+        "minMM": [
+          -1.4620688263985673,
+          11.851212686958846,
+          61.53549835205079
+        ],
+        "maxMM": [
+          0.8361688237664181,
+          14.139689517724442,
+          62.6
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.31295000131607453,
+            12.995451102341644,
+            61.53549835205079
+          ],
+          "radiiMM": [
+            1.1491188250824926,
+            1.1442384153827971,
+            100
+          ]
+        },
+        "rgb": [
+          1,
+          0.62,
+          0.075
+        ],
+        "roughness": 0.86,
+        "variation": 0.03
+      }
+    ],
+    "emissionStrength": 1.6,
+    "preservePhysicalWoodShade": true,
+    "flameBoundaryClip": {
+      "toleranceMM": 0.025,
+      "lodToleranceMM": 0.04,
+      "preserveRegions": [
+        {
+          "minMM": [
+            -3.5,
+            -17.3,
+            56.5
+          ],
+          "maxMM": [
+            3.5,
+            -8.6,
+            62.55
+          ]
+        },
+        {
+          "minMM": [
+            -3.5,
+            8.6,
+            56.5
+          ],
+          "maxMM": [
+            3.5,
+            17.3,
+            62.55
+          ]
+        }
+      ]
+    }
+  },
+  "weightBudget": {
+    "renderMiB": [
+      3,
+      9
+    ],
+    "lodMiB": [
+      1.5,
+      6
+    ],
+    "shadowKiB": [
+      100,
+      300
+    ],
+    "previewKiB": [
+      12,
+      50
+    ],
+    "basis": "Own619972tri/30998684bytes,max89.012497mm. Tallplaster/ownrearwood/2frontdiagonals/broadcandleposts,2metalbracket-cups/meltedbeeswax/2proceduralflames.120k/60k independentgeometry,2048/1536bakes,1536colour/data render,1024colour/1536data LOD;comparecompact."
+  },
+  "reviewNotes": "Own raw full/back/candlefront/south/north inspected. SourceSHA5bcec6a728ef2710fd89ceebad945e776c5c014ecf32f3e8ce6113ede73703d2,max89.012497mm. Upperwall286raycomparison:plain91matches223within.12mm,median.00352mm;otherwall/mirrorreferencesworse. Twoownfrontbeams6343/3290samples,directions[0,.827049,-.562130]/[0,.854811,.518939],6addedverticesoutsidefits. Ownrearbar/middlepostmeasured. BroadfrontcandlepostwoodkeptforwardofX-9.15,protectingrearplaster. Nativefloor[0,0]Z24.705322,nZ.994028,1logicalcell0. BlockerwestX<=-9.6plus2sidecandleregions|Y|>=8.2/X<=3.3leavescentrefree. Ownrawflamesabove62.5:1084/926vertices,2224/1911touchingfaces;boundedown-source masks+boundaryclip. FlameboundsnegativeYtop65.891800/positiveY65.574402. DynamicbaseXYfromlowest.3mmofflame,baseZ62.5;lightatownsourceflamecentre above17datum,sizefromownbounds. Keep2independentcandlelights,actualbodyrender/LOD/shadowcontainsnosculptedfire/emission. Convertwaxandbracketcolourtosurfacepaintforphysicalpixelrepairafterflameremoval;waxRGB/rough.86andagedmetalRGB/.8metal/.5roughretained. Pinwaxrims/runoff/nativecollar. Mandatorybodyoff/onviews,sourcegeometry/colour/PBR/holderclearances,2light-forward/upanddownshadowchecks,sourceflameraysall3assets,thenUD-016/finalproceduralpreviewreceipt/GoMF/MCPverification. Bodyoffviews/downdetectorconfirmedanopenneckafterold62.5cut,centre rays reachedholderundersideZ52.1..52.7 withbackface normals. Existingouterwaxpoolringsaroundhole measured175/163upwardvertices,minZ61.551197/61.565498. Clearremainingflamerootinsidemeasuredellipse;addclosed0.1mmwaxsurfaces0.05mmbelowmeasuredrim(top61.501197/61.515498),keepingouterwaxunchanged. Moveonlyeffectbasetothesurface+.01,lightsourcecentresunchanged. Preserveinitialfailedassets/QAunder candle-wax-repair/104/before. Revalidateoldoutergeometryprobes,fireremoval/selfshadow/capmaterials andon-offviews. Checkpublished039forthe samelegacyholeafter104.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standRayTopMM": 30,
+  "renderUVAngleLimitRad": 0.2,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVAngleLimitRad": 0.2,
+  "lodUVIslandMargin": 0.0012,
+  "defaultLights": [
+    {
+      "key": "wall-candle-1",
+      "name": "\u0421\u0432\u0435\u0447\u0430 \u0441\u0442\u0435\u043d\u044b 1",
+      "kind": "candle",
+      "color": "#ffd899",
+      "position": [
+        0.49732,
+        0.870183,
+        1.348464
+      ],
+      "intensity": 3,
+      "radius": 2.5,
+      "enabled": true,
+      "flicker": true,
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.097645,
+          0.12516
+        ],
+        "strength": 0.7,
+        "offset": [
+          -0.004917,
+          -0.003677,
+          -0.076716
+        ]
+      }
+    },
+    {
+      "key": "wall-candle-2",
+      "name": "\u0421\u0432\u0435\u0447\u0430 \u0441\u0442\u0435\u043d\u044b 2",
+      "kind": "candle",
+      "color": "#ffd899",
+      "position": [
+        0.493063,
+        0.127949,
+        1.344016
+      ],
+      "intensity": 3,
+      "radius": 2.5,
+      "enabled": true,
+      "flicker": true,
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.095,
+          0.115683
+        ],
+        "strength": 0.7,
+        "offset": [
+          -0.002004,
+          0.000752,
+          -0.071859
+        ]
+      }
+    }
+  ],
+  "proceduralFire": true,
+  "renderColourSize": 1536,
+  "renderDataSize": 1536,
+  "lodColourSize": 1024,
+  "lodDataSize": 1536,
+  "standPointsMM": [
+    [
+      0,
+      0
+    ]
+  ],
+  "placementCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "surfaceHeightMM": 24.705322265625,
+  "blockersMM": [
+    [
+      [
+        -17.65,
+        -17.65
+      ],
+      [
+        -9.6,
+        -17.65
+      ],
+      [
+        -9.6,
+        17.65
+      ],
+      [
+        -17.65,
+        17.65
+      ]
+    ],
+    [
+      [
+        -9.6,
+        -17.65
+      ],
+      [
+        3.3,
+        -17.65
+      ],
+      [
+        3.3,
+        -8.2
+      ],
+      [
+        -9.6,
+        -8.2
+      ]
+    ],
+    [
+      [
+        -9.6,
+        8.2
+      ],
+      [
+        3.3,
+        8.2
+      ],
+      [
+        3.3,
+        17.65
+      ],
+      [
+        -9.6,
+        17.65
+      ]
+    ]
+  ],
+  "geometryDetailRegions": [
+    {
+      "name": "native mounting rim",
+      "minMM": [
+        -17.7,
+        -17.7,
+        17
+      ],
+      "maxMM": [
+        17.7,
+        17.7,
+        17.51
+      ]
+    },
+    {
+      "name": "wax top rim and wick contact -1",
+      "minMM": [
+        -3.5,
+        -17.3,
+        61.7
+      ],
+      "maxMM": [
+        3.5,
+        -8.6,
+        62.55
+      ]
+    },
+    {
+      "name": "wax runoff over cup rim -1",
+      "minMM": [
+        -3.5,
+        -17.3,
+        56.65
+      ],
+      "maxMM": [
+        3.5,
+        -8.6,
+        57.25
+      ]
+    },
+    {
+      "name": "wax top rim and wick contact 1",
+      "minMM": [
+        -3.5,
+        8.6,
+        61.7
+      ],
+      "maxMM": [
+        3.5,
+        17.3,
+        62.55
+      ]
+    },
+    {
+      "name": "wax runoff over cup rim 1",
+      "minMM": [
+        -3.5,
+        8.6,
+        56.65
+      ],
+      "maxMM": [
+        3.5,
+        17.3,
+        57.25
+      ]
+    }
+  ],
+  "candleWaxCaps": [
+    {
+      "key": "wall-candle-1",
+      "centreMM": [
+        -0.265905687486392,
+        -12.827718577096412
+      ],
+      "cutRadiiMM": [
+        1.159211385769038,
+        1.1809836204857742
+      ],
+      "radiiMM": [
+        1.219211385769038,
+        1.2409836204857743
+      ],
+      "measuredWaxRimMinMM": 61.55119705200195,
+      "measuredRimSamples": 175,
+      "topMM": 61.501197052001956,
+      "bottomMM": 61.401197052001955,
+      "rgb": [
+        0.82,
+        0.75,
+        0.48
+      ],
+      "roughness": 0.86,
+      "measurementSourceSHA256": "5bcec6a728ef2710fd89ceebad945e776c5c014ecf32f3e8ce6113ede73703d2"
+    },
+    {
+      "key": "wall-candle-2",
+      "centreMM": [
+        -0.31295000131607453,
+        12.995451102341644
+      ],
+      "cutRadiiMM": [
+        1.1491188250824926,
+        1.1442384153827971
+      ],
+      "radiiMM": [
+        1.2091188250824927,
+        1.2042384153827972
+      ],
+      "measuredWaxRimMinMM": 61.56549835205078,
+      "measuredRimSamples": 163,
+      "topMM": 61.515498352050784,
+      "bottomMM": 61.41549835205078,
+      "rgb": [
+        0.82,
+        0.75,
+        0.48
+      ],
+      "roughness": 0.86,
+      "measurementSourceSHA256": "5bcec6a728ef2710fd89ceebad945e776c5c014ecf32f3e8ce6113ede73703d2"
+    }
+  ]
+}
