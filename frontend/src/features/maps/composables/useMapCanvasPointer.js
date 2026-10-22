@@ -173,19 +173,22 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
   }
   function applyMove(event) {
     if (!getRenderer() || props.readonly) return;
+    // Pointer capture keeps navigation active outside the canvas bounds.
     const point =
-      !props.selectedLight &&
-      !props.surfacePlacement &&
-      !props.placementDecal &&
-      !(drag?.hit?.decalId && !drag.pan && !drag.orbit) &&
-      !(props.previewObject?.modelId && props.previewObject.moving) &&
-      drag?.point?.elevation !== undefined &&
-      (!props.placementModel || drag.pan || drag.orbit || drag.region)
-        ? {
-            ...getRenderer().world(event, drag.point.elevation),
-            elevation: drag.point.elevation,
-          }
-        : pointAt(event);
+      drag?.pan && !drag.orbit
+        ? getRenderer().world(event, drag.point?.elevation)
+        : !props.selectedLight &&
+            !props.surfacePlacement &&
+            !props.placementDecal &&
+            !(drag?.hit?.decalId && !drag.pan && !drag.orbit) &&
+            !(props.previewObject?.modelId && props.previewObject.moving) &&
+            drag?.point?.elevation !== undefined &&
+            (!props.placementModel || drag.pan || drag.orbit || drag.region)
+          ? {
+              ...getRenderer().world(event, drag.point.elevation),
+              elevation: drag.point.elevation,
+            }
+          : pointAt(event);
     if (!drag) {
       emit("gesture", {
         phase: "hover",
@@ -218,6 +221,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
         ),
       });
     } else if (drag.pan) {
+      if (!drag.point || !point) return;
       const v = getRenderer().getView();
       setView({
         ...v,

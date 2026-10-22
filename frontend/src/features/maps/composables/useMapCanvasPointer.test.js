@@ -129,6 +129,45 @@ it("empty space always pans and command selection keeps its immediate gesture", 
   vi.advanceTimersByTime(600);
   expect(command.emit).toHaveBeenCalledTimes(1);
 });
+it.each([{}, { selectedLight: "light" }])(
+  "keeps a captured pan moving outside the canvas without repeated null-point errors (%j)",
+  (props) => {
+    const { pointer, event, setView } = setup(null, props, {
+      lightPoint: (e) => ({ x: e.clientX / 10, y: e.clientY / 10 }),
+    });
+    pointer.down(event);
+    const errors = [];
+    for (const clientX of [210, 225, 240, 260, 280, 300]) {
+      pointer.move({ ...event, clientX });
+      try {
+        vi.advanceTimersByTime(16);
+      } catch (error) {
+        errors.push(error.message);
+      }
+    }
+    expect(errors).toEqual([]);
+    expect(setView).toHaveBeenCalledTimes(6);
+    expect(setView).toHaveBeenLastCalledWith(
+      expect.objectContaining({ x: -28, y: 0 }),
+    );
+    pointer.up({ ...event, clientX: 300 });
+    pointer.down(event);
+    pointer.move({ ...event, clientX: 40 });
+    pointer.up({ ...event, clientX: 40 });
+    expect(setView).toHaveBeenLastCalledWith(
+      expect.objectContaining({ x: -2, y: 0 }),
+    );
+  },
+);
+it("still cancels a held edit released outside the canvas", () => {
+  const { pointer, event, emit, setView } = setup();
+  pointer.down(event);
+  vi.advanceTimersByTime(500);
+  pointer.move({ ...event, clientX: 210 });
+  pointer.up({ ...event, clientX: 210 });
+  expect(emit.mock.calls.at(-1)[1].phase).toBe("cancel");
+  expect(setView).not.toHaveBeenCalled();
+});
 it("session canvas retains immediate token dragging", () => {
   const { pointer, event, emit } = setup(
     { tokenId: "token" },
