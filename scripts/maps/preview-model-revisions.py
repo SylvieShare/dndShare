@@ -1,5 +1,6 @@
 """Render prepared GLB revisions; source files and screenshots stay in models/."""
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -23,9 +24,14 @@ def preview(report, size=256, front=False, review=False, inside=False, focus_max
         prefix = 'lod-' + prefix
     if transparent:
         prefix = 'transparent-' + prefix
-    if transparent_preview(directory/(prefix+'preview.png')) and not review:
+    if not transparent and transparent_preview(directory/(prefix+'preview.png')) and not review:
         return
     row = json.loads(report.read_text())['model']
+    if transparent:
+        digest = lambda file: hashlib.sha256(file.read_bytes()).hexdigest()
+        preview_model = directory/('lod-preview-model.glb' if tier=='lod' else 'preview-model.glb')
+        preview_inputs = {'renderSHA256': digest(directory/(tier+'.glb')),
+                          'previewModelSHA256': digest(preview_model)}
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=str(directory/('lod-preview-model.glb' if tier=='lod' else 'preview-model.glb')))
     scene = bpy.context.scene
@@ -80,6 +86,17 @@ def preview(report, size=256, front=False, review=False, inside=False, focus_max
             fit_camera(camera, bounds)
             scene.render.filepath = str(directory/(prefix+name+'.png'))
             bpy.ops.render.render(write_still=True)
+    if transparent:
+        if preview_inputs != {'renderSHA256': digest(directory/(tier+'.glb')),
+                              'previewModelSHA256': digest(preview_model)}:
+            raise RuntimeError('Model changed while rendering preview; render again')
+        receipt = {
+            'version': 1,
+            **preview_inputs,
+            'imageSHA256': digest(directory/(prefix+'preview.png')),
+            'frame': {key: row[key] for key in ('width', 'height', 'mountDepth', 'placementOffset')},
+        }
+        (directory/(prefix+'preview.json')).write_text(json.dumps(receipt, indent=2)+'\n')
     print('PREVIEW_REVISION', row['sourceCode'], flush=True)
 
 

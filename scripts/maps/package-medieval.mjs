@@ -17,6 +17,7 @@ import { stripSculptedFlames } from './model_flame_geometry.mjs';
 import { addLightEffectPreview } from './light_effect_preview.mjs';
 import { addModelWaterMask } from './model_water_mask.mjs';
 import { validateReceiverReport } from './receiver_frame_review.mjs';
+import { reviewedMedievalPreview } from './medieval_preview_review.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const base = path.join(root, 'models/collections/medieval-town-vol1');
@@ -206,7 +207,7 @@ if (!process.argv.includes('--publish-manifest')) {
   if (!report.model || !report.tiers?.shadow) throw new Error('Prepare geometry, textures and shadow first');
   if (JSON.stringify(report.recipe)!==JSON.stringify(recipe)) throw new Error('Stale publication recipe');
   for(const tier of ['render','lod']){const bytes=await fs.readFile(path.join(review,tier+'.glb'));await reviewedMountAssetHash(report,tier,review,createHash('sha256').update(bytes).digest('hex'));}
-  const input = path.join(review, 'preview.png');
+  const input = await reviewedMedievalPreview(review, report.model);
   const { data, info } = await sharp(input).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   const alpha = [];
   for (let i = 3; i < data.length; i += 4) alpha.push(data[i]);
