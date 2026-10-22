@@ -8,6 +8,7 @@ const sectionRules = {
     [/^path(?:-|$)/, "path"],
     [/^bar(?:-|$)/, "bar"],
     [/^bed(?:-|$)/, "bed"],
+    [/^tall-buffet$/, "buffet"],
     [/^(?:wall|window|door|wooden-arch)(?:-|$)/, "walls"],
     [/^tall-(?:angle|wall|window|door|skull-wall|pig-wall)(?:-|$)/, "walls"],
     [/^(?:tall-)?(?:pig|skull)-fireplace$/, "fireplaces"],

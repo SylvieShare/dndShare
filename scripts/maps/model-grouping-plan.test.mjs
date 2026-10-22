@@ -91,3 +91,11 @@ test("tall fireplaces keep a distinct family within the fireplace section", () =
     variantCode: "MED-tall-pig-fireplace",
   });
 });
+
+test("tall buffet keeps its family in the existing buffet section", () => {
+  const item = model("Tall Buffet", "MED-tall-buffet");
+  assert.deepEqual(groupingFor(item, [item]), {
+    code: "MED-buffet",
+    variantCode: "MED-tall-buffet",
+  });
+});
