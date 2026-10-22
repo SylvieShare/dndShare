@@ -11,6 +11,8 @@ const prepared = {
   code: "MED-stair",
   textureDetail: "detailed",
   mountDepth: 0.153517,
+  width: 1,
+  height: 1,
   placementPoints: [{ x: 0.5, y: 0.5, elevation: 0.4 }],
   assets: { render: { sha256: "original" }, source: { sha256: "source" } },
 };
@@ -26,6 +28,14 @@ test("fresh bilingual catalogue curation retains completed physical publication"
     variantCode: "MED-stair",
   };
   assert.equal(matchesPreparedPublication(prepared, current), true);
+});
+test("explicit logical cells retain painting while physical contacts stay strict", () => {
+  const current = { ...prepared, placementPoints: prepared.placementPoints.map(p => ({ ...p, cell: { x: 0, y: 0 } })) };
+  assert.equal(matchesPreparedPublication(prepared, current), true);
+  assert.equal(matchesPreparedPublication(current, { ...current, placementPoints: [{ ...current.placementPoints[0], elevation: .5 }] }), false);
+  for (const cell of [null, { x: -1, y: 0 }, { x: 1, y: 0 }, { x: 0, y: .5 }]) {
+    assert.equal(matchesPreparedPublication(prepared, { ...current, placementPoints: [{ ...current.placementPoints[0], cell }] }), false);
+  }
 });
 test("identity, source, resource and placement changes are never hidden by catalogue comparison", () => {
   for (const changed of [

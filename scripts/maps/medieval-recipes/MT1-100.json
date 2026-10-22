@@ -1,0 +1,2262 @@
+{
+  "name": "Tall Skull Fireplace",
+  "groupCode": "MED-tall-skull-fireplace",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 140000,
+  "lodTriangles": 110000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 2048,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "floor",
+    "stone",
+    "wood",
+    "fireplace",
+    "skull",
+    "horn",
+    "bone",
+    "cauldron",
+    "potion",
+    "metal",
+    "tall",
+    "wall",
+    "plaster"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.31,
+      0.3,
+      0.265
+    ],
+    "stoneLightRGB": [
+      0.58,
+      0.55,
+      0.48
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor X boards and north south rails",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          26.65
+        ],
+        "axis": "x",
+        "darkRGB": [
+          0.34,
+          0.165,
+          0.055
+        ],
+        "lightRGB": [
+          0.59,
+          0.35,
+          0.145
+        ],
+        "roughness": 0.9,
+        "physicalPigment": true
+      },
+      {
+        "name": "floor Y edge rail -17.7",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.7,
+          26.65
+        ],
+        "axis": "y",
+        "darkRGB": [
+          0.34,
+          0.165,
+          0.055
+        ],
+        "lightRGB": [
+          0.59,
+          0.35,
+          0.145
+        ],
+        "roughness": 0.9,
+        "physicalPigment": true
+      },
+      {
+        "name": "floor Y edge rail 14.3",
+        "minMM": [
+          14.3,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          26.65
+        ],
+        "axis": "y",
+        "darkRGB": [
+          0.34,
+          0.165,
+          0.055
+        ],
+        "lightRGB": [
+          0.59,
+          0.35,
+          0.145
+        ],
+        "roughness": 0.9,
+        "physicalPigment": true
+      },
+      {
+        "name": "south tall post",
+        "minMM": [
+          -17.65,
+          -17.65,
+          26.1
+        ],
+        "maxMM": [
+          -10.1,
+          -13.6,
+          89.2
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "north tall post",
+        "minMM": [
+          -17.65,
+          13.6,
+          26.1
+        ],
+        "maxMM": [
+          -10.1,
+          17.65,
+          89.2
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "measured rear crossbar",
+        "minMM": [
+          -17.65,
+          -13.8,
+          67
+        ],
+        "maxMM": [
+          -14,
+          13.8,
+          77
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0,
+          0.9998265685888501,
+          -0.018623446078674354
+        ],
+        "projection": {
+          "originMM": [
+            -17.30967468317004,
+            0.7152163788892221,
+            71.37400570192199
+          ],
+          "axis": [
+            0,
+            0.018623446078674354,
+            0.9998265685888501
+          ],
+          "rangeMM": [
+            -2.25822466842346,
+            2.8218527826519724
+          ]
+        }
+      },
+      {
+        "name": "measured rear middle post",
+        "minMM": [
+          -17.65,
+          -2.6450504302978515,
+          26.1
+        ],
+        "maxMM": [
+          -14,
+          2.4363495349884032,
+          69.1153893184719
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "tilted vertical wooden trophy plaque",
+        "minMM": [
+          -4,
+          -10.6,
+          54.8
+        ],
+        "maxMM": [
+          4.5,
+          10.6,
+          79.65
+        ],
+        "axis": "beam",
+        "darkRGB": [
+          0.29,
+          0.135,
+          0.045
+        ],
+        "lightRGB": [
+          0.57,
+          0.32,
+          0.11
+        ],
+        "roughness": 0.9,
+        "direction": [
+          -0.23,
+          0,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            1,
+            0,
+            0.23
+          ],
+          "rangeMM": [
+            14.45,
+            16.55
+          ]
+        },
+        "excludeParts": [
+          {
+            "minMM": [
+              -5,
+              -11,
+              54
+            ],
+            "maxMM": [
+              5,
+              11,
+              80
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                -0.44,
+                1
+              ],
+              "rangeMM": [
+                79.85,
+                1000
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -5,
+              -11,
+              54
+            ],
+            "maxMM": [
+              5,
+              11,
+              80
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                0.44,
+                1
+              ],
+              "rangeMM": [
+                79.85,
+                1000
+              ]
+            }
+          }
+        ],
+        "physicalPigment": true
+      },
+      {
+        "name": "charred fuel bed and small fragments",
+        "minMM": [
+          -7.1,
+          -10.5,
+          28.05
+        ],
+        "maxMM": [
+          7.6,
+          8.8,
+          33.4
+        ],
+        "axis": "beam",
+        "darkRGB": [
+          0.07,
+          0.05,
+          0.03
+        ],
+        "lightRGB": [
+          0.16,
+          0.09,
+          0.035
+        ],
+        "roughness": 0.98,
+        "direction": [
+          1,
+          0,
+          0
+        ],
+        "physicalPigment": true
+      },
+      {
+        "name": "charred log shaft 1",
+        "minMM": [
+          -7.0,
+          -10.7,
+          27.8
+        ],
+        "maxMM": [
+          7.5,
+          8.3,
+          33.5
+        ],
+        "axis": "beam",
+        "darkRGB": [
+          0.105,
+          0.065,
+          0.028
+        ],
+        "lightRGB": [
+          0.29,
+          0.16,
+          0.065
+        ],
+        "roughness": 0.97,
+        "direction": [
+          0.8543914627969588,
+          -0.5196298955022439,
+          0.0
+        ],
+        "radialShell": {
+          "originMM": [
+            5.605068330710891,
+            -8.707580226962849,
+            30.797765505515923
+          ],
+          "axis": [
+            0.8543914627969588,
+            -0.5196298955022439,
+            0.0
+          ],
+          "rangeMM": [
+            -13,
+            1.7
+          ],
+          "radiusAtOriginMM": 3.2,
+          "radiusSlope": 0,
+          "thicknessMM": 3.2,
+          "allowanceMM": 0
+        },
+        "physicalPigment": true
+      },
+      {
+        "name": "log cut growth rings 1",
+        "minMM": [
+          -7.0,
+          -10.7,
+          27.8
+        ],
+        "maxMM": [
+          7.5,
+          8.3,
+          33.5
+        ],
+        "axis": "log-x",
+        "darkRGB": [
+          0.3,
+          0.18,
+          0.07
+        ],
+        "lightRGB": [
+          0.53,
+          0.34,
+          0.13
+        ],
+        "roughness": 0.94,
+        "radialShell": {
+          "originMM": [
+            5.605068330710891,
+            -8.707580226962849,
+            30.797765505515923
+          ],
+          "axis": [
+            0.8543914627969588,
+            -0.5196298955022439,
+            0.0
+          ],
+          "rangeMM": [
+            -13,
+            1.7
+          ],
+          "radiusAtOriginMM": 2.85,
+          "radiusSlope": 0,
+          "thicknessMM": 2.85,
+          "allowanceMM": 0
+        },
+        "projection": {
+          "originMM": [
+            5.605068330710891,
+            -8.707580226962849,
+            30.797765505515923
+          ],
+          "axis": [
+            0.7487967330607331,
+            -0.5917474076735239,
+            0.29856064387195724
+          ],
+          "rangeMM": [
+            -0.6,
+            0.6
+          ]
+        },
+        "capCentersMM": [
+          [
+            5.605068330710891,
+            -8.707580226962849,
+            30.797765505515923
+          ]
+        ],
+        "grainRadiusMM": 2.85,
+        "endRangesMM": [
+          [
+            -20,
+            20
+          ]
+        ],
+        "endDarkRGB": [
+          0.28,
+          0.155,
+          0.06
+        ],
+        "endLightRGB": [
+          0.57,
+          0.37,
+          0.145
+        ],
+        "endRoughness": 0.94,
+        "physicalPigment": true
+      },
+      {
+        "name": "charred log shaft 2",
+        "minMM": [
+          -7.0,
+          -10.7,
+          27.8
+        ],
+        "maxMM": [
+          7.5,
+          8.3,
+          33.5
+        ],
+        "axis": "beam",
+        "darkRGB": [
+          0.105,
+          0.065,
+          0.028
+        ],
+        "lightRGB": [
+          0.29,
+          0.16,
+          0.065
+        ],
+        "roughness": 0.97,
+        "direction": [
+          0.9003489528419438,
+          -0.43516866054027287,
+          0.0
+        ],
+        "radialShell": {
+          "originMM": [
+            3.9884422639725914,
+            -1.5199419006075658,
+            30.65691088958525
+          ],
+          "axis": [
+            0.9003489528419438,
+            -0.43516866054027287,
+            0.0
+          ],
+          "rangeMM": [
+            -13,
+            1.7
+          ],
+          "radiusAtOriginMM": 3.2,
+          "radiusSlope": 0,
+          "thicknessMM": 3.2,
+          "allowanceMM": 0
+        },
+        "physicalPigment": true
+      },
+      {
+        "name": "log cut growth rings 2",
+        "minMM": [
+          -7.0,
+          -10.7,
+          27.8
+        ],
+        "maxMM": [
+          7.5,
+          8.3,
+          33.5
+        ],
+        "axis": "log-x",
+        "darkRGB": [
+          0.3,
+          0.18,
+          0.07
+        ],
+        "lightRGB": [
+          0.53,
+          0.34,
+          0.13
+        ],
+        "roughness": 0.94,
+        "radialShell": {
+          "originMM": [
+            3.9884422639725914,
+            -1.5199419006075658,
+            30.65691088958525
+          ],
+          "axis": [
+            0.9003489528419438,
+            -0.43516866054027287,
+            0.0
+          ],
+          "rangeMM": [
+            -13,
+            1.7
+          ],
+          "radiusAtOriginMM": 2.75,
+          "radiusSlope": 0,
+          "thicknessMM": 2.75,
+          "allowanceMM": 0
+        },
+        "projection": {
+          "originMM": [
+            3.9884422639725914,
+            -1.5199419006075658,
+            30.65691088958525
+          ],
+          "axis": [
+            0.75314974943991,
+            -0.3417455390709826,
+            0.5621169286222254
+          ],
+          "rangeMM": [
+            -0.6,
+            0.6
+          ]
+        },
+        "capCentersMM": [
+          [
+            3.9884422639725914,
+            -1.5199419006075658,
+            30.65691088958525
+          ]
+        ],
+        "grainRadiusMM": 2.75,
+        "endRangesMM": [
+          [
+            -20,
+            20
+          ]
+        ],
+        "endDarkRGB": [
+          0.28,
+          0.155,
+          0.06
+        ],
+        "endLightRGB": [
+          0.57,
+          0.37,
+          0.145
+        ],
+        "endRoughness": 0.94,
+        "physicalPigment": true
+      },
+      {
+        "name": "side charred fuel piece",
+        "minMM": [
+          -6.8,
+          2.5,
+          28.2
+        ],
+        "maxMM": [
+          2.5,
+          8.2,
+          33.3
+        ],
+        "axis": "beam",
+        "darkRGB": [
+          0.12,
+          0.07,
+          0.03
+        ],
+        "lightRGB": [
+          0.31,
+          0.17,
+          0.065
+        ],
+        "roughness": 0.97,
+        "direction": [
+          0.92,
+          -0.35,
+          0.02
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -1.8,
+            5.0,
+            30.5
+          ],
+          "radiiMM": [
+            5.2,
+            2.8,
+            2.75
+          ]
+        },
+        "physicalPigment": true
+      },
+      {
+        "name": "small side fuel cut rings",
+        "minMM": [
+          2.2,
+          1.9,
+          28.05
+        ],
+        "maxMM": [
+          4.2,
+          4.5,
+          30.5
+        ],
+        "axis": "log-x",
+        "darkRGB": [
+          0.3,
+          0.18,
+          0.07
+        ],
+        "lightRGB": [
+          0.53,
+          0.34,
+          0.13
+        ],
+        "roughness": 0.94,
+        "ellipsoid": {
+          "centerMM": [
+            3.0,
+            3.3,
+            29.2
+          ],
+          "radiiMM": [
+            1.4,
+            1.2,
+            1.2
+          ]
+        },
+        "capCentersMM": [
+          [
+            3.0,
+            3.3,
+            29.2
+          ]
+        ],
+        "grainRadiusMM": 1.2,
+        "endRangesMM": [
+          [
+            -20,
+            20
+          ]
+        ],
+        "endDarkRGB": [
+          0.28,
+          0.155,
+          0.06
+        ],
+        "endLightRGB": [
+          0.57,
+          0.37,
+          0.145
+        ],
+        "endRoughness": 0.94,
+        "physicalPigment": true
+      },
+      {
+        "name": "raised central trophy crest",
+        "minMM": [
+          -2.5,
+          -3,
+          75.5
+        ],
+        "maxMM": [
+          2,
+          3,
+          78.6
+        ],
+        "axis": "beam",
+        "direction": [
+          -0.23,
+          0,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            1,
+            0,
+            0.23
+          ],
+          "rangeMM": [
+            16.5,
+            17.4
+          ]
+        },
+        "darkRGB": [
+          0.29,
+          0.135,
+          0.045
+        ],
+        "lightRGB": [
+          0.57,
+          0.32,
+          0.11
+        ],
+        "roughness": 0.9,
+        "physicalPigment": true
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [],
+    "stoneParts": [
+      {
+        "name": "sooty firebox back stone",
+        "minMM": [
+          -9,
+          -9.4,
+          27.9
+        ],
+        "maxMM": [
+          -5.8,
+          9.4,
+          47.2
+        ],
+        "darkRGB": [
+          0.1,
+          0.09,
+          0.075
+        ],
+        "lightRGB": [
+          0.26,
+          0.24,
+          0.21
+        ]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "ochre plaster on both tall faces and top",
+        "kind": "plaster",
+        "minMM": [
+          -17.65,
+          -13.6,
+          26.6
+        ],
+        "maxMM": [
+          -10.1,
+          13.6,
+          89.2
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "south tall post",
+            "minMM": [
+              -17.65,
+              -17.65,
+              26.1
+            ],
+            "maxMM": [
+              -10.1,
+              -13.6,
+              89.2
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "north tall post",
+            "minMM": [
+              -17.65,
+              13.6,
+              26.1
+            ],
+            "maxMM": [
+              -10.1,
+              17.65,
+              89.2
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "measured rear crossbar",
+            "minMM": [
+              -17.65,
+              -13.8,
+              67
+            ],
+            "maxMM": [
+              -14,
+              13.8,
+              77
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0,
+              0.9998265685888501,
+              -0.018623446078674354
+            ],
+            "projection": {
+              "originMM": [
+                -17.30967468317004,
+                0.7152163788892221,
+                71.37400570192199
+              ],
+              "axis": [
+                0,
+                0.018623446078674354,
+                0.9998265685888501
+              ],
+              "rangeMM": [
+                -2.25822466842346,
+                2.8218527826519724
+              ]
+            }
+          },
+          {
+            "name": "measured rear middle post",
+            "minMM": [
+              -17.65,
+              -2.6450504302978515,
+              26.1
+            ],
+            "maxMM": [
+              -14,
+              2.4363495349884032,
+              69.1153893184719
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "added fireplace stone preserves its own material",
+            "minMM": [
+              -17.7,
+              -17.7,
+              26.5
+            ],
+            "maxMM": [
+              12,
+              17.7,
+              89.5
+            ],
+            "awayFromSource": {
+              "code": "MT1-091",
+              "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+              "matchMM": 0.12,
+              "projectTo": {
+                "code": "MT1-100",
+                "sourceSHA256": "9c67117f7ad8fcebbd2fadc7f7471bb8fe27ac1ff532ab3f65d14c67c682f379"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "warm exposed side fuel cut",
+        "kind": "paint",
+        "minMM": [
+          2.2,
+          1.9,
+          28.05
+        ],
+        "maxMM": [
+          4.2,
+          4.5,
+          30.5
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            3.0,
+            3.3,
+            29.2
+          ],
+          "radiiMM": [
+            1.55,
+            1.35,
+            1.3
+          ]
+        },
+        "rgb": [
+          0.42,
+          0.27,
+          0.12
+        ],
+        "roughness": 0.94,
+        "variation": 0.02
+      },
+      {
+        "name": "aged ivory skull and facial bone arches",
+        "kind": "paint",
+        "minMM": [
+          -1.5,
+          -7.3,
+          57
+        ],
+        "maxMM": [
+          7,
+          7.3,
+          78
+        ],
+        "includeParts": [
+          {
+            "minMM": [
+              -1.5,
+              -7.3,
+              57
+            ],
+            "maxMM": [
+              7,
+              7.3,
+              78
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                4.9,
+                0,
+                64.8
+              ],
+              "radiiMM": [
+                2.3,
+                3,
+                7.8
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -1.5,
+              -7.3,
+              57
+            ],
+            "maxMM": [
+              7,
+              7.3,
+              78
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                3.1,
+                0,
+                73.5
+              ],
+              "radiiMM": [
+                4.0,
+                7.2,
+                4.8
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -1.5,
+              -7.3,
+              57
+            ],
+            "maxMM": [
+              7,
+              7.3,
+              78
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                3.1,
+                -3.9,
+                68.7
+              ],
+              "radiiMM": [
+                2.1,
+                2.1,
+                4
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -1.5,
+              -7.3,
+              57
+            ],
+            "maxMM": [
+              7,
+              7.3,
+              78
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                3.1,
+                3.9,
+                68.7
+              ],
+              "radiiMM": [
+                2.1,
+                2.1,
+                4
+              ]
+            }
+          }
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            1,
+            0,
+            0.23
+          ],
+          "rangeMM": [
+            17.16,
+            100
+          ]
+        },
+        "rgb": [
+          0.8,
+          0.74,
+          0.54
+        ],
+        "roughness": 0.83,
+        "variation": 0.03
+      },
+      {
+        "name": "left orbital hollow",
+        "kind": "paint",
+        "minMM": [
+          0.34999999999999987,
+          -4.3,
+          66.7
+        ],
+        "maxMM": [
+          3.3,
+          -1.5,
+          70.89999999999999
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            1.45,
+            -2.9,
+            68.8
+          ],
+          "radiiMM": [
+            1.1,
+            1.4,
+            2.1
+          ]
+        },
+        "rgb": [
+          0.23,
+          0.19,
+          0.105
+        ],
+        "roughness": 0.95,
+        "variation": 0.02
+      },
+      {
+        "name": "right orbital hollow",
+        "kind": "paint",
+        "minMM": [
+          1.4,
+          2.4,
+          66.9
+        ],
+        "maxMM": [
+          3.6,
+          5.199999999999999,
+          71.1
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            2.5,
+            3.8,
+            69
+          ],
+          "radiiMM": [
+            1.1,
+            1.4,
+            2.1
+          ]
+        },
+        "rgb": [
+          0.23,
+          0.19,
+          0.105
+        ],
+        "roughness": 0.95,
+        "variation": 0.02
+      },
+      {
+        "name": "nasal hollow",
+        "kind": "paint",
+        "minMM": [
+          3.4999999999999996,
+          -1.25,
+          58.15
+        ],
+        "maxMM": [
+          5.1,
+          1.25,
+          60.85
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            4.6,
+            0,
+            59.5
+          ],
+          "radiiMM": [
+            1.1,
+            1.25,
+            1.35
+          ]
+        },
+        "rgb": [
+          0.23,
+          0.19,
+          0.105
+        ],
+        "roughness": 0.95,
+        "variation": 0.02
+      },
+      {
+        "name": "ridged brown horn -1",
+        "kind": "paint",
+        "minMM": [
+          -4.5,
+          -15.6,
+          74.6
+        ],
+        "maxMM": [
+          5,
+          -3,
+          91.1
+        ],
+        "includeParts": [
+          {
+            "minMM": [
+              -4.5,
+              -15.6,
+              74.6
+            ],
+            "maxMM": [
+              5,
+              15.6,
+              91.1
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                1.0,
+                -7.8,
+                77.8
+              ],
+              "radiiMM": [
+                3.8,
+                5.1,
+                3.8
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -4.5,
+              -15.6,
+              74.6
+            ],
+            "maxMM": [
+              5,
+              15.6,
+              91.1
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -0.4,
+                -12.5,
+                83.9
+              ],
+              "radiiMM": [
+                3,
+                2.8,
+                6.1
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -4.5,
+              -15.6,
+              74.6
+            ],
+            "maxMM": [
+              5,
+              15.6,
+              91.1
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -0.7,
+                -10.5,
+                88.6
+              ],
+              "radiiMM": [
+                2,
+                3.2,
+                3.1
+              ]
+            }
+          }
+        ],
+        "awayFromSource": {
+          "code": "MT1-066",
+          "sourceSHA256": "62ecc62490eeb2196c6350b61404f5fcb3de1d28aa37527f8d25024fac0ad31e",
+          "matchMM": 0.1,
+          "projectTo": {
+            "code": "MT1-100",
+            "sourceSHA256": "9c67117f7ad8fcebbd2fadc7f7471bb8fe27ac1ff532ab3f65d14c67c682f379"
+          }
+        },
+        "rgb": [
+          0.38,
+          0.16,
+          0.065
+        ],
+        "roughness": 0.79,
+        "variation": 0.035
+      },
+      {
+        "name": "ridged brown horn 1",
+        "kind": "paint",
+        "minMM": [
+          -4.5,
+          3,
+          74.6
+        ],
+        "maxMM": [
+          5,
+          15.6,
+          91.1
+        ],
+        "includeParts": [
+          {
+            "minMM": [
+              -4.5,
+              -15.6,
+              74.6
+            ],
+            "maxMM": [
+              5,
+              15.6,
+              91.1
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                1.0,
+                7.8,
+                77.8
+              ],
+              "radiiMM": [
+                3.8,
+                5.1,
+                3.8
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -4.5,
+              -15.6,
+              74.6
+            ],
+            "maxMM": [
+              5,
+              15.6,
+              91.1
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -0.4,
+                12.5,
+                83.9
+              ],
+              "radiiMM": [
+                3,
+                2.8,
+                6.1
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -4.5,
+              -15.6,
+              74.6
+            ],
+            "maxMM": [
+              5,
+              15.6,
+              91.1
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -0.7,
+                10.5,
+                88.6
+              ],
+              "radiiMM": [
+                2,
+                3.2,
+                3.1
+              ]
+            }
+          }
+        ],
+        "awayFromSource": {
+          "code": "MT1-066",
+          "sourceSHA256": "62ecc62490eeb2196c6350b61404f5fcb3de1d28aa37527f8d25024fac0ad31e",
+          "matchMM": 0.1,
+          "projectTo": {
+            "code": "MT1-100",
+            "sourceSHA256": "9c67117f7ad8fcebbd2fadc7f7471bb8fe27ac1ff532ab3f65d14c67c682f379"
+          }
+        },
+        "rgb": [
+          0.38,
+          0.16,
+          0.065
+        ],
+        "roughness": 0.79,
+        "variation": 0.035
+      },
+      {
+        "name": "stud top",
+        "kind": "paint",
+        "minMM": [
+          -0.6170000004768371,
+          -0.3870504069328308,
+          76.68359558105469
+        ],
+        "maxMM": [
+          -0.1393000018596649,
+          0.6682495641708374,
+          77.73390014648437
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.37815000116825104,
+            0.1405995786190033,
+            77.20874786376953
+          ],
+          "radiiMM": [
+            0.1938499993085861,
+            0.4826499855518341,
+            0.48015228271484206
+          ]
+        },
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02
+      },
+      {
+        "name": "stud L1",
+        "kind": "paint",
+        "minMM": [
+          -0.4428000020980835,
+          -8.363349990844727,
+          71.24510375976563
+        ],
+        "maxMM": [
+          0.15109999656677248,
+          -7.370250148773193,
+          72.2480908203125
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.14585000276565552,
+            -7.86680006980896,
+            71.74659729003906
+          ],
+          "radiiMM": [
+            0.3470349991321564,
+            0.6065148973464967,
+            0.6129415893554688
+          ]
+        },
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02
+      },
+      {
+        "name": "stud L2",
+        "kind": "paint",
+        "minMM": [
+          0.8381999564170838,
+          -8.01945026397705,
+          64.6754931640625
+        ],
+        "maxMM": [
+          1.4218999910354615,
+          -7.0313505363464355,
+          65.65919311523437
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            1.1300499737262726,
+            -7.525400400161743,
+            65.16734313964844
+          ],
+          "radiiMM": [
+            0.3404050225019455,
+            0.6032648229599,
+            0.6004049682617187
+          ]
+        },
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02
+      },
+      {
+        "name": "stud L3",
+        "kind": "paint",
+        "minMM": [
+          1.9344999027252197,
+          -5.676850395202637,
+          58.99599639892578
+        ],
+        "maxMM": [
+          2.4076000022888184,
+          -4.774250431060791,
+          59.864896850585936
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            2.171049952507019,
+            -5.225550413131714,
+            59.43044662475586
+          ],
+          "radiiMM": [
+            0.2685150647163391,
+            0.5476899766921997,
+            0.5257852935791016
+          ]
+        },
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02
+      },
+      {
+        "name": "stud R1",
+        "kind": "paint",
+        "minMM": [
+          -0.43109999775886537,
+          7.35364953994751,
+          71.25819580078125
+        ],
+        "maxMM": [
+          0.15020000368356706,
+          8.323849754333496,
+          72.24000366210937
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.14044999703764915,
+            7.838749647140503,
+            71.74909973144531
+          ],
+          "radiiMM": [
+            0.3388450009375811,
+            0.5916301393508911,
+            0.5991751098632814
+          ]
+        },
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02
+      },
+      {
+        "name": "stud R2",
+        "kind": "paint",
+        "minMM": [
+          0.8417000007629395,
+          7.011149806976318,
+          64.67340270996094
+        ],
+        "maxMM": [
+          1.4232999849319459,
+          8.00724895477295,
+          65.66149719238281
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            1.1324999928474426,
+            7.509199380874634,
+            65.16744995117188
+          ],
+          "radiiMM": [
+            0.33903998970985416,
+            0.6084644460678101,
+            0.6032614135742187
+          ]
+        },
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02
+      },
+      {
+        "name": "stud R3",
+        "kind": "paint",
+        "minMM": [
+          1.938399953842163,
+          4.738849563598633,
+          59.01689712524414
+        ],
+        "maxMM": [
+          2.4092999267578126,
+          5.652149753570557,
+          59.86589630126953
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            2.173849940299988,
+            5.195499658584595,
+            59.441396713256836
+          ],
+          "radiiMM": [
+            0.2670849823951721,
+            0.5546451234817504,
+            0.5128494644165039
+          ]
+        },
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02
+      },
+      {
+        "name": "hammered copper cauldron body",
+        "kind": "paint",
+        "minMM": [
+          -6.9,
+          -7.4,
+          31.5
+        ],
+        "maxMM": [
+          6.7,
+          7.4,
+          43.4
+        ],
+        "awayFromSource": {
+          "code": "MT1-066",
+          "sourceSHA256": "62ecc62490eeb2196c6350b61404f5fcb3de1d28aa37527f8d25024fac0ad31e",
+          "matchMM": 0.1,
+          "projectTo": {
+            "code": "MT1-100",
+            "sourceSHA256": "9c67117f7ad8fcebbd2fadc7f7471bb8fe27ac1ff532ab3f65d14c67c682f379"
+          }
+        },
+        "rgb": [
+          0.42,
+          0.27,
+          0.11
+        ],
+        "metallic": 0.78,
+        "roughness": 0.7,
+        "variation": 0.04
+      },
+      {
+        "name": "polished bronze cauldron lip",
+        "kind": "paint",
+        "minMM": [
+          -6.0,
+          -5.3,
+          40.4
+        ],
+        "maxMM": [
+          5.1,
+          5.3,
+          42.7
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.4,
+            0,
+            41.5
+          ],
+          "radiiMM": [
+            5.2,
+            5.2,
+            100
+          ]
+        },
+        "awayFromSource": {
+          "code": "MT1-066",
+          "sourceSHA256": "62ecc62490eeb2196c6350b61404f5fcb3de1d28aa37527f8d25024fac0ad31e",
+          "matchMM": 0.1,
+          "projectTo": {
+            "code": "MT1-100",
+            "sourceSHA256": "9c67117f7ad8fcebbd2fadc7f7471bb8fe27ac1ff532ab3f65d14c67c682f379"
+          }
+        },
+        "rgb": [
+          0.55,
+          0.38,
+          0.15
+        ],
+        "metallic": 0.82,
+        "roughness": 0.54,
+        "variation": 0.025
+      },
+      {
+        "name": "dark iron cauldron loop -1",
+        "kind": "paint",
+        "minMM": [
+          -3,
+          -7.6,
+          39.8
+        ],
+        "maxMM": [
+          2.4,
+          -4.0,
+          47.4
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.5,
+            -5.8,
+            43.2
+          ],
+          "radiiMM": [
+            2.5,
+            1.4,
+            4
+          ]
+        },
+        "awayFromSource": {
+          "code": "MT1-066",
+          "sourceSHA256": "62ecc62490eeb2196c6350b61404f5fcb3de1d28aa37527f8d25024fac0ad31e",
+          "matchMM": 0.1,
+          "projectTo": {
+            "code": "MT1-100",
+            "sourceSHA256": "9c67117f7ad8fcebbd2fadc7f7471bb8fe27ac1ff532ab3f65d14c67c682f379"
+          }
+        },
+        "rgb": [
+          0.2,
+          0.22,
+          0.21
+        ],
+        "metallic": 0.9,
+        "roughness": 0.55,
+        "variation": 0.02
+      },
+      {
+        "name": "dark iron cauldron loop 1",
+        "kind": "paint",
+        "minMM": [
+          -3,
+          4.0,
+          39.8
+        ],
+        "maxMM": [
+          2.4,
+          7.6,
+          47.4
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.5,
+            5.8,
+            43.2
+          ],
+          "radiiMM": [
+            2.5,
+            1.4,
+            4
+          ]
+        },
+        "awayFromSource": {
+          "code": "MT1-066",
+          "sourceSHA256": "62ecc62490eeb2196c6350b61404f5fcb3de1d28aa37527f8d25024fac0ad31e",
+          "matchMM": 0.1,
+          "projectTo": {
+            "code": "MT1-100",
+            "sourceSHA256": "9c67117f7ad8fcebbd2fadc7f7471bb8fe27ac1ff532ab3f65d14c67c682f379"
+          }
+        },
+        "rgb": [
+          0.2,
+          0.22,
+          0.21
+        ],
+        "metallic": 0.9,
+        "roughness": 0.55,
+        "variation": 0.02
+      },
+      {
+        "name": "green boiling brew surface",
+        "kind": "liquid",
+        "minMM": [
+          -2.8508328780679157,
+          -2.5632307753951697,
+          40.95
+        ],
+        "maxMM": [
+          2.1740041068944986,
+          2.4616062095672446,
+          41.95
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.3384143855867088,
+            -0.050812282913962545,
+            41.45
+          ],
+          "radiiMM": [
+            2.4624184924812074,
+            2.4624184924812074,
+            100
+          ]
+        },
+        "rgb": [
+          0.26,
+          0.68,
+          0.075
+        ],
+        "roughness": 0.24,
+        "variation": 0.02,
+        "probeMM": [
+          -1,
+          1.5,
+          41.3731575012207
+        ]
+      },
+      {
+        "name": "green brew emission mask",
+        "kind": "flame",
+        "minMM": [
+          -2.8508328780679157,
+          -2.5632307753951697,
+          40.95
+        ],
+        "maxMM": [
+          2.1740041068944986,
+          2.4616062095672446,
+          41.95
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.3384143855867088,
+            -0.050812282913962545,
+            41.45
+          ],
+          "radiiMM": [
+            2.4624184924812074,
+            2.4624184924812074,
+            100
+          ]
+        },
+        "rgb": [
+          0.26,
+          0.68,
+          0.075
+        ],
+        "roughness": 0.24,
+        "variation": 0.02,
+        "emissionInsetMM": 0.015
+      }
+    ],
+    "emissionStrength": 1.0,
+    "physicalStonePigment": true,
+    "preservePhysicalWoodShade": true
+  },
+  "weightBudget": {
+    "renderMiB": [
+      4,
+      12
+    ],
+    "lodMiB": [
+      2,
+      10
+    ],
+    "shadowKiB": [
+      140,
+      350
+    ],
+    "previewKiB": [
+      12,
+      55
+    ],
+    "basis": "Own720012tri/36000684byte source,max90.817093mm. Stone fireplace,tall plaster/rear framing,wood trophy,ivory skull/ridged horns/7 measured studs,copper pot/bronze rim/iron handles/green emissive brew.140k/110k independent geometry,2048/2048 bakes,1536 colour/data render,1152colour/2048data LOD;compare compact."
+  },
+  "reviewNotes": "Own native full/back/head/firebox inspected. SourceSHA9c67117f7ad8fcebbd2fadc7f7471bb8fe27ac1ff532ab3f65d14c67c682f379,90.817093mm max. Own highX7.238200+.15 defines blocker,West64. Own freefloorX8.75,Y[-8.75,0,8.75]Z25.517319/24.719604/25.398003,nZ>=.992425. Rearcrossbar690samples direction[0,.999827,-.018623],middlepost1112samples boundsY[-2.49505,2.28635]. Reuse established67 skull/cauldron family domains only after own probes;all projectTo references bound to own100SHA. Own7stud components119/169/161/115/168/177/107vertices redefine iron regions. Ownbrew1445upwardvertices,fitcentre[-.338414,-.050812],R2.392418mm,existinggeometryZ41.113297..41.704498. No added liquid plane. Preserve horn tips,hollow bonearches,rim/loop openings andbrewgeometry through pinned original triangles. Stone retains shared palette,plaster protected with plain91 source comparison andownrearwood exclusions. Nonprocedural green emission restricted to brew mask;one magiclight abovebrew. Native surface/channel/liquid/void andbothcandidatevisual checks required,before UD-016/finalreceipt-preview/GoMF/MCP verification. Initial60kLOD collapse removed alltinycollarfaces whileprotectinglargerdetails;pin thenativemountingrim17..17.51mminboth tiers,rather than inventing a new mounting depth.60kLOD changed a measuredsupportheight beyond.35mm;pin ownthreefloorcontactpatches0.6mmaround eachpoint. Keep original tolerances. Initial broad skull protection exceeded60kLOD target andcollapsed therest too strongly. Restrict protectedbone toactualorbital/nasal arches,raise LOD target80k,andrevalidate all source probes.80kLOD displaced hornside silhouettes andwidened gaps;pin complete own horns anduse110kLOD. Pin crest beneath topstud. Nativebone arch sample[1.565611,-5,68]hasprojection17.205611 veryclose toold17.2cutoff;movebonecutoff17.16 while ellipsoid excludes measuredwoodcrest[-.438492,-.171150,76.568222]. Topstud prior generousfit overlappedwood in texels;use measured ownbounding halfspans plus0.035mm allowanceinstead of65percent inflatedradius.LODdata1536 givesmetal.144 on actualwood at sourceY-8/Z71 beneathL1 stud;increaseLODdata to2048 andretainwoodmetal<.02gate. LODimagebudget mayexceedrender because independently unwrapped detailsneedfinerORMedges.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standRayTopMM": 110,
+  "renderUVAngleLimitRad": 0.18,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVAngleLimitRad": 0.18,
+  "lodUVIslandMargin": 0.0018,
+  "standPointsMM": [
+    [
+      8.75,
+      -8.75
+    ],
+    [
+      8.75,
+      0
+    ],
+    [
+      8.75,
+      8.75
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        -17.65,
+        -17.65
+      ],
+      [
+        7.388200187683106,
+        -17.65
+      ],
+      [
+        7.388200187683106,
+        17.65
+      ],
+      [
+        -17.65,
+        17.65
+      ]
+    ]
+  ],
+  "lodDataSize": 2048,
+  "lodColourSize": 1152,
+  "defaultLights": [
+    {
+      "key": "cauldron-brew",
+      "name": "\u0421\u0432\u0435\u0447\u0435\u043d\u0438\u0435 \u0441\u043e\u0441\u0442\u0430\u0432\u0430 \u0432 \u043a\u043e\u0442\u043b\u0435",
+      "kind": "magic",
+      "color": "#7ed637",
+      "position": [
+        0.488571,
+        0.5,
+        0.737143
+      ],
+      "intensity": 3,
+      "radius": 3,
+      "enabled": true,
+      "flicker": true
+    }
+  ],
+  "renderDataSize": 1536,
+  "renderColourSize": 1536,
+  "lodColourQuality": 98,
+  "surfaceHeightMM": 24.7196044921875,
+  "geometryDetailRegions": [
+    {
+      "name": "left and right horn tips",
+      "minMM": [
+        -4.5,
+        -15.6,
+        87
+      ],
+      "maxMM": [
+        5,
+        15.6,
+        91.1
+      ]
+    },
+    {
+      "name": "cauldron rim,brew and loop handles",
+      "minMM": [
+        -6.2,
+        -7.6,
+        40.2
+      ],
+      "maxMM": [
+        5.4,
+        7.6,
+        47.4
+      ]
+    },
+    {
+      "name": "stud top and wood rim",
+      "minMM": [
+        -0.7670000004768371,
+        -0.5370504069328308,
+        76.53359558105468
+      ],
+      "maxMM": [
+        0.010699998140335093,
+        0.8182495641708374,
+        77.88390014648438
+      ]
+    },
+    {
+      "name": "stud L1 and wood rim",
+      "minMM": [
+        -0.5928000020980835,
+        -8.513349990844727,
+        71.09510375976562
+      ],
+      "maxMM": [
+        0.30109999656677244,
+        -7.220250148773193,
+        72.3980908203125
+      ]
+    },
+    {
+      "name": "stud L2 and wood rim",
+      "minMM": [
+        0.6881999564170838,
+        -8.169450263977051,
+        64.5254931640625
+      ],
+      "maxMM": [
+        1.5718999910354614,
+        -6.881350536346435,
+        65.80919311523438
+      ]
+    },
+    {
+      "name": "stud L3 and wood rim",
+      "minMM": [
+        1.7844999027252197,
+        -5.826850395202637,
+        58.845996398925784
+      ],
+      "maxMM": [
+        2.5576000022888183,
+        -4.624250431060791,
+        60.014896850585934
+      ]
+    },
+    {
+      "name": "stud R1 and wood rim",
+      "minMM": [
+        -0.5810999977588653,
+        7.203649539947509,
+        71.10819580078125
+      ],
+      "maxMM": [
+        0.30020000368356703,
+        8.473849754333497,
+        72.39000366210938
+      ]
+    },
+    {
+      "name": "stud R2 and wood rim",
+      "minMM": [
+        0.6917000007629395,
+        6.861149806976318,
+        64.52340270996093
+      ],
+      "maxMM": [
+        1.5732999849319458,
+        8.15724895477295,
+        65.81149719238282
+      ]
+    },
+    {
+      "name": "stud R3 and wood rim",
+      "minMM": [
+        1.788399953842163,
+        4.588849563598632,
+        58.866897125244144
+      ],
+      "maxMM": [
+        2.5592999267578125,
+        5.802149753570557,
+        60.01589630126953
+      ]
+    },
+    {
+      "name": "native thin mounting rim",
+      "minMM": [
+        -17.7,
+        -17.7,
+        17
+      ],
+      "maxMM": [
+        17.7,
+        17.7,
+        17.51
+      ]
+    },
+    {
+      "name": "measured floor support [8.75, -8.75]",
+      "minMM": [
+        8.15,
+        -9.35,
+        24.2
+      ],
+      "maxMM": [
+        9.35,
+        -8.15,
+        26.1
+      ]
+    },
+    {
+      "name": "measured floor support [8.75, 0]",
+      "minMM": [
+        8.15,
+        -0.6,
+        24.2
+      ],
+      "maxMM": [
+        9.35,
+        0.6,
+        26.1
+      ]
+    },
+    {
+      "name": "measured floor support [8.75, 8.75]",
+      "minMM": [
+        8.15,
+        8.15,
+        24.2
+      ],
+      "maxMM": [
+        9.35,
+        9.35,
+        26.1
+      ]
+    },
+    {
+      "name": "left orbital arch",
+      "minMM": [
+        -0.5,
+        -4.7,
+        66.4
+      ],
+      "maxMM": [
+        4,
+        -1.2,
+        71.4
+      ]
+    },
+    {
+      "name": "right orbital arch",
+      "minMM": [
+        -0.1,
+        2.1,
+        66.5
+      ],
+      "maxMM": [
+        4.1,
+        5.5,
+        71.6
+      ]
+    },
+    {
+      "name": "nasal arch",
+      "minMM": [
+        3,
+        -1.5,
+        57.7
+      ],
+      "maxMM": [
+        5.5,
+        1.5,
+        61.2
+      ]
+    },
+    {
+      "name": "complete ridged left horn",
+      "minMM": [
+        -4.5,
+        -15.6,
+        74.6
+      ],
+      "maxMM": [
+        5,
+        -3,
+        91.1
+      ]
+    },
+    {
+      "name": "complete ridged right horn",
+      "minMM": [
+        -4.5,
+        3,
+        74.6
+      ],
+      "maxMM": [
+        5,
+        15.6,
+        91.1
+      ]
+    },
+    {
+      "name": "raised wood crest beneath top stud",
+      "minMM": [
+        -1.1,
+        -0.65,
+        76.1
+      ],
+      "maxMM": [
+        0.2,
+        0.65,
+        77.1
+      ]
+    }
+  ],
+  "placementCells": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ]
+}

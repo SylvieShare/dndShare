@@ -58,3 +58,20 @@ except ValueError:
 else:
     raise AssertionError('Changed detail triangle passed verification')
 print('MEASURED_GEOMETRY_DETAILS_PASS', proof, flush=True)
+
+# The mounting cut can leave quads; pinning must retain their surface and paint.
+mesh = bpy.data.meshes.new('Cut mounting rim')
+mesh.from_pydata([(0, 0, 17), (1, 0, 17), (1, 1, 17.4), (0, 1, 17.4)], [], [(0, 1, 2, 3)])
+mesh.update()
+paint = mesh.color_attributes.new(name='Paint', type='FLOAT_COLOR', domain='POINT')
+colours = [(0.2 + i*.1, 0.3, 0.4, 1) for i in range(4)]
+for i, colour in enumerate(colours): paint.data[i].color = colour
+obj = bpy.data.objects.new('Cut mounting rim fixture', mesh)
+bpy.context.collection.objects.link(obj)
+original = {tuple(v.co): tuple(paint.data[v.index].color) for v in mesh.vertices}
+_, before, review = pin_details(obj, [dict(name='Rim', minMM=[-.1, -.1, 16.9], maxMM=[1.1, 1.1, 17.5])])
+assert len(mesh.polygons) == 2 and all(len(f.vertices) == 3 for f in mesh.polygons)
+assert abs(sum(f.area for f in mesh.polygons) - (1 + .4**2)**.5) < 1e-5
+assert {tuple(v.co): tuple(mesh.color_attributes['Paint'].data[v.index].color) for v in mesh.vertices} == original
+assert verify_details(obj, before, review)['preservedTriangles'] == 2
+print('CUT_MOUNTING_RIM_TRIANGULATION_PASS', flush=True)

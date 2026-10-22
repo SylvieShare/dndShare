@@ -13,6 +13,16 @@ def face_key(mesh, face):
 
 def pin_details(target, regions, base_group=None):
     mesh = target.data
+    # Cutting the native mount may turn intersected STL triangles into quads.
+    # Pin their deterministic triangulation before recording triangle identities.
+    if any(len(face.vertices) != 3 for face in mesh.polygons):
+        import bmesh
+        bm = bmesh.new()
+        bm.from_mesh(mesh)
+        bmesh.ops.triangulate(bm, faces=[face for face in bm.faces if len(face.verts) != 3])
+        bm.to_mesh(mesh)
+        bm.free()
+        mesh.update()
     inside = set()
     counts = []
     for region in regions:
