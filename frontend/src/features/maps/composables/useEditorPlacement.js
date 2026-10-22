@@ -1,21 +1,25 @@
+import { decalCatalogueDrag } from "./decalCatalogueDrag";
 import { useCatalogueDrag } from "./useCatalogueDrag";
 import { useMapCursor } from "./useMapCursor";
 import { editorObjectDrag } from "./editorObjectDrag";
 export function useEditorPlacement(editor, canvas) {
   const tiles = useCatalogueDrag(editor, canvas),
     objects = useCatalogueDrag(editor, canvas, editorObjectDrag(editor)),
-    lights = useCatalogueDrag(editor, canvas, editor.lightDrag);
+    lights = useCatalogueDrag(editor, canvas, editor.lightDrag),
+    decals = useCatalogueDrag(editor, canvas, decalCatalogueDrag(editor));
   const cursor = useMapCursor(editor, canvas, {
     cameraMoved() {
       tiles.cameraMoved();
       objects.cameraMoved();
       lights.cameraMoved();
+      decals.cameraMoved();
     },
   });
   function cancel() {
     tiles.cancel();
     objects.cancel();
     lights.cancel();
+    decals.cancel();
     editor.resetGesture();
   }
   return {
@@ -24,6 +28,7 @@ export function useEditorPlacement(editor, canvas) {
     dragModel(id, event) {
       objects.cancel();
       lights.cancel();
+      decals.cancel();
       editor.resetGesture();
       editor.selectedLight = "";
       tiles.begin(id, event);
@@ -31,13 +36,18 @@ export function useEditorPlacement(editor, canvas) {
     dragObject(id, event) {
       tiles.cancel();
       lights.cancel();
+      decals.cancel();
       editor.resetGesture();
       editor.selectedLight = "";
       objects.begin(id, event);
     },
-    placeDecal(image) {
+    dragDecal(image, event) {
       cancel();
-      editor.beginDecal(image);
+      decals.begin(image, event);
+    },
+    placeDecal(image, event = cursor.pointerEvent()) {
+      cancel();
+      decals.place(image, event, { repeatOnCommand: true });
     },
     placeModel(id, event) {
       cancel();

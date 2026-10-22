@@ -20,6 +20,23 @@ export const BUILTIN_DECALS = [
   imageUrl: `/images/maps/decals/${id}.svg`,
 }));
 
+export function decalCatalogueGroups(images) {
+  return DECAL_CATEGORIES.map((category) => ({
+    key: category.id,
+    code: category.id,
+    name: category.name,
+    subsections: [
+      {
+        key: category.id,
+        models: (category.id === "custom"
+          ? images.map((image) => ({ ...image, category: "custom" }))
+          : BUILTIN_DECALS.filter((image) => image.category === category.id)
+        ).map((image) => ({ ...image, previewUrl: image.imageUrl })),
+      },
+    ],
+  }));
+}
+
 export function createDecal(image, surface) {
   return {
     id: uid(),

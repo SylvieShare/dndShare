@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { canvasFrame, mapPoint } from "./editorHelpers";
+import { canvasFrame, dragDecal, mapPoint } from "./editorHelpers";
 
 async function outlinePixels(page) {
   const frame = await canvasFrame(page);
@@ -42,10 +42,8 @@ test("decal contour, hold drag, title rename and owner list", async ({
   await expect(page.locator(".map-canvas canvas")).toBeVisible();
   await page.getByTitle("Вид сверху", { exact: true }).click();
   await page.getByRole("button", { name: "Декали", exact: true }).click();
-  await page.getByRole("button", { name: "Разместить: Лужа крови" }).click();
   const p = await mapPoint(page, 4.5, 4.5);
-  await page.mouse.move(p.x, p.y);
-  await page.mouse.click(p.x, p.y);
+  await dragDecal(page, "Лужа крови", p);
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.document.decals?.length))
     .toBe(1);

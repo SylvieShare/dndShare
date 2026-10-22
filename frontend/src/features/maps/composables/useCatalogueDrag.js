@@ -11,7 +11,7 @@ export function useCatalogueDrag(editor, canvas, driver = editor.tileDrag) {
     source;
   function keyboardAnchor(point) {
     if (!point) return null;
-    if (driver.kind === "object" || driver.kind === "light") return point;
+    if (["object", "light", "decal"].includes(driver.kind)) return point;
     const snap = (p) => ({
       ...p,
       x: Math.floor(p.x + 1e-8) + 0.5,

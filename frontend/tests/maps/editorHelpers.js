@@ -9,6 +9,17 @@ export async function canvasFrame(page) {
   });
   return Buffer.from(data.split(",")[1], "base64");
 }
+export async function dragDecal(page, name, point) {
+  const card = page
+    .getByRole("region", { name: "Каталог декалей", exact: true })
+    .getByRole("button", { name, exact: true });
+  await card.scrollIntoViewIfNeeded();
+  const bounds = await card.boundingBox();
+  await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + 30);
+  await page.mouse.down();
+  await page.mouse.move(point.x, point.y, { steps: 8 });
+  await page.mouse.up();
+}
 export async function uncoverMapPoint(page, point) {
   const covered = await page.evaluate(
     (point) =>

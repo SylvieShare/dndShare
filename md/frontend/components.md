@@ -335,7 +335,7 @@ MapModelCatalogue показывает все варианты соседним�
 MapModelLightBadge отмечает встроенный свет, конкретный UUID и клавиши R/Escape
 сохраняются при выборе или перетаскивании. Runtime-adapter mapsApi переводит
 публичные id/uuid в технический индекс рендера без изменения документов.
-Карточки MapTileCard задают контекстный
+Карточки MapCatalogueCard задают контекстный
 токен surface через map-model-preview-bg: серо-синий студийный фон прежних
 непрозрачных превью. Прозрачные WebP показывают фон карточки; hover и выделение
 остаются состояниями общего BaseTile. Полноэкранный выбор доступен и в режиме предметов.
@@ -587,7 +587,7 @@ modelMemoryUsage измеряет общие buffers и оценивает textu
 отпускании незагруженного тайла tilePreview освобождает hiddenIds без landing;
 статический loadingPreview остаётся до появления любого качества. Grid-аннотации
 обновляются через mapAnnotations до assets.prepare, без начального LoadingState.
-MapTileCard начинает перенос конкретной модели из её основного превью.
+MapCatalogueCard начинает перенос конкретной модели из её основного превью.
 Состояние поступает от modelAssets через общий modelDownloadManager, прямых
 HTTP-запросов и собственных загрузчиков в компоненте нет. Общего примитива
 прогресса в share-ui нет; нативный progress сохраняет семантику progressbar.
@@ -642,7 +642,7 @@ MapModelTransitions показывает переходы каталога и э
 удаляются плавно, reduced motion отключает движение.
 
 MapEntityRow и MapEntityHeading сохраняют showIdentifiers, по умолчанию false;
-MapTileCard также скрывают коды в обычных карточках, заголовках
+MapCatalogueCard также скрывают коды в обычных карточках, заголовках
 групп и tooltip. MapTilePalette/MapObjectPalette включают идентификаторы только
 в режиме inspect админского справочника. Данные модели не преобразуются.
 MapModelTransitions использует ту же MapEntityRow для всех переходов: details-slot
@@ -661,9 +661,10 @@ onSettled пересобирает обычную группу. Поэтому �
 экземпляры и не оставляет лишние draw calls. createMapFrameLoop ведёт импульс
 вместе с областями. Snapshot/reduced motion сразу возвращают нормальную яркость.
 
-MapModelCatalogue — общая композиция каталогов тайлов, объектов и выбора цели
-перехода. modelGroups создаёт разделы по code с хранимым русским groupName.
-Варианты идут обычными соседними MapTileCard, сортируются по variantCode и ID;
+MapModelCatalogue — общая композиция каталогов тайлов, объектов, декалей и выбора
+цели перехода. Для моделей modelGroups создаёт разделы по code с хранимым русским
+groupName; декали передают готовые группы категорий через groups.
+Варианты идут обычными соседними MapCatalogueCard, сортируются по variantCode и ID;
 раскрытия карточки и отдельного списка вариантов нет. Для стен раздел включает
 подзаголовки структурных форм. MapEntityHeading показывает MapPackIcon рядом
 с названием модели. Технические коды видны только в режиме админского inspect;
@@ -706,8 +707,11 @@ MapControlsHint и CanvasHotkeyHints — адаптеры текста и safe-a
 геометрии/стилей легенды у них нет. Легенда сюжета не зависит от глобальных
 подсказок клавиш; SessionShortcutHelp расположен в SessionSettingsWorkspace.
 
-`MapDecalPalette` собирает категории и библиотеку на общих FormSelect,
-ActionButton и BaseTile; `MapDecalFields` использует FormField, FormTextInput
+`MapDecalPalette` показывает все группы одновременно через MapModelCatalogue;
+плитки, объекты и декали используют один MapCatalogueCard на BaseTile,
+с общим фоном map-model-preview-bg, размерами превью и поведением переноса.
+Загрузка доступна через ActionButton, все личные изображения находятся только
+в группе «Свои», общего списка размещений в каталоге нет; `MapDecalFields` использует FormField, FormTextInput
 и AppSlider внутри MapInspectorSection. Наложение и локальная привязка к 3D-модели
 — предметный слой [декалей](../features/maps-decals.md).
 

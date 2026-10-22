@@ -27,8 +27,8 @@
     />
     <MapDecalPalette
       v-else-if="tab === 'decals'"
-      :editor="editor"
-      @place="emit('place-decal', $event)"
+      @place="(image, event) => emit('place-decal', image, event)"
+      @drag="(image, event) => emit('drag-decal', image, event)"
     />
     <MapAreasPanel
       v-else-if="tab === 'areas'"
@@ -81,6 +81,7 @@ const emit = defineEmits([
   "tab",
   "place-light",
   "place-decal",
+  "drag-decal",
   "resize",
 ]);
 const sidebar = ref(null);

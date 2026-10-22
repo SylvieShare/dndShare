@@ -17,21 +17,23 @@
         class="map-model-subsection"
       >
         <h5 v-if="subsection.name">{{ subsection.name }}</h5>
-        <div
+        <TransitionGroup
+          name="map-card"
+          tag="div"
           class="map-model-grid"
           :class="{ 'map-model-grid--compact': compact }"
         >
-          <MapTileCard
+          <MapCatalogueCard
             v-for="model in subsection.models"
             :key="model.id"
-            :model="model"
+            :item="model"
             :selected="selectedId === model.id"
             :show-identifiers="showIdentifiers"
             :draggable="draggable"
-            @model="(id, event) => emit('model', id, event)"
-            @drag-tile="(id, event) => emit('drag-tile', id, event)"
+            @select="(id, event) => emit('model', id, event)"
+            @drag="(id, event) => emit('drag-tile', id, event)"
           />
-        </div>
+        </TransitionGroup>
       </div>
     </section>
   </TransitionGroup>
@@ -39,9 +41,10 @@
 <script setup>
 import { computed } from "vue";
 import { modelGroups } from "../lib/modelGroups";
-import MapTileCard from "./MapTileCard.vue";
+import MapCatalogueCard from "./MapCatalogueCard.vue";
 const props = defineProps({
   models: Array,
+  groups: Array,
   wallSubcategories: Boolean,
   selectedId: String,
   compact: Boolean,
@@ -49,8 +52,12 @@ const props = defineProps({
   showIdentifiers: Boolean,
 });
 const emit = defineEmits(["model", "drag-tile"]);
-const sections = computed(() =>
-  modelGroups(props.models, { wallSubcategories: props.wallSubcategories }),
+const sections = computed(
+  () =>
+    props.groups ||
+    modelGroups(props.models || [], {
+      wallSubcategories: props.wallSubcategories,
+    }),
 );
 </script>
 <style scoped>
@@ -96,11 +103,21 @@ small {
 .map-model-grid--compact {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
+.map-card-enter-active,
+.map-card-leave-active {
+  transition: opacity 180ms ease;
+}
+.map-card-enter-from,
+.map-card-leave-to {
+  opacity: 0;
+}
 .map-catalogue-move {
   transition: transform 220ms ease;
 }
 @media (prefers-reduced-motion: reduce) {
-  .map-catalogue-move {
+  .map-catalogue-move,
+  .map-card-enter-active,
+  .map-card-leave-active {
     transition: none;
   }
 }

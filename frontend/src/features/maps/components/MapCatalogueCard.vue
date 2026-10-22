@@ -6,39 +6,37 @@
     :tint="selected"
     role="button"
     tabindex="0"
-    :aria-label="model.name"
+    :aria-label="item.name"
     :title="
-      showIdentifiers ? `${model.sourceCode} · ${model.sourceName}` : model.name
+      showIdentifiers ? `${item.sourceCode} · ${item.sourceName}` : item.name
     "
     @pointerdown="
-      draggable &&
-      !isSelectableText($event) &&
-      emit('drag-tile', model.id, $event)
+      draggable && !isSelectableText($event) && emit('drag', item.id, $event)
     "
-    @click="!draggable && !hasSelectedText() && emit('model', model.id, $event)"
+    @click="!draggable && !hasSelectedText() && emit('select', item.id, $event)"
     @dragstart="!isSelectableText($event) && $event.preventDefault()"
-    @keydown.enter.prevent.stop="emit('model', model.id, $event)"
-    @keydown.space.prevent.stop="emit('model', model.id, $event)"
+    @keydown.enter.prevent.stop="emit('select', item.id, $event)"
+    @keydown.space.prevent.stop="emit('select', item.id, $event)"
   >
     <img
-      :src="model.previewUrl"
+      :src="item.previewUrl"
       alt=""
       width="112"
       height="112"
       loading="lazy"
       draggable="false"
     />
-    <span class="map-model-name">{{ model.name }}</span
-    ><small v-if="showIdentifiers">{{ model.definitionId }}</small>
+    <span class="map-model-name">{{ item.name }}</span
+    ><small v-if="showIdentifiers">{{ item.definitionId }}</small>
     <MapModelLightBadge
       class="map-card-light"
-      :count="model.behaviour?.defaultLights?.length || 0"
+      :count="item.behaviour?.defaultLights?.length || 0"
     />
-    <small v-if="model.width > 1 || model.height > 1"
-      >{{ model.width }} × {{ model.height }} клетки</small
+    <small v-if="item.width > 1 || item.height > 1"
+      >{{ item.width }} × {{ item.height }} клетки</small
     >
-    <small v-if="model.supportSlots?.length"
-      >Пазов: {{ model.supportSlots.length }}</small
+    <small v-if="item.supportSlots?.length"
+      >Пазов: {{ item.supportSlots.length }}</small
     >
   </BaseTile>
 </template>
@@ -47,12 +45,12 @@ import { BaseTile } from "@sylvieshare/share-ui";
 import { hasSelectedText, isSelectableText } from "../lib/textSelection";
 import MapModelLightBadge from "./MapModelLightBadge.vue";
 defineProps({
-  model: Object,
+  item: Object,
   selected: Boolean,
   draggable: Boolean,
   showIdentifiers: Boolean,
 });
-const emit = defineEmits(["model", "drag-tile"]);
+const emit = defineEmits(["select", "drag"]);
 </script>
 <style scoped>
 .map-model-card {

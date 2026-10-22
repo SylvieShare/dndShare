@@ -51,7 +51,8 @@
         @object="(id, event) => beginPlacement('placeObject', id, event)"
         @drag-object="(id, event) => beginPlacement('dragObject', id, event)"
         @tab="placement.cancel"
-        @place-decal="(image) => beginPlacement('placeDecal', image)"
+        @place-decal="(image, event) => beginPlacement('placeDecal', image, event)"
+        @drag-decal="(image, event) => beginPlacement('dragDecal', image, event)"
         @place-light="(id, event) => beginPlacement('placeLight', id, event)"
       >
         <template v-for="tab in extraTabs" :key="tab.key" #[tab.key]>
