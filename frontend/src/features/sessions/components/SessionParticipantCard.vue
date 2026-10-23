@@ -29,7 +29,7 @@
             <span v-else class="ava-initial">{{ initial }}</span>
           </div>
 
-          <div class="p-info" :inert="compact" :aria-hidden="compact">
+          <div class="p-info" :class="{ 'p-info--stats': isDm && isDnd }" :inert="compact" :aria-hidden="compact">
             <div class="p-name-row"><div class="p-name">{{ displayName }}</div><span v-if="combatant?.position === 'reserve' && combatant.initiative != null" class="p-initiative-chip" title="Подготовленная инициатива" :aria-label="`Подготовленная инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span></div>
 
             <template v-if="showHp">
@@ -347,6 +347,16 @@ const participantTileStyle = computed(() => ({
 
 .p-card--compact .p-info { flex: 0 0 0; overflow: hidden; opacity: 0; transform: translateX(-7px); }
 .p-info :deep(.hp-row) { margin-top: 0; }
+.p-info--stats {
+  align-self: stretch;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0;
+  margin-bottom: -4px;
+}
+.p-info--stats :deep(.hp-row) { height: 6px; }
+.p-info--stats :deep(.participant-stats) { grid-row: 3; }
 .p-card--compact .p-avatar { width: 36px; height: 36px; }
 .p-card--compact .ava-initial { font-size: 14px; }
 

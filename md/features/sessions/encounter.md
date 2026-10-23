@@ -357,7 +357,9 @@ Drag starts ignore Ctrl and Cmd. Disabled selection and ordinary clicks keep the
 
 Participant tile indicators are a single row of 13px numbers and 14px icons with
 vertical dividers. Passive Perception and Investigation use muted gray for both
-numbers and icons; AC retains its primary number and blue shield. The compact rail hides the information column and makes it
+numbers and icons; AC retains its primary number and blue shield. The indicators
+are centered vertically between the bottom of the HP bar and the bottom edge of
+the tile. The compact rail hides the information column and makes it
 inert, including the indicators. Hover and keyboard focus open the shared `ItemTooltip` for the name,
 meaning and passive calculation. The player rail uses `--participant-rail-width`
 (264px), `--participant-selection-width` (36px) and `--participant-card-gap` (9px).
