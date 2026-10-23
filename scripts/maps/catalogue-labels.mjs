@@ -141,6 +141,7 @@ Tall Big Barrel|Высокая большая бочка
 Tall Little Barrels|Высокая стена с малыми бочками
 Tall Wall Light|Высокая стена со свечами
 Tall Bath Objects|Высокий угол с банными принадлежностями
+Tall Wardrobe|Высокий шкаф
 Ladder Down|Приставная лестница вниз
 Balcony|Балкон
 Balcony Angle|Угловой балкон

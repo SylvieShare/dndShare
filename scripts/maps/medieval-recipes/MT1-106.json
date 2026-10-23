@@ -1,0 +1,955 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.2,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Tall Wardrobe",
+  "groupCode": "MED-tall-wardrobe",
+  "hasDecor": true,
+  "renderTriangles": 150000,
+  "lodTriangles": 90000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1536,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1536,
+  "lodColourSize": 1152,
+  "lodDataSize": 1536,
+  "standRayTopMM": 110,
+  "standPointsMM": [
+    [
+      8.75,
+      -8.75
+    ],
+    [
+      8.75,
+      8.75
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        -17.7,
+        -17.7
+      ],
+      [
+        2.3,
+        -17.7
+      ],
+      [
+        2.3,
+        17.7
+      ],
+      [
+        -17.7,
+        17.7
+      ]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "floor",
+    "wood",
+    "wardrobe",
+    "cupboard",
+    "doors",
+    "brass",
+    "hinges",
+    "plaster",
+    "wall",
+    "tall"
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      5,
+      10
+    ],
+    "lodMiB": [
+      3,
+      6.5
+    ],
+    "shadowKiB": [
+      150,
+      320
+    ],
+    "previewKiB": [
+      14,
+      50
+    ],
+    "basis": "Own599976tri/29998884byte source with89mm rear wall and82mm sculpted wardrobe. Curved cornice,recessed panels,2flattened brass knobs and4thin iron hinges;native collar and6fittings retain source triangles. Start150k/90k independent geometry,2048/1536bakes,1536/1152colour and1536data both;compare compact on actual fittings,panel mouldings and rear timber/plaster boundaries."
+  },
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "floor X planks and north south fascia",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          26.65
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west Y floor border",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.7,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y floor border",
+        "minMM": [
+          14.3,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "wardrobe vertical body and door stiles",
+        "minMM": [
+          -17.564308314025403,
+          -17.602333641052248,
+          26.399950408935545
+        ],
+        "maxMM": [
+          2.235691685974598,
+          17.597666358947755,
+          82.19995040893555
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.86,
+        "darkRGB": [
+          0.32,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.55,
+          0.31,
+          0.11
+        ]
+      },
+      {
+        "name": "curved Y cornice and upper door rails",
+        "minMM": [
+          -17.564308314025403,
+          -17.602333641052248,
+          75.49995040893555
+        ],
+        "maxMM": [
+          2.235691685974598,
+          17.597666358947755,
+          82.19995040893555
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.86,
+        "darkRGB": [
+          0.36,
+          0.18,
+          0.06
+        ],
+        "lightRGB": [
+          0.6,
+          0.35,
+          0.14
+        ]
+      },
+      {
+        "name": "Y base plinth and lower door rails",
+        "minMM": [
+          -17.564308314025403,
+          -17.602333641052248,
+          26.999950408935547
+        ],
+        "maxMM": [
+          2.235691685974598,
+          17.597666358947755,
+          33.299950408935544
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.86,
+        "darkRGB": [
+          0.36,
+          0.18,
+          0.06
+        ],
+        "lightRGB": [
+          0.6,
+          0.35,
+          0.14
+        ]
+      },
+      {
+        "name": "south recessed door panel",
+        "minMM": [
+          -0.664308314025402,
+          -12.902333641052246,
+          32.799950408935544
+        ],
+        "maxMM": [
+          0.055691685974597935,
+          -2.602333641052246,
+          78.19995040893555
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.86,
+        "darkRGB": [
+          0.25,
+          0.105,
+          0.028
+        ],
+        "lightRGB": [
+          0.46,
+          0.235,
+          0.08
+        ]
+      },
+      {
+        "name": "north recessed door panel",
+        "minMM": [
+          -0.664308314025402,
+          2.597666358947754,
+          32.799950408935544
+        ],
+        "maxMM": [
+          0.055691685974597935,
+          12.897666358947754,
+          78.19995040893555
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.86,
+        "darkRGB": [
+          0.25,
+          0.105,
+          0.028
+        ],
+        "lightRGB": [
+          0.46,
+          0.235,
+          0.08
+        ]
+      },
+      {
+        "name": "south own tall rear post",
+        "minMM": [
+          -17.7,
+          -17.7,
+          26.1
+        ],
+        "maxMM": [
+          -10.1,
+          -13.6,
+          89.4
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "north own tall rear post",
+        "minMM": [
+          -17.7,
+          13.6,
+          26.1
+        ],
+        "maxMM": [
+          -10.1,
+          17.7,
+          89.4
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own rear horizontal crossbar",
+        "minMM": [
+          -17.7,
+          -13.8,
+          67
+        ],
+        "maxMM": [
+          -14,
+          13.8,
+          78
+        ],
+        "axis": "beam",
+        "direction": [
+          0,
+          0.997488264865762,
+          -0.07083192398270358
+        ],
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "projection": {
+          "originMM": [
+            -17.31669677197933,
+            0.7243917927145958,
+            71.62682582139969
+          ],
+          "axis": [
+            0,
+            0.07083192398270358,
+            0.997488264865762
+          ],
+          "rangeMM": [
+            -2.3902243257268383,
+            2.6426203862844884
+          ]
+        }
+      },
+      {
+        "name": "own rear middle post",
+        "minMM": [
+          -17.7,
+          -2.554550485610962,
+          26.1
+        ],
+        "maxMM": [
+          -14,
+          2.376449422836304,
+          69.5
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "own high ochre rear wall",
+        "minMM": [
+          -17.7,
+          -13.6,
+          26.6
+        ],
+        "maxMM": [
+          -13.8,
+          13.6,
+          89.4
+        ],
+        "kind": "plaster",
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "south own tall rear post",
+            "minMM": [
+              -17.7,
+              -17.7,
+              26.1
+            ],
+            "maxMM": [
+              -10.1,
+              -13.6,
+              89.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "north own tall rear post",
+            "minMM": [
+              -17.7,
+              13.6,
+              26.1
+            ],
+            "maxMM": [
+              -10.1,
+              17.7,
+              89.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own rear horizontal crossbar",
+            "minMM": [
+              -17.7,
+              -13.8,
+              67
+            ],
+            "maxMM": [
+              -14,
+              13.8,
+              78
+            ],
+            "axis": "beam",
+            "direction": [
+              0,
+              0.997488264865762,
+              -0.07083192398270358
+            ],
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                -17.31669677197933,
+                0.7243917927145958,
+                71.62682582139969
+              ],
+              "axis": [
+                0,
+                0.07083192398270358,
+                0.997488264865762
+              ],
+              "rangeMM": [
+                -2.3902243257268383,
+                2.6426203862844884
+              ]
+            }
+          },
+          {
+            "name": "own rear middle post",
+            "minMM": [
+              -17.7,
+              -2.554550485610962,
+              26.1
+            ],
+            "maxMM": [
+              -14,
+              2.376449422836304,
+              69.5
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "own exposed upper front plaster",
+        "minMM": [
+          -17.7,
+          -13.6,
+          82.25
+        ],
+        "maxMM": [
+          -10.1,
+          13.6,
+          89.4
+        ],
+        "kind": "plaster",
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "south own tall rear post",
+            "minMM": [
+              -17.7,
+              -17.7,
+              26.1
+            ],
+            "maxMM": [
+              -10.1,
+              -13.6,
+              89.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "north own tall rear post",
+            "minMM": [
+              -17.7,
+              13.6,
+              26.1
+            ],
+            "maxMM": [
+              -10.1,
+              17.7,
+              89.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own rear horizontal crossbar",
+            "minMM": [
+              -17.7,
+              -13.8,
+              67
+            ],
+            "maxMM": [
+              -14,
+              13.8,
+              78
+            ],
+            "axis": "beam",
+            "direction": [
+              0,
+              0.997488264865762,
+              -0.07083192398270358
+            ],
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                -17.31669677197933,
+                0.7243917927145958,
+                71.62682582139969
+              ],
+              "axis": [
+                0,
+                0.07083192398270358,
+                0.997488264865762
+              ],
+              "rangeMM": [
+                -2.3902243257268383,
+                2.6426203862844884
+              ]
+            }
+          },
+          {
+            "name": "own rear middle post",
+            "minMM": [
+              -17.7,
+              -2.554550485610962,
+              26.1
+            ],
+            "maxMM": [
+              -14,
+              2.376449422836304,
+              69.5
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "south own brass knob",
+        "minMM": [
+          0.45,
+          -2.633050489425659,
+          51.489897918701175
+        ],
+        "maxMM": [
+          1.4447000408172608,
+          -0.13215052783489223,
+          54.146298217773435
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            0.5,
+            -1.3826005086302757,
+            52.818098068237305
+          ],
+          "radiiMM": [
+            0.9447000408172608,
+            1.2504499807953835,
+            1.3282001495361329
+          ]
+        },
+        "kind": "paint",
+        "rgb": [
+          0.62,
+          0.43,
+          0.14
+        ],
+        "metallic": 0.8,
+        "roughness": 0.45,
+        "variation": 0.02
+      },
+      {
+        "name": "north own brass knob",
+        "minMM": [
+          0.45,
+          0.15614945888519283,
+          51.50599975585938
+        ],
+        "maxMM": [
+          1.4514000797271729,
+          2.6738493919372557,
+          54.15210037231445
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            0.5,
+            1.4149994254112244,
+            52.829050064086914
+          ],
+          "radiiMM": [
+            0.9514000797271729,
+            1.2588499665260315,
+            1.323050308227539
+          ]
+        },
+        "kind": "paint",
+        "rgb": [
+          0.62,
+          0.43,
+          0.14
+        ],
+        "metallic": 0.8,
+        "roughness": 0.45,
+        "variation": 0.02
+      },
+      {
+        "name": "own iron hinge 1",
+        "minMM": [
+          -0.29358479642488267,
+          13.720890442086445,
+          56.16580001831055
+        ],
+        "maxMM": [
+          0.6684936296723543,
+          14.68296886818368,
+          61.331998901367186
+        ],
+        "radialShell": {
+          "originMM": [
+            0.18745441662373577,
+            14.201929655135062,
+            56.16580001831055
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            5.166198883056637
+          ],
+          "radiusAtOriginMM": 0.48103921304861846,
+          "radiusSlope": 0,
+          "thicknessMM": 0.48103921304861846,
+          "allowanceMM": 0
+        },
+        "kind": "paint",
+        "rgb": [
+          0.19,
+          0.205,
+          0.19
+        ],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "own iron hinge 2",
+        "minMM": [
+          -0.29128935723061306,
+          -14.523406834795566,
+          56.16409866333008
+        ],
+        "maxMM": [
+          0.6682234051140918,
+          -13.56389407245086,
+          61.32200057983398
+        ],
+        "radialShell": {
+          "originMM": [
+            0.18846702394173942,
+            -14.043650453623213,
+            56.16409866333008
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            5.157901916503903
+          ],
+          "radiusAtOriginMM": 0.4797563811723525,
+          "radiusSlope": 0,
+          "thicknessMM": 0.4797563811723525,
+          "allowanceMM": 0
+        },
+        "kind": "paint",
+        "rgb": [
+          0.19,
+          0.205,
+          0.19
+        ],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "own iron hinge 3",
+        "minMM": [
+          -0.289479527194479,
+          13.721818824930045,
+          37.764898223876955
+        ],
+        "maxMM": [
+          0.6688547209189614,
+          14.680153073043487,
+          42.929899291992186
+        ],
+        "radialShell": {
+          "originMM": [
+            0.1896875968622412,
+            14.200985948986766,
+            37.764898223876955
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            5.165001068115231
+          ],
+          "radiusAtOriginMM": 0.4791671240567202,
+          "radiusSlope": 0,
+          "thicknessMM": 0.4791671240567202,
+          "allowanceMM": 0
+        },
+        "kind": "paint",
+        "rgb": [
+          0.19,
+          0.205,
+          0.19
+        ],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "own iron hinge 4",
+        "minMM": [
+          -0.2932235917000118,
+          -14.5234392350778,
+          37.7877978515625
+        ],
+        "maxMM": [
+          0.6683294277066115,
+          -13.561886215671178,
+          42.9378987121582
+        ],
+        "radialShell": {
+          "originMM": [
+            0.1875529180032999,
+            -14.04266272537449,
+            37.7877978515625
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            5.1501008605957
+          ],
+          "radiusAtOriginMM": 0.48077650970331165,
+          "radiusSlope": 0,
+          "thicknessMM": 0.48077650970331165,
+          "allowanceMM": 0
+        },
+        "kind": "paint",
+        "rgb": [
+          0.19,
+          0.205,
+          0.19
+        ],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "Author PDF page16 and own full/back/cabinet/doors/top source views inspected. SourceSHA4b983581b1a9a3dabbb7afb65041b7c533f49449201b3df0147f3e964fa7ba56,599976tri/29998884B,max89.011902mm. Sourceordinary17mm mount,finalUD0165.373095mm preserving body and source. Cabinet front compared to76 with15000own source points:toReferenceDelta[-0.03569168597459793, 0.0023336410522460938, 4.9591064453125e-05],alignedmedian.003083/p90.009341/p99.019197/max.038946mm. Tall wall/posts excluded from this comparison;own rear crossbar640samples and1495post samples. Own2knob components714/686vertices determine separate flattened brass masks. Own4hinges fitted from145rays each outside the wood moulding:radius.454167.. .456039mm,maxresidual.001907mm. Pin all6fittings andcollar. Xfloor,Ycornice/plinth,Zpanels;own measured orange plaster and rear timbers. Floor centre hitscabinet82.0616mm;two real front floor points[8.75,-8.75]Z25.517876 and[8.75,8.75]Z25.398010 have upward normals. Explicitcell[0,0]forboth,W64,blockerX2.3. Verify source geometry and tiny fitting normal directions,independent semantic colours plus dense actual colour/ORM/material channels,door mouldings,cornice silhouette,source/packed footprint andbothfloorpoints. Comparebothtexturecandidates matchinglargeviews;thenUD016bodyproof,finaltransparentpreview,Go manifest andfreshMCPidentity/assets/placement/behaviour confirmation. No emission or default lights. Visual QA caught the exposed front plaster above the82.062mm wardrobe outside the legacy rear-only plaster mask. Add an own upper-front plaster domain from82.25mm to89.4mm with timber exclusions,and independent front-facing probes;the cabinet and cornice stay wood.",
+  "placementCells": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "renderColourSize": 1536,
+  "geometryDetailRegions": [
+    {
+      "name": "native mounting collar",
+      "minMM": [
+        -17.7,
+        -17.7,
+        17
+      ],
+      "maxMM": [
+        17.7,
+        17.7,
+        17.51
+      ]
+    },
+    {
+      "name": "south own brass knob and surrounding wood",
+      "minMM": [
+        0.27,
+        -2.813050489425659,
+        51.309897918701175
+      ],
+      "maxMM": [
+        1.6247000408172607,
+        0.047849472165107765,
+        54.326298217773434
+      ]
+    },
+    {
+      "name": "north own brass knob and surrounding wood",
+      "minMM": [
+        0.27,
+        -0.023850541114807167,
+        51.32599975585938
+      ],
+      "maxMM": [
+        1.6314000797271728,
+        2.853849391937256,
+        54.33210037231445
+      ]
+    },
+    {
+      "name": "own iron hinge 1 and surrounding wood",
+      "minMM": [
+        -0.47358479642488266,
+        13.540890442086445,
+        55.98580001831055
+      ],
+      "maxMM": [
+        0.8484936296723542,
+        14.86296886818368,
+        61.511998901367186
+      ]
+    },
+    {
+      "name": "own iron hinge 2 and surrounding wood",
+      "minMM": [
+        -0.47128935723061305,
+        -14.703406834795565,
+        55.98409866333008
+      ],
+      "maxMM": [
+        0.8482234051140918,
+        -13.383894072450861,
+        61.50200057983398
+      ]
+    },
+    {
+      "name": "own iron hinge 3 and surrounding wood",
+      "minMM": [
+        -0.469479527194479,
+        13.541818824930045,
+        37.584898223876955
+      ],
+      "maxMM": [
+        0.8488547209189614,
+        14.860153073043486,
+        43.109899291992186
+      ]
+    },
+    {
+      "name": "own iron hinge 4 and surrounding wood",
+      "minMM": [
+        -0.47322359170001177,
+        -14.7034392350778,
+        37.6077978515625
+      ],
+      "maxMM": [
+        0.8483294277066116,
+        -13.381886215671178,
+        43.1178987121582
+      ]
+    }
+  ]
+}
