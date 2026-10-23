@@ -356,7 +356,8 @@ is shared with creature rows and shown before combat starts.
 Drag starts ignore Ctrl and Cmd. Disabled selection and ordinary clicks keep their behavior.
 
 Participant tile indicators are a single row of 13px numbers and 14px icons with
-vertical dividers. The compact rail hides the information column and makes it
+vertical dividers. Passive Perception and Investigation use muted gray for both
+numbers and icons; AC retains its primary number and blue shield. The compact rail hides the information column and makes it
 inert, including the indicators. Hover and keyboard focus open the shared `ItemTooltip` for the name,
 meaning and passive calculation. The player rail uses `--participant-rail-width`
 (264px), `--participant-selection-width` (36px) and `--participant-card-gap` (9px).
@@ -366,7 +367,7 @@ name/HP area retains its width as the rail expands.
 
 `CompactCheckbox` from share-ui 0.24.0 exposes `size` (default 18px); encounter, participant and target-selection rows pass 20px. Base geometry stays in the library. `ItemTooltip` forwards an optional `zIndex` to FloatingTooltip, retaining 4000 by default; participant indicator descriptions use 9500 above menus and submenus.
 
-`ArmorClassChip` is the shared session AC presentation (number then blue shield). `SessionHpBar.size` defaults to small (4px); the participant rail passes compact (9px), halfway to the medium (14px) bars in creature rows. Target pickers pass medium with decoration. `loadSessionTargets` hydrates the same character/NPC snapshots for attack, impact and saving-throw pickers and calculates AC with shared armor/effect rules. `SaveFormulaPreview` renders d20 mode, fixed bonus and extra dice from `sessionSaveProfile`; no second bonus calculation is maintained. The picker uses CompactCheckbox at 20px, including Ctrl/Cmd row selection. `ActionButton` dashed styling belongs to share-ui 0.25.0.
+`ArmorClassChip` is the shared session AC presentation (number then blue shield). `SessionHpBar.size` defaults to small (4px); the participant rail passes compact (6px), while creature rows use medium (14px). Target pickers pass medium with decoration. `loadSessionTargets` hydrates the same character/NPC snapshots for attack, impact and saving-throw pickers and calculates AC with shared armor/effect rules. `SaveFormulaPreview` renders d20 mode, fixed bonus and extra dice from `sessionSaveProfile`; no second bonus calculation is maintained. The picker uses CompactCheckbox at 20px, including Ctrl/Cmd row selection. `ActionButton` dashed styling belongs to share-ui 0.25.0.
 
 ## Связанные страницы
 

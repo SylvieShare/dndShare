@@ -3,7 +3,7 @@
     <LoadingIndicator v-if="loading" inline size="xs" label="Расчёт показателей" />
     <p v-else-if="error" role="alert" :title="error">{{ error }}</p>
     <template v-else>
-      <span v-for="indicator in indicators" :key="indicator.key" class="participant-stat" tabindex="0" :aria-label="`${indicator.label}: ${indicator.value}`"
+      <span v-for="indicator in indicators" :key="indicator.key" class="participant-stat" :class="{ 'participant-stat--passive': indicator.key !== 'ac' }" tabindex="0" :aria-label="`${indicator.label}: ${indicator.value}`"
         @mouseenter="showTooltip($event, indicator)" @mouseleave="tooltip = null" @focus="showTooltip($event, indicator)" @blur="tooltip = null">
         <strong>{{ indicator.value }}</strong><component :is="indicator.icon" :size="14" aria-hidden="true" />
       </span>
@@ -67,5 +67,6 @@ watch(referenceKey, async (_, __, onCleanup) => {
 .participant-stat:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: var(--r-sm); }
 .participant-stat svg { flex-shrink: 0; color: var(--info); }
 .participant-stat strong { color: var(--text-1); font-size: 13px; font-variant-numeric: tabular-nums; }
+.participant-stat--passive strong, .participant-stat--passive svg { color: var(--text-muted); }
 .participant-stats p { margin: 0; overflow: hidden; color: var(--danger); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
 </style>
