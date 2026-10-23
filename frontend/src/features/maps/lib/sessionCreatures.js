@@ -39,6 +39,7 @@ export function sessionCreatures(participants, encounter) {
       .filter((n) => n.type === "npc")
       .map((n) => ({
         kind: "creature",
+        itemId: n.itemId,
         ref: n.uid,
         name: `${n.markerLetter ? n.markerLetter + " · " : ""}${encounter.npcName(n)}`,
         previewUrl: creaturePortraitUrl(encounter.npcItem(n)),
@@ -56,5 +57,19 @@ export const creatureKey = (c) => (c ? `${c.kind}:${c.ref || c.id}` : "");
 export function creatureToken(map, creature) {
   return map?.state.tokens.find(
     (t) => creatureKey(t) === creatureKey(creature),
+  );
+}
+
+// Read-only rendering enrichment: opening a map never saves inferred item IDs.
+export function withCreatureItems(tokens, candidates) {
+  const items = new Map(
+    candidates
+      .filter((c) => c.kind === "creature")
+      .map((c) => [creatureKey(c), c.itemId]),
+  );
+  return tokens.map((t) =>
+    !t.itemId && items.get(creatureKey(t))
+      ? { ...t, itemId: items.get(creatureKey(t)) }
+      : t,
   );
 }

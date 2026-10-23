@@ -26,6 +26,7 @@ export function sessionFixture(pinia, source, params) {
     ? [
         {
           uid: "ogre",
+          ...(params.has("miniatures") ? { itemId: 1635 } : {}),
           type: "npc",
           markerLetter: "A",
           hpCurrent: 23,

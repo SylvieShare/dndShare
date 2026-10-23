@@ -10,13 +10,14 @@ export function createAssetView(camera, assets) {
   const tilesById = new Map(),
     objectsById = new Map();
   return {
-    update(tiles, objects) {
+    update(tiles, objects, tokens = []) {
       chunks.clear();
       tilesById.clear();
       objectsById.clear();
       for (const [items, kind, index] of [
         [tiles, "tile", tilesById],
         [objects, "object", objectsById],
+        [tokens, "object", new Map()],
       ])
         for (const item of items) {
           index.set(item.id, item);

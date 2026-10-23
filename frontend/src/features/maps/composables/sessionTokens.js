@@ -5,6 +5,7 @@ import {
   creatureKey,
   creatureToken,
   withCreaturePortraits,
+  withCreatureItems,
 } from "../lib/sessionCreatures";
 export function sessionTokens(getEditor, candidates, getCanvas) {
   const focused = ref(""),
@@ -31,7 +32,13 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
       : s.tokens.some((t) => t.id === preview.value.id)
         ? s.tokens.map((t) => (t.id === preview.value.id ? preview.value : t))
         : [...s.tokens, preview.value];
-    return { ...s, tokens: withCreaturePortraits(items, candidates.value) };
+    return {
+      ...s,
+      tokens: withCreatureItems(
+        withCreaturePortraits(items, candidates.value),
+        candidates.value,
+      ),
+    };
   });
   function clear() {
     focused.value = "";
@@ -81,6 +88,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
     const previous = creatureToken(getEditor().draft, c);
     return {
       kind: c.kind,
+      ...(c.kind === "creature" && c.itemId ? { itemId: c.itemId } : {}),
       ref: c.ref || "",
       name: c.name,
       imageUrl: c.previewUrl || previous?.imageUrl || "",

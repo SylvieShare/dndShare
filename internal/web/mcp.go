@@ -188,6 +188,8 @@ func (s *Server) mcpRequireWrite() error {
 func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json.RawMessage) (any, error) {
 	ctx := r.Context()
 	switch name {
+	case "item_models_list", "item_model_bind", "item_model_unbind":
+		return s.toolItemModels(r, name, args)
 	case "map_tile_model_group_update":
 		return s.toolMapModelGroup(r, args)
 	case "map_tile_model_grouping_update":

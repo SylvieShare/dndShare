@@ -41,6 +41,34 @@ function fixture() {
     document = { tiles, objects: [], areas: [] };
   return { geometry, dispose, part, metadata, assets, proxy, tiles, document };
 }
+it("uses the creature shadow proxy at the same size and ground datum as its visual", () => {
+  const f = fixture(),
+    roots = new Group(),
+    token = new Group();
+  token.userData.tokenId = "creature";
+  token.position.set(2, 0.05, 3);
+  roots.add(token);
+  const item = {
+    id: "creature",
+    modelId: "stairs",
+    x: 2,
+    y: 3,
+    scale: 2,
+    tokenSize: 2,
+  };
+  f.proxy.update({ ...f.document, tiles: [] }, [], [item], {}, roots);
+  f.proxy.advance(() => null, roots);
+  const matrix = new Matrix4();
+  f.proxy.root.children[0].getMatrixAt(0, matrix);
+  const expected = new Matrix4()
+    .makeScale(2, 2, 2)
+    .setPosition(2, 0, 3)
+    .multiply(f.part.matrix);
+  matrix.elements.forEach((v, i) =>
+    expect(v).toBeCloseTo(expected.elements[i], 5),
+  );
+  f.proxy.destroy();
+});
 it("shares real shadow geometry without filling blockers and preserves peg, rotation and part transforms", () => {
   const f = fixture();
   f.proxy.update(f.document, f.tiles, [], {}, new Group());

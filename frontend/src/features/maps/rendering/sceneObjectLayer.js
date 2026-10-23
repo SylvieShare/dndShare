@@ -4,7 +4,8 @@ import { buildMapToken } from "./sceneTokens";
 import { visibilityAt } from "../lib/mapModel";
 import { createModelBatches } from "./modelBatches";
 import { applyAreaOpacity } from "./areaOpacity";
-import { modelVisual } from "./modelVisual";
+import { modelVisual, visualSignature } from "./modelVisual";
+import { tokenModelId } from "../lib/tokenModels";
 
 // Stable logical roots serve motion/attachments; repeated props share GPU draws.
 export function createSceneObjectLayer(assets, fog, portraits) {
@@ -105,12 +106,18 @@ export function createSceneObjectLayer(assets, fog, portraits) {
         )
           continue;
         const { x, y, elevation, ...visual } = item;
+        const modelId = tokenModelId(item, assets.catalogue?.() || []);
         const stamp = JSON.stringify([
           visual,
           options.selectedToken === item.id,
+          modelId && visualSignature(assets, new Set([modelId]), tier),
         ]);
         const node = reconcile(`token:${item.id}`, stamp, () =>
-          buildMapToken(item, { ...options, tokenPortraits: portraits }, fog),
+          buildMapToken(
+            item,
+            { ...options, assets, tier, tokenPortraits: portraits },
+            fog,
+          ),
         );
         node.userData.placementTileId = item.placement?.tileId;
         node.position.set(x, (elevation || 0) + 0.05, y);

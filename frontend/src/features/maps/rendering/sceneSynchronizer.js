@@ -1,5 +1,6 @@
 import { areaAppearance } from "../lib/mapAreas";
 import { resolvedSurfacePosition } from "../lib/surfacePlacement";
+import { tokenItemIds, tokenModelId } from "../lib/tokenModels";
 import { modelTier } from "./modelTier";
 
 export function createSceneSynchronizer({
@@ -91,10 +92,19 @@ export function createSceneSynchronizer({
     if (opts.placementObject) objectIds.add(opts.placementObject);
     runtime.movingIds = new Set([...previewIds, ...objectIds]);
     runtime.modelIds = ids;
-    await assets.prepare(new Set([...ids, ...runtime.movingIds]), opts);
+    await assets.prepare(new Set([...ids, ...runtime.movingIds]), {
+      ...opts,
+      itemIds: tokenItemIds(nextState?.tokens),
+    });
     if (isDead() || id !== epoch) return;
     opts = { ...opts, ...runtime.options };
     runtime.options = opts;
+    const catalogue = assets.catalogue();
+    runtime.tokenModels = new Map(
+      (nextState?.tokens || []).map((t) => [t.id, tokenModelId(t, catalogue)]),
+    );
+    for (const modelId of runtime.tokenModels.values())
+      if (modelId) runtime.modelIds.add(modelId);
     const updateStarted = profiler.updateStart();
     const placed = structure.update(d, structureDirty);
     structureDirty = false;
@@ -204,7 +214,15 @@ export function createSceneSynchronizer({
       opts,
     );
     runtime.scenePreviewOptions = previewOptions;
-    assetView.update(placed, runtime.posedObjects);
+    assetView.update(
+      placed,
+      runtime.posedObjects,
+      runtime.posedTokens.map((t) => ({
+        ...t,
+        modelId: runtime.tokenModels.get(t.id),
+        scale: t.size,
+      })),
+    );
     refreshVisible();
     selection.document(d, placed, runtime.appearance, runtime.tier);
     selection.update(previewOptions, view.getView());
@@ -220,7 +238,22 @@ export function createSceneSynchronizer({
       { ...previewOptions, sceneHeight: structure.top() },
       structure.context(),
       placed,
-      runtime.posedObjects,
+      [
+        ...runtime.posedObjects,
+        ...runtime.posedTokens
+          .filter(
+            (t) =>
+              runtime.tokenModels.get(t.id) &&
+              runtime.appearance.tokenOpacity(t.placement?.tileId) > 0.001,
+          )
+          .map((t) => ({
+            ...t,
+            modelId: runtime.tokenModels.get(t.id),
+            scale: t.size,
+            tokenSize: t.size,
+            elevation: t.elevation + 0.05,
+          })),
+      ],
       view.getView(),
       objects,
       objectPreview.root,

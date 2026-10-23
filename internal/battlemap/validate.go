@@ -126,7 +126,7 @@ func ValidateState(s *State, d Document) error {
 	}
 	ids := map[string]bool{}
 	for _, t := range s.Tokens {
-		if !identifier.MatchString(t.ID) || ids[t.ID] || (t.Kind != "player" && t.Kind != "creature" && t.Kind != "marker") || len(t.Ref) > 100 || len([]rune(t.Name)) > 100 || !color.MatchString(t.Color) || !bounded(t.Size, .5, 8) || !bounded(t.X, 0, d.Width) || !bounded(t.Y, 0, d.Height) || !SafeURL(t.ImageURL) {
+		if t.ItemID < 0 || (t.ItemID != 0 && t.Kind != "creature") || !identifier.MatchString(t.ID) || ids[t.ID] || (t.Kind != "player" && t.Kind != "creature" && t.Kind != "marker") || len(t.Ref) > 100 || len([]rune(t.Name)) > 100 || !color.MatchString(t.Color) || !bounded(t.Size, .5, 8) || !bounded(t.X, 0, d.Width) || !bounded(t.Y, 0, d.Height) || !SafeURL(t.ImageURL) {
 			return fmt.Errorf("Некорректный жетон")
 		}
 		ids[t.ID] = true

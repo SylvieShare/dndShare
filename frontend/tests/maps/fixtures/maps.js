@@ -1,3 +1,4 @@
+import { miniatureFixture } from "./miniatures";
 import { paint, lineCells } from "./mapBuilders";
 import { decalFixture } from "./decals";
 import { modelDownloadsFixture, downloadMapExample } from "./downloads";
@@ -42,6 +43,7 @@ import {
 } from "./catalogue";
 const source = newMap();
 const params = new URLSearchParams(location.search);
+const miniature = await miniatureFixture(catalogue, params);
 if (params.has("groups")) groupExamples(catalogue);
 if (params.has("groupSections")) {
   const floor = catalogue.find((m) => m.id === FLOOR);
@@ -387,6 +389,7 @@ board.state.tokens = [
   },
 ];
 if (params.has("tokenPortraits")) tokenPortraitExample(board);
+miniature?.legacy(board);
 if (params.has("areaExample")) {
   board.state.fog = false;
   board.state.tokens = [];
@@ -464,6 +467,7 @@ window.loadedModels = [];
 window.releaseModelLoads = () =>
   window.pendingModelLoads?.splice(0).forEach((resolve) => resolve());
 const modelBody = (id) => {
+  if (id === miniature?.id) return miniature.glb;
   const key = modelAssetAliases.get(id) || id;
   return key.includes(FRAME)
     ? frameGlb

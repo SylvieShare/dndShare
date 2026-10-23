@@ -111,12 +111,11 @@ export function modelAssets(
       progress();
     }
     const key = options.publicCode
-      ? `${options.publicCode}:${[...ids].sort().join(",")}`
-      : "private";
+      ? `${options.publicCode}:${[...ids].sort().join(",")}:${(options.itemIds || []).join(",")}`
+      : `private:${(options.itemIds || []).join(",")}`;
     if (
       !refreshing &&
       catalogueKey === key &&
-      catalogue.size &&
       (!options.catalogue || options.catalogue === sourceCatalogue) &&
       [...ids].every((id) => catalogue.has(id))
     )
@@ -134,7 +133,7 @@ export function modelAssets(
     const promise = (async () => {
       let models = options.catalogue || [];
       if (
-        ids.size &&
+        (ids.size || options.itemIds?.length) &&
         (refreshing ||
           !models.length ||
           [...ids].some((id) => !models.some((m) => m.id === id)))

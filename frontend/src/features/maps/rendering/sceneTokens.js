@@ -2,6 +2,7 @@ import {
   CanvasTexture,
   CircleGeometry,
   CylinderGeometry,
+  RingGeometry,
   Group,
   ImageLoader,
   Mesh,
@@ -12,6 +13,7 @@ import {
   SRGBColorSpace,
 } from "three";
 import { FLOOR } from "./annotations";
+import { buildTokenMiniature } from "./tokenMiniature";
 
 const portraitKey = (t) =>
   `${t.kind === "player" ? "cover" : "contain"}:${t.imageUrl}`;
@@ -101,44 +103,67 @@ export function buildMapToken(token, options, fog) {
   group.position.set(token.x, (token.elevation ?? FLOOR) + 0.05, token.y);
   group.userData.tokenId = token.id;
   const hiddenOpacity = token.hidden ? 0.4 : 1;
-  group.add(
-    new Mesh(
-      new CylinderGeometry(token.size * 0.43, token.size * 0.43, 0.08, 32),
+  const miniature = buildTokenMiniature(token, options, fog);
+  if (miniature) {
+    const ring = new Mesh(
+      new RingGeometry(token.size * 0.45, token.size * 0.49, 48),
       fog.material(
         new MeshStandardMaterial({
           color: token.color,
-          roughness: 0.8,
+          roughness: 0.85,
           transparent: !!token.hidden,
           opacity: hiddenOpacity,
         }),
       ),
-    ),
-  );
-  if (token.imageUrl && options.tokenPortraits) {
-    const material = fog.material(
-      new MeshBasicMaterial({
-        map: options.tokenPortraits.texture(token),
-        transparent: true,
-        opacity: hiddenOpacity,
-        depthWrite: false,
-        toneMapped: false,
-      }),
     );
-    material.userData.borrowedTextures = true;
-    const avatar = new Mesh(
-      new CircleGeometry(token.size * 0.39, 48),
-      material,
+    ring.rotation.x = -Math.PI / 2;
+    ring.position.y = -0.039;
+    group.add(ring, miniature.root);
+  } else {
+    group.add(
+      new Mesh(
+        new CylinderGeometry(token.size * 0.43, token.size * 0.43, 0.08, 32),
+        fog.material(
+          new MeshStandardMaterial({
+            color: token.color,
+            roughness: 0.8,
+            transparent: !!token.hidden,
+            opacity: hiddenOpacity,
+          }),
+        ),
+      ),
     );
-    avatar.rotation.x = -Math.PI / 2;
-    avatar.position.y = 0.045;
-    group.add(avatar);
+    if (token.imageUrl && options.tokenPortraits) {
+      const material = fog.material(
+        new MeshBasicMaterial({
+          map: options.tokenPortraits.texture(token),
+          transparent: true,
+          opacity: hiddenOpacity,
+          depthWrite: false,
+          toneMapped: false,
+        }),
+      );
+      material.userData.borrowedTextures = true;
+      const avatar = new Mesh(
+        new CircleGeometry(token.size * 0.39, 48),
+        material,
+      );
+      avatar.rotation.x = -Math.PI / 2;
+      avatar.position.y = 0.045;
+      group.add(avatar);
+    }
   }
   const text = label(token.name);
-  text.position.y = 0.25;
+  text.position.y = miniature ? miniature.height + 0.2 : 0.25;
   group.add(text);
   if (token.id === options.selectedToken) {
     const marker = new Mesh(
-      new CylinderGeometry(token.size * 0.48, token.size * 0.48, 0.025, 32),
+      new CylinderGeometry(
+        token.size * (miniature ? 0.52 : 0.48),
+        token.size * (miniature ? 0.52 : 0.48),
+        0.025,
+        32,
+      ),
       new MeshStandardMaterial({ color: 0xf2d397, roughness: 0.9 }),
     );
     marker.position.y = -0.04;

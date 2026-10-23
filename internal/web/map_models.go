@@ -19,6 +19,7 @@ func (s *Server) routesMapModels(mux *http.ServeMux) {
 }
 
 type mapModelView struct {
+	ItemIDs []int64 `json:"itemIds,omitempty"`
 	battlemap.ModelMetadata
 	Behaviour        battlemap.ModelBehaviour `json:"behaviour"`
 	RenderURL        string                   `json:"renderUrl"`
@@ -54,6 +55,11 @@ func (s *Server) handleMapModels(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
+	preferred, err := s.store.PreferredItemModels(r.Context())
+	if err != nil {
+		serverError(w, err)
+		return
+	}
 	result := []mapModelView{}
 	behaviours, err := s.store.MapModelBehaviours(r.Context())
 	if err != nil {
@@ -62,6 +68,7 @@ func (s *Server) handleMapModels(w http.ResponseWriter, r *http.Request) {
 	}
 	for _, m := range models {
 		view := modelView(m, "/api/maps/models")
+		view.ItemIDs = preferred[m.ID]
 		view.Behaviour = behaviours[m.DefinitionID]
 		if err := signMapPreviewModel(&view); err != nil {
 			serverError(w, err)
@@ -90,6 +97,29 @@ func (s *Server) publicModelIDs(w http.ResponseWriter, r *http.Request) (map[str
 			mapError(w, err)
 			return nil, false
 		}
+		publicState, err := s.publicMapTokenState(r, session.ID, m.Document, m.State)
+		if err != nil {
+			serverError(w, err)
+			return nil, false
+		}
+		preferred, err := s.store.PreferredItemModels(r.Context())
+		if err != nil {
+			serverError(w, err)
+			return nil, false
+		}
+		visibleItems := map[int64]bool{}
+		for _, token := range publicState.Tokens {
+			if token.ItemID > 0 {
+				visibleItems[token.ItemID] = true
+			}
+		}
+		for modelID, itemIDs := range preferred {
+			for _, itemID := range itemIDs {
+				if visibleItems[itemID] {
+					ids[modelID] = true
+				}
+			}
+		}
 		for _, t := range m.Document.Tiles {
 			ids[t.ModelID] = true
 		}
@@ -112,6 +142,11 @@ func (s *Server) handlePublicMapModels(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
+	preferred, err := s.store.PreferredItemModels(r.Context())
+	if err != nil {
+		serverError(w, err)
+		return
+	}
 	result := []mapModelView{}
 	behaviours, err := s.store.MapModelBehaviours(r.Context())
 	if err != nil {
@@ -121,6 +156,7 @@ func (s *Server) handlePublicMapModels(w http.ResponseWriter, r *http.Request) {
 	for _, m := range models {
 		if ids[m.ID] {
 			view := modelView(m, "/api/public/sessions/"+url.PathEscape(r.PathValue("code"))+"/map-models")
+			view.ItemIDs = preferred[m.ID]
 			view.Behaviour = behaviours[m.DefinitionID]
 			view.Behaviour.Transitions = []battlemap.ModelTransition{}
 			result = append(result, view)

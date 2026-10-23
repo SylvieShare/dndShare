@@ -34,7 +34,7 @@
 
 | Endpoint | Контракт |
 | --- | --- |
-| `GET /api/maps/models` | Авторизованный пользователь: каталог метаданных моделей, постоянный id, code/name, постоянный UUID uuid, behaviour (revision/defaultLights/transitions/waterAnimation?), textureDetail (basic/detailed) текущей модели и renderUrl/lodUrl/shadowUrl/previewUrl; assetBytes {render,lod,shadow,preview} — размеры файлов в байтах для плана загрузки; previewSignature — подпись визуальных данных модели для локальной сверки при создании снимка |
+| `GET /api/maps/models` | Авторизованный пользователь: каталог метаданных моделей, постоянный id, code/name, постоянный UUID uuid, behaviour (revision/defaultLights/transitions/waterAnimation?), textureDetail (basic/detailed) текущей модели, itemIds (основные привязки итемов) и renderUrl/lodUrl/shadowUrl/previewUrl; assetBytes {render,lod,shadow,preview} — размеры файлов в байтах для плана загрузки; previewSignature — подпись визуальных данных модели для локальной сверки при создании снимка |
 | `PUT /api/maps/models/{modelId}` | ADMIN: поля каталога с id/uuid, редактируемый code и необязательный behaviour → обновление текущей модели с прежним UUID во всех картах; поведение сохраняется в той же транзакции; устаревшая behaviour.revision получает 409 |
 | `GET /api/maps/models/{modelId}/{variant}` | Авторизованный пользователь: source/render/lod/shadow/preview из S3; ETag и immutable cache |
 | `GET /api/maps` | Компактный список карт: scope=own/subscriptions/catalogue |
@@ -57,7 +57,7 @@
 | `GET /api/sessions/{uuid}/map-events` | Владелец: SSE invalidations |
 | `GET /api/public/sessions/{code}/map` | Публичный `{display,map}`; map=null при выключенном экране |
 | `GET /api/public/sessions/{code}/map-events` | Публичный SSE отдельного экрана карты |
-| `GET /api/public/sessions/{code}/map-models` | Только модели включённой карты трансляции |
+| `GET /api/public/sessions/{code}/map-models` | Только модели включённой карты и видимых существ; скрытые/физические жетоны и туман не раскрывают ресурсы |
 | `GET /api/public/sessions/{code}/map-models/{modelId}/{variant}` | render/lod/shadow/preview текущей карты; исходник STL недоступен |
 
 Документ имеет version=2. Плитка: `{id,modelId,x,y,rotation,level}`;
@@ -153,3 +153,7 @@ PUT метаданных требует явного variantCode и оба яз�
 перед четвертьоборотом `rotation`; отсутствие означает false. T отражает в
 осях карты, поэтому также меняет rotation на `-rotation mod 360`. Дополнительные
 файлы геометрии и отдельная таблица для отражений не требуются.
+
+Модели итемов связываются через MCP `item_models_list`, `item_model_bind`,
+`item_model_unbind`; контракт — [модели итемов](features/item-models.md).
+У жетона существа `state.tokens[].itemId` задаёт публичный итем для выбора модели.

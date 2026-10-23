@@ -151,7 +151,11 @@ func (s *Server) handlePublicMap(w http.ResponseWriter, r *http.Request) {
 		value.Document.Cameras = nil
 		hydrateMapImage(&value, "/api/public/sessions/"+r.PathValue("code"))
 		value.Source = nil
-		value.State = battlemap.PublicState(value.Document, value.State)
+		value.State, err = s.publicMapTokenState(r, session.ID, value.Document, value.State)
+		if err != nil {
+			serverError(w, err)
+			return
+		}
 		value.Document.Tags = []string{}
 		for i := range value.Document.Zones {
 			value.Document.Zones[i].Name = ""

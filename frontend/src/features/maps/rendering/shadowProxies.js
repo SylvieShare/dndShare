@@ -60,7 +60,16 @@ export function createShadowProxies(assets) {
     const props = [
       ...objects.filter((o) => !previewIds.has(o.id)),
       ...previews,
-    ].filter((o) => !hidden.objects.has(o.id) && !mist.objects.has(o.id));
+    ].filter(
+      (o) =>
+        !hidden.objects.has(o.id) &&
+        !mist.objects.has(o.id) &&
+        !(
+          o.tokenSize &&
+          (hidden.tiles.has(o.placement?.tileId) ||
+            mist.tiles.has(o.placement?.tileId))
+        ),
+    );
     const buckets = new Map();
     for (const item of [
       ...tiles.map((tile) => ({ tile, model: assets.metadata(tile.modelId) })),
@@ -136,7 +145,10 @@ export function createShadowProxies(assets) {
   function advance(tileMatrix, objects, objectPreview) {
     let changed = false;
     const objectRoots = new Map(
-      objects.children.map((o) => [o.userData.objectId, o]),
+      objects.children.map((o) => [
+        o.userData.objectId || o.userData.tokenId,
+        o,
+      ]),
     );
     for (const { mesh, part, items } of batches) {
       let dirty = false;
@@ -154,6 +166,12 @@ export function createShadowProxies(assets) {
           if (visual) {
             visual.updateMatrix();
             pose = visual.matrix;
+            if (object.tokenSize) {
+              pose = pose
+                .clone()
+                .scale(new Vector3().setScalar(object.tokenSize));
+              pose.elements[13] -= 0.05;
+            }
           } else {
             pose = new Matrix4().makeRotationY(
               (-(object.rotation || 0) * Math.PI) / 180,

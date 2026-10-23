@@ -61,6 +61,10 @@ CREATE TABLE AS и materialized view без WITH NO DATA не допускают
    только `schema_migration`; пользовательские данные не заполняются и не
    исправляются при применении схемы.
 
+Миграция `013_item_models.sql` добавляет таблицу-связку `item_model`
+между `item` и `map_model`: несколько вариантов, один основной, общие файлы.
+См. [модели итемов](features/item-models.md). Данные через MCP, без startup seed.
+
 ## Связанные страницы
 
 [Оглавление wiki](README.md) · [HTTP API](api.md) · [Архитектура DnD Share](architecture.md)

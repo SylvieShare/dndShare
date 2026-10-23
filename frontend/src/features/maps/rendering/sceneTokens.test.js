@@ -1,8 +1,15 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import { ImageLoader, Vector3 } from "three";
+import {
+  BoxGeometry,
+  ImageLoader,
+  Matrix4,
+  MeshStandardMaterial,
+  Vector3,
+} from "three";
 import { buildMapToken, createTokenPortraits } from "./sceneTokens";
 import { applyAreaOpacity } from "./areaOpacity";
 import { disposeObjects } from "./sceneObjects";
+import { createSceneObjectLayer } from "./sceneObjectLayer";
 
 let loads, draws;
 beforeEach(() => {
@@ -86,5 +93,63 @@ it("crops a player's portrait to the round face without stretching", () => {
   portraits.texture({ ...creature, kind: "player" });
   loads[0].onLoad({ width: 128, height: 256 });
   expect(draws[0].slice(1)).toEqual([0, -128, 256, 512]);
+  portraits.destroy();
+});
+
+it("uses a shared miniature with token sizing, fog opacity and safe disposal", () => {
+  const geometry = new BoxGeometry(),
+    material = new MeshStandardMaterial();
+  const dispose = vi.spyOn(geometry, "dispose");
+  const metadata = { id: "kobold", itemIds: [1635], maxHeight: 0.91 };
+  const resource = { parts: [{ geometry, material, matrix: new Matrix4() }] };
+  const assets = {
+    catalogue: () => [metadata],
+    metadata: () => metadata,
+    model: () => resource,
+  };
+  const root = buildMapToken(
+    { ...creature, itemId: 1635, size: 2, hidden: true },
+    { assets, tier: "render" },
+    fog,
+  );
+  const mini = root.children[1];
+  expect(mini.scale.x).toBe(2);
+  expect(mini.children[0].geometry).toBe(geometry);
+  expect(mini.children[0].receiveShadow).toBe(true);
+  expect(root.children[2].position.y).toBeGreaterThan(1.8);
+  applyAreaOpacity(root, 0.2);
+  expect(mini.children[0].material.opacity).toBeCloseTo(0.08);
+  disposeObjects(root);
+  expect(dispose).not.toHaveBeenCalled();
+  expect(material.opacity).toBe(1);
+});
+
+it("replaces the portrait when a miniature finishes loading, without a token edit", () => {
+  let ready = null;
+  const metadata = { id: "kobold", itemIds: [1635], maxHeight: 1 };
+  const assets = {
+    catalogue: () => [metadata],
+    metadata: () => metadata,
+    model: () => ready,
+  };
+  const portraits = createTokenPortraits(),
+    layer = createSceneObjectLayer(assets, fog, portraits);
+  const d = { objects: [], zones: [], areas: [], width: 4, height: 4 },
+    state = { tokens: [{ ...creature, itemId: 1635 }] };
+  const appearance = { tokenOpacity: () => 1 };
+  layer.update(d, state, { master: true }, "render", appearance);
+  expect(layer.root.children[0].children[1].isMesh).toBe(true);
+  ready = {
+    parts: [
+      {
+        geometry: new BoxGeometry(),
+        material: new MeshStandardMaterial(),
+        matrix: new Matrix4(),
+      },
+    ],
+  };
+  layer.update(d, state, { master: true }, "render", appearance);
+  expect(layer.root.children[0].children[1].isGroup).toBe(true);
+  layer.destroy();
   portraits.destroy();
 });

@@ -1,0 +1,14 @@
+{
+  "itemId": 1635,
+  "modelId": "e5ab34c3-4be1-56cb-ba74-ba053106dcd9",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1635",
+  "sourceName": "kobold-1635-miniature",
+  "name": "Кобольд",
+  "nameEn": "Kobold",
+  "code": "CRE-kobold",
+  "groupName": "Кобольды",
+  "groupNameEn": "Kobolds",
+  "maxHeight": 0.92
+}

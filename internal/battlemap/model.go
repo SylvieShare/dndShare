@@ -87,6 +87,7 @@ type Document struct {
 }
 
 type Token struct {
+	ItemID    int64            `json:"itemId,omitempty"`
 	ID        string           `json:"id"`
 	Kind      string           `json:"kind"`
 	Ref       string           `json:"ref"`

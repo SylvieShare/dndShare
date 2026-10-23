@@ -84,6 +84,7 @@ func (c client) call(ctx context.Context, name string, args any, out any) error 
 func main() {
 	dir := flag.String("assets", ".", "Folder with content-addressed assets and catalogue.json")
 	endpoint := flag.String("mcp-url", "https://dndshare.ru/mcp", "MCP endpoint")
+	itemID := flag.Int64("item-id", 0, "Bind the single uploaded object model as the default for a public handbook item")
 	workers := flag.Int("workers", 4, "Parallel model uploads (1–8)")
 	snapshot := flag.String("snapshot", "", "Write registered metadata to this file and exit without uploading")
 	flag.Parse()
@@ -123,6 +124,9 @@ func main() {
 	}
 	if err = json.Unmarshal(raw, &models); err != nil {
 		log.Fatal(err)
+	}
+	if *itemID < 0 || (*itemID > 0 && len(models) != 1) {
+		log.Fatal("item-id requires exactly one model")
 	}
 	known := map[string]battlemap.Model{}
 	knownAssets := map[battlemap.ModelAsset]bool{}
@@ -179,6 +183,12 @@ sendLoop:
 	for err := range failures {
 		log.Print(err)
 		os.Exit(1)
+	}
+	if *itemID > 0 {
+		if err := c.call(ctx, "item_model_bind", map[string]any{"itemId": *itemID, "modelId": models[0].ID, "default": true, "sortOrder": 0}, nil); err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("bound item %d to model %s", *itemID, models[0].ID)
 	}
 }
 

@@ -147,7 +147,7 @@ export function buildSceneObjects(d, state, options, fog, assets, tier) {
         visibilityAt(d, state, token.x, token.y) !== "visible")
     )
       continue;
-    const group = buildMapToken(token, options, fog);
+    const group = buildMapToken(token, { ...options, assets, tier }, fog);
     group.userData.placementTileId = token.placement?.tileId;
     applyAreaOpacity(
       group,
