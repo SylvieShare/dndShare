@@ -366,7 +366,7 @@ name/HP area retains its width as the rail expands.
 
 `CompactCheckbox` from share-ui 0.24.0 exposes `size` (default 18px); encounter, participant and target-selection rows pass 20px. Base geometry stays in the library. `ItemTooltip` forwards an optional `zIndex` to FloatingTooltip, retaining 4000 by default; participant indicator descriptions use 9500 above menus and submenus.
 
-`ArmorClassChip` is the shared session AC presentation (number then blue shield). `SessionHpBar.size` defaults to small; target pickers pass medium with decoration. `loadSessionTargets` hydrates the same character/NPC snapshots for attack, impact and saving-throw pickers and calculates AC with shared armor/effect rules. `SaveFormulaPreview` renders d20 mode, fixed bonus and extra dice from `sessionSaveProfile`; no second bonus calculation is maintained. The picker uses CompactCheckbox at 20px, including Ctrl/Cmd row selection. `ActionButton` dashed styling belongs to share-ui 0.25.0.
+`ArmorClassChip` is the shared session AC presentation (number then blue shield). `SessionHpBar.size` defaults to small (4px); the participant rail passes compact (9px), halfway to the medium (14px) bars in creature rows. Target pickers pass medium with decoration. `loadSessionTargets` hydrates the same character/NPC snapshots for attack, impact and saving-throw pickers and calculates AC with shared armor/effect rules. `SaveFormulaPreview` renders d20 mode, fixed bonus and extra dice from `sessionSaveProfile`; no second bonus calculation is maintained. The picker uses CompactCheckbox at 20px, including Ctrl/Cmd row selection. `ActionButton` dashed styling belongs to share-ui 0.25.0.
 
 ## Связанные страницы
 

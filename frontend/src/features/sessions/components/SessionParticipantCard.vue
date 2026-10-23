@@ -49,7 +49,7 @@
               </template>
 
               <template v-else>
-                <SessionHpBar :hp="hp" />
+                <SessionHpBar :hp="hp" size="compact" />
               </template>
             </template>
             <ParticipantStats v-if="isDm && isDnd" :participant="participant" />
