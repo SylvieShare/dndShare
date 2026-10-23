@@ -350,6 +350,7 @@ const participantTileStyle = computed(() => ({
 .p-info--stats {
   align-self: stretch;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 0;
