@@ -22,3 +22,4 @@ dndshare.log
 /output/rules-audit/
 /scripts/spell-rules/__pycache__/
 /scripts/maps/__pycache__/
+/scripts/creatures/__pycache__/

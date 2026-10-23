@@ -1,0 +1,221 @@
+[
+  {
+    "slug": "icewind",
+    "itemId": 1636,
+    "itemIds": [
+      1636
+    ],
+    "modelId": "24f3f429-1e4f-58e0-a9eb-b0e94b78f9f5",
+    "collection": "CRE",
+    "collectionName": "Миниатюры существ",
+    "sourceCode": "CRE-1636",
+    "sourceName": "icewind-miniature",
+    "name": "Кобольд долины Ледяного Ветра",
+    "nameEn": "Icewind Kobold",
+    "code": "CRE-kobold",
+    "groupName": "Кобольды",
+    "groupNameEn": "Kobolds",
+    "assetFiles": {
+      "render": "model.glb",
+      "lod": "model-lod.glb",
+      "shadow": "model-shadow.glb",
+      "source": "model-source.glb",
+      "preview": "preview.png"
+    }
+  },
+  {
+    "slug": "underling",
+    "itemId": 1637,
+    "itemIds": [
+      1637
+    ],
+    "modelId": "f2f64998-8914-568c-a90f-5eb4a2e35f26",
+    "collection": "CRE",
+    "collectionName": "Миниатюры существ",
+    "sourceCode": "CRE-1637",
+    "sourceName": "underling-miniature",
+    "name": "Кобольд подчиненный",
+    "nameEn": "Kobold Underling",
+    "code": "CRE-kobold",
+    "groupName": "Кобольды",
+    "groupNameEn": "Kobolds",
+    "assetFiles": {
+      "render": "model.glb",
+      "lod": "model-lod.glb",
+      "shadow": "model-shadow.glb",
+      "source": "model-source.glb",
+      "preview": "preview.png"
+    }
+  },
+  {
+    "slug": "dragonshield",
+    "itemId": 2051,
+    "itemIds": [
+      2051,
+      2052
+    ],
+    "modelId": "7f20b19e-8058-564a-b598-9fc8d5ec20a0",
+    "collection": "CRE",
+    "collectionName": "Миниатюры существ",
+    "sourceCode": "CRE-2051",
+    "sourceName": "dragonshield-miniature",
+    "name": "Кобольд драконий щит",
+    "nameEn": "Kobold Dragonshield",
+    "code": "CRE-kobold",
+    "groupName": "Кобольды",
+    "groupNameEn": "Kobolds",
+    "assetFiles": {
+      "render": "model.glb",
+      "lod": "model-lod.glb",
+      "shadow": "model-shadow.glb",
+      "source": "model-source.glb",
+      "preview": "preview.png"
+    }
+  },
+  {
+    "slug": "inventor",
+    "itemId": 1750,
+    "itemIds": [
+      1750,
+      1751
+    ],
+    "modelId": "d99430d6-d34d-507c-9d5f-139179414d16",
+    "collection": "CRE",
+    "collectionName": "Миниатюры существ",
+    "sourceCode": "CRE-1750",
+    "sourceName": "inventor-miniature",
+    "name": "Кобольд изобретатель",
+    "nameEn": "Kobold Inventor",
+    "code": "CRE-kobold",
+    "groupName": "Кобольды",
+    "groupNameEn": "Kobolds",
+    "assetFiles": {
+      "render": "model.glb",
+      "lod": "model-lod.glb",
+      "shadow": "model-shadow.glb",
+      "source": "model-source.glb",
+      "preview": "preview.png"
+    }
+  },
+  {
+    "slug": "sorcerer",
+    "itemId": 2053,
+    "itemIds": [
+      2053,
+      2054
+    ],
+    "modelId": "513e1cd1-1fb2-503e-a9d3-def57df3c562",
+    "collection": "CRE",
+    "collectionName": "Миниатюры существ",
+    "sourceCode": "CRE-2053",
+    "sourceName": "sorcerer-miniature",
+    "name": "Кобольд чешуйчатый чародей",
+    "nameEn": "Kobold Scale Sorcerer",
+    "code": "CRE-kobold",
+    "groupName": "Кобольды",
+    "groupNameEn": "Kobolds",
+    "assetFiles": {
+      "render": "model.glb",
+      "lod": "model-lod.glb",
+      "shadow": "model-shadow.glb",
+      "source": "model-source.glb",
+      "preview": "preview.png"
+    }
+  },
+  {
+    "slug": "tinkerer",
+    "itemId": 1752,
+    "itemIds": [
+      1752
+    ],
+    "modelId": "58e53e4b-39e8-50e4-9275-a7e8688c97c0",
+    "collection": "CRE",
+    "collectionName": "Миниатюры существ",
+    "sourceCode": "CRE-1752",
+    "sourceName": "tinkerer-miniature",
+    "name": "Кобольд-механик",
+    "nameEn": "Kobold Tinkerer",
+    "code": "CRE-kobold",
+    "groupName": "Кобольды",
+    "groupNameEn": "Kobolds",
+    "assetFiles": {
+      "render": "model.glb",
+      "lod": "model-lod.glb",
+      "shadow": "model-shadow.glb",
+      "source": "model-source.glb",
+      "preview": "preview.png"
+    }
+  },
+  {
+    "slug": "vampire",
+    "itemId": 2492,
+    "itemIds": [
+      2492
+    ],
+    "modelId": "5e1db633-38a5-5e91-ba93-05abb4b8482f",
+    "collection": "CRE",
+    "collectionName": "Миниатюры существ",
+    "sourceCode": "CRE-2492",
+    "sourceName": "vampire-miniature",
+    "name": "Кобольд-порождение вампира",
+    "nameEn": "Kobold Vampire Spawn",
+    "code": "CRE-kobold",
+    "groupName": "Кобольды",
+    "groupNameEn": "Kobolds",
+    "assetFiles": {
+      "render": "model.glb",
+      "lod": "model-lod.glb",
+      "shadow": "model-shadow.glb",
+      "source": "model-source.glb",
+      "preview": "preview.png"
+    }
+  },
+  {
+    "slug": "winged",
+    "itemId": 1759,
+    "itemIds": [
+      1759
+    ],
+    "modelId": "3165f222-76b6-51dc-b1a1-484f86ff458f",
+    "collection": "CRE",
+    "collectionName": "Миниатюры существ",
+    "sourceCode": "CRE-1759",
+    "sourceName": "winged-miniature",
+    "name": "Крылатый кобольд",
+    "nameEn": "Winged Kobold",
+    "code": "CRE-kobold",
+    "groupName": "Кобольды",
+    "groupNameEn": "Kobolds",
+    "assetFiles": {
+      "render": "model.glb",
+      "lod": "model-lod.glb",
+      "shadow": "model-shadow.glb",
+      "source": "model-source.glb",
+      "preview": "preview.png"
+    }
+  },
+  {
+    "slug": "guard-1672",
+    "itemId": 1672,
+    "itemIds": [
+      1672
+    ],
+    "modelId": "ed671194-3ad9-5df4-a5fb-2d27a3413cf7",
+    "collection": "CRE",
+    "collectionName": "Миниатюры существ",
+    "sourceCode": "CRE-1672",
+    "sourceName": "guard-1672-miniature",
+    "name": "Стражник",
+    "nameEn": "Guard",
+    "code": "CRE-guard",
+    "groupName": "Стражники",
+    "groupNameEn": "Guards",
+    "assetFiles": {
+      "render": "model.glb",
+      "lod": "model-lod.glb",
+      "shadow": "model-shadow.glb",
+      "source": "model-source.glb",
+      "preview": "preview.png"
+    }
+  }
+]

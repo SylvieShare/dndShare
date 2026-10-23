@@ -19,13 +19,16 @@ const recipe = JSON.parse(
 const output = path.join(folder, "publish");
 await fs.mkdir(output, { recursive: true });
 const assets = {};
-for (const [kind, file] of [
-  ["render", "kobold-1635.glb"],
-  ["lod", "kobold-1635-lod.glb"],
-  ["shadow", "kobold-1635-shadow.glb"],
-  ["source", "kobold-1635-master.glb"],
-  ["preview", "preview.png"],
-]) {
+const files =
+  recipe.assetFiles ||
+  Object.fromEntries([
+    ["render", "kobold-1635.glb"],
+    ["lod", "kobold-1635-lod.glb"],
+    ["shadow", "kobold-1635-shadow.glb"],
+    ["source", "kobold-1635-master.glb"],
+    ["preview", "preview.png"],
+  ]);
+for (const [kind, file] of Object.entries(files)) {
   const data =
     kind === "preview"
       ? await sharp(path.join(folder, file))
@@ -42,10 +45,14 @@ for (const [kind, file] of [
     sha256,
     size: data.length,
     mimeType: kind === "preview" ? "image/webp" : "model/gltf-binary",
-    fileName: kind === "preview" ? "kobold-1635.webp" : file,
+    fileName: recipe.assetFiles
+      ? `${recipe.sourceCode.toLowerCase()}-${kind}.${ext}`
+      : kind === "preview"
+        ? "kobold-1635.webp"
+        : file,
   };
 }
-const { itemId, modelId, ...metadata } = recipe;
+const { itemId, itemIds, modelId, assetFiles, slug, ...metadata } = recipe;
 const model = {
   ...metadata,
   id: modelId,

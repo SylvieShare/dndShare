@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ru">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  />
+  <title>Кобольды и стражник · миниатюры</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: #171d21;
+      color: #ece2d0;
+      font: 14px system-ui;
+    }
+    canvas {
+      display: block;
+    }
+    aside {
+      position: fixed;
+      inset: 16px auto 16px 16px;
+      width: 235px;
+      overflow: auto;
+      z-index: 2;
+      padding: 12px;
+      border: 1px solid #495158;
+      border-radius: 12px;
+      background: #1e252ce8;
+      backdrop-filter: blur(12px);
+    }
+    h1 {
+      font-size: 18px;
+      margin: 0 0 12px;
+    }
+    .model {
+      display: flex;
+      align-items: center;
+      text-align: left;
+      width: 100%;
+      gap: 9px;
+      margin: 5px 0;
+      padding: 7px;
+      border-radius: 8px;
+    }
+    .model img {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+    }
+    .model small {
+      display: block;
+      font-size: 11px;
+      color: #aeb8be;
+      margin-top: 3px;
+    }
+    button,
+    a {
+      font: inherit;
+      color: inherit;
+      background: #28323a;
+      border: 1px solid #4b5962;
+      padding: 9px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    button[aria-pressed="true"] {
+      border-color: #d3a66d;
+      color: #ffda9f;
+    }
+    button:hover,
+    a:hover {
+      background: #394651;
+    }
+    nav {
+      position: fixed;
+      bottom: 20px;
+      left: 275px;
+      right: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      z-index: 2;
+    }
+    #info {
+      position: fixed;
+      top: 22px;
+      left: 280px;
+      right: 20px;
+      max-width: 700px;
+      pointer-events: none;
+    }
+    #name {
+      font-size: 20px;
+      font-weight: 650;
+    }
+    #detail {
+      color: #b1bac0;
+      line-height: 1.5;
+      margin-top: 5px;
+    }
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid #d3a66d;
+      outline-offset: 3px;
+    }
+    @media (max-width: 700px) {
+      aside {
+        inset: 12px 12px auto;
+        width: auto;
+        height: 115px;
+        display: flex;
+        gap: 7px;
+        overflow: auto;
+      }
+      h1 {
+        display: none;
+      }
+      #models {
+        display: flex;
+        gap: 7px;
+      }
+      .model {
+        min-width: 170px;
+        width: 170px;
+        margin: 0;
+      }
+      #info {
+        left: 16px;
+        top: 145px;
+        font-size: 12px;
+      }
+      #name {
+        font-size: 17px;
+      }
+      nav {
+        left: 16px;
+        bottom: 16px;
+        right: 16px;
+      }
+      button,
+      a {
+        padding: 8px 10px;
+      }
+    }
+  </style>
+  <aside>
+    <h1>Миниатюры существ</h1>
+    <div id="models"></div>
+  </aside>
+  <div id="info">
+    <div id="name"></div>
+    <div id="detail">Загрузка…</div>
+  </div>
+  <nav>
+    <button id="render" aria-pressed="true">Полная</button
+    ><button id="lod" aria-pressed="false">LOD</button
+    ><button id="source" aria-pressed="false">Исходник</button
+    ><button id="close">Крупно</button><button id="field">На поле</button
+    ><button id="top">Сверху</button
+    ><button id="clay" aria-pressed="false">Без цвета</button
+    ><button id="rotate" aria-pressed="false">Вращать</button
+    ><a id="download" download>Скачать GLB</a>
+  </nav>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./viewer/three.module.js",
+        "three/addons/": "./viewer/addons/"
+      }
+    }
+  </script>
+  <script type="module" src="family-viewer.js"></script>
+</html>
