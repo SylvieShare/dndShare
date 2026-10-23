@@ -14,7 +14,7 @@
       </template>
     </RowActionSubmenu>
   </template>
-  <AppModalFrame v-if="result" :title="effect.name" :z-index="3700" @close="result = null"><DiceRollResult :result="result" :size="32" /><p>{{ outcome }}</p></AppModalFrame>
+  <AppModalFrame v-if="result" :title="effect.name" :z-index="ctx.overlayZIndex || 3700" @close="result = null"><DiceRollResult :result="result" :size="32" /><p>{{ outcome }}</p></AppModalFrame>
 </template>
 <script setup>
 import { computed, inject, ref, unref } from 'vue'
@@ -53,14 +53,14 @@ async function runOngoing() {
       await suggests.ensure(12).catch(() => {})
       if (!instance.value || !ctx.value.ownerMode) return
       const type = suggests.items(12).find(row => Number(row.id) === Number(config.damage_type))
-      result.value = dice.roll(props.effect.name, `${count.value}${config.dice}`, { color: type?.color })
+      result.value = dice.roll(props.effect.name, `${count.value}${config.dice}`, { color: type?.color, actor: ctx.value.actor, eventData: ctx.value.eventData })
       const hp = statusDamageHp(ctx.value.values.hp, result.value.total, unref(ctx.value.characterDefenses?.defenses) || [], config.damage_type)
       update(ongoingDamageTransition(config, params, 'damage'), { hp })
       outcome.value = 'Урон применён с учётом временных хитов и защит. Следующий шаг — спасбросок.'
     } else {
       const context = { kind: 'saving_throw', abilitySuggestId: config.save_ability }
       const mode = ctx.value.characterRolls?.resolve?.('auto', context)?.mode || 'normal'
-      result.value = await dice.rollD20(props.effect.name, statusSaveBonus(ctx.value, config.save_ability), mode, { roll_kind: 'saving_throw', bonus_formula: ctx.value.characterDerivedEffects?.rollBonus?.(context) })
+      result.value = await dice.rollD20(props.effect.name, statusSaveBonus(ctx.value, config.save_ability), mode, { roll_kind: 'saving_throw', actor: ctx.value.actor, eventData: ctx.value.eventData, bonus_formula: ctx.value.characterDerivedEffects?.rollBonus?.(context) })
       if (!result.value) return
       const success = result.value.total >= config.save_dc
       const next = ongoingDamageTransition(config, params, 'save', success)

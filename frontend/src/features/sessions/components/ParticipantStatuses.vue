@@ -1,60 +1,62 @@
 <template>
   <div class="participant-statuses" role="group" aria-label="Эффекты и состояния" @pointerdown.stop @click.stop @contextmenu.stop @keydown.stop>
-    <button
-      v-for="status in statuses"
-      :key="status.uid"
-      type="button"
-      class="participant-status"
-      :aria-label="status.title"
-      :style="{ color: status.color }"
-      @mouseenter="showTooltip($event, status)"
-      @mouseleave="tooltip = null"
-      @focus="showTooltip($event, status)"
-      @blur="tooltip = null"
-      @click.stop="openStatus(status)"
-    >
-      <ItemIcon v-if="status.item.iconImageUrl || status.item.svg" :item="status.item" :size="24" :fallback-to-type="false" />
-      <Sparkles v-else :size="22" aria-hidden="true" />
-    </button>
+    <DndStatusOverviewView
+      :items="items" :editable="context.ownerMode" :context="context" icons-only :icon-size="48"
+      @view="viewItem = $event.item"
+      @remove="removeStatus"
+      @increase-level="changeLevel($event, 1)"
+      @decrease-level="changeLevel($event, -1)"
+      @edit-duration="durationUid = $event.id"
+      @show-tooltip="showTooltip"
+      @hide-tooltip="tooltip = null"
+    />
   </div>
-  <ItemTooltip v-if="tooltip" :anchor="tooltip.anchor" :title="tooltip.title" :desc="tooltip.description" :width="300" :z-index="9500">
+  <ItemTooltip v-if="tooltip" :anchor="tooltip.anchor" :title="tooltip.value" :desc="tooltip.desc" :width="300" :z-index="9500">
     <template #details>
-      <span>{{ statusDuration(tooltip.duration) }}</span>
-      <span v-if="tooltip.params?.level">Уровень {{ tooltip.params.level }}</span>
-      <span v-if="tooltip.concentration">Концентрация</span>
+      <span>{{ tooltip.duration }}</span>
+      <span v-if="tooltip.level">Уровень {{ tooltip.level }}</span>
     </template>
   </ItemTooltip>
   <ItemViewModal v-if="viewItem" :item="viewItem" :item-id="Number(viewItem.id)" :item-type-id="15" :z-index="9600" @close="viewItem = null" />
+  <StatusDurationModal v-if="durationStatus" :key="durationStatus.uid" :status="durationStatus" :z-index="9600" @close="durationUid = null" @save="saveDuration" />
+  <AppModalFrame v-if="error" title="Не удалось сохранить эффект" close-label="Закрыть" :z-index="9700" @close="error = ''">{{ error }}</AppModalFrame>
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent, shallowRef } from 'vue'
-import { Sparkles } from '@lucide/vue'
-import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import { computed, defineAsyncComponent, ref, shallowRef } from 'vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
+import DndStatusOverviewView from '@/features/character-editor/blocks/dnd/components/DndStatusOverviewView.vue'
+import StatusDurationModal from '@/features/character-editor/blocks/dnd/components/StatusDurationModal.vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
-import { useItemReferenceMap } from '@/features/items/composables/useItemReferenceMap'
-import { collectCharacterStatuses } from '@/features/character-editor/lib/characterStatuses'
+import { useParticipantStatusContext } from '../composables/useParticipantStatusContext'
 import { statusDuration } from '@/shared/lib/statusDuration'
 
 const ItemViewModal = defineAsyncComponent(() => import('@/features/handbook/components/ItemViewModal.vue'))
-const props = defineProps({ instances: { type: Array, default: () => [] } })
-const itemIds = computed(() => props.instances.map(status => status.effect_id))
-const { itemsById } = useItemReferenceMap(itemIds)
-const statuses = computed(() => collectCharacterStatuses({ states: props.instances }, itemsById.value))
-const tooltip = shallowRef(null)
-const viewItem = shallowRef(null)
-
-function showTooltip(event, status) { tooltip.value = { ...status, anchor: event.currentTarget } }
-function openStatus(status) {
-  tooltip.value = null
-  viewItem.value = status.item
+const props = defineProps({ participant: { type: Object, required: true }, editable: Boolean })
+const { context, statuses, updateValues, error } = useParticipantStatusContext(() => props.participant, () => props.editable)
+const items = computed(() => statuses.value.map(status => ({
+  id: status.uid, kind: 'states', value: status.title, desc: status.description,
+  item: status.item, color: status.color,
+  level: Math.max(0, Number(status.params?.level ?? status.item?.data?.level) || 0),
+  adjustableLevel: Number(status.item?.data?.level) > 0,
+  maxLevel: Math.max(0, Number(status.item?.data?.max_level) || 0),
+  duration: statusDuration(status.duration) + (status.concentration ? ' · концентрация' : ''),
+})))
+const tooltip = shallowRef(null), viewItem = shallowRef(null), durationUid = ref(null)
+const durationStatus = computed(() => statuses.value.find(status => status.uid === durationUid.value))
+function showTooltip(event, item) { tooltip.value = { ...item, anchor: event.currentTarget } }
+function removeStatus(item) { return updateValues({ states: context.characterStatuses.remove(item.id) }) }
+function changeLevel(item, delta) {
+  const level = Math.max(1, Math.min(item.maxLevel || 99, (Number(item.level) || 1) + delta))
+  return updateValues({ states: context.characterStatuses.setLevel(item.id, level) })
+}
+async function saveDuration(duration) {
+  if (!durationStatus.value) return
+  const saved = await updateValues({ states: context.characterStatuses.setDuration(durationUid.value, duration) })
+  if (saved) durationUid.value = null
 }
 </script>
 
 <style scoped>
-.participant-statuses { display: flex; align-items: center; gap: 4px; height: 28px; min-width: 0; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; }
-.participant-status { display: inline-flex; flex: 0 0 24px; align-items: center; justify-content: center; width: 24px; height: 24px; padding: 0; border: 0; background: none; cursor: pointer; transition: opacity .15s, transform .15s; }
-.participant-status:hover { opacity: .8; transform: translateY(-1px); }
-.participant-status:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: var(--r-sm); }
-@media (prefers-reduced-motion: reduce) { .participant-status { transition: none; } }
+.participant-statuses { min-width: 0; height: 52px; }
 </style>

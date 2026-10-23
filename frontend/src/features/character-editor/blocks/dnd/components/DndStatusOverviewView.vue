@@ -1,5 +1,5 @@
 <template>
-  <div v-if="items.length || editable" class="dsov">
+  <div v-if="items.length || editable" class="dsov" :class="{ 'dsov--icons-only': iconsOnly }" :style="iconsOnly ? { '--status-icon-size': `${iconSize}px` } : null">
     <div v-if="items.length" class="dsov-row">
       <RowActionMenu
         v-for="item in items"
@@ -11,10 +11,13 @@
             class="dsov-effect action-menu-source"
             :class="{ 'action-menu-source--open': open }"
             type="button"
+            :aria-label="iconsOnly ? item.value : undefined"
             :style="{ '--status-color': item.color || 'var(--text-muted)' }"
             @click="$emit('hide-tooltip')"
             @mouseenter="$emit('show-tooltip', $event, item)"
             @mouseleave="$emit('hide-tooltip')"
+            @focus="$emit('show-tooltip', $event, item)"
+            @blur="$emit('hide-tooltip')"
           >
             <span class="dsov-icon">
               <ItemIcon
@@ -22,14 +25,15 @@
                 class="dsov-item-icon"
                 :item="item.item"
                 :fallback-to-type="false"
-                :size="64"
+                :size="iconSize"
               />
               <BatteryLow v-else-if="item.kind === 'exhaustion'" :size="38" :stroke-width="1.7" aria-hidden="true" />
               <Sparkles v-else-if="item.kind === 'inspiration'" :size="40" :stroke-width="1.7" aria-hidden="true" />
+              <Sparkles v-else-if="iconsOnly" :size="iconSize - 4" aria-hidden="true" />
               <span v-else class="dsov-monogram" aria-hidden="true">{{ monogram(item.value) }}</span>
             </span>
 
-            <span class="dsov-copy">
+            <span v-if="!iconsOnly" class="dsov-copy">
               <span class="dsov-heading">
                 <span class="dsov-name" :title="item.value">{{ item.value }}</span>
                 <span v-if="item.level" class="dsov-level">Уровень {{ item.level }}</span>
@@ -43,7 +47,7 @@
         </template>
 
         <template #default="{ close }">
-          <StatusMechanicsMenu v-if="editable && item.kind === 'states' && item.item" :uid="item.id" :effect="item.item" />
+          <StatusMechanicsMenu v-if="editable && item.kind === 'states' && item.item" :uid="item.id" :effect="item.item" :context="context" />
           <RowActionItem v-if="item.item" action="view" tone="info" @click="select(item, close, 'view')">
             Посмотреть
           </RowActionItem>
@@ -91,6 +95,9 @@ defineProps({
   items: { type: Array, default: () => [] },
   editable: { type: Boolean, default: false },
   showAddAction: { type: Boolean, default: false },
+  iconsOnly: { type: Boolean, default: false },
+  iconSize: { type: Number, default: 64 },
+  context: { type: Object, default: null },
 })
 const emit = defineEmits(['add', 'view', 'remove', 'edit-duration', 'increase-level', 'decrease-level', 'show-tooltip', 'hide-tooltip'])
 
@@ -139,6 +146,10 @@ function monogram(value) {
   overflow: hidden;
 }
 .dsov-item-icon { width: 64px; height: 64px; }
+.dsov--icons-only { padding: 0; gap: 4px; }
+.dsov--icons-only .dsov-row { flex: 1; gap: 4px; height: calc(var(--status-icon-size) + 4px); overflow-y: hidden; }
+.dsov--icons-only .dsov-effect { width: var(--status-icon-size); height: var(--status-icon-size); flex-basis: var(--status-icon-size); grid-template-columns: var(--status-icon-size); }
+.dsov--icons-only .dsov-icon, .dsov--icons-only .dsov-item-icon { width: var(--status-icon-size); height: var(--status-icon-size); }
 .dsov-item-icon :deep(img),
 .dsov-item-icon :deep(svg) { width: 100%; height: 100%; object-fit: cover; }
 .dsov-monogram { font-size: 24px; font-weight: 800; }

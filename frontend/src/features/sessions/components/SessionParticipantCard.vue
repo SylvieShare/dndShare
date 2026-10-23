@@ -59,7 +59,7 @@
               </div>
             </div>
             <div v-if="hasStatuses" class="p-statuses-area" :inert="compact" :aria-hidden="compact">
-              <ParticipantStatuses :instances="statusInstances" />
+              <ParticipantStatuses :participant="participant" :editable="isDm" />
             </div>
           </div>
 
@@ -244,7 +244,7 @@ const participantTileStyle = computed(() => ({
   box-shadow: inset 0 0 0 var(--participant-frame-width) var(--participant-color);
 }
 
-.p-card--statuses { height: 104px; }
+.p-card--statuses { height: 128px; }
 
 .p-card--compact { height: 48px; gap: 0; padding: 6px; justify-content: center; }
 .p-card--compact .p-combat-controls { margin-left: calc(-1 * var(--participant-selection-width, 36px)); }
@@ -315,7 +315,7 @@ const participantTileStyle = computed(() => ({
 
 .p-content { flex: 1; min-width: 0; }
 .p-summary { display: flex; align-items: center; gap: var(--participant-card-gap, 9px); height: 64px; min-width: 0; transition: height .42s cubic-bezier(.22, 1, .36, 1), gap .42s cubic-bezier(.22, 1, .36, 1); }
-.p-statuses-area { height: 28px; margin-top: 4px; overflow: hidden; opacity: 1; transition: height .42s cubic-bezier(.22, 1, .36, 1), margin-top .42s cubic-bezier(.22, 1, .36, 1), opacity .2s; }
+.p-statuses-area { height: 52px; margin-top: 4px; overflow: hidden; opacity: 1; transition: height .42s cubic-bezier(.22, 1, .36, 1), margin-top .42s cubic-bezier(.22, 1, .36, 1), opacity .2s; }
 .p-card--compact .p-summary { height: 36px; gap: 0; }
 .p-card--compact .p-statuses-area { height: 0; margin-top: 0; opacity: 0; }
 

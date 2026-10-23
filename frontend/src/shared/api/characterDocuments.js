@@ -5,8 +5,8 @@ import { createDocumentSync } from '../lib/documentSync'
 
 const documents = new Map()
 
-// DM health controls use the same versioned, retryable protocol as a sheet.
-export async function patchCharacterData(uuid, updates, snapshot) {
+// DM character controls use the same versioned, retryable protocol as a sheet.
+export async function patchCharacterData(uuid, updates, snapshot, { action = 'health' } = {}) {
   const actor = useAccountStore().user?.id
   const key = `${actor || 'anonymous'}:${uuid}`
   let sync = documents.get(key)
@@ -35,9 +35,9 @@ export async function patchCharacterData(uuid, updates, snapshot) {
     path: update.path.split('.'),
     value: update.value,
   }))
-  sync.edit(applyDocumentPatches(sync.data, operations), { action: 'health' })
+  sync.edit(applyDocumentPatches(sync.data, operations), { action })
   const wait = sync.whenIdle()
   void sync.flush()
   await wait
-  return { version: sync.version }
+  return { version: sync.version, data: sync.data }
 }

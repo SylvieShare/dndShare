@@ -1,5 +1,5 @@
 <template>
-  <AppModalFrame :title="`Длительность: ${status.title}`" :z-index="3500" @close="$emit('close')">
+  <AppModalFrame :title="`Длительность: ${status.title}`" :z-index="zIndex" @close="$emit('close')">
     <form id="status-duration-form" class="status-duration-fields" @submit.prevent="save">
       <FormField label="Когда заканчивается" vertical title="Длительность только этого экземпляра эффекта. Изменение не затрагивает справочник или другие эффекты.">
         <FormSelect v-model:value="draft.kind" aria-label="Когда заканчивается">
@@ -23,7 +23,7 @@ import { computed, ref } from 'vue'
 import { ActionButton, AppModalFrame, FormField, FormSelect, FormTextInput } from '@sylvieshare/share-ui'
 import { STATUS_DURATION_OPTIONS, cleanStatusDuration, copyStatusDuration, isTimedStatusDuration, statusDurationError } from '@/shared/lib/statusDuration'
 
-const props = defineProps({ status: { type: Object, required: true } })
+const props = defineProps({ status: { type: Object, required: true }, zIndex: { type: Number, default: 3500 } })
 const emit = defineEmits(['close', 'save'])
 const draft = ref({ value: 1, text: '', ...copyStatusDuration(props.status.duration) })
 const error = computed(() => statusDurationError(draft.value))
