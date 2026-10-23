@@ -192,8 +192,12 @@ creation and invite code/link copy actions. Attaching an existing character uses
 the same transfer confirmation as the invitation flow, refreshes the rail and
 keeps the session workspace open; the rail has no separate invitation tile. A separate header control
 switches the `264px` rail between its normal width and a compact avatar-only mode.
-Expanded participant tiles keep their `72px` height with `4px` padding around
-a `64px` image, while compact mode keeps its `36px` geometry. Independent
+Expanded participant tiles have a `72px` base height with `4px` padding around
+a `64px` image. For the DM, active D&D effects/states add a lower icon row and
+increase the tile to `104px`; the checkbox remains centered across the full
+height. Hover/focus describes the status and clicking opens its handbook modal.
+Without active statuses there is no empty row. Compact mode hides the row and
+keeps its `36px` avatar geometry. Independent
 character icons render square without the portrait rounding or radial mask;
 setting-provided portraits retain both. The
 choice is stored per session in `localStorage`. Combat is the third visual

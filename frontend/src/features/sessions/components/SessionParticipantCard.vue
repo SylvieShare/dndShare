@@ -12,6 +12,7 @@
           class="p-card"
           :class="{
             'p-card--combat': combatMode,
+            'p-card--statuses': hasStatuses,
             'p-card--compact': compact,
             'p-card--current': combatMode && combatCurrent,
             'p-card--reorderable': reorderEnabled,
@@ -24,35 +25,42 @@
             <CompactCheckbox :size="20" :model-value="combatSelected" :label="`Выбрать: ${displayName}`" :disabled="!combatEditable || !combatant" @update:model-value="$emit('update:combat-selected', $event)" />
           </div>
 
-          <div class="p-avatar" :class="{ 'p-avatar--icon': isIcon }" :style="participantAvatarStyle">
-            <img v-if="avaUrl" :src="avaUrl" class="ava-img" alt="" />
-            <span v-else class="ava-initial">{{ initial }}</span>
-          </div>
+          <div class="p-content">
+            <div class="p-summary">
+              <div class="p-avatar" :class="{ 'p-avatar--icon': isIcon }" :style="participantAvatarStyle">
+                <img v-if="avaUrl" :src="avaUrl" class="ava-img" alt="" />
+                <span v-else class="ava-initial">{{ initial }}</span>
+              </div>
 
-          <div class="p-info" :class="{ 'p-info--stats': isDm && isDnd }" :inert="compact" :aria-hidden="compact">
-            <div class="p-name-row"><div class="p-name">{{ displayName }}</div><span v-if="combatant?.position === 'reserve' && combatant.initiative != null" class="p-initiative-chip" title="Подготовленная инициатива" :aria-label="`Подготовленная инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span></div>
+              <div class="p-info" :class="{ 'p-info--stats': isDm && isDnd }" :inert="compact" :aria-hidden="compact">
+                <div class="p-name-row"><div class="p-name">{{ displayName }}</div><span v-if="combatant?.position === 'reserve' && combatant.initiative != null" class="p-initiative-chip" title="Подготовленная инициатива" :aria-label="`Подготовленная инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span></div>
 
-            <template v-if="showHp">
-              <template v-if="isDead">
-                <div class="ds-row">
-                  <span class="ds-label">При смерти</span>
-                  <span class="ds-counts">(✓ {{ hp.ds_success }} / ✕ {{ hp.ds_failure }})</span>
-                  <button
-                    v-if="isDm"
-                    type="button"
-                    class="ds-revive"
-                    title="Воскресить игрока"
-                    aria-label="Воскресить игрока"
-                    @click.stop="$emit('revive')"
-                  ><HeartPulse :size="14" /></button>
-                </div>
-              </template>
+                <template v-if="showHp">
+                  <template v-if="isDead">
+                    <div class="ds-row">
+                      <span class="ds-label">При смерти</span>
+                      <span class="ds-counts">(✓ {{ hp.ds_success }} / ✕ {{ hp.ds_failure }})</span>
+                      <button
+                        v-if="isDm"
+                        type="button"
+                        class="ds-revive"
+                        title="Воскресить игрока"
+                        aria-label="Воскресить игрока"
+                        @click.stop="$emit('revive')"
+                      ><HeartPulse :size="14" /></button>
+                    </div>
+                  </template>
 
-              <template v-else>
-                <SessionHpBar :hp="hp" size="compact" />
-              </template>
-            </template>
-            <ParticipantStats v-if="isDm && isDnd" :participant="participant" />
+                  <template v-else>
+                    <SessionHpBar :hp="hp" size="compact" />
+                  </template>
+                </template>
+                <ParticipantStats v-if="isDm && isDnd" :participant="participant" />
+              </div>
+            </div>
+            <div v-if="hasStatuses" class="p-statuses-area" :inert="compact" :aria-hidden="compact">
+              <ParticipantStatuses :instances="statusInstances" />
+            </div>
           </div>
 
         </BaseTile>
@@ -107,6 +115,7 @@ import { computed, defineAsyncComponent, inject } from 'vue'
 import { useTemplateStore } from '@/stores/template'
 import { settingAccessors } from '@/features/character-editor/settings'
 import { handleCtrlSelection } from '@/shared/lib/ctrlSelection'
+import { normalizeStatusInstances } from '@/features/character-editor/lib/characterStatuses'
 import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 import { Calculator, HeartPulse, Palette } from '@lucide/vue'
 import { BaseTile, CompactCheckbox } from '@sylvieshare/share-ui'
@@ -118,6 +127,7 @@ import EncounterInitiativeMenu from './EncounterInitiativeMenu.vue'
 import SessionHpBar from './SessionHpBar.vue'
 import { pvAvatar, pvHp, pvHpPath, pvName } from '@/features/sessions/lib/participantView'
 
+const ParticipantStatuses = defineAsyncComponent(() => import('./ParticipantStatuses.vue'))
 const ParticipantStats = defineAsyncComponent(() => import('./ParticipantStats.vue'))
 const encounter = inject('applicationEncounter', null)
 const templates = useTemplateStore()
@@ -142,6 +152,9 @@ const props = defineProps({
 })
 const emit = defineEmits(['view', 'kick', 'color', 'revive', 'drag-start', 'update:combat-selected'])
 
+const statusInstances = computed(() => normalizeStatusInstances(props.participant.data?.values?.states))
+const hasStatuses = computed(() => props.isDm && isDnd.value && statusInstances.value.length > 0)
+
 const REORDER_IGNORE = 'button, input, textarea, select, a, [contenteditable="true"], .p-combat-controls'
 
 function startReorder(event) {
@@ -152,6 +165,7 @@ function startReorder(event) {
 }
 
 function suppressReorderClick(event) {
+  if (event.target.closest('.p-statuses-area')) return
   if (handleCtrlSelection(event, props.combatMode && props.combatEditable && !!props.combatant, () => emit('update:combat-selected', !props.combatSelected))) return
   if (!props.shouldSuppressReorderClick?.()) return
   event.preventDefault()
@@ -230,6 +244,8 @@ const participantTileStyle = computed(() => ({
   box-shadow: inset 0 0 0 var(--participant-frame-width) var(--participant-color);
 }
 
+.p-card--statuses { height: 104px; }
+
 .p-card--compact { height: 48px; gap: 0; padding: 6px; justify-content: center; }
 .p-card--compact .p-combat-controls { margin-left: calc(-1 * var(--participant-selection-width, 36px)); }
 
@@ -296,6 +312,12 @@ const participantTileStyle = computed(() => ({
   background: var(--bg);
   border-style: dashed;
 }
+
+.p-content { flex: 1; min-width: 0; }
+.p-summary { display: flex; align-items: center; gap: var(--participant-card-gap, 9px); height: 64px; min-width: 0; transition: height .42s cubic-bezier(.22, 1, .36, 1), gap .42s cubic-bezier(.22, 1, .36, 1); }
+.p-statuses-area { height: 28px; margin-top: 4px; overflow: hidden; opacity: 1; transition: height .42s cubic-bezier(.22, 1, .36, 1), margin-top .42s cubic-bezier(.22, 1, .36, 1), opacity .2s; }
+.p-card--compact .p-summary { height: 36px; gap: 0; }
+.p-card--compact .p-statuses-area { height: 0; margin-top: 0; opacity: 0; }
 
 .p-avatar {
   flex-shrink: 0;
@@ -364,7 +386,9 @@ const participantTileStyle = computed(() => ({
 @media (prefers-reduced-motion: reduce) {
   .p-card,
   .p-combat-controls,
-  .p-info { transition: none; }
+  .p-info,
+  .p-summary,
+  .p-statuses-area { transition: none; }
 }
 
 .p-name-row { display: flex; align-items: center; gap: 6px; }

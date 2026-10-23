@@ -346,6 +346,14 @@ Chronicle attack target controls share the roll's row on the right, with chosen 
 `SessionParticipantCard` shows portrait, name and HP, with 14px right padding.
 For the DM, D&D tiles also show AC and passive skills below HP in the same
 information column; the action menu contains only actions.
+For the DM, active D&D effect/state instances from the character's `values.states`
+appear as 24px icons in a separate row below both portrait and information.
+Hover/focus shows the shared item tooltip with description and instance duration;
+click or Enter/Space opens the handbook item modal. Status icons do not open the
+participant menu, reorder the rail or toggle combat selection. The row scrolls
+horizontally when necessary. A tile with statuses is 104px tall (72px otherwise),
+while its combat checkbox stays vertically centered across the entire tile.
+Compact mode hides the status row and makes it inert; a tile remains 48px tall.
 Its combat strip contains a checkbox with wider side spacing; AC and initiative
 are not rendered in that strip. The tile uses lazy `ParticipantStats` for D&D
 characters viewed by the DM, backed by `participantDefenses`, the shared equipment/derived-effect
@@ -358,8 +366,9 @@ Drag starts ignore Ctrl and Cmd. Disabled selection and ordinary clicks keep the
 Participant tile indicators are a single row of 13px numbers and 14px icons with
 vertical dividers. Passive Perception and Investigation use muted gray for both
 numbers and icons; AC retains its primary number and blue shield. The indicators
-are centered vertically between the bottom of the HP bar and the bottom edge of
-the tile. The grid column is constrained to the available width: long names
+are centered vertically between the bottom of the HP bar and the lower edge of
+the main portrait/information area; the optional status row sits separately below.
+The grid column is constrained to the available width: long names
 truncate with an ellipsis while HP and indicators remain inside the tile.
 The compact rail hides the information column and makes it
 inert, including the indicators. Hover and keyboard focus open the shared `ItemTooltip` for the name,
