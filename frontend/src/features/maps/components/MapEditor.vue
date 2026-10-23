@@ -122,7 +122,7 @@
           :placement-hint="e.placementHint"
           @resources="e.modelMemory = $event"
           @gesture="handleGesture"
-          @camera-move="placement.cursor.moved"
+          @camera-move="cameraMoved"
         />
         <slot name="canvas-overlay" :editor="e" :canvas="canvas" />
         <MapSelectionPanel
@@ -199,6 +199,7 @@ const props = defineProps({
     "working",
     "selection",
     "sidebar-resize",
+    "camera-move",
     "broadcast-camera",
   ]),
   confirmClose = ref(false);
@@ -313,6 +314,10 @@ function beginPlacement(method, id, event) {
   emit("selection");
   placement[method](id, event);
 }
+function cameraMoved() {
+  placement.cursor.moved();
+  emit("camera-move");
+}
 useMapEditorKeys(
   e,
   canvas,
@@ -398,7 +403,14 @@ function finishLeave(leave) {
   if (leave) e.discard();
   resolveLeave?.(leave);
 }
-defineExpose({ prepareLeave, editor: e, canvas, openReference, focusEntries });
+defineExpose({
+  prepareLeave,
+  editor: e,
+  canvas,
+  openReference,
+  focusEntries,
+  cancelPlacement: placement.cancel,
+});
 </script>
 
 <style scoped>

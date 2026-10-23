@@ -1,5 +1,6 @@
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import { clone, uid } from "../lib/mapModel";
+import { resolvedSurfacePosition } from "../lib/surfacePlacement";
 import {
   creatureKey,
   creatureToken,
@@ -25,12 +26,11 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
   const canvasState = computed(() => {
     const s = getEditor()?.draft.state;
     if (!s) return s;
-    const items =
-      dragging.value && preview.value
+    const items = !preview.value
+      ? s.tokens
+      : s.tokens.some((t) => t.id === preview.value.id)
         ? s.tokens.map((t) => (t.id === preview.value.id ? preview.value : t))
-        : preview.value
-          ? [...s.tokens, preview.value]
-          : s.tokens;
+        : [...s.tokens, preview.value];
     return { ...s, tokens: withCreaturePortraits(items, candidates.value) };
   });
   function clear() {
@@ -46,7 +46,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
     e.setObjectSelection([]);
     e.selectedLight = "";
   }
-  function focus(c) {
+  function focus(c, moveCamera = true) {
     const e = getEditor();
     if (!e) return;
     e.resetGesture();
@@ -54,20 +54,43 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
     clearMapSelection(e);
     focused.value = creatureKey(c);
     pending.value = preview.value = null;
-    const t = creatureToken(e.draft, c),
-      canvas = getCanvas();
-    if (t && canvas) {
-      canvas.setView({ ...canvas.getView(), fit: false, x: t.x, y: t.y });
-      canvas.focus();
-    }
+    const t = creatureToken(e.draft, c);
+    if (t && moveCamera)
+      nextTick(() => {
+        if (focused.value !== creatureKey(c)) return;
+        const canvas = getCanvas();
+        canvas?.focusAt(
+          resolvedSurfacePosition(t, e.draft.document, e.catalogue || []),
+        );
+        canvas?.focus();
+      });
   }
   function place(c) {
     const e = getEditor();
     if (!e) return;
     e.resetGesture();
     e.tool = "select";
-    focus(c);
+    focus(c, false);
     pending.value = c;
+  }
+  function atPosition(point, temporary = false) {
+    const c =
+      candidates.value.find(
+        (c) => creatureKey(c) === creatureKey(pending.value),
+      ) || pending.value;
+    const previous = creatureToken(getEditor().draft, c);
+    return {
+      kind: c.kind,
+      ref: c.ref || "",
+      name: c.name,
+      imageUrl: c.previewUrl || previous?.imageUrl || "",
+      color: c.color,
+      id: previous?.id || (temporary ? "preview-token" : uid()),
+      ...point,
+      size: previous?.size || 1,
+      hidden: previous?.hidden || false,
+      physical: previous?.physical || false,
+    };
   }
   function position(point) {
     return (point?.placement || point?.grid) && !point.invalidSurface
@@ -86,17 +109,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
     if (phase === "hover") {
       if (pending.value) {
         const at = position(point);
-        preview.value = at
-          ? {
-              ...pending.value,
-              imageUrl: pending.value.previewUrl || "",
-              id: "preview-token",
-              ...at,
-              size: 1,
-              hidden: false,
-              physical: false,
-            }
-          : null;
+        preview.value = at ? atPosition(at, true) : null;
         return true;
       }
       return false;
@@ -116,18 +129,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
           candidates.value.find(
             (c) => creatureKey(c) === creatureKey(pending.value),
           ) || pending.value;
-        const placed = {
-          kind: c.kind,
-          ref: c.ref || "",
-          name: c.name,
-          imageUrl: c.previewUrl || "",
-          color: c.color,
-          id: uid(),
-          ...at,
-          size: 1,
-          hidden: false,
-          physical: false,
-        };
+        const placed = atPosition(at);
         e.change((m) => {
           m.state.tokens = m.state.tokens.filter(
             (t) => c.kind === "marker" || creatureKey(t) !== creatureKey(c),

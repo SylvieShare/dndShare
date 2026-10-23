@@ -17,30 +17,17 @@
           v-for="item in group.items"
           :key="creatureKey(item)"
           :entry="item"
-          :selected="selected === creatureKey(item)"
+          :selected="!!onMap(item) && selected === creatureKey(item)"
+          :placed="!!onMap(item)"
+          :activate-on-click="false"
+          class="map-creature-draggable"
+          @pointerdown="(event) => emit('drag', item, event)"
+          @dragstart.prevent
           @select="emit('focus', item)"
         >
           <template #details>
             <SessionHpBar v-if="item.hp" :hp="item.hp" />
             <small v-else class="map-hint">Хиты не указаны</small>
-          </template>
-          <template #actions>
-            <ActionButton
-              icon-only
-              variant="quiet"
-              :aria-label="
-                onMap(item)
-                  ? `Найти на карте: ${item.name}`
-                  : `Поставить на карту: ${item.name}`
-              "
-              @click.stop="
-                onMap(item) ? emit('focus', item) : emit('place', item)
-              "
-            >
-              <template #icon
-                ><Focus v-if="onMap(item)" :size="18" /><Plus v-else :size="18"
-              /></template>
-            </ActionButton>
           </template>
         </MapEntityRow>
       </div>
@@ -63,7 +50,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import { ActionButton, FormTextInput } from "@sylvieshare/share-ui";
-import { Focus, Plus, MapPin } from "@lucide/vue";
+import { MapPin } from "@lucide/vue";
 import SessionHpBar from "@/features/sessions/components/SessionHpBar.vue";
 import MapPanelHeading from "./MapPanelHeading.vue";
 import MapEntityRow from "./MapEntityRow.vue";
@@ -73,7 +60,7 @@ const props = defineProps({
   candidates: Array,
   selected: String,
 });
-const emit = defineEmits(["focus", "place"]),
+const emit = defineEmits(["focus", "place", "drag"]),
   query = ref("");
 const filtered = computed(() =>
   props.candidates.filter((c) =>
@@ -118,5 +105,12 @@ const onMap = (c) => creatureToken(props.editor.draft, c);
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+.map-creature-draggable {
+  cursor: grab;
+  touch-action: none;
+}
+.map-creature-draggable:active {
+  cursor: grabbing;
 }
 </style>

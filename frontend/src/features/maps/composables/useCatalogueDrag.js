@@ -73,24 +73,48 @@ export function useCatalogueDrag(editor, canvas, driver = editor.tileDrag) {
       rightCancel(event);
       return;
     }
+    if (!pointer.started) {
+      if (
+        Math.hypot(event.clientX - pointer.x, event.clientY - pointer.y) <
+        pointer.threshold
+      )
+        return;
+      pointer.started = true;
+      driver.begin(pointer.source);
+    }
     pointerEvent = event;
     fillKey = event.metaKey || event.ctrlKey;
     driver.move(canvas.value?.pointAt(event), { fill: fillKey });
   }
   function drop(event) {
     if (event.pointerId !== pointer?.id) return;
+    if (!pointer.started) {
+      const click = pointer.click;
+      cleanup();
+      click?.();
+      return;
+    }
     driver.drop(canvas.value?.pointAt(event), {
       fill: event.metaKey || event.ctrlKey,
     });
     cleanup();
   }
-  function begin(id, event) {
+  function begin(id, event, { threshold = 0, click } = {}) {
     if (event.button !== 0) return;
     cancel();
     event.preventDefault();
     event.currentTarget.focus({ preventScroll: true });
-    driver.begin(id);
-    pointer = { id: event.pointerId, element: event.currentTarget };
+    pointer = {
+      id: event.pointerId,
+      element: event.currentTarget,
+      source: id,
+      x: event.clientX,
+      y: event.clientY,
+      threshold,
+      click,
+      started: !threshold,
+    };
+    if (pointer.started) driver.begin(id);
     pointer.element.setPointerCapture(pointer.id);
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", drop);

@@ -27,8 +27,7 @@
     </MapInspectorSection>
     <MapInspectorSection title="Размещение">
       <ActionButton v-if="!token" @click="tokens.place(candidate)"
-        ><template #icon><Plus :size="18" /></template>Поставить на
-        карту</ActionButton
+        >Поставить на карту</ActionButton
       >
       <template v-else>
         <FormTextInput
@@ -90,7 +89,6 @@ import {
   FormTextInput,
   ToggleSwitch,
 } from "@sylvieshare/share-ui";
-import { Plus } from "@lucide/vue";
 import SessionHpBar from "@/features/sessions/components/SessionHpBar.vue";
 import MapSelectedEntity from "./MapSelectedEntity.vue";
 import MapInspectorSection from "./MapInspectorSection.vue";

@@ -1,0 +1,140 @@
+import { test, expect } from "@playwright/test";
+import { mapPoint } from "./editorHelpers";
+async function ready(page, extra = "") {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto(
+    `/tests/maps/fixtures/maps.html?mode=board&creatures${extra}`,
+  );
+  await expect(page.locator(".map-canvas canvas")).toBeVisible();
+  const topView = page.getByTitle("Вид сверху", { exact: true });
+  if (await topView.count()) await topView.click();
+  await page.getByRole("button", { name: "Существа", exact: true }).click();
+  return page.getByRole("region", { name: "Существа сессии" });
+}
+async function startDrag(page, row, point) {
+  const bounds = await row.boundingBox();
+  await page.mouse.move(bounds.x + 25, bounds.y + 25);
+  await page.mouse.down();
+  await page.mouse.move(point.x, point.y, { steps: 12 });
+}
+const saved = (page) => page.evaluate(() => window.latestBoard.state.tokens);
+const canvasTokens = (page) =>
+  page
+    .locator(".map-canvas")
+    .evaluate((el) => el.__vueParentComponent.props.state.tokens);
+test("roster drags preview before committing, mark placed creatures and focus their real position on click", async ({
+  page,
+}) => {
+  const errors = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  const roster = await ready(page);
+  const row = roster.getByRole("button", { name: "Лира", exact: true });
+  await row.click();
+  await expect(row).not.toHaveClass(/base-tile--framed/);
+  await expect(
+    roster.getByRole("button", { name: /Поставить на карту:|Найти на карте:/ }),
+  ).toHaveCount(0);
+  const p = await mapPoint(page, 4.5, 4.5);
+  await startDrag(page, row, p);
+  await expect
+    .poll(async () =>
+      (await canvasTokens(page)).some((t) => t.id === "preview-token"),
+    )
+    .toBe(true);
+  expect((await saved(page)).some((t) => t.ref === "41")).toBe(false);
+  await page.mouse.up();
+  await expect
+    .poll(async () =>
+      (await saved(page)).some((t) => t.ref === "41" && !!t.placement),
+    )
+    .toBe(true);
+  await expect(row).toHaveClass(/base-tile--framed/);
+  expect(
+    await row.evaluate((el) => getComputedStyle(el, "::before").borderTopWidth),
+  ).toBe("2px");
+  expect(
+    await row.evaluate((el) => el.style.getPropertyValue("--tile-color")),
+  ).toBe("var(--accent)");
+  const focus = page.getByRole("complementary", { name: "Выбранные элементы" });
+  await expect(focus.locator(".workspace-focus-content")).not.toHaveClass(
+    /base-tile--framed/,
+  );
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.down("ArrowRight");
+  await page.waitForTimeout(150);
+  await page.keyboard.up("ArrowRight");
+  await row.click();
+  await expect(
+    focus.getByRole("heading", { name: "Лира", exact: true }),
+  ).toBeVisible();
+  const free = await page.evaluate(() => {
+    const canvas = document
+      .querySelector(".map-canvas")
+      .getBoundingClientRect();
+    const left = document
+      .querySelector(".map-sidebar")
+      .getBoundingClientRect().right;
+    const right = document
+      .querySelector(".map-selection-panel")
+      .getBoundingClientRect().left;
+    return { x: (left + right) / 2, y: (canvas.top + canvas.bottom) / 2 };
+  });
+  await expect
+    .poll(() =>
+      page.locator(".map-canvas").evaluate(
+        (el, p) =>
+          el.__vueParentComponent.exposed.pointAt({
+            clientX: p.x,
+            clientY: p.y,
+          })?.x,
+        free,
+      ),
+    )
+    .toBeCloseTo(4.5, 0);
+  const previous = (await saved(page)).find((t) => t.ref === "41");
+  const next = await mapPoint(page, 5.5, 4.5);
+  await startDrag(page, row, next);
+  await expect
+    .poll(
+      async () =>
+        (await canvasTokens(page)).filter((t) => t.ref === "41").length,
+    )
+    .toBe(1);
+  await page.keyboard.press("Escape");
+  await page.mouse.up();
+  expect((await saved(page)).find((t) => t.ref === "41")).toEqual(previous);
+  expect(errors).toEqual([]);
+});
+test("roster drops outside the field or on invalid surfaces never create a creature", async ({
+  page,
+}) => {
+  const roster = await ready(page);
+  const row = roster.getByRole("button", { name: "A · Огр", exact: true });
+  await startDrag(page, row, { x: 20, y: 20 });
+  await page.mouse.up();
+  expect((await saved(page)).some((t) => t.ref === "ogre")).toBe(false);
+  await startDrag(page, row, await mapPoint(page, 11.5, 9.5));
+  await page.mouse.up();
+  expect((await saved(page)).some((t) => t.ref === "ogre")).toBe(false);
+  await startDrag(page, row, await mapPoint(page, 4.5, 4.5));
+  await page.mouse.down({ button: "right" });
+  await page.mouse.up({ button: "right" });
+  await page.mouse.up();
+  expect((await saved(page)).some((t) => t.ref === "ogre")).toBe(false);
+});
+
+test("dragging a creature onto a 2D map snaps to logical grid centres", async ({
+  page,
+}) => {
+  const roster = await ready(page, "&imageMap");
+  await startDrag(
+    page,
+    roster.getByRole("button", { name: "Лира", exact: true }),
+    await mapPoint(page, 6.2, 5.8),
+  );
+  await page.mouse.up();
+  await expect
+    .poll(async () => (await saved(page)).find((t) => t.ref === "41")?.x)
+    .toBe(6.5);
+  expect((await saved(page)).find((t) => t.ref === "41").y).toBe(5.5);
+});

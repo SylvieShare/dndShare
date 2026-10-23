@@ -2,15 +2,20 @@
   <BaseTile
     class="map-entity-row"
     :interactive="selectable && !disabled"
-    :framed="selected"
+    :framed="selected || placed"
+    :frame-width="placed ? 2 : 1"
     :tint="selected"
-    :color="entry.color"
+    :color="placed ? 'var(--accent)' : entry.color"
     :role="selectable ? 'button' : undefined"
     :tabindex="selectable && !disabled ? 0 : undefined"
     :aria-disabled="disabled || undefined"
     :aria-label="entry.name"
     @click="
-      selectable && !disabled && !hasSelectedText() && emit('select', entry)
+      activateOnClick &&
+      selectable &&
+      !disabled &&
+      !hasSelectedText() &&
+      emit('select', entry)
     "
     @keydown.enter.self.prevent="
       selectable && !disabled && emit('select', entry)
@@ -104,6 +109,8 @@ import {
 defineProps({
   entry: { type: Object, required: true },
   selected: Boolean,
+  placed: Boolean,
+  activateOnClick: { type: Boolean, default: true },
   toggleLight: Boolean,
   disabled: Boolean,
   showIdentifiers: Boolean,

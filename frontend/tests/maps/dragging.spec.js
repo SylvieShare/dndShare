@@ -68,12 +68,17 @@ test("hover outlines actual geometry and selection strengthens it with actions i
   await page
     .getByRole("button", { name: "Свернуть панель карты", exact: true })
     .click();
-  await page.waitForFunction(
-    () => {
-      const sidebar = document.querySelector(".map-sidebar"), rail = sidebar.querySelector(".map-sidebar-tabs");
-      return sidebar.classList.contains("map-sidebar--collapsed") && Math.abs(sidebar.getBoundingClientRect().width - rail.getBoundingClientRect().width) < 2;
-    },
-  );
+  await page.waitForFunction(() => {
+    const sidebar = document.querySelector(".map-sidebar"),
+      rail = sidebar.querySelector(".map-sidebar-tabs");
+    return (
+      sidebar.classList.contains("map-sidebar--collapsed") &&
+      Math.abs(
+        sidebar.getBoundingClientRect().width -
+          rail.getBoundingClientRect().width,
+      ) < 2
+    );
+  });
   await page.mouse.move(0, 0);
   const baseline = await bluePixels(page);
   const empty = await mapPoint(page, 1.8, 1.8),
@@ -193,7 +198,9 @@ test("occupied drops magnetize to a free position and moving a tile is a single 
 
 test("keyboard placement uses arrows, R and Enter", async ({ page }) => {
   await ready(page);
-  await page.getByRole("button", { name: "Плитки", exact: true }).click();
+  const tilesTab = page.getByRole("button", { name: "Плитки", exact: true });
+  if ((await tilesTab.getAttribute("aria-pressed")) !== "true")
+    await tilesTab.click();
   await page.getByRole("button", { name: "Пол 1", exact: true }).focus();
   await page.keyboard.press("Enter");
   await page.keyboard.down("ArrowLeft");

@@ -46,7 +46,9 @@ export async function pickTile(page, name = "Пол 1") {
     await reference
       .getByRole("button", { name: "Закрыть справочник тайлов", exact: true })
       .click();
-  await page.getByRole("button", { name: "Плитки", exact: true }).click();
+  const tilesTab = page.getByRole("button", { name: "Плитки", exact: true });
+  if ((await tilesTab.getAttribute("aria-pressed")) !== "true")
+    await tilesTab.click();
   const kind = await page.evaluate(
     async (name) =>
       (await (await fetch("/api/maps/models")).json()).find(

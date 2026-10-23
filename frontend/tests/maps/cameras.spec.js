@@ -148,14 +148,14 @@ test("2D image mode hides 3D tools and places creatures at logical grid centres"
 });
 
 for (const mobile of [false, true])
-  test(`the unified map toolbar keeps glass and captions below icons ${mobile ? "mobile" : "desktop"}`, async ({
+  test(`separate map toolbars keep neutral frames, glass and captions below icons ${mobile ? "mobile" : "desktop"}`, async ({
     page,
   }) => {
     await page.setViewportSize(
       mobile ? { width: 430, height: 932 } : { width: 1440, height: 1000 },
     );
     await page.goto("/tests/maps/fixtures/maps.html?mode=board");
-    await expect(page.locator(".session-map-toolbar")).toHaveCount(1);
+    await expect(page.locator(".session-map-toolbar")).toHaveCount(2);
     const bars = await page
       .locator(".session-map-toolbar")
       .evaluateAll((nodes) =>
@@ -168,10 +168,10 @@ for (const mobile of [false, true])
           overflow: node.scrollWidth > node.clientWidth,
         })),
       );
-    if (mobile) {
-      expect(bars[0].height).toBeGreaterThan(64);
-      expect(bars[0].height).toBeLessThan(140);
-    } else expect(bars[0].height).toBe(64);
+    expect(bars.map((b) => b.height)).toEqual([64, 64]);
+    await expect(
+      page.locator(".session-map-toolbar.base-tile--framed"),
+    ).toHaveCount(0);
     expect(
       bars.every(
         (b) => b.blur.includes("blur") && b.background.includes("0.76"),

@@ -1,5 +1,5 @@
 import { expect, it, vi } from "vitest";
-import { reactive, ref } from "vue";
+import { nextTick, reactive, ref } from "vue";
 import { sessionTokens } from "./sessionTokens";
 function setup() {
   const actor = reactive({
@@ -113,4 +113,83 @@ it("late creature artwork reaches existing and pending tokens without changing t
     editor,
   );
   expect(editor.draft.state.tokens[0].imageUrl).toBe("/art/hero.webp");
+});
+
+it("moving a roster creature reuses its ID and settings, previews only one token and commits once", () => {
+  const { actor, editor, tokens } = setup();
+  editor.draft.state.tokens.push({
+    kind: actor.kind,
+    ref: actor.ref,
+    name: actor.name,
+    id: "hero",
+    x: 1.5,
+    y: 1.5,
+    size: 2,
+    hidden: true,
+    physical: true,
+  });
+  tokens.place(actor);
+  const point = { x: 4.5, y: 5.5, placement: { tileId: "base", point: 1 } };
+  tokens.gesture({ phase: "hover", point }, editor);
+  expect(tokens.canvasState.value.tokens).toHaveLength(1);
+  expect(tokens.canvasState.value.tokens[0]).toMatchObject({
+    id: "hero",
+    x: 4.5,
+    size: 2,
+    hidden: true,
+    physical: true,
+  });
+  expect(editor.draft.state.tokens[0].x).toBe(1.5);
+  tokens.gesture({ phase: "start", point }, editor);
+  expect(editor.history).toHaveLength(1);
+  expect(editor.draft.state.tokens).toHaveLength(1);
+  expect(editor.draft.state.tokens[0]).toMatchObject({
+    id: "hero",
+    x: 4.5,
+    y: 5.5,
+    size: 2,
+    hidden: true,
+    physical: true,
+  });
+});
+it("focuses a creature with the shared smooth camera controller after opening its inspector", async () => {
+  const e = {
+    draft: {
+      document: { tiles: [] },
+      state: {
+        tokens: [
+          {
+            id: "hero",
+            kind: "player",
+            ref: "41",
+            x: 2.5,
+            y: 3.5,
+            elevation: 4,
+          },
+        ],
+      },
+    },
+    catalogue: [],
+    resetGesture() {},
+    clearAreaFocus() {},
+    setTileSelection() {},
+    setObjectSelection() {},
+  };
+  const canvas = { focusAt: vi.fn(), focus: vi.fn() };
+  const actor = { kind: "player", ref: "41", name: "Лира" };
+  const c = sessionTokens(
+    () => e,
+    ref([actor]),
+    () => canvas,
+  );
+  c.focus(actor);
+  expect(canvas.focusAt).not.toHaveBeenCalled();
+  await nextTick();
+  expect(canvas.focusAt).toHaveBeenCalledWith(
+    expect.objectContaining({ x: 2.5, y: 3.5, elevation: 4 }),
+  );
+  canvas.focusAt.mockClear();
+  c.place(actor);
+  await nextTick();
+  expect(canvas.focusAt).not.toHaveBeenCalled();
 });

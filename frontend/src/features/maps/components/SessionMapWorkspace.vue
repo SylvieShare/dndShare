@@ -30,7 +30,8 @@
       :remove-token="removeToken"
       @working="c.working"
       @broadcast-camera="source"
-      @selection="tokens.clear"
+      @selection="clearTokens"
+      @camera-move="tokenDrag.cameraMoved"
       @sidebar-resize="emit('inspector-resize', $event)"
     >
       <template #canvas-overlay="{ editor }"
@@ -47,7 +48,8 @@
           :editor="editor"
           :candidates="candidates"
           :selected="tokens.focused"
-          @focus="tokens.focus"
+          @focus="focusCreature"
+          @drag="dragCreature"
           @place="tokens.place"
       /></template>
       <template #focus="{ editor }"
@@ -108,6 +110,7 @@ import {
 import { Map, UsersRound } from "@lucide/vue";
 import { useSessionMaps } from "../composables/useSessionMaps";
 import { sessionTokens } from "../composables/sessionTokens";
+import { useCatalogueDrag } from "../composables/useCatalogueDrag";
 import {
   sessionCreatures,
   withCreaturePortraits,
@@ -143,6 +146,52 @@ const tokens = reactive(
     () => workspace.value?.canvas,
   ),
 );
+const tokenDrag = useCatalogueDrag(
+  {},
+  computed(() => workspace.value?.canvas),
+  {
+    kind: "object",
+    begin(item) {
+      workspace.value?.canvas?.stopCamera();
+      tokens.place(item);
+      workspace.value?.editor?.pauseSave(true);
+    },
+    move(point) {
+      if (workspace.value?.editor)
+        tokens.gesture({ phase: "hover", point }, workspace.value.editor);
+    },
+    drop(point) {
+      if (workspace.value?.editor)
+        tokens.gesture({ phase: "start", point }, workspace.value.editor);
+      this.cancel();
+    },
+    cancel() {
+      if (workspace.value?.editor)
+        tokens.gesture({ phase: "cancel" }, workspace.value.editor);
+    },
+  },
+);
+function focusCreature(item) {
+  tokenDrag.cancel();
+  tokens.focus(item);
+}
+function dragCreature(item, event) {
+  workspace.value?.cancelPlacement();
+  tokenDrag.begin(item, event, {
+    threshold: 5,
+    click: () => tokens.focus(item),
+  });
+}
+function clearTokens() {
+  tokenDrag.cancel();
+  tokens.clear();
+}
+watch(
+  () => props.active,
+  (active) => {
+    if (!active) tokenDrag.cancel();
+  },
+);
 const tabs = [{ key: "creatures", label: "Существа", icon: UsersRound }];
 const broadcastView = computed(() =>
   c.display?.mapId === c.selectedID && !c.display.camera.sceneId
@@ -155,6 +204,7 @@ const screenPath = computed(
 watch(
   () => c.selectedID,
   (id) => {
+    tokenDrag.cancel();
     tokens.reset();
     if (id && c.display && c.display.mapId !== id)
       c.updateDisplay({

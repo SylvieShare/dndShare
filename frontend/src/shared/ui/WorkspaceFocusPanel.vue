@@ -1,7 +1,7 @@
 <template>
   <Transition name="workspace-focus" appear @before-leave="disableLeaving" @before-enter="enableEntering">
     <aside v-if="open" ref="element" class="workspace-focus-panel" v-bind="$attrs">
-      <BaseTile class="workspace-focus-content" framed>
+      <BaseTile class="workspace-focus-content">
         <slot name="navigation" />
         <Transition name="workspace-focus-swap" mode="out-in" @before-leave="holdHeight" @enter="resizeFrame">
           <div :key="focusKey" class="workspace-focus-view"><slot /></div>
