@@ -26,7 +26,15 @@ export function useSaveDebounce(uuid, data, options = {}) {
       : null
   }
   let timer,
-    initialized = !!options.version?.value
+    initialized = options.serverDocument
+      ? !!options.serverDocument.value
+      : !!options.version?.value
+  function applyData(next) {
+    next = { values: {}, var: {}, ...next }
+    const current = data.value
+    const result = applyDocumentPatches(current, documentDiff(current, next))
+    if (result !== current) data.value = result
+  }
   const sync = createDocumentSync({
     data: options.serverDocument?.value?.data || data.value,
     version: options.version?.value || 0,
@@ -36,12 +44,7 @@ export function useSaveDebounce(uuid, data, options = {}) {
       fetchPatch(`/char/${encodeURIComponent(uuid)}/data`, packet),
     load: (version) =>
       fetchGet(`/char/${encodeURIComponent(uuid)}/changes?after=${version}`),
-    onData: (next) => {
-      next = { values: {}, var: {}, ...next }
-      const current = data.value
-      const result = applyDocumentPatches(current, documentDiff(current, next))
-      if (result !== current) data.value = result
-    },
+    onData: applyData,
     onAck: (response) => {
       if (options.version) options.version.value = response.version
     },
@@ -67,23 +70,33 @@ export function useSaveDebounce(uuid, data, options = {}) {
   })
   const stopVersion = options.version
     ? watch(
-        options.version,
-        (version) => {
-          if (version === sync.version) return
+        () => [options.version.value, options.serverDocument?.value],
+        ([version, snapshot]) => {
           if (!initialized) {
+            // A live roster can advance version before the initial GET arrives.
+            // Only the loaded snapshot proves that the sheet is ready to save.
+            if (options.serverDocument && !snapshot) return
+            const loadedVersion = snapshot?.version ?? version
+            const newerLive = sync.version > loadedVersion
             sync.reset(
-              options.serverDocument?.value?.data || data.value,
-              version,
+              newerLive ? sync.confirmed : snapshot?.data || data.value,
+              newerLive ? sync.version : loadedVersion,
               { preserveOutbox: true },
             )
             initialized = true
             sync.restorePending()
+            applyData(sync.data)
+            options.version.value = sync.version
             if (sync.pending) void sync.flush()
-          } else
-            sync.receive({
-              data: options.serverDocument?.value?.data || data.value,
-              version,
-            })
+          } else {
+            if (
+              version === sync.version &&
+              (!snapshot || snapshot.version <= version)
+            )
+              return
+            sync.receive(snapshot || { data: data.value, version })
+            if (snapshot) options.version.value = sync.version
+          }
         },
         { flush: 'sync' },
       )
@@ -170,9 +183,9 @@ export function useSaveDebounce(uuid, data, options = {}) {
   onBeforeUnmount(() => {
     clearTimeout(timer)
     stopVersion()
-    capture()
-    void sync.flush()
-    sync.stop()
+    // Let the current packet and later queued edits finish after closing.
+    // Stopping immediately would leave the latter unsent until the next open.
+    void flushSave().finally(() => sync.stop())
     globalThis.window?.removeEventListener('keydown', keydown)
   })
   return {
