@@ -23,17 +23,17 @@
   "plainMountCollarMM": 0.5,
   "name": "Chandelier On",
   "groupCode": "MED-chandelier",
-  "renderTriangles": 140000,
-  "lodTriangles": 50000,
-  "renderBakeSize": 1024,
-  "lodBakeSize": 1024,
-  "renderUVAngleLimitRad": 0.4,
-  "lodUVAngleLimitRad": 0.4,
+  "renderTriangles": 150000,
+  "lodTriangles": 90000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1536,
+  "renderUVAngleLimitRad": 0.22,
+  "lodUVAngleLimitRad": 0.25,
   "renderUVIslandMargin": 0.0012,
-  "lodUVIslandMargin": 0.0015,
-  "renderDataSize": 1024,
-  "lodColourSize": 768,
-  "lodDataSize": 768,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1536,
+  "lodColourSize": 1152,
+  "lodDataSize": 1536,
   "standRayTopMM": 100,
   "decorStartMM": 27,
   "standPointsMM": [
@@ -153,21 +153,21 @@
   "weightBudget": {
     "renderMiB": [
       4,
-      8
+      11
     ],
     "lodMiB": [
-      1.6,
-      4.2
+      2,
+      7
     ],
     "shadowKiB": [
-      110,
-      260
+      140,
+      350
     ],
     "previewKiB": [
       14,
       60
     ],
-    "basis": "35mm floor,88.2mm tall carved post and six curved iron braces supporting annular brass frame/six radial spokes,seven candles with irregular wax runoff and individually bounded/graded emissive flames.140000/50000 independent triangles,1024bakes/data render,768LOD colour/data; compare compact while preserving tiny heads,wax rims,spoke gaps and flame bases."
+    "basis": "Own540012tri/27000684byte On source,matched closed-wax Off70 reference. Seven source-measured .1mmwaxcaps below preserved rims;keep7light sources andextinguish transition.150k/90k independentgeometry,2048/1536bakes,1536rendercolour/data,1152LODcolour/1536data;comparecompact."
   },
   "materials": {
     "earthRGB": [
@@ -1245,352 +1245,1001 @@
         "variation": 0.02
       },
       {
-        "name": "candle flame 1",
+        "name": "own candle flame 1",
         "kind": "flame",
         "minMM": [
           -1.881499981880188,
           -1.3202999591827393,
-          84.97539367675782
+          84.85409423828125
         ],
         "maxMM": [
           0.7527000069618225,
           1.2094000339508058,
           88.29810485839843
         ],
-        "awayFromSource": {
-          "code": "MT1-070",
-          "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
-          "matchMM": 0.08,
+        "nearSource": {
+          "code": "MT1-069",
+          "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73",
+          "matchMM": 0.04,
+          "componentAboveMM": 84.97539367675782,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              -1.881499981880188,
+              -1.3202999591827393,
+              84.97539367675782
+            ],
+            "maxMM": [
+              0.7527000069618225,
+              1.2094000339508058,
+              88.29810485839843
+            ]
+          },
           "projectTo": {
             "code": "MT1-069",
             "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
           }
+        },
+        "excludeParts": [
+          {
+            "minMM": [
+              -1.881499981880188,
+              -1.3202999591827393,
+              84.97539367675782
+            ],
+            "maxMM": [
+              0.7527000069618225,
+              1.2094000339508058,
+              88.29810485839843
+            ],
+            "nearSource": {
+              "code": "MT1-070",
+              "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+              "matchMM": 0.08,
+              "projectTo": {
+                "code": "MT1-069",
+                "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
+              }
+            },
+            "excludeParts": [
+              {
+                "minMM": [
+                  -1.8923499601526768,
+                  -1.0357449720713654,
+                  84.85409423828125
+                ],
+                "maxMM": [
+                  0.4689671953443636,
+                  1.2486269036778985,
+                  88.34810485839844
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    -0.7116913824041565,
+                    0.10644096580326651,
+                    84.85409423828125
+                  ],
+                  "radiiMM": [
+                    1.1806585777485201,
+                    1.142185937874632,
+                    100
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "rgb": [
+          1,
+          0.65,
+          0.13
+        ],
+        "roughness": 0.3,
+        "variation": 0.025
+      },
+      {
+        "name": "measured flame root candle-1",
+        "kind": "flame",
+        "minMM": [
+          -1.8923499601526768,
+          -1.0357449720713654,
+          84.85409423828125
+        ],
+        "maxMM": [
+          0.4689671953443636,
+          1.2486269036778985,
+          88.34810485839844
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.7116913824041565,
+            0.10644096580326651,
+            84.85409423828125
+          ],
+          "radiiMM": [
+            1.1806585777485201,
+            1.142185937874632,
+            100
+          ]
         },
         "rgb": [
           1,
           0.65,
           0.13
         ],
-        "metallic": 0,
         "roughness": 0.3,
-        "variation": 0.02,
-        "gradientZMM": [
-          85.19539367675782,
-          88.14810485839844
-        ],
-        "gradientRGB": [
-          [
-            1,
-            0.9,
-            0.34
-          ],
-          [
-            1,
-            0.32,
-            0.045
-          ]
-        ],
-        "emissionInsetMM": 0.015
+        "variation": 0.025
       },
       {
-        "name": "candle flame 2",
+        "name": "own candle flame 2",
         "kind": "flame",
         "minMM": [
           -1.2999000310897828,
           12.073001289367676,
-          83.14620056152344
+          82.9457080078125
         ],
         "maxMM": [
           1.457100009918213,
           14.794999694824218,
           86.92330322265624
         ],
-        "awayFromSource": {
-          "code": "MT1-070",
-          "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
-          "matchMM": 0.08,
+        "nearSource": {
+          "code": "MT1-069",
+          "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73",
+          "matchMM": 0.04,
+          "componentAboveMM": 83.14620056152344,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              -1.2999000310897828,
+              12.073001289367676,
+              83.14620056152344
+            ],
+            "maxMM": [
+              1.457100009918213,
+              14.794999694824218,
+              86.92330322265624
+            ]
+          },
           "projectTo": {
             "code": "MT1-069",
             "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
           }
+        },
+        "excludeParts": [
+          {
+            "minMM": [
+              -1.2999000310897828,
+              12.073001289367676,
+              83.14620056152344
+            ],
+            "maxMM": [
+              1.457100009918213,
+              14.794999694824218,
+              86.92330322265624
+            ],
+            "nearSource": {
+              "code": "MT1-070",
+              "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+              "matchMM": 0.08,
+              "projectTo": {
+                "code": "MT1-069",
+                "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
+              }
+            },
+            "excludeParts": [
+              {
+                "minMM": [
+                  -1.0321090682394305,
+                  12.439904089166781,
+                  82.9457080078125
+                ],
+                "maxMM": [
+                  0.9319789497254114,
+                  14.459648100874077,
+                  86.97330322265626
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    -0.05006505925700949,
+                    13.449776095020429,
+                    82.9457080078125
+                  ],
+                  "radiiMM": [
+                    0.982044008982421,
+                    1.0098720058536488,
+                    100
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "rgb": [
+          1,
+          0.65,
+          0.13
+        ],
+        "roughness": 0.3,
+        "variation": 0.025
+      },
+      {
+        "name": "measured flame root candle-2",
+        "kind": "flame",
+        "minMM": [
+          -1.0321090682394305,
+          12.439904089166781,
+          82.9457080078125
+        ],
+        "maxMM": [
+          0.9319789497254114,
+          14.459648100874077,
+          86.97330322265626
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.05006505925700949,
+            13.449776095020429,
+            82.9457080078125
+          ],
+          "radiiMM": [
+            0.982044008982421,
+            1.0098720058536488,
+            100
+          ]
         },
         "rgb": [
           1,
           0.65,
           0.13
         ],
-        "metallic": 0,
         "roughness": 0.3,
-        "variation": 0.02,
-        "gradientZMM": [
-          83.36620056152344,
-          86.77330322265625
-        ],
-        "gradientRGB": [
-          [
-            1,
-            0.9,
-            0.34
-          ],
-          [
-            1,
-            0.32,
-            0.045
-          ]
-        ],
-        "emissionInsetMM": 0.015
+        "variation": 0.025
       },
       {
-        "name": "candle flame 3",
+        "name": "own candle flame 3",
         "kind": "flame",
         "minMM": [
           -1.3664999961853028,
           -14.943400001525879,
-          83.87079467773438
+          83.47630187988281
         ],
         "maxMM": [
           1.430199956893921,
           -12.102698707580567,
           87.9009033203125
         ],
-        "awayFromSource": {
-          "code": "MT1-070",
-          "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
-          "matchMM": 0.08,
+        "nearSource": {
+          "code": "MT1-069",
+          "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73",
+          "matchMM": 0.04,
+          "componentAboveMM": 83.87079467773438,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              -1.3664999961853028,
+              -14.943400001525879,
+              83.87079467773438
+            ],
+            "maxMM": [
+              1.430199956893921,
+              -12.102698707580567,
+              87.9009033203125
+            ]
+          },
           "projectTo": {
             "code": "MT1-069",
             "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
           }
+        },
+        "excludeParts": [
+          {
+            "minMM": [
+              -1.3664999961853028,
+              -14.943400001525879,
+              83.87079467773438
+            ],
+            "maxMM": [
+              1.430199956893921,
+              -12.102698707580567,
+              87.9009033203125
+            ],
+            "nearSource": {
+              "code": "MT1-070",
+              "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+              "matchMM": 0.08,
+              "projectTo": {
+                "code": "MT1-069",
+                "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
+              }
+            },
+            "excludeParts": [
+              {
+                "minMM": [
+                  -1.2352751701432299,
+                  -14.34325497036509,
+                  83.47630187988281
+                ],
+                "maxMM": [
+                  0.8081256260016972,
+                  -12.275286900820296,
+                  87.9509033203125
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    -0.21357477207076625,
+                    -13.309270935592693,
+                    83.47630187988281
+                  ],
+                  "radiiMM": [
+                    1.0217003980724635,
+                    1.0339840347723968,
+                    100
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "rgb": [
+          1,
+          0.65,
+          0.13
+        ],
+        "roughness": 0.3,
+        "variation": 0.025
+      },
+      {
+        "name": "measured flame root candle-3",
+        "kind": "flame",
+        "minMM": [
+          -1.2352751701432299,
+          -14.34325497036509,
+          83.47630187988281
+        ],
+        "maxMM": [
+          0.8081256260016972,
+          -12.275286900820296,
+          87.9509033203125
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.21357477207076625,
+            -13.309270935592693,
+            83.47630187988281
+          ],
+          "radiiMM": [
+            1.0217003980724635,
+            1.0339840347723968,
+            100
+          ]
         },
         "rgb": [
           1,
           0.65,
           0.13
         ],
-        "metallic": 0,
         "roughness": 0.3,
-        "variation": 0.02,
-        "gradientZMM": [
-          84.09079467773438,
-          87.7509033203125
-        ],
-        "gradientRGB": [
-          [
-            1,
-            0.9,
-            0.34
-          ],
-          [
-            1,
-            0.32,
-            0.045
-          ]
-        ],
-        "emissionInsetMM": 0.015
+        "variation": 0.025
       },
       {
-        "name": "candle flame 4",
+        "name": "own candle flame 4",
         "kind": "flame",
         "minMM": [
           10.21719970703125,
           5.140699768066407,
-          81.73979797363282
+          81.650908203125
         ],
         "maxMM": [
           12.802800750732422,
           7.905399417877197,
           86.2446075439453
         ],
-        "awayFromSource": {
-          "code": "MT1-070",
-          "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
-          "matchMM": 0.08,
+        "nearSource": {
+          "code": "MT1-069",
+          "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73",
+          "matchMM": 0.04,
+          "componentAboveMM": 81.73979797363282,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              10.21719970703125,
+              5.140699768066407,
+              81.73979797363282
+            ],
+            "maxMM": [
+              12.802800750732422,
+              7.905399417877197,
+              86.2446075439453
+            ]
+          },
           "projectTo": {
             "code": "MT1-069",
             "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
           }
+        },
+        "excludeParts": [
+          {
+            "minMM": [
+              10.21719970703125,
+              5.140699768066407,
+              81.73979797363282
+            ],
+            "maxMM": [
+              12.802800750732422,
+              7.905399417877197,
+              86.2446075439453
+            ],
+            "nearSource": {
+              "code": "MT1-070",
+              "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+              "matchMM": 0.08,
+              "projectTo": {
+                "code": "MT1-069",
+                "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
+              }
+            },
+            "excludeParts": [
+              {
+                "minMM": [
+                  10.374526781428957,
+                  5.661025970323146,
+                  81.650908203125
+                ],
+                "maxMM": [
+                  12.126581122086384,
+                  7.704758829072458,
+                  86.29460754394532
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    11.25055395175767,
+                    6.682892399697802,
+                    81.650908203125
+                  ],
+                  "radiiMM": [
+                    0.8760271703287134,
+                    1.021866429374656,
+                    100
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "rgb": [
+          1,
+          0.65,
+          0.13
+        ],
+        "roughness": 0.3,
+        "variation": 0.025
+      },
+      {
+        "name": "measured flame root candle-4",
+        "kind": "flame",
+        "minMM": [
+          10.374526781428957,
+          5.661025970323146,
+          81.650908203125
+        ],
+        "maxMM": [
+          12.126581122086384,
+          7.704758829072458,
+          86.29460754394532
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            11.25055395175767,
+            6.682892399697802,
+            81.650908203125
+          ],
+          "radiiMM": [
+            0.8760271703287134,
+            1.021866429374656,
+            100
+          ]
         },
         "rgb": [
           1,
           0.65,
           0.13
         ],
-        "metallic": 0,
         "roughness": 0.3,
-        "variation": 0.02,
-        "gradientZMM": [
-          81.95979797363282,
-          86.09460754394532
-        ],
-        "gradientRGB": [
-          [
-            1,
-            0.9,
-            0.34
-          ],
-          [
-            1,
-            0.32,
-            0.045
-          ]
-        ],
-        "emissionInsetMM": 0.015
+        "variation": 0.025
       },
       {
-        "name": "candle flame 5",
+        "name": "own candle flame 5",
         "kind": "flame",
         "minMM": [
           10.101299667358399,
           -7.553100204467773,
-          82.56200256347657
+          82.41520568847656
         ],
         "maxMM": [
           12.82379970550537,
           -4.9423002243042,
           86.67369995117187
         ],
-        "awayFromSource": {
-          "code": "MT1-070",
-          "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
-          "matchMM": 0.08,
+        "nearSource": {
+          "code": "MT1-069",
+          "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73",
+          "matchMM": 0.04,
+          "componentAboveMM": 82.56200256347657,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              10.101299667358399,
+              -7.553100204467773,
+              82.56200256347657
+            ],
+            "maxMM": [
+              12.82379970550537,
+              -4.9423002243042,
+              86.67369995117187
+            ]
+          },
           "projectTo": {
             "code": "MT1-069",
             "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
           }
+        },
+        "excludeParts": [
+          {
+            "minMM": [
+              10.101299667358399,
+              -7.553100204467773,
+              82.56200256347657
+            ],
+            "maxMM": [
+              12.82379970550537,
+              -4.9423002243042,
+              86.67369995117187
+            ],
+            "nearSource": {
+              "code": "MT1-070",
+              "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+              "matchMM": 0.08,
+              "projectTo": {
+                "code": "MT1-069",
+                "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
+              }
+            },
+            "excludeParts": [
+              {
+                "minMM": [
+                  10.58095223256116,
+                  -7.0423126987419264,
+                  82.41520568847656
+                ],
+                "maxMM": [
+                  12.675229617529155,
+                  -5.181968035977051,
+                  86.72369995117188
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    11.628090925045157,
+                    -6.112140367359489,
+                    82.41520568847656
+                  ],
+                  "radiiMM": [
+                    1.0471386924839967,
+                    0.930172331382438,
+                    100
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "rgb": [
+          1,
+          0.65,
+          0.13
+        ],
+        "roughness": 0.3,
+        "variation": 0.025
+      },
+      {
+        "name": "measured flame root candle-5",
+        "kind": "flame",
+        "minMM": [
+          10.58095223256116,
+          -7.0423126987419264,
+          82.41520568847656
+        ],
+        "maxMM": [
+          12.675229617529155,
+          -5.181968035977051,
+          86.72369995117188
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            11.628090925045157,
+            -6.112140367359489,
+            82.41520568847656
+          ],
+          "radiiMM": [
+            1.0471386924839967,
+            0.930172331382438,
+            100
+          ]
         },
         "rgb": [
           1,
           0.65,
           0.13
         ],
-        "metallic": 0,
         "roughness": 0.3,
-        "variation": 0.02,
-        "gradientZMM": [
-          82.78200256347657,
-          86.52369995117188
-        ],
-        "gradientRGB": [
-          [
-            1,
-            0.9,
-            0.34
-          ],
-          [
-            1,
-            0.32,
-            0.045
-          ]
-        ],
-        "emissionInsetMM": 0.015
+        "variation": 0.025
       },
       {
-        "name": "candle flame 6",
+        "name": "own candle flame 6",
         "kind": "flame",
         "minMM": [
           -12.920400238037109,
           -8.299799537658691,
-          81.84869995117188
+          81.62029907226562
         ],
         "maxMM": [
           -10.276899719238282,
           -5.414000415802002,
           86.21720275878906
         ],
-        "awayFromSource": {
-          "code": "MT1-070",
-          "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
-          "matchMM": 0.08,
+        "nearSource": {
+          "code": "MT1-069",
+          "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73",
+          "matchMM": 0.04,
+          "componentAboveMM": 81.84869995117188,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              -12.920400238037109,
+              -8.299799537658691,
+              81.84869995117188
+            ],
+            "maxMM": [
+              -10.276899719238282,
+              -5.414000415802002,
+              86.21720275878906
+            ]
+          },
           "projectTo": {
             "code": "MT1-069",
             "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
           }
+        },
+        "excludeParts": [
+          {
+            "minMM": [
+              -12.920400238037109,
+              -8.299799537658691,
+              81.84869995117188
+            ],
+            "maxMM": [
+              -10.276899719238282,
+              -5.414000415802002,
+              86.21720275878906
+            ],
+            "nearSource": {
+              "code": "MT1-070",
+              "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+              "matchMM": 0.08,
+              "projectTo": {
+                "code": "MT1-069",
+                "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
+              }
+            },
+            "excludeParts": [
+              {
+                "minMM": [
+                  -12.607144628041983,
+                  -7.602920766027278,
+                  81.62029907226562
+                ],
+                "maxMM": [
+                  -10.295576856328598,
+                  -5.4579219326948,
+                  86.26720275878907
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    -11.45136074218529,
+                    -6.530421349361039,
+                    81.62029907226562
+                  ],
+                  "radiiMM": [
+                    1.1557838858566933,
+                    1.072499416666239,
+                    100
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "rgb": [
+          1,
+          0.65,
+          0.13
+        ],
+        "roughness": 0.3,
+        "variation": 0.025
+      },
+      {
+        "name": "measured flame root candle-6",
+        "kind": "flame",
+        "minMM": [
+          -12.607144628041983,
+          -7.602920766027278,
+          81.62029907226562
+        ],
+        "maxMM": [
+          -10.295576856328598,
+          -5.4579219326948,
+          86.26720275878907
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -11.45136074218529,
+            -6.530421349361039,
+            81.62029907226562
+          ],
+          "radiiMM": [
+            1.1557838858566933,
+            1.072499416666239,
+            100
+          ]
         },
         "rgb": [
           1,
           0.65,
           0.13
         ],
-        "metallic": 0,
         "roughness": 0.3,
-        "variation": 0.02,
-        "gradientZMM": [
-          82.06869995117188,
-          86.06720275878907
-        ],
-        "gradientRGB": [
-          [
-            1,
-            0.9,
-            0.34
-          ],
-          [
-            1,
-            0.32,
-            0.045
-          ]
-        ],
-        "emissionInsetMM": 0.015
+        "variation": 0.025
       },
       {
-        "name": "candle flame 7",
+        "name": "own candle flame 7",
         "kind": "flame",
         "minMM": [
           -13.178200340270996,
           5.517899894714356,
-          80.777197265625
+          80.8030078125
         ],
         "maxMM": [
           -10.28599967956543,
           8.097600078582763,
           86.07019958496093
         ],
-        "awayFromSource": {
-          "code": "MT1-070",
-          "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
-          "matchMM": 0.08,
+        "nearSource": {
+          "code": "MT1-069",
+          "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73",
+          "matchMM": 0.04,
+          "componentAboveMM": 80.777197265625,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              -13.178200340270996,
+              5.517899894714356,
+              80.777197265625
+            ],
+            "maxMM": [
+              -10.28599967956543,
+              8.097600078582763,
+              86.07019958496093
+            ]
+          },
           "projectTo": {
             "code": "MT1-069",
             "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
           }
+        },
+        "excludeParts": [
+          {
+            "minMM": [
+              -13.178200340270996,
+              5.517899894714356,
+              80.777197265625
+            ],
+            "maxMM": [
+              -10.28599967956543,
+              8.097600078582763,
+              86.07019958496093
+            ],
+            "nearSource": {
+              "code": "MT1-070",
+              "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+              "matchMM": 0.08,
+              "projectTo": {
+                "code": "MT1-069",
+                "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
+              }
+            },
+            "excludeParts": [
+              {
+                "minMM": [
+                  -12.691887707980467,
+                  5.346473718418624,
+                  80.8030078125
+                ],
+                "maxMM": [
+                  -10.337948396297836,
+                  7.9166165289186665,
+                  86.12019958496094
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    -11.514918052139151,
+                    6.631545123668645,
+                    80.8030078125
+                  ],
+                  "radiiMM": [
+                    1.1769696558413152,
+                    1.2850714052500214,
+                    100
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "rgb": [
+          1,
+          0.65,
+          0.13
+        ],
+        "roughness": 0.3,
+        "variation": 0.025
+      },
+      {
+        "name": "measured flame root candle-7",
+        "kind": "flame",
+        "minMM": [
+          -12.691887707980467,
+          5.346473718418624,
+          80.8030078125
+        ],
+        "maxMM": [
+          -10.337948396297836,
+          7.9166165289186665,
+          86.12019958496094
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -11.514918052139151,
+            6.631545123668645,
+            80.8030078125
+          ],
+          "radiiMM": [
+            1.1769696558413152,
+            1.2850714052500214,
+            100
+          ]
         },
         "rgb": [
           1,
           0.65,
           0.13
         ],
-        "metallic": 0,
         "roughness": 0.3,
-        "variation": 0.02,
-        "gradientZMM": [
-          80.997197265625,
-          85.92019958496094
-        ],
-        "gradientRGB": [
-          [
-            1,
-            0.9,
-            0.34
-          ],
-          [
-            1,
-            0.32,
-            0.045
-          ]
-        ],
-        "emissionInsetMM": 0.015
+        "variation": 0.025
       }
     ],
     "stoneParts": [],
     "fabricParts": [],
     "ironParts": [],
     "hardware": [],
-    "emissionStrength": 1.2
+    "emissionStrength": 1.2,
+    "flameBoundaryClip": {
+      "toleranceMM": 0.025,
+      "lodToleranceMM": 0.04,
+      "preserveRegions": [
+        {
+          "minMM": [
+            -2.381499981880188,
+            -1.8202999591827393,
+            84.28409423828126
+          ],
+          "maxMM": [
+            1.2527000069618226,
+            1.7094000339508058,
+            85.97539367675782
+          ]
+        },
+        {
+          "minMM": [
+            -1.7999000310897828,
+            11.573001289367676,
+            82.3757080078125
+          ],
+          "maxMM": [
+            1.957100009918213,
+            15.294999694824218,
+            84.14620056152344
+          ]
+        },
+        {
+          "minMM": [
+            -1.8664999961853028,
+            -15.443400001525879,
+            82.90630187988282
+          ],
+          "maxMM": [
+            1.930199956893921,
+            -11.602698707580567,
+            84.87079467773438
+          ]
+        },
+        {
+          "minMM": [
+            9.71719970703125,
+            4.640699768066407,
+            81.080908203125
+          ],
+          "maxMM": [
+            13.302800750732422,
+            8.405399417877197,
+            82.73979797363282
+          ]
+        },
+        {
+          "minMM": [
+            9.601299667358399,
+            -8.053100204467773,
+            81.84520568847657
+          ],
+          "maxMM": [
+            13.32379970550537,
+            -4.4423002243042,
+            83.56200256347657
+          ]
+        },
+        {
+          "minMM": [
+            -13.420400238037109,
+            -8.799799537658691,
+            81.05029907226563
+          ],
+          "maxMM": [
+            -9.776899719238282,
+            -4.914000415802002,
+            82.84869995117188
+          ]
+        },
+        {
+          "minMM": [
+            -13.678200340270996,
+            5.017899894714356,
+            80.2330078125
+          ],
+          "maxMM": [
+            -9.78599967956543,
+            8.597600078582763,
+            81.777197265625
+          ]
+        }
+      ]
+    }
   },
   "defaultLights": [
     {
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.0828,
+          0.095829
+        ],
+        "strength": 0.7,
+        "offset": [
+          -0.003509,
+          -0.002828,
+          -0.055306
+        ]
+      },
       "key": "candle-1",
-      "name": "Свеча 1",
+      "name": "\u0421\u0432\u0435\u0447\u0430 1",
       "kind": "torch",
       "color": "#ffd078",
       "position": [
@@ -1601,24 +2250,24 @@
       "intensity": 1.3,
       "radius": 2.4,
       "enabled": true,
-      "flicker": true,
+      "flicker": true
+    },
+    {
       "effect": {
         "kind": "fire",
         "size": [
-          0.0828,
-          0.0949
+          0.0866,
+          0.111074
         ],
         "strength": 0.7,
         "offset": [
-          0.000699,
-          0.001797,
-          -0.051555
+          -0.003517,
+          -0.000705,
+          -0.065902
         ]
-      }
-    },
-    {
+      },
       "key": "candle-2",
-      "name": "Свеча 2",
+      "name": "\u0421\u0432\u0435\u0447\u0430 2",
       "kind": "torch",
       "color": "#ffd078",
       "position": [
@@ -1629,24 +2278,24 @@
       "intensity": 1.3,
       "radius": 2.4,
       "enabled": true,
-      "flicker": true,
+      "flicker": true
+    },
+    {
       "effect": {
         "kind": "fire",
         "size": [
-          0.0866,
-          0.1079
+          0.0893,
+          0.123846
         ],
         "strength": 0.7,
         "offset": [
-          0.000159,
-          -0.000255,
-          -0.059888
+          -0.006042,
+          -0.006801,
+          -0.073741
         ]
-      }
-    },
-    {
+      },
       "key": "candle-3",
-      "name": "Свеча 3",
+      "name": "\u0421\u0432\u0435\u0447\u0430 3",
       "kind": "torch",
       "color": "#ffd078",
       "position": [
@@ -1657,24 +2306,24 @@
       "intensity": 1.3,
       "radius": 2.4,
       "enabled": true,
-      "flicker": true,
+      "flicker": true
+    },
+    {
       "effect": {
         "kind": "fire",
         "size": [
-          0.0893,
-          0.1151
+          0.0869,
+          0.128677
         ],
         "strength": 0.7,
         "offset": [
-          0.00097,
-          -0.000693,
-          -0.062184
+          -0.005727,
+          -0.005085,
+          -0.069501
         ]
-      }
-    },
-    {
+      },
       "key": "candle-4",
-      "name": "Свеча 4",
+      "name": "\u0421\u0432\u0435\u0447\u0430 4",
       "kind": "torch",
       "color": "#ffd078",
       "position": [
@@ -1685,24 +2334,24 @@
       "intensity": 1.3,
       "radius": 2.4,
       "enabled": true,
-      "flicker": true,
+      "flicker": true
+    },
+    {
       "effect": {
         "kind": "fire",
         "size": [
-          0.0869,
-          0.1287
+          0.0856,
+          0.1191
         ],
         "strength": 0.7,
         "offset": [
-          0.001686,
-          -0.000518,
-          -0.066675
+          0.007113,
+          -0.004878,
+          -0.065575
         ]
-      }
-    },
-    {
+      },
       "key": "candle-5",
-      "name": "Свеча 5",
+      "name": "\u0421\u0432\u0435\u0447\u0430 5",
       "kind": "torch",
       "color": "#ffd078",
       "position": [
@@ -1713,24 +2362,24 @@
       "intensity": 1.3,
       "radius": 2.4,
       "enabled": true,
-      "flicker": true,
+      "flicker": true
+    },
+    {
       "effect": {
         "kind": "fire",
         "size": [
-          0.0856,
-          0.1175
+          0.0907,
+          0.128769
         ],
         "strength": 0.7,
         "offset": [
-          0.002383,
-          -0.001005,
-          -0.061095
+          0.005588,
+          -0.007446,
+          -0.070603
         ]
-      }
-    },
-    {
+      },
       "key": "candle-6",
-      "name": "Свеча 6",
+      "name": "\u0421\u0432\u0435\u0447\u0430 6",
       "kind": "torch",
       "color": "#ffd078",
       "position": [
@@ -1741,24 +2390,24 @@
       "intensity": 1.3,
       "radius": 2.4,
       "enabled": true,
-      "flicker": true,
+      "flicker": true
+    },
+    {
       "effect": {
         "kind": "fire",
         "size": [
-          0.0907,
-          0.1248
+          0.0909,
+          0.14792
         ],
         "strength": 0.7,
         "offset": [
-          0.00138,
-          0.001882,
-          -0.063792
+          0.003646,
+          0.003965,
+          -0.068862
         ]
-      }
-    },
-    {
+      },
       "key": "candle-7",
-      "name": "Свеча 7",
+      "name": "\u0421\u0432\u0435\u0447\u0430 7",
       "kind": "torch",
       "color": "#ffd078",
       "position": [
@@ -1769,23 +2418,10 @@
       "intensity": 1.3,
       "radius": 2.4,
       "enabled": true,
-      "flicker": true,
-      "effect": {
-        "kind": "fire",
-        "size": [
-          0.0909,
-          0.1512
-        ],
-        "strength": 0.7,
-        "offset": [
-          -0.002559,
-          -0.001069,
-          -0.069313
-        ]
-      }
+      "flicker": true
     }
   ],
-  "reviewNotes": "PDFpage10/full/front-back/+X/candles/top/underside andtemporarycut75.85inspected. Source540012tri/27000684bytes/SHAfbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73/maxZ88.198105. FloorY confirmednativeboards,front/backXrails;postZ/steppedfoot. Sixcurvedironbracesand6lowerbolts;bronzeannularframe6spokes/centralcollar,6measuredspokeheads. Sevenivorycandles,runoffoverringandspokes. Baremetalspokeplane74.865,collartop75.758,ringtop75.823;profilemasks/chamferenvelopesguardwetareas,needsactualmatchingcloseQA. CommonOff70distancesfloor/post/ring.000138/.001162/.001310mm;samplecommonmax.0303mm. SevenflamesuseSHA-boundaway70.08/project69,currentoriginalprojectionbeforeclassification,individualbbox/heightgradient/inset.015. Light7warmflickeringtorchtemplatesintensity1.3/radius2.4locatednativeflamemeans,APIlimit8. Noaddedwaxorflamegeometry. Sourcefloorraisedrim26.7823requiresdecorcut27.0forcontainment;trueupperdecorRmax18.089629→16gonR18.524026028046134clippedto±17.65mmtohonorfootprintbounds,fourverifiednative±14cornersstandclear25.3919..25.681/nZ>.932. Innerrayshituppercandles/ring,arenotfloorstands. Validatewax/metalboundaries,all7flames/noglowoutside,12heads,woodcontacts,6spokegaps,source/packedfootprintandbothcandidates/tiersbeforepub.",
+  "reviewNotes": "PDFpage10/full/front-back/+X/candles/top/underside andtemporarycut75.85inspected. Source540012tri/27000684bytes/SHAfbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73/maxZ88.198105. FloorY confirmednativeboards,front/backXrails;postZ/steppedfoot. Sixcurvedironbracesand6lowerbolts;bronzeannularframe6spokes/centralcollar,6measuredspokeheads. Sevenivorycandles,runoffoverringandspokes. Baremetalspokeplane74.865,collartop75.758,ringtop75.823;profilemasks/chamferenvelopesguardwetareas,needsactualmatchingcloseQA. CommonOff70distancesfloor/post/ring.000138/.001162/.001310mm;samplecommonmax.0303mm. SevenflamesuseSHA-boundaway70.08/project69,currentoriginalprojectionbeforeclassification,individualbbox/heightgradient/inset.015. Light7warmflickeringtorchtemplatesintensity1.3/radius2.4locatednativeflamemeans,APIlimit8. Noaddedwaxorflamegeometry. Sourcefloorraisedrim26.7823requiresdecorcut27.0forcontainment;trueupperdecorRmax18.089629\u219216gonR18.524026028046134clippedto\u00b117.65mmtohonorfootprintbounds,fourverifiednative\u00b114cornersstandclear25.3919..25.681/nZ>.932. Innerrayshituppercandles/ring,arenotfloorstands. Validatewax/metalboundaries,all7flames/noglowoutside,12heads,woodcontacts,6spokegaps,source/packedfootprintandbothcandidates/tiersbeforepub. RepairconfirmedfreshMCP/hashedrender/LOD/shadow:all7lightdownrayshitholderundersides13.15..15.89mmdown;centralrayreachedmount17mm(69.78mmdown),negativeZnormals. Fullpublished5asset/model/behaviour/recipe/QAbackupundercandle-wax-repair/069/before,UUIDae7ee18c-4986-45f3-b30f-3c96c7f915e5/sourceSHAfbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73 unchanged. Own7rim measurements155..210upwardvertices each,allwithin.08mmofverifiedOff70source(max.075713). Restore.1mmclosedwaxsurfaces.05mmbelowownrims;retainwaxRGB[.82,.79,.57]/rough.73. Ownper-candleOncomponents1454/1491/1434/1603/1605/1636/1838vertices. KeepOff-commonwaxoutsideexplicitrootcylinders;removeOnsculpture/root andalignonlyeffectbase/heighttocap+.01. Preserveall7sourcepositions/color/intensity/radius/flicker/width/strength andexistingextinguishtransitionIDs. Pinwaxrims/12fasteners/nativecollar. Fullsource/colour/PBR/cap/7lightclear-down/fire ray/void/on-offvisual QA bothcandidates beforeUD-016/finalreceipt/GoMF/MCP. AuthorOff70remainsuntouched. Repair root cut stays .04mm inside the independently measured boundary; the .06mm cap overlap closes the cut while retaining source wax at near-tangent rays. Off-common wax is preserved outside this measured root. Dense own-source/actual-body coverage audit detected 14/20/0/35/30/1/0 open-root samples. Cap footprint enlarged under the original wax rim to cover the measured cut; 126 perimeter rays per cap confirm the added surface stays inside the original wax volume.",
   "transitions": [
     {
       "toDefinitionId": "MT1-070",
@@ -1828,5 +2464,484 @@
       0
     ],
     "blockedDistance": 3
-  }
+  },
+  "renderColourSize": 1536,
+  "placementCells": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "candleWaxCaps": [
+    {
+      "key": "candle-1",
+      "centreMM": [
+        -0.7116913824041565,
+        0.10644096580326651
+      ],
+      "cutRadiiMM": [
+        1.2206585777485202,
+        1.182185937874632
+      ],
+      "radiiMM": [
+        1.8785351804028987,
+        2.0479999999999983
+      ],
+      "measuredWaxRimMinMM": 84.88409423828125,
+      "measuredRimSamples": 179,
+      "topMM": 84.83409423828125,
+      "bottomMM": 84.73409423828126,
+      "rgb": [
+        0.82,
+        0.79,
+        0.57
+      ],
+      "roughness": 0.73,
+      "measurementSourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73",
+      "closedWaxReferenceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+      "referenceMaxDistanceMM": 0.0579519122838974
+    },
+    {
+      "key": "candle-2",
+      "centreMM": [
+        -0.05006505925700949,
+        13.449776095020429
+      ],
+      "cutRadiiMM": [
+        1.022044008982421,
+        1.0498720058536488
+      ],
+      "radiiMM": [
+        1.7639999999999982,
+        1.7640000000000018
+      ],
+      "measuredWaxRimMinMM": 82.9757080078125,
+      "measuredRimSamples": 158,
+      "topMM": 82.9257080078125,
+      "bottomMM": 82.82570800781251,
+      "rgb": [
+        0.82,
+        0.79,
+        0.57
+      ],
+      "roughness": 0.73,
+      "measurementSourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73",
+      "closedWaxReferenceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+      "referenceMaxDistanceMM": 0.030635733157396317
+    },
+    {
+      "key": "candle-3",
+      "centreMM": [
+        -0.21357477207076625,
+        -13.309270935592693
+      ],
+      "cutRadiiMM": [
+        1.0617003980724635,
+        1.0739840347723968
+      ],
+      "radiiMM": [
+        1.1217003980724636,
+        1.1339840347723968
+      ],
+      "measuredWaxRimMinMM": 83.50630187988281,
+      "measuredRimSamples": 197,
+      "topMM": 83.45630187988282,
+      "bottomMM": 83.35630187988282,
+      "rgb": [
+        0.82,
+        0.79,
+        0.57
+      ],
+      "roughness": 0.73,
+      "measurementSourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73",
+      "closedWaxReferenceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+      "referenceMaxDistanceMM": 0.030630365014076233
+    },
+    {
+      "key": "candle-4",
+      "centreMM": [
+        11.25055395175767,
+        6.682892399697802
+      ],
+      "cutRadiiMM": [
+        0.9160271703287134,
+        1.061866429374656
+      ],
+      "radiiMM": [
+        2.048000000000002,
+        1.6530503297120116
+      ],
+      "measuredWaxRimMinMM": 81.680908203125,
+      "measuredRimSamples": 155,
+      "topMM": 81.630908203125,
+      "bottomMM": 81.53090820312501,
+      "rgb": [
+        0.82,
+        0.79,
+        0.57
+      ],
+      "roughness": 0.73,
+      "measurementSourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73",
+      "closedWaxReferenceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+      "referenceMaxDistanceMM": 0.07571269571781158
+    },
+    {
+      "key": "candle-5",
+      "centreMM": [
+        11.628090925045157,
+        -6.112140367359489
+      ],
+      "cutRadiiMM": [
+        1.0871386924839967,
+        0.9701723313824381
+      ],
+      "radiiMM": [
+        1.6889369433272754,
+        2.0479999999999983
+      ],
+      "measuredWaxRimMinMM": 82.44520568847656,
+      "measuredRimSamples": 168,
+      "topMM": 82.39520568847657,
+      "bottomMM": 82.29520568847657,
+      "rgb": [
+        0.82,
+        0.79,
+        0.57
+      ],
+      "roughness": 0.73,
+      "measurementSourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73",
+      "closedWaxReferenceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+      "referenceMaxDistanceMM": 0.038614775985479355
+    },
+    {
+      "key": "candle-6",
+      "centreMM": [
+        -11.45136074218529,
+        -6.530421349361039
+      ],
+      "cutRadiiMM": [
+        1.1957838858566934,
+        1.112499416666239
+      ],
+      "radiiMM": [
+        1.8432131179165046,
+        1.7249491716660594
+      ],
+      "measuredWaxRimMinMM": 81.65029907226562,
+      "measuredRimSamples": 210,
+      "topMM": 81.60029907226563,
+      "bottomMM": 81.50029907226563,
+      "rgb": [
+        0.82,
+        0.79,
+        0.57
+      ],
+      "roughness": 0.73,
+      "measurementSourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73",
+      "closedWaxReferenceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+      "referenceMaxDistanceMM": 0.02389257214963436
+    },
+    {
+      "key": "candle-7",
+      "centreMM": [
+        -11.514918052139151,
+        6.631545123668645
+      ],
+      "cutRadiiMM": [
+        1.2169696558413152,
+        1.3250714052500214
+      ],
+      "radiiMM": [
+        1.2769696558413153,
+        1.3850714052500215
+      ],
+      "measuredWaxRimMinMM": 80.8330078125,
+      "measuredRimSamples": 172,
+      "topMM": 80.7830078125,
+      "bottomMM": 80.68300781250001,
+      "rgb": [
+        0.82,
+        0.79,
+        0.57
+      ],
+      "roughness": 0.73,
+      "measurementSourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73",
+      "closedWaxReferenceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+      "referenceMaxDistanceMM": 0.03969644010066986
+    }
+  ],
+  "geometryDetailRegions": [
+    {
+      "name": "native mounting rim",
+      "minMM": [
+        -17.7,
+        -17.7,
+        17
+      ],
+      "maxMM": [
+        17.7,
+        17.7,
+        17.51
+      ]
+    },
+    {
+      "name": "fastener spoke top and surrounding contact",
+      "minMM": [
+        -0.7583271938562394,
+        -6.722327404022217,
+        74.72999999999999
+      ],
+      "maxMM": [
+        0.6016728061437607,
+        -5.362327404022216,
+        75.75
+      ]
+    },
+    {
+      "name": "fastener spoke upperright and surrounding contact",
+      "minMM": [
+        -6.050386123657227,
+        -3.8243846225738527,
+        74.72999999999999
+      ],
+      "maxMM": [
+        -4.690386123657226,
+        -2.4643846225738524,
+        75.75
+      ]
+    },
+    {
+      "name": "fastener spoke lowerright and surrounding contact",
+      "minMM": [
+        -6.050479583740235,
+        2.2235220146179198,
+        74.72999999999999
+      ],
+      "maxMM": [
+        -4.690479583740234,
+        3.58352201461792,
+        75.75
+      ]
+    },
+    {
+      "name": "fastener spoke bottom and surrounding contact",
+      "minMM": [
+        -0.7583414393663407,
+        5.4576581192016596,
+        74.72999999999999
+      ],
+      "maxMM": [
+        0.6016585606336594,
+        6.817658119201661,
+        75.75
+      ]
+    },
+    {
+      "name": "fastener spoke lowerleft and surrounding contact",
+      "minMM": [
+        4.449578590393066,
+        2.307577676773071,
+        74.72999999999999
+      ],
+      "maxMM": [
+        5.809578590393067,
+        3.6675776767730714,
+        75.75
+      ]
+    },
+    {
+      "name": "fastener spoke upperleft and surrounding contact",
+      "minMM": [
+        4.4075692367553705,
+        -3.824432067871094,
+        74.72999999999999
+      ],
+      "maxMM": [
+        5.767569236755372,
+        -2.4644320678710936,
+        75.75
+      ]
+    },
+    {
+      "name": "lower bolt 30 and surrounding contact",
+      "minMM": [
+        3.385324478149414,
+        1.6375303268432617,
+        60.95000076293945
+      ],
+      "maxMM": [
+        4.885324478149414,
+        3.1375303268432617,
+        62.45000076293945
+      ]
+    },
+    {
+      "name": "lower bolt 90 and surrounding contact",
+      "minMM": [
+        -0.7499999999999998,
+        3.58542537689209,
+        60.95000076293945
+      ],
+      "maxMM": [
+        0.7500000000000002,
+        5.08542537689209,
+        62.45000076293945
+      ]
+    },
+    {
+      "name": "lower bolt 150 and surrounding contact",
+      "minMM": [
+        -4.619109153747559,
+        1.483830451965332,
+        60.95000076293945
+      ],
+      "maxMM": [
+        -3.1191091537475586,
+        2.983830451965332,
+        62.45000076293945
+      ]
+    },
+    {
+      "name": "lower bolt 210 and surrounding contact",
+      "minMM": [
+        -4.756521224975586,
+        -3.0631656646728516,
+        60.95000076293945
+      ],
+      "maxMM": [
+        -3.256521224975586,
+        -1.5631656646728516,
+        62.45000076293945
+      ]
+    },
+    {
+      "name": "lower bolt 270 and surrounding contact",
+      "minMM": [
+        -0.7500000000000008,
+        -5.071427345275879,
+        60.95000076293945
+      ],
+      "maxMM": [
+        0.7499999999999992,
+        -3.571427345275879,
+        62.45000076293945
+      ]
+    },
+    {
+      "name": "lower bolt 330 and surrounding contact",
+      "minMM": [
+        3.157064437866211,
+        -3.005743980407715,
+        60.95000076293945
+      ],
+      "maxMM": [
+        4.657064437866211,
+        -1.5057439804077148,
+        62.45000076293945
+      ]
+    },
+    {
+      "name": "measured wax rim candle-1",
+      "minMM": [
+        -2.381499981880188,
+        -1.8202999591827393,
+        84.28409423828126
+      ],
+      "maxMM": [
+        1.2527000069618226,
+        1.7094000339508058,
+        85.97539367675782
+      ]
+    },
+    {
+      "name": "measured wax rim candle-2",
+      "minMM": [
+        -1.7999000310897828,
+        11.573001289367676,
+        82.3757080078125
+      ],
+      "maxMM": [
+        1.957100009918213,
+        15.294999694824218,
+        84.14620056152344
+      ]
+    },
+    {
+      "name": "measured wax rim candle-3",
+      "minMM": [
+        -1.8664999961853028,
+        -15.443400001525879,
+        82.90630187988282
+      ],
+      "maxMM": [
+        1.930199956893921,
+        -11.602698707580567,
+        84.87079467773438
+      ]
+    },
+    {
+      "name": "measured wax rim candle-4",
+      "minMM": [
+        9.71719970703125,
+        4.640699768066407,
+        81.080908203125
+      ],
+      "maxMM": [
+        13.302800750732422,
+        8.405399417877197,
+        82.73979797363282
+      ]
+    },
+    {
+      "name": "measured wax rim candle-5",
+      "minMM": [
+        9.601299667358399,
+        -8.053100204467773,
+        81.84520568847657
+      ],
+      "maxMM": [
+        13.32379970550537,
+        -4.4423002243042,
+        83.56200256347657
+      ]
+    },
+    {
+      "name": "measured wax rim candle-6",
+      "minMM": [
+        -13.420400238037109,
+        -8.799799537658691,
+        81.05029907226563
+      ],
+      "maxMM": [
+        -9.776899719238282,
+        -4.914000415802002,
+        82.84869995117188
+      ]
+    },
+    {
+      "name": "measured wax rim candle-7",
+      "minMM": [
+        -13.678200340270996,
+        5.017899894714356,
+        80.2330078125
+      ],
+      "maxMM": [
+        -9.78599967956543,
+        8.597600078582763,
+        81.777197265625
+      ]
+    }
+  ]
 }
