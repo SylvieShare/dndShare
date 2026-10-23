@@ -11,6 +11,7 @@ const sectionRules = {
     [/^tall-buffet$/, "buffet"],
     [/^tall-bath-objects$/, "bath-objects"],
     [/^tall-wardrobe$/, "wardrobe"],
+    [/^tall-bed$/, "bed"],
     [/^tall-(?:barrel|little-barrels)$/, "barrel"],
     [/^(?:wall|window|door|wooden-arch)(?:-|$)/, "walls"],
     [/^tall-(?:angle|wall|window|door|skull-wall|pig-wall)(?:-|$)/, "walls"],
