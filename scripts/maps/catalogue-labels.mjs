@@ -160,6 +160,7 @@ Roof Angle Flag|Угловая крыша с флагом
 Roof Angle Inverse|Обратная угловая крыша
 Roof Center|Центральная крыша
 Roof Center End|Торцевая центральная крыша
+Roof Center Balcony|Центральная крыша с балконом
 Balcony|Балкон
 Balcony Angle|Угловой балкон
 Balcony Corridor|Балкон с двумя ограждениями
