@@ -153,6 +153,7 @@ Roof Window Without Glass|Крыша со слуховым окном без с�
 Roof Wooden Plank|Крыша с деревянными планками
 Roof Hole|Крыша с отверстием
 Roof Fireplace|Крыша с дымовой трубой
+Roof End Left|Левый торец крыши
 Balcony|Балкон
 Balcony Angle|Угловой балкон
 Balcony Corridor|Балкон с двумя ограждениями
