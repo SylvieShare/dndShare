@@ -1,0 +1,936 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    -0.04900932312011719,
+    0.04797935485839844
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Roof Angle Inverse",
+  "groupCode": "MED-roof-angle-inverse",
+  "hasDecor": true,
+  "renderTriangles": 160000,
+  "lodTriangles": 120000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 2048,
+  "renderUVAngleLimitRad": 0.3,
+  "lodUVAngleLimitRad": 0.3,
+  "renderUVIslandMargin": 0.001,
+  "lodUVIslandMargin": 0.001,
+  "renderDataSize": 1536,
+  "lodColourSize": 2048,
+  "lodDataSize": 1536,
+  "standRayTopMM": 40,
+  "standPointsMM": [
+    [
+      -8.75,
+      -8.75
+    ],
+    [
+      -8.75,
+      8.75
+    ],
+    [
+      8.75,
+      8.75
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        1.2,
+        -17.8
+      ],
+      [
+        17.8,
+        -17.8
+      ],
+      [
+        17.8,
+        -1.2
+      ],
+      [
+        1.2,
+        -1.2
+      ]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "roof",
+    "inverse-angle",
+    "valley",
+    "wood",
+    "ceiling"
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      5,
+      10
+    ],
+    "lodMiB": [
+      3,
+      8
+    ],
+    "shadowKiB": [
+      300,
+      600
+    ],
+    "previewKiB": [
+      12,
+      35
+    ],
+    "basis": "Own659986triangles/32999384B inverse valleyroof,onecarvedcornerpost/fullfloor,2slopes/laths,nometalorplaster. Start160k/120k;2048colour/1536data vscompact1536/1152;pinvalleylips/stepedges/footrim. Checkall3freequarteractorsbeforebakes."
+  },
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "own complete wooden body",
+        "minMM": [
+          -17.9,
+          -17.9,
+          17.5
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          101
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own X floor cross frame -1",
+        "minMM": [
+          -17.9,
+          -17.9,
+          17.5
+        ],
+        "maxMM": [
+          17.9,
+          -14.3,
+          27
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own X floor cross frame 1",
+        "minMM": [
+          -17.9,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          27
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own vertical southeast carved post",
+        "minMM": [
+          1.2,
+          -17.9,
+          26.1
+        ],
+        "maxMM": [
+          17.9,
+          -1.2,
+          56
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own crossed underside laths 0",
+        "minMM": [
+          -17.9,
+          -17.9,
+          44
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          101
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "includeParts": [
+          {
+            "name": "own slope half",
+            "minMM": [
+              -18,
+              -18,
+              44
+            ],
+            "maxMM": [
+              18,
+              18,
+              101
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                -100,
+                0
+              ]
+            }
+          }
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            74.28371783363987
+          ],
+          "axis": [
+            0.8244961667771397,
+            -0.004222438896548943,
+            0.5658517844626525
+          ],
+          "rangeMM": [
+            -9,
+            -2.75
+          ]
+        }
+      },
+      {
+        "name": "own south sloping fascia",
+        "minMM": [
+          -17.9,
+          -17.9,
+          44
+        ],
+        "maxMM": [
+          17.9,
+          -14.3,
+          101
+        ],
+        "axis": "beam",
+        "direction": [
+          -0.5658568288130741,
+          -0.0,
+          0.824503516842476
+        ],
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "includeParts": [
+          {
+            "name": "own slope half",
+            "minMM": [
+              -18,
+              -18,
+              44
+            ],
+            "maxMM": [
+              18,
+              18,
+              101
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                -100,
+                0
+              ]
+            }
+          }
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            74.28371783363987
+          ],
+          "axis": [
+            0.8244961667771397,
+            -0.004222438896548943,
+            0.5658517844626525
+          ],
+          "rangeMM": [
+            -12,
+            -2.75
+          ]
+        }
+      },
+      {
+        "name": "own crossed underside laths 1",
+        "minMM": [
+          -17.9,
+          -17.9,
+          44
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          101
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "includeParts": [
+          {
+            "name": "own slope half",
+            "minMM": [
+              -18,
+              -18,
+              44
+            ],
+            "maxMM": [
+              18,
+              18,
+              101
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                0,
+                100
+              ]
+            }
+          }
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            74.43275698318655
+          ],
+          "axis": [
+            0.006684576182849181,
+            -0.8298383719291675,
+            0.5579637917600071
+          ],
+          "rangeMM": [
+            -9,
+            -2.75
+          ]
+        }
+      },
+      {
+        "name": "own east sloping fascia",
+        "minMM": [
+          14.3,
+          -17.9,
+          44
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          101
+        ],
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.5579762580817215,
+          0.8298569126163379
+        ],
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "includeParts": [
+          {
+            "name": "own slope half",
+            "minMM": [
+              -18,
+              -18,
+              44
+            ],
+            "maxMM": [
+              18,
+              18,
+              101
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                0,
+                100
+              ]
+            }
+          }
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            74.43275698318655
+          ],
+          "axis": [
+            0.006684576182849181,
+            -0.8298383719291675,
+            0.5579637917600071
+          ],
+          "rangeMM": [
+            -12,
+            -2.75
+          ]
+        }
+      },
+      {
+        "name": "own diagonal valley underside timber",
+        "minMM": [
+          -17.9,
+          -17.9,
+          44
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          101
+        ],
+        "axis": "beam",
+        "direction": [
+          -0.5,
+          0.5,
+          0.7071067811865475
+        ],
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0.7071067811865475,
+            0.7071067811865475,
+            0
+          ],
+          "rangeMM": [
+            -3.5,
+            3.5
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own crossed underside laths 0",
+            "minMM": [
+              -17.9,
+              -17.9,
+              44
+            ],
+            "maxMM": [
+              17.9,
+              17.9,
+              101
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "includeParts": [
+              {
+                "name": "own slope half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    -100,
+                    0
+                  ]
+                }
+              }
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.28371783363987
+              ],
+              "axis": [
+                0.8244961667771397,
+                -0.004222438896548943,
+                0.5658517844626525
+              ],
+              "rangeMM": [
+                -9,
+                -2.75
+              ]
+            }
+          },
+          {
+            "name": "own crossed underside laths 1",
+            "minMM": [
+              -17.9,
+              -17.9,
+              44
+            ],
+            "maxMM": [
+              17.9,
+              17.9,
+              101
+            ],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "includeParts": [
+              {
+                "name": "own slope half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.43275698318655
+              ],
+              "axis": [
+                0.006684576182849181,
+                -0.8298383719291675,
+                0.5579637917600071
+              ],
+              "rangeMM": [
+                -9,
+                -2.75
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own blue west X roof",
+        "minMM": [
+          -17.9,
+          -17.9,
+          46.5
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          101
+        ],
+        "axis": "beam",
+        "direction": [
+          -0.5658568288130741,
+          -0.0,
+          0.824503516842476
+        ],
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            74.28371783363987
+          ],
+          "axis": [
+            0.8244961667771397,
+            -0.004222438896548943,
+            0.5658517844626525
+          ],
+          "rangeMM": [
+            -2.75,
+            12
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own slope half",
+            "minMM": [
+              -18,
+              -18,
+              44
+            ],
+            "maxMM": [
+              18,
+              18,
+              101
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                -100,
+                0
+              ]
+            }
+          }
+        ],
+        "darkRGB": [
+          0.11,
+          0.17,
+          0.29
+        ],
+        "lightRGB": [
+          0.3,
+          0.37,
+          0.53
+        ]
+      },
+      {
+        "name": "own blue north Y roof",
+        "minMM": [
+          -17.9,
+          -17.9,
+          46.5
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          101
+        ],
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.5579762580817215,
+          0.8298569126163379
+        ],
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            74.43275698318655
+          ],
+          "axis": [
+            0.006684576182849181,
+            -0.8298383719291675,
+            0.5579637917600071
+          ],
+          "rangeMM": [
+            -2.75,
+            12
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own slope half",
+            "minMM": [
+              -18,
+              -18,
+              44
+            ],
+            "maxMM": [
+              18,
+              18,
+              101
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                0,
+                100
+              ]
+            }
+          }
+        ],
+        "darkRGB": [
+          0.11,
+          0.17,
+          0.29
+        ],
+        "lightRGB": [
+          0.3,
+          0.37,
+          0.53
+        ]
+      }
+    ],
+    "surfaceParts": [],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "Own source and PDF18 inspected. Two slopes use own23/23topray fits, not rejected single plane. Three17.5mmfloorquarters have39.047..42.969mm clearance. Native mount centre measured12/14/16mm. Inside valley stays blue as reference; crossed underside laths and carved cornerpost remain wood. No metal/plaster/lights.",
+  "renderColourSize": 2048,
+  "renderColourQuality": 96,
+  "lodColourQuality": 96,
+  "geometryDetailRegions": [
+    {
+      "name": "own low valley eave ends",
+      "minMM": [
+        10,
+        -17.9,
+        46.5
+      ],
+      "maxMM": [
+        17.9,
+        -10,
+        59
+      ]
+    },
+    {
+      "name": "own narrow carved valley rim",
+      "minMM": [
+        -17.9,
+        -17.9,
+        46.5
+      ],
+      "maxMM": [
+        17.9,
+        17.9,
+        101
+      ],
+      "sourceSelection": {
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0.7071067811865475,
+            0.7071067811865475,
+            0
+          ],
+          "rangeMM": [
+            -1.1,
+            1.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "own lower native mounting lip",
+      "minMM": [
+        -17.9,
+        -17.9,
+        16.99
+      ],
+      "maxMM": [
+        17.9,
+        17.9,
+        17.65
+      ]
+    }
+  ],
+  "placementCells": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "pegCentersMM": [
+    [
+      -0.04900932312011719,
+      0.04797935485839844
+    ]
+  ],
+  "mountCentreFitReview": {
+    "sourceSHA256": "b7aae1508925acb8e3f067bf792c8223434d951449a2bb8470b77153ba7737ac",
+    "nativeCentresMM": [
+      [
+        -0.04900932312011719,
+        0.04797935485839844
+      ]
+    ],
+    "fittedCentresMM": [
+      [
+        -0.04900932312011719,
+        0.04797935485839844
+      ]
+    ],
+    "preservedCentroidMM": [
+      -0.04900932312011719,
+      0.04797935485839844
+    ],
+    "maxCoordinateMoveMM": 0,
+    "requiredDecodedCentreToleranceMM": 0.02,
+    "sourceSections": [
+      {
+        "z": 12,
+        "centreMM": [
+          -0.04837846755981445,
+          0.04768514633178711
+        ]
+      },
+      {
+        "z": 14,
+        "centreMM": [
+          -0.04893684387207031,
+          0.04740715026855469
+        ]
+      },
+      {
+        "z": 16,
+        "centreMM": [
+          -0.04900932312011719,
+          0.04797935485839844
+        ]
+      }
+    ],
+    "method": "Own opposite external mounting face rays Z12/14/16; selected16mm crosssection centre"
+  },
+  "uvBaseTile": [
+    0.73,
+    0.002,
+    0.998,
+    0.998
+  ],
+  "uvDetailRegions": [
+    {
+      "name": "own two valley roof panels",
+      "minMM": [
+        -17.9,
+        -17.9,
+        46.5
+      ],
+      "maxMM": [
+        17.9,
+        17.9,
+        101
+      ],
+      "tile": [
+        0.002,
+        0.002,
+        0.72,
+        0.998
+      ],
+      "islandMargin": 0.0007
+    }
+  ]
+}
