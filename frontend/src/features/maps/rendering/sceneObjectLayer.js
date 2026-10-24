@@ -6,6 +6,7 @@ import { createModelBatches } from "./modelBatches";
 import { applyAreaOpacity } from "./areaOpacity";
 import { modelVisual, visualSignature } from "./modelVisual";
 import { tokenModelId } from "../lib/tokenModels";
+import { tokenBaseModel } from "../lib/tokenBases";
 
 // Stable logical roots serve motion/attachments; repeated props share GPU draws.
 export function createSceneObjectLayer(assets, fog, portraits) {
@@ -107,22 +108,26 @@ export function createSceneObjectLayer(assets, fog, portraits) {
             visibilityAt(document, state, item.x, item.y) !== "visible")
         )
           continue;
-        const { x, y, elevation, ...visual } = item;
+        const { x, y, elevation, rotation, mirrored, ...visual } = item;
         const modelId = tokenModelId(item, assets.catalogue?.() || []);
+        const base = tokenBaseModel(item, state, assets.catalogue?.() || []);
         const stamp = JSON.stringify([
           visual,
           options.selectedToken === item.id,
-          modelId && visualSignature(assets, new Set([modelId]), tier),
+          modelId && visualSignature(assets, new Set([modelId, base?.id].filter(Boolean)), tier),
+          !!state?.useCreatureBases,
         ]);
         const node = reconcile(`token:${item.id}`, stamp, () =>
           buildMapToken(
             item,
-            { ...options, assets, tier, tokenPortraits: portraits },
+            { ...options, state, assets, tier, tokenPortraits: portraits },
             fog,
           ),
         );
         node.userData.placementTileId = item.placement?.tileId;
         node.position.set(x, (elevation || 0) + 0.05, y);
+        node.scale.x = mirrored ? -1 : 1;
+        node.updateMatrix();
         applyAreaOpacity(node, appearance.tokenOpacity(item.placement?.tileId));
       }
       for (const [id, record] of records)
@@ -140,6 +145,13 @@ export function createSceneObjectLayer(assets, fog, portraits) {
     outlineSources(nodes) {
       const keep = new Set();
       const result = nodes.map((node) => {
+        if (node.userData.tokenId) {
+          const body = node.children.find((child) => child.userData.tokenBody);
+          if (!body) return node;
+          body.userData.outlineType = node.userData.outlineType;
+          body.userData.outlineStyle = node.userData.outlineStyle;
+          return body;
+        }
         if (!node.userData.modelId) return node;
         const id = node.userData.objectId;
         keep.add(id);

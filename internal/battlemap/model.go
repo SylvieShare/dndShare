@@ -87,22 +87,26 @@ type Document struct {
 }
 
 type Token struct {
-	ItemID    int64            `json:"itemId,omitempty"`
-	ID        string           `json:"id"`
-	Kind      string           `json:"kind"`
-	Ref       string           `json:"ref"`
-	Name      string           `json:"name"`
-	ImageURL  string           `json:"imageUrl,omitempty"`
-	Color     string           `json:"color"`
-	X         float64          `json:"x"`
-	Y         float64          `json:"y"`
-	Size      float64          `json:"size"`
-	Hidden    bool             `json:"hidden"`
-	Physical  bool             `json:"physical"`
-	Placement *PlacementAnchor `json:"placement,omitempty"`
+	BaseModelID string           `json:"baseModelId,omitempty"`
+	Rotation    int              `json:"rotation,omitempty"`
+	Mirrored    bool             `json:"mirrored,omitempty"`
+	ItemID      int64            `json:"itemId,omitempty"`
+	ID          string           `json:"id"`
+	Kind        string           `json:"kind"`
+	Ref         string           `json:"ref"`
+	Name        string           `json:"name"`
+	ImageURL    string           `json:"imageUrl,omitempty"`
+	Color       string           `json:"color"`
+	X           float64          `json:"x"`
+	Y           float64          `json:"y"`
+	Size        float64          `json:"size"`
+	Hidden      bool             `json:"hidden"`
+	Physical    bool             `json:"physical"`
+	Placement   *PlacementAnchor `json:"placement,omitempty"`
 }
 
 type State struct {
+	UseCreatureBases  bool              `json:"useCreatureBases"`
 	Fog               bool              `json:"fog"`
 	DefaultVisibility string            `json:"defaultVisibility"`
 	Zones             map[string]string `json:"zones"`

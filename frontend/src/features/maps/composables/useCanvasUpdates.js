@@ -102,6 +102,7 @@ export function useCanvasUpdates(props, getRenderer, onError, onActive) {
       props.selectedObject,
       props.selectedObjects,
       props.selectedToken,
+      props.hoveredToken,
       props.selectedTile,
       props.selectedTiles,
       props.hoveredTile,

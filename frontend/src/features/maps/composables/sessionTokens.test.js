@@ -32,6 +32,40 @@ function setup() {
   );
   return { actor, editor, tokens };
 }
+it("keeps creature rotation and reflection during placement, movement and cancellation", () => {
+  const { actor, editor, tokens } = setup();
+  Object.assign(actor, { kind: "creature", itemId: 1635 });
+  const point = { x: 2.5, y: 3.5, grid: true };
+  tokens.place(actor);
+  expect(tokens.rotate()).toBe(true);
+  expect(tokens.mirror()).toBe(true);
+  tokens.gesture({ phase: "hover", point }, editor);
+  expect(tokens.canvasState.value.tokens[0]).toMatchObject({ rotation: 90, mirrored: true });
+  expect(editor.draft.state.tokens).toHaveLength(0);
+  tokens.gesture({ phase: "start", point }, editor);
+  const stored = editor.draft.state.tokens[0];
+  expect(stored).toMatchObject({ rotation: 90, mirrored: true });
+  tokens.gesture({ phase: "start", hit: { tokenId: stored.id } }, editor);
+  tokens.rotate();
+  tokens.mirror();
+  tokens.gesture({ phase: "move", point: { ...point, x: 5 } }, editor);
+  expect(tokens.canvasState.value.tokens[0]).toMatchObject({ rotation: 180, mirrored: false, x: 5 });
+  tokens.gesture({ phase: "cancel" }, editor);
+  expect(stored).toMatchObject({ rotation: 90, mirrored: true, x: 2.5 });
+  tokens.place(actor);
+  tokens.gesture({ phase: "start", point: { ...point, x: 4 } }, editor);
+  expect(editor.draft.state.tokens[0]).toMatchObject({ rotation: 90, mirrored: true, x: 4 });
+});
+it("tracks token hover and leaves player transformations to the editor", () => {
+  const { actor, editor, tokens } = setup();
+  tokens.focus(actor, false);
+  expect(tokens.rotate()).toBe(false);
+  expect(tokens.mirror()).toBe(false);
+  tokens.gesture({ phase: "hover", hit: { tokenId: "hero" } }, editor);
+  expect(tokens.hovered.value).toBe("hero");
+  tokens.gesture({ phase: "hover", hit: null }, editor);
+  expect(tokens.hovered.value).toBe("");
+});
 it("preview and cancelled placement do not enter durable play state or copy HP into a token", () => {
   const { actor, editor, tokens } = setup();
   tokens.place(actor);

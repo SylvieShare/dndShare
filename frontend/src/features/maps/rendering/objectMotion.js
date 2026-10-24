@@ -17,7 +17,8 @@ export function createObjectMotion(assets, tileMatrix) {
       objects = new Map(items.map((o) => [o.id, o]));
       parents = new Map(document.tiles.map((t) => [t.id, t]));
       motion.retain(new Set(objects.keys()));
-      for (const object of items) motion.set(object.id, object);
+      for (const object of items)
+        motion.set(object.id, { ...object, rotation: object.rotation || 0 });
     },
     advance(delta, root, parentMoving = true) {
       changed.clear();
@@ -32,10 +33,13 @@ export function createObjectMotion(assets, tileMatrix) {
         const oldX = child.position.x,
           oldY = child.position.y,
           oldZ = child.position.z,
-          oldAngle = child.rotation.y;
+          oldAngle = child.rotation.y,
+          oldScale = child.scale.x;
         const pose = motion.pose(object.id);
         child.position.set(pose.x, pose.elevation, pose.y);
         child.rotation.y = (-pose.rotation * Math.PI) / 180;
+        if (child.userData.tokenId)
+          child.scale.x = (pose.mirrored ? -1 : 1) * (pose.mirrorScale ?? 1);
         const parent = parents.get(object.placement?.tileId),
           model = assets.metadata(parent?.modelId);
         const anchor = model?.placementPoints?.[object.placement?.point],
@@ -65,7 +69,8 @@ export function createObjectMotion(assets, tileMatrix) {
           oldX !== child.position.x ||
           oldY !== child.position.y ||
           oldZ !== child.position.z ||
-          oldAngle !== child.rotation.y
+          oldAngle !== child.rotation.y ||
+          oldScale !== child.scale.x
         ) {
           changed.add(object.id);
           child.updateMatrix();

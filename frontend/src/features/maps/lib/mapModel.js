@@ -27,6 +27,7 @@ export function newMap() {
 }
 export function initialState() {
   return {
+    useCreatureBases: false,
     fog: true,
     defaultVisibility: "hidden",
     zones: {},

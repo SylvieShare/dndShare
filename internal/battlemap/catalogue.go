@@ -38,6 +38,7 @@ type ModelMetadata struct {
 	MountProfile    string           `json:"mountProfile,omitempty"`
 	SurfaceHeight   float64          `json:"surfaceHeight"`
 	MaxHeight       float64          `json:"maxHeight"`
+	BaseSize        float64          `json:"baseSize,omitempty"`
 	Blockers        [][][2]float64   `json:"blockers"`
 	Tags            []string         `json:"tags"`
 	SupportSlots    []SupportSlot    `json:"supportSlots"`

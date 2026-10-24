@@ -1,6 +1,23 @@
 import { expect, it } from "vitest";
 import { Group, Matrix4 } from "three";
 import { createObjectMotion } from "./objectMotion";
+it("animates creature rotation and reflection and settles at the saved pose", () => {
+  const motion = createObjectMotion({ metadata: () => null }, () => null);
+  const root = new Group(), token = new Group();
+  token.userData.tokenId = "creature"; root.add(token);
+  const document = { tiles: [] };
+  const pose = { id: "creature", x: 2, y: 3, elevation: .05 };
+  motion.update([pose], document); motion.advance(280, root);
+  expect(token.rotation.y).toBeCloseTo(0);
+  motion.update([{ ...pose, rotation: 90, mirrored: true }], document);
+  motion.advance(60, root);
+  expect(Math.abs(token.scale.x)).toBeLessThan(1);
+  motion.advance(280, root);
+  expect(token.rotation.y).toBeCloseTo(-Math.PI / 2);
+  expect(token.scale.x).toBe(-1);
+  expect(token.position.toArray()).toEqual([2, .05, 3]);
+  motion.destroy();
+});
 it("creatures attached to a tile follow its live lift transform like model objects", () => {
   const model = {
     width: 1,

@@ -119,6 +119,7 @@ export function buildMapToken(token, options, fog) {
     ring.rotation.x = -Math.PI / 2;
     ring.position.y = -0.039;
     group.add(ring, miniature.root);
+    if (miniature.base) group.add(miniature.base);
   } else {
     group.add(
       new Mesh(

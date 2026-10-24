@@ -105,9 +105,13 @@ func (s *Server) publicModelIDs(w http.ResponseWriter, r *http.Request) (map[str
 			return nil, false
 		}
 		visibleItems := map[int64]bool{}
+		baseIDs := []string{}
 		for _, token := range publicState.Tokens {
-			if token.ItemID > 0 {
+			if token.Kind == "creature" && token.ItemID > 0 {
 				visibleItems[token.ItemID] = true
+				if publicState.UseCreatureBases && token.BaseModelID != "" {
+					baseIDs = append(baseIDs, token.BaseModelID)
+				}
 			}
 		}
 		for modelID, itemIDs := range preferred {
@@ -115,6 +119,16 @@ func (s *Server) publicModelIDs(w http.ResponseWriter, r *http.Request) (map[str
 				if visibleItems[itemID] {
 					ids[modelID] = true
 				}
+			}
+		}
+		baseSizes, err := s.store.CreatureBaseSizes(r.Context(), baseIDs)
+		if err != nil {
+			serverError(w, err)
+			return nil, false
+		}
+		for _, token := range publicState.Tokens {
+			if token.Kind == "creature" && visibleItems[token.ItemID] && publicState.UseCreatureBases && baseSizes[token.BaseModelID] == token.Size && token.BaseModelID != "" {
+				ids[token.BaseModelID] = true
 			}
 		}
 		for _, t := range m.Document.Tiles {

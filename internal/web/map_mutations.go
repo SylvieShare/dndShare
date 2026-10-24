@@ -238,6 +238,10 @@ func (s *Server) handleSessionMapMutation(w http.ResponseWriter, r *http.Request
 		badRequest(w, err.Error())
 		return
 	}
+	if err = s.store.ValidateCreatureBases(r.Context(), data.State); err != nil {
+		badRequest(w, err.Error())
+		return
+	}
 	models, err := s.store.MapModelsForDocument(r.Context(), data.Document)
 	if err != nil {
 		mapError(w, err)

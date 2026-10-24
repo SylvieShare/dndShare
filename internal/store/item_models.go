@@ -109,11 +109,11 @@ func (s *Store) BindItemModel(ctx context.Context, b ItemModelBinding) error {
 	if err != nil {
 		return err
 	}
-	var kind string
-	if err = tx.QueryRow(ctx, `SELECT tile_type FROM dndshare.map_model WHERE id=$1::uuid`, b.ModelID).Scan(&kind); err != nil {
+	var kind, category string
+	if err = tx.QueryRow(ctx, `SELECT tile_type,category FROM dndshare.map_model WHERE id=$1::uuid`, b.ModelID).Scan(&kind, &category); err != nil {
 		return err
 	}
-	if kind != "object" {
+	if kind != "object" || category == "creature-base" {
 		return errors.New("item models must use object geometry")
 	}
 	if b.Default {

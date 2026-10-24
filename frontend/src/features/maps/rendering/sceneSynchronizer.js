@@ -1,6 +1,7 @@
 import { areaAppearance } from "../lib/mapAreas";
 import { resolvedSurfacePosition } from "../lib/surfacePlacement";
 import { tokenItemIds, tokenModelId } from "../lib/tokenModels";
+import { tokenVisualModels } from "../lib/tokenBases";
 import { modelTier } from "./modelTier";
 
 export function createSceneSynchronizer({
@@ -105,6 +106,9 @@ export function createSceneSynchronizer({
     );
     for (const modelId of runtime.tokenModels.values())
       if (modelId) runtime.modelIds.add(modelId);
+    for (const token of nextState?.tokens || [])
+      for (const model of tokenVisualModels(token, nextState, catalogue))
+        runtime.modelIds.add(model.modelId);
     const updateStarted = profiler.updateStart();
     const placed = structure.update(d, structureDirty);
     structureDirty = false;
@@ -172,7 +176,6 @@ export function createSceneSynchronizer({
         ...runtime.posedObjects,
         ...runtime.posedTokens.map((t) => ({
           ...t,
-          rotation: 0,
           elevation: t.elevation + 0.05,
         })),
       ],
@@ -217,11 +220,7 @@ export function createSceneSynchronizer({
     assetView.update(
       placed,
       runtime.posedObjects,
-      runtime.posedTokens.map((t) => ({
-        ...t,
-        modelId: runtime.tokenModels.get(t.id),
-        scale: t.size,
-      })),
+      runtime.posedTokens.flatMap((t) => tokenVisualModels(t, nextState, catalogue)),
     );
     refreshVisible();
     selection.document(d, placed, runtime.appearance, runtime.tier);
@@ -246,13 +245,7 @@ export function createSceneSynchronizer({
               runtime.tokenModels.get(t.id) &&
               runtime.appearance.tokenOpacity(t.placement?.tileId) > 0.001,
           )
-          .map((t) => ({
-            ...t,
-            modelId: runtime.tokenModels.get(t.id),
-            scale: t.size,
-            tokenSize: t.size,
-            elevation: t.elevation + 0.05,
-          })),
+          .flatMap((t) => tokenVisualModels(t, nextState, catalogue)),
       ],
       view.getView(),
       objects,

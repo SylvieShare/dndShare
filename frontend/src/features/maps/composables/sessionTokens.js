@@ -1,6 +1,8 @@
 import { computed, nextTick, ref } from "vue";
 import { clone, uid } from "../lib/mapModel";
 import { resolvedSurfacePosition } from "../lib/surfacePlacement";
+import { chooseTokenBase } from "../lib/tokenBases";
+import { tokenModelId } from "../lib/tokenModels";
 import {
   creatureKey,
   creatureToken,
@@ -9,10 +11,12 @@ import {
 } from "../lib/sessionCreatures";
 export function sessionTokens(getEditor, candidates, getCanvas) {
   const focused = ref(""),
+    hovered = ref(""),
     pending = ref(null),
     preview = ref(null),
     dragging = ref(false);
   let drag = null;
+  let placementPose = {};
   const candidate = computed(
     () =>
       candidates.value.find((c) => creatureKey(c) === focused.value) ||
@@ -42,6 +46,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
   });
   function clear() {
     focused.value = "";
+    hovered.value = "";
     pending.value = null;
     preview.value = null;
   }
@@ -62,6 +67,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
     focused.value = creatureKey(c);
     pending.value = preview.value = null;
     const t = creatureToken(e.draft, c);
+    placementPose = { rotation: t?.rotation || 0, mirrored: !!t?.mirrored, ...(t?.baseModelId ? { baseModelId: t.baseModelId } : {}) };
     if (t && moveCamera)
       nextTick(() => {
         if (focused.value !== creatureKey(c)) return;
@@ -86,7 +92,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
         (c) => creatureKey(c) === creatureKey(pending.value),
       ) || pending.value;
     const previous = creatureToken(getEditor().draft, c);
-    return {
+    const placed = {
       kind: c.kind,
       ...(c.kind === "creature" && c.itemId ? { itemId: c.itemId } : {}),
       ref: c.ref || "",
@@ -98,7 +104,14 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
       size: previous?.size || 1,
       hidden: previous?.hidden || false,
       physical: previous?.physical || false,
+      ...placementPose,
     };
+    const editor = getEditor();
+    if (editor.draft.state.useCreatureBases && tokenModelId(placed, editor.catalogue || [])) {
+      const id = chooseTokenBase(placed, editor.catalogue || []);
+      if (id) placed.baseModelId = placementPose.baseModelId = id;
+    }
+    return placed;
   }
   function position(point) {
     return (point?.placement || point?.grid) && !point.invalidSurface
@@ -115,6 +128,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
   function gesture(event, e) {
     const { phase, point, hit } = event;
     if (phase === "hover") {
+      hovered.value = hit?.tokenId || "";
       if (pending.value) {
         const at = position(point);
         preview.value = at ? atPosition(at, true) : null;
@@ -123,6 +137,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
       return false;
     }
     if (phase === "cancel") {
+      hovered.value = "";
       drag = null;
       dragging.value = false;
       pending.value = preview.value = null;
@@ -185,8 +200,31 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
   function change(update) {
     getEditor().change((m) => {
       const t = creatureToken(m, candidate.value);
-      if (t) update(t);
+      if (t) {
+        update(t);
+        const modelToken = { ...t, itemId: t.itemId || candidate.value?.itemId };
+        if ((m.state.useCreatureBases || t.baseModelId) && tokenModelId(modelToken, getEditor().catalogue || [])) {
+          const id = chooseTokenBase(t, getEditor().catalogue || []);
+          if (id) t.baseModelId = id;
+          else delete t.baseModelId;
+        }
+      }
     });
+  }
+  function transform(update) {
+    const current = preview.value || token.value;
+    if ((pending.value?.kind || current?.kind) !== "creature") return false;
+    if (drag) {
+      update(drag.source);
+      if (preview.value) update(preview.value);
+      else preview.value = clone(drag.source);
+      drag.changed = true;
+    } else if (pending.value) {
+      update(placementPose);
+      if (preview.value) update(preview.value);
+    } else if (current) change(update);
+    else return false;
+    return true;
   }
   function remove() {
     change((t) => {
@@ -197,6 +235,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
   }
   return {
     focused,
+    hovered,
     candidate,
     token,
     selected,
@@ -207,6 +246,8 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
     place,
     gesture,
     change,
+    rotate: () => transform(t => { t.rotation = ((t.rotation || 0) + 90) % 360; }),
+    mirror: () => transform(t => { t.mirrored = !t.mirrored; }),
     remove,
     surface: computed(() => !!pending.value || dragging.value),
     reset: () => {

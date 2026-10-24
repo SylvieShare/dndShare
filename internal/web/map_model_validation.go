@@ -21,8 +21,11 @@ func validateMapModel(m battlemap.Model) error {
 	if !battlemap.ValidTileType(m.TileType) {
 		return errors.New("invalid tileType")
 	}
-	if !battlemap.ValidModelCategory(m.Category) || (m.TileType == "object") != (m.Category == "object") {
+	if !battlemap.ValidModelCategory(m.Category) || (m.TileType == "object") != (m.Category == "object" || m.Category == "creature-base") {
 		return errors.New("invalid catalogue category")
+	}
+	if math.IsNaN(m.BaseSize) || math.IsInf(m.BaseSize, 0) || (m.Category == "creature-base" && (m.BaseSize < .5 || m.BaseSize > 8 || m.Width != int(math.Ceil(m.BaseSize)) || m.Height != int(math.Ceil(m.BaseSize)))) || (m.Category != "creature-base" && m.BaseSize != 0) {
+		return errors.New("invalid creature base size")
 	}
 	for _, name := range []string{m.NameEn, m.GroupName, m.GroupNameEn} {
 		if strings.TrimSpace(name) == "" || len([]rune(name)) > 160 {

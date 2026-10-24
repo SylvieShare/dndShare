@@ -159,14 +159,19 @@ export function createShadowProxies(assets) {
             tileMatrix(item.tile.id) || tileTransform(item.tile, item.model);
         } else {
           const object = item.object;
-          const visual =
+          let visual =
             object.previewIndex == null
-              ? objectRoots.get(object.id)
+              ? objectRoots.get(object.tokenId || object.id)
               : objectPreview?.children[object.previewIndex];
+          if (object.tokenPart) {
+            visual = visual?.children.find((child) => child.userData[
+              object.tokenPart === "body" ? "tokenBody" : "tokenBase"
+            ]);
+          }
           if (visual) {
-            visual.updateMatrix();
-            pose = visual.matrix;
-            if (object.tokenSize) {
+            visual.updateWorldMatrix(true, false);
+            pose = visual.matrixWorld;
+            if (object.tokenSize && !object.tokenPart) {
               pose = pose
                 .clone()
                 .scale(new Vector3().setScalar(object.tokenSize));

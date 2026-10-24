@@ -34,6 +34,7 @@ export const METADATA_KEYS = [
   "mountProfile",
   "surfaceHeight",
   "maxHeight",
+  "baseSize",
   "blockers",
   "tags",
   "supportSlots",

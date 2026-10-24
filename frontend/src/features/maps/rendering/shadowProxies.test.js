@@ -69,6 +69,33 @@ it("uses the creature shadow proxy at the same size and ground datum as its visu
   );
   f.proxy.destroy();
 });
+it("follows separate body and base roots through rotation, reflection and vertical placement", () => {
+  const f = fixture(), roots = new Group(), token = new Group();
+  token.userData.tokenId = "creature";
+  token.position.set(2, 3.05, 4);
+  token.rotation.y = -Math.PI / 2;
+  token.scale.x = -1;
+  const body = new Group(), base = new Group();
+  body.userData.tokenBody = true;
+  body.position.y = .01;
+  body.scale.setScalar(2);
+  base.userData.tokenBase = true;
+  base.position.y = -.05;
+  token.add(body, base); roots.add(token);
+  const instances = ["body", "base"].map(tokenPart => ({
+    id: tokenPart, tokenId: "creature", modelId: "stairs", tokenPart, tokenSize: 2, x: 2, y: 4,
+  }));
+  f.proxy.update({ ...f.document, tiles: [] }, [], instances, {}, roots);
+  f.proxy.advance(() => null, roots);
+  const actual = new Matrix4();
+  for (const [i, visual] of [body, base].entries()) {
+    const expected = visual.matrixWorld.clone().multiply(f.part.matrix);
+    f.proxy.root.children[0].getMatrixAt(i, actual);
+    actual.elements.forEach((v, j) => expect(v).toBeCloseTo(expected.elements[j], 5));
+  }
+  expect(f.proxy.advance(() => null, roots)).toBe(false);
+  f.proxy.destroy();
+});
 it("shares real shadow geometry without filling blockers and preserves peg, rotation and part transforms", () => {
   const f = fixture();
   f.proxy.update(f.document, f.tiles, [], {}, new Group());

@@ -16,10 +16,13 @@ export function createMapFramePresentation({
 }) {
   return (objects, options, appearance, frameDepth) => {
     for (const object of objects.children) {
+      const { tokenId, objectId } = object.userData;
       object.userData.outlineType = "object";
       object.userData.outlineStyle =
-        object.userData.objectId === options.selectedObject ||
-        options.selectedObjects?.includes(object.userData.objectId)
+        (tokenId
+          ? tokenId === options.selectedToken
+          : objectId && (objectId === options.selectedObject ||
+            options.selectedObjects?.includes(objectId)))
           ? "selected"
           : "hover";
     }
@@ -36,13 +39,14 @@ export function createMapFramePresentation({
             (o) =>
               options.master &&
               o.visible &&
-              !appearance.hiddenObjects.has(o.userData.objectId) &&
-              o.userData.objectId &&
-              [
+              (o.userData.tokenId
+                ? [options.selectedToken, options.hoveredToken].includes(o.userData.tokenId)
+                : !appearance.hiddenObjects.has(o.userData.objectId) &&
+              o.userData.objectId && [
                 ...(options.selectedObjects || []),
                 options.selectedObject,
                 options.hoveredObject,
-              ].includes(o.userData.objectId),
+              ].includes(o.userData.objectId)),
           ),
         ),
       ],

@@ -7,6 +7,7 @@ import {
 } from "three";
 import { GLTFExporter } from "three/addons/exporters/GLTFExporter.js";
 export const MINI_ID = "16351635-1635-4635-8635-163516351635";
+export const BASE_IDS = ["11111635-1635-4635-8635-163516351635", "22221635-1635-4635-8635-163516351635"];
 export async function miniatureFixture(catalogue, params) {
   if (!params.has("miniatures")) return null;
   const scene = new Scene();
@@ -47,9 +48,23 @@ export async function miniatureFixture(catalogue, params) {
     lodUrl: `/api/maps/models/${MINI_ID}/lod`,
     shadowUrl: `/api/maps/models/${MINI_ID}/shadow`,
   });
+  const bases = new Map();
+  if (params.has("miniatureBases")) {
+    const baseScene = new Scene();
+    const base = new Mesh(new BoxGeometry(.9, .06, .9), new MeshStandardMaterial({ color: 0x888888 }));
+    base.position.y = .03; baseScene.add(base);
+    const file = await new GLTFExporter().parseAsync(baseScene, { binary: true });
+    for (const id of BASE_IDS) {
+      bases.set(id, file);
+      catalogue.push({ ...catalogue.at(-1), id, itemIds: [], category: "creature-base", baseSize: 1,
+        surfaceHeight: .06, maxHeight: .06, renderUrl: `/api/maps/models/${id}/render`,
+        lodUrl: `/api/maps/models/${id}/lod`, shadowUrl: `/api/maps/models/${id}/shadow` });
+    }
+  }
   return {
     id: MINI_ID,
     glb,
+    bases,
     legacy(board) {
       if (params.has("miniatureLegacy"))
         board.state.tokens.push({

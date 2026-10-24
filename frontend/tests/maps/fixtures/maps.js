@@ -468,6 +468,7 @@ window.releaseModelLoads = () =>
   window.pendingModelLoads?.splice(0).forEach((resolve) => resolve());
 const modelBody = (id) => {
   if (id === miniature?.id) return miniature.glb;
+  if (miniature?.bases.has(id)) return miniature.bases.get(id);
   const key = modelAssetAliases.get(id) || id;
   return key.includes(FRAME)
     ? frameGlb

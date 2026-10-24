@@ -4,7 +4,7 @@
     :class="{
       'map-canvas--draw': !['pan', 'select'].includes(tool) && !readonly,
       'map-canvas--select': tool === 'select' && !readonly,
-      'map-canvas--hover': !!hoveredTile || !!hoveredObject || !!hoveredDecal,
+      'map-canvas--hover': !!hoveredTile || !!hoveredObject || !!hoveredDecal || !!hoveredToken,
     }"
     @contextmenu.prevent
   >
@@ -108,6 +108,7 @@ const props = defineProps({
   placementLight: Boolean,
   editLights: Boolean,
   selectedToken: String,
+  hoveredToken: String,
   selectionColor: String,
   selectedTile: String,
   selectedTiles: Array,

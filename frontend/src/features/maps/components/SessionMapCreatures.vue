@@ -1,5 +1,6 @@
 <template>
   <section class="map-creatures" aria-label="Существа сессии">
+    <ToggleSwitch :model-value="!!editor.draft.state.useCreatureBases" label="Использовать подставки" @update:model-value="toggleBases" />
     <FormTextInput
       v-model:value="query"
       aria-label="Найти существо"
@@ -49,12 +50,13 @@
 </template>
 <script setup>
 import { computed, ref } from "vue";
-import { ActionButton, FormTextInput } from "@sylvieshare/share-ui";
+import { ActionButton, FormTextInput, ToggleSwitch } from "@sylvieshare/share-ui";
 import { MapPin } from "@lucide/vue";
 import SessionHpBar from "@/features/sessions/components/SessionHpBar.vue";
 import MapPanelHeading from "./MapPanelHeading.vue";
 import MapEntityRow from "./MapEntityRow.vue";
-import { creatureKey, creatureToken } from "../lib/sessionCreatures";
+import { creatureKey, creatureToken, withCreatureItems } from "../lib/sessionCreatures";
+import { assignTokenBases } from "../lib/tokenBases";
 const props = defineProps({
   editor: Object,
   candidates: Array,
@@ -94,6 +96,13 @@ const groups = computed(() => [
     : []),
 ]);
 const onMap = (c) => creatureToken(props.editor.draft, c);
+function toggleBases(enabled) {
+  props.editor.change(map => {
+    map.state.useCreatureBases = enabled;
+    map.state.tokens = withCreatureItems(map.state.tokens, props.candidates);
+    assignTokenBases(map.state, props.editor.catalogue || []);
+  });
+}
 </script>
 <style scoped>
 .map-creatures {

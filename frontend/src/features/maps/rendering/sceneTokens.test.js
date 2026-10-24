@@ -154,6 +154,38 @@ it("replaces the portrait when a miniature finishes loading, without a token edi
   portraits.destroy();
 });
 
+it("outlines only the creature body and seats it on a separately loaded base", () => {
+  const geometry = new BoxGeometry(), material = new MeshStandardMaterial();
+  const catalogue = [
+    { id: "body", itemIds: [1635], maxHeight: 1 },
+    { id: "base", category: "creature-base", tileType: "object", baseSize: 2, surfaceHeight: .06 },
+  ];
+  const assets = {
+    catalogue: () => catalogue,
+    metadata: id => catalogue.find(m => m.id === id),
+    model: () => ({ parts: [{ geometry, material, matrix: new Matrix4() }] }),
+  };
+  const portraits = createTokenPortraits(), layer = createSceneObjectLayer(assets, fog, portraits);
+  const state = { useCreatureBases: true, tokens: [{ ...creature, itemId: 1635, size: 2, baseModelId: "base", mirrored: true }] };
+  const doc = { objects: [], zones: [], areas: [], width: 4, height: 4 };
+  layer.update(doc, state, { master: true }, "render", { tokenOpacity: () => 1 });
+  const tokenRoot = layer.root.children[0];
+  const body = tokenRoot.children.find(n => n.userData.tokenBody);
+  const base = tokenRoot.children.find(n => n.userData.tokenBase);
+  expect(body.scale.x).toBe(2);
+  expect(base.scale.x).toBe(1);
+  expect(body.position.y - base.position.y).toBeCloseTo(.06);
+  expect(tokenRoot.scale.x).toBe(-1);
+  tokenRoot.userData.outlineStyle = "hover";
+  expect(layer.outlineSources([tokenRoot])).toEqual([body]);
+  expect(body.userData.outlineStyle).toBe("hover");
+  const before = tokenRoot.uuid;
+  state.tokens[0].rotation = 90;
+  layer.update(doc, state, { master: true }, "render", { tokenOpacity: () => 1 });
+  expect(layer.root.children[0].uuid).toBe(before);
+  layer.destroy(); portraits.destroy(); geometry.dispose(); material.dispose();
+});
+
 it("preserves native part transforms when freezing a miniature on the board", () => {
   const geometry = new BoxGeometry(),
     material = new MeshStandardMaterial(),

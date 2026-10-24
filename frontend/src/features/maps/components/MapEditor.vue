@@ -79,6 +79,7 @@
           :area-mode="playerPreview ? 'hide' : 'ghost'"
           :selection-color="e.areaSelectionColor"
           :selected-token="selectedToken"
+          :hovered-token="hoveredToken"
           :surface-placement="surfacePlacement"
           :master="!playerPreview"
           :readonly="playerPreview || e.conflict"
@@ -183,6 +184,9 @@ const props = defineProps({
     sessionMode: Boolean,
     extraTabs: { type: Array, default: () => [] },
     selectedToken: String,
+    hoveredToken: String,
+    rotateToken: Function,
+    mirrorToken: Function,
     canvasState: Object,
     surfacePlacement: Boolean,
     customFocus: Boolean,
@@ -226,6 +230,8 @@ const e = reactive({
     if (!cameras.removeCamera() && !props.removeToken?.())
       core.removeSelected();
   },
+  rotate() { if (!props.rotateToken?.()) core.rotate(); },
+  mirror() { if (!props.mirrorToken?.()) core.mirror(); },
   dismissFocus,
   focusLight,
   tokenSelected: computed(

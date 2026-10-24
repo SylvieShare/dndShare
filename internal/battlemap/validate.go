@@ -126,6 +126,9 @@ func ValidateState(s *State, d Document) error {
 	}
 	ids := map[string]bool{}
 	for _, t := range s.Tokens {
+		if t.Rotation < 0 || t.Rotation >= 360 || t.Rotation%90 != 0 || (t.BaseModelID != "" && (t.Kind != "creature" || !modelIdentifier.MatchString(t.BaseModelID))) {
+			return fmt.Errorf("Некорректный поворот или подставка существа")
+		}
 		if t.ItemID < 0 || (t.ItemID != 0 && t.Kind != "creature") || !identifier.MatchString(t.ID) || ids[t.ID] || (t.Kind != "player" && t.Kind != "creature" && t.Kind != "marker") || len(t.Ref) > 100 || len([]rune(t.Name)) > 100 || !color.MatchString(t.Color) || !bounded(t.Size, .5, 8) || !bounded(t.X, 0, d.Width) || !bounded(t.Y, 0, d.Height) || !SafeURL(t.ImageURL) {
 			return fmt.Errorf("Некорректный жетон")
 		}
