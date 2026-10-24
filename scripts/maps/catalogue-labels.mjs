@@ -156,6 +156,7 @@ Roof Fireplace|Крыша с дымовой трубой
 Roof End Left|Левый торец крыши
 Roof End Right|Правый торец крыши
 Roof Angle|Угловая крыша
+Roof Angle Flag|Угловая крыша с флагом
 Balcony|Балкон
 Balcony Angle|Угловой балкон
 Balcony Corridor|Балкон с двумя ограждениями
