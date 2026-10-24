@@ -17,12 +17,43 @@ const recipes = JSON.parse(
   ),
 );
 const report = [];
+const dressed = new Set([
+  "icewind",
+  "underling",
+  "dragonshield",
+  "inventor",
+  "sorcerer",
+  "vampire",
+]);
 for (const recipe of recipes) {
   const directory = path.join(folder, recipe.slug);
   const stats = JSON.parse(
     await fs.readFile(path.join(directory, "model-stats.json"), "utf8"),
   );
   const checks = [];
+  let clothing;
+  if (dressed.has(recipe.slug)) {
+    const creation = JSON.parse(
+      await fs.readFile(path.join(directory, "creation.json"), "utf8"),
+    );
+    clothing = creation.roles.map(({ role, clothingFit, coveredBodyFaces }) => {
+      assert.ok(
+        clothingFit?.attachmentVertices > 20,
+        `${recipe.slug} ${role} clothing anchors`,
+      );
+      assert.ok(clothingFit.maxBodyGap <= clothingFit.limit);
+      assert.ok(
+        clothingFit.pieces?.length &&
+          clothingFit.pieces.every((p) => p.components === 1),
+      );
+      assert.ok(coveredBodyFaces >= 10, `${recipe.slug} ${role} covered skin`);
+      return { role, ...clothingFit, coveredBodyFaces };
+    });
+    assert.deepEqual(
+      new Set(clothing.map((r) => r.role)),
+      new Set(["render", "lod", "source", "shadow"]),
+    );
+  }
   for (const entry of stats) {
     const bytes = await fs.readFile(path.join(directory, entry.file));
     assert.equal(bytes.readUInt32LE(0), 0x46546c67);
@@ -97,6 +128,7 @@ for (const recipe of recipes) {
     passed: true,
     lodBoundsDelta: delta,
     assets: checks,
+    ...(clothing ? { clothing } : {}),
   };
   await fs.writeFile(
     path.join(directory, "verification.json"),

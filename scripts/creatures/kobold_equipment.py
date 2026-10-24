@@ -3,6 +3,7 @@ import math
 import random
 from mathutils import Vector
 from miniature_geometry import Geometry, frame
+from kobold_clothing import Clothing
 
 UP = Vector((0, 0, 1))
 FRONT = Vector((-.72, -.69, 0)).normalized()
@@ -10,11 +11,12 @@ RIGHT = Vector((-.69, .72, 0)).normalized()
 
 
 class Equipment:
-    def __init__(self, anchors, lod=False, surface=None):
+    def __init__(self, anchors, lod=False, surface=None, shadow=False):
         self.a = {k: Vector(v) for k, v in anchors.items() if k != 'normals'}
         self.normals = {k: Vector(v) for k, v in anchors['normals'].items()}
         self.g = Geometry(lod)
         self.surface = surface
+        self.clothing = Clothing(self.g, surface, FRONT, RIGHT, shadow)
         self.wood = self.g.material('Dark wood', (.09, .035, .012), .9)
         self.leather = self.g.material('Dark brown leather', (.045, .016, .007), .92)
         self.steel = self.g.material('Satin steel', (.32, .36, .39), .42, .85)
@@ -91,57 +93,30 @@ class Equipment:
             p = centre + rotation @ Vector((math.cos(a) * .18, math.sin(a) * .217, .027))
             self.g.sphere('Shield rivet', p, (.007, .007, .005), self.steel, axis)
 
-    def cape(self, colour=None, fur=False, apron=False):
-        mat = colour or self.cloth
-        centre = self.back if not apron else self.a['chest'] + FRONT * .025
-        direction = -FRONT if not apron else FRONT
-        centre = centre + UP * (.04 if not apron else .055)
-        width = .21 if not apron else .155
-        rows = [(0, 1), (-.10, 1.02), (-.20, 1.04), (-.31, 1.12), (-.40 if apron else -.42, 1.20)]
-        vertices = []
-        count = 6 if self.g.lod else 10
-        for z, spread in rows:
-            for i in range(count + 1):
-                t = i / count * 2 - 1
-                folds = math.cos(t * math.pi * 3) * .012
-                middle = centre - direction * .12 + RIGHT * t * width * spread + UP * z
-                depth = .13 + abs(z) * .13
-                if self.surface:
-                    hit = self.surface.ray_cast(middle + direction * .8, -direction, 1.6)[0]
-                    if hit is not None:
-                        depth = min(.24, max(.095, (hit - middle).dot(direction)))
-                p = middle + direction * (depth + .007 + folds * .45)
-                if z < -.3:
-                    p.z += (.018 if i % 2 else -.012)
-                vertices.append(p)
-        faces = []
-        for row in range(len(rows) - 1):
-            for col in range(count):
-                a = row * (count + 1) + col
-                faces.append((a, a + 1, a + count + 2, a + count + 1))
-        cloth = self.g.mesh('Fitted folded apron' if apron else 'Layered miniature cape', vertices, faces, mat, thickness=.006)
-        for face in cloth.data.polygons:
-            face.use_smooth = True
-        if fur:
-            self.g.fur('Winter collar', self.a['neck'] - FRONT * .08 + UP * .025, UP, .12,
-                self.g.material('Warm ivory fur', (.45, .39, .28), .96), 1636)
+    def dress(self, material, hem=.39, fur=None, cloak=False):
+        if cloak:
+            self.clothing.cloak(material, self.leather)
         else:
-            for sign in [-1, 1]:
-                p = centre + RIGHT * .145 * sign + direction * .035
-                self.g.sphere('Cloak clasp', p, (.013, .012, .006), self.gold, direction)
+            self.clothing.tunic(material, self.leather, hem=hem, fur=fur)
+            buckle = self.clothing.point(0, .443, .018, False)
+            self.g.box('Attached belt buckle', buckle, (.035, .009, .022), self.gold, frame(FRONT))
 
     def backpack(self, mechanical=False):
-        centre = self.back - FRONT * .13 - UP * .025
-        self.g.box('Backpack frame', centre, (.24, .15, .24), self.leather, frame(FRONT))
+        centre = self.clothing.point(math.pi, .57, .008, False) - FRONT * .06 + UP * .015
+        self.pack_centre = centre
+        self.g.box('Backpack frame', centre, (.22, .12, .22), self.leather, frame(FRONT))
         for sign in [-1, 1]:
             p = centre + RIGHT * sign * .071
             self.g.rod('Brass pressure tank' if mechanical else 'Backpack rolled blanket',
                 p - UP * .12, p + UP * .13, .047, self.gold if mechanical else self.wood)
             for z in [-.07, .08]:
                 self.g.ring('Pack retaining strap', p + UP * z, UP, .049, .008, self.leather)
-        self.g.tube('Right shoulder strap', [centre + RIGHT * .10 + UP * .12,
-            self.back + RIGHT * .14 + UP * .08, self.a['chest'] + RIGHT * .11,
-            self.a['belt'] + RIGHT * .09], .012, self.leather)
+        for sign in [-1, 1]:
+            points = [centre + RIGHT * sign * .085 + UP * .105]
+            points += [self.clothing.point(sign * a, z, .012, False)
+                for a, z in [(2.4,.64),(1.55,.65),(.68,.61),(.65,.54),(.65,.445),(1.55,.445)]]
+            points.append(centre + RIGHT * sign * .085 - UP * .105)
+            self.g.tube('Fitted shoulder and waist pack strap', points, .008, self.leather)
         if mechanical:
             self.g.ring('Pressure gauge rim', centre - FRONT * .09 + UP * .03, -FRONT, .028, .006, self.steel)
             self.g.sphere('Gauge face', centre - FRONT * .093 + UP * .03, (.024, .024, .003), self.bone, -FRONT)
@@ -162,7 +137,7 @@ class Equipment:
             self.g.ring('Barrel cooling ring', centre + axis * t, axis, .033, .006, self.steel)
         self.g.sphere('Dark projector bore', centre + axis * .174, (.026, .026, .003), self.leather, axis)
         self.g.rod('Forearm projector bracket', wrist, centre - axis * .03, .019, self.steel)
-        start = self.back - FRONT * .18
+        start = self.pack_centre - FRONT * .075
         self.g.tube('Alchemical hose', [start, start - RIGHT * .22 - UP * .07,
             palm - UP * .05 - FRONT * .08, centre - axis * .05], .012, self.leather)
 
@@ -175,9 +150,11 @@ class Equipment:
             self.g.sphere('Potion flask', p, (.024, .024, .032), mat)
             self.g.rod('Flask neck', p + UP * .02, p + UP * .05, .011, self.gold)
             self.g.ring('Bottle belt loop', p, UP, .025, .004, self.leather)
-        p = self.back + RIGHT * .12 - FRONT * .13
+        p = self.pack_centre + RIGHT * .105 - FRONT * .062
         self.g.rod('Spanner handle', p - UP * .05, p + UP * .22, .012, self.steel)
         self.g.ring('Spanner jaw', p + UP * .24, FRONT, .025, .008, self.steel)
+        self.g.tube('Spanner retaining loop', [p-RIGHT*.018-UP*.01,
+            p-FRONT*.014,p+RIGHT*.018-UP*.01], .004, self.leather)
 
     def wings(self, mechanical=False):
         leather = self.g.material('Burnt orange wing membrane', (.30, .055, .018), .87)
@@ -216,7 +193,7 @@ class Equipment:
             self.g.rod('Wing claw tip', tip - RIGHT * sign * .025, tip + UP * .024, .011, self.bone, tip=0)
 
     def crossbow(self):
-        centre = self.back - FRONT * .14 - UP * .04
+        centre = self.clothing.point(math.pi, .55, .035, False)
         axis = (UP + RIGHT * .2).normalized()
         self.g.rod('Slung hand crossbow stock', centre - axis * .12, centre + axis * .14, .017, self.wood)
         bow = centre + axis * .06
@@ -224,21 +201,27 @@ class Equipment:
             bow - RIGHT * .05, bow + RIGHT * .05, bow + RIGHT * .11 - FRONT * .025], .008, self.steel)
         self.g.tube('Taut crossbow string', [bow - RIGHT * .11 - FRONT * .025,
             centre - axis * .07, bow + RIGHT * .11 - FRONT * .025], .0025, self.bone)
+        self.g.tube('Crossbow back sling', [self.clothing.point(2.5,.63,.012,False),
+            centre+axis*.08,self.clothing.point(3.7,.46,.012,False)], .006, self.leather)
 
     def winter(self):
         coat = self.g.material('Winter hide coat', (.095, .045, .018), .98)
-        self.cape(coat, fur=True)
-        self.cape(coat, apron=True)
         fur = self.g.material('Warm ivory fur', (.45, .39, .28), .96)
+        self.dress(coat, hem=.36, fur=fur)
         for name, wrist, grip in [('Left', self.a['wrist'], self.a['palm']),
             ('Right', self.a['wrist-right'], self.a['grip'])]:
             self.g.fur(name + ' winter cuff', wrist, grip - wrist, .047, fur, 1636)
-        p = self.back - FRONT * .11 + RIGHT * .08
+        p = self.clothing.point(math.pi, .58, .018, False) + RIGHT * .065 + UP * .04
         self.g.rod('Slung winter javelin', p - UP * .28, p + UP * .36, .009, self.wood)
         self.g.rod('Javelin iron tip', p + UP * .35, p + UP * .46, .022, self.steel, tip=0)
+        for z in [.53, .635]:
+            anchor = self.clothing.point(math.pi-.55, z, .012, False)
+            shaft = Vector((p.x,p.y,z))
+            self.g.tube('Attached javelin lashing', [anchor-RIGHT*.01,
+                shaft-RIGHT*.012,shaft+RIGHT*.012,anchor+RIGHT*.01], .005, self.leather)
 
     def vampire(self):
-        self.cape(self.g.material('Tattered charcoal cape', (.012, .009, .017), .97))
+        self.dress(self.g.material('Tattered charcoal cape', (.012, .009, .017), .97), cloak=True)
         red = self.g.material('Blood red eyes', (.42, .004, .012), .5, 0, .12)
         for side in ['eye-left', 'eye-right']:
             p, n = self.a[side], self.normals[side]
@@ -268,21 +251,20 @@ class Equipment:
             self.winter()
         elif kind == 'underling':
             self.sword()
-            self.cape(self.leather, apron=True)
+            self.dress(self.leather)
             self.crossbow()
         elif kind == 'dragonshield':
             self.spear()
             self.shield()
-            self.cape(self.leather, apron=True)
+            self.dress(self.leather)
         elif kind == 'inventor':
             self.goggles()
             self.backpack()
             self.tools()
-            self.cape(self.leather, apron=True)
+            self.dress(self.leather, hem=.36)
         elif kind == 'sorcerer':
             self.spear(magical=True)
-            self.cape()
-            self.cape(apron=True)
+            self.dress(self.cloth, hem=.32)
             orb = self.g.material('Green spell orb', (.01, .28, .04), .38, .1, .22)
             self.g.gemstone('Held spell focus', self.a['palm'] + UP * .085, .052, orb)
             self.g.ring('Spell focus orbit', self.a['palm'] + UP * .085, UP, .073, .005, self.gold)

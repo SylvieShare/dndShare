@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import miniature_scene as scene
 from kobold_equipment import Equipment
 from bake_equipment import bake_equipment
+from clothing_fit import mask_covered_body
 
 
 def remove_weapon(obj, anchors, replace_hand=False):
@@ -104,6 +105,11 @@ base = (args.base or out.parent / 'kobold-1635-v2').resolve()
 recipes = json.loads(Path(__file__).with_name('kobold-family.json').read_text())
 anchors = json.loads(Path(__file__).with_name('kobold-landmarks.json').read_text())
 chosen = set(args.only.split(',')) if args.only else None
+fitting_meshes = scene.import_glb(base / 'kobold-1635.glb')
+fitting_body = max(fitting_meshes, key=lambda obj: len(obj.data.polygons))
+fitting_surface = BVHTree.FromPolygons(
+    [fitting_body.matrix_world@v.co for v in fitting_body.data.vertices],
+    [list(p.vertices) for p in fitting_body.data.polygons])
 for recipe in recipes:
     kind = recipe['slug']
     if kind == 'guard-1672' or (chosen and kind not in chosen):
@@ -128,10 +134,11 @@ for recipe in recipes:
         if kind in {'underling', 'dragonshield', 'sorcerer', 'vampire'}:
             removed = remove_weapon(body, anchors, replace_hand=kind=='vampire')
         recolour(body, kind, folder, role)
-        surface = BVHTree.FromPolygons([body.matrix_world@v.co for v in body.data.vertices],
-            [list(p.vertices) for p in body.data.polygons])
-        equipment = Equipment(anchors, lod=role in {'lod','shadow'}, surface=surface)
+        equipment = Equipment(anchors, lod=role in {'lod','shadow'},
+            surface=fitting_surface, shadow=role=='shadow')
         equipment.build(kind)
+        clothing_fit = equipment.clothing.report()
+        covered_body_faces = mask_covered_body(body, equipment.clothing)
         if role != 'shadow':
             bake_equipment(equipment.g.objects, body, folder, role)
         if kind in {'icewind', 'vampire'}:
@@ -146,11 +153,15 @@ for recipe in recipes:
         high = max(p.z for p in values)
         details.append({'role': role, 'removedWeaponFaces': removed,
             'vertices': sum(len(o.data.vertices) for o in bpy.context.scene.objects if o.type == 'MESH'),
-            'maxHeight': high})
+            'maxHeight': high, 'clothingFit': clothing_fit,
+            'coveredBodyFaces': covered_body_faces})
         if role == 'render':
             bpy.ops.file.pack_all()
             bpy.ops.wm.save_as_mainfile(filepath=str(folder / 'model.blend'))
-            scene.render(folder, [('preview', 254, 25)] if args.quick else None)
+            views = [('preview',254,25)] if args.quick else [
+                ('preview',254,25), ('left',136,12), ('right',316,12),
+                ('back',74,20), ('top',254,78)]
+            scene.render(folder, views)
             recipe['maxHeight'] = round(high + .002, 4)
         elif role == 'lod':
             scene.render(folder, [('lod-preview', 254, 25), ('lod-top', 254, 78)])
