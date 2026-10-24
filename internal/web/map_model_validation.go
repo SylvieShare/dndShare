@@ -27,6 +27,9 @@ func validateMapModel(m battlemap.Model) error {
 	if math.IsNaN(m.BaseSize) || math.IsInf(m.BaseSize, 0) || (m.Category == "creature-base" && (m.BaseSize < .5 || m.BaseSize > 8 || m.Width != int(math.Ceil(m.BaseSize)) || m.Height != int(math.Ceil(m.BaseSize)))) || (m.Category != "creature-base" && m.BaseSize != 0) {
 		return errors.New("invalid creature base size")
 	}
+	if math.IsNaN(m.ReferenceDiameter) || math.IsInf(m.ReferenceDiameter, 0) || m.ReferenceDiameter < 0 || m.ReferenceDiameter > 32 || (m.ReferenceDiameter > 0 && m.TileType != "object") || (m.Category == "creature-base" && m.ReferenceDiameter == 0) {
+		return errors.New("invalid miniature reference diameter")
+	}
 	for _, name := range []string{m.NameEn, m.GroupName, m.GroupNameEn} {
 		if strings.TrimSpace(name) == "" || len([]rune(name)) > 160 {
 			return errors.New("Russian and English model/group names required")

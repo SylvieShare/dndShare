@@ -142,12 +142,14 @@ export async function itemModelFixture(
           json: {
             id: "miniature",
             renderUrl: "/api/items/1/model/render?sha=test",
+            size: 1, referenceDiameter: .9,
             lodUrl: "/api/items/1/model/lod?sha=test",
             assetBytes: { render: glb.length },
             base: withBase
               ? {
                   id: "base",
                   renderUrl: "/api/items/1/model/base/render?sha=test",
+                  referenceDiameter: .9,
                   assetBytes: { render: base.length },
                   surfaceHeight: 0.054,
                 }

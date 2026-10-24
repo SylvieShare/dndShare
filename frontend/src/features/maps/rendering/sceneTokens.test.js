@@ -100,7 +100,7 @@ it.each([false, true])("uses a shared miniature without a bottom disc or ring (f
   const geometry = new BoxGeometry(),
     material = new MeshStandardMaterial();
   const dispose = vi.spyOn(geometry, "dispose");
-  const metadata = { id: "kobold", itemIds: [1635], maxHeight: 0.91 };
+  const metadata = { id: "kobold", itemIds: [1635], referenceDiameter: .9, maxHeight: 0.91 };
   const resource = { parts: [{ geometry, material, matrix: new Matrix4() }] };
   const assets = {
     catalogue: () => [metadata],
@@ -114,8 +114,7 @@ it.each([false, true])("uses a shared miniature without a bottom disc or ring (f
   );
   const mini = root.children.find(node => node.userData.tokenBody);
   expect(root.children.some(node => node.isMesh)).toBe(false);
-  expect(mini.scale.x).toBeLessThanOrEqual(1.4);
-  expect(Math.hypot(.5, .5) * mini.scale.x).toBeCloseTo(.7);
+  expect(mini.scale.x).toBeCloseTo(1.7 / .9);
   expect(mini.children[0].geometry).toBe(geometry);
   expect(mini.children[0].receiveShadow).toBe(true);
   expect(root.children.find(node => node.isSprite).position.y).toBeGreaterThan(metadata.maxHeight * mini.scale.x);
@@ -128,7 +127,7 @@ it.each([false, true])("uses a shared miniature without a bottom disc or ring (f
 
 it("replaces the portrait when a miniature finishes loading, without a token edit", () => {
   let ready = null;
-  const metadata = { id: "kobold", itemIds: [1635], maxHeight: 1 };
+  const metadata = { id: "kobold", itemIds: [1635], referenceDiameter: .9, maxHeight: 1 };
   const assets = {
     catalogue: () => [metadata],
     metadata: () => metadata,
@@ -159,8 +158,8 @@ it("replaces the portrait when a miniature finishes loading, without a token edi
 it("outlines only the creature body and seats it on a separately loaded base", () => {
   const geometry = new BoxGeometry(), material = new MeshStandardMaterial();
   const catalogue = [
-    { id: "body", itemIds: [1635], maxHeight: 1 },
-    { id: "base", category: "creature-base", tileType: "object", baseSize: 2, surfaceHeight: .06 },
+    { id: "body", itemIds: [1635], referenceDiameter: .9, maxHeight: 1 },
+    { id: "base", category: "creature-base", tileType: "object", baseSize: 2, referenceDiameter: 1.8, surfaceHeight: .06 },
   ];
   const assets = {
     catalogue: () => catalogue,
@@ -174,8 +173,8 @@ it("outlines only the creature body and seats it on a separately loaded base", (
   const tokenRoot = layer.root.children[0];
   const body = tokenRoot.children.find(n => n.userData.tokenBody);
   const base = tokenRoot.children.find(n => n.userData.tokenBase);
-  expect(body.scale.x).toBeLessThanOrEqual(1.4);
-  expect(base.scale.x).toBe(.7);
+  expect(body.scale.x).toBeCloseTo(1.7 / .9);
+  expect(base.scale.x).toBeCloseTo(1.7 / 1.8);
   expect(base.scale.y).toBe(1);
   expect(body.position.y - base.position.y).toBeCloseTo(.06);
   expect(tokenRoot.scale.x).toBe(-1);
@@ -192,7 +191,7 @@ it("outlines only the creature body and seats it on a separately loaded base", (
 it("preserves native part transforms when freezing a miniature on the board", () => {
   const geometry = new BoxGeometry(),
     material = new MeshStandardMaterial(),
-    metadata = { id: "kobold", itemIds: [1635], maxHeight: 0.92 };
+    metadata = { id: "kobold", itemIds: [1635], referenceDiameter: .9, maxHeight: 0.92 };
   const body = new Matrix4().makeTranslation(0.005, 0.485, -0.053),
     pebble = new Matrix4()
       .makeRotationY(0.4)
@@ -234,9 +233,31 @@ it("preserves native part transforms when freezing a miniature on the board", ()
   material.dispose();
 });
 
+it("updates artist calibration without changing placements or refetching geometry", () => {
+  const geometry = new BoxGeometry(3, 1, .2), material = new MeshStandardMaterial();
+  const metadata = { id: "body", itemIds: [1635], referenceDiameter: .9, maxHeight: 1 };
+  const resource = { parts: [{ geometry, material, matrix: new Matrix4() }] };
+  const assets = { catalogue: () => [metadata], metadata: () => metadata, model: () => resource };
+  const portraits = createTokenPortraits(), layer = createSceneObjectLayer(assets, fog, portraits);
+  const state = { tokens: [{ ...creature, itemId: 1635 }] };
+  const before = structuredClone(state);
+  const doc = { objects: [], zones: [], areas: [], width: 4, height: 4 };
+  const update = tier => layer.update(doc, state, { master: true }, tier, { tokenOpacity: () => 1 });
+  update("render");
+  const body = () => layer.root.children[0].children.find(n => n.userData.tokenBody);
+  expect(body().scale.x).toBeCloseTo(.7 / .9);
+  update("lod");
+  expect(body().scale.x).toBeCloseTo(.7 / .9);
+  metadata.referenceDiameter = .75;
+  update("lod");
+  expect(body().scale.x).toBeCloseTo(.7 / .75);
+  expect(state).toEqual(before);
+  layer.destroy(); portraits.destroy(); geometry.dispose(); material.dispose();
+});
+
 it('replaces a dead miniature with a flat portrait and translucent skull, then restores it on revival', () => {
   const geometry = new BoxGeometry(), material = new MeshStandardMaterial();
-  const metadata = { id: 'kobold', itemIds: [1635], maxHeight: .91 };
+  const metadata = { id: 'kobold', itemIds: [1635], referenceDiameter: .9, maxHeight: .91 };
   const assets = { catalogue: () => [metadata], metadata: () => metadata, model: () => ({ parts: [{ geometry, material, matrix: new Matrix4() }] }) };
   const portraits = createTokenPortraits();
   const dead = buildMapToken({ ...creature, itemId: 1635, dead: true, hidden: true }, { assets, tokenPortraits: portraits }, fog);

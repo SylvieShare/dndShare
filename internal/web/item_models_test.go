@@ -122,6 +122,7 @@ func TestPublicItemModelHTTPPostgres(t *testing.T) {
 		t.Fatal(err)
 	}
 	model := battlemap.InitialCatalogue()[0]
+	model.ReferenceDiameter = .9
 	model.TileType, model.Category, model.Hidden = "object", "object", true
 	if _, err = st.RegisterMapModel(t.Context(), model); err != nil {
 		t.Fatal(err)
@@ -149,6 +150,7 @@ func TestPublicItemModelHTTPPostgres(t *testing.T) {
 		base := model
 		base.ID = []string{"92000000-0000-4000-8000-000000000001", "92000000-0000-4000-8000-000000000002", "92000000-0000-4000-8000-000000000003"}[index]
 		base.SourceCode, base.SourceName = base.ID, base.ID
+		base.ReferenceDiameter = .9 * size
 		base.Category, base.BaseSize, base.SurfaceHeight = "creature-base", size, .06
 		base.Width, base.Height = 1, 1
 		base.MountDepth, base.MountProfile = 0, ""
@@ -193,6 +195,27 @@ func TestPublicItemModelHTTPPostgres(t *testing.T) {
 			t.Fatalf("public base cache: %d %v", w.Code, w.Header())
 		}
 	}
+	// Deliberately nonstandard dictionary IDs: size is resolved by code.
+	_, err = pool.Exec(t.Context(), `INSERT INTO dndshare.suggest_type(id,name) VALUES(18,'Sizes');
+      INSERT INTO dndshare.suggest(id,type_id,value,code) VALUES(77,18,'Large','large'),(88,18,'Small','small');
+      UPDATE dndshare.item SET data='{"identity":{"size":[88,77]}}' WHERE id=1635;`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	largeBase := selectedBase
+	largeBase.ID = "92000000-0000-4000-8000-000000000004"
+	largeBase.SourceCode, largeBase.SourceName = largeBase.ID, largeBase.ID
+	largeBase.Width, largeBase.Height, largeBase.BaseSize, largeBase.ReferenceDiameter = 2, 2, 2, 1.8
+	if _, err = st.RegisterMapModel(t.Context(), largeBase); err != nil {
+		t.Fatal(err)
+	}
+	w = httptest.NewRecorder()
+	mux.ServeHTTP(w, httptest.NewRequest("GET", "/api/items/1635/model", nil))
+	var largeView itemModelView
+	if err := json.Unmarshal(w.Body.Bytes(), &largeView); err != nil || w.Code != 200 || largeView.Size != 2 || largeView.ReferenceDiameter != .9 || largeView.Base == nil || largeView.Base.ID != largeBase.ID || largeView.Base.ReferenceDiameter != 1.8 {
+		t.Fatalf("large miniature calibration: %d %s %v", w.Code, w.Body.String(), err)
+	}
+
 	for _, id := range []string{"1636", "1637", "1638", "999"} {
 		for _, suffix := range []string{"/model", "/model/render", "/model/base/render", "/model/base/lod"} {
 			w := httptest.NewRecorder()

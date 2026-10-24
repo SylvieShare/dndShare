@@ -110,11 +110,15 @@ func (s *Store) BindItemModel(ctx context.Context, b ItemModelBinding) error {
 		return err
 	}
 	var kind, category string
-	if err = tx.QueryRow(ctx, `SELECT tile_type,category FROM dndshare.map_model WHERE id=$1::uuid`, b.ModelID).Scan(&kind, &category); err != nil {
+	var diameter float64
+	if err = tx.QueryRow(ctx, `SELECT tile_type,category,COALESCE((geometry->>'referenceDiameter')::float8,0) FROM dndshare.map_model WHERE id=$1::uuid`, b.ModelID).Scan(&kind, &category, &diameter); err != nil {
 		return err
 	}
 	if kind != "object" || category == "creature-base" {
 		return errors.New("item models must use object geometry")
+	}
+	if diameter <= 0 || diameter > 32 {
+		return errors.New("item models require a calibrated referenceDiameter")
 	}
 	if b.Default {
 		if _, err = tx.Exec(ctx, `UPDATE dndshare.item_model SET is_default=false WHERE item_id=$1 AND is_default`, b.ItemID); err != nil {

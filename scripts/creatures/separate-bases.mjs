@@ -68,7 +68,7 @@ async function shadow(doc) {
   return doc;
 }
 for (const entry of models) {
-  const next = { ...entry.model, assets: {} };
+  const next = { ...entry.model, referenceDiameter: .9, assets: {} };
   const render = await split(path.join(entry.folder, entry.files.render), false);
   const datum = bounds(render).min[1];
   if (datum < .04 || datum > .08) throw new Error(`Unexpected foot datum ${entry.model.name}: ${datum}`);
@@ -112,7 +112,7 @@ for (const design of designs) for (const size of [.5, 1, 2, 3, 4, 6, 8]) {
     groupName: "Каменные подставки", groupNameEn: "Stone bases", category: "creature-base", tileType: "object",
     textureDetail: "detailed", hasDecor: true, canStand: false, hidden: true, placementPoints: [],
     wallMode: "none", wallMask: 0, width: Math.ceil(size), height: Math.ceil(size), placementOffset: [0,0], mountDepth: 0,
-    surfaceHeight: .06, maxHeight: Math.max(.06, Math.ceil(b.max[1] * 10000) / 10000), baseSize: size, blockers: [], tags: ["creature-base"], supportSlots: [],
+    surfaceHeight: .06, maxHeight: Math.max(.06, Math.ceil(b.max[1] * 10000) / 10000), baseSize: size, referenceDiameter: .9 * size, blockers: [], tags: ["creature-base"], supportSlots: [],
     assets: { render, lod: render, source: render, shadow: await asset(await shadow(proxy), `${code}-shadow.glb`) } };
   catalogue.push(next);
   report.push({ id, name: next.name, bounds: b });

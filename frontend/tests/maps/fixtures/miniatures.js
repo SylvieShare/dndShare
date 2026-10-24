@@ -38,6 +38,7 @@ export async function miniatureFixture(catalogue, params) {
     width: 1,
     height: 1,
     maxHeight: 0.8,
+    referenceDiameter: .9,
     mountDepth: 0,
     surfaceHeight: 0,
     hidden: true,

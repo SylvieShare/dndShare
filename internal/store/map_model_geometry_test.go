@@ -37,6 +37,18 @@ func TestMountProfilesSurviveGeometryStorage(t *testing.T) {
 	}
 }
 
+func TestMiniatureCalibrationSurvivesGeometryStorage(t *testing.T) {
+	model := battlemap.Model{ModelMetadata: battlemap.ModelMetadata{ReferenceDiameter: .9}}
+	data, _, err := marshalMapModel(model)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var restored battlemap.ModelMetadata
+	if err := readMapModelGeometry(data, &restored); err != nil || restored.ReferenceDiameter != .9 {
+		t.Fatalf("calibration lost: %+v %v", restored, err)
+	}
+}
+
 func TestGeometryCannotOverrideCatalogueFields(t *testing.T) {
 	m := battlemap.ModelMetadata{ID: "uuid", DefinitionID: "MT1-017", Code: "MED-lights", VariantCode: "MED-light", Name: "Погасший светильник", NameEn: "Light Off", GroupName: "Светильники", GroupNameEn: "Lights", Category: "floor", Collection: "medieval-town-vol1", SourceCode: "MT1-017", SourceName: "Light Off", TileType: "floor"}
 	want := m

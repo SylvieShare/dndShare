@@ -35,6 +35,7 @@ export const METADATA_KEYS = [
   "surfaceHeight",
   "maxHeight",
   "baseSize",
+  "referenceDiameter",
   "blockers",
   "tags",
   "supportSlots",

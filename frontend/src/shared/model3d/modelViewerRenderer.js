@@ -10,6 +10,7 @@ import {
 import { acquireModelLoader } from "./modelLoader";
 import { createModelOrbitCamera } from "./modelOrbitCamera";
 import { modelOrbitControls } from "./modelOrbitControls";
+import { miniatureScale } from "./miniatureScale";
 
 function disposeModel(root) {
   const geometries = new Set(),
@@ -34,13 +35,25 @@ function disposeModel(root) {
   images.forEach((i) => i?.close?.());
 }
 
-export function composeModelPreview(body, base, surfaceHeight = 0) {
+export function composeModelPreview(body, base, metadata) {
   const root = new Group(),
     figure = new Group();
   figure.add(body);
-  figure.position.y = base ? surfaceHeight : 0;
+  figure.scale.setScalar(
+    miniatureScale(metadata.size, metadata.referenceDiameter),
+  );
+  figure.position.y = base ? metadata.base.surfaceHeight : 0;
   root.add(figure);
-  if (base) root.add(base);
+  if (base) {
+    const support = new Group();
+    const scale = miniatureScale(
+      metadata.size,
+      metadata.base.referenceDiameter,
+    );
+    support.scale.set(scale, 1, scale);
+    support.add(base);
+    root.add(support);
+  }
   root.updateMatrixWorld(true);
   return root;
 }
@@ -121,7 +134,7 @@ export function createModelViewer(host, changed = () => {}) {
       const model = composeModelPreview(
         results[0].value.scene,
         results[1]?.value.scene,
-        metadata.base?.surfaceHeight,
+        metadata,
       );
       const box = new Box3().setFromObject(model);
       if (box.isEmpty()) {

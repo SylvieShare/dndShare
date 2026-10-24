@@ -83,6 +83,17 @@ export function modelPreviewGuides() {
         ),
       );
     root.add(line(rectangle(0, 0, g.width, g.height, 0), 0xa9bacd));
+    if (model.referenceDiameter > 0) {
+      const radius = model.referenceDiameter / 2;
+      const circle = Array.from({ length: 64 }, (_, i) => {
+        const point = (angle) => [g.width / 2 + g.offset[0] + Math.cos(angle) * radius,
+          0.012, g.height / 2 + g.offset[1] + Math.sin(angle) * radius];
+        return [point(i * Math.PI / 32), point((i + 1) * Math.PI / 32)];
+      }).flat();
+      const guide = line(circle, 0x78d4e7);
+      guide.userData.referenceDiameter = true;
+      root.add(guide);
+    }
     GEOMETRY_FIELDS.forEach((field, i) => {
       const active = !activeField || activeField === field.key,
         opacity = active ? 1 : 0.3;

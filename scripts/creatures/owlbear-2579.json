@@ -22,5 +22,15 @@
     "shadow": "model-shadow.glb",
     "source": "model-source.glb",
     "preview": "preview.png"
+  },
+  "referenceDiameter": 0.9,
+  "calibration": {
+    "sourceDiameter": 1.1103816686857777,
+    "sourceOrigin": [
+      -0.0032646210142888146,
+      0.0001734196324401175,
+      -0.3545054634703003
+    ],
+    "rotation": -45
   }
 }

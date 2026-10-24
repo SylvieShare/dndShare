@@ -18,15 +18,17 @@ func (s *Server) routesItemModels(mux *http.ServeMux) {
 }
 
 type itemModelAssetView struct {
-	ID         string           `json:"id"`
-	RenderURL  string           `json:"renderUrl"`
-	LODURL     string           `json:"lodUrl"`
-	AssetBytes map[string]int64 `json:"assetBytes"`
+	ID                string           `json:"id"`
+	RenderURL         string           `json:"renderUrl"`
+	LODURL            string           `json:"lodUrl"`
+	AssetBytes        map[string]int64 `json:"assetBytes"`
+	ReferenceDiameter float64          `json:"referenceDiameter"`
 }
 
 type itemModelView struct {
 	itemModelAssetView
 	Base *itemModelBaseView `json:"base,omitempty"`
+	Size float64            `json:"size"`
 }
 
 type itemModelBaseView struct {
@@ -36,7 +38,7 @@ type itemModelBaseView struct {
 
 func modelAssetView(model battlemap.Model, path string) itemModelAssetView {
 	url := func(kind string) string { return path + kind + "?sha=" + model.Assets[kind].SHA256 }
-	return itemModelAssetView{ID: model.ID, RenderURL: url("render"), LODURL: url("lod"),
+	return itemModelAssetView{ID: model.ID, ReferenceDiameter: model.ReferenceDiameter, RenderURL: url("render"), LODURL: url("lod"),
 		AssetBytes: map[string]int64{"render": model.Assets["render"].Size, "lod": model.Assets["lod"].Size}}
 }
 
@@ -61,7 +63,13 @@ func (s *Server) handleItemModel(w http.ResponseWriter, r *http.Request) {
 	}
 	path := "/api/items/" + r.PathValue("id") + "/model/"
 	view := itemModelView{itemModelAssetView: modelAssetView(model, path)}
-	base, err := s.store.GetHandbookModelBase(r.Context())
+	size, err := s.store.ItemModelSize(r.Context(), mustItemID(r))
+	if err != nil {
+		mapError(w, err)
+		return
+	}
+	view.Size = size
+	base, err := s.store.GetHandbookModelBase(r.Context(), size)
 	if err != nil && !errors.Is(err, store.ErrNotFound) {
 		mapError(w, err)
 		return
@@ -100,7 +108,12 @@ func (s *Server) handleItemModelBaseAsset(w http.ResponseWriter, r *http.Request
 	if _, ok := s.resolveItemModel(w, r); !ok {
 		return
 	}
-	base, err := s.store.GetHandbookModelBase(r.Context())
+	size, err := s.store.ItemModelSize(r.Context(), mustItemID(r))
+	if err != nil {
+		mapError(w, err)
+		return
+	}
+	base, err := s.store.GetHandbookModelBase(r.Context(), size)
 	if err != nil {
 		mapError(w, err)
 		return
@@ -111,4 +124,10 @@ func (s *Server) handleItemModelBaseAsset(w http.ResponseWriter, r *http.Request
 		return
 	}
 	s.streamModelAsset(w, r, asset, "public")
+}
+
+// Called only after resolveItemModel has validated the path.
+func mustItemID(r *http.Request) int64 {
+	id, _ := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	return id
 }

@@ -35,6 +35,22 @@
         @focus="emit('active', field.key)"
       />
     </FormField>
+    <FormField
+      v-if="'referenceDiameter' in model"
+      label="Диаметр опоры модели"
+      vertical
+    >
+      <FormTextInput
+        :value="model.referenceDiameter"
+        type="number"
+        min="0.001"
+        max="32"
+        step="any"
+        aria-label="Диаметр опоры модели"
+        required
+        @update:value="model.referenceDiameter = Number($event)"
+      />
+    </FormField>
     <FormField v-if="model.mountDepth > 0" label="Профиль выступа" vertical>
       <FormTextInput
         v-model:value="model.mountProfile"

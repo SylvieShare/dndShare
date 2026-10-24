@@ -7,12 +7,24 @@ import (
 	"dndshare/internal/battlemap"
 )
 
-// Handbook models use their native one-cell scale. Keep the same base between
-// visits without loading the map catalogue or persisting a viewer preference.
-func (s *Store) GetHandbookModelBase(ctx context.Context) (battlemap.Model, error) {
+// Use the item's footprint, with stable selection between visits.
+func (s *Store) GetHandbookModelBase(ctx context.Context, size float64) (battlemap.Model, error) {
 	return scanMapModel(s.pool.QueryRow(ctx, `SELECT `+mapModelColumns+` FROM dndshare.map_model
-        WHERE category='creature-base' AND tile_type='object' AND (geometry->>'baseSize')::numeric=1
-        ORDER BY id LIMIT 1`))
+        WHERE category='creature-base' AND tile_type='object' AND (geometry->>'baseSize')::numeric=$1
+        ORDER BY id LIMIT 1`, size))
+}
+
+// Match frontend creatureFootprint by dictionary code, never by suggest ID.
+// Non-creature items use a one-cell presentation base.
+func (s *Store) ItemModelSize(ctx context.Context, itemID int64) (float64, error) {
+	var size float64
+	err := s.pool.QueryRow(ctx, `SELECT COALESCE(MAX(CASE s.code
+        WHEN 'tiny' THEN 0.5 WHEN 'small' THEN 1 WHEN 'medium' THEN 1
+        WHEN 'large' THEN 2 WHEN 'huge' THEN 3 WHEN 'gargantuan' THEN 4 END),1)
+        FROM dndshare.item i JOIN dndshare.suggest s ON s.type_id=18 AND s.user_id IS NULL
+        AND (i.data #> '{identity,size}') @> jsonb_build_array(s.id)
+        WHERE i.id=$1 AND i.type_id=6`, itemID).Scan(&size)
+	return size, err
 }
 
 // Validate even disabled assignments: they can be enabled again without choosing

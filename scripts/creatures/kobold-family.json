@@ -21,7 +21,8 @@
       "shadow": "model-shadow.glb",
       "source": "model-source.glb",
       "preview": "preview.png"
-    }
+    },
+    "referenceDiameter": 0.9
   },
   {
     "slug": "underling",
@@ -45,7 +46,8 @@
       "shadow": "model-shadow.glb",
       "source": "model-source.glb",
       "preview": "preview.png"
-    }
+    },
+    "referenceDiameter": 0.9
   },
   {
     "slug": "dragonshield",
@@ -70,7 +72,8 @@
       "shadow": "model-shadow.glb",
       "source": "model-source.glb",
       "preview": "preview.png"
-    }
+    },
+    "referenceDiameter": 0.9
   },
   {
     "slug": "inventor",
@@ -95,7 +98,8 @@
       "shadow": "model-shadow.glb",
       "source": "model-source.glb",
       "preview": "preview.png"
-    }
+    },
+    "referenceDiameter": 0.9
   },
   {
     "slug": "sorcerer",
@@ -120,7 +124,8 @@
       "shadow": "model-shadow.glb",
       "source": "model-source.glb",
       "preview": "preview.png"
-    }
+    },
+    "referenceDiameter": 0.9
   },
   {
     "slug": "tinkerer",
@@ -144,7 +149,8 @@
       "shadow": "model-shadow.glb",
       "source": "model-source.glb",
       "preview": "preview.png"
-    }
+    },
+    "referenceDiameter": 0.9
   },
   {
     "slug": "vampire",
@@ -168,7 +174,8 @@
       "shadow": "model-shadow.glb",
       "source": "model-source.glb",
       "preview": "preview.png"
-    }
+    },
+    "referenceDiameter": 0.9
   },
   {
     "slug": "winged",
@@ -192,7 +199,8 @@
       "shadow": "model-shadow.glb",
       "source": "model-source.glb",
       "preview": "preview.png"
-    }
+    },
+    "referenceDiameter": 0.9
   },
   {
     "slug": "guard-1672",
@@ -216,6 +224,7 @@
       "shadow": "model-shadow.glb",
       "source": "model-source.glb",
       "preview": "preview.png"
-    }
+    },
+    "referenceDiameter": 0.9
   }
 ]

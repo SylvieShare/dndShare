@@ -1,5 +1,6 @@
 """Blender: review exported game GLBs, optionally on a separate token base."""
 import argparse
+import json
 import sys
 from pathlib import Path
 from mathutils import Matrix
@@ -9,6 +10,8 @@ import miniature_scene as scene
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('directory', type=Path)
 parser.add_argument('--base', type=Path)
+parser.add_argument('--base-diameter', type=float, help='Measured native outer diameter of the separate base')
+parser.add_argument('--recipe', type=Path, required=True)
 parser.add_argument('--token-size', type=float, default=1)
 parser.add_argument('--surface-height', type=float, default=.06)
 args = parser.parse_args(sys.argv[sys.argv.index('--')+1:])
@@ -19,7 +22,14 @@ scene.import_glb(folder/'model-lod.glb')
 scene.render(folder, [('lod-preview',254,25),('lod-top',254,78)])
 if args.base:
     body = scene.import_glb(folder/'model.glb')
+    recipe = json.loads(args.recipe.read_text())
+    reference = recipe['referenceDiameter']
+    if not args.base_diameter or args.base_diameter <= 0 or reference <= 0:
+        raise ValueError('Reviewed figure and base diameters required')
+    diameter = args.token_size - min(.3, args.token_size * .3)
     for obj in body:
-        obj.matrix_world = Matrix.Translation((0,0,args.surface_height)) @ Matrix.Scale(args.token_size,4) @ obj.matrix_world
-    scene.import_glb(args.base.resolve(), replace=False)
+        obj.matrix_world = Matrix.Translation((0,0,args.surface_height)) @ Matrix.Scale(diameter / reference,4) @ obj.matrix_world
+    support = scene.import_glb(args.base.resolve(), replace=False)
+    for obj in support:
+        obj.matrix_world = Matrix.Diagonal((diameter / args.base_diameter, diameter / args.base_diameter, 1, 1)) @ obj.matrix_world
     scene.render(folder, [('on-base',254,20)], resolution=900)

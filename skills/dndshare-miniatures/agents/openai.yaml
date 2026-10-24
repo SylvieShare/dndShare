@@ -1,0 +1,4 @@
+interface:
+  display_name: "Миниатюры DnD Share"
+  short_description: "Создание и проверка 3D-миниатюр для DnD Share"
+  default_prompt: "Используй $dndshare-miniatures, чтобы подготовить игровую миниатюру существа из справочника и проверить её масштаб на поле."

@@ -127,28 +127,38 @@ parser.add_argument('directory', type=Path)
 parser.add_argument('--height', type=float, default=1.4)
 parser.add_argument('--rotation', type=float, default=0)
 parser.add_argument('--footprint', type=float, help='Normalize to this unit-token diameter instead of height')
-parser.add_argument('--no-base', action='store_true', help='Keep feet at zero and use a separate runtime base')
+parser.add_argument('--embedded-base', action='store_true', help='Authoring comparison only; published bodies must have no base')
 parser.add_argument('--token-size', type=float, default=1, help='Nominal in-game token size for the report')
-parser.add_argument('--recipe', type=Path, help='Use the recipe material profile for exports and the editable scene')
+parser.add_argument('--recipe', type=Path, required=True, help='Reviewed standing calibration and material profile')
 args = parser.parse_args(sys.argv[sys.argv.index('--') + 1:])
-profile = json.loads(args.recipe.read_text()).get('materialProfile', 'native') if args.recipe else 'native'
+recipe = json.loads(args.recipe.read_text()) if args.recipe else {}
+profile = recipe.get('materialProfile', 'native')
+reference_diameter = recipe.get('referenceDiameter')
+if not reference_diameter or not 0 < reference_diameter <= 32:
+    raise ValueError('Recipe requires a reviewed referenceDiameter')
+calibration = recipe.get('calibration')
 folder = args.directory.resolve()
 high = scene.import_glb(folder / 'trellis-native/generated-original.glb')
-if args.footprint:
+if calibration:
+    transform = scene.standing_transform(calibration, reference_diameter)
+    if args.embedded_base:
+        transform = Matrix.Translation((0,0,.06)) @ transform
+elif args.footprint:
     from mathutils import Vector
     points = np.array([tuple(p) for p in scene.points(high)])
     low, top = points.min(axis=0), points.max(axis=0)
     centre = Vector(((low[0]+top[0])/2, (low[1]+top[1])/2, low[2]))
     radius = np.max(np.linalg.norm(points[:, :2]-np.array(centre)[:2], axis=1))
-    transform = Matrix.Translation((0,0,0 if args.no_base else .06)) @ Matrix.Scale(args.footprint/(2*radius),4) @ Matrix.Translation(-centre)
+    transform = Matrix.Translation((0,0,0 if not args.embedded_base else .06)) @ Matrix.Scale(args.footprint/(2*radius),4) @ Matrix.Translation(-centre)
 else:
     transform = scene.normalize(high, args.height)
-    if args.no_base:
+    if not args.embedded_base:
         transform = Matrix.Translation((0,0,-.06)) @ transform
-transform = Matrix.Rotation(math.radians(args.rotation),4,'Z') @ transform
+if not calibration:
+    transform = Matrix.Rotation(math.radians(args.rotation),4,'Z') @ transform
 for obj in high:
     obj.matrix_world = transform @ obj.matrix_world
-if not args.no_base:
+if args.embedded_base:
     scene.base()
 scene.material_profile(high, profile)
 scene.export_glb(folder / 'model-source.glb')
@@ -165,7 +175,7 @@ for role in ['render', 'lod', 'shadow']:
         scene.material_profile(low, profile)
     for obj in high:
         bpy.data.objects.remove(obj, do_unlink=True)
-    if not args.no_base:
+    if args.embedded_base:
         scene.base()
     scene.export_glb(folder / ('model.glb' if role == 'render' else f'model-{role}.glb'), shadow=role == 'shadow')
     if role == 'render':
@@ -174,8 +184,10 @@ for role in ['render', 'lod', 'shadow']:
         scene.render(folder)
     if role == 'lod':
         scene.render(folder, [('lod-preview', 254, 25), ('lod-top', 254, 78)])
-(folder / 'placement.json').write_text(json.dumps({'baseDiameterCells': None if args.no_base else .9,
-    'nativeFootprintDiameter': args.footprint, 'embeddedBase': not args.no_base,
+(folder / 'placement.json').write_text(json.dumps({'baseDiameterCells': None if not args.embedded_base else .9,
+    'referenceDiameter': reference_diameter,
+    'nativeFootprintDiameter': args.footprint,
+    'calibration': calibration, 'embeddedBase': args.embedded_base,
     'nominalFootprintCells': [args.token_size, args.token_size],
     'originalServiceMeshExported': True,
     'transform': [list(row) for row in transform]}, indent=2) + '\n')

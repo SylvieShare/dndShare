@@ -113,12 +113,15 @@ export function createSceneObjectLayer(assets, fog, portraits) {
         // Pose and preview changes must not rebuild the shared miniature meshes.
         const { x, y, elevation, rotation, mirrored, placement, anchorOffset, moving, invalidSurface, invalidReason, cell, ...visual } = item;
         const modelId = tokenModelId(item, assets.catalogue?.() || []);
+        const metadata = modelId && assets.metadata(modelId);
         const base = tokenBaseModel(item, state, assets.catalogue?.() || []);
         const stamp = JSON.stringify([
           visual,
           options.selectedToken === item.id,
           modelId && visualSignature(assets, new Set([modelId, base?.id].filter(Boolean)), tier),
           !!state?.useCreatureBases,
+          metadata?.referenceDiameter, metadata?.maxHeight,
+          base?.referenceDiameter, base?.surfaceHeight,
         ]);
         const node = reconcile(`token:${item.id}`, stamp, () =>
           buildMapToken(

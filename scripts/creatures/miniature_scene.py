@@ -39,6 +39,16 @@ def normalize(meshes, height=1.4):
     return Matrix.Translation((0, 0, .06)) @ Matrix.Scale(scale, 4) @ Matrix.Translation(-centre)
 
 
+def standing_transform(calibration, reference_diameter):
+    """One reviewed source-space datum for every geometry role; no bounds fit."""
+    diameter, origin = calibration['sourceDiameter'], calibration['sourceOrigin']
+    rotation = calibration['rotation']
+    if not all(math.isfinite(v) for v in [diameter, reference_diameter, rotation, *origin]) or diameter <= 0 or reference_diameter <= 0 or len(origin) != 3:
+        raise ValueError('Invalid source standing circle')
+    return (Matrix.Rotation(math.radians(rotation), 4, 'Z') @
+            Matrix.Scale(reference_diameter / diameter, 4) @ Matrix.Translation(-Vector(origin)))
+
+
 def paint(name, rgb, roughness=.8, metal=0, emission=0):
     mat = bpy.data.materials.new(name)
     mat.diffuse_color = (*rgb, 1)

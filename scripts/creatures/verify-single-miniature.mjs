@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
@@ -22,9 +23,17 @@ const placement = JSON.parse(
 );
 const limits = { render: 90000, lod: 25000, shadow: 12000, source: 600000 };
 assert.equal(placement.embeddedBase, false);
+assert.ok(
+  recipe.referenceDiameter > 0 && recipe.referenceDiameter <= 32,
+  "reviewed reference diameter",
+);
+if (placement.referenceDiameter !== undefined)
+  assert.equal(placement.referenceDiameter, recipe.referenceDiameter);
 assert.equal(stats.length, 4);
+const hashes = {};
 for (const entry of stats) {
   const bytes = await fs.readFile(path.join(folder, entry.file));
+  hashes[entry.role] = crypto.createHash("sha256").update(bytes).digest("hex");
   assert.equal(bytes.readUInt32LE(0), 0x46546c67);
   assert.equal(bytes.readUInt32LE(8), bytes.length);
   const json = JSON.parse(
@@ -34,6 +43,10 @@ for (const entry of stats) {
   assert.ok(!(json.images || []).some((i) => i.uri), "external image");
   const doc = await io.readBinary(bytes),
     r = doc.getRoot();
+  let triangles = 0,
+    parts = 0;
+  const low = [Infinity, Infinity, Infinity],
+    high = [-Infinity, -Infinity, -Infinity];
   if (recipe.materialProfile === "dielectric")
     for (const material of r.listMaterials())
       assert.equal(
@@ -53,18 +66,22 @@ for (const entry of stats) {
   assert.ok(entry.parts <= 4, "draw parts");
   for (const node of r.listNodes())
     for (const p of node.getMesh()?.listPrimitives() || []) {
+      parts++;
       const pos = p.getAttribute("POSITION"),
         point = [],
         m = node.getWorldMatrix();
+      triangles += (p.getIndices()?.getCount() || pos.getCount()) / 3;
       for (let i = 0; i < pos.getCount(); i++) {
         pos.getElement(i, point);
         assert.ok(point.every(Number.isFinite), "invalid coordinate");
         const x = m[0] * point[0] + m[4] * point[1] + m[8] * point[2] + m[12];
         const z = m[2] * point[0] + m[6] * point[1] + m[10] * point[2] + m[14];
-        assert.ok(
-          Math.hypot(x, z) <= placement.nativeFootprintDiameter / 2 + 0.02,
-          "base overhang",
-        );
+        const y = m[1] * point[0] + m[5] * point[1] + m[9] * point[2] + m[13];
+        for (const [axis, value] of [x, y, z].entries()) {
+          assert.ok(Number.isFinite(value), "invalid world coordinate");
+          low[axis] = Math.min(low[axis], value);
+          high[axis] = Math.max(high[axis], value);
+        }
       }
       if (["render", "lod"].includes(entry.role)) {
         const uv = p.getAttribute("TEXCOORD_0");
@@ -86,6 +103,15 @@ for (const entry of stats) {
         );
       }
     }
+  assert.equal(triangles, entry.triangles, "stale triangle statistics");
+  assert.equal(parts, entry.parts, "stale part statistics");
+  assert.equal(bytes.length, entry.bytes, "stale byte statistics");
+  assert.ok(
+    [low, high].every((v, i) =>
+      v.every((n, j) => Math.abs(n - entry.bounds[i][j]) < 1e-5),
+    ),
+    "stale geometry bounds",
+  );
   if (entry.role === "shadow") assert.equal(r.listTextures().length, 0);
 }
 const render = stats.find((s) => s.role === "render"),
@@ -100,7 +126,10 @@ const result = {
   passed: true,
   originalServiceMeshExported: !!placement.originalServiceMeshExported,
   nominalFootprintCells: placement.nominalFootprintCells,
+  referenceDiameter: recipe.referenceDiameter,
+  maxHeight: render.bounds[1][1],
   lodBoundsDelta: delta,
+  assetHashes: hashes,
   assets: stats,
 };
 await fs.writeFile(

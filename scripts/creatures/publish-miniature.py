@@ -26,11 +26,16 @@ recipe = json.loads(args.recipe.read_text())
 models = json.loads((folder/'publish/catalogue.json').read_text())
 verification = json.loads((folder/'verification.json').read_text())
 assert verification['passed'] and len(models) == 1
+assert verification['originalServiceMeshExported'], 'Native mesh export required'
 model = models[0]
+assert 0 < model.get('referenceDiameter', 0) <= 32
+assert verification['referenceDiameter'] == model['referenceDiameter'] == recipe['referenceDiameter']
 assert model['id'] == recipe['modelId'] and model['hidden'] and model['tileType'] == 'object'
 assert set(model['assets']) == {'render', 'lod', 'shadow', 'source', 'preview'}
-for asset in model['assets'].values():
+for role, asset in model['assets'].items():
     data = (folder/'publish'/Path(asset['key']).name).read_bytes()
+    if role != 'preview':
+        assert verification['assetHashes'][role] == asset['sha256'], 'Asset changed since verification'
     assert len(data) == asset['size'] and hashlib.sha256(data).hexdigest() == asset['sha256']
 previous = json.loads(args.update_from.read_text()) if args.update_from else None
 if previous:
@@ -66,10 +71,11 @@ if previous:
     actual = call('map_tile_model_get', {'id': model['id']})
     assert actual['assets'] in [previous['assets'], model['assets']], 'Model changed since the earlier publication'
     (folder/'update-before-model.json').write_text(json.dumps(actual, ensure_ascii=False, indent=2)+'\n')
+    assert actual['referenceDiameter'] == model['referenceDiameter'], 'Calibrate changed reference diameter separately'
     planned = dict(actual, assets=model['assets'], maxHeight=model['maxHeight'])
     upload = folder/'publish-update'
     upload.mkdir(exist_ok=True)
-    for asset in model['assets'].values():
+    for role, asset in model['assets'].items():
         name = Path(asset['key']).name
         if not (upload/name).exists():
             os.link(folder/'publish'/name, upload/name)

@@ -10,5 +10,6 @@
   "code": "CRE-kobold",
   "groupName": "Кобольды",
   "groupNameEn": "Kobolds",
-  "maxHeight": 0.92
+  "maxHeight": 0.92,
+  "referenceDiameter": 0.9
 }

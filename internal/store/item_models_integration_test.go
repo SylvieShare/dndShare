@@ -24,6 +24,7 @@ func TestItemModelsPostgres(t *testing.T) {
 		m.SourceName = fmt.Sprintf("Item model %d", i)
 		m.TileType = "object"
 		m.Category = "object"
+		m.ReferenceDiameter = .9
 		m.Hidden = true // Palette hiding must not hide a public item's miniature.
 		if _, err = s.RegisterMapModel(t.Context(), m); err != nil {
 			t.Fatal(err)
@@ -37,6 +38,10 @@ func TestItemModelsPostgres(t *testing.T) {
 	floor := ""
 	for _, m := range models {
 		if m.TileType == "object" {
+			m.ReferenceDiameter = .9
+			if _, err = s.RegisterMapModel(t.Context(), m); err != nil {
+				t.Fatal(err)
+			}
 			objects = append(objects, m.ID)
 		} else {
 			floor = m.ID

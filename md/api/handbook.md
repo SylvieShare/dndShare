@@ -37,9 +37,11 @@ API реализован Go `net/http` в `internal/web`. Feature-файл ре�
   с доступными читателю магическими предметами и заклинаниями.
 - `GET /api/items/by-ids?ids=`
 - `GET /api/items/{id}/model` — основная 3D-модель публичного нескрытого итема:
-  `{id,renderUrl,lodUrl,assetBytes:{render,lod},base?}`, `Cache-Control: no-store`.
-  Необязательная `base` содержит те же поля и `surfaceHeight`: стабильная первая
-  по UUID подставка `creature-base` размера 1 клетка. Она загружается через
+  `{id,renderUrl,lodUrl,assetBytes:{render,lod},size,referenceDiameter,base?}`, `Cache-Control: no-store`.
+  Необязательная `base` содержит visual-поля, собственный `referenceDiameter` и
+  `surfaceHeight`: стабильная первая по UUID подставка `creature-base`
+  размера `size`. Для существ size вычисляется по кодам словаря identity.size,
+  для остальных итемов равен 1. Она загружается через
   `GET /api/items/{id}/model/base/render` или `/lod` с повторной проверкой
   видимости итема и основной привязки; произвольный UUID передать нельзя.
   `GET /api/items/{id}/model/render` и `/lod` отдают GLB без авторизации,

@@ -16,7 +16,19 @@ const recipe = JSON.parse(
     "utf8",
   ),
 );
+if (!(recipe.referenceDiameter > 0 && recipe.referenceDiameter <= 32))
+  throw new Error("Recipe requires a reviewed referenceDiameter");
 const output = path.join(folder, "publish");
+const verification = JSON.parse(
+  await fs.readFile(path.join(folder, "verification.json"), "utf8"),
+);
+if (
+  !verification.passed ||
+  verification.referenceDiameter !== recipe.referenceDiameter
+)
+  throw new Error(
+    "Verify final files with the reviewed recipe before packaging",
+  );
 await fs.mkdir(output, { recursive: true });
 const assets = {};
 const files =
@@ -37,6 +49,8 @@ for (const [kind, file] of Object.entries(files)) {
           .toBuffer()
       : await fs.readFile(path.join(folder, file));
   const sha256 = crypto.createHash("sha256").update(data).digest("hex");
+  if (kind !== "preview" && verification.assetHashes[kind] !== sha256)
+    throw new Error(`${kind} changed after verification`);
   const ext = kind === "preview" ? "webp" : "glb";
   const name = `${sha256}.${ext}`;
   await fs.writeFile(path.join(output, name), data);
@@ -59,6 +73,7 @@ const {
   assetFiles,
   slug,
   materialProfile,
+  calibration,
   ...metadata
 } = recipe;
 const model = {
@@ -76,6 +91,7 @@ const model = {
   wallMask: 0,
   width: 1,
   height: 1,
+  maxHeight: Math.ceil(verification.maxHeight * 10000) / 10000,
   placementOffset: [0, 0],
   mountDepth: 0,
   surfaceHeight: 0,

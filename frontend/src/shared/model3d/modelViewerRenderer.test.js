@@ -41,8 +41,15 @@ function viewer() {
 }
 const metadata = {
   renderUrl: "/body",
+  size: 1,
+  referenceDiameter: 0.9,
   assetBytes: { render: 123 },
-  base: { renderUrl: "/base", assetBytes: { render: 45 }, surfaceHeight: 0.06 },
+  base: {
+    referenceDiameter: 0.9,
+    renderUrl: "/base",
+    assetBytes: { render: 45 },
+    surfaceHeight: 0.06,
+  },
 };
 
 it("places native feet on the base surface and fits both without changing GLB transforms", () => {
@@ -53,13 +60,13 @@ it("places native feet on the base surface and fits both without changing GLB tr
   detail.rotation.y = 0.3;
   body.updateMatrixWorld(true);
   const native = detail.matrix.clone();
-  const root = composeModelPreview(body, base, 0.06);
+  const root = composeModelPreview(body, base, metadata);
   const feet = new Box3().setFromObject(body).min.y;
   expect(feet).toBeCloseTo(new Box3().setFromObject(base).max.y);
   const bounds = new Box3().setFromObject(root);
   expect(bounds.min.y).toBeCloseTo(0);
-  expect(bounds.max.y).toBeCloseTo(1.26);
-  expect(bounds.max.x - bounds.min.x).toBeCloseTo(0.9);
+  expect(bounds.max.y).toBeCloseTo((1.2 * 0.7) / 0.9 + 0.06);
+  expect(bounds.max.x - bounds.min.x).toBeCloseTo(0.7);
   expect(detail.matrix.equals(native)).toBe(true);
   expect(body.position.y).toBe(0);
   root.traverse((node) => {
@@ -88,6 +95,28 @@ it("loads body and base together and releases both on closing the viewer", async
   );
   render.destroy();
   for (const dispose of disposed) expect(dispose).toHaveBeenCalledTimes(1);
+});
+
+it("uses a large creature's footprint and allows weapon overhang without shrinking the figure", () => {
+  const body = mesh(2.4, 1.2, 0.3),
+    base = mesh(1.8, 0.06, 1.8);
+  const root = composeModelPreview(body, base, {
+    ...metadata,
+    size: 2,
+    base: { ...metadata.base, referenceDiameter: 1.8 },
+  });
+  expect(body.parent.scale.x).toBeCloseTo(1.7 / 0.9);
+  const baseBounds = new Box3().setFromObject(base);
+  expect(baseBounds.max.x - baseBounds.min.x).toBeCloseTo(1.7);
+  expect(baseBounds.max.y).toBeCloseTo(0.06);
+  expect(new Box3().setFromObject(body).min.y).toBeCloseTo(0.06);
+  expect(new Box3().setFromObject(root).max.x).toBeGreaterThan(
+    baseBounds.max.x,
+  );
+  root.traverse((n) => {
+    n.geometry?.dispose();
+    n.material?.dispose();
+  });
 });
 
 it.each(["failure", "close"])(

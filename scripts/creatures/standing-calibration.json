@@ -1,0 +1,127 @@
+[
+  {
+    "modelId": "e5ab34c3-4be1-56cb-ba74-ba053106dcd9",
+    "sourceCode": "CRE-1635",
+    "referenceDiameter": 0.9
+  },
+  {
+    "modelId": "24f3f429-1e4f-58e0-a9eb-b0e94b78f9f5",
+    "sourceCode": "CRE-1636",
+    "referenceDiameter": 0.9
+  },
+  {
+    "modelId": "f2f64998-8914-568c-a90f-5eb4a2e35f26",
+    "sourceCode": "CRE-1637",
+    "referenceDiameter": 0.9
+  },
+  {
+    "modelId": "7f20b19e-8058-564a-b598-9fc8d5ec20a0",
+    "sourceCode": "CRE-2051",
+    "referenceDiameter": 0.9
+  },
+  {
+    "modelId": "d99430d6-d34d-507c-9d5f-139179414d16",
+    "sourceCode": "CRE-1750",
+    "referenceDiameter": 0.9
+  },
+  {
+    "modelId": "513e1cd1-1fb2-503e-a9d3-def57df3c562",
+    "sourceCode": "CRE-2053",
+    "referenceDiameter": 0.9
+  },
+  {
+    "modelId": "58e53e4b-39e8-50e4-9275-a7e8688c97c0",
+    "sourceCode": "CRE-1752",
+    "referenceDiameter": 0.9
+  },
+  {
+    "modelId": "5e1db633-38a5-5e91-ba93-05abb4b8482f",
+    "sourceCode": "CRE-2492",
+    "referenceDiameter": 0.9
+  },
+  {
+    "modelId": "3165f222-76b6-51dc-b1a1-484f86ff458f",
+    "sourceCode": "CRE-1759",
+    "referenceDiameter": 0.9
+  },
+  {
+    "modelId": "ed671194-3ad9-5df4-a5fb-2d27a3413cf7",
+    "sourceCode": "CRE-1672",
+    "referenceDiameter": 0.9
+  },
+  {
+    "modelId": "dfde5fa7-4bb1-5909-a039-06cd45d0f008",
+    "sourceCode": "BASE-pebbles-0p5",
+    "referenceDiameter": 0.45
+  },
+  {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "sourceCode": "BASE-pebbles-1",
+    "referenceDiameter": 0.9
+  },
+  {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "sourceCode": "BASE-pebbles-2",
+    "referenceDiameter": 1.8
+  },
+  {
+    "modelId": "c14c9163-3e8d-5e01-a615-b9490cf230d5",
+    "sourceCode": "BASE-pebbles-3",
+    "referenceDiameter": 2.7
+  },
+  {
+    "modelId": "078cf63b-090b-5f98-a0e2-85c83cd04b6f",
+    "sourceCode": "BASE-pebbles-4",
+    "referenceDiameter": 3.6
+  },
+  {
+    "modelId": "74424ab6-1843-58ff-ab1b-15f25f383100",
+    "sourceCode": "BASE-pebbles-6",
+    "referenceDiameter": 5.4
+  },
+  {
+    "modelId": "66634452-ba23-530c-a03d-a4214d133311",
+    "sourceCode": "BASE-pebbles-8",
+    "referenceDiameter": 7.2
+  },
+  {
+    "modelId": "2ece01ea-f319-527d-a81e-3a5122011952",
+    "sourceCode": "BASE-slate-0p5",
+    "referenceDiameter": 0.45
+  },
+  {
+    "modelId": "b52ced01-d4ec-5ae2-a2a7-4257536b27d0",
+    "sourceCode": "BASE-slate-1",
+    "referenceDiameter": 0.9
+  },
+  {
+    "modelId": "57f582d9-3506-5be6-a5c4-0ad815e4a324",
+    "sourceCode": "BASE-slate-2",
+    "referenceDiameter": 1.8
+  },
+  {
+    "modelId": "b50318e6-2500-5ac6-aa85-b6d15715e76f",
+    "sourceCode": "BASE-slate-3",
+    "referenceDiameter": 2.7
+  },
+  {
+    "modelId": "67b86cfc-859c-59bf-a6f5-595225a40335",
+    "sourceCode": "BASE-slate-4",
+    "referenceDiameter": 3.6
+  },
+  {
+    "modelId": "1d600aea-8c76-57ff-ae1b-74d8226f95ec",
+    "sourceCode": "BASE-slate-6",
+    "referenceDiameter": 5.4
+  },
+  {
+    "modelId": "85ab599d-0d52-5acc-a9f8-ef0216fe3fff",
+    "sourceCode": "BASE-slate-8",
+    "referenceDiameter": 7.2
+  },
+  {
+    "modelId": "17b5f1d8-3d00-59ad-bda6-edc05e07d2ac",
+    "sourceCode": "CRE-2579",
+    "referenceDiameter": 0.9
+  }
+]
