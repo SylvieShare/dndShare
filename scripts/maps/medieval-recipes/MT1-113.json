@@ -1,0 +1,2991 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0.07027673721313477,
+    -0.00591731071472168
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "edge",
+  "wallMask": 4,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Roof Window Without Glass",
+  "groupCode": "MED-roof-window-without-glass",
+  "hasDecor": true,
+  "renderTriangles": 220000,
+  "lodTriangles": 180000,
+  "renderBakeSize": 3072,
+  "lodBakeSize": 3072,
+  "renderUVAngleLimitRad": 0.3,
+  "lodUVAngleLimitRad": 0.3,
+  "renderUVIslandMargin": 0.001,
+  "lodUVIslandMargin": 0.001,
+  "renderDataSize": 2048,
+  "lodColourSize": 3072,
+  "lodDataSize": 2048,
+  "standRayTopMM": 40,
+  "standPointsMM": [
+    [
+      -8.75,
+      -8.75
+    ],
+    [
+      -8.75,
+      8.75
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        1.2,
+        -17.8
+      ],
+      [
+        17.8,
+        -17.8
+      ],
+      [
+        17.8,
+        17.8
+      ],
+      [
+        1.2,
+        17.8
+      ]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "roof",
+    "window",
+    "wood",
+    "plaster",
+    "iron",
+    "ceiling",
+    "open-window"
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      10,
+      15
+    ],
+    "lodMiB": [
+      9,
+      13
+    ],
+    "shadowKiB": [
+      400,
+      700
+    ],
+    "previewKiB": [
+      14,
+      45
+    ],
+    "basis": "Own780028tri39001484B open dormer. NoGlass geometry is separate native source with11front-visible apertures; own sixcircleheadfits/hoodplanes/rafters/basebrace/floor. Keep220k/180k and seven provenUVregions:vertical plaster andfascias need separate density. 3072bake+colourboth,2048data;compact2304/1536. Compare bothcandidates allactualgeometry/material/opening/PBR/actor tests;source archive separate."
+  },
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "own X floor planks and north south fascia",
+        "minMM": [
+          -17.8,
+          -17.8,
+          17.5
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          28
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own east Y floor end frame",
+        "minMM": [
+          14.3,
+          -17.8,
+          17.5
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          28
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own west Y floor end frame",
+        "minMM": [
+          -17.8,
+          -17.8,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.8,
+          28
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own raised rear timber base",
+        "minMM": [
+          16.85,
+          -13.3,
+          26.6
+        ],
+        "maxMM": [
+          17.8,
+          13.3,
+          51
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own wall end post -1",
+        "minMM": [
+          9.8,
+          13.3,
+          26.1
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          51
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own wall end post 1",
+        "minMM": [
+          9.8,
+          -17.8,
+          26.1
+        ],
+        "maxMM": [
+          17.8,
+          -13.3,
+          51
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own rear diagonal brace",
+        "minMM": [
+          13.9,
+          -15.5,
+          25.7
+        ],
+        "maxMM": [
+          17.8,
+          15.5,
+          49.9
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.8771589473685663,
+          -0.4802001468671876
+        ],
+        "projection": {
+          "originMM": [
+            16.893106509477665,
+            0.0,
+            34.36410243694599
+          ],
+          "axis": [
+            0.0,
+            0.4802001468671876,
+            0.8771589473685663
+          ],
+          "rangeMM": [
+            -1.9276907072259597,
+            1.9980548089952896
+          ]
+        }
+      },
+      {
+        "name": "own rear upper header",
+        "minMM": [
+          14.5,
+          -17.8,
+          43.4
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          46.4
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own Y roof underside laths and boarding",
+        "minMM": [
+          -17.8,
+          -17.8,
+          45
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          100
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            74.04458950618972
+          ],
+          "axis": [
+            0.8318055944919995,
+            0.005818813784436833,
+            0.5550365703068163
+          ],
+          "rangeMM": [
+            -7,
+            -2.75
+          ]
+        }
+      },
+      {
+        "name": "own sloping roof edge timber -1",
+        "minMM": [
+          -17.8,
+          14.6,
+          45
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          100
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          -0.5550459669243393,
+          -0.0,
+          0.8318196767335004
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            74.04458950618972
+          ],
+          "axis": [
+            0.8318055944919995,
+            0.005818813784436833,
+            0.5550365703068163
+          ],
+          "rangeMM": [
+            -12,
+            -2.75
+          ]
+        }
+      },
+      {
+        "name": "own sloping roof edge timber 1",
+        "minMM": [
+          -17.8,
+          -17.8,
+          45
+        ],
+        "maxMM": [
+          17.8,
+          -14.6,
+          100
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          -0.5550459669243393,
+          -0.0,
+          0.8318196767335004
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            74.04458950618972
+          ],
+          "axis": [
+            0.8318055944919995,
+            0.005818813784436833,
+            0.5550365703068163
+          ],
+          "rangeMM": [
+            -12,
+            -2.75
+          ]
+        }
+      },
+      {
+        "name": "own blue weathered roof shingles",
+        "minMM": [
+          -17.8,
+          -17.8,
+          46.7
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          100
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "direction": [
+          -0.5550459669243393,
+          -0.0,
+          0.8318196767335004
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            74.04458950618972
+          ],
+          "axis": [
+            0.8318055944919995,
+            0.005818813784436833,
+            0.5550365703068163
+          ],
+          "rangeMM": [
+            -2.75,
+            10
+          ]
+        },
+        "darkRGB": [
+          0.11,
+          0.17,
+          0.29
+        ],
+        "lightRGB": [
+          0.3,
+          0.37,
+          0.53
+        ],
+        "excludeParts": [
+          {
+            "name": "own measured added dormer envelope",
+            "minMM": [
+              -12,
+              -17.8,
+              46
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              93
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.04458950618972
+              ],
+              "axis": [
+                0.8318055944919995,
+                0.005818813784436833,
+                0.5550365703068163
+              ],
+              "rangeMM": [
+                -20,
+                35
+              ]
+            },
+            "awayFromSource": {
+              "code": "MT1-110",
+              "sourceSHA256": "6bdfd60ad0c3d576fcf80ed76356e18b282fd064be68bfe8816c396306124987",
+              "rotationZDeg": 180,
+              "matchMM": 0.4,
+              "projectTo": {
+                "code": "MT1-113",
+                "sourceSHA256": "787603428b65dce8a15b7895b6b9b837d172a83bce19aec1716f343ac376d7dc"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "own dormer posts and backing",
+        "minMM": [
+          -12,
+          -17.8,
+          46
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          93
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "includeParts": [
+          {
+            "name": "own measured added dormer envelope",
+            "minMM": [
+              -12,
+              -17.8,
+              46
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              93
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.04458950618972
+              ],
+              "axis": [
+                0.8318055944919995,
+                0.005818813784436833,
+                0.5550365703068163
+              ],
+              "rangeMM": [
+                -20,
+                35
+              ]
+            },
+            "awayFromSource": {
+              "code": "MT1-110",
+              "sourceSHA256": "6bdfd60ad0c3d576fcf80ed76356e18b282fd064be68bfe8816c396306124987",
+              "rotationZDeg": 180,
+              "matchMM": 0.4,
+              "projectTo": {
+                "code": "MT1-113",
+                "sourceSHA256": "787603428b65dce8a15b7895b6b9b837d172a83bce19aec1716f343ac376d7dc"
+              }
+            }
+          }
+        ],
+        "darkRGB": [
+          0.37,
+          0.17,
+          0.055
+        ],
+        "lightRGB": [
+          0.64,
+          0.35,
+          0.13
+        ]
+      },
+      {
+        "name": "own X dormer side board -1",
+        "minMM": [
+          7.5,
+          -15.8,
+          52
+        ],
+        "maxMM": [
+          15.2,
+          -13.3,
+          70
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "includeParts": [
+          {
+            "name": "own measured added dormer envelope",
+            "minMM": [
+              -12,
+              -17.8,
+              46
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              93
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.04458950618972
+              ],
+              "axis": [
+                0.8318055944919995,
+                0.005818813784436833,
+                0.5550365703068163
+              ],
+              "rangeMM": [
+                -20,
+                35
+              ]
+            },
+            "awayFromSource": {
+              "code": "MT1-110",
+              "sourceSHA256": "6bdfd60ad0c3d576fcf80ed76356e18b282fd064be68bfe8816c396306124987",
+              "rotationZDeg": 180,
+              "matchMM": 0.4,
+              "projectTo": {
+                "code": "MT1-113",
+                "sourceSHA256": "787603428b65dce8a15b7895b6b9b837d172a83bce19aec1716f343ac376d7dc"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "own X dormer side board 1",
+        "minMM": [
+          7.5,
+          13.3,
+          52
+        ],
+        "maxMM": [
+          15.2,
+          15.8,
+          70
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "includeParts": [
+          {
+            "name": "own measured added dormer envelope",
+            "minMM": [
+              -12,
+              -17.8,
+              46
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              93
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.04458950618972
+              ],
+              "axis": [
+                0.8318055944919995,
+                0.005818813784436833,
+                0.5550365703068163
+              ],
+              "rangeMM": [
+                -20,
+                35
+              ]
+            },
+            "awayFromSource": {
+              "code": "MT1-110",
+              "sourceSHA256": "6bdfd60ad0c3d576fcf80ed76356e18b282fd064be68bfe8816c396306124987",
+              "rotationZDeg": 180,
+              "matchMM": 0.4,
+              "projectTo": {
+                "code": "MT1-113",
+                "sourceSHA256": "787603428b65dce8a15b7895b6b9b837d172a83bce19aec1716f343ac376d7dc"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "own front Z lattice and lower posts",
+        "minMM": [
+          14.3,
+          -16,
+          48.5
+        ],
+        "maxMM": [
+          17.8,
+          16,
+          62.2
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own lower inner lattice thin -1",
+        "minMM": [
+          11,
+          -7.0,
+          48.5
+        ],
+        "maxMM": [
+          14.31,
+          -4.3,
+          62.2
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own lower inner lattice outer -1",
+        "minMM": [
+          11,
+          -13.3,
+          48.5
+        ],
+        "maxMM": [
+          14.31,
+          -9.4,
+          62.2
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own lower inner lattice thin 1",
+        "minMM": [
+          11,
+          4.3,
+          48.5
+        ],
+        "maxMM": [
+          14.31,
+          7.0,
+          62.2
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own lower inner lattice outer 1",
+        "minMM": [
+          11,
+          9.4,
+          48.5
+        ],
+        "maxMM": [
+          14.31,
+          13.3,
+          62.2
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own gable diagonal -1",
+        "minMM": [
+          14.5,
+          -16,
+          61
+        ],
+        "maxMM": [
+          17.8,
+          0,
+          85
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.5970958955175031,
+          0.8021698645275519
+        ],
+        "projection": {
+          "originMM": [
+            15.687288582324982,
+            -6.5,
+            71.22499990463257
+          ],
+          "axis": [
+            0.0,
+            -0.8021698645275519,
+            0.5970958955175031
+          ],
+          "rangeMM": [
+            -4.404954782414135,
+            4.741175005485857
+          ]
+        },
+        "excludeParts": [
+          {
+            "name": "central upright",
+            "minMM": [
+              -20,
+              -1.8,
+              40
+            ],
+            "maxMM": [
+              20,
+              1.8,
+              82
+            ]
+          }
+        ]
+      },
+      {
+        "name": "own gable diagonal 1",
+        "minMM": [
+          14.5,
+          0,
+          61
+        ],
+        "maxMM": [
+          17.8,
+          16,
+          85
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.5827136774108898,
+          -0.8126775314712948
+        ],
+        "projection": {
+          "originMM": [
+            15.572047710418701,
+            6.5,
+            71.46875095367432
+          ],
+          "axis": [
+            0.0,
+            0.8126775314712948,
+            0.5827136774108898
+          ],
+          "rangeMM": [
+            -4.249753466089306,
+            4.460987841013635
+          ]
+        },
+        "excludeParts": [
+          {
+            "name": "central upright",
+            "minMM": [
+              -20,
+              -1.8,
+              40
+            ],
+            "maxMM": [
+              20,
+              1.8,
+              82
+            ]
+          }
+        ]
+      },
+      {
+        "name": "own Y window sill",
+        "minMM": [
+          9.5,
+          -16,
+          46
+        ],
+        "maxMM": [
+          17.8,
+          16,
+          48.75
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own Y window lower crossbar",
+        "minMM": [
+          9.5,
+          -16,
+          52.55
+        ],
+        "maxMM": [
+          17.8,
+          16,
+          55.15
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own Y window upper crossbar",
+        "minMM": [
+          9.5,
+          -16,
+          59.55
+        ],
+        "maxMM": [
+          17.8,
+          16,
+          62.05
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own central Z window post",
+        "minMM": [
+          11,
+          -1.8,
+          48
+        ],
+        "maxMM": [
+          17.8,
+          1.8,
+          80
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own blue dormer hood -1",
+        "minMM": [
+          -10,
+          -17.8,
+          60
+        ],
+        "maxMM": [
+          15,
+          0,
+          92
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "direction": [
+          0.0,
+          0.5414195777760059,
+          0.8407525443320714
+        ],
+        "projection": {
+          "originMM": [
+            6.1098901098901095,
+            -5.62091968871735,
+            78.8021978021978
+          ],
+          "axis": [
+            0.03465132927574106,
+            -0.840247640789149,
+            0.5410944349443018
+          ],
+          "rangeMM": [
+            -1.5,
+            3
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own measured added dormer envelope",
+            "minMM": [
+              -12,
+              -17.8,
+              46
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              93
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.04458950618972
+              ],
+              "axis": [
+                0.8318055944919995,
+                0.005818813784436833,
+                0.5550365703068163
+              ],
+              "rangeMM": [
+                -20,
+                35
+              ]
+            },
+            "awayFromSource": {
+              "code": "MT1-110",
+              "sourceSHA256": "6bdfd60ad0c3d576fcf80ed76356e18b282fd064be68bfe8816c396306124987",
+              "rotationZDeg": 180,
+              "matchMM": 0.4,
+              "projectTo": {
+                "code": "MT1-113",
+                "sourceSHA256": "787603428b65dce8a15b7895b6b9b837d172a83bce19aec1716f343ac376d7dc"
+              }
+            }
+          }
+        ],
+        "darkRGB": [
+          0.11,
+          0.17,
+          0.29
+        ],
+        "lightRGB": [
+          0.3,
+          0.37,
+          0.53
+        ],
+        "excludeParts": [
+          {
+            "name": "own timber below hood tips",
+            "minMM": [
+              7.5,
+              -15.8,
+              52
+            ],
+            "maxMM": [
+              15.2,
+              -13.3,
+              64.3
+            ]
+          }
+        ]
+      },
+      {
+        "name": "own blue dormer hood 1",
+        "minMM": [
+          -10,
+          0,
+          60
+        ],
+        "maxMM": [
+          15,
+          17.8,
+          92
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "direction": [
+          0.0,
+          0.5551712703331925,
+          -0.8317360522405106
+        ],
+        "projection": {
+          "originMM": [
+            6.117647058823529,
+            5.600284464219037,
+            78.63529411764706
+          ],
+          "axis": [
+            0.035470767094564766,
+            0.8312126526704637,
+            0.5548219090142836
+          ],
+          "rangeMM": [
+            -1.5,
+            3
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own measured added dormer envelope",
+            "minMM": [
+              -12,
+              -17.8,
+              46
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              93
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.04458950618972
+              ],
+              "axis": [
+                0.8318055944919995,
+                0.005818813784436833,
+                0.5550365703068163
+              ],
+              "rangeMM": [
+                -20,
+                35
+              ]
+            },
+            "awayFromSource": {
+              "code": "MT1-110",
+              "sourceSHA256": "6bdfd60ad0c3d576fcf80ed76356e18b282fd064be68bfe8816c396306124987",
+              "rotationZDeg": 180,
+              "matchMM": 0.4,
+              "projectTo": {
+                "code": "MT1-113",
+                "sourceSHA256": "787603428b65dce8a15b7895b6b9b837d172a83bce19aec1716f343ac376d7dc"
+              }
+            }
+          }
+        ],
+        "darkRGB": [
+          0.11,
+          0.17,
+          0.29
+        ],
+        "lightRGB": [
+          0.3,
+          0.37,
+          0.53
+        ],
+        "excludeParts": [
+          {
+            "name": "own timber below hood tips",
+            "minMM": [
+              7.5,
+              13.3,
+              52
+            ],
+            "maxMM": [
+              15.2,
+              15.8,
+              64.3
+            ]
+          }
+        ]
+      },
+      {
+        "name": "own blue X dormer ridge cap",
+        "minMM": [
+          -10,
+          -2,
+          82
+        ],
+        "maxMM": [
+          17.8,
+          2,
+          93
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "direction": [
+          0.9979591876857195,
+          0.0,
+          -0.06385498973188165
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            87.669273239441
+          ],
+          "axis": [
+            0.06385498973188165,
+            0.0,
+            0.9979591876857195
+          ],
+          "rangeMM": [
+            -0.7,
+            3.5
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own measured added dormer envelope",
+            "minMM": [
+              -12,
+              -17.8,
+              46
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              93
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.04458950618972
+              ],
+              "axis": [
+                0.8318055944919995,
+                0.005818813784436833,
+                0.5550365703068163
+              ],
+              "rangeMM": [
+                -20,
+                35
+              ]
+            },
+            "awayFromSource": {
+              "code": "MT1-110",
+              "sourceSHA256": "6bdfd60ad0c3d576fcf80ed76356e18b282fd064be68bfe8816c396306124987",
+              "rotationZDeg": 180,
+              "matchMM": 0.4,
+              "projectTo": {
+                "code": "MT1-113",
+                "sourceSHA256": "787603428b65dce8a15b7895b6b9b837d172a83bce19aec1716f343ac376d7dc"
+              }
+            }
+          }
+        ],
+        "darkRGB": [
+          0.11,
+          0.17,
+          0.29
+        ],
+        "lightRGB": [
+          0.3,
+          0.37,
+          0.53
+        ]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "own plain front ochre plaster",
+        "minMM": [
+          9.8,
+          -13.3,
+          26.6
+        ],
+        "maxMM": [
+          13.9,
+          13.3,
+          46.5
+        ],
+        "kind": "plaster",
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "nearSource": {
+          "code": "MT1-113",
+          "sourceSHA256": "787603428b65dce8a15b7895b6b9b837d172a83bce19aec1716f343ac376d7dc",
+          "componentAboveMM": 26.6,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              10.8,
+              -13.3,
+              26.6
+            ],
+            "maxMM": [
+              14.0,
+              13.3,
+              49.5
+            ]
+          },
+          "matchMM": 0.1,
+          "projectTo": {
+            "code": "MT1-113",
+            "sourceSHA256": "787603428b65dce8a15b7895b6b9b837d172a83bce19aec1716f343ac376d7dc"
+          }
+        },
+        "excludeParts": [
+          {
+            "name": "own raised rear timber base",
+            "minMM": [
+              16.85,
+              -13.3,
+              26.6
+            ],
+            "maxMM": [
+              17.8,
+              13.3,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own wall end post -1",
+            "minMM": [
+              9.8,
+              13.3,
+              26.1
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own wall end post 1",
+            "minMM": [
+              9.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              17.8,
+              -13.3,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own rear diagonal brace",
+            "minMM": [
+              13.9,
+              -15.5,
+              25.7
+            ],
+            "maxMM": [
+              17.8,
+              15.5,
+              49.9
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.8771589473685663,
+              -0.4802001468671876
+            ],
+            "projection": {
+              "originMM": [
+                16.893106509477665,
+                0.0,
+                34.36410243694599
+              ],
+              "axis": [
+                0.0,
+                0.4802001468671876,
+                0.8771589473685663
+              ],
+              "rangeMM": [
+                -1.9276907072259597,
+                1.9980548089952896
+              ]
+            }
+          },
+          {
+            "name": "own rear upper header",
+            "minMM": [
+              14.5,
+              -17.8,
+              43.4
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              46.4
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own sloping roof edge timber -1",
+            "minMM": [
+              -17.8,
+              14.6,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.5550459669243393,
+              -0.0,
+              0.8318196767335004
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.04458950618972
+              ],
+              "axis": [
+                0.8318055944919995,
+                0.005818813784436833,
+                0.5550365703068163
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            }
+          },
+          {
+            "name": "own sloping roof edge timber 1",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              -14.6,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.5550459669243393,
+              -0.0,
+              0.8318196767335004
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.04458950618972
+              ],
+              "axis": [
+                0.8318055944919995,
+                0.005818813784436833,
+                0.5550365703068163
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            }
+          },
+          {
+            "name": "own blue weathered roof shingles",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              -0.5550459669243393,
+              -0.0,
+              0.8318196767335004
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.04458950618972
+              ],
+              "axis": [
+                0.8318055944919995,
+                0.005818813784436833,
+                0.5550365703068163
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          },
+          {
+            "name": "own measured added dormer envelope",
+            "minMM": [
+              -12,
+              -17.8,
+              46
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              93
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.04458950618972
+              ],
+              "axis": [
+                0.8318055944919995,
+                0.005818813784436833,
+                0.5550365703068163
+              ],
+              "rangeMM": [
+                -20,
+                35
+              ]
+            },
+            "awayFromSource": {
+              "code": "MT1-110",
+              "sourceSHA256": "6bdfd60ad0c3d576fcf80ed76356e18b282fd064be68bfe8816c396306124987",
+              "rotationZDeg": 180,
+              "matchMM": 0.4,
+              "projectTo": {
+                "code": "MT1-113",
+                "sourceSHA256": "787603428b65dce8a15b7895b6b9b837d172a83bce19aec1716f343ac376d7dc"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "own recessed rear ochre plaster",
+        "minMM": [
+          13.9,
+          -13.3,
+          26.6
+        ],
+        "maxMM": [
+          17.8,
+          13.3,
+          46.5
+        ],
+        "kind": "plaster",
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own raised rear timber base",
+            "minMM": [
+              16.85,
+              -13.3,
+              26.6
+            ],
+            "maxMM": [
+              17.8,
+              13.3,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own wall end post -1",
+            "minMM": [
+              9.8,
+              13.3,
+              26.1
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own wall end post 1",
+            "minMM": [
+              9.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              17.8,
+              -13.3,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own rear diagonal brace",
+            "minMM": [
+              13.9,
+              -15.5,
+              25.7
+            ],
+            "maxMM": [
+              17.8,
+              15.5,
+              49.9
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.8771589473685663,
+              -0.4802001468671876
+            ],
+            "projection": {
+              "originMM": [
+                16.893106509477665,
+                0.0,
+                34.36410243694599
+              ],
+              "axis": [
+                0.0,
+                0.4802001468671876,
+                0.8771589473685663
+              ],
+              "rangeMM": [
+                -1.9276907072259597,
+                1.9980548089952896
+              ]
+            }
+          },
+          {
+            "name": "own rear upper header",
+            "minMM": [
+              14.5,
+              -17.8,
+              43.4
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              46.4
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own Y roof underside laths and boarding",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              100
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.04458950618972
+              ],
+              "axis": [
+                0.8318055944919995,
+                0.005818813784436833,
+                0.5550365703068163
+              ],
+              "rangeMM": [
+                -7,
+                -2.75
+              ]
+            }
+          },
+          {
+            "name": "own sloping roof edge timber -1",
+            "minMM": [
+              -17.8,
+              14.6,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.5550459669243393,
+              -0.0,
+              0.8318196767335004
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.04458950618972
+              ],
+              "axis": [
+                0.8318055944919995,
+                0.005818813784436833,
+                0.5550365703068163
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            }
+          },
+          {
+            "name": "own sloping roof edge timber 1",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              -14.6,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.5550459669243393,
+              -0.0,
+              0.8318196767335004
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.04458950618972
+              ],
+              "axis": [
+                0.8318055944919995,
+                0.005818813784436833,
+                0.5550365703068163
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            }
+          },
+          {
+            "name": "own blue weathered roof shingles",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              -0.5550459669243393,
+              -0.0,
+              0.8318196767335004
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.04458950618972
+              ],
+              "axis": [
+                0.8318055944919995,
+                0.005818813784436833,
+                0.5550365703068163
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          },
+          {
+            "name": "own measured added dormer envelope",
+            "minMM": [
+              -12,
+              -17.8,
+              46
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              93
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                74.04458950618972
+              ],
+              "axis": [
+                0.8318055944919995,
+                0.005818813784436833,
+                0.5550365703068163
+              ],
+              "rangeMM": [
+                -20,
+                35
+              ]
+            },
+            "awayFromSource": {
+              "code": "MT1-110",
+              "sourceSHA256": "6bdfd60ad0c3d576fcf80ed76356e18b282fd064be68bfe8816c396306124987",
+              "rotationZDeg": 180,
+              "matchMM": 0.4,
+              "projectTo": {
+                "code": "MT1-113",
+                "sourceSHA256": "787603428b65dce8a15b7895b6b9b837d172a83bce19aec1716f343ac376d7dc"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "own iron disk rear brace upper",
+        "minMM": [
+          16.5,
+          -16.2156687314114,
+          41.10660456520192
+        ],
+        "maxMM": [
+          18,
+          -14.083473539547139,
+          43.238799757066175
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            17.29800033569336,
+            -15.14957113547927,
+            42.17270216113405
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 1.016097595932131,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.3,
+            1.3
+          ],
+          "thicknessMM": 1.016097595932131,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk rear brace lower",
+        "minMM": [
+          16.5,
+          11.190777685223763,
+          27.09643883928707
+        ],
+        "maxMM": [
+          18,
+          13.089792886815557,
+          28.995454040878865
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            17.035999298095703,
+            12.14028528601966,
+            28.045946440082968
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.8995076007958973,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.3,
+            1.3
+          ],
+          "thicknessMM": 0.8995076007958973,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk hood left upper",
+        "minMM": [
+          13.339353345840122,
+          -15.315054196137424,
+          61.501902549573074
+        ],
+        "maxMM": [
+          15.339353345840122,
+          -13.315054196137424,
+          63.501902549573074
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            14.339353345840122,
+            -14.315054196137424,
+            62.501902549573074
+          ],
+          "axis": [
+            0.022929251194000244,
+            -0.9994477033615112,
+            -0.02405335009098053
+          ],
+          "radiusAtOriginMM": 0.5643233479518142,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -0.65,
+            0.65
+          ],
+          "thicknessMM": 0.5643233479518142,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk hood left lower",
+        "minMM": [
+          13.366223228280518,
+          -15.403872315877972,
+          58.076338357056265
+        ],
+        "maxMM": [
+          15.366223228280518,
+          -13.403872315877972,
+          60.076338357056265
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            14.366223228280518,
+            -14.403872315877972,
+            59.076338357056265
+          ],
+          "axis": [
+            0.05771786347031593,
+            -0.9982274174690247,
+            0.014516117982566357
+          ],
+          "radiusAtOriginMM": 0.4837506119671435,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -0.65,
+            0.65
+          ],
+          "thicknessMM": 0.4837506119671435,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk hood right upper",
+        "minMM": [
+          13.632582451660866,
+          13.205402708346055,
+          61.26888987906283
+        ],
+        "maxMM": [
+          15.632582451660866,
+          15.205402708346055,
+          63.26888987906283
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            14.632582451660866,
+            14.205402708346055,
+            62.26888987906283
+          ],
+          "axis": [
+            0.06091170758008957,
+            0.9978780746459961,
+            0.023001786321401596
+          ],
+          "radiusAtOriginMM": 0.6205532678354599,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -0.65,
+            0.65
+          ],
+          "thicknessMM": 0.6205532678354599,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk hood right lower",
+        "minMM": [
+          13.420258297215284,
+          13.253512752824749,
+          57.17049972498943
+        ],
+        "maxMM": [
+          15.420258297215284,
+          15.253512752824749,
+          59.17049972498943
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            14.420258297215284,
+            14.253512752824749,
+            58.17049972498943
+          ],
+          "axis": [
+            0.011037733405828476,
+            0.9999373555183411,
+            -0.0018765530548989773
+          ],
+          "radiusAtOriginMM": 0.5637392704367089,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -0.65,
+            0.65
+          ],
+          "thicknessMM": 0.5637392704367089,
+          "allowanceMM": 0
+        }
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "OwnPDF17 andfull/back/top/side/5window/2headviews inspected. SourceSHA787603428b65dce8a15b7895b6b9b837d172a83bce19aec1716f343ac376d7dc,780028tri39001484B,max99.173897. Own10000floorWall matched110R180 median.002106/p99.016254. Own73intactbase rays C[0, 0, 74.04458950618972] N[0.8318055944919995, 0.005818813784436833, 0.5550365703068163], ownhood91/85rays,8sectionsperrafter,39rearbrace sections; sixcirclefits24bins each. Owncentre[0.07027673721313477, -0.00591731071472168] from14/16mm sections,canonical0. ActorfloornegativeX25.898331/26.017538 andcircleheadroommin36.920603/37.119749mm;lowEast4blockX>=1.2below61.017538. No glass, no emission/defaultlights. Eleven former pane cores verified as99native clear8mmsegments, includingtinyuppermargin.1mm; check source+R/L/S before/afterUD016,protectwood/latticevoidrims and6heads. All source-reference projections/exclusions recursively updated toown113,including plaster exclusions. SevenUVregions avoidnearverticalsharedatlas collapse. Mustsourcepaint/bothcandidatesgeometry/material/void/actor/PBR/fourtierviews,select/std/centreCLI/finaltransparentoutside+Xpreview/GoMF/MCP5+emptybehaviour. Own interiorrim probe [14,4.581064,50.75] exposed blue onbackoflowerlattice inheritedfromcoincidentparentroof. Explicitownrear-depthX11..14.31 verticalpostbands|Y|4.3..7/9.4..13.3 andcentralX11 restorebrowncutwood;existingYcrossbars stilloverride. Verifyallopeningrims beforebake. 44owninner-windowrim probes allwood and99openingair+67actorvoid sourcechecks pass;freeze .65mm neighbourhood aroundeachinnerwoodrim. Sourceprobes752geometry606colours plus2234dense;allsourcefaces classifiedinmaterialorder. Inner rim pointboxes maycontainnovertices onflatSTLtriangles;replacebyown44rehittrianglebounds+.02mm,sourcefaces/verticesrecorded,ensuringrealgeometrypins.",
+  "renderColourSize": 3072,
+  "renderColourQuality": 96,
+  "lodColourQuality": 96,
+  "geometryDetailRegions": [
+    {
+      "name": "own parent low eave",
+      "minMM": [
+        11,
+        -17.8,
+        46.7
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        56
+      ]
+    },
+    {
+      "name": "own frontal lattice and gable wood",
+      "minMM": [
+        15,
+        -16,
+        48
+      ],
+      "maxMM": [
+        17.8,
+        16,
+        86
+      ]
+    },
+    {
+      "name": "own added ridge cap",
+      "minMM": [
+        -10,
+        -2,
+        82
+      ],
+      "maxMM": [
+        17.8,
+        2,
+        93
+      ],
+      "sourceSelection": {
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            87.669273239441
+          ],
+          "axis": [
+            0.06385498973188165,
+            0.0,
+            0.9979591876857195
+          ],
+          "rangeMM": [
+            -0.7,
+            3.5
+          ]
+        },
+        "awayFromSource": {
+          "code": "MT1-110",
+          "sourceSHA256": "6bdfd60ad0c3d576fcf80ed76356e18b282fd064be68bfe8816c396306124987",
+          "rotationZDeg": 180,
+          "matchMM": 0.4,
+          "projectTo": {
+            "code": "MT1-113",
+            "sourceSHA256": "787603428b65dce8a15b7895b6b9b837d172a83bce19aec1716f343ac376d7dc"
+          }
+        }
+      }
+    },
+    {
+      "name": "own rear brace upper rim",
+      "minMM": [
+        15.79800033569336,
+        -16.64957113547927,
+        40.67270216113405
+      ],
+      "maxMM": [
+        18.79800033569336,
+        -13.64957113547927,
+        43.67270216113405
+      ]
+    },
+    {
+      "name": "own rear brace lower rim",
+      "minMM": [
+        15.535999298095703,
+        10.64028528601966,
+        26.545946440082968
+      ],
+      "maxMM": [
+        18.535999298095703,
+        13.64028528601966,
+        29.545946440082968
+      ]
+    },
+    {
+      "name": "own hood left upper rim",
+      "minMM": [
+        12.839353345840122,
+        -15.815054196137424,
+        61.001902549573074
+      ],
+      "maxMM": [
+        15.839353345840122,
+        -12.815054196137424,
+        64.00190254957307
+      ]
+    },
+    {
+      "name": "own hood left lower rim",
+      "minMM": [
+        12.866223228280518,
+        -15.903872315877972,
+        57.576338357056265
+      ],
+      "maxMM": [
+        15.866223228280518,
+        -12.903872315877972,
+        60.576338357056265
+      ]
+    },
+    {
+      "name": "own hood right upper rim",
+      "minMM": [
+        13.132582451660866,
+        12.705402708346055,
+        60.76888987906283
+      ],
+      "maxMM": [
+        16.132582451660866,
+        15.705402708346055,
+        63.76888987906283
+      ]
+    },
+    {
+      "name": "own hood right lower rim",
+      "minMM": [
+        12.920258297215284,
+        12.753512752824749,
+        56.67049972498943
+      ],
+      "maxMM": [
+        15.920258297215284,
+        15.753512752824749,
+        59.67049972498943
+      ]
+    },
+    {
+      "name": "own inner opening rim 1",
+      "minMM": [
+        12.780700187683106,
+        -1.706400055885315,
+        50.1936001586914
+      ],
+      "maxMM": [
+        14.126399536132812,
+        -1.598499994277954,
+        51.13180114746094
+      ]
+    },
+    {
+      "name": "own inner opening rim 2",
+      "minMM": [
+        13.784698944091797,
+        -4.6037001800537105,
+        48.91019866943359
+      ],
+      "maxMM": [
+        14.588301200866699,
+        -4.521100025177002,
+        51.355300445556644
+      ]
+    },
+    {
+      "name": "own inner opening rim 3",
+      "minMM": [
+        13.567900161743164,
+        -4.125599880218505,
+        52.77069900512695
+      ],
+      "maxMM": [
+        14.43510009765625,
+        -1.7521999883651733,
+        52.848498840332034
+      ]
+    },
+    {
+      "name": "own inner opening rim 4",
+      "minMM": [
+        12.648499946594239,
+        -3.4468999099731445,
+        48.46529815673828
+      ],
+      "maxMM": [
+        14.225799102783203,
+        -1.8315000343322754,
+        48.6199984741211
+      ]
+    },
+    {
+      "name": "own inner opening rim 5",
+      "minMM": [
+        13.72489974975586,
+        9.391999702453614,
+        49.8914990234375
+      ],
+      "maxMM": [
+        14.601199645996093,
+        9.46219970703125,
+        52.51750137329102
+      ]
+    },
+    {
+      "name": "own inner opening rim 6",
+      "minMM": [
+        12.911099891662598,
+        6.802599887847901,
+        48.647499542236325
+      ],
+      "maxMM": [
+        14.522598762512207,
+        7.018300075531005,
+        51.33689834594727
+      ]
+    },
+    {
+      "name": "own inner opening rim 7",
+      "minMM": [
+        13.513700942993164,
+        7.826399784088135,
+        52.75069854736328
+      ],
+      "maxMM": [
+        14.42920066833496,
+        8.34229995727539,
+        52.833701629638675
+      ]
+    },
+    {
+      "name": "own inner opening rim 8",
+      "minMM": [
+        12.933800201416016,
+        7.451199989318848,
+        48.45729873657226
+      ],
+      "maxMM": [
+        14.137899894714355,
+        9.15539981842041,
+        48.58489944458008
+      ]
+    },
+    {
+      "name": "own inner opening rim 9",
+      "minMM": [
+        12.709599952697754,
+        -6.881000061035156,
+        50.0253987121582
+      ],
+      "maxMM": [
+        14.088499565124511,
+        -6.783699970245362,
+        52.48379852294922
+      ]
+    },
+    {
+      "name": "own inner opening rim 10",
+      "minMM": [
+        13.807699661254883,
+        -9.860999603271484,
+        49.984501342773434
+      ],
+      "maxMM": [
+        15.306399841308593,
+        -9.715600471496582,
+        51.16599990844727
+      ]
+    },
+    {
+      "name": "own inner opening rim 11",
+      "minMM": [
+        13.173499565124512,
+        -9.531699676513671,
+        52.7555012512207
+      ],
+      "maxMM": [
+        14.54589988708496,
+        -7.204299907684327,
+        52.86310150146485
+      ]
+    },
+    {
+      "name": "own inner opening rim 12",
+      "minMM": [
+        13.848498802185059,
+        -8.42190029144287,
+        48.5686001586914
+      ],
+      "maxMM": [
+        14.032799263000488,
+        -7.822800617218018,
+        48.61439849853516
+      ]
+    },
+    {
+      "name": "own inner opening rim 13",
+      "minMM": [
+        13.967199783325196,
+        4.5527000236511235,
+        50.6227001953125
+      ],
+      "maxMM": [
+        14.062301177978515,
+        4.611400146484375,
+        50.899199981689456
+      ]
+    },
+    {
+      "name": "own inner opening rim 14",
+      "minMM": [
+        13.797000389099122,
+        1.3773000049591064,
+        48.88290069580078
+      ],
+      "maxMM": [
+        14.379299659729003,
+        1.4413000535964966,
+        51.885398406982425
+      ]
+    },
+    {
+      "name": "own inner opening rim 15",
+      "minMM": [
+        13.639899711608887,
+        1.8785998630523681,
+        52.766701202392575
+      ],
+      "maxMM": [
+        14.517798919677734,
+        4.458000202178955,
+        52.84580184936524
+      ]
+    },
+    {
+      "name": "own inner opening rim 16",
+      "minMM": [
+        12.624800186157227,
+        2.7769000339508056,
+        48.447399597167966
+      ],
+      "maxMM": [
+        14.203698654174804,
+        4.360099811553955,
+        48.60219909667969
+      ]
+    },
+    {
+      "name": "own inner opening rim 17",
+      "minMM": [
+        13.061899642944336,
+        -1.6288000535964966,
+        55.859299163818356
+      ],
+      "maxMM": [
+        14.62669994354248,
+        -1.543599944114685,
+        59.2793994140625
+      ]
+    },
+    {
+      "name": "own inner opening rim 18",
+      "minMM": [
+        13.664100151062012,
+        -4.4899001312255855,
+        57.05649993896484
+      ],
+      "maxMM": [
+        14.091100234985351,
+        -4.433599929809571,
+        58.292800445556644
+      ]
+    },
+    {
+      "name": "own inner opening rim 19",
+      "minMM": [
+        13.969800453186036,
+        -3.2235996913909912,
+        59.5706982421875
+      ],
+      "maxMM": [
+        14.089399833679199,
+        -1.674700002670288,
+        59.62929870605469
+      ]
+    },
+    {
+      "name": "own inner opening rim 20",
+      "minMM": [
+        13.321500282287598,
+        -3.574500102996826,
+        55.049198608398434
+      ],
+      "maxMM": [
+        14.211100120544433,
+        -2.106499891281128,
+        55.1288981628418
+      ]
+    },
+    {
+      "name": "own inner opening rim 21",
+      "minMM": [
+        13.910500030517579,
+        4.5953001785278325,
+        56.956799011230466
+      ],
+      "maxMM": [
+        14.033600349426269,
+        4.637499828338623,
+        57.521499176025394
+      ]
+    },
+    {
+      "name": "own inner opening rim 22",
+      "minMM": [
+        12.989499549865723,
+        1.4285000371932983,
+        55.366798858642575
+      ],
+      "maxMM": [
+        14.576200981140136,
+        1.533100028038025,
+        58.870601196289066
+      ]
+    },
+    {
+      "name": "own inner opening rim 23",
+      "minMM": [
+        13.955199699401856,
+        2.3847000408172607,
+        59.51400039672851
+      ],
+      "maxMM": [
+        14.121699829101562,
+        3.689600009918213,
+        59.58499862670899
+      ]
+    },
+    {
+      "name": "own inner opening rim 24",
+      "minMM": [
+        13.408999900817872,
+        2.5685000228881836,
+        55.044601898193356
+      ],
+      "maxMM": [
+        14.064500350952148,
+        4.142600078582763,
+        55.11260177612305
+      ]
+    },
+    {
+      "name": "own inner opening rim 25",
+      "minMM": [
+        13.21349952697754,
+        9.331200103759766,
+        55.99520156860351
+      ],
+      "maxMM": [
+        14.758499641418457,
+        9.409399528503418,
+        58.79220153808594
+      ]
+    },
+    {
+      "name": "own inner opening rim 26",
+      "minMM": [
+        13.241200904846192,
+        6.848600368499756,
+        55.18890045166015
+      ],
+      "maxMM": [
+        14.431398887634277,
+        7.04209997177124,
+        58.783198852539066
+      ]
+    },
+    {
+      "name": "own inner opening rim 27",
+      "minMM": [
+        13.858299713134766,
+        7.903799514770508,
+        59.455700378417966
+      ],
+      "maxMM": [
+        14.03819896697998,
+        8.526199836730957,
+        59.528899688720706
+      ]
+    },
+    {
+      "name": "own inner opening rim 28",
+      "minMM": [
+        12.731299858093262,
+        7.235499362945557,
+        55.003998260498044
+      ],
+      "maxMM": [
+        14.179199714660644,
+        9.289700050354003,
+        55.11090042114258
+      ]
+    },
+    {
+      "name": "own inner opening rim 29",
+      "minMM": [
+        12.665400009155274,
+        -6.793799896240234,
+        57.136600952148434
+      ],
+      "maxMM": [
+        14.181199569702148,
+        -6.7178001213073735,
+        58.9673991394043
+      ]
+    },
+    {
+      "name": "own inner opening rim 30",
+      "minMM": [
+        13.852599601745606,
+        -9.782599945068359,
+        55.40630004882812
+      ],
+      "maxMM": [
+        15.140100021362304,
+        -9.647599678039551,
+        59.342299957275394
+      ]
+    },
+    {
+      "name": "own inner opening rim 31",
+      "minMM": [
+        13.04619930267334,
+        -8.651400108337402,
+        59.628700714111325
+      ],
+      "maxMM": [
+        14.319400329589843,
+        -7.005199890136719,
+        59.69350006103516
+      ]
+    },
+    {
+      "name": "own inner opening rim 32",
+      "minMM": [
+        13.73100040435791,
+        -8.905000228881836,
+        55.076000671386716
+      ],
+      "maxMM": [
+        14.216199417114257,
+        -8.047399978637696,
+        55.13489868164063
+      ]
+    },
+    {
+      "name": "own inner opening rim 33",
+      "minMM": [
+        13.94780014038086,
+        -6.69889928817749,
+        62.64550064086914
+      ],
+      "maxMM": [
+        14.060398597717285,
+        -6.619900207519532,
+        63.03079940795899
+      ]
+    },
+    {
+      "name": "own inner opening rim 34",
+      "minMM": [
+        13.794200401306153,
+        -7.821000118255615,
+        62.34240005493164
+      ],
+      "maxMM": [
+        14.11220027923584,
+        -6.880000095367432,
+        63.664599914550784
+      ]
+    },
+    {
+      "name": "own inner opening rim 35",
+      "minMM": [
+        13.799199562072754,
+        -7.821000118255615,
+        62.34240005493164
+      ],
+      "maxMM": [
+        14.132899780273437,
+        -6.858499984741211,
+        63.66509963989258
+      ]
+    },
+    {
+      "name": "own inner opening rim 36",
+      "minMM": [
+        13.918300132751465,
+        -7.098800201416015,
+        61.95430038452148
+      ],
+      "maxMM": [
+        14.416699905395507,
+        -6.796999435424805,
+        61.99539901733399
+      ]
+    },
+    {
+      "name": "own inner opening rim 37",
+      "minMM": [
+        13.04670093536377,
+        -1.5716999959945679,
+        62.39740036010742
+      ],
+      "maxMM": [
+        14.81930019378662,
+        -1.481099944114685,
+        67.10679962158203
+      ]
+    },
+    {
+      "name": "own inner opening rim 38",
+      "minMM": [
+        13.651099662780762,
+        -4.3873000335693355,
+        65.28879974365235
+      ],
+      "maxMM": [
+        14.144199867248535,
+        -4.328999977111817,
+        66.84679748535156
+      ]
+    },
+    {
+      "name": "own inner opening rim 39",
+      "minMM": [
+        13.775000076293946,
+        -4.271399993896484,
+        67.26170013427735
+      ],
+      "maxMM": [
+        15.186399955749511,
+        -2.8594000148773193,
+        69.25979949951171
+      ]
+    },
+    {
+      "name": "own inner opening rim 40",
+      "minMM": [
+        13.645300369262696,
+        -4.108900089263916,
+        61.89139984130859
+      ],
+      "maxMM": [
+        14.70529987335205,
+        -1.6067999410629272,
+        61.96139862060547
+      ]
+    },
+    {
+      "name": "own inner opening rim 41",
+      "minMM": [
+        13.970300178527832,
+        4.652699928283692,
+        65.4163021850586
+      ],
+      "maxMM": [
+        14.070199508666992,
+        4.701399822235107,
+        65.86059906005859
+      ]
+    },
+    {
+      "name": "own inner opening rim 42",
+      "minMM": [
+        13.005300025939942,
+        1.5559000778198242,
+        62.150299530029294
+      ],
+      "maxMM": [
+        14.19490005493164,
+        1.683699984550476,
+        68.74840118408203
+      ]
+    },
+    {
+      "name": "own inner opening rim 43",
+      "minMM": [
+        13.804999809265137,
+        2.7467999267578125,
+        67.08299682617188
+      ],
+      "maxMM": [
+        14.878499526977539,
+        4.573400039672851,
+        69.88650085449218
+      ]
+    },
+    {
+      "name": "own inner opening rim 44",
+      "minMM": [
+        12.966499786376954,
+        1.6182001638412475,
+        61.81359909057617
+      ],
+      "maxMM": [
+        14.54690029144287,
+        4.425399799346923,
+        61.89710189819336
+      ]
+    }
+  ],
+  "placementCells": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "pegCentersMM": [
+    [
+      0.07027673721313477,
+      -0.00591731071472168
+    ]
+  ],
+  "mountCentreFitReview": {
+    "sourceSHA256": "787603428b65dce8a15b7895b6b9b837d172a83bce19aec1716f343ac376d7dc",
+    "nativeCentresMM": [
+      [
+        0.07027673721313477,
+        -0.00591731071472168
+      ]
+    ],
+    "fittedCentresMM": [
+      [
+        0.07027673721313477,
+        -0.00591731071472168
+      ]
+    ],
+    "preservedCentroidMM": [
+      0.07027673721313477,
+      -0.00591731071472168
+    ],
+    "maxCoordinateMoveMM": 0,
+    "requiredDecodedCentreToleranceMM": 0.02,
+    "sourceSections": [
+      {
+        "z": 12,
+        "centreMM": [
+          0.07589912414550781,
+          -0.019023418426513672
+        ]
+      },
+      {
+        "z": 14,
+        "centreMM": [
+          0.07026958465576172,
+          -0.005897045135498047
+        ]
+      },
+      {
+        "z": 16,
+        "centreMM": [
+          0.07028388977050781,
+          -0.0059375762939453125
+        ]
+      }
+    ],
+    "method": "Own opposite upper-frustum rays14/16; canonical placement and native material sampling"
+  },
+  "uvBaseTile": [
+    0.002,
+    0.002,
+    0.5,
+    0.998
+  ],
+  "uvDetailRegions": [
+    {
+      "name": "own open window frame and gable",
+      "minMM": [
+        10.5,
+        -16,
+        47.5
+      ],
+      "maxMM": [
+        17.8,
+        16,
+        86
+      ],
+      "tile": [
+        0.51,
+        0.002,
+        0.998,
+        0.65
+      ],
+      "angleLimitRad": 0.4,
+      "islandMargin": 0.0008
+    },
+    {
+      "name": "own front plaster and timber edges",
+      "minMM": [
+        9.4,
+        -17.8,
+        27.8
+      ],
+      "maxMM": [
+        13.7,
+        17.8,
+        46.8
+      ],
+      "tile": [
+        0.51,
+        0.66,
+        0.75,
+        0.9
+      ],
+      "angleLimitRad": 0.3,
+      "islandMargin": 0.0008
+    },
+    {
+      "name": "own rear wall brace and plaster",
+      "minMM": [
+        14,
+        -17.8,
+        27.8
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        46.8
+      ],
+      "tile": [
+        0.76,
+        0.66,
+        0.998,
+        0.9
+      ],
+      "angleLimitRad": 0.3,
+      "islandMargin": 0.0008
+    },
+    {
+      "name": "own high roof end fascia",
+      "minMM": [
+        -17.8,
+        -17.8,
+        80
+      ],
+      "maxMM": [
+        -16.4,
+        17.8,
+        100
+      ],
+      "tile": [
+        0.51,
+        0.91,
+        0.66,
+        0.998
+      ],
+      "angleLimitRad": 0.3,
+      "islandMargin": 0.00035
+    },
+    {
+      "name": "own sloping roof outer fascia -1",
+      "minMM": [
+        -16.4,
+        -17.8,
+        46.8
+      ],
+      "maxMM": [
+        17.8,
+        -16.4,
+        100
+      ],
+      "tile": [
+        0.67,
+        0.91,
+        0.83,
+        0.998
+      ],
+      "angleLimitRad": 0.3,
+      "islandMargin": 0.00035
+    },
+    {
+      "name": "own sloping roof outer fascia 1",
+      "minMM": [
+        -16.4,
+        16.4,
+        46.8
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        100
+      ],
+      "tile": [
+        0.84,
+        0.91,
+        0.998,
+        0.998
+      ],
+      "angleLimitRad": 0.3,
+      "islandMargin": 0.00035
+    }
+  ]
+}
