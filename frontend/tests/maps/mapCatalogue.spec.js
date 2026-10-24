@@ -133,9 +133,11 @@ test("session picker subscribes and opens an independent catalogue map", async (
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/tests/maps/fixtures/maps.html?mode=board&catalogueExample");
   await expect(page.locator(".map-canvas canvas")).toBeVisible();
-  await page.getByRole("button", { name: "Сменить", exact: true }).click();
   await page
-    .getByRole("dialog", { name: "Карты сессии", exact: true })
+    .getByRole("button", { name: "Добавить карту", exact: true })
+    .click();
+  await page
+    .getByRole("dialog", { name: "Добавить карту", exact: true })
     .getByRole("button", { name: "Добавить новую 3D карту", exact: true })
     .click();
   const picker = page.getByRole("dialog", {

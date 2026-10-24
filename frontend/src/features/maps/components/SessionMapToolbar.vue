@@ -1,93 +1,64 @@
 <template>
-  <div class="session-map-toolbars" data-tutorial="session-map-toolbar">
-    <BaseTile
-      surface="glass"
-      class="session-map-toolbar"
-      role="toolbar"
-      aria-label="Карта сессии"
+  <div
+    v-if="controller.display"
+    class="session-map-broadcast"
+    role="toolbar"
+    aria-label="Трансляция карты"
+    data-tutorial="session-map-broadcast"
+  >
+    <ActionButton
+      icon-only
+      :variant="selectedOnAir ? 'primary' : 'quiet'"
+      :aria-pressed="selectedOnAir"
+      :aria-label="
+        selectedOnAir
+          ? 'Остановить трансляцию'
+          : `Транслировать карту «${activeMap?.name || ''}»`
+      "
+      :disabled="controller.displaySaving || !activeMap"
+      @click="
+        controller.updateDisplay(
+          toggleMapBroadcast(controller.display, activeMap),
+        )
+      "
+      ><template #icon><MonitorUp :size="20" /></template
+    ></ActionButton>
+    <ActionButton
+      variant="quiet"
+      class="session-map-current-camera"
+      :disabled="!broadcastMap"
+      aria-label="Перейти к виду камеры трансляции"
+      :title="cameraName"
+      @click="emit('view')"
     >
-      <div class="session-map-toolbar-group session-map-toolbar-map">
-        <Map :size="18" />
-        <InlineEdit
-          :model-value="editor.draft.name"
-          label="Название карты сессии"
-          :maxlength="160"
-          required
-          @confirm="editor.change((m) => (m.name = String($event).trim()))"
-        />
-        <ActionButton
-          variant="quiet"
-          layout="stacked"
-          aria-label="Сменить"
-          @click="emit('switch')"
-          ><template #icon><ArrowLeftRight :size="20" /></template
-          >Сменить</ActionButton
-        >
-      </div>
-    </BaseTile>
-    <BaseTile
-      v-if="controller.display"
-      surface="glass"
-      class="session-map-toolbar"
-      role="toolbar"
-      aria-label="Трансляция карты"
-    >
-      <div
-        class="session-map-toolbar-group session-map-toolbar-broadcast"
-        data-tutorial="session-map-broadcast"
+      <template #icon><Camera :size="18" /></template>
+      <span class="session-map-camera-caption"
+        ><small>{{
+          controller.display.visible
+            ? `В эфире: ${broadcastMap?.name || "Карта"}`
+            : "Трансляция выключена"
+        }}</small
+        ><strong>{{ cameraName }}</strong></span
       >
-        <ActionButton
-          icon-only
-          :variant="controller.display.visible ? 'primary' : 'quiet'"
-          :disabled="controller.displaySaving"
-          :aria-pressed="controller.display.visible"
-          :aria-label="
-            controller.display.visible
-              ? 'Остановить трансляцию'
-              : 'Начать трансляцию'
-          "
-          @click="
-            controller.updateDisplay({
-              mapId: editor.draft.id,
-              visible: !controller.display.visible,
-            })
-          "
-          ><template #icon><MonitorUp :size="20" /></template
-        ></ActionButton>
-        <ActionButton
-          variant="quiet"
-          class="session-map-current-camera"
-          aria-label="Перейти к виду камеры трансляции"
-          :title="cameraName"
-          @click="emit('view')"
-        >
-          <template #icon><Camera :size="18" /></template>
-          <span class="session-map-camera-caption"
-            ><small>Камера трансляции</small
-            ><strong>{{ cameraName }}</strong></span
-          >
-        </ActionButton>
-        <ActionButton
-          v-if="editor.draft.document.kind === 'tiles'"
-          variant="quiet"
-          layout="stacked"
-          :disabled="controller.displaySaving"
-          aria-label="Отобразить текущий вид"
-          title="Отобразить текущий вид"
-          @click="emit('capture')"
-          ><template #icon><Focus :size="20" /></template>Текущий
-          вид</ActionButton
-        >
-        <ActionButton
-          v-else
-          icon-only
-          variant="quiet"
-          aria-label="Калибровка экрана"
-          @click="calibration = true"
-          ><template #icon><Settings :size="17" /></template
-        ></ActionButton>
-      </div>
-    </BaseTile>
+    </ActionButton>
+    <ActionButton
+      v-if="activeMap?.document.kind === 'tiles'"
+      variant="quiet"
+      layout="stacked"
+      :disabled="controller.displaySaving || !editor"
+      aria-label="Отобразить текущий вид"
+      title="Отобразить текущий вид"
+      @click="emit('capture')"
+      ><template #icon><Focus :size="20" /></template>Текущий вид</ActionButton
+    >
+    <ActionButton
+      v-else-if="activeMap?.document.kind === 'image'"
+      icon-only
+      variant="quiet"
+      aria-label="Калибровка экрана"
+      @click="calibration = true"
+      ><template #icon><Settings :size="17" /></template
+    ></ActionButton>
   </div>
   <AppModalFrame
     v-if="calibration"
@@ -98,9 +69,9 @@
     <MapDisplaySettings
       :display="controller.display"
       :path="screenPath"
-      :selected-map-id="editor.draft.id"
+      :selected-map-id="activeMap?.id || ''"
       :busy="controller.displaySaving"
-      :selected-on-air="controller.display.mapId === editor.draft.id"
+      :selected-on-air="controller.display.mapId === activeMap?.id"
       @update="controller.updateDisplay"
       @frame="emit('capture')"
     />
@@ -108,79 +79,46 @@
 </template>
 <script setup>
 import { computed, ref } from "vue";
-import {
-  ActionButton,
-  AppModalFrame,
-  BaseTile,
-  InlineEdit,
-} from "@sylvieshare/share-ui";
-import {
-  ArrowLeftRight,
-  Map,
-  MonitorUp,
-  Focus,
-  Settings,
-  Camera,
-} from "@lucide/vue";
+import { ActionButton, AppModalFrame } from "@sylvieshare/share-ui";
+import { MonitorUp, Focus, Settings, Camera } from "@lucide/vue";
 import MapDisplaySettings from "./MapDisplaySettings.vue";
+import { toggleMapBroadcast } from "../lib/sessionMapBroadcast";
 const calibration = ref(false);
 const props = defineProps({
   editor: Object,
   controller: Object,
   screenPath: String,
 });
-const emit = defineEmits(["switch", "view", "capture"]);
+const emit = defineEmits(["view", "capture"]);
+const activeMap = computed(
+  () => props.editor?.draft || props.controller.selected,
+);
+const broadcastMap = computed(() =>
+  activeMap.value?.id === props.controller.display?.mapId
+    ? activeMap.value
+    : props.controller.maps.find(
+        (m) => m.id === props.controller.display?.mapId,
+      ),
+);
+const selectedOnAir = computed(
+  () =>
+    !!props.controller.display?.visible &&
+    props.controller.display.mapId === activeMap.value?.id,
+);
 const cameraName = computed(() => {
   const camera = props.controller.display?.camera;
   return (
-    props.editor.draft.document.cameras?.find((c) => c.id === camera?.sceneId)
+    broadcastMap.value?.document.cameras?.find((c) => c.id === camera?.sceneId)
       ?.name || (camera?.view ? "Зафиксированный вид" : "Вся карта")
   );
 });
 </script>
 <style scoped>
-.session-map-toolbars {
-  position: absolute;
-  top: 12px;
-  left: calc(var(--map-overlay-left, 0px) + 12px);
-  right: 12px;
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 10px;
-  pointer-events: none;
-  z-index: 4;
-  transition: left 0.25s ease;
-}
-.session-map-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 8px;
-  box-sizing: border-box;
-  min-height: 64px;
-  width: max-content;
-  max-width: 100%;
-  pointer-events: auto;
-}
-.session-map-toolbar-group {
+.session-map-broadcast {
   display: flex;
   align-items: center;
   gap: 6px;
   min-width: 0;
-}
-.session-map-toolbar-map > svg {
-  flex: none;
-}
-.session-map-toolbar-map {
-  flex: 0 1 auto;
-}
-.session-map-toolbar-broadcast {
-  flex: 1 1 auto;
-}
-.session-map-toolbar :deep(.share-inline-edit) {
-  min-width: 0;
-  max-width: 220px;
 }
 .session-map-current-camera {
   min-width: 0;
@@ -202,6 +140,9 @@ const cameraName = computed(() => {
   font-size: 10px;
   color: var(--text-muted);
   font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .session-map-camera-caption strong {
   line-height: 16px;
@@ -209,10 +150,5 @@ const cameraName = computed(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-@media (prefers-reduced-motion: reduce) {
-  .session-map-toolbars {
-    transition: none;
-  }
 }
 </style>

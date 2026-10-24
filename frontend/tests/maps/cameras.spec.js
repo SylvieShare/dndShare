@@ -89,7 +89,9 @@ test("camera placement and focus save a pose; broadcasting a captured view stays
 test("switch dialog offers a session-only image mode", async ({ page }) => {
   await page.goto("/tests/maps/fixtures/maps.html?mode=board");
   await expect(page.locator(".map-canvas canvas")).toBeVisible();
-  await page.getByRole("button", { name: "Сменить", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Добавить карту", exact: true })
+    .click();
   await page
     .getByRole("button", { name: "Добавить 2D карту", exact: true })
     .click();
@@ -148,58 +150,37 @@ test("2D image mode hides 3D tools and places creatures at logical grid centres"
 });
 
 for (const mobile of [false, true])
-  test(`separate map toolbars keep neutral frames, glass and captions below icons ${mobile ? "mobile" : "desktop"}`, async ({
+  test(`map tabs and broadcast controls share the session subheader ${mobile ? "mobile" : "desktop"}`, async ({
     page,
   }) => {
     await page.setViewportSize(
       mobile ? { width: 430, height: 932 } : { width: 1440, height: 1000 },
     );
     await page.goto("/tests/maps/fixtures/maps.html?mode=board");
-    await expect(page.locator(".session-map-toolbar")).toHaveCount(2);
-    const bars = await page
-      .locator(".session-map-toolbar")
-      .evaluateAll((nodes) =>
-        nodes.map((node) => ({
-          height: node.getBoundingClientRect().height,
-          blur: getComputedStyle(node).backdropFilter,
-          background:
-            getComputedStyle(node).backgroundColor +
-            getComputedStyle(node).backgroundImage,
-          overflow: node.scrollWidth > node.clientWidth,
-        })),
-      );
-    expect(bars.map((b) => b.height)).toEqual([64, 64]);
+    const header = page.locator(".session-map-tabs-header");
+    await expect(header).toHaveCount(1);
     await expect(
-      page.locator(".session-map-toolbar.base-tile--framed"),
+      header.getByRole("tablist", { name: "Карты сессии" }),
+    ).toBeVisible();
+    await expect(
+      header.getByRole("toolbar", { name: "Трансляция карты" }),
+    ).toBeVisible();
+    await expect(page.locator(".session-map-toolbars")).toHaveCount(0);
+    await expect(
+      page.getByRole("button", { name: "Сменить", exact: true }),
     ).toHaveCount(0);
+    const current = header.getByRole("button", {
+      name: "Отобразить текущий вид",
+      exact: true,
+    });
     expect(
-      bars.every(
-        (b) => b.blur.includes("blur") && b.background.includes("0.76"),
+      await current.evaluate(
+        (el) =>
+          el.querySelector("span").getBoundingClientRect().top >=
+          el.querySelector("svg").getBoundingClientRect().bottom,
       ),
-      JSON.stringify(bars),
     ).toBe(true);
-    expect(bars.some((b) => b.overflow)).toBe(false);
-    for (const name of ["Сменить", "Отобразить текущий вид"]) {
-      const button = page.getByRole("button", { name, exact: true });
-      expect(
-        await button.evaluate((el) => {
-          const icon = el.querySelector("svg").getBoundingClientRect();
-          const text = el.querySelector("span").getBoundingClientRect();
-          return text.top >= icon.bottom;
-        }),
-      ).toBe(true);
-    }
-    await expect(
-      page.getByRole("combobox", { name: "Камера трансляции" }),
-    ).toHaveCount(0);
-    const toolbar = page.locator(".session-map-toolbars");
-    await expect(
-      toolbar.getByRole("button", { name: "Вид игроков", exact: true }),
-    ).toHaveCount(0);
-    await expect(
-      toolbar.getByRole("button", { name: "Экран карты", exact: true }),
-    ).toHaveCount(0);
-    await expect(toolbar.locator(".lucide-monitor-up")).toHaveCount(1);
+    await expect(header.locator(".lucide-monitor-up")).toHaveCount(2);
   });
 test("camera body moves freely with a stable height and look direction", async ({
   page,

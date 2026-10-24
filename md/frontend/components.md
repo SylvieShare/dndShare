@@ -538,16 +538,17 @@ MapEntityRow имеет слот details для переиспользуемог
 MapReferenceButton открывает справочник только из шапки редактора заготовок.
 В сессии первыми стоят «Существа», затем разделитель и общие вкладки редактора.
 Настройки одинаковы; новый MapCamerasPanel/MapCameraFocus с LOD-превью общие
-для 3D. MapImageSettings калибрует изображение 2D. Панели выбора карты и
-трансляции — две отдельные панели на BaseTile(surface="glass") с обычной
-нейтральной рамкой, InlineEdit
-и ActionButton над холстом. Кнопки смены и захвата используют общий
-ActionButton(layout="stacked") из share-ui 0.39.0. Название камеры — обычная
-ActionButton, которая посещает её вид; трансляция сохранённой камеры запускается
-в MapCameraFocus. ToggleSwitch «Отображать камеры» в MapCamerasPanel меняет
-только локальную видимость маркеров.
-Высота 64 px задаётся компоновкой SessionMapToolbar; полупрозрачный фон и blur —
-общим BaseTile(surface="glass"). Геометрия кнопок не переопределяется; селектора камеры в баре нет.
+для 3D. MapImageSettings калибрует изображение 2D. SessionMapTabsHeader находится
+под шапкой сессии над холстом: общий SlidingTabs(maxTabWidth=220) из share-ui
+0.42.0, отдельные карандаши в tab-actions и ActionButton плюса после вкладок.
+Иконка и подпись «В эфире» принадлежат домену карты и не меняют индикатор выбора.
+SessionMapToolbar теперь содержит только управление трансляцией и камерой в
+правой части этой строки. SessionMapPicker выбирает 3D/2D добавление;
+SessionMapTabDialog — доменная композиция AppModalFrame, FormField,
+FormTextInput, FormActionButtons и RemoveButton: в ней две операции над слепком
+(переименование и удаление), поэтому обычного TextPromptDialog недостаточно.
+useSessionMapBroadcast отделяет посещение вида камеры от смены карты игроков.
+MapCamerasPanel и MapCameraFocus используют общий ToggleSwitch видимости камер.
 Игроки не резервируют дополнительную колонку на карте.
 
 MapLightingControls, MapSunSettings и MapLightingPanel общие для обеих страниц;

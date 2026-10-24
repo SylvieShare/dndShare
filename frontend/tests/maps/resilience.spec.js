@@ -2,12 +2,17 @@ import { test, expect } from "@playwright/test";
 async function remove(page) {
   await page.goto("/tests/maps/fixtures/maps.html?mode=board&slowDelete");
   await expect(page.locator(".map-canvas canvas")).toBeVisible();
-  await page.getByRole("button", { name: "Сменить", exact: true }).click();
+  await page
+    .getByRole("button", { name: /Переименовать карту/ })
+    .first()
+    .click();
   await page.getByRole("button", { name: /Убрать карту / }).click();
   const dialog = page.getByRole("dialog", { name: "Убрать карту из сессии?" });
   await dialog.getByRole("button", { name: "Убрать", exact: true }).click();
   await expect(dialog).toHaveCount(0);
-  await expect(page.locator(".session-map-choice-main")).toHaveCount(0);
+  await expect(
+    page.getByRole("tablist", { name: "Карты сессии" }).getByRole("tab"),
+  ).toHaveCount(0);
   await expect
     .poll(() => page.evaluate(() => typeof window.finishMapDelete))
     .toBe("function");
@@ -24,16 +29,20 @@ test("session delete completes in the UI before the response and a failure uses 
   await expect(
     page.locator(".notification-stack [data-notification-type=error]"),
   ).toContainText("Не удалось удалить карту");
-  await expect(page.locator(".session-map-choice-main")).toHaveCount(1);
+  await expect(
+    page.getByRole("tablist", { name: "Карты сессии" }).getByRole("tab"),
+  ).toHaveCount(1);
 });
 test("successful background deletion does not reopen the removed map", async ({
   page,
 }) => {
   await remove(page);
   await page.evaluate(() => window.finishMapDelete());
-  await expect(page.locator(".session-map-choice-main")).toHaveCount(0);
   await expect(
-    page.getByText("В сессии пока нет карт.", { exact: true }),
+    page.getByRole("tablist", { name: "Карты сессии" }).getByRole("tab"),
+  ).toHaveCount(0);
+  await expect(
+    page.getByText("Откройте карту сессии", { exact: true }),
   ).toBeVisible();
 });
 test("catalogue connection failures retry in the manager and do not claim the model is absent", async ({

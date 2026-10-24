@@ -141,7 +141,9 @@ test("session toolbar opens independent snapshots while settings match the edito
   await expect(page.getByRole("region", { name: "Основа карты" })).toHaveCount(
     0,
   );
-  await page.getByRole("button", { name: "Сменить", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Добавить карту", exact: true })
+    .click();
   await page
     .getByRole("button", { name: "Добавить новую 3D карту", exact: true })
     .click();
@@ -151,8 +153,10 @@ test("session toolbar opens independent snapshots while settings match the edito
     .first()
     .click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
-  await page.getByRole("button", { name: "Сменить", exact: true }).click();
-  await expect(page.locator(".session-map-choice-main")).toHaveCount(2);
-  await page.locator(".session-map-choice-main").first().click();
+  const tabs = page
+    .getByRole("tablist", { name: "Карты сессии" })
+    .getByRole("tab");
+  await expect(tabs).toHaveCount(2);
+  await tabs.first().click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
 });
