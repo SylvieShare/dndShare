@@ -181,7 +181,7 @@ function commitNoteEdit() {
 
 <style scoped>
 .enc-row-shell { display: flex; min-width: 0; align-items: stretch; }
-.enc-row-main { display: flex; align-items: stretch; gap: 10px; min-width: 0; flex: 1; max-width: var(--enc-roster-width, 400px); }
+.enc-row-main { display: flex; align-items: stretch; gap: 10px; min-width: 0; flex: 1; max-width: var(--enc-roster-width, 480px); }
 .enc-row-tile { position: relative; flex: 1; min-width: 0; overflow: hidden; border-radius: var(--r-lg); }
 .enc-row-roll-overlay { position: absolute; z-index: 2; inset: 2px 2px 2px auto; width: min(248px, calc(100% - 40px)); display: flex; align-items: center; overflow: hidden; border-radius: 0 calc(var(--r-lg) - 2px) calc(var(--r-lg) - 2px) 0; background: var(--surface); box-shadow: -8px 0 16px color-mix(in srgb, var(--scrim) 20%, transparent); }
 .enc-row-result { width: 100%; }

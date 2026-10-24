@@ -47,7 +47,7 @@ defineProps({
 .p-name { flex: 0 1 auto; min-width: 0; font-size: 13px; line-height: 16px; font-weight: 600; color: var(--text-1); white-space: nowrap; overflow: hidden; }
 .p-name-text { display: inline-block; width: max-content; vertical-align: top; }
 .creature-tile { isolation: isolate; }
-.creature-tile--relation::after { content: ''; position: absolute; z-index: -1; inset: 0; border-radius: inherit; pointer-events: none; background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--creature-relation-color) 9%, transparent) 0 7px, transparent 7px 14px); }
+.creature-tile--relation::after { content: ''; position: absolute; z-index: -1; inset: 0; border-radius: inherit; pointer-events: none; background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--creature-relation-color) 9%, transparent) 0 7px, transparent 7px 21px); }
 .creature-tile-health { min-width: 0; }
 .creature-tile-health :deep(.hp-row) { margin-top: 0; height: 6px; min-width: 0; }
 .creature-tile-stats { min-width: 0; grid-row: 3; }

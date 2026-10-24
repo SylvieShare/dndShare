@@ -6,12 +6,12 @@ for (const mobile of [false, true]) test(`narrow creature tile, fitted name and 
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/tests/tutorials/fixtures/participant-controls.html')
   const tile = page.locator('.enc-row'), rail = page.locator('.p-card')
-  expect((await tile.boundingBox()).width).toBeLessThanOrEqual(400)
+  expect((await tile.boundingBox()).width).toBeLessThanOrEqual(480)
   const stats = await rail.locator('.participant-stats').boundingBox()
   const indicators = await rail.locator('.participant-stat').evaluateAll(nodes => nodes.map(n => ({ x: n.getBoundingClientRect().x, width: n.getBoundingClientRect().width })))
   expect(indicators[0].x).toBeCloseTo(stats.x, 1)
   expect(indicators.at(-1).x + indicators.at(-1).width - stats.x).toBeLessThan(stats.width - 8)
-  const name = 'Древний хранитель забытого подземелья'
+  const name = 'Древний хранитель забытого подземелья северных земель'
   await page.evaluate(name => {
     window.controls.encounter.npcName = () => name
     window.controls.npc.initiative = 123
@@ -36,7 +36,7 @@ for (const mobile of [false, true]) test(`narrow creature tile, fitted name and 
   expect(resultBox.x + resultBox.width).toBeLessThanOrEqual(tileBox.x + tileBox.width)
   expect(resultBox.y).toBeGreaterThanOrEqual(tileBox.y)
   expect(resultBox.y + resultBox.height).toBeLessThanOrEqual(tileBox.y + tileBox.height)
-  expect((await page.locator('.enc-combat-primary').boundingBox()).width).toBeLessThanOrEqual(400)
+  expect((await page.locator('.enc-combat-primary').boundingBox()).width).toBeLessThanOrEqual(492)
   expect(tileBox.height).toBe(72)
   await page.getByRole('button', { name: 'Скрыть результат броска', exact: true }).click()
   await expect(result).toHaveCount(0)

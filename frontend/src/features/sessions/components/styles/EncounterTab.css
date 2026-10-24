@@ -97,8 +97,9 @@
 .enc-block--disabled .enc-reserve-list { pointer-events: none; }
 
 .enc-combat-layout {
-  --enc-roster-width: 400px;
-  --enc-primary-width: 400px;
+  --enc-roster-width: 480px;
+  --enc-scroll-gap: 12px;
+  --enc-primary-width: calc(var(--enc-roster-width) + var(--enc-scroll-gap));
   min-width: 0;
   opacity: 1;
   transform: translateY(0);
@@ -114,7 +115,7 @@
   gap: 16px;
 }
 
-.enc-combat-primary { min-width: 0; max-width: var(--enc-primary-width); }
+.enc-combat-primary { min-width: 0; max-width: var(--enc-primary-width); box-sizing: border-box; padding-inline-end: var(--enc-scroll-gap); }
 .enc-combat-primary .enc-section-title-row,
 .enc-combat-primary .enc-add-row,
 .enc-combat-primary .enc-empty,

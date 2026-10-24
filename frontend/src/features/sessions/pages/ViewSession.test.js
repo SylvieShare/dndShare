@@ -458,12 +458,12 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain('await importCombatBlock(block)')
   })
 
-  it('uses a 400px combat roster and a current-turn reference panel', () => {
+  it('uses a 480px combat roster and a current-turn reference panel', () => {
     expect(encounterSource).toContain("'enc-combat-layout--active': enc.encounter.active || combatTransitionPhase === 'ending'")
     expect(encounterSource).toContain(':combatant="currentTurnCombatant"')
     expect(encounterSource).toContain('enc.inCombat.find(combatant => combatant.uid === currentTurnUid.value)')
     expect(encounterStylesSource).toContain('grid-template-columns: minmax(0, var(--enc-primary-width)) minmax(280px, 1fr);')
-    expect(encounterStylesSource).toContain('--enc-roster-width: 400px;')
+    expect(encounterStylesSource).toContain('--enc-roster-width: 480px;')
     expect(encounterStylesSource).toMatch(/\.enc-combat-layout--active > \.enc-combat-primary\s*\{[^}]*overflow-y:\s*auto;/s)
     expect(encounterTurnPreviewSource).toMatch(/\.turn-preview\s*\{[^}]*height:\s*100%;[^}]*max-height:\s*none;/s)
     expect(encounterTurnPreviewSource).toContain('Сейчас ходит')

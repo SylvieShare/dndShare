@@ -18,8 +18,8 @@ load/save, players, NPC item cache, HP, initiative, flow, states and dice.
 
 The encounter workspace has no shared backing surface. Its header and every NPC
 row are separate `BaseTile` surfaces. The map and its inspector are not shown
-in Combat. During active combat, the workspace uses two columns. The left roster, capped at 400px, contains the initiative queue and
-NPC reserve. The sticky right column follows the current turn: bestiary NPCs
+in Combat. During active combat, the workspace uses two columns. The left roster, capped at 480px, contains the initiative queue and
+NPC reserve. Its scroll container reserves an additional 12px of inline-end padding before the scrollbar; the content width remains capped at 480px. The sticky right column follows the current turn: bestiary NPCs
 show live combat values plus their reference abilities and actions; simplified
 NPCs show the encounter values and description; players show a compact combat
 profile with a link to the full character sheet. Selection does not change this
@@ -39,7 +39,7 @@ compact setup popover with one of the six D&D abilities and a saving-throw
 toggle, then rolls a d20 for selected creatures on the scene or in reserve, excluding the graveyard. The action is disabled until at least one eligible creature is selected. A
 normal check uses that creature's ability modifier. A saving throw also uses a
 player's save proficiency and extra save bonuses, or the explicit bestiary save
-bonus for an NPC; an NPC without one falls back to its ability modifier. Each result is a drawer over the right side of its creature tile, sliding in from the right and clipped to that tile's bounds on desktop and mobile. It remains an `EncounterRow` layer rather than part of the common tile content. Width is capped at 248px and leaves the selection strip visible; neither the tile nor the 400px roster changes size. A corner button hides the result and becomes a reopen button; new results reveal the drawer again.
+bonus for an NPC; an NPC without one falls back to its ability modifier. Each result is a drawer over the right side of its creature tile, sliding in from the right and clipped to that tile's bounds on desktop and mobile. It remains an `EncounterRow` layer rather than part of the common tile content. Width is capped at 248px and leaves the selection strip visible; neither the tile nor the 480px roster changes size. A corner button hides the result and becomes a reopen button; new results reveal the drawer again.
 It reuses `SystemDie` and the shared roll-settle animation to show the d20 face,
 numeric modifier and total without a textual formula. The drawer uses the tile surface with a subtle shadow so underlying text does not show through. Its reroll and hide controls do not open the tile menu, reorder or select the combatant. The slide respects reduced motion. The full check/save event
 title wraps inside the embedded result. Its up/down controls keep the existing
@@ -83,7 +83,7 @@ controls independent HP rolls when adding handbook creatures and synchronizes
 across browsers through the session live stream. It starts disabled; no browser
 preference is used.
 
-NPC relations are optional. They are shown as subtle diagonal `/` stripes tiled over the entire tile, with separate colors for enemy, ally, minion and neutral. There is no relation chip. Clearing the relation removes the stripes; `aria-description` retains the relation label for assistive technology. The row menu’s «Отношение» submenu sets enemy, ally, minion or neutral and offers «Убрать тег». The tile background is not a separate picker; newly added NPCs have no relation tag. The map roster uses the same submenu. Surprised status is changed from the row menu.
+NPC relations are optional. They are shown as subtle diagonal `/` stripes tiled over the entire tile (7px colored stripe followed by a 14px transparent gap, a 1:2 rhythm), with separate colors for enemy, ally, minion and neutral. There is no relation chip. Clearing the relation removes the stripes; `aria-description` retains the relation label for assistive technology. The row menu’s «Отношение» submenu sets enemy, ally, minion or neutral and offers «Убрать тег». The tile background is not a separate picker; newly added NPCs have no relation tag. The map roster uses the same submenu. Surprised status is changed from the row menu.
 
 Each NPC also receives the nearest free Latin marker from `A` through `Z`.
 The marker sits immediately to the left of the NPC name above the HP bar and is
