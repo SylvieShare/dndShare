@@ -147,6 +147,7 @@ Tall Bed Angle|Высокая угловая кровать
 Ladder Down|Приставная лестница вниз
 Roof Ladder Down|Крыша с лестницей вниз
 Roof 1|Крыша 1
+Roof 2|Крыша 2
 Balcony|Балкон
 Balcony Angle|Угловой балкон
 Balcony Corridor|Балкон с двумя ограждениями

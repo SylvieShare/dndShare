@@ -32,10 +32,34 @@ def pin_details(target, regions, base_group=None):
             raise ValueError('Finite positive measured geometry detail bounds required')
         selected = {v.index for v in mesh.vertices
                     if all(a <= c <= h for c, a, h in zip(v.co, lo, hi))}
+        selection = region.get('sourceSelection')
+        if selection is not None:
+            if not isinstance(selection, dict) or any(k in selection for k in ['minMM', 'maxMM']):
+                raise ValueError('Detail source selection uses its parent bounds')
+            import bpy
+            import numpy as np
+            from medieval_structure import domain, initialize_references
+            part = {**selection, 'minMM': lo, 'maxMM': hi}
+            active, selected_objects = bpy.context.view_layer.objects.active, list(bpy.context.selected_objects)
+            try:
+                initialize_references({'woodParts': [part]})
+            finally:
+                for item in bpy.context.selected_objects:
+                    item.select_set(False)
+                for item in selected_objects:
+                    item.select_set(True)
+                bpy.context.view_layer.objects.active = active
+            indices = sorted(selected)
+            if indices:
+                mask = domain(np.array([mesh.vertices[i].co[:] for i in indices]), part)
+                selected = {i for i, keep in zip(indices, mask) if keep}
         if not selected:
             raise ValueError('Measured geometry detail contains no source vertices')
         inside |= selected
-        counts.append(dict(name=region['name'], vertices=len(selected)))
+        count = dict(name=region['name'], vertices=len(selected))
+        if selection is not None:
+            count['sourceSelection'] = selection
+        counts.append(count)
     faces = [face for face in mesh.polygons if any(i in inside for i in face.vertices)]
     protected = {i for face in faces for i in face.vertices}
     before = {face_key(mesh, face) for face in faces}

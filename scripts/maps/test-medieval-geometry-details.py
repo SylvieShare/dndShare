@@ -26,6 +26,34 @@ base = obj.vertex_groups.new(name='Existing collapse restrictions')
 base.add(list(range(1, len(points))), 1, 'REPLACE')
 corner = tuple(mesh.vertices[0].co)
 region = dict(name='Small raised detail', minMM=[-.9, -.9, -.1], maxMM=[.9, .9, 1])
+# A broad envelope may contain mostly unchanged surfaces; keep only the
+# measured subset while preserving whole triangles at its boundary.
+subset = bpy.data.objects.new('Filtered detail fixture', mesh.copy())
+bpy.context.collection.objects.link(subset)
+filtered = {**region, 'sourceSelection': {'projection': {
+    'originMM': [0, 0, 0], 'axis': [1, 0, 0], 'rangeMM': [-.9, -.1]}}}
+_, subset_before, subset_review = pin_details(subset, [filtered])
+assert subset_review['regions'][0]['vertices'] == 21
+assert subset_review['protectedTriangles'] < 100
+assert verify_details(subset, subset_before, subset_review)['preservedTriangles'] == len(subset_before)
+original_active = bpy.context.view_layer.objects.active
+bpy.context.view_layer.objects.active = subset
+subset_mod = subset.modifiers.new('Reduce outside filtered detail', 'DECIMATE')
+subset_mod.ratio, subset_mod.use_collapse_triangulate = .15, True
+subset_mod.vertex_group = subset.vertex_groups[0].name
+subset_mod.vertex_group_factor = 1
+bpy.ops.object.modifier_apply(modifier=subset_mod.name)
+assert len(subset.data.polygons) < len(faces)*.5
+assert verify_details(subset, subset_before, subset_review)['preservedTriangles'] == len(subset_before)
+bpy.context.view_layer.objects.active = original_active
+try:
+    pin_details(subset, [{**region, 'sourceSelection': {'projection': {
+        'originMM': [0, 0, 0], 'axis': [1, 0, 0], 'rangeMM': [2, 3]}}}])
+except ValueError:
+    pass
+else:
+    raise AssertionError('Empty detail selection silently fell back to its bounding box')
+assert bpy.context.view_layer.objects.active == obj, 'Selection changed the active object'
 try:
     pin_details(obj, [region], 'Missing base restrictions')
 except ValueError:
