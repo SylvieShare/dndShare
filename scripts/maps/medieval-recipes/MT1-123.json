@@ -1,0 +1,5236 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0.04553508758544922,
+    0.023387908935546875
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Roof Center End",
+  "groupCode": "MED-roof-center-end",
+  "hasDecor": true,
+  "renderTriangles": 200000,
+  "lodTriangles": 160000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 2048,
+  "renderUVAngleLimitRad": 0.3,
+  "lodUVAngleLimitRad": 0.3,
+  "renderUVIslandMargin": 0.001,
+  "lodUVIslandMargin": 0.001,
+  "renderDataSize": 1536,
+  "lodColourSize": 2048,
+  "lodDataSize": 1536,
+  "standRayTopMM": 40,
+  "standPointsMM": [
+    [
+      0,
+      0
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        -17.75,
+        -17.75
+      ],
+      [
+        -10.2,
+        -17.75
+      ],
+      [
+        -10.2,
+        17.75
+      ],
+      [
+        -17.75,
+        17.75
+      ]
+    ],
+    [
+      [
+        12,
+        -17.75
+      ],
+      [
+        17.75,
+        -17.75
+      ],
+      [
+        17.75,
+        -12
+      ],
+      [
+        12,
+        -12
+      ]
+    ],
+    [
+      [
+        12,
+        12
+      ],
+      [
+        17.75,
+        12
+      ],
+      [
+        17.75,
+        17.75
+      ],
+      [
+        12,
+        17.75
+      ]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "roof",
+    "center",
+    "end",
+    "wood",
+    "plaster",
+    "iron",
+    "ceiling"
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      7,
+      15
+    ],
+    "lodMiB": [
+      5,
+      12
+    ],
+    "shadowKiB": [
+      400,
+      800
+    ],
+    "previewKiB": [
+      12,
+      40
+    ],
+    "basis": "Own1019838triangles/50991984B tall124.582mm centre endroof:own3openarches,westwall2plasterfaces/4differentbraces/8ironheads,fullfloor/twoslope/ridge. Start200k/160k;2048colour1536data vscompact1536/1152. Pinopenarches/headrims/ridge/eaves/mountlip;allowclosedplasterandflatwoodtosimplifywithnormalbake."
+  },
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "own complete X wood floor and frame",
+        "minMM": [
+          -17.9,
+          -17.9,
+          17.5
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          126
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own Y floor side frame -1",
+        "minMM": [
+          -17.9,
+          -17.9,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.9,
+          27
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own vertical corner post (-1, -1)",
+        "minMM": [
+          -17.9,
+          -17.9,
+          26.1
+        ],
+        "maxMM": [
+          -11.8,
+          -11.8,
+          99
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own vertical corner post (-1, 1)",
+        "minMM": [
+          -17.9,
+          11.8,
+          26.1
+        ],
+        "maxMM": [
+          -11.8,
+          17.9,
+          99
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own Y floor side frame 1",
+        "minMM": [
+          14.3,
+          -17.9,
+          17.5
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          27
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own vertical corner post (1, -1)",
+        "minMM": [
+          11.8,
+          -17.9,
+          26.1
+        ],
+        "maxMM": [
+          17.9,
+          -11.8,
+          99
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own vertical corner post (1, 1)",
+        "minMM": [
+          11.8,
+          11.8,
+          26.1
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          99
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own curved arch strut (0, 1, -1)",
+        "minMM": [
+          12,
+          -14.2,
+          74
+        ],
+        "maxMM": [
+          17.9,
+          0,
+          94.2
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0,
+          0.5,
+          0.8660254
+        ]
+      },
+      {
+        "name": "own curved arch strut (0, 1, 1)",
+        "minMM": [
+          12,
+          0,
+          74
+        ],
+        "maxMM": [
+          17.9,
+          14.2,
+          94.2
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0,
+          -0.5,
+          0.8660254
+        ]
+      },
+      {
+        "name": "own curved arch strut (1, -1, -1)",
+        "minMM": [
+          -14.2,
+          -17.9,
+          74
+        ],
+        "maxMM": [
+          0,
+          -12,
+          94.2
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.5,
+          0,
+          0.8660254
+        ]
+      },
+      {
+        "name": "own curved arch strut (1, -1, 1)",
+        "minMM": [
+          0,
+          -17.9,
+          74
+        ],
+        "maxMM": [
+          14.2,
+          -12,
+          94.2
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          -0.5,
+          0,
+          0.8660254
+        ]
+      },
+      {
+        "name": "own curved arch strut (1, 1, -1)",
+        "minMM": [
+          -14.2,
+          12,
+          74
+        ],
+        "maxMM": [
+          0,
+          17.9,
+          94.2
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.5,
+          0,
+          0.8660254
+        ]
+      },
+      {
+        "name": "own curved arch strut (1, 1, 1)",
+        "minMM": [
+          0,
+          12,
+          74
+        ],
+        "maxMM": [
+          14.2,
+          17.9,
+          94.2
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          -0.5,
+          0,
+          0.8660254
+        ]
+      },
+      {
+        "name": "own horizontal X header -1",
+        "minMM": [
+          -17.9,
+          -17.9,
+          89
+        ],
+        "maxMM": [
+          17.9,
+          -12,
+          99.5
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own horizontal X header 1",
+        "minMM": [
+          -17.9,
+          12,
+          89
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          99.5
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own X underside laths -1",
+        "minMM": [
+          -17.9,
+          -17.9,
+          96
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          126
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            126.23258496339255
+          ],
+          "axis": [
+            0.023405935812808715,
+            -0.8500309333759849,
+            0.5262124803467498
+          ],
+          "rangeMM": [
+            -11,
+            -2.75
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own roof half",
+            "minMM": [
+              -18,
+              -18,
+              90
+            ],
+            "maxMM": [
+              18,
+              18,
+              126
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                -1,
+                0
+              ],
+              "rangeMM": [
+                0,
+                100
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own gable sloping fascia (-1, -1)",
+        "minMM": [
+          -17.9,
+          -17.9,
+          94
+        ],
+        "maxMM": [
+          -13.8,
+          17.9,
+          126
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.5263566791496361,
+          0.8502638686399459
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            126.23258496339255
+          ],
+          "axis": [
+            0.023405935812808715,
+            -0.8500309333759849,
+            0.5262124803467498
+          ],
+          "rangeMM": [
+            -7.5,
+            -2.75
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own roof half",
+            "minMM": [
+              -18,
+              -18,
+              90
+            ],
+            "maxMM": [
+              18,
+              18,
+              126
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                -1,
+                0
+              ],
+              "rangeMM": [
+                0,
+                100
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own gable sloping fascia (-1, 1)",
+        "minMM": [
+          13.8,
+          -17.9,
+          94
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          126
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.5263566791496361,
+          0.8502638686399459
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            126.23258496339255
+          ],
+          "axis": [
+            0.023405935812808715,
+            -0.8500309333759849,
+            0.5262124803467498
+          ],
+          "rangeMM": [
+            -12,
+            -2.75
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own roof half",
+            "minMM": [
+              -18,
+              -18,
+              90
+            ],
+            "maxMM": [
+              18,
+              18,
+              126
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                -1,
+                0
+              ],
+              "rangeMM": [
+                0,
+                100
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own X underside laths 1",
+        "minMM": [
+          -17.9,
+          -17.9,
+          96
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          126
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            126.79443997907896
+          ],
+          "axis": [
+            -0.018711015752223253,
+            0.852977179317664,
+            0.5216127197958287
+          ],
+          "rangeMM": [
+            -11,
+            -2.75
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own roof half",
+            "minMM": [
+              -18,
+              -18,
+              90
+            ],
+            "maxMM": [
+              18,
+              18,
+              126
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "rangeMM": [
+                0,
+                100
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own gable sloping fascia (1, -1)",
+        "minMM": [
+          -17.9,
+          -17.9,
+          94
+        ],
+        "maxMM": [
+          -13.8,
+          17.9,
+          126
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          -0.5217040526354202,
+          0.8531265330909471
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            126.79443997907896
+          ],
+          "axis": [
+            -0.018711015752223253,
+            0.852977179317664,
+            0.5216127197958287
+          ],
+          "rangeMM": [
+            -7.5,
+            -2.75
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own roof half",
+            "minMM": [
+              -18,
+              -18,
+              90
+            ],
+            "maxMM": [
+              18,
+              18,
+              126
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "rangeMM": [
+                0,
+                100
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own gable sloping fascia (1, 1)",
+        "minMM": [
+          13.8,
+          -17.9,
+          94
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          126
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          -0.5217040526354202,
+          0.8531265330909471
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            126.79443997907896
+          ],
+          "axis": [
+            -0.018711015752223253,
+            0.852977179317664,
+            0.5216127197958287
+          ],
+          "rangeMM": [
+            -12,
+            -2.75
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own roof half",
+            "minMM": [
+              -18,
+              -18,
+              90
+            ],
+            "maxMM": [
+              18,
+              18,
+              126
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "rangeMM": [
+                0,
+                100
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own inside west gable fascia 0",
+        "minMM": [
+          -13.5,
+          -17.9,
+          94
+        ],
+        "maxMM": [
+          -9.5,
+          17.9,
+          126
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.5263566791496361,
+          0.8502638686399459
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            126.23258496339255
+          ],
+          "axis": [
+            0.023405935812808715,
+            -0.8500309333759849,
+            0.5262124803467498
+          ],
+          "rangeMM": [
+            -7.5,
+            -2.75
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own roof half",
+            "minMM": [
+              -18,
+              -18,
+              90
+            ],
+            "maxMM": [
+              18,
+              18,
+              126
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                -1,
+                0
+              ],
+              "rangeMM": [
+                0,
+                100
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own inside west gable fascia 1",
+        "minMM": [
+          -13.5,
+          -17.9,
+          94
+        ],
+        "maxMM": [
+          -9.5,
+          17.9,
+          126
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          -0.5217040526354202,
+          0.8531265330909471
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            126.79443997907896
+          ],
+          "axis": [
+            -0.018711015752223253,
+            0.852977179317664,
+            0.5216127197958287
+          ],
+          "rangeMM": [
+            -7.5,
+            -2.75
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own roof half",
+            "minMM": [
+              -18,
+              -18,
+              90
+            ],
+            "maxMM": [
+              18,
+              18,
+              126
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "rangeMM": [
+                0,
+                100
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own west Y endwall header",
+        "minMM": [
+          -17.9,
+          -17.9,
+          88.5
+        ],
+        "maxMM": [
+          -9.5,
+          17.9,
+          92.5
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own west outside upper full carved wood",
+        "minMM": [
+          -17.9,
+          -14.5,
+          26.5
+        ],
+        "maxMM": [
+          -15.5,
+          14.5,
+          88.5
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.872942580308972,
+          0.48782297145943615
+        ],
+        "projection": {
+          "originMM": [
+            -16.837943761776653,
+            0.0,
+            76.51282041500777
+          ],
+          "axis": [
+            0.0,
+            -0.48782297145943615,
+            0.872942580308972
+          ],
+          "rangeMM": [
+            -2.373158411660553,
+            2.382107683665934
+          ]
+        }
+      },
+      {
+        "name": "own west outside lower full carved wood",
+        "minMM": [
+          -17.9,
+          -14.5,
+          26.5
+        ],
+        "maxMM": [
+          -15.5,
+          14.5,
+          88.5
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.7658231879713373,
+          -0.6430511991788972
+        ],
+        "projection": {
+          "originMM": [
+            -16.832200221526318,
+            0.0,
+            38.48846134772668
+          ],
+          "axis": [
+            0.0,
+            0.6430511991788972,
+            0.7658231879713373
+          ],
+          "rangeMM": [
+            -2.74496796334377,
+            2.2965688055814315
+          ]
+        }
+      },
+      {
+        "name": "own west inside upper full carved wood",
+        "minMM": [
+          -13.5,
+          -14.5,
+          26.5
+        ],
+        "maxMM": [
+          -9.5,
+          14.5,
+          88.5
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.8952303786741346,
+          -0.44560360085951467
+        ],
+        "projection": {
+          "originMM": [
+            -11.460836765093681,
+            0.0,
+            70.85384588975172
+          ],
+          "axis": [
+            0.0,
+            0.44560360085951467,
+            0.8952303786741346
+          ],
+          "rangeMM": [
+            -3.3708518304039377,
+            3.488589721967684
+          ]
+        }
+      },
+      {
+        "name": "own west inside lower full carved wood",
+        "minMM": [
+          -13.5,
+          -14.5,
+          26.5
+        ],
+        "maxMM": [
+          -9.5,
+          14.5,
+          88.5
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.7466854419643797,
+          0.6651773077597123
+        ],
+        "projection": {
+          "originMM": [
+            -11.45649094459338,
+            0.0,
+            40.409615418849846
+          ],
+          "axis": [
+            0.0,
+            -0.6651773077597123,
+            0.7466854419643797
+          ],
+          "rangeMM": [
+            -2.3593292494142117,
+            3.0197799748386536
+          ]
+        }
+      },
+      {
+        "name": "own blue own south slope",
+        "minMM": [
+          -17.9,
+          -17.9,
+          98
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          126
+        ],
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.5263566791496361,
+          0.8502638686399459
+        ],
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            126.23258496339255
+          ],
+          "axis": [
+            0.023405935812808715,
+            -0.8500309333759849,
+            0.5262124803467498
+          ],
+          "rangeMM": [
+            -2.75,
+            10
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own roof half",
+            "minMM": [
+              -18,
+              -18,
+              90
+            ],
+            "maxMM": [
+              18,
+              18,
+              126
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                -1,
+                0
+              ],
+              "rangeMM": [
+                0,
+                100
+              ]
+            }
+          }
+        ],
+        "darkRGB": [
+          0.11,
+          0.17,
+          0.29
+        ],
+        "lightRGB": [
+          0.3,
+          0.37,
+          0.53
+        ]
+      },
+      {
+        "name": "own blue own north slope",
+        "minMM": [
+          -17.9,
+          -17.9,
+          98
+        ],
+        "maxMM": [
+          17.9,
+          17.9,
+          126
+        ],
+        "axis": "beam",
+        "direction": [
+          0.0,
+          -0.5217040526354202,
+          0.8531265330909471
+        ],
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            126.79443997907896
+          ],
+          "axis": [
+            -0.018711015752223253,
+            0.852977179317664,
+            0.5216127197958287
+          ],
+          "rangeMM": [
+            -2.75,
+            10
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own roof half",
+            "minMM": [
+              -18,
+              -18,
+              90
+            ],
+            "maxMM": [
+              18,
+              18,
+              126
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "rangeMM": [
+                0,
+                100
+              ]
+            }
+          }
+        ],
+        "darkRGB": [
+          0.11,
+          0.17,
+          0.29
+        ],
+        "lightRGB": [
+          0.3,
+          0.37,
+          0.53
+        ]
+      },
+      {
+        "name": "own blue longitudinal ridge cap",
+        "minMM": [
+          -17.9,
+          -4.35,
+          118.3
+        ],
+        "maxMM": [
+          17.9,
+          4.45,
+          126
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "darkRGB": [
+          0.11,
+          0.17,
+          0.29
+        ],
+        "lightRGB": [
+          0.3,
+          0.37,
+          0.53
+        ]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "own west outside ochre plaster",
+        "minMM": [
+          -17.9,
+          -14.4,
+          27.1
+        ],
+        "maxMM": [
+          -15.5,
+          14.4,
+          115.5
+        ],
+        "kind": "plaster",
+        "rgb": [
+          0.72,
+          0.51,
+          0.22
+        ],
+        "roughness": 0.98,
+        "variation": 0.08,
+        "excludeParts": [
+          {
+            "name": "own west Y endwall header",
+            "minMM": [
+              -17.9,
+              -17.9,
+              88.5
+            ],
+            "maxMM": [
+              -9.5,
+              17.9,
+              92.5
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own west outside upper full carved wood",
+            "minMM": [
+              -17.9,
+              -14.5,
+              26.5
+            ],
+            "maxMM": [
+              -15.5,
+              14.5,
+              88.5
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.872942580308972,
+              0.48782297145943615
+            ],
+            "projection": {
+              "originMM": [
+                -16.837943761776653,
+                0.0,
+                76.51282041500777
+              ],
+              "axis": [
+                0.0,
+                -0.48782297145943615,
+                0.872942580308972
+              ],
+              "rangeMM": [
+                -2.373158411660553,
+                2.382107683665934
+              ]
+            }
+          },
+          {
+            "name": "own west outside lower full carved wood",
+            "minMM": [
+              -17.9,
+              -14.5,
+              26.5
+            ],
+            "maxMM": [
+              -15.5,
+              14.5,
+              88.5
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.7658231879713373,
+              -0.6430511991788972
+            ],
+            "projection": {
+              "originMM": [
+                -16.832200221526318,
+                0.0,
+                38.48846134772668
+              ],
+              "axis": [
+                0.0,
+                0.6430511991788972,
+                0.7658231879713373
+              ],
+              "rangeMM": [
+                -2.74496796334377,
+                2.2965688055814315
+              ]
+            }
+          },
+          {
+            "name": "own gable sloping fascia (-1, -1)",
+            "minMM": [
+              -17.9,
+              -17.9,
+              94
+            ],
+            "maxMM": [
+              -13.8,
+              17.9,
+              126
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.5263566791496361,
+              0.8502638686399459
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                126.23258496339255
+              ],
+              "axis": [
+                0.023405935812808715,
+                -0.8500309333759849,
+                0.5262124803467498
+              ],
+              "rangeMM": [
+                -7.5,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  90
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  126
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0,
+                    -1,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own gable sloping fascia (1, -1)",
+            "minMM": [
+              -17.9,
+              -17.9,
+              94
+            ],
+            "maxMM": [
+              -13.8,
+              17.9,
+              126
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              -0.5217040526354202,
+              0.8531265330909471
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                126.79443997907896
+              ],
+              "axis": [
+                -0.018711015752223253,
+                0.852977179317664,
+                0.5216127197958287
+              ],
+              "rangeMM": [
+                -7.5,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  90
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  126
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own inside west gable fascia 0",
+            "minMM": [
+              -13.5,
+              -17.9,
+              94
+            ],
+            "maxMM": [
+              -9.5,
+              17.9,
+              126
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.5263566791496361,
+              0.8502638686399459
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                126.23258496339255
+              ],
+              "axis": [
+                0.023405935812808715,
+                -0.8500309333759849,
+                0.5262124803467498
+              ],
+              "rangeMM": [
+                -7.5,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  90
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  126
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0,
+                    -1,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own inside west gable fascia 1",
+            "minMM": [
+              -13.5,
+              -17.9,
+              94
+            ],
+            "maxMM": [
+              -9.5,
+              17.9,
+              126
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              -0.5217040526354202,
+              0.8531265330909471
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                126.79443997907896
+              ],
+              "axis": [
+                -0.018711015752223253,
+                0.852977179317664,
+                0.5216127197958287
+              ],
+              "rangeMM": [
+                -7.5,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  90
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  126
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own blue own south slope",
+            "minMM": [
+              -17.9,
+              -17.9,
+              98
+            ],
+            "maxMM": [
+              17.9,
+              17.9,
+              126
+            ],
+            "axis": "beam",
+            "direction": [
+              0.0,
+              0.5263566791496361,
+              0.8502638686399459
+            ],
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                126.23258496339255
+              ],
+              "axis": [
+                0.023405935812808715,
+                -0.8500309333759849,
+                0.5262124803467498
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  90
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  126
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0,
+                    -1,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          },
+          {
+            "name": "own blue own north slope",
+            "minMM": [
+              -17.9,
+              -17.9,
+              98
+            ],
+            "maxMM": [
+              17.9,
+              17.9,
+              126
+            ],
+            "axis": "beam",
+            "direction": [
+              0.0,
+              -0.5217040526354202,
+              0.8531265330909471
+            ],
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                126.79443997907896
+              ],
+              "axis": [
+                -0.018711015752223253,
+                0.852977179317664,
+                0.5216127197958287
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  90
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  126
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          },
+          {
+            "name": "own blue longitudinal ridge cap",
+            "minMM": [
+              -17.9,
+              -4.35,
+              118.3
+            ],
+            "maxMM": [
+              17.9,
+              4.45,
+              126
+            ],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          },
+          {
+            "name": "own west post front face",
+            "minMM": [
+              -18,
+              -17.9,
+              26
+            ],
+            "maxMM": [
+              -9.5,
+              -13.3,
+              115
+            ]
+          },
+          {
+            "name": "own post bevel protects wood",
+            "minMM": [
+              -18,
+              -14.5,
+              26
+            ],
+            "maxMM": [
+              -16.85,
+              -11.8,
+              94
+            ]
+          },
+          {
+            "name": "own west post front face",
+            "minMM": [
+              -18,
+              13.3,
+              26
+            ],
+            "maxMM": [
+              -9.5,
+              17.9,
+              115
+            ]
+          },
+          {
+            "name": "own post bevel protects wood",
+            "minMM": [
+              -18,
+              11.8,
+              26
+            ],
+            "maxMM": [
+              -16.85,
+              14.5,
+              94
+            ]
+          }
+        ]
+      },
+      {
+        "name": "own west inside ochre plaster",
+        "minMM": [
+          -13.5,
+          -14.4,
+          27.1
+        ],
+        "maxMM": [
+          -9.5,
+          14.4,
+          115.5
+        ],
+        "kind": "plaster",
+        "rgb": [
+          0.72,
+          0.51,
+          0.22
+        ],
+        "roughness": 0.98,
+        "variation": 0.08,
+        "excludeParts": [
+          {
+            "name": "own west Y endwall header",
+            "minMM": [
+              -17.9,
+              -17.9,
+              88.5
+            ],
+            "maxMM": [
+              -9.5,
+              17.9,
+              92.5
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own west inside upper full carved wood",
+            "minMM": [
+              -13.5,
+              -14.5,
+              26.5
+            ],
+            "maxMM": [
+              -9.5,
+              14.5,
+              88.5
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.8952303786741346,
+              -0.44560360085951467
+            ],
+            "projection": {
+              "originMM": [
+                -11.460836765093681,
+                0.0,
+                70.85384588975172
+              ],
+              "axis": [
+                0.0,
+                0.44560360085951467,
+                0.8952303786741346
+              ],
+              "rangeMM": [
+                -3.3708518304039377,
+                3.488589721967684
+              ]
+            }
+          },
+          {
+            "name": "own west inside lower full carved wood",
+            "minMM": [
+              -13.5,
+              -14.5,
+              26.5
+            ],
+            "maxMM": [
+              -9.5,
+              14.5,
+              88.5
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.7466854419643797,
+              0.6651773077597123
+            ],
+            "projection": {
+              "originMM": [
+                -11.45649094459338,
+                0.0,
+                40.409615418849846
+              ],
+              "axis": [
+                0.0,
+                -0.6651773077597123,
+                0.7466854419643797
+              ],
+              "rangeMM": [
+                -2.3593292494142117,
+                3.0197799748386536
+              ]
+            }
+          },
+          {
+            "name": "own gable sloping fascia (-1, -1)",
+            "minMM": [
+              -17.9,
+              -17.9,
+              94
+            ],
+            "maxMM": [
+              -13.8,
+              17.9,
+              126
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.5263566791496361,
+              0.8502638686399459
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                126.23258496339255
+              ],
+              "axis": [
+                0.023405935812808715,
+                -0.8500309333759849,
+                0.5262124803467498
+              ],
+              "rangeMM": [
+                -7.5,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  90
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  126
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0,
+                    -1,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own gable sloping fascia (1, -1)",
+            "minMM": [
+              -17.9,
+              -17.9,
+              94
+            ],
+            "maxMM": [
+              -13.8,
+              17.9,
+              126
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              -0.5217040526354202,
+              0.8531265330909471
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                126.79443997907896
+              ],
+              "axis": [
+                -0.018711015752223253,
+                0.852977179317664,
+                0.5216127197958287
+              ],
+              "rangeMM": [
+                -7.5,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  90
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  126
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own inside west gable fascia 0",
+            "minMM": [
+              -13.5,
+              -17.9,
+              94
+            ],
+            "maxMM": [
+              -9.5,
+              17.9,
+              126
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.5263566791496361,
+              0.8502638686399459
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                126.23258496339255
+              ],
+              "axis": [
+                0.023405935812808715,
+                -0.8500309333759849,
+                0.5262124803467498
+              ],
+              "rangeMM": [
+                -7.5,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  90
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  126
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0,
+                    -1,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own inside west gable fascia 1",
+            "minMM": [
+              -13.5,
+              -17.9,
+              94
+            ],
+            "maxMM": [
+              -9.5,
+              17.9,
+              126
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              -0.5217040526354202,
+              0.8531265330909471
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                126.79443997907896
+              ],
+              "axis": [
+                -0.018711015752223253,
+                0.852977179317664,
+                0.5216127197958287
+              ],
+              "rangeMM": [
+                -7.5,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  90
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  126
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own blue own south slope",
+            "minMM": [
+              -17.9,
+              -17.9,
+              98
+            ],
+            "maxMM": [
+              17.9,
+              17.9,
+              126
+            ],
+            "axis": "beam",
+            "direction": [
+              0.0,
+              0.5263566791496361,
+              0.8502638686399459
+            ],
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                126.23258496339255
+              ],
+              "axis": [
+                0.023405935812808715,
+                -0.8500309333759849,
+                0.5262124803467498
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  90
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  126
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0,
+                    -1,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          },
+          {
+            "name": "own blue own north slope",
+            "minMM": [
+              -17.9,
+              -17.9,
+              98
+            ],
+            "maxMM": [
+              17.9,
+              17.9,
+              126
+            ],
+            "axis": "beam",
+            "direction": [
+              0.0,
+              -0.5217040526354202,
+              0.8531265330909471
+            ],
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                126.79443997907896
+              ],
+              "axis": [
+                -0.018711015752223253,
+                0.852977179317664,
+                0.5216127197958287
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  90
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  126
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          },
+          {
+            "name": "own blue longitudinal ridge cap",
+            "minMM": [
+              -17.9,
+              -4.35,
+              118.3
+            ],
+            "maxMM": [
+              17.9,
+              4.45,
+              126
+            ],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          },
+          {
+            "name": "own west post front face",
+            "minMM": [
+              -18,
+              -17.9,
+              26
+            ],
+            "maxMM": [
+              -9.5,
+              -13.3,
+              115
+            ]
+          },
+          {
+            "name": "own post bevel protects wood",
+            "minMM": [
+              -11.2,
+              -14.5,
+              26
+            ],
+            "maxMM": [
+              -9.5,
+              -11.8,
+              94
+            ]
+          },
+          {
+            "name": "own west post front face",
+            "minMM": [
+              -18,
+              13.3,
+              26
+            ],
+            "maxMM": [
+              -9.5,
+              17.9,
+              115
+            ]
+          },
+          {
+            "name": "own post bevel protects wood",
+            "minMM": [
+              -11.2,
+              11.8,
+              26
+            ],
+            "maxMM": [
+              -9.5,
+              14.5,
+              94
+            ]
+          }
+        ]
+      },
+      {
+        "name": "own iron disk west outside upper north",
+        "minMM": [
+          -17.9,
+          11.201527563590702,
+          82.3219149028877
+        ],
+        "maxMM": [
+          -15.5,
+          13.121071532356737,
+          84.24145887165372
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -16.65519905090332,
+            12.16129954797372,
+            83.28168688727071
+          ],
+          "axis": [
+            -1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.9597719843830174,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.9597719843830174,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk west outside upper south",
+        "minMM": [
+          -17.9,
+          -13.023634075582676,
+          69.24790689284212
+        ],
+        "maxMM": [
+          -15.5,
+          -11.138594824501345,
+          71.13294614392346
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -16.76959991455078,
+            -12.08111445004201,
+            70.1904265183828
+          ],
+          "axis": [
+            -1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.9425196255406654,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.9425196255406654,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk west outside lower north",
+        "minMM": [
+          -17.9,
+          10.901506427793805,
+          27.151249297205702
+        ],
+        "maxMM": [
+          -15.5,
+          12.813763496873435,
+          29.06350636628533
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -16.781600952148438,
+            11.85763496233362,
+            28.107377831745517
+          ],
+          "axis": [
+            -1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.956128534539815,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.956128534539815,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk west outside lower south",
+        "minMM": [
+          -17.9,
+          -13.525310895291318,
+          49.40441988236108
+        ],
+        "maxMM": [
+          -15.5,
+          -11.716344591627147,
+          51.21338618602525
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -16.639299392700195,
+            -12.620827743459232,
+            50.308903034193165
+          ],
+          "axis": [
+            -1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.9044831518320853,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.9044831518320853,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk west inside upper south",
+        "minMM": [
+          -14,
+          -12.897982060030365,
+          76.16528313304437
+        ],
+        "maxMM": [
+          -9.5,
+          -11.19421911319067,
+          77.86904607988407
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -11.29734992980957,
+            -12.046100586610518,
+            77.01716460646422
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.8518814734198488,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.8518814734198488,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk west inside upper north",
+        "minMM": [
+          -14,
+          11.420331536377903,
+          63.35331979421013
+        ],
+        "maxMM": [
+          -9.5,
+          13.148319598985614,
+          65.08130785681784
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -11.403250217437744,
+            12.284325567681758,
+            64.21731382551398
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.8639940313038562,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.8639940313038562,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk west inside lower south",
+        "minMM": [
+          -14,
+          -12.96166334603692,
+          29.95667733889852
+        ],
+        "maxMM": [
+          -9.5,
+          -11.237782031696577,
+          31.680558653238858
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -11.507199764251709,
+            -12.099722688866748,
+            30.81861799606869
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.8619406571701707,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.8619406571701707,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk west inside lower north",
+        "minMM": [
+          -14,
+          11.742489987406461,
+          50.45308700883954
+        ],
+        "maxMM": [
+          -9.5,
+          13.441362169348299,
+          52.151959190781376
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -11.513749599456787,
+            12.59192607837738,
+            51.30252309981046
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.8494360909709189,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.8494360909709189,
+          "allowanceMM": 0
+        }
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "Own source and PDF19 inspected. Side headers have NO122metalheads. West endwall has4outer+4innerheads andtwoeachfacebraces atdifferentheights. Ownroof46/46rayfits,centre12/14/16,floor5097normals. Fourquarterstandingdiscsrejected byposts/wall;onecentral17.5mmdiscclear75.673mm. No lights.",
+  "renderColourSize": 2048,
+  "renderColourQuality": 96,
+  "lodColourQuality": 96,
+  "geometryDetailRegions": [
+    {
+      "name": "own original mounting lip",
+      "minMM": [
+        -17.9,
+        -17.9,
+        16.99
+      ],
+      "maxMM": [
+        17.9,
+        17.9,
+        17.65
+      ]
+    },
+    {
+      "name": "own two low shingle eave ends",
+      "minMM": [
+        -17.9,
+        -17.9,
+        98
+      ],
+      "maxMM": [
+        17.9,
+        17.9,
+        100.6
+      ],
+      "sourceSelection": {
+        "includeParts": [
+          {
+            "name": "own south lowest eave tips",
+            "minMM": [
+              -17.9,
+              -17.9,
+              98
+            ],
+            "maxMM": [
+              17.9,
+              -15.8,
+              100.6
+            ]
+          },
+          {
+            "name": "own north lowest eave tips",
+            "minMM": [
+              -17.9,
+              15.8,
+              98
+            ],
+            "maxMM": [
+              17.9,
+              17.9,
+              100.6
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "own ridge central bevel",
+      "minMM": [
+        -17.9,
+        -0.65,
+        122
+      ],
+      "maxMM": [
+        17.9,
+        0.65,
+        126
+      ]
+    },
+    {
+      "name": "own ridge wing tips",
+      "minMM": [
+        -17.9,
+        -4.6,
+        118
+      ],
+      "maxMM": [
+        17.9,
+        4.7,
+        126
+      ],
+      "sourceSelection": {
+        "includeParts": [
+          {
+            "name": "south cap edge",
+            "minMM": [
+              -17.9,
+              -4.6,
+              118
+            ],
+            "maxMM": [
+              17.9,
+              -3.8,
+              126
+            ]
+          },
+          {
+            "name": "north cap edge",
+            "minMM": [
+              -17.9,
+              3.9,
+              118
+            ],
+            "maxMM": [
+              17.9,
+              4.7,
+              126
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "own protected iron west outside upper north",
+      "minMM": [
+        -17.65519905090332,
+        10.751527563590702,
+        81.8719149028877
+      ],
+      "maxMM": [
+        -15.65519905090332,
+        13.571071532356736,
+        84.69145887165372
+      ]
+    },
+    {
+      "name": "own protected iron west outside upper south",
+      "minMM": [
+        -17.76959991455078,
+        -13.473634075582675,
+        68.79790689284212
+      ],
+      "maxMM": [
+        -15.769599914550781,
+        -10.688594824501346,
+        71.58294614392346
+      ]
+    },
+    {
+      "name": "own protected iron west outside lower north",
+      "minMM": [
+        -17.781600952148438,
+        10.451506427793806,
+        26.701249297205703
+      ],
+      "maxMM": [
+        -15.781600952148438,
+        13.263763496873434,
+        29.51350636628533
+      ]
+    },
+    {
+      "name": "own protected iron west outside lower south",
+      "minMM": [
+        -17.639299392700195,
+        -13.975310895291317,
+        48.95441988236108
+      ],
+      "maxMM": [
+        -15.639299392700195,
+        -11.266344591627147,
+        51.66338618602525
+      ]
+    },
+    {
+      "name": "own protected iron west inside upper south",
+      "minMM": [
+        -12.29734992980957,
+        -13.347982060030366,
+        75.71528313304437
+      ],
+      "maxMM": [
+        -10.29734992980957,
+        -10.744219113190669,
+        78.31904607988407
+      ]
+    },
+    {
+      "name": "own protected iron west inside upper north",
+      "minMM": [
+        -12.403250217437744,
+        10.970331536377902,
+        62.90331979421013
+      ],
+      "maxMM": [
+        -10.403250217437744,
+        13.598319598985615,
+        65.53130785681783
+      ]
+    },
+    {
+      "name": "own protected iron west inside lower south",
+      "minMM": [
+        -12.507199764251709,
+        -13.411663346036919,
+        29.50667733889852
+      ],
+      "maxMM": [
+        -10.507199764251709,
+        -10.787782031696578,
+        32.13055865323886
+      ]
+    },
+    {
+      "name": "own protected iron west inside lower north",
+      "minMM": [
+        -12.513749599456787,
+        11.292489987406462,
+        50.003087008839536
+      ],
+      "maxMM": [
+        -10.513749599456787,
+        13.891362169348298,
+        52.60195919078138
+      ]
+    },
+    {
+      "name": "own measured open arch (0, 1)",
+      "minMM": [
+        -17.9,
+        -17.9,
+        65
+      ],
+      "maxMM": [
+        17.9,
+        17.9,
+        125
+      ],
+      "sourceSelection": {
+        "includeParts": [
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -13.95,
+              93.08493499755859
+            ],
+            "maxMM": [
+              17.9,
+              -13.05,
+              93.9849349975586
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -13.45,
+              93.81190185546875
+            ],
+            "maxMM": [
+              17.9,
+              -12.55,
+              94.71190185546875
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -12.95,
+              94.52199249267578
+            ],
+            "maxMM": [
+              17.9,
+              -12.05,
+              95.42199249267578
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -12.45,
+              95.23208312988281
+            ],
+            "maxMM": [
+              17.9,
+              -11.55,
+              96.13208312988282
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -11.95,
+              95.93941955566406
+            ],
+            "maxMM": [
+              17.9,
+              -11.05,
+              96.83941955566407
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -11.45,
+              96.64246826171875
+            ],
+            "maxMM": [
+              17.9,
+              -10.55,
+              97.54246826171875
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -10.95,
+              97.33327941894531
+            ],
+            "maxMM": [
+              17.9,
+              -10.05,
+              98.23327941894532
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -10.45,
+              98.01392822265625
+            ],
+            "maxMM": [
+              17.9,
+              -9.55,
+              98.91392822265625
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -9.95,
+              98.69155578613281
+            ],
+            "maxMM": [
+              17.9,
+              -9.05,
+              99.59155578613282
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -9.45,
+              99.36883239746093
+            ],
+            "maxMM": [
+              17.9,
+              -8.55,
+              100.26883239746094
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -8.95,
+              100.04030303955078
+            ],
+            "maxMM": [
+              17.9,
+              -8.05,
+              100.94030303955078
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -8.45,
+              100.7044189453125
+            ],
+            "maxMM": [
+              17.9,
+              -7.55,
+              101.6044189453125
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -7.95,
+              101.36707000732422
+            ],
+            "maxMM": [
+              17.9,
+              -7.05,
+              102.26707000732422
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -7.45,
+              102.02649383544922
+            ],
+            "maxMM": [
+              17.9,
+              -6.55,
+              102.92649383544922
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -6.95,
+              102.68420104980468
+            ],
+            "maxMM": [
+              17.9,
+              -6.05,
+              103.58420104980469
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -6.45,
+              103.34124450683593
+            ],
+            "maxMM": [
+              17.9,
+              -5.55,
+              104.24124450683594
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -5.95,
+              103.99575500488281
+            ],
+            "maxMM": [
+              17.9,
+              -5.05,
+              104.89575500488282
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -5.45,
+              104.65028076171875
+            ],
+            "maxMM": [
+              17.9,
+              -4.55,
+              105.55028076171875
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -4.95,
+              105.30555419921875
+            ],
+            "maxMM": [
+              17.9,
+              -4.05,
+              106.20555419921875
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -4.45,
+              105.96091918945312
+            ],
+            "maxMM": [
+              17.9,
+              -3.55,
+              106.86091918945313
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -3.95,
+              106.61900024414062
+            ],
+            "maxMM": [
+              17.9,
+              -3.05,
+              107.51900024414063
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -3.45,
+              107.27740173339843
+            ],
+            "maxMM": [
+              17.9,
+              -2.55,
+              108.17740173339844
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -2.95,
+              107.93581848144531
+            ],
+            "maxMM": [
+              17.9,
+              -2.05,
+              108.83581848144532
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -2.45,
+              108.59421997070312
+            ],
+            "maxMM": [
+              17.9,
+              -1.55,
+              109.49421997070313
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -1.95,
+              109.25677185058593
+            ],
+            "maxMM": [
+              17.9,
+              -1.05,
+              110.15677185058594
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -1.45,
+              109.92462615966797
+            ],
+            "maxMM": [
+              17.9,
+              -0.55,
+              110.82462615966797
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -0.95,
+              110.59312896728515
+            ],
+            "maxMM": [
+              17.9,
+              -0.04999999999999999,
+              111.49312896728516
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              -0.45,
+              111.26955108642578
+            ],
+            "maxMM": [
+              17.9,
+              0.45,
+              112.16955108642578
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              0.04999999999999999,
+              111.95290832519531
+            ],
+            "maxMM": [
+              17.9,
+              0.95,
+              112.85290832519532
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              0.55,
+              112.08471374511718
+            ],
+            "maxMM": [
+              17.9,
+              1.45,
+              112.98471374511719
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              1.05,
+              111.32426147460937
+            ],
+            "maxMM": [
+              17.9,
+              1.95,
+              112.22426147460938
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              1.55,
+              110.57076721191406
+            ],
+            "maxMM": [
+              17.9,
+              2.45,
+              111.47076721191407
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              2.05,
+              109.80727844238281
+            ],
+            "maxMM": [
+              17.9,
+              2.95,
+              110.70727844238282
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              2.55,
+              109.03931884765625
+            ],
+            "maxMM": [
+              17.9,
+              3.45,
+              109.93931884765625
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              3.05,
+              108.26642303466797
+            ],
+            "maxMM": [
+              17.9,
+              3.95,
+              109.16642303466797
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              3.55,
+              107.48679809570312
+            ],
+            "maxMM": [
+              17.9,
+              4.45,
+              108.38679809570313
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              4.05,
+              106.70617370605468
+            ],
+            "maxMM": [
+              17.9,
+              4.95,
+              107.60617370605469
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              4.55,
+              105.92102508544922
+            ],
+            "maxMM": [
+              17.9,
+              5.45,
+              106.82102508544922
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              5.05,
+              105.13616638183593
+            ],
+            "maxMM": [
+              17.9,
+              5.95,
+              106.03616638183594
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              5.55,
+              104.35150604248047
+            ],
+            "maxMM": [
+              17.9,
+              6.45,
+              105.25150604248047
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              6.05,
+              103.5663345336914
+            ],
+            "maxMM": [
+              17.9,
+              6.95,
+              104.46633453369141
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              6.55,
+              102.78211669921875
+            ],
+            "maxMM": [
+              17.9,
+              7.45,
+              103.68211669921875
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              7.05,
+              102.00150756835937
+            ],
+            "maxMM": [
+              17.9,
+              7.95,
+              102.90150756835938
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              7.55,
+              101.22459869384765
+            ],
+            "maxMM": [
+              17.9,
+              8.45,
+              102.12459869384766
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              8.05,
+              100.45425109863281
+            ],
+            "maxMM": [
+              17.9,
+              8.95,
+              101.35425109863282
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              8.55,
+              99.68370513916015
+            ],
+            "maxMM": [
+              17.9,
+              9.45,
+              100.58370513916016
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              9.05,
+              98.9343994140625
+            ],
+            "maxMM": [
+              17.9,
+              9.95,
+              99.8343994140625
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              9.55,
+              98.18508605957031
+            ],
+            "maxMM": [
+              17.9,
+              10.45,
+              99.08508605957032
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              10.05,
+              97.43578033447265
+            ],
+            "maxMM": [
+              17.9,
+              10.95,
+              98.33578033447266
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              10.55,
+              96.686474609375
+            ],
+            "maxMM": [
+              17.9,
+              11.45,
+              97.586474609375
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              11.05,
+              95.9595458984375
+            ],
+            "maxMM": [
+              17.9,
+              11.95,
+              96.8595458984375
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              11.55,
+              95.24047546386718
+            ],
+            "maxMM": [
+              17.9,
+              12.45,
+              96.14047546386719
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              12.05,
+              94.5214126586914
+            ],
+            "maxMM": [
+              17.9,
+              12.95,
+              95.42141265869141
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.8,
+              12.55,
+              93.8032958984375
+            ],
+            "maxMM": [
+              17.9,
+              13.45,
+              94.7032958984375
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "own measured open arch (1, -1)",
+      "minMM": [
+        -17.9,
+        -17.9,
+        65
+      ],
+      "maxMM": [
+        17.9,
+        17.9,
+        125
+      ],
+      "sourceSelection": {
+        "includeParts": [
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -10.45,
+              -17.9,
+              81.739208984375
+            ],
+            "maxMM": [
+              -9.55,
+              -11.8,
+              82.639208984375
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -9.95,
+              -17.9,
+              82.20684509277343
+            ],
+            "maxMM": [
+              -9.05,
+              -11.8,
+              83.10684509277344
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -9.45,
+              -17.9,
+              82.68288879394531
+            ],
+            "maxMM": [
+              -8.55,
+              -11.8,
+              83.58288879394532
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -8.95,
+              -17.9,
+              83.15695648193359
+            ],
+            "maxMM": [
+              -8.05,
+              -11.8,
+              84.0569564819336
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -8.45,
+              -17.9,
+              83.63740997314453
+            ],
+            "maxMM": [
+              -7.55,
+              -11.8,
+              84.53740997314453
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -7.95,
+              -17.9,
+              84.11171417236328
+            ],
+            "maxMM": [
+              -7.05,
+              -11.8,
+              85.01171417236328
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -7.45,
+              -17.9,
+              84.5869873046875
+            ],
+            "maxMM": [
+              -6.55,
+              -11.8,
+              85.4869873046875
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -6.95,
+              -17.9,
+              85.02560119628906
+            ],
+            "maxMM": [
+              -6.05,
+              -11.8,
+              85.92560119628907
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -6.45,
+              -17.9,
+              85.39969329833984
+            ],
+            "maxMM": [
+              -5.55,
+              -11.8,
+              86.29969329833985
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -5.95,
+              -17.9,
+              85.72582702636718
+            ],
+            "maxMM": [
+              -5.05,
+              -11.8,
+              86.62582702636719
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -5.45,
+              -17.9,
+              86.05062561035156
+            ],
+            "maxMM": [
+              -4.55,
+              -11.8,
+              86.95062561035157
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -4.95,
+              -17.9,
+              86.38543395996093
+            ],
+            "maxMM": [
+              -4.05,
+              -11.8,
+              87.28543395996094
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -4.45,
+              -17.9,
+              86.6979263305664
+            ],
+            "maxMM": [
+              -3.55,
+              -11.8,
+              87.59792633056641
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -3.95,
+              -17.9,
+              86.99216156005859
+            ],
+            "maxMM": [
+              -3.05,
+              -11.8,
+              87.8921615600586
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -3.45,
+              -17.9,
+              87.26675872802734
+            ],
+            "maxMM": [
+              -2.55,
+              -11.8,
+              88.16675872802735
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -2.95,
+              -17.9,
+              87.52620391845703
+            ],
+            "maxMM": [
+              -2.05,
+              -11.8,
+              88.42620391845703
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -2.45,
+              -17.9,
+              87.76952056884765
+            ],
+            "maxMM": [
+              -1.55,
+              -11.8,
+              88.66952056884766
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -1.95,
+              -17.9,
+              87.99782257080078
+            ],
+            "maxMM": [
+              -1.05,
+              -11.8,
+              88.89782257080078
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -1.45,
+              -17.9,
+              88.20684509277343
+            ],
+            "maxMM": [
+              -0.55,
+              -11.8,
+              89.10684509277344
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -0.95,
+              -17.9,
+              88.40630798339843
+            ],
+            "maxMM": [
+              -0.04999999999999999,
+              -11.8,
+              89.30630798339844
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -0.45,
+              -17.9,
+              88.61443786621093
+            ],
+            "maxMM": [
+              0.45,
+              -11.8,
+              89.51443786621094
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              0.04999999999999999,
+              -17.9,
+              88.70290832519531
+            ],
+            "maxMM": [
+              0.95,
+              -11.8,
+              89.60290832519532
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              0.55,
+              -17.9,
+              88.49621276855468
+            ],
+            "maxMM": [
+              1.45,
+              -11.8,
+              89.39621276855469
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              1.05,
+              -17.9,
+              88.27349548339843
+            ],
+            "maxMM": [
+              1.95,
+              -11.8,
+              89.17349548339844
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              1.55,
+              -17.9,
+              88.03712158203125
+            ],
+            "maxMM": [
+              2.45,
+              -11.8,
+              88.93712158203125
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              2.05,
+              -17.9,
+              87.78114013671875
+            ],
+            "maxMM": [
+              2.95,
+              -11.8,
+              88.68114013671875
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              2.55,
+              -17.9,
+              87.51206665039062
+            ],
+            "maxMM": [
+              3.45,
+              -11.8,
+              88.41206665039063
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              3.05,
+              -17.9,
+              87.24058990478515
+            ],
+            "maxMM": [
+              3.95,
+              -11.8,
+              88.14058990478516
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              3.55,
+              -17.9,
+              86.97866516113281
+            ],
+            "maxMM": [
+              4.45,
+              -11.8,
+              87.87866516113282
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              4.05,
+              -17.9,
+              86.71012573242187
+            ],
+            "maxMM": [
+              4.95,
+              -11.8,
+              87.61012573242188
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              4.55,
+              -17.9,
+              86.41895751953125
+            ],
+            "maxMM": [
+              5.45,
+              -11.8,
+              87.31895751953125
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              5.05,
+              -17.9,
+              86.09326629638672
+            ],
+            "maxMM": [
+              5.95,
+              -11.8,
+              86.99326629638672
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              5.55,
+              -17.9,
+              85.74493103027343
+            ],
+            "maxMM": [
+              6.45,
+              -11.8,
+              86.64493103027344
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              6.05,
+              -17.9,
+              85.36511688232422
+            ],
+            "maxMM": [
+              6.95,
+              -11.8,
+              86.26511688232422
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              6.55,
+              -17.9,
+              84.98177795410156
+            ],
+            "maxMM": [
+              7.45,
+              -11.8,
+              85.88177795410157
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              7.05,
+              -17.9,
+              84.57613830566406
+            ],
+            "maxMM": [
+              7.95,
+              -11.8,
+              85.47613830566407
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              7.55,
+              -17.9,
+              84.17915802001953
+            ],
+            "maxMM": [
+              8.45,
+              -11.8,
+              85.07915802001953
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              8.05,
+              -17.9,
+              83.77487640380859
+            ],
+            "maxMM": [
+              8.95,
+              -11.8,
+              84.6748764038086
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              8.55,
+              -17.9,
+              83.34250335693359
+            ],
+            "maxMM": [
+              9.45,
+              -11.8,
+              84.2425033569336
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              9.05,
+              -17.9,
+              82.8679702758789
+            ],
+            "maxMM": [
+              9.95,
+              -11.8,
+              83.76797027587891
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              9.55,
+              -17.9,
+              82.34151916503906
+            ],
+            "maxMM": [
+              10.45,
+              -11.8,
+              83.24151916503907
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              10.05,
+              -17.9,
+              81.7598159790039
+            ],
+            "maxMM": [
+              10.95,
+              -11.8,
+              82.65981597900391
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              10.55,
+              -17.9,
+              81.05897216796875
+            ],
+            "maxMM": [
+              11.45,
+              -11.8,
+              81.95897216796875
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.05,
+              -17.9,
+              80.16258697509765
+            ],
+            "maxMM": [
+              11.95,
+              -11.8,
+              81.06258697509766
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.55,
+              -17.9,
+              79.08028869628906
+            ],
+            "maxMM": [
+              12.45,
+              -11.8,
+              79.98028869628907
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              12.05,
+              -17.9,
+              77.68970947265625
+            ],
+            "maxMM": [
+              12.95,
+              -11.8,
+              78.58970947265625
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              12.55,
+              -17.9,
+              75.62729339599609
+            ],
+            "maxMM": [
+              13.45,
+              -11.8,
+              76.5272933959961
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "own measured open arch (1, 1)",
+      "minMM": [
+        -17.9,
+        -17.9,
+        65
+      ],
+      "maxMM": [
+        17.9,
+        17.9,
+        125
+      ],
+      "sourceSelection": {
+        "includeParts": [
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -10.45,
+              11.8,
+              82.2495849609375
+            ],
+            "maxMM": [
+              -9.55,
+              17.9,
+              83.1495849609375
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -9.95,
+              11.8,
+              82.76867370605468
+            ],
+            "maxMM": [
+              -9.05,
+              17.9,
+              83.66867370605469
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -9.45,
+              11.8,
+              83.246044921875
+            ],
+            "maxMM": [
+              -8.55,
+              17.9,
+              84.146044921875
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -8.95,
+              11.8,
+              83.67555694580078
+            ],
+            "maxMM": [
+              -8.05,
+              17.9,
+              84.57555694580078
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -8.45,
+              11.8,
+              84.09328155517578
+            ],
+            "maxMM": [
+              -7.55,
+              17.9,
+              84.99328155517578
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -7.95,
+              11.8,
+              84.5091064453125
+            ],
+            "maxMM": [
+              -7.05,
+              17.9,
+              85.4091064453125
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -7.45,
+              11.8,
+              84.92010955810547
+            ],
+            "maxMM": [
+              -6.55,
+              17.9,
+              85.82010955810547
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -6.95,
+              11.8,
+              85.31220703125
+            ],
+            "maxMM": [
+              -6.05,
+              17.9,
+              86.21220703125
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -6.45,
+              11.8,
+              85.69501190185547
+            ],
+            "maxMM": [
+              -5.55,
+              17.9,
+              86.59501190185547
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -5.95,
+              11.8,
+              86.0513427734375
+            ],
+            "maxMM": [
+              -5.05,
+              17.9,
+              86.9513427734375
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -5.45,
+              11.8,
+              86.38102416992187
+            ],
+            "maxMM": [
+              -4.55,
+              17.9,
+              87.28102416992188
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -4.95,
+              11.8,
+              86.68218688964843
+            ],
+            "maxMM": [
+              -4.05,
+              17.9,
+              87.58218688964844
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -4.45,
+              11.8,
+              86.95141296386718
+            ],
+            "maxMM": [
+              -3.55,
+              17.9,
+              87.85141296386719
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -3.95,
+              11.8,
+              87.21386413574218
+            ],
+            "maxMM": [
+              -3.05,
+              17.9,
+              88.11386413574219
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -3.45,
+              11.8,
+              87.48510437011718
+            ],
+            "maxMM": [
+              -2.55,
+              17.9,
+              88.38510437011719
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -2.95,
+              11.8,
+              87.75618438720703
+            ],
+            "maxMM": [
+              -2.05,
+              17.9,
+              88.65618438720703
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -2.45,
+              11.8,
+              88.02510528564453
+            ],
+            "maxMM": [
+              -1.55,
+              17.9,
+              88.92510528564453
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -1.95,
+              11.8,
+              88.28269653320312
+            ],
+            "maxMM": [
+              -1.05,
+              17.9,
+              89.18269653320313
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -1.45,
+              11.8,
+              88.52518920898437
+            ],
+            "maxMM": [
+              -0.55,
+              17.9,
+              89.42518920898438
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -0.95,
+              11.8,
+              88.69476776123047
+            ],
+            "maxMM": [
+              -0.04999999999999999,
+              17.9,
+              89.59476776123047
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              -0.45,
+              11.8,
+              88.69556884765625
+            ],
+            "maxMM": [
+              0.45,
+              17.9,
+              89.59556884765625
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              0.04999999999999999,
+              11.8,
+              88.62375335693359
+            ],
+            "maxMM": [
+              0.95,
+              17.9,
+              89.5237533569336
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              0.55,
+              11.8,
+              88.42484741210937
+            ],
+            "maxMM": [
+              1.45,
+              17.9,
+              89.32484741210938
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              1.05,
+              11.8,
+              88.1985595703125
+            ],
+            "maxMM": [
+              1.95,
+              17.9,
+              89.0985595703125
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              1.55,
+              11.8,
+              87.93611602783203
+            ],
+            "maxMM": [
+              2.45,
+              17.9,
+              88.83611602783203
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              2.05,
+              11.8,
+              87.65237121582031
+            ],
+            "maxMM": [
+              2.95,
+              17.9,
+              88.55237121582032
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              2.55,
+              11.8,
+              87.35868530273437
+            ],
+            "maxMM": [
+              3.45,
+              17.9,
+              88.25868530273438
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              3.05,
+              11.8,
+              87.05128173828125
+            ],
+            "maxMM": [
+              3.95,
+              17.9,
+              87.95128173828125
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              3.55,
+              11.8,
+              86.73805694580078
+            ],
+            "maxMM": [
+              4.45,
+              17.9,
+              87.63805694580078
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              4.05,
+              11.8,
+              86.42474060058593
+            ],
+            "maxMM": [
+              4.95,
+              17.9,
+              87.32474060058594
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              4.55,
+              11.8,
+              86.09682159423828
+            ],
+            "maxMM": [
+              5.45,
+              17.9,
+              86.99682159423828
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              5.05,
+              11.8,
+              85.76087646484375
+            ],
+            "maxMM": [
+              5.95,
+              17.9,
+              86.66087646484375
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              5.55,
+              11.8,
+              85.43772583007812
+            ],
+            "maxMM": [
+              6.45,
+              17.9,
+              86.33772583007813
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              6.05,
+              11.8,
+              85.07945709228515
+            ],
+            "maxMM": [
+              6.95,
+              17.9,
+              85.97945709228516
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              6.55,
+              11.8,
+              84.65253143310547
+            ],
+            "maxMM": [
+              7.45,
+              17.9,
+              85.55253143310547
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              7.05,
+              11.8,
+              84.18765716552734
+            ],
+            "maxMM": [
+              7.95,
+              17.9,
+              85.08765716552735
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              7.55,
+              11.8,
+              83.70859985351562
+            ],
+            "maxMM": [
+              8.45,
+              17.9,
+              84.60859985351563
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              8.05,
+              11.8,
+              83.23459320068359
+            ],
+            "maxMM": [
+              8.95,
+              17.9,
+              84.1345932006836
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              8.55,
+              11.8,
+              82.7651870727539
+            ],
+            "maxMM": [
+              9.45,
+              17.9,
+              83.66518707275391
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              9.05,
+              11.8,
+              82.29546813964843
+            ],
+            "maxMM": [
+              9.95,
+              17.9,
+              83.19546813964844
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              9.55,
+              11.8,
+              81.8245132446289
+            ],
+            "maxMM": [
+              10.45,
+              17.9,
+              82.72451324462891
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              10.05,
+              11.8,
+              81.33592681884765
+            ],
+            "maxMM": [
+              10.95,
+              17.9,
+              82.23592681884766
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              10.55,
+              11.8,
+              80.79177551269531
+            ],
+            "maxMM": [
+              11.45,
+              17.9,
+              81.69177551269532
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.05,
+              11.8,
+              80.18895416259765
+            ],
+            "maxMM": [
+              11.95,
+              17.9,
+              81.08895416259766
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              11.55,
+              11.8,
+              79.49974517822265
+            ],
+            "maxMM": [
+              12.45,
+              17.9,
+              80.39974517822266
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              12.05,
+              11.8,
+              78.71739654541015
+            ],
+            "maxMM": [
+              12.95,
+              17.9,
+              79.61739654541016
+            ]
+          },
+          {
+            "name": "own native arch lip",
+            "minMM": [
+              12.55,
+              11.8,
+              77.83260803222656
+            ],
+            "maxMM": [
+              13.45,
+              17.9,
+              78.73260803222657
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "own south upper carved shingle rim",
+      "minMM": [
+        10.8,
+        -4.5,
+        114.8
+      ],
+      "maxMM": [
+        13.2,
+        -2.1,
+        117.2
+      ]
+    },
+    {
+      "name": "own east north post narrow carved fold",
+      "minMM": [
+        16.95,
+        13.15,
+        39.1
+      ],
+      "maxMM": [
+        17.85,
+        14.85,
+        40.9
+      ]
+    }
+  ],
+  "placementCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "pegCentersMM": [
+    [
+      0.04553508758544922,
+      0.023387908935546875
+    ]
+  ],
+  "mountCentreFitReview": {
+    "sourceSHA256": "be88a64042b62901d61fd908b46ea0c460f43ac338fc9d957310432c55dc6a3d",
+    "nativeCentresMM": [
+      [
+        0.04553508758544922,
+        0.023387908935546875
+      ]
+    ],
+    "fittedCentresMM": [
+      [
+        0.04553508758544922,
+        0.023387908935546875
+      ]
+    ],
+    "preservedCentroidMM": [
+      0.04553508758544922,
+      0.023387908935546875
+    ],
+    "maxCoordinateMoveMM": 0,
+    "requiredDecodedCentreToleranceMM": 0.02,
+    "sourceSections": [
+      {
+        "z": 12,
+        "centreMM": [
+          0.04562520980834961,
+          0.02222442626953125
+        ]
+      },
+      {
+        "z": 14,
+        "centreMM": [
+          0.04478645324707031,
+          0.02321338653564453
+        ]
+      },
+      {
+        "z": 16,
+        "centreMM": [
+          0.04553508758544922,
+          0.023387908935546875
+        ]
+      }
+    ],
+    "method": "Own opposite exterior mounting rays12/14/16;16mm section selected"
+  },
+  "uvBaseTile": [
+    0.65,
+    0.002,
+    0.998,
+    0.45
+  ],
+  "uvDetailRegions": [
+    {
+      "name": "own roof and gable top",
+      "minMM": [
+        -17.9,
+        -17.9,
+        98.001
+      ],
+      "maxMM": [
+        17.9,
+        17.9,
+        126
+      ],
+      "tile": [
+        0.002,
+        0.002,
+        0.64,
+        0.998
+      ],
+      "islandMargin": 0.0007
+    },
+    {
+      "name": "own outside west wall",
+      "minMM": [
+        -17.9,
+        -14.5,
+        27
+      ],
+      "maxMM": [
+        -15.5,
+        14.5,
+        98
+      ],
+      "tile": [
+        0.65,
+        0.46,
+        0.818,
+        0.998
+      ],
+      "islandMargin": 0.0007
+    },
+    {
+      "name": "own inside west wall",
+      "minMM": [
+        -13.5,
+        -14.5,
+        27
+      ],
+      "maxMM": [
+        -9.5,
+        14.5,
+        98
+      ],
+      "tile": [
+        0.83,
+        0.46,
+        0.998,
+        0.998
+      ],
+      "islandMargin": 0.0007
+    }
+  ]
+}
