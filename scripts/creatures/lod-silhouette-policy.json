@@ -1,0 +1,9 @@
+{
+  "resolution": 512,
+  "padding": 0.06,
+  "minIoU": 0.97,
+  "maxMissingFraction": 0.025,
+  "maxAddedFraction": 0.025,
+  "maxEdgeP95Pixels": 2,
+  "maxDistancePixels": 8
+}

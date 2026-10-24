@@ -2,6 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
+import { isDeepStrictEqual } from "node:util";
 import { createRequire } from "node:module";
 
 const root = path.resolve(import.meta.dirname, "../..");
@@ -22,6 +23,24 @@ const output = path.join(folder, "publish");
 const verification = JSON.parse(
   await fs.readFile(path.join(folder, "verification.json"), "utf8"),
 );
+const silhouetteBytes = await fs.readFile(
+  path.join(folder, "lod-silhouette.json"),
+);
+const silhouettePolicy = {
+  ...JSON.parse(
+    await fs.readFile(
+      path.join(import.meta.dirname, "lod-silhouette-policy.json"),
+    ),
+  ),
+  ...recipe.lodSilhouette,
+};
+if (
+  !verification.silhouette?.passed ||
+  !isDeepStrictEqual(JSON.parse(silhouetteBytes).policy, silhouettePolicy) ||
+  crypto.createHash("sha256").update(silhouetteBytes).digest("hex") !==
+    verification.silhouetteReportSHA256
+)
+  throw new Error("Verify the current LOD silhouette report before packaging");
 if (
   !verification.passed ||
   verification.referenceDiameter !== recipe.referenceDiameter
@@ -74,6 +93,7 @@ const {
   slug,
   materialProfile,
   calibration,
+  lodSilhouette,
   ...metadata
 } = recipe;
 const model = {

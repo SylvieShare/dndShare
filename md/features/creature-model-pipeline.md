@@ -43,10 +43,14 @@ models/creatures/.generation-runtime/bin/python scripts/creatures/generate-trell
 рецепте, истории команд, отчётах или чате.
 
 Успех подтверждают `generated-original.glb` и `generation.json` с
-`originalMeshExported:true`. `--views-only` оставляет только виды и не подходит
-для публикации. Если квота закончилась после генерации, сохранить результат и
-ошибку; не запускать серию новых генераций. Автоматического восстановления
-удалённой сессии после завершения процесса сейчас нет.
+`originalMeshExported:true`. Повтор той же команды продолжает сохранённый checkpoint:
+собирает существующую задачу, повторяет отказавший по квоте экспорт либо только
+скачивание. Модель повторно автоматически не генерируется. `--views-only`
+сохраняет виды; следующий запуск без флага продолжает экспорт.
+`--status` показывает локальное состояние без ключей и сети.
+Восстановление зависит от сохранности сессии сервиса: после её удаления или
+неизвестного результата отправки новый расчёт не запускается молча.
+Формат, ограничения и сценарии — [автоматические проверки и восстановление](creature-model-checks.md).
 
 ## Калибровка фигуры
 
@@ -96,6 +100,7 @@ models/creatures/.generation-runtime/bin/python scripts/creatures/generate-trell
 models/creatures/.generation-runtime/bin/python scripts/creatures/prepare-native-geometry.py models/creatures/SLUG --lod-triangles 12000
 /Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python-exit-code 1 --python scripts/creatures/bake-native-miniature.py -- models/creatures/SLUG --recipe scripts/creatures/RECIPE.json --token-size 1
 node scripts/creatures/optimize-miniature.mjs models/creatures/SLUG scripts/creatures/RECIPE.json
+models/creatures/.generation-runtime/bin/python scripts/creatures/compare-lod-silhouette.py models/creatures/SLUG --recipe scripts/creatures/RECIPE.json
 node scripts/creatures/verify-single-miniature.mjs models/creatures/SLUG scripts/creatures/RECIPE.json
 /Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python-exit-code 1 --python scripts/creatures/render-final-miniature.py -- models/creatures/SLUG --recipe scripts/creatures/RECIPE.json
 node scripts/creatures/package-miniature.mjs models/creatures/SLUG scripts/creatures/RECIPE.json
@@ -118,7 +123,14 @@ python3 scripts/creatures/publish-miniature.py models/creatures/SLUG scripts/cre
 Albedo использует sRGB, normal/ORM — Non-Color. Проверяются конечные координаты,
 UV, автономность GLB, отсутствие скелета/анимации, части, треугольники и datum.
 LOD может отличаться по границам не более 0,04 нативной единицы; этого недостаточно
-для оценки силуэта. Ограничения «весь меш обязан влезть в круг опоры» нет.
+для оценки силуэта. Дополнительно обязательны 17 одинаково направленных
+ортографических масок render/LOD: IoU, пропавшая/добавленная площадь и расстояния
+отклонений. Отчёт и картинки — `lod-silhouette.json/png`. Порог задаёт
+`lod-silhouette-policy.json`, рецепт может явно переопределить `lodSilhouette`.
+Fail или устаревший отчёт блокирует проверку/упаковку/публикацию; сами GLB
+не меняются. Проверка работает с непрозрачной геометрией, alpha-карты требуют
+отдельного сравнения материалов. Подробности — [проверки](creature-model-checks.md).
+Ограничения «весь меш обязан влезть в круг опоры» нет.
 
 Оптимизатор сокращает карты: albedo до 2048 render/1024 LOD, normal вдвое,
 ORM вчетверо меньше; albedo JPEG, карты данных PNG. Запускать на свежем экспорте,
@@ -200,11 +212,10 @@ Snapshot сохраняет текущие модели и связи до за�
   тонкое оперение потребовало большего LOD. Ошибочная металличность почти 1 делала
   тело тёмным; исправлен материал, а не освещение. Модель остаётся стилизованной,
   мелкие перья не гарантируют точного повторения иллюстрации.
-- Следующий полезный шаг для генератора — восстановление удалённой сессии на этапе
-  экспорта, если сервис её ещё хранит. Сейчас после сбоя данные ракурсов сохраняются,
-  но перезапуск автоматически не продолжает прежний расчёт.
-- Для дальнейшего каталога полезны отдельные принятые позы, смешанные PBR-материалы
-  экипировки и сравнение силуэта LOD по изображениям. Сейчас их оценивают визуально;
-  численный тест границ не заменяет такую оценку.
+- Генератор сохраняет этапы и восстанавливает задачу/экспорт/скачивание в пределах
+  сохранности серверной сессии. Численное сравнение силуэта LOD реализовано отдельно
+  от проверки границ. Оно не оценивает цвет, нормали и посадку одежды.
+- Для дальнейшего каталога полезны отдельные принятые позы и смешанные
+  PBR-материалы экипировки; их продолжают оценивать визуально.
 
 [Оглавление wiki](../README.md) · [Журнал моделей](maps-model-log.md)

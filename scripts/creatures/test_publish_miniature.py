@@ -31,7 +31,11 @@ class MiniatureUpdate(unittest.TestCase):
         self.model = {'id': 'model-1', 'hidden': True, 'tileType': 'object',
                       'referenceDiameter': .9, 'maxHeight': .6, 'name': 'Recipe name', 'assets': assets}
         (self.folder/'publish/catalogue.json').write_text(json.dumps([self.model]))
-        (self.folder/'verification.json').write_text(json.dumps({'passed': True, 'referenceDiameter': .9, 'originalServiceMeshExported': True, 'assetHashes': {k:v['sha256'] for k,v in assets.items() if k != 'preview'}}))
+        silhouette = json.dumps({'passed': True,
+            'policy': json.loads(SCRIPT.with_name('lod-silhouette-policy.json').read_text()),
+            'assetHashes': {k:v['sha256'] for k,v in assets.items() if k in ['render','lod']}}).encode()
+        (self.folder/'lod-silhouette.json').write_bytes(silhouette)
+        (self.folder/'verification.json').write_text(json.dumps({'passed': True, 'silhouette': {'passed': True}, 'silhouetteReportSHA256': hashlib.sha256(silhouette).hexdigest(), 'referenceDiameter': .9, 'originalServiceMeshExported': True, 'assetHashes': {k:v['sha256'] for k,v in assets.items() if k != 'preview'}}))
         self.recipe = self.folder/'recipe.json'
         self.recipe.write_text(json.dumps({'itemId': 2579, 'modelId': 'model-1', 'referenceDiameter': .9}))
         old = copy.deepcopy(assets)
@@ -97,6 +101,20 @@ class MiniatureUpdate(unittest.TestCase):
         (self.folder/'publish'/Path(asset['key']).name).write_bytes(data)
         (self.folder/'publish/catalogue.json').write_text(json.dumps([self.model]))
         with self.assertRaisesRegex(AssertionError, 'Asset changed since verification'):
+            self.run_update()
+        self.assertEqual(self.uploads, 0)
+
+    def test_refuses_a_report_changed_after_verification(self):
+        (self.folder/'lod-silhouette.json').write_text('{"passed":false}')
+        with self.assertRaisesRegex(AssertionError, 'Silhouette report changed'):
+            self.run_update()
+        self.assertEqual(self.uploads, 0)
+
+    def test_refuses_recipe_policy_changed_after_verification(self):
+        recipe = json.loads(self.recipe.read_text())
+        recipe['lodSilhouette'] = {'minIoU': .99}
+        self.recipe.write_text(json.dumps(recipe))
+        with self.assertRaisesRegex(AssertionError, 'Silhouette policy changed'):
             self.run_update()
         self.assertEqual(self.uploads, 0)
 

@@ -27,6 +27,12 @@ models = json.loads((folder/'publish/catalogue.json').read_text())
 verification = json.loads((folder/'verification.json').read_text())
 assert verification['passed'] and len(models) == 1
 assert verification['originalServiceMeshExported'], 'Native mesh export required'
+assert verification['silhouette']['passed'], 'LOD silhouette verification required'
+assert hashlib.sha256((folder/'lod-silhouette.json').read_bytes()).hexdigest() == verification['silhouetteReportSHA256'], 'Silhouette report changed since verification'
+silhouette = json.loads((folder/'lod-silhouette.json').read_text())
+silhouette_policy = dict(json.loads(Path(__file__).with_name('lod-silhouette-policy.json').read_text()), **(recipe.get('lodSilhouette') or {}))
+assert silhouette['policy'] == silhouette_policy, 'Silhouette policy changed since verification'
+assert all(silhouette['assetHashes'][role] == verification['assetHashes'][role] for role in ['render', 'lod']), 'Silhouette asset hashes differ from verification'
 model = models[0]
 assert 0 < model.get('referenceDiameter', 0) <= 32
 assert verification['referenceDiameter'] == model['referenceDiameter'] == recipe['referenceDiameter']

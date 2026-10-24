@@ -72,11 +72,18 @@ hidden-input/auth options. Honour current authorization and quota/budget limits;
 this skill itself does not authorize a paid generation or live publication.
 Do not persist volatile service prices or quotas here. If a generation/export
 fails on quota, preserve its outputs and stop remote retries until the reason
-is resolved; do not silently generate another paid attempt.
+is resolved; do not silently generate another paid attempt. Repeat the same
+command/output folder to resume its checkpoint. After an unknown submission or
+an expired session, stop; do not bypass that guard by creating another generation
+without the current task authorizing a new attempt. `--status` is local and does
+not request a key. A completed local GLB needs no service calls.
 
 Review neutral light, grey material, front/back/both sides/top, render versus
 LOD, and actual placement against walls. Record visible weaknesses. Run the
-verifier on the exact final files, then package and dry-run publication.
+silhouette comparison after optimization, then the verifier on the exact final
+files, then package and dry-run publication. Failed/stale silhouette reports
+block publication. Read [recovery and LOD checks](../../md/features/creature-model-checks.md)
+when resuming generation or investigating a failed comparison.
 Publication is complete only after reading back manifests, calibration and
 bindings. On interrupted updates, retry the reviewed bundle; refuse changed
 assets or metadata rather than overwriting someone else's work.

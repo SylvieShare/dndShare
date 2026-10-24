@@ -17,6 +17,12 @@
 На macOS используются Blender.app и его Python; на других системах можно задать
 `BLENDER_BIN` и `MODEL_PYTHON`. Node-инструменты моделей используют окружение,
 подготовленное `scripts/maps/setup-model-tools.sh`.
+Сравнение силуэта миниатюр обязательно проверяется в `models`: берётся
+`MODEL_PYTHON` либо `models/creatures/.generation-runtime/bin/python`, при отсутствии
+— общий Python профиля. Нужны зависимости `scripts/creatures/requirements.txt`.
+В обычном stdlib Python эти численные тесты отмечаются как skip; в `models`
+отсутствие зависимостей — ошибка. Тесты восстановления генерации используют
+подставной сервис и не расходуют GPU-квоту.
 
 ## Изоляция PostgreSQL
 

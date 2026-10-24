@@ -122,6 +122,33 @@ const delta = Math.max(
   ),
 );
 assert.ok(delta < 0.04, `LOD bounds delta ${delta}`);
+const silhouetteBytes = await fs.readFile(
+  path.join(folder, "lod-silhouette.json"),
+);
+const silhouette = JSON.parse(silhouetteBytes);
+const silhouettePolicy = {
+  ...JSON.parse(
+    await fs.readFile(
+      path.join(import.meta.dirname, "lod-silhouette-policy.json"),
+    ),
+  ),
+  ...recipe.lodSilhouette,
+};
+assert.equal(silhouette.schema, 1, "silhouette report schema");
+assert.equal(silhouette.mode, "opaque-geometry", "silhouette comparison mode");
+assert.equal(silhouette.passed, true, "LOD silhouette comparison failed");
+assert.deepEqual(
+  silhouette.policy,
+  silhouettePolicy,
+  "silhouette policy changed",
+);
+assert.equal(silhouette.views.length, 17, "missing silhouette views");
+for (const role of ["render", "lod"])
+  assert.equal(
+    silhouette.assetHashes[role],
+    hashes[role],
+    "silhouette report is stale",
+  );
 const result = {
   passed: true,
   originalServiceMeshExported: !!placement.originalServiceMeshExported,
@@ -130,6 +157,16 @@ const result = {
   maxHeight: render.bounds[1][1],
   lodBoundsDelta: delta,
   assetHashes: hashes,
+  silhouetteReportSHA256: crypto
+    .createHash("sha256")
+    .update(silhouetteBytes)
+    .digest("hex"),
+  silhouette: {
+    passed: true,
+    views: 17,
+    minIoU: silhouette.minIoU,
+    maxDistancePixels: silhouette.maxDistancePixels,
+  },
   assets: stats,
 };
 await fs.writeFile(
