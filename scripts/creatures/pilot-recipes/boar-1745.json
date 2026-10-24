@@ -1,0 +1,42 @@
+{
+  "slug": "boar-1745",
+  "itemId": 1745,
+  "itemIds": [
+    1745
+  ],
+  "modelId": "5ee692f4-7f16-5467-ac13-2bc7e79fa5ae",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1745",
+  "sourceName": "boar-1745-miniature",
+  "name": "Кабан",
+  "nameEn": "Boar",
+  "code": "CRE-boar",
+  "groupName": "Кабан",
+  "groupNameEn": "Boar",
+  "maxHeight": 0.6799390510321217,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "height": 0.68,
+    "size": 1,
+    "lodTriangles": 16000,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.7957202250718193,
+    "sourceOrigin": [
+      0.07947182688999686,
+      -0.19088613256784578,
+      -0.30222671049211725
+    ],
+    "rotation": -45
+  }
+}

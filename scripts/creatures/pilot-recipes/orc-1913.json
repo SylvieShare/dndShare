@@ -1,0 +1,46 @@
+{
+  "slug": "orc-1913",
+  "itemId": 1913,
+  "itemIds": [
+    1913
+  ],
+  "modelId": "27c87b55-5127-56b9-b972-8ad81fcdc81c",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1913",
+  "sourceName": "orc-1913-miniature",
+  "name": "Орк",
+  "nameEn": "Orc",
+  "code": "CRE-orc",
+  "groupName": "Орк",
+  "groupNameEn": "Orc",
+  "maxHeight": 1.6506807004029795,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "height": 1.65,
+    "size": 1,
+    "lodTriangles": 25000,
+    "dropComponentsBelow": 16,
+    "lodAggression": 4,
+    "shadowTriangles": 8000,
+    "shadowAggression": 5,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5210319219521553,
+    "sourceOrigin": [
+      0.15885959089224855,
+      0.2100057482463438,
+      -0.4778080592188124
+    ],
+    "rotation": -45
+  }
+}

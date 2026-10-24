@@ -57,6 +57,10 @@ for commands and acceptance criteria. For binding/storage/rendering changes read
 - LOD must preserve stance, proportions and thin appendages. Triangle budgets
   are starting points; the owlbear needed 24k rather than 12k for its feathers.
   A bounds test alone does not verify silhouette or baked shading.
+- Count legs/limbs in the exported 3D views, including the back. Watertight
+  geometry can still contain unwanted tunnels or cavities. Review smooth skin
+  in grey material. An explicitly reviewed voxel closure can repair pinholes,
+  but can erase thin anatomy; keep the raw source and recheck all appendages.
 - Keep native export, reference, prompt, recipe and reports. Never label a
   visual hull or views-only run as a native mesh export.
 

@@ -1,0 +1,46 @@
+{
+  "slug": "giant-spider-2008",
+  "itemId": 2008,
+  "itemIds": [
+    2008
+  ],
+  "modelId": "8850b84f-3345-5bc7-880e-a710629ec7f1",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2008",
+  "sourceName": "giant-spider-2008-miniature",
+  "name": "Гигантский паук",
+  "nameEn": "Giant Spider",
+  "code": "CRE-giant-spider",
+  "groupName": "Гигантский паук",
+  "groupNameEn": "Giant Spider",
+  "maxHeight": 0.3490852787366352,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "footprint": 0.95,
+    "size": 2,
+    "lodTriangles": 20000,
+    "surfaceClosure": {
+      "pitch": 0.004,
+      "radius": 4
+    },
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 1.0425986784445156,
+    "sourceOrigin": [
+      -0.00012123584288961025,
+      0.00021174549447065843,
+      -0.20214130695290894
+    ],
+    "rotation": -45
+  }
+}

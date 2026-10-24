@@ -13,7 +13,7 @@ from creature_archive_restore import restore_archive
 
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW = ['generate-trellis.py','trellis_checkpoint.py','trellis_transport.py','requirements.txt',
-            'prepare-native-geometry.py','bake-native-miniature.py','miniature_scene.py',
+            'prepare-native-geometry.py','close-native-surface.py','bake-native-miniature.py','miniature_scene.py',
             'optimize-miniature.mjs','render-final-miniature.py','lod_silhouette.py',
             'compare-lod-silhouette.py','lod-silhouette-policy.json','verify-single-miniature.mjs',
             'package-miniature.mjs','production-queue.py','production_stages.py','model_build_queue.py','creature_archive.py','creature_archive_restore.py','model-source-archive.py','miniature_mcp.py']
@@ -43,6 +43,9 @@ def archive_inputs(folder,stage):
                 [n+'.png' for n in ['preview','back','left','right','top','lod-preview','lod-top','grey-preview','grey-back','grey-top']]}
         for directory,names in selected.items():
             for name in names:inputs[directory+'/'+name] = folder/directory/name
+        for name in ['closed-source.glb','closed-source.json']:
+            if (folder/'geometry'/name).is_file():inputs['geometry/'+name]=folder/'geometry'/name
+        if (folder/'final/on-base.png').is_file():inputs['final/on-base.png']=folder/'final/on-base.png'
     if any(not p.is_file() or p.is_symlink() for p in inputs.values()):
         raise ValueError('Archive is missing an explicit regular source file')
     return inputs

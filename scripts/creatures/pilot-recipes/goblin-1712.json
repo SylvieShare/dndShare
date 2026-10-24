@@ -1,0 +1,44 @@
+{
+  "slug": "goblin-1712",
+  "itemId": 1712,
+  "itemIds": [
+    1712
+  ],
+  "modelId": "afa54c97-2b28-5438-a6a3-e22e350faf8c",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1712",
+  "sourceName": "goblin-1712-miniature",
+  "name": "Гоблин",
+  "nameEn": "Goblin",
+  "code": "CRE-goblin",
+  "groupName": "Гоблин",
+  "groupNameEn": "Goblin",
+  "maxHeight": 1.0502983749405956,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "height": 1.05,
+    "size": 1,
+    "lodTriangles": 16000,
+    "nativeAttempt": 2,
+    "seed": 1713,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.8578917887290739,
+    "sourceOrigin": [
+      0.14585597012136028,
+      0.18886879160613737,
+      -0.5001178362358129
+    ],
+    "rotation": -45
+  }
+}

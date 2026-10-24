@@ -1,0 +1,42 @@
+{
+  "slug": "bat-1563",
+  "itemId": 1563,
+  "itemIds": [
+    1563
+  ],
+  "modelId": "7373fd0f-5f7f-55a9-a4a4-2a54c8ca220b",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1563",
+  "sourceName": "bat-1563-miniature",
+  "name": "Летучая мышь",
+  "nameEn": "Bat",
+  "code": "CRE-bat",
+  "groupName": "Летучая мышь",
+  "groupNameEn": "Bat",
+  "maxHeight": 0.5017326741972425,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "footprint": 0.95,
+    "size": 0.5,
+    "lodTriangles": 16000,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.9643255728199626,
+    "sourceOrigin": [
+      3.159043397147328e-05,
+      0.0006769001356438378,
+      -0.2692746074744247
+    ],
+    "rotation": -45
+  }
+}

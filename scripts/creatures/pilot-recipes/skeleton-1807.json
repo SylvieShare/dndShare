@@ -1,0 +1,42 @@
+{
+  "slug": "skeleton-1807",
+  "itemId": 1807,
+  "itemIds": [
+    1807
+  ],
+  "modelId": "5be1af70-0611-5fa9-aa67-066debdf42de",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1807",
+  "sourceName": "skeleton-1807-miniature",
+  "name": "Скелет",
+  "nameEn": "Skeleton",
+  "code": "CRE-skeleton",
+  "groupName": "Скелет",
+  "groupNameEn": "Skeleton",
+  "maxHeight": 1.4000967266216264,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "height": 1.4,
+    "size": 1,
+    "lodTriangles": 20000,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.6432330064166186,
+    "sourceOrigin": [
+      -0.018004796328867215,
+      -0.03867168980875587,
+      -0.5002897201365676
+    ],
+    "rotation": -45
+  }
+}

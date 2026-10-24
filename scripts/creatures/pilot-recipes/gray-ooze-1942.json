@@ -1,0 +1,42 @@
+{
+  "slug": "gray-ooze-1942",
+  "itemId": 1942,
+  "itemIds": [
+    1942
+  ],
+  "modelId": "a4738d9b-2ef1-55ec-ad6f-89d1ebe4766f",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1942",
+  "sourceName": "gray-ooze-1942-miniature",
+  "name": "Серая слизь",
+  "nameEn": "Gray Ooze",
+  "code": "CRE-gray-ooze",
+  "groupName": "Серая слизь",
+  "groupNameEn": "Gray Ooze",
+  "maxHeight": 0.42601473969723,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "footprint": 0.9,
+    "size": 1,
+    "lodTriangles": 12000,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 1.0899587680778284,
+    "sourceOrigin": [
+      5.736945986585581e-05,
+      0.00037911534642527173,
+      -0.25781030342942113
+    ],
+    "rotation": -45
+  }
+}

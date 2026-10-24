@@ -29,7 +29,7 @@ def scripts_hash(*names):
 
 
 def build_settings(entry):
-    return {key:entry[key] for key in ['height','footprint','size','lodTriangles','dropComponentsBelow','fillSmallHoles','lodAggression','shadowTriangles','shadowAggression','nativeAttempt','seed'] if key in entry} | {'rotation':-45}
+    return {key:entry[key] for key in ['height','footprint','size','lodTriangles','dropComponentsBelow','fillSmallHoles','lodAggression','shadowTriangles','shadowAggression','nativeAttempt','seed','surfaceClosure'] if key in entry} | {'rotation':-45}
 
 
 def prepare_recipe(entry,folder):
@@ -42,11 +42,15 @@ def prepare_recipe(entry,folder):
 
 
 def geometry_inputs(entry,folder):
-    return {'native':file_hash(native_directory(folder,entry.get('nativeAttempt',1))/'generated-original.glb'),
+    inputs = {'native':file_hash(native_directory(folder,entry.get('nativeAttempt',1))/'generated-original.glb'),
             'lodTriangles':entry['lodTriangles'],'dropComponentsBelow':entry.get('dropComponentsBelow',0),
             'fillSmallHoles':entry.get('fillSmallHoles',False),'lodAggression':entry.get('lodAggression',3),
             'shadowTriangles':entry.get('shadowTriangles',3500),'shadowAggression':entry.get('shadowAggression',7),
             'scripts':scripts_hash('prepare-native-geometry.py')}
+    if entry.get('surfaceClosure'):
+        inputs['surfaceClosure'] = entry['surfaceClosure']
+        inputs['scripts'].update(scripts_hash('close-native-surface.py'))
+    return inputs
 
 
 def bake_inputs(entry,folder):
@@ -78,13 +82,18 @@ def process(queue,entry,until,server_token):
     archive('native')
 
     def geometry_stage():
-        command=[sys.executable,SCRIPTS/'prepare-native-geometry.py',geometry,'--source',raw,'--lod-triangles',entry['lodTriangles']]
+        source=raw;extra=[]
+        if entry.get('surfaceClosure'):
+            source=geometry/'closed-source.glb';settings=entry['surfaceClosure']
+            execute([sys.executable,SCRIPTS/'close-native-surface.py',raw,source,'--pitch',settings['pitch'],'--radius',settings['radius']],logs/'closure.log')
+            extra=[source,source.with_suffix('.json')]
+        command=[sys.executable,SCRIPTS/'prepare-native-geometry.py',geometry,'--source',source,'--lod-triangles',entry['lodTriangles']]
         if entry.get('dropComponentsBelow'):command+=['--drop-components-below',entry['dropComponentsBelow']]
         if entry.get('fillSmallHoles'):command+=['--fill-small-holes']
         for key,flag in [('lodAggression','--lod-aggression'),('shadowTriangles','--shadow-triangles'),('shadowAggression','--shadow-aggression')]:
             if key in entry:command+=[flag,entry[key]]
         execute(command,logs/'geometry.log')
-        return [geometry/f'geometry-{r}.glb' for r in ROLES]+[geometry/'geometry-report.json']
+        return [geometry/f'geometry-{r}.glb' for r in ROLES]+[geometry/'geometry-report.json']+extra
     stage('geometry',geometry_inputs(entry,folder),geometry_stage)
 
     def bake_stage():

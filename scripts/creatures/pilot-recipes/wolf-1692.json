@@ -1,0 +1,42 @@
+{
+  "slug": "wolf-1692",
+  "itemId": 1692,
+  "itemIds": [
+    1692
+  ],
+  "modelId": "07eddc15-6910-5bcf-bab8-462685f59191",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1692",
+  "sourceName": "wolf-1692-miniature",
+  "name": "Волк",
+  "nameEn": "Wolf",
+  "code": "CRE-wolf",
+  "groupName": "Волк",
+  "groupNameEn": "Wolf",
+  "maxHeight": 0.7197242186670678,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "height": 0.72,
+    "size": 1,
+    "lodTriangles": 16000,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 1.1066356736952452,
+    "sourceOrigin": [
+      0.29555447369691656,
+      0.11318083158932957,
+      -0.4424715621762432
+    ],
+    "rotation": -45
+  }
+}
