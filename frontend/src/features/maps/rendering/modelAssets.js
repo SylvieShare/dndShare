@@ -1,5 +1,5 @@
-import { missingModels, modelLoadError } from "../lib/modelLoadError";
-import { acquireModelLoader } from "./modelLoader";
+import { missingModels, modelLoadError } from "@/shared/model3d/modelLoadError";
+import { acquireModelLoader } from "@/shared/model3d/modelLoader";
 import { getMapModels } from "@/shared/api/mapsApi";
 import {
   acquire,

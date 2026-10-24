@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 const read = name => readFileSync(fileURLToPath(new URL(`./${name}`, import.meta.url)), 'utf8')
-const headerSource = read('ItemDetailHeader.vue')
+const headerSource = read('ItemDetailHeader.vue') + read('ItemDetailHeader.css')
 const detailSource = read('HandbookItemDetail.vue')
 const coverStatCardSource = read('../../items/components/cover/CoverStatCard.vue')
 const coverSummaryLayoutSource = read('../../items/components/cover/CoverSummaryLayout.vue')
@@ -53,7 +53,7 @@ describe('handbook item detail cover', () => {
     expect(headerSource).toContain(':key="displayedCoverUrl"')
     expect(headerSource).not.toContain('previousCoverUrl')
     expect(headerSource).toContain("displayedCoverUrl.value = ''\n    coverLoading.value = Boolean(url)")
-    expect(headerSource).toContain('v-if="coverLoading" class="item-detail-cover-loading"')
+    expect(headerSource).toContain('v-if="coverLoading && !modelMode" class="item-detail-cover-loading"')
     expect(headerSource).toContain('place-items: center;')
     expect(headerSource).toContain('{ immediate: true }')
     expect(headerSource).toContain('if (requestVersion !== coverRequestVersion) return')

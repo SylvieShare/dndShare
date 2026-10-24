@@ -9,7 +9,7 @@
         HemisphereLight,
         DirectionalLight,
       } from "three";
-      import { acquireModelLoader } from "/src/features/maps/rendering/modelLoader.js";
+      import { acquireModelLoader } from "/src/shared/model3d/modelLoader.js";
       const gpu = new WebGLRenderer({ antialias: true });
       gpu.setSize(640, 480);
       document.body.append(gpu.domElement);

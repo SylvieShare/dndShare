@@ -1,7 +1,7 @@
 import { afterEach, expect, it, vi } from "vitest";
 import { Matrix4 } from "three";
 const fake = vi.hoisted(() => ({ load: vi.fn(), release: vi.fn() }));
-vi.mock("./modelLoader", () => ({
+vi.mock("@/shared/model3d/modelLoader", () => ({
   acquireModelLoader: () => ({
     key: "download-assets",
     load: fake.load,

@@ -51,6 +51,7 @@ func TestItemAutomationPersistence(t *testing.T) {
  CREATE TABLE dndshare.item_version_compatibility(item_id bigint,source_version_id bigint,status text,replaced_by_item_id bigint,adapter_code text,note text);
  CREATE TABLE dndshare.content_source(id bigint PRIMARY KEY, name text, code text);
  CREATE TABLE dndshare.item_content_source(item_id bigint,content_source_id bigint,primary_source boolean);`)
+	exec(`CREATE TABLE dndshare.item_model(item_id bigint,model_id uuid,is_default boolean,sort_order integer);`)
 	exec(testSchemaColumns(t, "item", "hidden"))
 	exec(`UPDATE dndshare.item SET hidden=true WHERE name_en IN ('Magus','Shaman')`)
 	s := &Store{pool: pool}

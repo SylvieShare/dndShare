@@ -81,7 +81,7 @@
 <script setup>
 import { computed } from "vue";
 import { ActionButton, AppModalFrame } from "@sylvieshare/share-ui";
-import { MODEL_STAGES, MODEL_KINDS } from "../lib/modelLoadError";
+import { MODEL_STAGES, MODEL_KINDS } from "@/shared/model3d/modelLoadError";
 const props = defineProps({ issues: Array, document: Object });
 const emit = defineEmits(["close", "retry"]);
 function path(url) {

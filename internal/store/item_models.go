@@ -3,6 +3,8 @@ package store
 import (
 	"context"
 	"errors"
+
+	"dndshare/internal/battlemap"
 )
 
 type ItemModelBinding struct {
@@ -10,6 +12,54 @@ type ItemModelBinding struct {
 	ModelID   string `json:"modelId"`
 	Default   bool   `json:"default"`
 	SortOrder int    `json:"sortOrder"`
+}
+
+// Resolve only a public item's preferred binding, using the same ordering as maps.
+func (s *Store) GetItemModel(ctx context.Context, itemID int64) (battlemap.Model, error) {
+	return scanMapModel(s.pool.QueryRow(ctx, `SELECT `+mapModelColumns+` FROM dndshare.map_model
+        WHERE id=(SELECT b.model_id FROM dndshare.item_model b
+          JOIN dndshare.item i ON i.id=b.item_id
+          WHERE b.item_id=$1 AND i.user_id IS NULL AND NOT i.hidden
+          ORDER BY b.is_default DESC,b.sort_order,b.model_id LIMIT 1)`, itemID))
+}
+
+// Presence travels with item reads; the handbook never loads the map catalogue
+// or sends one metadata request per visible item to decide whether to show 3D.
+func (s *Store) attachItemModels(ctx context.Context, items []Item) ([]Item, error) {
+	ids := make([]int64, 0, len(items))
+	for index, item := range items {
+		items[index].ModelID = ""
+		if item.UserID == nil && !item.Hidden {
+			ids = append(ids, item.ID)
+		}
+	}
+	if len(ids) == 0 {
+		return items, nil
+	}
+	rows, err := s.pool.Query(ctx, `SELECT DISTINCT ON(b.item_id) b.item_id,b.model_id::text
+        FROM dndshare.item_model b JOIN dndshare.item i ON i.id=b.item_id
+        WHERE b.item_id=ANY($1::bigint[]) AND i.user_id IS NULL AND NOT i.hidden
+        ORDER BY b.item_id,b.is_default DESC,b.sort_order,b.model_id`, ids)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	preferred := map[int64]string{}
+	for rows.Next() {
+		var id int64
+		var model string
+		if err := rows.Scan(&id, &model); err != nil {
+			return nil, err
+		}
+		preferred[id] = model
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	for index := range items {
+		items[index].ModelID = preferred[items[index].ID]
+	}
+	return items, nil
 }
 
 func (s *Store) ListItemModels(ctx context.Context, itemID int64) ([]ItemModelBinding, error) {

@@ -4,7 +4,7 @@
     <script type="module">
       import { ACESFilmicToneMapping, BoxGeometry, Group, Mesh, MeshStandardMaterial,
         OrthographicCamera, Scene, Vector3, WebGLRenderer } from "three";
-      import { acquireModelLoader } from "/src/features/maps/rendering/modelLoader.js";
+      import { acquireModelLoader } from "/src/shared/model3d/modelLoader.js";
       import { createMapLighting } from "/src/features/maps/rendering/mapLighting.js";
       import { createTileLayer } from "/src/features/maps/rendering/tileLayer.js";
       const gpu = new WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
@@ -67,6 +67,9 @@
         d.lights[0].shadows = shadows;
         lighting.update(d, { animate: false }, null, [tile], [], { x: 1.5, y: 1.5 }, objects);
         lighting.advance(0, tiles.transform, objects);
+        // This standalone blocker lives outside the document/object roots,
+        // so the fixture must explicitly invalidate the cached light shadows.
+        lighting.invalidateShadows();
         gpu.shadowMap.needsUpdate = true;
         gpu.render(scene, camera);
         return { east: sample(new Vector3(2.689, 1.8, lightZ)),

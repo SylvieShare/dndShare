@@ -1,4 +1,4 @@
-import { modelLoadError } from "../lib/modelLoadError";
+import { modelLoadError } from "@/shared/model3d/modelLoadError";
 import { modelMemoryUsage } from "./modelMemoryUsage";
 import { modelDownloads } from "./modelDownloadManager";
 import { prepareModelPicking } from "./modelPicking";

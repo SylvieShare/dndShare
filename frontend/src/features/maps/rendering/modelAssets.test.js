@@ -8,7 +8,7 @@ const state = vi.hoisted(() => ({
 vi.mock("@/shared/api/mapsApi", () => ({
   getMapModels: async () => state.models,
 }));
-vi.mock("./modelLoader", () => ({
+vi.mock("@/shared/model3d/modelLoader", () => ({
   acquireModelLoader: () => ({
     key: "test",
     load: state.load,

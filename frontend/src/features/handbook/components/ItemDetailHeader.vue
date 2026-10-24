@@ -4,12 +4,15 @@
     :class="{
       'item-detail-header-summary': $slots.summary,
       'item-detail-header-title-only-shade': titleOnlyShade,
+      'item-detail-header-model': modelMode,
     }"
     :data-item-type-id="type?.id || undefined"
     :style="coverStyle"
   >
+    <Transition name="item-detail-media">
+    <ItemModelPreview v-if="modelMode" :key="item.id" :item="item" :frame="modelFrame" />
     <img
-      v-if="coverImageAvailable"
+      v-else-if="coverImageAvailable"
       :key="displayedCoverUrl"
       class="item-detail-cover item-detail-cover-entering"
       :src="displayedCoverUrl"
@@ -18,9 +21,10 @@
       @load="onCoverLoad"
       @error="onCoverError"
     />
+    </Transition>
     <div class="item-detail-shade" aria-hidden="true"></div>
 
-    <div v-if="coverLoading" class="item-detail-cover-loading">
+    <div v-if="coverLoading && !modelMode" class="item-detail-cover-loading">
       <LoadingIndicator label="Загрузка обложки" />
     </div>
 
@@ -31,17 +35,21 @@
           <span v-if="formattedNameEn">{{ formattedNameEn }}</span>
         </div>
         <span v-if="item.userId != null" class="item-detail-custom">✦ ваше</span>
-        <div v-if="$slots.actions || $slots.corner" class="item-detail-controls">
+        <div v-if="$slots.actions || $slots.corner || item.modelId" class="item-detail-controls">
           <div class="item-detail-actions">
             <slot name="actions" />
           </div>
-          <div v-if="$slots.corner" class="item-detail-corner">
+          <div v-if="$slots.corner || item.modelId" class="item-detail-corner">
+            <ActionButton v-if="item.modelId" class="item-detail-model-toggle"
+              :variant="modelMode ? 'primary' : 'secondary'" :aria-pressed="modelMode"
+              aria-label="3D-модель" :title="modelMode ? 'Показать обложку' : 'Показать 3D-модель'"
+              @click="modelMode = !modelMode">3D</ActionButton>
             <slot name="corner" />
           </div>
         </div>
       </div>
 
-      <div v-if="$slots.summary" class="item-detail-summary">
+      <div v-if="$slots.summary" ref="summary" class="item-detail-summary">
         <slot name="summary" :has-cover="coverImageAvailable" />
       </div>
     </div>
@@ -50,12 +58,16 @@
 
 <script setup>
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
-import { LoadingIndicator } from '@sylvieshare/share-ui'
+import { ActionButton, LoadingIndicator } from '@sylvieshare/share-ui'
+import ItemModelPreview from '@/features/items/components/ItemModelPreview.vue'
 
 const props = defineProps({
   item: { type: Object, required: true },
   type: { type: Object, default: null },
 })
+const modelMode = ref(false), summary = ref(null)
+const modelFrame = () => summary.value?.querySelector('.cover-summary-safe-zone')
+watch([() => props.item.id, () => props.item.modelId], () => { modelMode.value = false })
 
 const TYPE_COVER_STYLES = {
   2: {
@@ -121,7 +133,7 @@ const coverImageAvailable = computed(() => Boolean(displayedCoverUrl.value) && !
 const titleOnlyShade = computed(() => [3, 4, 7, 18].includes(props.type?.id))
 const coverStyle = computed(() => ({
   ...(TYPE_COVER_STYLES[props.type?.id] || {}),
-  ...(coverAspectRatio.value ? { '--cover-aspect-ratio': coverAspectRatio.value } : {}),
+  ...(modelMode.value ? { '--cover-aspect-ratio': '4 / 3' } : coverAspectRatio.value ? { '--cover-aspect-ratio': coverAspectRatio.value } : {}),
 }))
 const formattedNameEn = computed(() => String(props.item.nameEn || '')
   .replace(/_/g, ' ')
@@ -185,254 +197,4 @@ function onCoverError() {
 }
 </script>
 
-<style scoped>
-.item-detail-header {
-  position: relative;
-  isolation: isolate;
-  flex: 0 0 auto;
-  min-height: 86px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: flex-end;
-  margin: -16px -20px 16px;
-  overflow: hidden;
-  background:
-    radial-gradient(circle at 24% 20%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 44%),
-    linear-gradient(125deg, color-mix(in srgb, var(--surface) 92%, var(--accent)), var(--bg));
-  border-bottom: 1px solid var(--border);
-}
-
-.item-detail-header-covered {
-  aspect-ratio: var(--cover-aspect-ratio, auto);
-  min-height: 0;
-}
-
-.item-detail-header-summary {
-  align-items: stretch;
-}
-
-.item-detail-header-covered.item-detail-header-summary {
-  aspect-ratio: auto;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.item-detail-header-covered.item-detail-header-summary::before {
-  content: '';
-  grid-area: 1 / 1;
-  width: 100%;
-  min-height: var(--cover-min-height, 440px);
-  aspect-ratio: var(--cover-aspect-ratio, auto);
-}
-
-.item-detail-header-covered .item-detail-title h1 {
-  color: var(--text-on-accent);
-}
-
-.item-detail-header-covered .item-detail-title span {
-  color: color-mix(in srgb, var(--text-on-accent) 72%, transparent);
-}
-
-.item-detail-cover,
-.item-detail-shade {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.item-detail-cover {
-  z-index: -2;
-  object-fit: cover;
-  object-position: center;
-}
-
-.item-detail-cover-loading {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-  color: var(--text-on-accent);
-}
-
-.item-detail-cover-entering {
-  animation: item-detail-cover-enter 160ms cubic-bezier(.2, .7, .2, 1) both;
-}
-
-@keyframes item-detail-cover-enter {
-  from {
-    opacity: 0;
-    transform: scale(1.008);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.item-detail-shade {
-  z-index: -1;
-  background:
-    linear-gradient(90deg, color-mix(in srgb, var(--scrim) 92%, transparent) 0%, color-mix(in srgb, var(--scrim) 42%, transparent) 60%, color-mix(in srgb, var(--scrim) 18%, transparent) 100%),
-    linear-gradient(0deg, var(--scrim) 0%, color-mix(in srgb, var(--scrim) 10%, transparent) 75%);
-}
-
-.item-detail-header-covered.item-detail-header-summary .item-detail-shade {
-  display: none;
-}
-
-.item-detail-header-covered.item-detail-header-title-only-shade .item-detail-shade {
-  display: none;
-}
-
-.item-detail-overlay {
-  width: 100%;
-  min-width: 0;
-}
-
-.item-detail-header-summary .item-detail-overlay {
-  min-height: var(--cover-min-height, 0);
-  display: flex;
-  flex-direction: column;
-}
-
-.item-detail-header-covered.item-detail-header-summary .item-detail-overlay {
-  grid-area: 1 / 1;
-}
-
-.item-detail-content {
-  width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 18px 20px;
-  padding-right: calc(20px + var(--item-header-close-inset, 0px));
-}
-
-.item-detail-header-summary .item-detail-content {
-  padding-bottom: 10px;
-}
-
-.item-detail-summary {
-  padding: 0 20px 24px;
-}
-
-.item-detail-header-summary .item-detail-summary {
-  flex: 1;
-  min-height: min-content;
-  display: flex;
-}
-
-.item-detail-title {
-  min-width: 0;
-}
-
-.item-detail-header-covered.item-detail-header-summary .item-detail-title,
-.item-detail-header-covered.item-detail-header-title-only-shade .item-detail-title {
-  width: fit-content;
-  max-width: 100%;
-  padding: 7px 10px;
-  border: 1px solid color-mix(in srgb, var(--text-on-accent) 14%, transparent);
-  border-radius: 9px;
-  background: color-mix(in srgb, var(--scrim) 68%, transparent);
-  backdrop-filter: blur(4px);
-  box-sizing: border-box;
-}
-
-.item-detail-title h1 {
-  margin: 0;
-  color: var(--text-1);
-  font-family: var(--font-display);
-  font-size: clamp(20px, 3vw, 28px);
-  font-weight: 700;
-  line-height: 1.1;
-  text-shadow: 0 2px 12px var(--scrim);
-}
-
-.item-detail-title span {
-  display: block;
-  margin-top: 4px;
-  color: color-mix(in srgb, var(--text-1) 72%, transparent);
-  font-size: 12px;
-  text-shadow: 0 1px 8px var(--scrim);
-}
-
-.item-detail-custom {
-  align-self: flex-end;
-  padding-bottom: 3px;
-  color: var(--accent);
-  font-size: 10px;
-}
-
-.item-detail-controls {
-  flex: none;
-  align-self: flex-start;
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
-  max-width: 100%;
-}
-
-.item-detail-actions,
-.item-detail-corner {
-  display: flex;
-  align-items: center;
-}
-
-.item-detail-corner {
-  flex: none;
-}
-
-@media (max-width: 760px) {
-  .item-detail-header {
-    margin: -14px -16px 14px;
-  }
-
-  .item-detail-summary {
-    padding-right: 16px;
-    padding-left: 16px;
-  }
-}
-
-@media (max-width: 520px) {
-  .item-detail-header {
-    margin: -12px -12px 14px;
-  }
-
-  .item-detail-content {
-    align-items: flex-end;
-    flex-wrap: wrap;
-    padding: 16px 14px;
-    padding-right: calc(14px + var(--item-header-close-inset, 0px));
-  }
-
-  .item-detail-summary {
-    padding-right: 14px;
-    padding-bottom: 18px;
-    padding-left: 14px;
-  }
-
-  .item-detail-title {
-    flex: 1;
-  }
-
-  .item-detail-header-summary .item-detail-title {
-    flex: 0 1 auto;
-  }
-
-  .item-detail-controls {
-    margin-left: auto;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .item-detail-cover-entering {
-    animation: none;
-  }
-}
-</style>
+<style scoped src="./ItemDetailHeader.css"></style>

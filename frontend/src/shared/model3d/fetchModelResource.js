@@ -1,4 +1,4 @@
-import { modelLoadError } from "../lib/modelLoadError";
+import { modelLoadError } from "./modelLoadError";
 // An idle timeout permits slow transfers that are still making progress.
 export async function fetchModelResource(
   url,

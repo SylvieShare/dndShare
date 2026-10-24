@@ -1,6 +1,6 @@
 import { modelDownloads } from "@/features/maps/rendering/modelDownloadManager";
-import { fetchModelResource } from "@/features/maps/rendering/fetchModelResource";
-import { modelLoadError } from "@/features/maps/lib/modelLoadError";
+import { fetchModelResource } from "@/shared/model3d/fetchModelResource";
+import { modelLoadError } from "@/shared/model3d/modelLoadError";
 import { previewTask } from "@/features/maps/lib/previewTask";
 let current,
   sequence = 0;

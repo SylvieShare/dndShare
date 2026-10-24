@@ -11,7 +11,7 @@ import {
 } from "three";
 import { modelAssets } from "./modelAssets";
 import { tileBounds, tileTransform } from "./tileTransform";
-import { modelPreviewCamera } from "./modelPreviewCamera";
+import { createModelOrbitCamera } from "@/shared/model3d/modelOrbitCamera";
 import { modelPreviewGuides } from "./modelPreviewGuides";
 import { createMapEffects } from "./mapEffects";
 import { createMapFog } from "./mapFog";
@@ -108,7 +108,7 @@ export function createModelPreview(host, onFrame, onError) {
       });
     });
   }
-  const view = modelPreviewCamera(gpu, host, render);
+  const view = createModelOrbitCamera(gpu, host, render);
   function update(model, next = options) {
     current = model;
     options = next;

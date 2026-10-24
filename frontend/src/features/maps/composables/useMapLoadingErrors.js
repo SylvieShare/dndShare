@@ -1,5 +1,5 @@
 import { computed, ref, watch } from "vue";
-import { modelLoadError } from "../lib/modelLoadError";
+import { modelLoadError } from "@/shared/model3d/modelLoadError";
 export function useMapLoadingErrors(downloads) {
   const permanent = ref([]),
     open = ref(false);

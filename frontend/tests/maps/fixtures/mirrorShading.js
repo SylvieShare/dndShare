@@ -19,7 +19,7 @@ import {
 import { createTileLayer } from '../../../src/features/maps/rendering/tileLayer'
 import { createTilePreview } from '../../../src/features/maps/rendering/tilePreview'
 import { createShadowProxies } from '../../../src/features/maps/rendering/shadowProxies'
-import { acquireModelLoader } from '../../../src/features/maps/rendering/modelLoader'
+import { acquireModelLoader } from '../../../src/shared/model3d/modelLoader'
 
 const gpu = new WebGLRenderer({ antialias: false })
 gpu.setSize(192, 192)

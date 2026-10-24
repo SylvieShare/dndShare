@@ -1,7 +1,7 @@
 import { afterEach, expect, it, vi } from "vitest";
 import { Matrix4 } from "three";
 const state = vi.hoisted(() => ({ load: vi.fn(), models: [] }));
-vi.mock("./modelLoader", () => ({
+vi.mock("@/shared/model3d/modelLoader", () => ({
   acquireModelLoader: () => ({
     key: "progressive",
     load: state.load,

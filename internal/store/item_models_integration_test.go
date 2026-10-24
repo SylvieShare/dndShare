@@ -1,6 +1,7 @@
 package store
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 )
@@ -23,6 +24,7 @@ func TestItemModelsPostgres(t *testing.T) {
 		m.SourceName = fmt.Sprintf("Item model %d", i)
 		m.TileType = "object"
 		m.Category = "object"
+		m.Hidden = true // Palette hiding must not hide a public item's miniature.
 		if _, err = s.RegisterMapModel(t.Context(), m); err != nil {
 			t.Fatal(err)
 		}
@@ -62,6 +64,19 @@ func TestItemModelsPostgres(t *testing.T) {
 	preferred, err := s.PreferredItemModels(t.Context())
 	if err != nil || len(preferred[objects[1]]) != 2 {
 		t.Fatalf("shared asset binding: %+v %v", preferred, err)
+	}
+	visible, err := s.attachItemModels(t.Context(), []Item{{ID: 1635, TypeID: 6}, {ID: 1636, TypeID: 1}, {ID: 1638, Hidden: true}, {ID: 999}})
+	if err != nil || visible[0].ModelID != objects[1] || visible[1].ModelID != objects[1] || visible[2].ModelID != "" || visible[3].ModelID != "" {
+		t.Fatalf("batched model presence across item types: %+v %v", visible, err)
+	}
+	model, err := s.GetItemModel(t.Context(), 1635)
+	if err != nil || model.ID != objects[1] {
+		t.Fatalf("handbook preferred model differs from map selection: %+v %v", model, err)
+	}
+	for _, id := range []int64{1637, 1638, 999} {
+		if _, err := s.GetItemModel(t.Context(), id); !errors.Is(err, ErrNotFound) {
+			t.Fatalf("private/hidden/missing item %d exposed a model: %v", id, err)
+		}
 	}
 	for _, b := range []ItemModelBinding{{ItemID: 1637, ModelID: objects[0]}, {ItemID: 1638, ModelID: objects[0]}, {ItemID: 1635, ModelID: floor, Default: true}} {
 		if err = s.BindItemModel(t.Context(), b); err == nil {

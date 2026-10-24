@@ -36,6 +36,13 @@ API реализован Go `net/http` в `internal/web`. Feature-файл ре�
   по OR): базовые состояния/истощение/вдохновение или эффекты, связанные
   с доступными читателю магическими предметами и заклинаниями.
 - `GET /api/items/by-ids?ids=`
+- `GET /api/items/{id}/model` — основная 3D-модель публичного нескрытого итема:
+  `{id,renderUrl,lodUrl,assetBytes:{render,lod}}`, `Cache-Control: no-store`.
+  `GET /api/items/{id}/model/render` и `/lod` отдают GLB без авторизации,
+  после повторной проверки видимости и привязки. URL содержит `sha`; несовпадение
+  текущей версии даёт 404. Ответы используют ETag/304 и immutable-cache для URL
+  с актуальным SHA; ошибки хранения не кешируются. Личные, скрытые и непривязанные
+  итемы дают 404; source/shadow и произвольные UUID моделей здесь недоступны.
 - `GET /api/items/children?parentId=` — generic legacy-friendly traversal по
   `item.parent_id`; runtime выбора происхождения использует отдельные типы и
   schema-фильтры выше;
@@ -105,6 +112,11 @@ Item reads проецируют иконку как `iconSvgId` + `svg` либо
 Item list/search поддерживает publication scope через `contentSourceIds`,
 `sourceVersionId` и `allowLegacy`. Здесь Legacy — статус контента конкретной
 редакции правил, а не поддержка старого API/формата данных.
+
+Item DTO дополнительно содержит `modelId`, если у публичной нескрытой записи
+есть основная 3D-модель. Это проекция из `item_model`, определяемая одним запросом
+на выдачу; тип итема не ограничен бестиарием. Поле не записывается в `data`.
+Подробности UI и выбранной модели — [3D-модели итемов](../features/item-models.md).
 
 Suggest API:
 

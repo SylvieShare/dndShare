@@ -33,6 +33,7 @@ type Item struct {
 	SVG              *string            `json:"svg,omitempty"`
 	IconImageURL     *string            `json:"iconImageUrl,omitempty"`
 	CoverImageURL    *string            `json:"coverImageUrl,omitempty"`
+	ModelID          string             `json:"modelId,omitempty"`
 	ContentSourceIDs []int64            `json:"contentSourceIds"`
 	ContentSources   []ContentSourceRef `json:"contentSources"`
 }
@@ -371,7 +372,11 @@ func (s *Store) SearchByTypesAndName(ctx context.Context, typeIDs []int64, q str
 }
 
 func (s *Store) attachItemReadMetadata(ctx context.Context, items []Item, userID *int64) ([]Item, error) {
-	items, err := s.attachEffectPresentation(ctx, items, userID)
+	items, err := s.attachItemModels(ctx, items)
+	if err != nil {
+		return nil, err
+	}
+	items, err = s.attachEffectPresentation(ctx, items, userID)
 	if err != nil {
 		return nil, err
 	}

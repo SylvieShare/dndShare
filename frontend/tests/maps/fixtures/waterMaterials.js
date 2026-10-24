@@ -12,7 +12,7 @@ import {
   Mesh,
   PlaneGeometry,
 } from "three";
-import { acquireModelLoader } from "/src/features/maps/rendering/modelLoader.js";
+import { acquireModelLoader } from "/src/shared/model3d/modelLoader.js";
 import { createTileLayer } from "/src/features/maps/rendering/tileLayer.js";
 import { createMapFog } from "/src/features/maps/rendering/mapFog.js";
 import {

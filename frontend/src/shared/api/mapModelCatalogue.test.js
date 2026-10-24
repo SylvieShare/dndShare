@@ -1,6 +1,6 @@
 import { afterEach, expect, it, vi } from "vitest";
 const fake = vi.hoisted(() => ({ fetch: vi.fn() }));
-vi.mock("@/features/maps/rendering/fetchModelResource", () => ({
+vi.mock("@/shared/model3d/fetchModelResource", () => ({
   fetchModelResource: fake.fetch,
 }));
 import { loadModelCatalogue, resetModelCatalogue } from "./mapModelCatalogue";

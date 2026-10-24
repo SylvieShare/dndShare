@@ -1,5 +1,5 @@
 import { fetchModelResource } from "./fetchModelResource";
-import { modelLoadError } from "../lib/modelLoadError";
+import { modelLoadError } from "./modelLoadError";
 import { LoadingManager } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { KTX2Loader } from "three/addons/loaders/KTX2Loader.js";
