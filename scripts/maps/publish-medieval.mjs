@@ -9,6 +9,7 @@ import { mapTool } from "./mcp_maps_client.mjs";
 import { applyBehaviour } from "./apply-medieval-behaviour.mjs";
 import { reviewedMountAssetHash } from "./reviewed_mount_asset.mjs";
 import { validateReceiverReport } from "./receiver_frame_review.mjs";
+import { assertReviewedMountCentreFit } from "./mount_centre_fit.mjs";
 const run = promisify(execFile);
 const code = process.argv[2];
 if (!/^MT1-\d{3}$/.test(code || ""))
@@ -28,6 +29,7 @@ assert.deepEqual(
   expected,
   "Publication manifest differs from reviewed resources",
 );
+assertReviewedMountCentreFit(report, expected.assets);
 const nativeQAHashes = {};
 if (expected.tileType === "frame")
   await validateReceiverReport(report, path.join(base, "review", code), await mapTool("map_tile_models_list"));

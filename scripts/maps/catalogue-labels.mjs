@@ -143,6 +143,7 @@ Tall Wall Light|Высокая стена со свечами
 Tall Bath Objects|Высокий угол с банными принадлежностями
 Tall Wardrobe|Высокий шкаф
 Tall Bed|Высокая кровать
+Tall Bed Angle|Высокая угловая кровать
 Ladder Down|Приставная лестница вниз
 Balcony|Балкон
 Balcony Angle|Угловой балкон

@@ -12,6 +12,7 @@ import { torchSurface, torchFlameDomain } from './medieval_torch_domains.mjs';
 import { structureMetal, structureLiquid, structureFlame, structureEmissionFlame, structureGlass, structureSurfacePigment, structureWoodPigment, structureStonePigment, bakedColourShade, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
 import { initializeStructureReferences } from './medieval_source_reference.mjs';
 import { medievalTextureSizes, medievalColourQuality } from './medieval_texture_sizes.mjs';
+import { assertReviewedMountCentreFit } from './mount_centre_fit.mjs';
 import { reviewedMountAssetHash } from './reviewed_mount_asset.mjs';
 import { stripSculptedFlames, retainPaintForFlameClipping } from './model_flame_geometry.mjs';
 import { addLightEffectPreview } from './light_effect_preview.mjs';
@@ -267,6 +268,7 @@ if (!process.argv.includes('--publish-manifest')) {
     assets[kind] = { key: 'map-models/'+name, sha256, size: bytes.length, mimeType: mime,
       fileName: kind==='source' ? path.basename(file) : kind+ext };
   }
+  assertReviewedMountCentreFit(report, assets);
   const registry = JSON.parse(await fs.readFile(path.join(base, 'registry-snapshot.json'), 'utf8'));
   report.model = currentModel(medievalCatalogue(report.model, registry), registry, assets);
   if (report.model.tileType==='frame') await validateReceiverReport(report,review,registry);

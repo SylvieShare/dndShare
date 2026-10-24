@@ -40,9 +40,15 @@ export function standardMountMetadata(model) {
   for (const p of next.supportSlots ?? []) p.elevation = shift(p.elevation);
   return next;
 }
+function assertSeparatedPads(pads) {
+  for (let i = 0; i < pads.length; i++) for (let j = 0; j < i; j++) {
+    const overlap = [0, 1].map((a) => Math.min(pads[i].top.max[a], pads[j].top.max[a]) - Math.max(pads[i].top.min[a], pads[j].top.min[a]));
+    assert.ok(overlap.some((v) => v <= 0.002 / 35), "Standard insertions overlap; review the array centres");
+  }
+}
 export function standardMountPads(pads) {
   assert.ok(pads.length, "At least one existing pad required");
-  return pads.map((p) => {
+  const result = pads.map((p) => {
     const top = { min: [], max: [] },
       bottom = { min: [], max: [] };
     for (let a = 0; a < 2; a++) {
@@ -59,6 +65,8 @@ export function standardMountPads(pads) {
     }
     return { top, bottom };
   });
+  assertSeparatedPads(result);
+  return result;
 }
 function world(v, m) {
   return [0, 1, 2].map(
@@ -91,6 +99,9 @@ export async function validateStandardMount(bytes, model) {
           );
           const pads = mesh.getExtras().pads;
           assert.ok(Array.isArray(pads) && pads.length);
+          assertSeparatedPads(pads.map(({ center }) => ({
+            top: { min: center.map((v) => v - 0.5), max: center.map((v) => v + 0.5) },
+          })));
           const pos = p.getAttribute("POSITION"),
             idx = p.getIndices(),
             M = n.getWorldMatrix(),

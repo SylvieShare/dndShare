@@ -149,6 +149,15 @@ async function fixture(depth, count = 1, matrix = false) {
   );
   return io.writeBinary(d);
 }
+test("expanding a near-cell array to UD-016 cannot create overlapping tops", () => {
+  const source = (spacingMM) => [0, spacingMM / 35].map((x) => ({
+    top: { min: [x - 0.49, -0.49], max: [x + 0.49, 0.49] },
+  }));
+  assert.throws(() => standardMountPads(source(34.975507617)), /overlap/);
+  assert.equal(standardMountPads(source(35)).length, 2);
+  assert.equal(standardMountPads(source(35.04)).length, 2);
+});
+
 test("metadata preserves world elevations, identities and light heights", () => {
   const old = metadata(0.485714),
     next = standardMountMetadata(old);
