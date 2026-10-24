@@ -89,7 +89,7 @@ def unwrap_detail_regions(target, recipe, tier):
                     uv.x, uv.y = x0 + uv.x * width, y0 + uv.y * height
                     if not (x0-1e-6 <= uv.x <= x1+1e-6 and
                             y0-1e-6 <= uv.y <= y1+1e-6):
-                        raise ValueError('Unwrapped face escaped its UV tile')
+                        raise ValueError(f'Unwrapped face escaped its UV tile: {group["name"]}, uv={tuple(uv)}, tile={group["tile"]}')
                     count += 1
             bmesh.update_edit_mesh(mesh, loop_triangles=False, destructive=False)
             evidence.append(dict(name=group['name'], faces=len(selected),

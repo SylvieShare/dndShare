@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import assert from 'node:assert/strict';
+import { assertGlassPixelReview, glassProbeCount } from './medieval_glass_review.mjs';
 const code = process.argv.find(a => a.startsWith('--code='))?.slice(7);
 const candidate = process.argv.find(a => a.startsWith('--candidate='))?.slice(12);
 const reason = process.argv.find(a => a.startsWith('--reason='))?.slice(9);
@@ -16,9 +17,9 @@ const selected = JSON.parse(await fs.readFile(path.join(source, 'report.json'), 
 const liquidCount = selected.recipe.materials.surfaceParts?.filter(p => p.kind==='liquid').length || 0;
 const glassCount = selected.recipe.materials.surfaceParts?.filter(p => p.kind==='glass').length || 0;
 if (glassCount) for (const tier of ['render','lod']) {
-  assert.equal(selected.glassPixelReview?.[tier]?.length,glassCount*2,'Validate both sides of every glass pane');
+  assert.equal(selected.glassPixelReview?.[tier]?.length,glassProbeCount(selected.recipe.materials.surfaceParts.filter(p => p.kind==='glass'))*2,'Validate both sides of every glass pane');
   assert.equal(selected.glassPixelAssets?.[tier],createHash('sha256').update(await fs.readFile(path.join(source,tier+'.glb'))).digest('hex'),'Glass QA differs from selected resources');
-  for (const pane of selected.glassPixelReview[tier]) assert.ok(pane.greenRatio>=1.1 && pane.deviationMM<=.15 && pane.normalFacing>=.5,'Glass pane lost colour or shape');
+  assertGlassPixelReview(selected.recipe.materials.surfaceParts.filter(p => p.kind==='glass'), selected.glassPixelReview[tier]);
 }
 const flames = selected.recipe.materials.surfaceParts?.filter(p => p.kind==='flame') || [];
 if (flames.length && !selected.recipe.proceduralFire) for (const tier of ['render','lod']) {

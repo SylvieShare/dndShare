@@ -10,6 +10,7 @@ import { applyBehaviour } from "./apply-medieval-behaviour.mjs";
 import { reviewedMountAssetHash } from "./reviewed_mount_asset.mjs";
 import { validateReceiverReport } from "./receiver_frame_review.mjs";
 import { assertReviewedMountCentreFit } from "./mount_centre_fit.mjs";
+import { assertGlassPixelReview, glassProbeCount } from "./medieval_glass_review.mjs";
 const run = promisify(execFile);
 const code = process.argv[2];
 if (!/^MT1-\d{3}$/.test(code || ""))
@@ -95,7 +96,7 @@ if (glassCount)
   for (const tier of ["render", "lod"]) {
     assert.equal(
       report.glassPixelReview?.[tier]?.length,
-      glassCount * 2,
+      glassProbeCount(report.recipe.materials.surfaceParts.filter(p => p.kind === "glass")) * 2,
       "Unverified glass surfaces",
     );
     assert.equal(
@@ -103,13 +104,10 @@ if (glassCount)
       nativeQAHashes[tier],
       "Glass QA differs from publication resources",
     );
-    for (const pane of report.glassPixelReview[tier])
-      assert.ok(
-        pane.greenRatio >= 1.1 &&
-          pane.deviationMM <= 0.15 &&
-          pane.normalFacing >= 0.5,
-        "Glass pane lost colour or shape",
-      );
+    assertGlassPixelReview(
+      report.recipe.materials.surfaceParts.filter(p => p.kind === "glass"),
+      report.glassPixelReview[tier],
+    );
   }
 if (liquidCount)
   for (const tier of ["render", "lod"]) {
