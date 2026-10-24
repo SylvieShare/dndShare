@@ -2,7 +2,6 @@ import {
   CanvasTexture,
   CircleGeometry,
   CylinderGeometry,
-  RingGeometry,
   Group,
   ImageLoader,
   Mesh,
@@ -106,20 +105,7 @@ export function buildMapToken(token, options, fog) {
   const hiddenOpacity = token.hidden ? 0.4 : 1;
   const miniature = token.dead ? null : buildTokenMiniature(token, options, fog);
   if (miniature) {
-    const ring = new Mesh(
-      new RingGeometry(token.size * 0.45, token.size * 0.49, 48),
-      fog.material(
-        new MeshStandardMaterial({
-          color: token.color,
-          roughness: 0.85,
-          transparent: !!token.hidden,
-          opacity: hiddenOpacity,
-        }),
-      ),
-    );
-    ring.rotation.x = -Math.PI / 2;
-    ring.position.y = -0.039;
-    group.add(ring, miniature.root);
+    group.add(miniature.root);
     if (miniature.base) group.add(miniature.base);
   } else {
     const disc = new Mesh(
@@ -159,11 +145,11 @@ export function buildMapToken(token, options, fog) {
   const text = label(token.name);
   text.position.y = miniature ? miniature.height + 0.2 : 0.25;
   group.add(text);
-  if (token.id === options.selectedToken) {
+  if (!miniature && token.id === options.selectedToken) {
     const marker = new Mesh(
       new CylinderGeometry(
-        token.size * (miniature ? 0.52 : 0.48),
-        token.size * (miniature ? 0.52 : 0.48),
+        token.size * 0.48,
+        token.size * 0.48,
         0.025,
         32,
       ),

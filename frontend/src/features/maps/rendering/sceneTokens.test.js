@@ -96,7 +96,7 @@ it("crops a player's portrait to the round face without stretching", () => {
   portraits.destroy();
 });
 
-it("uses a shared miniature with token sizing, fog opacity and safe disposal", () => {
+it.each([false, true])("uses a shared miniature without a bottom disc or ring (focused: %s)", (focused) => {
   const geometry = new BoxGeometry(),
     material = new MeshStandardMaterial();
   const dispose = vi.spyOn(geometry, "dispose");
@@ -109,14 +109,15 @@ it("uses a shared miniature with token sizing, fog opacity and safe disposal", (
   };
   const root = buildMapToken(
     { ...creature, itemId: 1635, size: 2, hidden: true },
-    { assets, tier: "render" },
+    { assets, tier: "render", selectedToken: focused ? creature.id : "" },
     fog,
   );
-  const mini = root.children[1];
+  const mini = root.children.find(node => node.userData.tokenBody);
+  expect(root.children.some(node => node.isMesh)).toBe(false);
   expect(mini.scale.x).toBe(2);
   expect(mini.children[0].geometry).toBe(geometry);
   expect(mini.children[0].receiveShadow).toBe(true);
-  expect(root.children[2].position.y).toBeGreaterThan(1.8);
+  expect(root.children.find(node => node.isSprite).position.y).toBeGreaterThan(1.8);
   applyAreaOpacity(root, 0.2);
   expect(mini.children[0].material.opacity).toBeCloseTo(0.08);
   disposeObjects(root);
@@ -149,7 +150,7 @@ it("replaces the portrait when a miniature finishes loading, without a token edi
     ],
   };
   layer.update(d, state, { master: true }, "render", appearance);
-  expect(layer.root.children[0].children[1].isGroup).toBe(true);
+  expect(layer.root.children[0].children.some(node => node.userData.tokenBody)).toBe(true);
   layer.destroy();
   portraits.destroy();
 });
@@ -212,7 +213,7 @@ it("preserves native part transforms when freezing a miniature on the board", ()
     "render",
     { tokenOpacity: () => 1 },
   );
-  const mini = layer.root.children[0].children[1];
+  const mini = layer.root.children[0].children.find(node => node.userData.tokenBody);
   const placement = new Matrix4()
     .makeScale(2, 2, 2)
     .setPosition(token.x, token.elevation, token.y);
@@ -249,7 +250,7 @@ it('replaces a dead miniature with a flat portrait and translucent skull, then r
   disposeObjects(dead);
   expect(dispose).toHaveBeenCalledOnce();
   const revived = buildMapToken({ ...creature, itemId: 1635, dead: false }, { assets, tokenPortraits: portraits }, fog);
-  expect(revived.children[1].children[0].geometry).toBe(geometry);
+  expect(revived.children.find(c => c.userData.tokenBody).children[0].geometry).toBe(geometry);
   expect(revived.children.some(c => c.userData.deadTokenMark)).toBe(false);
   disposeObjects(revived); portraits.destroy();
 });
