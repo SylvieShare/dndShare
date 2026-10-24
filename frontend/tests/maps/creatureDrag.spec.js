@@ -22,6 +22,17 @@ const canvasTokens = (page) =>
   page
     .locator(".map-canvas")
     .evaluate((el) => el.__vueParentComponent.props.state.tokens);
+test("a Large handbook creature previews and saves at 2×2 on its first placement", async ({ page }) => {
+  const errors = [];
+  page.on("pageerror", e => errors.push(e.message));
+  const roster = await ready(page, "&largeCreature");
+  await startDrag(page, roster.getByRole("button", { name: "A · Огр", exact: true }), await mapPoint(page, 4.5, 4.5));
+  await expect.poll(async () => (await canvasTokens(page)).find(t => t.id === "preview-token")?.size).toBe(2);
+  expect((await saved(page)).some(t => t.ref === "ogre")).toBe(false);
+  await page.mouse.up();
+  await expect.poll(async () => (await saved(page)).find(t => t.ref === "ogre")?.size).toBe(2);
+  expect(errors).toEqual([]);
+});
 test("roster drags preview before committing, mark placed creatures and focus their real position on click", async ({
   page,
 }) => {

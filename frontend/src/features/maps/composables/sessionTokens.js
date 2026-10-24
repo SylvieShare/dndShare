@@ -102,7 +102,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
       color: c.color,
       id: previous?.id || (temporary ? "preview-token" : uid()),
       ...point,
-      size: previous?.size || 1,
+      size: previous?.size || c.size || 1,
       hidden: previous?.hidden || false,
       physical: previous?.physical || false,
       ...placementPose,

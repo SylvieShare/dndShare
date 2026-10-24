@@ -19,7 +19,23 @@ export function withCreaturePortraits(tokens, candidates) {
       : t,
   );
 }
-export function sessionCreatures(participants, encounter) {
+export function creatureFootprint(item, sizes = []) {
+  const ids = item?.data?.identity?.size || [];
+  const cells = {
+    tiny: 0.5,
+    small: 1,
+    medium: 1,
+    large: 2,
+    huge: 3,
+    gargantuan: 4,
+  };
+  const footprints = sizes
+    .filter((s) => ids.includes(s.id))
+    .map((s) => cells[s.code])
+    .filter(Boolean);
+  return footprints.length ? Math.max(...footprints) : 1;
+}
+export function sessionCreatures(participants, encounter, sizes = []) {
   const combatants = encounter?.encounter?.combatants || [];
   const candidates = [
     ...participants.map((p) => ({
@@ -44,6 +60,7 @@ export function sessionCreatures(participants, encounter) {
         name: encounter.npcName(n),
         markerLetter: n.markerLetter,
         previewUrl: creaturePortraitUrl(encounter.npcItem(n)),
+        size: creatureFootprint(encounter.npcItem(n), sizes),
         color: n.iconColor || "#c18f6f",
         hp: encounter.npcHpObj?.(n) || {
           current: n.hpCurrent ?? 0,
@@ -53,7 +70,10 @@ export function sessionCreatures(participants, encounter) {
         combatant: n,
       })),
   ];
-  return candidates.map(c => ({ ...c, dead: c.combatant?.position === "dead" }));
+  return candidates.map((c) => ({
+    ...c,
+    dead: c.combatant?.position === "dead",
+  }));
 }
 export const creatureKey = (c) => (c ? `${c.kind}:${c.ref || c.id}` : "");
 export function creatureToken(map, creature) {
@@ -78,6 +98,6 @@ export function withCreatureItems(tokens, candidates) {
 
 // Encounter owns life state; map drafts keep only placement and appearance.
 export function withCreatureLifeState(tokens, candidates) {
-  const dead = new Map(candidates.map(c => [creatureKey(c), c.dead]));
-  return tokens.map(t => ({ ...t, dead: !!dead.get(creatureKey(t)) }));
+  const dead = new Map(candidates.map((c) => [creatureKey(c), c.dead]));
+  return tokens.map((t) => ({ ...t, dead: !!dead.get(creatureKey(t)) }));
 }

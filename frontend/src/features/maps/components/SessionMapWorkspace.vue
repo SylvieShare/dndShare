@@ -127,6 +127,7 @@ import {
 } from "@sylvieshare/share-ui";
 import { Map, UsersRound } from "@lucide/vue";
 import { useSessionMaps } from "../composables/useSessionMaps";
+import { useSuggestStore } from "@/stores/suggest";
 import { sessionTokens } from "../composables/sessionTokens";
 import { useCatalogueDrag } from "../composables/useCatalogueDrag";
 import {
@@ -157,8 +158,10 @@ const c = reactive(useSessionMaps(props.sessionUuid)),
   pendingDelete = ref(null),
   renaming = ref(null);
 provide('encounter', props.encounter);
+const sizes = useSuggestStore();
+sizes.ensure(18).catch(() => {});
 const candidates = computed(() =>
-  sessionCreatures(props.participants, props.encounter),
+  sessionCreatures(props.participants, props.encounter, sizes.items(18)),
 );
 const headerMaps = computed(() =>
   c.maps.map((map) =>

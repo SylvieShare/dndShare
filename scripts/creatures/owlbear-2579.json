@@ -1,0 +1,25 @@
+{
+  "slug": "owlbear-2579",
+  "itemId": 2579,
+  "itemIds": [
+    2579
+  ],
+  "modelId": "17b5f1d8-3d00-59ad-bda6-edc05e07d2ac",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2579",
+  "sourceName": "owlbear-2579-miniature",
+  "name": "Совомед",
+  "nameEn": "Owlbear",
+  "code": "CRE-owlbear",
+  "groupName": "Совомеды",
+  "groupNameEn": "Owlbears",
+  "maxHeight": 0.5916,
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  }
+}

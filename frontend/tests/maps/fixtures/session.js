@@ -1,8 +1,11 @@
 import { reactive } from 'vue';
 import { documentMutationFixture } from "./documentMutations";
 import { useTemplateStore } from "../../../src/stores/template";
+import { useSuggestStore } from "../../../src/stores/suggest";
 export function sessionFixture(pinia, source, params) {
   useTemplateStore(pinia).templates = [{ id: 41, name: "DND5" }];
+  if (params.has("largeCreature") && !useSuggestStore(pinia).loaded(18))
+    useSuggestStore(pinia).set(18, [{ id: 403, code: "large", value: "Большой" }]);
   const participants = params.has("creatures")
     ? [
         {
@@ -37,6 +40,9 @@ export function sessionFixture(pinia, source, params) {
         },
       ]
     : [];
+  const npcItem = params.has("largeCreature")
+    ? { id: 2579, typeId: 6, name: "Огр", data: { identity: { size: [403] } } }
+    : params.has("tokenPortraits") ? { iconSvgId: 700, svg: '<svg viewBox="0 0 128 64" />' } : null;
   const encounter = reactive({
     encounter: { combatants: npcs },
     findParticipant: id => participants.find(p => p.charId === id), playerDisplayName: () => 'Лира', getPlayerAva: () => participants[0]?.iconImageUrl,
@@ -48,10 +54,7 @@ export function sessionFixture(pinia, source, params) {
     hpLabel: c => `${c.hpCurrent} / 30`, npcDsHp: c => ({ current: c.hpCurrent }), ENCOUNTER_LETTERS: ['A', 'B'],
     setSide: (c, side) => { if (side) c.side = side; else delete c.side },
     npcName: () => "Огр",
-    npcItem: () =>
-      params.has("tokenPortraits")
-        ? { iconSvgId: 700, svg: '<svg viewBox="0 0 128 64" />' }
-        : null,
+    npcItem: () => npcItem,
     npcHpObj: (c) => ({ current: c.hpCurrent, max: 30, temp: c.hpTemp }),
   });
   window.creatureEncounter = encounter;

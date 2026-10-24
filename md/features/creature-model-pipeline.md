@@ -2,7 +2,8 @@
 
 ← [3D-модели итемов](item-models.md) · [Обработка моделей](maps-model-pipeline.md)
 
-Миниатюра — статический GLB с PBR-текстурами и подставкой. Результат включает
+Миниатюра — статический GLB с PBR-материалами, без вшитой подставки.
+Основание добавляется отдельным ресурсом при отображении. Результат включает
 полную модель, LOD, геометрию теней, прозрачное превью и подробный source.
 Файлы публикуются в S3 общим процессом моделей; связь с публичным итемом
 создаётся отдельно через MCP. Две записи одного существа из разных книг могут
@@ -70,9 +71,11 @@ albedo, PBR и tangent normals с нативной модели. Парамет�
 `--height 1.4 --rotation -45`. Один и тот же transform применяется ко всем
 четырём ресурсам, поэтому силуэт, ориентация и тень совпадают.
 
-Подставка имеет диаметр 0,9 клетки, начало координат находится на её нижней
-плоскости. После экспорта GLB вертикаль — Y. У кобольда наследуется принятая
-подставка; стражнику она добавляется отдельно. Shadow не содержит текстур.
+Первые исходники кобольдов и стражника содержали подставку диаметром 0,9 клетки.
+Перед текущей публикацией основания отделены через `separate-bases.mjs`,
+а начало фигурок перенесено в точку ног. Основания зарегистрированы отдельно
+для размеров 0,5/1/2/3/4/6/8. После экспорта GLB вертикаль — Y.
+Shadow не содержит текстур. Контракт — [отдельные подставки](item-models.md#отдельные-подставки-и-управление-существами).
 
 `optimize-miniature.mjs` сокращает карты и удаляет дубли: albedo до 2048 для
 render и 1024 для LOD, normal вдвое меньше, ORM вчетверо меньше. Albedo — JPEG,
@@ -81,6 +84,49 @@ render и 1024 для LOD, normal вдвое меньше, ORM вчетверо 
 оптимизированные карты render также извлекаются в `textures/`.
 
 ## Сборка и проверка текущего набора
+
+### Совомед 2579: локальная реконструкция и размер 2×2
+
+[Рецепт](../../scripts/creatures/owlbear-2579.json) привязан к публичному
+совомеду из MM. [Промпт референса](../../scripts/creatures/owlbear-2579-reference.txt)
+использован встроенным imagegen с иллюстрацией итема. TRELLIS.2 с seed 2579,
+resolution 1024 построил восемь ракурсов, но прямой экспорт GLB был отклонён
+бесплатной GPU-квотой. Нативная сетка сервиса не получена и не заявляется.
+
+`trellis_views.py` извлекает калиброванные albedo/normal изображения.
+`reconstruct-miniature.py` строит visual hull на сетке 320³, а
+`refine-miniature.py` интегрирует наблюдаемые нормали с фиксацией силуэта.
+`bake-multiview-miniature.py` создаёт UV-атласы render/LOD через xatlas,
+переносит цвет и tangent normals из ракурсов. Материал матовый, без металла;
+постоянные roughness/metalness представлены PBR-факторами. Подробный source
+сохраняет более плотную сетку и проецированный цвет вершин, shadow — только
+геометрию. Это приближённая реконструкция: мелкие перья, лицо и невидимые снизу
+поверхности уступают референсу. Сетка не предназначена для 3D-печати.
+
+`prepare-multiview-miniature.py` применяет ко всем ролям один transform:
+ступни на Y=0, диаметр нативной геометрии 0,88 клетки, без основания.
+Размер жетона умножает эту геометрию один раз: при `token.size:2` диаметр 1,76,
+высота около 1,18 клетки, отдельная двухклеточная подставка имеет диаметр 1,8.
+Метаданные модели остаются 1×1, так как это нормализованный ресурс жетона.
+
+```bash
+models/creatures/.generation-runtime/bin/python scripts/creatures/reconstruct-miniature.py models/creatures/owlbear/trellis-native --resolution 320
+models/creatures/.generation-runtime/bin/python scripts/creatures/refine-miniature.py models/creatures/owlbear/trellis-native models/creatures/owlbear/local-model
+models/creatures/.generation-runtime/bin/python scripts/creatures/bake-multiview-miniature.py models/creatures/owlbear/local-model --views models/creatures/owlbear/trellis-native
+/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python-exit-code 1 --python scripts/creatures/prepare-multiview-miniature.py -- models/creatures/owlbear --token-size 2
+node scripts/creatures/optimize-miniature.mjs models/creatures/owlbear
+node scripts/creatures/verify-single-miniature.mjs models/creatures/owlbear
+node scripts/creatures/package-miniature.mjs models/creatures/owlbear scripts/creatures/owlbear-2579.json
+python3 scripts/creatures/publish-miniature.py models/creatures/owlbear scripts/creatures/owlbear-2579.json
+```
+
+Последняя команда по умолчанию проверяет файлы локально. С `--publish` она
+публикует один проверенный ресурс через MCP и назначает основной моделью итема.
+Чужую существующую привязку заменять отказывается. Итоговый `publication.json`
+подтверждает assets и основную связь; ключ остаётся в памяти процесса.
+`--server-token` требует разрешения на конкретный серверный файл.
+
+### Семейство кобольдов и стражник
 
 Команды выполняются из корня проекта. Каталог `kobold-family` должен содержать
 сохранённый нативный исходник стражника и принятый исходник кобольда рядом с ним.

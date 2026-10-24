@@ -32,6 +32,22 @@ function setup() {
   );
   return { actor, editor, tokens };
 }
+it("places a Large creature at 2×2 and preserves a later manual size on placement again", () => {
+  const { actor, editor, tokens } = setup();
+  Object.assign(actor, { kind: "creature", itemId: 2579, size: 2 });
+  const point = { x: 2.5, y: 3.5, grid: true };
+  tokens.place(actor);
+  tokens.gesture({ phase: "hover", point }, editor);
+  expect(tokens.canvasState.value.tokens[0].size).toBe(2);
+  tokens.gesture({ phase: "start", point }, editor);
+  expect(editor.draft.state.tokens[0].size).toBe(2);
+  tokens.change((token) => {
+    token.size = 3;
+  });
+  tokens.place(actor);
+  tokens.gesture({ phase: "start", point: { ...point, x: 4.5 } }, editor);
+  expect(editor.draft.state.tokens[0].size).toBe(3);
+});
 it("keeps creature rotation and reflection during placement, movement and cancellation", () => {
   const { actor, editor, tokens } = setup();
   Object.assign(actor, { kind: "creature", itemId: 1635 });
@@ -40,7 +56,10 @@ it("keeps creature rotation and reflection during placement, movement and cancel
   expect(tokens.rotate()).toBe(true);
   expect(tokens.mirror()).toBe(true);
   tokens.gesture({ phase: "hover", point }, editor);
-  expect(tokens.canvasState.value.tokens[0]).toMatchObject({ rotation: 90, mirrored: true });
+  expect(tokens.canvasState.value.tokens[0]).toMatchObject({
+    rotation: 90,
+    mirrored: true,
+  });
   expect(editor.draft.state.tokens).toHaveLength(0);
   tokens.gesture({ phase: "start", point }, editor);
   const stored = editor.draft.state.tokens[0];
@@ -49,12 +68,20 @@ it("keeps creature rotation and reflection during placement, movement and cancel
   tokens.rotate();
   tokens.mirror();
   tokens.gesture({ phase: "move", point: { ...point, x: 5 } }, editor);
-  expect(tokens.canvasState.value.tokens[0]).toMatchObject({ rotation: 180, mirrored: false, x: 5 });
+  expect(tokens.canvasState.value.tokens[0]).toMatchObject({
+    rotation: 180,
+    mirrored: false,
+    x: 5,
+  });
   tokens.gesture({ phase: "cancel" }, editor);
   expect(stored).toMatchObject({ rotation: 90, mirrored: true, x: 2.5 });
   tokens.place(actor);
   tokens.gesture({ phase: "start", point: { ...point, x: 4 } }, editor);
-  expect(editor.draft.state.tokens[0]).toMatchObject({ rotation: 90, mirrored: true, x: 4 });
+  expect(editor.draft.state.tokens[0]).toMatchObject({
+    rotation: 90,
+    mirrored: true,
+    x: 4,
+  });
 });
 it("tracks token hover and leaves player transformations to the editor", () => {
   const { actor, editor, tokens } = setup();
