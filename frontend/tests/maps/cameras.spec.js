@@ -124,16 +124,15 @@ test("2D image mode hides 3D tools and places creatures at logical grid centres"
     page.getByRole("region", { name: "Изображение и сетка" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Существа", exact: true }).click();
-  await page
+  const creature = page
     .getByRole("region", { name: "Существа сессии" })
-    .getByRole("button", { name: "Лира", exact: true })
-    .click();
-  await page
-    .getByRole("button", { name: "Поставить на карту", exact: true })
-    .click();
+    .getByRole("button", { name: "Лира", exact: true });
+  const bounds = await creature.boundingBox();
   const p = await mapPoint(page, 6.2, 5.8);
-  await page.mouse.move(p.x, p.y);
-  await page.mouse.click(p.x, p.y);
+  await page.mouse.move(bounds.x + 24, bounds.y + 24);
+  await page.mouse.down();
+  await page.mouse.move(p.x, p.y, { steps: 10 });
+  await page.mouse.up();
   await expect
     .poll(() =>
       page.evaluate(
@@ -159,6 +158,15 @@ for (const mobile of [false, true])
     await page.goto("/tests/maps/fixtures/maps.html?mode=board");
     const header = page.locator(".session-map-tabs-header");
     await expect(header).toHaveCount(1);
+    await expect(header.locator(".share-sliding-tabs--chips")).toBeVisible();
+    await expect(header.locator(".share-sliding-tabs__underline")).toHaveCount(
+      0,
+    );
+    const radius = await header
+      .locator(".share-sliding-tabs__item")
+      .first()
+      .evaluate((el) => parseFloat(getComputedStyle(el).borderRadius));
+    expect(radius).toBeGreaterThanOrEqual(20);
     await expect(
       header.getByRole("tablist", { name: "Карты сессии" }),
     ).toBeVisible();

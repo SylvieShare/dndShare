@@ -39,6 +39,10 @@ test("tabs switch editing independently of the live map and broadcast controls s
     .getByRole("tablist", { name: "Карты сессии" })
     .getByRole("tab");
   await expect(maps.nth(1)).toHaveAttribute("aria-selected", "true");
+  const fills = await maps.evaluateAll((nodes) =>
+    nodes.map((node) => getComputedStyle(node.parentElement).backgroundColor),
+  );
+  expect(fills[0]).not.toBe(fills[1]);
   await expect(maps.first()).toContainText("В эфире");
   expect((await state(page)).display).toEqual(initial.display);
   await maps.first().click();

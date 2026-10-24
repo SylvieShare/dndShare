@@ -2,6 +2,7 @@
   <header class="session-map-tabs-header" data-tutorial="session-map-toolbar">
     <div class="session-map-tab-list">
       <SlidingTabs
+        variant="chips"
         :tabs="tabs"
         :model-value="selected"
         :max-tab-width="220"
