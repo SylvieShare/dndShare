@@ -96,7 +96,7 @@ export function mapCatalogueFixture(source, params, previews) {
       );
     }
     const changes=path.match(/^\/api\/maps\/([^/]+)\/changes$/)
-    if(changes){const map=find(changes[1]);return response({fromVersion:Number(url.searchParams.get('after')),version:map.revision,data:{name:map.name,document:map.document},metadata:await decorate(map)})}
+    if(changes){const map=find(changes[1]);if(window.concurrentMapName){map.name=window.concurrentMapName;map.revision++;window.concurrentMapName=''};return response({fromVersion:Number(url.searchParams.get('after')),version:map.revision,data:{name:map.name,document:map.document},metadata:await decorate(map)})}
     if(method==='PATCH' && /^\/api\/maps\/[^/]+$/.test(path)) {
       const id=path.split('/')[3],map=find(id)
       if(!map)return response({},404)

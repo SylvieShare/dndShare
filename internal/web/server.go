@@ -43,6 +43,10 @@ func New(cfg config.Config, st *store.Store, s3 *storage.Service) *Server {
 
 // Handler собирает роутинг и цепочку middleware.
 func (s *Server) Handler() http.Handler {
+	return s.handlerWithSPA(spaHandler(s.cfg.FrontendAssetCacheDir))
+}
+
+func (s *Server) handlerWithSPA(spa http.Handler) http.Handler {
 	mux := http.NewServeMux()
 	for _, reg := range routeRegistrars {
 		reg(s, mux)
@@ -51,7 +55,7 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("/api/", http.NotFound)
 	mux.HandleFunc("/mcp", http.NotFound)
 	mux.HandleFunc("/mcp/", http.NotFound)
-	mux.Handle("/", spaHandler(s.cfg.FrontendAssetCacheDir))
+	mux.Handle("/", spa)
 
 	var h http.Handler = mux
 	h = s.session(h)   // резолвит userID в контекст (не блокирует)

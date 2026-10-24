@@ -20,7 +20,7 @@ export async function setup(page) {
     }
   })
   await page.route('**/test-global-world.svg', route => route.fulfill({ contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="1200" height="800" fill="#d6c7a3"/><path d="M0 600Q500 100 1200 400" stroke="#99b3bd" stroke-width="30" fill="none"/></svg>' }))
-  await page.route('**/api/**', async route => {
+  await page.route(url => url.pathname.startsWith('/api/'), async route => {
     const path = new URL(route.request().url()).pathname, method = route.request().method()
     if (!path.startsWith('/api/')) return route.continue()
     let json = {}
@@ -78,14 +78,14 @@ export async function open(page) {
   await expect(page.locator('.global-map-workspace')).toBeVisible()
 }
 export async function upload(page, name) {
-  await page.getByRole('button', { name: 'Карты мира', exact: true }).click()
+  await openWorldTab(page, 'Карты мира')
   await page.getByLabel('Изображение карты мира', { exact: true }).setInputFiles({ name: `${name}.png`, mimeType: 'image/png', buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jF9sAAAAASUVORK5CYII=', 'base64') })
   await expect(page.locator('.global-map-thumbnail--selected')).toContainText(name)
   await expect(page.getByText('Загружаем изображение…', { exact: true })).toHaveCount(0)
 }
 
 export async function openRoute(page, name = 'Путь') {
-  await page.getByRole('button', { name: 'Маршруты', exact: true }).click()
+  await openWorldTab(page, 'Маршруты')
   await page.locator('.global-map-sidebar').getByRole('button', { name: `Открыть маршрут ${name}`, exact: true }).click()
   await expect(page.getByRole('complementary', { name: 'Настройки маршрута', exact: true })).toHaveCSS('opacity', '1')
 }
@@ -105,4 +105,10 @@ export async function reuseWorldPoint(page, id) {
   await page.locator(`button[data-source-id="${id}"]`).click()
   await page.getByRole('button', { name: 'Готово', exact: true }).click()
   await page.locator('.global-route-point-open').last().click()
+}
+
+export async function openWorldTab(page, name) {
+  const button = page.locator('.global-map-sidebar').getByRole('button', { name, exact: true })
+  if (await button.getAttribute('aria-pressed') !== 'true') await button.click()
+  await expect(button).toHaveAttribute('aria-pressed', 'true')
 }

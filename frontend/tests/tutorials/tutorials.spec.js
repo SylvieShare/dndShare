@@ -11,7 +11,7 @@ const character = { templateName: 'DND5', userId: 1, sourceVersionId: 1, version
 }, var: { stats: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 } } } }
 async function mockApi(page, role = 'player', entries = []) {
   const writes = []
-  await page.route('**/api/**', async route => {
+  await page.route(url => url.pathname.startsWith('/api/'), async route => {
     const path = new URL(route.request().url()).pathname
     if (!path.startsWith('/api/')) return route.continue()
     if (route.request().method() !== 'GET') {

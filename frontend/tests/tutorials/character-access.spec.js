@@ -5,7 +5,7 @@ for (const mobile of [false, true]) for (const guest of [false, true]) {
     page.on('pageerror', error => { throw error })
     await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 })
     const writes = []
-    await page.route('**/api/**', async route => {
+    await page.route(url => url.pathname.startsWith('/api/'), async route => {
       const path = new URL(route.request().url()).pathname
       if (!path.startsWith('/api/')) return route.continue()
       let json = {}

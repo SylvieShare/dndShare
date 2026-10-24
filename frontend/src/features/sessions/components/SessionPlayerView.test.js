@@ -1,7 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import SessionPlayerView from './SessionPlayerView.vue'
 
 const source = readFileSync(fileURLToPath(new URL('./SessionPlayerView.vue', import.meta.url)), 'utf8')
 const responsiveStyles = readFileSync(fileURLToPath(new URL('./styles/SessionPlayerViewResponsive.css', import.meta.url)), 'utf8')
@@ -9,8 +8,7 @@ const sessionPage = readFileSync(fileURLToPath(new URL('../pages/ViewSession.vue
 const sessionCard = readFileSync(fileURLToPath(new URL('./SessionCard.vue', import.meta.url)), 'utf8')
 
 describe('player session view', () => {
-  it('compiles as a separate role-specific page composition', () => {
-    expect(SessionPlayerView).toBeTruthy()
+  it('uses a separate role-specific page composition', () => {
     expect(sessionPage).toContain('v-else-if="session && !isDm"')
     expect(sessionPage).toContain('<SessionPlayerView')
   })

@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { open, openRoute, setup } from './helpers'
+import { openWorldTab } from './helpers'
 
 async function seeded(page, mobile = false) {
   await page.setViewportSize(mobile ? { width: 430, height: 932 } : { width: 1600, height: 1000 })
@@ -17,7 +18,7 @@ for (const mobile of [false, true]) test(`map tiles rename in place and delete i
   await page.setViewportSize(mobile ? { width: 430, height: 932 } : { width: 1600, height: 1000 })
   state.maps.push(...['Мир', 'Регион'].map((name, index) => ({ id: `map-${index}`, name, imageId: 1, imageUrl: '/test-global-world.svg', current: index === 0, revision: 1, routes: [] })))
   await open(page)
-  await page.getByRole('button', { name: 'Карты мира', exact: true }).click()
+  await openWorldTab(page, 'Карты мира')
   await expect(page.getByRole('textbox', { name: 'Название карты мира', exact: true })).toHaveCount(0)
   await page.getByRole('button', { name: 'Переименовать карту Регион', exact: true }).click()
   await page.getByRole('textbox', { name: 'Название карты Регион', exact: true }).fill('Атлас')

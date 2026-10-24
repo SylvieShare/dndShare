@@ -7,39 +7,22 @@ import (
 	"dndshare/internal/config"
 	"dndshare/internal/documentsync"
 	"dndshare/internal/store"
+	"dndshare/internal/testdb"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"strings"
 	"testing"
-
-	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 const documentTestSession = "61000000-0000-4000-8000-000000000010"
 const documentTestCharacter = "61000000-0000-4000-8000-000000000001"
 
 func TestDocumentMutationsPostgres(t *testing.T) {
-	dsn := os.Getenv("DNDSHARE_DOCUMENT_TEST_DSN")
-	if dsn == "" {
-		t.Skip("requires disposable local dndshare_test_* database")
-	}
-	cfg, err := pgxpool.ParseConfig(dsn)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if cfg.ConnConfig.Host != "127.0.0.1" || !strings.HasPrefix(cfg.ConnConfig.Database, "dndshare_test_") {
-		t.Fatal("requires isolated local database")
-	}
-	cfg.ConnConfig.DefaultQueryExecMode = pgx.QueryExecModeSimpleProtocol
+	pool := testdb.Pool(t)
 	ctx := context.Background()
-	pool, err := pgxpool.NewWithConfig(ctx, cfg)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer pool.Close()
+	dsn := pool.Config().ConnString()
+	var err error
 	exec := func(sql string) {
 		t.Helper()
 		if _, err := pool.Exec(ctx, sql); err != nil {

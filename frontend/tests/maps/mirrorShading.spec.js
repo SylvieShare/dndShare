@@ -22,7 +22,7 @@ test('reflected normal-map lighting matches baked geometry, including preview an
 })
 
 for (const tier of ['render', 'lod'])
-  test(`local Medieval wooden floor ${tier} matches baked reflection under the same light`, async ({
+  test(`local Medieval wooden floor ${tier} matches baked reflection under the same light`, { tag: "@local-model" }, async ({
     page,
   }) => {
     const filename = resolve(

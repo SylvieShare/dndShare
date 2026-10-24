@@ -12,5 +12,5 @@ const desc = `<p>Восстанавливает ${createRichNodeHtml('dice', { f
 ${createRichNodeHtml('stat', { stat: 'hp' }, 'хитов')}.
 Класс доспеха ${createRichNodeHtml('stat', { stat: 'ac' }, '15')}.</p>`
 createApp({ render: () => h('main', { style: 'padding:24px;max-width:640px' }, [
-  h(PotionDetailContent, { item: { name: 'Зелье лечения', typeId: 10, data: { desc, consumption: { healing: '2d4 + 2' } } } }),
+  h(PotionDetailContent, { item: { name: 'Зелье лечения', typeId: 10, data: { desc, usable: { healing: '2d4 + 2' } } } }),
 ]) }).use(pinia).mount('#app')

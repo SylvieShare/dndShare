@@ -59,7 +59,7 @@ DTO Item, HTTP создание/обновление и MCP `handbook_item_creat
 
 `item_automation*_test.go` проверяют валидацию, повтор миграции, исходное состояние
 старых записей, чтение метаданных, права, сохранение пропущенных значений и явную
-очистку. PostgreSQL-проверка запускается с `DNDSHARE_ITEM_AUTOMATION_TEST_DSN`
+очистку. PostgreSQL-проверка запускается с `DNDSHARE_TEST_DSN`
 только на одноразовой локальной БД `dndshare_test_*`.
 Frontend: `itemAutomation.test.js`, `ItemAutomationBadge.test.js` и браузерный
 `tests/weapon-charges/item-automation.spec.js` проверяют desktop/mobile,

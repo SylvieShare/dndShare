@@ -77,6 +77,10 @@ it("a stale write is reported without replacing the current scene", async () => 
   expect(c.conflict.value).toBe(true);
   expect(c.saving.value).toBe(false);
   expect(c.selected.value.document.width).toBe(10);
+  c.accept({ ...map(), name: 'Server snapshot', revision: 2 });
+  expect(c.selected.value.name).toBe('Server snapshot');
+  expect(c.error.value).toBe('');
+  expect(c.conflict.value).toBe(false);
 });
 it("a slow delete hides the map immediately and a stale concurrent list cannot resurrect it", async () => {
   const c = useSessionMaps("session");

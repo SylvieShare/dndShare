@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
 import { localModelAsset } from "../../../scripts/maps/local_model_assets.mjs";
-test("decodes both reviewed tiers and preserves dedicated shadows under sun and point lights", async ({
+test("decodes both reviewed tiers and preserves dedicated shadows under sun and point lights", { tag: "@local-model" }, async ({
   page,
 }) => {
   test.setTimeout(90000);

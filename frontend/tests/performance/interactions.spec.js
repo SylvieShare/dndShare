@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 test.beforeEach(async ({ page }) => {
   page.on('pageerror', error => { console.error('BROWSER ERROR:', error.message) })
-  await page.route('**/api/**', route => new URL(route.request().url()).pathname.startsWith('/api/') ? route.fulfill({json: {items: []}}) : route.continue())
+  await page.route(url => url.pathname.startsWith('/api/'), route => new URL(route.request().url()).pathname.startsWith('/api/') ? route.fulfill({json: {items: []}}) : route.continue())
   await page.goto('/tests/performance/interactions.html')
 })
 test('search selection, limit, removal and creation work with keyboard and pointer', async ({page}) => {

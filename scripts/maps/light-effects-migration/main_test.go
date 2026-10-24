@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"dndshare/internal/battlemap"
+	"dndshare/internal/testdb"
 	"encoding/json"
 	"github.com/jackc/pgx/v5"
 	"net/url"
@@ -12,10 +13,7 @@ import (
 )
 
 func TestOfflineMigrationPostgres(t *testing.T) {
-	dsn := os.Getenv("DNDSHARE_MAP_TEST_DSN")
-	if dsn == "" {
-		t.Skip("disposable PostgreSQL DSN required")
-	}
+	dsn := testdb.DSN(t)
 	u, err := url.Parse(dsn)
 	if err != nil {
 		t.Fatal(err)

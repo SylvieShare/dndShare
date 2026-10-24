@@ -1,9 +1,10 @@
+import { localModelAssets } from "./localModelAssets";
 import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
 import { dragTile, mapPoint } from "./editorHelpers";
 for (const real of [false, true])
-  test(`object placement uses shared raised points ${real ? "with the prepared chest GLB" : "in the library"}`, async ({
+  test(`object placement uses shared raised points ${real ? "with the prepared chest GLB" : "in the library"}`, { tag: real ? "@local-model" : "@browser" }, async ({
     page,
   }) => {
     const root = path.resolve(import.meta.dirname, "../../../models");
@@ -13,21 +14,10 @@ for (const real of [false, true])
     );
     const errors = [];
     page.on("pageerror", (error) => errors.push(error.message));
-    if (real)
-      await page.route("**/api/maps/models/*/*", async (route) => {
-        const parts = new URL(route.request().url()).pathname.split("/");
-        const tier = parts[5] === "lod" ? "lod" : "render";
-        await route.fulfill({
-          path: parts[4].startsWith("ffff")
-            ? path.join(root, "objects/chest", `${tier}.glb`)
-            : path.join(
-                root,
-                "prepared/runtime",
-                `${parts[4].startsWith("1111") ? "LC-001" : "LC-007"}.${tier}.glb`,
-              ),
-          contentType: "model/gltf-binary",
-        });
-      });
+    if (real) {
+      const tiers = code => ({ render: path.join(root,'prepared/runtime',`${code}.render.glb`), lod: path.join(root,'prepared/runtime',`${code}.lod.glb`), shadow: path.join(root,'prepared/runtime',`${code}.render.glb`) });
+      await localModelAssets(page, { wall: tiers('LC-001'), floor: tiers('LC-007'), chest: { render: path.join(root,'objects/chest/render.glb'), lod: path.join(root,'objects/chest/lod.glb'), shadow: path.join(root,'objects/chest/render.glb') } });
+    }
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.goto(
       `/tests/maps/fixtures/maps.html?mode=editor${real ? "&realModels" : ""}`,

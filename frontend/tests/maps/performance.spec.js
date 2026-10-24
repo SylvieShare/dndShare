@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { choosePack, pickTile } from "./editorHelpers";
 
-test("GPU accounts for all six flames before and after toggling without leaving extra passes", async ({
+test("GPU accounts for all six flames before and after toggling without leaving extra passes", { tag: "@gpu" }, async ({
   page,
 }) => {
   await drawCounter(page);

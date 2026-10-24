@@ -87,7 +87,7 @@ export function useSessionMaps(uuid) {
     error.value = "";
     try {
       const result = await saveSessionMap(uuid, clone(map));
-      maps.value = maps.value.map((m) => (m.id === result.id ? result : m));
+      accept(result);
       return result;
     } catch (cause) {
       error.value = cause.message;
@@ -96,6 +96,11 @@ export function useSessionMaps(uuid) {
     } finally {
       saving.value = false;
     }
+  }
+  function accept(map) {
+    maps.value = maps.value.map(record => record.id === map.id ? map : record);
+    error.value = '';
+    conflict.value = false;
   }
   async function add(map) {
     try {
@@ -153,6 +158,7 @@ export function useSessionMaps(uuid) {
     connected,
     load,
     write,
+    accept,
     working,
     add,
     addImage(map) {

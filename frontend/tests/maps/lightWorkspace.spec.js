@@ -173,7 +173,7 @@ test("builtin lights expose editable effects, retain model identity, inherit are
       color: "#68cfff",
     });
   await expect(panel.locator("table")).toHaveCount(0);
-  const frame = await panel.locator(".map-selected-visual").boundingBox(),
+  const frame = await panel.locator(".inspector-preview-frame").boundingBox(),
     actions = await panel
       .getByRole("group", { name: "Действия источника света" })
       .boundingBox();

@@ -8,7 +8,7 @@
     />
 
     <div class="player-session__content">
-      <header class="player-session__intro">
+      <header data-tutorial="session-overview" class="player-session__intro">
         <SessionBackButton />
         <div data-tutorial="session-connection" class="player-session__eyebrow">
           <span class="player-session__live-dot" :class="`player-session__live-dot--${liveStatus}`" />

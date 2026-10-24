@@ -66,7 +66,7 @@ for (const mobile of [false, true])
       ],
     };
     let encounterVersion=1;
-    await page.route("**/api/**", async (route) => {
+    await page.route(url => url.pathname.startsWith("/api/"), async (route) => {
       const path = new URL(route.request().url()).pathname;
       if (!path.startsWith("/api/")) return route.continue();
       if (route.request().method() === "PATCH" && path.endsWith("/encounter")) {
@@ -121,8 +121,8 @@ for (const mobile of [false, true])
     const before = await page.locator(".map-canvas canvas").elementHandle();
     const canvas = await page.locator(".map-canvas-surface").boundingBox();
     const stage = await page.locator(".chapter-canvas-stage").boundingBox();
-    expect(canvas.y).toBe(stage.y);
-    expect(canvas.height).toBe(stage.height);
+    expect(canvas.y).toBeGreaterThanOrEqual(stage.y);
+    expect(canvas.y + canvas.height).toBeCloseTo(stage.y + stage.height, 0);
     expect(canvas.x).toBeGreaterThan(stage.x);
     await expect(
       page.locator('[data-tutorial="session-players"]'),

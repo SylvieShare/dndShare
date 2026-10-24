@@ -27,10 +27,11 @@ type errorBody struct {
 func writeJSON(w http.ResponseWriter, status int, body any) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(status)
-	if body != nil {
-		if err := json.NewEncoder(w).Encode(body); err != nil {
-			log.Printf("encode json: %v", err)
-		}
+	if status == http.StatusNoContent || status == http.StatusNotModified {
+		return
+	}
+	if err := json.NewEncoder(w).Encode(body); err != nil {
+		log.Printf("encode json: %v", err)
 	}
 }
 

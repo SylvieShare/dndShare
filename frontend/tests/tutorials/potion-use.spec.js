@@ -1,3 +1,4 @@
+import { applyDocumentPatches } from '../../src/shared/lib/documentPatch.js'
 import { test, expect } from '@playwright/test'
 import { TUTORIAL_REVISION } from '../../src/features/tutorials/lib/tutorialIdentity.js'
 
@@ -14,7 +15,7 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
   const session = { uuid: 'campaign', name: 'Тайны долины' }
   let transfers = [], nextId = 1, connected = true
   const requests = []
-  await page.route('**/api/**', async route => {
+  await page.route(url => url.pathname.startsWith('/api/'), async route => {
     const request = route.request(), path = new URL(request.url()).pathname
     if (!path.startsWith('/api/')) return route.continue()
     const parts = path.split('/'), char = chars[parts[3]]
@@ -26,11 +27,12 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
     else if (path === '/api/sessions/campaign') json = { session, participants: Object.entries(chars).map(([charUuid, c]) => ({ charUuid, templateId: 1, data: c.data, iconImageUrl: '/static/tab-stats.svg' })) }
     else if (char && parts.length === 4) json = char
     else if (char && parts[4] === 'sessions') json = { sessions: connected ? [session] : [] }
+    else if (char && parts[4] === 'changes') json = { version: char.version, data: char.data }
     else if (char && parts[4] === 'version') json = { version: char.version }
     else if (char && parts[4] === 'data') {
       const body = request.postDataJSON()
-      if (body.version !== char.version) return route.fulfill({ status: 409, json: { desc: 'Лист изменился' } })
-      char.data = body.data; char.version++; json = { version: char.version }
+      if (body.baseVersion !== char.version) return route.fulfill({ status: 409, json: { desc: 'Лист изменился' } })
+      char.data = applyDocumentPatches(char.data, body.patches); char.version++; json = { version: char.version, patches: body.patches }
     } else if (char && parts[4] === 'item-transfers') {
       if (request.method() === 'GET') json = { transfers: transfers.filter(t => t.status === 'pending') }
       else if (parts[6] === 'resolve') {

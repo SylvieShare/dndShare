@@ -4,7 +4,7 @@ for (const mobile of [false, true]) {
   test(`money keeps its source geometry through open and close (${mobile ? 'mobile' : 'desktop'})`, async ({ page }) => {
     page.on('pageerror', error => { throw error })
     await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1280, height: 900 })
-    await page.route('**/api/**', route => new URL(route.request().url()).pathname.startsWith('/api/')
+    await page.route(url => url.pathname.startsWith('/api/'), route => new URL(route.request().url()).pathname.startsWith('/api/')
       ? route.fulfill({ json: { types: [], items: [], presets: [], suggests: [] } })
       : route.continue())
     await page.goto('/tests/notifications/fixtures/inventory.html')

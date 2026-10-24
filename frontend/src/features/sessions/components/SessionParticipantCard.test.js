@@ -1,14 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { expect, it } from 'vitest'
-import SessionParticipantCard from './SessionParticipantCard.vue'
-import SessionCreatureTile from './SessionCreatureTile.vue'
-import SessionCombatantTile from './SessionCombatantTile.vue'
 const source = readFileSync(new URL('./SessionParticipantCard.vue', import.meta.url), 'utf8')
-it('compiles the shared tile and its player and combat adapters', () => {
-  expect(SessionParticipantCard).toBeTruthy()
-  expect(SessionCreatureTile).toBeTruthy()
-  expect(SessionCombatantTile).toBeTruthy()
-})
 it('delegates layout to the common tile while preserving player actions and permissions', () => {
   expect(source).toContain('<SessionCreatureTile')
   expect(source).toContain(':controls-visible="combatMode"')

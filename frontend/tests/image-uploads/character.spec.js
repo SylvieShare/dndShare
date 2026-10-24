@@ -4,7 +4,7 @@ import { captureUploads, expectWebp, raster } from './helpers'
 async function openCharacter(page) {
   await page.setViewportSize({ width: 1440, height: 1000 })
   page.on('pageerror', error => { throw error })
-  await page.route('**/api/**', async route => {
+  await page.route(url => url.pathname.startsWith('/api/'), async route => {
     const path = new URL(route.request().url()).pathname
     let json = {}
     if (path === '/api/user/checkAuth') json = { auth: true, user: { id: 1, roles: [], login: 'Игрок' } }

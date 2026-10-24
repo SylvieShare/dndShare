@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 import { copy, open, openRoute, setup, upload, dismissWorldFocus } from './helpers'
+import { openWorldTab } from './helpers'
 
 for (const mobile of [false, true]) test(`world maps, curved routes and annotations persist ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
   await page.setViewportSize(mobile ? { width: 430, height: 932 } : { width: 1680, height: 1050 })
@@ -15,7 +16,7 @@ for (const mobile of [false, true]) test(`world maps, curved routes and annotati
   await expect(page.locator('.workspace-tools-rail')).toHaveCount(0)
   const canvasBounds = await page.locator('.global-map-canvas').boundingBox()
   expect(canvasBounds.x + canvasBounds.width).toBeCloseTo(mobile ? 430 : 1680, 0)
-  await page.getByRole('button', { name: 'Маршруты', exact: true }).click()
+  await openWorldTab(page, 'Маршруты')
   await page.getByRole('button', { name: 'Добавить маршрут', exact: true }).click()
   await page.getByRole('button', { name: 'Добавить точку на карту', exact: true }).click()
   if (mobile) {
@@ -80,7 +81,7 @@ for (const mobile of [false, true]) test(`world maps, curved routes and annotati
   await page.reload()
   await expect(page.locator('.global-map-thumbnail--selected')).toContainText('Мир')
   await expect(page.locator('.global-map-point')).toHaveCount(2)
-  await page.getByRole('button', { name: 'Карты мира', exact: true }).click()
+  await openWorldTab(page, 'Карты мира')
   await page.getByRole('button', { name: 'Удалить карту Мир', exact: true }).click()
   await page.getByRole('dialog').getByRole('button', { name: 'Удалить', exact: true }).click()
   await expect(page.locator('.global-map-thumbnail--selected')).toContainText('Регион')
@@ -92,7 +93,7 @@ test('failed saves preserve local notes and conflicts require explicit reload', 
   const state = await setup(page)
   await page.setViewportSize({ width: 1680, height: 1050 })
   await open(page); await upload(page, 'Мир')
-  await page.getByRole('button', { name: 'Маршруты', exact: true }).click()
+  await openWorldTab(page, 'Маршруты')
   await page.getByRole('button', { name: 'Добавить маршрут', exact: true }).click()
   await page.getByRole('button', { name: 'Добавить точку на карту', exact: true }).click()
   const image = await page.locator('.global-map-image').boundingBox()

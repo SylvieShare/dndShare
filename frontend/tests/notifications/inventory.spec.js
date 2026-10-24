@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { inventoryCatalogue, inventoryTypes } from './fixtures/inventoryData'
-const mockInventory = page => page.route('**/api/**', route => new URL(route.request().url()).pathname.startsWith('/api/') ? route.fulfill({ json: { types: inventoryTypes, items: inventoryCatalogue } }) : route.continue())
+const mockInventory = page => page.route(url => url.pathname.startsWith('/api/'), route => new URL(route.request().url()).pathname.startsWith('/api/') ? route.fulfill({ json: { types: inventoryTypes, items: inventoryCatalogue } }) : route.continue())
 
 for (const mobile of [false, true]) test(`character bag layouts and moves on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
   await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1280, height: 1000 })

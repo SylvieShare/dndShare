@@ -13,7 +13,7 @@ for (const mobile of [false, true]) for (const role of ['dm', 'player']) {
         close() {}
       }
     })
-    await page.route('**/api/**', async route => {
+    await page.route(url => url.pathname.startsWith('/api/'), async route => {
       const path = new URL(route.request().url()).pathname
       if (!path.startsWith('/api/')) return route.continue()
       let json = {}

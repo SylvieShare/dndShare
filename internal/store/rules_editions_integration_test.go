@@ -2,10 +2,10 @@ package store
 
 import (
 	"context"
+	"dndshare/internal/testdb"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
 	"strings"
 	"testing"
 
@@ -13,24 +13,9 @@ import (
 )
 
 func TestRulesEditionsPersistenceAndValidation(t *testing.T) {
-	dsn := os.Getenv("DNDSHARE_EDITIONS_TEST_DSN")
-	if dsn == "" {
-		t.Skip("requires disposable local dndshare_test_* database")
-	}
-	cfg, err := pgxpool.ParseConfig(dsn)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if cfg.ConnConfig.Host != "127.0.0.1" || !strings.HasPrefix(cfg.ConnConfig.Database, "dndshare_test_") {
-		t.Fatal("requires disposable local database")
-	}
+	pool := testdb.Pool(t)
 	ctx := context.Background()
-
-	pool, err := pgxpool.NewWithConfig(ctx, cfg)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer pool.Close()
+	var err error
 	exec := func(sql string, args ...any) {
 		t.Helper()
 		if _, err := pool.Exec(ctx, sql, args...); err != nil {

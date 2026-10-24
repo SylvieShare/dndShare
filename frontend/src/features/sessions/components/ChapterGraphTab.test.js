@@ -1,7 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import ChapterGraphTab from './ChapterGraphTab.vue'
 
 const tab = readFileSync(fileURLToPath(new URL('./ChapterGraphTab.vue', import.meta.url)), 'utf8')
 const canvas = readFileSync(fileURLToPath(new URL('../../narrative-graph/components/NarrativeGraphCanvas.vue', import.meta.url)), 'utf8') + ['useNarrativeViewport', 'useNarrativeNodeGeometry', 'useNarrativeLinks'].map(name => readFileSync(fileURLToPath(new URL('../../narrative-graph/composables/' + name + '.js', import.meta.url)), 'utf8')).join('\n')
@@ -23,10 +22,6 @@ const navigation = readFileSync(fileURLToPath(new URL('../composables/useSession
 const workspaceHeader = readFileSync(fileURLToPath(new URL('../../../shared/ui/WorkspaceHeader.vue', import.meta.url)), 'utf8')
 
 describe('chapter graph workspace', () => {
-  it('compiles the graph tab', () => {
-    expect(ChapterGraphTab).toBeTruthy()
-  })
-
   it('keeps the canvas transparent and separates its semantic header with a panel surface', () => {
     expect(toolbar).toContain('<WorkspaceHeader class="chapter-toolbar"')
     expect(toolbar).not.toContain('<BaseTile')

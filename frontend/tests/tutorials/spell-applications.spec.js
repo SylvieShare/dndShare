@@ -10,7 +10,7 @@ async function openSpell(page, name) {
 for (const mobile of [false, true]) test(`spell application selects disjoint slot levels and multiple targets on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
   page.on('pageerror', error => { throw error })
   await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1400, height: 1000 })
-  await page.route('**/api/**', route => new URL(route.request().url()).pathname.startsWith('/api/') ? route.fulfill({ json: {} }) : route.continue())
+  await page.route(url => url.pathname.startsWith('/api/'), route => new URL(route.request().url()).pathname.startsWith('/api/') ? route.fulfill({ json: {} }) : route.continue())
   await page.goto('/tests/tutorials/fixtures/spell-applications.html')
   await openSpell(page, 'Благословение')
   const slider = page.getByRole('slider', { name: 'Круг ячейки' })
@@ -49,7 +49,7 @@ for (const mobile of [false, true]) test(`spell application selects disjoint slo
 
 for (const mobile of [false, true]) test(`spell conditions and formula-only healing ${mobile}`, async ({ page }) => {
   await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1400, height: 1000 })
-  await page.route('**/api/**', route => new URL(route.request().url()).pathname.startsWith('/api/') ? route.fulfill({ json: {} }) : route.continue())
+  await page.route(url => url.pathname.startsWith('/api/'), route => new URL(route.request().url()).pathname.startsWith('/api/') ? route.fulfill({ json: {} }) : route.continue())
   await page.goto('/tests/tutorials/fixtures/spell-applications.html?condition')
   await openSpell(page, 'Благословение')
   await expect(page.getByRole('menuitem', { name: 'На себя', exact: true })).toBeDisabled()
@@ -58,7 +58,7 @@ for (const mobile of [false, true]) test(`spell conditions and formula-only heal
   await page.getByRole('menuitem', { name: 'На себя', exact: true }).click()
   expect(await page.evaluate(() => window.casts.length)).toBe(1)
   await page.goto('/tests/tutorials/fixtures/spell-applications.html?formula-only')
-  await page.locator('.spell-row').filter({ hasText: 'Лечащее слово' }).click()
+  await page.locator('.spell-row').filter({ hasText: 'Лечащее слово' }).locator('.sp-name').click()
   await expect(page.getByRole('menuitem', { name: 'Использовать на…', exact: true })).toHaveCount(0)
   await expect(page.getByRole('menuitem', { name: 'Бросить на лечение', exact: true })).toBeVisible()
 })

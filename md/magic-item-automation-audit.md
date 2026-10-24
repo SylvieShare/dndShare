@@ -314,7 +314,7 @@
 счётчики и метаданные; `TestMagicItemAutomationAuditMigration` на одноразовой
 локальной PostgreSQL проверяет запись оценок, повтор, защиту изменённых записей
 и сохранность игровых данных. Для запуска задаётся
-`DNDSHARE_ITEM_AUTOMATION_TEST_DSN`.
+`DNDSHARE_TEST_DSN`.
 
 ## Связанные страницы
 

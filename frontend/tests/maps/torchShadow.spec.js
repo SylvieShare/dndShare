@@ -10,7 +10,7 @@ const base = path.resolve(import.meta.dirname,
     fixed: path.join(base, "MT1-017/0842fd90a412150eed8cb5086d12aa452054e52d15c683935a967a24c4a567eb.glb"),
   };
 
-test("torch light escapes its flame while solid objects still cast shadows", async ({ page }) => {
+test("torch light escapes its flame while solid objects still cast shadows", { tag: "@local-model" }, async ({ page }) => {
   test.skip(Object.values(files).some((f) => !fs.existsSync(f)), "Local models excluded from Git");
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));

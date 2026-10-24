@@ -9,11 +9,12 @@ test("scene is usable while one mesh is delayed, shows LOD before requesting ful
   await expect(page.locator(".map-canvas canvas")).toBeVisible();
   await expect(page.getByText("Подготавливаем карту…")).toHaveCount(0);
   await page.getByTitle("Вид сверху", { exact: true }).click();
+  for (let i = 0; i < 2; i++) await page.getByRole("button", { name: "Увеличить", exact: true }).click();
   await expect
     .poll(() =>
       page.evaluate(() =>
         window.loadedModels.some(
-          (p) => p.includes("2222") && p.endsWith("/render"),
+          (p) => p.includes("2222") && p.endsWith("/lod"),
         ),
       ),
     )

@@ -13,7 +13,7 @@ for (const mobile of [false, true]) test(`concentration links and self applicati
   } } }
   let concentration = null
   const writes = []
-  await page.route('**/api/**', async route => {
+  await page.route(url => url.pathname.startsWith('/api/'), async route => {
     const req = route.request(), path = new URL(req.url()).pathname
     if (!path.startsWith('/api/')) return route.continue()
     let json = {}

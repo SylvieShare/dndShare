@@ -4,6 +4,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"testing/fstest"
 
 	"dndshare/internal/config"
 )
@@ -13,7 +14,8 @@ func TestHandlerRegistersAllRoutesWithoutConflict(t *testing.T) {
 	s := New(config.Config{SecureCookie: "false"}, nil, nil)
 
 	// when
-	h := s.Handler()
+	// Route registration must not depend on ignored files from a previous deploy.
+	h := s.handlerWithSPA(newSPAHandler(fstest.MapFS{"index.html": {Data: []byte("route fixture")}}, nil))
 
 	// then
 	cases := []struct {

@@ -15,7 +15,8 @@
 
 ## Общие правила
 
-- JSON keys — camelCase.
+- JSON keys — camelCase. Успешный JSON-ответ без значения сериализуется как `null`;
+  ответы HTTP 204/304 остаются без тела.
 - Ошибка — JSON `{ "type": "...", "desc": "..." }`.
 - Session auth — cookies `sylvieshare-session-id` и
   `sylvieshare-session-uuid`; обе cookie имеют `HttpOnly`, `SameSite=Lax` и

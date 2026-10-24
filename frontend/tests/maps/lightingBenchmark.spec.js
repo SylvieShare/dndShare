@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
-test("records real-model lighting frame intervals with cached shadows", async ({
+test("records real-model lighting frame intervals with cached shadows", { tag: "@local-model" }, async ({
   page,
 }) => {
   test.setTimeout(120000);

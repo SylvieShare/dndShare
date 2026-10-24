@@ -45,7 +45,7 @@ test("copy assigns its saved URL, keeps editing and can be reopened", async ({
 }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/tests/maps/fixtures/maps.html?mode=library");
-  await page.getByTitle("Дублировать карту").click();
+  await page.getByRole("button", { name: "Создать копию карты", exact: true }).click();
   await readyEditor(page);
   await expect(
     page.getByRole("button", { name: "Сохранить", exact: true }),
@@ -127,8 +127,10 @@ test("leaving a conflicted editor preserves changes until discard is confirmed",
     window.failNextSave = 409;
   });
   await page.getByTitle("Вид сверху", { exact: true }).click();
-  const b = await page.locator(".map-canvas-surface").boundingBox();
-  await dragTile(page, await mapPoint(page, 4.5, 4.5));
+  await page.getByRole("button", { name: "Настройки", exact: true }).click();
+  const name = page.getByRole("textbox", { name: "Название карты", exact: true });
+  await name.fill('Моё конфликтующее имя');
+  await name.blur();
   await expect(page.getByRole("alert")).toContainText("другой вкладке");
   await page
     .getByRole("button", { name: "Вернуться к карте", exact: true })

@@ -524,7 +524,10 @@ const modelDto = ({ id, definitionId, ...model }) => ({
   ...model,
   id: definitionId,
   uuid: id,
-  assetBytes: transfers.sizes(id),
+  assetBytes: (window.fixtureModelAssetBytes &&
+    (id.startsWith('1111') ? window.fixtureModelAssetBytes.wall :
+      id.startsWith('ffff') && window.fixtureModelAssetBytes.chest ? window.fixtureModelAssetBytes.chest :
+      window.fixtureModelAssetBytes.floor)) || transfers.sizes(id),
 });
 const previews = previewFixture(catalogue, modelDto);
 libraryAPI = mapCatalogueFixture(source, params, previews);
@@ -537,6 +540,26 @@ window.fetch = async (url, options = {}) => {
   if (decalResponse) return decalResponse;
   if (!options.method || options.method === "GET")
     window.mapReadRequests.push(endpoint);
+  if (options.method === "PATCH" && window.failNextSave && /^\/api\/(?:maps|sessions\/[^/]+\/maps)\/[^/]+$/.test(endpoint)) {
+    const url = endpoint;
+    const data = options.body ? JSON.parse(options.body) : null;
+    window.requests.push({ url, data });
+    const status = window.failNextSave;
+    window.failNextSave = 0;
+    if (status === 409 && options.method === "PATCH") {
+      window.concurrentMapName = "Имя в другой вкладке";
+    }
+    return new Response(
+      JSON.stringify({
+        type: "ERROR",
+        desc:
+          status === 409
+            ? "Карта изменена в другой вкладке"
+            : "Нет связи с сервером",
+      }),
+      { status },
+    );
+  }
   const libraryResponse = await libraryAPI.handle(rawUrl, options);
   if (libraryResponse) return libraryResponse;
   const preview = await previews.handle(rawUrl, options);
@@ -607,23 +630,7 @@ window.fetch = async (url, options = {}) => {
     options.method === "PATCH"
   )
     window.requests.push({ url, data });
-  if (["PUT", "PATCH"].includes(options.method) && window.failNextSave) {
-    const status = window.failNextSave;
-    window.failNextSave = 0;
-    if (status === 409 && options.method === "PATCH") {
-      window.concurrentMapName = "Имя в другой вкладке";
-    }
-    return new Response(
-      JSON.stringify({
-        type: "ERROR",
-        desc:
-          status === 409
-            ? "Карта изменена в другой вкладке"
-            : "Нет связи с сервером",
-      }),
-      { status },
-    );
-  }
+
   if (options.method === "PUT" && /^\/api\/maps\/models\/[^/]+$/.test(url)) {
     const old = catalogue.find((m) => m.id === url.split("/")[4]);
     if (!old) return new Response("{}", { status: 404 });

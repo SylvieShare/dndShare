@@ -12,7 +12,7 @@ const presets = [
 for (const mobile of [false, true]) test(`simplified item icon persists and changes on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
   await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1280, height: 1000 })
   page.on('pageerror', error => { throw error })
-  await page.route('**/api/**', route => {
+  await page.route(url => url.pathname.startsWith('/api/'), route => {
     const path = new URL(route.request().url()).pathname
     if (!path.startsWith('/api/')) return route.continue()
     return route.fulfill({ json: path === '/api/inventory/icon-presets' ? { presets }
@@ -60,7 +60,7 @@ for (const mobile of [false, true]) for (const viewer of [false, true]) test(`in
     ] }],
   })
   page.on('pageerror', error => { throw error })
-  await page.route('**/api/**', route => {
+  await page.route(url => url.pathname.startsWith('/api/'), route => {
     const path = new URL(route.request().url()).pathname
     if (!path.startsWith('/api/')) return route.continue()
     return route.fulfill({ json: path === '/api/inventory/icon-presets' ? { presets } : { types: [{ id: 2 }], items: [item] } })

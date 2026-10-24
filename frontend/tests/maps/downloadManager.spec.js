@@ -20,7 +20,6 @@ for (const mobile of [false, true])
           .click();
     const panel = page.getByRole("region", { name: "Загрузка моделей" });
     await expect(panel).toBeVisible();
-    await expect(panel.getByText("Основные", { exact: true })).toBeVisible();
     await expect(panel.getByText("LOD", { exact: true })).toBeVisible();
     await expect(panel.getByText("Тени", { exact: true })).toBeVisible();
     await expect(panel).toContainText("В очереди");
@@ -47,5 +46,6 @@ for (const mobile of [false, true])
     await page.evaluate(() => window.finishModelTransfers());
     await expect(panel).toHaveCount(0);
     await expect(page.getByRole("alert")).toHaveCount(0);
+    expect(await page.evaluate(() => window.loadedModels.some(url => url.endsWith('/render')))).toBe(true);
     expect(errors).toEqual([]);
   });

@@ -8,7 +8,7 @@ const directory = path.resolve(
 );
 
 for (const tier of ["render", "lod"]) {
-  test(`real torch ${tier}: flame stays at 12 FPS while its body stays fixed`, async ({
+  test(`real torch ${tier}: flame stays at 12 FPS while its body stays fixed`, { tag: "@local-model" }, async ({
     page,
   }) => {
     test.skip(
@@ -47,7 +47,7 @@ for (const tier of ["render", "lod"]) {
   });
 }
 
-test("torch reference keeps the animated preview without a frequency setting", async ({
+test("torch reference keeps the animated preview without a frequency setting", { tag: "@local-model" }, async ({
   page,
 }) => {
   test.skip(

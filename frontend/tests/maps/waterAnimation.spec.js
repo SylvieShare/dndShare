@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
 
-test("fountain water animates both tiers and instancing while stone stays still", async ({
+test("fountain water animates both tiers and instancing while stone stays still", { tag: "@local-model" }, async ({
   page,
 }) => {
   test.setTimeout(90000);

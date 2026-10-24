@@ -201,6 +201,11 @@ Vite работает на `:5173` и проксирует `/api` и `/mcp` на
 
 ## Проверки
 
+[Профили, изоляция БД и браузерные контракты](md/testing.md).
+Полный набор: `python3 scripts/test.py all`; быстрый — `python3 scripts/test.py fast`.
+Проверки только БД: `python3 scripts/test.py db`, браузера: `python3 scripts/test.py browser`.
+Ниже — отдельные команды для узких проверок:
+
 ```bash
 python3 scripts/check-wiki.py
 GOCACHE=/private/tmp/dndshare-go-cache go test ./...

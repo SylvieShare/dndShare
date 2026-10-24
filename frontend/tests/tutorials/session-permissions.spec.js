@@ -3,7 +3,7 @@ for (const mobile of [false, true]) test(`session permissions reveal separate au
   page.on('pageerror', error => { throw error })
   await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 })
   await page.goto('/tests/tutorials/fixtures/session-permissions.html')
-  for (const label of ['Передача предметов', 'Применение зелий', 'Эффекты заклинаний']) {
+  for (const label of ['Передача предметов', 'Применение расходуемых предметов', 'Эффекты заклинаний']) {
     const permission = page.getByRole('switch', { name: label, exact: true })
     const automatic = page.getByRole('switch', { name: `Автоподтверждение: ${label}`, exact: true })
     await expect(permission).toBeChecked()
@@ -14,7 +14,7 @@ for (const mobile of [false, true]) test(`session permissions reveal separate au
     await expect(automatic).not.toBeChecked()
   }
   await page.getByRole('switch', { name: 'Передача предметов', exact: true }).click()
-  await page.getByRole('switch', { name: 'Применение зелий', exact: true }).click()
+  await page.getByRole('switch', { name: 'Применение расходуемых предметов', exact: true }).click()
   const trigger = page.getByRole('button', { name: 'Зелье', exact: true })
   await trigger.scrollIntoViewIfNeeded()
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))

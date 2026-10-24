@@ -1,6 +1,10 @@
 import { test, expect } from '@playwright/test'
 test.beforeEach(async ({ page }) => {
   await page.route('**/api/suggest/**', route => route.fulfill({ json: { items: {} } }))
+  await page.route(url => ['/api/sources', '/api/user/checkAuth', '/api/content-sources'].includes(url.pathname), route => {
+    const path = new URL(route.request().url()).pathname
+    return route.fulfill({ json: path === '/api/sources' ? { sources: [{ id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }] }] } : path === '/api/user/checkAuth' ? { auth: true, user: { id: 42, login: 'Редактор', roles: ['HANDBOOK_ADMIN'] } } : { sources: [] } })
+  })
   page.on('pageerror', error => { throw error })
 })
 for (const width of [1280, 390]) {
@@ -8,7 +12,7 @@ for (const width of [1280, 390]) {
   await page.setViewportSize({ width, height: 900 })
   let saved
   await page.route('**/api/items/4167', async route => { saved = route.request().postDataJSON(); await route.fulfill({ status: 204 }) })
-  await page.route('**/api/item-types**', route => route.fulfill({ json: { types: [{ id: 2, name: 'Вещи', fields: [] }] } }))
+  await page.route('**/api/item-types**', route => route.fulfill({ json: { types: [{ id: 2, sourceId: 1, name: 'Вещи', fields: [] }] } }))
   await page.goto('/tests/weapon-charges/item-automation.html')
   await expect(page.getByText('Автоматизация: не оценено', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Редактировать', exact: true }).click()

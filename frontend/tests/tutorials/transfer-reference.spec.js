@@ -10,7 +10,7 @@ for (const mobile of [false, true]) test(`transfer rows open catalogue reference
   }, var: { stats: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 } } } }
   const session = { uuid: 'campaign', name: 'Тайны долины' }
   const item = { id: 42, name: 'Верёвка', typeId: 2, iconImageUrl: '/static/tab-stats.svg', data: { desc: 'Описание из справочника' } }
-  await page.route('**/api/**', async route => {
+  await page.route(url => url.pathname.startsWith('/api/'), async route => {
     const path = new URL(route.request().url()).pathname
     if (!path.startsWith('/api/')) return route.continue()
     let json = {}

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 test.beforeEach(async ({ page }) => {
   page.on('pageerror', error => { throw error })
-  await page.route('**/api/**', route => new URL(route.request().url()).pathname.startsWith('/api/') ? route.fulfill({ json: { items: [] } }) : route.continue())
+  await page.route(url => url.pathname.startsWith('/api/'), route => new URL(route.request().url()).pathname.startsWith('/api/') ? route.fulfill({ json: { items: [] } }) : route.continue())
 })
 for (const width of [1280, 390]) {
   test(`abilities below cover, lineage benefits and size notes (${width})`, async ({ page }) => {

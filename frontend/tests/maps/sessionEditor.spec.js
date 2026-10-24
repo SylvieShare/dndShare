@@ -95,7 +95,8 @@ test("players and creatures have HP and a shared right focus, and placement is d
   await expect(
     roster.getByRole("button", { name: "A · Огр", exact: true }),
   ).toContainText("23");
-  await roster.getByRole("button", { name: "Лира", exact: true }).click();
+  await roster.getByRole("button", { name: "Лира", exact: true }).press("Enter");
+    await page.getByRole("menuitem", { name: "Выбрать на карте", exact: true }).click();
   const focus = page.getByRole("complementary", { name: "Выбранные элементы" });
   await expect(
     focus.getByRole("heading", { name: "Лира", exact: true }),

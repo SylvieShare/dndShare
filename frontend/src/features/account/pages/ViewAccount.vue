@@ -35,6 +35,7 @@
           <FormField label="Текущий пароль" vertical>
             <FormTextInput
               v-model:value="password.current"
+              aria-label="Текущий пароль"
               type="password"
               autocomplete="current-password"
               :invalid="Boolean(passwordError)"
@@ -43,6 +44,7 @@
           <FormField label="Новый пароль" hint="минимум 4 символа" vertical>
             <FormTextInput
               v-model:value="password.next"
+              aria-label="Новый пароль"
               type="password"
               autocomplete="new-password"
               maxlength="256"
@@ -52,6 +54,7 @@
           <FormField label="Повторите новый пароль" vertical>
             <FormTextInput
               v-model:value="password.confirm"
+              aria-label="Повторите новый пароль"
               type="password"
               autocomplete="new-password"
               maxlength="256"

@@ -183,6 +183,7 @@ const props = defineProps({
     normalize: Function,
     embedded: Boolean,
     sessionMode: Boolean,
+    sessionUuid: { type: String, default: '' },
     extraTabs: { type: Array, default: () => [] },
     selectedToken: String,
     placementToken: Object,
@@ -212,7 +213,7 @@ const props = defineProps({
 const core = useMapEditor(props.map, (map) => emit("saved", map), {
   save: props.save,
   normalize: props.normalize,
-  session: props.sessionMode,
+  session: props.sessionMode ? props.sessionUuid : undefined,
   active: () => props.active,
   finishEdit: () => cameras.finishCameraEdit(),
 });

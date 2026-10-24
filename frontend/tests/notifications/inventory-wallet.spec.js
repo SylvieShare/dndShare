@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 const mockApi = async page => {
-  await page.route('**/api/**', route => new URL(route.request().url()).pathname.startsWith('/api/')
+  await page.route(url => url.pathname.startsWith('/api/'), route => new URL(route.request().url()).pathname.startsWith('/api/')
     ? route.fulfill({ json: { types: [], items: [], presets: [], suggests: [] } })
     : route.continue())
 }

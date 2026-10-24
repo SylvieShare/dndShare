@@ -21,7 +21,7 @@ function index(dir) {
 }
 if (available) index(root);
 for (const code of ["UD-022", "UD-042", "MA-DungeonChest"]) {
-  test(`real shadow geometry preserves illuminated surfaces of ${code}`, async ({
+  test(`real shadow geometry preserves illuminated surfaces of ${code}`, { tag: "@local-model" }, async ({
     page,
   }) => {
     test.setTimeout(120000);

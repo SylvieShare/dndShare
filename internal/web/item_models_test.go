@@ -3,11 +3,11 @@ package web
 import (
 	"bytes"
 	"crypto/sha256"
+	"dndshare/internal/testdb"
 	"encoding/hex"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"strings"
 	"sync/atomic"
 	"testing"
@@ -16,7 +16,6 @@ import (
 	"dndshare/internal/config"
 	"dndshare/internal/storage"
 	"dndshare/internal/store"
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func TestItemModelRoutesRejectInvalidIDsAndNonVisualAssets(t *testing.T) {
@@ -89,22 +88,9 @@ func TestStreamModelAssetCacheAndContent(t *testing.T) {
 }
 
 func TestPublicItemModelHTTPPostgres(t *testing.T) {
-	dsn := os.Getenv("DNDSHARE_ITEM_MODEL_HTTP_TEST_DSN")
-	if dsn == "" {
-		t.Skip("requires an isolated local dndshare_test_* database")
-	}
-	cfg, err := pgxpool.ParseConfig(dsn)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if cfg.ConnConfig.Host != "127.0.0.1" || !strings.HasPrefix(cfg.ConnConfig.Database, "dndshare_test_") {
-		t.Fatal("requires an isolated local database")
-	}
-	pool, err := pgxpool.NewWithConfig(t.Context(), cfg)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer pool.Close()
+	pool := testdb.Pool(t)
+	dsn := pool.Config().ConnString()
+	var err error
 	if _, err := pool.Exec(t.Context(), `DROP SCHEMA IF EXISTS dndshare CASCADE`); err != nil {
 		t.Fatal(err)
 	}

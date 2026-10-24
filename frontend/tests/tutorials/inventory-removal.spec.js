@@ -13,7 +13,7 @@ for (const mobile of [false, true]) test(`inventory removal and HP calculator sa
     ] }] },
   }, var: {} } }
   const saves = []
-  await page.route('**/api/**', async route => {
+  await page.route(url => url.pathname.startsWith('/api/'), async route => {
     const request = route.request(), path = new URL(request.url()).pathname
     if (!path.startsWith('/api/')) return route.continue()
     let json = {}

@@ -7,7 +7,7 @@ import ItemEditModal from '../../src/features/character-editor/components/ItemEd
 import { useItemTypesStore } from '../../src/stores/itemTypes'
 const query = new URLSearchParams(location.search)
 const typeId = Number(query.get('type') || 2)
-const type = { id: typeId, name: 'Тестовый справочник', fields: [], instanceFields: [] }
+const type = { id: typeId, sourceId: 1, name: 'Тестовый справочник', fields: [], instanceFields: [] }
 const pinia = createPinia()
 useItemTypesStore(pinia).types = [type]
 const app = createApp({ setup() {

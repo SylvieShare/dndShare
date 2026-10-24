@@ -12,7 +12,7 @@ async function mockMeetings(page, role, initial = [], failCreate = false) {
       canEdit: role === 'dm', canManage: role === 'dm',
     }
   }
-  await page.route('**/api/**', async route => {
+  await page.route(url => url.pathname.startsWith('/api/'), async route => {
     const req = route.request(), path = new URL(req.url()).pathname
     if (!path.startsWith('/api/')) return route.continue()
     const method = req.method()

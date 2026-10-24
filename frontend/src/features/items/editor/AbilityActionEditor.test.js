@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
-import { createSSRApp, h } from 'vue'
-import { renderToString } from 'vue/server-renderer'
+import { h } from 'vue'
+import { renderComponent } from '../../../../tests/unit/renderComponent'
 import { createPinia } from 'pinia'
 import AbilityEditor from './AbilityEditor.vue'
 import schema from '../../../../../resources/items/item_4_shema.json'
@@ -11,10 +11,9 @@ vi.mock('@/shared/api/http', () => ({ fetchGet: vi.fn().mockResolvedValue({ refe
 describe('action dependency form', () => {
   it('renders separate action cards without nested list editors and hides unused resource controls', async () => {
     const data = { feature_actions: [{title:'Первое', key:'one'}, {title:'Второе',key:'two'}] }
-    const app=createSSRApp({ render: () => h(AbilityEditor, { fields:schema.filter(field=>field.key==='feature_actions'),data,typeId:4 }) })
-    app.use(createPinia())
-    app.provide(itemFieldEditorKey,{itemData:data,itemName:'Способность',zIndex:4500})
-    const html=await renderToString(app)
+    const html = await renderComponent(AbilityEditor, { fields: schema.filter(field => field.key === 'feature_actions'), data, typeId: 4 }, {
+      plugins: [createPinia()], provide: [[itemFieldEditorKey, { itemData: data, itemName: 'Способность', zIndex: 4500 }]],
+    })
     expect(html).toContain('Действие на листе · Первое')
     expect(html).toContain('Действие на листе · Второе')
     expect(html).not.toContain('Добавить запись')

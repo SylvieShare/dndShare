@@ -76,7 +76,7 @@ async function remove() {
   else deletePoint(target.routeId, target.pointId)
   pending.value = null
 }
-function retry() { if (c.hasPending()) c.flush(); else c.load().catch(() => {}) }
+function retry() { if (c.hasPending()) c.flush(); else c.load(true).catch(() => {}) }
 async function reload() { reloadConfirm.value = false; await c.load(true).catch(() => {}); routeId.value = c.selected?.routes[0]?.id || ''; pointId.value = ''; addMode.value = false }
 let resolveLeave
 async function prepareLeave() { await c.flush(); if (!c.hasPending()) return true; leaveConfirm.value = true; return new Promise(resolve => { resolveLeave = resolve }) }

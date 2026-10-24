@@ -34,7 +34,11 @@ func (s *Server) handleUpdateAccountGameContext(w http.ResponseWriter, r *http.R
 		return
 	}
 	var req accountGameContextRequest
-	if decodeJSON(r, &req) != nil || !validateAccountGameContextRequest(w, req) {
+	if decodeJSON(r, &req) != nil {
+		badRequest(w, "Некорректный запрос")
+		return
+	}
+	if !validateAccountGameContextRequest(w, req) {
 		return
 	}
 	exists, err := s.store.SourceVersionExists(r.Context(), req.SourceVersionID)
@@ -81,7 +85,11 @@ func (s *Server) handleChangeAccountPassword(w http.ResponseWriter, r *http.Requ
 		return
 	}
 	var req accountPasswordRequest
-	if decodeJSON(r, &req) != nil || !validateAccountPasswordRequest(w, req) {
+	if decodeJSON(r, &req) != nil {
+		badRequest(w, "Некорректный запрос")
+		return
+	}
+	if !validateAccountPasswordRequest(w, req) {
 		return
 	}
 	user, err := s.store.FindUserByID(r.Context(), userID)

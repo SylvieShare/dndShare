@@ -43,6 +43,7 @@
           :save="c.write"
           :normalize="normalize"
           session-mode
+          :session-uuid="sessionUuid"
           :embedded="integratedHeader"
           :active="active"
           :broadcast-view="broadcastView"
@@ -59,6 +60,7 @@
           :token-gesture="tokens.gesture"
           :remove-token="removeToken"
           @working="c.working"
+          @saved="c.accept"
           @broadcast-camera="source"
           @selection="clearTokens"
           @camera-move="tokenDrag.cameraMoved"

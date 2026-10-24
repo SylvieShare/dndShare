@@ -41,6 +41,8 @@ window.fetch = async (url, options = {}) => {
   if (path === '/api/char/sheet/data' && options.method === 'PATCH') {
     const packet = JSON.parse(options.body)
     window.characterRequests.push(packet)
+    if (window.failCharacterSaves)
+      return Response.json({ desc: 'Сохранение отклонено' }, { status: window.failCharacterSaves })
     window.savedCharacter.data = applyDocumentPatches(
       structuredClone(window.savedCharacter.data),
       packet.patches,

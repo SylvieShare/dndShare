@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
+import { localModelAssets } from "./localModelAssets";
 import { dragTile } from "./editorHelpers";
 
 async function point(page, x, y) {
@@ -78,22 +79,10 @@ for (const mobile of [false, true])
         page.evaluate(() => window.latestBoard.state.tokens[0].physical),
       )
       .toBe(true);
-    await page
-      .locator(".map-sidebar")
-      .getByRole("button", { name: "Настройки", exact: true })
-      .click();
-    await page
-      .getByRole("switch", { name: "Вписывать всю карту", exact: true })
-      .click();
-    await expect
-      .poll(() => page.evaluate(() => window.latestDisplay.camera.fit))
-      .toBe(false);
-    await page
-      .getByRole("switch", { name: "Показывать карту игрокам", exact: true })
-      .click();
-    await expect
-      .poll(() => page.evaluate(() => window.latestDisplay.visible))
-      .toBe(false);
+    await page.getByRole("button", { name: "Отобразить текущий вид", exact: true }).click();
+    await expect.poll(() => page.evaluate(() => window.latestDisplay.camera.fit)).toBe(false);
+    await page.getByRole("button", { name: "Остановить трансляцию", exact: true }).click();
+    await expect.poll(() => page.evaluate(() => window.latestDisplay.visible)).toBe(false);
   });
 test("held tokens move between surface points and procedural objects act from the shared focus", async ({
   page,
@@ -135,12 +124,13 @@ test("failed patch batches retry automatically with the same mutation id", async
   await ready(page);
   await page.locator('.map-sidebar').getByRole('button',{name:'Настройки',exact:true}).click();
   await page.evaluate(()=>{window.failNextSave=500});
-  await page.getByRole('switch',{name:'Туман войны',exact:true}).click();
-  await expect.poll(()=>page.evaluate(()=>window.latestBoard.state.fog)).toBe(false);
+  await page.getByRole('textbox',{name:'Название карты',exact:true}).fill('Повторное сохранение');
+  await page.getByRole('textbox',{name:'Название карты',exact:true}).blur();
+  await expect.poll(()=>page.evaluate(()=>window.latestBoard.name)).toBe('Повторное сохранение');
   const packets=await page.evaluate(()=>window.requests.filter(r=>r.url==='/api/sessions/test/maps/test-map').map(r=>r.data));
   expect(packets).toHaveLength(2);
   expect(packets[1]).toEqual(packets[0]);
-  expect(packets[0]).toMatchObject({baseVersion:1,patches:[{op:'set',path:['state','fog'],value:false}]});
+  expect(packets[0]).toMatchObject({baseVersion:1,patches:[{op:'set',path:['name'],value:'Повторное сохранение'}]});
 });
 test("scene conflicts require explicit server reload before replacing local changes", async ({
   page,
@@ -160,17 +150,13 @@ test("scene conflicts require explicit server reload before replacing local chan
   });
   await expect(dialog.getByRole("alert")).toContainText("другой вкладке");
   await dialog
-    .getByRole("button", { name: "Вернуться к карте", exact: true })
-    .click();
-  await page
     .getByRole("button", { name: "Загрузить с сервера", exact: true })
     .click();
   await page.getByRole("button", { name: "Загрузить", exact: true }).click();
-  await page
-    .locator(".map-sidebar")
-    .getByRole("button", { name: "Настройки", exact: true })
-    .click();
   await expect(page.getByRole("textbox", {name:"Название карты",exact:true})).toHaveValue("Имя в другой вкладке");
+  const reads = await page.evaluate(() => window.mapReadRequests);
+  expect(reads).toContain('/api/sessions/test/maps/test-map/changes');
+  expect(reads.some(url => url.includes('/sessions/true/'))).toBe(false);
   await expect(page.getByRole("alert")).toHaveCount(0);
 });
 
@@ -202,7 +188,7 @@ test("editor rotates a dragged tile before placing and deletes it from its menu"
     .toBeUndefined();
 });
 
-test("real compressed model uses the same editor and shader when local assets exist", async ({
+test("real compressed model uses the same editor and shader when local assets exist", { tag: "@local-model" }, async ({
   page,
 }) => {
   const assets = path.resolve(
@@ -214,22 +200,9 @@ test("real compressed model uses the same editor and shader when local assets ex
     "Local model files are intentionally excluded from Git",
   );
   const errors = [];
-  let modelRequests = 0;
-  page.on("console", (message) => {
-    if (message.type() === "error") errors.push(message.text());
-  });
-  await page.route("**/api/maps/models/*/*", async (route) => {
-    modelRequests++;
-    const parts = new URL(route.request().url()).pathname.split("/");
-    const code = parts[4].startsWith("1111") ? "LC-001" : "LC-007";
-    await route.fulfill({
-      path: path.join(
-        assets,
-        `${code}.${parts[5] === "lod" ? "lod" : "render"}.glb`,
-      ),
-      contentType: "model/gltf-binary",
-    });
-  });
+  page.on("console", message => { if (message.type() === "error") errors.push(message.text()) });
+  const tiers = code => ({ render: path.join(assets, `${code}.render.glb`), lod: path.join(assets, `${code}.lod.glb`), shadow: path.join(assets, `${code}.render.glb`) });
+  const modelRequests = await localModelAssets(page, { wall: tiers('LC-001'), floor: tiers('LC-007') });
   await page.setViewportSize({ width: 1440, height: 1000 });
   await ready(page, "editor&realModels");
   const p = await point(page, 4.5, 4.5);
@@ -246,5 +219,5 @@ test("real compressed model uses the same editor and shader when local assets ex
   expect(errors.filter((e) => /THREE|WebGL|shader|decode/i.test(e))).toEqual(
     [],
   );
-  expect(modelRequests).toBeGreaterThan(0);
+  expect(modelRequests()).toBeGreaterThan(0);
 });

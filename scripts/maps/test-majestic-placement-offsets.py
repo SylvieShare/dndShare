@@ -20,7 +20,7 @@ ordinary = module.support_points(obj, [0, 0], recipe, 9.75)
 shifted = module.support_points(obj, [0, 0], {**recipe, 'placementPointOffsetsMM': {'2,1': [10, 5]}}, 9.75)
 assert len(ordinary) == len(shifted) == 9
 assert ordinary[5]['elevation'] == round(15/35, 6)
-assert shifted[5] == {'x': round(2.5+10/35, 6), 'y': round(1.5-5/35, 6), 'elevation': round(25/35, 6)}
+assert shifted[5] == {'cell': {'x': 2, 'y': 1}, 'x': round(2.5+10/35, 6), 'y': round(1.5-5/35, 6), 'elevation': round(25/35, 6)}
 assert ordinary[:5] == shifted[:5] and ordinary[6:] == shifted[6:]
 np.testing.assert_array_equal(np.array([v.co[:] for v in mesh.vertices]), before)
 try:

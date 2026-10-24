@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { items, types } from './data'
 test.beforeEach(async ({ page }) => {
   page.on('pageerror', error => { throw error })
-  await page.route('**/api/**', async route => {
+  await page.route(url => url.pathname.startsWith('/api/'), async route => {
     const url = new URL(route.request().url())
     const path = url.pathname
     if (!path.startsWith('/api/')) return route.continue()

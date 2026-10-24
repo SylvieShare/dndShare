@@ -4,7 +4,7 @@ for (const width of [1280, 390]) test(`effect sources render and edit without re
  page.on('pageerror', error => { throw error })
  let reverseRequests = 0, saved
  page.on('request', request => { if (new URL(request.url()).pathname.startsWith('/api/items/') && new URL(request.url()).pathname.endsWith('/effect-sources')) reverseRequests++ })
- await page.route('**/api/**', async route => {
+ await page.route(url => url.pathname.startsWith('/api/'), async route => {
   if (!new URL(route.request().url()).pathname.startsWith('/api/')) return route.continue()
   if (route.request().method() === 'PUT') { saved = route.request().postDataJSON(); return route.fulfill({ status: 204 }) }
   return route.fulfill({ json: { items: [], types: await page.evaluate(() => window.testTypes || []) } })

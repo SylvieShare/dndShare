@@ -2,33 +2,15 @@ package store
 
 import (
 	"context"
+	"dndshare/internal/testdb"
 	"fmt"
-	"os"
 	"reflect"
-	"strings"
 	"testing"
-
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func TestEffectSourceFilter(t *testing.T) {
-	dsn := os.Getenv("DNDSHARE_EFFECT_FILTER_TEST_DSN")
-	if dsn == "" {
-		t.Skip("set DNDSHARE_EFFECT_FILTER_TEST_DSN to a disposable local dndshare_test_* database")
-	}
-	cfg, err := pgxpool.ParseConfig(dsn)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if cfg.ConnConfig.Host != "127.0.0.1" || !strings.HasPrefix(cfg.ConnConfig.Database, "dndshare_test_") {
-		t.Fatal("requires a disposable local test database")
-	}
+	pool := testdb.Pool(t)
 	ctx := context.Background()
-	pool, err := pgxpool.NewWithConfig(ctx, cfg)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer pool.Close()
 	exec := func(sql string) {
 		t.Helper()
 		if _, err := pool.Exec(ctx, sql); err != nil {

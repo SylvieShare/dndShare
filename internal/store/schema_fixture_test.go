@@ -9,7 +9,41 @@ import (
 	"testing"
 
 	"dndshare/internal/battlemap"
+	"dndshare/internal/testdb"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
+
+// Current-schema feature fixtures share the same migrations as the HTTP tests.
+func currentSchemaTestPool(t *testing.T) *pgxpool.Pool {
+	t.Helper()
+	pool := testdb.Pool(t)
+	if err := applySchema(t.Context(), pool); err != nil {
+		t.Fatal(err)
+	}
+	schemaTestExec(t, pool, `INSERT INTO dndshare.source(id,name) VALUES(1,'DND5e'); INSERT INTO dndshare.source_version(id,source_id,version) VALUES(1,1,'2014')`)
+	return pool
+}
+
+func seedTestUsers(t *testing.T, pool *pgxpool.Pool, ids ...int64) {
+	t.Helper()
+	for _, id := range ids {
+		schemaTestExec(t, pool, `INSERT INTO dndshare.users(id,login,password) VALUES($1,$2,'test')`, id, fmt.Sprintf("user-%d", id))
+	}
+}
+
+func seedTestItemTypes(t *testing.T, pool *pgxpool.Pool, ids ...int64) {
+	t.Helper()
+	for _, id := range ids {
+		schemaTestExec(t, pool, `INSERT INTO dndshare.item_type(id,name,source_id,fields) VALUES($1,$2,1,'[]')`, id, fmt.Sprintf("Type %d", id))
+	}
+}
+
+func seedTestImages(t *testing.T, pool *pgxpool.Pool, ids ...int64) {
+	t.Helper()
+	for _, id := range ids {
+		schemaTestExec(t, pool, `INSERT INTO dndshare.storage_image(id,url) VALUES($1,$2)`, id, fmt.Sprintf("/test/%d.webp", id))
+	}
+}
 
 func testItemFields(t *testing.T, typeID int) string {
 	t.Helper()

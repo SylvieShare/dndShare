@@ -2,6 +2,9 @@ import { test, expect } from "@playwright/test";
 import { mapPoint } from "./editorHelpers";
 async function ready(page, extra = "") {
   await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.route('**/api/svg/700', route => route.fulfill({
+    contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 64"><ellipse cx="64" cy="32" rx="50" ry="26" fill="#c18f6f"/></svg>',
+  }));
   await page.goto(
     `/tests/maps/fixtures/maps.html?mode=board&creatures${extra}`,
   );
@@ -40,7 +43,8 @@ test("roster drags preview before committing, mark placed creatures and focus th
   page.on("pageerror", (e) => errors.push(e.message));
   const roster = await ready(page);
   const row = roster.getByRole("button", { name: "Лира", exact: true });
-  await row.locator('.p-avatar').click();
+  await row.press('Enter');
+  await expect(page.getByRole('menu', { name: 'Лира', exact: true })).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(row).not.toHaveClass(/base-tile--framed/);
   await expect(
@@ -75,8 +79,9 @@ test("roster drags preview before committing, mark placed creatures and focus th
   await page.keyboard.down("ArrowRight");
   await page.waitForTimeout(150);
   await page.keyboard.up("ArrowRight");
-  await row.locator('.p-avatar').click();
-  await page.keyboard.press('Escape');
+  await row.press('Enter');
+  await page.getByRole('menu', { name: 'Лира', exact: true })
+    .getByRole('menuitem', { name: 'Выбрать на карте', exact: true }).click();
   await expect(
     focus.getByRole("heading", { name: "Лира", exact: true }),
   ).toBeVisible();

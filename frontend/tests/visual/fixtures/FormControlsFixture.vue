@@ -9,14 +9,14 @@
       Значение
       <FormNumberInput :value="number" @change="number = $event" />
     </label>
-    <label>
-      Режим
+    <fieldset>
+      <legend>Режим</legend>
       <MultiToggle
         :model-value="mode"
         :options="modes"
         @update:model-value="mode = $event"
       />
-    </label>
+    </fieldset>
     <label>
       Характеристика
       <ValueSelect v-model="selected" :options="options" placeholder="Выберите характеристику" />
@@ -71,7 +71,8 @@ const options = [
   font-size: 22px;
 }
 
-.fixture-card label {
+.fixture-card fieldset { border: 0; padding: 0; margin: 0; }
+.fixture-card label, .fixture-card fieldset {
   display: grid;
   gap: 7px;
   color: var(--text-2);

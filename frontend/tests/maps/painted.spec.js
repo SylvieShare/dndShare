@@ -1,9 +1,10 @@
 import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
+import { localModelAssets } from "./localModelAssets";
 import { dragTile } from "./editorHelpers";
 
-test("painted GLBs decode both tiers and render PBR textures in the editor", async ({
+test("painted GLBs decode both tiers and render PBR textures in the editor", { tag: "@local-model" }, async ({
   page,
 }) => {
   test.setTimeout(90000);
@@ -27,16 +28,8 @@ test("painted GLBs decode both tiers and render PBR textures in the editor", asy
     )
       errors.push(message.text());
   });
-  await page.route("**/api/maps/models/*/*", async (route) => {
-    const parts = new URL(route.request().url()).pathname.split("/");
-    const code = parts[4].startsWith("1111") ? "UD-002" : "UD-031";
-    const tier = parts[5] === "lod" ? "lod" : "render";
-    fetched.add(tier);
-    await route.fulfill({
-      path: path.join(assets, code, `${tier}.glb`),
-      contentType: "model/gltf-binary",
-    });
-  });
+  const tiers = code => ({ render: path.join(assets, code, 'render.glb'), lod: path.join(assets, code, 'lod.glb'), shadow: path.join(assets, code, 'render.glb') });
+  await localModelAssets(page, { wall: tiers('UD-002'), floor: tiers('UD-031') }, tier => fetched.add(tier));
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/tests/maps/fixtures/maps.html?mode=editor&realModels");
   await expect(page.locator(".map-canvas canvas")).toBeVisible();

@@ -3,7 +3,7 @@ import fixture from './data.json' with { type: 'json' }
 
 test.beforeEach(async ({ page }) => {
   page.on('pageerror', error => { throw error })
-  await page.route('**/api/**', route => {
+  await page.route(url => url.pathname.startsWith('/api/'), route => {
     const url = new URL(route.request().url())
     if (!url.pathname.startsWith('/api/')) return route.continue()
     if (url.pathname === '/api/suggest/batch') return route.fulfill({ json: { items: { 12: fixture.damageTypes } } })

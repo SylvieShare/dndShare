@@ -4,6 +4,7 @@ import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
+  cacheDir: process.env.DNDSHARE_VITE_CACHE || undefined,
   plugins: [vue(), compressedAssets()],
   resolve: {
     alias: {

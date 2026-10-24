@@ -2,35 +2,16 @@ package store
 
 import (
 	"context"
-	"os"
-	"strings"
+	"dndshare/internal/testdb"
 	"sync"
 	"testing"
-
-	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-// Opt-in: point DNDSHARE_JOURNAL_TEST_DSN at an empty local disposable database.
+// Run with isolated PostgreSQL: python3 scripts/test.py db.
 func TestPersonalJournalSourcesAndLifecycle(t *testing.T) {
-	dsn := os.Getenv("DNDSHARE_JOURNAL_TEST_DSN")
-	if dsn == "" {
-		t.Skip("set DNDSHARE_JOURNAL_TEST_DSN to run PostgreSQL journal regression tests")
-	}
-	cfg, err := pgxpool.ParseConfig(dsn)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !strings.HasPrefix(cfg.ConnConfig.Database, "dndshare_test_") || (cfg.ConnConfig.Host != "127.0.0.1" && cfg.ConnConfig.Host != "localhost") {
-		t.Fatal("journal integration tests require a local dndshare_test_* database")
-	}
-	cfg.ConnConfig.DefaultQueryExecMode = pgx.QueryExecModeSimpleProtocol
+	pool := testdb.Pool(t)
 	ctx := context.Background()
-	pool, err := pgxpool.NewWithConfig(ctx, cfg)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer pool.Close()
+	var err error
 	exec := func(sql string) {
 		t.Helper()
 		if _, err := pool.Exec(ctx, sql); err != nil {

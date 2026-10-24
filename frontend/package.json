@@ -9,10 +9,12 @@
     "check:colors": "node scripts/check-colors.mjs",
     "preview": "vite preview",
     "test": "vitest run src",
-    "test:visual": "playwright test",
+    "test:visual": "playwright test --project=ui tests/visual",
     "check:bundle": "node scripts/check-bundle.mjs",
     "benchmark": "node scripts/benchmark-frontend.mjs",
-    "test:performance": "playwright test -c playwright.performance.config.js"
+    "test:performance": "playwright test --project=ui tests/performance",
+    "test:browser": "playwright test -c playwright.suite.config.js",
+    "test:models": "DNDSHARE_TEST_MODELS=1 playwright test -c playwright.suite.config.js --project=models"
   },
   "dependencies": {
     "@lucide/vue": "^1.46.0",

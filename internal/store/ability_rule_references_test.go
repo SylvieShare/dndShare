@@ -2,31 +2,13 @@ package store
 
 import (
 	"context"
-	"os"
-	"strings"
+	"dndshare/internal/testdb"
 	"testing"
-
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func TestAbilityRuleReferences(t *testing.T) {
-	dsn := os.Getenv("DNDSHARE_ABILITY_LINK_TEST_DSN")
-	if dsn == "" {
-		t.Skip("set DNDSHARE_ABILITY_LINK_TEST_DSN to an empty local dndshare_test_* database")
-	}
-	cfg, err := pgxpool.ParseConfig(dsn)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !strings.HasPrefix(cfg.ConnConfig.Database, "dndshare_test_") || (cfg.ConnConfig.Host != "localhost" && cfg.ConnConfig.Host != "127.0.0.1") {
-		t.Fatal("requires a disposable local database")
-	}
+	pool := testdb.Pool(t)
 	ctx := context.Background()
-	pool, err := pgxpool.NewWithConfig(ctx, cfg)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer pool.Close()
 	exec := func(sql string, args ...any) {
 		t.Helper()
 		if _, err := pool.Exec(ctx, sql, args...); err != nil {

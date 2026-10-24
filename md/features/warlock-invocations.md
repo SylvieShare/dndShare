@@ -80,7 +80,7 @@ runtime и схемы. Без `--apply` показывает план; с `--app
 
 Unit-тесты проверяют отсутствие массовой выдачи, лимиты, требования,
 мультикласс, выборы того же повышения, сохранность зарядов и удаление даров.
-`npx playwright test --config playwright.ability-selection.config.js` проверяет
+`npm run test:browser -- --project=ui tests/ability-selection` проверяет
 реальные компоненты выбора, повышения и карточек на desktop/mobile.
 Обучение устройств и ролей проверяется `playwright.tutorials.config.js`.
 

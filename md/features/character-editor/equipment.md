@@ -371,7 +371,7 @@ current automation limits.
 вызывает его только при явном `spending=true`. Восстановление и редактирование
 остаются обычными изменениями счётчика. `magicItemActive` и адаптер неактивного
 инвентаря исключают `params.magic.lost`, включая восстановление на рассвете.
-Браузерный сценарий проверки: `npx playwright test --config playwright.weapon-charges.config.js`.
+Браузерный сценарий проверки: `npm run test:browser -- --project=ui tests/weapon-charges`.
 
 `ItemMechanicPanel` задаёт единую оболочку механик предмета: тип с иконкой и цветом,
 заголовок, краткое состояние, содержимое и ряд действий поверх `BaseTile`. Её используют

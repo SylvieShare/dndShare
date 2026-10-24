@@ -6,7 +6,7 @@ const url = '/tests/weapon-charges/feature-actions.html'
 for (const width of [390, 1280]) {
   test(`single charge preserves icon wrapping and full-width theses (${width}px)`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 })
-    await page.route('http://127.0.0.1:5176/api/**', route => route.fulfill({ json: { items: [] } }))
+    await page.route(url => url.pathname.startsWith('/api/'), route => route.fulfill({ json: { items: [] } }))
     await page.goto(url)
     await page.waitForFunction(() => !!window.fixture)
     const description = 'Длинное описание действия продолжает обтекать иконку. '.repeat(12)
@@ -41,7 +41,7 @@ for (const width of [390, 1280]) {
 
   test(`action menu covers the row, excludes charges and rolls once (${width}px)`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 })
-    await page.route('http://127.0.0.1:5176/api/**', route => route.fulfill({ json: { items: [] } }))
+    await page.route(url => url.pathname.startsWith('/api/'), route => route.fulfill({ json: { items: [] } }))
     await page.goto(url)
     const tile = page.locator('.da-block')
     await expect(tile).toHaveClass(/base-tile/)
@@ -89,7 +89,7 @@ for (const width of [390, 1280]) {
 }
 
 test('derives rolls from rich dice nodes for source and custom actions, without duplicate or invalid entries', async ({ page }) => {
-  await page.route('http://127.0.0.1:5176/api/**', route => route.fulfill({ json: { items: [] } }))
+  await page.route(url => url.pathname.startsWith('/api/'), route => route.fulfill({ json: { items: [] } }))
   await page.goto(url)
   await page.waitForFunction(() => !!window.fixture)
   const result = await page.evaluate(() => {

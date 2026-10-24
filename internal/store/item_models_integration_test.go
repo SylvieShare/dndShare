@@ -7,12 +7,15 @@ import (
 )
 
 func TestItemModelsPostgres(t *testing.T) {
-	pool := schemaTestPool(t)
-	schemaTestExec(t, pool, `CREATE SCHEMA dndshare; CREATE TABLE dndshare.item(id bigint PRIMARY KEY,user_id bigint,hidden boolean NOT NULL DEFAULT false);`)
-	schemaTestExec(t, pool, testSchemaTables(t, "map_model", "map_model_definition", "map_model_group", "map_model_transition", "item_model"))
+	pool := currentSchemaTestPool(t)
+	seedTestUsers(t, pool, 1)
+	seedTestItemTypes(t, pool, 6)
 	s := &Store{pool: pool}
 	seedMapModelsForTest(t, s)
-	schemaTestExec(t, pool, `INSERT INTO dndshare.item(id,user_id,hidden) VALUES(1635,NULL,false),(1636,NULL,false),(1637,1,false),(1638,NULL,true)`)
+	schemaTestExec(t, pool, `INSERT INTO dndshare.item(id,user_id,custom_source_id,name,type_id,data,hidden) VALUES
+ (1635,NULL,NULL,'Public',6,'{}',false),(1636,NULL,NULL,'Shared',6,'{}',false),
+ (1637,1,(SELECT id FROM dndshare.custom_item_source WHERE user_id=1 AND is_default),'Private',6,'{}',false),
+ (1638,NULL,NULL,'Hidden',6,'{}',true)`)
 	models, err := s.ListMapModels(t.Context())
 	if err != nil {
 		t.Fatal(err)

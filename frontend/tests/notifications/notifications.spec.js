@@ -1,25 +1,20 @@
 import { test, expect } from '@playwright/test'
+import { installSessionLive, emitSessionLive } from '../sessionLive.js'
+const fixtures = new WeakMap()
 import { TUTORIAL_REVISION } from '../../src/features/tutorials/lib/tutorialIdentity.js'
 
 const initialEvent = { id: 1, type: 'resource_used', action: 'Расход заряда', actorCharUuid: 'sender', actorName: 'Лиора', authorName: 'Игрок', authorUserId: 2,
   createdAt: '2026-09-14T12:00:00Z', data: { source: { name: 'Посох', instanceUid: 'staff' }, remaining: 2, delta: -1 } }
 async function prepare(page, role = 'dm') {
   page.on('pageerror', error => { throw error })
-  await page.addInitScript(() => {
-    const sources = new Set()
-    window.EventSource = class extends EventTarget {
-      constructor() { super(); sources.add(this); setTimeout(() => this.onopen?.(), 0) }
-      close() { sources.delete(this) }
-    }
-    window.emitSessionUpdate = () => sources.forEach(source => source.dispatchEvent(new MessageEvent('update', { data: JSON.stringify({ journal: true }) })))
-  })
+  await installSessionLive(page)
   const events = [structuredClone(initialEvent)], transfers = []
   const session = { uuid: 'test', name: 'Тайны долины', status: 'active', ownerUserId: role === 'dm' ? 1 : 2, systemId: 1 }
   const character = { templateName: 'DND5', userId: 1, sourceVersionId: 1, version: 1, data: { values: {
     name: 'Торин', hp: { current: 10, max: { base: 10, bonuses: [] }, hitDice: [] },
     STR: { value: 10 }, DEX: { value: 10 }, CON: { value: 10 }, INT: { value: 10 }, WIS: { value: 10 }, CHA: { value: 10 },
   }, var: { stats: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 } } } }
-  await page.route('**/api/**', async route => {
+  await page.route(url => url.pathname.startsWith('/api/'), async route => {
     const url = new URL(route.request().url()), path = url.pathname
     if (!path.startsWith('/api/')) return route.continue()
     let json = {}
@@ -37,6 +32,7 @@ async function prepare(page, role = 'dm') {
     else if (path === '/api/sources') json = { sources: [{ id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }] }] }
     await route.fulfill({ json })
   })
+  fixtures.set(page, { events, transfers, session })
   return { events, transfers }
 }
 async function open(page, path = '/sessions/test') {
@@ -44,7 +40,11 @@ async function open(page, path = '/sessions/test') {
   await expect.poll(() => page.evaluate(() => window.notificationFixture?.events.events.length)).toBe(1)
   await expect(page.locator('.app-notification')).toHaveCount(0)
 }
-const emit = page => page.evaluate(() => window.emitSessionUpdate())
+const emit = async page => {
+  const { events, session } = fixtures.get(page)
+  const projected = events.map(event => ({ ...structuredClone(event), sessionOwnerUserId: session.ownerUserId }))
+  await emitSessionLive(page, { chronicle: { events: projected, updates: [] } })
+}
 for (const mobile of [false, true]) for (const [kind, value, label] of [['crit', 20, 'Критический успех'], ['fumble', 1, 'Критический провал']]) {
   test(`critical ${kind} in session chronicle on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
     await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 })
@@ -151,6 +151,7 @@ test('incoming offer notifies even while the chronicle request fails', async ({ 
   const { events, transfers } = await prepare(page, 'player')
   await open(page, '/char/recipient')
   await page.route('**/api/sessions/test/events?**', route => route.fulfill({ status: 503, json: { desc: 'Временно недоступно' } }))
+  events.push({ ...structuredClone(initialEvent), id: 20, type: 'item_transfer', action: 'Передача: Посох', recipientUserId: 1, data: { status: 'pending', senderName: 'Лиора', recipientName: 'Торин', source: { name: 'Посох' } } })
   transfers.push({ id: 10, eventId: 20, authorUserId: 2, recipientUserId: 1, sessionOwnerUserId: 2,
     senderCharUuid: 'sender', recipientCharUuid: 'recipient', senderName: 'Лиора', recipientName: 'Торин', itemName: 'Посох', entry: { item_id: 42 }, status: 'pending' })
   await emit(page)
@@ -239,19 +240,23 @@ for (const mobile of [false, true]) test(`session inventory accepts, stores and 
     await route.fulfill({ json: { ok: true } })
   })
   await open(page)
-  await page.getByRole('button', { name: 'Инвентарь', exact: true }).click()
+  await page.getByRole('button', { name: 'Инструменты', exact: true }).press('ArrowDown')
+  await page.getByRole('menuitem', { name: 'Инвентарь', exact: true }).click()
   const inventory = page.getByRole('dialog', { name: 'Инвентарь сессии', exact: true })
   await expect(inventory).toBeVisible()
   await inventory.getByRole('button', { name: 'Принять', exact: true }).click()
   await expect(inventory.locator('.inventory-bag-item')).toContainText('Охотничий капкан')
-  await expect(inventory.locator('.inventory-bag-cell')).toHaveCount(4)
+  await expect(inventory.locator('.inventory-bag-cell')).toHaveCount(8)
+  await inventory.locator('.inventory-bag-grid').evaluate(async grid => {
+    await Promise.all(grid.getAnimations({ subtree: true }).map(animation => animation.finished.catch(() => {})))
+  })
   const bounds = await inventory.locator('.inventory-bag-grid').evaluate(grid => ({
     columns: getComputedStyle(grid).gridTemplateColumns.split(' ').length,
-    cells: [...grid.children].map(cell => ({ width: cell.getBoundingClientRect().width, height: cell.getBoundingClientRect().height })),
+    cells: [...grid.querySelectorAll(':scope > .inventory-bag-cell')].map(cell => ({ width: cell.getBoundingClientRect().width, height: cell.getBoundingClientRect().height })),
     overflow: grid.scrollWidth > grid.clientWidth,
   }))
   expect(bounds.columns).toBe(4)
-  expect(bounds.cells.every(cell => Math.abs(cell.width - cell.height) < 1)).toBe(true)
+  expect(Math.max(...bounds.cells.map(cell => Math.abs(cell.width - cell.height)))).toBeLessThan(1)
   expect(bounds.overflow).toBe(false)
   await expect(inventory.locator('.inventory-add')).toHaveCount(0)
   await inventory.getByRole('button', { name: 'Охотничий капкан', exact: true }).hover()
@@ -294,7 +299,7 @@ for (const mobile of [false, true]) test(`session inventory accepts, stores and 
   await drag(1, 3)
   await expect(cell(1).locator('.inventory-bag-item')).toHaveCount(0)
   await expect(cell(3).getByRole('button', { name: 'Охотничий капкан', exact: true })).toBeVisible()
-  await expect(inventory.locator('.inventory-bag-cell')).toHaveCount(4)
+  await expect(inventory.locator('.inventory-bag-cell')).toHaveCount(8)
   // Escape cancels a drag without submitting another mutation.
   const source = await cell(3).boundingBox(), target = await cell(2).boundingBox()
   await page.mouse.move(source.x + 20, source.y + 20)
@@ -304,7 +309,8 @@ for (const mobile of [false, true]) test(`session inventory accepts, stores and 
   await page.mouse.up()
   expect(moveRequests).toHaveLength(3)
   await inventory.getByRole('button', { name: 'Закрыть инвентарь', exact: true }).click()
-  await page.getByRole('button', { name: 'Инвентарь', exact: true }).click()
+  await page.getByRole('button', { name: 'Инструменты', exact: true }).press('ArrowDown')
+  await page.getByRole('menuitem', { name: 'Инвентарь', exact: true }).click()
   await expect(cell(3).getByRole('button', { name: 'Охотничий капкан', exact: true })).toBeVisible()
   await expect(inventory.getByRole('button', { name: 'Верёвка', exact: true })).toHaveAttribute('aria-disabled', 'false')
   await inventory.getByRole('button', { name: 'Верёвка', exact: true }).click()

@@ -13,7 +13,7 @@ async function switchTab(page, label) {
     .getByRole("navigation", { name: "Боковые вкладки редактора" })
     .getByRole("button", { name: label, exact: true })
     .evaluate(async (button) => {
-      const indicator = document.querySelector(".map-sidebar-indicator");
+      const indicator = document.querySelector(".share-icon-navigation__indicator");
       const before = indicator.getBoundingClientRect().y;
       const target = button.getBoundingClientRect().y;
       const outgoing = document.querySelector(".map-sidebar-content");
@@ -164,23 +164,34 @@ for (const reduced of [false, true])
     const tab = await switchTab(page, "Существа");
     expect(tab.animated).toBe(!reduced);
     const roster = page.getByRole("region", { name: "Существа сессии" });
-    await roster.getByRole("button", { name: "Лира", exact: true }).click();
+    await roster.getByRole("button", { name: "Лира", exact: true }).press("Enter");
+    await page.getByRole("menuitem", { name: "Выбрать на карте", exact: true }).click();
     const panel = page.getByRole("complementary", {
       name: "Выбранные элементы",
     });
     await expect(
       panel.getByRole("heading", { name: "Лира", exact: true }),
     ).toBeVisible();
-    const animated = await roster
-      .getByRole("button", { name: "A · Огр", exact: true })
+    await roster.getByRole("button", { name: "A · Огр", exact: true }).press("Enter");
+    const animated = await page
+      .getByRole("menu", { name: "Огр", exact: true })
+      .getByRole("menuitem", { name: "Выбрать на карте", exact: true })
       .evaluate(async (button) => {
+        let animated = false;
+        const panel = document.querySelector('.map-selection-panel');
+        const observer = new MutationObserver(() => {
+          animated ||= [...panel.querySelectorAll('[inert]')].some(node =>
+            node.getAnimations().some(animation => animation.transitionProperty === 'opacity'));
+        });
+        observer.observe(panel, { attributes: true, childList: true, subtree: true });
         button.click();
         for (let i = 0; i < 3; i++) await new Promise(requestAnimationFrame);
-        return !!document.querySelector(".workspace-focus-swap-leave-active[inert]");
+        observer.disconnect();
+        return animated;
       });
     expect(animated).toBe(!reduced);
     await expect(
-      panel.getByRole("heading", { name: "A · Огр", exact: true }),
+      panel.getByRole("heading", { name: "Огр", exact: true }),
     ).toBeVisible();
     if (reduced)
       expect(

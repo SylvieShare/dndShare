@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
-import { createSSRApp, h } from 'vue'
-import { renderToString } from 'vue/server-renderer'
+import { h } from 'vue'
+import { renderComponent } from '../../../../tests/unit/renderComponent'
 import { createPinia } from 'pinia'
 import AbilityEditor from './AbilityEditor.vue'
 import DamageRollOptions from '@/features/character-editor/blocks/dnd/components/DamageRollOptions.vue'
@@ -10,10 +10,9 @@ vi.mock('@/shared/ui/InputDescription.vue', () => ({ default: { render: () => h(
 vi.mock('@/shared/api/http', () => ({ fetchGet: vi.fn().mockResolvedValue({ references: [], items: [], types: [] }), fetchPut: vi.fn(), fetchPost: vi.fn(), fetchDelete: vi.fn() }))
 
 async function form(data) {
-  const app = createSSRApp({ render: () => h(AbilityEditor, { fields: schema.filter(field => Object.keys(data).includes(field.key)), data, typeId: 4 }) })
-  app.use(createPinia())
-  app.provide(itemFieldEditorKey, { itemData: data, itemName: 'Способность', zIndex: 4500, getSuggests: () => [], getSuggestId: field => field.suggest_id, itemRefLabel: id => `Эффект ${id}` })
-  return renderToString(app)
+  return renderComponent(AbilityEditor, { fields: schema.filter(field => Object.keys(data).includes(field.key)), data, typeId: 4 }, {
+    plugins: [createPinia()], provide: [[itemFieldEditorKey, { itemData: data, itemName: 'Способность', zIndex: 4500, getSuggests: () => [], getSuggestId: field => field.suggest_id, itemRefLabel: id => `Эффект ${id}` }]],
+  })
 }
 
 describe('ability mechanic composition', () => {
@@ -39,8 +38,7 @@ describe('ability mechanic composition', () => {
     expect(html).not.toContain('Свои подписи переключателя')
   })
   it('offers independent choices and a single roll without enumerating their combinations', async () => {
-    const app = createSSRApp({ render: () => h(DamageRollOptions, { versatile: true, actions: [{ key: 'sneak', label: 'Скрытая атака', dice: 'd6', dice_count: 3 }] }) })
-    const html = await renderToString(app)
+    const html = await renderComponent(DamageRollOptions, { versatile: true, actions: [{ key: 'sneak', label: 'Скрытая атака', dice: 'd6', dice_count: 3 }] })
     expect(html).toContain('Критическое попадание')
     expect(html).toContain('Двумя руками')
     expect(html).toContain('Скрытая атака')

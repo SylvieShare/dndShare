@@ -1,30 +1,13 @@
 package store
 
 import (
-	"os"
-	"strings"
+	"dndshare/internal/testdb"
 	"testing"
-
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func TestInventoryIconPresetsPostgres(t *testing.T) {
-	dsn := os.Getenv("DNDSHARE_ICON_PRESET_TEST_DSN")
-	if dsn == "" {
-		t.Skip("requires disposable local dndshare_test_* database")
-	}
-	cfg, err := pgxpool.ParseConfig(dsn)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if cfg.ConnConfig.Host != "127.0.0.1" || !strings.HasPrefix(cfg.ConnConfig.Database, "dndshare_test_") {
-		t.Fatal("requires disposable local database")
-	}
-	pool, err := pgxpool.NewWithConfig(t.Context(), cfg)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer pool.Close()
+	pool := testdb.Pool(t)
+	var err error
 	exec := func(sql string) {
 		t.Helper()
 		if _, err := pool.Exec(t.Context(), sql); err != nil {

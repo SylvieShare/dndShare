@@ -49,7 +49,7 @@ test("fading instanced tiles and multipart objects never expose their inner tria
   expect(errors).toEqual([]);
 });
 
-test("MT1-016 has a visible flash on its textured body while its own light fades", async ({
+test("MT1-016 has a visible flash on its textured body while its own light fades", { tag: "@local-model" }, async ({
   page,
 }) => {
   const model = path.resolve(
@@ -70,7 +70,7 @@ test("MT1-016 has a visible flash on its textured body while its own light fades
   expect(errors).toEqual([]);
 });
 
-test("real MT1-037 fades only the visible surface instead of its dark mounting geometry", async ({
+test("real MT1-037 fades only the visible surface instead of its dark mounting geometry", { tag: "@local-model" }, async ({
   page,
 }) => {
   const model = path.resolve(

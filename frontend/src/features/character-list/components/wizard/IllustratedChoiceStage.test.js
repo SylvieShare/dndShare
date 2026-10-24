@@ -1,26 +1,32 @@
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
-import { describe, expect, it } from 'vitest'
+import { h } from 'vue'
+import { renderComponent } from '../../../../../tests/unit/renderComponent'
+import { expect, it } from 'vitest'
+import IllustratedChoiceStage from './IllustratedChoiceStage.vue'
 
-const source = readFileSync(fileURLToPath(new URL('./IllustratedChoiceStage.vue', import.meta.url)), 'utf8')
+async function render(props) {
+  return renderComponent(IllustratedChoiceStage, props, { slots: {
+    cards: () => h('article', 'Выбор из справочника'),
+    details: () => h('section', 'Данные выбранного варианта'),
+  } })
+}
 
-describe('illustrated choice stage', () => {
-  it('keeps the back action next to the step heading and outside the cover', () => {
-    expect(source).toContain('class="illustrated-choice-stage"')
-    expect(source).toContain('class="illustrated-choice-back"')
-    expect(source).toContain('class="illustrated-choice-heading"')
-    expect(source.indexOf('class="illustrated-choice-back"')).toBeLessThan(source.indexOf('class="illustrated-choice-stage"'))
-    expect(source).not.toContain('top: 10px; left: 10px')
-  })
+it.each(['Раса', 'Класс', 'Предыстория'])('%s shows cards before selection and details with a back action afterwards', async title => {
+  const initial = await render({ title, selected: false, twoColumn: true })
+  expect(initial).toContain(title)
+  expect(initial).toContain('Выбор из справочника')
+  expect(initial).not.toContain('Данные выбранного варианта')
+  expect(initial).toContain('illustrated-choice-list--two-column')
+  const selected = await render({ title, selected: true, selectionKey: 7, backText: 'К выбору', twoColumn: true })
+  expect(selected).toContain('Данные выбранного варианта')
+  expect(selected).toContain('К выбору')
+  expect(selected).not.toContain('illustrated-choice-list--two-column')
+})
 
-  it('owns shared selection motion and scroll restoration', () => {
-    expect(source).toContain('name="illustrated-list"')
-    expect(source).toContain("scroller.scrollTo({ top: scrollTop, behavior: 'auto' })")
-  })
-
-  it('supports a responsive two-column catalogue that collapses after selection', () => {
-    expect(source).toContain("'illustrated-choice-list--two-column': twoColumn && !selected")
-    expect(source).toContain('.illustrated-choice-list--two-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }')
-    expect(source).toContain('@media (max-width: 700px)')
-  })
+it.each(['Раса', 'Класс', 'Предыстория'])('%s distinguishes loading from an empty catalogue', async title => {
+  const loading = await render({ title, loading: true, loadingText: 'Запрашиваем данные' })
+  expect(loading).toContain('Запрашиваем данные')
+  expect(loading).not.toContain('Выбор из справочника')
+  const empty = await render({ title, empty: true, emptyText: 'Нет вариантов для этой редакции' })
+  expect(empty).toContain('Нет вариантов для этой редакции')
+  expect(empty).not.toContain('Выбор из справочника')
 })

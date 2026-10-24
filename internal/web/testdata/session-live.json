@@ -1,0 +1,9 @@
+{
+  "initial": {
+    "roster": {"fromSequence": 0, "sequence": 1, "data": [{"charId": 7, "data": {"values": {"hp": {"current": 10}}}}], "patches": []},
+    "chronicle": {"baseline": [{"sessionOwnerUserId": 1, "id": 1, "authorName": "Player", "authorUserId": 2, "authorIsSessionOwner": false, "type": "hp_changed", "action": "HP: 10", "data": {"current": 10}, "visibility": "public", "createdAt": "2026-10-24T12:00:00Z"}], "updates": [], "events": []}
+  },
+  "delta": {
+    "chronicle": {"updates": [], "events": [{"sessionOwnerUserId": 1, "id": 2, "authorName": "Player", "authorUserId": 2, "authorIsSessionOwner": false, "type": "hp_changed", "action": "HP: 9", "data": {"current": 9}, "visibility": "public", "createdAt": "2026-10-24T12:01:00Z"}]}
+  }
+}

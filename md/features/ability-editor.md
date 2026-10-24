@@ -102,7 +102,7 @@ Picker добавляет ссылки из несохранённого чер�
 
 Регрессии: frontend-тесты генерации ключа, карточек, формы и runtime действий;
 `TestItemRuleReferences` проверяет SQL на отдельной локальной PostgreSQL
-(`DNDSHARE_RULE_REFERENCE_TEST_DSN`, база `dndshare_test_*`), включая права,
+(`DNDSHARE_TEST_DSN`, база `dndshare_test_*`), включая права,
 пагинацию и актуальность результатов после изменения предмета.
 
 ## Формы механик

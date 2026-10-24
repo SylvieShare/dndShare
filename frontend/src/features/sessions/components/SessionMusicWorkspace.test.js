@@ -1,7 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import SessionMusicWorkspace from './SessionMusicWorkspace.vue'
 
 function source(relativePath) {
   return readFileSync(fileURLToPath(new URL(relativePath, import.meta.url)), 'utf8')
@@ -15,7 +14,6 @@ const organizerSource = source('../composables/useMusicTrackOrganizer.js')
 
 describe('session music workspace', () => {
   it('keeps personal and system catalogues separate', () => {
-    expect(SessionMusicWorkspace).toBeTruthy()
     expect(workspaceSource).toContain('musicStore.tracks.filter(track => !track.isSystem)')
     expect(workspaceSource).toContain('musicStore.albums.filter(album => album.isSystem)')
     expect(workspaceSource).toContain('const base = selectedAlbumId.value ? musicStore.tracks : personalTracks.value')

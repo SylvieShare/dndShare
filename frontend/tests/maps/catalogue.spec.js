@@ -231,7 +231,6 @@ test("pack selection lives on the left, supports keyboard and stays available wh
   await expect(page.getByRole("listbox", { name: "Паки тайлов" })).toHaveCount(
     0,
   );
-  await page.getByRole("button", { name: "Плитки", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Пол 1", exact: true }),
   ).toBeVisible();

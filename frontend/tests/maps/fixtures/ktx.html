@@ -30,8 +30,10 @@
         gltf.scene.traverse((node) => {
           if (!node.isMesh) return;
           triangles += node.geometry.index.count / 3;
-          for (const value of Object.values(node.material))
-            if (value?.isTexture) textures.add(value);
+          const materials = Array.isArray(node.material) ? node.material : [node.material];
+          for (const material of materials)
+            for (const value of Object.values(material))
+              if (value?.isTexture) textures.add(value);
         });
         return {
           triangles,

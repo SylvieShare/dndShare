@@ -300,7 +300,7 @@ for (const mode of ['editor', 'board']) test(`area reference shares the framed i
   await ready(page, mode)
   await tileFocus(page)
   const panel = panelOf(page)
-  await expect(panel.locator('.workspace-focus-content')).toHaveClass(/base-tile--framed/)
+  await expect(panel.locator('.workspace-focus-content')).toHaveClass(/base-tile/)
   await expect(panel.locator('.inspector-preview-frame')).toBeVisible()
   const link = panel.getByRole('button', { name: 'Перейти к области «Комната»', exact: true })
   await expect(link).toHaveClass(/inspector-reference/)

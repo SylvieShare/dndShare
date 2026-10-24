@@ -7,11 +7,16 @@ export function useMapEditorKeys(
   blocked,
   readonly = () => false,
 ) {
+  function hasBlockingLayer() {
+    return [...document.querySelectorAll('[role="dialog"], [role="menu"]')].some(node =>
+      !node.closest('[inert], [aria-hidden="true"]') && node.getClientRects().length > 0 &&
+      getComputedStyle(node).pointerEvents !== 'none')
+  }
   function keydown(event) {
     if (
       event.defaultPrevented ||
       blocked() ||
-      document.querySelector('[role="dialog"], [role="menu"]')
+      hasBlockingLayer()
     )
       return;
     if (event.key === "Escape") {

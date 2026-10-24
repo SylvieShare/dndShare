@@ -2,34 +2,16 @@ package store
 
 import (
 	"context"
+	"dndshare/internal/testdb"
 	"errors"
-	"os"
 	"strings"
 	"testing"
-
-	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func TestSessionDisplayCodesAndLookup(t *testing.T) {
-	dsn := os.Getenv("DNDSHARE_DISPLAY_TEST_DSN")
-	if dsn == "" {
-		t.Skip("set DNDSHARE_DISPLAY_TEST_DSN to a disposable local dndshare_test_* database")
-	}
-	cfg, err := pgxpool.ParseConfig(dsn)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !strings.HasPrefix(cfg.ConnConfig.Database, "dndshare_test_") || cfg.ConnConfig.Host != "127.0.0.1" {
-		t.Fatal("requires a disposable local test database")
-	}
-	cfg.ConnConfig.DefaultQueryExecMode = pgx.QueryExecModeSimpleProtocol
+	pool := testdb.Pool(t)
 	ctx := context.Background()
-	pool, err := pgxpool.NewWithConfig(ctx, cfg)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer pool.Close()
+	var err error
 	exec := func(sql string) {
 		t.Helper()
 		if _, err := pool.Exec(ctx, sql); err != nil {

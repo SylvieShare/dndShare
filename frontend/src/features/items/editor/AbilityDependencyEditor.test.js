@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
-import { createSSRApp, h } from 'vue'
-import { renderToString } from 'vue/server-renderer'
+import { h } from 'vue'
+import { renderComponent } from '../../../../tests/unit/renderComponent'
 import { createPinia } from 'pinia'
 import AbilityEditor from './AbilityEditor.vue'
 import { choiceFilterFields } from './choiceFilterFields'
@@ -11,10 +11,9 @@ import schema from '../../../../../resources/items/item_4_shema.json'
 vi.mock('@/shared/ui/InputDescription.vue', () => ({ default: { render: () => h('textarea') } }))
 vi.mock('@/shared/api/http', () => ({ fetchGet: vi.fn().mockResolvedValue({ references: [], items: [], types: [] }) }))
 async function render(data) {
-  const app = createSSRApp({ render: () => h(AbilityEditor, { data, typeId: 4, fields: schema.filter(f => Object.keys(data).includes(f.key)) }) })
-  app.use(createPinia())
-  app.provide(itemFieldEditorKey, { itemData: data, getSuggests: () => [], getSuggestId: f => f.suggest_id, itemRefLabel: id => `Предмет ${id}` })
-  return renderToString(app)
+  return renderComponent(AbilityEditor, { data, typeId: 4, fields: schema.filter(f => Object.keys(data).includes(f.key)) }, {
+    plugins: [createPinia()], provide: [[itemFieldEditorKey, { itemData: data, getSuggests: () => [], getSuggestId: f => f.suggest_id, itemRefLabel: id => `Предмет ${id}` }]],
+  })
 }
 describe('dependency authoring', () => {
   it('offers nested class references as named filters without exposing JSON paths to the author', () => {

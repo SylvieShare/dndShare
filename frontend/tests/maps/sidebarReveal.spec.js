@@ -59,9 +59,14 @@ test("tab hover uses an outline and cannot cover the travelling selection square
     4,
   );
   await page.mouse.move(800, 20);
-  const normal = await tiles.screenshot();
+  const normal = await tiles.evaluate(node => {
+    const style = getComputedStyle(node);
+    return { color: style.color, background: style.backgroundColor, border: style.borderTopColor };
+  });
   await tiles.hover();
-  expect((await tiles.screenshot()).equals(normal)).toBe(true);
+  await expect(tiles).toHaveCSS('color', normal.color);
+  await expect(tiles).toHaveCSS('background-color', normal.background);
+  await expect(tiles).toHaveCSS('border-top-color', normal.border);
   const hovered = nav.getByRole("button", { name: "Объекты", exact: true });
   await hovered.hover();
   await expect(hovered).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");

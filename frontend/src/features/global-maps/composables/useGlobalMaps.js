@@ -7,7 +7,9 @@ import { prepareImageUpload, IMAGE_UPLOAD_MAX_BYTES } from '@/shared/lib/imageUp
 
 export function useGlobalMaps(uuid) {
   const maps = ref([]), selectedId = ref(''), loading = ref(true), saving = ref(false)
-  const busy = ref(false), editing = ref(false), error = ref(''), conflict = ref(false)
+  const busy = ref(false), editing = ref(false), error = ref(''), readError = ref(''), conflict = ref(false)
+  // A background read can recover its own error without hiding a failed upload.
+  const visibleError = computed({ get: () => error.value || readError.value, set: value => { error.value = value } })
   const selected = computed(() => maps.value.find(map => map.id === selectedId.value))
   const pending = new Set(), versions = new Map()
   const pendingCount = ref(0)
@@ -23,8 +25,9 @@ export function useGlobalMaps(uuid) {
       maps.value = result.maps
       if (!maps.value.some(map => map.id === selectedId.value)) selectedId.value = maps.value.find(map => map.current)?.id || maps.value[0]?.id || ''
       if (force) { pending.clear(); pendingCount.value = 0; conflict.value = false; clearTimeout(timer) }
-      error.value = ''
-    } catch (cause) { error.value = cause.message; throw cause }
+      readError.value = ''
+      if (force) error.value = ''
+    } catch (cause) { readError.value = cause.message; throw cause }
     finally { loading.value = false }
   }
   const { connected } = useMapSync(`/api/sessions/${uuid}/global-map-events`, load)
@@ -119,5 +122,5 @@ export function useGlobalMaps(uuid) {
   function unload(event) { if (hasPending()) { event.preventDefault(); event.returnValue = '' } }
   window.addEventListener('beforeunload', unload)
   onBeforeUnmount(() => { stopped = true; clearTimeout(timer); window.removeEventListener('beforeunload', unload) })
-  return { maps, selectedId, selected, loading, saving, busy, editing, error, conflict, connected, hasPending, load, change, persist, flush, upload, activate, remove, rename }
+  return { maps, selectedId, selected, loading, saving, busy, editing, error: visibleError, conflict, connected, hasPending, load, change, persist, flush, upload, activate, remove, rename }
 }

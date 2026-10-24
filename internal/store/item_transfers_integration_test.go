@@ -2,92 +2,23 @@ package store
 
 import (
 	"context"
+	"dndshare/internal/testdb"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"strings"
 	"sync"
 	"testing"
-
-	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func TestItemTransfersPostgres(t *testing.T) {
-	dsn := os.Getenv("DNDSHARE_TRANSFER_TEST_DSN")
-	if dsn == "" {
-		t.Skip("set DNDSHARE_TRANSFER_TEST_DSN to a disposable local dndshare_test_* database")
-	}
-	cfg, err := pgxpool.ParseConfig(dsn)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if cfg.ConnConfig.Host != "127.0.0.1" || !strings.HasPrefix(cfg.ConnConfig.Database, "dndshare_test_") {
-		t.Fatal("requires disposable local database")
-	}
-	cfg.ConnConfig.DefaultQueryExecMode = pgx.QueryExecModeSimpleProtocol
+	f := newTransferFixture(t)
+	s, pool := f.store, f.pool
 	ctx := context.Background()
-	pool, err := pgxpool.NewWithConfig(ctx, cfg)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer pool.Close()
-	exec := func(sql string) {
-		t.Helper()
-		if _, err := pool.Exec(ctx, sql); err != nil {
-			t.Fatal(err)
-		}
-	}
-	exec(`CREATE SCHEMA dndshare;
- CREATE TABLE dndshare.users(id bigint PRIMARY KEY,login text);
- CREATE TABLE dndshare.source_version(id bigint PRIMARY KEY,version text);
- INSERT INTO dndshare.source_version VALUES(1,'2014');
- CREATE TABLE dndshare.storage_image(id bigint PRIMARY KEY,url text,deleted bool DEFAULT false);
- CREATE TABLE dndshare.svg_storage(id bigint PRIMARY KEY,data text);
- CREATE TABLE dndshare.item_type(id bigint PRIMARY KEY,fields jsonb DEFAULT '[]');
- CREATE TABLE dndshare.item(id bigint PRIMARY KEY,name text,user_id bigint,type_id bigint,data jsonb DEFAULT '{}',icon_image_id bigint,cover_image_id bigint,icon_svg_id bigint);
- CREATE TABLE dndshare."session"(id bigint PRIMARY KEY,uuid uuid DEFAULT gen_random_uuid(),owner_user_id bigint,settings jsonb DEFAULT '{}',deleted bool DEFAULT false);
- CREATE TABLE dndshare."char"(id bigint PRIMARY KEY,uuid uuid DEFAULT gen_random_uuid(),user_id bigint,template_id bigint,icon_image_id bigint,source_version_id bigint DEFAULT 1,
- data jsonb DEFAULT '{"values":{}}',version bigint DEFAULT 1,changed_at timestamptz DEFAULT now(),deleted bool DEFAULT false);
- CREATE TABLE dndshare.session_encounter(id bigserial PRIMARY KEY,session_id bigint,revision bigint NOT NULL DEFAULT 1,data jsonb,status text,round int,changed_at timestamptz DEFAULT now(),deleted bool DEFAULT false);
- CREATE TABLE dndshare.session_participant(session_id bigint,char_id bigint PRIMARY KEY,user_id bigint);
- CREATE TABLE dndshare.session_event(id bigserial PRIMARY KEY,session_id bigint,author_user_id bigint,actor_char_id bigint,actor_item_id bigint,
- actor_name text,event_type text,action text,data jsonb,visibility text,created_at timestamptz DEFAULT now(),deleted bool DEFAULT false,client_action_id uuid);
- CREATE UNIQUE INDEX event_action ON dndshare.session_event(session_id,client_action_id) WHERE client_action_id IS NOT NULL;
- INSERT INTO dndshare.users VALUES(1,'Sender'),(2,'Recipient'),(3,'Outsider');
- INSERT INTO dndshare.item(id,name) VALUES(30,'Посох');
- INSERT INTO dndshare."session"(id,owner_user_id) VALUES(1,3),(2,3);
- INSERT INTO dndshare."char"(id,user_id,data) VALUES
- (1,1,'{"values":{"name":"Лиора","items":{"equipped":[{"uid":"staff","item_id":30,"count":1,"params":{"magic":{"attuned":true,"remaining":2,"bonus_transfer":2,"use_cooldowns":{"wish":3}}}}],"sections":[{"id":"bag","name":"Рюкзак","items":[{"uid":"potion","item_id":null,"count":3,"override":{"name":"Зелье","desc":"Особое"},"params":{"custom":7}}]}]}}}'),
- (2,2,'{"values":{"name":"Торин","hp":{"current":10}}}'),(3,3,'{"values":{"name":"Чужой"}}');
- INSERT INTO dndshare.session_participant VALUES(1,1,1),(1,2,2),(2,3,3);`)
-	defer exec(`DROP SCHEMA dndshare CASCADE`)
-	exec(testSchemaTables(t, "character_change", "item_transfer", "session_interaction", "item_application", "character_concentration", "concentration_effect", "spell_cast_receipt", "session_karmic_scale", "session_d20_roll", "session_inventory"))
-	exec(testSchemaTriggers(t, "guard_pending_item_transfers"))
-	exec(testSchemaTriggers(t, "bump_session_encounter_revision"))
-	if _, err := pool.Exec(ctx, `UPDATE dndshare.session SET settings=$1::jsonb`, testSessionSettingsJSON(t)); err != nil {
-		t.Fatal(err)
-	}
-	t.Run("rps constraints", func(t *testing.T) { testRPSInvitationConstraints(t, pool) })
-	exec(`INSERT INTO dndshare.item_type(id,fields) VALUES(10,'[]'),(2,'[]'),(5,'[]'),(15,'[]');
- INSERT INTO dndshare.item(id,name,type_id,data) VALUES(90010,'Зелье',10,'{"usable":{"healing":"2d4+2","choices":[{"key":"first"}],"status_effects":[{"key":"effect","effect":{"id":30}}]}}');`)
-	for _, typeID := range []int{2, 5, 10, 15} {
-		fields := testItemFields(t, typeID)
-		if _, err := pool.Exec(ctx, `UPDATE dndshare.item_type SET fields=$2::jsonb WHERE id=$1`, typeID, fields); err != nil {
-			t.Fatal(err)
-		}
-	}
-	exec(`INSERT INTO dndshare.storage_image(id,url) VALUES(1,'/sender.png'),(2,'/recipient.png');
- UPDATE dndshare."char" SET icon_image_id=id WHERE id IN (1,2);`)
-	s := &Store{pool: pool}
-	t.Run("document history", func(t *testing.T) { testCharacterDocumentHistory(t, s) })
+	exec := f.exec
+	var err error
 
-	t.Run("session impacts", func(t *testing.T) { testSessionImpacts(t, s, pool) })
-	t.Run("session saves", func(t *testing.T) { testSessionSaves(t, s, pool) })
-	t.Run("session attack targets", func(t *testing.T) { testSessionAttackTargets(t, s, pool) })
-
-	t.Run("application targets", func(t *testing.T) { testApplicationTargets(t, s, pool) })
 	current := func(id int64) transferCharacter {
 		t.Helper()
 		var c transferCharacter
@@ -264,7 +195,6 @@ func TestItemTransfersPostgres(t *testing.T) {
 	if _, err = s.ApproveSessionTransfer(ctx, 3, 1, roll.ID); !errors.Is(err, ErrNotFound) {
 		t.Fatalf("ordinary event approved: %v", err)
 	}
-	testPotionUseRequests(t, s, exec, current)
 	offer, err := s.CreateItemTransfer(ctx, 1, 1, 1, 2, current(1).Version, "items", "potion", "00000000-0000-4000-8000-000000000010")
 	if err != nil {
 		t.Fatal(err)
@@ -283,19 +213,112 @@ func TestItemTransfersPostgres(t *testing.T) {
 	if !delivered {
 		t.Fatal("DM approval did not deliver potion stack")
 	}
-	t.Run("money transfers", func(t *testing.T) { testMoneyTransfersPostgres(t, s) })
-	t.Run("player interactions", func(t *testing.T) { testSessionInteractionsPostgres(t, s) })
-	testPotionApplications(t, s, exec, current)
-	testUsableApplications(t, s, exec, current)
-	testSpellItemCreation(t, s, exec, current)
-	t.Run("session inventory", func(t *testing.T) { testSessionInventory(t, s, pool) })
-	t.Run("inventory grid", func(t *testing.T) { testSessionInventoryGrid(t, s) })
 	exec(`DELETE FROM dndshare.session_participant WHERE char_id=1`)
 	if pending, err := s.PendingItemTransfers(ctx, 2); err != nil || len(pending) != 0 {
 		t.Fatalf("resolved pending list: %+v %v", pending, err)
 	}
-	t.Run("prepared initiative", func(t *testing.T) { testPreparedInitiative(t, s, pool) })
-	t.Run("chronicle targets", func(t *testing.T) { testChronicleTargets(t, s, pool) })
-	t.Run("roll sequences", func(t *testing.T) { testSessionSequences(t, s, pool) })
 
+}
+
+type transferFixture struct {
+	store *Store
+	pool  *pgxpool.Pool
+	exec  func(string)
+}
+
+func newTransferFixture(t *testing.T) transferFixture {
+	t.Helper()
+	pool := testdb.Pool(t)
+	ctx := context.Background()
+	exec := func(sql string) {
+		t.Helper()
+		if _, err := pool.Exec(ctx, sql); err != nil {
+			t.Fatal(err)
+		}
+	}
+	exec(`CREATE SCHEMA dndshare;
+ CREATE TABLE dndshare.users(id bigint PRIMARY KEY,login text);
+ CREATE TABLE dndshare.source_version(id bigint PRIMARY KEY,version text);
+ INSERT INTO dndshare.source_version VALUES(1,'2014');
+ CREATE TABLE dndshare.storage_image(id bigint PRIMARY KEY,url text,deleted bool DEFAULT false);
+ CREATE TABLE dndshare.svg_storage(id bigint PRIMARY KEY,data text);
+ CREATE TABLE dndshare.item_type(id bigint PRIMARY KEY,fields jsonb DEFAULT '[]');
+ CREATE TABLE dndshare.item(id bigint PRIMARY KEY,name text,user_id bigint,type_id bigint,data jsonb DEFAULT '{}',icon_image_id bigint,cover_image_id bigint,icon_svg_id bigint);
+ CREATE TABLE dndshare."session"(id bigint PRIMARY KEY,uuid uuid DEFAULT gen_random_uuid(),owner_user_id bigint,settings jsonb DEFAULT '{}',deleted bool DEFAULT false);
+ CREATE TABLE dndshare."char"(id bigint PRIMARY KEY,uuid uuid DEFAULT gen_random_uuid(),user_id bigint,template_id bigint,icon_image_id bigint,source_version_id bigint DEFAULT 1,
+ data jsonb DEFAULT '{"values":{}}',version bigint DEFAULT 1,changed_at timestamptz DEFAULT now(),deleted bool DEFAULT false);
+ CREATE TABLE dndshare.session_encounter(id bigserial PRIMARY KEY,session_id bigint,revision bigint NOT NULL DEFAULT 1,data jsonb,status text,round int,changed_at timestamptz DEFAULT now(),deleted bool DEFAULT false);
+ CREATE TABLE dndshare.session_participant(session_id bigint,char_id bigint PRIMARY KEY,user_id bigint);
+ CREATE TABLE dndshare.session_event(id bigserial PRIMARY KEY,session_id bigint,author_user_id bigint,actor_char_id bigint,actor_item_id bigint,
+ actor_name text,event_type text,action text,data jsonb,visibility text,created_at timestamptz DEFAULT now(),deleted bool DEFAULT false,client_action_id uuid);
+ CREATE UNIQUE INDEX event_action ON dndshare.session_event(session_id,client_action_id) WHERE client_action_id IS NOT NULL;
+ INSERT INTO dndshare.users VALUES(1,'Sender'),(2,'Recipient'),(3,'Outsider');
+ INSERT INTO dndshare.item(id,name) VALUES(30,'Посох');
+ INSERT INTO dndshare."session"(id,owner_user_id) VALUES(1,3),(2,3);
+ INSERT INTO dndshare."char"(id,user_id,data) VALUES
+ (1,1,'{"values":{"name":"Лиора","items":{"equipped":[{"uid":"staff","item_id":30,"count":1,"params":{"magic":{"attuned":true,"remaining":2,"bonus_transfer":2,"use_cooldowns":{"wish":3}}}}],"sections":[{"id":"bag","name":"Рюкзак","items":[{"uid":"potion","item_id":null,"count":3,"override":{"name":"Зелье","desc":"Особое"},"params":{"custom":7}}]}]}}}'),
+ (2,2,'{"values":{"name":"Торин","hp":{"current":10}}}'),(3,3,'{"values":{"name":"Чужой"}}');
+ INSERT INTO dndshare.session_participant VALUES(1,1,1),(1,2,2),(2,3,3);`)
+	exec(testSchemaTables(t, "character_change", "item_transfer", "session_interaction", "item_application", "character_concentration", "concentration_effect", "spell_cast_receipt", "session_karmic_scale", "session_d20_roll", "session_inventory"))
+	exec(testSchemaTriggers(t, "guard_pending_item_transfers"))
+	exec(testSchemaTriggers(t, "bump_session_encounter_revision"))
+	if _, err := pool.Exec(ctx, `UPDATE dndshare.session SET settings=$1::jsonb`, testSessionSettingsJSON(t)); err != nil {
+		t.Fatal(err)
+	}
+	exec(`INSERT INTO dndshare.item_type(id,fields) VALUES(10,'[]'),(2,'[]'),(5,'[]'),(15,'[]');
+ INSERT INTO dndshare.item(id,name,type_id,data) VALUES(90010,'Зелье',10,'{"usable":{"healing":"2d4+2","choices":[{"key":"first"}],"status_effects":[{"key":"effect","effect":{"id":30}}]}}');`)
+	for _, typeID := range []int{2, 5, 10, 15} {
+		fields := testItemFields(t, typeID)
+		if _, err := pool.Exec(ctx, `UPDATE dndshare.item_type SET fields=$2::jsonb WHERE id=$1`, typeID, fields); err != nil {
+			t.Fatal(err)
+		}
+	}
+	exec(`INSERT INTO dndshare.storage_image(id,url) VALUES(1,'/sender.png'),(2,'/recipient.png');
+ UPDATE dndshare."char" SET icon_image_id=id WHERE id IN (1,2);`)
+
+	return transferFixture{store: &Store{pool: pool}, pool: pool, exec: exec}
+}
+
+func (f transferFixture) current(t *testing.T, id int64) transferCharacter {
+	t.Helper()
+	var result transferCharacter
+	if err := f.pool.QueryRow(t.Context(), `SELECT id,user_id,version,data FROM dndshare."char" WHERE id=$1`, id).Scan(&result.ID, &result.UserID, &result.Version, &result.Data); err != nil {
+		t.Fatal(err)
+	}
+	return result
+}
+
+func TestCharacterSessionPersistencePostgres(t *testing.T) {
+	for _, scenario := range []struct {
+		name string
+		run  func(*testing.T, transferFixture)
+	}{
+		{"rps constraints", func(t *testing.T, f transferFixture) { testRPSInvitationConstraints(t, f.pool) }},
+		{"document history", func(t *testing.T, f transferFixture) { testCharacterDocumentHistory(t, f.store) }},
+		{"session impacts", func(t *testing.T, f transferFixture) { testSessionImpacts(t, f.store, f.pool) }},
+		{"session saves", func(t *testing.T, f transferFixture) { testSessionSaves(t, f.store, f.pool) }},
+		{"session attack targets", func(t *testing.T, f transferFixture) { testSessionAttackTargets(t, f.store, f.pool) }},
+		{"application targets", func(t *testing.T, f transferFixture) { testApplicationTargets(t, f.store, f.pool) }},
+		{"money transfers", func(t *testing.T, f transferFixture) { testMoneyTransfersPostgres(t, f.store) }},
+		{"player interactions", func(t *testing.T, f transferFixture) { testSessionInteractionsPostgres(t, f.store) }},
+		{"potion requests", func(t *testing.T, f transferFixture) {
+			testPotionUseRequests(t, f.store, f.exec, func(id int64) transferCharacter { return f.current(t, id) })
+		}},
+		{"potion applications", func(t *testing.T, f transferFixture) {
+			testPotionApplications(t, f.store, f.exec, func(id int64) transferCharacter { return f.current(t, id) })
+		}},
+		{"usable applications", func(t *testing.T, f transferFixture) {
+			testUsableApplications(t, f.store, f.exec, func(id int64) transferCharacter { return f.current(t, id) })
+		}},
+		{"spell item creation", func(t *testing.T, f transferFixture) {
+			testSpellItemCreation(t, f.store, f.exec, func(id int64) transferCharacter { return f.current(t, id) })
+		}},
+		{"session inventory", func(t *testing.T, f transferFixture) { testSessionInventory(t, f.store, f.pool) }},
+		{"inventory grid", func(t *testing.T, f transferFixture) { testSessionInventoryGrid(t, f.store) }},
+		{"prepared initiative", func(t *testing.T, f transferFixture) { testPreparedInitiative(t, f.store, f.pool) }},
+		{"chronicle targets", func(t *testing.T, f transferFixture) { testChronicleTargets(t, f.store, f.pool) }},
+		{"roll sequences", func(t *testing.T, f transferFixture) { testSessionSequences(t, f.store, f.pool) }},
+	} {
+		t.Run(scenario.name, func(t *testing.T) { scenario.run(t, newTransferFixture(t)) })
+	}
 }

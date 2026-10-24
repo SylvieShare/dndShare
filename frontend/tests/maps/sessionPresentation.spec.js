@@ -38,7 +38,7 @@ for (const mobile of [false, true]) {
         .poll(
           async () => (await page.locator(".map-sidebar").boundingBox()).width,
         )
-        .toBe(mobile ? 330 : 334);
+        .toBe(mobile ? 330 : 350);
       styles.push(
         await page.locator(".map-sidebar").evaluate((el) => ({
           width: getComputedStyle(el).width,

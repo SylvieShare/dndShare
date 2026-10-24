@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
-test("decodes and renders actual KTX2/Meshopt models in both geometry tiers", async ({
+test("decodes and renders actual KTX2/Meshopt models in both geometry tiers", { tag: "@local-model" }, async ({
   page,
 }) => {
   test.setTimeout(90000);

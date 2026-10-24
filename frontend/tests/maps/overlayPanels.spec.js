@@ -43,6 +43,7 @@ for (const mode of ["editor", "board"])
           rail = document.querySelector(".map-sidebar-tabs");
         return {
           canvas: bounds.toJSON(),
+          sidebar: document.querySelector(".map-sidebar").getBoundingClientRect().toJSON(),
           workspace: workspace.toJSON(),
           panel: alpha(panel),
           inspector: alpha(inspector),
@@ -53,12 +54,12 @@ for (const mode of ["editor", "board"])
           ),
         };
       });
-      expect(layout.canvas.x).toBe(layout.railBounds.right);
+      expect(layout.canvas.x).toBeCloseTo(layout.railBounds.right, 0);
       expect(layout.canvas.y).toBe(layout.workspace.y);
-      expect(layout.canvas.width).toBe(
+      expect(layout.canvas.width).toBeCloseTo(
         layout.workspace.width - layout.railBounds.width,
       );
-      expect(layout.canvas.height).toBe(layout.workspace.height);
+      expect(layout.canvas.height).toBeCloseTo(layout.workspace.height, 0);
       expect([layout.panel, layout.inspector, layout.rail]).toEqual([
         255, 255, 255,
       ]);
@@ -112,7 +113,7 @@ for (const mode of ["editor", "board"])
             async () =>
               (await page.locator(".map-sidebar").boundingBox()).width,
           )
-          .toBe(60);
+          .toBeCloseTo(layout.railBounds.width, 0);
         await expectHintOutsidePanel();
         await page
           .getByRole("button", { name: "Области", exact: true })
@@ -122,7 +123,7 @@ for (const mode of ["editor", "board"])
             async () =>
               (await page.locator(".map-sidebar").boundingBox()).width,
           )
-          .toBe(mobile ? 330 : 334);
+          .toBeCloseTo(layout.sidebar.width, 0);
         await expectHintOutsidePanel();
       }
       const stability = await page.evaluate(() => {

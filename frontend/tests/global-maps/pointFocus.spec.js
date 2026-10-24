@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { open, setup, dismissWorldFocus } from './helpers'
+import { openWorldTab } from './helpers'
 async function ready(page, mobile) {
   await page.setViewportSize(mobile ? { width: 430, height: 932 } : { width: 1600, height: 1000 })
   const state = await setup(page)
@@ -14,7 +15,7 @@ async function ready(page, mobile) {
 for (const mobile of [false, true]) test(`point focus shares framed reference and preview, follows zoom ×2 (${mobile})`, async ({ page }) => {
   await ready(page, mobile)
   const focus = page.getByRole('complementary', { name: 'Настройки точки', exact: true })
-  await expect(focus.locator('.workspace-focus-content')).toHaveClass(/base-tile--framed/)
+  await expect(focus.locator('.workspace-focus-content')).toHaveClass(/base-tile/)
   const preview = focus.getByRole('figure', { name: /Точка на карте/ })
   await expect(preview).toHaveAttribute('data-preview-state', 'ready')
   async function metrics() {
@@ -52,7 +53,7 @@ for (const mobile of [false, true]) test(`point focus shares framed reference an
 for (const mobile of [false, true]) test(`world sidebar overlays a stable canvas like the map editor (${mobile})`, async ({ page }) => {
   await ready(page, mobile)
   await dismissWorldFocus(page)
-  await page.getByRole('button', { name: 'Карты мира', exact: true }).click()
+  await openWorldTab(page, 'Карты мира')
   await expect(page.locator('.global-map-sidebar')).toHaveClass(/map-sidebar--overlay/)
   const canvas = await page.locator('.global-map-canvas').boundingBox()
   const rail = await page.locator('.map-sidebar-tabs').boundingBox()

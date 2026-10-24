@@ -5,7 +5,7 @@ async function openInventory(page, { mobile = false, reduced = false, sparse = f
   await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1280, height: 1000 })
   await page.emulateMedia({ reducedMotion: reduced ? 'reduce' : 'no-preference' })
   page.on('pageerror', error => { throw error })
-  await page.route('**/api/**', route => new URL(route.request().url()).pathname.startsWith('/api/')
+  await page.route(url => url.pathname.startsWith('/api/'), route => new URL(route.request().url()).pathname.startsWith('/api/')
     ? route.fulfill({ json: { types: inventoryTypes, items: inventoryCatalogue } }) : route.continue())
   await page.addInitScript(({ sparse, dragDuringRemoval }) => {
     window.inventoryMotionCalls = []

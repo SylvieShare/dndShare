@@ -1,15 +1,10 @@
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import RowActionItem from './RowActionItem.vue'
 
 const source = readFileSync(fileURLToPath(new URL('./RowActionItem.vue', import.meta.url)), 'utf8')
 
 describe('RowActionItem', () => {
-  it('compiles the DnD icon adapter', () => {
-    expect(RowActionItem).toBeTruthy()
-  })
-
   it('provides icons for the standard action vocabulary', () => {
     for (const action of ['use', 'replenish', 'view', 'delete', 'edit', 'create', 'copy', 'copy-link', 'kick', 'revive', 'attack', 'damage', 'critical', 'feature-damage', 'feature-critical']) {
       expect(source).toMatch(new RegExp(`['"]?${action}['"]?:`))

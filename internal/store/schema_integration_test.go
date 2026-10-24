@@ -2,8 +2,8 @@ package store
 
 import (
 	"context"
+	"dndshare/internal/testdb"
 	"fmt"
-	"os"
 	"reflect"
 	"strings"
 	"sync"
@@ -15,26 +15,7 @@ import (
 
 func schemaTestPool(t *testing.T) *pgxpool.Pool {
 	t.Helper()
-	dsn := os.Getenv("DNDSHARE_SCHEMA_TEST_DSN")
-	if dsn == "" {
-		t.Skip("requires an isolated local dndshare_test_* database")
-	}
-	cfg, err := pgxpool.ParseConfig(dsn)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if cfg.ConnConfig.Host != "127.0.0.1" || !strings.HasPrefix(cfg.ConnConfig.Database, "dndshare_test_") {
-		t.Fatal("requires an isolated local dndshare_test_* database")
-	}
-	cfg.ConnConfig.DefaultQueryExecMode = pgx.QueryExecModeSimpleProtocol
-	pool, err := pgxpool.NewWithConfig(t.Context(), cfg)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(pool.Close)
-	schemaTestExec(t, pool, `DROP SCHEMA IF EXISTS dndshare CASCADE`)
-	t.Cleanup(func() { schemaTestExec(t, pool, `DROP SCHEMA IF EXISTS dndshare CASCADE`) })
-	return pool
+	return testdb.Pool(t)
 }
 
 func schemaTestExec(t *testing.T, pool *pgxpool.Pool, sql string, args ...any) {
@@ -77,7 +58,7 @@ func businessTableDigests(t *testing.T, pool *pgxpool.Pool) map[string]string {
 
 func TestSchemaCreatesOnlyEmptyStructurePostgres(t *testing.T) {
 	pool := schemaTestPool(t)
-	s, err := Open(t.Context(), os.Getenv("DNDSHARE_SCHEMA_TEST_DSN"))
+	s, err := Open(t.Context(), pool.Config().ConnString())
 	if err != nil {
 		t.Fatal(err)
 	}

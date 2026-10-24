@@ -23,11 +23,28 @@ for (const live of [false, true])
     })
 
 async function rename(page, name) {
-  await page.locator('.dci-edit').click()
+  await page.locator('.dci-edit').press('Enter')
   const editor = page.getByRole('dialog', { name: 'Персонаж', exact: true })
   await editor.getByPlaceholder('Имя персонажа').fill(name)
   await editor.getByRole('button', { name: 'Сохранить', exact: true }).click()
 }
+
+for (const mobile of [false, true])
+  test(`save failure remains retryable without losing edits (${mobile ? 'mobile' : 'desktop'})`, async ({ page }) => {
+    await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 })
+    await page.goto('/tests/tutorials/fixtures/character-sheet-save.html')
+    await expect(page.locator('.dci-name')).toHaveText('Торин')
+    await page.evaluate(() => { window.failCharacterSaves = 400 })
+    await rename(page, 'Несохранённое имя')
+    const failure = page.getByRole('alert').filter({ hasText: 'Не удалось сохранить лист' })
+    await expect(failure).toBeVisible()
+    await expect(page.locator('.dci-name')).toHaveText('Несохранённое имя')
+    expect(await page.evaluate(() => window.savedCharacter.data.values.name)).toBe('Торин')
+    await page.evaluate(() => { window.failCharacterSaves = false })
+    await failure.getByRole('button', { name: 'Повторить', exact: true }).click()
+    await expect.poll(() => page.evaluate(() => window.savedCharacter.data.values.name)).toBe('Несохранённое имя')
+    await expect(failure).toHaveCount(0)
+  })
 
 for (const mode of ['owner', 'dm'])
   test(`closing ${mode} sheet during a save sends the newer queued edit`, async ({

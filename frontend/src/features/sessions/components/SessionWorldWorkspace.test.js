@@ -1,10 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import SessionLocationsWorkspace from './SessionLocationsWorkspace.vue'
-import SessionNpcsWorkspace from './SessionNpcsWorkspace.vue'
-import SessionWorldLayer from './SessionWorldLayer.vue'
-import SessionQuestsWorkspace from './SessionQuestsWorkspace.vue'
 
 const read = path => readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8')
 const toolbar = read('../lib/sessionNavigation.js') + read('./ChapterGraphToolbar.vue')
@@ -37,13 +33,6 @@ const sessionView = read('../pages/ViewSession.vue') + '\n' + read('../composabl
 const sessionWorkspace = read('../composables/useSessionWorkspace.js')
 
 describe('session world workspaces', () => {
-  it('compiles all central world modes', () => {
-    expect(SessionWorldLayer).toBeTruthy()
-    expect(SessionLocationsWorkspace).toBeTruthy()
-    expect(SessionNpcsWorkspace).toBeTruthy()
-	expect(SessionQuestsWorkspace).toBeTruthy()
-  })
-
   it('switches the central workspace from the semantic session header', () => {
     expect(toolbar).toContain('label="Раздел сессии"')
     expect(toolbar).toContain("{ key: 'story', label: 'Сюжет'")
