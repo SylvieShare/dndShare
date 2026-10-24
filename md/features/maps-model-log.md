@@ -35,8 +35,23 @@
 Воспроизведение: `scripts/creatures/separate-bases.mjs`,
 `preview-separated-bases.py`, `package-separated-previews.mjs` и
 `publish-separated-bases.py`. Локальный пакет и отчёты:
-`models/creatures/separated-bases-20261024`. Статус подготовки: готово;
-подтверждённая публикация фиксируется отдельным `publication.json` этого пакета.
+`models/creatures/separated-bases-20261024`. Публикация через MCP подтверждена:
+обновлены 10 фигурок и зарегистрированы 14 подставок. Связи итемов, UUID фигурок
+и их остальные метаданные сохранены. `publication.json` фиксирует проверенные
+UUID и SHA-256 всех пяти ассетов; `before-models.json` и `before-bindings.json`
+сохраняют состояние до публикации.
+
+Подтверждённые UUID подставок:
+
+| Размер | Галька | Сланец |
+| --- | --- | --- |
+| 0.5 | `dfde5fa7-4bb1-5909-a039-06cd45d0f008` | `2ece01ea-f319-527d-a81e-3a5122011952` |
+| 1 | `3c506a01-f906-5627-a53e-e1198a33968a` | `b52ced01-d4ec-5ae2-a2a7-4257536b27d0` |
+| 2 | `ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7` | `57f582d9-3506-5be6-a5c4-0ad815e4a324` |
+| 3 | `c14c9163-3e8d-5e01-a615-b9490cf230d5` | `b50318e6-2500-5ac6-aa85-b6d15715e76f` |
+| 4 | `078cf63b-090b-5f98-a0e2-85c83cd04b6f` | `67b86cfc-859c-59bf-a6f5-595225a40335` |
+| 6 | `74424ab6-1843-58ff-ab1b-15f25f383100` | `1d600aea-8c76-57ff-ae1b-74d8226f95ec` |
+| 8 | `66634452-ba23-530c-a03d-a4214d133311` | `85ab599d-0d52-5acc-a9f8-ef0216fe3fff` |
 
 ## Стартовый набор
 
