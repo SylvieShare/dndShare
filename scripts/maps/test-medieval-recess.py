@@ -57,19 +57,41 @@ except ValueError as error:
     assert 'recess' in str(error)
 else:
     raise AssertionError('Ordinary cropping accepted a visible native recess')
+# A roof hides the well from the sky while leaving it accessible from inside.
+boolean(cube('Wall supporting the roof', [-17.5, -17.5, 25], [-15, 17.5, 39]), 'UNION')
+boolean(cube('Roof above the native well', [-17.5, -17.5, 38], [17.5, 17.5, 40]), 'UNION')
+try:
+    prepare_recess(source, recipe, 'a'*64)
+except ValueError as error:
+    assert 'visible surfaces below' in str(error)
+else:
+    raise AssertionError('A covered well unexpectedly passed sky-only probing')
+recipe['surfaceHeightMM'] = 26
+recipe['recessMount']['probeTopMM'] = 26
+try:
+    prepare_recess(source, recipe, 'a'*64)
+except ValueError as error:
+    assert 'above the measured rim' in str(error)
+else:
+    raise AssertionError('A probe starting inside the rim was accepted')
+recipe['recessMount']['probeTopMM'] = 29
 body, aux, protected, proof = prepare_recess(source, recipe, 'a'*64)
 assert proof['maximumCavityDeviationMM'] < .001
 assert proof['maximumUpperDeviationMM'] < .001
 assert proof['cavityProbesMM']
+assert all(abs(p[2]-9) < .001 for p in proof['cavityProbesMM']), 'Probe started inside solid wall boarding'
+assert proof['cavityProbeTopMM'] == 29
 for obj in aux:
     obj.hide_viewport = False
 bpy.context.view_layer.update()
 heights = []
 for obj in [body]+aux:
-    hit = BVHTree.FromObject(obj, bpy.context.evaluated_depsgraph_get()).ray_cast((0, 0, 50), (0, 0, -1))
+    hit = BVHTree.FromObject(obj, bpy.context.evaluated_depsgraph_get()).ray_cast((0, 0, 29), (0, 0, -1))
     if hit[0] is not None:
         heights.append(hit[0].z)
 assert abs(max(heights)-9) < .001, 'New insertion covered the native floor'
+roof_hit = BVHTree.FromObject(body, bpy.context.evaluated_depsgraph_get()).ray_cast((0, 0, 50), (0, 0, -1))
+assert roof_hit[0] is not None and abs(roof_hit[0].z-40) < .001, 'Recess construction changed the roof'
 group, boundary = pin_recess(body, protected)
 bpy.context.view_layer.objects.active = body
 mod = body.modifiers.new('Interface regression', 'DECIMATE')

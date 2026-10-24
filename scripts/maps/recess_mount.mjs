@@ -68,6 +68,10 @@ export function validateRecessConstruction(construction, sourceHash) {
         point[2] < construction.nativeDatumMM - 0.05,
     );
   }
+  if (construction.cavityProbeTopMM !== undefined)
+    assert.ok(Number.isFinite(construction.cavityProbeTopMM) &&
+      construction.cavityProbeTopMM > construction.nativeDatumMM + 0.05,
+    "Recess probe must start above its native datum");
 }
 function world(v, m) {
   return [0, 1, 2].map(
@@ -221,7 +225,10 @@ export async function validateRecessMount(bytes, model, construction) {
     );
     const hit = tree.raycastFirst(
       new Ray(
-        new Vector3(expected.x, model.maxHeight + 1, expected.z),
+        new Vector3(expected.x, construction.cavityProbeTopMM === undefined
+          ? model.maxHeight + 1
+          : (construction.cavityProbeTopMM - construction.nativeDatumMM) / 35 + top,
+        expected.z),
         new Vector3(0, -1, 0),
       ),
       DoubleSide,

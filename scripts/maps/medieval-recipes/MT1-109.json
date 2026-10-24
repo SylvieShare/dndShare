@@ -1,0 +1,2520 @@
+{
+  "tileType": "stairs",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "edge",
+  "wallMask": 80,
+  "supportSlots": [],
+  "plainMountCollarMM": 0,
+  "name": "Roof Ladder Down",
+  "groupCode": "MED-roof-ladder-down",
+  "hasDecor": true,
+  "renderTriangles": 170000,
+  "lodTriangles": 145000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 2048,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.3,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0015,
+  "renderDataSize": 1536,
+  "lodColourSize": 1536,
+  "lodDataSize": 1536,
+  "standRayTopMM": 125,
+  "standPointsMM": [],
+  "blockersMM": [
+    [
+      [
+        -17.8,
+        -17.8
+      ],
+      [
+        17.8,
+        -17.8
+      ],
+      [
+        17.8,
+        17.8
+      ],
+      [
+        -17.8,
+        17.8
+      ]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "stairs",
+    "ladder",
+    "roof",
+    "wood",
+    "plaster",
+    "iron",
+    "recess"
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      5,
+      9
+    ],
+    "lodMiB": [
+      2.5,
+      5
+    ],
+    "shadowKiB": [
+      200,
+      400
+    ],
+    "previewKiB": [
+      15,
+      45
+    ],
+    "basis": "Own939810triangle/46990584byte one-cell roof with open ladder well and two recessed steps,high triangular plaster wall,crossed inner braces,blue wooden shingles,exposed underside laths andsix visible iron disks. Start170k/85k,2048/1536 bakes,1536/1152 packed maps;compare compact and preserve well and roof gaps."
+  },
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "Z native recessed well boarding",
+        "minMM": [
+          -17.65,
+          -17.65,
+          3.2
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          26.65
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "darkRGB": [
+          0.3,
+          0.14,
+          0.045
+        ],
+        "lightRGB": [
+          0.52,
+          0.285,
+          0.1
+        ]
+      },
+      {
+        "name": "Y own native well floor",
+        "minMM": [
+          -13.5,
+          -13.5,
+          3.2
+        ],
+        "maxMM": [
+          13.5,
+          13.5,
+          3.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "X platform planks and north south fascia",
+        "minMM": [
+          -17.65,
+          -17.65,
+          17.5
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          26.65
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "excludeParts": [
+          {
+            "name": "recessed opening",
+            "minMM": [
+              -11.7,
+              -11.7,
+              0
+            ],
+            "maxMM": [
+              11.7,
+              11.7,
+              25.0
+            ]
+          }
+        ]
+      },
+      {
+        "name": "west Y platform border and fascia",
+        "minMM": [
+          -17.65,
+          -17.65,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.8,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y platform border and fascia",
+        "minMM": [
+          14.3,
+          -17.65,
+          17.5
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own recessed rung 1",
+        "minMM": [
+          -13.5,
+          -13.5,
+          5.2
+        ],
+        "maxMM": [
+          13.5,
+          13.5,
+          10.7
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.5995304593243841,
+          -0.7998639936741894,
+          -0.027943155975459426
+        ],
+        "projection": {
+          "originMM": [
+            0.06227963813754567,
+            -0.42185078206278037,
+            26.985399960444944
+          ],
+          "axis": [
+            0.6647071054351735,
+            -0.7471040516447447,
+            0.0
+          ],
+          "rangeMM": [
+            -9.5,
+            9.5
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "rung depth",
+            "minMM": [
+              -100,
+              -100,
+              -100
+            ],
+            "maxMM": [
+              100,
+              100,
+              100
+            ],
+            "projection": {
+              "originMM": [
+                0.06227963813754567,
+                -0.42185078206278037,
+                26.985399960444944
+              ],
+              "axis": [
+                -0.7471040516447447,
+                -0.6647071054351735,
+                0.0
+              ],
+              "rangeMM": [
+                -7,
+                3
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own recessed rung 2",
+        "minMM": [
+          -13.5,
+          -13.5,
+          15.6
+        ],
+        "maxMM": [
+          13.5,
+          13.5,
+          20.5
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.6749761715960224,
+          -0.7378066691426585,
+          0.006963242505610064
+        ],
+        "projection": {
+          "originMM": [
+            0.06227963813754567,
+            -0.42185078206278037,
+            26.985399960444944
+          ],
+          "axis": [
+            0.6647071054351735,
+            -0.7471040516447447,
+            0.0
+          ],
+          "rangeMM": [
+            -9.5,
+            9.5
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "rung depth",
+            "minMM": [
+              -100,
+              -100,
+              -100
+            ],
+            "maxMM": [
+              100,
+              100,
+              100
+            ],
+            "projection": {
+              "originMM": [
+                0.06227963813754567,
+                -0.42185078206278037,
+                26.985399960444944
+              ],
+              "axis": [
+                -0.7471040516447447,
+                -0.6647071054351735,
+                0.0
+              ],
+              "rangeMM": [
+                -7,
+                3
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own descending stile -1",
+        "minMM": [
+          -13.5,
+          -13.5,
+          3.2
+        ],
+        "maxMM": [
+          13.5,
+          13.5,
+          27.7
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          -0.14944757197214317,
+          -0.12538941789050068,
+          0.9807868866949194
+        ],
+        "projection": {
+          "originMM": [
+            -6.444831314048647,
+            7.921869226420916,
+            20.0
+          ],
+          "axis": [
+            0.66387187756268,
+            -0.7478257241080065,
+            0.005551265057420075
+          ],
+          "rangeMM": [
+            -2.88291935365734,
+            2.7396784071688227
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "stile depth",
+            "minMM": [
+              -100,
+              -100,
+              -100
+            ],
+            "maxMM": [
+              100,
+              100,
+              100
+            ],
+            "projection": {
+              "originMM": [
+                -6.444831314048647,
+                7.921869226420916,
+                20.0
+              ],
+              "axis": [
+                -0.7327615938441597,
+                -0.6519464550432168,
+                -0.19500324700770957
+              ],
+              "rangeMM": [
+                -2.9919636883736267,
+                2.925314772664302
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own descending stile 1",
+        "minMM": [
+          -13.5,
+          -13.5,
+          3.2
+        ],
+        "maxMM": [
+          13.5,
+          13.5,
+          27.7
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          -0.31030085697707316,
+          -0.16195284565259868,
+          0.9367415086053995
+        ],
+        "projection": {
+          "originMM": [
+            8.189032221714434,
+            -7.33357624599772,
+            20.0
+          ],
+          "axis": [
+            0.6405824749295301,
+            -0.7636937698739203,
+            0.08016182800384192
+          ],
+          "rangeMM": [
+            -2.3033038688802705,
+            3.362326937392429
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "stile depth",
+            "minMM": [
+              -100,
+              -100,
+              -100
+            ],
+            "maxMM": [
+              100,
+              100,
+              100
+            ],
+            "projection": {
+              "originMM": [
+                8.189032221714434,
+                -7.33357624599772,
+                20.0
+              ],
+              "axis": [
+                -0.7024012179463046,
+                -0.6249344778781094,
+                -0.34071898594995104
+              ],
+              "rangeMM": [
+                -2.0168899220778784,
+                2.91573395567752
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own west rear raised timber",
+        "minMM": [
+          -17.8,
+          -13.3,
+          26.6
+        ],
+        "maxMM": [
+          -16.65,
+          13.3,
+          100
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own south rear raised timber",
+        "minMM": [
+          -13.3,
+          -17.8,
+          26.6
+        ],
+        "maxMM": [
+          13.3,
+          -16.85,
+          51
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own west south post",
+        "minMM": [
+          -17.8,
+          -17.8,
+          26.1
+        ],
+        "maxMM": [
+          -10,
+          -13.3,
+          51
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own west north tall post",
+        "minMM": [
+          -17.8,
+          13.3,
+          26.1
+        ],
+        "maxMM": [
+          -10,
+          17.8,
+          100
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own south west corner",
+        "minMM": [
+          -17.8,
+          -17.8,
+          26.1
+        ],
+        "maxMM": [
+          -13.3,
+          -10,
+          51
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own south east post",
+        "minMM": [
+          13.3,
+          -17.8,
+          26.1
+        ],
+        "maxMM": [
+          17.8,
+          -10,
+          51
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own west front rising",
+        "minMM": [
+          -13.5,
+          -13.3,
+          26.6
+        ],
+        "maxMM": [
+          -10,
+          13.3,
+          61
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.8190917910439037,
+          0.5736624772847619
+        ],
+        "projection": {
+          "originMM": [
+            -11.139833748340607,
+            0.0,
+            34.08437520265579
+          ],
+          "axis": [
+            0.0,
+            -0.5736624772847619,
+            0.8190917910439037
+          ],
+          "rangeMM": [
+            -3.255258390227085,
+            3.2291346836043138
+          ]
+        },
+        "nearSource": {
+          "code": "MT1-109",
+          "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6",
+          "componentAboveMM": 26.7,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              -11.65,
+              -13.3,
+              26.7
+            ],
+            "maxMM": [
+              -10,
+              13.3,
+              61
+            ]
+          },
+          "matchMM": 0.14,
+          "projectTo": {
+            "code": "MT1-109",
+            "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6"
+          }
+        }
+      },
+      {
+        "name": "own west front descending",
+        "minMM": [
+          -13.5,
+          -13.3,
+          26.6
+        ],
+        "maxMM": [
+          -10,
+          13.3,
+          61
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.7802628154692298,
+          -0.6254517877470898
+        ],
+        "projection": {
+          "originMM": [
+            -11.4097640812397,
+            0.0,
+            40.7921878695488
+          ],
+          "axis": [
+            0.0,
+            0.6254517877470898,
+            0.7802628154692298
+          ],
+          "rangeMM": [
+            -4.043313156312042,
+            3.1365708980474714
+          ]
+        },
+        "nearSource": {
+          "code": "MT1-109",
+          "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6",
+          "componentAboveMM": 26.7,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              -11.65,
+              -13.3,
+              26.7
+            ],
+            "maxMM": [
+              -10,
+              13.3,
+              61
+            ]
+          },
+          "matchMM": 0.14,
+          "projectTo": {
+            "code": "MT1-109",
+            "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6"
+          }
+        }
+      },
+      {
+        "name": "own south front rising",
+        "minMM": [
+          -13.3,
+          -13.5,
+          26.6
+        ],
+        "maxMM": [
+          13.3,
+          -10,
+          61
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.8082086841061319,
+          0.0,
+          0.5888961902877575
+        ],
+        "projection": {
+          "originMM": [
+            0.0,
+            -11.34178995474791,
+            33.85320519178342
+          ],
+          "axis": [
+            -0.5888961902877575,
+            0.0,
+            0.8082086841061319
+          ],
+          "rangeMM": [
+            -3.072962903333417,
+            3.076173082316868
+          ]
+        },
+        "nearSource": {
+          "code": "MT1-109",
+          "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6",
+          "componentAboveMM": 26.7,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              -13.3,
+              -11.65,
+              26.7
+            ],
+            "maxMM": [
+              13.3,
+              -10,
+              61
+            ]
+          },
+          "matchMM": 0.14,
+          "projectTo": {
+            "code": "MT1-109",
+            "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6"
+          }
+        }
+      },
+      {
+        "name": "own south rear rising",
+        "minMM": [
+          -13.3,
+          -17.8,
+          26.6
+        ],
+        "maxMM": [
+          13.3,
+          -13.9,
+          61
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.8761410139713248,
+          0.0,
+          0.48205489691247705
+        ],
+        "projection": {
+          "originMM": [
+            0.0,
+            -16.903076734298313,
+            34.19102568504138
+          ],
+          "axis": [
+            -0.48205489691247705,
+            0.0,
+            0.8761410139713248
+          ],
+          "rangeMM": [
+            -2.1950951392471074,
+            2.082768294860666
+          ]
+        }
+      },
+      {
+        "name": "own west rear rising",
+        "minMM": [
+          -17.8,
+          -13.3,
+          26.6
+        ],
+        "maxMM": [
+          -13.9,
+          13.3,
+          61
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.7560437149133769,
+          0.6545211235246577
+        ],
+        "projection": {
+          "originMM": [
+            -16.782786320417355,
+            0.0,
+            38.85705136030148
+          ],
+          "axis": [
+            0.0,
+            -0.6545211235246577,
+            0.7560437149133769
+          ],
+          "rangeMM": [
+            -3.4939792951657207,
+            3.3062480165700414
+          ]
+        }
+      },
+      {
+        "name": "own central corner post and inner bevel",
+        "minMM": [
+          -17.8,
+          -17.8,
+          26.1
+        ],
+        "maxMM": [
+          -10,
+          -10,
+          56
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own south rear upper horizontal tie",
+        "minMM": [
+          -17.8,
+          -17.8,
+          42.6
+        ],
+        "maxMM": [
+          17.8,
+          -14.8,
+          46.7
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own roof underside laths and boarding",
+        "minMM": [
+          -17.8,
+          -17.8,
+          45
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          100
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "projection": {
+          "originMM": [
+            0.0,
+            0.0,
+            74.38770442153468
+          ],
+          "axis": [
+            0.0008644057153471141,
+            -0.8295364951536996,
+            0.5584518385777554
+          ],
+          "rangeMM": [
+            -7,
+            -2.75
+          ]
+        }
+      },
+      {
+        "name": "own inside sloping roof side beam",
+        "minMM": [
+          -11.55,
+          -17.8,
+          45
+        ],
+        "maxMM": [
+          -10,
+          17.8,
+          100
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.5584520472147086,
+          0.8295368050675634
+        ],
+        "projection": {
+          "originMM": [
+            0.0,
+            0.0,
+            74.38770442153468
+          ],
+          "axis": [
+            0.0008644057153471141,
+            -0.8295364951536996,
+            0.5584518385777554
+          ],
+          "rangeMM": [
+            -12,
+            -2.75
+          ]
+        }
+      },
+      {
+        "name": "own outside sloping roof side beam",
+        "minMM": [
+          -17.8,
+          -17.8,
+          45
+        ],
+        "maxMM": [
+          -16.65,
+          17.8,
+          100
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.5584520472147086,
+          0.8295368050675634
+        ],
+        "projection": {
+          "originMM": [
+            0.0,
+            0.0,
+            74.38770442153468
+          ],
+          "axis": [
+            0.0008644057153471141,
+            -0.8295364951536996,
+            0.5584518385777554
+          ],
+          "rangeMM": [
+            -12,
+            -2.75
+          ]
+        }
+      },
+      {
+        "name": "own blue weathered roof shingles",
+        "minMM": [
+          -17.8,
+          -17.8,
+          46.7
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          100
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "direction": [
+          0.0,
+          0.5584520472147086,
+          0.8295368050675634
+        ],
+        "projection": {
+          "originMM": [
+            0.0,
+            0.0,
+            74.38770442153468
+          ],
+          "axis": [
+            0.0008644057153471141,
+            -0.8295364951536996,
+            0.5584518385777554
+          ],
+          "rangeMM": [
+            -2.75,
+            10
+          ]
+        },
+        "darkRGB": [
+          0.11,
+          0.17,
+          0.29
+        ],
+        "lightRGB": [
+          0.3,
+          0.37,
+          0.53
+        ]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "own west triangular ochre plaster",
+        "minMM": [
+          -17.8,
+          -13.3,
+          26.6
+        ],
+        "maxMM": [
+          -10,
+          13.3,
+          100
+        ],
+        "kind": "plaster",
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own west rear raised timber",
+            "minMM": [
+              -17.8,
+              -13.3,
+              26.6
+            ],
+            "maxMM": [
+              -16.65,
+              13.3,
+              100
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own south rear raised timber",
+            "minMM": [
+              -13.3,
+              -17.8,
+              26.6
+            ],
+            "maxMM": [
+              13.3,
+              -16.85,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own west south post",
+            "minMM": [
+              -17.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              -10,
+              -13.3,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own west north tall post",
+            "minMM": [
+              -17.8,
+              13.3,
+              26.1
+            ],
+            "maxMM": [
+              -10,
+              17.8,
+              100
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own south west corner",
+            "minMM": [
+              -17.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              -13.3,
+              -10,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own south east post",
+            "minMM": [
+              13.3,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              17.8,
+              -10,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own west front rising",
+            "minMM": [
+              -13.5,
+              -13.3,
+              26.6
+            ],
+            "maxMM": [
+              -10,
+              13.3,
+              61
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.8190917910439037,
+              0.5736624772847619
+            ],
+            "projection": {
+              "originMM": [
+                -11.139833748340607,
+                0.0,
+                34.08437520265579
+              ],
+              "axis": [
+                0.0,
+                -0.5736624772847619,
+                0.8190917910439037
+              ],
+              "rangeMM": [
+                -3.255258390227085,
+                3.2291346836043138
+              ]
+            },
+            "nearSource": {
+              "code": "MT1-109",
+              "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6",
+              "componentAboveMM": 26.7,
+              "componentIndex": 0,
+              "componentBoundsMM": {
+                "minMM": [
+                  -11.65,
+                  -13.3,
+                  26.7
+                ],
+                "maxMM": [
+                  -10,
+                  13.3,
+                  61
+                ]
+              },
+              "matchMM": 0.14,
+              "projectTo": {
+                "code": "MT1-109",
+                "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6"
+              }
+            }
+          },
+          {
+            "name": "own west front descending",
+            "minMM": [
+              -13.5,
+              -13.3,
+              26.6
+            ],
+            "maxMM": [
+              -10,
+              13.3,
+              61
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.7802628154692298,
+              -0.6254517877470898
+            ],
+            "projection": {
+              "originMM": [
+                -11.4097640812397,
+                0.0,
+                40.7921878695488
+              ],
+              "axis": [
+                0.0,
+                0.6254517877470898,
+                0.7802628154692298
+              ],
+              "rangeMM": [
+                -4.043313156312042,
+                3.1365708980474714
+              ]
+            },
+            "nearSource": {
+              "code": "MT1-109",
+              "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6",
+              "componentAboveMM": 26.7,
+              "componentIndex": 0,
+              "componentBoundsMM": {
+                "minMM": [
+                  -11.65,
+                  -13.3,
+                  26.7
+                ],
+                "maxMM": [
+                  -10,
+                  13.3,
+                  61
+                ]
+              },
+              "matchMM": 0.14,
+              "projectTo": {
+                "code": "MT1-109",
+                "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6"
+              }
+            }
+          },
+          {
+            "name": "own south front rising",
+            "minMM": [
+              -13.3,
+              -13.5,
+              26.6
+            ],
+            "maxMM": [
+              13.3,
+              -10,
+              61
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.8082086841061319,
+              0.0,
+              0.5888961902877575
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                -11.34178995474791,
+                33.85320519178342
+              ],
+              "axis": [
+                -0.5888961902877575,
+                0.0,
+                0.8082086841061319
+              ],
+              "rangeMM": [
+                -3.072962903333417,
+                3.076173082316868
+              ]
+            },
+            "nearSource": {
+              "code": "MT1-109",
+              "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6",
+              "componentAboveMM": 26.7,
+              "componentIndex": 0,
+              "componentBoundsMM": {
+                "minMM": [
+                  -13.3,
+                  -11.65,
+                  26.7
+                ],
+                "maxMM": [
+                  13.3,
+                  -10,
+                  61
+                ]
+              },
+              "matchMM": 0.14,
+              "projectTo": {
+                "code": "MT1-109",
+                "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6"
+              }
+            }
+          },
+          {
+            "name": "own south rear rising",
+            "minMM": [
+              -13.3,
+              -17.8,
+              26.6
+            ],
+            "maxMM": [
+              13.3,
+              -13.9,
+              61
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.8761410139713248,
+              0.0,
+              0.48205489691247705
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                -16.903076734298313,
+                34.19102568504138
+              ],
+              "axis": [
+                -0.48205489691247705,
+                0.0,
+                0.8761410139713248
+              ],
+              "rangeMM": [
+                -2.1950951392471074,
+                2.082768294860666
+              ]
+            }
+          },
+          {
+            "name": "own west rear rising",
+            "minMM": [
+              -17.8,
+              -13.3,
+              26.6
+            ],
+            "maxMM": [
+              -13.9,
+              13.3,
+              61
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.7560437149133769,
+              0.6545211235246577
+            ],
+            "projection": {
+              "originMM": [
+                -16.782786320417355,
+                0.0,
+                38.85705136030148
+              ],
+              "axis": [
+                0.0,
+                -0.6545211235246577,
+                0.7560437149133769
+              ],
+              "rangeMM": [
+                -3.4939792951657207,
+                3.3062480165700414
+              ]
+            }
+          },
+          {
+            "name": "own central corner post and inner bevel",
+            "minMM": [
+              -17.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              -10,
+              -10,
+              56
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own south rear upper horizontal tie",
+            "minMM": [
+              -17.8,
+              -17.8,
+              42.6
+            ],
+            "maxMM": [
+              17.8,
+              -14.8,
+              46.7
+            ],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own roof underside laths and boarding",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              100
+            ],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.38770442153468
+              ],
+              "axis": [
+                0.0008644057153471141,
+                -0.8295364951536996,
+                0.5584518385777554
+              ],
+              "rangeMM": [
+                -7,
+                -2.75
+              ]
+            }
+          },
+          {
+            "name": "own inside sloping roof side beam",
+            "minMM": [
+              -11.55,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              -10,
+              17.8,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.5584520472147086,
+              0.8295368050675634
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.38770442153468
+              ],
+              "axis": [
+                0.0008644057153471141,
+                -0.8295364951536996,
+                0.5584518385777554
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            }
+          },
+          {
+            "name": "own outside sloping roof side beam",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              -16.65,
+              17.8,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.5584520472147086,
+              0.8295368050675634
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.38770442153468
+              ],
+              "axis": [
+                0.0008644057153471141,
+                -0.8295364951536996,
+                0.5584518385777554
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            }
+          },
+          {
+            "name": "own blue weathered roof shingles",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              0.0,
+              0.5584520472147086,
+              0.8295368050675634
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.38770442153468
+              ],
+              "axis": [
+                0.0008644057153471141,
+                -0.8295364951536996,
+                0.5584518385777554
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          }
+        ]
+      },
+      {
+        "name": "own south ochre plaster",
+        "minMM": [
+          -13.3,
+          -17.8,
+          26.6
+        ],
+        "maxMM": [
+          13.3,
+          -10,
+          50.5
+        ],
+        "kind": "plaster",
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own west rear raised timber",
+            "minMM": [
+              -17.8,
+              -13.3,
+              26.6
+            ],
+            "maxMM": [
+              -16.65,
+              13.3,
+              100
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own south rear raised timber",
+            "minMM": [
+              -13.3,
+              -17.8,
+              26.6
+            ],
+            "maxMM": [
+              13.3,
+              -16.85,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own west south post",
+            "minMM": [
+              -17.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              -10,
+              -13.3,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own west north tall post",
+            "minMM": [
+              -17.8,
+              13.3,
+              26.1
+            ],
+            "maxMM": [
+              -10,
+              17.8,
+              100
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own south west corner",
+            "minMM": [
+              -17.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              -13.3,
+              -10,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own south east post",
+            "minMM": [
+              13.3,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              17.8,
+              -10,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own west front rising",
+            "minMM": [
+              -13.5,
+              -13.3,
+              26.6
+            ],
+            "maxMM": [
+              -10,
+              13.3,
+              61
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.8190917910439037,
+              0.5736624772847619
+            ],
+            "projection": {
+              "originMM": [
+                -11.139833748340607,
+                0.0,
+                34.08437520265579
+              ],
+              "axis": [
+                0.0,
+                -0.5736624772847619,
+                0.8190917910439037
+              ],
+              "rangeMM": [
+                -3.255258390227085,
+                3.2291346836043138
+              ]
+            },
+            "nearSource": {
+              "code": "MT1-109",
+              "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6",
+              "componentAboveMM": 26.7,
+              "componentIndex": 0,
+              "componentBoundsMM": {
+                "minMM": [
+                  -11.65,
+                  -13.3,
+                  26.7
+                ],
+                "maxMM": [
+                  -10,
+                  13.3,
+                  61
+                ]
+              },
+              "matchMM": 0.14,
+              "projectTo": {
+                "code": "MT1-109",
+                "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6"
+              }
+            }
+          },
+          {
+            "name": "own west front descending",
+            "minMM": [
+              -13.5,
+              -13.3,
+              26.6
+            ],
+            "maxMM": [
+              -10,
+              13.3,
+              61
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.7802628154692298,
+              -0.6254517877470898
+            ],
+            "projection": {
+              "originMM": [
+                -11.4097640812397,
+                0.0,
+                40.7921878695488
+              ],
+              "axis": [
+                0.0,
+                0.6254517877470898,
+                0.7802628154692298
+              ],
+              "rangeMM": [
+                -4.043313156312042,
+                3.1365708980474714
+              ]
+            },
+            "nearSource": {
+              "code": "MT1-109",
+              "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6",
+              "componentAboveMM": 26.7,
+              "componentIndex": 0,
+              "componentBoundsMM": {
+                "minMM": [
+                  -11.65,
+                  -13.3,
+                  26.7
+                ],
+                "maxMM": [
+                  -10,
+                  13.3,
+                  61
+                ]
+              },
+              "matchMM": 0.14,
+              "projectTo": {
+                "code": "MT1-109",
+                "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6"
+              }
+            }
+          },
+          {
+            "name": "own south front rising",
+            "minMM": [
+              -13.3,
+              -13.5,
+              26.6
+            ],
+            "maxMM": [
+              13.3,
+              -10,
+              61
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.8082086841061319,
+              0.0,
+              0.5888961902877575
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                -11.34178995474791,
+                33.85320519178342
+              ],
+              "axis": [
+                -0.5888961902877575,
+                0.0,
+                0.8082086841061319
+              ],
+              "rangeMM": [
+                -3.072962903333417,
+                3.076173082316868
+              ]
+            },
+            "nearSource": {
+              "code": "MT1-109",
+              "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6",
+              "componentAboveMM": 26.7,
+              "componentIndex": 0,
+              "componentBoundsMM": {
+                "minMM": [
+                  -13.3,
+                  -11.65,
+                  26.7
+                ],
+                "maxMM": [
+                  13.3,
+                  -10,
+                  61
+                ]
+              },
+              "matchMM": 0.14,
+              "projectTo": {
+                "code": "MT1-109",
+                "sourceSHA256": "d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6"
+              }
+            }
+          },
+          {
+            "name": "own south rear rising",
+            "minMM": [
+              -13.3,
+              -17.8,
+              26.6
+            ],
+            "maxMM": [
+              13.3,
+              -13.9,
+              61
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.8761410139713248,
+              0.0,
+              0.48205489691247705
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                -16.903076734298313,
+                34.19102568504138
+              ],
+              "axis": [
+                -0.48205489691247705,
+                0.0,
+                0.8761410139713248
+              ],
+              "rangeMM": [
+                -2.1950951392471074,
+                2.082768294860666
+              ]
+            }
+          },
+          {
+            "name": "own west rear rising",
+            "minMM": [
+              -17.8,
+              -13.3,
+              26.6
+            ],
+            "maxMM": [
+              -13.9,
+              13.3,
+              61
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.7560437149133769,
+              0.6545211235246577
+            ],
+            "projection": {
+              "originMM": [
+                -16.782786320417355,
+                0.0,
+                38.85705136030148
+              ],
+              "axis": [
+                0.0,
+                -0.6545211235246577,
+                0.7560437149133769
+              ],
+              "rangeMM": [
+                -3.4939792951657207,
+                3.3062480165700414
+              ]
+            }
+          },
+          {
+            "name": "own central corner post and inner bevel",
+            "minMM": [
+              -17.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              -10,
+              -10,
+              56
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own south rear upper horizontal tie",
+            "minMM": [
+              -17.8,
+              -17.8,
+              42.6
+            ],
+            "maxMM": [
+              17.8,
+              -14.8,
+              46.7
+            ],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own roof underside laths and boarding",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              100
+            ],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.38770442153468
+              ],
+              "axis": [
+                0.0008644057153471141,
+                -0.8295364951536996,
+                0.5584518385777554
+              ],
+              "rangeMM": [
+                -7,
+                -2.75
+              ]
+            }
+          },
+          {
+            "name": "own inside sloping roof side beam",
+            "minMM": [
+              -11.55,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              -10,
+              17.8,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.5584520472147086,
+              0.8295368050675634
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.38770442153468
+              ],
+              "axis": [
+                0.0008644057153471141,
+                -0.8295364951536996,
+                0.5584518385777554
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            }
+          },
+          {
+            "name": "own outside sloping roof side beam",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              -16.65,
+              17.8,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.5584520472147086,
+              0.8295368050675634
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.38770442153468
+              ],
+              "axis": [
+                0.0008644057153471141,
+                -0.8295364951536996,
+                0.5584518385777554
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            }
+          },
+          {
+            "name": "own blue weathered roof shingles",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              0.0,
+              0.5584520472147086,
+              0.8295368050675634
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.38770442153468
+              ],
+              "axis": [
+                0.0008644057153471141,
+                -0.8295364951536996,
+                0.5584518385777554
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          }
+        ]
+      },
+      {
+        "name": "own iron disk west rear lower",
+        "minMM": [
+          -18,
+          -14.332782554937394,
+          29.335398545828156
+        ],
+        "maxMM": [
+          -16.5,
+          -12.224512515429469,
+          31.443668585336084
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -17.430450439453125,
+            -13.278647535183431,
+            30.38953356558212
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 1.004135019753962,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.3,
+            1.3
+          ],
+          "thicknessMM": 1.004135019753962,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk west rear upper",
+        "minMM": [
+          -18,
+          -14.031725755506532,
+          44.07263777771665
+        ],
+        "maxMM": [
+          -16.5,
+          -12.09317799403778,
+          46.01118553918539
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -16.912099838256836,
+            -13.062451874772156,
+            45.04191165845102
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.9192738807343745,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.3,
+            1.3
+          ],
+          "thicknessMM": 0.9192738807343745,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk south rear west",
+        "minMM": [
+          -16.518934118493846,
+          -18,
+          43.38168221250301
+        ],
+        "maxMM": [
+          -14.520830498873803,
+          -16.5,
+          45.37978583212305
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -15.519882308683824,
+            -17.391550064086914,
+            44.38073402231303
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "radiusAtOriginMM": 0.9490518098100199,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.3,
+            1.3
+          ],
+          "thicknessMM": 0.9490518098100199,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk south rear east",
+        "minMM": [
+          14.152232809386712,
+          -18,
+          44.024526872778985
+        ],
+        "maxMM": [
+          15.895518471285717,
+          -16.5,
+          45.76781253467798
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            15.023875640336215,
+            -16.960248947143555,
+            44.89616970372848
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "radiusAtOriginMM": 0.8216428309495019,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.3,
+            1.3
+          ],
+          "thicknessMM": 0.8216428309495019,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk west inner north",
+        "minMM": [
+          -12.2,
+          14.529364585364767,
+          45.10917900564771
+        ],
+        "maxMM": [
+          -10.8,
+          17.417979202544785,
+          47.99779362282772
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -10.60890007019043,
+            15.973671893954776,
+            46.553486314237716
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 1.3943073085900073,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.3,
+            1.3
+          ],
+          "thicknessMM": 1.3943073085900073,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk south inner east",
+        "minMM": [
+          14.779935957045977,
+          -12.2,
+          45.17810669071246
+        ],
+        "maxMM": [
+          17.52313264963828,
+          -10.8,
+          47.92130338330475
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            16.151534303342128,
+            -10.651899337768555,
+            46.54970503700861
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "radiusAtOriginMM": 1.3215983462961507,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.3,
+            1.3
+          ],
+          "thicknessMM": 1.3215983462961507,
+          "allowanceMM": 0
+        }
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "Initial85k LOD lost a thin wooden return and had .16-.26mm post drift;145k plus own local exposed-return pin passes3490 geometry probes. Initial .18rad/.0018 UV and1152maps gave2.05mm per texel near timber/shingle edge and visibly lost LODgrain. Use .3rad/.0015 UV and2048bake/1536colour-data to retain grain and boundaries; keep exact pigment checks. Individually inspected author PDFpage16 and own full/back/top/side/west/south/well/underside/rear source views. SourceSHA d13b9447c0d967283afcca4e252c34f9a0630e0d81ab24c031f6fb5aa234abe6,939810 triangles,46990584 bytes,max99.174202mm. Native well floor measured3.418652 at[5,5],upper rung20.124432 at[0,0],rim25.406626 at[14,14];no standing points. Two own cap components and independent rung/stile fits retained. Lower-source comparison to82/88 is not exact(p90 .077/.276mm),so use own geometry and measurements rather than copying coordinates. Roof plane from165 own vertical rays:origin [0.0, 0.0, 74.38770442153468],normal [0.0008644057153471141, -0.8295364951536996, 0.5584518385777554],slope direction [0.0, 0.5584520472147086, 0.8295368050675634]. Outer shingles around signed plane distance -1.78..1.54mm;underside laths around-4.1..-6.5mm. Five own brace section fits;first RANSAC contaminated opposite faces and rejected. Front raised components constrain crossed timber masks. Six own fastener circle fits require visual cap/rim confirmation. Hollow UD016 outer insertion must preserve functional lowerwell;final90frame cells andpublished86 fit required before MCP. Review both candidates,roof blue/wood separation,ochre timber boundaries,grain,allhead channels,cavity,rungs,underside gaps,source/render/LOD/shadow geometry,footprint,finalpreview and allfive MCPresources. No emission or built-in lights.",
+  "surfaceHeightMM": 25.4066257477,
+  "renderColourSize": 1536,
+  "recessMount": {
+    "probeHalfMM": 16,
+    "envelopeTriangles": 2000,
+    "hiddenWallMM": 1,
+    "probeTopMM": 29
+  },
+  "renderColourQuality": 96,
+  "lodColourQuality": 96,
+  "geometryDetailRegions": [
+    {
+      "name": "own roof eave and underside gaps",
+      "minMM": [
+        -17.8,
+        -17.8,
+        47
+      ],
+      "maxMM": [
+        17.8,
+        -12,
+        56
+      ]
+    },
+    {
+      "name": "own west sloping beam lower exposed return",
+      "minMM": [
+        -17.8,
+        -7,
+        54.5
+      ],
+      "maxMM": [
+        -16.5,
+        -5,
+        58
+      ]
+    },
+    {
+      "name": "own west rear lower disk and rim",
+      "minMM": [
+        -18.95549945831299,
+        -15.109435149923877,
+        28.893165929827678
+      ],
+      "maxMM": [
+        -15.355499458312988,
+        -11.509435149923876,
+        32.493165929827676
+      ]
+    },
+    {
+      "name": "own west rear upper disk and rim",
+      "minMM": [
+        -18.712099838256837,
+        -14.862451874772157,
+        43.24191165845102
+      ],
+      "maxMM": [
+        -15.112099838256835,
+        -11.262451874772156,
+        46.84191165845102
+      ]
+    },
+    {
+      "name": "own south rear west disk and rim",
+      "minMM": [
+        -17.319882308683823,
+        -19.191550064086915,
+        42.58073402231303
+      ],
+      "maxMM": [
+        -13.719882308683824,
+        -15.591550064086913,
+        46.180734022313025
+      ]
+    },
+    {
+      "name": "own south rear east disk and rim",
+      "minMM": [
+        13.223875640336214,
+        -18.760248947143555,
+        43.096169703728485
+      ],
+      "maxMM": [
+        16.823875640336215,
+        -15.160248947143554,
+        46.69616970372848
+      ]
+    },
+    {
+      "name": "own west inner north disk and rim",
+      "minMM": [
+        -12.550100135803223,
+        14.77923641798419,
+        44.957284025681865
+      ],
+      "maxMM": [
+        -8.950100135803222,
+        18.379236417984192,
+        48.55728402568186
+      ]
+    },
+    {
+      "name": "own south inner east disk and rim",
+      "minMM": [
+        14.821455630869501,
+        -12.741749572753907,
+        45.1004631316163
+      ],
+      "maxMM": [
+        18.421455630869502,
+        -9.141749572753906,
+        48.700463131616296
+      ]
+    }
+  ]
+}

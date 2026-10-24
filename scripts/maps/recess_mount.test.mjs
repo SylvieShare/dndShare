@@ -64,7 +64,7 @@ function ring(r, y) {
     [-r, y, r],
   ];
 }
-async function fixture(solid = false, bad = false) {
+async function fixture(solid = false, bad = false, roof = false) {
   const doc = new Document(),
     scene = doc.createScene(),
     buffer = doc.createBuffer();
@@ -117,6 +117,7 @@ async function fixture(solid = false, bad = false) {
   quad("Visible well", ring(0.2, floor), [0, 1, 0]);
   quad(RECESS_HIDDEN, ring(0.22, floor - 0.02), [0, -1, 0]);
   if (solid) quad(RECESS_OUTER, holeTop, [0, 1, 0]);
+  if (roof) quad("Roof above well", ring(0.4, md + 0.4), [0, 1, 0]);
   if (bad) groups.get(RECESS_OUTER)[0] -= 0.03;
   for (const [name, values] of groups) {
     const positions = doc
@@ -162,6 +163,20 @@ test("a filled opening and altered outer dimensions are rejected", async () => {
   await assert.rejects(
     validateRecessMount(await fixture(false, true), model, proof),
   );
+});
+test("a covered well uses its measured interior probe height before and after mounting", async () => {
+  const bytes = await fixture(false, false, true);
+  const coveredModel = { ...model, maxHeight: md + 0.4 };
+  await assert.rejects(validateRecessMount(bytes, coveredModel, proof), /filled or changed/);
+  const measuredProof = { ...proof, cavityProbeTopMM: 27.5 };
+  await validateRecessMount(bytes, coveredModel, measuredProof);
+  const result = await fitRecessMount(bytes, coveredModel, measuredProof);
+  await validateRecessMount(result.bytes, result.model, measuredProof);
+  await assert.rejects(
+    validateRecessMount(await fixture(true, false, true), coveredModel, measuredProof),
+    /filled or changed/,
+  );
+  assert.throws(() => validateRecessConstruction({ ...proof, cavityProbeTopMM: 17 }, proof.sourceSHA256));
 });
 test("native construction identity and closed topology are mandatory", () => {
   assert.throws(() => validateRecessConstruction(proof, "b".repeat(64)));

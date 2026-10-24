@@ -1,5 +1,6 @@
 """Preserve a native stairwell inside the shared UD-016 outer mounting envelope."""
 import json
+import math
 from pathlib import Path
 import bmesh
 import bpy
@@ -196,12 +197,17 @@ def prepare_recess(source, recipe, source_hash):
         bm.free()
     original_tree = BVHTree.FromObject(source, bpy.context.evaluated_depsgraph_get())
     sky = max(v.co.z for v in source.data.vertices)+1
+    probe_top = settings.get('probeTopMM', sky)
+    if (not math.isfinite(probe_top) or
+            probe_top <= max(datum, recipe.get('surfaceHeightMM', datum))+.05 or
+            probe_top > sky):
+        raise ValueError('Recess probe top must be above the measured rim and below the source sky')
     cavity_probes = []
     half = settings['probeHalfMM']
     for x in np.linspace(-half, half, 65):
         for y in [-10, -5, 0, 5, 10]:
-            hit = original_tree.ray_cast((float(x), y, sky), (0, 0, -1))
-            if hit[0] is not None and hit[0].z < datum-.05:
+            hit = original_tree.ray_cast((float(x), y, probe_top), (0, 0, -1))
+            if hit[0] is not None and hit[0].z < datum-.05 and hit[1].z > 0.25:
                 cavity_probes.append(list(hit[0]))
     if not cavity_probes:
         raise ValueError('A recessed profile requires measured visible surfaces below its datum')
@@ -281,7 +287,7 @@ def prepare_recess(source, recipe, source_hash):
     report = dict(profile='ud016-recess-v1', sourceSHA256=source_hash, nativeDatumMM=datum,
                   reference=PROFILE, topology=topology, triangulation=triangulation,
                   cavityFaces=len(cavity_errors), maximumCavityDeviationMM=max(cavity_errors),
-                  cavityProbesMM=cavity_probes,
+                  cavityProbeTopMM=probe_top, cavityProbesMM=cavity_probes,
                   upperFaces=len(upper_errors), maximumUpperDeviationMM=max(upper_errors),
                   constructionToleranceMM=tolerance_mm,
                   outerTriangles=len(outer.data.polygons), hiddenTriangles=len(hidden.data.polygons))

@@ -145,6 +145,7 @@ Tall Wardrobe|Высокий шкаф
 Tall Bed|Высокая кровать
 Tall Bed Angle|Высокая угловая кровать
 Ladder Down|Приставная лестница вниз
+Roof Ladder Down|Крыша с лестницей вниз
 Balcony|Балкон
 Balcony Angle|Угловой балкон
 Balcony Corridor|Балкон с двумя ограждениями
