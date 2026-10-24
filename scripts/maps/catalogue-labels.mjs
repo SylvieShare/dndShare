@@ -162,6 +162,7 @@ Roof Center|Центральная крыша
 Roof Center End|Торцевая центральная крыша
 Roof Center Balcony|Центральная крыша с балконом
 Roof Flat|Плоская крыша
+Roof Flat Straight|Плоская крыша с двумя ограждениями
 Balcony|Балкон
 Balcony Angle|Угловой балкон
 Balcony Corridor|Балкон с двумя ограждениями
