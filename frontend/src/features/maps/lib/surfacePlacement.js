@@ -1,5 +1,6 @@
 import { structureContext } from "./tileStructure";
 import { hiddenAreaMembers } from "./mapAreas";
+import { gridTokenPoint, occupiesCells, tokenAnchorOffset, tokenSpan } from "./tokenFootprint";
 
 export function surfacePosition(tile, model, point, elevation = 0) {
   let x = point.x,
@@ -66,7 +67,9 @@ export function resolvedSurfacePosition(
   index,
 ) {
   if (!entity.placement)
-    return { ...entity, elevation: entity.elevation ?? 0.44 };
+    return occupiesCells(entity) && tokenSpan(entity) > 1
+      ? { ...entity, ...gridTokenPoint(entity, entity.size) }
+      : { ...entity, elevation: entity.elevation ?? 0.44 };
   const tile =
       index?.tiles.get(entity.placement.tileId) ||
       context?.tilesById?.get(entity.placement.tileId) ||
@@ -80,12 +83,16 @@ export function resolvedSurfacePosition(
   if (!tile || !point)
     return { ...entity, elevation: entity.elevation ?? 0.44 };
   const poses = context || structureContext(document, catalogue);
+  const offset = tokenAnchorOffset(entity, point, tile);
+  const [dx, dy] = offset;
   return {
     ...entity,
+    ...(occupiesCells(entity) && point.cell ? { cell: surfaceCell(tile,model,point) } : {}),
+    ...(occupiesCells(entity) && tokenSpan(entity) > 1 ? { anchorOffset: offset } : {}),
     ...surfacePosition(
       tile,
       model,
-      point,
+      { ...point, x: point.x + dx, y: point.y + dy },
       poses.placements.get(tile.id)?.elevation || 0,
     ),
   };

@@ -2,6 +2,7 @@ import { reactive } from 'vue';
 import { documentMutationFixture } from "./documentMutations";
 import { useTemplateStore } from "../../../src/stores/template";
 import { useSuggestStore } from "../../../src/stores/suggest";
+import { canonicalMapData } from "../../../src/shared/api/mapDocumentData";
 export function sessionFixture(pinia, source, params) {
   useTemplateStore(pinia).templates = [{ id: 41, name: "DND5" }];
   if (params.has("largeCreature") && !useSuggestStore(pinia).loaded(18))
@@ -61,6 +62,7 @@ export function sessionFixture(pinia, source, params) {
   return { participants, encounter };
 }
 export function sessionAPI(initial, initialDisplay, getSource) {
+  initial = canonicalMapData(initial);
   const mutate = documentMutationFixture(["name", "document", "state"]);
   let maps = [initial],
     display = initialDisplay;

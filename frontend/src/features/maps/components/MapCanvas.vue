@@ -108,6 +108,7 @@ const props = defineProps({
   placementLight: Boolean,
   editLights: Boolean,
   selectedToken: String,
+  placementToken: Object,
   hoveredToken: String,
   selectionColor: String,
   selectedTile: String,

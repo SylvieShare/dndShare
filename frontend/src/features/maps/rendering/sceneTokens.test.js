@@ -114,10 +114,11 @@ it.each([false, true])("uses a shared miniature without a bottom disc or ring (f
   );
   const mini = root.children.find(node => node.userData.tokenBody);
   expect(root.children.some(node => node.isMesh)).toBe(false);
-  expect(mini.scale.x).toBe(2);
+  expect(mini.scale.x).toBeLessThanOrEqual(1.4);
+  expect(Math.hypot(.5, .5) * mini.scale.x).toBeCloseTo(.7);
   expect(mini.children[0].geometry).toBe(geometry);
   expect(mini.children[0].receiveShadow).toBe(true);
-  expect(root.children.find(node => node.isSprite).position.y).toBeGreaterThan(1.8);
+  expect(root.children.find(node => node.isSprite).position.y).toBeGreaterThan(metadata.maxHeight * mini.scale.x);
   applyAreaOpacity(root, 0.2);
   expect(mini.children[0].material.opacity).toBeCloseTo(0.08);
   disposeObjects(root);
@@ -173,8 +174,9 @@ it("outlines only the creature body and seats it on a separately loaded base", (
   const tokenRoot = layer.root.children[0];
   const body = tokenRoot.children.find(n => n.userData.tokenBody);
   const base = tokenRoot.children.find(n => n.userData.tokenBase);
-  expect(body.scale.x).toBe(2);
-  expect(base.scale.x).toBe(1);
+  expect(body.scale.x).toBeLessThanOrEqual(1.4);
+  expect(base.scale.x).toBe(.7);
+  expect(base.scale.y).toBe(1);
   expect(body.position.y - base.position.y).toBeCloseTo(.06);
   expect(tokenRoot.scale.x).toBe(-1);
   tokenRoot.userData.outlineStyle = "hover";
@@ -215,7 +217,7 @@ it("preserves native part transforms when freezing a miniature on the board", ()
   );
   const mini = layer.root.children[0].children.find(node => node.userData.tokenBody);
   const placement = new Matrix4()
-    .makeScale(2, 2, 2)
+    .makeScale(mini.scale.x, mini.scale.y, mini.scale.z)
     .setPosition(token.x, token.elevation, token.y);
   for (const [index, expected] of [body, pebble].entries()) {
     expect(mini.children[index].matrix.equals(expected)).toBe(true);

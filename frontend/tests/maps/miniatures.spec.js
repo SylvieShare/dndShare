@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { canvasFrame, mapPoint } from "./editorHelpers";
+import { canvasFrame, worldPoint } from "./editorHelpers";
 import { MINI_ID, BASE_IDS } from "./fixtures/miniatures.js";
 
 async function miniaturePixels(page) {
@@ -36,7 +36,7 @@ test("placing an NPC loads its bound miniature and saves the bestiary ID", async
     .getByRole("region", { name: "Существа сессии" })
     .getByRole("button", { name: "A · Огр", exact: true });
   const b = await row.boundingBox(),
-    point = await mapPoint(page, 4.5, 4.5);
+    point = await worldPoint(page, 4.5, 4.5);
   await page.mouse.move(b.x + 25, b.y + 25);
   await page.mouse.down();
   await page.mouse.move(point.x, point.y, { steps: 12 });
@@ -118,7 +118,10 @@ test("the creature base toggle persists its random choice and R/T reach the sele
   await toggle.click();
   await toggle.click();
   expect((await token()).baseModelId).toBe(chosen);
-  await page.getByRole("region", { name: "Существа сессии" }).getByRole("button", { name: "A · Огр", exact: true }).click();
+  await page.getByRole("region", { name: "Существа сессии" }).getByRole("button", { name: "A · Огр", exact: true }).locator(".p-name").click();
+  await page.getByRole("menuitem", { name: "Выбрать на карте", exact: true }).click();
+  await expect(page.locator('[role="dialog"]')).toHaveCount(0);
+  await expect(page.getByRole("menu")).toHaveCount(0);
   await page.locator(".map-canvas-surface").focus();
   await page.keyboard.press("r");
   await page.keyboard.press("t");

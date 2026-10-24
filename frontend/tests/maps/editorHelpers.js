@@ -9,6 +9,17 @@ export async function canvasFrame(page) {
   });
   return Buffer.from(data.split(",")[1], "base64");
 }
+export async function worldPoint(page, x, y, elevation = .44) {
+  return page.locator(".map-canvas").evaluate(async (el, point) => {
+    const { OrthographicCamera, Vector3 } = await import("/node_modules/three/build/three.module.js");
+    const { applySceneCamera } = await import("/src/features/maps/rendering/sceneCameraView.js");
+    const camera = new OrthographicCamera();
+    applySceneCamera(camera, el.__vueParentComponent.exposed.captureCamera());
+    const p = new Vector3(point.x, point.elevation, point.y).project(camera);
+    const bounds = el.querySelector("canvas").getBoundingClientRect();
+    return { x: bounds.left+(p.x+1)*bounds.width/2, y: bounds.top+(1-p.y)*bounds.height/2 };
+  }, { x,y,elevation });
+}
 export async function dragDecal(page, name, point) {
   const card = page
     .getByRole("region", { name: "Каталог декалей", exact: true })

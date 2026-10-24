@@ -87,23 +87,24 @@ type Document struct {
 }
 
 type Token struct {
-	Dead        bool             `json:"dead,omitempty"` // Read-only encounter projection, cleared on map writes.
-	BaseModelID string           `json:"baseModelId,omitempty"`
-	Rotation    int              `json:"rotation,omitempty"`
-	Mirrored    bool             `json:"mirrored,omitempty"`
-	ItemID      int64            `json:"itemId,omitempty"`
-	ID          string           `json:"id"`
-	Kind        string           `json:"kind"`
-	Ref         string           `json:"ref"`
-	Name        string           `json:"name"`
-	ImageURL    string           `json:"imageUrl,omitempty"`
-	Color       string           `json:"color"`
-	X           float64          `json:"x"`
-	Y           float64          `json:"y"`
-	Size        float64          `json:"size"`
-	Hidden      bool             `json:"hidden"`
-	Physical    bool             `json:"physical"`
-	Placement   *PlacementAnchor `json:"placement,omitempty"`
+	Dead         bool             `json:"dead,omitempty"` // Read-only encounter projection, cleared on map writes.
+	BaseModelID  string           `json:"baseModelId,omitempty"`
+	Rotation     int              `json:"rotation,omitempty"`
+	Mirrored     bool             `json:"mirrored,omitempty"`
+	ItemID       int64            `json:"itemId,omitempty"`
+	ID           string           `json:"id"`
+	Kind         string           `json:"kind"`
+	Ref          string           `json:"ref"`
+	Name         string           `json:"name"`
+	ImageURL     string           `json:"imageUrl,omitempty"`
+	Color        string           `json:"color"`
+	X            float64          `json:"x"`
+	Y            float64          `json:"y"`
+	Size         float64          `json:"size"`
+	Hidden       bool             `json:"hidden"`
+	Physical     bool             `json:"physical"`
+	Placement    *PlacementAnchor `json:"placement,omitempty"`
+	AnchorOffset *[2]float64      `json:"anchorOffset,omitempty"`
 }
 
 type State struct {

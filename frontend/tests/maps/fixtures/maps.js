@@ -155,6 +155,8 @@ source.document.objects = [
     open: false,
   },
 ];
+if (params.has("largeCreature"))
+  paint(source.document, [{x:4,y:4},{x:5,y:4},{x:4,y:5},{x:5,y:5}], FLOOR);
 source.document.zones = [
   {
     id: "left",

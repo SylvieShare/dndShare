@@ -1,7 +1,10 @@
 import { Vector3 } from "three";
 import { createRotationMotion } from "./rotationMotion";
+import { createTokenMotion } from "./tokenMotion";
+import { tokenAnchorOffset } from "../lib/tokenFootprint";
 export function createObjectMotion(assets, tileMatrix) {
   const motion = createRotationMotion(),
+    tokens = createTokenMotion(),
     point = new Vector3(),
     changed = new Set();
   let objects = new Map(),
@@ -9,7 +12,7 @@ export function createObjectMotion(assets, tileMatrix) {
     dirty = true;
   return {
     get needsUpdate() {
-      return dirty || motion.isMoving();
+      return dirty || motion.isMoving() || tokens.isMoving();
     },
     changed,
     update(items, document) {
@@ -17,14 +20,16 @@ export function createObjectMotion(assets, tileMatrix) {
       objects = new Map(items.map((o) => [o.id, o]));
       parents = new Map(document.tiles.map((t) => [t.id, t]));
       motion.retain(new Set(objects.keys()));
+      tokens.retain(new Set(objects.keys()));
       for (const object of items)
         motion.set(object.id, { ...object, rotation: object.rotation || 0 });
     },
     advance(delta, root, parentMoving = true) {
       changed.clear();
-      if (!dirty && !parentMoving && !motion.isMoving()) return false;
+      if (!dirty && !parentMoving && !motion.isMoving() && !tokens.isMoving()) return false;
       dirty = false;
       const moving = motion.advance(delta);
+      tokens.begin();
       for (const child of root.children) {
         const object = objects.get(
           child.userData.objectId || child.userData.tokenId,
@@ -45,6 +50,7 @@ export function createObjectMotion(assets, tileMatrix) {
         const anchor = model?.placementPoints?.[object.placement?.point],
           matrix = parent && tileMatrix(parent.id);
         if (anchor && matrix) {
+          const [dx, dy] = child.userData.tokenId ? tokenAnchorOffset(object, anchor, parent) : [0, 0];
           if (!matrix.mirroring) {
             const values = matrix.elements,
               sign = matrix.determinant() < 0 ? -1 : 1;
@@ -57,13 +63,17 @@ export function createObjectMotion(assets, tileMatrix) {
           child.position.copy(
             point
               .set(
-                anchor.x - model.width / 2 - (model.placementOffset?.[0] || 0),
+                anchor.x + dx - model.width / 2 - (model.placementOffset?.[0] || 0),
                 anchor.elevation,
-                anchor.y - model.height / 2 - (model.placementOffset?.[1] || 0),
+                anchor.y + dy - model.height / 2 - (model.placementOffset?.[1] || 0),
               )
               .applyMatrix4(matrix),
           );
           if (child.userData.tokenId) child.position.y += 0.05;
+        }
+        if (child.userData.tokenId) {
+          const visual = tokens.pose(object.id, { x: child.position.x, y: child.position.z, elevation: child.position.y }, object.moving, delta, !!anchor && !!matrix && parentMoving && !object.moving);
+          child.position.set(visual.x, visual.elevation, visual.y);
         }
         if (
           oldX !== child.position.x ||
@@ -77,8 +87,8 @@ export function createObjectMotion(assets, tileMatrix) {
           child.updateMatrixWorld(true);
         }
       }
-      return moving;
+      return moving || tokens.isMoving();
     },
-    destroy: motion.clear,
+    destroy() { motion.clear(); tokens.clear(); },
   };
 }

@@ -2,12 +2,15 @@ import { buildModelObject } from "./modelObject";
 import { modelVisual } from "./modelVisual";
 import { tokenModelId } from "../lib/tokenModels";
 import { tokenBaseModel } from "../lib/tokenBases";
+import { tokenBodyScale, TOKEN_VISUAL_SCALE } from "./tokenScale";
 
 export function buildTokenMiniature(token, options, fog) {
   const assets = options.assets;
   if (!assets) return null;
   const id = tokenModelId(token, assets.catalogue?.() || []);
-  if (!id || !modelVisual(assets, id, options.tier)) return null;
+  const visual = id && modelVisual(assets, id, options.tier);
+  if (!visual) return null;
+  const scale = tokenBodyScale(token.size, visual);
   const root = buildModelObject(
     {
       id: token.id,
@@ -15,7 +18,7 @@ export function buildTokenMiniature(token, options, fog) {
       x: 0,
       y: 0,
       elevation: 0,
-      scale: token.size,
+      scale,
       rotation: 0,
     },
     assets,
@@ -35,6 +38,8 @@ export function buildTokenMiniature(token, options, fog) {
     );
     delete baseRoot.userData.objectId;
     baseRoot.userData.tokenBase = true;
+    baseRoot.scale.x *= TOKEN_VISUAL_SCALE;
+    baseRoot.scale.z *= TOKEN_VISUAL_SCALE;
     baseRoot.position.y = -0.05;
   }
   if (token.hidden)
@@ -44,5 +49,5 @@ export function buildTokenMiniature(token, options, fog) {
         material.opacity *= 0.4;
       }
     });
-  return { root, base: baseRoot, height: (assets.metadata(id)?.maxHeight || 1) * token.size + (base?.surfaceHeight || 0) };
+  return { root, base: baseRoot, height: (assets.metadata(id)?.maxHeight || 1) * scale + (base?.surfaceHeight || 0) };
 }

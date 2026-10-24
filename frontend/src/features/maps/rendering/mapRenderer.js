@@ -422,6 +422,10 @@ export async function createMapRenderer(
     getView: view.getView,
     captureCamera: view.capture,
     world: view.world,
+    tokenPoint(event, id) {
+      const token = runtime.posedTokens.find(t => t.id === id);
+      return token ? { ...view.world(event, token.elevation), elevation: token.elevation } : null;
+    },
     placementPoint: structure.point,
     ...queries,
     decalPoint: (event) => decalOwners.surface(view.ray(event)),

@@ -3,6 +3,8 @@ import { clone, uid } from "../lib/mapModel";
 import { resolvedSurfacePosition } from "../lib/surfacePlacement";
 import { chooseTokenBase } from "../lib/tokenBases";
 import { tokenModelId } from "../lib/tokenModels";
+import { tokenPlacementIssue } from "../lib/tokenFootprint";
+import { tokenPlacementPoints, imageTokenPoint } from "../lib/tokenPlacement";
 import {
   creatureKey,
   creatureToken,
@@ -15,6 +17,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
     hovered = ref(""),
     pending = ref(null),
     preview = ref(null),
+    error = ref(""),
     dragging = ref(false);
   let drag = null;
   let placementPose = {};
@@ -29,6 +32,12 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
     creatureToken(getEditor()?.draft, candidate.value),
   );
   const selected = computed(() => preview.value?.id || token.value?.id || "");
+  const placement = computed(() => {
+    const c = pending.value || (dragging.value && token.value);
+    if (!c) return null;
+    const previous = creatureToken(getEditor()?.draft, c);
+    return { ...c, id: previous?.id || "preview-token", size: previous?.size || c.size || 1, grabOffset: drag?.grabOffset };
+  });
   const canvasState = computed(() => {
     const s = getEditor()?.draft.state;
     if (!s) return s;
@@ -42,7 +51,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
       tokens: withCreatureLifeState(withCreatureItems(
         withCreaturePortraits(items, candidates.value),
         candidates.value,
-      ), candidates.value),
+      ), candidates.value).map(t => t.id === preview.value?.id ? { ...t, moving: true } : t),
     };
   });
   function clear() {
@@ -50,6 +59,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
     hovered.value = "";
     pending.value = null;
     preview.value = null;
+    error.value = "";
   }
   function clearMapSelection(e) {
     e.clearCamera?.();
@@ -69,6 +79,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
     pending.value = preview.value = null;
     const t = creatureToken(e.draft, c);
     placementPose = { rotation: t?.rotation || 0, mirrored: !!t?.mirrored, ...(t?.baseModelId ? { baseModelId: t.baseModelId } : {}) };
+    error.value = "";
     if (t && moveCamera)
       nextTick(() => {
         if (focused.value !== creatureKey(c)) return;
@@ -115,16 +126,25 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
     return placed;
   }
   function position(point) {
-    return (point?.placement || point?.grid) && !point.invalidSurface
-      ? {
+    if (!point?.placement && !point?.grid) return null;
+    const at = {
           x: point.x,
           y: point.y,
           elevation: point.elevation,
+          cell: point.cell,
+          anchorOffset: point.anchorOffset,
           ...(point.placement
             ? { placement: point.placement }
             : { placement: undefined }),
-        }
-      : null;
+        };
+    const e = getEditor();
+    const others = e.draft.state.tokens.map(t => resolvedSurfacePosition(t, e.draft.document, e.catalogue || []));
+    const reason = point.invalidReason || tokenPlacementIssue({ ...placement.value, ...at }, e.draft.document, others);
+    return { ...at, invalidSurface: !!point.invalidSurface || !!reason, invalidReason: reason };
+  }
+  function durable(t) {
+    const { invalidSurface, invalidReason, moving, cell, ...saved } = t;
+    return Object.fromEntries(Object.entries(saved).filter(([,value]) => value !== undefined));
   }
   function gesture(event, e) {
     const { phase, point, hit } = event;
@@ -148,12 +168,12 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
     if (phase === "start") {
       if (pending.value) {
         const at = position(point);
-        if (!at) return true;
+        if (!at || at.invalidSurface) { error.value = at?.invalidReason || "Здесь нельзя поставить существо"; return true; }
         const c =
           candidates.value.find(
             (c) => creatureKey(c) === creatureKey(pending.value),
           ) || pending.value;
-        const placed = atPosition(at);
+        const placed = durable(atPosition(at));
         e.change((m) => {
           m.state.tokens = m.state.tokens.filter(
             (t) => c.kind === "marker" || creatureKey(t) !== creatureKey(c),
@@ -168,7 +188,9 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
       if (!t) return false;
       clearMapSelection(e);
       focused.value = creatureKey(t);
-      drag = { id: t.id, source: clone(t), changed: false };
+      const posed = resolvedSurfacePosition(t,e.draft.document,e.catalogue || []);
+      drag = { id: t.id, source: clone(t), changed: false, grabOffset: point ? { x:point.x-posed.x,y:point.y-posed.y } : null };
+      preview.value = clone(t);
       dragging.value = true;
       e.pauseSave(true);
       return true;
@@ -182,8 +204,9 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
       }
     }
     if (phase === "end") {
-      if (drag.changed && preview.value) {
-        const target = preview.value;
+      const at = point === undefined ? preview.value : position(point);
+      if (drag.changed && at && !at.invalidSurface && preview.value) {
+        const target = durable({ ...preview.value, ...at });
         e.change((m) =>
           Object.assign(
             m.state.tokens.find((t) => t.id === drag.id),
@@ -199,10 +222,24 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
     return true;
   }
   function change(update) {
+    const current = token.value;
+    if (!current) return false;
+    const next = clone(current);
+    update(next);
+    if (next.size !== current.size) {
+      const e = getEditor(), d = e.draft.document;
+      const points = d.kind === "image"
+        ? [imageTokenPoint(current, next, d, e.draft.state)]
+        : tokenPlacementPoints(d, e.catalogue || [], next, e.draft.state);
+      const at = points.sort((a, b) => Math.hypot(a.x-current.x,a.y-current.y)-Math.hypot(b.x-current.x,b.y-current.y))[0];
+      if (!at || at.invalidSurface) { error.value = at?.invalidReason || "Для этого размера нет свободного места"; return false; }
+      Object.assign(next, position(at));
+    }
+    error.value = "";
     getEditor().change((m) => {
       const t = creatureToken(m, candidate.value);
       if (t) {
-        update(t);
+        Object.assign(t, durable(next));
         const modelToken = { ...t, itemId: t.itemId || candidate.value?.itemId };
         if ((m.state.useCreatureBases || t.baseModelId) && tokenModelId(modelToken, getEditor().catalogue || [])) {
           const id = chooseTokenBase(t, getEditor().catalogue || []);
@@ -211,6 +248,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
         }
       }
     });
+    return true;
   }
   function transform(update) {
     const current = preview.value || token.value;
@@ -228,15 +266,14 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
     return true;
   }
   function remove() {
-    change((t) => {
-      getEditor().draft.state.tokens = getEditor().draft.state.tokens.filter(
-        (x) => x.id !== t.id,
-      );
-    });
+    const id = token.value?.id;
+    if (id) getEditor().change(m => { m.state.tokens = m.state.tokens.filter(t => t.id !== id); });
   }
   return {
     focused,
     hovered,
+    error,
+    placement,
     candidate,
     token,
     selected,

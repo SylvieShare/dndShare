@@ -69,6 +69,8 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
         getRenderer().surfacePoint(
           event,
           props.previewObject?.moving ? props.previewObject.id : "",
+          props.placementToken,
+          props.state,
         ) || { ...getRenderer().world(event), invalidSurface: true }
       );
     }
@@ -104,6 +106,11 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
             ...getRenderer().world(event, cameraHeight),
             elevation: cameraHeight,
           };
+    const tokenPoint = hit?.tokenId && props.tool === "select" &&
+      !props.surfacePlacement && !props.placementObject && !props.placementModel &&
+      !props.placementLight && !props.placementDecal
+      ? getRenderer().tokenPoint?.(event, hit.tokenId)
+      : null;
     const additive = event.metaKey || event.ctrlKey;
     const delayed =
       props.holdToDrag &&
@@ -136,7 +143,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
         (!hit || hit.anchor),
       screen: { x: event.clientX, y: event.clientY },
       point:
-        cameraPoint ||
+        cameraPoint || tokenPoint ||
         (hit?.decalId
           ? getRenderer().decalPoint(event) || hit.point
           : props.tool === "paste" ||

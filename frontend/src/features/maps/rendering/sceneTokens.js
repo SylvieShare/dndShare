@@ -102,6 +102,8 @@ export function buildMapToken(token, options, fog) {
   const group = new Group();
   group.position.set(token.x, (token.elevation ?? FLOOR) + 0.05, token.y);
   group.userData.tokenId = token.id;
+  group.rotation.y = (-(token.rotation || 0) * Math.PI) / 180;
+  group.scale.x = token.mirrored ? -1 : 1;
   const hiddenOpacity = token.hidden ? 0.4 : 1;
   const miniature = token.dead ? null : buildTokenMiniature(token, options, fog);
   if (miniature) {

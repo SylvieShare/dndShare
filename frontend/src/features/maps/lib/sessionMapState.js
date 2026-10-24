@@ -25,6 +25,7 @@ export function normalizeSessionMap(map, catalogue) {
       const posed = resolvedSurfacePosition(token, d, catalogue, context);
       token.x = posed.x;
       token.y = posed.y;
+      if (posed.anchorOffset) token.anchorOffset = posed.anchorOffset;
     }
     token.x = Math.max(0, Math.min(d.width, token.x));
     token.y = Math.max(0, Math.min(d.height, token.y));

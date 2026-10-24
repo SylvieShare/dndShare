@@ -94,6 +94,10 @@ it("follows separate body and base roots through rotation, reflection and vertic
     actual.elements.forEach((v, j) => expect(v).toBeCloseTo(expected.elements[j], 5));
   }
   expect(f.proxy.advance(() => null, roots)).toBe(false);
+  token.remove(base);
+  f.proxy.advance(() => null, roots);
+  f.proxy.root.children[0].getMatrixAt(1, actual);
+  expect(actual.determinant()).toBe(0);
   f.proxy.destroy();
 });
 it("shares real shadow geometry without filling blockers and preserves peg, rotation and part transforms", () => {

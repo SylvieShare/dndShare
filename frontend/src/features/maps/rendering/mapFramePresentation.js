@@ -19,7 +19,7 @@ export function createMapFramePresentation({
       const { tokenId, objectId } = object.userData;
       object.userData.outlineType = "object";
       object.userData.outlineStyle =
-        (tokenId
+        object.userData.invalidSurface ? "invalid" : (tokenId
           ? tokenId === options.selectedToken
           : objectId && (objectId === options.selectedObject ||
             options.selectedObjects?.includes(objectId)))

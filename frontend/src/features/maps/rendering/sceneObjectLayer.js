@@ -7,6 +7,7 @@ import { applyAreaOpacity } from "./areaOpacity";
 import { modelVisual, visualSignature } from "./modelVisual";
 import { tokenModelId } from "../lib/tokenModels";
 import { tokenBaseModel } from "../lib/tokenBases";
+import { createTokenFootprintPreview } from "./tokenFootprintPreview";
 
 // Stable logical roots serve motion/attachments; repeated props share GPU draws.
 export function createSceneObjectLayer(assets, fog, portraits) {
@@ -16,6 +17,7 @@ export function createSceneObjectLayer(assets, fog, portraits) {
   root.matrixAutoUpdate = false;
   const batches = createModelBatches(root, assets, fog, "objects");
   const pose = new Matrix4();
+  const footprint = createTokenFootprintPreview();
   let appearance;
   function release(id, record) {
     root.remove(record.node);
@@ -108,7 +110,8 @@ export function createSceneObjectLayer(assets, fog, portraits) {
             visibilityAt(document, state, item.x, item.y) !== "visible")
         )
           continue;
-        const { x, y, elevation, rotation, mirrored, ...visual } = item;
+        // Pose and preview changes must not rebuild the shared miniature meshes.
+        const { x, y, elevation, rotation, mirrored, placement, anchorOffset, moving, invalidSurface, invalidReason, cell, ...visual } = item;
         const modelId = tokenModelId(item, assets.catalogue?.() || []);
         const base = tokenBaseModel(item, state, assets.catalogue?.() || []);
         const stamp = JSON.stringify([
@@ -125,13 +128,14 @@ export function createSceneObjectLayer(assets, fog, portraits) {
           ),
         );
         node.userData.placementTileId = item.placement?.tileId;
-        node.position.set(x, (elevation || 0) + 0.05, y);
-        node.scale.x = mirrored ? -1 : 1;
-        node.updateMatrix();
+        node.userData.invalidSurface = !!invalidSurface;
         applyAreaOpacity(node, appearance.tokenOpacity(item.placement?.tileId));
       }
       for (const [id, record] of records)
         if (!keep.has(id)) release(id, record);
+      footprint.update(state?.tokens || [], options.master);
+      if (footprint.root.visible) root.add(footprint.root);
+      else root.remove(footprint.root);
       batches.sync(groups);
       root.updateMatrixWorld(true);
     },
@@ -186,6 +190,7 @@ export function createSceneObjectLayer(assets, fog, portraits) {
       batches.destroy();
       for (const [id, record] of records) release(id, record);
       masks.clear();
+      footprint.destroy();
     },
   };
 }

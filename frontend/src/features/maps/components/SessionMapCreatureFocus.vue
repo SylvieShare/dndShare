@@ -26,6 +26,7 @@
       >
     </MapInspectorSection>
     <MapInspectorSection title="Размещение">
+      <p v-if="tokens.error" class="map-error" role="status">{{ tokens.error }}</p>
       <ActionButton v-if="!token" @click="tokens.place(candidate)"
         >Поставить на карту</ActionButton
       >
@@ -43,12 +44,9 @@
         />
         <FormField label="Размер, клеток"
           ><FormSelect
+            :key="sizeReset"
             :value="token.size"
-            @change="
-              tokens.change((t) => {
-                t.size = Number($event);
-              })
-            "
+            @change="resize"
             ><option
               v-for="size in [0.5, 1, 2, 3, 4, 6, 8]"
               :key="size"
@@ -58,6 +56,10 @@
             </option></FormSelect
           ></FormField
         >
+        <small v-if="candidate.kind === 'creature'" class="map-hint">
+          По справочнику: {{ candidate.size || 1 }} × {{ candidate.size || 1 }}
+        </small>
+        <ActionButton v-if="candidate.kind === 'creature' && token.size !== (candidate.size || 1)" variant="quiet" @click="tokens.change(t => { t.size = candidate.size || 1 })">Размер из справочника</ActionButton>
         <ToggleSwitch
           :model-value="token.hidden"
           label="Скрыть от игроков"
@@ -81,7 +83,7 @@
   </MapSelectedEntity>
 </template>
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import {
   ActionButton,
   FormField,
@@ -101,6 +103,10 @@ const props = defineProps({
   encounter: Object,
 });
 const emit = defineEmits(["participant"]);
+const sizeReset = ref(0);
+function resize(value) {
+  if (!props.tokens.change(t => { t.size = Number(value); })) sizeReset.value++;
+}
 const entry = computed(() => ({
   ...props.candidate,
   item: props.token || {},

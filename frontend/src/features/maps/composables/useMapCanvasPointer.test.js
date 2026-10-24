@@ -77,6 +77,15 @@ it("decal placement preserves the projected surface through pointer start and en
     expect(payload.point.decalSurface).toEqual(surface.decalSurface);
   expect(emit).toHaveBeenCalledTimes(2);
 });
+
+it("starts creature pickup in its own floor plane rather than the ground plane", () => {
+  const point={x:2.2,y:3.1,elevation:2.4};
+  const {pointer,event,emit}=setup({tokenId:"ogre"},{},{tokenPoint:()=>point});
+  pointer.down(event);vi.advanceTimersByTime(600);
+  const start=emit.mock.calls.find(([,payload])=>payload.phase==="start");
+  expect(start[1].point).toEqual(point);
+  pointer.cancel(event);
+});
 it("a quick drag over a model pans, cancels the hold and never starts an edit", () => {
   const { pointer, event, emit, setView } = setup();
   pointer.down(event);

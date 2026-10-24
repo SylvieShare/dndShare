@@ -123,7 +123,7 @@ test("roster drops outside the field or on invalid surfaces never create a creat
 }) => {
   const roster = await ready(page);
   const row = roster.getByRole("button", { name: "A · Огр", exact: true });
-  await startDrag(page, row, { x: 20, y: 20 });
+  await startDrag(page, row, { x: 1450, y: 1100 });
   await page.mouse.up();
   expect((await saved(page)).some((t) => t.ref === "ogre")).toBe(false);
   await startDrag(page, row, await mapPoint(page, 11.5, 9.5));

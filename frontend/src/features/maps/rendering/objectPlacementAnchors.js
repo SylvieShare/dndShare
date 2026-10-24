@@ -1,6 +1,7 @@
 import { Group, Mesh, MeshBasicMaterial, SphereGeometry } from "three";
 import { surfacePoints } from "../lib/surfacePlacement";
 import { OBJECT_ACCENT } from "./mapAccents";
+import { tokenPlacementPoints, unoccupiedObjectPoints } from "../lib/tokenPlacement";
 export function objectPlacementAnchors() {
   const root = new Group(),
     geometry = new SphereGeometry(0.065, 12, 8);
@@ -10,7 +11,7 @@ export function objectPlacementAnchors() {
     points = [];
   return {
     root,
-    update(document, catalogue, object, show, hiddenTiles) {
+    update(document, catalogue, object, show, hiddenTiles, token, state) {
       root.visible = !!show;
       if (!show) return;
       points = surfacePoints(
@@ -19,6 +20,8 @@ export function objectPlacementAnchors() {
         object?.moving ? object.id : "",
         hiddenTiles,
       );
+      if (token) points = tokenPlacementPoints(document, catalogue, token, state, points).filter(point => !point.invalidSurface);
+      else points = unoccupiedObjectPoints(document,catalogue,state,points);
       const next = JSON.stringify([points, object?.placement]);
       if (key === next) return;
       key = next;

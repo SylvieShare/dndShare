@@ -2,6 +2,7 @@ import { modelVisual } from "./modelVisual";
 import { Vector3 } from "three";
 import { surfacePoints } from "../lib/surfacePlacement";
 import { tileBounds } from "./tileTransform";
+import { imageTokenPoint, tokenPlacementPoints, unoccupiedObjectPoints } from "../lib/tokenPlacement";
 export function mapScreenQueries(
   host,
   view,
@@ -43,7 +44,7 @@ export function mapScreenQueries(
       cachedContext = null;
       surfaces.clear();
     },
-    surfacePoint(event, ignored = "") {
+    surfacePoint(event, ignored = "", token, state) {
       const document = getDocument();
       if (!document) return null;
       if (document.kind === "image") {
@@ -55,6 +56,7 @@ export function mapScreenQueries(
           p.y >= document.height
         )
           return null;
+        if (token) return imageTokenPoint(p, token, document, state);
         return {
           x: Math.floor(p.x) + 0.5,
           y: Math.floor(p.y) + 0.5,
@@ -80,22 +82,24 @@ export function mapScreenQueries(
         );
         if (surfaces.size > 4) surfaces.delete(surfaces.keys().next().value);
       }
-      const points = surfaces.get(ignored),
+      const points = token
+          ? tokenPlacementPoints(document, assets.catalogue(), token, state, surfaces.get(ignored), context)
+          : unoccupiedObjectPoints(document,assets.catalogue(),state,surfaces.get(ignored),context),
         rect = host.getBoundingClientRect();
       let best = null,
         distance = Infinity;
       for (const point of points) {
-        const p = view.project(new Vector3(point.x, point.elevation, point.y));
+        const p = view.project(new Vector3(point.x + (token?.grabOffset?.x || 0), point.elevation, point.y + (token?.grabOffset?.y || 0)));
         const next = Math.hypot(
           p.x + rect.left - event.clientX,
           p.y + rect.top - event.clientY,
         );
-        if (next < distance) {
+        if (next < distance - .01 || Math.abs(next-distance) <= .01 && best?.invalidSurface && !point.invalidSurface) {
           distance = next;
           best = point;
         }
       }
-      return best;
+      return !token || token.kind === "marker" || distance <= Math.max(12,(view.getView?.().cellPixels || 48)*.75) ? best : null;
     },
     tilesInRect(rect) {
       return (getDocument()?.tiles || [])

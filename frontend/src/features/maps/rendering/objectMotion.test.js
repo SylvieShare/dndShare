@@ -1,6 +1,20 @@
 import { expect, it } from "vitest";
 import { Group, Matrix4 } from "three";
 import { createObjectMotion } from "./objectMotion";
+it("moves an attached multi-cell creature from its anchor to its offset centre with animated pickup", () => {
+  const model={width:1,height:1,placementPoints:[{x:.5,y:.5,elevation:.4,cell:{x:0,y:0}}]};
+  const motion=createObjectMotion({metadata:()=>model},()=>new Matrix4().makeTranslation(.5,0,.5));
+  const root=new Group(), token=new Group(); token.userData.tokenId="ogre";root.add(token);
+  const pose={id:"ogre",kind:"creature",size:2,x:1,y:1,elevation:.45,placement:{tileId:"floor",point:0}};
+  const document={tiles:[{id:"floor",modelId:"floor",rotation:0}]};
+  motion.update([pose],document);motion.advance(16,root,false);
+  expect(token.position.toArray()).toEqual([1,.45,1]);
+  motion.update([{...pose,moving:true}],document);motion.advance(16,root,false);
+  expect(token.position.y).toBeGreaterThan(.45);expect(token.position.y).toBeLessThan(.67);
+  motion.update([{...pose,moving:true,placement:undefined,x:4,y:4}],document);motion.advance(16,root,false);
+  expect(token.position.x).toBeGreaterThan(1);expect(token.position.x).toBeLessThan(4);
+  motion.destroy();
+});
 it("animates creature rotation and reflection and settles at the saved pose", () => {
   const motion = createObjectMotion({ metadata: () => null }, () => null);
   const root = new Group(), token = new Group();

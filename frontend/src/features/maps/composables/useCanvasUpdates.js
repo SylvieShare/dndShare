@@ -87,6 +87,7 @@ export function useCanvasUpdates(props, getRenderer, onError, onActive) {
       props.previewObject,
       props.placementObject,
       props.surfacePlacement,
+      props.placementToken,
       props.previewLight,
       props.previewDecal,
       props.showAnchors,

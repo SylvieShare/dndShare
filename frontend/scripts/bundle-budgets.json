@@ -1,6 +1,6 @@
 {
-  "initialGzip": 1440000,
-  "totalGzip": 1440000,
+  "initialGzip": 1445000,
+  "totalGzip": 1445000,
   "textureDecoderGzip": 270000,
   "geometryWorkerGzip": 55000
 }

@@ -79,6 +79,7 @@
           :area-mode="playerPreview ? 'hide' : 'ghost'"
           :selection-color="e.areaSelectionColor"
           :selected-token="selectedToken"
+          :placement-token="placementToken"
           :hovered-token="hoveredToken"
           :surface-placement="surfacePlacement"
           :master="!playerPreview"
@@ -184,6 +185,7 @@ const props = defineProps({
     sessionMode: Boolean,
     extraTabs: { type: Array, default: () => [] },
     selectedToken: String,
+    placementToken: Object,
     hoveredToken: String,
     rotateToken: Function,
     mirrorToken: Function,

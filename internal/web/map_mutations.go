@@ -247,11 +247,9 @@ func (s *Server) handleSessionMapMutation(w http.ResponseWriter, r *http.Request
 		mapError(w, err)
 		return
 	}
-	for _, token := range data.State.Tokens {
-		if err = battlemap.ValidateSurfaceAnchor(data.Document, models, token.Placement, token.X, token.Y); err != nil {
-			badRequest(w, err.Error())
-			return
-		}
+	if err = battlemap.ValidateTokenPlacements(data.Document, &data.State, models); err != nil {
+		badRequest(w, err.Error())
+		return
 	}
 	m.Name, m.Document, m.State = data.Name, data.Document, data.State
 	m, err = s.store.SaveSessionMap(r.Context(), sid, m)

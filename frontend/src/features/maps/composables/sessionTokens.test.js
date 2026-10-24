@@ -10,7 +10,7 @@ function setup() {
     hp: { current: 18, max: 24 },
   });
   const editor = reactive({
-    draft: { document: { tiles: [] }, state: { tokens: [] } },
+    draft: { document: { kind: "image", width: 12, height: 12, tiles: [], objects: [] }, state: { tokens: [] } },
     history: [],
     future: [],
     clearAreaFocus: vi.fn(),
@@ -92,6 +92,22 @@ it("tracks token hover and leaves player transformations to the editor", () => {
   expect(tokens.hovered.value).toBe("hero");
   tokens.gesture({ phase: "hover", hit: null }, editor);
   expect(tokens.hovered.value).toBe("");
+});
+
+it("rejects an occupied release instead of saving the last valid hover, and rejects growing into a neighbour", () => {
+  const {actor,editor,tokens}=setup();
+  editor.draft.state.tokens=[{...actor,id:"hero",x:1.5,y:1.5,size:1},{id:"npc",kind:"creature",ref:"npc",x:4.5,y:4.5,size:1}];
+  tokens.gesture({phase:"start",hit:{tokenId:"hero"}},editor);
+  tokens.gesture({phase:"move",point:{x:3.5,y:4.5,grid:true}},editor);
+  tokens.gesture({phase:"end",point:{x:4.5,y:4.5,grid:true}},editor);
+  expect(editor.draft.state.tokens[0]).toMatchObject({x:1.5,y:1.5});
+  expect(editor.history).toHaveLength(0);
+  editor.draft.state.tokens[1].x=2.5;editor.draft.state.tokens[1].y=2.5;
+  tokens.focus(actor,false);
+  expect(tokens.change(t=>{t.size=2})).toBe(false);
+  expect(tokens.error.value).toMatch(/заняты/);
+  expect(editor.draft.state.tokens[0].size).toBe(1);
+  expect(editor.history).toHaveLength(0);
 });
 it("preview and cancelled placement do not enter durable play state or copy HP into a token", () => {
   const { actor, editor, tokens } = setup();

@@ -202,6 +202,8 @@ export function createSceneSynchronizer({
         (!!opts.previewObject?.modelId &&
           (!!opts.previewObject?.placing || !!opts.previewObject?.moving)),
       runtime.appearance.hiddenTiles,
+      opts.placementToken,
+      nextState,
     );
     const context = structure.context();
     anchors.update(

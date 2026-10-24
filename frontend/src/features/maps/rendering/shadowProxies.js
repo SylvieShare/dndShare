@@ -177,6 +177,8 @@ export function createShadowProxies(assets) {
                 .scale(new Vector3().setScalar(object.tokenSize));
               pose.elements[13] -= 0.05;
             }
+          } else if (object.tokenPart) {
+            pose = new Matrix4().makeScale(0, 0, 0);
           } else {
             pose = new Matrix4().makeRotationY(
               (-(object.rotation || 0) * Math.PI) / 180,
