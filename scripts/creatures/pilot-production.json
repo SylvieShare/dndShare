@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "name": "Популярные существа базового бестиария — пилот",
+  "budget": {
+    "maxGenerations": 10,
+    "maxGpuCalls": 20,
+    "minRemainingGpuSeconds": 240,
+    "allowPaidOverquota": false
+  },
+  "entries": [
+    {
+      "slug": "wolf-1692",
+      "itemId": 1692,
+      "name": "Волк",
+      "nameEn": "Wolf",
+      "size": 1,
+      "height": 0.72,
+      "lodTriangles": 16000
+    },
+    {
+      "slug": "boar-1745",
+      "itemId": 1745,
+      "name": "Кабан",
+      "nameEn": "Boar",
+      "size": 1,
+      "height": 0.68,
+      "lodTriangles": 16000
+    },
+    {
+      "slug": "goblin-1712",
+      "itemId": 1712,
+      "name": "Гоблин",
+      "nameEn": "Goblin",
+      "size": 1,
+      "height": 1.05,
+      "lodTriangles": 16000,
+      "nativeAttempt": 2,
+      "seed": 1713
+    },
+    {
+      "slug": "skeleton-1807",
+      "itemId": 1807,
+      "name": "Скелет",
+      "nameEn": "Skeleton",
+      "size": 1,
+      "height": 1.4,
+      "lodTriangles": 20000
+    },
+    {
+      "slug": "orc-1913",
+      "itemId": 1913,
+      "name": "Орк",
+      "nameEn": "Orc",
+      "size": 1,
+      "height": 1.65,
+      "lodTriangles": 20000,
+      "dropComponentsBelow": 16,
+      "lodAggression": 4,
+      "shadowTriangles": 8000,
+      "shadowAggression": 5
+    },
+    {
+      "slug": "giant-spider-2008",
+      "itemId": 2008,
+      "name": "Гигантский паук",
+      "nameEn": "Giant Spider",
+      "size": 2,
+      "footprint": 0.95,
+      "lodTriangles": 20000
+    },
+    {
+      "slug": "bat-1563",
+      "itemId": 1563,
+      "name": "Летучая мышь",
+      "nameEn": "Bat",
+      "size": 0.5,
+      "footprint": 0.95,
+      "lodTriangles": 16000
+    },
+    {
+      "slug": "gray-ooze-1942",
+      "itemId": 1942,
+      "name": "Серая слизь",
+      "nameEn": "Gray Ooze",
+      "size": 1,
+      "footprint": 0.9,
+      "lodTriangles": 12000
+    }
+  ]
+}

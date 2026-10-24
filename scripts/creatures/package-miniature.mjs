@@ -93,6 +93,7 @@ const {
   slug,
   materialProfile,
   calibration,
+  build,
   lodSilhouette,
   ...metadata
 } = recipe;

@@ -138,6 +138,11 @@ rollback; apply требует точный token и включённые MCP wr
 [пайплайне обработки моделей](maps-model-pipeline.md).
 Каталог и передача файлов поддерживаются отдельными tools:
 
+Исходные архивы миниатюр используют отдельные `creature_model_archive_*`:
+prepare/complete upload, постраничный list по itemId и подписанный get.
+Они не меняют assets каталога и привязки итемов; формат, лимиты и восстановление
+описаны в [производстве миниатюр](creature-model-production.md).
+
 - `map_tile_models_list`: метаданные, постоянный definitionId и assets; опциональный фильтр collection.
 - `map_tile_model_get`: текущая модель по UUID.
 - `map_tile_model_group_update`: definitionId, текущие expectedCode и expectedVariantCode, новый code;

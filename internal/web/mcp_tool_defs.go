@@ -169,6 +169,7 @@ func mcpToolDefs() []map[string]any {
 	}
 	defs = append(defs, mapModelToolDefinitions()...)
 	defs = append(defs, itemModelTools()...)
+	defs = append(defs, creatureArchiveTools()...)
 	return append(defs, compatibilityBatchDefinition(), editionImportDefinition(), inventoryIconPresetDefinition())
 
 }

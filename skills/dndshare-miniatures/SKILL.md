@@ -62,6 +62,16 @@ for commands and acceptance criteria. For binding/storage/rendering changes read
 
 ## Execution and delivery
 
+For a batch, read [production and source archives](../../md/features/creature-model-production.md).
+Use the persistent production queue with a bounded generation/GPU-call budget;
+do not invent automatic retries or increase attempts to bypass a failed guard.
+An intentional new nativeAttempt uses its own folder and the same batch budget.
+Local completed stages need no HF credential. Keep the accepted reference prompt
+and hash-bound reference/model reviews with the recipe. Technical passed is not
+visual approval. Archive native immediately and the reviewed ready package in
+the separate S3 source namespace when publication is authorized; verify at least
+one download/restore before considering a new production workflow established.
+
 Use isolated background Blender processes; do not overwrite an open user scene.
 Keep work and binary assets under ignored `models/creatures/`; publish served
 files in S3 through the existing registry. Commit recipes, tools and wiki.

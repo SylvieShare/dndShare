@@ -9,9 +9,8 @@ import hashlib
 import json
 import os
 from pathlib import Path
-import shlex
 import subprocess
-import urllib.request
+from miniature_mcp import MiniatureMCP, configured_token
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('directory', type=Path)
@@ -50,24 +49,8 @@ if not args.publish:
     print(json.dumps({'dryRun': True, 'updateExisting': bool(previous), 'itemId': recipe['itemId'], 'modelId': model['id'],
         'bytes': sum(a['size'] for a in model['assets'].values())}))
     raise SystemExit(0)
-token = os.environ.get('MCP_AUTH_TOKEN')
-if not token and args.server_token:
-    code = "import pathlib,shlex; values=[line.partition('=')[2] for line in pathlib.Path.home().joinpath('dndshare.env').read_text().splitlines() if line.startswith('MCP_AUTH_TOKEN=')]; assert len(values)==1; print(shlex.split(values[0])[0])"
-    token = subprocess.check_output(['ssh', '-i', str(Path.home()/'.ssh/dndshare'),
-        'sylvieshare@72.56.16.183', 'python3 -c '+shlex.quote(code)], text=True).strip()
-if not token:
-    raise RuntimeError('Configured MCP_AUTH_TOKEN is required')
-
-def call(name, arguments):
-    payload = json.dumps({'jsonrpc': '2.0', 'id': 1, 'method': 'tools/call',
-        'params': {'name': name, 'arguments': arguments}}).encode()
-    request = urllib.request.Request('https://dndshare.ru/mcp', data=payload,
-        headers={'Content-Type': 'application/json', 'Authorization': 'Bearer '+token})
-    with urllib.request.urlopen(request, timeout=120) as response:
-        value = json.load(response)
-    if value.get('error') or value.get('result', {}).get('isError'):
-        raise RuntimeError('MCP operation failed: '+name)
-    return value['result']['structuredContent']['result']
+token = configured_token(args.server_token)
+call = MiniatureMCP(token).call
 
 before = call('item_models_list', {'itemId': recipe['itemId']})
 assert all(b['modelId'] == model['id'] for b in before), 'Refusing to replace a different model binding'

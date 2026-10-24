@@ -130,6 +130,9 @@ parser.add_argument('--footprint', type=float, help='Normalize to this unit-toke
 parser.add_argument('--embedded-base', action='store_true', help='Authoring comparison only; published bodies must have no base')
 parser.add_argument('--token-size', type=float, default=1, help='Nominal in-game token size for the report')
 parser.add_argument('--recipe', type=Path, required=True, help='Reviewed standing calibration and material profile')
+parser.add_argument('--source', type=Path, help='Explicit native source for a staged build')
+parser.add_argument('--geometry-dir', type=Path, help='Geometry-only input folder; baked outputs stay separate')
+parser.add_argument('--skip-preview', action='store_true', help='Render final optimized assets in the subsequent review stage')
 args = parser.parse_args(sys.argv[sys.argv.index('--') + 1:])
 recipe = json.loads(args.recipe.read_text()) if args.recipe else {}
 profile = recipe.get('materialProfile', 'native')
@@ -138,7 +141,10 @@ if not reference_diameter or not 0 < reference_diameter <= 32:
     raise ValueError('Recipe requires a reviewed referenceDiameter')
 calibration = recipe.get('calibration')
 folder = args.directory.resolve()
-high = scene.import_glb(folder / 'trellis-native/generated-original.glb')
+folder.mkdir(parents=True,exist_ok=True)
+source = args.source or folder / 'trellis-native/generated-original.glb'
+geometry_folder = args.geometry_dir or folder
+high = scene.import_glb(source)
 if calibration:
     transform = scene.standing_transform(calibration, reference_diameter)
     if args.embedded_base:
@@ -163,10 +169,10 @@ if args.embedded_base:
 scene.material_profile(high, profile)
 scene.export_glb(folder / 'model-source.glb')
 for role in ['render', 'lod', 'shadow']:
-    high = scene.import_glb(folder / 'trellis-native/generated-original.glb')
+    high = scene.import_glb(source)
     for obj in high:
         obj.matrix_world = transform @ obj.matrix_world
-    low = scene.import_glb(folder / f'geometry-{role}.glb', replace=False)
+    low = scene.import_glb(geometry_folder / f'geometry-{role}.glb', replace=False)
     for obj in low:
         obj.matrix_world = transform @ obj.matrix_world
     bpy.context.view_layer.update()
@@ -181,8 +187,8 @@ for role in ['render', 'lod', 'shadow']:
     if role == 'render':
         bpy.ops.file.pack_all()
         bpy.ops.wm.save_as_mainfile(filepath=str(folder / 'model.blend'))
-        scene.render(folder)
-    if role == 'lod':
+        if not args.skip_preview: scene.render(folder)
+    if role == 'lod' and not args.skip_preview:
         scene.render(folder, [('lod-preview', 254, 25), ('lod-top', 254, 78)])
 (folder / 'placement.json').write_text(json.dumps({'baseDiameterCells': None if not args.embedded_base else .9,
     'referenceDiameter': reference_diameter,
