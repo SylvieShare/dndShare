@@ -88,15 +88,13 @@ function resize() {
     frame
       ? {
           left: `${frame.left - box.left}px`,
-          top: `${frame.top - box.top}px`,
           width: `${frame.width}px`,
-          height: `${frame.height}px`,
+          "--model-tools-bottom": `${Math.max(12, box.bottom - frame.bottom + 12)}px`,
         }
       : {
           left: "16px",
-          top: "64px",
           width: `${Math.max(1, box.width - 32)}px`,
-          height: `${Math.max(1, box.height - 120)}px`,
+          "--model-tools-bottom": "12px",
         },
   );
   renderer?.resize();
@@ -118,11 +116,7 @@ async function load() {
       signal: request.signal,
     });
     if (dead || id !== serial) return;
-    await renderer.load(
-      model.renderUrl,
-      model.assetBytes?.render || 0,
-      request.signal,
-    );
+    await renderer.load(model, request.signal);
     if (!dead && id === serial) ready.value = true;
   } catch (cause) {
     if (!dead && id === serial && cause.name !== "AbortError")
@@ -159,10 +153,12 @@ onBeforeUnmount(() => {
 }
 .item-model-stage {
   position: absolute;
+  top: 0;
+  bottom: 0;
 }
 .item-model-canvas {
   position: absolute;
-  inset: 0 0 48px;
+  inset: 0;
   cursor: grab;
   touch-action: none;
   outline-offset: -3px;
@@ -178,7 +174,7 @@ onBeforeUnmount(() => {
 }
 .item-model-message {
   position: absolute;
-  inset: 0 0 48px;
+  inset: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -189,7 +185,7 @@ onBeforeUnmount(() => {
 .item-model-tools {
   position: absolute;
   right: 0;
-  bottom: 0;
+  bottom: var(--model-tools-bottom, 12px);
   display: flex;
   gap: 2px;
   background: color-mix(in srgb, var(--surface) 88%, transparent);

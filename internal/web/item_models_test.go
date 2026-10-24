@@ -26,7 +26,8 @@ func TestItemModelRoutesRejectInvalidIDsAndNonVisualAssets(t *testing.T) {
 	for path, status := range map[string]int{
 		"/api/items/bad/model": 400, "/api/items/0/model": 400,
 		"/api/items/1/model/source": 404, "/api/items/1/model/shadow": 404,
-		"/api/items/1/model/preview": 404,
+		"/api/items/1/model/preview":     404,
+		"/api/items/1/model/base/source": 404, "/api/items/1/model/base/shadow": 404,
 	} {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest("GET", path, nil))
@@ -138,6 +139,27 @@ func TestPublicItemModelHTTPPostgres(t *testing.T) {
 	mux := http.NewServeMux()
 	s.routesItemModels(mux)
 	s.routesItems(mux)
+	w := httptest.NewRecorder()
+	mux.ServeHTTP(w, httptest.NewRequest("GET", "/api/items/1635/model", nil))
+	if w.Code != 200 || strings.Contains(w.Body.String(), `"base"`) {
+		t.Fatalf("model without a registered base: %d %s", w.Code, w.Body.String())
+	}
+	var selectedBase battlemap.Model
+	for index, size := range []float64{.5, 1, 1} {
+		base := model
+		base.ID = []string{"92000000-0000-4000-8000-000000000001", "92000000-0000-4000-8000-000000000002", "92000000-0000-4000-8000-000000000003"}[index]
+		base.SourceCode, base.SourceName = base.ID, base.ID
+		base.Category, base.BaseSize, base.SurfaceHeight = "creature-base", size, .06
+		base.Width, base.Height = 1, 1
+		base.MountDepth, base.MountProfile = 0, ""
+		base.PlacementPoints, base.SupportSlots, base.Blockers = nil, nil, nil
+		if _, err := st.RegisterMapModel(t.Context(), base); err != nil {
+			t.Fatal(err)
+		}
+		if index == 1 {
+			selectedBase = base
+		}
+	}
 	for _, path := range []string{"/api/items/1635/model", "/api/items/by-ids?ids=1635"} {
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, httptest.NewRequest("GET", path, nil))
@@ -156,10 +178,23 @@ func TestPublicItemModelHTTPPostgres(t *testing.T) {
 			if err := json.Unmarshal(w.Body.Bytes(), &result); err != nil || result.ID != model.ID || !strings.HasPrefix(result.RenderURL, "/api/items/1635/model/render?sha=") || strings.Contains(w.Body.String(), "sourceUrl") {
 				t.Fatalf("invalid public projection: %s %v", w.Body.String(), err)
 			}
+			if result.Base == nil || result.Base.ID != selectedBase.ID || result.Base.SurfaceHeight != .06 || !strings.HasPrefix(result.Base.RenderURL, "/api/items/1635/model/base/render?sha=") {
+				t.Fatalf("invalid deterministic unit base: %s", w.Body.String())
+			}
+		}
+	}
+	for _, kind := range []string{"render", "lod"} {
+		sha := selectedBase.Assets[kind].SHA256
+		r := httptest.NewRequest("GET", "/api/items/1635/model/base/"+kind+"?sha="+sha, nil)
+		r.Header.Set("If-None-Match", `"`+sha+`"`)
+		w := httptest.NewRecorder()
+		mux.ServeHTTP(w, r)
+		if w.Code != http.StatusNotModified || w.Header().Get("Cache-Control") != "public, max-age=31536000, immutable" {
+			t.Fatalf("public base cache: %d %v", w.Code, w.Header())
 		}
 	}
 	for _, id := range []string{"1636", "1637", "1638", "999"} {
-		for _, suffix := range []string{"/model", "/model/render"} {
+		for _, suffix := range []string{"/model", "/model/render", "/model/base/render", "/model/base/lod"} {
 			w := httptest.NewRecorder()
 			mux.ServeHTTP(w, httptest.NewRequest("GET", "/api/items/"+id+suffix, nil))
 			if w.Code != 404 {

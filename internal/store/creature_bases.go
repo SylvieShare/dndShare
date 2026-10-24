@@ -7,6 +7,14 @@ import (
 	"dndshare/internal/battlemap"
 )
 
+// Handbook models use their native one-cell scale. Keep the same base between
+// visits without loading the map catalogue or persisting a viewer preference.
+func (s *Store) GetHandbookModelBase(ctx context.Context) (battlemap.Model, error) {
+	return scanMapModel(s.pool.QueryRow(ctx, `SELECT `+mapModelColumns+` FROM dndshare.map_model
+        WHERE category='creature-base' AND tile_type='object' AND (geometry->>'baseSize')::numeric=1
+        ORDER BY id LIMIT 1`))
+}
+
 // Validate even disabled assignments: they can be enabled again without choosing
 // another asset, and must never grant access to an unrelated hidden model.
 func (s *Store) ValidateCreatureBases(ctx context.Context, state battlemap.State) error {

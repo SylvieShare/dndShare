@@ -4,6 +4,12 @@ import { itemModelFixture } from "./itemModelFixture";
 const toggle = (page) =>
   page.getByRole("button", { name: "3D-модель", exact: true });
 const canvasHost = (page) => page.locator(".item-model-canvas");
+async function expectFullCoverHeight(page) {
+  const cover = await page.locator(".item-detail-header-model").boundingBox();
+  const canvas = await canvasHost(page).boundingBox();
+  expect(Math.abs(canvas.y - cover.y)).toBeLessThanOrEqual(1);
+  expect(Math.abs(canvas.height - cover.height)).toBeLessThanOrEqual(1);
+}
 async function open(page, typeId = 6) {
   await page.goto(`/handbook?type=${typeId}&item=1`);
   await expect(page.locator(".handbook-detail h1")).toHaveText("Кобольд");
@@ -29,6 +35,7 @@ for (const typeId of [6, 2])
     await expect(canvasHost(page)).toHaveAttribute("data-model-ready", "true");
     await expect(canvasHost(page)).toHaveAttribute("data-model-zoom", "1");
     await expect(page.locator(".item-detail-cover")).toHaveCount(0);
+    await expectFullCoverHeight(page);
     const host = canvasHost(page),
       before = await host.locator("canvas").screenshot(),
       yaw = await host.getAttribute("data-model-yaw");
@@ -57,7 +64,7 @@ for (const typeId of [6, 2])
     await expect(page.locator(".item-detail-cover")).toBeVisible();
     await expect(page.locator(".item-model-preview")).toHaveCount(0);
     expect(requests.metadata).toBe(1);
-    expect(requests.files).toBe(1);
+    expect(requests.files).toBe(2);
     expect(requests.catalogues).toBe(0);
     expect(errors).toEqual([]);
   });
@@ -123,6 +130,7 @@ test.describe("touch 3D preview", () => {
     const host = canvasHost(page);
     await expect(host).toHaveAttribute("data-model-ready", "true");
     await expect(host).toHaveAttribute("data-model-zoom", "1");
+    await expectFullCoverHeight(page);
     const b = await host.boundingBox();
     expect(b.width).toBeGreaterThan(300);
     expect(b.height).toBeGreaterThan(200);

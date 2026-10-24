@@ -1,5 +1,5 @@
 // An asymmetric miniature with a separately transformed small detail, in GLB 2.
-function modelGLB() {
+function modelGLB(base = false) {
   const positions = new Float32Array([
     -0.25, 0, -0.15, 0.3, 0, -0.15, 0, 0.9, 0, 0, 0.1, 0.25,
   ]);
@@ -11,11 +11,13 @@ function modelGLB() {
   const json = {
     asset: { version: "2.0" },
     scene: 0,
-    scenes: [{ nodes: [0, 1] }],
-    nodes: [
-      { mesh: 0, translation: [0, 0.04, 0] },
-      { mesh: 0, translation: [0.32, 0.04, 0], scale: [0.07, 0.05, 0.06] },
-    ],
+    scenes: [{ nodes: base ? [0] : [0, 1] }],
+    nodes: base
+      ? [{ mesh: 0, scale: [1.5, 0.06, 1.8] }]
+      : [
+          { mesh: 0, translation: [0, 0.04, 0] },
+          { mesh: 0, translation: [0.32, 0.04, 0], scale: [0.07, 0.05, 0.06] },
+        ],
     meshes: [
       {
         primitives: [{ attributes: { POSITION: 0 }, indices: 1, material: 0 }],
@@ -25,7 +27,7 @@ function modelGLB() {
       {
         doubleSided: true,
         pbrMetallicRoughness: {
-          baseColorFactor: [0, 0.8, 1, 1],
+          baseColorFactor: base ? [0.3, 0.3, 0.3, 1] : [0, 0.8, 1, 1],
           metallicFactor: 0,
           roughnessFactor: 0.8,
         },
@@ -75,9 +77,18 @@ function modelGLB() {
 
 export async function itemModelFixture(
   page,
-  { typeId = 6, hasModel = true, slow = false, fail = false, binary } = {},
+  {
+    typeId = 6,
+    hasModel = true,
+    slow = false,
+    fail = false,
+    binary,
+    baseBinary,
+    withBase = true,
+  } = {},
 ) {
   const glb = binary || modelGLB();
+  const base = baseBinary || modelGLB(true);
   const state = { metadata: 0, files: 0, catalogues: 0, fail };
   const gate = slow
     ? new Promise((resolve) => {
@@ -133,6 +144,14 @@ export async function itemModelFixture(
             renderUrl: "/api/items/1/model/render?sha=test",
             lodUrl: "/api/items/1/model/lod?sha=test",
             assetBytes: { render: glb.length },
+            base: withBase
+              ? {
+                  id: "base",
+                  renderUrl: "/api/items/1/model/base/render?sha=test",
+                  assetBytes: { render: base.length },
+                  surfaceHeight: 0.054,
+                }
+              : undefined,
           },
         });
         return;
@@ -144,6 +163,11 @@ export async function itemModelFixture(
             ? { status: 503, json: { desc: "temporary" } }
             : { contentType: "model/gltf-binary", body: glb },
         );
+        return;
+      }
+      if (url.pathname === "/api/items/1/model/base/render") {
+        state.files++;
+        await route.fulfill({ contentType: "model/gltf-binary", body: base });
         return;
       }
       let json = {};

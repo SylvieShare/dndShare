@@ -34,6 +34,17 @@ function disposeModel(root) {
   images.forEach((i) => i?.close?.());
 }
 
+export function composeModelPreview(body, base, surfaceHeight = 0) {
+  const root = new Group(),
+    figure = new Group();
+  figure.add(body);
+  figure.position.y = base ? surfaceHeight : 0;
+  root.add(figure);
+  if (base) root.add(base);
+  root.updateMatrixWorld(true);
+  return root;
+}
+
 export function createModelViewer(host, changed = () => {}) {
   const gpu = new WebGLRenderer({ antialias: true, alpha: true });
   gpu.setPixelRatio(Math.min(globalThis.devicePixelRatio || 1, 1.5));
@@ -81,30 +92,43 @@ export function createModelViewer(host, changed = () => {}) {
     bounds = null;
   }
   return {
-    async load(url, bytes, signal) {
+    async load(metadata, signal) {
       const id = ++serial;
       clear();
       draw();
-      const model = await loader.load(
-        url,
-        (fn) => fn(),
-        undefined,
-        signal,
-        bytes,
+      const results = await Promise.allSettled(
+        [metadata, metadata.base]
+          .filter(Boolean)
+          .map((asset) =>
+            loader.load(
+              asset.renderUrl,
+              (fn) => fn(),
+              undefined,
+              signal,
+              asset.assetBytes?.render || 0,
+            ),
+          ),
       );
-      if (dead || id !== serial || signal?.aborted) {
-        disposeModel(model.scene);
+      const failure = results.find((r) => r.status === "rejected");
+      if (failure || dead || id !== serial || signal?.aborted) {
+        for (const result of results)
+          if (result.status === "fulfilled") disposeModel(result.value.scene);
         signal?.throwIfAborted();
+        if (failure) throw failure.reason;
         return;
       }
       // Preserve the complete GLB hierarchy and native transforms.
-      model.scene.updateMatrixWorld(true);
-      const box = new Box3().setFromObject(model.scene);
+      const model = composeModelPreview(
+        results[0].value.scene,
+        results[1]?.value.scene,
+        metadata.base?.surfaceHeight,
+      );
+      const box = new Box3().setFromObject(model);
       if (box.isEmpty()) {
-        disposeModel(model.scene);
+        disposeModel(model);
         throw new Error("В модели нет геометрии");
       }
-      root.add(model.scene);
+      root.add(model);
       bounds = box;
       fit();
     },

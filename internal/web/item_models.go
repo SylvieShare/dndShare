@@ -1,10 +1,12 @@
 package web
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
 	"dndshare/internal/battlemap"
+	"dndshare/internal/store"
 )
 
 func init() { registerRoutes((*Server).routesItemModels) }
@@ -12,13 +14,30 @@ func init() { registerRoutes((*Server).routesItemModels) }
 func (s *Server) routesItemModels(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/items/{id}/model", s.handleItemModel)
 	mux.HandleFunc("GET /api/items/{id}/model/{variant}", s.handleItemModelAsset)
+	mux.HandleFunc("GET /api/items/{id}/model/base/{variant}", s.handleItemModelBaseAsset)
 }
 
-type itemModelView struct {
+type itemModelAssetView struct {
 	ID         string           `json:"id"`
 	RenderURL  string           `json:"renderUrl"`
 	LODURL     string           `json:"lodUrl"`
 	AssetBytes map[string]int64 `json:"assetBytes"`
+}
+
+type itemModelView struct {
+	itemModelAssetView
+	Base *itemModelBaseView `json:"base,omitempty"`
+}
+
+type itemModelBaseView struct {
+	itemModelAssetView
+	SurfaceHeight float64 `json:"surfaceHeight"`
+}
+
+func modelAssetView(model battlemap.Model, path string) itemModelAssetView {
+	url := func(kind string) string { return path + kind + "?sha=" + model.Assets[kind].SHA256 }
+	return itemModelAssetView{ID: model.ID, RenderURL: url("render"), LODURL: url("lod"),
+		AssetBytes: map[string]int64{"render": model.Assets["render"].Size, "lod": model.Assets["lod"].Size}}
 }
 
 func (s *Server) resolveItemModel(w http.ResponseWriter, r *http.Request) (battlemap.Model, bool) {
@@ -40,11 +59,18 @@ func (s *Server) handleItemModel(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	base := "/api/items/" + r.PathValue("id") + "/model/"
-	url := func(kind string) string { return base + kind + "?sha=" + model.Assets[kind].SHA256 }
+	path := "/api/items/" + r.PathValue("id") + "/model/"
+	view := itemModelView{itemModelAssetView: modelAssetView(model, path)}
+	base, err := s.store.GetHandbookModelBase(r.Context())
+	if err != nil && !errors.Is(err, store.ErrNotFound) {
+		mapError(w, err)
+		return
+	}
+	if err == nil {
+		view.Base = &itemModelBaseView{itemModelAssetView: modelAssetView(base, path+"base/"), SurfaceHeight: base.SurfaceHeight}
+	}
 	w.Header().Set("Cache-Control", "no-store")
-	writeJSON(w, http.StatusOK, itemModelView{ID: model.ID, RenderURL: url("render"), LODURL: url("lod"),
-		AssetBytes: map[string]int64{"render": model.Assets["render"].Size, "lod": model.Assets["lod"].Size}})
+	writeJSON(w, http.StatusOK, view)
 }
 
 func (s *Server) handleItemModelAsset(w http.ResponseWriter, r *http.Request) {
@@ -58,6 +84,28 @@ func (s *Server) handleItemModelAsset(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	asset, ok := model.Assets[kind]
+	if !ok {
+		notFound(w, "")
+		return
+	}
+	s.streamModelAsset(w, r, asset, "public")
+}
+
+func (s *Server) handleItemModelBaseAsset(w http.ResponseWriter, r *http.Request) {
+	kind := r.PathValue("variant")
+	if kind != "render" && kind != "lod" {
+		notFound(w, "")
+		return
+	}
+	if _, ok := s.resolveItemModel(w, r); !ok {
+		return
+	}
+	base, err := s.store.GetHandbookModelBase(r.Context())
+	if err != nil {
+		mapError(w, err)
+		return
+	}
+	asset, ok := base.Assets[kind]
 	if !ok {
 		notFound(w, "")
 		return
