@@ -1,0 +1,6912 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0.008315086364746094,
+    -0.11245918273925781
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "edge",
+  "wallMask": 20,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Roof Angle",
+  "groupCode": "MED-roof-angle",
+  "hasDecor": true,
+  "renderTriangles": 180000,
+  "lodTriangles": 140000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 2048,
+  "renderUVAngleLimitRad": 0.3,
+  "lodUVAngleLimitRad": 0.3,
+  "renderUVIslandMargin": 0.001,
+  "lodUVIslandMargin": 0.001,
+  "renderDataSize": 1536,
+  "lodColourSize": 2048,
+  "lodDataSize": 1536,
+  "standRayTopMM": 40,
+  "standPointsMM": [
+    [
+      -8.75,
+      8.75
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        1.2,
+        -17.7
+      ],
+      [
+        17.8,
+        -17.7
+      ],
+      [
+        17.8,
+        17.7
+      ],
+      [
+        1.2,
+        17.7
+      ]
+    ],
+    [
+      [
+        -17.8,
+        -17.7
+      ],
+      [
+        1.2,
+        -17.7
+      ],
+      [
+        1.2,
+        -1.2
+      ],
+      [
+        -17.8,
+        -1.2
+      ]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "roof",
+    "angle",
+    "ridge",
+    "wood",
+    "plaster",
+    "iron",
+    "ceiling"
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      6,
+      11
+    ],
+    "lodMiB": [
+      4,
+      9
+    ],
+    "shadowKiB": [
+      350,
+      600
+    ],
+    "previewKiB": [
+      14,
+      40
+    ],
+    "basis": "Own739792triangles/36989684B one-cell hipcornerroof withtwohalfpanels,diagonalbluecover,two lowwalls(fourfaces),four ironheads andfullfloor.180k/140k/2048bakes;65percentatlastoroof,ownfourwalltiles/floor;compare2048colour1536dataandcompact1536/1152whilepreservingridge/eaves/actors."
+  },
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "own Y floor boards",
+        "minMM": [
+          -17.8,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.8,
+          17.7,
+          27
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own X floor cross frame -1",
+        "minMM": [
+          -17.8,
+          -17.8,
+          17.5
+        ],
+        "maxMM": [
+          17.8,
+          -14.3,
+          27
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own X floor cross frame 1",
+        "minMM": [
+          -17.8,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          27
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own east north end post",
+        "minMM": [
+          9.8,
+          13.3,
+          26.1
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          50.5
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "excludeParts": [
+          {
+            "name": "own south outside plaster before corner post",
+            "minMM": [
+              9.8,
+              -17.8,
+              26
+            ],
+            "maxMM": [
+              13.3,
+              -16,
+              50.5
+            ]
+          },
+          {
+            "name": "own east outside plaster before corner post",
+            "minMM": [
+              16,
+              -13.3,
+              26
+            ],
+            "maxMM": [
+              17.8,
+              -9.8,
+              50.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "own south west end post",
+        "minMM": [
+          -17.8,
+          -17.8,
+          26.1
+        ],
+        "maxMM": [
+          -13.3,
+          -9.8,
+          50.5
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "excludeParts": [
+          {
+            "name": "own south outside plaster before corner post",
+            "minMM": [
+              9.8,
+              -17.8,
+              26
+            ],
+            "maxMM": [
+              13.3,
+              -16,
+              50.5
+            ]
+          },
+          {
+            "name": "own east outside plaster before corner post",
+            "minMM": [
+              16,
+              -13.3,
+              26
+            ],
+            "maxMM": [
+              17.8,
+              -9.8,
+              50.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "own shared inner bevel corner post",
+        "minMM": [
+          9.8,
+          -17.8,
+          26.1
+        ],
+        "maxMM": [
+          17.8,
+          -9.8,
+          50.5
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "excludeParts": [
+          {
+            "name": "own south outside plaster before corner post",
+            "minMM": [
+              9.8,
+              -17.8,
+              26
+            ],
+            "maxMM": [
+              13.3,
+              -16,
+              50.5
+            ]
+          },
+          {
+            "name": "own east outside plaster before corner post",
+            "minMM": [
+              16,
+              -13.3,
+              26
+            ],
+            "maxMM": [
+              17.8,
+              -9.8,
+              50.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "own east outside falling brace",
+        "minMM": [
+          13.9,
+          -15.5,
+          25.7
+        ],
+        "maxMM": [
+          17.8,
+          15.5,
+          49.9
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.8770579952366515,
+          -0.48038450536155486
+        ],
+        "projection": {
+          "originMM": [
+            16.884380438388924,
+            0.0,
+            34.29294886955848
+          ],
+          "axis": [
+            0.0,
+            0.48038450536155486,
+            0.8770579952366515
+          ],
+          "rangeMM": [
+            -1.9305744557678748,
+            1.9748101657921762
+          ]
+        }
+      },
+      {
+        "name": "own south outside falling brace",
+        "minMM": [
+          -15.5,
+          -17.8,
+          25.7
+        ],
+        "maxMM": [
+          15.5,
+          -13.9,
+          49.9
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.8777570039176016,
+          0.0,
+          -0.4791060864501679
+        ],
+        "projection": {
+          "originMM": [
+            0.0,
+            -16.89777386494172,
+            34.38205122336363
+          ],
+          "axis": [
+            0.4791060864501679,
+            0.0,
+            0.8777570039176016
+          ],
+          "rangeMM": [
+            -1.940440757554083,
+            2.0139911390903906
+          ]
+        }
+      },
+      {
+        "name": "own east upper header",
+        "minMM": [
+          14.5,
+          -17.8,
+          43.4
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          46.4
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own south upper header",
+        "minMM": [
+          -17.8,
+          -17.8,
+          43.4
+        ],
+        "maxMM": [
+          17.8,
+          -14.5,
+          46.4
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own Y underside laths on X panel",
+        "minMM": [
+          -17.8,
+          -17.8,
+          45
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          101
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "projection": {
+          "originMM": [
+            0.0,
+            0.0,
+            74.35689733587175
+          ],
+          "axis": [
+            0.8266345707262938,
+            0.0014135370565501275,
+            0.5627373173987538
+          ],
+          "rangeMM": [
+            -7,
+            -2.75
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own roof half",
+            "minMM": [
+              -18,
+              -18,
+              44
+            ],
+            "maxMM": [
+              18,
+              18,
+              101
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                0,
+                100
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own X underside laths on Y panel",
+        "minMM": [
+          -17.8,
+          -17.8,
+          45
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          101
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "projection": {
+          "originMM": [
+            0.0,
+            0.0,
+            74.3523728701664
+          ],
+          "axis": [
+            0.010438851791323627,
+            -0.8296489503344697,
+            0.5581878264367571
+          ],
+          "rangeMM": [
+            -7,
+            -2.75
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own roof half",
+            "minMM": [
+              -18,
+              -18,
+              44
+            ],
+            "maxMM": [
+              18,
+              18,
+              101
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                -100,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own west open sloping fascia",
+        "minMM": [
+          -17.8,
+          -17.8,
+          45
+        ],
+        "maxMM": [
+          -14.6,
+          17.8,
+          101
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.5582182416820768,
+          0.8296941572973565
+        ],
+        "projection": {
+          "originMM": [
+            0.0,
+            0.0,
+            74.3523728701664
+          ],
+          "axis": [
+            0.010438851791323627,
+            -0.8296489503344697,
+            0.5581878264367571
+          ],
+          "rangeMM": [
+            -12,
+            -2.75
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own roof half",
+            "minMM": [
+              -18,
+              -18,
+              44
+            ],
+            "maxMM": [
+              18,
+              18,
+              101
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                -100,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own north open sloping fascia",
+        "minMM": [
+          -17.8,
+          14.6,
+          45
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          101
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          -0.5627378795986584,
+          0.0,
+          0.8266353965714303
+        ],
+        "projection": {
+          "originMM": [
+            0.0,
+            0.0,
+            74.35689733587175
+          ],
+          "axis": [
+            0.8266345707262938,
+            0.0014135370565501275,
+            0.5627373173987538
+          ],
+          "rangeMM": [
+            -12,
+            -2.75
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own roof half",
+            "minMM": [
+              -18,
+              -18,
+              44
+            ],
+            "maxMM": [
+              18,
+              18,
+              101
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                0,
+                100
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own diagonal underside ridge timber",
+        "minMM": [
+          -17.8,
+          -17.8,
+          45
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          101
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          -0.5085111167870257,
+          0.4924853118943437,
+          0.7063105985841802
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0.7071067811865475,
+            0.7071067811865475,
+            0
+          ],
+          "rangeMM": [
+            -1.8,
+            1.8
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own Y underside laths on X panel",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.35689733587175
+              ],
+              "axis": [
+                0.8266345707262938,
+                0.0014135370565501275,
+                0.5627373173987538
+              ],
+              "rangeMM": [
+                -7,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own X underside laths on Y panel",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3523728701664
+              ],
+              "axis": [
+                0.010438851791323627,
+                -0.8296489503344697,
+                0.5581878264367571
+              ],
+              "rangeMM": [
+                -7,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    -100,
+                    0
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "own blue X roof shingles",
+        "minMM": [
+          -17.8,
+          -17.8,
+          46.7
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          101
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "direction": [
+          -0.5627378795986584,
+          0.0,
+          0.8266353965714303
+        ],
+        "projection": {
+          "originMM": [
+            0.0,
+            0.0,
+            74.35689733587175
+          ],
+          "axis": [
+            0.8266345707262938,
+            0.0014135370565501275,
+            0.5627373173987538
+          ],
+          "rangeMM": [
+            -2.75,
+            10
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own roof half",
+            "minMM": [
+              -18,
+              -18,
+              44
+            ],
+            "maxMM": [
+              18,
+              18,
+              101
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                0,
+                100
+              ]
+            }
+          }
+        ],
+        "darkRGB": [
+          0.11,
+          0.17,
+          0.29
+        ],
+        "lightRGB": [
+          0.3,
+          0.37,
+          0.53
+        ]
+      },
+      {
+        "name": "own blue Y roof shingles",
+        "minMM": [
+          -17.8,
+          -17.8,
+          46.7
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          101
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "direction": [
+          0.0,
+          0.5582182416820768,
+          0.8296941572973565
+        ],
+        "projection": {
+          "originMM": [
+            0.0,
+            0.0,
+            74.3523728701664
+          ],
+          "axis": [
+            0.010438851791323627,
+            -0.8296489503344697,
+            0.5581878264367571
+          ],
+          "rangeMM": [
+            -2.75,
+            10
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own roof half",
+            "minMM": [
+              -18,
+              -18,
+              44
+            ],
+            "maxMM": [
+              18,
+              18,
+              101
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                -100,
+                0
+              ]
+            }
+          }
+        ],
+        "darkRGB": [
+          0.11,
+          0.17,
+          0.29
+        ],
+        "lightRGB": [
+          0.3,
+          0.37,
+          0.53
+        ]
+      },
+      {
+        "name": "own blue diagonal ridge cover",
+        "minMM": [
+          -17.8,
+          -17.8,
+          46.7
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          101
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "direction": [
+          -0.5085111167870257,
+          0.4924853118943437,
+          0.7063105985841802
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0.7071067811865475,
+            0.7071067811865475,
+            0
+          ],
+          "rangeMM": [
+            -3.5708892449920646,
+            2.510229073212243
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own blue X roof shingles",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              -0.5627378795986584,
+              0.0,
+              0.8266353965714303
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.35689733587175
+              ],
+              "axis": [
+                0.8266345707262938,
+                0.0014135370565501275,
+                0.5627373173987538
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          },
+          {
+            "name": "own blue Y roof shingles",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              0.0,
+              0.5582182416820768,
+              0.8296941572973565
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3523728701664
+              ],
+              "axis": [
+                0.010438851791323627,
+                -0.8296489503344697,
+                0.5581878264367571
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    -100,
+                    0
+                  ]
+                }
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          }
+        ],
+        "darkRGB": [
+          0.11,
+          0.17,
+          0.29
+        ],
+        "lightRGB": [
+          0.3,
+          0.37,
+          0.53
+        ]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "own east inside ochre plaster",
+        "minMM": [
+          9.8,
+          -13.3,
+          26.6
+        ],
+        "maxMM": [
+          13.9,
+          13.3,
+          50.5
+        ],
+        "kind": "plaster",
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.018,
+        "excludeParts": [
+          {
+            "name": "own east north end post",
+            "minMM": [
+              9.8,
+              13.3,
+              26.1
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              50.5
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "excludeParts": [
+              {
+                "name": "own south outside plaster before corner post",
+                "minMM": [
+                  9.8,
+                  -17.8,
+                  26
+                ],
+                "maxMM": [
+                  13.3,
+                  -16,
+                  50.5
+                ]
+              },
+              {
+                "name": "own east outside plaster before corner post",
+                "minMM": [
+                  16,
+                  -13.3,
+                  26
+                ],
+                "maxMM": [
+                  17.8,
+                  -9.8,
+                  50.5
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own south west end post",
+            "minMM": [
+              -17.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              -13.3,
+              -9.8,
+              50.5
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "excludeParts": [
+              {
+                "name": "own south outside plaster before corner post",
+                "minMM": [
+                  9.8,
+                  -17.8,
+                  26
+                ],
+                "maxMM": [
+                  13.3,
+                  -16,
+                  50.5
+                ]
+              },
+              {
+                "name": "own east outside plaster before corner post",
+                "minMM": [
+                  16,
+                  -13.3,
+                  26
+                ],
+                "maxMM": [
+                  17.8,
+                  -9.8,
+                  50.5
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own shared inner bevel corner post",
+            "minMM": [
+              9.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              17.8,
+              -9.8,
+              50.5
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "excludeParts": [
+              {
+                "name": "own south outside plaster before corner post",
+                "minMM": [
+                  9.8,
+                  -17.8,
+                  26
+                ],
+                "maxMM": [
+                  13.3,
+                  -16,
+                  50.5
+                ]
+              },
+              {
+                "name": "own east outside plaster before corner post",
+                "minMM": [
+                  16,
+                  -13.3,
+                  26
+                ],
+                "maxMM": [
+                  17.8,
+                  -9.8,
+                  50.5
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own east outside falling brace",
+            "minMM": [
+              13.9,
+              -15.5,
+              25.7
+            ],
+            "maxMM": [
+              17.8,
+              15.5,
+              49.9
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.8770579952366515,
+              -0.48038450536155486
+            ],
+            "projection": {
+              "originMM": [
+                16.884380438388924,
+                0.0,
+                34.29294886955848
+              ],
+              "axis": [
+                0.0,
+                0.48038450536155486,
+                0.8770579952366515
+              ],
+              "rangeMM": [
+                -1.9305744557678748,
+                1.9748101657921762
+              ]
+            }
+          },
+          {
+            "name": "own south outside falling brace",
+            "minMM": [
+              -15.5,
+              -17.8,
+              25.7
+            ],
+            "maxMM": [
+              15.5,
+              -13.9,
+              49.9
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.8777570039176016,
+              0.0,
+              -0.4791060864501679
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                -16.89777386494172,
+                34.38205122336363
+              ],
+              "axis": [
+                0.4791060864501679,
+                0.0,
+                0.8777570039176016
+              ],
+              "rangeMM": [
+                -1.940440757554083,
+                2.0139911390903906
+              ]
+            }
+          },
+          {
+            "name": "own east upper header",
+            "minMM": [
+              14.5,
+              -17.8,
+              43.4
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              46.4
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own south upper header",
+            "minMM": [
+              -17.8,
+              -17.8,
+              43.4
+            ],
+            "maxMM": [
+              17.8,
+              -14.5,
+              46.4
+            ],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own Y underside laths on X panel",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.35689733587175
+              ],
+              "axis": [
+                0.8266345707262938,
+                0.0014135370565501275,
+                0.5627373173987538
+              ],
+              "rangeMM": [
+                -7,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own X underside laths on Y panel",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3523728701664
+              ],
+              "axis": [
+                0.010438851791323627,
+                -0.8296489503344697,
+                0.5581878264367571
+              ],
+              "rangeMM": [
+                -7,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    -100,
+                    0
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own west open sloping fascia",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              -14.6,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.5582182416820768,
+              0.8296941572973565
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3523728701664
+              ],
+              "axis": [
+                0.010438851791323627,
+                -0.8296489503344697,
+                0.5581878264367571
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    -100,
+                    0
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own north open sloping fascia",
+            "minMM": [
+              -17.8,
+              14.6,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.5627378795986584,
+              0.0,
+              0.8266353965714303
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.35689733587175
+              ],
+              "axis": [
+                0.8266345707262938,
+                0.0014135370565501275,
+                0.5627373173987538
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own diagonal underside ridge timber",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.5085111167870257,
+              0.4924853118943437,
+              0.7063105985841802
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                -1.8,
+                1.8
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own Y underside laths on X panel",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  45
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "y",
+                "physicalPigment": true,
+                "roughness": 0.9,
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.35689733587175
+                  ],
+                  "axis": [
+                    0.8266345707262938,
+                    0.0014135370565501275,
+                    0.5627373173987538
+                  ],
+                  "rangeMM": [
+                    -7,
+                    -2.75
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        0,
+                        100
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "name": "own X underside laths on Y panel",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  45
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "x",
+                "physicalPigment": true,
+                "roughness": 0.9,
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.3523728701664
+                  ],
+                  "axis": [
+                    0.010438851791323627,
+                    -0.8296489503344697,
+                    0.5581878264367571
+                  ],
+                  "rangeMM": [
+                    -7,
+                    -2.75
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        -100,
+                        0
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own blue X roof shingles",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              -0.5627378795986584,
+              0.0,
+              0.8266353965714303
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.35689733587175
+              ],
+              "axis": [
+                0.8266345707262938,
+                0.0014135370565501275,
+                0.5627373173987538
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          },
+          {
+            "name": "own blue Y roof shingles",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              0.0,
+              0.5582182416820768,
+              0.8296941572973565
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3523728701664
+              ],
+              "axis": [
+                0.010438851791323627,
+                -0.8296489503344697,
+                0.5581878264367571
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    -100,
+                    0
+                  ]
+                }
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          },
+          {
+            "name": "own blue diagonal ridge cover",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              -0.5085111167870257,
+              0.4924853118943437,
+              0.7063105985841802
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                -3.5708892449920646,
+                2.510229073212243
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own blue X roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  -0.5627378795986584,
+                  0.0,
+                  0.8266353965714303
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.35689733587175
+                  ],
+                  "axis": [
+                    0.8266345707262938,
+                    0.0014135370565501275,
+                    0.5627373173987538
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        0,
+                        100
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              },
+              {
+                "name": "own blue Y roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  0.0,
+                  0.5582182416820768,
+                  0.8296941572973565
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.3523728701664
+                  ],
+                  "axis": [
+                    0.010438851791323627,
+                    -0.8296489503344697,
+                    0.5581878264367571
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        -100,
+                        0
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          }
+        ],
+        "nearSource": {
+          "code": "MT1-119",
+          "sourceSHA256": "933ed8ee82047f99d20271947dcd33faad7770ce3828178d4655b89f7ccd5746",
+          "componentAboveMM": 26.6,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              10.8,
+              -13.3,
+              26.6
+            ],
+            "maxMM": [
+              14,
+              13.3,
+              49.5
+            ]
+          },
+          "matchMM": 0.1,
+          "projectTo": {
+            "code": "MT1-119",
+            "sourceSHA256": "933ed8ee82047f99d20271947dcd33faad7770ce3828178d4655b89f7ccd5746"
+          }
+        }
+      },
+      {
+        "name": "own east outside ochre plaster",
+        "minMM": [
+          13.9,
+          -13.3,
+          26.6
+        ],
+        "maxMM": [
+          17.8,
+          13.3,
+          50.5
+        ],
+        "kind": "plaster",
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own east north end post",
+            "minMM": [
+              9.8,
+              13.3,
+              26.1
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              50.5
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "excludeParts": [
+              {
+                "name": "own south outside plaster before corner post",
+                "minMM": [
+                  9.8,
+                  -17.8,
+                  26
+                ],
+                "maxMM": [
+                  13.3,
+                  -16,
+                  50.5
+                ]
+              },
+              {
+                "name": "own east outside plaster before corner post",
+                "minMM": [
+                  16,
+                  -13.3,
+                  26
+                ],
+                "maxMM": [
+                  17.8,
+                  -9.8,
+                  50.5
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own south west end post",
+            "minMM": [
+              -17.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              -13.3,
+              -9.8,
+              50.5
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "excludeParts": [
+              {
+                "name": "own south outside plaster before corner post",
+                "minMM": [
+                  9.8,
+                  -17.8,
+                  26
+                ],
+                "maxMM": [
+                  13.3,
+                  -16,
+                  50.5
+                ]
+              },
+              {
+                "name": "own east outside plaster before corner post",
+                "minMM": [
+                  16,
+                  -13.3,
+                  26
+                ],
+                "maxMM": [
+                  17.8,
+                  -9.8,
+                  50.5
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own shared inner bevel corner post",
+            "minMM": [
+              9.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              17.8,
+              -9.8,
+              50.5
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "excludeParts": [
+              {
+                "name": "own south outside plaster before corner post",
+                "minMM": [
+                  9.8,
+                  -17.8,
+                  26
+                ],
+                "maxMM": [
+                  13.3,
+                  -16,
+                  50.5
+                ]
+              },
+              {
+                "name": "own east outside plaster before corner post",
+                "minMM": [
+                  16,
+                  -13.3,
+                  26
+                ],
+                "maxMM": [
+                  17.8,
+                  -9.8,
+                  50.5
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own east outside falling brace",
+            "minMM": [
+              13.9,
+              -15.5,
+              25.7
+            ],
+            "maxMM": [
+              17.8,
+              15.5,
+              49.9
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.8770579952366515,
+              -0.48038450536155486
+            ],
+            "projection": {
+              "originMM": [
+                16.884380438388924,
+                0.0,
+                34.29294886955848
+              ],
+              "axis": [
+                0.0,
+                0.48038450536155486,
+                0.8770579952366515
+              ],
+              "rangeMM": [
+                -1.9305744557678748,
+                1.9748101657921762
+              ]
+            }
+          },
+          {
+            "name": "own south outside falling brace",
+            "minMM": [
+              -15.5,
+              -17.8,
+              25.7
+            ],
+            "maxMM": [
+              15.5,
+              -13.9,
+              49.9
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.8777570039176016,
+              0.0,
+              -0.4791060864501679
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                -16.89777386494172,
+                34.38205122336363
+              ],
+              "axis": [
+                0.4791060864501679,
+                0.0,
+                0.8777570039176016
+              ],
+              "rangeMM": [
+                -1.940440757554083,
+                2.0139911390903906
+              ]
+            }
+          },
+          {
+            "name": "own east upper header",
+            "minMM": [
+              14.5,
+              -17.8,
+              43.4
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              46.4
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own south upper header",
+            "minMM": [
+              -17.8,
+              -17.8,
+              43.4
+            ],
+            "maxMM": [
+              17.8,
+              -14.5,
+              46.4
+            ],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own Y underside laths on X panel",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.35689733587175
+              ],
+              "axis": [
+                0.8266345707262938,
+                0.0014135370565501275,
+                0.5627373173987538
+              ],
+              "rangeMM": [
+                -7,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own X underside laths on Y panel",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3523728701664
+              ],
+              "axis": [
+                0.010438851791323627,
+                -0.8296489503344697,
+                0.5581878264367571
+              ],
+              "rangeMM": [
+                -7,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    -100,
+                    0
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own west open sloping fascia",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              -14.6,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.5582182416820768,
+              0.8296941572973565
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3523728701664
+              ],
+              "axis": [
+                0.010438851791323627,
+                -0.8296489503344697,
+                0.5581878264367571
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    -100,
+                    0
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own north open sloping fascia",
+            "minMM": [
+              -17.8,
+              14.6,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.5627378795986584,
+              0.0,
+              0.8266353965714303
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.35689733587175
+              ],
+              "axis": [
+                0.8266345707262938,
+                0.0014135370565501275,
+                0.5627373173987538
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own diagonal underside ridge timber",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.5085111167870257,
+              0.4924853118943437,
+              0.7063105985841802
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                -1.8,
+                1.8
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own Y underside laths on X panel",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  45
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "y",
+                "physicalPigment": true,
+                "roughness": 0.9,
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.35689733587175
+                  ],
+                  "axis": [
+                    0.8266345707262938,
+                    0.0014135370565501275,
+                    0.5627373173987538
+                  ],
+                  "rangeMM": [
+                    -7,
+                    -2.75
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        0,
+                        100
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "name": "own X underside laths on Y panel",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  45
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "x",
+                "physicalPigment": true,
+                "roughness": 0.9,
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.3523728701664
+                  ],
+                  "axis": [
+                    0.010438851791323627,
+                    -0.8296489503344697,
+                    0.5581878264367571
+                  ],
+                  "rangeMM": [
+                    -7,
+                    -2.75
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        -100,
+                        0
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own blue X roof shingles",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              -0.5627378795986584,
+              0.0,
+              0.8266353965714303
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.35689733587175
+              ],
+              "axis": [
+                0.8266345707262938,
+                0.0014135370565501275,
+                0.5627373173987538
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          },
+          {
+            "name": "own blue Y roof shingles",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              0.0,
+              0.5582182416820768,
+              0.8296941572973565
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3523728701664
+              ],
+              "axis": [
+                0.010438851791323627,
+                -0.8296489503344697,
+                0.5581878264367571
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    -100,
+                    0
+                  ]
+                }
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          },
+          {
+            "name": "own blue diagonal ridge cover",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              -0.5085111167870257,
+              0.4924853118943437,
+              0.7063105985841802
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                -3.5708892449920646,
+                2.510229073212243
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own blue X roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  -0.5627378795986584,
+                  0.0,
+                  0.8266353965714303
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.35689733587175
+                  ],
+                  "axis": [
+                    0.8266345707262938,
+                    0.0014135370565501275,
+                    0.5627373173987538
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        0,
+                        100
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              },
+              {
+                "name": "own blue Y roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  0.0,
+                  0.5582182416820768,
+                  0.8296941572973565
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.3523728701664
+                  ],
+                  "axis": [
+                    0.010438851791323627,
+                    -0.8296489503344697,
+                    0.5581878264367571
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        -100,
+                        0
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          }
+        ]
+      },
+      {
+        "name": "own south inside ochre plaster",
+        "minMM": [
+          -13.3,
+          -13.9,
+          26.6
+        ],
+        "maxMM": [
+          13.3,
+          -9.8,
+          50.5
+        ],
+        "kind": "plaster",
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.018,
+        "excludeParts": [
+          {
+            "name": "own east north end post",
+            "minMM": [
+              9.8,
+              13.3,
+              26.1
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              50.5
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "excludeParts": [
+              {
+                "name": "own south outside plaster before corner post",
+                "minMM": [
+                  9.8,
+                  -17.8,
+                  26
+                ],
+                "maxMM": [
+                  13.3,
+                  -16,
+                  50.5
+                ]
+              },
+              {
+                "name": "own east outside plaster before corner post",
+                "minMM": [
+                  16,
+                  -13.3,
+                  26
+                ],
+                "maxMM": [
+                  17.8,
+                  -9.8,
+                  50.5
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own south west end post",
+            "minMM": [
+              -17.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              -13.3,
+              -9.8,
+              50.5
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "excludeParts": [
+              {
+                "name": "own south outside plaster before corner post",
+                "minMM": [
+                  9.8,
+                  -17.8,
+                  26
+                ],
+                "maxMM": [
+                  13.3,
+                  -16,
+                  50.5
+                ]
+              },
+              {
+                "name": "own east outside plaster before corner post",
+                "minMM": [
+                  16,
+                  -13.3,
+                  26
+                ],
+                "maxMM": [
+                  17.8,
+                  -9.8,
+                  50.5
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own shared inner bevel corner post",
+            "minMM": [
+              9.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              17.8,
+              -9.8,
+              50.5
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "excludeParts": [
+              {
+                "name": "own south outside plaster before corner post",
+                "minMM": [
+                  9.8,
+                  -17.8,
+                  26
+                ],
+                "maxMM": [
+                  13.3,
+                  -16,
+                  50.5
+                ]
+              },
+              {
+                "name": "own east outside plaster before corner post",
+                "minMM": [
+                  16,
+                  -13.3,
+                  26
+                ],
+                "maxMM": [
+                  17.8,
+                  -9.8,
+                  50.5
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own east outside falling brace",
+            "minMM": [
+              13.9,
+              -15.5,
+              25.7
+            ],
+            "maxMM": [
+              17.8,
+              15.5,
+              49.9
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.8770579952366515,
+              -0.48038450536155486
+            ],
+            "projection": {
+              "originMM": [
+                16.884380438388924,
+                0.0,
+                34.29294886955848
+              ],
+              "axis": [
+                0.0,
+                0.48038450536155486,
+                0.8770579952366515
+              ],
+              "rangeMM": [
+                -1.9305744557678748,
+                1.9748101657921762
+              ]
+            }
+          },
+          {
+            "name": "own south outside falling brace",
+            "minMM": [
+              -15.5,
+              -17.8,
+              25.7
+            ],
+            "maxMM": [
+              15.5,
+              -13.9,
+              49.9
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.8777570039176016,
+              0.0,
+              -0.4791060864501679
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                -16.89777386494172,
+                34.38205122336363
+              ],
+              "axis": [
+                0.4791060864501679,
+                0.0,
+                0.8777570039176016
+              ],
+              "rangeMM": [
+                -1.940440757554083,
+                2.0139911390903906
+              ]
+            }
+          },
+          {
+            "name": "own east upper header",
+            "minMM": [
+              14.5,
+              -17.8,
+              43.4
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              46.4
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own south upper header",
+            "minMM": [
+              -17.8,
+              -17.8,
+              43.4
+            ],
+            "maxMM": [
+              17.8,
+              -14.5,
+              46.4
+            ],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own Y underside laths on X panel",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.35689733587175
+              ],
+              "axis": [
+                0.8266345707262938,
+                0.0014135370565501275,
+                0.5627373173987538
+              ],
+              "rangeMM": [
+                -7,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own X underside laths on Y panel",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3523728701664
+              ],
+              "axis": [
+                0.010438851791323627,
+                -0.8296489503344697,
+                0.5581878264367571
+              ],
+              "rangeMM": [
+                -7,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    -100,
+                    0
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own west open sloping fascia",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              -14.6,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.5582182416820768,
+              0.8296941572973565
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3523728701664
+              ],
+              "axis": [
+                0.010438851791323627,
+                -0.8296489503344697,
+                0.5581878264367571
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    -100,
+                    0
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own north open sloping fascia",
+            "minMM": [
+              -17.8,
+              14.6,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.5627378795986584,
+              0.0,
+              0.8266353965714303
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.35689733587175
+              ],
+              "axis": [
+                0.8266345707262938,
+                0.0014135370565501275,
+                0.5627373173987538
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own diagonal underside ridge timber",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.5085111167870257,
+              0.4924853118943437,
+              0.7063105985841802
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                -1.8,
+                1.8
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own Y underside laths on X panel",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  45
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "y",
+                "physicalPigment": true,
+                "roughness": 0.9,
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.35689733587175
+                  ],
+                  "axis": [
+                    0.8266345707262938,
+                    0.0014135370565501275,
+                    0.5627373173987538
+                  ],
+                  "rangeMM": [
+                    -7,
+                    -2.75
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        0,
+                        100
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "name": "own X underside laths on Y panel",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  45
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "x",
+                "physicalPigment": true,
+                "roughness": 0.9,
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.3523728701664
+                  ],
+                  "axis": [
+                    0.010438851791323627,
+                    -0.8296489503344697,
+                    0.5581878264367571
+                  ],
+                  "rangeMM": [
+                    -7,
+                    -2.75
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        -100,
+                        0
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own blue X roof shingles",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              -0.5627378795986584,
+              0.0,
+              0.8266353965714303
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.35689733587175
+              ],
+              "axis": [
+                0.8266345707262938,
+                0.0014135370565501275,
+                0.5627373173987538
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          },
+          {
+            "name": "own blue Y roof shingles",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              0.0,
+              0.5582182416820768,
+              0.8296941572973565
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3523728701664
+              ],
+              "axis": [
+                0.010438851791323627,
+                -0.8296489503344697,
+                0.5581878264367571
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    -100,
+                    0
+                  ]
+                }
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          },
+          {
+            "name": "own blue diagonal ridge cover",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              -0.5085111167870257,
+              0.4924853118943437,
+              0.7063105985841802
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                -3.5708892449920646,
+                2.510229073212243
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own blue X roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  -0.5627378795986584,
+                  0.0,
+                  0.8266353965714303
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.35689733587175
+                  ],
+                  "axis": [
+                    0.8266345707262938,
+                    0.0014135370565501275,
+                    0.5627373173987538
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        0,
+                        100
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              },
+              {
+                "name": "own blue Y roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  0.0,
+                  0.5582182416820768,
+                  0.8296941572973565
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.3523728701664
+                  ],
+                  "axis": [
+                    0.010438851791323627,
+                    -0.8296489503344697,
+                    0.5581878264367571
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        -100,
+                        0
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          }
+        ],
+        "nearSource": {
+          "code": "MT1-119",
+          "sourceSHA256": "933ed8ee82047f99d20271947dcd33faad7770ce3828178d4655b89f7ccd5746",
+          "componentAboveMM": 26.6,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              -13.3,
+              -14,
+              26.6
+            ],
+            "maxMM": [
+              13.3,
+              -10.8,
+              49.5
+            ]
+          },
+          "matchMM": 0.1,
+          "projectTo": {
+            "code": "MT1-119",
+            "sourceSHA256": "933ed8ee82047f99d20271947dcd33faad7770ce3828178d4655b89f7ccd5746"
+          }
+        }
+      },
+      {
+        "name": "own south outside ochre plaster",
+        "minMM": [
+          -13.3,
+          -17.8,
+          26.6
+        ],
+        "maxMM": [
+          13.3,
+          -13.9,
+          50.5
+        ],
+        "kind": "plaster",
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own east north end post",
+            "minMM": [
+              9.8,
+              13.3,
+              26.1
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              50.5
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "excludeParts": [
+              {
+                "name": "own south outside plaster before corner post",
+                "minMM": [
+                  9.8,
+                  -17.8,
+                  26
+                ],
+                "maxMM": [
+                  13.3,
+                  -16,
+                  50.5
+                ]
+              },
+              {
+                "name": "own east outside plaster before corner post",
+                "minMM": [
+                  16,
+                  -13.3,
+                  26
+                ],
+                "maxMM": [
+                  17.8,
+                  -9.8,
+                  50.5
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own south west end post",
+            "minMM": [
+              -17.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              -13.3,
+              -9.8,
+              50.5
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "excludeParts": [
+              {
+                "name": "own south outside plaster before corner post",
+                "minMM": [
+                  9.8,
+                  -17.8,
+                  26
+                ],
+                "maxMM": [
+                  13.3,
+                  -16,
+                  50.5
+                ]
+              },
+              {
+                "name": "own east outside plaster before corner post",
+                "minMM": [
+                  16,
+                  -13.3,
+                  26
+                ],
+                "maxMM": [
+                  17.8,
+                  -9.8,
+                  50.5
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own shared inner bevel corner post",
+            "minMM": [
+              9.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              17.8,
+              -9.8,
+              50.5
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "excludeParts": [
+              {
+                "name": "own south outside plaster before corner post",
+                "minMM": [
+                  9.8,
+                  -17.8,
+                  26
+                ],
+                "maxMM": [
+                  13.3,
+                  -16,
+                  50.5
+                ]
+              },
+              {
+                "name": "own east outside plaster before corner post",
+                "minMM": [
+                  16,
+                  -13.3,
+                  26
+                ],
+                "maxMM": [
+                  17.8,
+                  -9.8,
+                  50.5
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own east outside falling brace",
+            "minMM": [
+              13.9,
+              -15.5,
+              25.7
+            ],
+            "maxMM": [
+              17.8,
+              15.5,
+              49.9
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.8770579952366515,
+              -0.48038450536155486
+            ],
+            "projection": {
+              "originMM": [
+                16.884380438388924,
+                0.0,
+                34.29294886955848
+              ],
+              "axis": [
+                0.0,
+                0.48038450536155486,
+                0.8770579952366515
+              ],
+              "rangeMM": [
+                -1.9305744557678748,
+                1.9748101657921762
+              ]
+            }
+          },
+          {
+            "name": "own south outside falling brace",
+            "minMM": [
+              -15.5,
+              -17.8,
+              25.7
+            ],
+            "maxMM": [
+              15.5,
+              -13.9,
+              49.9
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.8777570039176016,
+              0.0,
+              -0.4791060864501679
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                -16.89777386494172,
+                34.38205122336363
+              ],
+              "axis": [
+                0.4791060864501679,
+                0.0,
+                0.8777570039176016
+              ],
+              "rangeMM": [
+                -1.940440757554083,
+                2.0139911390903906
+              ]
+            }
+          },
+          {
+            "name": "own east upper header",
+            "minMM": [
+              14.5,
+              -17.8,
+              43.4
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              46.4
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own south upper header",
+            "minMM": [
+              -17.8,
+              -17.8,
+              43.4
+            ],
+            "maxMM": [
+              17.8,
+              -14.5,
+              46.4
+            ],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own Y underside laths on X panel",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.35689733587175
+              ],
+              "axis": [
+                0.8266345707262938,
+                0.0014135370565501275,
+                0.5627373173987538
+              ],
+              "rangeMM": [
+                -7,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own X underside laths on Y panel",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "x",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3523728701664
+              ],
+              "axis": [
+                0.010438851791323627,
+                -0.8296489503344697,
+                0.5581878264367571
+              ],
+              "rangeMM": [
+                -7,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    -100,
+                    0
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own west open sloping fascia",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              -14.6,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.5582182416820768,
+              0.8296941572973565
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3523728701664
+              ],
+              "axis": [
+                0.010438851791323627,
+                -0.8296489503344697,
+                0.5581878264367571
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    -100,
+                    0
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own north open sloping fascia",
+            "minMM": [
+              -17.8,
+              14.6,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.5627378795986584,
+              0.0,
+              0.8266353965714303
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.35689733587175
+              ],
+              "axis": [
+                0.8266345707262938,
+                0.0014135370565501275,
+                0.5627373173987538
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own diagonal underside ridge timber",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              -0.5085111167870257,
+              0.4924853118943437,
+              0.7063105985841802
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                -1.8,
+                1.8
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own Y underside laths on X panel",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  45
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "y",
+                "physicalPigment": true,
+                "roughness": 0.9,
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.35689733587175
+                  ],
+                  "axis": [
+                    0.8266345707262938,
+                    0.0014135370565501275,
+                    0.5627373173987538
+                  ],
+                  "rangeMM": [
+                    -7,
+                    -2.75
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        0,
+                        100
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "name": "own X underside laths on Y panel",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  45
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "x",
+                "physicalPigment": true,
+                "roughness": 0.9,
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.3523728701664
+                  ],
+                  "axis": [
+                    0.010438851791323627,
+                    -0.8296489503344697,
+                    0.5581878264367571
+                  ],
+                  "rangeMM": [
+                    -7,
+                    -2.75
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        -100,
+                        0
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own blue X roof shingles",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              -0.5627378795986584,
+              0.0,
+              0.8266353965714303
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.35689733587175
+              ],
+              "axis": [
+                0.8266345707262938,
+                0.0014135370565501275,
+                0.5627373173987538
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    0,
+                    100
+                  ]
+                }
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          },
+          {
+            "name": "own blue Y roof shingles",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              0.0,
+              0.5582182416820768,
+              0.8296941572973565
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3523728701664
+              ],
+              "axis": [
+                0.010438851791323627,
+                -0.8296489503344697,
+                0.5581878264367571
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own roof half",
+                "minMM": [
+                  -18,
+                  -18,
+                  44
+                ],
+                "maxMM": [
+                  18,
+                  18,
+                  101
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865475,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    -100,
+                    0
+                  ]
+                }
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          },
+          {
+            "name": "own blue diagonal ridge cover",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              -0.5085111167870257,
+              0.4924853118943437,
+              0.7063105985841802
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                -3.5708892449920646,
+                2.510229073212243
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own blue X roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  -0.5627378795986584,
+                  0.0,
+                  0.8266353965714303
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.35689733587175
+                  ],
+                  "axis": [
+                    0.8266345707262938,
+                    0.0014135370565501275,
+                    0.5627373173987538
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        0,
+                        100
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              },
+              {
+                "name": "own blue Y roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  0.0,
+                  0.5582182416820768,
+                  0.8296941572973565
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.3523728701664
+                  ],
+                  "axis": [
+                    0.010438851791323627,
+                    -0.8296489503344697,
+                    0.5581878264367571
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        -100,
+                        0
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              }
+            ],
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          }
+        ]
+      },
+      {
+        "name": "own iron disk east upper",
+        "minMM": [
+          16.45,
+          -16.32475471977083,
+          41.091348480317215
+        ],
+        "maxMM": [
+          18,
+          -14.180696229395181,
+          43.23540697069286
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            17.24435043334961,
+            -15.252725474583006,
+            42.163377725505036
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 1.0220292451878228,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.3,
+            1.3
+          ],
+          "thicknessMM": 1.0220292451878228,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk east lower",
+        "minMM": [
+          16.45,
+          11.077053020767458,
+          27.12271343872557
+        ],
+        "maxMM": [
+          18,
+          12.910803785801786,
+          28.9564642037599
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            16.803449630737305,
+            11.993928403284622,
+            28.039588821242734
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.8668753825171637,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.3,
+            1.3
+          ],
+          "thicknessMM": 0.8668753825171637,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk south upper",
+        "minMM": [
+          -16.186706306452567,
+          -18,
+          41.11591754912888
+        ],
+        "maxMM": [
+          -14.048172574290543,
+          -16.45,
+          43.2544512812909
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -15.117439440371555,
+            -17.318649291992188,
+            42.18518441520989
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "radiusAtOriginMM": 1.019266866081011,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.3,
+            1.3
+          ],
+          "thicknessMM": 1.019266866081011,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk south lower",
+        "minMM": [
+          11.193457717360436,
+          -18,
+          27.088084237409387
+        ],
+        "maxMM": [
+          13.080078870778953,
+          -16.45,
+          28.974705390827904
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            12.136768294069695,
+            -17.026649475097656,
+            28.031394814118645
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "radiusAtOriginMM": 0.8933105767092572,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.3,
+            1.3
+          ],
+          "thicknessMM": 0.8933105767092572,
+          "allowanceMM": 0
+        }
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "AuthorPDF18HD andraw4/wall4/underroof/floor/panel2/ridge3views inspected. Actualhighcorner-X+Y,lowwalls+X/-Y;GLOBALC67.198fitREJECTED. OwnXroof41raysC[0.0, 0.0, 74.35689733587175]N[0.8266345707262938, 0.0014135370565501275, 0.5627373173987538];Yroof39raysC[0.0, 0.0, 74.3523728701664]N[0.010438851791323627, -0.8296489503344697, 0.5581878264367571]. Eachpanelownalong-slopewoodgrain,undersidelathscrossslope. Fullridgecover29ownmaximasectionsD[-0.5085111167870257, 0.4924853118943437, 0.7063105985841802]crossrange[-3.5708892449920646, 2.510229073212243];old125pointnormalfitONLYcentralbevel,notwholecap. Capblueallwingsandgrainalongridge;bluepaneldomainskeepundersidewood. Own5203floorupnormalsnx2.10329/ny2.04177=>Ygrain. Fourheads337/326/311/311vall24bins,diagonalendplacements. Own2outsidebraces39sectionseach. Sharedinnercornerposthas8mminwardbevel;cutonly2measuredoutsideplasterfacesas117repair. Plaininsideplastervariation.018avoidregularstripes,roughoutside.065. Ownfreequarter[-8.75,8.75]minimum39.46517mm,other3blocked;conservativeLblockerX>=1.2orY<=-1.2containsALLbodyZ28..60.711512(outside0). Sourcefloor25.711512,centre[0.008315086364746094, -0.11245918273925781];nativeouterY+-17.7accountsnonzeroaxis. Needownsourcepaintcontrols/dry3180geometry+34actorair/fullcandidateRGBPBRviews/UD016/finalRLS/GoMCPbeforepublication. Noemission/defaultlights. DryLODplaincollarseparationfoundnocollarfaceafterunprotectedlowerlipcollapsedabovecutoff17.5. PreserveownnativeZ16.99..17.65lip/cutcaptrianglesbeforedecimation;doNOTdropvisiblebodyorrelaxcollarguard. InitialwideeavepinsZ46.7..56/XorY11..17.8overconstrainedLOD:roof143kfacesretainedwhilefloordisappeared(1703sourcefailures). NarrowpinsonlytrueoutereaveX>=14orY<=-14/Z<=54.5;retainfullridge/lip/heads. Pin3ownnorth-edgebluegapsRdrift.18564/.20871mmorflippednormalatX3.2078/Z67.9066,X-.3528/Z72,X2/Z68.9914. RecheckALL2778geometry+33actorairRLODbeforebakes. Narrowednativepinsstillrequire144905triangles;140kLODisbelowpreservedminimumandcannotretainfloor. RaiseLOD175k(R180kunchanged)so~30kfacesremainforunprotectedbody,notrelaxsource/actorchecks. VerifiedfallbackR180k/L175kpassesALL2778sourcegeometry+33actorair,savedMT1-119-safe175. Comparelighter140kLODbyprotectingONLYtrueeavetipsZ<=51.5andridgewingedges(.65mm),centralbevel/endsections;flatcapwinginteriorsmaydecimateandrebakenormalscapturecarving. Thisreducesprotectedminimuminsteadofsacrificingfloor. ALLsource/actorchecksunchanged. Reducedpin140kLODpreservedfloor/actorairand2777of2778surfaces;ONLYnorthfloorframeX16/Y17.35894/Z22normal.23428failed(.03721mmdrift). Preserveown2.4mmnativepatch;noactortolerancerelaxed.",
+  "renderColourSize": 2048,
+  "renderColourQuality": 96,
+  "lodColourQuality": 96,
+  "geometryDetailRegions": [
+    {
+      "name": "own east lower roof eave",
+      "minMM": [
+        14,
+        -17.8,
+        46.7
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        51.5
+      ]
+    },
+    {
+      "name": "own south lower roof eave",
+      "minMM": [
+        -17.8,
+        -17.8,
+        46.7
+      ],
+      "maxMM": [
+        17.8,
+        -14,
+        51.5
+      ]
+    },
+    {
+      "name": "own diagonal ridge cover",
+      "minMM": [
+        -17.8,
+        -17.8,
+        46.7
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        101
+      ],
+      "sourceSelection": {
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0.7071067811865475,
+            0.7071067811865475,
+            0
+          ],
+          "rangeMM": [
+            -3.5708892449920646,
+            2.510229073212243
+          ]
+        },
+        "includeParts": [
+          {
+            "name": "own ridge left wing edge",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                -3.5708892449920646,
+                -2.9208892449920647
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own blue X roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  -0.5627378795986584,
+                  0.0,
+                  0.8266353965714303
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.35689733587175
+                  ],
+                  "axis": [
+                    0.8266345707262938,
+                    0.0014135370565501275,
+                    0.5627373173987538
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        0,
+                        100
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              },
+              {
+                "name": "own blue Y roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  0.0,
+                  0.5582182416820768,
+                  0.8296941572973565
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.3523728701664
+                  ],
+                  "axis": [
+                    0.010438851791323627,
+                    -0.8296489503344697,
+                    0.5581878264367571
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        -100,
+                        0
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own ridge right wing edge",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                1.8602290732122433,
+                2.510229073212243
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own blue X roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  -0.5627378795986584,
+                  0.0,
+                  0.8266353965714303
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.35689733587175
+                  ],
+                  "axis": [
+                    0.8266345707262938,
+                    0.0014135370565501275,
+                    0.5627373173987538
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        0,
+                        100
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              },
+              {
+                "name": "own blue Y roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  0.0,
+                  0.5582182416820768,
+                  0.8296941572973565
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.3523728701664
+                  ],
+                  "axis": [
+                    0.010438851791323627,
+                    -0.8296489503344697,
+                    0.5581878264367571
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        -100,
+                        0
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own ridge central carved bevel",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                -1.22,
+                0.34
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own blue X roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  -0.5627378795986584,
+                  0.0,
+                  0.8266353965714303
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.35689733587175
+                  ],
+                  "axis": [
+                    0.8266345707262938,
+                    0.0014135370565501275,
+                    0.5627373173987538
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        0,
+                        100
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              },
+              {
+                "name": "own blue Y roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  0.0,
+                  0.5582182416820768,
+                  0.8296941572973565
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.3523728701664
+                  ],
+                  "axis": [
+                    0.010438851791323627,
+                    -0.8296489503344697,
+                    0.5581878264367571
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        -100,
+                        0
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own ridge lower end",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                -0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                -30,
+                -18
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own blue X roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  -0.5627378795986584,
+                  0.0,
+                  0.8266353965714303
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.35689733587175
+                  ],
+                  "axis": [
+                    0.8266345707262938,
+                    0.0014135370565501275,
+                    0.5627373173987538
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        0,
+                        100
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              },
+              {
+                "name": "own blue Y roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  0.0,
+                  0.5582182416820768,
+                  0.8296941572973565
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.3523728701664
+                  ],
+                  "axis": [
+                    0.010438851791323627,
+                    -0.8296489503344697,
+                    0.5581878264367571
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        -100,
+                        0
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              }
+            ]
+          },
+          {
+            "name": "own ridge upper end",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              101
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                -0.7071067811865475,
+                0.7071067811865475,
+                0
+              ],
+              "rangeMM": [
+                18,
+                30
+              ]
+            },
+            "includeParts": [
+              {
+                "name": "own blue X roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  -0.5627378795986584,
+                  0.0,
+                  0.8266353965714303
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.35689733587175
+                  ],
+                  "axis": [
+                    0.8266345707262938,
+                    0.0014135370565501275,
+                    0.5627373173987538
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        0,
+                        100
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              },
+              {
+                "name": "own blue Y roof shingles",
+                "minMM": [
+                  -17.8,
+                  -17.8,
+                  46.7
+                ],
+                "maxMM": [
+                  17.8,
+                  17.8,
+                  101
+                ],
+                "axis": "beam",
+                "physicalPigment": true,
+                "roughness": 0.94,
+                "direction": [
+                  0.0,
+                  0.5582182416820768,
+                  0.8296941572973565
+                ],
+                "projection": {
+                  "originMM": [
+                    0.0,
+                    0.0,
+                    74.3523728701664
+                  ],
+                  "axis": [
+                    0.010438851791323627,
+                    -0.8296489503344697,
+                    0.5581878264367571
+                  ],
+                  "rangeMM": [
+                    -2.75,
+                    10
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "name": "own roof half",
+                    "minMM": [
+                      -18,
+                      -18,
+                      44
+                    ],
+                    "maxMM": [
+                      18,
+                      18,
+                      101
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        0.7071067811865475,
+                        0.7071067811865475,
+                        0
+                      ],
+                      "rangeMM": [
+                        -100,
+                        0
+                      ]
+                    }
+                  }
+                ],
+                "darkRGB": [
+                  0.11,
+                  0.17,
+                  0.29
+                ],
+                "lightRGB": [
+                  0.3,
+                  0.37,
+                  0.53
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "own east upper head and rim",
+      "minMM": [
+        15.444350433349609,
+        -17.052725474583006,
+        40.36337772550504
+      ],
+      "maxMM": [
+        19.04435043334961,
+        -13.452725474583005,
+        43.96337772550503
+      ]
+    },
+    {
+      "name": "own east lower head and rim",
+      "minMM": [
+        15.003449630737304,
+        10.193928403284621,
+        26.239588821242734
+      ],
+      "maxMM": [
+        18.603449630737305,
+        13.793928403284623,
+        29.839588821242735
+      ]
+    },
+    {
+      "name": "own south upper head and rim",
+      "minMM": [
+        -16.917439440371556,
+        -19.118649291992188,
+        40.38518441520989
+      ],
+      "maxMM": [
+        -13.317439440371555,
+        -15.518649291992187,
+        43.985184415209886
+      ]
+    },
+    {
+      "name": "own south lower head and rim",
+      "minMM": [
+        10.336768294069694,
+        -18.826649475097657,
+        26.231394814118644
+      ],
+      "maxMM": [
+        13.936768294069696,
+        -15.226649475097656,
+        29.831394814118646
+      ]
+    },
+    {
+      "name": "own native lower mounting lip",
+      "minMM": [
+        -17.8,
+        -17.8,
+        16.99
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        17.65
+      ]
+    },
+    {
+      "name": "own north edge blue slat near X3",
+      "minMM": [
+        2.0077846527099608,
+        12.798644828796387,
+        66.7066162109375
+      ],
+      "maxMM": [
+        4.407784652709961,
+        15.198644828796386,
+        69.1066162109375
+      ]
+    },
+    {
+      "name": "own north edge carved slat near X0",
+      "minMM": [
+        -1.5527870178222656,
+        12.8,
+        70.8
+      ],
+      "maxMM": [
+        0.8472129821777343,
+        15.2,
+        73.2
+      ]
+    },
+    {
+      "name": "own north edge blue gap near X2",
+      "minMM": [
+        0.8,
+        12.8,
+        67.79144744873047
+      ],
+      "maxMM": [
+        3.2,
+        15.2,
+        70.19144744873047
+      ]
+    },
+    {
+      "name": "own north floor frame carved edge at X16 Z22",
+      "minMM": [
+        14.8,
+        16.158942031860352,
+        20.8
+      ],
+      "maxMM": [
+        17.2,
+        18.55894203186035,
+        23.2
+      ]
+    }
+  ],
+  "placementCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "pegCentersMM": [
+    [
+      0.008315086364746094,
+      -0.11245918273925781
+    ]
+  ],
+  "mountCentreFitReview": {
+    "sourceSHA256": "933ed8ee82047f99d20271947dcd33faad7770ce3828178d4655b89f7ccd5746",
+    "nativeCentresMM": [
+      [
+        0.008315086364746094,
+        -0.11245918273925781
+      ]
+    ],
+    "fittedCentresMM": [
+      [
+        0.008315086364746094,
+        -0.11245918273925781
+      ]
+    ],
+    "preservedCentroidMM": [
+      0.008315086364746094,
+      -0.11245918273925781
+    ],
+    "maxCoordinateMoveMM": 0,
+    "requiredDecodedCentreToleranceMM": 0.02,
+    "sourceSections": [
+      {
+        "z": 12,
+        "centreMM": [
+          0.008512020111083984,
+          -0.11191606521606445
+        ]
+      },
+      {
+        "z": 14,
+        "centreMM": [
+          0.008310317993164062,
+          -0.11316299438476562
+        ]
+      },
+      {
+        "z": 16,
+        "centreMM": [
+          0.008319854736328125,
+          -0.11175537109375
+        ]
+      }
+    ],
+    "method": "Own opposite external face rays Z14/16"
+  },
+  "uvBaseTile": [
+    0.66,
+    0.002,
+    0.998,
+    0.45
+  ],
+  "uvDetailRegions": [
+    {
+      "name": "own both roof panels and diagonal cover",
+      "minMM": [
+        -17.8,
+        -17.8,
+        46.7
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        101
+      ],
+      "tile": [
+        0.002,
+        0.002,
+        0.65,
+        0.998
+      ],
+      "islandMargin": 0.001
+    },
+    {
+      "name": "own east inside plaster and frame",
+      "minMM": [
+        9.8,
+        -13.9,
+        26.5
+      ],
+      "maxMM": [
+        13.9,
+        17.8,
+        46.7
+      ],
+      "tile": [
+        0.66,
+        0.46,
+        0.823,
+        0.72
+      ],
+      "islandMargin": 0.001
+    },
+    {
+      "name": "own east outside plaster and brace",
+      "minMM": [
+        13.9,
+        -13.9,
+        26.5
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        46.7
+      ],
+      "tile": [
+        0.833,
+        0.46,
+        0.998,
+        0.72
+      ],
+      "islandMargin": 0.001
+    },
+    {
+      "name": "own south inside plaster and frame",
+      "minMM": [
+        -17.8,
+        -13.9,
+        26.5
+      ],
+      "maxMM": [
+        9.8,
+        -9.8,
+        46.7
+      ],
+      "tile": [
+        0.66,
+        0.73,
+        0.823,
+        0.998
+      ],
+      "islandMargin": 0.001
+    },
+    {
+      "name": "own south outside plaster and brace",
+      "minMM": [
+        -17.8,
+        -17.8,
+        26.5
+      ],
+      "maxMM": [
+        17.8,
+        -13.9,
+        46.7
+      ],
+      "tile": [
+        0.833,
+        0.73,
+        0.998,
+        0.998
+      ],
+      "islandMargin": 0.001
+    }
+  ]
+}
