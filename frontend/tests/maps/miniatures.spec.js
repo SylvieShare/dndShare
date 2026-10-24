@@ -1,6 +1,26 @@
 import { test, expect } from "@playwright/test";
-import { mapPoint } from "./editorHelpers";
+import { canvasFrame, mapPoint } from "./editorHelpers";
 import { MINI_ID } from "./fixtures/miniatures.js";
+
+async function miniaturePixels(page) {
+  const png = await canvasFrame(page);
+  return page.evaluate(async (base64) => {
+    const image = await createImageBitmap(
+      new Blob([Uint8Array.from(atob(base64), (c) => c.charCodeAt(0))], {
+        type: "image/png",
+      }),
+    );
+    const context = new OffscreenCanvas(image.width, image.height).getContext(
+      "2d",
+    );
+    context.drawImage(image, 0, 0);
+    const pixels = context.getImageData(0, 0, image.width, image.height).data;
+    let cyan = 0;
+    for (let i = 0; i < pixels.length; i += 4)
+      if (pixels[i] < 80 && pixels[i + 1] > 100 && pixels[i + 2] > 150) cyan++;
+    return cyan;
+  }, png.toString("base64"));
+}
 
 test("placing an NPC loads its bound miniature and saves the bestiary ID", async ({
   page,
@@ -45,6 +65,9 @@ test("placing an NPC loads its bound miniature and saves the bestiary ID", async
   await expect(
     page.getByText("Не удалось загрузить карту", { exact: true }),
   ).toHaveCount(0);
+  // Fetching a GLB alone does not prove it is drawn: unscaled grey stones
+  // previously covered the entire coloured figure after reconciliation.
+  await expect.poll(() => miniaturePixels(page)).toBeGreaterThan(50);
   expect(errors).toEqual([]);
 });
 

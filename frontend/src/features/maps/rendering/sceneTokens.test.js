@@ -153,3 +153,48 @@ it("replaces the portrait when a miniature finishes loading, without a token edi
   layer.destroy();
   portraits.destroy();
 });
+
+it("preserves native part transforms when freezing a miniature on the board", () => {
+  const geometry = new BoxGeometry(),
+    material = new MeshStandardMaterial(),
+    metadata = { id: "kobold", itemIds: [1635], maxHeight: 0.92 };
+  const body = new Matrix4().makeTranslation(0.005, 0.485, -0.053),
+    pebble = new Matrix4()
+      .makeRotationY(0.4)
+      .scale(new Vector3(0.041, 0.013, 0.028))
+      .setPosition(0.348, 0.068, -0.035);
+  const assets = {
+    catalogue: () => [metadata],
+    metadata: () => metadata,
+    model: () => ({
+      parts: [body, pebble].map((matrix) => ({ geometry, material, matrix })),
+    }),
+  };
+  const portraits = createTokenPortraits(),
+    layer = createSceneObjectLayer(assets, fog, portraits);
+  const token = { ...creature, itemId: 1635, size: 2, elevation: 0.3 };
+  layer.update(
+    { objects: [], zones: [], areas: [], width: 4, height: 4 },
+    { tokens: [token] },
+    { master: true },
+    "render",
+    { tokenOpacity: () => 1 },
+  );
+  const mini = layer.root.children[0].children[1];
+  const placement = new Matrix4()
+    .makeScale(2, 2, 2)
+    .setPosition(token.x, token.elevation, token.y);
+  for (const [index, expected] of [body, pebble].entries()) {
+    expect(mini.children[index].matrix.equals(expected)).toBe(true);
+    expect(
+      mini.children[index].matrixWorld.equals(
+        placement.clone().multiply(expected),
+      ),
+    ).toBe(true);
+    expect(mini.children[index].matrixAutoUpdate).toBe(false);
+  }
+  layer.destroy();
+  portraits.destroy();
+  geometry.dispose();
+  material.dispose();
+});

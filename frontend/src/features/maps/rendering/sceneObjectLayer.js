@@ -42,7 +42,9 @@ export function createSceneObjectLayer(assets, fog, portraits) {
           if (record) release(id, record);
           record = { stamp, node: build() };
           record.node.traverse((node) => {
-            node.updateMatrix();
+            // GLB parts already carry their native matrix, including scale.
+            // Composing it from default position/rotation would erase it.
+            if (node.matrixAutoUpdate) node.updateMatrix();
             node.matrixAutoUpdate = false;
           });
           records.set(id, record);
