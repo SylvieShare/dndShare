@@ -151,6 +151,7 @@ Roof 2|Крыша 2
 Roof Window With Glass|Крыша со слуховым окном со стеклом
 Roof Window Without Glass|Крыша со слуховым окном без стекла
 Roof Wooden Plank|Крыша с деревянными планками
+Roof Hole|Крыша с отверстием
 Balcony|Балкон
 Balcony Angle|Угловой балкон
 Balcony Corridor|Балкон с двумя ограждениями
