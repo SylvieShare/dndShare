@@ -14,6 +14,7 @@ import {
 } from "three";
 import { FLOOR } from "./annotations";
 import { buildTokenMiniature } from "./tokenMiniature";
+import { deadTokenMark } from "./deadTokenMark";
 
 const portraitKey = (t) =>
   `${t.kind === "player" ? "cover" : "contain"}:${t.imageUrl}`;
@@ -103,7 +104,7 @@ export function buildMapToken(token, options, fog) {
   group.position.set(token.x, (token.elevation ?? FLOOR) + 0.05, token.y);
   group.userData.tokenId = token.id;
   const hiddenOpacity = token.hidden ? 0.4 : 1;
-  const miniature = buildTokenMiniature(token, options, fog);
+  const miniature = token.dead ? null : buildTokenMiniature(token, options, fog);
   if (miniature) {
     const ring = new Mesh(
       new RingGeometry(token.size * 0.45, token.size * 0.49, 48),
@@ -121,9 +122,8 @@ export function buildMapToken(token, options, fog) {
     group.add(ring, miniature.root);
     if (miniature.base) group.add(miniature.base);
   } else {
-    group.add(
-      new Mesh(
-        new CylinderGeometry(token.size * 0.43, token.size * 0.43, 0.08, 32),
+    const disc = new Mesh(
+        new CylinderGeometry(token.size * 0.43, token.size * 0.43, token.dead ? 0.015 : 0.08, 32),
         fog.material(
           new MeshStandardMaterial({
             color: token.color,
@@ -132,8 +132,9 @@ export function buildMapToken(token, options, fog) {
             opacity: hiddenOpacity,
           }),
         ),
-      ),
-    );
+      );
+    if (token.dead) disc.position.y = -.0325;
+    group.add(disc);
     if (token.imageUrl && options.tokenPortraits) {
       const material = fog.material(
         new MeshBasicMaterial({
@@ -150,9 +151,10 @@ export function buildMapToken(token, options, fog) {
         material,
       );
       avatar.rotation.x = -Math.PI / 2;
-      avatar.position.y = 0.045;
+      avatar.position.y = token.dead ? -.024 : 0.045;
       group.add(avatar);
     }
+    if (token.dead) group.add(deadTokenMark(token, fog));
   }
   const text = label(token.name);
   text.position.y = miniature ? miniature.height + 0.2 : 0.25;

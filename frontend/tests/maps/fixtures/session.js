@@ -1,3 +1,4 @@
+import { reactive } from 'vue';
 import { documentMutationFixture } from "./documentMutations";
 import { useTemplateStore } from "../../../src/stores/template";
 export function sessionFixture(pinia, source, params) {
@@ -36,15 +37,24 @@ export function sessionFixture(pinia, source, params) {
         },
       ]
     : [];
-  const encounter = {
+  const encounter = reactive({
     encounter: { combatants: npcs },
+    findParticipant: id => participants.find(p => p.charId === id), playerDisplayName: () => 'Лира', getPlayerAva: () => participants[0]?.iconImageUrl,
+    playerDsHp: () => ({ current: 18 }), playerHpLabel: () => '18 / 24',
+    openHpCalc() {}, openNpcHpEdit() {},
+    canEditPlayerHp: () => true, statesValue: () => [], tileColor: c => c.iconColor,
+    avatarStyle: c => ({ color: c.iconColor }), displayAc: () => 13, npcHpFormula: () => '',
+    hpPercent: c => c.hpCurrent / 30 * 100, hpColor: () => 'var(--success)', hpTempValue: c => c.hpTemp || 0, hpTempPercent: () => 0,
+    hpLabel: c => `${c.hpCurrent} / 30`, npcDsHp: c => ({ current: c.hpCurrent }), ENCOUNTER_LETTERS: ['A', 'B'],
+    setSide: (c, side) => { if (side) c.side = side; else delete c.side },
     npcName: () => "Огр",
     npcItem: () =>
       params.has("tokenPortraits")
         ? { iconSvgId: 700, svg: '<svg viewBox="0 0 128 64" />' }
         : null,
     npcHpObj: (c) => ({ current: c.hpCurrent, max: 30, temp: c.hpTemp }),
-  };
+  });
+  window.creatureEncounter = encounter;
   return { participants, encounter };
 }
 export function sessionAPI(initial, initialDisplay, getSource) {

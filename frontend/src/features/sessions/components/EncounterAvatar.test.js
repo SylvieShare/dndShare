@@ -7,22 +7,10 @@ const source = readFileSync(
   'utf8',
 )
 
-function cssRule(selector) {
-  return source.match(new RegExp(`${selector} \\{([^}]*)\\}`))?.[1] || ''
-}
-
 describe('EncounterAvatar', () => {
-  it('centres 64px NPC artwork vertically while preserving player portraits', () => {
-    const npcRule = cssRule('\\.enc-avatar--npc')
-    const playerRule = cssRule('\\.enc-avatar--player')
-
-    expect(npcRule).toContain('width: 64px;')
-    expect(npcRule).toContain('height: 64px;')
-    expect(npcRule).toContain('align-self: center;')
-    expect(playerRule).toContain('width: 62px;')
-    expect(playerRule).toContain('height: 62px;')
-    expect(playerRule).toContain('border-radius: 50%;')
-    expect(source).toContain('object-fit: cover;')
-    expect(source).toContain('object-position: center;')
+  it('delegates portrait and icon geometry to the common avatar', () => {
+    expect(source).toContain('<SessionCreatureAvatar')
+    expect(source).toContain(':icon="!isPlayer || isPlayerIcon"')
+    expect(source).toContain('enc.findParticipant(props.combatant.charId)?.iconImageUrl')
   })
 })

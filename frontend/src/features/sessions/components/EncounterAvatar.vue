@@ -1,26 +1,19 @@
 <template>
-  <div
-    class="enc-avatar"
-    :class="isPlayer ? 'enc-avatar--player' : 'enc-avatar--npc'"
-    :style="{ color: tintColor }"
-  >
-    <img v-if="imgSrc" class="enc-avatar-img" :class="{ 'enc-avatar-img--photo': isPlayer }" :src="imgSrc" alt="" />
-    <span v-else-if="inlineSvg" class="enc-avatar-svg" v-html="inlineSvg" />
-    <ImageIcon v-else class="enc-avatar-empty" :size="24" :stroke-width="1.4" aria-hidden="true" />
-  </div>
+  <SessionCreatureAvatar class="enc-avatar" :class="isPlayer ? 'enc-avatar--player' : 'enc-avatar--npc'" :url="imgSrc" :svg="inlineSvg" :icon="!isPlayer || isPlayerIcon" :color="tintColor" />
 </template>
 
 <script setup>
 import { computed, inject } from 'vue'
-import { Image as ImageIcon } from '@lucide/vue'
+import SessionCreatureAvatar from './SessionCreatureAvatar.vue'
 
 const props = defineProps({
   combatant: { type: Object, required: true },
 })
 
-const enc = inject('encounter')
+const enc = inject('encounter', null) || inject('applicationEncounter', null)
 
 const isPlayer = computed(() => props.combatant.type === 'player')
+const isPlayerIcon = computed(() => isPlayer.value && !!enc.findParticipant(props.combatant.charId)?.iconImageUrl)
 const isNpc    = computed(() => props.combatant.type === 'npc')
 
 const playerAva = computed(() => isPlayer.value ? enc.getPlayerAva(props.combatant.charId) : null)
@@ -46,53 +39,3 @@ const inlineSvg = computed(() =>
 
 const tintColor = computed(() => enc.avatarStyle(props.combatant)?.color || 'var(--text-2)')
 </script>
-
-<style scoped>
-.enc-avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  overflow: hidden;
-  background: transparent;
-}
-
-.enc-avatar--player {
-  width: 62px;
-  height: 62px;
-  border-radius: 50%;
-}
-
-.enc-avatar--npc {
-  width: 64px;
-  height: 64px;
-  align-self: center;
-  border-radius: 10px;
-}
-
-.enc-avatar-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
-}
-
-/* Player photos crop to fill (face stays near the top). */
-.enc-avatar-img--photo {
-  object-fit: cover;
-  object-position: center 15%;
-  -webkit-mask-image: radial-gradient(ellipse 82% 84% at 50% 44%, var(--text-on-accent) 54%, transparent 100%);
-  mask-image: radial-gradient(ellipse 82% 84% at 50% 44%, var(--text-on-accent) 54%, transparent 100%);
-}
-
-.enc-avatar-svg {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  color: currentColor;
-}
-.enc-avatar-svg :deep(svg) { width: 100%; height: 100%; object-fit: contain; }
-.enc-avatar-empty { color: currentColor; opacity: 0.5; }
-</style>

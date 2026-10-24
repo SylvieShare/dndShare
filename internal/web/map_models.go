@@ -94,7 +94,7 @@ func (s *Server) publicModelIDs(w http.ResponseWriter, r *http.Request) (map[str
 			mapError(w, err)
 			return nil, false
 		}
-		publicState, err := s.publicMapTokenState(r, session.ID, m.Document, m.State)
+		publicState, err := s.publicMapTokenState(r, session, m.Document, m.State)
 		if err != nil {
 			serverError(w, err)
 			return nil, false
@@ -107,7 +107,7 @@ func (s *Server) publicModelIDs(w http.ResponseWriter, r *http.Request) (map[str
 		visibleItems := map[int64]bool{}
 		baseIDs := []string{}
 		for _, token := range publicState.Tokens {
-			if token.Kind == "creature" && token.ItemID > 0 {
+			if !token.Dead && token.Kind == "creature" && token.ItemID > 0 {
 				visibleItems[token.ItemID] = true
 				if publicState.UseCreatureBases && token.BaseModelID != "" {
 					baseIDs = append(baseIDs, token.BaseModelID)

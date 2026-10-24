@@ -1,6 +1,6 @@
 export function tokenModelId(token, catalogue) {
   if (
-    token.kind !== "creature" ||
+    token.dead || token.kind !== "creature" ||
     !Number.isSafeInteger(token.itemId) ||
     token.itemId <= 0
   )
@@ -16,7 +16,7 @@ export function tokenItemIds(tokens = []) {
       tokens
         .filter(
           (t) =>
-            t.kind === "creature" &&
+            !t.dead && t.kind === "creature" &&
             Number.isSafeInteger(t.itemId) &&
             t.itemId > 0,
         )

@@ -96,6 +96,7 @@ func (s *Server) handleEncounterMutation(w http.ResponseWriter, r *http.Request)
 	}
 
 	s.displayEvents.publish(session.ID)
+	s.mapEvents.publish(session.ID)
 	s.publishSessionJournal(session.ID)
 	writeJSON(w, http.StatusOK, result)
 }

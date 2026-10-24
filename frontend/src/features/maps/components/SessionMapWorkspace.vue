@@ -119,7 +119,7 @@
 </template>
 <script setup>
 import "../styles/maps.css";
-import { computed, nextTick, reactive, ref, watch } from "vue";
+import { computed, nextTick, provide, reactive, ref, watch } from "vue";
 import {
   ActionButton,
   ConfirmDialog,
@@ -156,6 +156,7 @@ const c = reactive(useSessionMaps(props.sessionUuid)),
   picker = ref(false),
   pendingDelete = ref(null),
   renaming = ref(null);
+provide('encounter', props.encounter);
 const candidates = computed(() =>
   sessionCreatures(props.participants, props.encounter),
 );

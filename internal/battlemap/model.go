@@ -87,6 +87,7 @@ type Document struct {
 }
 
 type Token struct {
+	Dead        bool             `json:"dead,omitempty"` // Read-only encounter projection, cleared on map writes.
 	BaseModelID string           `json:"baseModelId,omitempty"`
 	Rotation    int              `json:"rotation,omitempty"`
 	Mirrored    bool             `json:"mirrored,omitempty"`

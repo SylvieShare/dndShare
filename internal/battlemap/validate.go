@@ -125,7 +125,9 @@ func ValidateState(s *State, d Document) error {
 		}
 	}
 	ids := map[string]bool{}
-	for _, t := range s.Tokens {
+	for i := range s.Tokens {
+		s.Tokens[i].Dead = false
+		t := s.Tokens[i]
 		if t.Rotation < 0 || t.Rotation >= 360 || t.Rotation%90 != 0 || (t.BaseModelID != "" && (t.Kind != "creature" || !modelIdentifier.MatchString(t.BaseModelID))) {
 			return fmt.Errorf("Некорректный поворот или подставка существа")
 		}

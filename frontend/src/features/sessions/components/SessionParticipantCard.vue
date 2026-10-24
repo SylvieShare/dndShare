@@ -8,63 +8,32 @@
   >
     <RowActionMenu>
       <template #trigger>
-        <BaseTile
+        <SessionCreatureTile
           class="p-card"
-          :class="{
-            'p-card--combat': combatMode,
-            'p-card--statuses': hasStatuses,
-            'p-card--compact': compact,
-            'p-card--current': combatMode && combatCurrent,
-            'p-card--reorderable': reorderEnabled,
-          }"
-          :title="compact ? displayName : undefined"
-          :style="participantTileStyle"
-          interactive
+          :class="{ 'p-card--combat': combatMode, 'p-card--statuses': hasStatuses, 'p-card--compact': compact, 'p-card--current': combatMode && combatCurrent, 'p-card--reorderable': reorderEnabled }"
+          :name="displayName" :avatar-url="avaUrl" :icon="isIcon" :avatar-color="avatarColor"
+          :color="participant.color" :compact="compact" :current="combatMode && combatCurrent"
+          :controls-visible="combatMode" :has-statuses="hasStatuses"
         >
-          <div class="p-combat-controls" :aria-hidden="!combatMode" :inert="!combatMode" @click.stop @pointerdown.stop>
+          <template #controls>
             <CompactCheckbox :size="20" :model-value="combatSelected" :label="`Выбрать: ${displayName}`" :disabled="!combatEditable || !combatant" @update:model-value="$emit('update:combat-selected', $event)" />
-          </div>
-
-          <div class="p-content">
-            <div class="p-summary">
-              <div class="p-avatar" :class="{ 'p-avatar--icon': isIcon }" :style="participantAvatarStyle">
-                <img v-if="avaUrl" :src="avaUrl" class="ava-img" alt="" />
-                <span v-else class="ava-initial">{{ initial }}</span>
+          </template>
+          <template #name-suffix>
+            <span v-if="combatant?.position === 'reserve' && combatant.initiative != null" class="p-initiative-chip" title="Подготовленная инициатива" :aria-label="`Подготовленная инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span>
+          </template>
+          <template #health>
+            <template v-if="showHp">
+              <div v-if="isDead" class="ds-row">
+                <span class="ds-label">При смерти</span>
+                <span class="ds-counts">(✓ {{ hp.ds_success }} / ✕ {{ hp.ds_failure }})</span>
+                <button v-if="isDm" type="button" class="ds-revive" title="Воскресить игрока" aria-label="Воскресить игрока" @click.stop="$emit('revive')"><HeartPulse :size="14" /></button>
               </div>
-
-              <div class="p-info" :class="{ 'p-info--stats': isDm && isDnd }" :inert="compact" :aria-hidden="compact">
-                <div class="p-name-row"><div class="p-name">{{ displayName }}</div><span v-if="combatant?.position === 'reserve' && combatant.initiative != null" class="p-initiative-chip" title="Подготовленная инициатива" :aria-label="`Подготовленная инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span></div>
-
-                <template v-if="showHp">
-                  <template v-if="isDead">
-                    <div class="ds-row">
-                      <span class="ds-label">При смерти</span>
-                      <span class="ds-counts">(✓ {{ hp.ds_success }} / ✕ {{ hp.ds_failure }})</span>
-                      <button
-                        v-if="isDm"
-                        type="button"
-                        class="ds-revive"
-                        title="Воскресить игрока"
-                        aria-label="Воскресить игрока"
-                        @click.stop="$emit('revive')"
-                      ><HeartPulse :size="14" /></button>
-                    </div>
-                  </template>
-
-                  <template v-else>
-                    <SessionHpBar :hp="hp" size="compact" />
-                  </template>
-                </template>
-                <ParticipantStats v-if="isDm && isDnd" :participant="participant" />
-              </div>
-            </div>
-            <div v-if="hasStatuses" class="p-statuses-area" :inert="compact" :aria-hidden="compact">
-              <span class="p-statuses-label" aria-hidden="true">состояния:</span>
-              <ParticipantStatuses :participant="participant" :editable="isDm" />
-            </div>
-          </div>
-
-        </BaseTile>
+              <SessionHpBar v-else :hp="hp" size="compact" />
+            </template>
+          </template>
+          <template v-if="isDm && isDnd" #stats><ParticipantStats :participant="participant" /></template>
+          <template #statuses><ParticipantStatuses :participant="participant" :editable="isDm" /></template>
+        </SessionCreatureTile>
       </template>
 
       <template #default="{ close }">
@@ -119,13 +88,14 @@ import { handleCtrlSelection } from '@/shared/lib/ctrlSelection'
 import { normalizeStatusInstances } from '@/features/character-editor/lib/characterStatuses'
 import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 import { Calculator, HeartPulse, Palette } from '@lucide/vue'
-import { BaseTile, CompactCheckbox } from '@sylvieshare/share-ui'
+import { CompactCheckbox } from '@sylvieshare/share-ui'
 import { ColorPresetPicker } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'
 import EncounterInitiativeMenu from './EncounterInitiativeMenu.vue'
 import SessionHpBar from './SessionHpBar.vue'
+import SessionCreatureTile from './SessionCreatureTile.vue'
 import { pvAvatar, pvHp, pvHpPath, pvName } from '@/features/sessions/lib/participantView'
 
 const ParticipantStatuses = defineAsyncComponent(() => import('./ParticipantStatuses.vue'))
@@ -218,75 +188,11 @@ const avatarColor = computed(() => {
   return AVATAR_COLORS[code % AVATAR_COLORS.length]
 })
 
-const participantAvatarStyle = computed(() => ({
-  background: avaUrl.value ? 'transparent' : avatarColor.value,
-}))
-const participantTileStyle = computed(() => ({
-  '--participant-color': props.participant.color || 'var(--border)',
-  '--participant-frame-width': props.participant.color ? '2px' : '1px',
-}))
 </script>
 
 <style scoped>
-.p-card {
-  width: 100%;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  gap: var(--participant-card-gap, 9px);
-  height: 72px;
-  padding: 4px 14px 4px 4px;
-  overflow: hidden;
-  user-select: none;
-  transition: height 0.42s cubic-bezier(0.22, 1, 0.36, 1), gap 0.42s cubic-bezier(0.22, 1, 0.36, 1), padding 0.42s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s, border-color 0.18s, box-shadow 0.18s;
-}
-
-.p-card.base-tile {
-  box-shadow: inset 0 0 0 var(--participant-frame-width) var(--participant-color);
-}
-
-.p-card--statuses { height: 112px; }
-
-.p-card--compact { height: 48px; gap: 0; padding: 6px; justify-content: center; }
-.p-card--compact .p-combat-controls { margin-left: calc(-1 * var(--participant-selection-width, 36px)); }
-
 .p-card.p-card--reorderable { cursor: grab; touch-action: none; }
 .p-card.p-card--reorderable:active { cursor: grabbing; }
-
-.p-card.base-tile--interactive:hover {
-  box-shadow: inset 0 0 0 var(--participant-frame-width) var(--participant-color);
-}
-
-.p-combat-controls {
-  width: var(--participant-selection-width, 36px);
-  flex: 0 0 var(--participant-selection-width, 36px);
-  box-sizing: border-box;
-  padding: 0 2px 0 10px;
-  display: flex;
-  justify-content: center;
-  margin-left: calc(-1 * (var(--participant-selection-width, 36px) + var(--participant-card-gap, 9px)));
-  clip-path: inset(0 0 0 100%);
-  pointer-events: none;
-  animation: none;
-  transition:
-    margin-left 0.42s cubic-bezier(0.22, 1, 0.36, 1),
-    clip-path 0.42s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.p-card--combat .p-combat-controls {
-  margin-left: 0;
-  clip-path: inset(-12px);
-  pointer-events: auto;
-}
-
-.p-card.p-card--current,
-.p-card.p-card--current.base-tile--interactive:hover {
-  background: color-mix(in srgb, var(--accent) 11%, var(--surface));
-  border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
-  box-shadow:
-    inset 0 0 0 var(--participant-frame-width) var(--participant-color),
-    0 0 0 2px color-mix(in srgb, var(--accent) 10%, transparent);
-}
 
 .p-card-menu {
   width: 100%;
@@ -314,97 +220,7 @@ const participantTileStyle = computed(() => ({
   border-style: dashed;
 }
 
-.p-content { flex: 1; min-width: 0; }
-.p-summary { display: flex; align-items: center; gap: var(--participant-card-gap, 9px); height: 64px; min-width: 0; transition: height .42s cubic-bezier(.22, 1, .36, 1), gap .42s cubic-bezier(.22, 1, .36, 1); }
-.p-statuses-area { display: flex; align-items: center; gap: var(--participant-card-gap, 9px); height: 36px; margin-top: 4px; overflow: hidden; opacity: 1; transition: height .42s cubic-bezier(.22, 1, .36, 1), margin-top .42s cubic-bezier(.22, 1, .36, 1), opacity .2s; }
-.p-statuses-label { flex: 0 0 64px; color: var(--text-muted); font-size: 10px; font-weight: 400; line-height: 14px; text-align: center; }
-.p-statuses-area :deep(.participant-statuses) { flex: 1; }
-.p-card--compact .p-summary { height: 36px; gap: 0; }
-.p-card--compact .p-statuses-area { height: 0; margin-top: 0; opacity: 0; }
-
-.p-avatar {
-  flex-shrink: 0;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.p-avatar--icon {
-  border-radius: 0;
-}
-
-.ava-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top center;
-  -webkit-mask-image: radial-gradient(ellipse 82% 84% at 50% 44%, var(--text-on-accent) 54%, transparent 100%);
-  mask-image: radial-gradient(ellipse 82% 84% at 50% 44%, var(--text-on-accent) 54%, transparent 100%);
-}
-
-.p-avatar--icon .ava-img {
-  object-fit: contain;
-  object-position: center;
-  -webkit-mask-image: none;
-  mask-image: none;
-}
-
-.ava-initial {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text-on-accent);
-}
-
-.p-info {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 0.2s ease, transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.p-card--compact .p-info { flex: 0 0 0; overflow: hidden; opacity: 0; transform: translateX(-7px); }
-.p-info :deep(.hp-row) { margin-top: 0; }
-.p-info--stats {
-  align-self: stretch;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
-  gap: 0;
-  margin-bottom: -4px;
-}
-.p-info--stats :deep(.hp-row) { height: 6px; }
-.p-info--stats :deep(.participant-stats) { grid-row: 3; }
-.p-card--compact .p-avatar { width: 36px; height: 36px; }
-.p-card--compact .ava-initial { font-size: 14px; }
-
-@media (prefers-reduced-motion: reduce) {
-  .p-card,
-  .p-combat-controls,
-  .p-info,
-  .p-summary,
-  .p-statuses-area { transition: none; }
-}
-
-.p-name-row { display: flex; align-items: center; gap: 6px; }
 .p-initiative-chip { display: inline-flex; flex: none; align-items: center; gap: 4px; padding: 2px 5px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface-raised); color: var(--text-1); font-size: 12px; font-weight: 750; }
-.p-name {
-  font-size: 13px;
-  line-height: 16px;
-  font-weight: 600;
-  color: var(--text-1);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 
 .ds-row {
   display: flex;

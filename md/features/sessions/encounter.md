@@ -69,7 +69,7 @@ tile and slide in from behind its left edge together with the widening rail;
 closing combat sends them back left instead of mounting or unmounting them.
 Players that enter combat also appear in the common
 initiative-ordered combat scene alongside NPCs while remaining visible in the
-left rail. Common scene rows keep initiative on the left. AC follows the portrait in a chip: a prominent number followed by a blue shield. Tiles have a 74px minimum height around 62–64px portraits and no trailing ellipsis; clicking the tile or pressing Enter/Space while focused opens its menu. Selection squares are 20px in rows, the player rail and chronicle target selection. The left-rail tile and portrait keep
+left rail. Common scene and reserve rows use `SessionCombatantTile`, backed by the same `SessionCreatureTile` as the player rail and map roster. Initiative is a chip beside the name and is edited in the row menu even during combat (reroll is available before combat). HP uses the 6px compact bar; AC and optional player passives sit below it. Tiles have a 72px minimum height around 64px portraits and no trailing ellipsis; clicking the tile or pressing Enter/Space while focused opens its menu. Selection squares are 20px in rows, the player rail and chronicle target selection. The left-rail tile and portrait keep
 the same height and circular geometry in and out of combat; the larger combat-scene
 portrait is circular too. Player photos use a soft alpha fade around their edges. An
 assigned session color appears as the 2px frame of both the left-rail player tile
@@ -86,6 +86,8 @@ rolling in the session's structured `settings` JSONB. `combat.autoRollNpcHp`
 controls independent HP rolls when adding handbook creatures and synchronizes
 across browsers through the session live stream. It starts disabled; no browser
 preference is used.
+
+NPC relation tags are optional. The row menu’s «Отношение» submenu sets enemy, ally, minion or neutral and offers «Убрать тег». The displayed tag is not a separate picker; newly added NPCs have no relation tag. The map roster uses the same submenu. Surprised status is changed from the row menu.
 
 Each NPC also receives the nearest free Latin marker from `A` through `Z`.
 The marker sits immediately to the left of the NPC name above the HP bar and is
@@ -343,7 +345,7 @@ Chronicle attack target controls share the roll's row on the right, with chosen 
 `SessionAttackTargets` сохраняет выбор в событии через API; цели видны в хронике мастера,
 права доступа к событиям не расширяются. Сравнения атаки с КД в этом компоненте нет.
 
-`SessionParticipantCard` shows portrait, name and HP, with 14px right padding.
+`SessionCreatureTile` owns the shared visual layout, including optional controls, a letter before the name, statuses and a roll-result slot. `SessionParticipantCard` preserves player actions; `SessionCombatantTile` supplies encounter data and is reused by both combat lists and the map roster. The optional roll area wraps below on narrow tiles. The tile shows portrait, name and HP, with 14px right padding.
 For the DM, D&D tiles also show AC and passive skills below HP in the same
 information column; the action menu contains only actions.
 For the DM, active D&D effect/state instances from the character's `values.states`
@@ -363,6 +365,7 @@ participant menu, reorder the rail or toggle combat selection. The row scrolls
 horizontally when necessary. A tile with statuses is 112px tall (72px otherwise),
 while its combat checkbox stays vertically centered across the entire tile.
 Compact mode hides the status row and makes it inert; a tile remains 48px tall.
+Numeric NPC conditions and applied effect instances use the same 32px icon presentation and handbook tooltip. Applied effects support duration, level, removal and mechanics; numeric conditions support viewing and removal without changing their stored format.
 Its combat strip contains a checkbox with wider side spacing; AC and initiative
 are not rendered in that strip. The tile uses lazy `ParticipantStats` for D&D
 characters viewed by the DM, backed by `participantDefenses`, the shared equipment/derived-effect

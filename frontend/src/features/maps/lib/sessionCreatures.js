@@ -21,7 +21,7 @@ export function withCreaturePortraits(tokens, candidates) {
 }
 export function sessionCreatures(participants, encounter) {
   const combatants = encounter?.encounter?.combatants || [];
-  return [
+  const candidates = [
     ...participants.map((p) => ({
       kind: "player",
       ref: String(p.charId),
@@ -41,7 +41,8 @@ export function sessionCreatures(participants, encounter) {
         kind: "creature",
         itemId: n.itemId,
         ref: n.uid,
-        name: `${n.markerLetter ? n.markerLetter + " · " : ""}${encounter.npcName(n)}`,
+        name: encounter.npcName(n),
+        markerLetter: n.markerLetter,
         previewUrl: creaturePortraitUrl(encounter.npcItem(n)),
         color: n.iconColor || "#c18f6f",
         hp: encounter.npcHpObj?.(n) || {
@@ -52,6 +53,7 @@ export function sessionCreatures(participants, encounter) {
         combatant: n,
       })),
   ];
+  return candidates.map(c => ({ ...c, dead: c.combatant?.position === "dead" }));
 }
 export const creatureKey = (c) => (c ? `${c.kind}:${c.ref || c.id}` : "");
 export function creatureToken(map, creature) {
@@ -72,4 +74,10 @@ export function withCreatureItems(tokens, candidates) {
       ? { ...t, itemId: items.get(creatureKey(t)) }
       : t,
   );
+}
+
+// Encounter owns life state; map drafts keep only placement and appearance.
+export function withCreatureLifeState(tokens, candidates) {
+  const dead = new Map(candidates.map(c => [creatureKey(c), c.dead]));
+  return tokens.map(t => ({ ...t, dead: !!dead.get(creatureKey(t)) }));
 }

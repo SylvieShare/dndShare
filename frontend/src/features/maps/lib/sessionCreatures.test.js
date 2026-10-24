@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { creaturePortraitUrl, withCreaturePortraits } from "./sessionCreatures";
+import { creaturePortraitUrl, withCreaturePortraits, withCreatureLifeState } from "./sessionCreatures";
 
 it("uses raster artwork first and a persistent SVG URL for SVG-only creatures", () => {
   expect(
@@ -24,4 +24,13 @@ it("fills missing portraits by identity while preserving saved snapshots and map
   expect(tokens[0].imageUrl).toBe("");
   expect(result[1]).toBe(tokens[1]);
   expect(result[2]).toBe(tokens[2]);
+});
+
+it('projects graveyard membership without persisting it and removes it after revival', () => {
+  const tokens = [{ kind: 'creature', ref: 'ogre' }, { kind: 'player', ref: '41' }];
+  const candidates = [{ kind: 'creature', ref: 'ogre', dead: true }, { kind: 'player', ref: '41', dead: false }];
+  expect(withCreatureLifeState(tokens, candidates).map(t => t.dead)).toEqual([true, false]);
+  expect(tokens[0]).not.toHaveProperty('dead');
+  candidates[0].dead = false;
+  expect(withCreatureLifeState(tokens, candidates)[0].dead).toBe(false);
 });

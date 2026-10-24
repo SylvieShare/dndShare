@@ -6,7 +6,9 @@
     :trigger-attrs="{ style: { display: 'none' } }"
   >
     <template #default="{ close }">
-      <EncounterInitiativeMenu v-if="!enc.encounter.active && section !== 'dead'" :combatant="combatant" :encounter="enc" />
+      <EncounterInitiativeMenu v-if="section !== 'dead'" :combatant="combatant" :encounter="enc" />
+      <EncounterSideMenu v-if="isNpc" :combatant="combatant" />
+      <RowActionItem v-if="section === 'combat' && (!enc.encounter.active || enc.encounter.round === 0)" :icon="Activity" @click="enc.toggleSurprised(combatant); close()">{{ combatant.surprised ? 'Убрать «врасплох»' : 'Застигнут врасплох' }}</RowActionItem>
       <RowActionItem
         v-if="canOpenCard"
         :icon="BookOpen"
@@ -69,6 +71,7 @@
 import { computed, defineAsyncComponent, inject, nextTick, ref, shallowRef } from 'vue'
 import { Activity, Archive, BookOpen, Copy, Dices, History } from '@lucide/vue'
 import EncounterInitiativeMenu from './EncounterInitiativeMenu.vue'
+import EncounterSideMenu from './EncounterSideMenu.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { ActionButton, FormField, FormNumberInput, RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'

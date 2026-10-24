@@ -37,10 +37,12 @@ export function useEncounterFlow({
   }
 
   function setSide(c, side) {
-    if (!SIDE_COLOR[side]) return
+    if (side != null && side !== '' && !SIDE_COLOR[side]) return
     mutate(() => {
       const t = getCombatant(c.uid)
-      if (t) t.side = side
+      if (!t) return
+      if (side) t.side = side
+      else delete t.side
     })
   }
 

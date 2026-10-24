@@ -29,7 +29,7 @@ test("roster drags preview before committing, mark placed creatures and focus th
   page.on("pageerror", (e) => errors.push(e.message));
   const roster = await ready(page);
   const row = roster.getByRole("button", { name: "Лира", exact: true });
-  await row.click();
+  await row.locator('.p-avatar').click();
   await expect(row).not.toHaveClass(/base-tile--framed/);
   await expect(
     roster.getByRole("button", { name: /Поставить на карту:|Найти на карте:/ }),
@@ -48,12 +48,12 @@ test("roster drags preview before committing, mark placed creatures and focus th
       (await saved(page)).some((t) => t.ref === "41" && !!t.placement),
     )
     .toBe(true);
-  await expect(row).toHaveClass(/base-tile--framed/);
+  await expect(row).toHaveCSS("--participant-frame-width", "2px");
   expect(
-    await row.evaluate((el) => getComputedStyle(el, "::before").borderTopWidth),
+    await row.evaluate((el) => getComputedStyle(el).getPropertyValue("--participant-frame-width")),
   ).toBe("2px");
   expect(
-    await row.evaluate((el) => el.style.getPropertyValue("--tile-color")),
+    await row.evaluate((el) => el.style.getPropertyValue("--participant-color")),
   ).toBe("var(--accent)");
   const focus = page.getByRole("complementary", { name: "Выбранные элементы" });
   await expect(focus.locator(".workspace-focus-content")).not.toHaveClass(
@@ -63,7 +63,7 @@ test("roster drags preview before committing, mark placed creatures and focus th
   await page.keyboard.down("ArrowRight");
   await page.waitForTimeout(150);
   await page.keyboard.up("ArrowRight");
-  await row.click();
+  await row.locator('.p-avatar').click();
   await expect(
     focus.getByRole("heading", { name: "Лира", exact: true }),
   ).toBeVisible();
@@ -137,4 +137,31 @@ test("dragging a creature onto a 2D map snaps to logical grid centres", async ({
     .poll(async () => (await saved(page)).find((t) => t.ref === "41")?.x)
     .toBe(6.5);
   expect((await saved(page)).find((t) => t.ref === "41").y).toBe(5.5);
+});
+
+test('dead creatures move to their own group and revive without rewriting map placement', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', e => errors.push(e.message));
+  const roster = await ready(page, '&tokenPortraits');
+  const ogre = roster.getByRole('button', { name: 'A · Огр', exact: true });
+  await startDrag(page, ogre, await mapPoint(page, 4.5, 4.5));
+  await page.mouse.up();
+  await expect.poll(async () => (await saved(page)).some(t => t.ref === 'ogre')).toBe(true);
+  const before = (await saved(page)).find(t => t.ref === 'ogre');
+  await ogre.getByRole('button', { name: 'Действия: Огр', exact: true }).click();
+  await page.getByText('Отношение', { exact: true }).click();
+  await page.getByRole('menuitem', { name: 'Союзник', exact: true }).click();
+  await expect(ogre.locator('.enc-badge')).toHaveText('СОЮЗНИК');
+  await page.keyboard.press('Escape');
+  await page.evaluate(() => { window.creatureEncounter.encounter.combatants[0].position = 'dead'; });
+  const deadGroup = roster.locator('.map-creature-group').filter({ has: page.getByRole('heading', { name: /^Умершие / }) });
+  await expect(deadGroup.getByRole('button', { name: 'A · Огр', exact: true })).toBeVisible();
+  await expect(roster.locator('.map-creature-group').filter({ has: page.getByRole('heading', { name: /^Существа / }) }).getByRole('button', { name: 'A · Огр', exact: true })).toHaveCount(0);
+  await expect.poll(async () => (await canvasTokens(page)).find(t => t.ref === 'ogre')?.dead).toBe(true);
+  expect((await saved(page)).find(t => t.ref === 'ogre')).toEqual(before);
+  await page.evaluate(() => { window.creatureEncounter.encounter.combatants[0].position = 'reserve'; });
+  await expect(deadGroup.getByRole('button', { name: 'A · Огр', exact: true })).toHaveCount(0);
+  await expect.poll(async () => (await canvasTokens(page)).find(t => t.ref === 'ogre')?.dead).toBe(false);
+  expect((await saved(page)).find(t => t.ref === 'ogre')).toEqual(before);
+  expect(errors).toEqual([]);
 });

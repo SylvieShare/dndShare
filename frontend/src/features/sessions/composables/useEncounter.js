@@ -349,11 +349,11 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
   }
 
   function badgeClass(c) {
-    return 'badge--' + sideOf(c)
+    return SIDE_LABEL[c.side] ? 'badge--' + c.side : ''
   }
 
   function badgeLabel(c) {
-    return SIDE_LABEL[sideOf(c)]
+    return SIDE_LABEL[c.side] || ''
   }
 
   function flushWhenBackgrounded() {

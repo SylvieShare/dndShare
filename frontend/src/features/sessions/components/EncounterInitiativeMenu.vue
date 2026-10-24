@@ -6,7 +6,7 @@
         <FormNumberInput :placeholder="enterCombat ? 'Авто' : '—'" :value="combatant.initiative" @change="encounter.setInitiative(combatant, $event)" />
       </FormField>
       <RowActionItem v-if="enterCombat" :icon="Swords" @click="encounter.sendCombatantsTo([combatant], 'combat'); close(); $emit('joined')">В бой</RowActionItem>
-      <RowActionItem v-else :icon="Dices" @click="encounter.rollCombatantInitiative(combatant); close()">Бросить инициативу</RowActionItem>
+      <RowActionItem v-else-if="!encounter.encounter.active" :icon="Dices" @click="encounter.rollCombatantInitiative(combatant); close()">Бросить инициативу</RowActionItem>
     </template>
   </RowActionSubmenu>
 </template>

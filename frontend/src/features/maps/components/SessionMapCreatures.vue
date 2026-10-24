@@ -14,23 +14,10 @@
       <MapPanelHeading :title="group.label" :count="group.items.length" />
       <div class="map-creature-list">
         <p v-if="!group.items.length" class="map-hint">{{ group.empty }}</p>
-        <MapEntityRow
-          v-for="item in group.items"
-          :key="creatureKey(item)"
-          :entry="item"
-          :selected="!!onMap(item) && selected === creatureKey(item)"
-          :placed="!!onMap(item)"
-          :activate-on-click="false"
-          class="map-creature-draggable"
-          @pointerdown="(event) => emit('drag', item, event)"
-          @dragstart.prevent
-          @select="emit('focus', item)"
-        >
-          <template #details>
-            <SessionHpBar v-if="item.hp" :hp="item.hp" />
-            <small v-else class="map-hint">Хиты не указаны</small>
-          </template>
-        </MapEntityRow>
+        <template v-for="item in group.items" :key="creatureKey(item)">
+          <MapEntityRow v-if="item.kind === 'marker'" :entry="item" :selected="selected === creatureKey(item)" :placed="!!onMap(item)" :activate-on-click="false" @pointerdown="emit('drag', item, $event)" @select="emit('focus', item)" />
+          <MapCreatureTile v-else :entry="item" :selected="selected === creatureKey(item)" :placed="!!onMap(item)" @drag="emit('drag', item, $event)" @focus="emit('focus', item)" />
+        </template>
       </div>
     </section>
     <ActionButton
@@ -52,7 +39,7 @@
 import { computed, ref } from "vue";
 import { ActionButton, FormTextInput, ToggleSwitch } from "@sylvieshare/share-ui";
 import { MapPin } from "@lucide/vue";
-import SessionHpBar from "@/features/sessions/components/SessionHpBar.vue";
+import MapCreatureTile from "./MapCreatureTile.vue";
 import MapPanelHeading from "./MapPanelHeading.vue";
 import MapEntityRow from "./MapEntityRow.vue";
 import { creatureKey, creatureToken, withCreatureItems } from "../lib/sessionCreatures";
@@ -74,14 +61,15 @@ const groups = computed(() => [
     kind: "player",
     label: "Игроки",
     empty: "В сессии пока нет игроков",
-    items: filtered.value.filter((c) => c.kind === "player"),
+    items: filtered.value.filter((c) => c.kind === "player" && !c.dead),
   },
   {
     kind: "creature",
     label: "Существа",
     empty: "В бою и резерве пока нет существ",
-    items: filtered.value.filter((c) => c.kind === "creature"),
+    items: filtered.value.filter((c) => c.kind === "creature" && !c.dead),
   },
+  { kind: "dead", label: "Умершие", empty: "Умерших нет", items: filtered.value.filter(c => c.dead) },
   ...((props.editor.draft.state.tokens || []).some((t) => t.kind === "marker")
     ? [
         {

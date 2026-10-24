@@ -53,7 +53,7 @@ const props = defineProps({
   editable: { type: Boolean, default: false },
 })
 
-const enc = inject('encounter')
+const enc = inject('encounter', null) || inject('applicationEncounter', null)
 const anchorEl = ref(null)
 const open = ref(false)
 

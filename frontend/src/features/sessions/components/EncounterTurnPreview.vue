@@ -19,7 +19,7 @@
           <strong class="turn-preview-name"><NpcMarker v-if="isNpc" :letter="combatant.markerLetter" :color="enc.avatarStyle(combatant)?.color" />{{ displayName }}</strong>
           <small v-if="subtitle">{{ subtitle }}</small>
         </div>
-        <span v-if="isNpc" class="turn-preview-side" :class="enc.badgeClass(combatant)">
+        <span v-if="isNpc && enc.badgeLabel(combatant)" class="turn-preview-side" :class="enc.badgeClass(combatant)">
           {{ enc.badgeLabel(combatant) }}
         </span>
       </header>

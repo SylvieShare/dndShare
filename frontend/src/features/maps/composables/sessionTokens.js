@@ -8,6 +8,7 @@ import {
   creatureToken,
   withCreaturePortraits,
   withCreatureItems,
+  withCreatureLifeState,
 } from "../lib/sessionCreatures";
 export function sessionTokens(getEditor, candidates, getCanvas) {
   const focused = ref(""),
@@ -38,10 +39,10 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
         : [...s.tokens, preview.value];
     return {
       ...s,
-      tokens: withCreatureItems(
+      tokens: withCreatureLifeState(withCreatureItems(
         withCreaturePortraits(items, candidates.value),
         candidates.value,
-      ),
+      ), candidates.value),
     };
   });
   function clear() {
@@ -96,7 +97,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
       kind: c.kind,
       ...(c.kind === "creature" && c.itemId ? { itemId: c.itemId } : {}),
       ref: c.ref || "",
-      name: c.name,
+      name: `${c.markerLetter ? c.markerLetter + " · " : ""}${c.name}`,
       imageUrl: c.previewUrl || previous?.imageUrl || "",
       color: c.color,
       id: previous?.id || (temporary ? "preview-token" : uid()),

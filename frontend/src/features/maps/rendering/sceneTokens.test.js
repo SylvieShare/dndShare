@@ -18,7 +18,7 @@ beforeEach(() => {
   vi.stubGlobal("document", {
     createElement: () => ({
       getContext: () => ({
-        fillRect() {},
+        fillRect() {}, beginPath() {}, moveTo() {}, lineTo() {}, stroke() {}, arc() {}, fill() {}, ellipse() {}, closePath() {},
         strokeText() {},
         fillText() {},
         drawImage: (...args) => draws.push(args),
@@ -229,4 +229,27 @@ it("preserves native part transforms when freezing a miniature on the board", ()
   portraits.destroy();
   geometry.dispose();
   material.dispose();
+});
+
+it('replaces a dead miniature with a flat portrait and translucent skull, then restores it on revival', () => {
+  const geometry = new BoxGeometry(), material = new MeshStandardMaterial();
+  const metadata = { id: 'kobold', itemIds: [1635], maxHeight: .91 };
+  const assets = { catalogue: () => [metadata], metadata: () => metadata, model: () => ({ parts: [{ geometry, material, matrix: new Matrix4() }] }) };
+  const portraits = createTokenPortraits();
+  const dead = buildMapToken({ ...creature, itemId: 1635, dead: true, hidden: true }, { assets, tokenPortraits: portraits }, fog);
+  expect(dead.children[0].geometry.parameters.height).toBe(.015);
+  expect(dead.children[1].material.map).toBe(portraits.texture(creature));
+  const mark = dead.children.find(c => c.userData.deadTokenMark);
+  expect(mark).toBeTruthy();
+  expect(mark.rotation.x).toBe(-Math.PI / 2);
+  expect(mark.material.opacity).toBeCloseTo(.62 * .4);
+  const dispose = vi.spyOn(mark.material.map, 'dispose');
+  applyAreaOpacity(dead, .2);
+  expect(mark.material.opacity).toBeCloseTo(.62 * .4 * .2);
+  disposeObjects(dead);
+  expect(dispose).toHaveBeenCalledOnce();
+  const revived = buildMapToken({ ...creature, itemId: 1635, dead: false }, { assets, tokenPortraits: portraits }, fog);
+  expect(revived.children[1].children[0].geometry).toBe(geometry);
+  expect(revived.children.some(c => c.userData.deadTokenMark)).toBe(false);
+  disposeObjects(revived); portraits.destroy();
 });

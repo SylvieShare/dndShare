@@ -63,3 +63,15 @@ func TestTokenPoseStateValidation(t *testing.T) {
 		t.Fatal("accepted a base on a player")
 	}
 }
+
+func TestMapWritesDoNotPersistEncounterDeath(t *testing.T) {
+	d := testPresets()[0].Document
+	state := InitialState()
+	state.Tokens = []Token{{ID: "dead", Kind: "creature", Name: "Огр", Color: "#c18f6f", Size: 1, X: 1, Y: 1, Dead: true}}
+	if err := ValidateState(&state, d); err != nil {
+		t.Fatal(err)
+	}
+	if state.Tokens[0].Dead {
+		t.Fatal("persisted a derived encounter field")
+	}
+}

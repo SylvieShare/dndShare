@@ -1,14 +1,14 @@
 <template>
   <div
     class="enc-hp-area"
-    :class="{ 'enc-hp-area--clickable': hpClickable, 'enc-hp-area--dead': dsVisible }"
+    :class="{ 'enc-hp-area--clickable': hpClickable, 'enc-hp-area--dead': dsVisible, 'enc-hp-area--compact': compact }"
     @click="onHpAreaClick"
   >
     <div class="enc-hp-bar-wrap" :class="{ 'enc-hp-bar-wrap--dead': dsVisible }">
       <StatBar label="Здоровье"
         class="enc-hp-statbar"
-        size="medium"
-        decorated
+        :size="compact ? 'compact' : 'medium'"
+        :decorated="!compact"
         :percent="enc.hpPercent(combatant)"
         :color="enc.hpColor(combatant)"
         :temp-percent="hpTempPct"
@@ -44,7 +44,7 @@
     <div v-else-if="npcDead" class="enc-ds-overlay enc-ds-overlay--npc" @click.stop>
       <span class="enc-skull">💀</span>
       <button
-        v-if="canEdit"
+        v-if="canEdit && section !== 'dead'"
         type="button"
         class="enc-graveyard-btn"
         title="Отправить на кладбище"
@@ -68,6 +68,7 @@ import { StatBar } from '@sylvieshare/share-ui'
 const props = defineProps({
   combatant: { type: Object, required: true },
   section:   { type: String, required: true },
+  compact: Boolean,
 })
 
 const enc = inject('encounter')
@@ -83,7 +84,7 @@ const hpText = computed(() => {
   return enc.hpLabel(props.combatant)
 })
 
-const hpClickable = computed(() => isNpc.value || (isPlayer.value && enc.canEditPlayerHp()))
+const hpClickable = computed(() => enc.canEditPlayerHp() && (isNpc.value || isPlayer.value))
 
 function onHpAreaClick() {
   if (!hpClickable.value) return
@@ -115,6 +116,7 @@ function emitDsChange(nextHp) {
 }
 
 function togglePip(type, i) {
+  if (!canEdit.value) return
   const cur = dsState.value[type]
   const next = cur === i ? i - 1 : i
   const base = { ...dsHp.value }
@@ -140,6 +142,10 @@ function togglePip(type, i) {
   border-radius: 999px;
 }
 
+.enc-hp-area--compact { max-width: none; min-height: 6px; height: 6px; }
+.enc-hp-area--compact .enc-hp-nums { font-size: 11px; }
+.enc-hp-area--compact .enc-ds-overlay { min-height: 22px; top: 50%; transform: translateY(-50%); bottom: auto; }
+.enc-hp-area--compact .enc-graveyard-btn { font-size: 9px; padding: 2px 4px; }
 .enc-hp-area--clickable { cursor: pointer; }
 .enc-hp-area--clickable:hover :deep(.stat-bar) { border-color: var(--border-strong); }
 

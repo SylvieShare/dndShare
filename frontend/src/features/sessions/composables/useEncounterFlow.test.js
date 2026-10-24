@@ -63,3 +63,16 @@ describe('encounter group movement', () => {
     expect(encounter.value.combatants[0]).toMatchObject({ position: 'reserve', initiative: null, surprised: false })
   })
 })
+
+it('sets all NPC relations and removes the tag without accepting unknown values', () => {
+  const { encounter, flow } = createFlow();
+  const npc = encounter.value.combatants[1];
+  for (const side of ['enemy', 'ally', 'minion', 'neutral']) {
+    flow.setSide(npc, side);
+    expect(npc.side).toBe(side);
+  }
+  flow.setSide(npc, 'unknown');
+  expect(npc.side).toBe('neutral');
+  flow.setSide(npc, null);
+  expect(npc).not.toHaveProperty('side');
+});
