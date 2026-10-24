@@ -52,7 +52,15 @@ for (const [kind, file] of Object.entries(files)) {
         : file,
   };
 }
-const { itemId, itemIds, modelId, assetFiles, slug, ...metadata } = recipe;
+const {
+  itemId,
+  itemIds,
+  modelId,
+  assetFiles,
+  slug,
+  materialProfile,
+  ...metadata
+} = recipe;
 const model = {
   ...metadata,
   id: modelId,

@@ -54,6 +54,20 @@ def paint(name, rgb, roughness=.8, metal=0, emission=0):
     return mat
 
 
+def material_profile(meshes, profile='native'):
+    if profile not in {'native', 'dielectric'}:
+        raise ValueError('Unknown miniature material profile: '+profile)
+    if profile == 'native':
+        return
+    for obj in meshes:
+        for material in obj.data.materials:
+            shader = material.node_tree.nodes.get('Principled BSDF') if material and material.use_nodes else None
+            if shader:
+                for link in list(shader.inputs['Metallic'].links):
+                    material.node_tree.links.remove(link)
+                shader.inputs['Metallic'].default_value = 0
+
+
 def base():
     rim = paint('Charcoal miniature rim', (.035, .04, .045))
     top = paint('Slate miniature top', (.115, .12, .105), .95)

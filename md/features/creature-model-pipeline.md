@@ -83,6 +83,14 @@ render и 1024 для LOD, normal вдвое меньше, ORM вчетверо 
 не перекодировать JPEG. Полные экспортные текстуры остаются рядом с `.blend`,
 оптимизированные карты render также извлекаются в `textures/`.
 
+Необязательный второй аргумент оптимизатора — JSON-рецепт с `materialProfile`.
+`native` сохраняет PBR исходника; `dielectric` задаёт `metallicFactor:0` во всех
+видимых ролях, включая source. Для совомеда выбран `dielectric`: перья, кожа,
+клюв и когти не металлические. Иначе ошибочная карта генератора подавляла
+рассеянный свет. `--materials-only` исправляет профиль без перекодирования
+текстур. `bake-native-miniature.py --recipe` применяет этот же профиль при
+экспорте и сохранении `.blend`; проверка модели с рецептом контролирует metalness.
+
 ## Сборка и проверка текущего набора
 
 ### Совомед 2579: исходная сетка TRELLIS и размер 2×2
@@ -119,9 +127,9 @@ decimation target 300000, textureSize 2048. Личный PRO-аккаунт ра
 ```bash
 models/creatures/.generation-runtime/bin/python scripts/creatures/generate-trellis.py models/creatures/owlbear-native/miniature-reference.png models/creatures/owlbear-native/trellis-native --seed 2579 --resolution 1024 --token-stdin --allow-pro
 models/creatures/.generation-runtime/bin/python scripts/creatures/prepare-native-geometry.py models/creatures/owlbear-native --lod-triangles 24000
-/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python-exit-code 1 --python scripts/creatures/bake-native-miniature.py -- models/creatures/owlbear-native --rotation -45 --footprint .88 --no-base --token-size 2
-node scripts/creatures/optimize-miniature.mjs models/creatures/owlbear-native
-node scripts/creatures/verify-single-miniature.mjs models/creatures/owlbear-native
+/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python-exit-code 1 --python scripts/creatures/bake-native-miniature.py -- models/creatures/owlbear-native --rotation -45 --footprint .88 --no-base --token-size 2 --recipe scripts/creatures/owlbear-2579.json
+node scripts/creatures/optimize-miniature.mjs models/creatures/owlbear-native scripts/creatures/owlbear-2579.json
+node scripts/creatures/verify-single-miniature.mjs models/creatures/owlbear-native scripts/creatures/owlbear-2579.json
 /Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python-exit-code 1 --python scripts/creatures/render-final-miniature.py -- models/creatures/owlbear-native
 node scripts/creatures/package-miniature.mjs models/creatures/owlbear-native scripts/creatures/owlbear-2579.json
 python3 scripts/creatures/publish-miniature.py models/creatures/owlbear-native scripts/creatures/owlbear-2579.json --update-from models/creatures/owlbear/publication.json

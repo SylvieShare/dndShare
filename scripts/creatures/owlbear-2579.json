@@ -15,6 +15,7 @@
   "groupName": "Совомеды",
   "groupNameEn": "Owlbears",
   "maxHeight": 0.5774,
+  "materialProfile": "dielectric",
   "assetFiles": {
     "render": "model.glb",
     "lod": "model-lod.glb",

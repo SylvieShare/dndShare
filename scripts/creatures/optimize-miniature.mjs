@@ -11,11 +11,20 @@ const { dedup, prune } = require("@gltf-transform/functions");
 const sharp = require("sharp");
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS);
 const folder = path.resolve(process.argv[2]);
+const recipe = process.argv[3]
+  ? JSON.parse(await fs.readFile(process.argv[3], "utf8"))
+  : {};
+const profile = recipe.materialProfile || "native";
+if (!["native", "dielectric"].includes(profile))
+  throw new Error(`Unknown material profile: ${profile}`);
+const materialsOnly = process.argv.includes("--materials-only");
 const report = [];
 for (const role of ["render", "lod", "shadow", "source"]) {
   const file = role === "render" ? "model.glb" : `model-${role}.glb`;
   const doc = await io.read(path.join(folder, file));
   const materials = doc.getRoot().listMaterials();
+  if (profile === "dielectric")
+    for (const material of materials) material.setMetallicFactor(0);
   const colours = new Set(
     materials.map((m) => m.getBaseColorTexture()).filter(Boolean),
   );
@@ -33,21 +42,24 @@ for (const role of ["render", "lod", "shadow", "source"]) {
     const full = role === "lod" ? 1024 : 2048;
     const limit =
       type === "basecolor" ? full : type === "normal" ? full / 2 : full / 4;
-    const image = sharp(texture.getImage())
-      .resize({
-        width: limit,
-        height: limit,
-        fit: "inside",
-        withoutEnlargement: true,
-      })
-      .removeAlpha();
-    const data =
-      type === "basecolor"
-        ? await image.jpeg({ quality: 91, mozjpeg: true }).toBuffer()
-        : await image.png({ compressionLevel: 9 }).toBuffer();
-    texture
-      .setImage(data)
-      .setMimeType(type === "basecolor" ? "image/jpeg" : "image/png");
+    let data = texture.getImage();
+    if (!materialsOnly) {
+      const image = sharp(data)
+        .resize({
+          width: limit,
+          height: limit,
+          fit: "inside",
+          withoutEnlargement: true,
+        })
+        .removeAlpha();
+      data =
+        type === "basecolor"
+          ? await image.jpeg({ quality: 91, mozjpeg: true }).toBuffer()
+          : await image.png({ compressionLevel: 9 }).toBuffer();
+      texture
+        .setImage(data)
+        .setMimeType(type === "basecolor" ? "image/jpeg" : "image/png");
+    }
     const dimensions = await sharp(data).metadata();
     textures.push({
       role: type,

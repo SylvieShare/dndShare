@@ -11,6 +11,9 @@ const { NodeIO } = require("@gltf-transform/core");
 const { ALL_EXTENSIONS } = require("@gltf-transform/extensions");
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS);
 const folder = path.resolve(process.argv[2]);
+const recipe = process.argv[3]
+  ? JSON.parse(await fs.readFile(process.argv[3], "utf8"))
+  : {};
 const stats = JSON.parse(
   await fs.readFile(path.join(folder, "model-stats.json")),
 );
@@ -31,6 +34,13 @@ for (const entry of stats) {
   assert.ok(!(json.images || []).some((i) => i.uri), "external image");
   const doc = await io.readBinary(bytes),
     r = doc.getRoot();
+  if (recipe.materialProfile === "dielectric")
+    for (const material of r.listMaterials())
+      assert.equal(
+        material.getMetallicFactor(),
+        0,
+        `${entry.role}: dielectric metalness`,
+      );
   assert.equal(r.listAnimations().length, 0);
   assert.equal(r.listSkins().length, 0);
   assert.equal(r.listCameras().length, 0);

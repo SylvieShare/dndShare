@@ -129,7 +129,9 @@ parser.add_argument('--rotation', type=float, default=0)
 parser.add_argument('--footprint', type=float, help='Normalize to this unit-token diameter instead of height')
 parser.add_argument('--no-base', action='store_true', help='Keep feet at zero and use a separate runtime base')
 parser.add_argument('--token-size', type=float, default=1, help='Nominal in-game token size for the report')
+parser.add_argument('--recipe', type=Path, help='Use the recipe material profile for exports and the editable scene')
 args = parser.parse_args(sys.argv[sys.argv.index('--') + 1:])
+profile = json.loads(args.recipe.read_text()).get('materialProfile', 'native') if args.recipe else 'native'
 folder = args.directory.resolve()
 high = scene.import_glb(folder / 'trellis-native/generated-original.glb')
 if args.footprint:
@@ -148,6 +150,7 @@ for obj in high:
     obj.matrix_world = transform @ obj.matrix_world
 if not args.no_base:
     scene.base()
+scene.material_profile(high, profile)
 scene.export_glb(folder / 'model-source.glb')
 for role in ['render', 'lod', 'shadow']:
     high = scene.import_glb(folder / 'trellis-native/generated-original.glb')
@@ -159,6 +162,7 @@ for role in ['render', 'lod', 'shadow']:
     bpy.context.view_layer.update()
     if role != 'shadow':
         bake(high, low, folder, role)
+        scene.material_profile(low, profile)
     for obj in high:
         bpy.data.objects.remove(obj, do_unlink=True)
     if not args.no_base:
