@@ -105,7 +105,7 @@ it("uses a large creature's footprint and allows weapon overhang without shrinki
     size: 2,
     base: { ...metadata.base, referenceDiameter: 1.8 },
   });
-  expect(body.parent.scale.x).toBeCloseTo(1.7 / 0.9);
+  expect(body.parent.scale.x).toBeCloseTo(1.4 / 0.9);
   const baseBounds = new Box3().setFromObject(base);
   expect(baseBounds.max.x - baseBounds.min.x).toBeCloseTo(1.7);
   expect(baseBounds.max.y).toBeCloseTo(0.06);

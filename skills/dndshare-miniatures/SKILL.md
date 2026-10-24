@@ -30,9 +30,14 @@ for commands and acceptance criteria. For binding/storage/rendering changes read
 ## Invariants that caused real failures
 
 - `token.size` owns occupied cells. `referenceDiameter` owns the model's virtual
-  standing circle in native GLB units. The figure is scaled to
-  `size - min(.3, .3*size)`, divided by that reference diameter. Weapons, tails
-  and wings may overhang. Never fit the whole silhouette into a token circle.
+  standing circle in native GLB units. Body scale is `.7*size/referenceDiameter`:
+  a 2-cell version of the same body is exactly twice its 1-cell version. Base
+  diameter is `size - min(.3, .3*size)`; its fixed outer wall clearance must not
+  enlarge the body. For Large, body target is 1.4 versus base diameter 1.7
+  (14/17 compensation). Apply this in runtime and review renders; do not also
+  shrink the GLB or adjust its recipe calibration to compensate twice.
+  Weapons, tails and wings may overhang. Never fit the whole silhouette into
+  a token circle.
 - Use the same coordinate transform for source, render, LOD and shadow. Feet
   are at Y=0 after GLB export, the standing centre is X/Z=0. Preserve the full
   native node hierarchy/matrices; tiny stones with scaled nodes once became

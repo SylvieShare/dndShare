@@ -1,11 +1,9 @@
 // Leave room for walls at the outer edge, not between a large creature's cells.
-export function miniatureDiameter(size) {
+export function miniatureBaseDiameter(size) {
   return size - Math.min(0.3, size * 0.3);
 }
 
-// referenceDiameter is an artist-defined standing circle, never mesh bounds.
-// Body, LOD and shadow share this one calibration; appendages may overhang it.
-export function miniatureScale(size, referenceDiameter) {
+function scale(size, referenceDiameter, diameter) {
   if (
     !(size > 0) ||
     !Number.isFinite(size) ||
@@ -15,5 +13,16 @@ export function miniatureScale(size, referenceDiameter) {
     throw new RangeError(
       "Miniature size and reference diameter must be positive",
     );
-  return miniatureDiameter(size) / referenceDiameter;
+  return diameter / referenceDiameter;
+}
+
+// Preserve authored proportions as footprint size grows. Large bodies are 2x
+// their one-cell version, independent of the base's fixed outer wall clearance.
+export function miniatureBodyScale(size, referenceDiameter) {
+  return scale(size, referenceDiameter, size * 0.7);
+}
+
+// Bases retain a fixed outer margin on multi-cell footprints and their native Y.
+export function miniatureBaseScale(size, referenceDiameter) {
+  return scale(size, referenceDiameter, miniatureBaseDiameter(size));
 }

@@ -27,8 +27,9 @@ if args.base:
     if not args.base_diameter or args.base_diameter <= 0 or reference <= 0:
         raise ValueError('Reviewed figure and base diameters required')
     diameter = args.token_size - min(.3, args.token_size * .3)
+    body_scale = .7 * args.token_size / reference
     for obj in body:
-        obj.matrix_world = Matrix.Translation((0,0,args.surface_height)) @ Matrix.Scale(diameter / reference,4) @ obj.matrix_world
+        obj.matrix_world = Matrix.Translation((0,0,args.surface_height)) @ Matrix.Scale(body_scale,4) @ obj.matrix_world
     support = scene.import_glb(args.base.resolve(), replace=False)
     for obj in support:
         obj.matrix_world = Matrix.Diagonal((diameter / args.base_diameter, diameter / args.base_diameter, 1, 1)) @ obj.matrix_world

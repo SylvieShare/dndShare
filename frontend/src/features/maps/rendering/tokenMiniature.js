@@ -2,7 +2,10 @@ import { buildModelObject } from "./modelObject";
 import { modelVisual } from "./modelVisual";
 import { tokenModelId } from "../lib/tokenModels";
 import { tokenBaseModel } from "../lib/tokenBases";
-import { miniatureScale } from "@/shared/model3d/miniatureScale";
+import {
+  miniatureBodyScale,
+  miniatureBaseScale,
+} from "@/shared/model3d/miniatureScale";
 
 export function buildTokenMiniature(token, options, fog) {
   const assets = options.assets;
@@ -11,7 +14,7 @@ export function buildTokenMiniature(token, options, fog) {
   const visual = id && modelVisual(assets, id, options.tier);
   const metadata = id && assets.metadata(id);
   if (!visual || !(metadata?.referenceDiameter > 0)) return null;
-  const scale = miniatureScale(token.size, metadata.referenceDiameter);
+  const scale = miniatureBodyScale(token.size, metadata.referenceDiameter);
   const root = buildModelObject(
     {
       id: token.id,
@@ -50,7 +53,7 @@ export function buildTokenMiniature(token, options, fog) {
     );
     delete baseRoot.userData.objectId;
     baseRoot.userData.tokenBase = true;
-    const baseScale = miniatureScale(token.size, base.referenceDiameter);
+    const baseScale = miniatureBaseScale(token.size, base.referenceDiameter);
     baseRoot.scale.set(baseScale, 1, baseScale);
     baseRoot.position.y = -0.05;
   }

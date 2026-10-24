@@ -114,7 +114,7 @@ it.each([false, true])("uses a shared miniature without a bottom disc or ring (f
   );
   const mini = root.children.find(node => node.userData.tokenBody);
   expect(root.children.some(node => node.isMesh)).toBe(false);
-  expect(mini.scale.x).toBeCloseTo(1.7 / .9);
+  expect(mini.scale.x).toBeCloseTo(1.4 / .9);
   expect(mini.children[0].geometry).toBe(geometry);
   expect(mini.children[0].receiveShadow).toBe(true);
   expect(root.children.find(node => node.isSprite).position.y).toBeGreaterThan(metadata.maxHeight * mini.scale.x);
@@ -173,7 +173,7 @@ it("outlines only the creature body and seats it on a separately loaded base", (
   const tokenRoot = layer.root.children[0];
   const body = tokenRoot.children.find(n => n.userData.tokenBody);
   const base = tokenRoot.children.find(n => n.userData.tokenBase);
-  expect(body.scale.x).toBeCloseTo(1.7 / .9);
+  expect(body.scale.x).toBeCloseTo(1.4 / .9);
   expect(base.scale.x).toBeCloseTo(1.7 / 1.8);
   expect(base.scale.y).toBe(1);
   expect(body.position.y - base.position.y).toBeCloseTo(.06);

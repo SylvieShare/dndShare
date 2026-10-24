@@ -1,5 +1,8 @@
 import { tokenModelId } from "./tokenModels";
-import { miniatureScale } from "@/shared/model3d/miniatureScale";
+import {
+  miniatureBodyScale,
+  miniatureBaseScale,
+} from "@/shared/model3d/miniatureScale";
 
 export function fittingTokenBases(token, catalogue = []) {
   if (token.kind !== "creature") return [];
@@ -54,7 +57,7 @@ export function tokenVisualModels(token, state, catalogue = []) {
     {
       ...token,
       modelId,
-      scale: miniatureScale(token.size, body.referenceDiameter),
+      scale: miniatureBodyScale(token.size, body.referenceDiameter),
       tokenSize: token.size,
       tokenId: token.id,
       tokenPart: "body",
@@ -66,7 +69,7 @@ export function tokenVisualModels(token, state, catalogue = []) {
             ...token,
             id: `${token.id}:base`,
             modelId: base.id,
-            scale: miniatureScale(token.size, base.referenceDiameter),
+            scale: miniatureBaseScale(token.size, base.referenceDiameter),
             tokenSize: token.size,
             tokenId: token.id,
             tokenPart: "base",

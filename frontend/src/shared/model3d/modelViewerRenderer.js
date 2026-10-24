@@ -10,7 +10,7 @@ import {
 import { acquireModelLoader } from "./modelLoader";
 import { createModelOrbitCamera } from "./modelOrbitCamera";
 import { modelOrbitControls } from "./modelOrbitControls";
-import { miniatureScale } from "./miniatureScale";
+import { miniatureBodyScale, miniatureBaseScale } from "./miniatureScale";
 
 function disposeModel(root) {
   const geometries = new Set(),
@@ -40,13 +40,13 @@ export function composeModelPreview(body, base, metadata) {
     figure = new Group();
   figure.add(body);
   figure.scale.setScalar(
-    miniatureScale(metadata.size, metadata.referenceDiameter),
+    miniatureBodyScale(metadata.size, metadata.referenceDiameter),
   );
   figure.position.y = base ? metadata.base.surfaceHeight : 0;
   root.add(figure);
   if (base) {
     const support = new Group();
-    const scale = miniatureScale(
+    const scale = miniatureBaseScale(
       metadata.size,
       metadata.base.referenceDiameter,
     );

@@ -54,7 +54,7 @@ it("reselects for a changed size, never uses another size, and plans body and ba
   );
   expect(body).toMatchObject({
     modelId: "body",
-    scale: 1.7 / 0.9,
+    scale: 1.4 / 0.9,
     elevation: 3.06,
   });
   expect(base).toMatchObject({
