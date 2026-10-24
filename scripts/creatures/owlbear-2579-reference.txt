@@ -1,31 +1,17 @@
-Use case: stylized-concept
-Asset type: single-view image-to-3D reference for a textured tabletop miniature.
-Reference image: handbook-reference.jpg establishes this owlbear's identity,
-owl facial discs, pale face, hooked beak, dark amber eyes, and charcoal
-purple-brown feathered bear body. Adapt the creature into a sculpted miniature.
-
-Create one complete, high quality painted resin fantasy owlbear miniature,
-full body visible, on a transparent background. Massive muscular bear torso,
-short powerful hind legs, two huge forelimbs ending in curved ivory claws,
-recognizable broad owl head and round facial discs, short hooked horn-colored
-beak, layered sculpted feathers on head, shoulders and back transitioning
-to dense shaggy fur on the belly and legs. Pale cream face and chest contrast
-with muted charcoal, plum-brown and warm grey feathers. Dark amber eyes,
-ferocious alert expression. No human teeth, no tusks, no wings, no accessories.
-
-Pose: grounded, compact and heavy, facing toward the viewer's left in a clear
-front three-quarter view. Hind feet planted apart, one forepaw planted slightly
-forward and the other raised just enough to show its claws. All four limbs
-are anatomically distinct with clear readable gaps, no detached parts. The
-body fits a circular 50mm tabletop footprint. Show the entire silhouette,
-including every claw and both hind feet, with comfortable image margins.
-
-Style: an actual premium painted resin gaming miniature photographed in a
-studio, cohesive hand-painted materials, sharp carved feather clumps and fur,
-subtle recess shading, restrained highlights, no plastic sheen. Surface detail
-must read as sculpted solid forms, not hair cards or wispy individual strands.
-Use soft neutral studio lighting with even visibility on the dark surfaces.
-
-Constraints: exactly one creature, no base, pedestal, ground, rocks, scenery,
-cast shadow on a ground plane, grid, text, watermark, border or turnaround.
-True transparent background. The feet are fully formed and unsupported.
+Use case: stylized-concept. Create a single complete painted resin tabletop owlbear
+miniature using the provided handbook illustration ONLY as creature identity
+reference. Match the broad owl face, pale cream facial discs, hooked horn-colored
+beak, dark amber eyes and muted charcoal/plum-brown/grey feathered bear body.
+Massive muscular bear torso, short powerful hind legs, two huge clawed forelimbs,
+layered solid sculpted feathers on head/shoulders/back transitioning to shaggy belly
+fur. Clear anatomically correct four limbs. Ferocious expression, no human teeth or
+tusks, no wings, no accessories. Compact heavy grounded pose facing viewer's LEFT,
+FRONT THREE-QUARTER view: hind feet planted apart, one forepaw planted forward,
+other slightly raised showing curved ivory claws. Full silhouette and every claw
+visible with comfortable margins, readable gaps between limbs. Body fits circular
+50mm footprint. Premium hand-painted resin miniature photographed in studio,
+cohesive sculpted clumps, subtle recess shading and restrained highlights, no shiny
+plastic or wispy hair strands. Soft neutral even studio lighting, detailed but
+readable for image-to-3D reconstruction. EXACTLY ONE creature, NO base, pedestal,
+floor, ground, rocks, scenery, ground-plane shadow, text, watermark, frame, grid or
+turnaround. Fully formed feet. TRUE TRANSPARENT background.

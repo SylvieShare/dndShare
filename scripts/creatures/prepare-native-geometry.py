@@ -9,6 +9,7 @@ import xatlas
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('directory', type=Path)
 parser.add_argument('--only', choices=['render','lod','shadow'])
+parser.add_argument('--lod-triangles', type=int, default=12000)
 args = parser.parse_args()
 folder = args.directory
 mesh = trimesh.load(folder / 'trellis-native/generated-original.glb', force='mesh')
@@ -16,7 +17,7 @@ mesh.visual = trimesh.visual.ColorVisuals(mesh)
 mesh.merge_vertices(merge_tex=True, merge_norm=True, digits_vertex=5)
 mesh.update_faces(mesh.nondegenerate_faces())
 mesh.remove_unreferenced_vertices()
-for role, count in [('render', 44000), ('lod', 12000), ('shadow', 3500)]:
+for role, count in [('render', 44000), ('lod', args.lod_triangles), ('shadow', 3500)]:
     if args.only and args.only != role:
         continue
     simplified = mesh.simplify_quadric_decimation(face_count=count, aggression=7 if role=='shadow' else 3)

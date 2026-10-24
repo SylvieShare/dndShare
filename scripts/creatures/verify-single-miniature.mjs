@@ -88,7 +88,7 @@ const delta = Math.max(
 assert.ok(delta < 0.04, `LOD bounds delta ${delta}`);
 const result = {
   passed: true,
-  originalServiceMeshExported: false,
+  originalServiceMeshExported: !!placement.originalServiceMeshExported,
   nominalFootprintCells: placement.nominalFootprintCells,
   lodBoundsDelta: delta,
   assets: stats,

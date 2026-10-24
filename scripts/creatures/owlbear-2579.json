@@ -14,7 +14,7 @@
   "code": "CRE-owlbear",
   "groupName": "Совомеды",
   "groupNameEn": "Owlbears",
-  "maxHeight": 0.5916,
+  "maxHeight": 0.5774,
   "assetFiles": {
     "render": "model.glb",
     "lod": "model-lod.glb",

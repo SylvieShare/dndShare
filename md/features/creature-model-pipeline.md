@@ -85,45 +85,55 @@ render и 1024 для LOD, normal вдвое меньше, ORM вчетверо 
 
 ## Сборка и проверка текущего набора
 
-### Совомед 2579: локальная реконструкция и размер 2×2
+### Совомед 2579: исходная сетка TRELLIS и размер 2×2
 
 [Рецепт](../../scripts/creatures/owlbear-2579.json) привязан к публичному
 совомеду из MM. [Промпт референса](../../scripts/creatures/owlbear-2579-reference.txt)
-использован встроенным imagegen с иллюстрацией итема. TRELLIS.2 с seed 2579,
-resolution 1024 построил восемь ракурсов, но прямой экспорт GLB был отклонён
-бесплатной GPU-квотой. Нативная сетка сервиса не получена и не заявляется.
+использован встроенным imagegen с иллюстрацией итема.
+Текущая модель получена прямым экспортом TRELLIS.2: seed 2579, resolution 1024,
+decimation target 300000, textureSize 2048. Личный PRO-аккаунт разрешён
+пользователем; генератор принимает его только с явным `--allow-pro`.
+Ключ читается скрытым вводом `--token-stdin`, остаётся в памяти процесса.
 
-`trellis_views.py` извлекает калиброванные albedo/normal изображения.
-`reconstruct-miniature.py` строит visual hull на сетке 320³, а
-`refine-miniature.py` интегрирует наблюдаемые нормали с фиксацией силуэта.
-`bake-multiview-miniature.py` создаёт UV-атласы render/LOD через xatlas,
-переносит цвет и tangent normals из ракурсов. Материал матовый, без металла;
-постоянные roughness/metalness представлены PBR-факторами. Подробный source
-сохраняет более плотную сетку и проецированный цвет вершин, shadow — только
-геометрию. Это приближённая реконструкция: мелкие перья, лицо и невидимые снизу
-поверхности уступают референсу. Сетка не предназначена для 3D-печати.
+Первая попытка прямого экспорта была отклонена бесплатной квотой. Черновая
+локальная реконструкция, её ракурсы и скрипты сохранены отдельно в
+`models/creatures/owlbear/`, исходники эксперимента — в `workflow/` этой папки.
+В опубликованной версии используется исходный GLB сервиса;
+текущие результаты находятся в `models/creatures/owlbear-native/`.
 
-`prepare-multiview-miniature.py` применяет ко всем ролям один transform:
-ступни на Y=0, диаметр нативной геометрии 0,88 клетки, без основания.
-Размер жетона умножает эту геометрию один раз: при `token.size:2` диаметр 1,76,
-высота около 1,18 клетки, отдельная двухклеточная подставка имеет диаметр 1,8.
+`prepare-native-geometry.py` делает QEM и xatlas для render/LOD; для тонкого
+оперения LOD имеет целевой бюджет 24000 вместо стандартных 12000 треугольников.
+`bake-native-miniature.py` переносит albedo/PBR с исходника и запекает настоящие
+геометрические tangent normals. Отдельный проход покрытия позволяет заполнить
+пропуски лучей и расширить края UV-островов. Обратные tangent normals на тонких
+перьях разворачиваются в наружную полусферу, предотвращая инвертированное освещение.
+Подробный source сохраняет нативную текстурированную сетку, shadow — только
+геометрию. Это игровая статическая модель, не подготовленная для 3D-печати.
+
+Один transform применяется ко всем ролям: `--rotation -45 --footprint .88
+--no-base --token-size 2`. Ступни на Y=0, диаметр нативной геометрии 0,88,
+основания в файле нет. Размер жетона умножает геометрию один раз: при
+`token.size:2` диаметр 1,76 клетки, отдельная двухклеточная подставка — 1,8.
 Метаданные модели остаются 1×1, так как это нормализованный ресурс жетона.
 
 ```bash
-models/creatures/.generation-runtime/bin/python scripts/creatures/reconstruct-miniature.py models/creatures/owlbear/trellis-native --resolution 320
-models/creatures/.generation-runtime/bin/python scripts/creatures/refine-miniature.py models/creatures/owlbear/trellis-native models/creatures/owlbear/local-model
-models/creatures/.generation-runtime/bin/python scripts/creatures/bake-multiview-miniature.py models/creatures/owlbear/local-model --views models/creatures/owlbear/trellis-native
-/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python-exit-code 1 --python scripts/creatures/prepare-multiview-miniature.py -- models/creatures/owlbear --token-size 2
-node scripts/creatures/optimize-miniature.mjs models/creatures/owlbear
-node scripts/creatures/verify-single-miniature.mjs models/creatures/owlbear
-node scripts/creatures/package-miniature.mjs models/creatures/owlbear scripts/creatures/owlbear-2579.json
-python3 scripts/creatures/publish-miniature.py models/creatures/owlbear scripts/creatures/owlbear-2579.json
+models/creatures/.generation-runtime/bin/python scripts/creatures/generate-trellis.py models/creatures/owlbear-native/miniature-reference.png models/creatures/owlbear-native/trellis-native --seed 2579 --resolution 1024 --token-stdin --allow-pro
+models/creatures/.generation-runtime/bin/python scripts/creatures/prepare-native-geometry.py models/creatures/owlbear-native --lod-triangles 24000
+/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python-exit-code 1 --python scripts/creatures/bake-native-miniature.py -- models/creatures/owlbear-native --rotation -45 --footprint .88 --no-base --token-size 2
+node scripts/creatures/optimize-miniature.mjs models/creatures/owlbear-native
+node scripts/creatures/verify-single-miniature.mjs models/creatures/owlbear-native
+/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python-exit-code 1 --python scripts/creatures/render-final-miniature.py -- models/creatures/owlbear-native
+node scripts/creatures/package-miniature.mjs models/creatures/owlbear-native scripts/creatures/owlbear-2579.json
+python3 scripts/creatures/publish-miniature.py models/creatures/owlbear-native scripts/creatures/owlbear-2579.json --update-from models/creatures/owlbear/publication.json
 ```
 
 Последняя команда по умолчанию проверяет файлы локально. С `--publish` она
-публикует один проверенный ресурс через MCP и назначает основной моделью итема.
-Чужую существующую привязку заменять отказывается. Итоговый `publication.json`
-подтверждает assets и основную связь; ключ остаётся в памяти процесса.
+публикует проверенный ресурс через MCP. Первичная публикация назначает основную
+модель; чужую привязку заменять отказывается. `--update-from` сверяет assets
+с прежним подтверждённым отчётом, сохраняет свежие не связанные с файлами
+метаданные и все привязки. Повтор уже выполненного обновления допустим,
+посторонняя версия исходных assets останавливает запись.
+`publication.json` подтверждает итоговые manifests и связи.
 `--server-token` требует разрешения на конкретный серверный файл.
 
 ### Семейство кобольдов и стражник

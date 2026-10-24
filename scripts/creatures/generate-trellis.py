@@ -32,15 +32,16 @@ def main():
     parser.add_argument("--resolution", choices=["512", "1024", "1536"], default="1024")
     parser.add_argument("--seed", type=int, default=1635)
     parser.add_argument("--token-stdin", action="store_true", help="Read an authorized token with hidden terminal input; never persist it")
+    parser.add_argument("--allow-pro", action="store_true", help="Use an explicitly authorized personal PRO account")
     parser.add_argument("--views-only", action="store_true", help="Save generated views for local reconstruction; skip remote GLB extraction")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     token = getpass.getpass('HF token (not saved): ') if args.token_stdin else False
     if token:
         account = HfApi(token=token).whoami()
-        if account.get('isPro') or account.get('type') != 'user':
-            raise RuntimeError('This experiment only uses free personal quota; paid accounts require a separate spending limit')
-        print('Authenticated free personal account; token stays in memory', flush=True)
+        if account.get('type') != 'user' or (account.get('isPro') and not args.allow_pro):
+            raise RuntimeError('A personal account is required; PRO use needs explicit --allow-pro authorization')
+        print('Authenticated personal account; PRO=' + str(bool(account.get('isPro'))) + '; token stays in memory', flush=True)
     client = Client("microsoft/TRELLIS.2", token=token, verbose=False, analytics_enabled=False,
                     download_files=str(args.output / "downloads"))
     run(client, "/start_session")
@@ -65,7 +66,7 @@ def main():
     shutil.copy2(path, target)
     metadata = {"provider": "microsoft/TRELLIS.2", "seed": args.seed,
                 "resolution": args.resolution, "decimationTarget": 300000,
-                "textureSize": 2048, "bytes": target.stat().st_size}
+                "textureSize": 2048, "originalMeshExported": True, "bytes": target.stat().st_size}
     (args.output / "generation.json").write_text(json.dumps(metadata, indent=2) + "\n")
     print(json.dumps(metadata), flush=True)
 
