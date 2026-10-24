@@ -17,17 +17,23 @@ models/creatures/.generation-runtime/bin/python scripts/creatures/production-que
 Состав, визуальные ограничения и замер поля описаны в
 [отчёте пилота](../reports/creature-miniatures-pilot-2026-10-25.md).
 
-Запуск генерации добавляет `--run --until native --token-stdin`. Это скрытый
+Запуск генерации добавляет `--run --until native --token-stdin --server-token`. Это скрытый
 ввод личного HF-ключа; автоматизация может передать его через наследуемый pipe
 `--token-fd`. Содержимое ключа не должно попадать в аргументы процесса или файлы.
 `--watch` ждёт появления проверенных референсов в рамках текущего запуска;
 это не фоновый планировщик и не автоматическое согласие на новый расход квоты.
 `--only wolf-1692,boar-1745` ограничивает выбранные задания.
+Режим native включает создание архива; с `--server-token` его загрузка и проверка
+в S3 завершаются **до следующей генерации**. Без флага архив остаётся локальным.
+Ошибка раннего резервирования останавливает весь набор. Повтор использует уже
+полученный native и повторяет резервирование, не GPU. Полностью кешированный
+повтор не читает ключи и не обращается к MCP.
 
 Для каждого slug перед генерацией подготовить:
 
 - `recipe.json`: идентификатор итема/модели, калибровка, профиль материалов,
-  метаданные и имена файлов по общему контракту миниатюр;
+  `artProfile`, `supportKind`, измеренный `reviewBase`, метаданные и имена файлов
+  по общему контракту миниатюр; правила выбора — [качество](creature-model-quality.md);
 - `handbook-item.json` и `handbook-reference.jpg`: прочитанный публичный итем и
   иллюстрацию; `reference-prompt.txt`: фактически принятый промпт;
 - `miniature-reference.png`: принятый результат imagegen;
@@ -43,7 +49,7 @@ models/creatures/.generation-runtime/bin/python scripts/creatures/production-que
 незаметной новой генерации. Ошибка одной модели не отменяет локальные результаты
 остальных. Текст исключений с потенциальными секретами в state не сохраняется.
 
-Порядок: native → архив native → geometry → bake → optimize → render →
+Порядок: native → архив native → geometry → bake → optimize → render → placement →
 silhouette → verify → **осмотр** → ready → архив ready → published.
 `trellis-native`, `geometry`, `baked`, `final` разделены: оптимизация каждый раз
 копирует свежий bake, поэтому повторный запуск не пережимает уже готовый JPEG.
@@ -54,9 +60,30 @@ models/creatures/.generation-runtime/bin/python scripts/creatures/production-que
 ```
 
 Готовый native не требует HF-ключа. Рендеры включают перед, спину, оба бока,
-верх, LOD и серый материал. При успешной технической проверке очередь ждёт
-`model-review.json`: `approved:true`, `renderSHA256`, `lodSHA256` и замечания.
-Только действующий осмотр разрешает упаковку. Отсутствие осмотра возвращает
+верх, LOD и серый материал. Placement дополнительно создаёт on-base/on-base-top
+с фактическими размером, диаметром опоры и подъёмом ног. Рецепт задаёт:
+
+```json
+{"artProfile":"painted","supportKind":"grounded","reviewBase":{"modelId":"3c506a01-f906-5627-a53e-e1198a33968a","file":"models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb","referenceDiameter":0.9,"surfaceHeight":0.06}}
+```
+
+`placement-review.json` связывает картинки с GLB, размером, калибровкой,
+материалами, политикой текстур и SHA/метаданными основания. Изменение этих входов
+перестраивает примерку. При успешной технической проверке очередь ждёт
+`final/model-review.json` schema 2: `approved:true`, полный `context`, его
+`contextSHA256` и замечания. Контекст включает четыре GLB, текущие ракурсы и
+доказательство примерки. Одних прежних render/lod SHA недостаточно.
+
+После визуального осмотра сформировать запись инструментом:
+
+```bash
+python3 scripts/creatures/review-miniature.py models/creatures/SLUG/final models/creatures/SLUG/recipe.json
+python3 scripts/creatures/review-miniature.py models/creatures/SLUG/final models/creatures/SLUG/recipe.json --approve --notes-file models/creatures/SLUG/review-notes.txt
+```
+
+Первая команда только показывает контекст. Вторая требует реальных замечаний
+оператора; passed verifier не является визуальным осмотром. Только действующий
+осмотр разрешает упаковку и прямую публикацию. Отсутствие/устаревание осмотра возвращает
 ненулевой код завершения для цели ready/published, но сохраняет все результаты.
 Нельзя выставлять approved по одному passed verifier.
 
@@ -99,7 +126,8 @@ GPU-задачей перечитывается личная квота серв
 `native` сохраняет оригинальный GLB сразу после экспорта, референсы, промпт,
 рецепт и исходники инструментов. `ready` дополнительно содержит геометрию,
 упакованный `.blend`, полные bake-карты, окончательные GLB, виды, принятый
-осмотр, отчёты и каталог. Каждый архив содержит manifest с per-file SHA/size,
+осмотр, отчёты, каталог и `review/base.glb` для воспроизводимой примерки.
+Каждый архив содержит manifest с per-file SHA/size,
 Git commit и признаком незакоммиченных изменений workflow. Конкретные версии
 скриптов вложены и проверяются по SHA, включая случай dirty commit.
 Список файлов явный: checkpoint с session ID, временные service URL, env,
@@ -143,6 +171,11 @@ python3 scripts/creatures/model-source-archive.py --restore-receipt models/creat
 `bake-native-miniature.py --source --geometry-dir`; для прямого исправления —
 упакованный `baked/model.blend`. История серверной HF-сессии не восстанавливается
 из архива: законченный native больше не нуждается в этой сессии.
+При переносе создать рабочую копию рецепта и направить `reviewBase.file` на
+восстановленный `review/base.glb`. Локальный путь не входит в визуальный контекст;
+SHA и физические параметры основания входят. Сами архивные файлы не менять.
+Автоматический импорт всей очереди из архива не реализован: это восстановление
+исходников для локальной обработки, не восстановление приватного HF checkpoint.
 
 ## Публикация
 

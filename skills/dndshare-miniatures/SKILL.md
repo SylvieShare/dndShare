@@ -38,18 +38,19 @@ for commands and acceptance criteria. For binding/storage/rendering changes read
   shrink the GLB or adjust its recipe calibration to compensate twice.
   Weapons, tails and wings may overhang. Never fit the whole silhouette into
   a token circle.
-- Use the same coordinate transform for source, render, LOD and shadow. Feet
-  are at Y=0 after GLB export, the standing centre is X/Z=0. Preserve the full
+- Use the same coordinate transform for source, render, LOD and shadow. Grounded
+  feet use Y=0 after GLB export; flight/amorphous datum is explicitly authored.
+  The standing centre is X/Z=0. Preserve the full
   native node hierarchy/matrices; tiny stones with scaled nodes once became
   giant polygons because their native matrices were discarded.
 - Bodies have no embedded base. Bases are separate resources; their
   `referenceDiameter` is their measured outer diameter. Scale a base in X/Z
   only, keeping thickness and standing height constant. Verify against the
   runtime formula, including a 2×2 example.
-- Organic surfaces are dielectric. Inspect effective metalness, roughness,
-  normal map and colour spaces before changing lights. Use `dielectric` only
-  when every visible surface warrants it; metal armour needs a mixed material
-  treatment. Do not brighten textures to conceal faulty PBR.
+- Organic surfaces are dielectric. Choose artProfile explicitly: painted resin
+  can be dielectric even for a painted sword; physical skin and exposed steel
+  need mixed native PBR. Inspect metalness, roughness, normals and colour spaces
+  before changing lights. Do not brighten textures to conceal faulty PBR.
 - Clothing is a connected volume fitted to the torso, with shoulder/side joins
   and openings. Check both side views and the back. Hide covered skin faces
   without cutting holes around neck/arm openings. Floating rectangular sheets
@@ -70,11 +71,19 @@ For a batch, read [production and source archives](../../md/features/creature-mo
 Use the persistent production queue with a bounded generation/GPU-call budget;
 do not invent automatic retries or increase attempts to bypass a failed guard.
 An intentional new nativeAttempt uses its own folder and the same batch budget.
-Local completed stages need no HF credential. Keep the accepted reference prompt
+Production-queue native-only runs include local archives; add --server-token when S3
+publication is authorized. Backup must finish before the next model; a failure
+stops the batch. Cached stages do not read credentials. Keep the reference prompt
 and hash-bound reference/model reviews with the recipe. Technical passed is not
 visual approval. Archive native immediately and the reviewed ready package in
 the separate S3 source namespace when publication is authorized; verify at least
 one download/restore before considering a new production workflow established.
+Read [quality, support and texture budgets](../../md/features/creature-model-quality.md)
+before a new batch. Grounded feet use Y=0; flight and amorphous bodies need an
+explicit supportKind/datum. Compare in one scene/scale, not only auto-fit covers.
+Prefer a bounded local repair for an isolated defect; reconsider the approach
+after two unsuccessful passes. Wrong anatomy or identity calls for a revised
+reference/new native attempt within the existing budget, not endless smoothing.
 
 Use isolated background Blender processes; do not overwrite an open user scene.
 Keep work and binary assets under ignored `models/creatures/`; publish served
@@ -101,6 +110,10 @@ when resuming generation or investigating a failed comparison.
 Publication is complete only after reading back manifests, calibration and
 bindings. On interrupted updates, retry the reviewed bundle; refuse changed
 assets or metadata rather than overwriting someone else's work.
+Review schema 2 binds assets, scale/calibration, material/texture policy, all
+views and current on-base evidence. Regenerate placement after any relevant
+change; old GLB hashes alone do not preserve acceptance. Packaging/publication
+check the same contract. Respect decoded texture budgets, not just JPEG bytes.
 
 Deliver the usable model/registry result, recipe and verification report, with
 any remaining visible limitations. Do not call technical validation alone an

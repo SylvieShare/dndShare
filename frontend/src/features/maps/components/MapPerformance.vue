@@ -60,6 +60,10 @@
       GPU-таймер недоступен в этом браузере. Показаны замеры CPU.
     </p>
     <p v-else-if="!stats.gpu" class="map-hint">Ожидание GPU-замера…</p>
+    <p v-if="stats?.gpuSupported && stats.gpuMode === 'frame'" class="map-hint">
+      На Metal измеряется кадр целиком: подробные GPU-замеры меняют время
+      отрисовки.
+    </p>
     <dl class="map-performance-details">
       <div>
         <dt>Вызовы отрисовки</dt>

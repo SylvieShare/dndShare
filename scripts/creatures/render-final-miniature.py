@@ -7,6 +7,7 @@ from pathlib import Path
 from mathutils import Matrix
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import miniature_scene as scene
+from miniature_review import placement_context, write_placement_evidence
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('directory', type=Path)
@@ -35,6 +36,7 @@ if args.base:
     body = scene.import_glb(folder/'model.glb')
     recipe = json.loads(args.recipe.read_text())
     reference = recipe['referenceDiameter']
+    context = placement_context(folder,recipe,args.token_size,args.base.resolve(),args.base_diameter,args.surface_height)
     if not args.base_diameter or args.base_diameter <= 0 or reference <= 0:
         raise ValueError('Reviewed figure and base diameters required')
     diameter = args.token_size - min(.3, args.token_size * .3)
@@ -44,4 +46,5 @@ if args.base:
     support = scene.import_glb(args.base.resolve(), replace=False)
     for obj in support:
         obj.matrix_world = Matrix.Diagonal((diameter / args.base_diameter, diameter / args.base_diameter, 1, 1)) @ obj.matrix_world
-    scene.render(folder, [('on-base',254,20)], resolution=900)
+    scene.render(folder, [('on-base',254,20),('on-base-top',254,90)], resolution=900)
+    write_placement_evidence(folder,context)

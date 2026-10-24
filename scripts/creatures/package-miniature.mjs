@@ -4,6 +4,8 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 import { createRequire } from "node:module";
+import { texturePolicy } from "./texture_policy.mjs";
+import { execFileSync } from "node:child_process";
 
 const root = path.resolve(import.meta.dirname, "../..");
 const require = createRequire(
@@ -17,12 +19,26 @@ const recipe = JSON.parse(
     "utf8",
   ),
 );
+execFileSync(
+  process.env.MODEL_PYTHON || "python3",
+  [
+    path.join(import.meta.dirname, "check-miniature-review.py"),
+    folder,
+    process.argv[3] || path.join(import.meta.dirname, "kobold-1635.json"),
+  ],
+  { stdio: "pipe" },
+);
 if (!(recipe.referenceDiameter > 0 && recipe.referenceDiameter <= 32))
   throw new Error("Recipe requires a reviewed referenceDiameter");
 const output = path.join(folder, "publish");
 const verification = JSON.parse(
   await fs.readFile(path.join(folder, "verification.json"), "utf8"),
 );
+if (
+  !verification.textureBudget?.passed ||
+  !isDeepStrictEqual(verification.textureBudget.policy, texturePolicy(recipe))
+)
+  throw new Error("Verify the current decoded texture budget before packaging");
 const silhouetteBytes = await fs.readFile(
   path.join(folder, "lod-silhouette.json"),
 );
@@ -95,6 +111,10 @@ const {
   calibration,
   build,
   lodSilhouette,
+  texturePolicy: textureBudgetPolicy,
+  reviewBase,
+  artProfile,
+  supportKind,
   ...metadata
 } = recipe;
 const model = {

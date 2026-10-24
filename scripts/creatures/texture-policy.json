@@ -1,0 +1,6 @@
+{
+  "schema": 1,
+  "render": { "basecolor": 1024, "normal": 512, "orm": 256, "maxMiB": 8 },
+  "lod": { "basecolor": 512, "normal": 256, "orm": 128, "maxMiB": 2 },
+  "source": { "basecolor": 2048, "normal": 1024, "orm": 512 }
+}

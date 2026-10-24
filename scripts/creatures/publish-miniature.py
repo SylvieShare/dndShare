@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import subprocess
 from miniature_mcp import MiniatureMCP, configured_token
+from miniature_review import require_review
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('directory', type=Path)
@@ -24,6 +25,10 @@ folder = args.directory.resolve()
 recipe = json.loads(args.recipe.read_text())
 models = json.loads((folder/'publish/catalogue.json').read_text())
 verification = json.loads((folder/'verification.json').read_text())
+require_review(folder,recipe,recipe['build']['size'],folder/'model-review.json')
+assert verification.get('textureBudget',{}).get('passed'), 'Decoded texture budget verification required'
+assert verification['textureBudget']['policySHA256'] == hashlib.sha256(Path(__file__).with_name('texture-policy.json').read_bytes()).hexdigest(), 'Texture policy changed since verification'
+assert verification['textureBudget'].get('override') == recipe.get('texturePolicy'), 'Texture policy override changed since verification'
 assert verification['passed'] and len(models) == 1
 assert verification['originalServiceMeshExported'], 'Native mesh export required'
 assert verification['silhouette']['passed'], 'LOD silhouette verification required'

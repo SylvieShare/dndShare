@@ -42,5 +42,13 @@
       -0.20214130695290894
     ],
     "rotation": -45
-  }
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "artProfile": "painted",
+  "supportKind": "grounded"
 }

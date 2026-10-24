@@ -1,6 +1,24 @@
 import { expect, test } from "@playwright/test";
 import { choosePack, pickTile } from "./editorHelpers";
 
+test('Metal measures one GPU query per frame without inventing a flame breakdown', {tag:'@gpu'}, async ({page})=>{
+  await drawCounter(page);
+  await page.goto('/tests/maps/fixtures/maps.html?mode=editor&componentsExample&sixFires');
+  await expect(page.locator('.map-canvas canvas')).toBeVisible();
+  const metal=await page.evaluate(()=>{const gl=document.querySelector('.map-canvas canvas').getContext('webgl2'),ext=gl.getExtension('WEBGL_debug_renderer_info');return ext&&/Metal/i.test(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL));});
+  test.skip(!metal,'ANGLE Metal is required');
+  await page.getByRole('button',{name:'Производительность',exact:true}).click();
+  const panel=page.getByRole('region',{name:'Нагрузка',exact:true});
+  await expect(panel.getByText(/На Metal измеряется кадр целиком/)).toBeVisible();
+  await expect(panel.locator('.map-performance-parts').getByText('Кадр целиком',{exact:true})).toBeVisible();
+  await expect(panel.locator('.map-performance-parts').getByText('Огонь',{exact:true})).toHaveCount(0);
+  await expect.poll(()=>page.evaluate(()=>window.gpuQueryFrames.length)).toBeGreaterThanOrEqual(3);
+  expect(await page.evaluate(()=>window.gpuQueryFrames.slice(-3))).toEqual([1,1,1]);
+  await page.getByRole('button',{name:'Освещение',exact:true}).click();
+  const samples=await page.evaluate(()=>window.gpuQueryFrames.length);await page.waitForTimeout(1000);
+  expect(await page.evaluate(()=>window.gpuQueryFrames.length)).toBe(samples);
+});
+
 test("GPU accounts for all six flames before and after toggling without leaving extra passes", { tag: "@gpu" }, async ({
   page,
 }) => {
@@ -18,6 +36,8 @@ test("GPU accounts for all six flames before and after toggling without leaving 
     exact: true,
   });
   test.skip(!(await gpu.isEnabled()), "GPU timer unavailable in this browser");
+  test.skip(await panel.getByText(/На Metal измеряется кадр целиком/).isVisible(),
+    "This backend measures whole frames rather than individual GPU parts");
   await expect(
     panel.locator(".map-performance-parts").getByText("Огонь", { exact: true }),
   ).toBeVisible();

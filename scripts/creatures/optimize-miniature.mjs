@@ -1,6 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
+import {
+  texturePolicy,
+  textureMeasurements,
+  checkTextureBudget,
+} from "./texture_policy.mjs";
 const root = path.resolve(import.meta.dirname, "../..");
 const require = createRequire(
   path.join(root, "models/.map-model-tools-runtime/package.json"),
@@ -18,6 +23,7 @@ const profile = recipe.materialProfile || "native";
 if (!["native", "dielectric"].includes(profile))
   throw new Error(`Unknown material profile: ${profile}`);
 const materialsOnly = process.argv.includes("--materials-only");
+const policy = texturePolicy(recipe);
 const report = [];
 for (const role of ["render", "lod", "shadow", "source"]) {
   const file = role === "render" ? "model.glb" : `model-${role}.glb`;
@@ -39,9 +45,7 @@ for (const role of ["render", "lod", "shadow", "source"]) {
       : normals.has(texture)
         ? "normal"
         : "orm";
-    const full = role === "lod" ? 1024 : 2048;
-    const limit =
-      type === "basecolor" ? full : type === "normal" ? full / 2 : full / 4;
+    const limit = policy[role]?.[type];
     let data = texture.getImage();
     if (!materialsOnly) {
       const image = sharp(data)
@@ -80,6 +84,11 @@ for (const role of ["render", "lod", "shadow", "source"]) {
     }
   }
   await doc.transform(dedup(), prune());
+  const actualTextures = await textureMeasurements(doc, (data) =>
+    sharp(data).metadata(),
+  );
+  const textureMemoryBytes =
+    role === "shadow" ? 0 : checkTextureBudget(role, actualTextures, policy);
   await io.write(path.join(folder, file), doc);
   let triangles = 0,
     vertices = 0,
@@ -116,7 +125,9 @@ for (const role of ["render", "lod", "shadow", "source"]) {
     vertices,
     parts,
     bounds: [low, high],
-    textures,
+    textures: actualTextures,
+    textureMemoryBytes,
+    texturePolicy: policy[role] || null,
   });
 }
 await fs.writeFile(

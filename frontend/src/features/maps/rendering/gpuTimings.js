@@ -2,6 +2,11 @@
 export function createGpuTimings(gpu, classify) {
   const gl = gpu.getContext(),
     ext = gl.getExtension("EXT_disjoint_timer_query_webgl2");
+  const debug = gl.getExtension("WEBGL_debug_renderer_info");
+  const renderer = debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : "";
+  // ANGLE Metal flushes a command buffer at each timer boundary. Per-draw
+  // segments heavily perturb tile-based rendering; use one asynchronous query.
+  const granularity = /Metal/i.test(String(renderer)) ? "frame" : "parts";
   let frame,
     segment,
     queries = [],
@@ -60,8 +65,13 @@ export function createGpuTimings(gpu, classify) {
   }
   return {
     supported,
+    granularity,
     start() {
       if (!supported || restore) return;
+      if (granularity === "frame") {
+        restore = () => {};
+        return;
+      }
       const render = gpu.render,
         draw = gpu.renderBufferDirect,
         blit = gl.blitFramebuffer;
@@ -114,6 +124,7 @@ export function createGpuTimings(gpu, classify) {
         return;
       frame = { accept, overflow: false };
       queries = [];
+      if (granularity === "frame") phase("frame");
     },
     end() {
       if (!frame) return;

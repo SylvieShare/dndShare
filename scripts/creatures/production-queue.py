@@ -12,6 +12,7 @@ import time
 from model_build_queue import BuildQueue, QuotaStop, file_hash, native_directory
 from trellis_checkpoint import Checkpoint, output_lock
 from trellis_transport import TrellisRemote
+from production_archives import archive_native, NativeArchiveStop
 
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW = runpy.run_path(str(Path(__file__).with_name('generate-trellis.py')))['workflow']
@@ -38,6 +39,8 @@ def native(queue, entry, credentials):
     review = json.loads(review_file.read_text())
     if not review.get('approved') or review['imageSHA256'] != image_sha:
         raise ValueError('Reference needs review: '+entry['slug'])
+    from production_stages import prepare_recipe
+    prepare_recipe(entry,folder)
     settings = {'seed':entry.get('seed',entry['itemId']),'resolution':'1024','decimationTarget':300000,'textureSize':2048}
     attempt = entry.get('nativeAttempt',1)
 
@@ -98,6 +101,7 @@ def main():
         idle = time.monotonic()
         while True:
             progress, waiting = False,False
+            completed=set()
             for entry in entries:
                 try:
                     result = native(queue,entry,credentials)
@@ -105,10 +109,14 @@ def main():
                         waiting = True
                         continue
                     progress |= result
+                    progress |= archive_native(queue,entry,args.server_token)
                     if args.until != 'native':
                         from production_stages import process
-                        progress |= process(queue,entry,args.until,args.server_token)
-                except QuotaStop:
+                        outcome=process(queue,entry,args.until,args.server_token)
+                        if outcome is None: continue
+                        progress |= outcome
+                    completed.add(entry['slug'])
+                except (QuotaStop,NativeArchiveStop):
                     raise
                 except Exception as error:
                     print(json.dumps({'model':entry['slug'],'failed':type(error).__name__}),flush=True)
@@ -118,7 +126,9 @@ def main():
             if time.monotonic()-idle > args.idle_timeout: break
             time.sleep(5)
         print(json.dumps(queue.summary(),ensure_ascii=False,indent=2))
-        return 0 if all(queue.data['jobs'][e['slug']]['stages'].get(args.until,{}).get('status') == 'complete' for e in entries) else 1
+        # Old successful stage records are historical, not approval of changed
+        # inputs. Only the targets actually reached in this run count.
+        return 0 if len(completed)==len(entries) else 1
 
 
 if __name__ == '__main__':

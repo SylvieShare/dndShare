@@ -3,6 +3,38 @@ import { createGpuTimings } from "./gpuTimings";
 
 import { fakeGpu } from "./gpuTimings.fixture";
 
+it("uses one query on ANGLE Metal even for hundreds of changing draw categories", () => {
+  const { gpu, gl, queries } = fakeGpu(),
+    originalExtension = gl.getExtension;
+  gl.getExtension = (name) =>
+    name === "WEBGL_debug_renderer_info"
+      ? { UNMASKED_RENDERER_WEBGL: 123 }
+      : originalExtension(name);
+  gl.getParameter = (field) =>
+    field === 123 ? "ANGLE Metal Renderer: Apple M2 Pro" : false;
+  const render = gpu.render,
+    draw = gpu.renderBufferDirect,
+    accept = vi.fn();
+  const timer = createGpuTimings(gpu, (object) => object.kind);
+  timer.start();
+  expect(timer.granularity).toBe("frame");
+  expect(gpu.render).toBe(render);
+  expect(gpu.renderBufferDirect).toBe(draw);
+  timer.begin(accept);
+  gpu.render({
+    draws: Array.from({ length: 300 }, (_, i) => ({
+      object: { kind: i % 2 ? "objects" : "overlays" },
+    })),
+  });
+  timer.end();
+  expect(queries).toHaveLength(1);
+  queries[0].ready = true;
+  timer.poll();
+  expect(accept).toHaveBeenCalledWith({ frame: 1 });
+  timer.stop();
+  expect(queries[0].deleted).toBe(true);
+});
+
 it("attributes MSAA resolves to frame output rather than the last mesh, and keeps mask resolves in outlines", () => {
   const { gpu, gl, queries } = fakeGpu(),
     accept = vi.fn();

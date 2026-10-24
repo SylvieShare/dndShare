@@ -27,6 +27,7 @@ export function createRenderProfiler(
   function publish() {
     timings?.poll();
     const snapshot = history.snapshot(!!timings?.supported);
+    snapshot.gpuMode = timings?.granularity || "parts";
     for (const listener of observers) listener(snapshot);
   }
   function stop() {

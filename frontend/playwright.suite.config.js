@@ -5,6 +5,7 @@ const buildPort = Number(process.env.DNDSHARE_BROWSER_BUILD_PORT || 15441)
 const devURL = `http://127.0.0.1:${devPort}`
 const buildURL = `http://127.0.0.1:${buildPort}`
 const models = process.env.DNDSHARE_TEST_MODELS === '1'
+const hardware = models && process.env.DNDSHARE_TEST_HARDWARE === '1'
 const smokeURL = process.env.DNDSHARE_SMOKE_URL
 const diagnostics = /@local-model|@gpu/
 const selected = process.argv.flatMap((argument, index, args) =>
@@ -23,7 +24,8 @@ export default defineConfig({
   projects: smokeURL ? [
     { name: 'fullstack', testMatch: '**/fullstack/*.spec.js', workers: 1, use: { baseURL: smokeURL } },
   ] : models ? [
-    { name: 'models', testMatch: '**/maps/*.spec.js', grep: diagnostics, workers: 1, use: { baseURL: devURL } },
+    { name: 'models', testMatch: '**/maps/*.spec.js', grep: diagnostics, workers: 1, use: { baseURL: devURL,
+      ...(hardware ? { channel: 'chrome', launchOptions: { args: process.platform === 'darwin' ? ['--use-angle=metal', '--enable-gpu'] : ['--enable-gpu'] } } : {}) } },
   ] : [
     { name: 'ui', testIgnore: ['**/maps/**', '**/global-maps/**', '**/image-uploads/**', '**/fullstack/**'], use: { baseURL: devURL } },
     { name: 'maps', testMatch: '**/maps/*.spec.js', grepInvert: diagnostics, workers: 1, use: { baseURL: devURL } },

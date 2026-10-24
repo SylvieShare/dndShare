@@ -12,6 +12,7 @@ export const CPU_PARTS = [
   ["other", "Прочее", "var(--text-muted)"],
 ].map(([id, label, color]) => ({ id, label, color }));
 export const GPU_PARTS = [
+  ["frame", "Кадр целиком", "var(--accent)"],
   ["tiles", "Плитки со светом", "var(--accent)"],
   ["objects", "Объекты и жетоны", "var(--info)"],
   ["shadows", "Тени освещения", "var(--text-muted)"],

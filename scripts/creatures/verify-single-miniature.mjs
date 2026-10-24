@@ -3,6 +3,11 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
+import {
+  texturePolicy,
+  textureMeasurements,
+  checkTextureBudget,
+} from "./texture_policy.mjs";
 
 const root = path.resolve(import.meta.dirname, "../..");
 const require = createRequire(
@@ -10,6 +15,7 @@ const require = createRequire(
 );
 const { NodeIO } = require("@gltf-transform/core");
 const { ALL_EXTENSIONS } = require("@gltf-transform/extensions");
+const sharp = require("sharp");
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS);
 const folder = path.resolve(process.argv[2]);
 const recipe = process.argv[3]
@@ -22,6 +28,8 @@ const placement = JSON.parse(
   await fs.readFile(path.join(folder, "placement.json")),
 );
 const limits = { render: 90000, lod: 25000, shadow: 12000, source: 600000 };
+const policy = texturePolicy(recipe),
+  textureUsage = {};
 assert.equal(placement.embeddedBase, false);
 assert.ok(
   recipe.referenceDiameter > 0 && recipe.referenceDiameter <= 32,
@@ -43,6 +51,19 @@ for (const entry of stats) {
   assert.ok(!(json.images || []).some((i) => i.uri), "external image");
   const doc = await io.readBinary(bytes),
     r = doc.getRoot();
+  const textures = await textureMeasurements(doc, (data) =>
+    sharp(data).metadata(),
+  );
+  textureUsage[entry.role] =
+    entry.role === "shadow"
+      ? 0
+      : checkTextureBudget(entry.role, textures, policy);
+  assert.equal(
+    entry.textureMemoryBytes,
+    textureUsage[entry.role],
+    "stale texture memory statistics",
+  );
+  assert.deepEqual(entry.textures, textures, "stale texture dimensions");
   let triangles = 0,
     parts = 0;
   const low = [Infinity, Infinity, Infinity],
@@ -168,6 +189,18 @@ const result = {
     maxDistancePixels: silhouette.maxDistancePixels,
   },
   assets: stats,
+  textureBudget: {
+    passed: true,
+    policy,
+    rgbaMipBytes: textureUsage,
+    override: recipe.texturePolicy || null,
+    policySHA256: crypto
+      .createHash("sha256")
+      .update(
+        await fs.readFile(new URL("./texture-policy.json", import.meta.url)),
+      )
+      .digest("hex"),
+  },
 };
 await fs.writeFile(
   path.join(folder, "verification.json"),

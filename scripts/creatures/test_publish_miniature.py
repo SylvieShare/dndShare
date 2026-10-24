@@ -11,6 +11,7 @@ import sys
 import tempfile
 import unittest
 from unittest.mock import patch
+from review_test_support import reviewed_fixture
 
 SCRIPT = Path(__file__).with_name('publish-miniature.py')
 
@@ -37,7 +38,13 @@ class MiniatureUpdate(unittest.TestCase):
         (self.folder/'lod-silhouette.json').write_bytes(silhouette)
         (self.folder/'verification.json').write_text(json.dumps({'passed': True, 'silhouette': {'passed': True}, 'silhouetteReportSHA256': hashlib.sha256(silhouette).hexdigest(), 'referenceDiameter': .9, 'originalServiceMeshExported': True, 'assetHashes': {k:v['sha256'] for k,v in assets.items() if k != 'preview'}}))
         self.recipe = self.folder/'recipe.json'
-        self.recipe.write_text(json.dumps({'itemId': 2579, 'modelId': 'model-1', 'referenceDiameter': .9}))
+        for role,name in [('render','model.glb'),('lod','model-lod.glb'),('shadow','model-shadow.glb'),('source','model-source.glb')]:
+            (self.folder/name).write_bytes(('new '+role).encode())
+        recipe=reviewed_fixture(self.folder,{'itemId':2579,'modelId':'model-1','referenceDiameter':.9})
+        self.recipe.write_text(json.dumps(recipe))
+        verification=json.loads((self.folder/'verification.json').read_text())
+        verification['textureBudget']={'passed':True,'override':None,'policySHA256':hashlib.sha256(SCRIPT.with_name('texture-policy.json').read_bytes()).hexdigest()}
+        (self.folder/'verification.json').write_text(json.dumps(verification))
         old = copy.deepcopy(assets)
         old['render']['sha256'] = 'previous'
         self.previous = self.folder/'previous.json'

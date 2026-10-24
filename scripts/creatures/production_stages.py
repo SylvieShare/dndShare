@@ -6,8 +6,8 @@ import shutil
 import subprocess
 import sys
 
-from creature_archive import archive_inputs, pack_archive, publish_archive
-from miniature_mcp import MiniatureMCP, configured_token
+from production_archives import archive_stage
+from miniature_review import placement_context, review_base, require_review
 from model_build_queue import file_hash, native_directory
 from trellis_checkpoint import write_json
 
@@ -72,15 +72,6 @@ def process(queue,entry,until,server_token):
         nonlocal changed
         changed |= queue.stage(entry,name,inputs,action)
 
-    def archive(stage_name):
-        inputs={name:file_hash(path) for name,path in archive_inputs(folder,stage_name).items()}
-        stage('archive-'+stage_name,inputs,lambda:pack_archive(folder,stage_name))
-        if server_token:
-            if not hasattr(queue,'mcp'):queue.mcp=MiniatureMCP(configured_token(True))
-            stage('archive-'+stage_name+'-published',{'descriptor':file_hash(folder/'archives'/(stage_name+'-archive.json'))},
-                  lambda:[publish_archive(folder,stage_name,queue.mcp)])
-    archive('native')
-
     def geometry_stage():
         source=raw;extra=[]
         if entry.get('surfaceClosure'):
@@ -110,13 +101,24 @@ def process(queue,entry,until,server_token):
         execute(['node',SCRIPTS/'optimize-miniature.mjs',final,recipe],logs/'optimize.log')
         return [final/f for f in FILES+['model-stats.json','placement.json']]
     stage('optimize',{'baked':{f:file_hash(baked/f) for f in FILES},'placement':file_hash(baked/'placement.json'),
-        'profile':json.loads(recipe.read_text())['materialProfile'],'scripts':scripts_hash('optimize-miniature.mjs')},optimize)
+        'profile':json.loads(recipe.read_text())['materialProfile'],'texturePolicy':json.loads(recipe.read_text()).get('texturePolicy'),
+        'scripts':scripts_hash('optimize-miniature.mjs','texture_policy.mjs','texture-policy.json')},optimize)
 
     def render():
         execute([BLENDER,'--background','--factory-startup','--python-exit-code','1','--python',SCRIPTS/'render-final-miniature.py','--',final,'--recipe',recipe,'--grey'],logs/'render.log')
         return [final/(name+'.png') for name in ['preview','back','left','right','top','lod-preview','lod-top','grey-preview','grey-back','grey-top']]
     stage('render',{'render':file_hash(final/'model.glb'),'lod':file_hash(final/'model-lod.glb'),
         'scripts':scripts_hash('render-final-miniature.py','miniature_scene.py')},render)
+
+    data=json.loads(recipe.read_text())
+    base_file,base=review_base(data)
+    def placement():
+        execute([BLENDER,'--background','--factory-startup','--python-exit-code','1','--python',SCRIPTS/'render-final-miniature.py','--',final,
+            '--recipe',recipe,'--base',base_file,'--base-diameter',base['referenceDiameter'],'--surface-height',base['surfaceHeight'],
+            '--token-size',entry['size'],'--base-only'],logs/'placement.log')
+        return [final/n for n in ['on-base.png','on-base-top.png','placement-review.json']]
+    stage('placement',{'context':placement_context(final,data,entry['size']),
+        'scripts':scripts_hash('render-final-miniature.py','miniature_scene.py','miniature_review.py')},placement)
 
     def compare():
         execute([sys.executable,SCRIPTS/'compare-lod-silhouette.py',final,'--recipe',recipe],logs/'silhouette.log')
@@ -129,15 +131,16 @@ def process(queue,entry,until,server_token):
         return [final/'verification.json']
     stage('verify',{'assets':{f:file_hash(final/f) for f in FILES},'stats':file_hash(final/'model-stats.json'),
         'placement':file_hash(final/'placement.json'),'silhouette':file_hash(final/'lod-silhouette.json'),
-        'recipe':file_hash(recipe),'scripts':scripts_hash('verify-single-miniature.mjs')},verify)
+        'recipe':file_hash(recipe),'scripts':scripts_hash('verify-single-miniature.mjs','texture_policy.mjs','texture-policy.json')},verify)
 
-    review_file=folder/'model-review.json'
+    review_file=final/'model-review.json'
     if not review_file.exists():
         queue.data['jobs'][entry['slug']]['status']='awaiting-model-review';queue.save()
-        return changed
-    review=json.loads(review_file.read_text())
-    if not review.get('approved') or review.get('renderSHA256')!=file_hash(final/'model.glb') or review.get('lodSHA256')!=file_hash(final/'model-lod.glb'):
-        raise ValueError('Model review is missing or stale: '+entry['slug'])
+        return None
+    try: review=require_review(final,data,entry['size'],review_file)
+    except ValueError:
+        queue.data['jobs'][entry['slug']]['status']='awaiting-model-review';queue.save()
+        return None
 
     def ready():
         execute(['node',SCRIPTS/'package-miniature.mjs',final,recipe],logs/'package.log')
@@ -148,7 +151,7 @@ def process(queue,entry,until,server_token):
         return [path,final/'catalogue.json',final/'preview.webp',final/'publish/catalogue.json']
     stage('ready',{'review':file_hash(review_file),'verification':file_hash(final/'verification.json'),
         'recipe':file_hash(recipe),'preview':file_hash(final/'preview.png'),'script':scripts_hash('package-miniature.mjs')},ready)
-    archive('ready')
+    changed |= archive_stage(queue,entry,'ready',server_token)
     if until=='published':
         if not server_token:raise ValueError('Publishing requires the authorized project MCP credential')
         def publish():

@@ -16,7 +16,8 @@ WORKFLOW = ['generate-trellis.py','trellis_checkpoint.py','trellis_transport.py'
             'prepare-native-geometry.py','close-native-surface.py','bake-native-miniature.py','miniature_scene.py',
             'optimize-miniature.mjs','render-final-miniature.py','lod_silhouette.py',
             'compare-lod-silhouette.py','lod-silhouette-policy.json','verify-single-miniature.mjs',
-            'package-miniature.mjs','production-queue.py','production_stages.py','model_build_queue.py','creature_archive.py','creature_archive_restore.py','model-source-archive.py','miniature_mcp.py']
+            'package-miniature.mjs','check-miniature-review.py','review-miniature.py','production-queue.py','production_stages.py','production_archives.py','miniature_review.py',
+            'texture-policy.json','texture_policy.mjs','model_build_queue.py','creature_archive.py','creature_archive_restore.py','model-source-archive.py','miniature_mcp.py']
 
 
 def archive_inputs(folder,stage):
@@ -35,17 +36,18 @@ def archive_inputs(folder,stage):
         file = ROOT/'scripts/creatures'/name
         inputs['workflow/'+name] = file
     if stage=='ready':
-        inputs['model-review.json']=folder/'model-review.json'
+        inputs['final/model-review.json']=folder/'final/model-review.json'
+        base=Path(recipe['reviewBase']['file'])
+        inputs['review/base.glb']=base if base.is_absolute() else ROOT/base
         files = ['model.glb','model-lod.glb','model-shadow.glb','model-source.glb']
         selected = {'geometry':[f'geometry-{r}.glb' for r in ['render','lod','shadow']]+['geometry-report.json'],
             'baked':files+['model.blend','placement.json']+[f'{r}-{c}.png' for r in ['render','lod'] for c in ['normal','basecolor','orm','coverage']],
-            'final':files+['placement.json','model-stats.json','lod-silhouette.json','lod-silhouette.png','verification.json','catalogue.json','preview.webp']+
+            'final':files+['placement.json','model-stats.json','lod-silhouette.json','lod-silhouette.png','verification.json','catalogue.json','preview.webp','placement-review.json','on-base.png','on-base-top.png']+
                 [n+'.png' for n in ['preview','back','left','right','top','lod-preview','lod-top','grey-preview','grey-back','grey-top']]}
         for directory,names in selected.items():
             for name in names:inputs[directory+'/'+name] = folder/directory/name
         for name in ['closed-source.glb','closed-source.json']:
             if (folder/'geometry'/name).is_file():inputs['geometry/'+name]=folder/'geometry'/name
-        if (folder/'final/on-base.png').is_file():inputs['final/on-base.png']=folder/'final/on-base.png'
     if any(not p.is_file() or p.is_symlink() for p in inputs.values()):
         raise ValueError('Archive is missing an explicit regular source file')
     return inputs

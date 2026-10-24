@@ -38,5 +38,13 @@
       -0.2692746074744247
     ],
     "rotation": -45
-  }
+  },
+  "reviewBase": {
+    "modelId": "dfde5fa7-4bb1-5909-a039-06cd45d0f008",
+    "file": "models/creatures/separated-bases-20261024/dfde5fa7-4bb1-5909-a039-06cd45d0f008.glb",
+    "referenceDiameter": 0.45,
+    "surfaceHeight": 0.06
+  },
+  "artProfile": "painted",
+  "supportKind": "flight"
 }
