@@ -1,7 +1,7 @@
 <template>
   <div class="participant-statuses" role="group" aria-label="Эффекты и состояния" @pointerdown.stop @click.stop @contextmenu.stop @keydown.stop>
     <DndStatusOverviewView
-      :items="items" :editable="context.ownerMode" :context="context" icons-only :icon-size="48"
+      :items="items" :editable="context.ownerMode" :context="context" icons-only :icon-size="32"
       @view="viewItem = $event.item"
       @remove="removeStatus"
       @increase-level="changeLevel($event, 1)"
@@ -58,5 +58,5 @@ async function saveDuration(duration) {
 </script>
 
 <style scoped>
-.participant-statuses { min-width: 0; height: 52px; }
+.participant-statuses { min-width: 0; height: 36px; }
 </style>

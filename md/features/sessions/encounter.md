@@ -347,7 +347,8 @@ Chronicle attack target controls share the roll's row on the right, with chosen 
 For the DM, D&D tiles also show AC and passive skills below HP in the same
 information column; the action menu contains only actions.
 For the DM, active D&D effect/state instances from the character's `values.states`
-appear as 48px icons in a separate row below both portrait and information.
+appear as 32px icons in a separate row below the information column, to the
+right of the portrait and aligned with the name/HP column.
 Hover/focus shows the shared item tooltip with description and instance duration;
 click or Enter/Space opens the same action menu as the character sheet, through
 `DndStatusOverviewView(iconsOnly)`. It offers handbook viewing, duration changes,
@@ -357,7 +358,7 @@ Changes go through the shared versioned character-command queue, with confirmed
 data applied after acknowledgement and a visible error if saving is rejected.
 Status icons do not open the
 participant menu, reorder the rail or toggle combat selection. The row scrolls
-horizontally when necessary. A tile with statuses is 128px tall (72px otherwise),
+horizontally when necessary. A tile with statuses is 112px tall (72px otherwise),
 while its combat checkbox stays vertically centered across the entire tile.
 Compact mode hides the status row and makes it inert; a tile remains 48px tall.
 Its combat strip contains a checkbox with wider side spacing; AC and initiative

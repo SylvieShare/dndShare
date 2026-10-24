@@ -193,9 +193,10 @@ the same transfer confirmation as the invitation flow, refreshes the rail and
 keeps the session workspace open; the rail has no separate invitation tile. A separate header control
 switches the `264px` rail between its normal width and a compact avatar-only mode.
 Expanded participant tiles have a `72px` base height with `4px` padding around
-a `64px` image. For the DM, active D&D effects/states add a lower icon row and
-increase the tile to `128px`; the checkbox remains centered across the full
-height. Icons are 48px. Hover/focus describes the status; clicking opens the
+a `64px` image. For the DM, active D&D effects/states add an icon row below
+the information column, aligned with the name/HP column to the right of the avatar, and
+increase the tile to `112px`; the checkbox remains centered across the full
+height. Icons are 32px. Hover/focus describes the status; clicking opens the
 character-sheet status menu for viewing, duration, levels, removal and mechanics.
 Without active statuses there is no empty row. Compact mode hides the row and
 keeps its `36px` avatar geometry. Independent

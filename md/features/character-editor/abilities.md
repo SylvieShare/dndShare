@@ -174,7 +174,7 @@ description, optional presentation level, stacking policy, default duration, con
 `uid`, `effect_id`, source identity, bound `params`, duration and concentration.
 This keeps a temporary spell or ability effect removable with its source and
 allows the same catalogue effect to be added manually from the status block.
-The same `DndStatusOverviewView` renders the session participant's 48px icon-only
+The same `DndStatusOverviewView` renders the session participant's 32px icon-only
 strip and retains the sheet's status action menu. Its optional `context` supplies
 the participant's mechanics; ordinary sheet presentation remains 64px with text.
 Abilities, feats and spells declare zero or more links in `status_effects`;
