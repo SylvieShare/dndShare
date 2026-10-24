@@ -1,0 +1,1168 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    -0.06963849067687988,
+    0.005812883377075195
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Roof 1",
+  "groupCode": "MED-roof-1",
+  "hasDecor": true,
+  "renderTriangles": 150000,
+  "lodTriangles": 120000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 2048,
+  "renderUVAngleLimitRad": 0.3,
+  "lodUVAngleLimitRad": 0.3,
+  "renderUVIslandMargin": 0.0015,
+  "lodUVIslandMargin": 0.0015,
+  "renderDataSize": 1536,
+  "lodColourSize": 1152,
+  "lodDataSize": 1152,
+  "standRayTopMM": 40,
+  "standPointsMM": [
+    [
+      8.75,
+      -8.75
+    ],
+    [
+      8.75,
+      8.75
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        -17.8,
+        -17.8
+      ],
+      [
+        -1.2,
+        -17.8
+      ],
+      [
+        -1.2,
+        17.8
+      ],
+      [
+        -17.8,
+        17.8
+      ]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "roof",
+    "wood",
+    "plaster",
+    "iron",
+    "slope",
+    "ceiling"
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      5,
+      9
+    ],
+    "lodMiB": [
+      3,
+      6
+    ],
+    "shadowKiB": [
+      200,
+      400
+    ],
+    "previewKiB": [
+      14,
+      40
+    ],
+    "basis": "Own699904triangle/34995284byte one-cell cantilever roof with one low plain-front/diagonal-rear westwall,full floor,two ironheads,blue shingles and exposed Ylaths. Less wall geometry than109,no functionalwell. Start150k/120k,2048bakes,1536/1152packed maps,.3rad/.0015UV,compare compact while retaining grain,roofedge/lathgaps,disks and free floor."
+  },
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "own X floor planks and north south fascia",
+        "minMM": [
+          -17.8,
+          -17.8,
+          17.5
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          28
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own west Y floor end frame",
+        "minMM": [
+          -17.8,
+          -17.8,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.8,
+          28
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own east Y floor end frame",
+        "minMM": [
+          14.3,
+          -17.8,
+          17.5
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          28
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own raised rear timber base",
+        "minMM": [
+          -17.8,
+          -13.3,
+          26.6
+        ],
+        "maxMM": [
+          -16.85,
+          13.3,
+          51
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own wall end post -1",
+        "minMM": [
+          -17.8,
+          -17.8,
+          26.1
+        ],
+        "maxMM": [
+          -9.8,
+          -13.3,
+          51
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own wall end post 1",
+        "minMM": [
+          -17.8,
+          13.3,
+          26.1
+        ],
+        "maxMM": [
+          -9.8,
+          17.8,
+          51
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own rear diagonal brace",
+        "minMM": [
+          -17.8,
+          -15.5,
+          25.7
+        ],
+        "maxMM": [
+          -13.9,
+          15.5,
+          49.9
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          0.8773047745245331,
+          0.47993367520570807
+        ],
+        "projection": {
+          "originMM": [
+            -16.890174963535408,
+            0.0,
+            34.36346144553943
+          ],
+          "axis": [
+            0.0,
+            -0.47993367520570807,
+            0.8773047745245331
+          ],
+          "rangeMM": [
+            -1.9470372699077776,
+            1.9956461351020969
+          ]
+        }
+      },
+      {
+        "name": "own rear upper header",
+        "minMM": [
+          -17.8,
+          -17.8,
+          43.4
+        ],
+        "maxMM": [
+          -14.5,
+          17.8,
+          46.4
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own Y roof underside laths and boarding",
+        "minMM": [
+          -17.8,
+          -17.8,
+          45
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          100
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "projection": {
+          "originMM": [
+            0.0,
+            0.0,
+            74.3359671159224
+          ],
+          "axis": [
+            -0.8268553602613772,
+            0.00030247621616951483,
+            0.5624145461447159
+          ],
+          "rangeMM": [
+            -7,
+            -2.75
+          ]
+        }
+      },
+      {
+        "name": "own sloping roof edge timber -1",
+        "minMM": [
+          -17.8,
+          -17.8,
+          45
+        ],
+        "maxMM": [
+          17.8,
+          -14.6,
+          100
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.5624145718728946,
+          0.0,
+          0.8268553980866478
+        ],
+        "projection": {
+          "originMM": [
+            0.0,
+            0.0,
+            74.3359671159224
+          ],
+          "axis": [
+            -0.8268553602613772,
+            0.00030247621616951483,
+            0.5624145461447159
+          ],
+          "rangeMM": [
+            -12,
+            -2.75
+          ]
+        }
+      },
+      {
+        "name": "own sloping roof edge timber 1",
+        "minMM": [
+          -17.8,
+          14.6,
+          45
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          100
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.5624145718728946,
+          0.0,
+          0.8268553980866478
+        ],
+        "projection": {
+          "originMM": [
+            0.0,
+            0.0,
+            74.3359671159224
+          ],
+          "axis": [
+            -0.8268553602613772,
+            0.00030247621616951483,
+            0.5624145461447159
+          ],
+          "rangeMM": [
+            -12,
+            -2.75
+          ]
+        }
+      },
+      {
+        "name": "own blue weathered roof shingles",
+        "minMM": [
+          -17.8,
+          -17.8,
+          46.7
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          100
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "direction": [
+          0.5624145718728946,
+          0.0,
+          0.8268553980866478
+        ],
+        "projection": {
+          "originMM": [
+            0.0,
+            0.0,
+            74.3359671159224
+          ],
+          "axis": [
+            -0.8268553602613772,
+            0.00030247621616951483,
+            0.5624145461447159
+          ],
+          "rangeMM": [
+            -2.75,
+            10
+          ]
+        },
+        "darkRGB": [
+          0.11,
+          0.17,
+          0.29
+        ],
+        "lightRGB": [
+          0.3,
+          0.37,
+          0.53
+        ]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "own plain front ochre plaster",
+        "minMM": [
+          -13.9,
+          -13.3,
+          26.6
+        ],
+        "maxMM": [
+          -9.8,
+          13.3,
+          50.5
+        ],
+        "kind": "plaster",
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "nearSource": {
+          "code": "MT1-110",
+          "sourceSHA256": "6bdfd60ad0c3d576fcf80ed76356e18b282fd064be68bfe8816c396306124987",
+          "componentAboveMM": 26.6,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              -14.0,
+              -13.3,
+              26.6
+            ],
+            "maxMM": [
+              -10.8,
+              13.3,
+              49.5
+            ]
+          },
+          "matchMM": 0.1,
+          "projectTo": {
+            "code": "MT1-110",
+            "sourceSHA256": "6bdfd60ad0c3d576fcf80ed76356e18b282fd064be68bfe8816c396306124987"
+          }
+        },
+        "excludeParts": [
+          {
+            "name": "own raised rear timber base",
+            "minMM": [
+              -17.8,
+              -13.3,
+              26.6
+            ],
+            "maxMM": [
+              -16.85,
+              13.3,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own wall end post -1",
+            "minMM": [
+              -17.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              -9.8,
+              -13.3,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own wall end post 1",
+            "minMM": [
+              -17.8,
+              13.3,
+              26.1
+            ],
+            "maxMM": [
+              -9.8,
+              17.8,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own rear diagonal brace",
+            "minMM": [
+              -17.8,
+              -15.5,
+              25.7
+            ],
+            "maxMM": [
+              -13.9,
+              15.5,
+              49.9
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.8773047745245331,
+              0.47993367520570807
+            ],
+            "projection": {
+              "originMM": [
+                -16.890174963535408,
+                0.0,
+                34.36346144553943
+              ],
+              "axis": [
+                0.0,
+                -0.47993367520570807,
+                0.8773047745245331
+              ],
+              "rangeMM": [
+                -1.9470372699077776,
+                1.9956461351020969
+              ]
+            }
+          },
+          {
+            "name": "own rear upper header",
+            "minMM": [
+              -17.8,
+              -17.8,
+              43.4
+            ],
+            "maxMM": [
+              -14.5,
+              17.8,
+              46.4
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own sloping roof edge timber -1",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              -14.6,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.5624145718728946,
+              0.0,
+              0.8268553980866478
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3359671159224
+              ],
+              "axis": [
+                -0.8268553602613772,
+                0.00030247621616951483,
+                0.5624145461447159
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            }
+          },
+          {
+            "name": "own sloping roof edge timber 1",
+            "minMM": [
+              -17.8,
+              14.6,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.5624145718728946,
+              0.0,
+              0.8268553980866478
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3359671159224
+              ],
+              "axis": [
+                -0.8268553602613772,
+                0.00030247621616951483,
+                0.5624145461447159
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            }
+          },
+          {
+            "name": "own blue weathered roof shingles",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              0.5624145718728946,
+              0.0,
+              0.8268553980866478
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3359671159224
+              ],
+              "axis": [
+                -0.8268553602613772,
+                0.00030247621616951483,
+                0.5624145461447159
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          }
+        ]
+      },
+      {
+        "name": "own recessed rear ochre plaster",
+        "minMM": [
+          -17.8,
+          -13.3,
+          26.6
+        ],
+        "maxMM": [
+          -13.9,
+          13.3,
+          50.5
+        ],
+        "kind": "plaster",
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own raised rear timber base",
+            "minMM": [
+              -17.8,
+              -13.3,
+              26.6
+            ],
+            "maxMM": [
+              -16.85,
+              13.3,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own wall end post -1",
+            "minMM": [
+              -17.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              -9.8,
+              -13.3,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own wall end post 1",
+            "minMM": [
+              -17.8,
+              13.3,
+              26.1
+            ],
+            "maxMM": [
+              -9.8,
+              17.8,
+              51
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own rear diagonal brace",
+            "minMM": [
+              -17.8,
+              -15.5,
+              25.7
+            ],
+            "maxMM": [
+              -13.9,
+              15.5,
+              49.9
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              0.8773047745245331,
+              0.47993367520570807
+            ],
+            "projection": {
+              "originMM": [
+                -16.890174963535408,
+                0.0,
+                34.36346144553943
+              ],
+              "axis": [
+                0.0,
+                -0.47993367520570807,
+                0.8773047745245331
+              ],
+              "rangeMM": [
+                -1.9470372699077776,
+                1.9956461351020969
+              ]
+            }
+          },
+          {
+            "name": "own rear upper header",
+            "minMM": [
+              -17.8,
+              -17.8,
+              43.4
+            ],
+            "maxMM": [
+              -14.5,
+              17.8,
+              46.4
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own Y roof underside laths and boarding",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              100
+            ],
+            "axis": "y",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3359671159224
+              ],
+              "axis": [
+                -0.8268553602613772,
+                0.00030247621616951483,
+                0.5624145461447159
+              ],
+              "rangeMM": [
+                -7,
+                -2.75
+              ]
+            }
+          },
+          {
+            "name": "own sloping roof edge timber -1",
+            "minMM": [
+              -17.8,
+              -17.8,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              -14.6,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.5624145718728946,
+              0.0,
+              0.8268553980866478
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3359671159224
+              ],
+              "axis": [
+                -0.8268553602613772,
+                0.00030247621616951483,
+                0.5624145461447159
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            }
+          },
+          {
+            "name": "own sloping roof edge timber 1",
+            "minMM": [
+              -17.8,
+              14.6,
+              45
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.5624145718728946,
+              0.0,
+              0.8268553980866478
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3359671159224
+              ],
+              "axis": [
+                -0.8268553602613772,
+                0.00030247621616951483,
+                0.5624145461447159
+              ],
+              "rangeMM": [
+                -12,
+                -2.75
+              ]
+            }
+          },
+          {
+            "name": "own blue weathered roof shingles",
+            "minMM": [
+              -17.8,
+              -17.8,
+              46.7
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              100
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.94,
+            "direction": [
+              0.5624145718728946,
+              0.0,
+              0.8268553980866478
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                0.0,
+                74.3359671159224
+              ],
+              "axis": [
+                -0.8268553602613772,
+                0.00030247621616951483,
+                0.5624145461447159
+              ],
+              "rangeMM": [
+                -2.75,
+                10
+              ]
+            },
+            "darkRGB": [
+              0.11,
+              0.17,
+              0.29
+            ],
+            "lightRGB": [
+              0.3,
+              0.37,
+              0.53
+            ]
+          }
+        ]
+      },
+      {
+        "name": "own iron disk rear brace upper",
+        "minMM": [
+          -18,
+          14.09211139075165,
+          41.09966095780225
+        ],
+        "maxMM": [
+          -16.5,
+          16.228687455977415,
+          43.236237023028
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -17.294099807739258,
+            15.160399423364533,
+            42.16794899041513
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 1.0182880326128818,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.3,
+            1.3
+          ],
+          "thicknessMM": 1.0182880326128818,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron disk rear brace lower",
+        "minMM": [
+          -18,
+          -13.091527779504649,
+          27.057473847312885
+        ],
+        "maxMM": [
+          -16.5,
+          -11.188891716719176,
+          28.96010991009836
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -17.035099983215332,
+            -12.140209748111912,
+            28.008791878705622
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.901318031392736,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.3,
+            1.3
+          ],
+          "thicknessMM": 0.901318031392736,
+          "allowanceMM": 0
+        }
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "Own author PDF17 and neutral full/back/top/side plus perpendicular front/rear wall,floor and underside inspected. SourceSHA 6bdfd60ad0c3d576fcf80ed76356e18b282fd064be68bfe8816c396306124987,699904tri/34995284B/max99.168907mm. This roof rises +X;it has ONLY ONE low WESTwall,NOT the two-wall/talltriangle/well geometry of109. Ownplane C[0.0, 0.0, 74.3359671159224],N[-0.8268553602613772, 0.00030247621616951483, 0.5624145461447159],ownalong-slopeD[0.5624145718728946, 0.0, 0.8268553980866478]. Initial copied plane helper assumedYdirection and wasREJECTED;DrecomputedfromownXfit. Xfloorgrain supportedby6768upward floor normals meanSquared [0.03598884746284883, 0.09626549353877709, 0.8677456587491412]. Plain front wall;one ownrearbrace measuredby39sections dir[0.0, 0.8773047745245331, 0.47993367520570807]range[-1.9470372699077776, 1.9956461351020969];Yheader,Zendposts,Yunderlaths,bluewoodgrainalongroof. Initial4cornerhead guesses weak10-13/24bins andREJECTED:actualsourcehasONLY TWOheads at diagonalends. Owncirclefits333/310pointsall24bins fromperpview seeds upperY14.95/Z42.2 andlowerY-12.1/Z27.96. Nativeuppermount14/16mean[-0.06963849067687988, 0.005812883377075195]preservedexact;onepadnative=fitted,actualdecodedRLScentresmustremain<=.02mm. Sourcefloorpoints X8.75/Y\u00b18.75 from40mmunderroof height26.016788/25.897202,explicitcell[0,0]. Acrossradius0/4.375/8.75with16directions,high-Xquarters minimumceilingclearance38.9088/38.7152mm (>35mm),lowquarters1.141/8.505mm blocked. Conservative measured low-roofblocker X<=-1.2mm (allnonfloorbody Z28..61.0168mm);highhalfroofisoverhead,verifyfloor/35mmactorheadroomandheight-awareblockercoverage ratherthanrequireallroofverticesinsidefloorblocker. Bothcandidategeometry/material/PBR/head/roofgrain/gap/floor/standingpoint/shadow/centreproof,ordinaryUD016normalization/finalpreview/Go/MCPfreshfiveassets beforepublication. No emission or built-in lights.",
+  "renderColourSize": 1536,
+  "renderColourQuality": 96,
+  "lodColourQuality": 96,
+  "geometryDetailRegions": [
+    {
+      "name": "own roof lower eave and open lath ends",
+      "minMM": [
+        -17.8,
+        -17.8,
+        46.7
+      ],
+      "maxMM": [
+        -11,
+        17.8,
+        56
+      ]
+    },
+    {
+      "name": "own rear brace upper head and wooden rim",
+      "minMM": [
+        -19.09409980773926,
+        13.360399423364532,
+        40.36794899041513
+      ],
+      "maxMM": [
+        -15.494099807739257,
+        16.96039942336453,
+        43.967948990415124
+      ]
+    },
+    {
+      "name": "own rear brace lower head and wooden rim",
+      "minMM": [
+        -18.835099983215333,
+        -13.940209748111913,
+        26.20879187870562
+      ],
+      "maxMM": [
+        -15.235099983215331,
+        -10.340209748111912,
+        29.808791878705623
+      ]
+    }
+  ],
+  "placementCells": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "pegCentersMM": [
+    [
+      -0.06963849067687988,
+      0.005812883377075195
+    ]
+  ],
+  "mountCentreFitReview": {
+    "sourceSHA256": "6bdfd60ad0c3d576fcf80ed76356e18b282fd064be68bfe8816c396306124987",
+    "nativeCentresMM": [
+      [
+        -0.06963849067687988,
+        0.005812883377075195
+      ]
+    ],
+    "fittedCentresMM": [
+      [
+        -0.06963849067687988,
+        0.005812883377075195
+      ]
+    ],
+    "preservedCentroidMM": [
+      -0.06963849067687988,
+      0.005812883377075195
+    ],
+    "maxCoordinateMoveMM": 0,
+    "requiredDecodedCentreToleranceMM": 0.02,
+    "sourceSections": [
+      {
+        "z": 12,
+        "centreMM": [
+          -0.0753169059753418,
+          0.02045726776123047
+        ]
+      },
+      {
+        "z": 14,
+        "centreMM": [
+          -0.06957769393920898,
+          0.006002902984619141
+        ]
+      },
+      {
+        "z": 16,
+        "centreMM": [
+          -0.06969928741455078,
+          0.00562286376953125
+        ]
+      }
+    ],
+    "method": "Opposite external face rays at upper frustum Z14/16; preserve measured single axis without grid fitting"
+  }
+}

@@ -6,6 +6,7 @@ const sectionRules = {
     [/^ground-wood/, "ground-wood"],
     [/^ground(?:-|$)/, "ground"],
     [/^path(?:-|$)/, "path"],
+    [/^roof(?:-|$)/, "roof"],
     [/^bar(?:-|$)/, "bar"],
     [/^bed(?:-|$)/, "bed"],
     [/^tall-buffet$/, "buffet"],

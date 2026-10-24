@@ -35,6 +35,7 @@ MED-ground-wood|Деревянный пол|Wooden ground
 MED-lights|Светильники|Lights
 MED-market|Рынок|Market
 MED-path|Тропинки|Paths
+MED-roof|Крыши|Roofs
 MED-pavement|Мощение|Pavement
 MED-seating|Стулья и табуреты|Seating
 MED-stair|Лестницы|Stairs

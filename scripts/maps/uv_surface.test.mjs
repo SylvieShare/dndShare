@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { nativeSurfaceSamplers } from "./medieval_native_surface.mjs";
 import {
   rasterizeSurface,
   seedSurfaceGutters,
@@ -56,6 +57,27 @@ function fixture() {
     }),
   };
 }
+
+test("nonzero native mount centres restore physical material positions and gutters without shifting UV", () => {
+  const doc = fixture(), size = 128, centre = [-0.06963849067687988, 0.005812883377075195];
+  const native = nativeSurfaceSamplers(centre), original = new Map(), shifted = new Map();
+  const capture = target => (i, p, n, rgba) => target.set(i, { p, n, rgba });
+  const coverage = rasterizeSurface(doc, size, size, capture(original), "BaseColor", "COLOR_1");
+  const shiftedCoverage = native.rasterizeSurface(doc, size, size, capture(shifted), "BaseColor", "COLOR_1");
+  assert.deepEqual(shiftedCoverage, coverage);
+  const seeded = seedSurfaceGutters(doc, size, size, coverage, capture(original), 1, "BaseColor", "COLOR_1");
+  const shiftedSeeded = native.seedSurfaceGutters(doc, size, size, shiftedCoverage, capture(shifted), 1, "BaseColor", "COLOR_1");
+  assert.deepEqual(shiftedSeeded, seeded);
+  assert.equal(original.size, shifted.size);
+  for (const [i, a] of original) {
+    const b = shifted.get(i);
+    assert.deepEqual(b.p, [a.p[0] + centre[0], a.p[1] + centre[1], a.p[2]]);
+    assert.deepEqual(b.n, a.n);
+    assert.deepEqual(b.rgba, a.rgba);
+  }
+  assert.equal(nativeSurfaceSamplers([0, 0]).rasterizeSurface, rasterizeSurface);
+  assert.throws(() => nativeSurfaceSamplers([NaN, 0]));
+});
 
 test("subpixel wall triangles seed their own gutters without replacing used crystal texels", () => {
   const doc = fixture(),

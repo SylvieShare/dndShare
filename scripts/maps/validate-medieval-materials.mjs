@@ -4,7 +4,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { createHash } from 'node:crypto';
-import { rasterizeSurface } from './uv_surface.mjs';
+import { nativeSurfaceSamplers } from './medieval_native_surface.mjs';
 import { torchSurface, torchFlameDomain } from './medieval_torch_domains.mjs';
 import { structureMetal, structureFlame } from './medieval_structure_domains.mjs';
 import { initializeStructureReferences } from './medieval_source_reference.mjs';
@@ -20,6 +20,7 @@ assert.match(code, /^MT1-\d{3}$/);
 const directory = path.resolve(import.meta.dirname, '../../models/collections/medieval-town-vol1/review', code, ...(candidate ? ['candidates', candidate] : []));
 const reportPath = path.join(directory, 'report.json');
 const report = JSON.parse(await fs.readFile(reportPath, 'utf8'));
+const { rasterizeSurface } = nativeSurfaceSamplers(report.recipe.mountCenterMM);
 const settings = report.recipe.materials;
 const bodySettings=report.recipe.proceduralFire
   ? {...settings,surfaceParts:(settings.surfaceParts||[]).filter(part=>part.kind!=='flame')}
