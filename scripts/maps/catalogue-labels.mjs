@@ -166,6 +166,7 @@ Roof Flat Straight|Плоская крыша с двумя ограждения�
 Roof Flat End|Плоская крыша с тремя ограждениями
 Roof Flat Square|Плоская крыша с квадратным ограждением
 Roof Top|Четырёхскатная крыша
+Roof Top Flag|Четырёхскатная крыша с флагом
 Balcony|Балкон
 Balcony Angle|Угловой балкон
 Balcony Corridor|Балкон с двумя ограждениями
