@@ -85,6 +85,7 @@ for (const mobile of [false, true]) test(`participant menu and Ctrl selection ${
   expect(await page.evaluate(() => window.controls.state.drags)).toBe(0)
   await page.evaluate(() => { window.controls.state.challenge = true })
   await expect(page.locator('.enc-row-result')).toBeVisible()
+  await expect(page.locator('.enc-row-roll-overlay')).toHaveCSS('transform', 'none')
   await expect(page.locator('.enc-row-result .ecr-title')).toContainText('Спасбросок')
   const resultBox = await page.locator('.enc-row-result').boundingBox(), rowWithResult = await page.locator('.enc-row-shell').boundingBox()
   expect(resultBox.x + resultBox.width).toBeLessThanOrEqual(rowWithResult.x + rowWithResult.width)

@@ -8,20 +8,32 @@
   >
     <div class="enc-row-main">
       <EncounterOrderMarker v-if="order != null" :order="order" :current="isCurrent" />
-      <SessionCombatantTile
-        class="enc-row" :class="rowClasses" :combatant="combatant" :section="section" :current="isCurrent"
-        :selectable="showCheckbox" :editable="canEdit" :selected="enc.isSelected(combatant)"
-        @select="enc.toggleSelected(combatant)" @pointerdown="onRowPointerDown"
-        :tabindex="rowMenuVisible ? 0 : undefined" aria-haspopup="menu"
-        @keydown.enter.self="onRowClick" @keydown.space.self.prevent="onRowClick"
-        @click="onRowClick" @click.capture="onSelectionClick" @contextmenu.capture="onSelectionClick"
-      />
+      <div class="enc-row-tile">
+        <SessionCombatantTile
+          class="enc-row" :class="rowClasses" :combatant="combatant" :section="section" :current="isCurrent"
+          :selectable="showCheckbox" :editable="canEdit" :selected="enc.isSelected(combatant)"
+          @select="enc.toggleSelected(combatant)" @pointerdown="onRowPointerDown"
+          :tabindex="rowMenuVisible ? 0 : undefined" aria-haspopup="menu"
+          @keydown.enter.self="onRowClick" @keydown.space.self.prevent="onRowClick"
+          @click="onRowClick" @click.capture="onSelectionClick" @contextmenu.capture="onSelectionClick"
+        />
+        <Transition name="enc-row-roll" appear>
+          <div v-if="challengeResult && !resultHidden" class="enc-row-roll-overlay" @pointerdown.stop @click.stop @contextmenu.stop @keydown.esc.stop.prevent="hideResult">
+            <EncounterChallengeResult
+              class="enc-row-result" :challenge="enc.challenge" :busy="enc.challengeBusy"
+              :ability="challengeAbility" :result="challengeResult"
+              @reroll="enc.rerollChallenge(combatant, $event)"
+            />
+          </div>
+        </Transition>
+        <button v-if="challengeResult" ref="resultToggle" class="enc-row-roll-toggle" type="button"
+          :title="resultHidden ? 'Показать результат броска' : 'Скрыть результат броска'"
+          :aria-label="resultHidden ? 'Показать результат броска' : 'Скрыть результат броска'"
+          @pointerdown.stop @click.stop="resultHidden = !resultHidden">
+          <Dices v-if="resultHidden" :size="14" /><ChevronRight v-else :size="14" />
+        </button>
+      </div>
     </div>
-    <EncounterChallengeResult
-      v-if="challengeResult" class="enc-row-result" :challenge="enc.challenge"
-      :busy="enc.challengeBusy" :ability="challengeAbility" :result="challengeResult"
-      @reroll="enc.rerollChallenge(combatant, $event)"
-    />
 
     <EncounterRowMenu
       v-if="rowMenuVisible"
@@ -63,7 +75,8 @@
 
 <script setup>
 import { handleCtrlSelection } from '@/shared/lib/ctrlSelection'
-import { computed, inject, ref } from 'vue'
+import { computed, inject, nextTick, ref, watch } from 'vue'
+import { ChevronRight, Dices } from '@lucide/vue'
 import SessionCombatantTile from './SessionCombatantTile.vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import EncounterChallengeResult from '@/features/sessions/components/EncounterChallengeResult.vue'
@@ -91,6 +104,9 @@ const displayName = computed(() =>
 const challengeResult = computed(() =>
   props.section !== 'dead' ? enc.challengeResult(props.combatant) : null
 )
+const resultHidden = ref(false), resultToggle = ref(null)
+function hideResult() { resultHidden.value = true; nextTick(() => resultToggle.value?.focus()) }
+watch(challengeResult, () => { resultHidden.value = false })
 const challengeAbility = computed(() => enc.challengeAbilityMeta(enc.challenge?.ability))
 
 const skippedInTurn = computed(() =>
@@ -164,9 +180,22 @@ function commitNoteEdit() {
 </script>
 
 <style scoped>
-.enc-row-shell { display: flex; flex-wrap: wrap; min-width: 0; align-items: center; column-gap: 12px; row-gap: 8px; }
-.enc-row-main { display: flex; align-items: stretch; gap: 10px; min-width: 0; flex: 1 1 300px; max-width: var(--enc-roster-width, 400px); }
-.enc-row-result { flex: 0 1 248px; width: 248px; max-width: 100%; }
+.enc-row-shell { display: flex; min-width: 0; align-items: stretch; }
+.enc-row-main { display: flex; align-items: stretch; gap: 10px; min-width: 0; flex: 1; max-width: var(--enc-roster-width, 400px); }
+.enc-row-tile { position: relative; flex: 1; min-width: 0; overflow: hidden; border-radius: var(--r-lg); }
+.enc-row-roll-overlay { position: absolute; z-index: 2; inset: 2px 2px 2px auto; width: min(248px, calc(100% - 40px)); display: flex; align-items: center; overflow: hidden; border-radius: 0 calc(var(--r-lg) - 2px) calc(var(--r-lg) - 2px) 0; background: var(--surface); box-shadow: -8px 0 16px color-mix(in srgb, var(--scrim) 20%, transparent); }
+.enc-row-result { width: 100%; }
+.enc-row-tile:has(:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.enc-row-shell--placeholder .enc-row-roll-overlay, .enc-row-shell--placeholder .enc-row-roll-toggle { visibility: hidden; }
+.enc-row-roll-toggle { position: absolute; right: 4px; bottom: 3px; z-index: 3; display: grid; place-items: center; width: 22px; height: 18px; padding: 0; border: 0; border-radius: var(--r-sm); background: var(--surface-raised); color: var(--text-muted); cursor: pointer; transition: color .16s, background .16s; }
+.enc-row-roll-toggle:hover { color: var(--accent); background: var(--surface-active); }
+.enc-row-roll-enter-active, .enc-row-roll-leave-active { transition: transform .26s cubic-bezier(.22,1,.36,1), opacity .18s; }
+.enc-row-roll-enter-from, .enc-row-roll-leave-to { transform: translateX(105%); opacity: 0; }
+.enc-row-roll-leave-active { pointer-events: none; }
+@media (prefers-reduced-motion: reduce) {
+  .enc-row-roll-enter-active, .enc-row-roll-leave-active, .enc-row-roll-toggle { transition: none; }
+  .enc-row-roll-enter-from, .enc-row-roll-leave-to { transform: none; opacity: 1; }
+}
 .enc-row-shell[data-encounter-section="combat"] { width: 100%; max-width: 100%; }
 .enc-row-shell--placeholder :deep(.enc-row-order) { opacity: .25; }
 .enc-row { flex: 1; cursor: grab; touch-action: none; }

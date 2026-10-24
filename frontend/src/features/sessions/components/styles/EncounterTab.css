@@ -114,7 +114,6 @@
   gap: 16px;
 }
 
-.enc-combat-layout:has(.enc-row-result) { --enc-primary-width: 660px; }
 .enc-combat-primary { min-width: 0; max-width: var(--enc-primary-width); }
 .enc-combat-primary .enc-section-title-row,
 .enc-combat-primary .enc-add-row,

@@ -386,7 +386,7 @@ describe('ViewSession participant rail', () => {
     expect(encounterChallengeMenuSource).toContain('enc.selectedChallengeCount')
     expect(encounterChallengeMenuSource).toContain('Испытание выбранным')
     expect(encounterChallengeSource).toContain('npcSavingThrow(combatant, key)')
-    expect(encounterRowSource).toContain('v-if="challengeResult" class="enc-row-result"')
+    expect(encounterRowSource).toContain('v-if="challengeResult && !resultHidden" class="enc-row-roll-overlay"')
     expect(encounterRowSource).toContain('@reroll="enc.rerollChallenge(combatant, $event)"')
     expect(encounterRowSource).toContain('.enc-row-shell[data-encounter-section="combat"]')
     expect(encounterRowSource).toContain('max-width: 100%;')

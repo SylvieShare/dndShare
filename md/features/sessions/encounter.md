@@ -39,13 +39,9 @@ compact setup popover with one of the six D&D abilities and a saving-throw
 toggle, then rolls a d20 for selected creatures on the scene or in reserve, excluding the graveyard. The action is disabled until at least one eligible creature is selected. A
 normal check uses that creature's ability modifier. A saving throw also uses a
 player's save proficiency and extra save bonuses, or the explicit bestiary save
-bonus for an NPC; an NPC without one falls back to its ability modifier. Each
-result is a fixed-size column after the creature's complete identity/HP block;
-scene and reserve rows show results in a separate sibling block outside the tile, 248px wide on its right. The roster remains 400px wide; only the result corridor expands the primary area to 660px. In narrow rows the result wraps below without overflowing.
+bonus for an NPC; an NPC without one falls back to its ability modifier. Each result is a drawer over the right side of its creature tile, sliding in from the right and clipped to that tile's bounds on desktop and mobile. It remains an `EncounterRow` layer rather than part of the common tile content. Width is capped at 248px and leaves the selection strip visible; neither the tile nor the 400px roster changes size. A corner button hides the result and becomes a reopen button; new results reveal the drawer again.
 It reuses `SystemDie` and the shared roll-settle animation to show the d20 face,
-numeric modifier and total without a textual formula. The result block has no
-backing surface or enclosing frame; only its left and right borders separate it
-from the combatant details. The full check/save event
+numeric modifier and total without a textual formula. The drawer uses the tile surface with a subtle shadow so underlying text does not show through. Its reroll and hide controls do not open the tile menu, reorder or select the combatant. The slide respects reduced motion. The full check/save event
 title wraps inside the embedded result. Its up/down controls keep the existing
 d20 visible and roll one extra d20 beside it, then keep the higher/lower natural
 value respectively. Only the new die animates; the unused die is crossed out
@@ -345,7 +341,7 @@ Chronicle attack target controls share the roll's row on the right, with chosen 
 `SessionAttackTargets` сохраняет выбор в событии через API; цели видны в хронике мастера,
 права доступа к событиям не расширяются. Сравнения атаки с КД в этом компоненте нет.
 
-`SessionCreatureTile` owns the shared visual layout, including optional controls, a letter before the name and statuses. Roll results belong to `EncounterRow` outside this component. `SessionParticipantCard` preserves player actions; `SessionCombatantTile` supplies encounter data and is reused by both combat lists and the map roster. The external roll area wraps below on narrow rows. Initiative stays immediately after the name and does not shrink; `useCreatureNameFit` measures the remaining row width and reduces the name font from 13px until the full name fits, recalculating after resizes, data and font updates. AC and passives keep their natural widths and align left. The tile shows portrait, name and HP, with 14px right padding.
+`SessionCreatureTile` owns the shared visual layout, including optional controls, a letter before the name and statuses. Roll results belong to a separate `EncounterRow` overlay positioned within the visible tile bounds. `SessionParticipantCard` preserves player actions; `SessionCombatantTile` supplies encounter data and is reused by both combat lists and the map roster. The roll drawer slides over the tile from the right and stays within it on narrow screens; it does not wrap below or take list width. Initiative stays immediately after the name and does not shrink; `useCreatureNameFit` measures the remaining row width and reduces the name font from 13px until the full name fits, recalculating after resizes, data and font updates. AC and passives keep their natural widths and align left. The tile shows portrait, name and HP, with 14px right padding.
 For the DM, D&D tiles also show AC and passive skills below HP in the same
 information column; the action menu contains only actions.
 For the DM, active D&D effect/state instances from the character's `values.states`
