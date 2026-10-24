@@ -6,6 +6,7 @@ for (const mobile of [false, true]) test(`participant status icons ${mobile ? 'm
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/tests/tutorials/fixtures/participant-controls.html')
   const card = page.locator('.p-card')
+  await expect(card.getByText('состояния:', { exact: true })).toHaveCount(0)
   await page.evaluate(() => {
     window.controls.participant.data.values.states = [
       { uid: 'bless', effect_id: 701, params: { level: 1 }, duration: { kind: 'minutes', value: 1 }, concentration: true },
@@ -28,6 +29,12 @@ for (const mobile of [false, true]) test(`participant status icons ${mobile ? 'm
   const column = await card.locator('.p-info').boundingBox()
   expect(icons.x).toBeCloseTo(column.x, 1)
   expect(icons.x).toBeGreaterThanOrEqual(avatar.x + avatar.width)
+  const label = card.getByText('состояния:', { exact: true })
+  await expect(label).toBeVisible()
+  const labelBox = await label.boundingBox()
+  expect(labelBox.x).toBeCloseTo(avatar.x, 1)
+  expect(labelBox.x + labelBox.width).toBeLessThanOrEqual(icons.x)
+  expect(labelBox.y + labelBox.height / 2).toBeCloseTo(icons.y + icons.height / 2, 1)
   expect(icons.y).toBeGreaterThanOrEqual(Math.max(avatar.y + avatar.height, stats.y + stats.height))
   await page.evaluate(() => { window.controls.state.combat = false })
   const normalTile = await card.boundingBox(), normalIcons = await statuses.boundingBox()
@@ -127,4 +134,5 @@ for (const mobile of [false, true]) test(`participant status icons ${mobile ? 'm
   await page.evaluate(() => { window.controls.state.dm = true; window.controls.participant.data.values.states = [] })
   await expect(card.locator('.p-statuses-area')).toHaveCount(0)
   expect((await card.boundingBox()).height).toBe(72)
+  await expect(label).toHaveCount(0)
 })

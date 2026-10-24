@@ -198,7 +198,9 @@ the information column, aligned with the name/HP column to the right of the avat
 increase the tile to `112px`; the checkbox remains centered across the full
 height. Icons are 32px. Hover/focus describes the status; clicking opens the
 character-sheet status menu for viewing, duration, levels, removal and mechanics.
-Without active statuses there is no empty row. Compact mode hides the row and
+The portrait column beneath the avatar contains a muted `состояния:` caption
+to the left of the icons. Without active statuses neither caption nor row is
+shown. Compact mode hides the row and
 keeps its `36px` avatar geometry. Independent
 character icons render square without the portrait rounding or radial mask;
 setting-provided portraits retain both. The

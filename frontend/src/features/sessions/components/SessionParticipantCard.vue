@@ -59,6 +59,7 @@
               </div>
             </div>
             <div v-if="hasStatuses" class="p-statuses-area" :inert="compact" :aria-hidden="compact">
+              <span class="p-statuses-label" aria-hidden="true">состояния:</span>
               <ParticipantStatuses :participant="participant" :editable="isDm" />
             </div>
           </div>
@@ -315,9 +316,11 @@ const participantTileStyle = computed(() => ({
 
 .p-content { flex: 1; min-width: 0; }
 .p-summary { display: flex; align-items: center; gap: var(--participant-card-gap, 9px); height: 64px; min-width: 0; transition: height .42s cubic-bezier(.22, 1, .36, 1), gap .42s cubic-bezier(.22, 1, .36, 1); }
-.p-statuses-area { height: 36px; margin-top: 4px; margin-left: calc(64px + var(--participant-card-gap, 9px)); overflow: hidden; opacity: 1; transition: height .42s cubic-bezier(.22, 1, .36, 1), margin-top .42s cubic-bezier(.22, 1, .36, 1), margin-left .42s cubic-bezier(.22, 1, .36, 1), opacity .2s; }
+.p-statuses-area { display: flex; align-items: center; gap: var(--participant-card-gap, 9px); height: 36px; margin-top: 4px; overflow: hidden; opacity: 1; transition: height .42s cubic-bezier(.22, 1, .36, 1), margin-top .42s cubic-bezier(.22, 1, .36, 1), opacity .2s; }
+.p-statuses-label { flex: 0 0 64px; color: var(--text-muted); font-size: 10px; font-weight: 400; line-height: 14px; text-align: center; }
+.p-statuses-area :deep(.participant-statuses) { flex: 1; }
 .p-card--compact .p-summary { height: 36px; gap: 0; }
-.p-card--compact .p-statuses-area { height: 0; margin-top: 0; margin-left: 0; opacity: 0; }
+.p-card--compact .p-statuses-area { height: 0; margin-top: 0; opacity: 0; }
 
 .p-avatar {
   flex-shrink: 0;

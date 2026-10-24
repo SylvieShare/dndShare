@@ -349,6 +349,8 @@ information column; the action menu contains only actions.
 For the DM, active D&D effect/state instances from the character's `values.states`
 appear as 32px icons in a separate row below the information column, to the
 right of the portrait and aligned with the name/HP column.
+A muted `состояния:` caption occupies the portrait column to the left of the
+icons and is shown only when statuses are present.
 Hover/focus shows the shared item tooltip with description and instance duration;
 click or Enter/Space opens the same action menu as the character sheet, through
 `DndStatusOverviewView(iconsOnly)`. It offers handbook viewing, duration changes,
