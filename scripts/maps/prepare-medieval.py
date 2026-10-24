@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from tile_mesh import activate, crop, shade
 import tile_bake
 from medieval_material import paint, material
-from medieval_placement import placement_samples, model_blockers
+from medieval_placement import placement_samples, placement_ray_tops, model_blockers
 from placement_cells import placement_cells
 from medieval_recess import assert_no_recess, prepare_recess, pin_recess, verify_recess_collapse
 from recess_frame_profiles import apply_recess_profiles
@@ -24,8 +24,9 @@ from recess_frame_profiles import apply_recess_profiles
 def support_points(obj, recipe):
     tree = BVHTree.FromObject(obj, bpy.context.evaluated_depsgraph_get())
     points = []
-    for x, y, native_x, native_y in placement_samples(recipe):
-        origin = (native_x, native_y, recipe.get('standRayTopMM', 1200))
+    samples = placement_samples(recipe)
+    for (x, y, native_x, native_y), ray_top in zip(samples, placement_ray_tops(recipe, len(samples))):
+        origin = (native_x, native_y, ray_top)
         p, normal, _, _ = tree.ray_cast(origin, (0, 0, -1))
         if p is None or normal.z<.5 or p.z<recipe['mountDepthMM']+.1:
             raise ValueError(f'Invalid stand cell {x},{y}')

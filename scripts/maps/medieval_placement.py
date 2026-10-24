@@ -1,5 +1,7 @@
 """Convert native STL millimetres to the editor's downward-Y footprint."""
 
+import math
+
 
 def native_to_local(recipe, point):
     cx, cy = recipe['mountCenterMM']
@@ -16,6 +18,17 @@ def placement_samples(recipe):
     cx, cy = recipe['mountCenterMM']
     return [(x, y, cx+(x-recipe['width']/2)*35, cy-(y-recipe['height']/2)*35)
             for x, y in locations]
+
+
+def placement_ray_tops(recipe, count):
+    tops = recipe.get('standRayTopsMM', [recipe.get('standRayTopMM', 1200)] * count)
+    if not isinstance(tops, list) or len(tops) != count:
+        raise ValueError('Each stand point requires one native ray origin height')
+    if any(isinstance(z, bool) or not isinstance(z, (int, float))
+           or not math.isfinite(z) or z <= recipe.get('mountDepthMM', 0) + .1
+           for z in tops):
+        raise ValueError('Standing ray origins must be finite and above the mounting level')
+    return tops
 
 
 def model_blockers(recipe):

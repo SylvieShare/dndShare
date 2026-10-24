@@ -1,5 +1,5 @@
 import unittest
-from medieval_placement import native_to_local, placement_samples, model_blockers
+from medieval_placement import native_to_local, placement_samples, placement_ray_tops, model_blockers
 
 
 class PlacementCoordinates(unittest.TestCase):
@@ -28,6 +28,19 @@ class PlacementCoordinates(unittest.TestCase):
             placement_samples({**self.recipe, 'standPoints': [], 'standPointsMM': []})
         with self.assertRaises(ValueError):
             model_blockers({**self.recipe, 'blockers': [], 'blockersMM': []})
+
+    def test_two_storeys_keep_independent_native_ray_heights(self):
+        recipe = {**self.recipe, 'standPointsMM': [[0, 0], [0, 0]],
+                  'mountDepthMM': 17, 'standRayTopsMM': [40, 140]}
+        samples = placement_samples(recipe)
+        self.assertEqual(samples[0], samples[1])
+        self.assertEqual(placement_ray_tops(recipe, len(samples)), [40, 140])
+        self.assertEqual(placement_ray_tops({'standRayTopMM': 40}, 2), [40, 40])
+
+    def test_invalid_storey_measurements_are_rejected(self):
+        for tops in [[40], [40, float('nan')], [40, float('inf')], [40, True], [40, 17]]:
+            with self.assertRaises(ValueError):
+                placement_ray_tops({'mountDepthMM': 17, 'standRayTopsMM': tops}, 2)
 
 
 if __name__ == '__main__':

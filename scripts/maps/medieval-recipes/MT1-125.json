@@ -1,0 +1,4510 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0.0015726089477539062,
+    0.05216217041015625
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Roof Flat",
+  "groupCode": "MED-roof-flat",
+  "hasDecor": true,
+  "renderTriangles": 170000,
+  "lodTriangles": 140000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 2048,
+  "renderUVAngleLimitRad": 0.3,
+  "lodUVAngleLimitRad": 0.3,
+  "renderUVIslandMargin": 0.001,
+  "lodUVIslandMargin": 0.001,
+  "renderDataSize": 1536,
+  "lodColourSize": 2048,
+  "lodDataSize": 1536,
+  "standRayTopMM": 40,
+  "standPointsMM": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        -17.75,
+        -17.75
+      ],
+      [
+        -12,
+        -17.75
+      ],
+      [
+        -12,
+        -12
+      ],
+      [
+        -17.75,
+        -12
+      ]
+    ],
+    [
+      [
+        -17.75,
+        12
+      ],
+      [
+        -12,
+        12
+      ],
+      [
+        -12,
+        17.75
+      ],
+      [
+        -17.75,
+        17.75
+      ]
+    ],
+    [
+      [
+        12,
+        -17.75
+      ],
+      [
+        17.75,
+        -17.75
+      ],
+      [
+        17.75,
+        -12
+      ],
+      [
+        12,
+        -12
+      ]
+    ],
+    [
+      [
+        12,
+        12
+      ],
+      [
+        17.75,
+        12
+      ],
+      [
+        17.75,
+        17.75
+      ],
+      [
+        12,
+        17.75
+      ]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "roof",
+    "flat",
+    "deck",
+    "wood",
+    "iron",
+    "ceiling"
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      6,
+      12
+    ],
+    "lodMiB": [
+      4,
+      10
+    ],
+    "shadowKiB": [
+      300,
+      650
+    ],
+    "previewKiB": [
+      10,
+      35
+    ],
+    "basis": "Own720010tri/36000584B flatwoodroof/upperdeck,4arches/posts,lowerfloor,14visibleheads(6oldlocationscoveredbywood,1partial). Two independently sampledcentralstandinglevels. Start170k/140k,2048colour1536data vscompact1536/1152. Preservearchedges/visibleheadrims/upperinnerframe/mountlip,notallflatfloorfaces."
+  },
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "own complete Y lower floor and frame",
+        "minMM": [
+          -17.8,
+          -17.8,
+          17.5
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          105
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own X lower cross frame -1",
+        "minMM": [
+          -17.8,
+          -17.8,
+          17.5
+        ],
+        "maxMM": [
+          17.8,
+          -14.3,
+          27.5
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own X lower cross frame 1",
+        "minMM": [
+          -17.8,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          27.5
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own vertical corner post (-1, -1)",
+        "minMM": [
+          -17.8,
+          -17.8,
+          26.1
+        ],
+        "maxMM": [
+          -11.8,
+          -11.8,
+          98.5
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own vertical corner post (-1, 1)",
+        "minMM": [
+          -17.8,
+          11.8,
+          26.1
+        ],
+        "maxMM": [
+          -11.8,
+          17.8,
+          98.5
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own vertical corner post (1, -1)",
+        "minMM": [
+          11.8,
+          -17.8,
+          26.1
+        ],
+        "maxMM": [
+          17.8,
+          -11.8,
+          98.5
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own vertical corner post (1, 1)",
+        "minMM": [
+          11.8,
+          11.8,
+          26.1
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          98.5
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own curved arch strut (0, -1, -1)",
+        "minMM": [
+          -17.8,
+          -14.2,
+          74
+        ],
+        "maxMM": [
+          -12,
+          0,
+          94.2
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0,
+          0.5,
+          0.8660254
+        ]
+      },
+      {
+        "name": "own curved arch strut (0, -1, 1)",
+        "minMM": [
+          -17.8,
+          0,
+          74
+        ],
+        "maxMM": [
+          -12,
+          14.2,
+          94.2
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0,
+          -0.5,
+          0.8660254
+        ]
+      },
+      {
+        "name": "own horizontal header (0, -1)",
+        "minMM": [
+          -17.8,
+          -17.8,
+          88.5
+        ],
+        "maxMM": [
+          -12,
+          17.8,
+          98.5
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own curved arch strut (0, 1, -1)",
+        "minMM": [
+          12,
+          -14.2,
+          74
+        ],
+        "maxMM": [
+          17.8,
+          0,
+          94.2
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0,
+          0.5,
+          0.8660254
+        ]
+      },
+      {
+        "name": "own curved arch strut (0, 1, 1)",
+        "minMM": [
+          12,
+          0,
+          74
+        ],
+        "maxMM": [
+          17.8,
+          14.2,
+          94.2
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0,
+          -0.5,
+          0.8660254
+        ]
+      },
+      {
+        "name": "own horizontal header (0, 1)",
+        "minMM": [
+          12,
+          -17.8,
+          88.5
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          98.5
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own curved arch strut (1, -1, -1)",
+        "minMM": [
+          -14.2,
+          -17.8,
+          74
+        ],
+        "maxMM": [
+          0,
+          -12,
+          94.2
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.5,
+          0,
+          0.8660254
+        ]
+      },
+      {
+        "name": "own curved arch strut (1, -1, 1)",
+        "minMM": [
+          0,
+          -17.8,
+          74
+        ],
+        "maxMM": [
+          14.2,
+          -12,
+          94.2
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          -0.5,
+          0,
+          0.8660254
+        ]
+      },
+      {
+        "name": "own horizontal header (1, -1)",
+        "minMM": [
+          -17.8,
+          -17.8,
+          88.5
+        ],
+        "maxMM": [
+          17.8,
+          -12,
+          98.5
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own curved arch strut (1, 1, -1)",
+        "minMM": [
+          -14.2,
+          12,
+          74
+        ],
+        "maxMM": [
+          0,
+          17.8,
+          94.2
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.5,
+          0,
+          0.8660254
+        ]
+      },
+      {
+        "name": "own curved arch strut (1, 1, 1)",
+        "minMM": [
+          0,
+          12,
+          74
+        ],
+        "maxMM": [
+          14.2,
+          17.8,
+          94.2
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          -0.5,
+          0,
+          0.8660254
+        ]
+      },
+      {
+        "name": "own horizontal header (1, 1)",
+        "minMM": [
+          -17.8,
+          12,
+          88.5
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          98.5
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own X upper deck boards",
+        "minMM": [
+          -17.8,
+          -17.8,
+          98
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          105
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own Y upper deck side frame -1",
+        "minMM": [
+          -17.8,
+          -17.8,
+          98.0
+        ],
+        "maxMM": [
+          -14,
+          17.8,
+          105
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own X upper deck cross frame -1",
+        "minMM": [
+          -14,
+          -17.8,
+          98
+        ],
+        "maxMM": [
+          14,
+          -14,
+          105
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own Y upper deck side frame 1",
+        "minMM": [
+          14,
+          -17.8,
+          98.0
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          105
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own X upper deck cross frame 1",
+        "minMM": [
+          -14,
+          14,
+          98
+        ],
+        "maxMM": [
+          14,
+          17.8,
+          105
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "own iron west (15, 95.5)",
+        "minMM": [
+          -18.494100189208986,
+          13.729633031156373,
+          94.4605027466728
+        ],
+        "maxMM": [
+          -16.294100189208983,
+          15.694949440804622,
+          96.42581915632104
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -17.394100189208984,
+            14.712291235980498,
+            95.44316095149692
+          ],
+          "axis": [
+            -1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.9826582048241252,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.9826582048241252,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron west (15, 92)",
+        "minMM": [
+          -18.25999984741211,
+          14.167776560905619,
+          91.22718979789988
+        ],
+        "maxMM": [
+          -16.059999847412108,
+          15.748149592869044,
+          92.80756282986331
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -17.15999984741211,
+            14.957963076887332,
+            92.0173763138816
+          ],
+          "axis": [
+            -1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.7901865159817123,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.7901865159817123,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron west (0, 93)",
+        "minMM": [
+          -18.320500946044923,
+          -1.657334865022556,
+          92.29752805479418
+        ],
+        "maxMM": [
+          -16.12050094604492,
+          -0.2320624011271475,
+          93.72280051868958
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -17.220500946044922,
+            -0.9446986330748517,
+            93.01016428674188
+          ],
+          "axis": [
+            -1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.7126362319477042,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.7126362319477042,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron east (-15, 95.5)",
+        "minMM": [
+          16.232200050354002,
+          -16.0729326397937,
+          94.34038500654806
+        ],
+        "maxMM": [
+          18.432200050354005,
+          -14.194117782503408,
+          96.21919986383834
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            17.332200050354004,
+            -15.133525211148553,
+            95.2797924351932
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.9394074286451449,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.9394074286451449,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron east (15, 95.5)",
+        "minMM": [
+          15.967800521850586,
+          13.929263901391728,
+          94.19153128198954
+        ],
+        "maxMM": [
+          18.167800521850587,
+          15.630427587638891,
+          95.8926949682367
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            17.067800521850586,
+            14.77984574451531,
+            95.04211312511312
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.8505818431235808,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.8505818431235808,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron east (-15, 91)",
+        "minMM": [
+          16.13460006713867,
+          -15.64030229815736,
+          89.68480744106354
+        ],
+        "maxMM": [
+          18.334600067138673,
+          -14.193028281708303,
+          91.1320814575126
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            17.234600067138672,
+            -14.916665289932832,
+            90.40844444928807
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.723637008224529,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.723637008224529,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron east (15, 91)",
+        "minMM": [
+          16.135200881958006,
+          13.846285204994112,
+          90.26982082067505
+        ],
+        "maxMM": [
+          18.33520088195801,
+          15.36222457412031,
+          91.78576018980124
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            17.235200881958008,
+            14.604254889557211,
+            91.02779050523814
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.7579696845630992,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.7579696845630992,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron east (0, 93)",
+        "minMM": [
+          16.09409942626953,
+          -0.7024036523953456,
+          92.30199480616962
+        ],
+        "maxMM": [
+          18.294099426269533,
+          0.8447471344523927,
+          93.84914559301735
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            17.19409942626953,
+            0.07117174102852354,
+            93.07557019959349
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "radiusAtOriginMM": 0.7735753934238692,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.7735753934238692,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron north (15, 95.5) partial",
+        "minMM": [
+          14.2509592885608,
+          16.91139976501465,
+          94.32129478416968
+        ],
+        "maxMM": [
+          15.717979285522585,
+          17.537799377441406,
+          95.78831478113148
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            14.984469287041692,
+            17.359100341796875,
+            95.05480478265058
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "radiusAtOriginMM": 0.7335099984808917,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -0.44770057678222486,
+            0.17869903564453082
+          ],
+          "thicknessMM": 0.7335099984808917,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron north (-15, 91)",
+        "minMM": [
+          -15.229675971073412,
+          16.1472505569458,
+          90.24746209749294
+        ],
+        "maxMM": [
+          -13.757734180672205,
+          18.347250556945802,
+          91.71940388789416
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -14.493705075872809,
+            17.2472505569458,
+            90.98343299269355
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "radiusAtOriginMM": 0.7359708952006035,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.7359708952006035,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron north (15, 90.5)",
+        "minMM": [
+          14.06393198556185,
+          16.323650741577147,
+          89.4944897601184
+        ],
+        "maxMM": [
+          15.949732902302687,
+          18.52365074157715,
+          91.38029067685923
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            15.006832443932268,
+            17.42365074157715,
+            90.43739021848882
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "radiusAtOriginMM": 0.9429004583704184,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.9429004583704184,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron north (0, 93)",
+        "minMM": [
+          -0.956010151323951,
+          16.27730026245117,
+          92.08703579325281
+        ],
+        "maxMM": [
+          1.0563390556244758,
+          18.477300262451173,
+          94.09938500020122
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            0.050164452150262384,
+            17.377300262451172,
+            93.09321039672702
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "radiusAtOriginMM": 1.0061746034742134,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 1.0061746034742134,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron south (-15, 92)",
+        "minMM": [
+          -15.582982948270947,
+          -18.31150016784668,
+          91.24402439920631
+        ],
+        "maxMM": [
+          -14.058668625081951,
+          -16.11150016784668,
+          92.76833872239531
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            -14.82082578667645,
+            -17.21150016784668,
+            92.00618156080081
+          ],
+          "axis": [
+            0,
+            -1,
+            0
+          ],
+          "radiusAtOriginMM": 0.7621571615944972,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.7621571615944972,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron south (0, 93)",
+        "minMM": [
+          0.2800737607486675,
+          -18.3273006439209,
+          92.2656815942889
+        ],
+        "maxMM": [
+          1.7203029724851095,
+          -16.127300643920897,
+          93.70591080602534
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.255,
+          0.25
+        ],
+        "metallic": 0.85,
+        "roughness": 0.6,
+        "variation": 0.025,
+        "radialShell": {
+          "originMM": [
+            1.0001883666168885,
+            -17.2273006439209,
+            92.98579620015713
+          ],
+          "axis": [
+            0,
+            -1,
+            0
+          ],
+          "radiusAtOriginMM": 0.720114605868221,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -1.1,
+            1.1
+          ],
+          "thicknessMM": 0.720114605868221,
+          "allowanceMM": 0
+        }
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "Own source and PDF19 inspected. LowerfloorYgrain6336normals/upperdeckXgrain5733. Two central17.5mmstandingdiscs:lowerclear66.6911mm,upperopenSky. Quarterpointsrejectedbelowpostsandupperrim/deckjoints(height91.99..103.84). standRayTopsMM[40,140] measuresactual2floorssameXY. Fourheadershave14VISIBLEheads:west3,east5,north4inclpartial21bins,south2;6oldpositionscoveredbywoodnotpaintedmetal. Thirteenfullheads24bins;nativevisibilityfilter.025mm. Partialmetaldepthboundedtoexposednativearc. Upperdeckiswoodplatform,notreceivingfrustumslot. No blue/plaster/lights.",
+  "renderColourSize": 2048,
+  "renderColourQuality": 96,
+  "lodColourQuality": 96,
+  "geometryDetailRegions": [
+    {
+      "name": "own native mounting lip",
+      "minMM": [
+        -17.8,
+        -17.8,
+        16.99
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        17.65
+      ]
+    },
+    {
+      "name": "own exposed iron west (15, 95.5)",
+      "minMM": [
+        -18.394100189208984,
+        13.279633031156372,
+        94.0105027466728
+      ],
+      "maxMM": [
+        -16.394100189208984,
+        16.144949440804623,
+        96.87581915632104
+      ]
+    },
+    {
+      "name": "own exposed iron west (15, 92)",
+      "minMM": [
+        -18.15999984741211,
+        13.71777656090562,
+        90.77718979789988
+      ],
+      "maxMM": [
+        -16.15999984741211,
+        16.198149592869044,
+        93.25756282986332
+      ]
+    },
+    {
+      "name": "own exposed iron west (0, 93)",
+      "minMM": [
+        -18.220500946044922,
+        -2.1073348650225556,
+        91.84752805479418
+      ],
+      "maxMM": [
+        -16.220500946044922,
+        0.21793759887285247,
+        94.17280051868958
+      ]
+    },
+    {
+      "name": "own exposed iron east (-15, 95.5)",
+      "minMM": [
+        16.332200050354004,
+        -16.522932639793698,
+        93.89038500654806
+      ],
+      "maxMM": [
+        18.332200050354004,
+        -13.744117782503409,
+        96.66919986383834
+      ]
+    },
+    {
+      "name": "own exposed iron east (15, 95.5)",
+      "minMM": [
+        16.067800521850586,
+        13.479263901391729,
+        93.74153128198954
+      ],
+      "maxMM": [
+        18.067800521850586,
+        16.08042758763889,
+        96.3426949682367
+      ]
+    },
+    {
+      "name": "own exposed iron east (-15, 91)",
+      "minMM": [
+        16.234600067138672,
+        -16.09030229815736,
+        89.23480744106354
+      ],
+      "maxMM": [
+        18.234600067138672,
+        -13.743028281708302,
+        91.5820814575126
+      ]
+    },
+    {
+      "name": "own exposed iron east (15, 91)",
+      "minMM": [
+        16.235200881958008,
+        13.396285204994111,
+        89.81982082067505
+      ],
+      "maxMM": [
+        18.235200881958008,
+        15.812224574120311,
+        92.23576018980124
+      ]
+    },
+    {
+      "name": "own exposed iron east (0, 93)",
+      "minMM": [
+        16.19409942626953,
+        -1.1524036523953456,
+        91.85199480616961
+      ],
+      "maxMM": [
+        18.19409942626953,
+        1.2947471344523926,
+        94.29914559301736
+      ]
+    },
+    {
+      "name": "own exposed iron north (15, 95.5) partial",
+      "minMM": [
+        13.8009592885608,
+        16.359100341796875,
+        93.87129478416969
+      ],
+      "maxMM": [
+        16.167979285522584,
+        18.359100341796875,
+        96.23831478113146
+      ]
+    },
+    {
+      "name": "own exposed iron north (-15, 91)",
+      "minMM": [
+        -15.679675971073411,
+        16.2472505569458,
+        89.79746209749295
+      ],
+      "maxMM": [
+        -13.307734180672206,
+        18.2472505569458,
+        92.16940388789415
+      ]
+    },
+    {
+      "name": "own exposed iron north (15, 90.5)",
+      "minMM": [
+        13.61393198556185,
+        16.42365074157715,
+        89.0444897601184
+      ],
+      "maxMM": [
+        16.399732902302688,
+        18.42365074157715,
+        91.83029067685924
+      ]
+    },
+    {
+      "name": "own exposed iron north (0, 93)",
+      "minMM": [
+        -1.406010151323951,
+        16.377300262451172,
+        91.6370357932528
+      ],
+      "maxMM": [
+        1.5063390556244758,
+        18.377300262451172,
+        94.54938500020123
+      ]
+    },
+    {
+      "name": "own exposed iron south (-15, 92)",
+      "minMM": [
+        -16.03298294827095,
+        -18.21150016784668,
+        90.79402439920631
+      ],
+      "maxMM": [
+        -13.608668625081952,
+        -16.21150016784668,
+        93.21833872239532
+      ]
+    },
+    {
+      "name": "own exposed iron south (0, 93)",
+      "minMM": [
+        -0.16992623925133232,
+        -18.2273006439209,
+        91.8156815942889
+      ],
+      "maxMM": [
+        2.1703029724851093,
+        -16.2273006439209,
+        94.15591080602535
+      ]
+    },
+    {
+      "name": "own open arch (0, -1)",
+      "minMM": [
+        -17.8,
+        -17.8,
+        65
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        100
+      ],
+      "sourceSelection": {
+        "includeParts": [
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -13.95,
+              66.83284454345703
+            ],
+            "maxMM": [
+              -11.8,
+              -13.05,
+              67.73284454345703
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -13.45,
+              75.56158905029297
+            ],
+            "maxMM": [
+              -11.8,
+              -12.55,
+              76.46158905029297
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -12.95,
+              77.59017639160156
+            ],
+            "maxMM": [
+              -11.8,
+              -12.05,
+              78.49017639160157
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -12.45,
+              78.94701843261718
+            ],
+            "maxMM": [
+              -11.8,
+              -11.55,
+              79.84701843261719
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -11.95,
+              79.95860748291015
+            ],
+            "maxMM": [
+              -11.8,
+              -11.05,
+              80.85860748291016
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -11.45,
+              80.80324249267578
+            ],
+            "maxMM": [
+              -11.8,
+              -10.55,
+              81.70324249267578
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -10.95,
+              81.47994689941406
+            ],
+            "maxMM": [
+              -11.8,
+              -10.05,
+              82.37994689941407
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -10.45,
+              82.03051452636718
+            ],
+            "maxMM": [
+              -11.8,
+              -9.55,
+              82.93051452636719
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -9.95,
+              82.51873474121093
+            ],
+            "maxMM": [
+              -11.8,
+              -9.05,
+              83.41873474121094
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -9.45,
+              82.96783142089843
+            ],
+            "maxMM": [
+              -11.8,
+              -8.55,
+              83.86783142089844
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -8.95,
+              83.40565185546875
+            ],
+            "maxMM": [
+              -11.8,
+              -8.05,
+              84.30565185546875
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -8.45,
+              83.89034729003906
+            ],
+            "maxMM": [
+              -11.8,
+              -7.55,
+              84.79034729003907
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -7.95,
+              84.37652282714843
+            ],
+            "maxMM": [
+              -11.8,
+              -7.05,
+              85.27652282714844
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -7.45,
+              84.83067779541015
+            ],
+            "maxMM": [
+              -11.8,
+              -6.55,
+              85.73067779541016
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -6.95,
+              85.25233917236328
+            ],
+            "maxMM": [
+              -11.8,
+              -6.05,
+              86.15233917236328
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -6.45,
+              85.65218811035156
+            ],
+            "maxMM": [
+              -11.8,
+              -5.55,
+              86.55218811035157
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -5.95,
+              86.02686767578125
+            ],
+            "maxMM": [
+              -11.8,
+              -5.05,
+              86.92686767578125
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -5.45,
+              86.37337951660156
+            ],
+            "maxMM": [
+              -11.8,
+              -4.55,
+              87.27337951660157
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -4.95,
+              86.6896255493164
+            ],
+            "maxMM": [
+              -11.8,
+              -4.05,
+              87.58962554931641
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -4.45,
+              86.96610717773437
+            ],
+            "maxMM": [
+              -11.8,
+              -3.55,
+              87.86610717773438
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -3.95,
+              87.22262268066406
+            ],
+            "maxMM": [
+              -11.8,
+              -3.05,
+              88.12262268066407
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -3.45,
+              87.4829605102539
+            ],
+            "maxMM": [
+              -11.8,
+              -2.55,
+              88.38296051025391
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -2.95,
+              87.750439453125
+            ],
+            "maxMM": [
+              -11.8,
+              -2.05,
+              88.650439453125
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -2.45,
+              88.01434020996093
+            ],
+            "maxMM": [
+              -11.8,
+              -1.55,
+              88.91434020996094
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -1.95,
+              88.27060394287109
+            ],
+            "maxMM": [
+              -11.8,
+              -1.05,
+              89.1706039428711
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -1.45,
+              88.51615600585937
+            ],
+            "maxMM": [
+              -11.8,
+              -0.55,
+              89.41615600585938
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -0.95,
+              88.71371917724609
+            ],
+            "maxMM": [
+              -11.8,
+              -0.04999999999999999,
+              89.6137191772461
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              -0.45,
+              88.71817474365234
+            ],
+            "maxMM": [
+              -11.8,
+              0.45,
+              89.61817474365235
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              0.04999999999999999,
+              88.62098388671875
+            ],
+            "maxMM": [
+              -11.8,
+              0.95,
+              89.52098388671875
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              0.55,
+              88.42098693847656
+            ],
+            "maxMM": [
+              -11.8,
+              1.45,
+              89.32098693847657
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              1.05,
+              88.19394378662109
+            ],
+            "maxMM": [
+              -11.8,
+              1.95,
+              89.0939437866211
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              1.55,
+              87.93426208496093
+            ],
+            "maxMM": [
+              -11.8,
+              2.45,
+              88.83426208496094
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              2.05,
+              87.65374450683593
+            ],
+            "maxMM": [
+              -11.8,
+              2.95,
+              88.55374450683594
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              2.55,
+              87.36254577636718
+            ],
+            "maxMM": [
+              -11.8,
+              3.45,
+              88.26254577636719
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              3.05,
+              87.05739288330078
+            ],
+            "maxMM": [
+              -11.8,
+              3.95,
+              87.95739288330078
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              3.55,
+              86.74564056396484
+            ],
+            "maxMM": [
+              -11.8,
+              4.45,
+              87.64564056396485
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              4.05,
+              86.43336181640625
+            ],
+            "maxMM": [
+              -11.8,
+              4.95,
+              87.33336181640625
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              4.55,
+              86.10428314208984
+            ],
+            "maxMM": [
+              -11.8,
+              5.45,
+              87.00428314208985
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              5.05,
+              85.75574951171875
+            ],
+            "maxMM": [
+              -11.8,
+              5.95,
+              86.65574951171875
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              5.55,
+              85.4081314086914
+            ],
+            "maxMM": [
+              -11.8,
+              6.45,
+              86.30813140869141
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              6.05,
+              85.05755310058593
+            ],
+            "maxMM": [
+              -11.8,
+              6.95,
+              85.95755310058594
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              6.55,
+              84.68194274902343
+            ],
+            "maxMM": [
+              -11.8,
+              7.45,
+              85.58194274902344
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              7.05,
+              84.24596099853515
+            ],
+            "maxMM": [
+              -11.8,
+              7.95,
+              85.14596099853516
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              7.55,
+              83.78689270019531
+            ],
+            "maxMM": [
+              -11.8,
+              8.45,
+              84.68689270019532
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              8.05,
+              83.32394866943359
+            ],
+            "maxMM": [
+              -11.8,
+              8.95,
+              84.2239486694336
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              8.55,
+              82.86513977050781
+            ],
+            "maxMM": [
+              -11.8,
+              9.45,
+              83.76513977050782
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              9.05,
+              82.40438537597656
+            ],
+            "maxMM": [
+              -11.8,
+              9.95,
+              83.30438537597657
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              9.55,
+              81.93270568847656
+            ],
+            "maxMM": [
+              -11.8,
+              10.45,
+              82.83270568847657
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              10.05,
+              81.43271331787109
+            ],
+            "maxMM": [
+              -11.8,
+              10.95,
+              82.3327133178711
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              10.55,
+              80.87893371582031
+            ],
+            "maxMM": [
+              -11.8,
+              11.45,
+              81.77893371582032
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              11.05,
+              80.26702575683593
+            ],
+            "maxMM": [
+              -11.8,
+              11.95,
+              81.16702575683594
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              11.55,
+              79.56455688476562
+            ],
+            "maxMM": [
+              -11.8,
+              12.45,
+              80.46455688476563
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              12.05,
+              78.73488311767578
+            ],
+            "maxMM": [
+              -11.8,
+              12.95,
+              79.63488311767578
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -17.8,
+              12.55,
+              77.73569183349609
+            ],
+            "maxMM": [
+              -11.8,
+              13.45,
+              78.6356918334961
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "own open arch (0, 1)",
+      "minMM": [
+        -17.8,
+        -17.8,
+        65
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        100
+      ],
+      "sourceSelection": {
+        "includeParts": [
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -13.45,
+              77.59295349121093
+            ],
+            "maxMM": [
+              17.8,
+              -12.55,
+              78.49295349121094
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -12.95,
+              78.47074584960937
+            ],
+            "maxMM": [
+              17.8,
+              -12.05,
+              79.37074584960938
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -12.45,
+              79.26685028076172
+            ],
+            "maxMM": [
+              17.8,
+              -11.55,
+              80.16685028076172
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -11.95,
+              79.9579360961914
+            ],
+            "maxMM": [
+              17.8,
+              -11.05,
+              80.85793609619141
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -11.45,
+              80.56334381103515
+            ],
+            "maxMM": [
+              17.8,
+              -10.55,
+              81.46334381103516
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -10.95,
+              81.08910064697265
+            ],
+            "maxMM": [
+              17.8,
+              -10.05,
+              81.98910064697266
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -10.45,
+              81.57593994140625
+            ],
+            "maxMM": [
+              17.8,
+              -9.55,
+              82.47593994140625
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -9.95,
+              82.06117706298828
+            ],
+            "maxMM": [
+              17.8,
+              -9.05,
+              82.96117706298828
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -9.45,
+              82.56438903808593
+            ],
+            "maxMM": [
+              17.8,
+              -8.55,
+              83.46438903808594
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -8.95,
+              83.0714614868164
+            ],
+            "maxMM": [
+              17.8,
+              -8.05,
+              83.97146148681641
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -8.45,
+              83.55985717773437
+            ],
+            "maxMM": [
+              17.8,
+              -7.55,
+              84.45985717773438
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -7.95,
+              84.04420166015625
+            ],
+            "maxMM": [
+              17.8,
+              -7.05,
+              84.94420166015625
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -7.45,
+              84.51955871582031
+            ],
+            "maxMM": [
+              17.8,
+              -6.55,
+              85.41955871582032
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -6.95,
+              84.98476104736328
+            ],
+            "maxMM": [
+              17.8,
+              -6.05,
+              85.88476104736328
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -6.45,
+              85.41485290527343
+            ],
+            "maxMM": [
+              17.8,
+              -5.55,
+              86.31485290527344
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -5.95,
+              85.74377899169922
+            ],
+            "maxMM": [
+              17.8,
+              -5.05,
+              86.64377899169922
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -5.45,
+              86.04638366699218
+            ],
+            "maxMM": [
+              17.8,
+              -4.55,
+              86.94638366699219
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -4.95,
+              86.37316589355468
+            ],
+            "maxMM": [
+              17.8,
+              -4.05,
+              87.27316589355469
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -4.45,
+              86.68766479492187
+            ],
+            "maxMM": [
+              17.8,
+              -3.55,
+              87.58766479492188
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -3.95,
+              86.98170928955078
+            ],
+            "maxMM": [
+              17.8,
+              -3.05,
+              87.88170928955078
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -3.45,
+              87.25722961425781
+            ],
+            "maxMM": [
+              17.8,
+              -2.55,
+              88.15722961425782
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -2.95,
+              87.51685791015625
+            ],
+            "maxMM": [
+              17.8,
+              -2.05,
+              88.41685791015625
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -2.45,
+              87.76076202392578
+            ],
+            "maxMM": [
+              17.8,
+              -1.55,
+              88.66076202392578
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -1.95,
+              87.9885757446289
+            ],
+            "maxMM": [
+              17.8,
+              -1.05,
+              88.88857574462891
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -1.45,
+              88.19798736572265
+            ],
+            "maxMM": [
+              17.8,
+              -0.55,
+              89.09798736572266
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -0.95,
+              88.39542846679687
+            ],
+            "maxMM": [
+              17.8,
+              -0.04999999999999999,
+              89.29542846679688
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              -0.45,
+              88.61356048583984
+            ],
+            "maxMM": [
+              17.8,
+              0.45,
+              89.51356048583985
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              0.04999999999999999,
+              88.68404846191406
+            ],
+            "maxMM": [
+              17.8,
+              0.95,
+              89.58404846191407
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              0.55,
+              88.49934844970703
+            ],
+            "maxMM": [
+              17.8,
+              1.45,
+              89.39934844970703
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              1.05,
+              88.27709655761718
+            ],
+            "maxMM": [
+              17.8,
+              1.95,
+              89.17709655761719
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              1.55,
+              88.04055480957031
+            ],
+            "maxMM": [
+              17.8,
+              2.45,
+              88.94055480957032
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              2.05,
+              87.78411560058593
+            ],
+            "maxMM": [
+              17.8,
+              2.95,
+              88.68411560058594
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              2.55,
+              87.51699523925781
+            ],
+            "maxMM": [
+              17.8,
+              3.45,
+              88.41699523925782
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              3.05,
+              87.23240356445312
+            ],
+            "maxMM": [
+              17.8,
+              3.95,
+              88.13240356445313
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              3.55,
+              86.9596450805664
+            ],
+            "maxMM": [
+              17.8,
+              4.45,
+              87.85964508056641
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              4.05,
+              86.68836669921875
+            ],
+            "maxMM": [
+              17.8,
+              4.95,
+              87.58836669921875
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              4.55,
+              86.40214233398437
+            ],
+            "maxMM": [
+              17.8,
+              5.45,
+              87.30214233398438
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              5.05,
+              86.08742218017578
+            ],
+            "maxMM": [
+              17.8,
+              5.95,
+              86.98742218017578
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              5.55,
+              85.75198059082031
+            ],
+            "maxMM": [
+              17.8,
+              6.45,
+              86.65198059082032
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              6.05,
+              85.39734344482422
+            ],
+            "maxMM": [
+              17.8,
+              6.95,
+              86.29734344482422
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              6.55,
+              85.04505615234375
+            ],
+            "maxMM": [
+              17.8,
+              7.45,
+              85.94505615234375
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              7.05,
+              84.66066436767578
+            ],
+            "maxMM": [
+              17.8,
+              7.95,
+              85.56066436767578
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              7.55,
+              84.31031494140625
+            ],
+            "maxMM": [
+              17.8,
+              8.45,
+              85.21031494140625
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              8.05,
+              83.94215850830078
+            ],
+            "maxMM": [
+              17.8,
+              8.95,
+              84.84215850830078
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              8.55,
+              83.48256378173828
+            ],
+            "maxMM": [
+              17.8,
+              9.45,
+              84.38256378173828
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              9.05,
+              82.99219207763672
+            ],
+            "maxMM": [
+              17.8,
+              9.95,
+              83.89219207763672
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              9.55,
+              82.42704467773437
+            ],
+            "maxMM": [
+              17.8,
+              10.45,
+              83.32704467773438
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              10.05,
+              81.80718688964843
+            ],
+            "maxMM": [
+              17.8,
+              10.95,
+              82.70718688964844
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              10.55,
+              81.05675964355468
+            ],
+            "maxMM": [
+              17.8,
+              11.45,
+              81.95675964355469
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              11.05,
+              80.11656646728515
+            ],
+            "maxMM": [
+              17.8,
+              11.95,
+              81.01656646728516
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              11.55,
+              78.98833923339843
+            ],
+            "maxMM": [
+              17.8,
+              12.45,
+              79.88833923339844
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              12.05,
+              77.48904113769531
+            ],
+            "maxMM": [
+              17.8,
+              12.95,
+              78.38904113769532
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.8,
+              12.55,
+              75.64032440185547
+            ],
+            "maxMM": [
+              17.8,
+              13.45,
+              76.54032440185547
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "own open arch (1, -1)",
+      "minMM": [
+        -17.8,
+        -17.8,
+        65
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        100
+      ],
+      "sourceSelection": {
+        "includeParts": [
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -13.45,
+              -17.8,
+              77.48917083740234
+            ],
+            "maxMM": [
+              -12.55,
+              -11.8,
+              78.38917083740235
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -12.95,
+              -17.8,
+              78.57754974365234
+            ],
+            "maxMM": [
+              -12.05,
+              -11.8,
+              79.47754974365235
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -12.45,
+              -17.8,
+              79.46666412353515
+            ],
+            "maxMM": [
+              -11.55,
+              -11.8,
+              80.36666412353516
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -11.95,
+              -17.8,
+              80.19688110351562
+            ],
+            "maxMM": [
+              -11.05,
+              -11.8,
+              81.09688110351563
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -11.45,
+              -17.8,
+              80.82365112304687
+            ],
+            "maxMM": [
+              -10.55,
+              -11.8,
+              81.72365112304688
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -10.95,
+              -17.8,
+              81.38689880371093
+            ],
+            "maxMM": [
+              -10.05,
+              -11.8,
+              82.28689880371094
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -10.45,
+              -17.8,
+              81.89388732910156
+            ],
+            "maxMM": [
+              -9.55,
+              -11.8,
+              82.79388732910157
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -9.95,
+              -17.8,
+              82.36855010986328
+            ],
+            "maxMM": [
+              -9.05,
+              -11.8,
+              83.26855010986328
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -9.45,
+              -17.8,
+              82.82861022949218
+            ],
+            "maxMM": [
+              -8.55,
+              -11.8,
+              83.72861022949219
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -8.95,
+              -17.8,
+              83.28668670654297
+            ],
+            "maxMM": [
+              -8.05,
+              -11.8,
+              84.18668670654297
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -8.45,
+              -17.8,
+              83.74481658935547
+            ],
+            "maxMM": [
+              -7.55,
+              -11.8,
+              84.64481658935547
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -7.95,
+              -17.8,
+              84.19559173583984
+            ],
+            "maxMM": [
+              -7.05,
+              -11.8,
+              85.09559173583985
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -7.45,
+              -17.8,
+              84.62332611083984
+            ],
+            "maxMM": [
+              -6.55,
+              -11.8,
+              85.52332611083985
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -6.95,
+              -17.8,
+              84.99789123535156
+            ],
+            "maxMM": [
+              -6.05,
+              -11.8,
+              85.89789123535157
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -6.45,
+              -17.8,
+              85.35562591552734
+            ],
+            "maxMM": [
+              -5.55,
+              -11.8,
+              86.25562591552735
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -5.95,
+              -17.8,
+              85.71226196289062
+            ],
+            "maxMM": [
+              -5.05,
+              -11.8,
+              86.61226196289063
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -5.45,
+              -17.8,
+              86.0626953125
+            ],
+            "maxMM": [
+              -4.55,
+              -11.8,
+              86.9626953125
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -4.95,
+              -17.8,
+              86.39484100341797
+            ],
+            "maxMM": [
+              -4.05,
+              -11.8,
+              87.29484100341797
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -4.45,
+              -17.8,
+              86.70838623046875
+            ],
+            "maxMM": [
+              -3.55,
+              -11.8,
+              87.60838623046875
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -3.95,
+              -17.8,
+              87.02047424316406
+            ],
+            "maxMM": [
+              -3.05,
+              -11.8,
+              87.92047424316407
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -3.45,
+              -17.8,
+              87.32547454833984
+            ],
+            "maxMM": [
+              -2.55,
+              -11.8,
+              88.22547454833985
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -2.95,
+              -17.8,
+              87.62039642333984
+            ],
+            "maxMM": [
+              -2.05,
+              -11.8,
+              88.52039642333985
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -2.45,
+              -17.8,
+              87.89989929199218
+            ],
+            "maxMM": [
+              -1.55,
+              -11.8,
+              88.79989929199219
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -1.95,
+              -17.8,
+              88.1614501953125
+            ],
+            "maxMM": [
+              -1.05,
+              -11.8,
+              89.0614501953125
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -1.45,
+              -17.8,
+              88.39336853027343
+            ],
+            "maxMM": [
+              -0.55,
+              -11.8,
+              89.29336853027344
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -0.95,
+              -17.8,
+              88.59647827148437
+            ],
+            "maxMM": [
+              -0.04999999999999999,
+              -11.8,
+              89.49647827148438
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -0.45,
+              -17.8,
+              88.72364501953125
+            ],
+            "maxMM": [
+              0.45,
+              -11.8,
+              89.62364501953125
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              0.04999999999999999,
+              -17.8,
+              88.7195327758789
+            ],
+            "maxMM": [
+              0.95,
+              -11.8,
+              89.61953277587891
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              0.55,
+              -17.8,
+              88.54369812011718
+            ],
+            "maxMM": [
+              1.45,
+              -11.8,
+              89.44369812011719
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              1.05,
+              -17.8,
+              88.30045776367187
+            ],
+            "maxMM": [
+              1.95,
+              -11.8,
+              89.20045776367188
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              1.55,
+              -17.8,
+              88.04614715576172
+            ],
+            "maxMM": [
+              2.45,
+              -11.8,
+              88.94614715576172
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              2.05,
+              -17.8,
+              87.78246002197265
+            ],
+            "maxMM": [
+              2.95,
+              -11.8,
+              88.68246002197266
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              2.55,
+              -17.8,
+              87.51638488769531
+            ],
+            "maxMM": [
+              3.45,
+              -11.8,
+              88.41638488769532
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              3.05,
+              -17.8,
+              87.25789337158203
+            ],
+            "maxMM": [
+              3.95,
+              -11.8,
+              88.15789337158203
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              3.55,
+              -17.8,
+              87.00280456542968
+            ],
+            "maxMM": [
+              4.45,
+              -11.8,
+              87.90280456542969
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              4.05,
+              -17.8,
+              86.72804718017578
+            ],
+            "maxMM": [
+              4.95,
+              -11.8,
+              87.62804718017578
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              4.55,
+              -17.8,
+              86.41013793945312
+            ],
+            "maxMM": [
+              5.45,
+              -11.8,
+              87.31013793945313
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              5.05,
+              -17.8,
+              86.06011657714843
+            ],
+            "maxMM": [
+              5.95,
+              -11.8,
+              86.96011657714844
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              5.55,
+              -17.8,
+              85.68715362548828
+            ],
+            "maxMM": [
+              6.45,
+              -11.8,
+              86.58715362548828
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              6.05,
+              -17.8,
+              85.28731994628906
+            ],
+            "maxMM": [
+              6.95,
+              -11.8,
+              86.18731994628907
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              6.55,
+              -17.8,
+              84.86079864501953
+            ],
+            "maxMM": [
+              7.45,
+              -11.8,
+              85.76079864501953
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              7.05,
+              -17.8,
+              84.40333251953125
+            ],
+            "maxMM": [
+              7.95,
+              -11.8,
+              85.30333251953125
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              7.55,
+              -17.8,
+              83.90047149658203
+            ],
+            "maxMM": [
+              8.45,
+              -11.8,
+              84.80047149658203
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              8.05,
+              -17.8,
+              83.39614562988281
+            ],
+            "maxMM": [
+              8.95,
+              -11.8,
+              84.29614562988282
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              8.55,
+              -17.8,
+              82.94444732666015
+            ],
+            "maxMM": [
+              9.45,
+              -11.8,
+              83.84444732666016
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              9.05,
+              -17.8,
+              82.49922637939453
+            ],
+            "maxMM": [
+              9.95,
+              -11.8,
+              83.39922637939453
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              9.55,
+              -17.8,
+              82.01672058105468
+            ],
+            "maxMM": [
+              10.45,
+              -11.8,
+              82.91672058105469
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              10.05,
+              -17.8,
+              81.48167114257812
+            ],
+            "maxMM": [
+              10.95,
+              -11.8,
+              82.38167114257813
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              10.55,
+              -17.8,
+              80.83822326660156
+            ],
+            "maxMM": [
+              11.45,
+              -11.8,
+              81.73822326660157
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.05,
+              -17.8,
+              80.01559906005859
+            ],
+            "maxMM": [
+              11.95,
+              -11.8,
+              80.9155990600586
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.55,
+              -17.8,
+              79.0587890625
+            ],
+            "maxMM": [
+              12.45,
+              -11.8,
+              79.9587890625
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              12.05,
+              -17.8,
+              77.8003433227539
+            ],
+            "maxMM": [
+              12.95,
+              -11.8,
+              78.70034332275391
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              12.55,
+              -17.8,
+              75.8170669555664
+            ],
+            "maxMM": [
+              13.45,
+              -11.8,
+              76.71706695556641
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              13.05,
+              -17.8,
+              75.00095825195312
+            ],
+            "maxMM": [
+              13.95,
+              -11.8,
+              75.90095825195313
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "own open arch (1, 1)",
+      "minMM": [
+        -17.8,
+        -17.8,
+        65
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        100
+      ],
+      "sourceSelection": {
+        "includeParts": [
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -13.45,
+              11.8,
+              75.56873016357422
+            ],
+            "maxMM": [
+              -12.55,
+              17.8,
+              76.46873016357422
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -12.45,
+              11.8,
+              78.78910522460937
+            ],
+            "maxMM": [
+              -11.55,
+              17.8,
+              79.68910522460938
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -11.95,
+              11.8,
+              79.94352416992187
+            ],
+            "maxMM": [
+              -11.05,
+              17.8,
+              80.84352416992188
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -11.45,
+              11.8,
+              80.90396575927734
+            ],
+            "maxMM": [
+              -10.55,
+              17.8,
+              81.80396575927735
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -10.95,
+              11.8,
+              81.70933227539062
+            ],
+            "maxMM": [
+              -10.05,
+              17.8,
+              82.60933227539063
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -10.45,
+              11.8,
+              82.3557632446289
+            ],
+            "maxMM": [
+              -9.55,
+              17.8,
+              83.25576324462891
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -9.95,
+              11.8,
+              82.93137817382812
+            ],
+            "maxMM": [
+              -9.05,
+              17.8,
+              83.83137817382813
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -9.45,
+              11.8,
+              83.44818572998047
+            ],
+            "maxMM": [
+              -8.55,
+              17.8,
+              84.34818572998047
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -8.95,
+              11.8,
+              83.91151123046875
+            ],
+            "maxMM": [
+              -8.05,
+              17.8,
+              84.81151123046875
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -8.45,
+              11.8,
+              84.2819107055664
+            ],
+            "maxMM": [
+              -7.55,
+              17.8,
+              85.18191070556641
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -7.95,
+              11.8,
+              84.62327270507812
+            ],
+            "maxMM": [
+              -7.05,
+              17.8,
+              85.52327270507813
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -7.45,
+              11.8,
+              85.00352172851562
+            ],
+            "maxMM": [
+              -6.55,
+              17.8,
+              85.90352172851563
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -6.95,
+              11.8,
+              85.3557861328125
+            ],
+            "maxMM": [
+              -6.05,
+              17.8,
+              86.2557861328125
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -6.45,
+              11.8,
+              85.70594482421875
+            ],
+            "maxMM": [
+              -5.55,
+              17.8,
+              86.60594482421875
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -5.95,
+              11.8,
+              86.04177551269531
+            ],
+            "maxMM": [
+              -5.05,
+              17.8,
+              86.94177551269532
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -5.45,
+              11.8,
+              86.358837890625
+            ],
+            "maxMM": [
+              -4.55,
+              17.8,
+              87.258837890625
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -4.95,
+              11.8,
+              86.64651947021484
+            ],
+            "maxMM": [
+              -4.05,
+              17.8,
+              87.54651947021485
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -4.45,
+              11.8,
+              86.92162780761718
+            ],
+            "maxMM": [
+              -3.55,
+              17.8,
+              87.82162780761719
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -3.95,
+              11.8,
+              87.19761352539062
+            ],
+            "maxMM": [
+              -3.05,
+              17.8,
+              88.09761352539063
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -3.45,
+              11.8,
+              87.48014526367187
+            ],
+            "maxMM": [
+              -2.55,
+              17.8,
+              88.38014526367188
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -2.95,
+              11.8,
+              87.7549560546875
+            ],
+            "maxMM": [
+              -2.05,
+              17.8,
+              88.6549560546875
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -2.45,
+              11.8,
+              88.00845794677734
+            ],
+            "maxMM": [
+              -1.55,
+              17.8,
+              88.90845794677735
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -1.95,
+              11.8,
+              88.24838714599609
+            ],
+            "maxMM": [
+              -1.05,
+              17.8,
+              89.1483871459961
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -1.45,
+              11.8,
+              88.4728515625
+            ],
+            "maxMM": [
+              -0.55,
+              17.8,
+              89.3728515625
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -0.95,
+              11.8,
+              88.66779022216797
+            ],
+            "maxMM": [
+              -0.04999999999999999,
+              17.8,
+              89.56779022216797
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              -0.45,
+              11.8,
+              88.65221862792968
+            ],
+            "maxMM": [
+              0.45,
+              17.8,
+              89.55221862792969
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              0.04999999999999999,
+              11.8,
+              88.41872100830078
+            ],
+            "maxMM": [
+              0.95,
+              17.8,
+              89.31872100830078
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              0.55,
+              11.8,
+              88.22169952392578
+            ],
+            "maxMM": [
+              1.45,
+              17.8,
+              89.12169952392578
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              1.05,
+              11.8,
+              88.01499633789062
+            ],
+            "maxMM": [
+              1.95,
+              17.8,
+              88.91499633789063
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              1.55,
+              11.8,
+              87.78757934570312
+            ],
+            "maxMM": [
+              2.45,
+              17.8,
+              88.68757934570313
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              2.05,
+              11.8,
+              87.54575805664062
+            ],
+            "maxMM": [
+              2.95,
+              17.8,
+              88.44575805664063
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              2.55,
+              11.8,
+              87.28844909667968
+            ],
+            "maxMM": [
+              3.45,
+              17.8,
+              88.18844909667969
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              3.05,
+              11.8,
+              87.01400451660156
+            ],
+            "maxMM": [
+              3.95,
+              17.8,
+              87.91400451660157
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              3.55,
+              11.8,
+              86.72140197753906
+            ],
+            "maxMM": [
+              4.45,
+              17.8,
+              87.62140197753907
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              4.05,
+              11.8,
+              86.41025238037109
+            ],
+            "maxMM": [
+              4.95,
+              17.8,
+              87.3102523803711
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              4.55,
+              11.8,
+              86.0886734008789
+            ],
+            "maxMM": [
+              5.45,
+              17.8,
+              86.98867340087891
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              5.05,
+              11.8,
+              85.78405456542968
+            ],
+            "maxMM": [
+              5.95,
+              17.8,
+              86.68405456542969
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              5.55,
+              11.8,
+              85.45993499755859
+            ],
+            "maxMM": [
+              6.45,
+              17.8,
+              86.3599349975586
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              6.05,
+              11.8,
+              85.02727966308593
+            ],
+            "maxMM": [
+              6.95,
+              17.8,
+              85.92727966308594
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              6.55,
+              11.8,
+              84.56789855957031
+            ],
+            "maxMM": [
+              7.45,
+              17.8,
+              85.46789855957032
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              7.05,
+              11.8,
+              84.09823303222656
+            ],
+            "maxMM": [
+              7.95,
+              17.8,
+              84.99823303222657
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              7.55,
+              11.8,
+              83.61082153320312
+            ],
+            "maxMM": [
+              8.45,
+              17.8,
+              84.51082153320313
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              8.05,
+              11.8,
+              83.11729888916015
+            ],
+            "maxMM": [
+              8.95,
+              17.8,
+              84.01729888916016
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              8.55,
+              11.8,
+              82.60287170410156
+            ],
+            "maxMM": [
+              9.45,
+              17.8,
+              83.50287170410157
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              9.05,
+              11.8,
+              82.08385925292968
+            ],
+            "maxMM": [
+              9.95,
+              17.8,
+              82.98385925292969
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              9.55,
+              11.8,
+              81.58678894042968
+            ],
+            "maxMM": [
+              10.45,
+              17.8,
+              82.48678894042969
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              10.05,
+              11.8,
+              81.09692077636718
+            ],
+            "maxMM": [
+              10.95,
+              17.8,
+              81.99692077636719
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              10.55,
+              11.8,
+              80.57864074707031
+            ],
+            "maxMM": [
+              11.45,
+              17.8,
+              81.47864074707032
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.05,
+              11.8,
+              79.99709777832031
+            ],
+            "maxMM": [
+              11.95,
+              17.8,
+              80.89709777832032
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              11.55,
+              11.8,
+              79.31674652099609
+            ],
+            "maxMM": [
+              12.45,
+              17.8,
+              80.2167465209961
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              12.05,
+              11.8,
+              78.52859191894531
+            ],
+            "maxMM": [
+              12.95,
+              17.8,
+              79.42859191894532
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              12.55,
+              11.8,
+              77.65079956054687
+            ],
+            "maxMM": [
+              13.45,
+              17.8,
+              78.55079956054688
+            ]
+          },
+          {
+            "name": "native arch lip",
+            "minMM": [
+              13.05,
+              11.8,
+              76.55630187988281
+            ],
+            "maxMM": [
+              13.95,
+              17.8,
+              77.45630187988282
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "own upper deck inner rim",
+      "minMM": [
+        -17.8,
+        -17.8,
+        98
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        104.2
+      ],
+      "sourceSelection": {
+        "includeParts": [
+          {
+            "name": "native inner deck rim",
+            "minMM": [
+              -13.6,
+              -17.8,
+              98
+            ],
+            "maxMM": [
+              -12.5,
+              17.8,
+              104.2
+            ]
+          },
+          {
+            "name": "native inner deck rim",
+            "minMM": [
+              12.5,
+              -17.8,
+              98
+            ],
+            "maxMM": [
+              13.6,
+              17.8,
+              104.2
+            ]
+          },
+          {
+            "name": "native inner deck rim",
+            "minMM": [
+              -17.8,
+              -13.6,
+              98
+            ],
+            "maxMM": [
+              17.8,
+              -12.5,
+              104.2
+            ]
+          },
+          {
+            "name": "native inner deck rim",
+            "minMM": [
+              -17.8,
+              12.5,
+              98
+            ],
+            "maxMM": [
+              17.8,
+              13.6,
+              104.2
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "placementCells": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "pegCentersMM": [
+    [
+      0.0015726089477539062,
+      0.05216217041015625
+    ]
+  ],
+  "mountCentreFitReview": {
+    "sourceSHA256": "efb1ea0541496e3736080bccb37b03cd697480aaff0f3dfda6909caf07ee87b3",
+    "nativeCentresMM": [
+      [
+        0.0015726089477539062,
+        0.05216217041015625
+      ]
+    ],
+    "fittedCentresMM": [
+      [
+        0.0015726089477539062,
+        0.05216217041015625
+      ]
+    ],
+    "preservedCentroidMM": [
+      0.0015726089477539062,
+      0.05216217041015625
+    ],
+    "maxCoordinateMoveMM": 0,
+    "requiredDecodedCentreToleranceMM": 0.02,
+    "sourceSections": [
+      {
+        "z": 12,
+        "centreMM": [
+          0.0014677047729492188,
+          0.05205059051513672
+        ]
+      },
+      {
+        "z": 14,
+        "centreMM": [
+          0.0015964508056640625,
+          0.051690101623535156
+        ]
+      },
+      {
+        "z": 16,
+        "centreMM": [
+          0.0015726089477539062,
+          0.05216217041015625
+        ]
+      }
+    ],
+    "method": "Own opposite exterior mounting rays12/14/16;16mm section selected"
+  },
+  "uvBaseTile": [
+    0.56,
+    0.002,
+    0.998,
+    0.6
+  ],
+  "uvDetailRegions": [
+    {
+      "name": "own upper X deck and rim",
+      "minMM": [
+        -17.8,
+        -17.8,
+        98.001
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        105
+      ],
+      "tile": [
+        0.002,
+        0.002,
+        0.55,
+        0.6
+      ],
+      "islandMargin": 0.0007
+    },
+    {
+      "name": "own lower Y floor",
+      "minMM": [
+        -17.8,
+        -17.8,
+        17.5
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        27.5
+      ],
+      "tile": [
+        0.002,
+        0.61,
+        0.55,
+        0.998
+      ],
+      "islandMargin": 0.0007
+    },
+    {
+      "name": "own header and visible heads (0, -1)",
+      "minMM": [
+        -17.8,
+        -13.9,
+        88.5
+      ],
+      "maxMM": [
+        -13.901,
+        13.9,
+        98
+      ],
+      "tile": [
+        0.56,
+        0.61,
+        0.774,
+        0.8
+      ],
+      "islandMargin": 0.0005
+    },
+    {
+      "name": "own header and visible heads (0, 1)",
+      "minMM": [
+        13.901,
+        -13.9,
+        88.5
+      ],
+      "maxMM": [
+        17.8,
+        13.9,
+        98
+      ],
+      "tile": [
+        0.784,
+        0.61,
+        0.998,
+        0.8
+      ],
+      "islandMargin": 0.0005
+    },
+    {
+      "name": "own header and visible heads (1, -1)",
+      "minMM": [
+        -17.8,
+        -17.8,
+        88.5
+      ],
+      "maxMM": [
+        17.8,
+        -13.901,
+        98
+      ],
+      "tile": [
+        0.56,
+        0.81,
+        0.774,
+        0.998
+      ],
+      "islandMargin": 0.0005
+    },
+    {
+      "name": "own header and visible heads (1, 1)",
+      "minMM": [
+        -17.8,
+        13.901,
+        88.5
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        98
+      ],
+      "tile": [
+        0.784,
+        0.81,
+        0.998,
+        0.998
+      ],
+      "islandMargin": 0.0005
+    }
+  ],
+  "standRayTopsMM": [
+    40,
+    140
+  ]
+}
