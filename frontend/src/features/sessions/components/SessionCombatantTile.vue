@@ -1,10 +1,9 @@
 <template>
-  <SessionCreatureTile :name="name" :color="color" :current="current" :controls-visible="selectable" :has-statuses="hasStatuses">
+  <SessionCreatureTile :name="name" :color="color" :relation="isNpc ? combatant.side : undefined" :current="current" :controls-visible="selectable" :has-statuses="hasStatuses">
     <template v-if="selectable" #controls><CompactCheckbox :size="20" :model-value="selected" :label="`Выбрать: ${name}`" @update:model-value="$emit('select')" /></template>
     <template #avatar><EncounterAvatar :combatant="combatant" /></template>
     <template #name-prefix><EncounterMarkerMenu v-if="isNpc" :combatant="combatant" :editable="editable" /></template>
     <template #name-suffix>
-      <EncounterSideTag v-if="isNpc" :side="combatant.side" />
       <span v-if="combatant.initiative != null" class="combatant-initiative" :aria-label="`Инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span>
       <span v-if="combatant.surprised && (!enc.encounter.active || enc.encounter.round === 0)" class="combatant-surprised" title="Застигнут врасплох">врасплох</span>
       <slot name="actions" />
@@ -18,7 +17,6 @@
       <ParticipantStatuses v-if="participant && isDnd" :participant="participant" :editable="editable" />
       <EncounterStatuses v-else :combatant="combatant" :editable="editable" />
     </template>
-    <template v-if="$slots.result" #result><slot name="result" /></template>
   </SessionCreatureTile>
 </template>
 <script setup>
@@ -30,7 +28,6 @@ import { settingAccessors } from '@/features/character-editor/settings'
 import SessionCreatureTile from './SessionCreatureTile.vue'
 import EncounterAvatar from './EncounterAvatar.vue'
 import EncounterMarkerMenu from './EncounterMarkerMenu.vue'
-import EncounterSideTag from './EncounterSideTag.vue'
 import EncounterHpBar from './EncounterHpBar.vue'
 const ParticipantStats = defineAsyncComponent(() => import('./ParticipantStats.vue'))
 const ParticipantStatuses = defineAsyncComponent(() => import('./ParticipantStatuses.vue'))
@@ -48,7 +45,7 @@ const hasStatuses = computed(() => participant.value ? isDnd.value && !!particip
 </script>
 <style scoped>
 .combatant-initiative { flex: none; display: inline-flex; align-items: center; gap: 3px; color: var(--text-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
-.combatant-indicators { display: flex; align-items: center; justify-content: center; min-width: 0; gap: 10px; min-height: 18px; }
+.combatant-indicators { display: flex; align-items: center; justify-content: flex-start; min-width: 0; gap: 10px; min-height: 18px; }
 .enc-ac { display: inline-flex; align-items: center; gap: 4px; color: var(--text-1); font-size: 13px; }
 .enc-ac svg { color: var(--info); }
 .combatant-surprised { flex: none; color: var(--warning); font-size: 9px; }

@@ -1,29 +1,27 @@
 <template>
   <div
     class="enc-row-shell"
-    :class="{ 'enc-row-shell--placeholder': enc.sortable.isSource(combatant) }"
+    :class="{ 'enc-row-shell--placeholder': enc.sortable.isSource(combatant), 'enc-row-shell--challenge': !!challengeResult }"
     :data-sortable-key="combatant.uid"
     :data-encounter-uid="combatant.uid"
     :data-encounter-section="section"
   >
-    <EncounterOrderMarker
-      v-if="order != null"
-      :order="order"
-      :current="isCurrent"
+    <div class="enc-row-main">
+      <EncounterOrderMarker v-if="order != null" :order="order" :current="isCurrent" />
+      <SessionCombatantTile
+        class="enc-row" :class="rowClasses" :combatant="combatant" :section="section" :current="isCurrent"
+        :selectable="showCheckbox" :editable="canEdit" :selected="enc.isSelected(combatant)"
+        @select="enc.toggleSelected(combatant)" @pointerdown="onRowPointerDown"
+        :tabindex="rowMenuVisible ? 0 : undefined" aria-haspopup="menu"
+        @keydown.enter.self="onRowClick" @keydown.space.self.prevent="onRowClick"
+        @click="onRowClick" @click.capture="onSelectionClick" @contextmenu.capture="onSelectionClick"
+      />
+    </div>
+    <EncounterChallengeResult
+      v-if="challengeResult" class="enc-row-result" :challenge="enc.challenge"
+      :busy="enc.challengeBusy" :ability="challengeAbility" :result="challengeResult"
+      @reroll="enc.rerollChallenge(combatant, $event)"
     />
-
-    <SessionCombatantTile
-      class="enc-row" :class="rowClasses" :combatant="combatant" :section="section" :current="isCurrent"
-      :selectable="showCheckbox" :editable="canEdit" :selected="enc.isSelected(combatant)"
-      @select="enc.toggleSelected(combatant)" @pointerdown="onRowPointerDown"
-      :tabindex="rowMenuVisible ? 0 : undefined" aria-haspopup="menu"
-      @keydown.enter.self="onRowClick" @keydown.space.self.prevent="onRowClick"
-      @click="onRowClick" @click.capture="onSelectionClick" @contextmenu.capture="onSelectionClick"
-    >
-      <template v-if="challengeResult" #result>
-        <EncounterChallengeResult :challenge="enc.challenge" :busy="enc.challengeBusy" :ability="challengeAbility" :result="challengeResult" @reroll="enc.rerollChallenge(combatant, $event)" />
-      </template>
-    </SessionCombatantTile>
 
     <EncounterRowMenu
       v-if="rowMenuVisible"
@@ -166,7 +164,9 @@ function commitNoteEdit() {
 </script>
 
 <style scoped>
-.enc-row-shell { display: flex; min-width: 0; align-items: stretch; gap: 10px; }
+.enc-row-shell { display: flex; flex-wrap: wrap; min-width: 0; align-items: center; column-gap: 12px; row-gap: 8px; }
+.enc-row-main { display: flex; align-items: stretch; gap: 10px; min-width: 0; flex: 1 1 300px; max-width: var(--enc-roster-width, 400px); }
+.enc-row-result { flex: 0 1 248px; width: 248px; max-width: 100%; }
 .enc-row-shell[data-encounter-section="combat"] { width: 100%; max-width: 100%; }
 .enc-row-shell--placeholder :deep(.enc-row-order) { opacity: .25; }
 .enc-row { flex: 1; cursor: grab; touch-action: none; }

@@ -18,7 +18,7 @@ load/save, players, NPC item cache, HP, initiative, flow, states and dice.
 
 The encounter workspace has no shared backing surface. Its header and every NPC
 row are separate `BaseTile` surfaces. The map and its inspector are not shown
-in Combat. During active combat, the workspace uses two columns. The left column, capped at 800px, contains the initiative queue and
+in Combat. During active combat, the workspace uses two columns. The left roster, capped at 400px, contains the initiative queue and
 NPC reserve. The sticky right column follows the current turn: bestiary NPCs
 show live combat values plus their reference abilities and actions; simplified
 NPCs show the encounter values and description; players show a compact combat
@@ -41,7 +41,7 @@ normal check uses that creature's ability modifier. A saving throw also uses a
 player's save proficiency and extra save bonuses, or the explicit bestiary save
 bonus for an NPC; an NPC without one falls back to its ability modifier. Each
 result is a fixed-size column after the creature's complete identity/HP block;
-scene and reserve rows show results beside their identity/HP block; in narrow rows the result wraps below without overflowing.
+scene and reserve rows show results in a separate sibling block outside the tile, 248px wide on its right. The roster remains 400px wide; only the result corridor expands the primary area to 660px. In narrow rows the result wraps below without overflowing.
 It reuses `SystemDie` and the shared roll-settle animation to show the d20 face,
 numeric modifier and total without a textual formula. The result block has no
 backing surface or enclosing frame; only its left and right borders separate it
@@ -87,7 +87,7 @@ controls independent HP rolls when adding handbook creatures and synchronizes
 across browsers through the session live stream. It starts disabled; no browser
 preference is used.
 
-NPC relation tags are optional. The row menu’s «Отношение» submenu sets enemy, ally, minion or neutral and offers «Убрать тег». The displayed tag is not a separate picker; newly added NPCs have no relation tag. The map roster uses the same submenu. Surprised status is changed from the row menu.
+NPC relations are optional. They are shown as subtle diagonal `/` stripes tiled over the entire tile, with separate colors for enemy, ally, minion and neutral. There is no relation chip. Clearing the relation removes the stripes; `aria-description` retains the relation label for assistive technology. The row menu’s «Отношение» submenu sets enemy, ally, minion or neutral and offers «Убрать тег». The tile background is not a separate picker; newly added NPCs have no relation tag. The map roster uses the same submenu. Surprised status is changed from the row menu.
 
 Each NPC also receives the nearest free Latin marker from `A` through `Z`.
 The marker sits immediately to the left of the NPC name above the HP bar and is
@@ -345,7 +345,7 @@ Chronicle attack target controls share the roll's row on the right, with chosen 
 `SessionAttackTargets` сохраняет выбор в событии через API; цели видны в хронике мастера,
 права доступа к событиям не расширяются. Сравнения атаки с КД в этом компоненте нет.
 
-`SessionCreatureTile` owns the shared visual layout, including optional controls, a letter before the name, statuses and a roll-result slot. `SessionParticipantCard` preserves player actions; `SessionCombatantTile` supplies encounter data and is reused by both combat lists and the map roster. The optional roll area wraps below on narrow tiles. The tile shows portrait, name and HP, with 14px right padding.
+`SessionCreatureTile` owns the shared visual layout, including optional controls, a letter before the name and statuses. Roll results belong to `EncounterRow` outside this component. `SessionParticipantCard` preserves player actions; `SessionCombatantTile` supplies encounter data and is reused by both combat lists and the map roster. The external roll area wraps below on narrow rows. Initiative stays immediately after the name and does not shrink; `useCreatureNameFit` measures the remaining row width and reduces the name font from 13px until the full name fits, recalculating after resizes, data and font updates. AC and passives keep their natural widths and align left. The tile shows portrait, name and HP, with 14px right padding.
 For the DM, D&D tiles also show AC and passive skills below HP in the same
 information column; the action menu contains only actions.
 For the DM, active D&D effect/state instances from the character's `values.states`
@@ -381,7 +381,7 @@ numbers and icons; AC retains its primary number and blue shield. The indicators
 are centered vertically between the bottom of the HP bar and the lower edge of
 the main portrait/information area; the optional status row sits separately below.
 The grid column is constrained to the available width: long names
-truncate with an ellipsis while HP and indicators remain inside the tile.
+fit through a smaller name font while HP, initiative and indicators remain inside the tile.
 The compact rail hides the information column and makes it
 inert, including the indicators. Hover and keyboard focus open the shared `ItemTooltip` for the name,
 meaning and passive calculation. The player rail uses `--participant-rail-width`

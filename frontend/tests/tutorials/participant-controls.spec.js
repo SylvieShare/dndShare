@@ -84,9 +84,9 @@ for (const mobile of [false, true]) test(`participant menu and Ctrl selection ${
   await expect(npc.getByRole('checkbox')).not.toBeChecked()
   expect(await page.evaluate(() => window.controls.state.drags)).toBe(0)
   await page.evaluate(() => { window.controls.state.challenge = true })
-  await expect(npc.locator('.ecr-result')).toBeVisible()
-  await expect(npc.locator('.ecr-title')).toContainText('Спасбросок')
-  const resultBox = await npc.locator('.ecr-result').boundingBox(), rowWithResult = await npc.boundingBox()
+  await expect(page.locator('.enc-row-result')).toBeVisible()
+  await expect(page.locator('.enc-row-result .ecr-title')).toContainText('Спасбросок')
+  const resultBox = await page.locator('.enc-row-result').boundingBox(), rowWithResult = await page.locator('.enc-row-shell').boundingBox()
   expect(resultBox.x + resultBox.width).toBeLessThanOrEqual(rowWithResult.x + rowWithResult.width)
   if (!mobile) expect(rowWithResult.height).toBe(npcBox.height)
   await page.evaluate(() => { window.controls.encounter.encounter.active = true })
@@ -119,7 +119,8 @@ for (const mobile of [false, true]) test(`combat creature menu anchors to its ti
   await expect(menu).not.toBeVisible()
 
   await tile.evaluate(node => {
-    Object.assign(node.parentElement.style, { position: 'fixed', bottom: '20px', left: '20px', right: '20px' })
+    node.closest('.enc-combat-layout').style.transform = 'none'
+    Object.assign(node.closest('.enc-row-shell').style, { position: 'fixed', bottom: '20px', left: '20px', right: '20px' })
   })
   await tile.focus()
   await page.keyboard.press('Enter')
@@ -144,19 +145,20 @@ for (const mobile of [false, true]) test(`NPC relation is optional and edited th
   await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1200, height: 900 })
   await page.goto('/tests/tutorials/fixtures/participant-controls.html')
   const tile = page.locator('.enc-row')
-  await expect(tile.locator('.enc-badge')).toHaveCount(0)
+  await expect(tile).not.toHaveAttribute('data-relation')
   for (const [label, value] of [['Враг', 'enemy'], ['Союзник', 'ally'], ['Приспешник', 'minion'], ['Нейтрал', 'neutral']]) {
     await tile.locator('.p-name').click()
     await page.getByRole('menu', { name: 'Действия существа', exact: true }).getByText('Отношение', { exact: true }).click()
     await page.getByRole('menuitem', { name: label, exact: true }).click()
-    await expect(tile.locator('.enc-badge')).toHaveText(label.toUpperCase())
+    await expect(tile).toHaveAttribute('data-relation', value)
+    await expect(tile).toHaveAttribute('aria-description', `Отношение: ${label.toUpperCase()}`)
     expect(await page.evaluate(() => window.controls.npc.side)).toBe(value)
     await page.keyboard.press('Escape')
   }
   await tile.locator('.p-name').click()
   await page.getByRole('menu', { name: 'Действия существа', exact: true }).getByText('Отношение', { exact: true }).click()
   await page.getByText('Убрать тег', { exact: true }).click()
-  await expect(tile.locator('.enc-badge')).toHaveCount(0)
+  await expect(tile).not.toHaveAttribute('data-relation')
   expect(await page.evaluate(() => Object.hasOwn(window.controls.npc, 'side'))).toBe(false)
 })
 

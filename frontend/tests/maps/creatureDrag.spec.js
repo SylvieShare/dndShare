@@ -30,6 +30,7 @@ test("roster drags preview before committing, mark placed creatures and focus th
   const roster = await ready(page);
   const row = roster.getByRole("button", { name: "Лира", exact: true });
   await row.locator('.p-avatar').click();
+  await page.keyboard.press('Escape');
   await expect(row).not.toHaveClass(/base-tile--framed/);
   await expect(
     roster.getByRole("button", { name: /Поставить на карту:|Найти на карте:/ }),
@@ -64,6 +65,7 @@ test("roster drags preview before committing, mark placed creatures and focus th
   await page.waitForTimeout(150);
   await page.keyboard.up("ArrowRight");
   await row.locator('.p-avatar').click();
+  await page.keyboard.press('Escape');
   await expect(
     focus.getByRole("heading", { name: "Лира", exact: true }),
   ).toBeVisible();
@@ -148,10 +150,10 @@ test('dead creatures move to their own group and revive without rewriting map pl
   await page.mouse.up();
   await expect.poll(async () => (await saved(page)).some(t => t.ref === 'ogre')).toBe(true);
   const before = (await saved(page)).find(t => t.ref === 'ogre');
-  await ogre.getByRole('button', { name: 'Действия: Огр', exact: true }).click();
+  await ogre.locator('.p-name').click();
   await page.getByText('Отношение', { exact: true }).click();
   await page.getByRole('menuitem', { name: 'Союзник', exact: true }).click();
-  await expect(ogre.locator('.enc-badge')).toHaveText('СОЮЗНИК');
+  await expect(ogre).toHaveAttribute('data-relation', 'ally');
   await page.keyboard.press('Escape');
   await page.evaluate(() => { window.creatureEncounter.encounter.combatants[0].position = 'dead'; });
   const deadGroup = roster.locator('.map-creature-group').filter({ has: page.getByRole('heading', { name: /^Умершие / }) });
@@ -164,4 +166,24 @@ test('dead creatures move to their own group and revive without rewriting map pl
   await expect.poll(async () => (await canvasTokens(page)).find(t => t.ref === 'ogre')?.dead).toBe(false);
   expect((await saved(page)).find(t => t.ref === 'ogre')).toEqual(before);
   expect(errors).toEqual([]);
+});
+
+
+test('the whole map tile opens its menu, keyboard works and dragging does not open it', async ({ page }) => {
+  const roster = await ready(page);
+  const tile = roster.getByRole('button', { name: 'Лира', exact: true });
+  await expect(tile.locator('.map-creature-actions')).toHaveCount(0);
+  await tile.locator('.p-name').click();
+  const menu = page.getByRole('menu', { name: 'Лира', exact: true });
+  await expect(menu.getByRole('menuitem', { name: 'Выбрать на карте', exact: true })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(menu).not.toBeVisible();
+  await tile.focus();
+  await page.keyboard.press('Enter');
+  await expect(menu).toBeVisible();
+  await page.keyboard.press('Escape');
+  await startDrag(page, tile, await mapPoint(page, 4.5, 4.5));
+  await page.mouse.up();
+  await expect.poll(async () => (await saved(page)).some(t => t.ref === '41')).toBe(true);
+  await expect(menu).not.toBeVisible();
 });

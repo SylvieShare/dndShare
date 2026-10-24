@@ -8,6 +8,7 @@ import { applyDocumentPatches } from '../../../src/shared/lib/documentPatch'
 import '@sylvieshare/share-ui/styles.css'
 import '../../../src/app/theme.css'
 import '../../../src/features/sessions/pages/styles/ViewSession.css'
+import '../../../src/features/sessions/components/styles/EncounterTab.css'
 const pinia = createPinia()
 useTemplateStore(pinia).templates = [{ id: 1, name: 'DND5' }]
 useSuggestStore(pinia).set(3, [])
@@ -52,5 +53,5 @@ window.fetch = async (input, options = {}) => {
 window.controls = { state, encounter, player, participant, npc, writes }
 createApp({ render: () => h('main', { style: 'padding:20px;max-width:850px' }, [
   h('div', { class: ['campaign-workspace', state.combat && 'campaign-workspace--combat'], style: 'height:80px;overflow:visible' }, h('div', { class: 'workspace-dock workspace-dock--left', style: 'position:relative;top:0;left:0;display:flex;max-height:none;overflow:visible' }, h(SessionParticipantCard, { participant, isDm: state.dm, compact: state.compact, combatMode: state.combat, combatEditable: true, combatant: player, combatSelected: state.selected, reorderEnabled: true, 'onUpdate:combat-selected': value => { state.selected = value }, 'onDrag-start': () => { state.drags++ } }))),
-  h('div', { style: 'margin-top:24px' }, h(EncounterRow, { combatant: npc, section: state.npcSection })),
+  h('div', { class: 'enc-combat-layout', style: 'margin-top:24px' }, h('div', { class: 'enc-combat-primary' }, h(EncounterRow, { combatant: npc, section: state.npcSection }))),
 ]) }).use(pinia).provide('applicationEncounter', encounter).provide('encounter', encounter).mount('#app')

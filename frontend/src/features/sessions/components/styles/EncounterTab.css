@@ -97,6 +97,8 @@
 .enc-block--disabled .enc-reserve-list { pointer-events: none; }
 
 .enc-combat-layout {
+  --enc-roster-width: 400px;
+  --enc-primary-width: 400px;
   min-width: 0;
   opacity: 1;
   transform: translateY(0);
@@ -107,12 +109,17 @@
   display: grid;
   height: 100%;
   min-height: 0;
-  grid-template-columns: minmax(0, 800px) minmax(280px, 1fr);
+  grid-template-columns: minmax(0, var(--enc-primary-width)) minmax(280px, 1fr);
   align-items: stretch;
   gap: 16px;
 }
 
-.enc-combat-primary { min-width: 0; max-width: 800px; }
+.enc-combat-layout:has(.enc-row-result) { --enc-primary-width: 660px; }
+.enc-combat-primary { min-width: 0; max-width: var(--enc-primary-width); }
+.enc-combat-primary .enc-section-title-row,
+.enc-combat-primary .enc-add-row,
+.enc-combat-primary .enc-empty,
+.enc-combat-primary .enc-reserve-empty { box-sizing: border-box; max-width: var(--enc-roster-width); }
 .enc-combat-layout--active > .enc-combat-primary {
   height: 100%;
   min-height: 0;

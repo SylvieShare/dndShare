@@ -1,6 +1,7 @@
 <template>
-  <BaseTile class="creature-tile" :class="{ 'creature-tile--compact': compact, 'creature-tile--controls': controlsVisible, 'creature-tile--current': current, 'creature-tile--statuses': hasStatuses }"
-    :style="{ '--participant-color': color || 'var(--border)', '--participant-frame-width': color ? '2px' : '1px' }"
+  <BaseTile class="creature-tile" :class="{ 'creature-tile--compact': compact, 'creature-tile--controls': controlsVisible, 'creature-tile--current': current, 'creature-tile--statuses': hasStatuses, 'creature-tile--relation': !!SIDE_COLOR[relation] }"
+    :style="{ '--participant-color': color || 'var(--border)', '--participant-frame-width': color ? '2px' : '1px', '--creature-relation-color': SIDE_COLOR[relation] }"
+    :data-relation="SIDE_COLOR[relation] ? relation : undefined" :aria-description="SIDE_LABEL[relation] ? `Отношение: ${SIDE_LABEL[relation]}` : undefined"
     :title="compact ? name : undefined" interactive>
     <div v-if="$slots.controls" class="p-combat-controls" :aria-hidden="!controlsVisible" :inert="!controlsVisible" @click.stop @pointerdown.stop><slot name="controls" /></div>
     <div class="creature-tile-body">
@@ -10,7 +11,7 @@
             <SessionCreatureAvatar :name="name" :url="avatarUrl" :icon="icon" :background="avatarColor" />
           </slot>
           <div class="p-info" :class="{ 'p-info--stats': !!$slots.stats }" :inert="compact" :aria-hidden="compact">
-            <div class="p-name-row"><slot name="name-prefix" /><span class="p-name">{{ name }}</span><slot name="name-suffix" /></div>
+            <div ref="nameRow" class="p-name-row"><slot name="name-prefix" /><span class="p-name" :title="name"><span ref="nameText" class="p-name-text">{{ name }}</span></span><slot name="name-suffix" /></div>
             <div class="creature-tile-health"><slot name="health" /></div>
             <div v-if="$slots.stats" class="creature-tile-stats"><slot name="stats" /></div>
           </div>
@@ -19,16 +20,18 @@
           <span class="p-statuses-label" aria-hidden="true">состояния:</span><div class="creature-tile-statuses"><slot name="statuses" /></div>
         </div>
       </div>
-      <div v-if="$slots.result" class="creature-tile-result"><slot name="result" /></div>
     </div>
   </BaseTile>
 </template>
 <script setup>
 import { BaseTile } from '@sylvieshare/share-ui'
 import SessionCreatureAvatar from './SessionCreatureAvatar.vue'
+import { SIDE_COLOR, SIDE_LABEL } from '../lib/encounterHelpers'
+import { useCreatureNameFit } from '../composables/useCreatureNameFit'
+const { nameRow, nameText } = useCreatureNameFit()
 defineProps({
   name: { type: String, default: '' }, avatarUrl: String, icon: Boolean, avatarColor: String,
-  color: String, compact: Boolean, current: Boolean, controlsVisible: Boolean, hasStatuses: Boolean,
+  color: String, relation: String, compact: Boolean, current: Boolean, controlsVisible: Boolean, hasStatuses: Boolean,
 })
 </script>
 <style scoped>
@@ -41,14 +44,16 @@ defineProps({
 .p-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; transition: opacity .2s, transform .42s; }
 .p-info--stats { align-self: stretch; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 0; margin-bottom: -4px; }
 .p-name-row { display: flex; align-items: center; min-width: 0; gap: 6px; }
-.p-name { flex: 1; min-width: 0; font-size: 13px; line-height: 16px; font-weight: 600; color: var(--text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.p-name { flex: 0 1 auto; min-width: 0; font-size: 13px; line-height: 16px; font-weight: 600; color: var(--text-1); white-space: nowrap; overflow: hidden; }
+.p-name-text { display: inline-block; width: max-content; vertical-align: top; }
+.creature-tile { isolation: isolate; }
+.creature-tile--relation::after { content: ''; position: absolute; z-index: -1; inset: 0; border-radius: inherit; pointer-events: none; background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--creature-relation-color) 9%, transparent) 0 7px, transparent 7px 14px); }
 .creature-tile-health { min-width: 0; }
 .creature-tile-health :deep(.hp-row) { margin-top: 0; height: 6px; min-width: 0; }
 .creature-tile-stats { min-width: 0; grid-row: 3; }
 .p-statuses-area { display: flex; align-items: center; gap: var(--participant-card-gap, 9px); height: 36px; margin-top: 4px; overflow: hidden; transition: height .42s, margin-top .42s, opacity .2s; }
 .p-statuses-label { flex: 0 0 64px; color: var(--text-muted); font-size: 10px; font-weight: 400; line-height: 14px; text-align: center; }
 .creature-tile-statuses { flex: 1; min-width: 0; }
-.creature-tile-result { width: 248px; flex: 0 1 248px; max-width: 100%; min-width: 0; margin-left: auto; }
 .p-combat-controls { width: var(--participant-selection-width, 36px); flex: 0 0 var(--participant-selection-width, 36px); box-sizing: border-box; padding: 0 2px 0 10px; display: flex; justify-content: center; margin-left: calc(-1 * (var(--participant-selection-width, 36px) + var(--participant-card-gap, 9px))); clip-path: inset(0 0 0 100%); pointer-events: none; transition: margin-left .42s, clip-path .42s; }
 .creature-tile--controls .p-combat-controls { margin-left: 0; clip-path: inset(-12px); pointer-events: auto; }
 .creature-tile.creature-tile--current, .creature-tile.creature-tile--current.base-tile--interactive:hover { background: color-mix(in srgb, var(--accent) 11%, var(--surface)); border-color: color-mix(in srgb, var(--accent) 42%, var(--border)); box-shadow: inset 0 0 0 var(--participant-frame-width) var(--participant-color), 0 0 0 2px color-mix(in srgb, var(--accent) 10%, transparent); }

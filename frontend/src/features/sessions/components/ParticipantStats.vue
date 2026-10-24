@@ -62,7 +62,8 @@ watch(referenceKey, async (_, __, onCleanup) => {
 </script>
 <style scoped>
 .participant-stats { display: flex; align-items: center; min-height: 18px; line-height: 18px; }
-.participant-stat { display: inline-flex; flex: 1; align-items: center; justify-content: center; gap: 4px; padding: 0 6px; color: var(--text-2); cursor: help; }
+.participant-stat { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: flex-start; gap: 4px; padding: 0 8px; color: var(--text-2); cursor: help; }
+.participant-stat:first-child { padding-left: 0; }
 .participant-stat + .participant-stat { border-left: 1px solid var(--border); }
 .participant-stat:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: var(--r-sm); }
 .participant-stat svg { flex-shrink: 0; color: var(--info); }

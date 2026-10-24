@@ -11,7 +11,7 @@ export function useMapEditorKeys(
     if (
       event.defaultPrevented ||
       blocked() ||
-      document.querySelector('[role="dialog"]')
+      document.querySelector('[role="dialog"], [role="menu"]')
     )
       return;
     if (event.key === "Escape") {
