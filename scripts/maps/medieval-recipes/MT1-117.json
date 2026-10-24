@@ -245,7 +245,22 @@
         ],
         "axis": "z",
         "physicalPigment": true,
-        "roughness": 0.9
+        "roughness": 0.9,
+        "excludeParts": [
+          {
+            "name": "own low exterior plaster before corner post",
+            "minMM": [
+              9.8,
+              -17.8,
+              26
+            ],
+            "maxMM": [
+              13.3,
+              -16,
+              50.5
+            ]
+          }
+        ]
       },
       {
         "name": "own low outer header",
@@ -512,7 +527,7 @@
             0.5602961328570435
           ],
           "rangeMM": [
-            -12,
+            -7.5,
             -2.75
           ]
         }
@@ -746,7 +761,22 @@
             ],
             "axis": "z",
             "physicalPigment": true,
-            "roughness": 0.9
+            "roughness": 0.9,
+            "excludeParts": [
+              {
+                "name": "own low exterior plaster before corner post",
+                "minMM": [
+                  9.8,
+                  -17.8,
+                  26
+                ],
+                "maxMM": [
+                  13.3,
+                  -16,
+                  50.5
+                ]
+              }
+            ]
           },
           {
             "name": "own low outer header",
@@ -1013,7 +1043,7 @@
                 0.5602961328570435
               ],
               "rangeMM": [
-                -12,
+                -7.5,
                 -2.75
               ]
             }
@@ -1247,7 +1277,22 @@
             ],
             "axis": "z",
             "physicalPigment": true,
-            "roughness": 0.9
+            "roughness": 0.9,
+            "excludeParts": [
+              {
+                "name": "own low exterior plaster before corner post",
+                "minMM": [
+                  9.8,
+                  -17.8,
+                  26
+                ],
+                "maxMM": [
+                  13.3,
+                  -16,
+                  50.5
+                ]
+              }
+            ]
           },
           {
             "name": "own low outer header",
@@ -1514,7 +1559,7 @@
                 0.5602961328570435
               ],
               "rangeMM": [
-                -12,
+                -7.5,
                 -2.75
               ]
             }
@@ -1748,7 +1793,22 @@
             ],
             "axis": "z",
             "physicalPigment": true,
-            "roughness": 0.9
+            "roughness": 0.9,
+            "excludeParts": [
+              {
+                "name": "own low exterior plaster before corner post",
+                "minMM": [
+                  9.8,
+                  -17.8,
+                  26
+                ],
+                "maxMM": [
+                  13.3,
+                  -16,
+                  50.5
+                ]
+              }
+            ]
           },
           {
             "name": "own low outer header",
@@ -2015,7 +2075,7 @@
                 0.5602961328570435
               ],
               "rangeMM": [
-                -12,
+                -7.5,
                 -2.75
               ]
             }
@@ -2249,7 +2309,22 @@
             ],
             "axis": "z",
             "physicalPigment": true,
-            "roughness": 0.9
+            "roughness": 0.9,
+            "excludeParts": [
+              {
+                "name": "own low exterior plaster before corner post",
+                "minMM": [
+                  9.8,
+                  -17.8,
+                  26
+                ],
+                "maxMM": [
+                  13.3,
+                  -16,
+                  50.5
+                ]
+              }
+            ]
           },
           {
             "name": "own low outer header",
@@ -2516,7 +2591,7 @@
                 0.5602961328570435
               ],
               "rangeMM": [
-                -12,
+                -7.5,
                 -2.75
               ]
             }
@@ -2841,7 +2916,7 @@
     "fabricParts": [],
     "hardware": []
   },
-  "reviewNotes": "Own authorPDF18HD andfull/back/top/side/perpendicularlowandendwallviews inspected. High+Y roof,tallendwall+X,lowwall-Y. Own96qualifiedroofrays plane{'originMM': [0, 0, 74.43391053500994], 'normal': [0.009576324385248414, -0.8282370056431376, 0.5602961328570435], 'direction': [0.0, 0.5603218258796331, 0.8282749854021394], 'fit': [-0.017091541104196344, 1.4782129610993724, 74.43391053500994], 'samples': 96, 'selection': 'Own visible roof first-hit rays,centralX+-12/Z>45/normalY<-.2/normalZ>.25 androbustfit;NOTforeignfamilyassumption', 'topRangeMM': [-0.9975977694232636, -0.8969571979749735, -0.5708768354399323, -0.013736166705855535, 0.6483965505366087, 0.8783208152158138, 0.9036950049672401]}. Parent110alltransformsfail exactfloorcorrespondence(bestrotate270median.202mm),therefore NOforeignmaterialmasks reused. OwnfloorYgrain2347normals nx2.082/ny2.033. Fourcirclefits394/289/324/247verticesall24bins;twoendheads radius1.305/1.286 andtwolowheaderheads. Ownenddiag39sections;lowoutsidefalling39sections;uppercrossbeam ownviewseedneeds sourcepaintverification. Onefreequarter[-8.75,8.75] minimum38.904137mmheadroom;otherthreequartersblocked. LblockerY<=-1.2 orX>=10.3measuredbodyZ28..61.49799. Nativecentre[-0.0053005218505859375, -0.06665515899658203] from14/16,ordinaryUD016. Sourcepaint,allnativegeometry/material/airchecks,twocandidates4tierlargeviews,finalRLS/centre/transparentpreview/GoMCP required beforepublication. No lights. OwninsideendXprofilesproveplainplasterX11.65..11.9 belowfascia,raisedslopingwoodX10.996..11.276. RestrictinnerfasciaXmax11.45(includingplasterexclusions) toavoidwoodgrainoverplainwall. Owninnerwallraiseddiagonal39sectionsdir[0.0, 0.7430697131269689, -0.6692140176605719]range[-1.6521302454787632, 2.2624025471207787]andupper11sections measured;boundedownsourcecomponents atX<=11.45/near.12 preventwoodoverplainX11.65..12.05. Allplasterexclusionsincludeowninnerbeams. Upperinnerinitial11sectionfitcontainsX7.54rooflathandwrongruns;REJECTED. Retain5ownraisedX>=10.3sectionsY9.5..11.5,lineC[11.431758403778076, 10.5, 73.83000106811524]D[0, 0.8799061835250624, 0.4751474594211349]maxsectionresidual<.01. Selfboundedcomponentstilldefinespaintonlyonraisedwood. Lowerinnerdiagonal carvedfaceextendsdeeperthanraisedcomponent;applyownmeasurednormalband[-1.65213,2.26240]toX<=12.2includinggrooves,notcomponentdistance. Plainoutsidebandstillplaster. Dry3196sourceprobes:renderallpass,LODonlyridgeX-4Y-9.059525Z62normal.21793failed(.01175mmdrift);preserveown2.4mmnativepatch.",
+  "reviewNotes": "Own authorPDF18HD andfull/back/top/side/perpendicularlowandendwallviews inspected. High+Y roof,tallendwall+X,lowwall-Y. Own96qualifiedroofrays plane{'originMM': [0, 0, 74.43391053500994], 'normal': [0.009576324385248414, -0.8282370056431376, 0.5602961328570435], 'direction': [0.0, 0.5603218258796331, 0.8282749854021394], 'fit': [-0.017091541104196344, 1.4782129610993724, 74.43391053500994], 'samples': 96, 'selection': 'Own visible roof first-hit rays,centralX+-12/Z>45/normalY<-.2/normalZ>.25 androbustfit;NOTforeignfamilyassumption', 'topRangeMM': [-0.9975977694232636, -0.8969571979749735, -0.5708768354399323, -0.013736166705855535, 0.6483965505366087, 0.8783208152158138, 0.9036950049672401]}. Parent110alltransformsfail exactfloorcorrespondence(bestrotate270median.202mm),therefore NOforeignmaterialmasks reused. OwnfloorYgrain2347normals nx2.082/ny2.033. Fourcirclefits394/289/324/247verticesall24bins;twoendheads radius1.305/1.286 andtwolowheaderheads. Ownenddiag39sections;lowoutsidefalling39sections;uppercrossbeam ownviewseedneeds sourcepaintverification. Onefreequarter[-8.75,8.75] minimum38.904137mmheadroom;otherthreequartersblocked. LblockerY<=-1.2 orX>=10.3measuredbodyZ28..61.49799. Nativecentre[-0.0053005218505859375, -0.06665515899658203] from14/16,ordinaryUD016. Sourcepaint,allnativegeometry/material/airchecks,twocandidates4tierlargeviews,finalRLS/centre/transparentpreview/GoMCP required beforepublication. No lights. OwninsideendXprofilesproveplainplasterX11.65..11.9 belowfascia,raisedslopingwoodX10.996..11.276. RestrictinnerfasciaXmax11.45(includingplasterexclusions) toavoidwoodgrainoverplainwall. Owninnerwallraiseddiagonal39sectionsdir[0.0, 0.7430697131269689, -0.6692140176605719]range[-1.6521302454787632, 2.2624025471207787]andupper11sections measured;boundedownsourcecomponents atX<=11.45/near.12 preventwoodoverplainX11.65..12.05. Allplasterexclusionsincludeowninnerbeams. Upperinnerinitial11sectionfitcontainsX7.54rooflathandwrongruns;REJECTED. Retain5ownraisedX>=10.3sectionsY9.5..11.5,lineC[11.431758403778076, 10.5, 73.83000106811524]D[0, 0.8799061835250624, 0.4751474594211349]maxsectionresidual<.01. Selfboundedcomponentstilldefinespaintonlyonraisedwood. Lowerinnerdiagonal carvedfaceextendsdeeperthanraisedcomponent;applyownmeasurednormalband[-1.65213,2.26240]toX<=12.2includinggrooves,notcomponentdistance. Plainoutsidebandstillplaster. Dry3196sourceprobes:renderallpass,LODonlyridgeX-4Y-9.059525Z62normal.21793failed(.01175mmdrift);preserveown2.4mmnativepatch. Boundaryrepairafter118:own117nativepostprofilesX10..13/Y-16.4..-16.6plastervsX14..15/Y-17.2..-17.5. ExcludeX9.8..13.3/Y-17.8..-16fromendpostandnestedplasterexclusions;outerfasciaNmin-7.5instead-12restoresroughplasterbumps. Changeonlyalbedoandlocalroughness.9->.98;allgeometryUVnormalAOmetallicshadowmetadataUUIDsourcebehaviourpreservedwithbyteproof.",
   "renderColourSize": 2048,
   "renderColourQuality": 96,
   "lodColourQuality": 96,
