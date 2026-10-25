@@ -171,6 +171,7 @@ Roof Flat Straight Line|Плоская крыша с одним огражден
 Wood Ground Cross|Деревянный пол с перекрестием
 Big Barrel Tall Angle|Большая бочка в высоком углу
 Big Barrel Angle|Большая бочка в углу
+Little Barrels Angle|Маленькие бочки в углу
 Balcony|Балкон
 Balcony Angle|Угловой балкон
 Balcony Corridor|Балкон с двумя ограждениями
