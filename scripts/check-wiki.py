@@ -115,7 +115,7 @@ def check(root, strict=False):
                     if fragment not in anchors[dest]:
                         fail(page, number, f"missing heading anchor: {raw}")
             for match in CODE.finditer(line):
-                if page.is_relative_to(root / "plans"):
+                if page.relative_to(root).parts[0] == "plans":
                     continue  # A proposal may explicitly name an implementation that does not exist yet.
                 name = match[1]
                 if not SOURCE_FILE.fullmatch(name):
