@@ -85,12 +85,39 @@ export function triangleFingerprint(document, exclude = []) {
   return digest.digest("hex");
 }
 
+// Count the published scene, including mesh reuse and generated closure geometry.
+export function sceneTriangleCount(document) {
+  const root = document.getRoot();
+  const scene = root.getDefaultScene() || root.listScenes()[0];
+  assert.ok(scene, "A published scene is required");
+  let triangles = 0;
+  const visit = (node) => {
+    for (const primitive of node.getMesh()?.listPrimitives() || []) {
+      assert.equal(primitive.getMode(), 4, "Triangle primitives required");
+      const count = primitive.getIndices()?.getCount() ??
+        primitive.getAttribute("POSITION").getCount();
+      assert.equal(count % 3, 0, "Complete triangles required");
+      triangles += count / 3;
+    }
+    node.listChildren().forEach(visit);
+  };
+  scene.listChildren().forEach(visit);
+  return triangles;
+}
+
 export function stripSculptedFlames(
   document,
   settings,
   nativeZShiftMM = 0,
   tier,
+  mountCenterMM = [0, 0],
 ) {
+  assert.ok(
+    Array.isArray(mountCenterMM) && mountCenterMM.length === 2 &&
+      mountCenterMM.every(Number.isFinite) && Number.isFinite(nativeZShiftMM),
+    "Finite native mounting centre and height required",
+  );
+  const nativeShiftMM = [...mountCenterMM, nativeZShiftMM];
   const parts = (settings.surfaceParts || []).filter((p) => p.kind === "flame");
   if (!parts.length) throw Error("Measured flame domains required");
   if ((settings.surfaceParts || []).some((p) => p.kind === "liquid"))
@@ -99,7 +126,7 @@ export function stripSculptedFlames(
     return clipMeasuredFlameBoundaries(
       document,
       (p) => parts.some((part) => structureDomain(p, part)),
-      [0, 0, nativeZShiftMM],
+      nativeShiftMM,
       {
         ...settings.flameBoundaryClip,
         toleranceMM:
@@ -113,7 +140,7 @@ export function stripSculptedFlames(
   return stripMeasuredFlames(
     document,
     (p) => parts.some((part) => structureDomain(p, part)),
-    [0, 0, nativeZShiftMM],
+    nativeShiftMM,
   );
 }
 

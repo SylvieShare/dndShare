@@ -59,6 +59,7 @@ for (const tier of ["render", "lod"]) {
       recipe.materials,
       recipe.mountDepthMM - report.model.mountDepth * 35,
       tier,
+      recipe.mountCenterMM,
     ),
     expected = triangleFingerprint(doc);
   await doc.transform(prune({ keepAttributes: true }));

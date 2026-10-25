@@ -15,7 +15,7 @@ import { initializeStructureReferences } from './medieval_source_reference.mjs';
 import { medievalTextureSizes, medievalColourQuality } from './medieval_texture_sizes.mjs';
 import { assertReviewedMountCentreFit } from './mount_centre_fit.mjs';
 import { reviewedMountAssetHash } from './reviewed_mount_asset.mjs';
-import { stripSculptedFlames, retainPaintForFlameClipping } from './model_flame_geometry.mjs';
+import { stripSculptedFlames, retainPaintForFlameClipping, sceneTriangleCount } from './model_flame_geometry.mjs';
 import { addLightEffectPreview } from './light_effect_preview.mjs';
 import { addModelWaterMask } from './model_water_mask.mjs';
 import { validateReceiverReport } from './receiver_frame_review.mjs';
@@ -61,7 +61,7 @@ if (!process.argv.includes('--publish-manifest')) {
     if (!bakedCoverage.some(Boolean) || !packedCoverage.some(Boolean)) throw new Error('UV has no physical surface pixels: '+tier);
     if (recipe.proceduralFire) {
       retainPaintForFlameClipping(doc);
-      report.flameRemovalGeometryReview = stripSculptedFlames(doc, recipe.materials, 0, tier);
+      report.flameRemovalGeometryReview = stripSculptedFlames(doc, recipe.materials, 0, tier, recipe.mountCenterMM);
       await doc.transform(prune({ keepAttributes: true }));
     }
     const paintSettings=recipe.proceduralFire
@@ -217,8 +217,8 @@ if (!process.argv.includes('--publish-manifest')) {
     for (const side of ['min', 'max']) for (let i = 0; i < 3; i++) {
       if (Math.abs(before[side][i]-after[side][i])>.0002) throw new Error('Packaging changed bounds');
     }
-    tiers[tier] = { bytes: final.length, triangles: report.triangles, colourSize: size, colourQuality: medievalColourQuality(recipe,tier), normalORMSize: dataSize,
-      ...(recipe.materials.torch?.flameReference || recipe.materials.surfaceParts?.some(p => p.kind==='flame') ? { emissiveSize: size, emissiveFormat: 'PNG sRGB' } : {}),
+    tiers[tier] = { bytes: final.length, triangles: sceneTriangleCount(decoded), preparedTriangles: report.triangles, colourSize: size, colourQuality: medievalColourQuality(recipe,tier), normalORMSize: dataSize,
+      ...(decoded.getRoot().listMaterials().some(material => material.getEmissiveTexture()) ? { emissiveSize: size, emissiveFormat: 'PNG sRGB' } : {}),
       blackSurfacePixels: 0, invalidNormalPixels: 0, bounds: after, quality: report.quality };
     console.log('MEDIEVAL_PACKAGED', code, tier, tiers[tier].triangles, final.length);
   }

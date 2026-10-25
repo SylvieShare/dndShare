@@ -148,3 +148,24 @@ test("paint interpolation remains available after normalized export colours are 
   });
   assert.ok(p.getAttribute("COLOR_1").getCount() > 0);
 });
+
+test("clipping a shifted native flame retains the original body and UV frame", () => {
+  const {d,p} = fixture();
+  stripSculptedFlames(d,{
+    surfaceParts:[{kind:"flame",minMM:[87.5,-71,16],maxMM:[106,-34,18]}],
+    flameBoundaryClip:{toleranceMM:.25},
+  },17,"render",[70,-35]);
+  const a=p.getAttribute("POSITION"),uv=p.getAttribute("TEXCOORD_0"),idx=p.getIndices();
+  let area=0,maxX=-Infinity;
+  for(let i=0;i<a.getCount();i++){
+    const q=a.getElement(i,[]),t=uv.getElement(i,[]);maxX=Math.max(maxX,q[0]);
+    assert.ok(q[0]<=.50001);
+    assert.ok(Math.abs(q[0]-t[0])<1e-6&&Math.abs(q[2]-t[1])<1e-6);
+  }
+  for(let i=0;i<idx.getCount();i+=3){
+    const [u,v,w]=[0,1,2].map(j=>a.getElement(idx.getScalar(i+j),[]));
+    area+=Math.abs((v[0]-u[0])*(w[2]-u[2])-(v[2]-u[2])*(w[0]-u[0]))/2;
+  }
+  assert.ok(Math.abs(maxX-.5)<1e-5);
+  assert.ok(Math.abs(area-.375)<1e-4);
+});

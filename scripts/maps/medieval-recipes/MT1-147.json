@@ -1,0 +1,4148 @@
+{
+  "name": "Fireplace",
+  "groupCode": "MED-fireplaces",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0.0001697540283203125,
+    0.0048465728759765625
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "renderTriangles": 190000,
+  "lodTriangles": 130000,
+  "renderBakeSize": 1536,
+  "lodBakeSize": 1536,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "floor",
+    "wood",
+    "stone",
+    "fireplace",
+    "fire",
+    "logs",
+    "plaster",
+    "bonus"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.31,
+      0.3,
+      0.265
+    ],
+    "stoneLightRGB": [
+      0.58,
+      0.55,
+      0.48
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "hardware": [],
+    "physicalStonePigment": true,
+    "preservePhysicalWoodShade": true,
+    "woodParts": [
+      {
+        "name": "floor boards and north south fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west floor frame and fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.6,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east floor frame and fascia",
+        "minMM": [
+          14.3,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south vertical timber post",
+        "minMM": [
+          -17.557304000854494,
+          -17.60241780281067,
+          26.1000114440918
+        ],
+        "maxMM": [
+          -10.057304000854492,
+          -13.602417802810669,
+          50.0000114440918
+        ],
+        "axis": "z",
+        "nearSource": {
+          "code": "MT1-035",
+          "sourceSHA256": "ea1edada38e8dc1216cfc2f5eb98e167bcbc7afa3a1dd356a37f84f745c89953",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            -0.04269599914550781,
+            0.0024178028106689453,
+            -1.1444091796875e-05
+          ],
+          "projectTo": {
+            "code": "MT1-147",
+            "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+          }
+        },
+        "physicalPigment": true
+      },
+      {
+        "name": "north vertical timber post",
+        "minMM": [
+          -17.557304000854494,
+          13.59758219718933,
+          26.1000114440918
+        ],
+        "maxMM": [
+          -10.057304000854492,
+          17.597582197189332,
+          50.0000114440918
+        ],
+        "axis": "z",
+        "nearSource": {
+          "code": "MT1-035",
+          "sourceSHA256": "ea1edada38e8dc1216cfc2f5eb98e167bcbc7afa3a1dd356a37f84f745c89953",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            -0.04269599914550781,
+            0.0024178028106689453,
+            -1.1444091796875e-05
+          ],
+          "projectTo": {
+            "code": "MT1-147",
+            "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+          }
+        },
+        "physicalPigment": true
+      },
+      {
+        "name": "own new charred fuel envelope",
+        "minMM": [
+          -7,
+          -11.1,
+          27.7
+        ],
+        "maxMM": [
+          7.8,
+          11.1,
+          34.15
+        ],
+        "awayFromSource": {
+          "code": "MT1-145",
+          "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            -1.71661376953125e-05,
+            0.0,
+            -0.00054931640625
+          ],
+          "projectTo": {
+            "code": "MT1-147",
+            "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+          }
+        },
+        "axis": "beam",
+        "direction": [
+          1,
+          0,
+          0
+        ],
+        "physicalPigment": true,
+        "darkRGB": [
+          0.07,
+          0.05,
+          0.03
+        ],
+        "lightRGB": [
+          0.16,
+          0.09,
+          0.035
+        ],
+        "roughness": 0.98
+      },
+      {
+        "name": "own left whole log",
+        "minMM": [
+          -7,
+          -11.1,
+          27.7
+        ],
+        "maxMM": [
+          7.8,
+          11.1,
+          34.15
+        ],
+        "radialShell": {
+          "originMM": [
+            5.882882440085921,
+            -9.226661227784215,
+            29.96888749028039
+          ],
+          "axis": [
+            0.7354430778701758,
+            -0.6753723971361142,
+            0.0547321148820472
+          ],
+          "radiusAtOriginMM": 2.827528567688471,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -14,
+            2.5
+          ],
+          "thicknessMM": 2.827528567688471,
+          "allowanceMM": 0.06
+        },
+        "awayFromSource": {
+          "code": "MT1-145",
+          "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            -1.71661376953125e-05,
+            0.0,
+            -0.00054931640625
+          ],
+          "projectTo": {
+            "code": "MT1-147",
+            "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+          }
+        },
+        "axis": "beam",
+        "direction": [
+          0.7354430778701758,
+          -0.6753723971361142,
+          0.0547321148820472
+        ],
+        "physicalPigment": true,
+        "darkRGB": [
+          0.105,
+          0.065,
+          0.028
+        ],
+        "lightRGB": [
+          0.29,
+          0.16,
+          0.065
+        ],
+        "roughness": 0.97
+      },
+      {
+        "name": "own left measured end growth rings",
+        "minMM": [
+          -7,
+          -11.1,
+          27.7
+        ],
+        "maxMM": [
+          7.8,
+          11.1,
+          34.15
+        ],
+        "radialShell": {
+          "originMM": [
+            5.882882440085921,
+            -9.226661227784215,
+            29.96888749028039
+          ],
+          "axis": [
+            0.7354430778701758,
+            -0.6753723971361142,
+            0.0547321148820472
+          ],
+          "radiusAtOriginMM": 2.5531593799730232,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -14,
+            2.5
+          ],
+          "thicknessMM": 2.5531593799730232,
+          "allowanceMM": 0.06
+        },
+        "awayFromSource": {
+          "code": "MT1-145",
+          "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            -1.71661376953125e-05,
+            0.0,
+            -0.00054931640625
+          ],
+          "projectTo": {
+            "code": "MT1-147",
+            "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+          }
+        },
+        "projection": {
+          "originMM": [
+            5.989757101500364,
+            -9.259952662603617,
+            30.187188085730163
+          ],
+          "axis": [
+            0.7028289627614253,
+            -0.6568445851412249,
+            0.2731055474983092
+          ],
+          "rangeMM": [
+            -0.65,
+            0.65
+          ]
+        },
+        "axis": "log-x",
+        "physicalPigment": true,
+        "darkRGB": [
+          0.3,
+          0.18,
+          0.07
+        ],
+        "lightRGB": [
+          0.53,
+          0.34,
+          0.13
+        ],
+        "roughness": 0.94,
+        "capCentersMM": [
+          [
+            6.000951812653897,
+            -9.33508674374735,
+            29.97767428379017
+          ]
+        ],
+        "grainRadiusMM": 2.5531593799730232,
+        "endRangesMM": [
+          [
+            -20,
+            20
+          ]
+        ],
+        "endDarkRGB": [
+          0.28,
+          0.155,
+          0.06
+        ],
+        "endLightRGB": [
+          0.57,
+          0.37,
+          0.145
+        ],
+        "endRoughness": 0.94
+      },
+      {
+        "name": "own right whole log",
+        "minMM": [
+          -7,
+          -11.1,
+          27.7
+        ],
+        "maxMM": [
+          7.8,
+          11.1,
+          34.15
+        ],
+        "radialShell": {
+          "originMM": [
+            4.515600584320303,
+            -1.231848921952147,
+            31.115408253972227
+          ],
+          "axis": [
+            0.879490218114345,
+            -0.47009787237779893,
+            0.0741953275284124
+          ],
+          "radiusAtOriginMM": 3.4398248163041854,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -14,
+            2.5
+          ],
+          "thicknessMM": 3.4398248163041854,
+          "allowanceMM": 0.06
+        },
+        "awayFromSource": {
+          "code": "MT1-145",
+          "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            -1.71661376953125e-05,
+            0.0,
+            -0.00054931640625
+          ],
+          "projectTo": {
+            "code": "MT1-147",
+            "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+          }
+        },
+        "axis": "beam",
+        "direction": [
+          0.879490218114345,
+          -0.47009787237779893,
+          0.0741953275284124
+        ],
+        "physicalPigment": true,
+        "darkRGB": [
+          0.105,
+          0.065,
+          0.028
+        ],
+        "lightRGB": [
+          0.29,
+          0.16,
+          0.065
+        ],
+        "roughness": 0.97
+      },
+      {
+        "name": "own right measured end growth rings",
+        "minMM": [
+          -7,
+          -11.1,
+          27.7
+        ],
+        "maxMM": [
+          7.8,
+          11.1,
+          34.15
+        ],
+        "radialShell": {
+          "originMM": [
+            4.515600584320303,
+            -1.231848921952147,
+            31.115408253972227
+          ],
+          "axis": [
+            0.879490218114345,
+            -0.47009787237779893,
+            0.0741953275284124
+          ],
+          "radiusAtOriginMM": 3.0709131562758563,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -14,
+            2.5
+          ],
+          "thicknessMM": 3.0709131562758563,
+          "allowanceMM": 0.06
+        },
+        "awayFromSource": {
+          "code": "MT1-145",
+          "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            -1.71661376953125e-05,
+            0.0,
+            -0.00054931640625
+          ],
+          "projectTo": {
+            "code": "MT1-147",
+            "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+          }
+        },
+        "projection": {
+          "originMM": [
+            4.520502415191117,
+            -1.6206285317364484,
+            30.6199333812154
+          ],
+          "axis": [
+            0.7484957329660727,
+            -0.424405059629128,
+            0.5095434064854322
+          ],
+          "rangeMM": [
+            -0.65,
+            0.65
+          ]
+        },
+        "axis": "log-x",
+        "physicalPigment": true,
+        "darkRGB": [
+          0.3,
+          0.18,
+          0.07
+        ],
+        "lightRGB": [
+          0.53,
+          0.34,
+          0.13
+        ],
+        "roughness": 0.94,
+        "capCentersMM": [
+          [
+            4.433312109444498,
+            -1.1878647636709223,
+            31.10846625482377
+          ]
+        ],
+        "grainRadiusMM": 3.0709131562758563,
+        "endRangesMM": [
+          [
+            -20,
+            20
+          ]
+        ],
+        "endDarkRGB": [
+          0.28,
+          0.155,
+          0.06
+        ],
+        "endLightRGB": [
+          0.57,
+          0.37,
+          0.145
+        ],
+        "endRoughness": 0.94
+      },
+      {
+        "name": "own side charred fuel fragment",
+        "minMM": [
+          -7.1,
+          2.2,
+          28.1
+        ],
+        "maxMM": [
+          3.8,
+          9.0,
+          33.5
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -1.6205432796698347,
+            6.0,
+            30.93425805408284
+          ],
+          "radiiMM": [
+            6.8,
+            4.1,
+            3.0
+          ]
+        },
+        "awayFromSource": {
+          "code": "MT1-145",
+          "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            -1.71661376953125e-05,
+            0.0,
+            -0.00054931640625
+          ],
+          "projectTo": {
+            "code": "MT1-147",
+            "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+          }
+        },
+        "axis": "beam",
+        "direction": [
+          0.9139093909963921,
+          -0.36565313018287765,
+          -0.0191680316171618
+        ],
+        "physicalPigment": true,
+        "darkRGB": [
+          0.12,
+          0.07,
+          0.03
+        ],
+        "lightRGB": [
+          0.31,
+          0.17,
+          0.065
+        ],
+        "roughness": 0.97
+      }
+    ],
+    "stoneParts": [
+      {
+        "name": "own sooty native firebox backing and recessed maker mark",
+        "minMM": [
+          -8.999982833862305,
+          -9.4,
+          27.40054931640625
+        ],
+        "maxMM": [
+          -5.7999828338623045,
+          9.4,
+          42.00054931640625
+        ],
+        "darkRGB": [
+          0.1,
+          0.09,
+          0.075
+        ],
+        "lightRGB": [
+          0.26,
+          0.24,
+          0.21
+        ],
+        "excludeParts": [
+          {
+            "name": "own new charred fuel envelope",
+            "minMM": [
+              -7,
+              -11.1,
+              27.7
+            ],
+            "maxMM": [
+              7.8,
+              11.1,
+              34.15
+            ],
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "rough ochre plaster on both wall faces and top",
+        "kind": "plaster",
+        "minMM": [
+          -17.557304000854494,
+          -13.602417802810669,
+          26.6000114440918
+        ],
+        "maxMM": [
+          -10.057304000854492,
+          13.59758219718933,
+          50.0000114440918
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "nearSource": {
+          "code": "MT1-035",
+          "sourceSHA256": "ea1edada38e8dc1216cfc2f5eb98e167bcbc7afa3a1dd356a37f84f745c89953",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            -0.04269599914550781,
+            0.0024178028106689453,
+            -1.1444091796875e-05
+          ],
+          "projectTo": {
+            "code": "MT1-147",
+            "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+          }
+        }
+      },
+      {
+        "name": "own tilted cast iron scroll fireback and rim",
+        "minMM": [
+          -8.999982833862305,
+          -8.5,
+          27.20054931640625
+        ],
+        "maxMM": [
+          -5.999982833862305,
+          8.5,
+          40.15054931640625
+        ],
+        "projection": {
+          "originMM": [
+            1.71661376953125e-05,
+            0.0,
+            0.00054931640625
+          ],
+          "axis": [
+            0.9991687927780292,
+            0.005688395958262367,
+            0.04036540213992376
+          ],
+          "rangeMM": [
+            -6.65,
+            -5.95
+          ]
+        },
+        "kind": "paint",
+        "rgb": [
+          0.14,
+          0.13,
+          0.11
+        ],
+        "metallic": 0.84,
+        "roughness": 0.72,
+        "variation": 0.025,
+        "excludeParts": [
+          {
+            "name": "own new charred fuel envelope",
+            "minMM": [
+              -7,
+              -11.1,
+              27.7
+            ],
+            "maxMM": [
+              7.8,
+              11.1,
+              34.15
+            ],
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "own warm side fuel cut",
+        "minMM": [
+          2.2859346963542033,
+          1.694884562442282,
+          28.009792713464172
+        ],
+        "maxMM": [
+          4.691915108004811,
+          4.685798481640744,
+          31.25
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            3.280746385871599,
+            3.299344988187358,
+            29.377458681986482
+          ],
+          "radiiMM": [
+            1.736685834063689,
+            1.5129409043452628,
+            1.8
+          ]
+        },
+        "awayFromSource": {
+          "code": "MT1-145",
+          "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            -1.71661376953125e-05,
+            0.0,
+            -0.00054931640625
+          ],
+          "projectTo": {
+            "code": "MT1-147",
+            "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+          }
+        },
+        "kind": "paint",
+        "rgb": [
+          0.42,
+          0.27,
+          0.12
+        ],
+        "roughness": 0.94,
+        "variation": 0.02
+      },
+      {
+        "name": "own lower fire away from cold masonry and outside native fuel",
+        "kind": "flame",
+        "minMM": [
+          -7.4,
+          -10.9,
+          29.7
+        ],
+        "maxMM": [
+          3.5,
+          10.9,
+          46
+        ],
+        "awayFromSource": {
+          "code": "MT1-145",
+          "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            -1.71661376953125e-05,
+            0.0,
+            -0.00054931640625
+          ],
+          "projectTo": {
+            "code": "MT1-147",
+            "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+          }
+        },
+        "excludeParts": [
+          {
+            "name": "own left whole log",
+            "minMM": [
+              -7,
+              -11.1,
+              27.7
+            ],
+            "maxMM": [
+              7.8,
+              11.1,
+              34.15
+            ],
+            "radialShell": {
+              "originMM": [
+                5.882882440085921,
+                -9.226661227784215,
+                29.96888749028039
+              ],
+              "axis": [
+                0.7354430778701758,
+                -0.6753723971361142,
+                0.0547321148820472
+              ],
+              "radiusAtOriginMM": 2.827528567688471,
+              "radiusSlope": 0,
+              "rangeMM": [
+                -14,
+                2.5
+              ],
+              "thicknessMM": 2.827528567688471,
+              "allowanceMM": 0.06
+            },
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            }
+          },
+          {
+            "name": "own right whole log",
+            "minMM": [
+              -7,
+              -11.1,
+              27.7
+            ],
+            "maxMM": [
+              7.8,
+              11.1,
+              34.15
+            ],
+            "radialShell": {
+              "originMM": [
+                4.515600584320303,
+                -1.231848921952147,
+                31.115408253972227
+              ],
+              "axis": [
+                0.879490218114345,
+                -0.47009787237779893,
+                0.0741953275284124
+              ],
+              "radiusAtOriginMM": 3.4398248163041854,
+              "radiusSlope": 0,
+              "rangeMM": [
+                -14,
+                2.5
+              ],
+              "thicknessMM": 3.4398248163041854,
+              "allowanceMM": 0.06
+            },
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            }
+          },
+          {
+            "name": "own side charred fuel fragment",
+            "minMM": [
+              -7.1,
+              2.2,
+              28.1
+            ],
+            "maxMM": [
+              3.8,
+              9.0,
+              33.5
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -1.6205432796698347,
+                6.0,
+                30.93425805408284
+              ],
+              "radiiMM": [
+                6.8,
+                4.1,
+                3.0
+              ]
+            },
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            }
+          },
+          {
+            "name": "own native fireback and deeper backing",
+            "minMM": [
+              -10,
+              -9.4,
+              27.5
+            ],
+            "maxMM": [
+              -6.7,
+              9.4,
+              42
+            ],
+            "projection": {
+              "originMM": [
+                1.71661376953125e-05,
+                0.0,
+                0.00054931640625
+              ],
+              "axis": [
+                0.9991687927780292,
+                0.005688395958262367,
+                0.04036540213992376
+              ],
+              "rangeMM": [
+                -20,
+                -5.95
+              ]
+            }
+          },
+          {
+            "name": "own warm side fuel cut",
+            "minMM": [
+              2.2859346963542033,
+              1.694884562442282,
+              28.009792713464172
+            ],
+            "maxMM": [
+              4.691915108004811,
+              4.685798481640744,
+              31.25
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                3.280746385871599,
+                3.299344988187358,
+                29.377458681986482
+              ],
+              "radiiMM": [
+                1.736685834063689,
+                1.5129409043452628,
+                1.8
+              ]
+            },
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            }
+          }
+        ],
+        "rgb": [
+          1,
+          0.5,
+          0.05
+        ],
+        "emissionInsetMM": 0.015,
+        "gradientZMM": [
+          30,
+          44.7
+        ],
+        "gradientRGB": [
+          [
+            1,
+            0.72,
+            0.09
+          ],
+          [
+            1,
+            0.23,
+            0.025
+          ]
+        ],
+        "roughness": 0.9,
+        "variation": 0.025
+      },
+      {
+        "name": "own upper fire component without matching cold stone",
+        "kind": "flame",
+        "minMM": [
+          -3.5,
+          -11,
+          34.3
+        ],
+        "maxMM": [
+          3.5,
+          11,
+          46
+        ],
+        "nearSource": {
+          "code": "MT1-147",
+          "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a",
+          "matchMM": 0.04,
+          "componentAboveMM": 34.3,
+          "componentIndex": 0,
+          "componentBoundsMM": {
+            "minMM": [
+              -3.5,
+              -11.0,
+              34.3
+            ],
+            "maxMM": [
+              3.5,
+              11.0,
+              43.8
+            ]
+          },
+          "projectTo": {
+            "code": "MT1-147",
+            "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+          }
+        },
+        "awayFromSource": {
+          "code": "MT1-145",
+          "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            -1.71661376953125e-05,
+            0.0,
+            -0.00054931640625
+          ],
+          "projectTo": {
+            "code": "MT1-147",
+            "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+          }
+        },
+        "rgb": [
+          1,
+          0.5,
+          0.05
+        ],
+        "emissionInsetMM": 0.015,
+        "gradientZMM": [
+          30,
+          44.7
+        ],
+        "gradientRGB": [
+          [
+            1,
+            0.72,
+            0.09
+          ],
+          [
+            1,
+            0.23,
+            0.025
+          ]
+        ],
+        "roughness": 0.9,
+        "variation": 0.025,
+        "excludeParts": [
+          {
+            "name": "own warm side fuel cut",
+            "minMM": [
+              2.2859346963542033,
+              1.694884562442282,
+              28.009792713464172
+            ],
+            "maxMM": [
+              4.691915108004811,
+              4.685798481640744,
+              31.25
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                3.280746385871599,
+                3.299344988187358,
+                29.377458681986482
+              ],
+              "radiiMM": [
+                1.736685834063689,
+                1.5129409043452628,
+                1.8
+              ]
+            },
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "ironParts": [],
+    "fabricParts": [],
+    "produceParts": [],
+    "emissionStrength": 1.2,
+    "flameBoundaryClip": {
+      "toleranceMM": 0.025,
+      "lodToleranceMM": 0.05,
+      "preserveRegions": [
+        {
+          "minMM": [
+            -7,
+            -11.1,
+            27.7
+          ],
+          "maxMM": [
+            7.8,
+            11.1,
+            34.15
+          ]
+        },
+        {
+          "minMM": [
+            -10,
+            -9.4,
+            27.5
+          ],
+          "maxMM": [
+            -6.7,
+            9.4,
+            42
+          ]
+        }
+      ]
+    }
+  },
+  "weightBudget": {
+    "renderMiB": [
+      5.5,
+      13
+    ],
+    "lodMiB": [
+      4,
+      10
+    ],
+    "shadowKiB": [
+      250,
+      750
+    ],
+    "previewKiB": [
+      15,
+      45
+    ],
+    "basis": "Own699988tri34999484B cold145masonry+own2logs/sidefuel/sculptedflames. R190k/L130k1536mapsvs1152compact. Ownfuel66direct/whole-similarity NOTexact; ownshaft/capfits and ownupperfirecomponent identify147,keepwood/stone,striprigidfire,FXtorch5radius4warm. Needbody+FXon/off+forward/backstop+nativeframeproof."
+  },
+  "reviewNotes": "OwnRAWfull/back/fireboxSEEN:twofrontcutlogs/sidefuel+rigidfireinsideotherwise145coldfireplace. Wall03510000all<.05max.022133;floor14510000all<.05max.046560;owncore198normalsX. Own28medium17.5diam35heightpositionsNONEclear,bodyxmax7.415200/block7.515200. Directfuel66matchREJECTmedian.20433/p90.461617;similaritybestS.963709 with3Drotation gives8695of10000<.05/9533<.15,notexacttransfer. Usedonlyaslog-fitseed/side-envelope. Ownleftcyl290pts6angularbinsR2.267469,cap471ownpts;right56pts7binsR3.189825,cap743ownpts. Caprim1608/2065ownpts determineconservativewood/caplimits andaxis-planeintersectiongrowthcentres. NativeupperROI34.3..43.8component0=5387pts,cold-away97.4%median5.519mm;components1/2 areSTONE(100%coldmatching),notfire. Wholelowerheapcomponentfused54076vertswithstone/woodsoREJECTasflamemask. Mainfireisawaycold145,outsideownfuelvolumes+nativebackplate;upperowncomponentadditionallyawaycoldprotects2.6%commoncontactstone. MeasuredmountCentre147nonzero requiresnewstripSculptedFlamesXYnativeframe;21NodechecksPASSincludingtranslatedwholetriangleandclippedUV/area. Coldmasonry/wood/PBRpreserved;staticfiremustremovedbeforefinalMCP,proceduralwarmFXon/offandlightclearance/backstoprequired. Nativepaintdiagnostic:sidewoodfrontpoints[y5/z30..32,y7/z32,y8/z30..32]atX2.02..3.438wereoutsideoldsideellipsoidandmislabelledfire. OwnsideenvelopecenterY6/radii[6,3.5,2.8],maxX3.8/maxZ33.5preservesall,whileactualflame[y3/z33.5..34,x1.2..1.4]staysoutside. Nativeuppertipreaches44.6;old44.1boundsmissed. Extendedflamebounds46withcold-stoneexclusion,gradientend44.7;stonevaultat44.8..45matchescold145andstayssolid. Finalside-fuelenvelopeexpandedradii[6.8,4.1,3]withinownz≤33.5box;smallownwarmcutseparatelyexcludedfromEVERYflamedomainaswellaspainted,top31.25/radiusZ1.8. Thisprotectsactualwoodcutrimwhichmainflamemaskotherwiseoverrode. New147wallpartsfromlegacy035missedphysicalPigmenton['south vertical timber post', 'north vertical timber post'];enabledallownwoodpartsforphysicalsourceRGBreprojection. DecodedsceneTriangleCountnowincludesclippingrefinement/backstop,keepspreparedTrianglesseparate;22NodechecksPASS. NativeFireQA196rays/RLSstableHottriangles0/frontTorchclear/rearclosedpassedbeforecolour-onlyrebuild.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standRayTopMM": 100,
+  "renderUVAngleLimitRad": 0.45,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.45,
+  "lodUVIslandMargin": 0.0008,
+  "standPointsMM": [],
+  "blockersMM": [
+    [
+      [
+        -17.7,
+        -17.7
+      ],
+      [
+        7.515200233459472,
+        -17.7
+      ],
+      [
+        7.515200233459472,
+        17.7
+      ],
+      [
+        -17.7,
+        17.7
+      ]
+    ]
+  ],
+  "lodDataSize": 1536,
+  "pegCentersMM": [
+    [
+      0.0001697540283203125,
+      0.0048465728759765625
+    ]
+  ],
+  "placementCells": [],
+  "standRayTopsMM": [],
+  "surfaceHeightMM": 25.879155158996582,
+  "renderColourSize": 1536,
+  "lodColourSize": 1536,
+  "renderDataSize": 1536,
+  "defaultLights": [
+    {
+      "key": "fireplace-fire",
+      "name": "Огонь камина",
+      "kind": "torch",
+      "color": "#ffb45a",
+      "position": [
+        0.557138,
+        0.500138,
+        0.528571
+      ],
+      "intensity": 5,
+      "radius": 4,
+      "enabled": true,
+      "flicker": true,
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.46,
+          0.37
+        ],
+        "strength": 0.7,
+        "offset": [
+          -0.108572,
+          0,
+          -0.157142
+        ]
+      }
+    }
+  ],
+  "mountCentreFitReview": {
+    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a",
+    "nativeCentresMM": [
+      [
+        0.0001697540283203125,
+        0.0048465728759765625
+      ]
+    ],
+    "fittedCentresMM": [
+      [
+        0.0001697540283203125,
+        0.0048465728759765625
+      ]
+    ],
+    "preservedCentroidMM": [
+      0.0001697540283203125,
+      0.0048465728759765625
+    ],
+    "maxCoordinateMoveMM": 0,
+    "requiredDecodedCentreToleranceMM": 0.02,
+    "sourceSections": [
+      {
+        "z": 4,
+        "centreMM": [
+          0.04372215270996094,
+          0.0025925636291503906
+        ],
+        "endsMM": [
+          [
+            -12.89090347290039,
+            12.978347778320312
+          ],
+          [
+            -12.930343627929688,
+            12.935528755187988
+          ]
+        ]
+      },
+      {
+        "z": 6,
+        "centreMM": [
+          0.043741703033447266,
+          0.0027704238891601562
+        ],
+        "endsMM": [
+          [
+            -12.890901565551758,
+            12.978384971618652
+          ],
+          [
+            -12.930398941040039,
+            12.93593978881836
+          ]
+        ]
+      },
+      {
+        "z": 8,
+        "centreMM": [
+          0.043868064880371094,
+          0.0029230117797851562
+        ],
+        "endsMM": [
+          [
+            -12.8906888961792,
+            12.978425025939941
+          ],
+          [
+            -12.93045425415039,
+            12.936300277709961
+          ]
+        ]
+      },
+      {
+        "z": 10,
+        "centreMM": [
+          0.02184009552001953,
+          0.0031418800354003906
+        ],
+        "endsMM": [
+          [
+            -12.934759140014648,
+            12.978439331054688
+          ],
+          [
+            -12.930455207824707,
+            12.936738967895508
+          ]
+        ]
+      },
+      {
+        "z": 12,
+        "centreMM": [
+          0.00020313262939453125,
+          0.004896640777587891
+        ],
+        "endsMM": [
+          [
+            -13.37848949432373,
+            13.37889575958252
+          ],
+          [
+            -13.370638847351074,
+            13.38043212890625
+          ]
+        ]
+      },
+      {
+        "z": 14,
+        "centreMM": [
+          0.0006732940673828125,
+          0.004798412322998047
+        ],
+        "endsMM": [
+          [
+            -15.099228858947754,
+            15.10057544708252
+          ],
+          [
+            -15.092509269714355,
+            15.102106094360352
+          ]
+        ]
+      },
+      {
+        "z": 16,
+        "centreMM": [
+          0.0001697540283203125,
+          0.0048465728759765625
+        ],
+        "endsMM": [
+          [
+            -16.8216552734375,
+            16.82199478149414
+          ],
+          [
+            -16.81414794921875,
+            16.823841094970703
+          ]
+        ]
+      }
+    ],
+    "method": "Own nativeinsertflank rays4/6/8/10/12/14/16;upper16axis selected separatelyfromlowerstem"
+  },
+  "geometryDetailRegions": [
+    {
+      "name": "own native mounting lip",
+      "minMM": [
+        -17.8,
+        -17.8,
+        16.99
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        17.65
+      ],
+      "sourceSelection": {
+        "excludeParts": [
+          {
+            "name": "own lower fire away from cold masonry and outside native fuel",
+            "kind": "flame",
+            "minMM": [
+              -7.4,
+              -10.9,
+              29.7
+            ],
+            "maxMM": [
+              3.5,
+              10.9,
+              46
+            ],
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            },
+            "excludeParts": [
+              {
+                "name": "own left whole log",
+                "minMM": [
+                  -7,
+                  -11.1,
+                  27.7
+                ],
+                "maxMM": [
+                  7.8,
+                  11.1,
+                  34.15
+                ],
+                "radialShell": {
+                  "originMM": [
+                    5.882882440085921,
+                    -9.226661227784215,
+                    29.96888749028039
+                  ],
+                  "axis": [
+                    0.7354430778701758,
+                    -0.6753723971361142,
+                    0.0547321148820472
+                  ],
+                  "radiusAtOriginMM": 2.827528567688471,
+                  "radiusSlope": 0,
+                  "rangeMM": [
+                    -14,
+                    2.5
+                  ],
+                  "thicknessMM": 2.827528567688471,
+                  "allowanceMM": 0.06
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              },
+              {
+                "name": "own right whole log",
+                "minMM": [
+                  -7,
+                  -11.1,
+                  27.7
+                ],
+                "maxMM": [
+                  7.8,
+                  11.1,
+                  34.15
+                ],
+                "radialShell": {
+                  "originMM": [
+                    4.515600584320303,
+                    -1.231848921952147,
+                    31.115408253972227
+                  ],
+                  "axis": [
+                    0.879490218114345,
+                    -0.47009787237779893,
+                    0.0741953275284124
+                  ],
+                  "radiusAtOriginMM": 3.4398248163041854,
+                  "radiusSlope": 0,
+                  "rangeMM": [
+                    -14,
+                    2.5
+                  ],
+                  "thicknessMM": 3.4398248163041854,
+                  "allowanceMM": 0.06
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              },
+              {
+                "name": "own side charred fuel fragment",
+                "minMM": [
+                  -7.1,
+                  2.2,
+                  28.1
+                ],
+                "maxMM": [
+                  3.8,
+                  9.0,
+                  33.5
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    -1.6205432796698347,
+                    6.0,
+                    30.93425805408284
+                  ],
+                  "radiiMM": [
+                    6.8,
+                    4.1,
+                    3.0
+                  ]
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              },
+              {
+                "name": "own native fireback and deeper backing",
+                "minMM": [
+                  -10,
+                  -9.4,
+                  27.5
+                ],
+                "maxMM": [
+                  -6.7,
+                  9.4,
+                  42
+                ],
+                "projection": {
+                  "originMM": [
+                    1.71661376953125e-05,
+                    0.0,
+                    0.00054931640625
+                  ],
+                  "axis": [
+                    0.9991687927780292,
+                    0.005688395958262367,
+                    0.04036540213992376
+                  ],
+                  "rangeMM": [
+                    -20,
+                    -5.95
+                  ]
+                }
+              },
+              {
+                "name": "own warm side fuel cut",
+                "minMM": [
+                  2.2859346963542033,
+                  1.694884562442282,
+                  28.009792713464172
+                ],
+                "maxMM": [
+                  4.691915108004811,
+                  4.685798481640744,
+                  31.25
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    3.280746385871599,
+                    3.299344988187358,
+                    29.377458681986482
+                  ],
+                  "radiiMM": [
+                    1.736685834063689,
+                    1.5129409043452628,
+                    1.8
+                  ]
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              }
+            ],
+            "rgb": [
+              1,
+              0.5,
+              0.05
+            ],
+            "emissionInsetMM": 0.015,
+            "gradientZMM": [
+              30,
+              44.7
+            ],
+            "gradientRGB": [
+              [
+                1,
+                0.72,
+                0.09
+              ],
+              [
+                1,
+                0.23,
+                0.025
+              ]
+            ],
+            "roughness": 0.9,
+            "variation": 0.025
+          },
+          {
+            "name": "own upper fire component without matching cold stone",
+            "kind": "flame",
+            "minMM": [
+              -3.5,
+              -11,
+              34.3
+            ],
+            "maxMM": [
+              3.5,
+              11,
+              46
+            ],
+            "nearSource": {
+              "code": "MT1-147",
+              "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a",
+              "matchMM": 0.04,
+              "componentAboveMM": 34.3,
+              "componentIndex": 0,
+              "componentBoundsMM": {
+                "minMM": [
+                  -3.5,
+                  -11.0,
+                  34.3
+                ],
+                "maxMM": [
+                  3.5,
+                  11.0,
+                  43.8
+                ]
+              },
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            },
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            },
+            "rgb": [
+              1,
+              0.5,
+              0.05
+            ],
+            "emissionInsetMM": 0.015,
+            "gradientZMM": [
+              30,
+              44.7
+            ],
+            "gradientRGB": [
+              [
+                1,
+                0.72,
+                0.09
+              ],
+              [
+                1,
+                0.23,
+                0.025
+              ]
+            ],
+            "roughness": 0.9,
+            "variation": 0.025,
+            "excludeParts": [
+              {
+                "name": "own warm side fuel cut",
+                "minMM": [
+                  2.2859346963542033,
+                  1.694884562442282,
+                  28.009792713464172
+                ],
+                "maxMM": [
+                  4.691915108004811,
+                  4.685798481640744,
+                  31.25
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    3.280746385871599,
+                    3.299344988187358,
+                    29.377458681986482
+                  ],
+                  "radiiMM": [
+                    1.736685834063689,
+                    1.5129409043452628,
+                    1.8
+                  ]
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "own original cast iron fireback scrollwork and rim",
+      "minMM": [
+        -8.999982833862305,
+        -8.6,
+        27.20054931640625
+      ],
+      "maxMM": [
+        -5.999982833862305,
+        8.6,
+        40.30054931640625
+      ],
+      "sourceSelection": {
+        "excludeParts": [
+          {
+            "name": "own lower fire away from cold masonry and outside native fuel",
+            "kind": "flame",
+            "minMM": [
+              -7.4,
+              -10.9,
+              29.7
+            ],
+            "maxMM": [
+              3.5,
+              10.9,
+              46
+            ],
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            },
+            "excludeParts": [
+              {
+                "name": "own left whole log",
+                "minMM": [
+                  -7,
+                  -11.1,
+                  27.7
+                ],
+                "maxMM": [
+                  7.8,
+                  11.1,
+                  34.15
+                ],
+                "radialShell": {
+                  "originMM": [
+                    5.882882440085921,
+                    -9.226661227784215,
+                    29.96888749028039
+                  ],
+                  "axis": [
+                    0.7354430778701758,
+                    -0.6753723971361142,
+                    0.0547321148820472
+                  ],
+                  "radiusAtOriginMM": 2.827528567688471,
+                  "radiusSlope": 0,
+                  "rangeMM": [
+                    -14,
+                    2.5
+                  ],
+                  "thicknessMM": 2.827528567688471,
+                  "allowanceMM": 0.06
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              },
+              {
+                "name": "own right whole log",
+                "minMM": [
+                  -7,
+                  -11.1,
+                  27.7
+                ],
+                "maxMM": [
+                  7.8,
+                  11.1,
+                  34.15
+                ],
+                "radialShell": {
+                  "originMM": [
+                    4.515600584320303,
+                    -1.231848921952147,
+                    31.115408253972227
+                  ],
+                  "axis": [
+                    0.879490218114345,
+                    -0.47009787237779893,
+                    0.0741953275284124
+                  ],
+                  "radiusAtOriginMM": 3.4398248163041854,
+                  "radiusSlope": 0,
+                  "rangeMM": [
+                    -14,
+                    2.5
+                  ],
+                  "thicknessMM": 3.4398248163041854,
+                  "allowanceMM": 0.06
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              },
+              {
+                "name": "own side charred fuel fragment",
+                "minMM": [
+                  -7.1,
+                  2.2,
+                  28.1
+                ],
+                "maxMM": [
+                  3.8,
+                  9.0,
+                  33.5
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    -1.6205432796698347,
+                    6.0,
+                    30.93425805408284
+                  ],
+                  "radiiMM": [
+                    6.8,
+                    4.1,
+                    3.0
+                  ]
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              },
+              {
+                "name": "own native fireback and deeper backing",
+                "minMM": [
+                  -10,
+                  -9.4,
+                  27.5
+                ],
+                "maxMM": [
+                  -6.7,
+                  9.4,
+                  42
+                ],
+                "projection": {
+                  "originMM": [
+                    1.71661376953125e-05,
+                    0.0,
+                    0.00054931640625
+                  ],
+                  "axis": [
+                    0.9991687927780292,
+                    0.005688395958262367,
+                    0.04036540213992376
+                  ],
+                  "rangeMM": [
+                    -20,
+                    -5.95
+                  ]
+                }
+              },
+              {
+                "name": "own warm side fuel cut",
+                "minMM": [
+                  2.2859346963542033,
+                  1.694884562442282,
+                  28.009792713464172
+                ],
+                "maxMM": [
+                  4.691915108004811,
+                  4.685798481640744,
+                  31.25
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    3.280746385871599,
+                    3.299344988187358,
+                    29.377458681986482
+                  ],
+                  "radiiMM": [
+                    1.736685834063689,
+                    1.5129409043452628,
+                    1.8
+                  ]
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              }
+            ],
+            "rgb": [
+              1,
+              0.5,
+              0.05
+            ],
+            "emissionInsetMM": 0.015,
+            "gradientZMM": [
+              30,
+              44.7
+            ],
+            "gradientRGB": [
+              [
+                1,
+                0.72,
+                0.09
+              ],
+              [
+                1,
+                0.23,
+                0.025
+              ]
+            ],
+            "roughness": 0.9,
+            "variation": 0.025
+          },
+          {
+            "name": "own upper fire component without matching cold stone",
+            "kind": "flame",
+            "minMM": [
+              -3.5,
+              -11,
+              34.3
+            ],
+            "maxMM": [
+              3.5,
+              11,
+              46
+            ],
+            "nearSource": {
+              "code": "MT1-147",
+              "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a",
+              "matchMM": 0.04,
+              "componentAboveMM": 34.3,
+              "componentIndex": 0,
+              "componentBoundsMM": {
+                "minMM": [
+                  -3.5,
+                  -11.0,
+                  34.3
+                ],
+                "maxMM": [
+                  3.5,
+                  11.0,
+                  43.8
+                ]
+              },
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            },
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            },
+            "rgb": [
+              1,
+              0.5,
+              0.05
+            ],
+            "emissionInsetMM": 0.015,
+            "gradientZMM": [
+              30,
+              44.7
+            ],
+            "gradientRGB": [
+              [
+                1,
+                0.72,
+                0.09
+              ],
+              [
+                1,
+                0.23,
+                0.025
+              ]
+            ],
+            "roughness": 0.9,
+            "variation": 0.025,
+            "excludeParts": [
+              {
+                "name": "own warm side fuel cut",
+                "minMM": [
+                  2.2859346963542033,
+                  1.694884562442282,
+                  28.009792713464172
+                ],
+                "maxMM": [
+                  4.691915108004811,
+                  4.685798481640744,
+                  31.25
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    3.280746385871599,
+                    3.299344988187358,
+                    29.377458681986482
+                  ],
+                  "radiiMM": [
+                    1.736685834063689,
+                    1.5129409043452628,
+                    1.8
+                  ]
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "own native front mantel rounded mouldings",
+      "minMM": [
+        1.5000171661376953,
+        -17.8,
+        47.00054931640625
+      ],
+      "maxMM": [
+        7.000017166137695,
+        17.8,
+        54.00054931640625
+      ],
+      "sourceSelection": {
+        "excludeParts": [
+          {
+            "name": "own lower fire away from cold masonry and outside native fuel",
+            "kind": "flame",
+            "minMM": [
+              -7.4,
+              -10.9,
+              29.7
+            ],
+            "maxMM": [
+              3.5,
+              10.9,
+              46
+            ],
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            },
+            "excludeParts": [
+              {
+                "name": "own left whole log",
+                "minMM": [
+                  -7,
+                  -11.1,
+                  27.7
+                ],
+                "maxMM": [
+                  7.8,
+                  11.1,
+                  34.15
+                ],
+                "radialShell": {
+                  "originMM": [
+                    5.882882440085921,
+                    -9.226661227784215,
+                    29.96888749028039
+                  ],
+                  "axis": [
+                    0.7354430778701758,
+                    -0.6753723971361142,
+                    0.0547321148820472
+                  ],
+                  "radiusAtOriginMM": 2.827528567688471,
+                  "radiusSlope": 0,
+                  "rangeMM": [
+                    -14,
+                    2.5
+                  ],
+                  "thicknessMM": 2.827528567688471,
+                  "allowanceMM": 0.06
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              },
+              {
+                "name": "own right whole log",
+                "minMM": [
+                  -7,
+                  -11.1,
+                  27.7
+                ],
+                "maxMM": [
+                  7.8,
+                  11.1,
+                  34.15
+                ],
+                "radialShell": {
+                  "originMM": [
+                    4.515600584320303,
+                    -1.231848921952147,
+                    31.115408253972227
+                  ],
+                  "axis": [
+                    0.879490218114345,
+                    -0.47009787237779893,
+                    0.0741953275284124
+                  ],
+                  "radiusAtOriginMM": 3.4398248163041854,
+                  "radiusSlope": 0,
+                  "rangeMM": [
+                    -14,
+                    2.5
+                  ],
+                  "thicknessMM": 3.4398248163041854,
+                  "allowanceMM": 0.06
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              },
+              {
+                "name": "own side charred fuel fragment",
+                "minMM": [
+                  -7.1,
+                  2.2,
+                  28.1
+                ],
+                "maxMM": [
+                  3.8,
+                  9.0,
+                  33.5
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    -1.6205432796698347,
+                    6.0,
+                    30.93425805408284
+                  ],
+                  "radiiMM": [
+                    6.8,
+                    4.1,
+                    3.0
+                  ]
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              },
+              {
+                "name": "own native fireback and deeper backing",
+                "minMM": [
+                  -10,
+                  -9.4,
+                  27.5
+                ],
+                "maxMM": [
+                  -6.7,
+                  9.4,
+                  42
+                ],
+                "projection": {
+                  "originMM": [
+                    1.71661376953125e-05,
+                    0.0,
+                    0.00054931640625
+                  ],
+                  "axis": [
+                    0.9991687927780292,
+                    0.005688395958262367,
+                    0.04036540213992376
+                  ],
+                  "rangeMM": [
+                    -20,
+                    -5.95
+                  ]
+                }
+              },
+              {
+                "name": "own warm side fuel cut",
+                "minMM": [
+                  2.2859346963542033,
+                  1.694884562442282,
+                  28.009792713464172
+                ],
+                "maxMM": [
+                  4.691915108004811,
+                  4.685798481640744,
+                  31.25
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    3.280746385871599,
+                    3.299344988187358,
+                    29.377458681986482
+                  ],
+                  "radiiMM": [
+                    1.736685834063689,
+                    1.5129409043452628,
+                    1.8
+                  ]
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              }
+            ],
+            "rgb": [
+              1,
+              0.5,
+              0.05
+            ],
+            "emissionInsetMM": 0.015,
+            "gradientZMM": [
+              30,
+              44.7
+            ],
+            "gradientRGB": [
+              [
+                1,
+                0.72,
+                0.09
+              ],
+              [
+                1,
+                0.23,
+                0.025
+              ]
+            ],
+            "roughness": 0.9,
+            "variation": 0.025
+          },
+          {
+            "name": "own upper fire component without matching cold stone",
+            "kind": "flame",
+            "minMM": [
+              -3.5,
+              -11,
+              34.3
+            ],
+            "maxMM": [
+              3.5,
+              11,
+              46
+            ],
+            "nearSource": {
+              "code": "MT1-147",
+              "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a",
+              "matchMM": 0.04,
+              "componentAboveMM": 34.3,
+              "componentIndex": 0,
+              "componentBoundsMM": {
+                "minMM": [
+                  -3.5,
+                  -11.0,
+                  34.3
+                ],
+                "maxMM": [
+                  3.5,
+                  11.0,
+                  43.8
+                ]
+              },
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            },
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            },
+            "rgb": [
+              1,
+              0.5,
+              0.05
+            ],
+            "emissionInsetMM": 0.015,
+            "gradientZMM": [
+              30,
+              44.7
+            ],
+            "gradientRGB": [
+              [
+                1,
+                0.72,
+                0.09
+              ],
+              [
+                1,
+                0.23,
+                0.025
+              ]
+            ],
+            "roughness": 0.9,
+            "variation": 0.025,
+            "excludeParts": [
+              {
+                "name": "own warm side fuel cut",
+                "minMM": [
+                  2.2859346963542033,
+                  1.694884562442282,
+                  28.009792713464172
+                ],
+                "maxMM": [
+                  4.691915108004811,
+                  4.685798481640744,
+                  31.25
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    3.280746385871599,
+                    3.299344988187358,
+                    29.377458681986482
+                  ],
+                  "radiiMM": [
+                    1.736685834063689,
+                    1.5129409043452628,
+                    1.8
+                  ]
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "own original logs caps and side fuel",
+      "minMM": [
+        -7,
+        -11.1,
+        27.7
+      ],
+      "maxMM": [
+        7.8,
+        11.1,
+        34.15
+      ],
+      "sourceSelection": {
+        "includeParts": [
+          {
+            "name": "own left whole log",
+            "minMM": [
+              -7,
+              -11.1,
+              27.7
+            ],
+            "maxMM": [
+              7.8,
+              11.1,
+              34.15
+            ],
+            "radialShell": {
+              "originMM": [
+                5.882882440085921,
+                -9.226661227784215,
+                29.96888749028039
+              ],
+              "axis": [
+                0.7354430778701758,
+                -0.6753723971361142,
+                0.0547321148820472
+              ],
+              "radiusAtOriginMM": 2.827528567688471,
+              "radiusSlope": 0,
+              "rangeMM": [
+                -14,
+                2.5
+              ],
+              "thicknessMM": 2.827528567688471,
+              "allowanceMM": 0.06
+            },
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            }
+          },
+          {
+            "name": "own right whole log",
+            "minMM": [
+              -7,
+              -11.1,
+              27.7
+            ],
+            "maxMM": [
+              7.8,
+              11.1,
+              34.15
+            ],
+            "radialShell": {
+              "originMM": [
+                4.515600584320303,
+                -1.231848921952147,
+                31.115408253972227
+              ],
+              "axis": [
+                0.879490218114345,
+                -0.47009787237779893,
+                0.0741953275284124
+              ],
+              "radiusAtOriginMM": 3.4398248163041854,
+              "radiusSlope": 0,
+              "rangeMM": [
+                -14,
+                2.5
+              ],
+              "thicknessMM": 3.4398248163041854,
+              "allowanceMM": 0.06
+            },
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            }
+          },
+          {
+            "name": "own side charred fuel fragment",
+            "minMM": [
+              -7.1,
+              2.2,
+              28.1
+            ],
+            "maxMM": [
+              3.8,
+              9.0,
+              33.5
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -1.6205432796698347,
+                6.0,
+                30.93425805408284
+              ],
+              "radiiMM": [
+                6.8,
+                4.1,
+                3.0
+              ]
+            },
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            }
+          },
+          {
+            "name": "own warm side fuel cut",
+            "minMM": [
+              2.2859346963542033,
+              1.694884562442282,
+              28.009792713464172
+            ],
+            "maxMM": [
+              4.691915108004811,
+              4.685798481640744,
+              31.25
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                3.280746385871599,
+                3.299344988187358,
+                29.377458681986482
+              ],
+              "radiiMM": [
+                1.736685834063689,
+                1.5129409043452628,
+                1.8
+              ]
+            },
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "own lower fire away from cold masonry and outside native fuel",
+            "kind": "flame",
+            "minMM": [
+              -7.4,
+              -10.9,
+              29.7
+            ],
+            "maxMM": [
+              3.5,
+              10.9,
+              46
+            ],
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            },
+            "excludeParts": [
+              {
+                "name": "own left whole log",
+                "minMM": [
+                  -7,
+                  -11.1,
+                  27.7
+                ],
+                "maxMM": [
+                  7.8,
+                  11.1,
+                  34.15
+                ],
+                "radialShell": {
+                  "originMM": [
+                    5.882882440085921,
+                    -9.226661227784215,
+                    29.96888749028039
+                  ],
+                  "axis": [
+                    0.7354430778701758,
+                    -0.6753723971361142,
+                    0.0547321148820472
+                  ],
+                  "radiusAtOriginMM": 2.827528567688471,
+                  "radiusSlope": 0,
+                  "rangeMM": [
+                    -14,
+                    2.5
+                  ],
+                  "thicknessMM": 2.827528567688471,
+                  "allowanceMM": 0.06
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              },
+              {
+                "name": "own right whole log",
+                "minMM": [
+                  -7,
+                  -11.1,
+                  27.7
+                ],
+                "maxMM": [
+                  7.8,
+                  11.1,
+                  34.15
+                ],
+                "radialShell": {
+                  "originMM": [
+                    4.515600584320303,
+                    -1.231848921952147,
+                    31.115408253972227
+                  ],
+                  "axis": [
+                    0.879490218114345,
+                    -0.47009787237779893,
+                    0.0741953275284124
+                  ],
+                  "radiusAtOriginMM": 3.4398248163041854,
+                  "radiusSlope": 0,
+                  "rangeMM": [
+                    -14,
+                    2.5
+                  ],
+                  "thicknessMM": 3.4398248163041854,
+                  "allowanceMM": 0.06
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              },
+              {
+                "name": "own side charred fuel fragment",
+                "minMM": [
+                  -7.1,
+                  2.2,
+                  28.1
+                ],
+                "maxMM": [
+                  3.8,
+                  9.0,
+                  33.5
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    -1.6205432796698347,
+                    6.0,
+                    30.93425805408284
+                  ],
+                  "radiiMM": [
+                    6.8,
+                    4.1,
+                    3.0
+                  ]
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              },
+              {
+                "name": "own native fireback and deeper backing",
+                "minMM": [
+                  -10,
+                  -9.4,
+                  27.5
+                ],
+                "maxMM": [
+                  -6.7,
+                  9.4,
+                  42
+                ],
+                "projection": {
+                  "originMM": [
+                    1.71661376953125e-05,
+                    0.0,
+                    0.00054931640625
+                  ],
+                  "axis": [
+                    0.9991687927780292,
+                    0.005688395958262367,
+                    0.04036540213992376
+                  ],
+                  "rangeMM": [
+                    -20,
+                    -5.95
+                  ]
+                }
+              },
+              {
+                "name": "own warm side fuel cut",
+                "minMM": [
+                  2.2859346963542033,
+                  1.694884562442282,
+                  28.009792713464172
+                ],
+                "maxMM": [
+                  4.691915108004811,
+                  4.685798481640744,
+                  31.25
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    3.280746385871599,
+                    3.299344988187358,
+                    29.377458681986482
+                  ],
+                  "radiiMM": [
+                    1.736685834063689,
+                    1.5129409043452628,
+                    1.8
+                  ]
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              }
+            ],
+            "rgb": [
+              1,
+              0.5,
+              0.05
+            ],
+            "emissionInsetMM": 0.015,
+            "gradientZMM": [
+              30,
+              44.7
+            ],
+            "gradientRGB": [
+              [
+                1,
+                0.72,
+                0.09
+              ],
+              [
+                1,
+                0.23,
+                0.025
+              ]
+            ],
+            "roughness": 0.9,
+            "variation": 0.025
+          },
+          {
+            "name": "own upper fire component without matching cold stone",
+            "kind": "flame",
+            "minMM": [
+              -3.5,
+              -11,
+              34.3
+            ],
+            "maxMM": [
+              3.5,
+              11,
+              46
+            ],
+            "nearSource": {
+              "code": "MT1-147",
+              "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a",
+              "matchMM": 0.04,
+              "componentAboveMM": 34.3,
+              "componentIndex": 0,
+              "componentBoundsMM": {
+                "minMM": [
+                  -3.5,
+                  -11.0,
+                  34.3
+                ],
+                "maxMM": [
+                  3.5,
+                  11.0,
+                  43.8
+                ]
+              },
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            },
+            "awayFromSource": {
+              "code": "MT1-145",
+              "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+              "matchMM": 0.08,
+              "nativeToReferenceMatrix": [
+                [
+                  1,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "nativeToReferenceOffsetMM": [
+                -1.71661376953125e-05,
+                0.0,
+                -0.00054931640625
+              ],
+              "projectTo": {
+                "code": "MT1-147",
+                "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+              }
+            },
+            "rgb": [
+              1,
+              0.5,
+              0.05
+            ],
+            "emissionInsetMM": 0.015,
+            "gradientZMM": [
+              30,
+              44.7
+            ],
+            "gradientRGB": [
+              [
+                1,
+                0.72,
+                0.09
+              ],
+              [
+                1,
+                0.23,
+                0.025
+              ]
+            ],
+            "roughness": 0.9,
+            "variation": 0.025,
+            "excludeParts": [
+              {
+                "name": "own warm side fuel cut",
+                "minMM": [
+                  2.2859346963542033,
+                  1.694884562442282,
+                  28.009792713464172
+                ],
+                "maxMM": [
+                  4.691915108004811,
+                  4.685798481640744,
+                  31.25
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    3.280746385871599,
+                    3.299344988187358,
+                    29.377458681986482
+                  ],
+                  "radiiMM": [
+                    1.736685834063689,
+                    1.5129409043452628,
+                    1.8
+                  ]
+                },
+                "awayFromSource": {
+                  "code": "MT1-145",
+                  "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+                  "matchMM": 0.08,
+                  "nativeToReferenceMatrix": [
+                    [
+                      1,
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      1,
+                      0
+                    ],
+                    [
+                      0,
+                      0,
+                      1
+                    ]
+                  ],
+                  "nativeToReferenceOffsetMM": [
+                    -1.71661376953125e-05,
+                    0.0,
+                    -0.00054931640625
+                  ],
+                  "projectTo": {
+                    "code": "MT1-147",
+                    "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "uvBaseTile": [
+    0.002,
+    0.8,
+    0.998,
+    0.998
+  ],
+  "uvDetailRegions": [
+    {
+      "name": "own fireplace front sides empty firebox and chimney",
+      "minMM": [
+        -10.099,
+        -17.8,
+        26.651
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        82.4
+      ],
+      "tile": [
+        0.002,
+        0.002,
+        0.7,
+        0.78
+      ],
+      "angleLimitRad": 0.25,
+      "islandMargin": 0.0016
+    },
+    {
+      "name": "own low West plaster and timber wall",
+      "minMM": [
+        -17.8,
+        -17.8,
+        26.651
+      ],
+      "maxMM": [
+        -10.1,
+        17.8,
+        50
+      ],
+      "tile": [
+        0.72,
+        0.002,
+        0.998,
+        0.45
+      ],
+      "angleLimitRad": 0.25,
+      "islandMargin": 0.0008
+    },
+    {
+      "name": "own rear chimney above low wall",
+      "minMM": [
+        -17.8,
+        -17.8,
+        50.001
+      ],
+      "maxMM": [
+        -10.1,
+        17.8,
+        82.4
+      ],
+      "tile": [
+        0.72,
+        0.47,
+        0.998,
+        0.78
+      ],
+      "angleLimitRad": 0.45,
+      "islandMargin": 0.0008
+    }
+  ],
+  "proceduralFire": true,
+  "fireboxBackstop": {
+    "minMM": [
+      -9.246196746826172,
+      -9.4,
+      27.9
+    ],
+    "maxMM": [
+      -9.046196746826173,
+      9.4,
+      47.2
+    ],
+    "measuredInnerWallMinXMM": -8.996196746826172,
+    "rgb": [
+      0.16,
+      0.145,
+      0.12
+    ],
+    "roughness": 0.91,
+    "measurementReference": {
+      "code": "MT1-147",
+      "sourceSHA256": "3970780ed0a7fa6519325bf76a8fde6fbcf8fd08e253cfa38192f7df8861bd1a",
+      "samples": 2052,
+      "clearanceMM": 0.05
+    }
+  }
+}

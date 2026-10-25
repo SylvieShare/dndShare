@@ -6,6 +6,7 @@ import {
   triangleFingerprint,
   materialImages,
   stripMeasuredFlames,
+  sceneTriangleCount,
 } from "./model_flame_geometry.mjs";
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json"),
   { Document } = require("@gltf-transform/core");
@@ -110,4 +111,34 @@ test("source-centre offsets select only the measured flame and retain the origin
     [...primitive.getAttribute("POSITION").getArray()],
     [0, 0, 0, Math.fround(0.1), 0, 0, 0, 0, Math.fround(0.1)],
   );
+});
+
+test("sculpted flame removal restores the native mounting centre", () => {
+  const doc = new Document(), buffer = doc.createBuffer(), material = doc.createMaterial();
+  const values = new Float32Array([
+    0,0,0, .1,0,0, 0,0,.1,
+    0,1,0, .01,1,0, 0,1,.01,
+  ]);
+  const p = doc.createPrimitive().setMaterial(material)
+    .setAttribute("POSITION",doc.createAccessor().setType("VEC3").setBuffer(buffer).setArray(values))
+    .setIndices(doc.createAccessor().setType("SCALAR").setBuffer(buffer).setArray(new Uint16Array([0,1,2,3,4,5])));
+  doc.createScene().addChild(doc.createNode().setMesh(doc.createMesh().addPrimitive(p)));
+  const review = stripSculptedFlames(doc, {
+    surfaceParts:[{kind:"flame",minMM:[69.9,-35.4,51.9],maxMM:[70.5,-34.9,52.1]}],
+  },17,"render",[70,-35]);
+  assert.equal(review.counts[0].removed,1);
+  assert.deepEqual(Array.from(p.getAttribute("POSITION").getArray()),Array.from(values.subarray(0,9)));
+});
+
+test("published triangle metrics use the default scene and count reused and unindexed meshes", () => {
+  const d=new Document(),b=d.createBuffer();
+  const position=()=>d.createAccessor().setType("VEC3").setBuffer(b).setArray(new Float32Array([0,0,0,1,0,0,0,1,0]));
+  const indexed=d.createMesh().addPrimitive(d.createPrimitive().setAttribute("POSITION",position()).setIndices(d.createAccessor().setType("SCALAR").setBuffer(b).setArray(new Uint16Array([0,1,2]))));
+  d.createScene("unused").addChild(d.createNode().setMesh(indexed));
+  const selected=d.createScene("published");d.getRoot().setDefaultScene(selected);
+  selected.addChild(d.createNode().setMesh(indexed));selected.addChild(d.createNode().setMesh(indexed));
+  const plain=d.createMesh().addPrimitive(d.createPrimitive().setAttribute("POSITION",position()));
+  selected.addChild(d.createNode().addChild(d.createNode().setMesh(plain)));
+  d.createNode("orphan").setMesh(indexed);
+  assert.equal(sceneTriangleCount(d),3);
 });
