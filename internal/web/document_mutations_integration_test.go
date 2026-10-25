@@ -197,6 +197,7 @@ func TestDocumentMutationsPostgres(t *testing.T) {
 			t.Fatal("map snapshot", fallback.Code, fallback.Body.String())
 		}
 	})
+	t.Run("large map rotation", func(t *testing.T) { testLargeMapMutation(t, st, request) })
 	t.Run("session map", func(t *testing.T) {
 		doc := battlemap.Document{Version: 2, Kind: "tiles", Width: 10, Height: 10, Sun: battlemap.DefaultSun()}
 		source, err := st.SaveBattleMap(ctx, 2, store.BattleMap{Name: "Session source", Document: doc})

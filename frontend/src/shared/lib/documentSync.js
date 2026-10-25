@@ -1,6 +1,7 @@
 import { takeDocumentBatch } from './documentBatch'
 import { createDocumentOutbox } from './documentOutbox'
 import { createDocumentUndo } from './documentUndo'
+import { recoverDocumentQueue } from './documentRecovery'
 import {
   copyDocument,
   sameDocument,
@@ -34,6 +35,9 @@ export function createDocumentSync(options) {
     error: null,
   }
   let deferredRemote = []
+  let restoring = null
+  let recovered = false
+  let recoveryEpoch = 0
   const outbox = createDocumentOutbox(options.storageKey)
   const undoHistory = createDocumentUndo({
     data: () => desired,
@@ -108,7 +112,8 @@ export function createDocumentSync(options) {
     persist()
   }
   async function catchUp(rejected = false) {
-    const response = await options.load(version)
+    const requestedVersion = version
+    const response = await options.load(requestedVersion)
     if (!Number.isInteger(response.version) || response.version < 0)
       throw Object.assign(new Error('Некорректная версия документа'), {
         status: 502,
@@ -117,7 +122,9 @@ export function createDocumentSync(options) {
       deferRemote(response)
       return
     }
-    if (response.version < version) return
+    if (response.version <= version) return
+    if (response.data === undefined && (response.fromVersion ?? requestedVersion) !== version)
+      return catchUp(rejected)
     const next =
       response.data !== undefined
         ? response.data
@@ -223,10 +230,14 @@ export function createDocumentSync(options) {
         return false
       }
     }
-    if (!stopped) publish('idle')
+    if (!stopped && !blocked && outbox.available) await restorePending()
+    if (!stopped && !blocked && (flight || queue.length)) return drain()
+    if (!queue.length && !flight) recovered = false
+    if (!stopped && !blocked) publish('idle')
     return !blocked && !flight && !queue.length
   }
   function flush() {
+    if (restoring) return restoring.then(() => flush())
     if (draining) return draining
     if (blocked) return Promise.resolve(false)
     draining = drain().finally(() => {
@@ -283,7 +294,7 @@ export function createDocumentSync(options) {
     blocked = null
     deferredRemote = []
     undoHistory.clear()
-    if (!preserveOutbox) persist()
+    if (!preserveOutbox) { recoveryEpoch++; outbox.discardRecovered(); persist() }
     publish('idle')
   }
   async function reload() {
@@ -312,8 +323,11 @@ export function createDocumentSync(options) {
     stopped = true
     clearTimeout(timer)
     persist()
+    if (draining) void draining.finally(() => outbox.close())
+    else outbox.close()
   }
   function whenIdle() {
+    if (restoring) return restoring.then(() => whenIdle())
     if (blocked) return Promise.reject(blocked)
     if (!queue.length && !flight) return Promise.resolve(true)
     return new Promise((resolve, reject) => {
@@ -329,36 +343,37 @@ export function createDocumentSync(options) {
       subscribers.add(listener)
     })
   }
-  function restorePending() {
+  async function recoverPending() {
+    const epoch = recoveryEpoch
     try {
-      const saved = outbox.read()
-      if (!saved || !Array.isArray(saved.queue)) return
-      const current = base,
-        currentVersion = version
-      base = saved.base
-      version = saved.version
-      queue = saved.queue
-      flight = saved.flight
-      render(
-        applyDocumentPatches(copyDocument(base), [
-          ...(flight?.packet.patches || []),
-          ...queue.flatMap((group) => group.patches),
-        ]),
-      )
-      // Even if the initial GET is newer, retry the original mutation first:
-      // its durable receipt is what proves that semantic events were committed.
-      if (flight) {
-        if (currentVersion > version)
-          deferRemote({ data: current, version: currentVersion })
-      } else if (currentVersion !== version || !sameDocument(current, base))
-        rebase(current, currentVersion)
+      const saved = await outbox.read()
+      if (!saved || stopped) { outbox.abandon(); return false }
+      if (epoch !== recoveryEpoch) { outbox.discardRecovered(); return false }
+      const result = recoverDocumentQueue(saved, copyDocument(base), version, queue, options.canonicalize)
+      base = result.base
+      version = result.version
+      queue = result.queue
+      flight = result.flight
+      if (result.deferred) deferRemote(result.deferred)
+      outbox.adopt()
+      recovered = !!(queue.length || flight)
+      render(result.data)
+      persist()
       publish('pending')
+      return true
     } catch (error) {
       blocked = error
+      persist()
       publish('conflict', error)
+      return false
     }
   }
-  if (options.restore !== false) restorePending()
+  function restorePending() {
+    if (!outbox.available) return Promise.resolve(false)
+    if (!restoring) restoring = recoverPending().finally(() => { restoring = null })
+    return restoring
+  }
+  if (options.restore !== false && outbox.available) void restorePending()
   return {
     edit,
     flush,
@@ -372,6 +387,9 @@ export function createDocumentSync(options) {
     whenIdle,
     catchUp,
     restorePending,
+    get ready() { return restoring || Promise.resolve() },
+    get recovered() { return recovered },
+    get recovering() { return !!restoring },
     subscribe(listener) {
       subscribers.add(listener)
       listener(lastStatus)

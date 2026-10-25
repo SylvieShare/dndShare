@@ -19,6 +19,13 @@ func Diff(before, after json.RawMessage) ([]Operation, error) {
 	return diff(a, b, []any{}), nil
 }
 func diff(a, b any, path []any) []Operation {
+	changes := diffNode(a, b, path)
+	if len(changes) > 10000 {
+		return []Operation{{Op: "set", Path: path, Value: raw(b)}}
+	}
+	return changes
+}
+func diffNode(a, b any, path []any) []Operation {
 	if Equal(a, b) {
 		return []Operation{}
 	}

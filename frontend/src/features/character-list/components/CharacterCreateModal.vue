@@ -18,15 +18,18 @@
     </FormField>
 
     <DndCreateWizard
-      v-if="isDndTemplate"
+      v-if="isDndTemplate && sourceVersionId"
+      ref="wizardRef"
       :template-id="selectedTemplateId"
       :template-name="selectedTemplate?.name || ''"
       :source-version-id="sourceVersionId"
+      :rules-version="setting?.sourceVersion || '2014'"
       :creating="creating"
       @create="onWizardCreate"
       @cancel="requestClose"
     />
 
+    <LoadingState v-else-if="isDndTemplate" label="Загрузка редакции…" compact />
     <template v-else>
     <FormField label="Имя персонажа" vertical>
       <FormTextInput
@@ -58,6 +61,7 @@ import { FormField } from '@sylvieshare/share-ui'
 import { FormSelect } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import { MorphSheet } from '@sylvieshare/share-ui'
+import { LoadingState } from '@sylvieshare/share-ui'
 import { resolveSetting } from '@/features/character-editor/settings'
 import { fetchGet } from '@/shared/api/http'
 import { findSourceVersion } from '@/shared/lib/sourceVersions'
@@ -71,6 +75,8 @@ const props = defineProps({
 })
 const emit = defineEmits(['close', 'create'])
 const sheetRef = ref(null)
+const wizardRef = ref(null)
+defineExpose({ clearDraft: () => wizardRef.value?.clearDraft() })
 
 // Animate the collapse back into the tile (MorphSheet owns the morph), then close.
 function requestClose() { sheetRef.value?.close() }

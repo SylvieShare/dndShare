@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { createDocumentSync } from '@/shared/lib/documentSync'
 import { applyDocumentPatches, documentDiff } from '@/shared/lib/documentPatch'
+import { finishDocumentSync } from '@/shared/lib/finishDocumentSync'
 
 export function useEncounterPersistence({
   source,
@@ -41,7 +42,9 @@ export function useEncounterPersistence({
               : ''
       },
     })
-    if (sync.pending) void sync.flush()
+    const current = sync
+    void current.ready.then(() => { if (sync === current && current.pending) void current.flush() })
+    return current.ready
   }
   function markLoadFailed() {
     sync?.stop()
@@ -61,12 +64,12 @@ export function useEncounterPersistence({
   }
   function stop() {
     clearTimeout(timer)
+    stopped = true
     if (sync) {
       sync.edit(source.value, {}, { record: false })
-      void sync.flush()
-      sync.stop()
+      return finishDocumentSync(sync)
     }
-    stopped = true
+    return Promise.resolve(true)
   }
   return {
     loadError,

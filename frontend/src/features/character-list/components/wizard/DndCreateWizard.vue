@@ -109,12 +109,14 @@
 
     <div class="wz-nav">
       <button class="wz-btn ghost" @click="back">{{ state.step === 0 ? 'Отмена' : 'Назад' }}</button>
-      <button v-if="!isLast" class="wz-btn" :disabled="!canNext" @click="next">Далее</button>
+      <button v-if="!isLast" class="wz-btn" :disabled="initializing || !!loadError || !canNext" @click="next">Далее</button>
       <div v-else class="wz-nav-actions">
-        <button class="wz-btn soft" :disabled="creating || !templateName" @click="openPreview">Предпросмотр листа</button>
-        <button class="wz-btn" :disabled="creating || !canNext" @click="submit"><LoadingIndicator v-if="creating" label="Создание…" size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ creating ? 'Создание…' : 'Создать' }}</button>
+        <button class="wz-btn soft" :disabled="creating || initializing || !templateName" @click="openPreview">Предпросмотр листа</button>
+        <button class="wz-btn" :disabled="creating || initializing || !!loadError || !canNext" @click="submit"><LoadingIndicator v-if="creating" label="Создание…" size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ creating ? 'Создание…' : 'Создать' }}</button>
       </div>
     </div>
+    <p v-if="catalogueNotice" role="status">{{ catalogueNotice }}</p>
+    <div v-if="loadError" role="alert">{{ loadError }} <button class="wz-btn ghost" @click="initialize(false)">Повторить загрузку</button></div>
 
     <CharacterSheetModal
       v-if="previewDraft"
@@ -128,7 +130,7 @@
 <script setup>
 import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { LoadingState } from '@sylvieshare/share-ui'
-import { computed, onMounted, provide, ref } from 'vue'
+import { computed, nextTick, onMounted, provide, ref, watch } from 'vue'
 import DndStatAssign from './DndStatAssign.vue'
 import CharacterSheetModal from '@/features/character-editor/components/CharacterSheetModal.vue'
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
@@ -137,26 +139,51 @@ import { FormTextInput } from '@sylvieshare/share-ui'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { useDndCreateWizard } from '@/features/character-list/composables/useDndCreateWizard'
 import { dieLabel } from '@/shared/lib/systemDice'
+import { DND_COMPACT_WIZARD_STORAGE_KEY, normalizeCompactDndWizardDraft } from '@/features/character-list/composables/dndCreateWizardState'
 
 const props = defineProps({
   templateId: { type: [Number, String], required: true },
   templateName: { type: String, default: '' },
   sourceVersionId: { type: [Number, String], default: null },
+  rulesVersion: { type: String, default: '2014' },
   creating: { type: Boolean, default: false },
 })
 const emit = defineEmits(['create', 'cancel'])
 
-const wz = useDndCreateWizard()
+const wz = useDndCreateWizard({ draftKey: DND_COMPACT_WIZARD_STORAGE_KEY, normalizeDraft: normalizeCompactDndWizardDraft })
 const {
   STATS, state, races, classes, subraces, subclasses, spellPool, loading,
   raceAbilities, classAbilities,
   grants, isCaster, skillOptions, skillLimit, finalScores, pointsLeft,
-  featureChoices, choicesComplete,
+  featureChoices, choicesComplete, catalogueNotice,
   suggestValue, load, loadSpells, setMethod, rollStats, scoresComplete, buildPayload,
 } = wz
 provide('createWizard', wz)
 
-onMounted(load)
+const loadError = ref('')
+const initializing = ref(true)
+let initialization = 0
+async function initialize(restoreDraft = true) {
+  const request = ++initialization
+  initializing.value = true
+  loadError.value = ''
+  wz.setSourceVersionId(props.sourceVersionId)
+  try {
+    if (restoreDraft) await wz.restore()
+    if (state.version !== props.rulesVersion) {
+      wz.reset()
+      state.version = props.rulesVersion
+      await nextTick()
+    }
+    await load()
+    if (isCaster.value) await loadSpells()
+    state.step = Math.min(state.step, steps.value.length - 1)
+  } catch (cause) { if (request === initialization) loadError.value = cause.message || 'Не удалось загрузить справочник' }
+  finally { if (request === initialization) initializing.value = false }
+}
+onMounted(() => initialize())
+watch([() => props.sourceVersionId, () => props.rulesVersion], () => initialize(false))
+defineExpose({ clearDraft: wz.clearPersist })
 
 const steps = computed(() => {
   const s = [
@@ -227,7 +254,7 @@ function back() {
   state.step--
 }
 function submit() {
-  if (props.creating) return
+  if (props.creating || initializing.value || loadError.value) return
   emit('create', { templateId: props.templateId, ...buildPayload() })
 }
 

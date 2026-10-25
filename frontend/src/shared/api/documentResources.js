@@ -15,13 +15,13 @@ const content = (record, config) => {
   return config.canonicalize ? config.canonicalize(data) : data
 }
 
-export function seedDocumentResource(record, config) {
+export async function seedDocumentResource(record, config) {
   const { key, url } = config
   const identity = scoped(key)
   let entry = documents.get(identity)
   if (!entry) {
     if (documents.size >= 16) {
-      const idle = [...documents].find(([, entry]) => !entry.sync.pending)
+      const idle = [...documents].find(([, entry]) => !entry.sync.pending && !entry.sync.recovering)
       if (idle) {
         idle[1].sync.stop()
         documents.delete(idle[0])
@@ -62,6 +62,7 @@ export function seedDocumentResource(record, config) {
       version: record.revision,
     })
   }
+  await entry.sync.ready
   entry.versions.set(record.revision, copyDocument(content(record, config)))
   if (entry.sync.pending && record.owned !== false) void entry.sync.flush()
   const data = entry.sync.data, revision = entry.sync.version
@@ -80,7 +81,7 @@ export async function writeDocumentResource(record, config) {
       throw Object.assign(new Error('Документ изменился на сервере'), {
         status: 409,
       })
-    seedDocumentResource(
+    await seedDocumentResource(
       {
         ...record,
         ...snapshot.metadata,

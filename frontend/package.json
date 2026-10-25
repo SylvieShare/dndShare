@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run check:colors && vite build && npm run check:bundle",
+    "build": "npm run check:bindings && npm run check:colors && vite build && npm run check:bundle",
+    "check:bindings": "eslint src",
     "check:colors": "node scripts/check-colors.mjs",
     "preview": "vite preview",
-    "test": "vitest run src",
+    "test": "npm run check:bindings && vitest run src",
     "test:visual": "playwright test --project=ui tests/visual",
     "check:bundle": "node scripts/check-bundle.mjs",
     "benchmark": "node scripts/benchmark-frontend.mjs",
@@ -28,6 +29,9 @@
   "devDependencies": {
     "@playwright/test": "^1.63.0",
     "@vitejs/plugin-vue": "^6.0.9",
+    "eslint": "^10.13.0",
+    "eslint-plugin-vue": "^10.11.1",
+    "globals": "^17.13.0",
     "vite": "^8.3.0",
     "vitest": "^4.1.11"
   }

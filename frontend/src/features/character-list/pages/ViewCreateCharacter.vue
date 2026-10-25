@@ -23,13 +23,15 @@
         :current="current"
         :reachable="maxReachable"
         :show-incomplete="!isFullyValid"
-        :creating="creating"
+        :creating="creating || initializing || !!bootstrapError"
         @go="goTo"
         @reset="resetOpen = true"
         @create-incomplete="createIncomplete"
       />
 
       <main ref="mainRef" class="cc-main" :class="{ 'cc-main--invalid': invalidPulse }">
+        <p v-if="wz.catalogueNotice.value" role="status">{{ wz.catalogueNotice.value }}</p>
+        <div v-if="bootstrapError" role="alert">{{ bootstrapError }} <button class="btn ghost" @click="initialize(false)">Повторить загрузку</button></div>
         <transition name="cc-fade" mode="out-in">
           <component :is="stepComponent" :key="stepKey" />
         </transition>
@@ -39,14 +41,14 @@
     <footer class="cc-foot">
       <div class="cc-foot-main">
         <button class="btn ghost" @click="back">{{ current === 0 ? 'Отмена' : 'Назад' }}</button>
-        <button v-if="!isFullyValid" class="btn incomplete-mobile" :disabled="creating" @click="createIncomplete">Создать неполноценного</button>
+        <button v-if="!isFullyValid" class="btn incomplete-mobile" :disabled="creating || initializing || !!bootstrapError" @click="createIncomplete">Создать неполноценного</button>
         <span v-if="error" class="cc-error" role="alert">{{ error }}</span>
         <span v-else-if="blockReason && !isLast" class="cc-reason">{{ blockReason }}</span>
         <div class="cc-actions">
           <button v-if="!isLast" class="btn next" :class="{ disabled: !canNext }" :aria-disabled="!canNext" @click="next">Далее</button>
           <template v-else>
-            <button class="btn soft" type="button" :disabled="creating || !dndTemplateId" @click="openPreview">Предпросмотр листа</button>
-            <button class="btn create" :disabled="creating" @click="createNow"><LoadingIndicator v-if="creating" label="Создание…" size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ creating ? 'Создание…' : 'Создать персонажа' }}</button>
+            <button class="btn soft" type="button" :disabled="creating || initializing || !dndTemplateId" @click="openPreview">Предпросмотр листа</button>
+            <button class="btn create" :disabled="creating || initializing || !!bootstrapError" @click="createNow"><LoadingIndicator v-if="creating" label="Создание…" size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ creating ? 'Создание…' : 'Создать персонажа' }}</button>
           </template>
         </div>
       </div>
@@ -273,7 +275,7 @@ function exit() {
 // "Создать" is available on every step (an empty character is allowed) — confirm
 // first when something's missing, then build with whatever's filled (blanks default).
 function createNow() {
-  if (creating.value) return
+  if (creating.value || initializing.value || bootstrapError.value) return
   if (accountStore.authStatus !== 'success') {
     requestCharacterCreationAuth()
     return
@@ -283,7 +285,7 @@ function createNow() {
 }
 
 function createIncomplete() {
-  if (creating.value) return
+  if (creating.value || initializing.value || bootstrapError.value) return
   if (accountStore.authStatus !== 'success') {
     requestCharacterCreationAuth()
     return
@@ -356,16 +358,25 @@ async function submit() {
 
 defineExpose({ clearDraft: clearPersist })
 
-onMounted(async () => {
-  accountStore.ensureAuth()
-  const [, sourcesRes] = await Promise.all([templateStore.ensure(), fetchGet('/sources')])
-  dndTemplateId.value = templateStore.all.find((t) => resolveSetting(t)?.system === 'dnd5e')?.id ?? null
-  dndSource.value = (sourcesRes?.sources || []).find((source) => source.name.toLowerCase() === 'dnd5e') || null
-  setSourceVersionId(sourceVersionId.value)
-  await load()
-  await restore()
-  await load()
-})
+const bootstrapError = ref('')
+const initializing = ref(true)
+async function initialize(restoreDraft = true) {
+  initializing.value = true
+  bootstrapError.value = ''
+  try {
+    accountStore.ensureAuth()
+    const [, sourcesRes] = await Promise.all([templateStore.ensure(), fetchGet('/sources')])
+    dndTemplateId.value = templateStore.all.find((t) => resolveSetting(t)?.system === 'dnd5e')?.id ?? null
+    dndSource.value = (sourcesRes?.sources || []).find((source) => source.name.toLowerCase() === 'dnd5e') || null
+    setSourceVersionId(sourceVersionId.value)
+    await load()
+    if (restoreDraft) await restore()
+    await load()
+    if (!restoreDraft && wz.isCaster.value) await wz.loadSpells()
+  } catch (cause) { bootstrapError.value = cause.message || 'Не удалось загрузить справочник' }
+  finally { initializing.value = false }
+}
+onMounted(() => initialize())
 </script>
 
 <style scoped>

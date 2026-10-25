@@ -63,6 +63,10 @@ attaches the character to the current session, refreshes its participant rail
 and closes the modal without opening the character sheet or changing the route.
 The invitation screen keeps the compact `CharacterCreateModal` based on
 `MorphSheet`. For VTM the compact modal calls the registered `createData(name)`.
+The compact D&D flow uses its own `dnd-create-compact-v1` draft and step
+normalization. It restores on opening and clears only after successful creation;
+it never reads or overwrites the full wizard draft. Its catalogue requests receive
+the explicit edition ID and its rules version from the parent before loading.
 Each character card can show at most one attached session. Joining another
 session requires a warning and confirmed transfer; the previous membership is
 then removed by the server.
@@ -185,6 +189,11 @@ Restoring a draft preserves its current step, assigned scores, racial choices,
 feats, class/background selections and personality fields. Refreshing catalogue
 records for the same race/subrace IDs does not reset their dependent choices;
 those choices reset only when the selected race, subrace or variant changes.
+Class, subclass and background snapshots are refreshed by ID as well. Existing
+choices survive a refresh of the same record. A removed or filtered-out record
+clears the corresponding selection and displays an explanation requiring a new
+choice. A failed spell request during restoration releases the hydration guard;
+further edits persist, and catalogue loading can be retried without replacing them.
 Selection retains the regular card surface; only its border, status and shadow
 signal selection, so nested fact and subrace chips keep sufficient contrast.
 The concise “Раса” label is presented as a display-font page heading with a short

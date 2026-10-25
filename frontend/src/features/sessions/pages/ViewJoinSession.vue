@@ -89,6 +89,7 @@
     </template>
 
     <CharacterCreateModal
+      ref="createRef"
       v-if="createOpen"
       :templates="templates"
       :creating="creating"
@@ -138,6 +139,7 @@ const joiningId = ref(null)
 const pendingTransfer = ref(null)
 
 const createOpen = ref(false)
+const createRef = ref(null)
 const creating = ref(false)
 const templates = computed(() => templateStore.all)
 const transferMessage = computed(() => {
@@ -219,6 +221,7 @@ async function createChar(payload) {
   try {
     const res = await fetchPost('/chars', payload)
     if (res?.charId != null) {
+      createRef.value?.clearDraft()
       accountStore.setHasCharacters(true)
       await joinSession(session.value.uuid, res.charId).catch(() => {})
       createOpen.value = false

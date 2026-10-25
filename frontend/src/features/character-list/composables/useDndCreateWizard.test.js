@@ -53,11 +53,12 @@ describe('D&D wizard draft restoration', () => {
   it.each(['2014', '2024'])('keeps all %s selections through catalogue loading and another reload', async (version) => {
     const race = { id: 1, name: 'Человек', data: { subraces: [{ id: 11 }], lang_choice: { count: 1 } } }
     const subrace = { id: 11, name: 'Происхождение', data: { race: 1 } }
+    const charClass = { id: 2, name: 'Воин', data: { subclasses: [{ id: 22 }] } }
+    const subclass = { id: 22, name: 'Архетип', data: { class: 2 } }
+    const background = { id: 3, name: 'Предыстория', data: {} }
     const saved = {
       ...createDndWizardState(), version, step: 5, name: 'Герой',
-      race, subrace, charClass: { id: 2, name: 'Воин', data: {} },
-      subclass: { id: 22, name: 'Архетип', data: {} },
-      background: { id: 3, name: 'Предыстория', data: {} },
+      race, subrace, charClass, subclass, background,
       asiChoice: ['STR', 'CON'], raceSkillIds: [201], raceLangIds: [21],
       featIds: [7], featSelections: { 7: { casting: ['INT'] } },
       skillIds: [202], classToolProficiencyIds: [301], spellIds: [401],
@@ -72,7 +73,7 @@ describe('D&D wizard draft restoration', () => {
     useSuggestStore().set(6, [{ id: 21, value: 'Общий' }, { id: 19, value: 'Эльфийский' }])
     fetchGet.mockImplementation(async (url) => {
       const typeId = Number(new URL(url, 'http://test').searchParams.get('typeId'))
-      return { items: typeId === 8 ? [structuredClone(race)] : typeId === 16 ? [structuredClone(subrace)] : [] }
+      return { items: structuredClone(({ 8: [race], 16: [subrace], 9: [charClass], 17: [subclass], 11: [background] })[typeId] || []) }
     })
 
     const wizard = createWizard()

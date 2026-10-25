@@ -7,7 +7,7 @@ export function takeDocumentBatch(queue, version) {
       count = candidate.metadata.events?.length || 0
     if (
       groups.length &&
-      (operations + candidate.patches.length > 10000 || events + count > 50)
+      (groups.length >= 1000 || operations + candidate.patches.length > 10000 || events + count > 50)
     )
       break
     groups.push(queue.shift())

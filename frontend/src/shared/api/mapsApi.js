@@ -35,9 +35,9 @@ export const saveMap = (map) =>
     : fetchPost("/maps", map).then((map) => seedMapDocument(map));
 export const deleteMap = (id) => fetchDelete(`/maps/${id}`);
 export const getSessionMaps = (uuid, reset = false) =>
-  fetchGet(`/sessions/${uuid}/maps`).then((response) => ({
+  fetchGet(`/sessions/${uuid}/maps`).then(async (response) => ({
     ...response,
-    maps: response.maps.map((map) => seedMapDocument(map, uuid, reset)),
+    maps: await Promise.all(response.maps.map((map) => seedMapDocument(map, uuid, reset))),
   }));
 export const addSessionMap = (uuid, mapId) =>
   fetchPost(`/sessions/${uuid}/maps`, { mapId }).then((map) =>

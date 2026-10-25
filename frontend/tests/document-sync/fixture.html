@@ -1,0 +1,12 @@
+<!doctype html><html><head><meta charset="utf-8"></head><body>
+<script type="module">
+import { createDocumentSync } from '/src/shared/lib/documentSync.js'
+window.packets = []
+window.start = async (data = { a: 0, b: 0 }, version = 1) => {
+  window.editor = createDocumentSync({ data, version, storageKey: 'test.multi-tab.document',
+    send: packet => new Promise(resolve => { window.packets.push(packet); window.ack = response => resolve(response) }),
+  })
+  await window.editor.ready
+}
+window.loaded = true
+</script></body></html>

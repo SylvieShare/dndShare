@@ -40,6 +40,15 @@ export function collectionIdentity(a, b) {
 }
 
 export function documentDiff(before, after, path = []) {
+  const patches = diffDocument(before, after, path)
+  // Keep a user action atomic. Large collection edits use one replacement,
+  // rather than intermediate packets that can violate placement constraints.
+  return patches.length > 10000
+    ? [{ op: 'set', path, value: copyDocument(after) }]
+    : patches
+}
+
+function diffDocument(before, after, path) {
   if (sameDocument(before, after)) return []
   if (object(before) && object(after)) {
     return [...new Set([...Object.keys(before), ...Object.keys(after)])]

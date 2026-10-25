@@ -40,6 +40,7 @@
     </template>
 
     <CharacterCreateModal
+      ref="createRef"
       v-if="showModal"
       :templates="templates"
       :creating="creating"
@@ -79,6 +80,7 @@ const loadError = ref('')
 const loading = ref(true)
 const showModal = ref(false)
 const creating = ref(false)
+const createRef = ref(null)
 const createOriginEl = ref(null)
 const createOriginRect = ref(null)
 const templates = computed(() => templateStore.all)
@@ -155,6 +157,7 @@ async function createChar(payload) {
   creating.value = true
   try {
     const res = await fetchPost('/chars', payload)
+    createRef.value?.clearDraft()
     accountStore.setHasCharacters(true)
     showModal.value = false
     router.push('/char/' + res.uuid)

@@ -3,6 +3,11 @@ import { emptyScores } from './dndCreateWizardStats'
 
 export const DND_WIZARD_STORAGE_KEY = 'dnd-create-wizard-v2'
 export const DND_WIZARD_FLOW_VERSION = 4
+export const DND_COMPACT_WIZARD_STORAGE_KEY = 'dnd-create-compact-v1'
+
+export function normalizeCompactDndWizardDraft(saved) {
+  return { ...saved, step: Math.max(0, Math.min(Number(saved.step) || 0, 4)), flowVersion: DND_WIZARD_FLOW_VERSION }
+}
 
 const PERSISTED_KEYS = [
   'flowVersion', 'step', 'version', 'contentSources', 'name', 'race', 'subrace', 'charClass',

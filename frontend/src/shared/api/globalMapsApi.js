@@ -12,9 +12,9 @@ const config = (uuid, map) => ({
 const seed = (uuid, map, reset = false) =>
   seedDocumentResource(map, { ...config(uuid, map), reset })
 export const getGlobalMaps = (uuid, reset = false) =>
-  fetchGet(path(uuid), { cache: 'no-store' }).then((response) => ({
+  fetchGet(path(uuid), { cache: 'no-store' }).then(async (response) => ({
     ...response,
-    maps: response.maps.map((map) => seed(uuid, map, reset)),
+    maps: await Promise.all(response.maps.map((map) => seed(uuid, map, reset))),
   }))
 export const createGlobalMap = (uuid, data) =>
   fetchPost(path(uuid), data).then((map) => seed(uuid, map))

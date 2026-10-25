@@ -4,6 +4,7 @@ import { useAccountStore } from '@/stores/account'
 import { fetchGet, fetchPatch } from '@/shared/api/http'
 import { createDocumentSync } from '@/shared/lib/documentSync'
 import { documentDiff, applyDocumentPatches } from '@/shared/lib/documentPatch'
+import { finishDocumentSync } from '@/shared/lib/finishDocumentSync'
 
 const SAVE_DELAY_MS = 400
 const urgentFields = new Set([
@@ -38,7 +39,7 @@ export function useSaveDebounce(uuid, data, options = {}) {
   const sync = createDocumentSync({
     data: options.serverDocument?.value?.data || data.value,
     version: options.version?.value || 0,
-    restore: initialized,
+    restore: false,
     storageKey,
     send: (packet) =>
       fetchPatch(`/char/${encodeURIComponent(uuid)}/data`, packet),
@@ -84,10 +85,8 @@ export function useSaveDebounce(uuid, data, options = {}) {
               { preserveOutbox: true },
             )
             initialized = true
-            sync.restorePending()
             applyData(sync.data)
             options.version.value = sync.version
-            if (sync.pending) void sync.flush()
           } else {
             if (
               version === sync.version &&
@@ -101,6 +100,20 @@ export function useSaveDebounce(uuid, data, options = {}) {
         { flush: 'sync' },
       )
     : () => {}
+  let recoveryStarted = false
+  const stopReady = watch(
+    () => [options.version?.value, options.serverDocument?.value, options.canSave?.() ?? true],
+    () => {
+      if (!initialized || recoveryStarted || !(options.canSave?.() ?? true)) return
+      recoveryStarted = true
+      void sync.restorePending().then(() => {
+        applyData(sync.data)
+        if (options.version) options.version.value = sync.version
+        if (sync.recovered && (options.canSave?.() ?? true)) void sync.flush()
+      })
+    },
+    { immediate: true, flush: 'sync' },
+  )
   function capture() {
     if (options.canSave && !options.canSave()) return false
     if (sync.applying || (!initialized && options.version)) return false
@@ -183,9 +196,11 @@ export function useSaveDebounce(uuid, data, options = {}) {
   onBeforeUnmount(() => {
     clearTimeout(timer)
     stopVersion()
+    stopReady()
     // Let the current packet and later queued edits finish after closing.
     // Stopping immediately would leave the latter unsent until the next open.
-    void flushSave().finally(() => sync.stop())
+    capture()
+    void finishDocumentSync(sync)
     globalThis.window?.removeEventListener('keydown', keydown)
   })
   return {

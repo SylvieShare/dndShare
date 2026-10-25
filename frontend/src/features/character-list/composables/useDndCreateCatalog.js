@@ -4,6 +4,7 @@ import { itemsApi } from '@/shared/api/itemsApi'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import { CLASS_ITEM_TYPE, RACE_ITEM_TYPE, SUBCLASS_ITEM_TYPE, SUBRACE_ITEM_TYPE, originChildren } from '@/shared/lib/dndItemTypes'
 import { backgroundReferenceIds } from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
+import { refreshDndWizardSelections } from './refreshDndWizardSelections'
 const RACE_ABIL_TYPE = 3, CLASS_ABIL_TYPE = 4, SPELL_TYPE = 5, FEAT_TYPE = 7, BG_TYPE = 11
 
 export function useDndCreateCatalog({ state, sourceVersionId, sourceSuffix, equipment, paused }) {
@@ -21,6 +22,7 @@ export function useDndCreateCatalog({ state, sourceVersionId, sourceSuffix, equi
   const featPool = ref([])
   const bgPool = ref([])
   const loading = ref(false)
+  const catalogueNotice = ref('')
 
   let loadRequest = 0, spellRequest = 0
   let loadedOnce = false
@@ -59,12 +61,10 @@ export function useDndCreateCatalog({ state, sourceVersionId, sourceSuffix, equi
       })
       classSubclassesByParent.value = subclassMap
       // Drafts store snapshots; use current catalogue descriptions and grants.
-      if (state.race) {
-        state.race = races.value.find(race => race.id === state.race.id) || null
-        const children = state.race ? originChildren(state.race, allSubraces.value, 'subraces') : []
-        state.subrace = children.find(child => child.id === state.subrace?.id) || null
-        if (!state.race?.data?.variants?.some(option => option.value === state.raceVariant)) state.raceVariant = null
-      }
+      catalogueNotice.value = refreshDndWizardSelections(state, {
+        races: races.value, subraces: allSubraces.value, classes: classes.value,
+        subclasses: allSubclasses.value, backgrounds: bg?.items || [],
+      })
       subraces.value = state.race ? originChildren(state.race, allSubraces.value, 'subraces') : []
       subclasses.value = state.charClass ? originChildren(state.charClass, allSubclasses.value, 'subclasses') : []
       raceAbilities.value = ra?.items || []
@@ -95,8 +95,9 @@ export function useDndCreateCatalog({ state, sourceVersionId, sourceSuffix, equi
     if (!r) return
     subraces.value = originChildren(r, allSubraces.value, 'subraces')
   })
-  watch(() => state.charClass, (c) => {
+  watch(() => state.charClass?.id, () => {
     if (paused()) return
+    const c = state.charClass
     state.subclass = null
     state.skillIds = []
     state.classToolProficiencyIds = []
@@ -129,5 +130,5 @@ export function useDndCreateCatalog({ state, sourceVersionId, sourceSuffix, equi
   function raceSubraceNames(raceId) { return raceSubracesByParent.value.get(String(raceId)) || [] }
   function classSubclassNames(classId) { return classSubclassesByParent.value.get(String(classId)) || [] }
   if (getCurrentScope()) onScopeDispose(() => clearTimeout(scopeReloadTimer))
-  return { races, allSubraces, classes, allSubclasses, subraces, subclasses, raceAbilities, classAbilities, spellPool, featPool, bgPool, loading, load, loadSpells, raceSubraceNames, classSubclassNames }
+  return { races, allSubraces, classes, allSubclasses, subraces, subclasses, raceAbilities, classAbilities, spellPool, featPool, bgPool, loading, catalogueNotice, load, loadSpells, raceSubraceNames, classSubclassNames }
 }

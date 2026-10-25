@@ -12,7 +12,7 @@ export async function patchCharacterData(uuid, updates, snapshot, { action = 'he
   let sync = documents.get(key)
   if (!sync) {
     if (documents.size >= 16) {
-      const idle = [...documents].find(([, value]) => !value.pending)
+      const idle = [...documents].find(([, value]) => !value.pending && !value.recovering)
       if (idle) {
         idle[1].stop()
         documents.delete(idle[0])
@@ -30,6 +30,7 @@ export async function patchCharacterData(uuid, updates, snapshot, { action = 'he
     documents.set(key, sync)
   } else if (snapshot.version > sync.version)
     sync.receive({ data: snapshot.data, version: snapshot.version })
+  await sync.ready
   const operations = updates.map((update) => ({
     op: 'set',
     path: update.path.split('.'),

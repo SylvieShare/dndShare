@@ -43,7 +43,7 @@ const STANDARD_LANG_IDS = [21, 19, 39, 55, 52, 20, 40, 25, 31, 23, 33, 30, 34, 3
 const STAT_BY_SUGGEST16 = SUGGEST16_TO_STAT
 
 /** Wizard state + data loading + payload assembly for D&D character creation. */
-export function useDndCreateWizard() {
+export function useDndCreateWizard({ draftKey = DND_WIZARD_STORAGE_KEY, normalizeDraft = normalizeDndWizardDraft } = {}) {
   const suggestStore = useSuggestStore()
   ;[3, 4, 5, 6, 7, 15, 16].forEach((t) => suggestStore.ensure(t))
 
@@ -63,7 +63,7 @@ export function useDndCreateWizard() {
 
   const {
     races, allSubraces, classes, allSubclasses, subraces, subclasses,
-    raceAbilities, classAbilities, spellPool, featPool, bgPool, loading,
+    raceAbilities, classAbilities, spellPool, featPool, bgPool, loading, catalogueNotice,
     load, loadSpells, raceSubraceNames, classSubclassNames,
   } = useDndCreateCatalog({ state, sourceVersionId, sourceSuffix, equipment, paused: () => hydrating })
 
@@ -481,7 +481,7 @@ export function useDndCreateWizard() {
 
   // ─── Persistence (localStorage) — survives reload; going back keeps forward picks ─
   const { clear: clearPersist } = usePersistedDraft(state, {
-    key: DND_WIZARD_STORAGE_KEY, serialize: serializeDndWizardState, paused: () => hydrating,
+    key: draftKey, serialize: serializeDndWizardState, paused: () => hydrating,
   })
   // Start over: wipe every pick back to defaults and drop the saved draft.
   function reset() {
@@ -491,25 +491,28 @@ export function useDndCreateWizard() {
   }
   async function restore() {
     let saved = null
-    try { saved = JSON.parse(localStorage.getItem(DND_WIZARD_STORAGE_KEY) || 'null') } catch { saved = null }
+    try { saved = JSON.parse(localStorage.getItem(draftKey) || 'null') } catch { saved = null }
     if (!saved) return
-    saved = normalizeDndWizardDraft(saved)
+    saved = normalizeDraft(saved)
     hydrating = true
-    Object.assign(state, saved)
-    state.contentSources = normalizeContentSourceSettings(state.contentSources)
-    if (state.race) subraces.value = originChildren(state.race, allSubraces.value, 'subraces')
-    if (state.charClass) subclasses.value = originChildren(state.charClass, allSubclasses.value, 'subclasses')
-    if (isCaster.value) await loadSpells()
-    // Let the reset watchers (guarded by `hydrating`) flush before unlocking, so
-    // they can't wipe the restored subrace / variant / floating-ASI picks.
-    await nextTick()
-    hydrating = false
+    try {
+      Object.assign(state, saved)
+      state.contentSources = normalizeContentSourceSettings(state.contentSources)
+      if (state.race) subraces.value = originChildren(state.race, allSubraces.value, 'subraces')
+      if (state.charClass) subclasses.value = originChildren(state.charClass, allSubclasses.value, 'subclasses')
+      if (isCaster.value) await loadSpells()
+    } finally {
+      // Reset watchers must flush while hydration is still protected, including
+      // after a failed catalogue request. Later user edits must persist again.
+      await nextTick()
+      hydrating = false
+    }
   }
 
   return {
     STATS, ...origin, ...abilitySelections,
     state, sourceVersionId, setSourceVersionId,
-    races, classes, subraces, subclasses, spellPool, featPool, bgPool, loading,
+    races, classes, subraces, subclasses, spellPool, featPool, bgPool, loading, catalogueNotice,
     raceSubraceNames,
     raceAbilities, classAbilities, classSubclassNames,
     grants, isCaster, skillOptions, skillLimit, finalScores, racialBonus, featBonuses,

@@ -100,6 +100,8 @@ it('restores an immutable outbox after a lost acknowledgement without duplicatin
   vi.useFakeTimers()
   const storage = new Map()
   vi.stubGlobal('localStorage', {
+    get length() { return storage.size },
+    key: index => [...storage.keys()][index] ?? null,
     getItem: (key) => storage.get(key),
     setItem: (key, value) => storage.set(key, value),
     removeItem: (key) => storage.delete(key),
@@ -127,6 +129,7 @@ it('restores an immutable outbox after a lost acknowledgement without duplicatin
     storageKey: 'outbox',
     send,
   })
+  await restored.ready
   expect(restored.data.hp).toBe(9)
   await restored.flush()
   expect(send.mock.calls[0][0]).toEqual(savedPacket)

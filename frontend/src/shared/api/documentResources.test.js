@@ -20,7 +20,7 @@ it('bases the next edit on the optimistic map DTO returned after restoring pendi
     server=applyDocumentPatches(copyDocument(server),packet.patches)
     return {version:++version,data:server,metadata:{id:'restored-mirror'}}
   })
-  const view=seedMapDocument({...server,id:'restored-mirror',revision:2,owned:true})
+  const view=await seedMapDocument({...server,id:'restored-mirror',revision:2,owned:true})
   expect(view.document.tiles[0].mirrored).toBe(true)
   release();await vi.waitFor(()=>expect(version).toBe(3))
   const next={...view,document:{tiles:[{id:'tile'}]}}
