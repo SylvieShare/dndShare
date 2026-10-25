@@ -1,0 +1,651 @@
+{
+  "name": "Fireplace Unlit",
+  "groupCode": "MED-fireplaces",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0.00018405914306640625,
+    0.0049228668212890625
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "renderTriangles": 180000,
+  "lodTriangles": 120000,
+  "renderBakeSize": 1536,
+  "lodBakeSize": 1536,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "floor",
+    "wood",
+    "stone",
+    "fireplace",
+    "unlit",
+    "empty",
+    "plaster",
+    "bonus"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.31,
+      0.3,
+      0.265
+    ],
+    "stoneLightRGB": [
+      0.58,
+      0.55,
+      0.48
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "hardware": [],
+    "physicalStonePigment": true,
+    "preservePhysicalWoodShade": true,
+    "woodParts": [
+      {
+        "name": "floor boards and north south fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west floor frame and fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.6,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east floor frame and fascia",
+        "minMM": [
+          14.3,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south vertical timber post",
+        "minMM": [
+          -17.557242012023927,
+          -17.602361297607423,
+          26.10005340576172
+        ],
+        "maxMM": [
+          -10.057242012023925,
+          -13.602361297607422,
+          50.00005340576172
+        ],
+        "axis": "z",
+        "nearSource": {
+          "code": "MT1-035",
+          "sourceSHA256": "ea1edada38e8dc1216cfc2f5eb98e167bcbc7afa3a1dd356a37f84f745c89953",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            -0.04275798797607422,
+            0.002361297607421875,
+            -5.340576171875e-05
+          ],
+          "projectTo": {
+            "code": "MT1-145",
+            "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96"
+          }
+        },
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "north vertical timber post",
+        "minMM": [
+          -17.557242012023927,
+          13.597638702392578,
+          26.10005340576172
+        ],
+        "maxMM": [
+          -10.057242012023925,
+          17.59763870239258,
+          50.00005340576172
+        ],
+        "axis": "z",
+        "nearSource": {
+          "code": "MT1-035",
+          "sourceSHA256": "ea1edada38e8dc1216cfc2f5eb98e167bcbc7afa3a1dd356a37f84f745c89953",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            -0.04275798797607422,
+            0.002361297607421875,
+            -5.340576171875e-05
+          ],
+          "projectTo": {
+            "code": "MT1-145",
+            "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96"
+          }
+        },
+        "physicalPigment": true,
+        "roughness": 0.9
+      }
+    ],
+    "stoneParts": [
+      {
+        "name": "own sooty native firebox backing and recessed maker mark",
+        "minMM": [
+          -9,
+          -9.4,
+          27.4
+        ],
+        "maxMM": [
+          -5.8,
+          9.4,
+          42
+        ],
+        "darkRGB": [
+          0.1,
+          0.09,
+          0.075
+        ],
+        "lightRGB": [
+          0.26,
+          0.24,
+          0.21
+        ]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "rough ochre plaster on both wall faces and top",
+        "kind": "plaster",
+        "minMM": [
+          -17.557242012023927,
+          -13.602361297607422,
+          26.60005340576172
+        ],
+        "maxMM": [
+          -10.057242012023925,
+          13.597638702392578,
+          50.00005340576172
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "nearSource": {
+          "code": "MT1-035",
+          "sourceSHA256": "ea1edada38e8dc1216cfc2f5eb98e167bcbc7afa3a1dd356a37f84f745c89953",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            -0.04275798797607422,
+            0.002361297607421875,
+            -5.340576171875e-05
+          ],
+          "projectTo": {
+            "code": "MT1-145",
+            "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96"
+          }
+        }
+      },
+      {
+        "name": "own tilted cast iron scroll fireback and rim",
+        "minMM": [
+          -9,
+          -8.5,
+          27.2
+        ],
+        "maxMM": [
+          -6,
+          8.5,
+          40.15
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0.9991687927780292,
+            0.005688395958262367,
+            0.04036540213992376
+          ],
+          "rangeMM": [
+            -6.65,
+            -5.95
+          ]
+        },
+        "kind": "paint",
+        "rgb": [
+          0.14,
+          0.13,
+          0.11
+        ],
+        "metallic": 0.84,
+        "roughness": 0.72,
+        "variation": 0.025
+      }
+    ],
+    "ironParts": [],
+    "fabricParts": [],
+    "produceParts": []
+  },
+  "weightBudget": {
+    "renderMiB": [
+      5,
+      12
+    ],
+    "lodMiB": [
+      3.5,
+      9
+    ],
+    "shadowKiB": [
+      250,
+      700
+    ],
+    "previewKiB": [
+      15,
+      40
+    ],
+    "basis": "Own679970tri33998584B coldemptyfireplace35mmfloor,max82.1448;plainmasonrychimney/mouldings/emptyfireboxwithrecessedmaker mark/lowplasterWestwall. NOlogs/fire/pigsculpt.180k120k1536mapsvscompact1152. Own28mediumactorcandidatesnonecomplete17.5disc35headroom;25finitefirebox/frontairrays."
+  },
+  "reviewNotes": "Ownsourcefull/back/front/top/crest/firebox/rear-wallSEEN,authorPDF10(066/067)neutralmasonry+brownwoodpalette. OwnUNLITemptyfirebox,ornamentedcastironfireback;no fuel/flame/pig/trophy exists. Allflame/proceduralFire/emission/defaultLightsremoved. Rearwall03510000all<.05max.020847,D[-.042758,.002361,-.000053],post/plasterpartsown-nearSource035. Masonrysides0669595of10000<.05/p90.012212,highoutliersinrearwall/cutintersectionsNOTwholebodycopy;floor066correspondenceREJECTmedian.101845/p90.385707. Ownfloorcore198normalsNx2.001582/Ny2.120660confirmsXgrain;sideYrails/postZ. Ownfloorheight25.876372,decorbodyxmax6.606950 givesconservativeblockedx≤6.706950. Own28actorcandidates17.5diam35heightNONEclear;legacyx14anchorsmissing14-15disksupportsamplesnotcopied. 25ownfiniteemptyfirebox/frontfloorairrays. NativeD17/C16ownflanksections;nativeglyphandfrontmouldingsprotected. Needownsourcepaint/geometry/UV/exactstone+wood+plasterRGB/PBR/air/fourviews/finalUD016beforeMCP. Ownfirebackfrontplane987flatpoints,A[.999168793,.005688396,.040365402],nativepeaksS-6.18274/-6.34274/-6.44274;metalfront/rimS[-6.65,-5.95],Y±8.5,Z27.2..40.15,deeprecessesremainsootstone. OwnpanelgeometryexpandedthroughY±8.6/Z40.3 toprotectscrollsandrim.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standRayTopMM": 100,
+  "renderUVAngleLimitRad": 0.45,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.45,
+  "lodUVIslandMargin": 0.0008,
+  "standPointsMM": [],
+  "blockersMM": [
+    [
+      [
+        -17.7,
+        -17.7
+      ],
+      [
+        6.706950283050537,
+        -17.7
+      ],
+      [
+        6.706950283050537,
+        17.7
+      ],
+      [
+        -17.7,
+        17.7
+      ]
+    ]
+  ],
+  "lodDataSize": 1536,
+  "pegCentersMM": [
+    [
+      0.00018405914306640625,
+      0.0049228668212890625
+    ]
+  ],
+  "placementCells": [],
+  "standRayTopsMM": [],
+  "surfaceHeightMM": 25.87637233734131,
+  "renderColourSize": 1536,
+  "lodColourSize": 1536,
+  "renderDataSize": 1536,
+  "defaultLights": [],
+  "mountCentreFitReview": {
+    "sourceSHA256": "2a86186f27c8f7e2b14006b71418ca10eb6aa94c110be14be4a8e78c2f1adb96",
+    "nativeCentresMM": [
+      [
+        0.00018405914306640625,
+        0.0049228668212890625
+      ]
+    ],
+    "fittedCentresMM": [
+      [
+        0.00018405914306640625,
+        0.0049228668212890625
+      ]
+    ],
+    "preservedCentroidMM": [
+      0.00018405914306640625,
+      0.0049228668212890625
+    ],
+    "maxCoordinateMoveMM": 0,
+    "requiredDecodedCentreToleranceMM": 0.02,
+    "sourceSections": [
+      {
+        "z": 4,
+        "centreMM": [
+          0.04370880126953125,
+          0.0027666091918945312
+        ],
+        "endsMM": [
+          [
+            -12.891014099121094,
+            12.978431701660156
+          ],
+          [
+            -12.93017864227295,
+            12.935711860656738
+          ]
+        ]
+      },
+      {
+        "z": 6,
+        "centreMM": [
+          0.0437006950378418,
+          0.0029935836791992188
+        ],
+        "endsMM": [
+          [
+            -12.890987396240234,
+            12.978388786315918
+          ],
+          [
+            -12.930168151855469,
+            12.936155319213867
+          ]
+        ]
+      },
+      {
+        "z": 8,
+        "centreMM": [
+          0.04345703125,
+          0.003238677978515625
+        ],
+        "endsMM": [
+          [
+            -12.891439437866211,
+            12.978353500366211
+          ],
+          [
+            -12.930122375488281,
+            12.936599731445312
+          ]
+        ]
+      },
+      {
+        "z": 10,
+        "centreMM": [
+          0.02185535430908203,
+          0.003418445587158203
+        ],
+        "endsMM": [
+          [
+            -12.934667587280273,
+            12.978378295898438
+          ],
+          [
+            -12.93007755279541,
+            12.936914443969727
+          ]
+        ]
+      },
+      {
+        "z": 12,
+        "centreMM": [
+          8.869171142578125e-05,
+          0.005396366119384766
+        ],
+        "endsMM": [
+          [
+            -13.380125999450684,
+            13.380303382873535
+          ],
+          [
+            -13.371733665466309,
+            13.382526397705078
+          ]
+        ]
+      },
+      {
+        "z": 14,
+        "centreMM": [
+          0.0009322166442871094,
+          0.005252838134765625
+        ],
+        "endsMM": [
+          [
+            -15.100092887878418,
+            15.101957321166992
+          ],
+          [
+            -15.093459129333496,
+            15.103964805603027
+          ]
+        ]
+      },
+      {
+        "z": 16,
+        "centreMM": [
+          0.00018405914306640625,
+          0.0049228668212890625
+        ],
+        "endsMM": [
+          [
+            -16.823400497436523,
+            16.823768615722656
+          ],
+          [
+            -16.815494537353516,
+            16.825340270996094
+          ]
+        ]
+      }
+    ],
+    "method": "Own nativeinsertflank rays4/6/8/10/12/14/16;upper16axis selected separatelyfromlowerstem"
+  },
+  "geometryDetailRegions": [
+    {
+      "name": "own native mounting lip",
+      "minMM": [
+        -17.8,
+        -17.8,
+        16.99
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        17.65
+      ]
+    },
+    {
+      "name": "own original cast iron fireback scrollwork and rim",
+      "minMM": [
+        -9,
+        -8.6,
+        27.2
+      ],
+      "maxMM": [
+        -6,
+        8.6,
+        40.3
+      ]
+    },
+    {
+      "name": "own native front mantel rounded mouldings",
+      "minMM": [
+        1.5,
+        -17.8,
+        47
+      ],
+      "maxMM": [
+        7,
+        17.8,
+        54
+      ]
+    }
+  ],
+  "uvBaseTile": [
+    0.002,
+    0.8,
+    0.998,
+    0.998
+  ],
+  "uvDetailRegions": [
+    {
+      "name": "own fireplace front sides empty firebox and chimney",
+      "minMM": [
+        -10.099,
+        -17.8,
+        26.651
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        82.4
+      ],
+      "tile": [
+        0.002,
+        0.002,
+        0.7,
+        0.78
+      ],
+      "angleLimitRad": 0.35,
+      "islandMargin": 0.0008
+    },
+    {
+      "name": "own low West plaster and timber wall",
+      "minMM": [
+        -17.8,
+        -17.8,
+        26.651
+      ],
+      "maxMM": [
+        -10.1,
+        17.8,
+        50
+      ],
+      "tile": [
+        0.72,
+        0.002,
+        0.998,
+        0.45
+      ],
+      "angleLimitRad": 0.35,
+      "islandMargin": 0.0008
+    },
+    {
+      "name": "own rear chimney above low wall",
+      "minMM": [
+        -17.8,
+        -17.8,
+        50.001
+      ],
+      "maxMM": [
+        -10.1,
+        17.8,
+        82.4
+      ],
+      "tile": [
+        0.72,
+        0.47,
+        0.998,
+        0.78
+      ],
+      "angleLimitRad": 0.45,
+      "islandMargin": 0.0008
+    }
+  ]
+}
