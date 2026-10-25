@@ -179,6 +179,7 @@ Small Door Angle Left Opened|Угловая левая дверь, открыт�
 Small Door Angle Right Opened|Угловая правая дверь, открытая
 Small Door Angle Left Closed Tall|Высокая угловая левая дверь, закрытая
 Small Door Angle Right Closed Tall|Высокая угловая правая дверь, закрытая
+Small Door Angle Left Opened Tall|Высокая угловая левая дверь, открытая
 Balcony|Балкон
 Balcony Angle|Угловой балкон
 Balcony Corridor|Балкон с двумя ограждениями
