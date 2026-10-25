@@ -26,6 +26,7 @@ recipe = json.loads(args.recipe.read_text())
 models = json.loads((folder/'publish/catalogue.json').read_text())
 verification = json.loads((folder/'verification.json').read_text())
 require_review(folder,recipe,recipe['build']['size'],folder/'model-review.json')
+assert verification.get('lodBudget') == recipe.get('lodBudget'), 'LOD budget changed since verification'
 assert verification.get('textureBudget',{}).get('passed'), 'Decoded texture budget verification required'
 assert verification['textureBudget']['policySHA256'] == hashlib.sha256(Path(__file__).with_name('texture-policy.json').read_bytes()).hexdigest(), 'Texture policy changed since verification'
 assert verification['textureBudget'].get('override') == recipe.get('texturePolicy'), 'Texture policy override changed since verification'

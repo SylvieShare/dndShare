@@ -1,0 +1,53 @@
+{
+  "slug": "tiger-2125",
+  "itemId": 2125,
+  "itemIds": [
+    2125
+  ],
+  "modelId": "cd3712dc-fbc9-5655-aa74-1d6ca8a53439",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2125",
+  "sourceName": "tiger-2125-miniature",
+  "name": "Тигр",
+  "nameEn": "Tiger",
+  "code": "CRE-tiger",
+  "groupName": "Тигр",
+  "groupNameEn": "Tiger",
+  "maxHeight": 0.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 0.7,
+    "size": 2,
+    "lodTriangles": 22000,
+    "lodAggression": 4,
+    "shadowTriangles": 6000,
+    "shadowAggression": 4,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.6695771174771445,
+    "sourceOrigin": [
+      -0.03546250000000001,
+      -0.012950000000000017,
+      -0.26048293709754944
+    ],
+    "rotation": -45
+  }
+}

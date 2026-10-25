@@ -120,6 +120,8 @@ python3 scripts/creatures/publish-miniature.py models/creatures/SLUG scripts/cre
 `prepare-native-geometry.py` делает QEM и новую UV-развёртку xatlas:
 начальные бюджеты 44k render, 12k LOD, 3,5k shadow. Совомеду нужен LOD 24k
 для сохранения тонких перьев. Бюджет выбирается по видимому результату.
+Для LOD выше обычного предела 25k требуется явное
+[объяснённое исключение в рецепте](creature-model-quality.md).
 
 `bake-native-miniature.py` переносит albedo/PBR и геометрические tangent normals
 с исходника на render/LOD, сохраняет `.blend`. По умолчанию основание отсутствует;

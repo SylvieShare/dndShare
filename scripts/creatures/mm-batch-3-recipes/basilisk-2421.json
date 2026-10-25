@@ -1,0 +1,53 @@
+{
+  "slug": "basilisk-2421",
+  "itemId": 2421,
+  "itemIds": [
+    2421
+  ],
+  "modelId": "2669ad8f-6427-5d95-9b6b-2ddfc94f6a73",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2421",
+  "sourceName": "basilisk-2421-miniature",
+  "name": "Василиск",
+  "nameEn": "Basilisk",
+  "code": "CRE-basilisk",
+  "groupName": "Василиск",
+  "groupNameEn": "Basilisk",
+  "maxHeight": 0.32,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 0.32,
+    "size": 1,
+    "lodTriangles": 25000,
+    "lodAggression": 4,
+    "shadowTriangles": 6000,
+    "shadowAggression": 4,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5786918965168297,
+    "sourceOrigin": [
+      -0.005,
+      -0.033,
+      -0.09303954243659973
+    ],
+    "rotation": -45
+  }
+}

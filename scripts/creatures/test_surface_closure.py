@@ -31,6 +31,41 @@ class SurfaceClosureTests(unittest.TestCase):
         inside=(u>=-1e-6)&(v>=-1e-6)&(u+v<=1+1e-6)
         return np.max((triangles[:,0,0]*(1-u-v)+triangles[:,1,0]*u+triangles[:,2,0]*v)[inside])
 
+    def test_surface_cap_fills_cloth_without_reshaping_the_source(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);source=root/'source.glb';target=root/'cap.glb'
+            mesh=trimesh.creation.box(extents=(.3,.3,.3)).subdivide().subdivide().subdivide()
+            centres=mesh.triangles_center;candidates=np.where(centres[:,0]>.149)[0]
+            opening=candidates[np.linalg.norm(centres[candidates,1:],axis=1).argmin()]
+            ray=centres[opening,1:].copy();rim=mesh.triangles[opening].copy()
+            keep=np.ones(len(mesh.faces),dtype=bool);keep[opening]=False;mesh.update_faces(keep)
+            mesh.export(source);original=source.read_bytes();authored=trimesh.load(source,force='mesh')
+            self.assertLess(self.front_hit(authored,ray),0)
+            command=[sys.executable,str(Path(__file__).with_name('close-native-surface.py')),str(source),str(target),
+                '--cap-rim',*map(str,rim.reshape(-1)),'--cap-normal','1','0','0']
+            subprocess.run(command,check=True,capture_output=True)
+            repaired=trimesh.load(target,force='mesh')
+            self.assertGreater(self.front_hit(repaired,ray),.15)
+            self.assertLess(self.front_hit(repaired,ray),.151)
+            for vertex in authored.vertices:
+                self.assertLess(np.linalg.norm(repaired.vertices-vertex,axis=1).min(),1e-7)
+            report=json.loads(target.with_suffix('.json').read_text())
+            self.assertEqual(report['method'],'surface-cap')
+            self.assertTrue(report['preservedSourceGeometry'])
+            self.assertEqual(report['replacementFaces'],12)
+            self.assertTrue(report['capWatertight'])
+            self.assertEqual(source.read_bytes(),original)
+            command[-3:]=['0','0','0']
+            failed=subprocess.run(command,capture_output=True,text=True)
+            self.assertNotEqual(failed.returncode,0)
+            self.assertIn('outward normal',failed.stderr)
+            angles=np.arange(5)*2*np.pi/5
+            star=np.column_stack([np.full(5,.15),.01*np.cos(angles),.01*np.sin(angles)])[[0,2,4,1,3]]
+            failed=subprocess.run(command[:4]+['--cap-rim',*map(str,star.reshape(-1)),
+                '--cap-normal','1','0','0'],capture_output=True,text=True)
+            self.assertNotEqual(failed.returncode,0)
+            self.assertIn('ordered loop',failed.stderr)
+
     def test_local_patch_seals_opening_and_preserves_distant_anatomy(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);source=root/'source.glb';target=root/'local.glb'

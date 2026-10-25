@@ -16,6 +16,7 @@
 - [Проверка заклинаний и способностей — 12 сентября 2026](catalogue/spell-rules-audit.md)
 - [Посадка одежды миниатюр — 24 октября 2026](creature-clothing-fit-2026-10-24.md)
 - [Миниатюры MM: второй набор, 20 видов — 25 октября 2026](creature-miniatures-mm-batch-20-2026-10-25.md)
+- [Миниатюры MM: третий набор, 20 видов — 25–26 октября 2026](creature-miniatures-mm-batch-3-2026-10-26.md)
 - [Пилот миниатюр MM — 24–25 октября 2026](creature-miniatures-pilot-2026-10-25.md)
 - [Миниатюры: четыре доработки производства — 25 октября 2026](creature-miniatures-production-2026-10-25.md)
 - [Сверка каталога Majestic Highlands 17 октября 2026](majestic-catalogue-2026-10-17.md)

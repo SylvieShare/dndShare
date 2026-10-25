@@ -1,0 +1,9 @@
+Use case: stylized-concept
+Asset type: primary image-to-3D reference for one static textured DnD Share tabletop creature miniature.
+Input image: handbook illustration used only as an identity, palette and surface-detail reference; convert the subject to a solid sculpted miniature and obey the anatomy and equipment below.
+Primary request: A ghast: a pallid blue-grey undead humanoid, bald skull-like head, long pointed ears, sunken milky eyes, a fanged open mouth and a long substantial dark reddish tongue hanging only a little from the jaw. Lean muscular torso with bony ridges, exactly TWO arms with long separated thick claws, exactly TWO legs with two bare clawed feet grounded in a hunched predatory stance. A fitted ragged dark ochre loincloth tied around the waist, connected cloth volume. No gore, no detached skin flaps, no base.
+Style/medium: a carefully painted resin gaming miniature with realistic anatomy, slightly strengthened small details, matte dielectric paint, readable sculptural volumes. Match the established fantasy miniature collection, not a cartoon mascot.
+Composition/framing: one complete creature, isolated, three-quarter front view from modest elevation; include every foot, tail and wing tip with a generous transparent margin. Face toward the viewer-left; keep appendages separated and countable. Stable grounded stance, no motion blur.
+Lighting: bright soft neutral studio illumination with fill from both sides. Surface colors and dark bodies must remain readable. No colored lighting, no dramatic black shadows, no glossy metallic skin.
+Scene/backdrop: genuinely transparent alpha background. NO base, pedestal, ground plane, cast shadow, terrain or scenery.
+Constraints: exactly one creature; preserve species, count all limbs; solid continuous anatomy and garments; no text, captions, border, watermark, extra objects, detached parts or visible display stand.

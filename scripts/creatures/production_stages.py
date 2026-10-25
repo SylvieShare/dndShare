@@ -76,8 +76,14 @@ def process(queue,entry,until,server_token):
         source=raw;extra=[]
         if entry.get('surfaceClosure'):
             source=geometry/'closed-source.glb';settings=entry['surfaceClosure']
-            command=[sys.executable,SCRIPTS/'close-native-surface.py',raw,source,'--pitch',settings['pitch'],'--radius',settings['radius']]
-            if settings.get('region'): command += ['--region', *settings['region']]
+            command=[sys.executable,SCRIPTS/'close-native-surface.py',raw,source]
+            if settings.get('method') == 'cap':
+                command += ['--cap-rim',*[v for point in settings['rim'] for v in point],
+                    '--cap-normal',*settings['normal'],'--cap-offset',settings.get('offset',.0003),
+                    '--cap-thickness',settings.get('thickness',.004)]
+            else:
+                command += ['--pitch',settings['pitch'],'--radius',settings['radius']]
+                if settings.get('region'): command += ['--region', *settings['region']]
             execute(command,logs/'closure.log')
             extra=[source,source.with_suffix('.json')]
         command=[sys.executable,SCRIPTS/'prepare-native-geometry.py',geometry,'--source',source,'--lod-triangles',entry['lodTriangles']]
@@ -133,7 +139,7 @@ def process(queue,entry,until,server_token):
         return [final/'verification.json']
     stage('verify',{'assets':{f:file_hash(final/f) for f in FILES},'stats':file_hash(final/'model-stats.json'),
         'placement':file_hash(final/'placement.json'),'silhouette':file_hash(final/'lod-silhouette.json'),
-        'recipe':file_hash(recipe),'scripts':scripts_hash('verify-single-miniature.mjs','texture_policy.mjs','texture-policy.json')},verify)
+        'recipe':file_hash(recipe),'scripts':scripts_hash('verify-single-miniature.mjs','texture_policy.mjs','texture-policy.json','lod_budget.mjs')},verify)
 
     review_file=final/'model-review.json'
     if not review_file.exists():

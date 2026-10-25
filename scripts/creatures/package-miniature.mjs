@@ -5,6 +5,7 @@ import crypto from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 import { createRequire } from "node:module";
 import { texturePolicy } from "./texture_policy.mjs";
+import { lodTriangleLimit } from "./lod_budget.mjs";
 import { execFileSync } from "node:child_process";
 
 const root = path.resolve(import.meta.dirname, "../..");
@@ -34,6 +35,9 @@ const output = path.join(folder, "publish");
 const verification = JSON.parse(
   await fs.readFile(path.join(folder, "verification.json"), "utf8"),
 );
+if (verification.lodTriangleLimit !== lodTriangleLimit(recipe) ||
+    !isDeepStrictEqual(verification.lodBudget, recipe.lodBudget ?? null))
+  throw new Error("Verify the current authored LOD budget before packaging");
 if (
   !verification.textureBudget?.passed ||
   !isDeepStrictEqual(verification.textureBudget.policy, texturePolicy(recipe))
@@ -111,6 +115,7 @@ const {
   calibration,
   build,
   lodSilhouette,
+  lodBudget,
   texturePolicy: textureBudgetPolicy,
   reviewBase,
   artProfile,

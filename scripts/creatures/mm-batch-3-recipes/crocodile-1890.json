@@ -1,0 +1,53 @@
+{
+  "slug": "crocodile-1890",
+  "itemId": 1890,
+  "itemIds": [
+    1890
+  ],
+  "modelId": "740a3b97-125a-5701-ac11-070a5c529b14",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1890",
+  "sourceName": "crocodile-1890-miniature",
+  "name": "Крокодил",
+  "nameEn": "Crocodile",
+  "code": "CRE-crocodile",
+  "groupName": "Крокодил",
+  "groupNameEn": "Crocodile",
+  "maxHeight": 0.38,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 0.38,
+    "size": 2,
+    "lodTriangles": 22000,
+    "lodAggression": 4,
+    "shadowTriangles": 6000,
+    "shadowAggression": 4,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.8535245060920715,
+    "sourceOrigin": [
+      -0.03922999999999999,
+      0.020245,
+      -0.18256402015686035
+    ],
+    "rotation": -45
+  }
+}

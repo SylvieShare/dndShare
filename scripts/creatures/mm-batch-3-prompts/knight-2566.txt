@@ -1,0 +1,9 @@
+Use case: stylized-concept
+Asset type: primary image-to-3D reference for one static textured DnD Share tabletop creature miniature.
+Input image: handbook illustration used only as an identity, palette and surface-detail reference; convert the subject to a solid sculpted miniature and obey the anatomy and equipment below.
+Primary request: A human knight in fitted full steel plate armor painted in muted silver-grey, closed visored helmet, brown leather belts and a short off-white tabard with understated red cloth accents. Exactly TWO arms and TWO legs; two armored boots firmly planted. Both hands grip ONE thick straight greatsword held diagonally across the front with blade raised outside the face. A compact heavy crossbow is strapped flat to the back, clearly not a second held weapon. No shield, no horse, no polearm. Cloth is fitted around armor and connected at shoulders, no floating panels.
+Style/medium: a carefully painted resin gaming miniature with realistic anatomy, slightly strengthened small details, matte dielectric paint, readable sculptural volumes. Match the established fantasy miniature collection, not a cartoon mascot.
+Composition/framing: one complete creature, isolated, three-quarter front view from modest elevation; include every foot, tail and wing tip with a generous transparent margin. Face toward the viewer-left; keep appendages separated and countable. Stable grounded stance, no motion blur.
+Lighting: bright soft neutral studio illumination with fill from both sides. Surface colors and dark bodies must remain readable. No colored lighting, no dramatic black shadows, no glossy metallic skin.
+Scene/backdrop: genuinely transparent alpha background. NO base, pedestal, ground plane, cast shadow, terrain or scenery.
+Constraints: exactly one creature; preserve species, count all limbs; solid continuous anatomy and garments; no text, captions, border, watermark, extra objects, detached parts or visible display stand.

@@ -1,0 +1,55 @@
+{
+  "slug": "dire-wolf-2068",
+  "itemId": 2068,
+  "itemIds": [
+    2068
+  ],
+  "modelId": "dc7c8e65-8422-5bcd-94cb-0a2181ba21f8",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2068",
+  "sourceName": "dire-wolf-2068-miniature",
+  "name": "Лютый волк",
+  "nameEn": "Dire Wolf",
+  "code": "CRE-dire-wolf",
+  "groupName": "Лютый волк",
+  "groupNameEn": "Dire Wolf",
+  "maxHeight": 0.74,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 0.74,
+    "size": 2,
+    "lodTriangles": 22000,
+    "lodAggression": 4,
+    "shadowTriangles": 6000,
+    "shadowAggression": 4,
+    "nativeAttempt": 2,
+    "seed": 12068,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.819385784703332,
+    "sourceOrigin": [
+      0.01074,
+      -0.022570000000000007,
+      -0.3388700485229492
+    ],
+    "rotation": -45
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "slug": "displacer-beast-2592",
+  "itemId": 2592,
+  "itemIds": [
+    2592
+  ],
+  "modelId": "23af2f18-c6a4-5797-93f8-5829daaf824b",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2592",
+  "sourceName": "displacer-beast-2592-miniature",
+  "name": "Ускользающий зверь",
+  "nameEn": "Displacer Beast",
+  "code": "CRE-displacer-beast",
+  "groupName": "Ускользающий зверь",
+  "groupNameEn": "Displacer Beast",
+  "maxHeight": 1.1,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.1,
+    "size": 2,
+    "lodTriangles": 25000,
+    "dropComponentsBelow": 80,
+    "lodAggression": 4,
+    "shadowTriangles": 10000,
+    "shadowAggression": 4,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.466696712103757,
+    "sourceOrigin": [
+      0.010937500000000003,
+      -0.11894999999999999,
+      -0.28734028339385986
+    ],
+    "rotation": -45
+  }
+}

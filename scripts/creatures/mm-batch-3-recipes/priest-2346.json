@@ -1,0 +1,100 @@
+{
+  "slug": "priest-2346",
+  "itemId": 2346,
+  "itemIds": [
+    2346
+  ],
+  "modelId": "ad70d6f4-1205-5952-9ff5-bb5a61d6d780",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2346",
+  "sourceName": "priest-2346-miniature",
+  "name": "Священник",
+  "nameEn": "Priest",
+  "code": "CRE-priest",
+  "groupName": "Священник",
+  "groupNameEn": "Priest",
+  "maxHeight": 1.5,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.5,
+    "size": 1,
+    "lodTriangles": 24000,
+    "lodAggression": 4,
+    "shadowTriangles": 6000,
+    "shadowAggression": 4,
+    "surfaceClosure": {
+      "method": "cap",
+      "rim": [
+        [
+          0.17660486698150635,
+          -0.27153849601745605,
+          -0.1322462558746338
+        ],
+        [
+          0.16455577313899994,
+          -0.26791322231292725,
+          -0.140061616897583
+        ],
+        [
+          0.14674413204193115,
+          -0.2769050598144531,
+          -0.14339208602905273
+        ],
+        [
+          0.14469099044799805,
+          -0.2922779321670532,
+          -0.1455984264612198
+        ],
+        [
+          0.15739403665065765,
+          -0.30309975147247314,
+          -0.15078401565551758
+        ],
+        [
+          0.17568957805633545,
+          -0.2999659776687622,
+          -0.14832663536071777
+        ],
+        [
+          0.18223035335540771,
+          -0.28750836849212646,
+          -0.13648463785648346
+        ]
+      ],
+      "normal": [
+        0.1942486856679539,
+        0.3352314780367329,
+        -0.9218933258515217
+      ],
+      "offset": 0.0003,
+      "thickness": 0.004
+    },
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.6006924033164979,
+    "sourceOrigin": [
+      0.06799999999999999,
+      0.003155000000000005,
+      -0.5004220008850098
+    ],
+    "rotation": -45
+  }
+}

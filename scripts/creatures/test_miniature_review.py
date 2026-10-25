@@ -23,7 +23,7 @@ class ReviewTests(unittest.TestCase):
         self.assertTrue(self.check()['approved'])
 
     def test_metadata_changes_require_fresh_placement_even_with_identical_glbs(self):
-        for field,value in [('referenceDiameter',.8),('materialProfile','native'),('artProfile','physical'),('supportKind','flight'),('texturePolicy',{'lod':{'basecolor':256}})]:
+        for field,value in [('referenceDiameter',.8),('materialProfile','native'),('artProfile','physical'),('supportKind','flight'),('texturePolicy',{'lod':{'basecolor':256}}),('lodBudget',{'maxTriangles':32000,'reason':'Feathers'})]:
             with self.subTest(field=field):
                 old=self.recipe.get(field);self.recipe[field]=value
                 with self.assertRaisesRegex(ValueError,'Placement preview is stale'):self.check()

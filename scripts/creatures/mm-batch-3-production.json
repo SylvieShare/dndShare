@@ -1,0 +1,305 @@
+{
+  "schema": 1,
+  "name": "Популярные существа MM — третий набор, 20 видов",
+  "budget": {
+    "maxGenerations": 22,
+    "maxGpuCalls": 44,
+    "minRemainingGpuSeconds": 240,
+    "allowPaidOverquota": false
+  },
+  "entries": [
+    {
+      "slug": "dire-wolf-2068",
+      "itemId": 2068,
+      "name": "Лютый волк",
+      "nameEn": "Dire Wolf",
+      "size": 2,
+      "height": 0.74,
+      "lodTriangles": 22000,
+      "lodAggression": 4,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4,
+      "nativeAttempt": 2,
+      "seed": 12068
+    },
+    {
+      "slug": "black-bear-1965",
+      "itemId": 1965,
+      "name": "Чёрный медведь",
+      "nameEn": "Black Bear",
+      "size": 1,
+      "height": 0.72,
+      "lodTriangles": 25000,
+      "lodAggression": 4,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4
+    },
+    {
+      "slug": "panther-1781",
+      "itemId": 1781,
+      "name": "Пантера",
+      "nameEn": "Panther",
+      "size": 1,
+      "height": 0.72,
+      "lodTriangles": 22000,
+      "lodAggression": 4,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4
+    },
+    {
+      "slug": "lion-2064",
+      "itemId": 2064,
+      "name": "Лев",
+      "nameEn": "Lion",
+      "size": 2,
+      "height": 0.73,
+      "lodTriangles": 25000,
+      "lodAggression": 3,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4,
+      "dropComponentsBelow": 80
+    },
+    {
+      "slug": "tiger-2125",
+      "itemId": 2125,
+      "name": "Тигр",
+      "nameEn": "Tiger",
+      "size": 2,
+      "height": 0.7,
+      "lodTriangles": 22000,
+      "lodAggression": 4,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4
+    },
+    {
+      "slug": "mastiff-1649",
+      "itemId": 1649,
+      "name": "Мастифф",
+      "nameEn": "Mastiff",
+      "size": 1,
+      "height": 0.85,
+      "lodTriangles": 20000,
+      "lodAggression": 4,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4
+    },
+    {
+      "slug": "giant-eagle-2006",
+      "itemId": 2006,
+      "name": "Гигантский орёл",
+      "nameEn": "Giant Eagle",
+      "size": 2,
+      "height": 0.95,
+      "lodTriangles": 25000,
+      "lodAggression": 4,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4
+    },
+    {
+      "slug": "crocodile-1890",
+      "itemId": 1890,
+      "name": "Крокодил",
+      "nameEn": "Crocodile",
+      "size": 2,
+      "height": 0.38,
+      "lodTriangles": 22000,
+      "lodAggression": 4,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4
+    },
+    {
+      "slug": "griffon-2219",
+      "itemId": 2219,
+      "name": "Грифон",
+      "nameEn": "Griffon",
+      "size": 2,
+      "height": 1.02,
+      "lodTriangles": 32000,
+      "lodAggression": 3,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4
+    },
+    {
+      "slug": "basilisk-2421",
+      "itemId": 2421,
+      "name": "Василиск",
+      "nameEn": "Basilisk",
+      "size": 1,
+      "height": 0.32,
+      "lodTriangles": 25000,
+      "lodAggression": 4,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4
+    },
+    {
+      "slug": "rust-monster-1930",
+      "itemId": 1930,
+      "name": "Ржавник",
+      "nameEn": "Rust Monster",
+      "size": 1,
+      "height": 0.95,
+      "lodTriangles": 25000,
+      "lodAggression": 4,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4
+    },
+    {
+      "slug": "displacer-beast-2592",
+      "itemId": 2592,
+      "name": "Ускользающий зверь",
+      "nameEn": "Displacer Beast",
+      "size": 2,
+      "height": 1.1,
+      "lodTriangles": 25000,
+      "lodAggression": 4,
+      "shadowTriangles": 10000,
+      "shadowAggression": 4,
+      "dropComponentsBelow": 80
+    },
+    {
+      "slug": "bulette-2871",
+      "itemId": 2871,
+      "name": "Панцирница",
+      "nameEn": "Bulette",
+      "size": 2,
+      "height": 0.84,
+      "lodTriangles": 24000,
+      "lodAggression": 4,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4
+    },
+    {
+      "slug": "gargoyle-2216",
+      "itemId": 2216,
+      "name": "Горгулья",
+      "nameEn": "Gargoyle",
+      "size": 1,
+      "height": 1.5,
+      "lodTriangles": 25000,
+      "lodAggression": 4,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4
+    },
+    {
+      "slug": "ghast-2200",
+      "itemId": 2200,
+      "name": "Вурдалак",
+      "nameEn": "Ghast",
+      "size": 1,
+      "height": 1.4,
+      "lodTriangles": 24000,
+      "lodAggression": 4,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4
+    },
+    {
+      "slug": "wight-2591",
+      "itemId": 2591,
+      "name": "Умертвие",
+      "nameEn": "Wight",
+      "size": 1,
+      "height": 1.65,
+      "lodTriangles": 24000,
+      "lodAggression": 4,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4
+    },
+    {
+      "slug": "knight-2566",
+      "itemId": 2566,
+      "name": "Рыцарь",
+      "nameEn": "Knight",
+      "size": 1,
+      "height": 1.85,
+      "lodTriangles": 24000,
+      "lodAggression": 4,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4
+    },
+    {
+      "slug": "imp-1974",
+      "itemId": 1974,
+      "name": "Бес",
+      "nameEn": "Imp",
+      "size": 0.5,
+      "height": 1.2,
+      "lodTriangles": 25000,
+      "lodAggression": 4,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4
+    },
+    {
+      "slug": "ankheg-2154",
+      "itemId": 2154,
+      "name": "Анхег",
+      "nameEn": "Ankheg",
+      "size": 2,
+      "height": 0.5,
+      "lodTriangles": 25000,
+      "lodAggression": 4,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4,
+      "nativeAttempt": 2,
+      "seed": 12154
+    },
+    {
+      "slug": "priest-2346",
+      "itemId": 2346,
+      "name": "Священник",
+      "nameEn": "Priest",
+      "size": 1,
+      "height": 1.5,
+      "lodTriangles": 24000,
+      "lodAggression": 4,
+      "shadowTriangles": 6000,
+      "shadowAggression": 4,
+      "surfaceClosure": {
+        "method": "cap",
+        "rim": [
+          [
+            0.17660486698150635,
+            -0.27153849601745605,
+            -0.1322462558746338
+          ],
+          [
+            0.16455577313899994,
+            -0.26791322231292725,
+            -0.140061616897583
+          ],
+          [
+            0.14674413204193115,
+            -0.2769050598144531,
+            -0.14339208602905273
+          ],
+          [
+            0.14469099044799805,
+            -0.2922779321670532,
+            -0.1455984264612198
+          ],
+          [
+            0.15739403665065765,
+            -0.30309975147247314,
+            -0.15078401565551758
+          ],
+          [
+            0.17568957805633545,
+            -0.2999659776687622,
+            -0.14832663536071777
+          ],
+          [
+            0.18223035335540771,
+            -0.28750836849212646,
+            -0.13648463785648346
+          ]
+        ],
+        "normal": [
+          0.1942486856679539,
+          0.3352314780367329,
+          -0.9218933258515217
+        ],
+        "offset": 0.0003,
+        "thickness": 0.004
+      }
+    }
+  ]
+}

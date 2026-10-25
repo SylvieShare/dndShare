@@ -3,6 +3,7 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
+import { lodTriangleLimit } from "./lod_budget.mjs";
 import {
   texturePolicy,
   textureMeasurements,
@@ -27,7 +28,7 @@ const stats = JSON.parse(
 const placement = JSON.parse(
   await fs.readFile(path.join(folder, "placement.json")),
 );
-const limits = { render: 90000, lod: 25000, shadow: 12000, source: 600000 };
+const limits = { render: 90000, lod: lodTriangleLimit(recipe), shadow: 12000, source: 600000 };
 const policy = texturePolicy(recipe),
   textureUsage = {};
 assert.equal(placement.embeddedBase, false);
@@ -172,6 +173,8 @@ for (const role of ["render", "lod"])
   );
 const result = {
   passed: true,
+  lodBudget: recipe.lodBudget ?? null,
+  lodTriangleLimit: limits.lod,
   originalServiceMeshExported: !!placement.originalServiceMeshExported,
   nominalFootprintCells: placement.nominalFootprintCells,
   referenceDiameter: recipe.referenceDiameter,

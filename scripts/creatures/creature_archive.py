@@ -17,7 +17,7 @@ WORKFLOW = ['generate-trellis.py','trellis_checkpoint.py','trellis_transport.py'
             'optimize-miniature.mjs','render-final-miniature.py','lod_silhouette.py',
             'compare-lod-silhouette.py','lod-silhouette-policy.json','verify-single-miniature.mjs',
             'package-miniature.mjs','check-miniature-review.py','review-miniature.py','production-queue.py','production_stages.py','production_archives.py','miniature_review.py',
-            'texture-policy.json','texture_policy.mjs','model_build_queue.py','creature_archive.py','creature_archive_restore.py','model-source-archive.py','miniature_mcp.py']
+            'texture-policy.json','texture_policy.mjs','lod_budget.mjs','model_build_queue.py','creature_archive.py','creature_archive_restore.py','model-source-archive.py','miniature_mcp.py']
 
 
 def archive_inputs(folder,stage):

@@ -88,6 +88,14 @@ class MiniatureUpdate(unittest.TestCase):
         for file in self.folder.rglob('*.json'):
             self.assertNotIn('offline-test-token', file.read_text())
 
+    def test_stale_lod_budget_stops_before_upload(self):
+        path=self.folder/'verification.json';value=json.loads(path.read_text())
+        value['lodBudget']={'maxTriangles':32000,'reason':'Different authored budget'}
+        path.write_text(json.dumps(value))
+        with self.assertRaisesRegex(AssertionError,'LOD budget changed'):
+            self.run_update()
+        self.assertEqual(self.uploads,0)
+
     def test_refuses_concurrent_asset_changes(self):
         self.remote['assets']['render']['sha256'] = 'someone-else'
         with self.assertRaisesRegex(AssertionError, 'Model changed'):

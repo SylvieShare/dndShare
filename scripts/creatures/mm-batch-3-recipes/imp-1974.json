@@ -1,0 +1,53 @@
+{
+  "slug": "imp-1974",
+  "itemId": 1974,
+  "itemIds": [
+    1974
+  ],
+  "modelId": "89fcd37d-7bc7-5af2-9d0b-9c3815f0987d",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1974",
+  "sourceName": "imp-1974-miniature",
+  "name": "Бес",
+  "nameEn": "Imp",
+  "code": "CRE-imp",
+  "groupName": "Бес",
+  "groupNameEn": "Imp",
+  "maxHeight": 1.2,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "dfde5fa7-4bb1-5909-a039-06cd45d0f008",
+    "file": "models/creatures/separated-bases-20261024/dfde5fa7-4bb1-5909-a039-06cd45d0f008.glb",
+    "referenceDiameter": 0.45,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.2,
+    "size": 0.5,
+    "lodTriangles": 25000,
+    "lodAggression": 4,
+    "shadowTriangles": 6000,
+    "shadowAggression": 4,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5273289978504181,
+    "sourceOrigin": [
+      0.0001825000000000021,
+      -0.012505,
+      -0.35346168279647827
+    ],
+    "rotation": -45
+  }
+}

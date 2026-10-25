@@ -1,0 +1,9 @@
+Use case: stylized-concept
+Asset type: primary image-to-3D reference for one static textured DnD Share tabletop creature miniature.
+Input image: handbook illustration used only as an identity, palette and surface-detail reference; convert the subject to a solid sculpted miniature and obey the anatomy and equipment below.
+Primary request: A rust monster with a squat rust-orange armored insect-like body, overlapping rough orange-brown dorsal plates, small insect head. Exactly FOUR walking legs arranged in two pairs, four separate feet grounded. Exactly TWO long fuzzy antennae curve forward from its face, with thick sculpted tips. A single long segmented tail arches behind and terminates in a broad bony paddle or fan shape. Keep antennae away from legs and tail so they are unambiguous and sturdy. Do not copy an erroneous extra pair of legs from the illustration. No discarded weapons or debris.
+Style/medium: a carefully painted resin gaming miniature with realistic anatomy, slightly strengthened small details, matte dielectric paint, readable sculptural volumes. Match the established fantasy miniature collection, not a cartoon mascot.
+Composition/framing: one complete creature, isolated, three-quarter front view from modest elevation; include every foot, tail and wing tip with a generous transparent margin. Face toward the viewer-left; keep appendages separated and countable. Stable grounded stance, no motion blur.
+Lighting: bright soft neutral studio illumination with fill from both sides. Surface colors and dark bodies must remain readable. No colored lighting, no dramatic black shadows, no glossy metallic skin.
+Scene/backdrop: genuinely transparent alpha background. NO base, pedestal, ground plane, cast shadow, terrain or scenery.
+Constraints: exactly one creature; preserve species, count all limbs; solid continuous anatomy and garments; no text, captions, border, watermark, extra objects, detached parts or visible display stand.

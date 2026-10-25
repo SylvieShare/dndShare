@@ -27,7 +27,7 @@ def placement_context(folder,recipe,size,base_file=None,base_diameter=None,surfa
         if Path(base_file).resolve()!=file.resolve() or base_diameter!=base['referenceDiameter'] or surface_height!=base['surfaceHeight']:
             raise ValueError('Rendered base differs from the reviewed recipe')
     if not size>0: raise ValueError('Positive nominal size required')
-    return {'schema':1,'modelId':recipe['modelId'],'itemId':recipe['itemId'],
+    context = {'schema':1,'modelId':recipe['modelId'],'itemId':recipe['itemId'],
         'bodySHA256':file_hash(folder/'model.glb'),'lodSHA256':file_hash(folder/'model-lod.glb'),
         'size':size,'referenceDiameter':recipe['referenceDiameter'],'calibration':recipe.get('calibration'),
         'materialProfile':recipe.get('materialProfile','native'),'texturePolicy':recipe.get('texturePolicy'),
@@ -35,6 +35,8 @@ def placement_context(folder,recipe,size,base_file=None,base_diameter=None,surfa
         'artProfile':recipe.get('artProfile'),'supportKind':recipe.get('supportKind'),
         'base':dict(base,sha256=file_hash(file)),
         'bodyFormula':'0.7*size/referenceDiameter','baseFormula':'size-min(0.3,0.3*size)'}
+    if recipe.get('lodBudget') is not None:context['lodBudget']=recipe['lodBudget']
+    return context
 
 
 def write_placement_evidence(folder,context):
