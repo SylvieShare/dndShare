@@ -5,20 +5,20 @@
     </header>
     <small v-if="save.onSuccess === 'half'">При успехе — половина урона</small>
     <small v-if="save.condition">{{ save.condition }}</small>
-    <div v-for="row in save.results || []" :key="row.key" class="event-save-result">
+    <div v-for="row in displayedResults" :key="row.key" class="event-save-result">
       <SaveTargetName :target="row.target" />
-      <DiceRollResult :result="row.result" :size="24" />
+      <DiceRollResult :result="row.result" :size="24" :animated="row.local" />
       <DamageImpact v-if="impactForTarget(event, row.target)" class="save-impact" :impact="impactForTarget(event, row.target)" :show-target="false" />
-      <div v-else-if="isDm" class="save-apply">
+      <div v-else-if="isDm && !row.local" class="save-apply">
         <ActionButton size="sm" :variant="row.success ? 'primary' : 'quiet'" @click="applying = { target: row.target, outcome: 'success' }">Применить успех</ActionButton>
         <ActionButton size="sm" :variant="!row.success ? 'primary' : 'quiet'" @click="applying = { target: row.target, outcome: 'failure' }">Применить провал</ActionButton>
       </div>
-      <span v-else :class="row.success ? 'save-success' : 'save-failure'">{{ row.success ? 'Успех' : 'Провал' }}</span>
+      <span v-else-if="!row.local" :class="row.success ? 'save-success' : 'save-failure'">{{ row.success ? 'Успех' : 'Провал' }}</span>
     </div>
   </section>
   <SessionImpactModal v-if="applying" :event="event" v-bind="applying" @close="applying = null" />
   <SessionTargetPicker :event="event" v-if="picking" v-model="selected" :title="`${SAVE_ABILITIES[save.ability - 1]} · Сл ${save.dc}`" :targets="targets" :loading="loading" :busy="busy" :locked="busy || !!pending" :disabled-keys="[...rolled]" :error="error" :z-index="3700" @close="picking = false">
-    <template #target-note="{ target }"><span v-if="rolled.has(saveTargetKey(target))">Уже брошено</span><SaveFormulaPreview v-else :profile="profile(target)" /></template>
+    <template #target-note="{ target }"><DiceRollResult v-if="previewFor(target)" :result="previewFor(target)" :size="24" animated /><span v-else-if="rolled.has(saveTargetKey(target))">Уже брошено</span><SaveFormulaPreview v-else :profile="profile(target)" /></template>
     <RollModeControl v-if="!pending" v-model="mode" label="Режим спасбросков" />
     <template #footer><ActionButton :disabled="busy || loading || !selected.length" @click="rollSelected">{{ pending ? 'Сохранить результаты' : `Бросить · ${selected.length}` }}</ActionButton></template>
   </SessionTargetPicker>
@@ -53,6 +53,18 @@ const rolled = computed(() => new Set((save.value.results || []).map(row => row.
 const picking = ref(false), loading = ref(false), busy = ref(false), error = ref(''), mode = ref('auto')
 const targets = ref([]), selected = ref([]), pending = ref(null)
 const pendingKeys = ref([])
+const previews = ref([])
+const displayedResults = computed(() => {
+  const rows = new Map((save.value.results || []).map(row => [row.key, row]))
+  for (const row of previews.value) if (!rows.has(row.key)) rows.set(row.key, { ...row, local: true })
+  return [...rows.values()]
+})
+function preview(target, result) {
+  const key = saveTargetKey(target)
+  previews.value = previews.value.filter(row => row.key !== key)
+  if (result) previews.value.push({ key, target, result })
+}
+function previewFor(target) { return previews.value.find(row => row.key === saveTargetKey(target))?.result }
 let items = new Map()
 function profile(target) { return sessionSaveProfile(target, save.value.ability, items, mode.value, type => suggest.items(type)) }
 async function choose() {
@@ -77,14 +89,17 @@ async function rollSelected() {
       const result = await dice.rollD20('Спасбросок', profile.bonus, profile.mode, {
         roll_kind: 'saving_throw', actor: { charUuid: target.charUuid }, eventData: target.kind === 'npc' ? { npcActor: { uid: target.npcUid } } : {},
         bonus_formula: profile.formula, popup: false, log: false,
+        onPending: result => preview(target, result),
       })
       if (!result) throw new Error('Не удалось бросить спасбросок. Уже полученные результаты сохранены в окне.')
       const { snapshot, hp, armorClass, ...identity } = target
       pending.value.push({ target: identity, result })
+      preview(identity, result)
     }
     await appendSessionSaves(events.sessionUuid, props.event.id, pending.value)
     pending.value = null; pendingKeys.value = []; picking.value = false
     await events.refresh()
+    previews.value = []
   } catch (cause) { error.value = cause.message || 'Не удалось сохранить спасброски. Повтор сохранит те же результаты.' }
   finally { busy.value = false }
 }

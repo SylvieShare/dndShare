@@ -1,5 +1,5 @@
 <template>
-  <div class="dice-pop" :class="{ 'dice-pop--crit': hasSettledOutcome(entry, 'crit'), 'dice-pop--fumble': hasSettledOutcome(entry, 'fumble') }">
+  <div class="dice-pop" :aria-busy="!!entry.result.pending" :class="{ 'dice-pop--crit': hasSettledOutcome(entry, 'crit'), 'dice-pop--fumble': hasSettledOutcome(entry, 'fumble') }">
     <div v-if="entry.title" class="dice-pop-title">{{ entry.title }}</div>
 
     <div class="dice-pop-body">
@@ -18,6 +18,7 @@
                 :class="{
                   'dice-pop-roll--drop': p.dropped && p.dropped.includes(ri) && !isRolling(entry.id),
                   'dice-pop-roll--rolling': isRolling(entry.id),
+                  'dice-pop-roll--pending': entry.result.pending && isRolling(entry.id),
                 }"
               >
                 <SystemDie
@@ -101,8 +102,8 @@ function shouldAnimateRolls() {
   return typeof window !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 const { displayedRoll, displayedTotal, startEntryAnimation, clearEntryAnimation, isRolling, isTotalRolling, dispose } = useDiceRollAnimation({ shouldAnimate: shouldAnimateRolls })
-watch(() => props.entry.id, (id, previous) => {
-  if (previous != null) clearEntryAnimation(previous)
+watch(() => [props.entry.id, props.entry.result], ([id], previous) => {
+  if (previous && previous[0] !== id) clearEntryAnimation(previous[0])
   startEntryAnimation(props.entry)
 }, { immediate: true })
 onBeforeUnmount(dispose)
@@ -172,6 +173,7 @@ function rawExpression(entry) { return (entry?.result?.expression || '').replace
   transform-origin: center;
   animation: dice-pop-roll-tumble 0.56s cubic-bezier(0.22, 0.78, 0.2, 1) both;
 }
+.dice-pop-roll--pending { animation: dice-pop-roll-wait .56s ease-in-out infinite; }
 .dice-pop-roll--drop {
   position: relative;
   opacity: 0.38;
@@ -301,6 +303,11 @@ function rawExpression(entry) { return (entry?.result?.expression || '').replace
   58%  { transform: translateY(-3px) rotate(-8deg) scale(1.03); }
   78%  { transform: translateY(1px) rotate(5deg) scale(0.99); }
   100% { transform: translateY(0) rotate(0deg) scale(1); }
+}
+
+@keyframes dice-pop-roll-wait {
+  0%, 100% { transform: translateY(0) rotate(-8deg) scale(.96); }
+  50% { transform: translateY(-4px) rotate(8deg) scale(1.03); }
 }
 
 @keyframes dice-pop-crit-settle {

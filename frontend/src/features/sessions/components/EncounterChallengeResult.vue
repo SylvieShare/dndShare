@@ -2,11 +2,12 @@
   <div
     class="ecr-result"
     :class="{
-      'ecr-result--critical': result.roll === 20 && !isRolling(animationId),
-      'ecr-result--fumble': result.roll === 1 && !isRolling(animationId),
+      'ecr-result--critical': !result.pending && result.roll === 20 && !isRolling(animationId),
+      'ecr-result--fumble': !result.pending && result.roll === 1 && !isRolling(animationId),
       'ecr-result--rolling': isRolling(animationId),
     }"
     :aria-label="ariaLabel"
+    :aria-busy="!!result.pending"
   >
     <div class="ecr-event">
       <span class="ecr-title">{{ eventTitle }}</span>
@@ -95,14 +96,15 @@ function shouldAnimate() {
 const animationId = useId()
 const naturalRolls = computed(() => {
   if (Array.isArray(props.result.rolls) && props.result.rolls.length === 2) {
-    return props.result.rolls.map(roll => Number(roll) || 0)
+    return props.result.rolls.map(roll => roll == null ? null : Number(roll) || 0)
   }
-  return [Number(props.result.roll) || 0]
+  return [props.result.pending ? null : Number(props.result.roll) || 0]
 })
 const droppedRolls = computed(() =>
   Array.isArray(props.result.dropped) ? props.result.dropped : []
 )
 const hasExtraRoll = computed(() => naturalRolls.value.length === 2)
+const animateExtraOnly = computed(() => hasExtraRoll.value && Number(props.result.revision) > 0)
 const rollEntry = computed(() => {
   const bonus = Number(props.result.bonus) || 0
   const parts = [{
@@ -121,7 +123,7 @@ const rollEntry = computed(() => {
   }
   return {
     id: animationId,
-    result: { parts, total: Number(props.result.total) || 0 },
+    result: { parts, total: Number(props.result.total) || 0, pending: props.result.pending },
   }
 })
 
@@ -135,20 +137,20 @@ const {
 } = useDiceRollAnimation({ shouldAnimate })
 
 function displayedNatural(rollIndex, natural) {
-  if (hasExtraRoll.value && rollIndex === 0) return natural
+  if (animateExtraOnly.value && rollIndex === 0) return natural
   return displayedRoll(rollEntry.value, 0, rollIndex, natural)
 }
 
 function isNaturalRolling(rollIndex) {
-  return isRolling(animationId) && (!hasExtraRoll.value || rollIndex === 1)
+  return isRolling(animationId) && (!animateExtraOnly.value || rollIndex === 1)
 }
 
 function isNaturalDropped(rollIndex) {
-  return !isRolling(animationId) && droppedRolls.value.includes(rollIndex)
+  return !props.result.pending && !isRolling(animationId) && droppedRolls.value.includes(rollIndex)
 }
 
 const displayedTotalValue = computed(() => {
-  if (hasExtraRoll.value && isRolling(animationId)) {
+  if (animateExtraOnly.value && isRolling(animationId)) {
     const extra = naturalRolls.value[1]
     return displayedNatural(1, extra) + (Number(props.result.bonus) || 0)
   }
@@ -163,19 +165,20 @@ const eventTitle = computed(() => {
 })
 
 const resultColor = computed(() => {
-  if (isRolling(animationId)) return 'var(--accent)'
+  if (props.result.pending || isRolling(animationId)) return 'var(--accent)'
   if (props.result.roll === 20) return 'var(--warning)'
   if (props.result.roll === 1) return 'var(--danger)'
   return 'var(--accent)'
 })
 
 const ariaLabel = computed(() => {
+  if (props.result.pending) return `${eventTitle.value}: ожидаем результат броска`
   const rolls = hasExtraRoll.value ? `броски ${naturalRolls.value.join(' и ')}, ` : ''
   return `${eventTitle.value}: ${rolls}бонус ${props.result.bonus}, итог ${props.result.total}`
 })
 
 watch(
-  () => [props.result.roll, props.result.bonus, props.result.total, props.result.revision],
+  () => [props.result.roll, props.result.bonus, props.result.total, props.result.revision, props.result.pending],
   () => startEntryAnimation(rollEntry.value),
   { immediate: true },
 )

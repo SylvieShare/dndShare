@@ -17,6 +17,59 @@ function session() {
 }
 
 describe('session d20 rolls', () => {
+  it('opens immediately, waits without expiring and updates the same card only with the server result', async () => {
+    const events = session()
+    let finish
+    vi.spyOn(api, 'rollSessionD20').mockImplementation(() => new Promise(resolve => { finish = resolve }))
+    const dice = useDiceStore(), notifications = useNotificationsStore()
+    const pending = dice.rollD20('Атака', 3, 'advantage', { roll_kind: 'attack', crit_mode: true, bonus_formula: '1d4' })
+    const id = dice.stack[0].id
+    expect(dice.stack[0].result).toMatchObject({ pending: true, total: null })
+    expect(dice.stack[0].result.parts[0].rolls).toEqual([null, null])
+    expect(dice.stack[0].result.parts[2].rolls).toEqual([null])
+    expect(events.publish).not.toHaveBeenCalled()
+    vi.advanceTimersByTime(15000)
+    expect(dice.stack).toHaveLength(1)
+    expect(notifications.entries[0].paused).toBe(true)
+    finish({ rolls: [1, 20], karmic: false })
+    const result = await pending
+    expect(dice.stack).toHaveLength(1)
+    expect(dice.stack[0].id).toBe(id)
+    expect(dice.stack[0].result.pending).toBeUndefined()
+    expect(dice.stack[0].result.total).toBe(result.total)
+    expect(dice.stack[0].outcome).toMatchObject({ kind: 'crit', value: 20 })
+    expect(events.publish).toHaveBeenCalledTimes(1)
+    vi.advanceTimersByTime(5999)
+    expect(dice.stack).toHaveLength(1)
+    vi.advanceTimersByTime(1)
+    expect(dice.stack).toHaveLength(0)
+  })
+
+  it('does not reopen a pending card dismissed before the response', async () => {
+    session()
+    let finish
+    vi.spyOn(api, 'rollSessionD20').mockImplementation(() => new Promise(resolve => { finish = resolve }))
+    const dice = useDiceStore()
+    const pending = dice.rollD20('Атака', 0, 'normal', { roll_kind: 'attack' })
+    dice.dismiss(dice.stack[0].id)
+    finish({ rolls: [13] })
+    expect((await pending).total).toBe(13)
+    expect(dice.stack).toHaveLength(0)
+  })
+
+  it('supplies an embedded pending presentation without adding a popup or publishing unknown dice', async () => {
+    const events = session(), onPending = vi.fn()
+    let finish
+    vi.spyOn(api, 'rollSessionD20').mockImplementation(() => new Promise(resolve => { finish = resolve }))
+    const dice = useDiceStore()
+    const pending = dice.rollD20('Спасбросок', 2, 'normal', { roll_kind: 'saving_throw', popup: false, onPending })
+    expect(onPending).toHaveBeenCalledWith(expect.objectContaining({ pending: true, total: null }))
+    expect(dice.stack).toHaveLength(0)
+    expect(events.publish).not.toHaveBeenCalled()
+    finish({ rolls: [9] })
+    expect((await pending).total).toBe(11)
+    expect(events.publish).toHaveBeenCalledTimes(1)
+  })
   it('uses the server faces, keeps advantage and rolls blessing normally', async () => {
     session()
     const server = vi.spyOn(api, 'rollSessionD20').mockResolvedValue({ rolls: [3, 18], karmic: true, balanceBefore: 3, balanceAfter: 2.4 })
@@ -87,5 +140,6 @@ describe('session d20 rolls', () => {
     finish({ rolls: [20], karmic: false })
     expect(await pending).toBeNull()
     expect(events.publish).not.toHaveBeenCalled()
+    expect(dice.stack).toHaveLength(0)
   })
 })

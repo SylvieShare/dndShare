@@ -4,6 +4,7 @@ import {
   DICE_ROLL_ANIMATION_DELAYS,
   useDiceRollAnimation,
 } from './useDiceRollAnimation'
+import { pendingDiceResult } from '@/shared/lib/pendingDice'
 
 const entry = {
   id: 7,
@@ -14,6 +15,57 @@ beforeEach(() => vi.useFakeTimers())
 afterEach(() => vi.useRealTimers())
 
 describe('dice roll presentation animation', () => {
+  it('spins for a slow response and then preserves every phase of the existing settle animation', () => {
+    const waiting = { id: 12, result: pendingDiceResult('2d20+3+1d4') }
+    const animation = useDiceRollAnimation({ shouldAnimate: () => true, random: () => 0.5 })
+    animation.startEntryAnimation(waiting)
+    const first = animation.displayedRoll(waiting, 0, 0, null)
+    vi.advanceTimersByTime(40)
+    expect(animation.displayedRoll(waiting, 0, 0, null)).not.toBe(first)
+    vi.advanceTimersByTime(8000)
+    expect(animation.isRolling(12)).toBe(true)
+    expect(animation.isTotalRolling(12)).toBe(true)
+    expect(waiting.result.parts[0].rolls).toEqual([null, null])
+    expect(waiting.result.total).toBeNull()
+    const beforeAnswer = animation.displayedRoll(waiting, 0, 0, null)
+
+    const ready = { id: 12, result: { parts: [
+      { kind: 'dice', sides: 20, rolls: [1, 20], dropped: [0] },
+      { kind: 'flat', value: 3 }, { kind: 'dice', sides: 4, rolls: [2] },
+    ], total: 25 } }
+    animation.startEntryAnimation(ready)
+    expect(animation.displayedRoll(ready, 0, 0, 1)).toBe(beforeAnswer)
+    vi.advanceTimersByTime(310)
+    expect(animation.displayedTotal(ready)).toBe(25)
+    expect(animation.isRolling(12)).toBe(true)
+    vi.advanceTimersByTime(250)
+    expect(animation.isRolling(12)).toBe(false)
+    expect(animation.displayedRoll(ready, 0, 0, 1)).toBe(1)
+    expect(animation.displayedRoll(ready, 0, 1, 20)).toBe(20)
+    expect(vi.getTimerCount()).toBe(0)
+  })
+
+  it('cancels waiting loops independently and disposes remaining requests', () => {
+    const animation = useDiceRollAnimation({ shouldAnimate: () => true })
+    for (const id of [1, 2]) animation.startEntryAnimation({ id, result: pendingDiceResult('d20') })
+    animation.clearEntryAnimation(1)
+    vi.advanceTimersByTime(1000)
+    expect(animation.isRolling(1)).toBe(false)
+    expect(animation.isRolling(2)).toBe(true)
+    animation.dispose()
+    expect(vi.getTimerCount()).toBe(0)
+    expect(animation.isRolling(2)).toBe(false)
+  })
+
+  it('shows unknown values without cycling in reduced-motion mode', () => {
+    const animation = useDiceRollAnimation({ shouldAnimate: () => false })
+    const waiting = { id: 1, result: pendingDiceResult('d20+3') }
+    animation.startEntryAnimation(waiting)
+    expect(animation.displayedRoll(waiting, 0, 0, null)).toBe('…')
+    expect(animation.displayedTotal(waiting)).toBe('…')
+    expect(vi.getTimerCount()).toBe(0)
+  })
+
   it('keeps every temporary face moving before it settles quickly', () => {
     const animation = useDiceRollAnimation({ shouldAnimate: () => true, random: () => 0.999 })
 

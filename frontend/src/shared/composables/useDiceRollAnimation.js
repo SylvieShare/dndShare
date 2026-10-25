@@ -13,13 +13,14 @@ export function useDiceRollAnimation({
   const rollingEntries = reactive(new Set())
   const rollingTotals = reactive(new Set())
   const animationTimers = new Map()
+  const pendingEntries = new Set()
 
   function rollKey(entryId, partIndex, rollIndex) {
     return `${entryId}:${partIndex}:${rollIndex}`
   }
 
   function displayedRoll(entry, partIndex, rollIndex, actual) {
-    return displayedRolls.get(rollKey(entry.id, partIndex, rollIndex)) ?? actual
+    return displayedRolls.get(rollKey(entry.id, partIndex, rollIndex)) ?? actual ?? '…'
   }
 
   function randomSpinningFace(actual, sides, previous) {
@@ -52,7 +53,7 @@ export function useDiceRollAnimation({
   }
 
   function displayedTotal(entry) {
-    if (!isTotalRolling(entry.id)) return entry.result.total
+    if (!isTotalRolling(entry.id)) return entry.result.pending ? '…' : entry.result.total
     return evaluateDiceParts(entry.result.parts, (part, partIndex) => {
       let value = part.value
       if (part.kind === 'dice') {
@@ -65,12 +66,17 @@ export function useDiceRollAnimation({
     }).total
   }
 
-  function clearEntryAnimation(entryId) {
+  function clearEntryTimers(entryId) {
     const timers = animationTimers.get(entryId)
     if (timers) {
       for (const timer of timers) clearTimer(timer)
       animationTimers.delete(entryId)
     }
+  }
+
+  function clearEntryAnimation(entryId) {
+    clearEntryTimers(entryId)
+    pendingEntries.delete(entryId)
     rollingEntries.delete(entryId)
     rollingTotals.delete(entryId)
     for (const key of displayedRolls.keys()) {
@@ -79,14 +85,30 @@ export function useDiceRollAnimation({
   }
 
   function startEntryAnimation(entry) {
-    clearEntryAnimation(entry.id)
-    if (!shouldAnimate?.()) return
+    const wasPending = pendingEntries.has(entry.id)
+    if (wasPending) clearEntryTimers(entry.id)
+    else clearEntryAnimation(entry.id)
+    pendingEntries.delete(entry.id)
+    if (!shouldAnimate?.()) { clearEntryAnimation(entry.id); return }
 
     rollingEntries.add(entry.id)
     rollingTotals.add(entry.id)
-    setDisplayedRolls(entry)
+    if (!wasPending) setDisplayedRolls(entry)
     const timers = new Set()
     animationTimers.set(entry.id, timers)
+    if (entry.result.pending) {
+      pendingEntries.add(entry.id)
+      function spin() {
+        const timer = setTimer(() => {
+          timers.delete(timer)
+          setDisplayedRolls(entry)
+          spin()
+        }, DICE_ROLL_ANIMATION_DELAYS[0])
+        timers.add(timer)
+      }
+      spin()
+      return
+    }
     DICE_ROLL_ANIMATION_DELAYS.forEach((delay, index) => {
       const timer = setTimer(() => {
         timers.delete(timer)

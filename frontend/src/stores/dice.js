@@ -5,6 +5,7 @@ import { evaluateDiceParts, rollDiceExpression } from '@/shared/lib/dice'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 import { rollSessionD20 } from '@/shared/api/sessionDiceApi'
 import { rememberDiceOutcome } from '@/shared/lib/diceOutcome'
+import { d20Expression, pendingDiceResult } from '@/shared/lib/pendingDice'
 
 function detectOutcome(result, criticalThreshold = null) {
   let fumble = null
@@ -57,7 +58,7 @@ export const useDiceStore = defineStore('dice', () => {
   const lastD20 = ref(null)
   const dismiss = id => notifications.dismiss(id)
 
-  function pushEntry(entry) {
+  function pushEntry(entry, notificationId) {
     rememberDiceOutcome(toRaw(entry.result), entry.outcome)
     if (entry.color) entry.result.color = entry.color
     const duration = entry.duration || 6000
@@ -75,10 +76,9 @@ export const useDiceStore = defineStore('dice', () => {
         actions: Array.isArray(entry.actions) ? entry.actions : [],
         rerollSpec: entry.rerollSpec || null,
       }
-      const id = notifications.notify({ type: 'dice', title: popupEntry.title, data: popupEntry, duration,
-        scope: 'dice', onAction: key => runAction(id, key) })
+      const id = showPopup(popupEntry, notificationId)
       popupEntry.id = id
-      if (entry.result?.parts?.some(part => part.kind === 'dice' && part.sides === 20)) lastD20.value = popupEntry
+      if (id != null && entry.result?.parts?.some(part => part.kind === 'dice' && part.sides === 20)) lastD20.value = popupEntry
     }
     if (entry.log !== false) {
       useSessionEventsStore().publish({
@@ -95,6 +95,20 @@ export const useDiceStore = defineStore('dice', () => {
       })
     }
     return entry.result
+  }
+
+  function showPopup(entry, notificationId) {
+    if (notificationId != null) {
+      const notification = notifications.entries.find(row => row.id === notificationId)
+      if (!notification) return null
+      notification.data = entry
+      notifications.resume(notificationId, 'dice-pending')
+      return notificationId
+    }
+    const id = notifications.notify({ type: 'dice', title: entry.title, data: entry, duration: entry.duration,
+      scope: 'dice', onAction: key => runAction(id, key) })
+    if (entry.result.pending) notifications.pause(id, 'dice-pending')
+    return id
   }
 
   function roll(action, expression, opts = {}) {
@@ -121,7 +135,19 @@ export const useDiceStore = defineStore('dice', () => {
   function rollD20(action, bonus = 0, mode = 'normal', opts = {}) {
     const events = useSessionEventsStore()
     if (opts.roll_kind && events.sessionUuid) {
-      return requestD20(mode, opts).then(serverRoll => serverRoll ? finishD20(action, bonus, mode, opts, serverRoll) : null)
+      const result = pendingDiceResult(d20Expression(bonus, mode, opts.bonus_formula))
+      const actorName = String(opts.actor?.name || '').trim()
+      const id = opts.popup === false ? null : showPopup({
+        title: actorName ? `${actorName} — ${action}` : action,
+        result, color: opts.color, duration: opts.duration,
+      })
+      opts.onPending?.(result)
+      return requestD20(mode, opts).then(serverRoll => {
+        if (serverRoll) return finishD20(action, bonus, mode, opts, serverRoll, id)
+        if (id != null) dismiss(id)
+        opts.onPending?.(null)
+        return null
+      })
     }
     return finishD20(action, bonus, mode, opts)
   }
@@ -151,10 +177,9 @@ export const useDiceStore = defineStore('dice', () => {
     return { rolls: [Math.floor(Math.random() * 20) + 1], karmic: false }
   }
 
-  function finishD20(action, bonus, mode, opts, serverRoll = null) {
+  function finishD20(action, bonus, mode, opts, serverRoll = null, notificationId) {
     const normalizedMode = ['advantage', 'disadvantage'].includes(mode) ? mode : 'normal'
-    const modifier = Number(bonus) || 0
-    const expression = `${normalizedMode === 'normal' ? 1 : 2}d20${modifier >= 0 ? '+' : ''}${modifier}${opts.bonus_formula ? ` + ${opts.bonus_formula}` : ''}`
+    const expression = d20Expression(bonus, normalizedMode, opts.bonus_formula)
     let index = 0
     const result = rollDiceExpression(expression, sides => sides === 20 && index < (serverRoll?.rolls.length || 0)
       ? serverRoll.rolls[index++] : Math.floor(Math.random() * sides) + 1)
@@ -189,7 +214,7 @@ export const useDiceStore = defineStore('dice', () => {
       popup: opts.popup, log: opts.log, duration: opts.duration,
       actions,
       rerollSpec: actions.length ? { action, bonus, mode: normalizedMode, opts: { ...opts, roll_triggers: [] } } : null,
-    })
+    }, notificationId)
   }
 
   function runAction(id, key) {

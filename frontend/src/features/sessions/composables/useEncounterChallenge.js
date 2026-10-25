@@ -66,7 +66,9 @@ export function useEncounterChallenge({
   flushSave = async () => true,
 }) {
   const challengeBusy = ref(false)
+  const pendingChallenge = ref(null)
   const challenge = computed(() => {
+    if (pendingChallenge.value) return pendingChallenge.value
     const value = encounter.value.challenge
     if (!value || typeof value !== 'object' || Array.isArray(value)) return null
     if (!value.results || typeof value.results !== 'object' || Array.isArray(value.results)) return null
@@ -128,6 +130,12 @@ export function useEncounterChallenge({
             eventData: { ...encounterEventData(combatant, displayName(combatant)), ability: { id: meta.id, typeId: 16, name: meta.label } },
             crit_mode: true,
             popup: false,
+            onPending: result => {
+              if (result) pendingChallenge.value = { ability: key, savingThrow: !!savingThrow, results: {
+                ...results, [combatant.uid]: { pending: true, roll: null, bonus, total: null,
+                  rolls: result.parts[0].rolls },
+              } }
+            },
             actor: {
               name: displayName(combatant),
               charUuid: participant?.charUuid || null,
@@ -148,9 +156,10 @@ export function useEncounterChallenge({
         }
         // Preserve completed dice when a later participant's request fails.
         encounter.value = { ...encounter.value, challenge: { ability: key, savingThrow: !!savingThrow, results: { ...results } } }
+        pendingChallenge.value = encounter.value.challenge
       }
 
-    } finally { challengeBusy.value = false }
+    } finally { pendingChallenge.value = null; challengeBusy.value = false }
   }
 
   async function rerollChallenge(combatant, mode) {
@@ -170,6 +179,11 @@ export function useEncounterChallenge({
         charUuid: combatant.type === 'player' ? findParticipant(combatant.charId)?.charUuid || null : null,
         itemId: combatant.type === 'npc' ? combatant.itemId || null : null,
       }
+      pendingChallenge.value = { ...currentChallenge, results: {
+        ...currentChallenge.results,
+        [combatant.uid]: { ...currentResult, pending: true, rolls: [previous, null],
+          revision: (Number(currentResult.revision) || 0) + 1 },
+      } }
       const extraRoll = await useDiceStore().rollExtraD20(mode, previous, {
         roll_kind: currentChallenge.savingThrow ? 'saving_throw' : 'ability_check', actor,
         eventData: encounterEventData(combatant, displayName(combatant)),
@@ -248,7 +262,7 @@ export function useEncounterChallenge({
           },
         },
       }
-    } finally { challengeBusy.value = false }
+    } finally { pendingChallenge.value = null; challengeBusy.value = false }
   }
 
   function resetChallenge() {

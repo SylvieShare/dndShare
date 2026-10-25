@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { ref } from 'vue'
+import { useSessionEventsStore } from '@/stores/sessionEvents'
+import * as api from '@/shared/api/sessionDiceApi'
 import {
   npcChallengeBonus,
   playerChallengeBonus,
@@ -8,6 +10,38 @@ import {
 } from '@/features/sessions/composables/useEncounterChallenge'
 
 describe('encounter challenge bonuses', () => {
+  it('presents pending checks and extra dice locally without saving unknown faces', async () => {
+    setActivePinia(createPinia())
+    const events = useSessionEventsStore()
+    events.sessionUuid = 'game'
+    vi.spyOn(events, 'publish').mockResolvedValue(null)
+    let finish
+    const server = vi.spyOn(api, 'rollSessionD20').mockImplementation(() => new Promise(resolve => { finish = resolve }))
+    const npc = { uid: 'goblin', type: 'npc' }
+    const encounter = ref({ combatants: [npc] })
+    const challenge = useEncounterChallenge({ encounter, selectedUids: ref(new Set(['goblin'])),
+      findParticipant: () => null, playerDisplayName: () => '', npcName: () => 'Гоблин',
+      npcAbilityScore: () => 14, npcSavingThrow: () => null })
+    try {
+      const pending = challenge.runChallenge({ ability: 'DEX' })
+      await vi.waitFor(() => expect(server).toHaveBeenCalledTimes(1))
+      expect(challenge.challengeResult(npc)).toMatchObject({ pending: true, rolls: [null] })
+      expect(encounter.value.challenge).toBeUndefined()
+      finish({ rolls: [12] })
+      await pending
+      expect(challenge.challengeResult(npc)).toMatchObject({ roll: 12, total: 14 })
+      expect(encounter.value.challenge.results.goblin.pending).toBeUndefined()
+
+      const extra = challenge.rerollChallenge(npc, 'advantage')
+      await vi.waitFor(() => expect(server).toHaveBeenCalledTimes(2))
+      expect(challenge.challengeResult(npc)).toMatchObject({ pending: true, rolls: [12, null] })
+      expect(encounter.value.challenge.results.goblin).toMatchObject({ roll: 12, total: 14 })
+      finish({ rolls: [20] })
+      await extra
+      expect(challenge.challengeResult(npc)).toMatchObject({ rolls: [12, 20], total: 22 })
+      expect(challenge.challengeResult(npc).pending).toBeUndefined()
+    } finally { server.mockRestore() }
+  })
   it('uses the player ability modifier for a check', () => {
     const participant = {
       data: { values: { DEX: { value: { base: 16, bonuses: [] }, save_up: true } } },
