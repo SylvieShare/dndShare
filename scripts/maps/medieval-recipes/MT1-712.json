@@ -1,0 +1,3239 @@
+{
+  "name": "Wood Level Grid 1X2",
+  "groupCode": "MED-frames",
+  "tileType": "frame",
+  "width": 2,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 0,
+  "pegBottomHalfMM": 0,
+  "pegTopHalfMM": 0,
+  "standCells": [],
+  "standPointsMM": [],
+  "standRayTopsMM": [],
+  "standToleranceMM": 0.15,
+  "surfaceHeightMM": 25.093799591064453,
+  "wallMode": "edge",
+  "wallMask": 85,
+  "supportSlots": [
+    {
+      "x": 0,
+      "y": 0,
+      "width": 2,
+      "height": 1,
+      "elevation": 0.7169657026018416
+    }
+  ],
+  "blockersMM": [
+    [
+      [
+        -35.1,
+        -17.6
+      ],
+      [
+        -30.95,
+        -17.6
+      ],
+      [
+        -30.95,
+        17.6
+      ],
+      [
+        -35.1,
+        17.6
+      ]
+    ],
+    [
+      [
+        30.95,
+        -17.6
+      ],
+      [
+        35.1,
+        -17.6
+      ],
+      [
+        35.1,
+        17.6
+      ],
+      [
+        30.95,
+        17.6
+      ]
+    ],
+    [
+      [
+        -30.95,
+        -17.6
+      ],
+      [
+        30.95,
+        -17.6
+      ],
+      [
+        30.95,
+        -13.45
+      ],
+      [
+        -30.95,
+        -13.45
+      ]
+    ],
+    [
+      [
+        -30.95,
+        13.45
+      ],
+      [
+        30.95,
+        13.45
+      ],
+      [
+        30.95,
+        17.6
+      ],
+      [
+        -30.95,
+        17.6
+      ]
+    ],
+    [
+      [
+        -4.05,
+        -13.45
+      ],
+      [
+        4.05,
+        -13.45
+      ],
+      [
+        4.05,
+        13.45
+      ],
+      [
+        -4.05,
+        13.45
+      ]
+    ]
+  ],
+  "hasDecor": false,
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "frame",
+    "level",
+    "wood",
+    "plaster",
+    "socket",
+    "cross-brace"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.24,
+      0.115,
+      0.04
+    ],
+    "stoneStartMM": -1,
+    "stoneBlendMM": 0.5,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.27,
+      0.125,
+      0.045
+    ],
+    "stoneLightRGB": [
+      0.49,
+      0.27,
+      0.1
+    ],
+    "woodParts": [
+      {
+        "name": "own horizontal lower frame and receiving boards X",
+        "minMM": [
+          -35.2,
+          -17.7,
+          -0.1
+        ],
+        "maxMM": [
+          35.2,
+          17.7,
+          25.3
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.92
+      },
+      {
+        "name": "own end boards middle partition and receiving boards Y",
+        "minMM": [
+          -35.2,
+          -13.5,
+          -0.1
+        ],
+        "maxMM": [
+          35.2,
+          13.5,
+          25.3
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.92
+      },
+      {
+        "name": "own corner upright [-1, -1]",
+        "minMM": [
+          -35.2,
+          -17.7,
+          9
+        ],
+        "maxMM": [
+          -28,
+          -10.5,
+          25.3
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own corner upright [-1, 1]",
+        "minMM": [
+          -35.2,
+          10.5,
+          9
+        ],
+        "maxMM": [
+          -28,
+          17.7,
+          25.3
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own corner upright [1, -1]",
+        "minMM": [
+          28,
+          -17.7,
+          9
+        ],
+        "maxMM": [
+          35.2,
+          -10.5,
+          25.3
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own corner upright [1, 1]",
+        "minMM": [
+          28,
+          10.5,
+          9
+        ],
+        "maxMM": [
+          35.2,
+          17.7,
+          25.3
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own middle upright -1",
+        "minMM": [
+          -3.7,
+          -17.7,
+          9
+        ],
+        "maxMM": [
+          3.7,
+          -13.2,
+          25.3
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own middle upright 1",
+        "minMM": [
+          -3.7,
+          13.2,
+          9
+        ],
+        "maxMM": [
+          3.7,
+          17.7,
+          25.3
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own measured [0, -1] end V -1",
+        "minMM": [
+          -35.1,
+          -10.8,
+          9.0
+        ],
+        "maxMM": [
+          -34.05,
+          0,
+          25.3
+        ],
+        "projection": {
+          "originMM": [
+            -34.7,
+            0,
+            6.1129957963384225
+          ],
+          "axis": [
+            0,
+            0.8264025865947533,
+            0.563079714489433
+          ],
+          "rangeMM": [
+            -2.277902038285154,
+            2.0833487628574123
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.563079714489433,
+          -0.8264025865947533
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own measured [0, -1] end V 1",
+        "minMM": [
+          -35.1,
+          0,
+          9.0
+        ],
+        "maxMM": [
+          -34.05,
+          10.8,
+          25.3
+        ],
+        "projection": {
+          "originMM": [
+            -34.7,
+            0,
+            6.300020034726589
+          ],
+          "axis": [
+            0,
+            -0.8198083072478031,
+            0.5726380526715734
+          ],
+          "rangeMM": [
+            -2.290013004669709,
+            2.147931109916131
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.5726380526715734,
+          0.8198083072478031
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own measured [0, 1] end V -1",
+        "minMM": [
+          34.05,
+          -10.8,
+          9.0
+        ],
+        "maxMM": [
+          35.1,
+          0,
+          25.3
+        ],
+        "projection": {
+          "originMM": [
+            34.7,
+            0,
+            6.1129957963384225
+          ],
+          "axis": [
+            0,
+            0.8264025865947533,
+            0.563079714489433
+          ],
+          "rangeMM": [
+            -2.277902038285154,
+            2.0833487628574123
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.563079714489433,
+          -0.8264025865947533
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own measured [0, 1] end V 1",
+        "minMM": [
+          34.05,
+          0,
+          9.0
+        ],
+        "maxMM": [
+          35.1,
+          10.8,
+          25.3
+        ],
+        "projection": {
+          "originMM": [
+            34.7,
+            0,
+            6.300020034726589
+          ],
+          "axis": [
+            0,
+            -0.8198083072478031,
+            0.5726380526715734
+          ],
+          "rangeMM": [
+            -2.290013004669709,
+            2.147931109916131
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.5726380526715734,
+          0.8198083072478031
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own measured [1, -1] long diagonal -17.5",
+        "minMM": [
+          -31.7,
+          -17.6,
+          9.0
+        ],
+        "maxMM": [
+          -3.3000000000000007,
+          -16.65,
+          25.3
+        ],
+        "projection": {
+          "originMM": [
+            -17.5,
+            -17.2,
+            14.491750550617885
+          ],
+          "axis": [
+            -0.660520969878794,
+            0,
+            0.7508075974245181
+          ],
+          "rangeMM": [
+            -3.059117139722548,
+            2.387654585385258
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.7508075974245181,
+          0.0,
+          0.660520969878794
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own measured [1, -1] long diagonal 17.5",
+        "minMM": [
+          3.3000000000000007,
+          -17.6,
+          9.0
+        ],
+        "maxMM": [
+          31.7,
+          -16.65,
+          25.3
+        ],
+        "projection": {
+          "originMM": [
+            17.5,
+            -17.2,
+            14.491750550617887
+          ],
+          "axis": [
+            0.6605209698787946,
+            0,
+            0.7508075974245175
+          ],
+          "rangeMM": [
+            -3.059117139722553,
+            2.3876545853852553
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.7508075974245175,
+          0.0,
+          -0.6605209698787946
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own measured [1, 1] long diagonal -17.5",
+        "minMM": [
+          -31.7,
+          16.65,
+          9.0
+        ],
+        "maxMM": [
+          -3.3000000000000007,
+          17.6,
+          25.3
+        ],
+        "projection": {
+          "originMM": [
+            -17.5,
+            17.2,
+            14.491750550617885
+          ],
+          "axis": [
+            -0.660520969878794,
+            0,
+            0.7508075974245181
+          ],
+          "rangeMM": [
+            -3.059117139722548,
+            2.387654585385258
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.7508075974245181,
+          0.0,
+          0.660520969878794
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own measured [1, 1] long diagonal 17.5",
+        "minMM": [
+          3.3000000000000007,
+          16.65,
+          9.0
+        ],
+        "maxMM": [
+          31.7,
+          17.6,
+          25.3
+        ],
+        "projection": {
+          "originMM": [
+            17.5,
+            17.2,
+            14.491750550617887
+          ],
+          "axis": [
+            0.6605209698787946,
+            0,
+            0.7508075974245175
+          ],
+          "rangeMM": [
+            -3.059117139722553,
+            2.3876545853852553
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.7508075974245175,
+          0.0,
+          -0.6605209698787946
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "own ochre plaster between braces [0, -1]",
+        "kind": "plaster",
+        "minMM": [
+          -35.1,
+          -10.8,
+          9.3
+        ],
+        "maxMM": [
+          -33.3,
+          10.8,
+          25.3
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own measured [0, -1] end V -1",
+            "minMM": [
+              -35.1,
+              -10.8,
+              9.0
+            ],
+            "maxMM": [
+              -34.05,
+              0,
+              25.3
+            ],
+            "projection": {
+              "originMM": [
+                -34.7,
+                0,
+                6.1129957963384225
+              ],
+              "axis": [
+                0,
+                0.8264025865947533,
+                0.563079714489433
+              ],
+              "rangeMM": [
+                -2.277902038285154,
+                2.0833487628574123
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.0,
+              0.563079714489433,
+              -0.8264025865947533
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own measured [0, -1] end V 1",
+            "minMM": [
+              -35.1,
+              0,
+              9.0
+            ],
+            "maxMM": [
+              -34.05,
+              10.8,
+              25.3
+            ],
+            "projection": {
+              "originMM": [
+                -34.7,
+                0,
+                6.300020034726589
+              ],
+              "axis": [
+                0,
+                -0.8198083072478031,
+                0.5726380526715734
+              ],
+              "rangeMM": [
+                -2.290013004669709,
+                2.147931109916131
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.0,
+              0.5726380526715734,
+              0.8198083072478031
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own corner upright [-1, -1]",
+            "minMM": [
+              -35.2,
+              -17.7,
+              9
+            ],
+            "maxMM": [
+              -28,
+              -10.5,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [-1, 1]",
+            "minMM": [
+              -35.2,
+              10.5,
+              9
+            ],
+            "maxMM": [
+              -28,
+              17.7,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, -1]",
+            "minMM": [
+              28,
+              -17.7,
+              9
+            ],
+            "maxMM": [
+              35.2,
+              -10.5,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, 1]",
+            "minMM": [
+              28,
+              10.5,
+              9
+            ],
+            "maxMM": [
+              35.2,
+              17.7,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own middle upright -1",
+            "minMM": [
+              -3.7,
+              -17.7,
+              9
+            ],
+            "maxMM": [
+              3.7,
+              -13.2,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own middle upright 1",
+            "minMM": [
+              -3.7,
+              13.2,
+              9
+            ],
+            "maxMM": [
+              3.7,
+              17.7,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "own ochre plaster between braces [0, 1]",
+        "kind": "plaster",
+        "minMM": [
+          33.3,
+          -10.8,
+          9.3
+        ],
+        "maxMM": [
+          35.1,
+          10.8,
+          25.3
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own measured [0, 1] end V -1",
+            "minMM": [
+              34.05,
+              -10.8,
+              9.0
+            ],
+            "maxMM": [
+              35.1,
+              0,
+              25.3
+            ],
+            "projection": {
+              "originMM": [
+                34.7,
+                0,
+                6.1129957963384225
+              ],
+              "axis": [
+                0,
+                0.8264025865947533,
+                0.563079714489433
+              ],
+              "rangeMM": [
+                -2.277902038285154,
+                2.0833487628574123
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.0,
+              0.563079714489433,
+              -0.8264025865947533
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own measured [0, 1] end V 1",
+            "minMM": [
+              34.05,
+              0,
+              9.0
+            ],
+            "maxMM": [
+              35.1,
+              10.8,
+              25.3
+            ],
+            "projection": {
+              "originMM": [
+                34.7,
+                0,
+                6.300020034726589
+              ],
+              "axis": [
+                0,
+                -0.8198083072478031,
+                0.5726380526715734
+              ],
+              "rangeMM": [
+                -2.290013004669709,
+                2.147931109916131
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.0,
+              0.5726380526715734,
+              0.8198083072478031
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own corner upright [-1, -1]",
+            "minMM": [
+              -35.2,
+              -17.7,
+              9
+            ],
+            "maxMM": [
+              -28,
+              -10.5,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [-1, 1]",
+            "minMM": [
+              -35.2,
+              10.5,
+              9
+            ],
+            "maxMM": [
+              -28,
+              17.7,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, -1]",
+            "minMM": [
+              28,
+              -17.7,
+              9
+            ],
+            "maxMM": [
+              35.2,
+              -10.5,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, 1]",
+            "minMM": [
+              28,
+              10.5,
+              9
+            ],
+            "maxMM": [
+              35.2,
+              17.7,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own middle upright -1",
+            "minMM": [
+              -3.7,
+              -17.7,
+              9
+            ],
+            "maxMM": [
+              3.7,
+              -13.2,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own middle upright 1",
+            "minMM": [
+              -3.7,
+              13.2,
+              9
+            ],
+            "maxMM": [
+              3.7,
+              17.7,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "own ochre plaster between braces [1, -1]",
+        "kind": "plaster",
+        "minMM": [
+          -28.2,
+          -17.6,
+          9.3
+        ],
+        "maxMM": [
+          28.2,
+          -15.8,
+          25.3
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own measured [1, -1] long diagonal -17.5",
+            "minMM": [
+              -31.7,
+              -17.6,
+              9.0
+            ],
+            "maxMM": [
+              -3.3000000000000007,
+              -16.65,
+              25.3
+            ],
+            "projection": {
+              "originMM": [
+                -17.5,
+                -17.2,
+                14.491750550617885
+              ],
+              "axis": [
+                -0.660520969878794,
+                0,
+                0.7508075974245181
+              ],
+              "rangeMM": [
+                -3.059117139722548,
+                2.387654585385258
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.7508075974245181,
+              0.0,
+              0.660520969878794
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own measured [1, -1] long diagonal 17.5",
+            "minMM": [
+              3.3000000000000007,
+              -17.6,
+              9.0
+            ],
+            "maxMM": [
+              31.7,
+              -16.65,
+              25.3
+            ],
+            "projection": {
+              "originMM": [
+                17.5,
+                -17.2,
+                14.491750550617887
+              ],
+              "axis": [
+                0.6605209698787946,
+                0,
+                0.7508075974245175
+              ],
+              "rangeMM": [
+                -3.059117139722553,
+                2.3876545853852553
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.7508075974245175,
+              0.0,
+              -0.6605209698787946
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own corner upright [-1, -1]",
+            "minMM": [
+              -35.2,
+              -17.7,
+              9
+            ],
+            "maxMM": [
+              -28,
+              -10.5,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [-1, 1]",
+            "minMM": [
+              -35.2,
+              10.5,
+              9
+            ],
+            "maxMM": [
+              -28,
+              17.7,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, -1]",
+            "minMM": [
+              28,
+              -17.7,
+              9
+            ],
+            "maxMM": [
+              35.2,
+              -10.5,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, 1]",
+            "minMM": [
+              28,
+              10.5,
+              9
+            ],
+            "maxMM": [
+              35.2,
+              17.7,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own middle upright -1",
+            "minMM": [
+              -3.7,
+              -17.7,
+              9
+            ],
+            "maxMM": [
+              3.7,
+              -13.2,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own middle upright 1",
+            "minMM": [
+              -3.7,
+              13.2,
+              9
+            ],
+            "maxMM": [
+              3.7,
+              17.7,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "own ochre plaster between braces [1, 1]",
+        "kind": "plaster",
+        "minMM": [
+          -28.2,
+          15.8,
+          9.3
+        ],
+        "maxMM": [
+          28.2,
+          17.6,
+          25.3
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own measured [1, 1] long diagonal -17.5",
+            "minMM": [
+              -31.7,
+              16.65,
+              9.0
+            ],
+            "maxMM": [
+              -3.3000000000000007,
+              17.6,
+              25.3
+            ],
+            "projection": {
+              "originMM": [
+                -17.5,
+                17.2,
+                14.491750550617885
+              ],
+              "axis": [
+                -0.660520969878794,
+                0,
+                0.7508075974245181
+              ],
+              "rangeMM": [
+                -3.059117139722548,
+                2.387654585385258
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.7508075974245181,
+              0.0,
+              0.660520969878794
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own measured [1, 1] long diagonal 17.5",
+            "minMM": [
+              3.3000000000000007,
+              16.65,
+              9.0
+            ],
+            "maxMM": [
+              31.7,
+              17.6,
+              25.3
+            ],
+            "projection": {
+              "originMM": [
+                17.5,
+                17.2,
+                14.491750550617887
+              ],
+              "axis": [
+                0.6605209698787946,
+                0,
+                0.7508075974245175
+              ],
+              "rangeMM": [
+                -3.059117139722553,
+                2.3876545853852553
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.7508075974245175,
+              0.0,
+              -0.6605209698787946
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own corner upright [-1, -1]",
+            "minMM": [
+              -35.2,
+              -17.7,
+              9
+            ],
+            "maxMM": [
+              -28,
+              -10.5,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [-1, 1]",
+            "minMM": [
+              -35.2,
+              10.5,
+              9
+            ],
+            "maxMM": [
+              -28,
+              17.7,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, -1]",
+            "minMM": [
+              28,
+              -17.7,
+              9
+            ],
+            "maxMM": [
+              35.2,
+              -10.5,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, 1]",
+            "minMM": [
+              28,
+              10.5,
+              9
+            ],
+            "maxMM": [
+              35.2,
+              17.7,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own middle upright -1",
+            "minMM": [
+              -3.7,
+              -17.7,
+              9
+            ],
+            "maxMM": [
+              3.7,
+              -13.2,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own middle upright 1",
+            "minMM": [
+              -3.7,
+              13.2,
+              9
+            ],
+            "maxMM": [
+              3.7,
+              17.7,
+              25.3
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "own dark iron fastening head 0",
+        "kind": "paint",
+        "minMM": [
+          -36.050000000000004,
+          -15.628592139725104,
+          3.2310664027872336
+        ],
+        "maxMM": [
+          -33.35,
+          -12.928592139725104,
+          5.931066402787234
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -34.7,
+            -14.278592139725104,
+            4.581066402787234
+          ],
+          "radiiMM": [
+            0.65,
+            0.5939734611589214,
+            0.5939734611589214
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 1",
+        "kind": "paint",
+        "minMM": [
+          -36.050000000000004,
+          12.97700323686899,
+          3.3030262394905763
+        ],
+        "maxMM": [
+          -33.35,
+          15.67700323686899,
+          6.003026239490577
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -34.7,
+            14.32700323686899,
+            4.653026239490576
+          ],
+          "radiiMM": [
+            0.65,
+            0.6,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 2",
+        "kind": "paint",
+        "minMM": [
+          -36.050000000000004,
+          -15.819540960774702,
+          9.135846732280896
+        ],
+        "maxMM": [
+          -33.35,
+          -13.119540960774703,
+          11.835846732280896
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -34.7,
+            -14.469540960774703,
+            10.485846732280896
+          ],
+          "radiiMM": [
+            0.65,
+            0.5885523717387328,
+            0.5885523717387328
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 3",
+        "kind": "paint",
+        "minMM": [
+          -36.050000000000004,
+          13.120614574048753,
+          9.138727976970426
+        ],
+        "maxMM": [
+          -33.35,
+          15.820614574048752,
+          11.838727976970425
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -34.7,
+            14.470614574048753,
+            10.488727976970425
+          ],
+          "radiiMM": [
+            0.65,
+            0.5873655103556361,
+            0.5873655103556361
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 4",
+        "kind": "paint",
+        "minMM": [
+          33.35,
+          -15.625366687553193,
+          3.2230751573668583
+        ],
+        "maxMM": [
+          36.050000000000004,
+          -12.925366687553193,
+          5.923075157366858
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            34.7,
+            -14.275366687553193,
+            4.573075157366858
+          ],
+          "radiiMM": [
+            0.65,
+            0.5989177886449164,
+            0.5989177886449164
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 5",
+        "kind": "paint",
+        "minMM": [
+          33.35,
+          12.940087023572394,
+          3.229838111752087
+        ],
+        "maxMM": [
+          36.050000000000004,
+          15.640087023572393,
+          5.929838111752087
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            34.7,
+            14.290087023572394,
+            4.579838111752087
+          ],
+          "radiiMM": [
+            0.65,
+            0.5861829637860427,
+            0.5861829637860427
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 6",
+        "kind": "paint",
+        "minMM": [
+          33.35,
+          -15.820637568568737,
+          9.139937123799323
+        ],
+        "maxMM": [
+          36.050000000000004,
+          -13.120637568568737,
+          11.839937123799322
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            34.7,
+            -14.470637568568737,
+            10.489937123799322
+          ],
+          "radiiMM": [
+            0.65,
+            0.5863492272001413,
+            0.5863492272001413
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 7",
+        "kind": "paint",
+        "minMM": [
+          33.35,
+          13.119319813059926,
+          9.135499457326667
+        ],
+        "maxMM": [
+          36.050000000000004,
+          15.819319813059925,
+          11.835499457326666
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            34.7,
+            14.469319813059926,
+            10.485499457326666
+          ],
+          "radiiMM": [
+            0.65,
+            0.5888061396195994,
+            0.5888061396195994
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 8",
+        "kind": "paint",
+        "minMM": [
+          -33.08215269358897,
+          -18.55,
+          8.91353374227818
+        ],
+        "maxMM": [
+          -30.382152693588967,
+          -15.85,
+          11.613533742278179
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -31.73215269358897,
+            -17.2,
+            10.26353374227818
+          ],
+          "radiiMM": [
+            0.6,
+            0.65,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 9",
+        "kind": "paint",
+        "minMM": [
+          -1.3499999999999943,
+          -18.55,
+          10.193121949404205
+        ],
+        "maxMM": [
+          1.3500000000000059,
+          -15.85,
+          12.893121949404204
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            5.719933223331263e-15,
+            -17.2,
+            11.543121949404204
+          ],
+          "radiiMM": [
+            0.6,
+            0.65,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 10",
+        "kind": "paint",
+        "minMM": [
+          30.432102549693415,
+          -18.55,
+          8.924785102724352
+        ],
+        "maxMM": [
+          33.132102549693414,
+          -15.85,
+          11.624785102724351
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            31.782102549693416,
+            -17.2,
+            10.274785102724351
+          ],
+          "radiiMM": [
+            0.5714693879048187,
+            0.65,
+            0.5714693879048187
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 11",
+        "kind": "paint",
+        "minMM": [
+          -34.35232484118738,
+          -18.55,
+          2.86521382621927
+        ],
+        "maxMM": [
+          -31.65232484118738,
+          -15.85,
+          5.565213826219271
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -33.00232484118738,
+            -17.2,
+            4.21521382621927
+          ],
+          "radiiMM": [
+            0.6,
+            0.65,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 12",
+        "kind": "paint",
+        "minMM": [
+          -3.825698053690548,
+          -18.55,
+          2.925442021066847
+        ],
+        "maxMM": [
+          -1.1256980536905479,
+          -15.85,
+          5.625442021066847
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -2.475698053690548,
+            -17.2,
+            4.275442021066847
+          ],
+          "radiiMM": [
+            0.6,
+            0.65,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 13",
+        "kind": "paint",
+        "minMM": [
+          1.1271850789585267,
+          -18.55,
+          2.919440831008975
+        ],
+        "maxMM": [
+          3.827185078958527,
+          -15.85,
+          5.6194408310089745
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            2.477185078958527,
+            -17.2,
+            4.269440831008975
+          ],
+          "radiiMM": [
+            0.6,
+            0.65,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 14",
+        "kind": "paint",
+        "minMM": [
+          31.743093232554983,
+          -18.55,
+          2.9295968438250726
+        ],
+        "maxMM": [
+          34.443093232554986,
+          -15.85,
+          5.629596843825073
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            33.093093232554985,
+            -17.2,
+            4.279596843825073
+          ],
+          "radiiMM": [
+            0.5879715555502416,
+            0.65,
+            0.5879715555502416
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 15",
+        "kind": "paint",
+        "minMM": [
+          -33.12216687445593,
+          15.85,
+          8.910219803221002
+        ],
+        "maxMM": [
+          -30.42216687445593,
+          18.55,
+          11.610219803221002
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -31.77216687445593,
+            17.2,
+            10.260219803221002
+          ],
+          "radiiMM": [
+            0.5837124594223125,
+            0.65,
+            0.5837124594223125
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 16",
+        "kind": "paint",
+        "minMM": [
+          -1.3491062967905112,
+          15.85,
+          10.193169529541342
+        ],
+        "maxMM": [
+          1.350893703209489,
+          18.55,
+          12.89316952954134
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            0.0008937032094889421,
+            17.2,
+            11.543169529541341
+          ],
+          "radiiMM": [
+            0.6,
+            0.65,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 17",
+        "kind": "paint",
+        "minMM": [
+          30.41518532082082,
+          15.85,
+          8.9039338197888
+        ],
+        "maxMM": [
+          33.11518532082082,
+          18.55,
+          11.6039338197888
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            31.765185320820823,
+            17.2,
+            10.2539338197888
+          ],
+          "radiiMM": [
+            0.5878713071415432,
+            0.65,
+            0.5878713071415432
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 18",
+        "kind": "paint",
+        "minMM": [
+          -34.44236595168755,
+          15.85,
+          2.9303413472312863
+        ],
+        "maxMM": [
+          -31.742365951687546,
+          18.55,
+          5.630341347231287
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -33.09236595168755,
+            17.2,
+            4.280341347231286
+          ],
+          "radiiMM": [
+            0.5877110206443832,
+            0.65,
+            0.5877110206443832
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 19",
+        "kind": "paint",
+        "minMM": [
+          -3.836494245583586,
+          15.85,
+          2.929526111581153
+        ],
+        "maxMM": [
+          -1.1364942455835858,
+          18.55,
+          5.6295261115811535
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -2.486494245583586,
+            17.2,
+            4.279526111581153
+          ],
+          "radiiMM": [
+            0.6,
+            0.65,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 20",
+        "kind": "paint",
+        "minMM": [
+          1.1277620508246784,
+          15.85,
+          2.920616504330296
+        ],
+        "maxMM": [
+          3.8277620508246786,
+          18.55,
+          5.620616504330297
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            2.4777620508246785,
+            17.2,
+            4.270616504330296
+          ],
+          "radiiMM": [
+            0.6,
+            0.65,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening head 21",
+        "kind": "paint",
+        "minMM": [
+          31.69112006071301,
+          15.85,
+          2.8666289192326544
+        ],
+        "maxMM": [
+          34.391120060713014,
+          18.55,
+          5.566628919232654
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            33.04112006071301,
+            17.2,
+            4.2166289192326545
+          ],
+          "radiiMM": [
+            0.6,
+            0.65,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": [],
+    "physicalStonePigment": false,
+    "preservePhysicalWoodShade": true,
+    "produceParts": []
+  },
+  "renderTriangles": 260000,
+  "lodTriangles": 240000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 2048,
+  "renderColourSize": 1792,
+  "lodColourSize": 1280,
+  "renderDataSize": 1024,
+  "lodDataSize": 768,
+  "renderUVAngleLimitRad": 0.35,
+  "lodUVAngleLimitRad": 0.35,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "plainMountCollarMM": 0,
+  "geometryDetailRegions": [
+    {
+      "name": "own complete upper receiving chamfers and middle rim",
+      "minMM": [
+        -35.2,
+        -17.7,
+        22.8
+      ],
+      "maxMM": [
+        35.2,
+        17.7,
+        25.3
+      ]
+    },
+    {
+      "name": "own through-hole and straight socket -17.5",
+      "minMM": [
+        -31.15,
+        -13.65,
+        -0.1
+      ],
+      "maxMM": [
+        -3.8499999999999996,
+        13.65,
+        23.25
+      ]
+    },
+    {
+      "name": "own through-hole and straight socket 17.5",
+      "minMM": [
+        3.8499999999999996,
+        -13.65,
+        -0.1
+      ],
+      "maxMM": [
+        31.15,
+        13.65,
+        23.25
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 0",
+      "minMM": [
+        -36.050000000000004,
+        -15.628592139725104,
+        3.2310664027872336
+      ],
+      "maxMM": [
+        -33.35,
+        -12.928592139725104,
+        5.931066402787234
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 1",
+      "minMM": [
+        -36.050000000000004,
+        12.97700323686899,
+        3.3030262394905763
+      ],
+      "maxMM": [
+        -33.35,
+        15.67700323686899,
+        6.003026239490577
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 2",
+      "minMM": [
+        -36.050000000000004,
+        -15.819540960774702,
+        9.135846732280896
+      ],
+      "maxMM": [
+        -33.35,
+        -13.119540960774703,
+        11.835846732280896
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 3",
+      "minMM": [
+        -36.050000000000004,
+        13.120614574048753,
+        9.138727976970426
+      ],
+      "maxMM": [
+        -33.35,
+        15.820614574048752,
+        11.838727976970425
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 4",
+      "minMM": [
+        33.35,
+        -15.625366687553193,
+        3.2230751573668583
+      ],
+      "maxMM": [
+        36.050000000000004,
+        -12.925366687553193,
+        5.923075157366858
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 5",
+      "minMM": [
+        33.35,
+        12.940087023572394,
+        3.229838111752087
+      ],
+      "maxMM": [
+        36.050000000000004,
+        15.640087023572393,
+        5.929838111752087
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 6",
+      "minMM": [
+        33.35,
+        -15.820637568568737,
+        9.139937123799323
+      ],
+      "maxMM": [
+        36.050000000000004,
+        -13.120637568568737,
+        11.839937123799322
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 7",
+      "minMM": [
+        33.35,
+        13.119319813059926,
+        9.135499457326667
+      ],
+      "maxMM": [
+        36.050000000000004,
+        15.819319813059925,
+        11.835499457326666
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 8",
+      "minMM": [
+        -33.08215269358897,
+        -18.55,
+        8.91353374227818
+      ],
+      "maxMM": [
+        -30.382152693588967,
+        -15.85,
+        11.613533742278179
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 9",
+      "minMM": [
+        -1.3499999999999943,
+        -18.55,
+        10.193121949404205
+      ],
+      "maxMM": [
+        1.3500000000000059,
+        -15.85,
+        12.893121949404204
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 10",
+      "minMM": [
+        30.432102549693415,
+        -18.55,
+        8.924785102724352
+      ],
+      "maxMM": [
+        33.132102549693414,
+        -15.85,
+        11.624785102724351
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 11",
+      "minMM": [
+        -34.35232484118738,
+        -18.55,
+        2.86521382621927
+      ],
+      "maxMM": [
+        -31.65232484118738,
+        -15.85,
+        5.565213826219271
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 12",
+      "minMM": [
+        -3.825698053690548,
+        -18.55,
+        2.925442021066847
+      ],
+      "maxMM": [
+        -1.1256980536905479,
+        -15.85,
+        5.625442021066847
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 13",
+      "minMM": [
+        1.1271850789585267,
+        -18.55,
+        2.919440831008975
+      ],
+      "maxMM": [
+        3.827185078958527,
+        -15.85,
+        5.6194408310089745
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 14",
+      "minMM": [
+        31.743093232554983,
+        -18.55,
+        2.9295968438250726
+      ],
+      "maxMM": [
+        34.443093232554986,
+        -15.85,
+        5.629596843825073
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 15",
+      "minMM": [
+        -33.12216687445593,
+        15.85,
+        8.910219803221002
+      ],
+      "maxMM": [
+        -30.42216687445593,
+        18.55,
+        11.610219803221002
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 16",
+      "minMM": [
+        -1.3491062967905112,
+        15.85,
+        10.193169529541342
+      ],
+      "maxMM": [
+        1.350893703209489,
+        18.55,
+        12.89316952954134
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 17",
+      "minMM": [
+        30.41518532082082,
+        15.85,
+        8.9039338197888
+      ],
+      "maxMM": [
+        33.11518532082082,
+        18.55,
+        11.6039338197888
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 18",
+      "minMM": [
+        -34.44236595168755,
+        15.85,
+        2.9303413472312863
+      ],
+      "maxMM": [
+        -31.742365951687546,
+        18.55,
+        5.630341347231287
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 19",
+      "minMM": [
+        -3.836494245583586,
+        15.85,
+        2.929526111581153
+      ],
+      "maxMM": [
+        -1.1364942455835858,
+        18.55,
+        5.6295261115811535
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 20",
+      "minMM": [
+        1.1277620508246784,
+        15.85,
+        2.920616504330296
+      ],
+      "maxMM": [
+        3.8277620508246786,
+        18.55,
+        5.620616504330297
+      ]
+    },
+    {
+      "name": "own original fastening head and rim 21",
+      "minMM": [
+        31.69112006071301,
+        15.85,
+        2.8666289192326544
+      ],
+      "maxMM": [
+        34.391120060713014,
+        18.55,
+        5.566628919232654
+      ]
+    },
+    {
+      "name": "own North middle post deep grain 16.25",
+      "minMM": [
+        -0.7,
+        16.5,
+        15.65
+      ],
+      "maxMM": [
+        0.7,
+        17.7,
+        16.85
+      ]
+    },
+    {
+      "name": "own North middle post deep grain 22.25",
+      "minMM": [
+        -0.7,
+        16.5,
+        21.65
+      ],
+      "maxMM": [
+        0.7,
+        17.7,
+        22.85
+      ]
+    },
+    {
+      "name": "own lower board socket-exit detail [-27.5, -17.45]",
+      "minMM": [
+        -28.1,
+        -17.95,
+        7.0
+      ],
+      "maxMM": [
+        -26.9,
+        -16.95,
+        8.0
+      ]
+    },
+    {
+      "name": "own lower board socket-exit detail [-27.5, 17.45]",
+      "minMM": [
+        -28.1,
+        16.95,
+        7.0
+      ],
+      "maxMM": [
+        -26.9,
+        17.95,
+        8.0
+      ]
+    },
+    {
+      "name": "own lower board socket-exit detail [27.5, -17.45]",
+      "minMM": [
+        26.9,
+        -17.95,
+        7.0
+      ],
+      "maxMM": [
+        28.1,
+        -16.95,
+        8.0
+      ]
+    },
+    {
+      "name": "own lower board socket-exit detail [27.5, 17.45]",
+      "minMM": [
+        26.9,
+        16.95,
+        7.0
+      ],
+      "maxMM": [
+        28.1,
+        17.95,
+        8.0
+      ]
+    }
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      6,
+      11
+    ],
+    "lodMiB": [
+      4,
+      9
+    ],
+    "shadowKiB": [
+      500,
+      1000
+    ],
+    "previewKiB": [
+      20,
+      45
+    ],
+    "basis": "Own2x1receiver829220tri41461084B:two native sockets/throughholes andmiddlepartition,own8diagonal/V arms+22roundfasteners. R260k/L220k plusnative socket/chamfer/bolt pins;2048bakes,1792/1280colour and1024/768data vs1344/960compact. Every2cells×5profiles×4rotations×source/RLS;allUV/PBR/geometry source-bound. Compareweight/quality beforeselection. LOD220k ultimatelyREJECTnativeunderside1probe.157mm>.15afterfullsocketpins. Dry240kpassesall9689surface/normalprobes and2138socketprobes, choose240k beforefinalbake."
+  },
+  "reviewNotes": "Own RAWfull/back/front/right/top/bottom/socket andauthorPDF22SEEN. NOT711Xbracegeometry:longfacesoneown diagonalpercell andshortendsVbraces,6outeruprights,22visible darkfastenerheads. Own0.25mmfacegrids andnativecylinder-circlefits locateeachhead;caponlyradius<=.60mm insideownmeasuredring,fullringgeometryretained. Own55medium17.5diam35heightcandidatesNONEclear withfull49-ray support/level/headroom. NativecentreDownNONEatX±17.5/Y0. Width2height1,datum0 entireframe/noartificialpeg,nativepocketsandchamfermustpreserved. ExplicitX/Y inner/lowerboards,Zuprights,beamgrainownmeasured8arms,ochreplasterbetween. Multi-celltoolsmustproveeachslot/cell/profile/cardinalrotation withSHA-boundfinalRLS andper-cell socketraycoverage. Initialfive-tileUVlayout angle.25/regionmargin.0012 REJECT:Blender smart_project returnedoutofrangeUV24.47/9.74forlongface. TestwholemeshUV.35/.0012 beforeacceptance;own9689sourceprobes andphysicaltexelfootprints muststillpass. InitialR260k/L220k only4normalfailures atNorthmiddlepostnative[0,17.295,16.25]/[0,17.408,22.25];preserve2ownsourcecreaseboxeswithoutrelaxing.15mm/.25facing thresholds. Socket2138RaysPerMesh:initialRpassed;LOD4outerexitprobesatX±27.5/Y±17.45/Z7.5drift.0319mm>.02,protect4nativepatches,keepstrictprobe set and.02tolerance.",
+  "lodColourQuality": 98,
+  "nativeDetailMeasurements": {
+    "sourceSHA256": "428a31c4ae4e6bb7ce0362ca25914073c5e9247d616cb2b8b141f2299f88b81e",
+    "braces": [
+      {
+        "axis": 0,
+        "side": -1,
+        "name": "end V -1",
+        "originAlongMM": 0,
+        "slope": -1.4676475911480595,
+        "interceptMM": 6.1129957963384225,
+        "sourceSamples": 515,
+        "planeNormalUZ": [
+          0.8264025865947533,
+          0.563079714489433
+        ],
+        "frontResidualRangeMM": [
+          -1.7779020382851538,
+          1.6833487628574124
+        ],
+        "materialRangeMM": [
+          -1.9279020382851537,
+          1.8333487628574123
+        ]
+      },
+      {
+        "axis": 0,
+        "side": -1,
+        "name": "end V 1",
+        "originAlongMM": 0,
+        "slope": 1.4316343516171983,
+        "interceptMM": 6.300020034726589,
+        "sourceSamples": 495,
+        "planeNormalUZ": [
+          -0.8198083072478031,
+          0.5726380526715734
+        ],
+        "frontResidualRangeMM": [
+          -1.7900130046697091,
+          1.7479311099161314
+        ],
+        "materialRangeMM": [
+          -1.940013004669709,
+          1.8979311099161313
+        ]
+      },
+      {
+        "axis": 0,
+        "side": 1,
+        "name": "end V -1",
+        "originAlongMM": 0,
+        "slope": -1.4676475911480595,
+        "interceptMM": 6.1129957963384225,
+        "sourceSamples": 515,
+        "planeNormalUZ": [
+          0.8264025865947533,
+          0.563079714489433
+        ],
+        "frontResidualRangeMM": [
+          -1.7779020382851538,
+          1.6833487628574124
+        ],
+        "materialRangeMM": [
+          -1.9279020382851537,
+          1.8333487628574123
+        ]
+      },
+      {
+        "axis": 0,
+        "side": 1,
+        "name": "end V 1",
+        "originAlongMM": 0,
+        "slope": 1.4316343516171983,
+        "interceptMM": 6.300020034726589,
+        "sourceSamples": 495,
+        "planeNormalUZ": [
+          -0.8198083072478031,
+          0.5726380526715734
+        ],
+        "frontResidualRangeMM": [
+          -1.7900130046697091,
+          1.7479311099161314
+        ],
+        "materialRangeMM": [
+          -1.940013004669709,
+          1.8979311099161313
+        ]
+      },
+      {
+        "axis": 1,
+        "side": -1,
+        "name": "long diagonal -17.5",
+        "originAlongMM": -17.5,
+        "slope": 0.8797473176144827,
+        "interceptMM": 14.491750550617885,
+        "sourceSamples": 710,
+        "planeNormalUZ": [
+          -0.660520969878794,
+          0.7508075974245181
+        ],
+        "frontResidualRangeMM": [
+          -2.559117139722548,
+          1.9876545853852579
+        ],
+        "materialRangeMM": [
+          -2.7091171397225478,
+          2.137654585385258
+        ]
+      },
+      {
+        "axis": 1,
+        "side": -1,
+        "name": "long diagonal 17.5",
+        "originAlongMM": 17.5,
+        "slope": -0.879747317614484,
+        "interceptMM": 14.491750550617887,
+        "sourceSamples": 710,
+        "planeNormalUZ": [
+          0.6605209698787946,
+          0.7508075974245175
+        ],
+        "frontResidualRangeMM": [
+          -2.559117139722553,
+          1.9876545853852554
+        ],
+        "materialRangeMM": [
+          -2.709117139722553,
+          2.1376545853852553
+        ]
+      },
+      {
+        "axis": 1,
+        "side": 1,
+        "name": "long diagonal -17.5",
+        "originAlongMM": -17.5,
+        "slope": 0.8797473176144827,
+        "interceptMM": 14.491750550617885,
+        "sourceSamples": 710,
+        "planeNormalUZ": [
+          -0.660520969878794,
+          0.7508075974245181
+        ],
+        "frontResidualRangeMM": [
+          -2.559117139722548,
+          1.9876545853852579
+        ],
+        "materialRangeMM": [
+          -2.7091171397225478,
+          2.137654585385258
+        ]
+      },
+      {
+        "axis": 1,
+        "side": 1,
+        "name": "long diagonal 17.5",
+        "originAlongMM": 17.5,
+        "slope": -0.879747317614484,
+        "interceptMM": 14.491750550617887,
+        "sourceSamples": 710,
+        "planeNormalUZ": [
+          0.6605209698787946,
+          0.7508075974245175
+        ],
+        "frontResidualRangeMM": [
+          -2.559117139722553,
+          1.9876545853852554
+        ],
+        "materialRangeMM": [
+          -2.709117139722553,
+          2.1376545853852553
+        ]
+      }
+    ],
+    "fastenerHeads": [
+      {
+        "axis": 0,
+        "side": -1,
+        "seedUZMM": [
+          -14.3,
+          4.5
+        ],
+        "centreMM": [
+          -34.7,
+          -14.278592139725104,
+          4.581066402787234
+        ],
+        "radiusMM": 0.7139734611589214,
+        "materialRadiusMM": 0.6339734611589214,
+        "sourceVertices": 1419,
+        "circleVertices": 235,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.013947576406253326,
+          0.03134157363337427,
+          0.03987713086422706
+        ]
+      },
+      {
+        "axis": 0,
+        "side": -1,
+        "seedUZMM": [
+          14.3,
+          4.5
+        ],
+        "centreMM": [
+          -34.7,
+          14.32700323686899,
+          4.653026239490576
+        ],
+        "radiusMM": 0.956227506552066,
+        "materialRadiusMM": 0.876227506552066,
+        "sourceVertices": 1419,
+        "circleVertices": 228,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.0163100987426969,
+          0.03413600255005833,
+          0.039898277425099216
+        ]
+      },
+      {
+        "axis": 0,
+        "side": -1,
+        "seedUZMM": [
+          -14.3,
+          10.5
+        ],
+        "centreMM": [
+          -34.7,
+          -14.469540960774703,
+          10.485846732280896
+        ],
+        "radiusMM": 0.7085523717387328,
+        "materialRadiusMM": 0.6285523717387328,
+        "sourceVertices": 1812,
+        "circleVertices": 324,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.010731383615519952,
+          0.030371746235711535,
+          0.039602775052257844
+        ]
+      },
+      {
+        "axis": 0,
+        "side": -1,
+        "seedUZMM": [
+          14.3,
+          10.5
+        ],
+        "centreMM": [
+          -34.7,
+          14.470614574048753,
+          10.488727976970425
+        ],
+        "radiusMM": 0.7073655103556361,
+        "materialRadiusMM": 0.6273655103556361,
+        "sourceVertices": 1812,
+        "circleVertices": 330,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.011595757290335962,
+          0.031413403288977085,
+          0.039621562037623126
+        ]
+      },
+      {
+        "axis": 0,
+        "side": 1,
+        "seedUZMM": [
+          -14.3,
+          4.5
+        ],
+        "centreMM": [
+          34.7,
+          -14.275366687553193,
+          4.573075157366858
+        ],
+        "radiusMM": 0.7189177886449164,
+        "materialRadiusMM": 0.6389177886449164,
+        "sourceVertices": 1419,
+        "circleVertices": 229,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.014460546190415813,
+          0.030302514075449344,
+          0.039903225177422064
+        ]
+      },
+      {
+        "axis": 0,
+        "side": 1,
+        "seedUZMM": [
+          14.3,
+          4.5
+        ],
+        "centreMM": [
+          34.7,
+          14.290087023572394,
+          4.579838111752087
+        ],
+        "radiusMM": 0.7061829637860427,
+        "materialRadiusMM": 0.6261829637860428,
+        "sourceVertices": 1419,
+        "circleVertices": 231,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.014181202527992598,
+          0.03271698596323125,
+          0.03945671708380427
+        ]
+      },
+      {
+        "axis": 0,
+        "side": 1,
+        "seedUZMM": [
+          -14.3,
+          10.5
+        ],
+        "centreMM": [
+          34.7,
+          -14.470637568568737,
+          10.489937123799322
+        ],
+        "radiusMM": 0.7063492272001413,
+        "materialRadiusMM": 0.6263492272001413,
+        "sourceVertices": 1812,
+        "circleVertices": 331,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.011625700482017387,
+          0.031148054462575514,
+          0.03946949123825361
+        ]
+      },
+      {
+        "axis": 0,
+        "side": 1,
+        "seedUZMM": [
+          14.3,
+          10.5
+        ],
+        "centreMM": [
+          34.7,
+          14.469319813059926,
+          10.485499457326666
+        ],
+        "radiusMM": 0.7088061396195994,
+        "materialRadiusMM": 0.6288061396195994,
+        "sourceVertices": 1812,
+        "circleVertices": 324,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.010823667684659366,
+          0.030553017899575475,
+          0.03999318785460815
+        ]
+      },
+      {
+        "axis": 1,
+        "side": -1,
+        "seedUZMM": [
+          -31.5,
+          10.5
+        ],
+        "centreMM": [
+          -31.73215269358897,
+          -17.2,
+          10.26353374227818
+        ],
+        "radiusMM": 0.7209675631513082,
+        "materialRadiusMM": 0.6409675631513082,
+        "sourceVertices": 1214,
+        "circleVertices": 192,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.019328200213410807,
+          0.03601362182874866,
+          0.03965777499870582
+        ]
+      },
+      {
+        "axis": 1,
+        "side": -1,
+        "seedUZMM": [
+          0,
+          10.5
+        ],
+        "centreMM": [
+          5.719933223331263e-15,
+          -17.2,
+          11.543121949404204
+        ],
+        "radiusMM": 0.8215949133716683,
+        "materialRadiusMM": 0.7415949133716684,
+        "sourceVertices": 2220,
+        "circleVertices": 349,
+        "angularBins24": 20,
+        "radialResidualQuantilesMM": [
+          0.00848696712225061,
+          0.029872558605643595,
+          0.03842728932843442
+        ]
+      },
+      {
+        "axis": 1,
+        "side": -1,
+        "seedUZMM": [
+          31.5,
+          10.5
+        ],
+        "centreMM": [
+          31.782102549693416,
+          -17.2,
+          10.274785102724351
+        ],
+        "radiusMM": 0.6914693879048187,
+        "materialRadiusMM": 0.6114693879048188,
+        "sourceVertices": 1214,
+        "circleVertices": 197,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.017585569994945094,
+          0.034322560101625606,
+          0.039999164495922335
+        ]
+      },
+      {
+        "axis": 1,
+        "side": -1,
+        "seedUZMM": [
+          -33,
+          4.5
+        ],
+        "centreMM": [
+          -33.00232484118738,
+          -17.2,
+          4.21521382621927
+        ],
+        "radiusMM": 0.7974204873738903,
+        "materialRadiusMM": 0.7174204873738903,
+        "sourceVertices": 1616,
+        "circleVertices": 210,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.017705989285217993,
+          0.034427435061158126,
+          0.039955946834629
+        ]
+      },
+      {
+        "axis": 1,
+        "side": -1,
+        "seedUZMM": [
+          -2.5,
+          4.5
+        ],
+        "centreMM": [
+          -2.475698053690548,
+          -17.2,
+          4.275442021066847
+        ],
+        "radiusMM": 0.8802069256758894,
+        "materialRadiusMM": 0.8002069256758895,
+        "sourceVertices": 1051,
+        "circleVertices": 171,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.019044209489961217,
+          0.030800220551226443,
+          0.03990954668644253
+        ]
+      },
+      {
+        "axis": 1,
+        "side": -1,
+        "seedUZMM": [
+          2.5,
+          4.5
+        ],
+        "centreMM": [
+          2.477185078958527,
+          -17.2,
+          4.269440831008975
+        ],
+        "radiusMM": 0.882417693018495,
+        "materialRadiusMM": 0.8024176930184951,
+        "sourceVertices": 1051,
+        "circleVertices": 167,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.018540746039267142,
+          0.030772839702027002,
+          0.03934585746891839
+        ]
+      },
+      {
+        "axis": 1,
+        "side": -1,
+        "seedUZMM": [
+          33,
+          4.5
+        ],
+        "centreMM": [
+          33.093093232554985,
+          -17.2,
+          4.279596843825073
+        ],
+        "radiusMM": 0.7079715555502416,
+        "materialRadiusMM": 0.6279715555502416,
+        "sourceVertices": 1616,
+        "circleVertices": 216,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.014236927451264703,
+          0.02856774621495345,
+          0.03906871917520982
+        ]
+      },
+      {
+        "axis": 1,
+        "side": 1,
+        "seedUZMM": [
+          -31.5,
+          10.5
+        ],
+        "centreMM": [
+          -31.77216687445593,
+          17.2,
+          10.260219803221002
+        ],
+        "radiusMM": 0.7037124594223125,
+        "materialRadiusMM": 0.6237124594223126,
+        "sourceVertices": 1214,
+        "circleVertices": 213,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.017370514269086756,
+          0.03422597221997603,
+          0.03997321277871435
+        ]
+      },
+      {
+        "axis": 1,
+        "side": 1,
+        "seedUZMM": [
+          0,
+          10.5
+        ],
+        "centreMM": [
+          0.0008937032094889421,
+          17.2,
+          11.543169529541341
+        ],
+        "radiusMM": 0.8209219582153636,
+        "materialRadiusMM": 0.7409219582153637,
+        "sourceVertices": 2218,
+        "circleVertices": 349,
+        "angularBins24": 20,
+        "radialResidualQuantilesMM": [
+          0.008699829022562056,
+          0.02991601485202519,
+          0.039148288947694176
+        ]
+      },
+      {
+        "axis": 1,
+        "side": 1,
+        "seedUZMM": [
+          31.5,
+          10.5
+        ],
+        "centreMM": [
+          31.765185320820823,
+          17.2,
+          10.2539338197888
+        ],
+        "radiusMM": 0.7078713071415432,
+        "materialRadiusMM": 0.6278713071415433,
+        "sourceVertices": 1214,
+        "circleVertices": 203,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.017683121977194904,
+          0.033131975594757467,
+          0.03931812172808313
+        ]
+      },
+      {
+        "axis": 1,
+        "side": 1,
+        "seedUZMM": [
+          -33,
+          4.5
+        ],
+        "centreMM": [
+          -33.09236595168755,
+          17.2,
+          4.280341347231286
+        ],
+        "radiusMM": 0.7077110206443832,
+        "materialRadiusMM": 0.6277110206443832,
+        "sourceVertices": 1616,
+        "circleVertices": 217,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.014242095227966933,
+          0.02927755381956467,
+          0.03966354463075017
+        ]
+      },
+      {
+        "axis": 1,
+        "side": 1,
+        "seedUZMM": [
+          -2.5,
+          4.5
+        ],
+        "centreMM": [
+          -2.486494245583586,
+          17.2,
+          4.279526111581153
+        ],
+        "radiusMM": 0.8890125068130255,
+        "materialRadiusMM": 0.8090125068130255,
+        "sourceVertices": 1051,
+        "circleVertices": 166,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.017871098051384204,
+          0.03324388232796621,
+          0.03998719902316694
+        ]
+      },
+      {
+        "axis": 1,
+        "side": 1,
+        "seedUZMM": [
+          2.5,
+          4.5
+        ],
+        "centreMM": [
+          2.4777620508246785,
+          17.2,
+          4.270616504330296
+        ],
+        "radiusMM": 0.8821039636849092,
+        "materialRadiusMM": 0.8021039636849092,
+        "sourceVertices": 1051,
+        "circleVertices": 170,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.019301641359608213,
+          0.030970699602627317,
+          0.03978375818721158
+        ]
+      },
+      {
+        "axis": 1,
+        "side": 1,
+        "seedUZMM": [
+          33,
+          4.5
+        ],
+        "centreMM": [
+          33.04112006071301,
+          17.2,
+          4.2166289192326545
+        ],
+        "radiusMM": 0.7725172507920699,
+        "materialRadiusMM": 0.6925172507920699,
+        "sourceVertices": 1616,
+        "circleVertices": 216,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.017449480114706095,
+          0.033824908093851025,
+          0.03954713430081658
+        ]
+      }
+    ]
+  }
+}

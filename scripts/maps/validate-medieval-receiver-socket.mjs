@@ -1,5 +1,6 @@
 // Compare the actual socket in packed meshes against its immutable STL.
 import { validateReceiverRayDrift } from "./receiver_frame_review.mjs";
+import { socketProbeCellSamples } from "./receiver_cells.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import assert from "node:assert/strict";
@@ -122,6 +123,7 @@ for (const tier of ["render", "lod", "shadow"]) {
   evidence[tier] = {
     sha256: sha(bytes),
     samples: refs.length,
+    ...(record.socketProbeVersion >= 3 ? { cellSamples: socketProbeCellSamples(refs, record.cells) } : {}),
     missingSurfaces: 0,
     clearAboveSocket: clear,
     boundaryRayChanges,

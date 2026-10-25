@@ -6,9 +6,11 @@ import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import {
   sourceSocketProbes,
+  SOCKET_PROBE_VERSION,
   receiverTriangles as triangles,
 } from "./receiver_geometry.mjs";
-import { nativeSeatSupport } from "./native_seat_support.mjs";
+import { fitReceiverGeometry } from "./receiver_cell_fit.mjs";
+import { receiverCells, receiverSlotForCell } from "./receiver_cells.mjs";
 import { STANDARD_MOUNT as S } from "./standard_mount.mjs";
 import { matchesPreparedPublication } from "./medieval_publication.mjs";
 import { refreshReceiverSupportSlots } from "./receiver_frame_review.mjs";
@@ -16,9 +18,7 @@ import { recessProfileID, validateRecessMount } from "./recess_mount.mjs";
 const req = createRequire("/private/tmp/dndshare-model-tools/package.json"),
   { NodeIO } = req("@gltf-transform/core"),
   { ALL_EXTENSIONS } = req("@gltf-transform/extensions"),
-  { MeshoptDecoder } = req("meshoptimizer"),
-  { BufferGeometry, BufferAttribute, Ray, Vector3, DoubleSide } = req("three"),
-  { MeshBVH } = req("three-mesh-bvh");
+  { MeshoptDecoder } = req("meshoptimizer");
 await MeshoptDecoder.ready;
 const io = new NodeIO()
     .registerExtensions(ALL_EXTENSIONS)
@@ -49,21 +49,12 @@ const inv = JSON.parse(await fs.readFile(base + "/inventory.json", "utf8")),
   );
 assert.ok(
   recipe.tileType === "frame" &&
-    recipe.width === 1 &&
-    recipe.height === 1 &&
     recipe.mountCenterMM.every((v) => v === 0),
-  "This fitter currently requires a measured single-cell receiver",
+  "Measured receiving coordinates required",
 );
-assert.equal(recipe.supportSlots.length, 1);
-assert.deepEqual(
-  [
-    recipe.supportSlots[0].x,
-    recipe.supportSlots[0].y,
-    recipe.supportSlots[0].width,
-    recipe.supportSlots[0].height,
-  ],
-  [0, 0, 1, 1],
-);
+assert.equal(recipe.width, Math.round((row.max[0] - row.min[0]) / 35));
+assert.equal(recipe.height, Math.round((row.max[1] - row.min[1]) / 35));
+const cells = receiverCells(recipe);
 const registry = JSON.parse(
     await fs.readFile(base + "/registry-snapshot.json", "utf8"),
   ),
@@ -116,12 +107,13 @@ if (mode === "source") {
     sourceTopMM: row.max[2],
     quantizationReserveMM: 0.02,
     profiles: [{ profile: S.name, references: [] }, ...refs],
-    cells: [{ x: 0, y: 0, centerMM: [0, 0], seatsMM: {} }],
+    cells,
   };
 } else receipt = JSON.parse(await fs.readFile(file, "utf8"));
 assert.equal(receipt.sourceCode, code);
 assert.equal(receipt.nativeDatumMM, recipe.mountDepthMM);
 assert.deepEqual(receipt.reference, S);
+assert.deepEqual(receipt.cells.map(({ seatsMM, ...c }) => c), cells.map(({ seatsMM, ...c }) => c));
 const raw = await fs.readFile(path.join(root, "models", row.sourcePath));
 assert.equal(hash(raw), receipt.sourceSHA256);
 const n = raw.readUInt32LE(80),
@@ -129,9 +121,9 @@ const n = raw.readUInt32LE(80),
 for (let t = 0; t < n; t++)
   for (let k = 0; k < 9; k++)
     source[t * 9 + k] = raw.readFloatLE(84 + t * 50 + 12 + k * 4);
-if (receipt.socketProbeVersion !== 2) {
-  receipt.socketProbes = sourceSocketProbes(source, row);
-  receipt.socketProbeVersion = 2;
+if (receipt.socketProbeVersion !== SOCKET_PROBE_VERSION) {
+  receipt.socketProbes = sourceSocketProbes(source, row, cells);
+  receipt.socketProbeVersion = SOCKET_PROBE_VERSION;
 }
 const profiles = [];
 for (const p of receipt.profiles) {
@@ -240,8 +232,8 @@ const datasets = [{ name: "source", arr: source }],
 for (const [i, dir] of directories.entries()) {
   const r = JSON.parse(await fs.readFile(dir + "/report.json", "utf8"));
   assert.equal(r.model.sourceCode, code);
-  assert.equal(r.model.width, 1);
-  assert.equal(r.model.height, 1);
+  assert.equal(r.model.width, recipe.width);
+  assert.equal(r.model.height, recipe.height);
   if (mode === "final")
     assert.equal(r.model.mountDepth, receipt.nativeDatumMM ? S.depth : 0);
   else
@@ -271,33 +263,7 @@ for (const data of datasets) {
   const geometryHash = hash(Buffer.from(data.arr.buffer));
   let rows = cache.get(geometryHash);
   if (!rows) {
-    rows = [];
-    const flat = data.arr.map((v, i) => (i % 3 === 2 ? 0 : v)),
-      g = new BufferGeometry();
-    g.setAttribute("position", new BufferAttribute(flat, 3));
-    const tree = new MeshBVH(g);
-    for (const p of profiles)
-      for (const angle of [0, 90, 180, 270]) {
-        const a = (angle * Math.PI) / 180,
-          c = Math.cos(a),
-          s = Math.sin(a),
-          body = p.lower.slice();
-        for (let i = 0; i < body.length; i += 3) {
-          const x = body[i],
-            y = body[i + 1];
-          body[i] = x * c - y * s;
-          body[i + 1] = x * s + y * c;
-        }
-        const result = nativeSeatSupport(body, data.arr, g, tree, 0, 0, 17);
-        rows.push({
-          x: 0,
-          y: 0,
-          profile: p.profile,
-          rotation: angle,
-          ...result,
-        });
-      }
-    g.dispose();
+    rows = fitReceiverGeometry(data.arr, profiles, cells);
     cache.set(geometryHash, rows);
   }
   for (const row of rows)
@@ -313,31 +279,33 @@ for (const data of datasets) {
     Math.max(...rows.map((r) => r.verifiedSeatMM)),
   );
 }
+if (mode !== "final")
+  for (const cell of receipt.cells)
+    for (const p of profiles) {
+      const rows = fits.filter(f => f.profile === p.profile && f.x === cell.x && f.y === cell.y);
+      assert.ok(rows.length && rows.every(f => Number.isFinite(f.verifiedSeatMM)));
+      cell.seatsMM[p.profile] = Math.max(...rows.map(f => f.verifiedSeatMM)) + receipt.quantizationReserveMM;
+    }
 if (mode === "source") {
   for (const p of receipt.profiles) {
     p.fits = fits.filter((f) => f.profile === p.profile);
     p.verifiedSeatMM = Math.max(...p.fits.map((f) => f.verifiedSeatMM));
-    receipt.cells[0].seatsMM[p.profile] =
-      p.verifiedSeatMM + receipt.quantizationReserveMM;
   }
 } else if (mode === "native") {
-  for (const p of profiles)
-    receipt.cells[0].seatsMM[p.profile] =
-      Math.max(
-        ...fits
-          .filter((r) => r.profile === p.profile)
-          .map((r) => r.verifiedSeatMM),
-      ) + receipt.quantizationReserveMM;
   for (const item of reports) {
-    const slot = item.r.model.supportSlots[0];
-    for (const p of profiles) {
-      const rise =
-        Math.ceil(
-          (receipt.cells[0].seatsMM[p.profile] / 35 - slot.elevation) * 1e6,
-        ) / 1e6;
-      assert.ok(rise >= 0 && rise <= 0.15);
-      if (p.profile === S.name) slot.insertionRise = rise;
-      else (slot.insertionRises ??= {})[p.profile] = rise;
+    const bias = receipt.nativeDatumMM - item.r.model.mountDepth * 35;
+    for (const slot of item.r.model.supportSlots) {
+      const covered = receipt.cells.filter(c => receiverSlotForCell(item.r.model, c.x, c.y) === slot);
+      for (const p of profiles) {
+        const seat = Math.max(...covered.map(c => c.seatsMM[p.profile]));
+        const rise =
+          Math.ceil(
+            ((seat - bias) / 35 - slot.elevation) * 1e6,
+          ) / 1e6;
+        assert.ok(rise >= 0 && rise <= 0.15);
+        if (p.profile === S.name) slot.insertionRise = Math.max(slot.insertionRise ?? 0, rise);
+        else (slot.insertionRises ??= {})[p.profile] = Math.max(slot.insertionRises?.[p.profile] ?? 0, rise);
+      }
     }
     item.r.receiverNativeReview = {
       assets: item.assets,
@@ -356,10 +324,10 @@ if (mode === "source") {
   delete receipt.final;
 } else {
   const item = reports[0],
-    slot = item.r.model.supportSlots[0],
     bias = receipt.nativeDatumMM - item.r.model.mountDepth * 35;
   if (refreshSlots) refreshReceiverSupportSlots(item.r.model, receipt, fits);
   for (const fit of fits) {
+    const slot = receiverSlotForCell(item.r.model, fit.x, fit.y);
     const rise =
       fit.profile === S.name
         ? slot.insertionRise
@@ -395,4 +363,4 @@ if (mode === "source") {
   );
 }
 await fs.writeFile(file, JSON.stringify(receipt, null, 2) + "\n");
-console.log("MEDIEVAL_RECEIVER_VERIFIED", mode, receipt.cells[0].seatsMM);
+console.log("MEDIEVAL_RECEIVER_VERIFIED", mode, receipt.cells.map(c => ({ x: c.x, y: c.y, seatsMM: c.seatsMM })));

@@ -4,39 +4,37 @@ import path from "node:path";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import standard from "./standard-mount-profile.json" with { type: "json" };
+import { receiverCells, receiverSlotForCell, socketProbeCellSamples } from "./receiver_cells.mjs";
 const tiers = ["render", "lod", "shadow"],
   rotations = [0, 90, 180, 270];
 // Refresh a published receiver after measuring an additional recessed body.
 // Geometry stays fixed; earlier declared rises can only remain or increase.
 export function refreshReceiverSupportSlots(model, record, fits) {
   assert.equal(model.tileType, "frame");
-  assert.equal(model.supportSlots.length, 1);
-  assert.equal(record.cells.length, 1);
-  const slot = model.supportSlots[0];
-  assert.deepEqual([slot.x, slot.y, slot.width, slot.height], [0, 0, 1, 1]);
+  const expected = receiverCells(model);
+  assert.deepEqual(record.cells.map(({ seatsMM, ...c }) => c), expected.map(({ seatsMM, ...c }) => c));
   const bias = record.nativeDatumMM - model.mountDepth * 35;
-  for (const p of record.profiles) {
-    const rows = fits.filter((f) => f.profile === p.profile);
-    assert.equal(rows.length, rotations.length * (tiers.length + 1));
-    const cases = new Set(rows.map((r) => r.receiverTier + ":" + r.rotation));
-    for (const tier of ["source", ...tiers])
-      for (const rotation of rotations)
-        assert.ok(cases.has(tier + ":" + rotation));
-    assert.ok(rows.every((r) => Number.isFinite(r.verifiedSeatMM)));
-    const seat =
-      Math.max(...rows.map((r) => r.verifiedSeatMM)) +
-      record.quantizationReserveMM;
-    const previous =
-      p.profile === standard.name
-        ? slot.insertionRise
-        : (slot.insertionRises?.[p.profile] ?? 0);
-    const needed = (seat - bias) / 35 - slot.elevation;
-    const rise =
-      needed <= previous + 1e-12 ? previous : Math.ceil(needed * 1e6) / 1e6;
-    assert.ok(Number.isFinite(rise) && rise >= 0 && rise <= 0.15);
-    if (p.profile === standard.name) slot.insertionRise = rise;
-    else (slot.insertionRises ??= {})[p.profile] = rise;
-    record.cells[0].seatsMM[p.profile] = slot.elevation * 35 + bias + rise * 35;
+  assert.ok(Number.isFinite(bias) && Number.isFinite(record.quantizationReserveMM) && record.quantizationReserveMM >= 0);
+  for (const slot of model.supportSlots) {
+    const cells = record.cells.filter(c => receiverSlotForCell(model, c.x, c.y) === slot);
+    for (const p of record.profiles) {
+      const rows = fits.filter(f => f.profile === p.profile && cells.some(c => c.x === f.x && c.y === f.y));
+      assert.equal(rows.length, cells.length * rotations.length * (tiers.length + 1));
+      const cases = new Set(rows.map(r => [r.x, r.y, r.receiverTier, r.rotation].join(":")));
+      for (const c of cells)
+        for (const tier of ["source", ...tiers])
+          for (const rotation of rotations)
+            assert.ok(cases.has([c.x, c.y, tier, rotation].join(":")), "Missing receiving cell/tier/rotation");
+      assert.ok(rows.every(r => Number.isFinite(r.verifiedSeatMM)));
+      const seat = Math.max(...rows.map(r => r.verifiedSeatMM)) + record.quantizationReserveMM;
+      const previous = p.profile === standard.name ? (slot.insertionRise ?? 0) : (slot.insertionRises?.[p.profile] ?? 0);
+      const needed = (seat - bias) / 35 - slot.elevation;
+      const rise = needed <= previous + 1e-12 ? previous : Math.ceil(needed * 1e6) / 1e6;
+      assert.ok(Number.isFinite(rise) && rise >= 0 && rise <= 0.15);
+      if (p.profile === standard.name) slot.insertionRise = rise;
+      else (slot.insertionRises ??= {})[p.profile] = rise;
+      for (const c of cells) c.seatsMM[p.profile] = slot.elevation * 35 + bias + rise * 35;
+    }
   }
 }
 // A ray can cross a different side of a quantized boundary while the physical
@@ -80,6 +78,7 @@ export function validateReceiverSocketEvidence(
     assert.equal(r.sha256, assets[tier], "Socket QA resource changed");
     assert.ok(r.samples >= 100);
     if (probes) assert.equal(r.samples, probes.samples);
+    if (probes?.cellSamples) assert.deepEqual(r.cellSamples, probes.cellSamples, "Socket coverage differs between cells");
     assert.equal(r.missingSurfaces, 0);
     assert.ok(
       Number.isFinite(r.maximumNativeDriftMM) &&
@@ -178,11 +177,7 @@ export function validateReceiverEvidence(
       "Invalid profile-specific receiving rise",
     );
     const seat = slot.elevation * 35 + bias + rise * 35;
-    if (
-      f.profile === standard.name &&
-      model.width === 1 &&
-      model.height === 1
-    ) {
+    if (f.profile === standard.name) {
       assert.ok(Number.isFinite(record.sourceTopMM));
       assert.ok(
         seat + 0.000001 >= record.sourceTopMM + 0.02,
@@ -291,6 +286,7 @@ export async function validateReceiverReport(report, directory, registry) {
         .update(JSON.stringify(record.socketProbes))
         .digest("hex"),
       samples: record.socketProbes.length,
+      ...(record.socketProbeVersion >= 3 ? { cellSamples: socketProbeCellSamples(record.socketProbes, record.cells) } : {}),
     },
   );
   if (registry) validateReceiverReferences(record, registry);

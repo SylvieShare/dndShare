@@ -202,6 +202,7 @@ Key 2|Соединитель 2
 Level Grid 1x1|Каркас 1×1
 Level Grid 1X1|Каркас 1×1
 Wood Level Grid 1X1|Деревянный каркас с раскосами 1×1
+Wood Level Grid 1X2|Деревянный каркас с диагоналями 1×2
 Level Grid 1X2|Каркас 1×2
 Level Grid 1X3|Каркас 1×3
 Level Grid 2X2|Каркас 2×2

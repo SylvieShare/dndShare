@@ -300,3 +300,37 @@ test("single-cell ordinary insertion also clears frame geometry above the peg fo
   f.record.sourceTopMM = 45;
   assert.throws(() => check(f), /above the receiving frame/);
 });
+
+function twoCellSeating(separate = false) {
+  const model = { tileType: "frame", width: 2, height: 1, mountDepth: 0,
+    supportSlots: separate
+      ? [{x:0,y:0,width:1,height:1,elevation:24/35},{x:1,y:0,width:1,height:1,elevation:26/35}]
+      : [{x:0,y:0,width:2,height:1,elevation:25/35}] };
+  const record = { nativeDatumMM:0,quantizationReserveMM:.02,profiles:[{profile:standard.name},{profile:recess}],
+    cells:[{x:0,y:0,centerMM:[-17.5,0],seatsMM:{}},{x:1,y:0,centerMM:[17.5,0],seatsMM:{}}] };
+  const fits=[];
+  for (const c of record.cells) for (const p of record.profiles)
+    for (const receiverTier of ["source","render","lod","shadow"]) for (const rotation of [0,90,180,270])
+      fits.push({x:c.x,y:c.y,profile:p.profile,receiverTier,rotation,verifiedSeatMM:26+c.x+(p.profile===recess?.2:0)});
+  return {model,record,fits};
+}
+test("a rectangular support uses the limiting cell for every profile", () => {
+  const f=twoCellSeating();refreshReceiverSupportSlots(f.model,f.record,f.fits);
+  for (const c of f.record.cells) {
+    assert.ok(c.seatsMM[standard.name]>=27.02);
+    assert.ok(c.seatsMM[recess]>=27.22);
+  }
+  const before=structuredClone(f.model.supportSlots);
+  refreshReceiverSupportSlots(f.model,f.record,f.fits.map(v=>({...v,verifiedSeatMM:v.verifiedSeatMM-.2})));
+  assert.deepEqual(f.model.supportSlots,before);
+});
+test("separate cells retain their own elevations and reject missing or duplicate rotations", () => {
+  const f=twoCellSeating(true);refreshReceiverSupportSlots(f.model,f.record,f.fits);
+  assert.ok(f.model.supportSlots[0].insertionRise>f.model.supportSlots[1].insertionRise);
+  assert.ok(f.record.cells[0].seatsMM[standard.name]>=26.02 && f.record.cells[0].seatsMM[standard.name]<26.021);
+  assert.ok(f.record.cells[1].seatsMM[standard.name]>=27.02 && f.record.cells[1].seatsMM[standard.name]<27.021);
+  const missing=twoCellSeating();missing.fits.pop();
+  assert.throws(()=>refreshReceiverSupportSlots(missing.model,missing.record,missing.fits));
+  const duplicate=twoCellSeating();duplicate.fits[1]={...duplicate.fits[0]};
+  assert.throws(()=>refreshReceiverSupportSlots(duplicate.model,duplicate.record,duplicate.fits),/Missing receiving/);
+});
