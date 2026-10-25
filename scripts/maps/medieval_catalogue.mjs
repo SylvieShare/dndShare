@@ -13,7 +13,11 @@ export function medievalCatalogue(model, registry) {
   if (current) return model;
   const grouping = groupingFor(model, [...registry, model]);
   if (model.tileType === "stairs") grouping.code = "MED-stair";
-  if (model.tileType === "frame") grouping.code = "MED-frames";
+  if (model.tileType === "frame") {
+    grouping.code = "MED-frames";
+    if (/^(?:Wood2?|Rock) Level Grid /.test(model.sourceName))
+      grouping.variantCode = `MED-frames-${model.width}x${model.height}-${model.wallMode}-${model.wallMask}`;
+  }
   const plan = cataloguePlan([{ ...model, ...grouping }]),
     names = plan.models[0],
     labels = plan.groups[0];

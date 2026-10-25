@@ -57,3 +57,28 @@ test("publication retains current names, grouping, UUID and user-edited group la
   };
   assert.equal(medievalCatalogue(model, [sibling]).groupName, "Переходы");
 });
+
+test("native frame families stay stable as other sizes enter the catalogue", () => {
+  const frame = {
+    ...model,
+    sourceCode: "MT1-711",
+    definitionId: "MT1-711",
+    sourceName: "Wood Level Grid 1X1",
+    name: "Wood Level Grid 1X1",
+    code: "MED-frames",
+    tileType: "frame",
+    wallMode: "edge",
+    wallMask: 85,
+    mountDepth: 0,
+  };
+  const first = medievalCatalogue(frame, []);
+  const otherSize = { ...first, sourceCode: "MT1-712", sourceName: "Wood Level Grid 1X2", width: 2 };
+  const later = medievalCatalogue({ ...frame, sourceCode: "MT1-811", sourceName: "Wood2 Level Grid 1X1" }, [first, otherSize]);
+  assert.equal(first.variantCode, "MED-frames-1x1-edge-85");
+  assert.equal(later.variantCode, first.variantCode);
+  const large = medievalCatalogue({ ...frame, ...otherSize, name: "Level Grid 1X2", variantCode: undefined }, [first]);
+  assert.equal(large.variantCode, "MED-frames-2x1-edge-85");
+  assert.notEqual(large.variantCode, first.variantCode);
+  const curated = { ...first, variantCode: "MED-user-frame" };
+  assert.equal(medievalCatalogue(curated, [curated]).variantCode, curated.variantCode);
+});

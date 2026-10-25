@@ -1,0 +1,1899 @@
+{
+  "name": "Wood Level Grid 1X1",
+  "groupCode": "MED-frames",
+  "tileType": "frame",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 0,
+  "pegBottomHalfMM": 0,
+  "pegTopHalfMM": 0,
+  "standCells": [],
+  "standPointsMM": [],
+  "standRayTopsMM": [],
+  "standToleranceMM": 0.15,
+  "surfaceHeightMM": 25.156400680541992,
+  "wallMode": "edge",
+  "wallMask": 85,
+  "supportSlots": [
+    {
+      "x": 0,
+      "y": 0,
+      "width": 1,
+      "height": 1,
+      "elevation": 0.7187543051583426
+    }
+  ],
+  "blockersMM": [
+    [
+      [
+        -17.6,
+        -17.6
+      ],
+      [
+        -13.45,
+        -17.6
+      ],
+      [
+        -13.45,
+        17.6
+      ],
+      [
+        -17.6,
+        17.6
+      ]
+    ],
+    [
+      [
+        13.45,
+        -17.6
+      ],
+      [
+        17.6,
+        -17.6
+      ],
+      [
+        17.6,
+        17.6
+      ],
+      [
+        13.45,
+        17.6
+      ]
+    ],
+    [
+      [
+        -13.45,
+        -17.6
+      ],
+      [
+        13.45,
+        -17.6
+      ],
+      [
+        13.45,
+        -13.45
+      ],
+      [
+        -13.45,
+        -13.45
+      ]
+    ],
+    [
+      [
+        -13.45,
+        13.45
+      ],
+      [
+        13.45,
+        13.45
+      ],
+      [
+        13.45,
+        17.6
+      ],
+      [
+        -13.45,
+        17.6
+      ]
+    ]
+  ],
+  "hasDecor": false,
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "frame",
+    "level",
+    "wood",
+    "plaster",
+    "socket",
+    "cross-brace"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.24,
+      0.115,
+      0.04
+    ],
+    "stoneStartMM": -1,
+    "stoneBlendMM": 0.5,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.27,
+      0.125,
+      0.045
+    ],
+    "stoneLightRGB": [
+      0.49,
+      0.27,
+      0.1
+    ],
+    "woodParts": [
+      {
+        "name": "native inner receiving boards and lower horizontal frame",
+        "minMM": [
+          -17.7,
+          -17.7,
+          -0.1
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          25.4
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.92
+      },
+      {
+        "name": "native west east receiving boards and lower frame Y",
+        "minMM": [
+          -17.7,
+          -13.5,
+          -0.1
+        ],
+        "maxMM": [
+          17.7,
+          13.5,
+          25.4
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.92
+      },
+      {
+        "name": "own corner upright [-1, -1]",
+        "minMM": [
+          -17.7,
+          -17.7,
+          8.7
+        ],
+        "maxMM": [
+          -14.0,
+          -14.0,
+          25.4
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own corner upright [-1, 1]",
+        "minMM": [
+          -17.7,
+          14.0,
+          8.7
+        ],
+        "maxMM": [
+          -14.0,
+          17.7,
+          25.4
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own corner upright [1, -1]",
+        "minMM": [
+          14.0,
+          -17.7,
+          8.7
+        ],
+        "maxMM": [
+          17.7,
+          -14.0,
+          25.4
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own corner upright [1, 1]",
+        "minMM": [
+          14.0,
+          14.0,
+          8.7
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          25.4
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own [0, -1, -1] lower measured brace",
+        "minMM": [
+          -17.7,
+          -14.3,
+          9.5
+        ],
+        "maxMM": [
+          -15.75,
+          0,
+          25.2
+        ],
+        "projection": {
+          "originMM": [
+            -17,
+            0,
+            16.013303825803813
+          ],
+          "axis": [
+            0,
+            -0.441287111842242,
+            0.8973659704501461
+          ],
+          "rangeMM": [
+            -1.8307903091818951,
+            1.732954774247307
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.8973659704501461,
+          0.441287111842242
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own [0, -1, 1] lower measured brace",
+        "minMM": [
+          -17.7,
+          0,
+          9.5
+        ],
+        "maxMM": [
+          -15.75,
+          14.3,
+          25.2
+        ],
+        "projection": {
+          "originMM": [
+            -17,
+            0,
+            16.013303825803813
+          ],
+          "axis": [
+            0,
+            0.441287111842242,
+            0.8973659704501461
+          ],
+          "rangeMM": [
+            -1.8307903091818951,
+            1.732954774247307
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.8973659704501461,
+          -0.441287111842242
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own [0, -1, -1] upper measured brace",
+        "minMM": [
+          -17.7,
+          -14.3,
+          9.5
+        ],
+        "maxMM": [
+          -15.75,
+          0,
+          25.2
+        ],
+        "projection": {
+          "originMM": [
+            -17,
+            0,
+            15.123131229235883
+          ],
+          "axis": [
+            0,
+            0.4273907756669405,
+            0.9040669913644734
+          ],
+          "rangeMM": [
+            -1.4208474506015392,
+            1.4908617869574678
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.9040669913644734,
+          -0.4273907756669405
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own [0, -1, 1] upper measured brace",
+        "minMM": [
+          -17.7,
+          0,
+          9.5
+        ],
+        "maxMM": [
+          -15.75,
+          14.3,
+          25.2
+        ],
+        "projection": {
+          "originMM": [
+            -17,
+            0,
+            15.123131229235883
+          ],
+          "axis": [
+            0,
+            -0.4273907756669405,
+            0.9040669913644734
+          ],
+          "rangeMM": [
+            -1.4208474506015392,
+            1.4908617869574678
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.9040669913644734,
+          0.4273907756669405
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own [0, 1, -1] lower measured brace",
+        "minMM": [
+          15.75,
+          -14.3,
+          9.5
+        ],
+        "maxMM": [
+          17.7,
+          0,
+          25.2
+        ],
+        "projection": {
+          "originMM": [
+            17,
+            0,
+            16.013303825803813
+          ],
+          "axis": [
+            0,
+            -0.441287111842242,
+            0.8973659704501461
+          ],
+          "rangeMM": [
+            -1.8307903091818951,
+            1.732954774247307
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.8973659704501461,
+          0.441287111842242
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own [0, 1, 1] lower measured brace",
+        "minMM": [
+          15.75,
+          0,
+          9.5
+        ],
+        "maxMM": [
+          17.7,
+          14.3,
+          25.2
+        ],
+        "projection": {
+          "originMM": [
+            17,
+            0,
+            16.013303825803813
+          ],
+          "axis": [
+            0,
+            0.441287111842242,
+            0.8973659704501461
+          ],
+          "rangeMM": [
+            -1.8307903091818951,
+            1.732954774247307
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.8973659704501461,
+          -0.441287111842242
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own [0, 1, -1] upper measured brace",
+        "minMM": [
+          15.75,
+          -14.3,
+          9.5
+        ],
+        "maxMM": [
+          17.7,
+          0,
+          25.2
+        ],
+        "projection": {
+          "originMM": [
+            17,
+            0,
+            15.123131229235883
+          ],
+          "axis": [
+            0,
+            0.4273907756669405,
+            0.9040669913644734
+          ],
+          "rangeMM": [
+            -1.4208474506015392,
+            1.4908617869574678
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.9040669913644734,
+          -0.4273907756669405
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own [0, 1, 1] upper measured brace",
+        "minMM": [
+          15.75,
+          0,
+          9.5
+        ],
+        "maxMM": [
+          17.7,
+          14.3,
+          25.2
+        ],
+        "projection": {
+          "originMM": [
+            17,
+            0,
+            15.123131229235883
+          ],
+          "axis": [
+            0,
+            -0.4273907756669405,
+            0.9040669913644734
+          ],
+          "rangeMM": [
+            -1.4208474506015392,
+            1.4908617869574678
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.9040669913644734,
+          0.4273907756669405
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own [1, -1, -1] lower measured brace",
+        "minMM": [
+          -14.3,
+          -17.7,
+          9.5
+        ],
+        "maxMM": [
+          0,
+          -15.75,
+          25.2
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            -17,
+            16.013303825803813
+          ],
+          "axis": [
+            -0.441287111842242,
+            0,
+            0.8973659704501461
+          ],
+          "rangeMM": [
+            -1.8307903091818951,
+            1.732954774247307
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.8973659704501461,
+          0.0,
+          0.441287111842242
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own [1, -1, 1] lower measured brace",
+        "minMM": [
+          0,
+          -17.7,
+          9.5
+        ],
+        "maxMM": [
+          14.3,
+          -15.75,
+          25.2
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            -17,
+            16.013303825803813
+          ],
+          "axis": [
+            0.441287111842242,
+            0,
+            0.8973659704501461
+          ],
+          "rangeMM": [
+            -1.8307903091818951,
+            1.732954774247307
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.8973659704501461,
+          0.0,
+          -0.441287111842242
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own [1, -1, -1] upper measured brace",
+        "minMM": [
+          -14.3,
+          -17.7,
+          9.5
+        ],
+        "maxMM": [
+          0,
+          -15.75,
+          25.2
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            -17,
+            15.123131229235883
+          ],
+          "axis": [
+            0.4273907756669405,
+            0,
+            0.9040669913644734
+          ],
+          "rangeMM": [
+            -1.4208474506015392,
+            1.4908617869574678
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.9040669913644734,
+          0.0,
+          -0.4273907756669405
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own [1, -1, 1] upper measured brace",
+        "minMM": [
+          0,
+          -17.7,
+          9.5
+        ],
+        "maxMM": [
+          14.3,
+          -15.75,
+          25.2
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            -17,
+            15.123131229235883
+          ],
+          "axis": [
+            -0.4273907756669405,
+            0,
+            0.9040669913644734
+          ],
+          "rangeMM": [
+            -1.4208474506015392,
+            1.4908617869574678
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.9040669913644734,
+          0.0,
+          0.4273907756669405
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own [1, 1, -1] lower measured brace",
+        "minMM": [
+          -14.3,
+          15.75,
+          9.5
+        ],
+        "maxMM": [
+          0,
+          17.7,
+          25.2
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            17,
+            16.013303825803813
+          ],
+          "axis": [
+            -0.441287111842242,
+            0,
+            0.8973659704501461
+          ],
+          "rangeMM": [
+            -1.8307903091818951,
+            1.732954774247307
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.8973659704501461,
+          0.0,
+          0.441287111842242
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own [1, 1, 1] lower measured brace",
+        "minMM": [
+          0,
+          15.75,
+          9.5
+        ],
+        "maxMM": [
+          14.3,
+          17.7,
+          25.2
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            17,
+            16.013303825803813
+          ],
+          "axis": [
+            0.441287111842242,
+            0,
+            0.8973659704501461
+          ],
+          "rangeMM": [
+            -1.8307903091818951,
+            1.732954774247307
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.8973659704501461,
+          0.0,
+          -0.441287111842242
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own [1, 1, -1] upper measured brace",
+        "minMM": [
+          -14.3,
+          15.75,
+          9.5
+        ],
+        "maxMM": [
+          0,
+          17.7,
+          25.2
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            17,
+            15.123131229235883
+          ],
+          "axis": [
+            0.4273907756669405,
+            0,
+            0.9040669913644734
+          ],
+          "rangeMM": [
+            -1.4208474506015392,
+            1.4908617869574678
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.9040669913644734,
+          0.0,
+          -0.4273907756669405
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own [1, 1, 1] upper measured brace",
+        "minMM": [
+          0,
+          15.75,
+          9.5
+        ],
+        "maxMM": [
+          14.3,
+          17.7,
+          25.2
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            17,
+            15.123131229235883
+          ],
+          "axis": [
+            -0.4273907756669405,
+            0,
+            0.9040669913644734
+          ],
+          "rangeMM": [
+            -1.4208474506015392,
+            1.4908617869574678
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.9040669913644734,
+          0.0,
+          0.4273907756669405
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "own ochre plaster panel [0, -1]",
+        "kind": "plaster",
+        "minMM": [
+          -17.7,
+          -14.15,
+          9.5
+        ],
+        "maxMM": [
+          -15.75,
+          14.15,
+          25.2
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own [0, -1, -1] lower measured brace",
+            "minMM": [
+              -17.7,
+              -14.3,
+              9.5
+            ],
+            "maxMM": [
+              -15.75,
+              0,
+              25.2
+            ],
+            "projection": {
+              "originMM": [
+                -17,
+                0,
+                16.013303825803813
+              ],
+              "axis": [
+                0,
+                -0.441287111842242,
+                0.8973659704501461
+              ],
+              "rangeMM": [
+                -1.8307903091818951,
+                1.732954774247307
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.0,
+              0.8973659704501461,
+              0.441287111842242
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own [0, -1, 1] lower measured brace",
+            "minMM": [
+              -17.7,
+              0,
+              9.5
+            ],
+            "maxMM": [
+              -15.75,
+              14.3,
+              25.2
+            ],
+            "projection": {
+              "originMM": [
+                -17,
+                0,
+                16.013303825803813
+              ],
+              "axis": [
+                0,
+                0.441287111842242,
+                0.8973659704501461
+              ],
+              "rangeMM": [
+                -1.8307903091818951,
+                1.732954774247307
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.0,
+              0.8973659704501461,
+              -0.441287111842242
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own [0, -1, -1] upper measured brace",
+            "minMM": [
+              -17.7,
+              -14.3,
+              9.5
+            ],
+            "maxMM": [
+              -15.75,
+              0,
+              25.2
+            ],
+            "projection": {
+              "originMM": [
+                -17,
+                0,
+                15.123131229235883
+              ],
+              "axis": [
+                0,
+                0.4273907756669405,
+                0.9040669913644734
+              ],
+              "rangeMM": [
+                -1.4208474506015392,
+                1.4908617869574678
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.0,
+              0.9040669913644734,
+              -0.4273907756669405
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own [0, -1, 1] upper measured brace",
+            "minMM": [
+              -17.7,
+              0,
+              9.5
+            ],
+            "maxMM": [
+              -15.75,
+              14.3,
+              25.2
+            ],
+            "projection": {
+              "originMM": [
+                -17,
+                0,
+                15.123131229235883
+              ],
+              "axis": [
+                0,
+                -0.4273907756669405,
+                0.9040669913644734
+              ],
+              "rangeMM": [
+                -1.4208474506015392,
+                1.4908617869574678
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.0,
+              0.9040669913644734,
+              0.4273907756669405
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own corner upright [-1, -1]",
+            "minMM": [
+              -17.7,
+              -17.7,
+              8.7
+            ],
+            "maxMM": [
+              -14.0,
+              -14.0,
+              25.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [-1, 1]",
+            "minMM": [
+              -17.7,
+              14.0,
+              8.7
+            ],
+            "maxMM": [
+              -14.0,
+              17.7,
+              25.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, -1]",
+            "minMM": [
+              14.0,
+              -17.7,
+              8.7
+            ],
+            "maxMM": [
+              17.7,
+              -14.0,
+              25.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, 1]",
+            "minMM": [
+              14.0,
+              14.0,
+              8.7
+            ],
+            "maxMM": [
+              17.7,
+              17.7,
+              25.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "own ochre plaster panel [0, 1]",
+        "kind": "plaster",
+        "minMM": [
+          15.75,
+          -14.15,
+          9.5
+        ],
+        "maxMM": [
+          17.7,
+          14.15,
+          25.2
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own [0, 1, -1] lower measured brace",
+            "minMM": [
+              15.75,
+              -14.3,
+              9.5
+            ],
+            "maxMM": [
+              17.7,
+              0,
+              25.2
+            ],
+            "projection": {
+              "originMM": [
+                17,
+                0,
+                16.013303825803813
+              ],
+              "axis": [
+                0,
+                -0.441287111842242,
+                0.8973659704501461
+              ],
+              "rangeMM": [
+                -1.8307903091818951,
+                1.732954774247307
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.0,
+              0.8973659704501461,
+              0.441287111842242
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own [0, 1, 1] lower measured brace",
+            "minMM": [
+              15.75,
+              0,
+              9.5
+            ],
+            "maxMM": [
+              17.7,
+              14.3,
+              25.2
+            ],
+            "projection": {
+              "originMM": [
+                17,
+                0,
+                16.013303825803813
+              ],
+              "axis": [
+                0,
+                0.441287111842242,
+                0.8973659704501461
+              ],
+              "rangeMM": [
+                -1.8307903091818951,
+                1.732954774247307
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.0,
+              0.8973659704501461,
+              -0.441287111842242
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own [0, 1, -1] upper measured brace",
+            "minMM": [
+              15.75,
+              -14.3,
+              9.5
+            ],
+            "maxMM": [
+              17.7,
+              0,
+              25.2
+            ],
+            "projection": {
+              "originMM": [
+                17,
+                0,
+                15.123131229235883
+              ],
+              "axis": [
+                0,
+                0.4273907756669405,
+                0.9040669913644734
+              ],
+              "rangeMM": [
+                -1.4208474506015392,
+                1.4908617869574678
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.0,
+              0.9040669913644734,
+              -0.4273907756669405
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own [0, 1, 1] upper measured brace",
+            "minMM": [
+              15.75,
+              0,
+              9.5
+            ],
+            "maxMM": [
+              17.7,
+              14.3,
+              25.2
+            ],
+            "projection": {
+              "originMM": [
+                17,
+                0,
+                15.123131229235883
+              ],
+              "axis": [
+                0,
+                -0.4273907756669405,
+                0.9040669913644734
+              ],
+              "rangeMM": [
+                -1.4208474506015392,
+                1.4908617869574678
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.0,
+              0.9040669913644734,
+              0.4273907756669405
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own corner upright [-1, -1]",
+            "minMM": [
+              -17.7,
+              -17.7,
+              8.7
+            ],
+            "maxMM": [
+              -14.0,
+              -14.0,
+              25.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [-1, 1]",
+            "minMM": [
+              -17.7,
+              14.0,
+              8.7
+            ],
+            "maxMM": [
+              -14.0,
+              17.7,
+              25.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, -1]",
+            "minMM": [
+              14.0,
+              -17.7,
+              8.7
+            ],
+            "maxMM": [
+              17.7,
+              -14.0,
+              25.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, 1]",
+            "minMM": [
+              14.0,
+              14.0,
+              8.7
+            ],
+            "maxMM": [
+              17.7,
+              17.7,
+              25.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "own ochre plaster panel [1, -1]",
+        "kind": "plaster",
+        "minMM": [
+          -14.15,
+          -17.7,
+          9.5
+        ],
+        "maxMM": [
+          14.15,
+          -15.75,
+          25.2
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own [1, -1, -1] lower measured brace",
+            "minMM": [
+              -14.3,
+              -17.7,
+              9.5
+            ],
+            "maxMM": [
+              0,
+              -15.75,
+              25.2
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                -17,
+                16.013303825803813
+              ],
+              "axis": [
+                -0.441287111842242,
+                0,
+                0.8973659704501461
+              ],
+              "rangeMM": [
+                -1.8307903091818951,
+                1.732954774247307
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.8973659704501461,
+              0.0,
+              0.441287111842242
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own [1, -1, 1] lower measured brace",
+            "minMM": [
+              0,
+              -17.7,
+              9.5
+            ],
+            "maxMM": [
+              14.3,
+              -15.75,
+              25.2
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                -17,
+                16.013303825803813
+              ],
+              "axis": [
+                0.441287111842242,
+                0,
+                0.8973659704501461
+              ],
+              "rangeMM": [
+                -1.8307903091818951,
+                1.732954774247307
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.8973659704501461,
+              0.0,
+              -0.441287111842242
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own [1, -1, -1] upper measured brace",
+            "minMM": [
+              -14.3,
+              -17.7,
+              9.5
+            ],
+            "maxMM": [
+              0,
+              -15.75,
+              25.2
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                -17,
+                15.123131229235883
+              ],
+              "axis": [
+                0.4273907756669405,
+                0,
+                0.9040669913644734
+              ],
+              "rangeMM": [
+                -1.4208474506015392,
+                1.4908617869574678
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.9040669913644734,
+              0.0,
+              -0.4273907756669405
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own [1, -1, 1] upper measured brace",
+            "minMM": [
+              0,
+              -17.7,
+              9.5
+            ],
+            "maxMM": [
+              14.3,
+              -15.75,
+              25.2
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                -17,
+                15.123131229235883
+              ],
+              "axis": [
+                -0.4273907756669405,
+                0,
+                0.9040669913644734
+              ],
+              "rangeMM": [
+                -1.4208474506015392,
+                1.4908617869574678
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.9040669913644734,
+              0.0,
+              0.4273907756669405
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own corner upright [-1, -1]",
+            "minMM": [
+              -17.7,
+              -17.7,
+              8.7
+            ],
+            "maxMM": [
+              -14.0,
+              -14.0,
+              25.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [-1, 1]",
+            "minMM": [
+              -17.7,
+              14.0,
+              8.7
+            ],
+            "maxMM": [
+              -14.0,
+              17.7,
+              25.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, -1]",
+            "minMM": [
+              14.0,
+              -17.7,
+              8.7
+            ],
+            "maxMM": [
+              17.7,
+              -14.0,
+              25.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, 1]",
+            "minMM": [
+              14.0,
+              14.0,
+              8.7
+            ],
+            "maxMM": [
+              17.7,
+              17.7,
+              25.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "own ochre plaster panel [1, 1]",
+        "kind": "plaster",
+        "minMM": [
+          -14.15,
+          15.75,
+          9.5
+        ],
+        "maxMM": [
+          14.15,
+          17.7,
+          25.2
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own [1, 1, -1] lower measured brace",
+            "minMM": [
+              -14.3,
+              15.75,
+              9.5
+            ],
+            "maxMM": [
+              0,
+              17.7,
+              25.2
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                17,
+                16.013303825803813
+              ],
+              "axis": [
+                -0.441287111842242,
+                0,
+                0.8973659704501461
+              ],
+              "rangeMM": [
+                -1.8307903091818951,
+                1.732954774247307
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.8973659704501461,
+              0.0,
+              0.441287111842242
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own [1, 1, 1] lower measured brace",
+            "minMM": [
+              0,
+              15.75,
+              9.5
+            ],
+            "maxMM": [
+              14.3,
+              17.7,
+              25.2
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                17,
+                16.013303825803813
+              ],
+              "axis": [
+                0.441287111842242,
+                0,
+                0.8973659704501461
+              ],
+              "rangeMM": [
+                -1.8307903091818951,
+                1.732954774247307
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.8973659704501461,
+              0.0,
+              -0.441287111842242
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own [1, 1, -1] upper measured brace",
+            "minMM": [
+              -14.3,
+              15.75,
+              9.5
+            ],
+            "maxMM": [
+              0,
+              17.7,
+              25.2
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                17,
+                15.123131229235883
+              ],
+              "axis": [
+                0.4273907756669405,
+                0,
+                0.9040669913644734
+              ],
+              "rangeMM": [
+                -1.4208474506015392,
+                1.4908617869574678
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.9040669913644734,
+              0.0,
+              -0.4273907756669405
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own [1, 1, 1] upper measured brace",
+            "minMM": [
+              0,
+              15.75,
+              9.5
+            ],
+            "maxMM": [
+              14.3,
+              17.7,
+              25.2
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                17,
+                15.123131229235883
+              ],
+              "axis": [
+                -0.4273907756669405,
+                0,
+                0.9040669913644734
+              ],
+              "rangeMM": [
+                -1.4208474506015392,
+                1.4908617869574678
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.9040669913644734,
+              0.0,
+              0.4273907756669405
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own corner upright [-1, -1]",
+            "minMM": [
+              -17.7,
+              -17.7,
+              8.7
+            ],
+            "maxMM": [
+              -14.0,
+              -14.0,
+              25.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [-1, 1]",
+            "minMM": [
+              -17.7,
+              14.0,
+              8.7
+            ],
+            "maxMM": [
+              -14.0,
+              17.7,
+              25.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, -1]",
+            "minMM": [
+              14.0,
+              -17.7,
+              8.7
+            ],
+            "maxMM": [
+              17.7,
+              -14.0,
+              25.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, 1]",
+            "minMM": [
+              14.0,
+              14.0,
+              8.7
+            ],
+            "maxMM": [
+              17.7,
+              17.7,
+              25.4
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": [],
+    "physicalStonePigment": false,
+    "preservePhysicalWoodShade": true,
+    "produceParts": []
+  },
+  "renderTriangles": 160000,
+  "lodTriangles": 140000,
+  "renderBakeSize": 1536,
+  "lodBakeSize": 1536,
+  "renderColourSize": 1536,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 768,
+  "renderUVAngleLimitRad": 0.35,
+  "lodUVAngleLimitRad": 0.35,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "plainMountCollarMM": 0,
+  "geometryDetailRegions": [
+    {
+      "name": "native inner through-hole and straight receiving walls",
+      "minMM": [
+        -13.6,
+        -13.6,
+        -0.1
+      ],
+      "maxMM": [
+        13.6,
+        13.6,
+        23.25
+      ]
+    },
+    {
+      "name": "native whole upper receiving chamfer and rim",
+      "minMM": [
+        -17.7,
+        -17.7,
+        22.8
+      ],
+      "maxMM": [
+        17.7,
+        17.7,
+        25.4
+      ]
+    },
+    {
+      "name": "own deep plaster crease [0, -1]",
+      "minMM": [
+        -17.7,
+        6.1,
+        14.6
+      ],
+      "maxMM": [
+        -15.5,
+        7.4,
+        15.9
+      ]
+    },
+    {
+      "name": "own deep plaster crease [0, 1]",
+      "minMM": [
+        15.5,
+        6.1,
+        14.6
+      ],
+      "maxMM": [
+        17.7,
+        7.4,
+        15.9
+      ]
+    },
+    {
+      "name": "own deep plaster crease [1, -1]",
+      "minMM": [
+        6.1,
+        -17.7,
+        14.6
+      ],
+      "maxMM": [
+        7.4,
+        -15.5,
+        15.9
+      ]
+    },
+    {
+      "name": "own deep plaster crease [1, 1]",
+      "minMM": [
+        6.1,
+        15.5,
+        14.6
+      ],
+      "maxMM": [
+        7.4,
+        17.7,
+        15.9
+      ]
+    }
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      3.5,
+      8
+    ],
+    "lodMiB": [
+      2,
+      5.5
+    ],
+    "shadowKiB": [
+      250,
+      650
+    ],
+    "previewKiB": [
+      10,
+      35
+    ],
+    "basis": "Own single-cell 563156tri/28157884B braced timber/plaster receiving frame. Preserve native through-hole/straight socket/chamfer, no ordinary insert. R160k/L80k+native socket pins,1536 bake and1536/1024colour vs1152/768compact. Fourfold source symmetry and own measured braces; retain all receiving surfaces within.02mm, every insertion profile/source/RLS/4rotations fit. Initial80kLOD REJECT:79242native socket triangles left too few outer triangles,2472surface failures andfootprint drift. Compare120k/140k before new bake; protect4 own deepplastercreases atalong6.75/Z15.25 where160k had.217mm drift."
+  },
+  "reviewNotes": "Own source full/back/front/right/top/bottom/socket SEEN and authorPDF22. Native centreDown NO HIT, no actor support, no synthetic peg. Inner through-hole half8.489mm z1..10; straight socket half13.49 z12..23; native chamfer14.414 at24/15.432 at25. 4faces13900 own rays each, symmetry max.002077103mm. Measured upper brace slope±.472742374/intercept15.123131; lower fit excludes fused baseplanks. Each arm grain along own shaft, corner uprights Z, lower/inner horizontal frame grain X/Y, plaster between. Native receiving socket protected, all five measured insertion profiles and final RLS plus4rotations required,20um clearance+quantizationreserve. Source mountDepth0 preserves whole frame and openings, ordinaryUD016 applies only to receiving insertions. InitialbalancedLOD1024quality94 rejected1densecolourprobe:blueerror12.04/255 atlowercorner board, despite validphysicaltexels. IncreaseLODWebPquality98; compact768LOD separatelyREJECT nativecorner UVsamplesoppositewall34mm away.",
+  "lodColourQuality": 98
+}

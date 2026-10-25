@@ -16,9 +16,11 @@ assert.deepEqual(registry.find(m => m.id===report.model.id), report.model);
 const file = path.join(root, 'md/features/medieval-town.md');
 let wiki = await fs.readFile(file, 'utf8');
 const count = progress.filter(p => p.status==='published').length;
-const last = progress.filter(p => p.status==='published').at(-1).code.slice(4);
-wiki = wiki.replace(/Опубликованы и подтверждены \d+ из 163 моделей: MT1-001–\d+\./,
-  `Опубликованы и подтверждены ${count} из 163 моделей: MT1-001–${last}.`);
+const inventory = JSON.parse(await fs.readFile(path.join(base, 'inventory.json'), 'utf8'));
+const nativeFrames = new Set(inventory.filter(p => /Level Grid/.test(p.sourceName)).map(p => p.code));
+const frameCount = progress.filter(p => p.status==='published' && nativeFrames.has(p.code)).length;
+wiki = wiki.replace(/^Опубликованы и подтверждены \d+ из 163 моделей:[^\n]+$/m,
+  `Опубликованы и подтверждены ${count} из 163 моделей: плитки и объекты — ${count-frameCount}, каркасы этажей — ${frameCount}.`);
 wiki = wiki.replace(/Остальные \d+ элементов ещё не обработаны\./, `Остальные ${163-count} элементов ещё не обработаны.`);
 const sizes = ['render','lod','shadow','preview'].map(k => report.model.assets[k].size).join(' / ');
 const row = `| ${code} ${report.model.name} | \`${report.model.id}\` | ${note.trim()} | ${sizes} |`;
