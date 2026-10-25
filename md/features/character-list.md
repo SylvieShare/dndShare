@@ -181,6 +181,10 @@ to a level-one character. Only the chosen subrace supplies the casting-ability
 choice. The selected race header includes the subrace speed (35 ft for Wood Elf).
 Catalogue reloads refresh race/subrace snapshots from saved drafts while retaining
 valid selections; obsolete variants are cleared and require a new subrace choice.
+Restoring a draft preserves its current step, assigned scores, racial choices,
+feats, class/background selections and personality fields. Refreshing catalogue
+records for the same race/subrace IDs does not reset their dependent choices;
+those choices reset only when the selected race, subrace or variant changes.
 Selection retains the regular card surface; only its border, status and shadow
 signal selection, so nested fact and subrace chips keep sufficient contrast.
 The concise “Раса” label is presented as a display-font page heading with a short

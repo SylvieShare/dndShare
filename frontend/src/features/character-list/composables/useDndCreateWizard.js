@@ -72,7 +72,7 @@ export function useDndCreateWizard() {
   watch(() => state.version, () => { if (!hydrating) { state.race = null; state.subrace = null; state.charClass = null; state.subclass = null; state.background = null; state.backgroundAsi = {}; state.originFeatId = null; state.originFeatChoices = {}; state.backgroundTakeGold = false } })
 
   // A different race/subrace/variant means a different set of race offers — clear the picks.
-  watch(() => [state.race?.id, state.subrace?.id, state.raceVariant], () => {
+  watch([() => state.race?.id, () => state.subrace?.id, () => state.raceVariant], () => {
     if (hydrating) return
     state.asiChoice = []
     state.raceSkillIds = []
