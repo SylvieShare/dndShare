@@ -1,0 +1,2330 @@
+{
+  "name": "Wood Level Grid 1X3",
+  "groupCode": "MED-frames",
+  "tileType": "frame",
+  "width": 3,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 0,
+  "pegBottomHalfMM": 0,
+  "pegTopHalfMM": 0,
+  "standCells": [],
+  "standPointsMM": [],
+  "standRayTopsMM": [],
+  "standToleranceMM": 0.15,
+  "surfaceHeightMM": 25.229700088500977,
+  "wallMode": "edge",
+  "wallMask": 85,
+  "supportSlots": [
+    {
+      "x": 0,
+      "y": 0,
+      "width": 3,
+      "height": 1,
+      "elevation": 0.7208485739571707
+    }
+  ],
+  "blockersMM": [
+    [
+      [
+        -52.473001098632814,
+        -17.6
+      ],
+      [
+        -48.27300109863281,
+        -17.6
+      ],
+      [
+        -48.27300109863281,
+        17.6
+      ],
+      [
+        -52.473001098632814,
+        17.6
+      ]
+    ],
+    [
+      [
+        48.27300109863281,
+        -17.6
+      ],
+      [
+        52.473001098632814,
+        -17.6
+      ],
+      [
+        52.473001098632814,
+        17.6
+      ],
+      [
+        48.27300109863281,
+        17.6
+      ]
+    ],
+    [
+      [
+        -48.27300109863281,
+        -17.6
+      ],
+      [
+        48.27300109863281,
+        -17.6
+      ],
+      [
+        48.27300109863281,
+        -13.45
+      ],
+      [
+        -48.27300109863281,
+        -13.45
+      ]
+    ],
+    [
+      [
+        -48.27300109863281,
+        13.45
+      ],
+      [
+        48.27300109863281,
+        13.45
+      ],
+      [
+        48.27300109863281,
+        17.6
+      ],
+      [
+        -48.27300109863281,
+        17.6
+      ]
+    ],
+    [
+      [
+        -21.55,
+        -13.45
+      ],
+      [
+        -13.45,
+        -13.45
+      ],
+      [
+        -13.45,
+        13.45
+      ],
+      [
+        -21.55,
+        13.45
+      ]
+    ],
+    [
+      [
+        13.45,
+        -13.45
+      ],
+      [
+        21.55,
+        -13.45
+      ],
+      [
+        21.55,
+        13.45
+      ],
+      [
+        13.45,
+        13.45
+      ]
+    ]
+  ],
+  "hasDecor": false,
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "frame",
+    "level",
+    "wood",
+    "plaster",
+    "socket",
+    "crossbar",
+    "cross-brace",
+    "upright"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.24,
+      0.115,
+      0.04
+    ],
+    "stoneStartMM": -1,
+    "stoneBlendMM": 0.5,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.27,
+      0.125,
+      0.045
+    ],
+    "stoneLightRGB": [
+      0.49,
+      0.27,
+      0.1
+    ],
+    "woodParts": [
+      {
+        "name": "own lower horizontal frame and receiving boards X",
+        "minMM": [
+          -52.573001098632815,
+          -17.7,
+          -0.1
+        ],
+        "maxMM": [
+          52.573001098632815,
+          17.7,
+          25.429700088500976
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.92
+      },
+      {
+        "name": "own receiving end boards and partitions Y",
+        "minMM": [
+          -52.573001098632815,
+          -13.5,
+          -0.1
+        ],
+        "maxMM": [
+          52.573001098632815,
+          13.5,
+          25.429700088500976
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.92
+      },
+      {
+        "name": "own corner upright [-1, -1]",
+        "minMM": [
+          -52.573001098632815,
+          -17.7,
+          8.9
+        ],
+        "maxMM": [
+          -45.17300109863281,
+          -10.5,
+          25.429700088500976
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own corner upright [-1, 1]",
+        "minMM": [
+          -52.573001098632815,
+          10.5,
+          8.9
+        ],
+        "maxMM": [
+          -45.17300109863281,
+          17.7,
+          25.429700088500976
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own corner upright [1, -1]",
+        "minMM": [
+          45.17300109863281,
+          -17.7,
+          8.9
+        ],
+        "maxMM": [
+          52.573001098632815,
+          -10.5,
+          25.429700088500976
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own corner upright [1, 1]",
+        "minMM": [
+          45.17300109863281,
+          10.5,
+          8.9
+        ],
+        "maxMM": [
+          52.573001098632815,
+          17.7,
+          25.429700088500976
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own partition face upright [-17.5, -1]",
+        "minMM": [
+          -21.2,
+          -17.7,
+          8.9
+        ],
+        "maxMM": [
+          -13.8,
+          -13.1,
+          25.429700088500976
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own partition face upright [-17.5, 1]",
+        "minMM": [
+          -21.2,
+          13.1,
+          8.9
+        ],
+        "maxMM": [
+          -13.8,
+          17.7,
+          25.429700088500976
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own partition face upright [17.5, -1]",
+        "minMM": [
+          13.8,
+          -17.7,
+          8.9
+        ],
+        "maxMM": [
+          21.2,
+          -13.1,
+          25.429700088500976
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own partition face upright [17.5, 1]",
+        "minMM": [
+          13.8,
+          13.1,
+          8.9
+        ],
+        "maxMM": [
+          21.2,
+          17.7,
+          25.429700088500976
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own right-panel measured upright -1",
+        "minMM": [
+          32.72699890136719,
+          -17.7,
+          8.9
+        ],
+        "maxMM": [
+          36.526998901367186,
+          -13.1,
+          25.429700088500976
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own right-panel measured upright 1",
+        "minMM": [
+          32.72699890136719,
+          13.1,
+          8.9
+        ],
+        "maxMM": [
+          36.526998901367186,
+          17.7,
+          25.429700088500976
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own left horizontal crossbar -1",
+        "minMM": [
+          -45.5,
+          -17.7,
+          9.2
+        ],
+        "maxMM": [
+          -20.8,
+          -16.55,
+          25.429700088500976
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            -17.2,
+            17.994142199953114
+          ],
+          "axis": [
+            -0.015967256235486647,
+            0,
+            0.9998725152379729
+          ],
+          "rangeMM": [
+            -1.8358948236823744,
+            1.629108636315862
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.9998725152379729,
+          0,
+          0.015967256235486647
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own left horizontal crossbar 1",
+        "minMM": [
+          -45.5,
+          16.55,
+          9.2
+        ],
+        "maxMM": [
+          -20.8,
+          17.7,
+          25.429700088500976
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            17.2,
+            17.994142199953114
+          ],
+          "axis": [
+            -0.015967256235486647,
+            0,
+            0.9998725152379729
+          ],
+          "rangeMM": [
+            -1.8358948236823744,
+            1.629108636315862
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.9998725152379729,
+          0,
+          0.015967256235486647
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own middle ascending crossbrace -1",
+        "minMM": [
+          -14.1,
+          -17.7,
+          9.2
+        ],
+        "maxMM": [
+          14.1,
+          -16.55,
+          25.429700088500976
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            -17.2,
+            15.789732594936714
+          ],
+          "axis": [
+            -0.40747871346454734,
+            0,
+            0.9132147053531701
+          ],
+          "rangeMM": [
+            -1.7779969942214002,
+            1.8653710069590042
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.9132147053531701,
+          0,
+          0.40747871346454734
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own middle ascending crossbrace 1",
+        "minMM": [
+          -14.1,
+          16.55,
+          9.2
+        ],
+        "maxMM": [
+          14.1,
+          17.7,
+          25.429700088500976
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            17.2,
+            15.789732594936714
+          ],
+          "axis": [
+            -0.40747871346454734,
+            0,
+            0.9132147053531701
+          ],
+          "rangeMM": [
+            -1.7779969942214002,
+            1.8653710069590042
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.9132147053531701,
+          0,
+          0.40747871346454734
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own middle descending crossbrace -1",
+        "minMM": [
+          -14.1,
+          -17.7,
+          9.2
+        ],
+        "maxMM": [
+          14.1,
+          -16.55,
+          25.429700088500976
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            -17.2,
+            15.383778381387721
+          ],
+          "axis": [
+            0.43488202716692625,
+            0,
+            0.9004874360296121
+          ],
+          "rangeMM": [
+            -1.3681504689708959,
+            2.341433474637694
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.9004874360296121,
+          0,
+          -0.43488202716692625
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      },
+      {
+        "name": "own middle descending crossbrace 1",
+        "minMM": [
+          -14.1,
+          16.55,
+          9.2
+        ],
+        "maxMM": [
+          14.1,
+          17.7,
+          25.429700088500976
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            17.2,
+            15.383778381387721
+          ],
+          "axis": [
+            0.43488202716692625,
+            0,
+            0.9004874360296121
+          ],
+          "rangeMM": [
+            -1.3681504689708959,
+            2.341433474637694
+          ]
+        },
+        "axis": "beam",
+        "direction": [
+          0.9004874360296121,
+          0,
+          -0.43488202716692625
+        ],
+        "physicalPigment": true,
+        "roughness": 0.91
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "own plain end plaster [0, -1]",
+        "kind": "plaster",
+        "minMM": [
+          -52.473001098632814,
+          -10.6,
+          9.1
+        ],
+        "maxMM": [
+          -50.573001098632815,
+          10.6,
+          25.429700088500976
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own corner upright [-1, -1]",
+            "minMM": [
+              -52.573001098632815,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              -45.17300109863281,
+              -10.5,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [-1, 1]",
+            "minMM": [
+              -52.573001098632815,
+              10.5,
+              8.9
+            ],
+            "maxMM": [
+              -45.17300109863281,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, -1]",
+            "minMM": [
+              45.17300109863281,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              52.573001098632815,
+              -10.5,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, 1]",
+            "minMM": [
+              45.17300109863281,
+              10.5,
+              8.9
+            ],
+            "maxMM": [
+              52.573001098632815,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own partition face upright [-17.5, -1]",
+            "minMM": [
+              -21.2,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              -13.8,
+              -13.1,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own partition face upright [-17.5, 1]",
+            "minMM": [
+              -21.2,
+              13.1,
+              8.9
+            ],
+            "maxMM": [
+              -13.8,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own partition face upright [17.5, -1]",
+            "minMM": [
+              13.8,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              21.2,
+              -13.1,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own partition face upright [17.5, 1]",
+            "minMM": [
+              13.8,
+              13.1,
+              8.9
+            ],
+            "maxMM": [
+              21.2,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own right-panel measured upright -1",
+            "minMM": [
+              32.72699890136719,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              36.526998901367186,
+              -13.1,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own right-panel measured upright 1",
+            "minMM": [
+              32.72699890136719,
+              13.1,
+              8.9
+            ],
+            "maxMM": [
+              36.526998901367186,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "own plain end plaster [0, 1]",
+        "kind": "plaster",
+        "minMM": [
+          50.573001098632815,
+          -10.6,
+          9.1
+        ],
+        "maxMM": [
+          52.473001098632814,
+          10.6,
+          25.429700088500976
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own corner upright [-1, -1]",
+            "minMM": [
+              -52.573001098632815,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              -45.17300109863281,
+              -10.5,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [-1, 1]",
+            "minMM": [
+              -52.573001098632815,
+              10.5,
+              8.9
+            ],
+            "maxMM": [
+              -45.17300109863281,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, -1]",
+            "minMM": [
+              45.17300109863281,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              52.573001098632815,
+              -10.5,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, 1]",
+            "minMM": [
+              45.17300109863281,
+              10.5,
+              8.9
+            ],
+            "maxMM": [
+              52.573001098632815,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own partition face upright [-17.5, -1]",
+            "minMM": [
+              -21.2,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              -13.8,
+              -13.1,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own partition face upright [-17.5, 1]",
+            "minMM": [
+              -21.2,
+              13.1,
+              8.9
+            ],
+            "maxMM": [
+              -13.8,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own partition face upright [17.5, -1]",
+            "minMM": [
+              13.8,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              21.2,
+              -13.1,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own partition face upright [17.5, 1]",
+            "minMM": [
+              13.8,
+              13.1,
+              8.9
+            ],
+            "maxMM": [
+              21.2,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own right-panel measured upright -1",
+            "minMM": [
+              32.72699890136719,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              36.526998901367186,
+              -13.1,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own right-panel measured upright 1",
+            "minMM": [
+              32.72699890136719,
+              13.1,
+              8.9
+            ],
+            "maxMM": [
+              36.526998901367186,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "own three-panel long plaster -1",
+        "kind": "plaster",
+        "minMM": [
+          -45.4,
+          -17.6,
+          9.1
+        ],
+        "maxMM": [
+          45.4,
+          -15.7,
+          25.429700088500976
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own corner upright [-1, -1]",
+            "minMM": [
+              -52.573001098632815,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              -45.17300109863281,
+              -10.5,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [-1, 1]",
+            "minMM": [
+              -52.573001098632815,
+              10.5,
+              8.9
+            ],
+            "maxMM": [
+              -45.17300109863281,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, -1]",
+            "minMM": [
+              45.17300109863281,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              52.573001098632815,
+              -10.5,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, 1]",
+            "minMM": [
+              45.17300109863281,
+              10.5,
+              8.9
+            ],
+            "maxMM": [
+              52.573001098632815,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own partition face upright [-17.5, -1]",
+            "minMM": [
+              -21.2,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              -13.8,
+              -13.1,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own partition face upright [-17.5, 1]",
+            "minMM": [
+              -21.2,
+              13.1,
+              8.9
+            ],
+            "maxMM": [
+              -13.8,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own partition face upright [17.5, -1]",
+            "minMM": [
+              13.8,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              21.2,
+              -13.1,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own partition face upright [17.5, 1]",
+            "minMM": [
+              13.8,
+              13.1,
+              8.9
+            ],
+            "maxMM": [
+              21.2,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own right-panel measured upright -1",
+            "minMM": [
+              32.72699890136719,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              36.526998901367186,
+              -13.1,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own right-panel measured upright 1",
+            "minMM": [
+              32.72699890136719,
+              13.1,
+              8.9
+            ],
+            "maxMM": [
+              36.526998901367186,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own left horizontal crossbar -1",
+            "minMM": [
+              -45.5,
+              -17.7,
+              9.2
+            ],
+            "maxMM": [
+              -20.8,
+              -16.55,
+              25.429700088500976
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                -17.2,
+                17.994142199953114
+              ],
+              "axis": [
+                -0.015967256235486647,
+                0,
+                0.9998725152379729
+              ],
+              "rangeMM": [
+                -1.8358948236823744,
+                1.629108636315862
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.9998725152379729,
+              0,
+              0.015967256235486647
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own middle ascending crossbrace -1",
+            "minMM": [
+              -14.1,
+              -17.7,
+              9.2
+            ],
+            "maxMM": [
+              14.1,
+              -16.55,
+              25.429700088500976
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                -17.2,
+                15.789732594936714
+              ],
+              "axis": [
+                -0.40747871346454734,
+                0,
+                0.9132147053531701
+              ],
+              "rangeMM": [
+                -1.7779969942214002,
+                1.8653710069590042
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.9132147053531701,
+              0,
+              0.40747871346454734
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own middle descending crossbrace -1",
+            "minMM": [
+              -14.1,
+              -17.7,
+              9.2
+            ],
+            "maxMM": [
+              14.1,
+              -16.55,
+              25.429700088500976
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                -17.2,
+                15.383778381387721
+              ],
+              "axis": [
+                0.43488202716692625,
+                0,
+                0.9004874360296121
+              ],
+              "rangeMM": [
+                -1.3681504689708959,
+                2.341433474637694
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.9004874360296121,
+              0,
+              -0.43488202716692625
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          }
+        ]
+      },
+      {
+        "name": "own three-panel long plaster 1",
+        "kind": "plaster",
+        "minMM": [
+          -45.4,
+          15.7,
+          9.1
+        ],
+        "maxMM": [
+          45.4,
+          17.6,
+          25.429700088500976
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own corner upright [-1, -1]",
+            "minMM": [
+              -52.573001098632815,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              -45.17300109863281,
+              -10.5,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [-1, 1]",
+            "minMM": [
+              -52.573001098632815,
+              10.5,
+              8.9
+            ],
+            "maxMM": [
+              -45.17300109863281,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, -1]",
+            "minMM": [
+              45.17300109863281,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              52.573001098632815,
+              -10.5,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner upright [1, 1]",
+            "minMM": [
+              45.17300109863281,
+              10.5,
+              8.9
+            ],
+            "maxMM": [
+              52.573001098632815,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own partition face upright [-17.5, -1]",
+            "minMM": [
+              -21.2,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              -13.8,
+              -13.1,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own partition face upright [-17.5, 1]",
+            "minMM": [
+              -21.2,
+              13.1,
+              8.9
+            ],
+            "maxMM": [
+              -13.8,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own partition face upright [17.5, -1]",
+            "minMM": [
+              13.8,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              21.2,
+              -13.1,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own partition face upright [17.5, 1]",
+            "minMM": [
+              13.8,
+              13.1,
+              8.9
+            ],
+            "maxMM": [
+              21.2,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own right-panel measured upright -1",
+            "minMM": [
+              32.72699890136719,
+              -17.7,
+              8.9
+            ],
+            "maxMM": [
+              36.526998901367186,
+              -13.1,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own right-panel measured upright 1",
+            "minMM": [
+              32.72699890136719,
+              13.1,
+              8.9
+            ],
+            "maxMM": [
+              36.526998901367186,
+              17.7,
+              25.429700088500976
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own left horizontal crossbar 1",
+            "minMM": [
+              -45.5,
+              16.55,
+              9.2
+            ],
+            "maxMM": [
+              -20.8,
+              17.7,
+              25.429700088500976
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                17.2,
+                17.994142199953114
+              ],
+              "axis": [
+                -0.015967256235486647,
+                0,
+                0.9998725152379729
+              ],
+              "rangeMM": [
+                -1.8358948236823744,
+                1.629108636315862
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.9998725152379729,
+              0,
+              0.015967256235486647
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own middle ascending crossbrace 1",
+            "minMM": [
+              -14.1,
+              16.55,
+              9.2
+            ],
+            "maxMM": [
+              14.1,
+              17.7,
+              25.429700088500976
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                17.2,
+                15.789732594936714
+              ],
+              "axis": [
+                -0.40747871346454734,
+                0,
+                0.9132147053531701
+              ],
+              "rangeMM": [
+                -1.7779969942214002,
+                1.8653710069590042
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.9132147053531701,
+              0,
+              0.40747871346454734
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          },
+          {
+            "name": "own middle descending crossbrace 1",
+            "minMM": [
+              -14.1,
+              16.55,
+              9.2
+            ],
+            "maxMM": [
+              14.1,
+              17.7,
+              25.429700088500976
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                17.2,
+                15.383778381387721
+              ],
+              "axis": [
+                0.43488202716692625,
+                0,
+                0.9004874360296121
+              ],
+              "rangeMM": [
+                -1.3681504689708959,
+                2.341433474637694
+              ]
+            },
+            "axis": "beam",
+            "direction": [
+              0.9004874360296121,
+              0,
+              -0.43488202716692625
+            ],
+            "physicalPigment": true,
+            "roughness": 0.91
+          }
+        ]
+      },
+      {
+        "name": "own dark iron end fastening head 0",
+        "kind": "paint",
+        "minMM": [
+          -53.42300109863282,
+          -16.123987206550236,
+          3.320472958284943
+        ],
+        "maxMM": [
+          -50.723001098632814,
+          -13.423987206550237,
+          6.020472958284943
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -52.073001098632815,
+            -14.773987206550236,
+            4.670472958284943
+          ],
+          "radiiMM": [
+            0.65,
+            0.6,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron end fastening head 1",
+        "kind": "paint",
+        "minMM": [
+          -53.42300109863282,
+          13.423910236681312,
+          3.3201873769329278
+        ],
+        "maxMM": [
+          -50.723001098632814,
+          16.12391023668131,
+          6.0201873769329275
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -52.073001098632815,
+            14.773910236681312,
+            4.670187376932928
+          ],
+          "radiiMM": [
+            0.65,
+            0.6,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron end fastening head 2",
+        "kind": "paint",
+        "minMM": [
+          -53.42300109863282,
+          -16.065412155104298,
+          9.651599246778718
+        ],
+        "maxMM": [
+          -50.723001098632814,
+          -13.365412155104297,
+          12.351599246778717
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -52.073001098632815,
+            -14.715412155104296,
+            11.001599246778717
+          ],
+          "radiiMM": [
+            0.65,
+            0.6,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron end fastening head 3",
+        "kind": "paint",
+        "minMM": [
+          -53.42300109863282,
+          13.334846850471077,
+          9.693434853757898
+        ],
+        "maxMM": [
+          -50.723001098632814,
+          16.034846850471077,
+          12.393434853757897
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -52.073001098632815,
+            14.684846850471077,
+            11.043434853757898
+          ],
+          "radiiMM": [
+            0.65,
+            0.6,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron end fastening head 4",
+        "kind": "paint",
+        "minMM": [
+          50.723001098632814,
+          -16.085379244701823,
+          3.0970347732758525
+        ],
+        "maxMM": [
+          53.42300109863282,
+          -13.385379244701822,
+          5.797034773275852
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            52.073001098632815,
+            -14.735379244701821,
+            4.447034773275853
+          ],
+          "radiiMM": [
+            0.65,
+            0.6,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron end fastening head 5",
+        "kind": "paint",
+        "minMM": [
+          50.723001098632814,
+          13.385189467230171,
+          3.0986378878701752
+        ],
+        "maxMM": [
+          53.42300109863282,
+          16.085189467230173,
+          5.798637887870175
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            52.073001098632815,
+            14.735189467230171,
+            4.448637887870175
+          ],
+          "radiiMM": [
+            0.65,
+            0.6,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron end fastening head 6",
+        "kind": "paint",
+        "minMM": [
+          50.723001098632814,
+          -15.354142598191855,
+          9.471779968493355
+        ],
+        "maxMM": [
+          53.42300109863282,
+          -12.654142598191855,
+          12.171779968493354
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            52.073001098632815,
+            -14.004142598191855,
+            10.821779968493354
+          ],
+          "radiiMM": [
+            0.65,
+            0.6,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron end fastening head 7",
+        "kind": "paint",
+        "minMM": [
+          50.723001098632814,
+          12.647606720039253,
+          9.467093649706053
+        ],
+        "maxMM": [
+          53.42300109863282,
+          15.347606720039252,
+          12.167093649706052
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            52.073001098632815,
+            13.997606720039252,
+            10.817093649706052
+          ],
+          "radiiMM": [
+            0.65,
+            0.6,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": [],
+    "physicalStonePigment": false,
+    "preservePhysicalWoodShade": true,
+    "produceParts": []
+  },
+  "renderTriangles": 360000,
+  "lodTriangles": 300000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 2048,
+  "renderColourSize": 2048,
+  "lodColourSize": 1536,
+  "renderDataSize": 1280,
+  "lodDataSize": 1024,
+  "renderUVAngleLimitRad": 0.35,
+  "lodUVAngleLimitRad": 0.35,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "plainMountCollarMM": 0,
+  "geometryDetailRegions": [
+    {
+      "name": "own complete upper chamfers and two partition rims",
+      "minMM": [
+        -52.573001098632815,
+        -17.7,
+        22.8
+      ],
+      "maxMM": [
+        52.573001098632815,
+        17.7,
+        25.429700088500976
+      ]
+    },
+    {
+      "name": "own native through-hole and straight socket -35",
+      "minMM": [
+        -48.65,
+        -13.65,
+        -0.1
+      ],
+      "maxMM": [
+        -21.35,
+        13.65,
+        23.3
+      ]
+    },
+    {
+      "name": "own native through-hole and straight socket 0",
+      "minMM": [
+        -13.65,
+        -13.65,
+        -0.1
+      ],
+      "maxMM": [
+        13.65,
+        13.65,
+        23.3
+      ]
+    },
+    {
+      "name": "own native through-hole and straight socket 35",
+      "minMM": [
+        21.35,
+        -13.65,
+        -0.1
+      ],
+      "maxMM": [
+        48.65,
+        13.65,
+        23.3
+      ]
+    },
+    {
+      "name": "own native end fastening and ring 0",
+      "minMM": [
+        -53.42300109863282,
+        -16.123987206550236,
+        3.320472958284943
+      ],
+      "maxMM": [
+        -50.723001098632814,
+        -13.423987206550237,
+        6.020472958284943
+      ]
+    },
+    {
+      "name": "own native end fastening and ring 1",
+      "minMM": [
+        -53.42300109863282,
+        13.423910236681312,
+        3.3201873769329278
+      ],
+      "maxMM": [
+        -50.723001098632814,
+        16.12391023668131,
+        6.0201873769329275
+      ]
+    },
+    {
+      "name": "own native end fastening and ring 2",
+      "minMM": [
+        -53.42300109863282,
+        -16.065412155104298,
+        9.651599246778718
+      ],
+      "maxMM": [
+        -50.723001098632814,
+        -13.365412155104297,
+        12.351599246778717
+      ]
+    },
+    {
+      "name": "own native end fastening and ring 3",
+      "minMM": [
+        -53.42300109863282,
+        13.334846850471077,
+        9.693434853757898
+      ],
+      "maxMM": [
+        -50.723001098632814,
+        16.034846850471077,
+        12.393434853757897
+      ]
+    },
+    {
+      "name": "own native end fastening and ring 4",
+      "minMM": [
+        50.723001098632814,
+        -16.085379244701823,
+        3.0970347732758525
+      ],
+      "maxMM": [
+        53.42300109863282,
+        -13.385379244701822,
+        5.797034773275852
+      ]
+    },
+    {
+      "name": "own native end fastening and ring 5",
+      "minMM": [
+        50.723001098632814,
+        13.385189467230171,
+        3.0986378878701752
+      ],
+      "maxMM": [
+        53.42300109863282,
+        16.085189467230173,
+        5.798637887870175
+      ]
+    },
+    {
+      "name": "own native end fastening and ring 6",
+      "minMM": [
+        50.723001098632814,
+        -15.354142598191855,
+        9.471779968493355
+      ],
+      "maxMM": [
+        53.42300109863282,
+        -12.654142598191855,
+        12.171779968493354
+      ]
+    },
+    {
+      "name": "own native end fastening and ring 7",
+      "minMM": [
+        50.723001098632814,
+        12.647606720039253,
+        9.467093649706053
+      ],
+      "maxMM": [
+        53.42300109863282,
+        15.347606720039252,
+        12.167093649706052
+      ]
+    }
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      8,
+      13
+    ],
+    "lodMiB": [
+      6,
+      11
+    ],
+    "shadowKiB": [
+      650,
+      1300
+    ],
+    "previewKiB": [
+      20,
+      45
+    ],
+    "basis": "Own990980tri49549084B3x1nativeframe:threeopenpockets/twopartitions,three distinct timberpanels perlongface,plainendplaster,eightvisibleendfasteners. EstimateR360k/L300–320kafter ownpins;2048bake,2048/1536colour and1280/1024data vs1536/1152compact. Drycompare300/320/360geometry/socket beforebake;finalall3cells×5profiles×4rotations×source/RLS,physicalRGB-PBR/UVprobes andmatchedviews required. Dry300/320/360k all13140surfaces/facing and3207socketprobesPASS;lightest300kLODselectedbeforebaking,maxsurface.012589/socket.008532mm. KeepR360k forcloserelief."
+  },
+  "reviewNotes": "Own RAWfull/back/front/right/top/bottom/socketandauthorPDF22SEEN. Differentfrom712:longleftslightlyslopedhorizontalcrossbar,middleXtwodifferentgrainaxes,rightnarrowverticalupright,plainendsNOdiagonalV. Ownfacegridsfit6beams and2rightposts;front/back sourcefitsrecordedindividually. Eight visibleendheadscircle-fittedfromnativevertices>=18angularbins,paintcap<=.60mm insideownring;doNOTinventlongfaceboltsnotvisibleinsource. NativeactualboundsX±52.373001/Y±17.5/Z0..25.229700;logicalwidth3height1,centresX[-35,0,35],allcentraldownNONE.85medium17.5diam35heightcandidatesNONEclearusingfull49-raylevelsupport/headroom. D0preserveswholeframe/nosyntheticpeg,3pockets/twopartitions. Nativeupperchamfer/inners/headsrimprotected. Geometry/UV/materials/footprint/allprofilefitsrequired beforeMCP. Drynativegeometrybudgets300/320/360allPASS13140surfaceprobes and3207socketprobes;LOD300lightesttested. Sourcefit60casesdone,all3cellsownseatsdiffer sofinalsupportrectmustusemax.",
+  "lodColourQuality": 98,
+  "nativeDetailMeasurements": {
+    "sourceSHA256": "469c1f2e5b8bf507a85c093b2fcb7d6b25634b4891c08255ae244686375a8a9c",
+    "beams": [
+      {
+        "name": "left horizontal crossbar",
+        "side": -1,
+        "slope": 0.01596929207688681,
+        "interceptMM": 17.994142199953114,
+        "planeNormalXZ": [
+          -0.015967256235486647,
+          0.9998725152379729
+        ],
+        "sections": 80,
+        "sourceSamples": 763,
+        "materialRangeMM": [
+          -1.8358948236823744,
+          1.629108636315862
+        ]
+      },
+      {
+        "name": "middle descending crossbrace",
+        "side": -1,
+        "slope": -0.48294069385841537,
+        "interceptMM": 15.383778381387721,
+        "planeNormalXZ": [
+          0.43488202716692625,
+          0.9004874360296121
+        ],
+        "sections": 80,
+        "sourceSamples": 761,
+        "materialRangeMM": [
+          -1.3681504689708959,
+          2.341433474637694
+        ]
+      },
+      {
+        "name": "middle ascending crossbrace",
+        "side": -1,
+        "slope": 0.44620253164556956,
+        "interceptMM": 15.789732594936714,
+        "planeNormalXZ": [
+          -0.40747871346454734,
+          0.9132147053531701
+        ],
+        "sections": 80,
+        "sourceSamples": 964,
+        "materialRangeMM": [
+          -1.7779969942214002,
+          1.8653710069590042
+        ]
+      },
+      {
+        "name": "left horizontal crossbar",
+        "side": 1,
+        "slope": 0.01596929207688681,
+        "interceptMM": 17.994142199953114,
+        "planeNormalXZ": [
+          -0.015967256235486647,
+          0.9998725152379729
+        ],
+        "sections": 80,
+        "sourceSamples": 763,
+        "materialRangeMM": [
+          -1.8358948236823744,
+          1.629108636315862
+        ]
+      },
+      {
+        "name": "middle descending crossbrace",
+        "side": 1,
+        "slope": -0.48294069385841537,
+        "interceptMM": 15.383778381387721,
+        "planeNormalXZ": [
+          0.43488202716692625,
+          0.9004874360296121
+        ],
+        "sections": 80,
+        "sourceSamples": 761,
+        "materialRangeMM": [
+          -1.3681504689708959,
+          2.341433474637694
+        ]
+      },
+      {
+        "name": "middle ascending crossbrace",
+        "side": 1,
+        "slope": 0.44620253164556956,
+        "interceptMM": 15.789732594936714,
+        "planeNormalXZ": [
+          -0.40747871346454734,
+          0.9132147053531701
+        ],
+        "sections": 80,
+        "sourceSamples": 964,
+        "materialRangeMM": [
+          -1.7779969942214002,
+          1.8653710069590042
+        ]
+      }
+    ],
+    "rightPanelPosts": [
+      {
+        "name": "own right-panel middle upright",
+        "side": -1,
+        "sourceSamples": 569,
+        "minXMM": 32.72699890136719,
+        "maxXMM": 36.526998901367186
+      },
+      {
+        "name": "own right-panel middle upright",
+        "side": 1,
+        "sourceSamples": 569,
+        "minXMM": 32.72699890136719,
+        "maxXMM": 36.526998901367186
+      }
+    ],
+    "fastenerHeads": [
+      {
+        "axis": 0,
+        "side": -1,
+        "seedUZMM": [
+          -14.3,
+          4.5
+        ],
+        "centreMM": [
+          -52.073001098632815,
+          -14.773987206550236,
+          4.670472958284943
+        ],
+        "radiusMM": 0.8865169279126887,
+        "materialRadiusMM": 0.8065169279126887,
+        "sourceVertices": 1428,
+        "circleVertices": 337,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.011690925185907308,
+          0.0283157372896385,
+          0.03945346721544529
+        ]
+      },
+      {
+        "axis": 0,
+        "side": -1,
+        "seedUZMM": [
+          14.3,
+          4.5
+        ],
+        "centreMM": [
+          -52.073001098632815,
+          14.773910236681312,
+          4.670187376932928
+        ],
+        "radiusMM": 0.8865600516761931,
+        "materialRadiusMM": 0.8065600516761932,
+        "sourceVertices": 1428,
+        "circleVertices": 337,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.01169425022193571,
+          0.028489450647555415,
+          0.03965502158619394
+        ]
+      },
+      {
+        "axis": 0,
+        "side": -1,
+        "seedUZMM": [
+          -14.3,
+          10.5
+        ],
+        "centreMM": [
+          -52.073001098632815,
+          -14.715412155104296,
+          11.001599246778717
+        ],
+        "radiusMM": 1.0643667283458391,
+        "materialRadiusMM": 0.9843667283458392,
+        "sourceVertices": 1819,
+        "circleVertices": 183,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.017642156268810272,
+          0.0351704485600116,
+          0.03977806498328462
+        ]
+      },
+      {
+        "axis": 0,
+        "side": -1,
+        "seedUZMM": [
+          14.3,
+          10.5
+        ],
+        "centreMM": [
+          -52.073001098632815,
+          14.684846850471077,
+          11.043434853757898
+        ],
+        "radiusMM": 1.0932448083409505,
+        "materialRadiusMM": 1.0132448083409504,
+        "sourceVertices": 1819,
+        "circleVertices": 225,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.018581559789608404,
+          0.0347910396704461,
+          0.03957042829721025
+        ]
+      },
+      {
+        "axis": 0,
+        "side": 1,
+        "seedUZMM": [
+          -14.3,
+          4.5
+        ],
+        "centreMM": [
+          52.073001098632815,
+          -14.735379244701821,
+          4.447034773275853
+        ],
+        "radiusMM": 0.8818781708359246,
+        "materialRadiusMM": 0.8018781708359246,
+        "sourceVertices": 1006,
+        "circleVertices": 298,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.016261404307061023,
+          0.034629394281565175,
+          0.039833945827267514
+        ]
+      },
+      {
+        "axis": 0,
+        "side": 1,
+        "seedUZMM": [
+          14.3,
+          4.5
+        ],
+        "centreMM": [
+          52.073001098632815,
+          14.735189467230171,
+          4.448637887870175
+        ],
+        "radiusMM": 0.8845201159688844,
+        "materialRadiusMM": 0.8045201159688844,
+        "sourceVertices": 1006,
+        "circleVertices": 302,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.01724866358780014,
+          0.0352130380275629,
+          0.039767971367037136
+        ]
+      },
+      {
+        "axis": 0,
+        "side": 1,
+        "seedUZMM": [
+          -14.3,
+          10.5
+        ],
+        "centreMM": [
+          52.073001098632815,
+          -14.004142598191855,
+          10.821779968493354
+        ],
+        "radiusMM": 0.8178263749722492,
+        "materialRadiusMM": 0.7378263749722492,
+        "sourceVertices": 2086,
+        "circleVertices": 305,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.011952645707552056,
+          0.03209236027434776,
+          0.0399455958137066
+        ]
+      },
+      {
+        "axis": 0,
+        "side": 1,
+        "seedUZMM": [
+          14.3,
+          10.5
+        ],
+        "centreMM": [
+          52.073001098632815,
+          13.997606720039252,
+          10.817093649706052
+        ],
+        "radiusMM": 0.8226444276079292,
+        "materialRadiusMM": 0.7426444276079293,
+        "sourceVertices": 2086,
+        "circleVertices": 293,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.012248912946110302,
+          0.03087906474267553,
+          0.03988328411194897
+        ]
+      }
+    ]
+  }
+}
