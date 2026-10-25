@@ -442,7 +442,7 @@ export function useDndCreateWizard() {
 
   const {
     cantripPool, spell1Pool, cantripLimit, spell1Limit, cantripChosen, spell1Chosen,
-    toggleSpell, spellsComplete, grantedSpellList,
+    toggleSpell, spellsComplete, grantedSpellIds, grantedSpellList,
   } = useDndCreateSpells({ state, spellPool, grants })
 
   // ─── Convenience actions ───────────────────────────────────────────────────

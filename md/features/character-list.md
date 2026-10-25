@@ -102,6 +102,10 @@ mobile header and footer. There is no duplicate numeric step counter.
 записывает на сервер. Вкладки, броски, подсказки и read-only карточки предметов
 остаются доступны, а входы в редакторы и обработчики изменений заблокированы;
 отдельного обязательного шага обзора нет.
+Создание, неполный персонаж и предпросмотр используют одну сборку данных:
+`useDndCreateSpells` передаёт в неё актуальные ID даруемых классом и подклассом
+заклинаний, доступных на первом уровне персонажа. Если таких заклинаний нет,
+передаётся пустой список.
 Neither race nor class repeats a «Результат выбора» block below its controls:
 the selected illustrated card already contains the base result and dependent
 choices remain visible in their own sections. Ability descriptions remain

@@ -43,5 +43,5 @@ export function useDndCreateSpells({ state, spellPool, grants }) {
     grantedSpellItems.value[id] || { id, name: `#${id}`, data: {} }
   )))
 
-  return { cantripPool, spell1Pool, cantripLimit, spell1Limit, cantripChosen, spell1Chosen, toggleSpell, spellsComplete, grantedSpellList }
+  return { cantripPool, spell1Pool, cantripLimit, spell1Limit, cantripChosen, spell1Chosen, toggleSpell, spellsComplete, grantedSpellIds, grantedSpellList }
 }
