@@ -1,0 +1,854 @@
+{
+  "name": "Fireplace Unlit Tall",
+  "groupCode": "MED-fireplaces",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0.0002307891845703125,
+    -0.0002384185791015625
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "renderTriangles": 210000,
+  "lodTriangles": 150000,
+  "renderBakeSize": 1536,
+  "lodBakeSize": 1536,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "floor",
+    "wood",
+    "stone",
+    "fireplace",
+    "unlit",
+    "empty",
+    "plaster",
+    "tall",
+    "bonus"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.31,
+      0.3,
+      0.265
+    ],
+    "stoneLightRGB": [
+      0.58,
+      0.55,
+      0.48
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "hardware": [],
+    "physicalStonePigment": true,
+    "preservePhysicalWoodShade": true,
+    "woodParts": [
+      {
+        "name": "floor boards and north south fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west floor frame and fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.6,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east floor frame and fascia",
+        "minMM": [
+          14.3,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south tall post",
+        "minMM": [
+          -17.65209045410156,
+          -17.651056671142577,
+          26.09999237060547
+        ],
+        "maxMM": [
+          -10.102090454101562,
+          -13.601056671142578,
+          89.19999237060547
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "nearSource": {
+          "code": "MT1-091",
+          "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            0.0020904541015625,
+            0.001056671142578125,
+            7.62939453125e-06
+          ],
+          "projectTo": {
+            "code": "MT1-146",
+            "sourceSHA256": "4de8edac29b762973473e2f8f3ba70d2f8b618d3e8c93b1ca0a4b6575e4e9b8a"
+          }
+        }
+      },
+      {
+        "name": "north tall post",
+        "minMM": [
+          -17.65209045410156,
+          13.598943328857422,
+          26.09999237060547
+        ],
+        "maxMM": [
+          -10.102090454101562,
+          17.64894332885742,
+          89.19999237060547
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "nearSource": {
+          "code": "MT1-091",
+          "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            0.0020904541015625,
+            0.001056671142578125,
+            7.62939453125e-06
+          ],
+          "projectTo": {
+            "code": "MT1-146",
+            "sourceSHA256": "4de8edac29b762973473e2f8f3ba70d2f8b618d3e8c93b1ca0a4b6575e4e9b8a"
+          }
+        }
+      },
+      {
+        "name": "measured rear crossbar",
+        "minMM": [
+          -17.65209045410156,
+          -13.801056671142579,
+          66.99999237060547
+        ],
+        "maxMM": [
+          -14.002090454101562,
+          13.798943328857423,
+          76.99999237060547
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0,
+          0.9999317754102179,
+          -0.011680947092146237
+        ],
+        "projection": {
+          "originMM": [
+            -17.327088943330367,
+            -0.09369957517869401,
+            71.52098260256324
+          ],
+          "axis": [
+            0,
+            0.011680947092146237,
+            0.9999317754102179
+          ],
+          "rangeMM": [
+            -2.2821408035258326,
+            2.6620868927809846
+          ]
+        },
+        "nearSource": {
+          "code": "MT1-091",
+          "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            0.0020904541015625,
+            0.001056671142578125,
+            7.62939453125e-06
+          ],
+          "projectTo": {
+            "code": "MT1-146",
+            "sourceSHA256": "4de8edac29b762973473e2f8f3ba70d2f8b618d3e8c93b1ca0a4b6575e4e9b8a"
+          }
+        }
+      },
+      {
+        "name": "measured rear middle post",
+        "minMM": [
+          -17.65209045410156,
+          -2.6449567317962646,
+          26.09999237060547
+        ],
+        "maxMM": [
+          -14.002090454101562,
+          2.4350432395935058,
+          69.63881759368383
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "nearSource": {
+          "code": "MT1-091",
+          "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            0.0020904541015625,
+            0.001056671142578125,
+            7.62939453125e-06
+          ],
+          "projectTo": {
+            "code": "MT1-146",
+            "sourceSHA256": "4de8edac29b762973473e2f8f3ba70d2f8b618d3e8c93b1ca0a4b6575e4e9b8a"
+          }
+        }
+      }
+    ],
+    "stoneParts": [
+      {
+        "name": "own sooty native firebox backing and recessed maker mark",
+        "minMM": [
+          -8.999863624572754,
+          -9.403611326217652,
+          27.400205993652342
+        ],
+        "maxMM": [
+          -5.799863624572754,
+          9.396388673782349,
+          42.000205993652344
+        ],
+        "darkRGB": [
+          0.1,
+          0.09,
+          0.075
+        ],
+        "lightRGB": [
+          0.26,
+          0.24,
+          0.21
+        ]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "ochre plaster on both tall faces and top",
+        "kind": "plaster",
+        "minMM": [
+          -17.65209045410156,
+          -13.601056671142578,
+          26.59999237060547
+        ],
+        "maxMM": [
+          -10.102090454101562,
+          13.598943328857422,
+          89.19999237060547
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "south tall post",
+            "minMM": [
+              -17.65209045410156,
+              -17.651056671142577,
+              26.09999237060547
+            ],
+            "maxMM": [
+              -10.102090454101562,
+              -13.601056671142578,
+              89.19999237060547
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "north tall post",
+            "minMM": [
+              -17.65209045410156,
+              13.598943328857422,
+              26.09999237060547
+            ],
+            "maxMM": [
+              -10.102090454101562,
+              17.64894332885742,
+              89.19999237060547
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "measured rear crossbar",
+            "minMM": [
+              -17.65209045410156,
+              -13.801056671142579,
+              66.99999237060547
+            ],
+            "maxMM": [
+              -14.002090454101562,
+              13.798943328857423,
+              76.99999237060547
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0,
+              0.9999317754102179,
+              -0.011680947092146237
+            ],
+            "projection": {
+              "originMM": [
+                -17.327088943330367,
+                -0.09369957517869401,
+                71.52098260256324
+              ],
+              "axis": [
+                0,
+                0.011680947092146237,
+                0.9999317754102179
+              ],
+              "rangeMM": [
+                -2.2821408035258326,
+                2.6620868927809846
+              ]
+            }
+          },
+          {
+            "name": "measured rear middle post",
+            "minMM": [
+              -17.65209045410156,
+              -2.6449567317962646,
+              26.09999237060547
+            ],
+            "maxMM": [
+              -14.002090454101562,
+              2.4350432395935058,
+              69.63881759368383
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ],
+        "nearSource": {
+          "code": "MT1-091",
+          "sourceSHA256": "5825812d6e1cf33e3ebb5db7128ef4b30db3a75680257d25775137dcb283fbfd",
+          "matchMM": 0.08,
+          "nativeToReferenceMatrix": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "nativeToReferenceOffsetMM": [
+            0.0020904541015625,
+            0.001056671142578125,
+            7.62939453125e-06
+          ],
+          "projectTo": {
+            "code": "MT1-146",
+            "sourceSHA256": "4de8edac29b762973473e2f8f3ba70d2f8b618d3e8c93b1ca0a4b6575e4e9b8a"
+          }
+        }
+      },
+      {
+        "name": "own tilted cast iron scroll fireback and rim",
+        "minMM": [
+          -8.999863624572754,
+          -8.503611326217651,
+          27.200205993652343
+        ],
+        "maxMM": [
+          -5.999863624572754,
+          8.496388673782349,
+          40.15020599365234
+        ],
+        "projection": {
+          "originMM": [
+            -6.0493869795856545,
+            0,
+            0
+          ],
+          "axis": [
+            0.9989876073904667,
+            0.008091669952020302,
+            0.04425251583422787
+          ],
+          "rangeMM": [
+            -0.41173400518038417,
+            0.288265994819616
+          ]
+        },
+        "kind": "paint",
+        "rgb": [
+          0.14,
+          0.13,
+          0.11
+        ],
+        "metallic": 0.84,
+        "roughness": 0.72,
+        "variation": 0.025
+      }
+    ],
+    "ironParts": [],
+    "fabricParts": [],
+    "produceParts": []
+  },
+  "weightBudget": {
+    "renderMiB": [
+      6,
+      13
+    ],
+    "lodMiB": [
+      4.5,
+      10
+    ],
+    "shadowKiB": [
+      300,
+      800
+    ],
+    "previewKiB": [
+      15,
+      40
+    ],
+    "basis": "Own779992tri38999684B coldsamefireplace+fullWestwall89.0111. 210k150k1536mapsvscompact1152. Ownfireplacepartial1459485of10000<.05,p90.008319;newwall09110000all<.05max.025165. Own28mediumcandidatesnoneclear,25nativefirebox/frontairsegments."
+  },
+  "reviewNotes": "Ownsourcefull/back/fireboxSEEN:emptycoldstonefireplace/ornatescrollfireback/woodfloor/tallWestplasterwallwithZposts,horizontalcrossbarandmiddlepost,NOcrest,NOlogs/fire/lights. Fireplace145partial9485/10000<.05,p90.008319,p99.295973,max.664396atnewwallintersectionsnotwholebodycopy. Highwall09110000/10000<.05max.025165,D[.002090454,.001056671,.000007629],allnewpost/crossbar/plasterdomainsnear091/projectToown146SHA. FireplaceD[-.000136375,.003611326,-.000205994],own146firebackplanemeasuredindependently. Floor1459067<.05/9597<.15notexactcopy;owncore198normalsNx2.001576/Ny2.123458→Xgrain. OwnfloorRef25.878086,bodyxmax6.607400,blockx<=6.707400. Own28medium17.5diam/35heightpositionsNONEclear;noanchors. 25ownfiniteemptyfirebox/frontairrays. C16/D17ownflanks. StrictphysicalRGBincludesoriginalbakedColourShadeandCOLOR_1plusfourtexels;allmodel/source/finalUD016checksrequiredbeforeMCP. Own146fireback714flatpoints A[0.9989876073904667, 0.008091669952020302, 0.04425251583422787],planeS=-6.0432626249153145. Metalrange keptrelativetotheownfittedplane,notoldabsolutecoordinates:ownorigin[-6.0493869795856545,0,0],range[-0.41173400518038417,0.288265994819616];deeprecessesremainsootstone.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standRayTopMM": 100,
+  "renderUVAngleLimitRad": 0.45,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.45,
+  "lodUVIslandMargin": 0.0008,
+  "standPointsMM": [],
+  "blockersMM": [
+    [
+      [
+        -17.7,
+        -17.7
+      ],
+      [
+        6.707399940490722,
+        -17.7
+      ],
+      [
+        6.707399940490722,
+        17.7
+      ],
+      [
+        -17.7,
+        17.7
+      ]
+    ]
+  ],
+  "lodDataSize": 1536,
+  "pegCentersMM": [
+    [
+      0.0002307891845703125,
+      -0.0002384185791015625
+    ]
+  ],
+  "placementCells": [],
+  "standRayTopsMM": [],
+  "surfaceHeightMM": 25.87808609008789,
+  "renderColourSize": 1536,
+  "lodColourSize": 1536,
+  "renderDataSize": 1536,
+  "defaultLights": [],
+  "mountCentreFitReview": {
+    "sourceSHA256": "4de8edac29b762973473e2f8f3ba70d2f8b618d3e8c93b1ca0a4b6575e4e9b8a",
+    "nativeCentresMM": [
+      [
+        0.0002307891845703125,
+        -0.0002384185791015625
+      ]
+    ],
+    "fittedCentresMM": [
+      [
+        0.0002307891845703125,
+        -0.0002384185791015625
+      ]
+    ],
+    "preservedCentroidMM": [
+      0.0002307891845703125,
+      -0.0002384185791015625
+    ],
+    "maxCoordinateMoveMM": 0,
+    "requiredDecodedCentreToleranceMM": 0.02,
+    "sourceSections": [
+      {
+        "z": 4,
+        "centreMM": [
+          0.04386472702026367,
+          -0.002480030059814453
+        ],
+        "endsMM": [
+          [
+            -12.890856742858887,
+            12.978586196899414
+          ],
+          [
+            -12.935420989990234,
+            12.930460929870605
+          ]
+        ]
+      },
+      {
+        "z": 6,
+        "centreMM": [
+          0.04386758804321289,
+          -0.0023012161254882812
+        ],
+        "endsMM": [
+          [
+            -12.890825271606445,
+            12.978560447692871
+          ],
+          [
+            -12.93539810180664,
+            12.930795669555664
+          ]
+        ]
+      },
+      {
+        "z": 8,
+        "centreMM": [
+          0.04358386993408203,
+          -0.002017498016357422
+        ],
+        "endsMM": [
+          [
+            -12.89138126373291,
+            12.978549003601074
+          ],
+          [
+            -12.93537712097168,
+            12.931342124938965
+          ]
+        ]
+      },
+      {
+        "z": 10,
+        "centreMM": [
+          0.02191448211669922,
+          -0.0016570091247558594
+        ],
+        "endsMM": [
+          [
+            -12.934720039367676,
+            12.978549003601074
+          ],
+          [
+            -12.935357093811035,
+            12.932043075561523
+          ]
+        ]
+      },
+      {
+        "z": 12,
+        "centreMM": [
+          0.0002918243408203125,
+          -7.82012939453125e-05
+        ],
+        "endsMM": [
+          [
+            -13.379633903503418,
+            13.380217552185059
+          ],
+          [
+            -13.37718677520752,
+            13.377030372619629
+          ]
+        ]
+      },
+      {
+        "z": 14,
+        "centreMM": [
+          0.0018596649169921875,
+          -0.0002307891845703125
+        ],
+        "endsMM": [
+          [
+            -15.098118782043457,
+            15.101838111877441
+          ],
+          [
+            -15.098997116088867,
+            15.098535537719727
+          ]
+        ]
+      },
+      {
+        "z": 16,
+        "centreMM": [
+          0.0002307891845703125,
+          -0.0002384185791015625
+        ],
+        "endsMM": [
+          [
+            -16.823047637939453,
+            16.823509216308594
+          ],
+          [
+            -16.820354461669922,
+            16.81987762451172
+          ]
+        ]
+      }
+    ],
+    "method": "Own nativeinsertflank rays4/6/8/10/12/14/16;upper16axis selected separatelyfromlowerstem"
+  },
+  "geometryDetailRegions": [
+    {
+      "name": "own native mounting lip",
+      "minMM": [
+        -17.8,
+        -17.8,
+        16.99
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        17.65
+      ]
+    },
+    {
+      "name": "own original cast iron fireback scrollwork and rim",
+      "minMM": [
+        -8.999863624572754,
+        -8.603611326217651,
+        27.200205993652343
+      ],
+      "maxMM": [
+        -5.999863624572754,
+        8.596388673782348,
+        40.30020599365234
+      ]
+    },
+    {
+      "name": "own native front mantel rounded mouldings",
+      "minMM": [
+        1.500136375427246,
+        -17.803611326217652,
+        47.000205993652344
+      ],
+      "maxMM": [
+        7.000136375427246,
+        17.79638867378235,
+        54.000205993652344
+      ]
+    }
+  ],
+  "uvBaseTile": [
+    0.002,
+    0.8,
+    0.998,
+    0.998
+  ],
+  "uvDetailRegions": [
+    {
+      "name": "own fireplace front sides empty firebox and chimney",
+      "minMM": [
+        -10.099,
+        -17.8,
+        26.651
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        89.3
+      ],
+      "tile": [
+        0.002,
+        0.002,
+        0.7,
+        0.78
+      ],
+      "angleLimitRad": 0.35,
+      "islandMargin": 0.0008
+    },
+    {
+      "name": "own tall West wall lower posts and plaster",
+      "minMM": [
+        -17.8,
+        -17.8,
+        26.651
+      ],
+      "maxMM": [
+        -10.1,
+        17.8,
+        50
+      ],
+      "tile": [
+        0.72,
+        0.002,
+        0.998,
+        0.45
+      ],
+      "angleLimitRad": 0.35,
+      "islandMargin": 0.0008
+    },
+    {
+      "name": "own tall West wall upper crossbar and post",
+      "minMM": [
+        -17.8,
+        -17.8,
+        50.001
+      ],
+      "maxMM": [
+        -10.1,
+        17.8,
+        89.3
+      ],
+      "tile": [
+        0.72,
+        0.47,
+        0.998,
+        0.78
+      ],
+      "angleLimitRad": 0.45,
+      "islandMargin": 0.0008
+    }
+  ]
+}
