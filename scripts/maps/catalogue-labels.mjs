@@ -209,6 +209,7 @@ Wood Level Grid 2X3|Деревянный каркас 2×3
 Wood Level Grid 3X3|Деревянный каркас 3×3
 Wood Level Grid 3X6|Деревянный каркас 3×6
 Wood Level Grid 4X4|Деревянный каркас 4×4
+Wood 2 Level Grid 1X1|Деревянный каркас с центральной стойкой 1×1
 Level Grid 1X2|Каркас 1×2
 Level Grid 1X3|Каркас 1×3
 Level Grid 2X2|Каркас 2×2

@@ -1,0 +1,1835 @@
+{
+  "name": "Wood 2 Level Grid 1X1",
+  "groupCode": "MED-frames",
+  "tileType": "frame",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 0,
+  "pegBottomHalfMM": 0,
+  "pegTopHalfMM": 0,
+  "standCells": [],
+  "standPointsMM": [],
+  "standRayTopsMM": [],
+  "standToleranceMM": 0.15,
+  "surfaceHeightMM": 25.229698181152344,
+  "wallMode": "edge",
+  "wallMask": 85,
+  "supportSlots": [
+    {
+      "x": 0,
+      "y": 0,
+      "width": 1,
+      "height": 1,
+      "elevation": 0.7208485194614955
+    }
+  ],
+  "blockersMM": [
+    [
+      [
+        -17.600099182128908,
+        -17.67710075378418
+      ],
+      [
+        -13.400099182128907,
+        -17.67710075378418
+      ],
+      [
+        -13.400099182128907,
+        17.67710075378418
+      ],
+      [
+        -17.600099182128908,
+        17.67710075378418
+      ]
+    ],
+    [
+      [
+        13.400099182128907,
+        -17.67710075378418
+      ],
+      [
+        17.600099182128908,
+        -17.67710075378418
+      ],
+      [
+        17.600099182128908,
+        17.67710075378418
+      ],
+      [
+        13.400099182128907,
+        17.67710075378418
+      ]
+    ],
+    [
+      [
+        -13.400099182128907,
+        -17.67710075378418
+      ],
+      [
+        13.400099182128907,
+        -17.67710075378418
+      ],
+      [
+        13.400099182128907,
+        -13.47710075378418
+      ],
+      [
+        -13.400099182128907,
+        -13.47710075378418
+      ]
+    ],
+    [
+      [
+        -13.400099182128907,
+        13.47710075378418
+      ],
+      [
+        13.400099182128907,
+        13.47710075378418
+      ],
+      [
+        13.400099182128907,
+        17.67710075378418
+      ],
+      [
+        -13.400099182128907,
+        17.67710075378418
+      ]
+    ]
+  ],
+  "hasDecor": false,
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "frame",
+    "level",
+    "wood",
+    "plaster",
+    "socket",
+    "upright",
+    "iron"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.24,
+      0.115,
+      0.04
+    ],
+    "stoneStartMM": -1,
+    "stoneBlendMM": 0.5,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.27,
+      0.125,
+      0.045
+    ],
+    "stoneLightRGB": [
+      0.49,
+      0.27,
+      0.1
+    ],
+    "woodParts": [
+      {
+        "name": "own lower horizontal frame and receiving boards X",
+        "minMM": [
+          -17.700099182128906,
+          -17.77710075378418,
+          -0.1
+        ],
+        "maxMM": [
+          17.700099182128906,
+          17.77710075378418,
+          25.429698181152343
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.92
+      },
+      {
+        "name": "own west or east receiving board Y -17.700099182128906",
+        "minMM": [
+          -17.700099182128906,
+          -17.77710075378418,
+          -0.1
+        ],
+        "maxMM": [
+          -13.000099182128906,
+          17.77710075378418,
+          25.429698181152343
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.92
+      },
+      {
+        "name": "own west or east receiving board Y 13.000099182128906",
+        "minMM": [
+          13.000099182128906,
+          -17.77710075378418,
+          -0.1
+        ],
+        "maxMM": [
+          17.700099182128906,
+          17.77710075378418,
+          25.429698181152343
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.92
+      },
+      {
+        "name": "own corner face upright [0, -1, -14.3]",
+        "minMM": [
+          -17.700099182128906,
+          -17.77710075378418,
+          8.9
+        ],
+        "maxMM": [
+          -13.000099182128906,
+          -10.927,
+          25.429698181152343
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own corner face upright [0, -1, 14.3]",
+        "minMM": [
+          -17.700099182128906,
+          11.023,
+          8.9
+        ],
+        "maxMM": [
+          -13.000099182128906,
+          17.77710075378418,
+          25.429698181152343
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own corner face upright [0, 1, -14.3]",
+        "minMM": [
+          13.000099182128906,
+          -17.77710075378418,
+          8.9
+        ],
+        "maxMM": [
+          17.700099182128906,
+          -10.927,
+          25.429698181152343
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own corner face upright [0, 1, 14.3]",
+        "minMM": [
+          13.000099182128906,
+          11.023,
+          8.9
+        ],
+        "maxMM": [
+          17.700099182128906,
+          17.77710075378418,
+          25.429698181152343
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own corner face upright [1, -1, -14.3]",
+        "minMM": [
+          -17.700099182128906,
+          -17.77710075378418,
+          8.9
+        ],
+        "maxMM": [
+          -10.6,
+          -13.07710075378418,
+          25.429698181152343
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own narrow central upright [1, -1, 0]",
+        "minMM": [
+          -0.9,
+          -17.77710075378418,
+          8.9
+        ],
+        "maxMM": [
+          0.9,
+          -15.777100753784179,
+          25.429698181152343
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own corner face upright [1, -1, 14.3]",
+        "minMM": [
+          10.6,
+          -17.77710075378418,
+          8.9
+        ],
+        "maxMM": [
+          17.700099182128906,
+          -13.07710075378418,
+          25.429698181152343
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own corner face upright [1, 1, -14.3]",
+        "minMM": [
+          -17.700099182128906,
+          13.07710075378418,
+          8.9
+        ],
+        "maxMM": [
+          -10.6,
+          17.77710075378418,
+          25.429698181152343
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own narrow central upright [1, 1, 0]",
+        "minMM": [
+          -0.9,
+          15.777100753784179,
+          8.9
+        ],
+        "maxMM": [
+          0.9,
+          17.77710075378418,
+          25.429698181152343
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own corner face upright [1, 1, 14.3]",
+        "minMM": [
+          10.6,
+          13.07710075378418,
+          8.9
+        ],
+        "maxMM": [
+          17.700099182128906,
+          17.77710075378418,
+          25.429698181152343
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "own ochre plaster face [0, -1]",
+        "kind": "plaster",
+        "minMM": [
+          -17.600099182128908,
+          -17.47710075378418,
+          9.1
+        ],
+        "maxMM": [
+          -15.700099182128906,
+          17.47710075378418,
+          25.429698181152343
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own corner face upright [0, -1, -14.3]",
+            "minMM": [
+              -17.700099182128906,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              -13.000099182128906,
+              -10.927,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [0, -1, 14.3]",
+            "minMM": [
+              -17.700099182128906,
+              11.023,
+              8.9
+            ],
+            "maxMM": [
+              -13.000099182128906,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [0, 1, -14.3]",
+            "minMM": [
+              13.000099182128906,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              17.700099182128906,
+              -10.927,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [0, 1, 14.3]",
+            "minMM": [
+              13.000099182128906,
+              11.023,
+              8.9
+            ],
+            "maxMM": [
+              17.700099182128906,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [1, -1, -14.3]",
+            "minMM": [
+              -17.700099182128906,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              -10.6,
+              -13.07710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own narrow central upright [1, -1, 0]",
+            "minMM": [
+              -0.9,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              0.9,
+              -15.777100753784179,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [1, -1, 14.3]",
+            "minMM": [
+              10.6,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              17.700099182128906,
+              -13.07710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [1, 1, -14.3]",
+            "minMM": [
+              -17.700099182128906,
+              13.07710075378418,
+              8.9
+            ],
+            "maxMM": [
+              -10.6,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own narrow central upright [1, 1, 0]",
+            "minMM": [
+              -0.9,
+              15.777100753784179,
+              8.9
+            ],
+            "maxMM": [
+              0.9,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [1, 1, 14.3]",
+            "minMM": [
+              10.6,
+              13.07710075378418,
+              8.9
+            ],
+            "maxMM": [
+              17.700099182128906,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "own ochre plaster face [0, 1]",
+        "kind": "plaster",
+        "minMM": [
+          15.700099182128906,
+          -17.47710075378418,
+          9.1
+        ],
+        "maxMM": [
+          17.600099182128908,
+          17.47710075378418,
+          25.429698181152343
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own corner face upright [0, -1, -14.3]",
+            "minMM": [
+              -17.700099182128906,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              -13.000099182128906,
+              -10.927,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [0, -1, 14.3]",
+            "minMM": [
+              -17.700099182128906,
+              11.023,
+              8.9
+            ],
+            "maxMM": [
+              -13.000099182128906,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [0, 1, -14.3]",
+            "minMM": [
+              13.000099182128906,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              17.700099182128906,
+              -10.927,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [0, 1, 14.3]",
+            "minMM": [
+              13.000099182128906,
+              11.023,
+              8.9
+            ],
+            "maxMM": [
+              17.700099182128906,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [1, -1, -14.3]",
+            "minMM": [
+              -17.700099182128906,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              -10.6,
+              -13.07710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own narrow central upright [1, -1, 0]",
+            "minMM": [
+              -0.9,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              0.9,
+              -15.777100753784179,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [1, -1, 14.3]",
+            "minMM": [
+              10.6,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              17.700099182128906,
+              -13.07710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [1, 1, -14.3]",
+            "minMM": [
+              -17.700099182128906,
+              13.07710075378418,
+              8.9
+            ],
+            "maxMM": [
+              -10.6,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own narrow central upright [1, 1, 0]",
+            "minMM": [
+              -0.9,
+              15.777100753784179,
+              8.9
+            ],
+            "maxMM": [
+              0.9,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [1, 1, 14.3]",
+            "minMM": [
+              10.6,
+              13.07710075378418,
+              8.9
+            ],
+            "maxMM": [
+              17.700099182128906,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "own ochre plaster face [1, -1]",
+        "kind": "plaster",
+        "minMM": [
+          -17.400099182128905,
+          -17.67710075378418,
+          9.1
+        ],
+        "maxMM": [
+          17.400099182128905,
+          -15.777100753784179,
+          25.429698181152343
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own corner face upright [0, -1, -14.3]",
+            "minMM": [
+              -17.700099182128906,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              -13.000099182128906,
+              -10.927,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [0, -1, 14.3]",
+            "minMM": [
+              -17.700099182128906,
+              11.023,
+              8.9
+            ],
+            "maxMM": [
+              -13.000099182128906,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [0, 1, -14.3]",
+            "minMM": [
+              13.000099182128906,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              17.700099182128906,
+              -10.927,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [0, 1, 14.3]",
+            "minMM": [
+              13.000099182128906,
+              11.023,
+              8.9
+            ],
+            "maxMM": [
+              17.700099182128906,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [1, -1, -14.3]",
+            "minMM": [
+              -17.700099182128906,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              -10.6,
+              -13.07710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own narrow central upright [1, -1, 0]",
+            "minMM": [
+              -0.9,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              0.9,
+              -15.777100753784179,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [1, -1, 14.3]",
+            "minMM": [
+              10.6,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              17.700099182128906,
+              -13.07710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [1, 1, -14.3]",
+            "minMM": [
+              -17.700099182128906,
+              13.07710075378418,
+              8.9
+            ],
+            "maxMM": [
+              -10.6,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own narrow central upright [1, 1, 0]",
+            "minMM": [
+              -0.9,
+              15.777100753784179,
+              8.9
+            ],
+            "maxMM": [
+              0.9,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [1, 1, 14.3]",
+            "minMM": [
+              10.6,
+              13.07710075378418,
+              8.9
+            ],
+            "maxMM": [
+              17.700099182128906,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "own ochre plaster face [1, 1]",
+        "kind": "plaster",
+        "minMM": [
+          -17.400099182128905,
+          15.777100753784179,
+          9.1
+        ],
+        "maxMM": [
+          17.400099182128905,
+          17.67710075378418,
+          25.429698181152343
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "own corner face upright [0, -1, -14.3]",
+            "minMM": [
+              -17.700099182128906,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              -13.000099182128906,
+              -10.927,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [0, -1, 14.3]",
+            "minMM": [
+              -17.700099182128906,
+              11.023,
+              8.9
+            ],
+            "maxMM": [
+              -13.000099182128906,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [0, 1, -14.3]",
+            "minMM": [
+              13.000099182128906,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              17.700099182128906,
+              -10.927,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [0, 1, 14.3]",
+            "minMM": [
+              13.000099182128906,
+              11.023,
+              8.9
+            ],
+            "maxMM": [
+              17.700099182128906,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [1, -1, -14.3]",
+            "minMM": [
+              -17.700099182128906,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              -10.6,
+              -13.07710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own narrow central upright [1, -1, 0]",
+            "minMM": [
+              -0.9,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              0.9,
+              -15.777100753784179,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [1, -1, 14.3]",
+            "minMM": [
+              10.6,
+              -17.77710075378418,
+              8.9
+            ],
+            "maxMM": [
+              17.700099182128906,
+              -13.07710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [1, 1, -14.3]",
+            "minMM": [
+              -17.700099182128906,
+              13.07710075378418,
+              8.9
+            ],
+            "maxMM": [
+              -10.6,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own narrow central upright [1, 1, 0]",
+            "minMM": [
+              -0.9,
+              15.777100753784179,
+              8.9
+            ],
+            "maxMM": [
+              0.9,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own corner face upright [1, 1, 14.3]",
+            "minMM": [
+              10.6,
+              13.07710075378418,
+              8.9
+            ],
+            "maxMM": [
+              17.700099182128906,
+              17.77710075378418,
+              25.429698181152343
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "own dark iron fastening 0",
+        "kind": "paint",
+        "minMM": [
+          -18.550099182128907,
+          -16.166945362772942,
+          3.091752280187739
+        ],
+        "maxMM": [
+          -15.850099182128906,
+          -13.466945362772943,
+          5.791752280187739
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -17.200099182128906,
+            -14.816945362772943,
+            4.441752280187739
+          ],
+          "radiiMM": [
+            0.65,
+            0.6,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening 1",
+        "kind": "paint",
+        "minMM": [
+          -18.550099182128907,
+          -15.435523549918322,
+          9.474227225699908
+        ],
+        "maxMM": [
+          -15.850099182128906,
+          -12.735523549918323,
+          12.174227225699907
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -17.200099182128906,
+            -14.085523549918323,
+            10.824227225699907
+          ],
+          "radiiMM": [
+            0.65,
+            0.6,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening 2",
+        "kind": "paint",
+        "minMM": [
+          -18.550099182128907,
+          13.469986352755202,
+          3.096275863503475
+        ],
+        "maxMM": [
+          -15.850099182128906,
+          16.169986352755203,
+          5.796275863503475
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -17.200099182128906,
+            14.819986352755201,
+            4.446275863503475
+          ],
+          "radiiMM": [
+            0.65,
+            0.6,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening 3",
+        "kind": "paint",
+        "minMM": [
+          -18.550099182128907,
+          12.850333658249493,
+          9.494270263759798
+        ],
+        "maxMM": [
+          -15.850099182128906,
+          15.550333658249492,
+          12.194270263759798
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -17.200099182128906,
+            14.200333658249493,
+            10.844270263759798
+          ],
+          "radiiMM": [
+            0.65,
+            0.6,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening 4",
+        "kind": "paint",
+        "minMM": [
+          15.850099182128906,
+          -16.169745929366602,
+          3.096367289997819
+        ],
+        "maxMM": [
+          18.550099182128907,
+          -13.469745929366603,
+          5.79636728999782
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            17.200099182128906,
+            -14.819745929366603,
+            4.446367289997819
+          ],
+          "radiiMM": [
+            0.65,
+            0.6,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening 5",
+        "kind": "paint",
+        "minMM": [
+          15.850099182128906,
+          -15.403077821605773,
+          9.463606187828459
+        ],
+        "maxMM": [
+          18.550099182128907,
+          -12.703077821605774,
+          12.163606187828458
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            17.200099182128906,
+            -14.053077821605774,
+            10.813606187828459
+          ],
+          "radiiMM": [
+            0.65,
+            0.6,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening 6",
+        "kind": "paint",
+        "minMM": [
+          15.850099182128906,
+          13.463883913267985,
+          3.0985998677412456
+        ],
+        "maxMM": [
+          18.550099182128907,
+          16.163883913267984,
+          5.798599867741245
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            17.200099182128906,
+            14.813883913267984,
+            4.448599867741246
+          ],
+          "radiiMM": [
+            0.65,
+            0.6,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      },
+      {
+        "name": "own dark iron fastening 7",
+        "kind": "paint",
+        "minMM": [
+          15.850099182128906,
+          12.735276739855241,
+          9.47192897303426
+        ],
+        "maxMM": [
+          18.550099182128907,
+          15.43527673985524,
+          12.171928973034259
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            17.200099182128906,
+            14.08527673985524,
+            10.82192897303426
+          ],
+          "radiiMM": [
+            0.65,
+            0.6,
+            0.6
+          ]
+        },
+        "rgb": [
+          0.13,
+          0.14,
+          0.15
+        ],
+        "roughness": 0.58,
+        "metallic": 0.82,
+        "variation": 0.015
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": [],
+    "physicalStonePigment": false,
+    "preservePhysicalWoodShade": true,
+    "produceParts": []
+  },
+  "renderTriangles": 180000,
+  "lodTriangles": 140000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 2048,
+  "renderColourSize": 1536,
+  "lodColourSize": 1280,
+  "renderDataSize": 1024,
+  "lodDataSize": 768,
+  "renderUVAngleLimitRad": 0.35,
+  "lodUVAngleLimitRad": 0.35,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "plainMountCollarMM": 0,
+  "geometryDetailRegions": [
+    {
+      "name": "own entire upper receiving chamfer and rim",
+      "minMM": [
+        -17.700099182128906,
+        -17.77710075378418,
+        22.8
+      ],
+      "maxMM": [
+        17.700099182128906,
+        17.77710075378418,
+        25.429698181152343
+      ]
+    },
+    {
+      "name": "own whole native inner pocket and through-hole",
+      "minMM": [
+        -14.1,
+        -14.1,
+        -0.1
+      ],
+      "maxMM": [
+        14.1,
+        14.1,
+        23.3
+      ]
+    },
+    {
+      "name": "own narrow central upright [1, -1, 0]",
+      "minMM": [
+        -1.05,
+        -17.927100753784178,
+        8.75
+      ],
+      "maxMM": [
+        1.05,
+        -15.627100753784179,
+        25.57969818115234
+      ]
+    },
+    {
+      "name": "own narrow central upright [1, 1, 0]",
+      "minMM": [
+        -1.05,
+        15.627100753784179,
+        8.75
+      ],
+      "maxMM": [
+        1.05,
+        17.927100753784178,
+        25.57969818115234
+      ]
+    },
+    {
+      "name": "own native fastening and ring 0",
+      "minMM": [
+        -18.550099182128907,
+        -16.166945362772942,
+        3.091752280187739
+      ],
+      "maxMM": [
+        -15.850099182128906,
+        -13.466945362772943,
+        5.791752280187739
+      ]
+    },
+    {
+      "name": "own native fastening and ring 1",
+      "minMM": [
+        -18.550099182128907,
+        -15.435523549918322,
+        9.474227225699908
+      ],
+      "maxMM": [
+        -15.850099182128906,
+        -12.735523549918323,
+        12.174227225699907
+      ]
+    },
+    {
+      "name": "own native fastening and ring 2",
+      "minMM": [
+        -18.550099182128907,
+        13.469986352755202,
+        3.096275863503475
+      ],
+      "maxMM": [
+        -15.850099182128906,
+        16.169986352755203,
+        5.796275863503475
+      ]
+    },
+    {
+      "name": "own native fastening and ring 3",
+      "minMM": [
+        -18.550099182128907,
+        12.850333658249493,
+        9.494270263759798
+      ],
+      "maxMM": [
+        -15.850099182128906,
+        15.550333658249492,
+        12.194270263759798
+      ]
+    },
+    {
+      "name": "own native fastening and ring 4",
+      "minMM": [
+        15.850099182128906,
+        -16.169745929366602,
+        3.096367289997819
+      ],
+      "maxMM": [
+        18.550099182128907,
+        -13.469745929366603,
+        5.79636728999782
+      ]
+    },
+    {
+      "name": "own native fastening and ring 5",
+      "minMM": [
+        15.850099182128906,
+        -15.403077821605773,
+        9.463606187828459
+      ],
+      "maxMM": [
+        18.550099182128907,
+        -12.703077821605774,
+        12.163606187828458
+      ]
+    },
+    {
+      "name": "own native fastening and ring 6",
+      "minMM": [
+        15.850099182128906,
+        13.463883913267985,
+        3.0985998677412456
+      ],
+      "maxMM": [
+        18.550099182128907,
+        16.163883913267984,
+        5.798599867741245
+      ]
+    },
+    {
+      "name": "own native fastening and ring 7",
+      "minMM": [
+        15.850099182128906,
+        12.735276739855241,
+        9.47192897303426
+      ],
+      "maxMM": [
+        18.550099182128907,
+        15.43527673985524,
+        12.171928973034259
+      ]
+    }
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      4,
+      9
+    ],
+    "lodMiB": [
+      3,
+      7
+    ],
+    "shadowKiB": [
+      350,
+      750
+    ],
+    "previewKiB": [
+      10,
+      35
+    ],
+    "basis": "Own432932tri21646684B single-cell Wood2 frame:one native pocket,8headcircles and2narrow central uprights. Compare140/160/180/220k after actualMeshopt16 geometry/native.02mm checks BEFOREbake. R180k for close plaster/wood relief,LOD140k lightest passing.2048bakes/1536R1280LcolourJPEG98 and1024R768LnormalORMPNG versus1152/960compact. All5profiles/sourceRLS/4rotations andpercellproof required."
+  },
+  "reviewNotes": "Own9RAWviews and source facade ray grids measured. X± each haveone plasterpanel and2corner posts,with2upper post heads and2lower beam heads. Y± each havetwo plasterpanels separatedbyown1.8mm central upright,andNOsourcefasteners. No diagonal brace/invented crossbar. Own10postface ranges and8complete24/24-sectorheadcircles fitted independently; metalcap radius<=.60 inside own ring. Full nativeD0/C0 receiving pocket/through-hole and chamfer retained, no synthetic peg.25actorcandidates NONEclear with49levelsupport/headroom probes. Ownsourceheight25.2296981812mm/boundsX±17.50009918,Y±17.57710075. Source20/final80fitcases,1069per-cell socket probes required. Geometry budgets/UV/paint pending individual QA. Own facade domain preview inspected:onepanel X±,twopanels with1.8mm middlepost Y±,8metal caps X±only. Dry140/160/180/220k all5601 body/facing probes pass after Meshopt16, and all1069 native socket probes pass. Protected104089 source triangles including narrowposts/heads/nativeinner/chamfer. Choose render180k (maxbody.007815598mm) andLOD140k (.014651893mm),native socket max.007933020mm. Controls1874named+3727dense=5601 (142metal1257plaster4202wood),67native airsegments. Ownsource20fitcases completed. UV.35/.0012 passed all5601 four-texel probes after Meshopt16 quantization: render1536 max.174766mm,LOD1280 max.326958mm. Individual paint/candidate review pending.",
+  "lodColourQuality": 98,
+  "nativeDetailMeasurements": {
+    "sourceSHA256": "4a91f540758617914e86406e8913aa03f83e6a986768b0d6acda80c9cb5837be",
+    "posts": [
+      {
+        "axis": 0,
+        "side": -1,
+        "seedAlongMM": -14.3,
+        "minAlongMM": -17.477,
+        "maxAlongMM": -10.927,
+        "verticalCoreSections": 25
+      },
+      {
+        "axis": 0,
+        "side": -1,
+        "seedAlongMM": 14.3,
+        "minAlongMM": 11.023,
+        "maxAlongMM": 17.322999999999997,
+        "verticalCoreSections": 24
+      },
+      {
+        "axis": 0,
+        "side": 1,
+        "seedAlongMM": -14.3,
+        "minAlongMM": -17.477,
+        "maxAlongMM": -10.927,
+        "verticalCoreSections": 25
+      },
+      {
+        "axis": 0,
+        "side": 1,
+        "seedAlongMM": 14.3,
+        "minAlongMM": 11.023,
+        "maxAlongMM": 17.322999999999997,
+        "verticalCoreSections": 24
+      },
+      {
+        "axis": 1,
+        "side": -1,
+        "seedAlongMM": -14.3,
+        "minAlongMM": -17.4,
+        "maxAlongMM": -10.6,
+        "verticalCoreSections": 27
+      },
+      {
+        "axis": 1,
+        "side": -1,
+        "seedAlongMM": 0,
+        "minAlongMM": -0.9,
+        "maxAlongMM": 0.9,
+        "verticalCoreSections": 7
+      },
+      {
+        "axis": 1,
+        "side": -1,
+        "seedAlongMM": 14.3,
+        "minAlongMM": 10.6,
+        "maxAlongMM": 17.4,
+        "verticalCoreSections": 27
+      },
+      {
+        "axis": 1,
+        "side": 1,
+        "seedAlongMM": -14.3,
+        "minAlongMM": -17.4,
+        "maxAlongMM": -10.6,
+        "verticalCoreSections": 27
+      },
+      {
+        "axis": 1,
+        "side": 1,
+        "seedAlongMM": 0,
+        "minAlongMM": -0.9,
+        "maxAlongMM": 0.9,
+        "verticalCoreSections": 7
+      },
+      {
+        "axis": 1,
+        "side": 1,
+        "seedAlongMM": 14.3,
+        "minAlongMM": 10.6,
+        "maxAlongMM": 17.4,
+        "verticalCoreSections": 27
+      }
+    ],
+    "beams": [],
+    "fastenerHeads": [
+      {
+        "axis": 0,
+        "side": -1,
+        "seedUZMM": [
+          -14.3,
+          4.5
+        ],
+        "centreMM": [
+          -17.200099182128906,
+          -14.816945362772943,
+          4.441752280187739
+        ],
+        "radiusMM": 0.876637096658225,
+        "materialRadiusMM": 0.796637096658225,
+        "sourceVertices": 1275,
+        "circleVertices": 295,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.017404014177662797,
+          0.035116060667003145,
+          0.039799203537571604
+        ]
+      },
+      {
+        "axis": 0,
+        "side": -1,
+        "seedUZMM": [
+          -14.3,
+          10.5
+        ],
+        "centreMM": [
+          -17.200099182128906,
+          -14.085523549918323,
+          10.824227225699907
+        ],
+        "radiusMM": 0.8183463168473184,
+        "materialRadiusMM": 0.7383463168473184,
+        "sourceVertices": 2481,
+        "circleVertices": 303,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.01201618842752139,
+          0.03140090206941444,
+          0.03963404767825429
+        ]
+      },
+      {
+        "axis": 0,
+        "side": -1,
+        "seedUZMM": [
+          14.3,
+          4.5
+        ],
+        "centreMM": [
+          -17.200099182128906,
+          14.819986352755201,
+          4.446275863503475
+        ],
+        "radiusMM": 0.8816484485080085,
+        "materialRadiusMM": 0.8016484485080085,
+        "sourceVertices": 1275,
+        "circleVertices": 301,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.016234901860334383,
+          0.03547777881924841,
+          0.0396564035688316
+        ]
+      },
+      {
+        "axis": 0,
+        "side": -1,
+        "seedUZMM": [
+          14.3,
+          10.5
+        ],
+        "centreMM": [
+          -17.200099182128906,
+          14.200333658249493,
+          10.844270263759798
+        ],
+        "radiusMM": 1.0383129775370283,
+        "materialRadiusMM": 0.9583129775370284,
+        "sourceVertices": 2481,
+        "circleVertices": 302,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.018496389261030477,
+          0.035551192892235454,
+          0.03998866655727962
+        ]
+      },
+      {
+        "axis": 0,
+        "side": 1,
+        "seedUZMM": [
+          -14.3,
+          4.5
+        ],
+        "centreMM": [
+          17.200099182128906,
+          -14.819745929366603,
+          4.446367289997819
+        ],
+        "radiusMM": 0.8820461832471541,
+        "materialRadiusMM": 0.8020461832471542,
+        "sourceVertices": 1274,
+        "circleVertices": 301,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.016423631011409312,
+          0.03545348676750515,
+          0.03980201166396535
+        ]
+      },
+      {
+        "axis": 0,
+        "side": 1,
+        "seedUZMM": [
+          -14.3,
+          10.5
+        ],
+        "centreMM": [
+          17.200099182128906,
+          -14.053077821605774,
+          10.813606187828459
+        ],
+        "radiusMM": 0.841489746595827,
+        "materialRadiusMM": 0.761489746595827,
+        "sourceVertices": 2481,
+        "circleVertices": 284,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.01564511600302365,
+          0.03397828516788866,
+          0.039266992597366546
+        ]
+      },
+      {
+        "axis": 0,
+        "side": 1,
+        "seedUZMM": [
+          14.3,
+          4.5
+        ],
+        "centreMM": [
+          17.200099182128906,
+          14.813883913267984,
+          4.448599867741246
+        ],
+        "radiusMM": 0.8844812648973139,
+        "materialRadiusMM": 0.804481264897314,
+        "sourceVertices": 1274,
+        "circleVertices": 301,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.017092376504088902,
+          0.034578982585767526,
+          0.03973149243413909
+        ]
+      },
+      {
+        "axis": 0,
+        "side": 1,
+        "seedUZMM": [
+          14.3,
+          10.5
+        ],
+        "centreMM": [
+          17.200099182128906,
+          14.08527673985524,
+          10.82192897303426
+        ],
+        "radiusMM": 0.8179196158978636,
+        "materialRadiusMM": 0.7379196158978636,
+        "sourceVertices": 2481,
+        "circleVertices": 303,
+        "angularBins24": 24,
+        "radialResidualQuantilesMM": [
+          0.011808869394769106,
+          0.03150628084310177,
+          0.03898272577513329
+        ]
+      }
+    ]
+  },
+  "renderColourQuality": 98
+}
