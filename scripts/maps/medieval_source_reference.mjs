@@ -7,6 +7,33 @@ import { selectSourceComponent } from './source_component_regions.mjs';
 
 const matchers = new WeakMap();
 
+export function compileSourceReferenceTransform(reference) {
+  const matrix=reference.nativeToReferenceMatrix,offset=reference.nativeToReferenceOffsetMM;
+  const vector=a=>Array.isArray(a)&&a.length===3&&a.every(Number.isFinite);
+  if (matrix!==undefined||offset!==undefined) {
+    if (!Array.isArray(matrix)||matrix.length!==3||!matrix.every(vector)||!vector(offset)||
+        reference.rotationZDeg!==undefined||reference.mirrorY!==undefined||
+        matrix.some((row,i)=>matrix.some((other,j)=>
+          Math.abs(row.reduce((sum,v,a)=>sum+v*other[a],0)-(i===j?1:0))>1e-6)))
+      throw new Error('Measured orthogonal source transform required');
+    return (p,out=[])=>{
+      const x=p[0],y=p[1],z=p[2];
+      for(let a=0;a<3;a++)out[a]=matrix[a][0]*x+matrix[a][1]*y+matrix[a][2]*z+offset[a];
+      return out;
+    };
+  }
+  const degrees=reference.rotationZDeg??0;
+  if (!Number.isFinite(degrees)) throw new Error('Finite source rotation required');
+  if (reference.mirrorY!==undefined&&typeof reference.mirrorY!=='boolean')
+    throw new Error('Boolean source mirror required');
+  const angle=-degrees*Math.PI/180,cosine=Math.cos(angle),sine=Math.sin(angle);
+  return(p,out=[])=>{
+    const x=p[0],y=p[1],z=p[2];
+    out[0]=x*cosine-y*sine;out[1]=(x*sine+y*cosine)*(reference.mirrorY?-1:1);out[2]=z;
+    return out;
+  };
+}
+
 export function awayFromSource(p, reference) {
   const matcher = matchers.get(reference);
   if (!matcher) throw new Error('Uninitialized measured source reference');
@@ -54,14 +81,10 @@ export async function initializeStructureReferences(settings, inventoryPath) {
     return tree;
   }
   for (const reference of references) {
-    const degrees = reference.rotationZDeg ?? 0;
-    if (!Number.isFinite(degrees)) throw new Error('Finite source rotation required');
-    if (reference.mirrorY !== undefined && typeof reference.mirrorY !== 'boolean')
-      throw new Error('Boolean source mirror required');
-    const angle = -degrees*Math.PI/180, cosine = Math.cos(angle), sine = Math.sin(angle);
+    const transform=compileSourceReferenceTransform(reference);
     const tree = await load(reference.code,reference.sourceSHA256,reference);
     const sculpt = reference.projectTo ? await load(reference.projectTo.code,reference.projectTo.sourceSHA256) : null;
-    const point = new Vector3(), projected = {}, nearest = {};
+    const point = new Vector3(), projected = {}, nearest = {},input=[0,0,0],output=[0,0,0];
     matchers.set(reference,p => {
       point.fromArray(p);
       if (sculpt) {
@@ -69,11 +92,8 @@ export async function initializeStructureReferences(settings, inventoryPath) {
         if (!hit) throw new Error('Missing source projection');
         point.copy(hit.point);
       }
-      if (degrees) {
-        const x = point.x, y = point.y;
-        point.set(x*cosine-y*sine, x*sine+y*cosine, point.z);
-      }
-      if (reference.mirrorY) point.y = -point.y;
+      input[0]=point.x;input[1]=point.y;input[2]=point.z;
+      transform(input,output);point.fromArray(output);
       const hit = tree.closestPointToPoint(point,nearest,0,reference.matchMM);
       // A BVH leaf intersecting the threshold can contain farther triangles.
       return hit===null || hit.distance>reference.matchMM;

@@ -3,6 +3,24 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { structureDomain, structureMetal, structureFlame, structureEmissionFlame, structureGlass, structureSurfacePigment, structureWoodPigment, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
 
+test('arc grain follows a measured tilted plane and remains constant through its thickness',()=>{
+  const a=.31,b=.14,U=[Math.cos(a),Math.sin(a),0],V=[Math.sin(a)*Math.sin(b),-Math.cos(a)*Math.sin(b),Math.cos(b)];
+  const N=[Math.sin(a)*Math.cos(b),-Math.cos(a)*Math.cos(b),-Math.sin(b)],C=[7,-4,11];
+  const common={minMM:[-100,-100,-100],maxMM:[100,100,100],physicalPigment:true,
+    darkRGB:[.31,.17,.06],lightRGB:[.62,.38,.18],roughness:.91,radiusMM:5.5};
+  const original={...common,axis:'arc-xz',centerXZMM:[0,0]};
+  const tilted={...common,axis:'arc-plane',centerMM:C,arcUAxis:U,arcVAxis:V};
+  for(const angle of[.15,.65,1.4,2.4,2.95])for(const depth of[-3,0,4]){
+    const x=5.2*Math.cos(angle),z=5.2*Math.sin(angle),point=C.map((v,i)=>v+U[i]*x+V[i]*z+N[i]*depth);
+    const expected=structureWoodPigment([x,depth,z],[0,-1,0],{woodParts:[original]});
+    const actual=structureWoodPigment(point,N,{woodParts:[tilted]});
+    actual.forEach((v,i)=>assert.ok(Math.abs(v-expected[i])<1e-12));
+    assert.equal(structureMetal(point,{woodParts:[tilted]}).roughness,.91);
+  }
+  for(const bad of[{arcVAxis:U},{arcUAxis:[2,0,0]},{radiusMM:0}])
+    assert.throws(()=>structureWoodPigment(C,N,{woodParts:[{...tilted,...bad}]}),/orthonormal timber arc/);
+});
+
 test('optional emission inset keeps light inside the flame under packing displacement', () => {
   const part={ name:'fire',kind:'flame',minMM:[-1,-1,0],maxMM:[1,1,6],rgb:[1,.5,.05],emissionInsetMM:.015 };
   const settings={surfaceParts:[part]};

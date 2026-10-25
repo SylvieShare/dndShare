@@ -175,6 +175,7 @@ Little Barrels Angle|Маленькие бочки в углу
 Little Barrels Tall Angle|Маленькие бочки в высоком углу
 Small Door Angle Left Closed|Угловая левая дверь, закрытая
 Small Door Angle Right Closed|Угловая правая дверь, закрытая
+Small Door Angle Left Opened|Угловая левая дверь, открытая
 Balcony|Балкон
 Balcony Angle|Угловой балкон
 Balcony Corridor|Балкон с двумя ограждениями

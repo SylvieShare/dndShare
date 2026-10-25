@@ -174,6 +174,16 @@ export function structureWoodPigment(p, n, settings) {
   else if (part.axis==='beam') {
     const d=unit(part.direction), t=unit(cross(d,Math.abs(d[0])<.8 ? [1,0,0] : [0,1,0])), other=cross(d,t);
     u=dot(p,d); v=Math.abs(dot(n,t))>Math.abs(dot(n,other)) ? dot(p,other) : dot(p,t);
+  } else if (part.axis==='arc-plane') {
+    const centre=part.centerMM, first=part.arcUAxis, second=part.arcVAxis;
+    const vector=a=>Array.isArray(a)&&a.length===3&&a.every(Number.isFinite);
+    if (!vector(centre)||!vector(first)||!vector(second)||
+        !Number.isFinite(part.radiusMM)||part.radiusMM<=0||
+        Math.abs(dot(first,first)-1)>1e-6||Math.abs(dot(second,second)-1)>1e-6||
+        Math.abs(dot(first,second))>1e-6)
+      throw new Error('Measured orthonormal timber arc plane required');
+    const delta=p.map((v,i)=>v-centre[i]),dx=dot(delta,first),dz=dot(delta,second);
+    u=Math.atan2(dz,dx)*part.radiusMM;v=Math.hypot(dx,dz);
   } else if (part.axis==='arc-xz' || part.axis==='arc-yz') {
     const centre=part.axis==='arc-xz' ? part.centerXZMM : part.centerYZMM;
     if (!Array.isArray(centre) || centre.length!==2 || !centre.every(Number.isFinite) ||

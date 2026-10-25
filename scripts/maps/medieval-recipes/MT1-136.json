@@ -3929,7 +3929,7 @@
       12,
       45
     ],
-    "basis": "Own899908tri/44995484B four small casks/rack plus two full tall walls and carved crest. Ownfurniture135translation10000allwithin.05max.015122;ownwalls/crown08910000allwithin.15each. Protect ownpresenthardware/lids/nativecrest+lip;280k230k2048allmapsvscompact1152. Revalidateinteriorrackairbeforetallbackwall,nomediumactorplacements."
+    "basis": "Own899908tri/44995484B four small casks/rack plus two full tall walls and carved crest. Ownfurniture135translation10000allwithin.05max.015122;ownwalls/crown08910000allwithin.15each. Protect ownpresenthardware/lids/nativecrest+lip;280k230k2048allmapsvscompact1536. Revalidateinteriorrackairbeforetallbackwall,nomediumactorplacements."
   },
   "reviewNotes": "Ownsourcefull/back/top/highwallsseen;relatedPDF10(065)caskpaletteandPDF13(089)crestpalette. Source899908tri/44995484B nativeD17/C16ownflankrays. Furniturevs135withoutrotation10000allwithin.05max.029152;owntranslation[.0109767318,.0161964893,-.0001983643]improvesindependent10000to max.015122. All furniturematerials/profiles shifted byownoffset,notfloor/walls. HighwallROImustZ>60toexcludecasks:ownwalls08910000allwithin.15max.090547,owncrown10000allwithin.15max.017131. Ownpost/crossbar/crestplanestranslatedbyseparatefits;plasternearSource089.1projectTo136 preventswoodfurniturespill. Old135lowdiagonalwallbraces/insetheadsremovedbecausenotpresentin136;greyplateandorangecrossretained. Ownvisiblefrontfloor/25actorcandidatesandallnativeaisleraysremeasured;farsegmentsstopbeforeaddedtallbackwall. Sourcegrainlog-y4casks/6lids/6cones+rivets/frameheads;emptygeometrydomainsprunedfromownsource. IndividualRLSgeometry/RGB/PBR/UV/footprint/airand4matchedviewsrequiredbeforeUD016/MCP.",
   "uvIslandMargin": 0.0012,

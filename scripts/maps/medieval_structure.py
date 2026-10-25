@@ -54,6 +54,32 @@ def coordinates(p, part):
                            -delta[:, 0]*np.sin(angle)+delta[:, 1]*np.cos(angle), delta[:, 2]])
 
 
+def source_reference_coordinates(p, ref):
+    if 'nativeToReferenceMatrix' in ref or 'nativeToReferenceOffsetMM' in ref:
+        matrix = np.asarray(ref.get('nativeToReferenceMatrix'), float)
+        offset = np.asarray(ref.get('nativeToReferenceOffsetMM'), float)
+        if (matrix.shape!=(3, 3) or offset.shape!=(3,) or
+                not np.isfinite(np.r_[matrix.ravel(), offset]).all() or
+                not np.allclose(matrix@matrix.T, np.eye(3), atol=1e-6, rtol=0) or
+                'rotationZDeg' in ref or 'mirrorY' in ref):
+            raise ValueError('Measured orthogonal source transform required')
+        return p@matrix.T+offset
+    degrees = ref.get('rotationZDeg', 0)
+    if not np.isfinite(degrees):
+        raise ValueError('Finite source rotation required')
+    mirror = ref.get('mirrorY', False)
+    if not isinstance(mirror, bool):
+        raise ValueError('Boolean source mirror required')
+    angle = np.deg2rad(-degrees)
+    points = p if not degrees else np.column_stack([
+        p[:, 0]*np.cos(angle)-p[:, 1]*np.sin(angle),
+        p[:, 0]*np.sin(angle)+p[:, 1]*np.cos(angle), p[:, 2]])
+    if mirror:
+        points = points.copy()
+        points[:, 1] *= -1
+    return points
+
+
 def domain(p, part):
     q = coordinates(p, part)
     mask = np.all((q>=part['minMM'])&(q<=part['maxMM']), axis=1)
@@ -83,19 +109,7 @@ def domain(p, part):
         if not ref:
             continue
         tree = REFERENCE_TREES[reference_key(ref)]
-        degrees = ref.get('rotationZDeg', 0)
-        if not np.isfinite(degrees):
-            raise ValueError('Finite source rotation required')
-        angle = np.deg2rad(-degrees)
-        points = p if not degrees else np.column_stack([
-            p[:, 0]*np.cos(angle)-p[:, 1]*np.sin(angle),
-            p[:, 0]*np.sin(angle)+p[:, 1]*np.cos(angle), p[:, 2]])
-        mirror = ref.get('mirrorY', False)
-        if not isinstance(mirror, bool):
-            raise ValueError('Boolean source mirror required')
-        if mirror:
-            points = points.copy()
-            points[:, 1] *= -1
+        points = source_reference_coordinates(p, ref)
         candidates = np.flatnonzero(mask)
         for i in candidates:
             hit = tree.find_nearest(tuple(points[i]),ref['matchMM'])[0]
@@ -154,6 +168,18 @@ def paint(obj, recipe):
             centre = part['centerXZMM'] if axis=='arc-xz' else part['centerYZMM']
             dx, dz = q[:, 0 if axis=='arc-xz' else 1]-centre[0], q[:, 2]-centre[1]
             u, v = np.arctan2(dz, dx)*part['radiusMM'], np.hypot(dx, dz)
+        elif axis=='arc-plane':
+            centre = np.asarray(part['centerMM'], float)
+            first, second = np.asarray(part['arcUAxis'], float), np.asarray(part['arcVAxis'], float)
+            radius = part['radiusMM']
+            if (centre.shape!=(3,) or first.shape!=(3,) or second.shape!=(3,) or
+                    not np.isfinite(np.r_[centre, first, second, radius]).all() or radius<=0 or
+                    abs(np.linalg.norm(first)-1)>1e-6 or abs(np.linalg.norm(second)-1)>1e-6 or
+                    abs(first@second)>1e-6):
+                raise ValueError('Measured orthonormal timber arc plane required')
+            delta = p-centre
+            dx, dz = delta@first, delta@second
+            u, v = np.arctan2(dz, dx)*radius, np.hypot(dx, dz)
         elif axis=='crate':
             a = np.deg2rad(part['rotationZDeg'])
             qnx, qny = nx*np.cos(a)+ny*np.sin(a), -nx*np.sin(a)+ny*np.cos(a)

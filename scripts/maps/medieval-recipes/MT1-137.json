@@ -2096,7 +2096,7 @@
       15,
       45
     ],
-    "basis": "Own559922tri/27996184B closedNorthdoor+Westlowwall. Own22metalcomponents/2partialhingecylinders/curvedwoodarch/actorfloor/lip sourceprotected,220k170k2048mapsvs1152compact. Own49mediumactorair andfinitehandlebores needverification beforeMCP."
+    "basis": "Own559922tri/27996184B closedNorthdoor+Westlowwall. Own22metalcomponents/2partialhingecylinders/curvedwoodarch/actorfloor/lip sourceprotected,220k170k2048mapsvs1536compact. Own49mediumactorair andfinitehandlebores needverification beforeMCP."
   },
   "reviewNotes": "Ownsourcefull/back/top/doorinside/outside/handle inspected,authorPDF07Door042palette. Mirror/rotation096and042affinefitsREJECTmedian.19p90.857;notexactsource. Ownarchouter286samplesCx-.018604/Cz60.915558/R15.336424/maxres.04384,inner759Cx-.018327/Cz60.908919/R12.763345/maxres.029843. OwninsidewoodY12.4375/raisedscroll11.9575,outsidewood14.9325/scroll15.5075. ARCHWOODprotrudes11.236/16.26,metalmustbeclippedtoactualleaf(notdepthalone). OwnconnectedcomponentsEACHFACE8roundheads+2scrolls+ringheartplate;woodrail/tinyfloor/partialwoodfragmentsREJECT. Ownhingeupper216points15binsR2.010167,C[-13.42322,12.355014],lower90points7binsR1.983197,C[-13.411913,12.303735];lowerunconstrained3.2mmwoodcornerREJECT. Onlyownmeasuredcapplanesandradialsidespaintmetal. Westbrace92flatfacesD[0,-.787767,.615973];naturalpostknotsWOOD. Floor400upwardnormalsX(.002544,.130729);preferredactor[2,-2]17.5mmdisc/35mmheadroom49raysclear,logicalcell[0,0]. D17/C16owninsertsections. Sourcepaint/independentRLSsurfaces/pixelRGBPBR/UV/actor/ringair/footprint requiredbeforeordinaryUD016/MCP.",
   "uvIslandMargin": 0.0012,

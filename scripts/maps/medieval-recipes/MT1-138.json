@@ -2096,7 +2096,7 @@
       15,
       45
     ],
-    "basis": "Own559956tri/27997884B mirroredclosedRightdoor/lowNorthwall;measured137wholebodymatch10000/10000<.05max.037244. All137domains/pins/UV/actor+bores transformedandvalidatedonownsource.220k170k2048mapsvs1152compact."
+    "basis": "Own559956tri/27997884B mirroredclosedRightdoor/lowNorthwall;measured137wholebodymatch10000/10000<.05max.037244. All137domains/pins/UV/actor+bores transformedandvalidatedonownsource.220k170k2048mapsvs1536compact."
   },
   "reviewNotes": "OwnsourceclosedRightWestdoor+Northlowwall. Wholebodyabove17.7 vs13710000/10000within.05 after measuredreflectionM[[0,-1,0],[-1,0,0],[0,0,1]]andtranslationownTo137[.000041008,-.000100136,-.000198364];median.001317/p99.008934/max.037244mm. TransferONLYthroughthisverifiednativeorthogonaltransform:allmaterialboxes/projectionaxes/radialshells/curvedarchxztotrueyz/geometrypins/UVdomains/nativeblockers/standingpoint. NewsourceSTLpreservedseparately. OwnD17/C16 measured;original137hardwaremeasurements(16heads/4scrolls/2rings/2hingearcs) transferred thenmustvalidateallownsourcecolour/geometry/actor+bore. Preferredactor is reflectedoriginal[2,-2],logicalcell[0,0];North+Westedgeports65. Revalidateactual69sourceairrays ratherthanrelabel137receipt. Individualsourcepaint/RLS/UV/pixelPBR/candidates/footprint beforeUD016/MCP.",
   "uvIslandMargin": 0.0012,
