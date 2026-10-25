@@ -5,6 +5,7 @@ import { createHash } from "node:crypto";
 import { execFile } from "node:child_process";
 import { promisify, isDeepStrictEqual } from "node:util";
 import { mapTool } from "./mcp_maps_client.mjs";
+import { readMedievalWikiRow } from "./medieval_wiki.mjs";
 import {
   STANDARD_MOUNT,
   standardMountMetadata,
@@ -267,9 +268,7 @@ await fs.writeFile(
   path.join(base, "mount-standard-progress.json"),
   JSON.stringify(standard, null, 2) + "\n",
 );
-const wikiPath = path.join(root, "md/features/medieval-town.md");
-const wiki = await fs.readFile(wikiPath, "utf8"),
-  line = wiki.split("\n").find((l) => l.startsWith("| " + code + " "));
+const line = (await readMedievalWikiRow(root, code))?.row;
 if (line) {
   let note = line
     .split("|")[3]
@@ -283,16 +282,8 @@ if (line) {
     { cwd: root, maxBuffer: 1048576 },
   );
 }
-const standardized = standard.filter(
-  (r) => r.status === "verified" && Number(r.code.slice(4)) <= 70,
-).length;
-await fs.writeFile(
-  wikiPath,
-  (await fs.readFile(wikiPath, "utf8")).replace(
-    /Монтаж UD-016 подтверждён у \d+ из 70 опубликованных моделей\./,
-    `Монтаж UD-016 подтверждён у ${standardized} из 70 опубликованных моделей.`,
-  ),
-);
+// The per-model journal is updated above. This batch's 70-model counter must
+// not replace the collection-wide mount coverage in the current instructions.
 console.log(
   "MEDIEVAL_STANDARD_PUBLISHED",
   code,

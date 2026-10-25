@@ -7,20 +7,24 @@
 
 ## С чего начать
 
-| Задача | Что прочитать |
-| --- | --- |
-| Разобраться в устройстве проекта | [Архитектура](architecture.md), [структура репозитория](../README.md#структура-проекта) |
-| Запустить приложение и выполнить проверки | [Локальная разработка](../README.md#локальная-разработка), [проверки](../README.md#проверки) |
-| Изменить интерфейс | [Frontend](frontend.md), [выбор UI-компонента](frontend/components.md), страница затронутой фичи |
-| Изменить лист персонажа | [Устройство листа](features/character-editor.md), [документ и сохранение](features/character-editor/data.md), [обучение](features/tutorials.md) |
-| Изменить сессию | [Сессии](features/sessions.md), соответствующий раздел сюжета, боя или хроники, [обучение](features/tutorials.md) |
-| Изменить справочник или механику записи | [Справочник](features/handbook.md), [редактор](features/catalogue-editor.md), [оценка поддержки](features/item-automation.md) |
-| Изменить endpoint или формат данных | [HTTP API](api.md), [БД и миграции](database.md), страница фичи |
-| Подготовить изображения | [Медиа справочника](handbook-media.md), [стиль обложек](handbook-art-style.md), [маскоты](mascot.md) |
-| Подготовить модели карт | [Пайплайн обработки моделей](features/maps-model-pipeline.md), [монтаж по UD-016](features/maps-model-mount-standard.md), [материалы Ultimate Dungeon](features/maps-textures.md), [Lost Cave](features/lost-cave.md) |
-| Подготовить миниатюру существа | [Модели итемов](features/item-models.md), [подготовка миниатюр](features/creature-model-pipeline.md) |
-| Выпустить изменение или разобраться с production | [Деплой и окружение](deploy.md) |
-| Обновить саму документацию | [Устройство и проверка wiki](documentation.md) |
+| Задача | Прочитать сначала | Проверки и обновляемые описания |
+| --- | --- | --- |
+| Устройство проекта | [Архитектура](architecture.md), [структура](../README.md#структура-проекта) | Выбрать предметный маршрут ниже. |
+| Запуск и окружение | [Локальная разработка](../README.md#локальная-разработка), [матрица](testing.md#матрица-проверок) | Профили из testing; конфигурация и deploy при изменении запуска. |
+| Интерфейс | [Frontend](frontend.md), [компоненты](frontend/components.md), [Composition API](composition-api.md), контракт фичи | Frontend; поведение фичи и каталог общего UI при изменении композиции. |
+| Создание персонажа | [Создание](features/character-list.md), [стартовый магазин](features/starting-shop.md) | Frontend; восстановление черновика, обе редакции, страница создания и её API. |
+| Лист персонажа | [Лист](features/character-editor.md), [данные](features/character-editor/data.md), [обучение](features/tutorials.md) | Frontend; права desktop/mobile, контракт листа, затронутые цели обучения. |
+| Патчи, сохранение и SSE | [Синхронизация](document-sync.md), данные затронутой фичи, её API/БД | Строка синхронизации в матрице: reload, две вкладки, поздний ответ, повтор и конфликт. |
+| Сессия, бой и хроника | [Сессии](features/sessions.md), нужный подраздел, [обучение](features/tutorials.md) | Frontend/API/БД по scope; роли мастера и игрока, сценарии и журнал событий. |
+| Backend, endpoint или DTO | [Правила Go](backend.md), [HTTP API](api.md), контракт фичи | Backend и при необходимости DB; тематическая страница API. |
+| Схема или формат данных | [Миграции](database.md), нужный подраздел БД, [правила Go](backend.md) | DB; явная операция с данными отдельно от DDL, DTO и все producer/consumer. |
+| Справочник | [Справочник](features/handbook.md), [редактор](features/catalogue-editor.md), [автоматизация](features/item-automation.md) | Данные через MCP; schema/editor tests при изменении механики, контракт записи. |
+| Общий share-ui | [Consumer workflow](frontend/share-ui.md), runbook библиотеки | Матрица библиотеки и затронутых consumers; точный release tag и lock-файл. |
+| Изображения | [Медиа](handbook-media.md), [стиль](handbook-art-style.md), при необходимости [маскоты](mascot.md) | Размеры, формат, визуальная приёмка и чтение результата публикации. |
+| Модели карт | [Пайплайн](features/maps-model-pipeline.md), [UD-016](features/maps-model-mount-standard.md), нужный пак | Строка моделей; конкретный рецепт и запись журнала, MCP read-back. |
+| Миниатюры существ | [Навык](../skills/dndshare-miniatures/SKILL.md), [производство](features/creature-model-production.md), [качество](features/creature-model-quality.md) | Предметные проверки, текущий review и публикация; ограничения генерации из навыка. |
+| Выпуск или production | [Release workflow](../README.md#деплой-завершённого-изменения), [deploy](deploy.md) | Матрица, чистый commit, SHA readiness; исключение для документации описано в README. |
+| Документация | [Правила wiki](documentation.md), основная страница темы | Ссылки, структура, сохранность перенесённых разделов; тесты checker при его изменении. |
 
 [Мир: карты и маршруты](features/global-maps.md) — изображения мира и маршруты путешествия.
 
@@ -35,6 +39,7 @@
 | [CSS-токены](css-variables.md) | Поверхности, палитра, типографика и исключения для цветов. |
 | [Состояния загрузки](loading-states.md) | Выбор индикатора, скелетона и поведение при ошибках. |
 | [Размер исходных файлов](file-size-rules.md) | Границы ответственности и правила разбиения реализации. |
+| [Правила backend](backend.md) | Реализация Go, DTO, routes, auth и jobs. |
 | [HTTP API](api.md) | Общие правила и тематические контракты endpoints. |
 | [База данных](database.md) | Startup migrations, таблицы и контракты данных по областям. |
 | [Проверки](testing.md) | Профили тестов, изоляция PostgreSQL, браузерные проекты и общие контракты. |
@@ -139,3 +144,8 @@ data/ и замеры в measurements/ связаны с соответству�
 их нужно сверять с текущим кодом и каталогом.
 
 [Переходы моделей и встроенный свет](features/maps-model-behaviour.md) — постоянные ключи, направленные связи и источники моделей.
+
+
+## История структуры документации
+
+Исторические записи деплоя, сборок и обновлений share-ui доступны из соответствующих текущих runbooks. Отчёты аудитов находятся в [каталоге отчётов](reports/README.md).

@@ -44,7 +44,7 @@ CREATE TABLE AS и materialized view без WITH NO DATA не допускают
 
 ## Правила изменения
 
-1. Добавить следующий файл `001_<name>.sql`, затем `002_...` и далее; порядок
+1. Добавить файл со следующим свободным последовательным номером `NNN_<name>.sql`; порядок
    зависимостей задаётся именем файла. `000_` и применённые файлы не менять.
 2. В SQL включать только структурные определения. Изменения `item.data`,
    `item_type.fields`, описаний, медиа, каталогов и форматов документов выполнять
@@ -65,11 +65,7 @@ CREATE TABLE AS и materialized view без WITH NO DATA не допускают
 между `item` и `map_model`: несколько вариантов, один основной, общие файлы.
 См. [модели итемов](features/item-models.md). Данные через MCP, без startup seed.
 
+
 ## Связанные страницы
 
 [Оглавление wiki](README.md) · [HTTP API](api.md) · [Архитектура DnD Share](architecture.md)
-
-Карта сессии `session_map` также поддерживает kind=image. `image_id` с FK на
-storage_image и CHECK согласуется с document.image.id; файл защищён от удаления,
-URL не сохраняется. Камеры хранятся в document.cameras, источник трансляции — в
-JSON camera существующей session_map_display. [Контракт](features/maps-cameras-and-images.md).

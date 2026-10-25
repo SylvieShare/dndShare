@@ -23,3 +23,7 @@ dndshare.log
 /scripts/spell-rules/__pycache__/
 /scripts/maps/__pycache__/
 /scripts/creatures/__pycache__/
+
+# Python documentation/tooling caches
+__pycache__/
+*.py[cod]

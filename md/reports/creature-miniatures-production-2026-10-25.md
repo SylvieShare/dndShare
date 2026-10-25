@@ -1,5 +1,7 @@
 # Миниатюры: четыре доработки производства — 25 октября 2026
 
+Статус: исторический отчёт. Commit документа до переноса: `e37e20d1`; даты и границы среза указаны в тексте.
+
 ← [Пилот MM](creature-miniatures-pilot-2026-10-25.md) ·
 [Очередь](../features/creature-model-production.md) · [Качество](../features/creature-model-quality.md)
 

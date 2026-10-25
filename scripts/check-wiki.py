@@ -6,6 +6,7 @@ from collections import deque
 from pathlib import Path
 import re
 from urllib.parse import unquote, urlsplit
+from wiki_structure import structural_warnings
 
 
 LINK = re.compile(r"!?\[[^\]\n]*\]\(([^)\n]+)\)")
@@ -65,23 +66,34 @@ def local_target(raw):
     return unquote(parsed.path), unquote(parsed.fragment)
 
 
-def check(root):
+def check(root, strict=False):
+    root = root.resolve()
     wiki = root / "md"
     pages = sorted(wiki.rglob("*.md"))
     documents = pages + [
         root / name for name in ("README.md", "AGENTS.md", "CLAUDE.md")
         if (root / name).exists()
     ]
+    # Include instruction/proposal/readme links outside md/ without traversing
+    # generated model folders or node_modules. Only wiki pages require reachability.
+    for directory in ("skills", "plans", "reports", "scripts", "internal/systemmusic", "frontend/public"):
+        documents.extend(sorted((root / directory).rglob("*.md")))
     lines = {p.resolve(): outside_fences(p.read_text()) for p in documents}
     anchors = {p: heading_anchors(text) for p, text in lines.items()}
     graph = {p.resolve(): set() for p in pages}
     failures = []
+    warnings = []
     links_checked = paths_checked = 0
 
     def fail(page, number, message):
         failures.append(f"{page.relative_to(root)}:{number}: {message}")
 
     for page in documents:
+        relative = str(page.relative_to(root))
+        warnings.extend(
+            f"{relative}:{number}: warning [{code}]: {message}"
+            for number, code, message in structural_warnings(relative, page.read_text(), lines[page.resolve()])
+        )
         for number, line in enumerate(lines[page.resolve()], 1):
             targets = [m[1].strip() for m in LINK.finditer(line)]
             targets.extend(m[1] for m in HTML_LINK.finditer(line))
@@ -103,6 +115,8 @@ def check(root):
                     if fragment not in anchors[dest]:
                         fail(page, number, f"missing heading anchor: {raw}")
             for match in CODE.finditer(line):
+                if page.is_relative_to(root / "plans"):
+                    continue  # A proposal may explicitly name an implementation that does not exist yet.
                 name = match[1]
                 if not SOURCE_FILE.fullmatch(name):
                     continue
@@ -130,14 +144,16 @@ def check(root):
         for page in sorted(set(graph) - visited):
             failures.append(f"{page.relative_to(root)}: unreachable from md/README.md")
 
+    for warning in warnings:
+        print(warning)
     for failure in failures:
         print(failure)
-    if failures:
-        print(f"Wiki check failed: {len(failures)} issue(s).")
+    if failures or strict and warnings:
+        print(f"Wiki check failed: {len(failures)} error(s), {len(warnings)} structural warning(s).")
         return 1
     print(
         f"Wiki check passed: {len(pages)} pages, {links_checked} local links, "
-        f"{paths_checked} explicit source paths."
+        f"{paths_checked} explicit source paths; {len(documents)} Markdown documents scanned."
     )
     return 0
 
@@ -145,8 +161,9 @@ def check(root):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parent.parent)
+    parser.add_argument("--strict", action="store_true", help="Treat structural warnings as failures")
     args = parser.parse_args()
-    return check(args.root.resolve())
+    return check(args.root.resolve(), strict=args.strict)
 
 
 if __name__ == "__main__":
