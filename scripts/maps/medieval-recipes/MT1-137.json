@@ -1,0 +1,2794 @@
+{
+  "name": "Small Door Angle Left Closed",
+  "groupCode": "MED-door",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    -0.007473945617675781,
+    0.032629966735839844
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.15,
+  "renderTriangles": 220000,
+  "lodTriangles": 170000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 2048,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "edge",
+  "wallMask": 65,
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "floor",
+    "door",
+    "closed",
+    "corner",
+    "wood",
+    "iron",
+    "plaster",
+    "bonus"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "own vertical door timber and jamb base",
+        "minMM": [
+          -17.8,
+          -17.8,
+          17
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          78
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own measured X floor and front rear fascia",
+        "minMM": [
+          -17.8,
+          -17.8,
+          17
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          26.65
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own Y floor side rail -1",
+        "minMM": [
+          -17.8,
+          -17.8,
+          17
+        ],
+        "maxMM": [
+          -14.3,
+          17.8,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own Y floor side rail 1",
+        "minMM": [
+          14.3,
+          -17.8,
+          17
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own threshold horizontal X boards",
+        "minMM": [
+          -13.1,
+          8.5,
+          26.4
+        ],
+        "maxMM": [
+          13.1,
+          17.8,
+          33.1
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own measured curved arch grain",
+        "minMM": [
+          -17.8,
+          9,
+          60.83555765999648
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          77
+        ],
+        "axis": "arc-xz",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "centerXZMM": [
+          -0.018604206242004855,
+          60.91555765999648
+        ],
+        "radiusMM": 15.336424373574248,
+        "radialShell": {
+          "originMM": [
+            -0.018604206242004855,
+            0,
+            60.91555765999648
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "radiusAtOriginMM": 15.336424373574248,
+          "radiusSlope": 0,
+          "rangeMM": [
+            9,
+            17.8
+          ],
+          "thicknessMM": 2.6730789577088125,
+          "allowanceMM": 0.08
+        }
+      },
+      {
+        "name": "own West southwest post",
+        "minMM": [
+          -17.8,
+          -17.8,
+          26.1
+        ],
+        "maxMM": [
+          -10,
+          -13.5,
+          50
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own West northwest post",
+        "minMM": [
+          -17.8,
+          10,
+          26.1
+        ],
+        "maxMM": [
+          -10,
+          17.8,
+          50
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own measured West exterior brace",
+        "minMM": [
+          -17.8,
+          -14.2,
+          26.4
+        ],
+        "maxMM": [
+          -16.1,
+          10.4,
+          50
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          -0.7877671014629494,
+          0.6159732087133848
+        ],
+        "projection": {
+          "originMM": [
+            -17.257838210848668,
+            -2.892629912200535,
+            34.039858304673956
+          ],
+          "axis": [
+            0.0,
+            -0.6159732087133848,
+            -0.7877671014629494
+          ],
+          "rangeMM": [
+            -2.353576686055386,
+            2.6322760092461537
+          ]
+        }
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "own West rough ochre plaster",
+        "minMM": [
+          -16.7,
+          -14.1,
+          26.6
+        ],
+        "maxMM": [
+          -12.25,
+          10.4,
+          50
+        ],
+        "kind": "plaster",
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.04,
+        "excludeParts": [
+          {
+            "name": "own West southwest post",
+            "minMM": [
+              -17.8,
+              -17.8,
+              26.1
+            ],
+            "maxMM": [
+              -10,
+              -13.5,
+              50
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own West northwest post",
+            "minMM": [
+              -17.8,
+              10,
+              26.1
+            ],
+            "maxMM": [
+              -10,
+              17.8,
+              50
+            ],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "own measured West exterior brace",
+            "minMM": [
+              -17.8,
+              -14.2,
+              26.4
+            ],
+            "maxMM": [
+              -16.1,
+              10.4,
+              50
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              -0.7877671014629494,
+              0.6159732087133848
+            ],
+            "projection": {
+              "originMM": [
+                -17.257838210848668,
+                -2.892629912200535,
+                34.039858304673956
+              ],
+              "axis": [
+                0.0,
+                -0.6159732087133848,
+                -0.7877671014629494
+              ],
+              "rangeMM": [
+                -2.353576686055386,
+                2.6322760092461537
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own -1 round head 0",
+        "minMM": [
+          -3.8734999084472657,
+          11.638199768066407,
+          71.15319915771484
+        ],
+        "maxMM": [
+          -2.284399948120117,
+          12.32,
+          72.760703125
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.19,
+          0.125
+        ],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.025
+      },
+      {
+        "name": "own -1 scroll strap 1",
+        "minMM": [
+          -12.70659927368164,
+          11.161199531555177,
+          35.67080017089844
+        ],
+        "maxMM": [
+          5.400000133514404,
+          12.32,
+          48.70650009155273
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.47,
+          0.145,
+          0.065
+        ],
+        "metallic": 0.72,
+        "roughness": 0.64,
+        "variation": 0.025
+      },
+      {
+        "name": "own -1 scroll strap 2",
+        "minMM": [
+          -12.700099983215331,
+          11.04769989013672,
+          51.35960098266602
+        ],
+        "maxMM": [
+          5.362800159454346,
+          12.32,
+          64.39489654541016
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.47,
+          0.145,
+          0.065
+        ],
+        "metallic": 0.72,
+        "roughness": 0.64,
+        "variation": 0.025
+      },
+      {
+        "name": "own -1 round head 3",
+        "minMM": [
+          -4.009899892807007,
+          11.779400787353516,
+          32.90070053100586
+        ],
+        "maxMM": [
+          -2.506099901199341,
+          12.32,
+          34.41110137939453
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.19,
+          0.125
+        ],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.025
+      },
+      {
+        "name": "own -1 ring handle and plate 4",
+        "minMM": [
+          6.381599864959717,
+          10.14299961090088,
+          44.64040084838867
+        ],
+        "maxMM": [
+          12.63529972076416,
+          12.32,
+          52.52030090332031
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.195,
+          0.175,
+          0.14
+        ],
+        "metallic": 0.83,
+        "roughness": 0.52,
+        "variation": 0.025
+      },
+      {
+        "name": "own -1 round head 5",
+        "minMM": [
+          2.710699996948242,
+          11.885100326538087,
+          71.1830987548828
+        ],
+        "maxMM": [
+          4.089300193786621,
+          12.32,
+          72.612998046875
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.19,
+          0.125
+        ],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.025
+      },
+      {
+        "name": "own -1 round head 6",
+        "minMM": [
+          -10.158800163269042,
+          11.759300193786622,
+          32.81269927978516
+        ],
+        "maxMM": [
+          -8.645099601745606,
+          12.32,
+          34.35840133666992
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.19,
+          0.125
+        ],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.025
+      },
+      {
+        "name": "own -1 round head 7",
+        "minMM": [
+          9.555499992370606,
+          11.875300369262696,
+          33.19529815673828
+        ],
+        "maxMM": [
+          10.949700393676757,
+          12.32,
+          34.569998779296874
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.19,
+          0.125
+        ],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.025
+      },
+      {
+        "name": "own -1 round head 8",
+        "minMM": [
+          -11.015799560546874,
+          11.866999588012696,
+          65.75959869384765
+        ],
+        "maxMM": [
+          -9.628899536132813,
+          12.32,
+          67.21980194091798
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.19,
+          0.125
+        ],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.025
+      },
+      {
+        "name": "own -1 round head 9",
+        "minMM": [
+          9.254099807739259,
+          11.840700111389161,
+          66.43229766845702
+        ],
+        "maxMM": [
+          10.688399353027343,
+          12.32,
+          67.83180145263673
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.19,
+          0.125
+        ],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.025
+      },
+      {
+        "name": "own -1 round head 10",
+        "minMM": [
+          2.78450008392334,
+          11.747099838256837,
+          33.08779998779297
+        ],
+        "maxMM": [
+          4.309700050354004,
+          12.32,
+          34.60589889526367
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.19,
+          0.125
+        ],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.025
+      },
+      {
+        "name": "own 1 scroll strap 0",
+        "minMM": [
+          -12.703999557495116,
+          15.08,
+          35.67030044555664
+        ],
+        "maxMM": [
+          5.400199928283691,
+          16.355399169921874,
+          48.70630172729492
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.47,
+          0.145,
+          0.065
+        ],
+        "metallic": 0.72,
+        "roughness": 0.64,
+        "variation": 0.025
+      },
+      {
+        "name": "own 1 ring handle and plate 1",
+        "minMM": [
+          6.3807000732421875,
+          15.08,
+          44.64080139160156
+        ],
+        "maxMM": [
+          12.633400001525878,
+          17.169199981689452,
+          52.52109817504883
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.195,
+          0.175,
+          0.14
+        ],
+        "metallic": 0.83,
+        "roughness": 0.52,
+        "variation": 0.025
+      },
+      {
+        "name": "own 1 scroll strap 2",
+        "minMM": [
+          -12.707899131774901,
+          15.08,
+          51.36129852294922
+        ],
+        "maxMM": [
+          5.361800231933594,
+          16.292500534057616,
+          64.3950033569336
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.47,
+          0.145,
+          0.065
+        ],
+        "metallic": 0.72,
+        "roughness": 0.64,
+        "variation": 0.025
+      },
+      {
+        "name": "own 1 round head 3",
+        "minMM": [
+          -10.289199867248534,
+          15.08,
+          33.27489944458008
+        ],
+        "maxMM": [
+          -8.909999809265138,
+          15.471699752807616,
+          34.630099334716796
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.19,
+          0.125
+        ],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.025
+      },
+      {
+        "name": "own 1 round head 4",
+        "minMM": [
+          -11.23789981842041,
+          15.08,
+          65.73410125732421
+        ],
+        "maxMM": [
+          -9.746399841308595,
+          15.565798797607421,
+          67.22340301513673
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.19,
+          0.125
+        ],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.025
+      },
+      {
+        "name": "own 1 round head 5",
+        "minMM": [
+          2.6052999114990234,
+          15.08,
+          33.03059860229492
+        ],
+        "maxMM": [
+          3.77799991607666,
+          15.34720043182373,
+          34.20960144042969
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.19,
+          0.125
+        ],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.025
+      },
+      {
+        "name": "own 1 round head 6",
+        "minMM": [
+          9.034399948120118,
+          15.08,
+          66.65519805908202
+        ],
+        "maxMM": [
+          10.4706001663208,
+          15.524100341796874,
+          68.09149841308594
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.19,
+          0.125
+        ],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.025
+      },
+      {
+        "name": "own 1 round head 7",
+        "minMM": [
+          2.8008000469207763,
+          15.08,
+          71.14099975585937
+        ],
+        "maxMM": [
+          4.318600215911865,
+          15.607899703979491,
+          72.6765966796875
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.19,
+          0.125
+        ],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.025
+      },
+      {
+        "name": "own 1 round head 8",
+        "minMM": [
+          9.553899726867677,
+          15.08,
+          33.05289932250977
+        ],
+        "maxMM": [
+          11.038599052429198,
+          15.558699645996093,
+          34.536898651123046
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.19,
+          0.125
+        ],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.025
+      },
+      {
+        "name": "own 1 round head 9",
+        "minMM": [
+          -4.452799835205078,
+          15.08,
+          33.03740020751953
+        ],
+        "maxMM": [
+          -2.9744996643066406,
+          15.574799575805663,
+          34.49970153808594
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.19,
+          0.125
+        ],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.025
+      },
+      {
+        "name": "own 1 round head 10",
+        "minMM": [
+          -3.856200017929077,
+          15.08,
+          71.49089904785156
+        ],
+        "maxMM": [
+          -2.706299982070923,
+          15.346500434875487,
+          72.65679840087891
+        ],
+        "includeParts": [
+          {
+            "name": "own rectangular leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              28.5
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              60.91555765999648
+            ]
+          },
+          {
+            "name": "own curved leaf aperture",
+            "minMM": [
+              -12.668604206242005,
+              8,
+              60.91555765999648
+            ],
+            "maxMM": [
+              12.631395793757996,
+              19,
+              74
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.018326984986547907,
+                0,
+                60.908918918976546
+              ],
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "radiusAtOriginMM": 12.6,
+              "radiusSlope": 0,
+              "rangeMM": [
+                8,
+                19
+              ],
+              "thicknessMM": 12.6,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.19,
+          0.125
+        ],
+        "metallic": 0.8,
+        "roughness": 0.58,
+        "variation": 0.025
+      },
+      {
+        "name": "own upper hinge",
+        "minMM": [
+          -15.51338731530649,
+          10.264846960935722,
+          43.9983512878418
+        ],
+        "maxMM": [
+          -11.333053395603793,
+          14.445180880638416,
+          51.8276985168457
+        ],
+        "includeParts": [
+          {
+            "name": "own cylindrical hinge side",
+            "minMM": [
+              -15.51338731530649,
+              10.264846960935722,
+              43.9983512878418
+            ],
+            "maxMM": [
+              -11.333053395603793,
+              14.445180880638416,
+              51.8276985168457
+            ],
+            "radialShell": {
+              "originMM": [
+                -13.423220355455141,
+                12.35501392078707,
+                0
+              ],
+              "axis": [
+                0,
+                0,
+                1
+              ],
+              "radiusAtOriginMM": 2.0101669598513476,
+              "radiusSlope": 0,
+              "rangeMM": [
+                43.9983512878418,
+                51.8276985168457
+              ],
+              "thicknessMM": 0.35,
+              "allowanceMM": 0.07
+            }
+          },
+          {
+            "name": "own measured hinge cap bottom",
+            "minMM": [
+              -15.51338731530649,
+              10.264846960935722,
+              43.9683512878418
+            ],
+            "maxMM": [
+              -11.333053395603793,
+              14.445180880638416,
+              44.128351287841795
+            ]
+          },
+          {
+            "name": "own measured hinge cap top",
+            "minMM": [
+              -15.51338731530649,
+              10.264846960935722,
+              51.697698516845705
+            ],
+            "maxMM": [
+              -11.333053395603793,
+              14.445180880638416,
+              51.8576985168457
+            ]
+          }
+        ],
+        "radialShell": {
+          "originMM": [
+            -13.423220355455141,
+            12.35501392078707,
+            0
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "radiusAtOriginMM": 2.0101669598513476,
+          "radiusSlope": 0,
+          "rangeMM": [
+            43.9983512878418,
+            51.8276985168457
+          ],
+          "thicknessMM": 2.0101669598513476,
+          "allowanceMM": 0.07
+        },
+        "kind": "paint",
+        "rgb": [
+          0.21,
+          0.19,
+          0.15
+        ],
+        "metallic": 0.82,
+        "roughness": 0.55,
+        "variation": 0.025
+      },
+      {
+        "name": "own lower hinge",
+        "minMM": [
+          -15.475109359398461,
+          10.240538578085022,
+          30.779299545288087
+        ],
+        "maxMM": [
+          -11.34871628076577,
+          14.366931656717714,
+          37.651599121093746
+        ],
+        "includeParts": [
+          {
+            "name": "own cylindrical hinge side",
+            "minMM": [
+              -15.475109359398461,
+              10.240538578085022,
+              30.779299545288087
+            ],
+            "maxMM": [
+              -11.34871628076577,
+              14.366931656717714,
+              37.651599121093746
+            ],
+            "radialShell": {
+              "originMM": [
+                -13.411912820082115,
+                12.303735117401368,
+                0
+              ],
+              "axis": [
+                0,
+                0,
+                1
+              ],
+              "radiusAtOriginMM": 1.983196539316345,
+              "radiusSlope": 0,
+              "rangeMM": [
+                30.779299545288087,
+                37.651599121093746
+              ],
+              "thicknessMM": 0.35,
+              "allowanceMM": 0.07
+            }
+          }
+        ],
+        "radialShell": {
+          "originMM": [
+            -13.411912820082115,
+            12.303735117401368,
+            0
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "radiusAtOriginMM": 1.983196539316345,
+          "radiusSlope": 0,
+          "rangeMM": [
+            30.779299545288087,
+            37.651599121093746
+          ],
+          "thicknessMM": 1.983196539316345,
+          "allowanceMM": 0.07
+        },
+        "kind": "paint",
+        "rgb": [
+          0.21,
+          0.19,
+          0.15
+        ],
+        "metallic": 0.82,
+        "roughness": 0.55,
+        "variation": 0.025
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      6,
+      14
+    ],
+    "lodMiB": [
+      5,
+      12
+    ],
+    "shadowKiB": [
+      350,
+      900
+    ],
+    "previewKiB": [
+      15,
+      45
+    ],
+    "basis": "Own559922tri/27996184B closedNorthdoor+Westlowwall. Own22metalcomponents/2partialhingecylinders/curvedwoodarch/actorfloor/lip sourceprotected,220k170k2048mapsvs1152compact. Own49mediumactorair andfinitehandlebores needverification beforeMCP."
+  },
+  "reviewNotes": "Ownsourcefull/back/top/doorinside/outside/handle inspected,authorPDF07Door042palette. Mirror/rotation096and042affinefitsREJECTmedian.19p90.857;notexactsource. Ownarchouter286samplesCx-.018604/Cz60.915558/R15.336424/maxres.04384,inner759Cx-.018327/Cz60.908919/R12.763345/maxres.029843. OwninsidewoodY12.4375/raisedscroll11.9575,outsidewood14.9325/scroll15.5075. ARCHWOODprotrudes11.236/16.26,metalmustbeclippedtoactualleaf(notdepthalone). OwnconnectedcomponentsEACHFACE8roundheads+2scrolls+ringheartplate;woodrail/tinyfloor/partialwoodfragmentsREJECT. Ownhingeupper216points15binsR2.010167,C[-13.42322,12.355014],lower90points7binsR1.983197,C[-13.411913,12.303735];lowerunconstrained3.2mmwoodcornerREJECT. Onlyownmeasuredcapplanesandradialsidespaintmetal. Westbrace92flatfacesD[0,-.787767,.615973];naturalpostknotsWOOD. Floor400upwardnormalsX(.002544,.130729);preferredactor[2,-2]17.5mmdisc/35mmheadroom49raysclear,logicalcell[0,0]. D17/C16owninsertsections. Sourcepaint/independentRLSsurfaces/pixelRGBPBR/UV/actor/ringair/footprint requiredbeforeordinaryUD016/MCP.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standRayTopMM": 36,
+  "renderUVAngleLimitRad": 0.35,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.35,
+  "lodUVIslandMargin": 0.0008,
+  "standPointsMM": [
+    [
+      2,
+      -2
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        -17.7,
+        -17.7
+      ],
+      [
+        -10,
+        -17.7
+      ],
+      [
+        -10,
+        17.7
+      ],
+      [
+        -17.7,
+        17.7
+      ]
+    ],
+    [
+      [
+        -17.7,
+        8
+      ],
+      [
+        17.7,
+        8
+      ],
+      [
+        17.7,
+        17.7
+      ],
+      [
+        -17.7,
+        17.7
+      ]
+    ]
+  ],
+  "lodDataSize": 2048,
+  "pegCentersMM": [
+    [
+      -0.007473945617675781,
+      0.032629966735839844
+    ]
+  ],
+  "placementCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standRayTopsMM": [
+    36
+  ],
+  "surfaceHeightMM": 25.58328914642334,
+  "renderColourSize": 2048,
+  "lodColourSize": 2048,
+  "renderDataSize": 2048,
+  "defaultLights": [],
+  "mountCentreFitReview": {
+    "sourceSHA256": "76b9c0df14fa22944a23c4140d8b5a315be1da920e4759f62af7905a26540f20",
+    "nativeCentresMM": [
+      [
+        -0.007473945617675781,
+        0.032629966735839844
+      ]
+    ],
+    "fittedCentresMM": [
+      [
+        -0.007473945617675781,
+        0.032629966735839844
+      ]
+    ],
+    "preservedCentroidMM": [
+      -0.007473945617675781,
+      0.032629966735839844
+    ],
+    "maxCoordinateMoveMM": 0,
+    "requiredDecodedCentreToleranceMM": 0.02,
+    "sourceSections": [
+      {
+        "z": 4,
+        "centreMM": [
+          0.012760162353515625,
+          0.026141643524169922
+        ],
+        "endsMM": [
+          [
+            -12.921079635620117,
+            12.946599960327148
+          ],
+          [
+            -12.907601356506348,
+            12.959884643554688
+          ]
+        ]
+      },
+      {
+        "z": 6,
+        "centreMM": [
+          0.012840747833251953,
+          0.025957107543945312
+        ],
+        "endsMM": [
+          [
+            -12.920879364013672,
+            12.946560859680176
+          ],
+          [
+            -12.90798282623291,
+            12.9598970413208
+          ]
+        ]
+      },
+      {
+        "z": 8,
+        "centreMM": [
+          0.012968063354492188,
+          0.025855541229248047
+        ],
+        "endsMM": [
+          [
+            -12.920522689819336,
+            12.94645881652832
+          ],
+          [
+            -12.908185005187988,
+            12.959896087646484
+          ]
+        ]
+      },
+      {
+        "z": 10,
+        "centreMM": [
+          0.003287792205810547,
+          0.029409408569335938
+        ],
+        "endsMM": [
+          [
+            -12.939743995666504,
+            12.946319580078125
+          ],
+          [
+            -12.908238410949707,
+            12.967057228088379
+          ]
+        ]
+      },
+      {
+        "z": 12,
+        "centreMM": [
+          -0.007272243499755859,
+          0.031903743743896484
+        ],
+        "endsMM": [
+          [
+            -13.383337020874023,
+            13.368792533874512
+          ],
+          [
+            -13.345020294189453,
+            13.408827781677246
+          ]
+        ]
+      },
+      {
+        "z": 14,
+        "centreMM": [
+          -0.007190704345703125,
+          0.03255271911621094
+        ],
+        "endsMM": [
+          [
+            -15.104548454284668,
+            15.090167045593262
+          ],
+          [
+            -15.067214965820312,
+            15.132320404052734
+          ]
+        ]
+      },
+      {
+        "z": 16,
+        "centreMM": [
+          -0.007473945617675781,
+          0.032629966735839844
+        ],
+        "endsMM": [
+          [
+            -16.82640266418457,
+            16.81145477294922
+          ],
+          [
+            -16.788711547851562,
+            16.853971481323242
+          ]
+        ]
+      }
+    ],
+    "method": "Own nativeinsertflank rays4/6/8/10/12/14/16;upper16axis selected separatelyfromlowerstem"
+  },
+  "geometryDetailRegions": [
+    {
+      "name": "own native mounting lip",
+      "minMM": [
+        -17.8,
+        -17.8,
+        16.99
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        17.65
+      ]
+    },
+    {
+      "name": "own precise actor floor",
+      "minMM": [
+        1,
+        -3,
+        24
+      ],
+      "maxMM": [
+        3,
+        -1,
+        27
+      ]
+    },
+    {
+      "name": "own original own -1 round head 0",
+      "minMM": [
+        -3.9534999084472657,
+        11.558199768066407,
+        71.07319915771484
+      ],
+      "maxMM": [
+        -2.204399948120117,
+        12.412200088500976,
+        72.840703125
+      ]
+    },
+    {
+      "name": "own original own -1 scroll strap 1",
+      "minMM": [
+        -12.78659927368164,
+        11.081199531555177,
+        35.59080017089844
+      ],
+      "maxMM": [
+        5.480000133514404,
+        12.439999694824218,
+        48.78650009155273
+      ]
+    },
+    {
+      "name": "own original own -1 scroll strap 2",
+      "minMM": [
+        -12.780099983215331,
+        10.96769989013672,
+        51.27960098266602
+      ],
+      "maxMM": [
+        5.442800159454346,
+        12.439999694824218,
+        64.47489654541016
+      ]
+    },
+    {
+      "name": "own original own -1 round head 3",
+      "minMM": [
+        -4.089899892807007,
+        11.699400787353516,
+        32.82070053100586
+      ],
+      "maxMM": [
+        -2.4260999011993407,
+        12.422300453186034,
+        34.49110137939453
+      ]
+    },
+    {
+      "name": "own original own -1 ring handle and plate 4",
+      "minMM": [
+        6.301599864959717,
+        10.06299961090088,
+        44.560400848388674
+      ],
+      "maxMM": [
+        12.71529972076416,
+        12.439999694824218,
+        52.60030090332031
+      ]
+    },
+    {
+      "name": "own original own -1 round head 5",
+      "minMM": [
+        2.630699996948242,
+        11.805100326538087,
+        71.10309875488281
+      ],
+      "maxMM": [
+        4.169300193786621,
+        12.435299987792968,
+        72.692998046875
+      ]
+    },
+    {
+      "name": "own original own -1 round head 6",
+      "minMM": [
+        -10.238800163269042,
+        11.679300193786622,
+        32.73269927978516
+      ],
+      "maxMM": [
+        -8.565099601745606,
+        12.436300392150878,
+        34.43840133666992
+      ]
+    },
+    {
+      "name": "own original own -1 round head 7",
+      "minMM": [
+        9.475499992370606,
+        11.795300369262696,
+        33.115298156738284
+      ],
+      "maxMM": [
+        11.029700393676757,
+        12.435299987792968,
+        34.64999877929687
+      ]
+    },
+    {
+      "name": "own original own -1 round head 8",
+      "minMM": [
+        -11.095799560546874,
+        11.786999588012696,
+        65.67959869384765
+      ],
+      "maxMM": [
+        -9.548899536132813,
+        12.438099975585937,
+        67.29980194091797
+      ]
+    },
+    {
+      "name": "own original own -1 round head 9",
+      "minMM": [
+        9.174099807739259,
+        11.760700111389161,
+        66.35229766845703
+      ],
+      "maxMM": [
+        10.768399353027343,
+        12.412000770568847,
+        67.91180145263672
+      ]
+    },
+    {
+      "name": "own original own -1 round head 10",
+      "minMM": [
+        2.7045000839233397,
+        11.667099838256837,
+        33.00779998779297
+      ],
+      "maxMM": [
+        4.389700050354004,
+        12.43700038909912,
+        34.68589889526367
+      ]
+    },
+    {
+      "name": "own original own 1 scroll strap 0",
+      "minMM": [
+        -12.783999557495116,
+        14.960699920654298,
+        35.59030044555664
+      ],
+      "maxMM": [
+        5.4801999282836915,
+        16.435399169921876,
+        48.78630172729492
+      ]
+    },
+    {
+      "name": "own original own 1 ring handle and plate 1",
+      "minMM": [
+        6.300700073242187,
+        14.998499755859376,
+        44.560801391601565
+      ],
+      "maxMM": [
+        12.713400001525878,
+        17.249199981689454,
+        52.601098175048826
+      ]
+    },
+    {
+      "name": "own original own 1 scroll strap 2",
+      "minMM": [
+        -12.787899131774902,
+        14.961299781799317,
+        51.28129852294922
+      ],
+      "maxMM": [
+        5.441800231933594,
+        16.372500534057618,
+        64.4750033569336
+      ]
+    },
+    {
+      "name": "own original own 1 round head 3",
+      "minMM": [
+        -10.369199867248534,
+        14.964500312805177,
+        33.19489944458008
+      ],
+      "maxMM": [
+        -8.829999809265138,
+        15.551699752807616,
+        34.710099334716794
+      ]
+    },
+    {
+      "name": "own original own 1 round head 4",
+      "minMM": [
+        -11.31789981842041,
+        14.961199645996095,
+        65.65410125732421
+      ],
+      "maxMM": [
+        -9.666399841308595,
+        15.645798797607421,
+        67.30340301513672
+      ]
+    },
+    {
+      "name": "own original own 1 round head 5",
+      "minMM": [
+        2.5252999114990233,
+        14.961100463867188,
+        32.950598602294924
+      ],
+      "maxMM": [
+        3.8579999160766603,
+        15.42720043182373,
+        34.289601440429685
+      ]
+    },
+    {
+      "name": "own original own 1 round head 6",
+      "minMM": [
+        8.954399948120118,
+        14.960100059509278,
+        66.57519805908203
+      ],
+      "maxMM": [
+        10.5506001663208,
+        15.604100341796874,
+        68.17149841308594
+      ]
+    },
+    {
+      "name": "own original own 1 round head 7",
+      "minMM": [
+        2.7208000469207763,
+        14.961299781799317,
+        71.06099975585937
+      ],
+      "maxMM": [
+        4.398600215911865,
+        15.687899703979491,
+        72.7565966796875
+      ]
+    },
+    {
+      "name": "own original own 1 round head 8",
+      "minMM": [
+        9.473899726867677,
+        14.960100059509278,
+        32.97289932250977
+      ],
+      "maxMM": [
+        11.118599052429198,
+        15.638699645996093,
+        34.616898651123044
+      ]
+    },
+    {
+      "name": "own original own 1 round head 9",
+      "minMM": [
+        -4.532799835205078,
+        14.961299781799317,
+        32.957400207519534
+      ],
+      "maxMM": [
+        -2.8944996643066405,
+        15.654799575805663,
+        34.579701538085935
+      ]
+    },
+    {
+      "name": "own original own 1 round head 10",
+      "minMM": [
+        -3.9362000179290773,
+        14.962099914550782,
+        71.41089904785156
+      ],
+      "maxMM": [
+        -2.6262999820709227,
+        15.426500434875487,
+        72.73679840087891
+      ]
+    },
+    {
+      "name": "own upper hinge source profile",
+      "minMM": [
+        -15.51338731530649,
+        10.264846960935722,
+        43.9983512878418
+      ],
+      "maxMM": [
+        -11.333053395603793,
+        14.445180880638416,
+        51.8276985168457
+      ]
+    },
+    {
+      "name": "own lower hinge source profile",
+      "minMM": [
+        -15.475109359398461,
+        10.240538578085022,
+        30.779299545288087
+      ],
+      "maxMM": [
+        -11.34871628076577,
+        14.366931656717714,
+        37.651599121093746
+      ]
+    },
+    {
+      "name": "own native arch rim",
+      "minMM": [
+        -17.8,
+        9,
+        60.7
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        76.5
+      ],
+      "sourceSelection": {
+        "radialShell": {
+          "originMM": [
+            -0.018604206242004855,
+            0,
+            60.91555765999648
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "radiusAtOriginMM": 15.336424373574248,
+          "radiusSlope": 0,
+          "rangeMM": [
+            9,
+            17.8
+          ],
+          "thicknessMM": 2.6730789577088125,
+          "allowanceMM": 0.08
+        }
+      }
+    },
+    {
+      "name": "own native West brace",
+      "minMM": [
+        -17.8,
+        -14.2,
+        26.4
+      ],
+      "maxMM": [
+        -16.1,
+        10.4,
+        50
+      ],
+      "sourceSelection": {
+        "projection": {
+          "originMM": [
+            -17.257838210848668,
+            -2.892629912200535,
+            34.039858304673956
+          ],
+          "axis": [
+            0.0,
+            -0.6159732087133848,
+            -0.7877671014629494
+          ],
+          "rangeMM": [
+            -2.353576686055386,
+            2.6322760092461537
+          ]
+        }
+      }
+    }
+  ],
+  "uvBaseTile": [
+    0.002,
+    0.8,
+    0.64,
+    0.998
+  ],
+  "uvDetailRegions": [
+    {
+      "name": "own door inside and metal face",
+      "minMM": [
+        -17.8,
+        9,
+        26.651
+      ],
+      "maxMM": [
+        17.8,
+        13.7,
+        78
+      ],
+      "tile": [
+        0.002,
+        0.002,
+        0.47,
+        0.78
+      ],
+      "angleLimitRad": 0.35,
+      "islandMargin": 0.0008
+    },
+    {
+      "name": "own door outside and metal face",
+      "minMM": [
+        -17.8,
+        13.701,
+        26.651
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        78
+      ],
+      "tile": [
+        0.49,
+        0.002,
+        0.998,
+        0.78
+      ],
+      "angleLimitRad": 0.35,
+      "islandMargin": 0.0008
+    },
+    {
+      "name": "own low West wall",
+      "minMM": [
+        -17.8,
+        -17.8,
+        26.651
+      ],
+      "maxMM": [
+        -10,
+        8.999,
+        50.5
+      ],
+      "tile": [
+        0.65,
+        0.8,
+        0.998,
+        0.998
+      ],
+      "angleLimitRad": 0.3,
+      "islandMargin": 0.0008
+    }
+  ]
+}
