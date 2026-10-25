@@ -127,11 +127,14 @@ def paint(obj, recipe):
         elif axis=='meridian':
             u = z
             v = np.arctan2(y-part['centerXYMM'][1], x-part['centerXYMM'][0])*part['radiusMM']
-        elif axis=='log-x':
+        elif axis in ('log-x', 'log-y'):
             centers = np.array(part['capCentersMM'])
-            nearest = ((p[:, None, 1:]-centers[None, :, 1:])**2).sum(2).argmin(1)
-            dy, dz = y-centers[nearest, 1], z-centers[nearest, 2]
-            u, v = x, np.arctan2(dz, dy)*part['grainRadiusMM']
+            along, across = (0, 1) if axis=='log-x' else (1, 0)
+            radial = [across, 2]
+            nearest = ((p[:, None, radial]-centers[None, :, radial])**2).sum(2).argmin(1)
+            dy = (p[:, across]-centers[nearest, across])*(1 if along==0 else -1)
+            dz = z-centers[nearest, 2]
+            u, v = p[:, along], np.arctan2(dz, dy)*part['grainRadiusMM']
         elif axis=='floor-frame':
             horizontal = np.abs(y)>part['frameInnerHalfMM']
             u, v = np.where(horizontal, x, y), np.where(horizontal, y, x)
@@ -174,10 +177,10 @@ def paint(obj, recipe):
         ends = mask&((np.abs(nx)>.75) if axis=='x' else (np.abs(ny)>.75) if axis=='y' else (np.abs(nz)>.75) if axis=='z' else False)
         wood[ends] *= (.85+.15*np.sin(np.hypot(v[ends], u[ends]%4)*7))[:, None]
         roughness = np.full(len(z), part.get('roughness', .88), np.float32)
-        if axis=='log-x':
+        if axis in ('log-x', 'log-y'):
             end_region = np.zeros(len(z), bool)
-            for lo, hi in part['endRangesMM']: end_region |= (x>=lo)&(x<=hi)
-            cap = mask&end_region&(np.abs(nx)>.55)
+            for lo, hi in part['endRangesMM']: end_region |= (p[:, along]>=lo)&(p[:, along]<=hi)
+            cap = mask&end_region&(np.abs(n.reshape(-1, 3)[:, along])>.55)
             radius = np.hypot(dy, dz)
             rings = .5+.24*np.sin(radius*5.8+.1*np.sin(np.arctan2(dz,dy)*3))
             cut = np.array(part['endDarkRGB'])*(1-rings[:, None])+np.array(part['endLightRGB'])*rings[:, None]

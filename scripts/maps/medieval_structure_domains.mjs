@@ -46,7 +46,10 @@ export function structureMetal(p, settings) {
   let metallic = 0, roughness = terrainRoughness(p, settings);
   for (const part of settings.woodParts || []) if (structureDomain(p, part)) {
     roughness = part.roughness ?? .88;
-    if (part.axis==='log-x' && part.endRangesMM.some(([lo,hi]) => p[0]>=lo && p[0]<=hi)) roughness = part.endRoughness;
+    if (['log-x','log-y'].includes(part.axis)) {
+      const along = part.axis==='log-x' ? 0 : 1;
+      if (part.endRangesMM.some(([lo,hi]) => p[along]>=lo && p[along]<=hi)) roughness = part.endRoughness;
+    }
   }
   for (const part of settings.stoneParts || []) if (structureDomain(p, part)) roughness = .91;
   for (const part of settings.fabricParts || []) if (structureDomain(p, part)) roughness = .98;
@@ -154,15 +157,16 @@ export function structureWoodPigment(p, n, settings) {
   const dot = (a,b) => a.reduce((sum,x,i) => sum+x*b[i],0);
   const cross = (a,b) => [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
   const unit = a => { const length=Math.hypot(...a); return a.map(x => x/length); };
-  if (part.axis==='log-x') {
+  if (['log-x','log-y'].includes(part.axis)) {
     assertLogCaps(part);
-    const centre=part.capCentersMM.reduce((best,c)=>Math.hypot(p[1]-c[1],p[2]-c[2])<Math.hypot(p[1]-best[1],p[2]-best[2])?c:best);
-    const dy=p[1]-centre[1],dz=p[2]-centre[2],angle=Math.atan2(dz,dy);
-    if (Math.abs(n[0])>.55 && part.endRangesMM.some(([lo,hi])=>p[0]>=lo&&p[0]<=hi)) {
+    const along=part.axis==='log-x' ? 0 : 1, across=1-along;
+    const centre=part.capCentersMM.reduce((best,c)=>Math.hypot(p[across]-c[across],p[2]-c[2])<Math.hypot(p[across]-best[across],p[2]-best[2])?c:best);
+    const dy=(p[across]-centre[across])*(along===0 ? 1 : -1),dz=p[2]-centre[2],angle=Math.atan2(dz,dy);
+    if (Math.abs(n[along])>.55 && part.endRangesMM.some(([lo,hi])=>p[along]>=lo&&p[along]<=hi)) {
       const rings=.5+.24*Math.sin(Math.hypot(dy,dz)*5.8+.1*Math.sin(angle*3));
       return part.endDarkRGB.map((c,i)=>c*(1-rings)+part.endLightRGB[i]*rings);
     }
-    u=p[0];v=angle*part.grainRadiusMM;
+    u=p[along];v=angle*part.grainRadiusMM;
   }
   else if (part.axis==='x') { u=p[0]; v=Math.abs(n[1])>Math.abs(n[2]) ? p[2] : p[1]; }
   else if (part.axis==='y') { u=p[1]; v=Math.abs(n[0])>Math.abs(n[2]) ? p[2] : p[0]; }

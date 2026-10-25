@@ -91,6 +91,36 @@ test('measured beam pigment agrees with straight grain on the same side face', (
   assert.deepEqual(structureWoodPigment([-1.3,2.1,.7],[0,1,0],settings),expected,'A rotated mask keeps the measured global beam direction');
 });
 
+test('wrapped Y timber preserves pigment and end roughness under a quarter turn', () => {
+  const part = {
+    minMM: [-20,-20,0], maxMM: [20,20,30], axis: 'log-x', physicalPigment: true,
+    capCentersMM: [[-10,0,15],[10,0,15]], grainRadiusMM: 2,
+    endRangesMM: [[-10.1,-9.8],[9.8,10.1]], roughness: .91, endRoughness: .67,
+    darkRGB: [.3,.15,.05], lightRGB: [.55,.32,.12],
+    endDarkRGB: [.37,.2,.08], endLightRGB: [.65,.4,.18],
+  };
+  const turn = ([x,y,z]) => [-y,x,z];
+  const rotated = {...part,axis:'log-y',capCentersMM:part.capCentersMM.map(turn)};
+  const settings = timber => ({stoneStartMM:0,stoneBlendMM:1,woodParts:[timber]});
+  for (const [point,normal] of [
+    [[-3.7,1.2,16.6],[0,.6,.8]], [[4,-1.4,16.2],[0,-.7,.6]],
+    [[10,1.1,15.7],[1,0,0]], [[-10,-.9,13.9],[-1,0,0]],
+  ]) {
+    const expected = structureWoodPigment(point,normal,settings(part));
+    const actual = structureWoodPigment(turn(point),turn(normal),settings(rotated));
+    actual.forEach((c,i) => assert.ok(Math.abs(c-expected[i])<1e-12));
+    assert.deepEqual(structureMetal(turn(point),settings(rotated)),structureMetal(point,settings(part)));
+  }
+  assert.equal(structureMetal([10,0,15],settings(rotated)).roughness,.91,
+    'X coordinates cannot select a cut end of Y timber');
+  assert.equal(structureMetal([0,10,15],settings(rotated)).roughness,.67);
+  assert.notDeepEqual(
+    structureWoodPigment([0,10,15],[0,1,0],settings(rotated)),
+    structureWoodPigment([0,10,15],[1,0,0],settings(rotated)),
+    'Only the exposed end face receives growth rings',
+  );
+});
+
 test('curved timber uses arc length and radius consistently on both wall planes', () => {
   const timber = {
     minMM: [-100, -100, -100], maxMM: [100, 100, 100], physicalPigment: true,

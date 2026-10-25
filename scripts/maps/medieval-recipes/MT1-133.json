@@ -1,0 +1,2906 @@
+{
+  "name": "Big Barrel Angle",
+  "groupCode": "MED-barrel",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0.006337165832519531,
+    0.016431808471679688
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.15,
+  "renderTriangles": 220000,
+  "lodTriangles": 180000,
+  "renderBakeSize": 1536,
+  "lodBakeSize": 1536,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "barrel",
+    "corner",
+    "wood",
+    "iron",
+    "brass",
+    "plaster",
+    "bonus"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "own native Y floor and frame base",
+        "minMM": [
+          -17.8,
+          -17.8,
+          17
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          50
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own X floor end frame -1",
+        "minMM": [
+          -17.8,
+          -17.8,
+          17
+        ],
+        "maxMM": [
+          17.8,
+          -14.3,
+          26.6
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own X floor end frame 1",
+        "minMM": [
+          -17.8,
+          14.3,
+          17
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          26.6
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own native support transverse X boards",
+        "minMM": [
+          -13.1,
+          -9,
+          25.9
+        ],
+        "maxMM": [
+          13.1,
+          9,
+          34.8
+        ],
+        "axis": "y",
+        "darkRGB": [
+          0.32,
+          0.16,
+          0.06
+        ],
+        "lightRGB": [
+          0.57,
+          0.34,
+          0.14
+        ],
+        "roughness": 0.91,
+        "physicalPigment": true
+      },
+      {
+        "name": "own native support inclined frame [-6.9, -13.2]",
+        "minMM": [
+          -13.2,
+          4.1,
+          25.9
+        ],
+        "maxMM": [
+          -7.2,
+          6.9,
+          34.8
+        ],
+        "axis": "beam",
+        "darkRGB": [
+          0.32,
+          0.16,
+          0.06
+        ],
+        "lightRGB": [
+          0.57,
+          0.34,
+          0.14
+        ],
+        "roughness": 0.91,
+        "direction": [
+          0.59,
+          0,
+          0.81
+        ],
+        "physicalPigment": true
+      },
+      {
+        "name": "own native support inclined frame [-6.9, 7.2]",
+        "minMM": [
+          7.2,
+          4.1,
+          25.9
+        ],
+        "maxMM": [
+          13.2,
+          6.9,
+          34.8
+        ],
+        "axis": "beam",
+        "darkRGB": [
+          0.32,
+          0.16,
+          0.06
+        ],
+        "lightRGB": [
+          0.57,
+          0.34,
+          0.14
+        ],
+        "roughness": 0.91,
+        "direction": [
+          -0.59,
+          0,
+          0.81
+        ],
+        "physicalPigment": true
+      },
+      {
+        "name": "own native support inclined frame [3.9, -13.2]",
+        "minMM": [
+          -13.2,
+          -6.8,
+          25.9
+        ],
+        "maxMM": [
+          -7.2,
+          -3.9,
+          34.8
+        ],
+        "axis": "beam",
+        "darkRGB": [
+          0.32,
+          0.16,
+          0.06
+        ],
+        "lightRGB": [
+          0.57,
+          0.34,
+          0.14
+        ],
+        "roughness": 0.91,
+        "direction": [
+          0.59,
+          0,
+          0.81
+        ],
+        "physicalPigment": true
+      },
+      {
+        "name": "own native support inclined frame [3.9, 7.2]",
+        "minMM": [
+          7.2,
+          -6.8,
+          25.9
+        ],
+        "maxMM": [
+          13.2,
+          -3.9,
+          34.8
+        ],
+        "axis": "beam",
+        "darkRGB": [
+          0.32,
+          0.16,
+          0.06
+        ],
+        "lightRGB": [
+          0.57,
+          0.34,
+          0.14
+        ],
+        "roughness": 0.91,
+        "direction": [
+          -0.59,
+          0,
+          0.81
+        ],
+        "physicalPigment": true
+      },
+      {
+        "name": "own wrapped golden cask staves and end grain",
+        "minMM": [
+          -13,
+          -13.8,
+          25.5
+        ],
+        "maxMM": [
+          13,
+          13.8,
+          49.9
+        ],
+        "axis": "log-y",
+        "physicalPigment": true,
+        "roughness": 0.84,
+        "darkRGB": [
+          0.4,
+          0.235,
+          0.075
+        ],
+        "lightRGB": [
+          0.7,
+          0.48,
+          0.18
+        ],
+        "capCentersMM": [
+          [
+            -0.010286516706409822,
+            0,
+            37.713117360802634
+          ]
+        ],
+        "grainRadiusMM": 11.525465970277265,
+        "endRangesMM": [
+          [
+            -13.8,
+            -9.85
+          ],
+          [
+            10.45,
+            13.8
+          ]
+        ],
+        "endDarkRGB": [
+          0.46,
+          0.27,
+          0.09
+        ],
+        "endLightRGB": [
+          0.73,
+          0.5,
+          0.2
+        ],
+        "endRoughness": 0.9,
+        "ellipsoid": {
+          "centerMM": [
+            -0.010286516706409822,
+            0,
+            37.713117360802634
+          ],
+          "radiiMM": [
+            12.1,
+            100,
+            12.1
+          ]
+        }
+      },
+      {
+        "name": "own front lid follows native diagonal joins",
+        "minMM": [
+          -8.5,
+          -11.6,
+          29.213117360802634
+        ],
+        "maxMM": [
+          8.5,
+          -11.0,
+          46.213117360802634
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.86,
+        "direction": [
+          1,
+          0,
+          1
+        ],
+        "darkRGB": [
+          0.36,
+          0.205,
+          0.065
+        ],
+        "lightRGB": [
+          0.64,
+          0.42,
+          0.14
+        ],
+        "radialShell": {
+          "originMM": [
+            -0.010286516706409822,
+            0,
+            37.713117360802634
+          ],
+          "axis": [
+            0,
+            -1,
+            0
+          ],
+          "radiusAtOriginMM": 8.25,
+          "radiusSlope": 0,
+          "rangeMM": [
+            11,
+            11.6
+          ],
+          "thicknessMM": 8.25,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own southwest Z post",
+        "minMM": [
+          -17.8,
+          -17.8,
+          25.8
+        ],
+        "maxMM": [
+          -10,
+          -13.5,
+          50
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own shared northwest Z post",
+        "minMM": [
+          -17.8,
+          10,
+          25.8
+        ],
+        "maxMM": [
+          -10,
+          17.8,
+          50
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own northeast Z post",
+        "minMM": [
+          13.5,
+          10,
+          25.8
+        ],
+        "maxMM": [
+          17.8,
+          17.8,
+          50
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "own measured exterior brace 0",
+        "minMM": [
+          -17.8,
+          -14.2,
+          26.4
+        ],
+        "maxMM": [
+          -16.1,
+          10.4,
+          50
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.0,
+          -0.7890670308107033,
+          0.6143071063300346
+        ],
+        "projection": {
+          "originMM": [
+            -17.259327828631765,
+            -2.673952440600649,
+            33.86911338770673
+          ],
+          "axis": [
+            0.0,
+            -0.6143071063300346,
+            -0.7890670308107033
+          ],
+          "rangeMM": [
+            -2.316209404867408,
+            2.4706361301449924
+          ]
+        }
+      },
+      {
+        "name": "own measured exterior brace 1",
+        "minMM": [
+          -10.4,
+          16.1,
+          26.4
+        ],
+        "maxMM": [
+          14.2,
+          17.8,
+          50
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.7874640002905657,
+          0.0,
+          0.6163606478729642
+        ],
+        "projection": {
+          "originMM": [
+            3.412338104445556,
+            17.29860104593909,
+            34.47682671504114
+          ],
+          "axis": [
+            -0.6163606478729642,
+            0.0,
+            0.7874640002905657
+          ],
+          "rangeMM": [
+            -2.416087492974715,
+            2.519597216044654
+          ]
+        }
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "own rough ochre plaster panel 0",
+        "minMM": [
+          -16.7,
+          -14.1,
+          26.6
+        ],
+        "maxMM": [
+          -12.25,
+          10.4,
+          50
+        ],
+        "kind": "plaster",
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.04,
+        "excludeParts": [
+          {
+            "name": "own southwest Z post",
+            "minMM": [
+              -17.8,
+              -17.8,
+              25.8
+            ],
+            "maxMM": [
+              -10,
+              -13.5,
+              50
+            ]
+          },
+          {
+            "name": "own shared northwest Z post",
+            "minMM": [
+              -17.8,
+              10,
+              25.8
+            ],
+            "maxMM": [
+              -10,
+              17.8,
+              50
+            ]
+          },
+          {
+            "name": "own northeast Z post",
+            "minMM": [
+              13.5,
+              10,
+              25.8
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              50
+            ]
+          },
+          {
+            "name": "own measured exterior brace 0",
+            "minMM": [
+              -17.8,
+              -14.2,
+              26.4
+            ],
+            "maxMM": [
+              -16.1,
+              10.4,
+              50
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              -0.7890670308107033,
+              0.6143071063300346
+            ],
+            "projection": {
+              "originMM": [
+                -17.259327828631765,
+                -2.673952440600649,
+                33.86911338770673
+              ],
+              "axis": [
+                0.0,
+                -0.6143071063300346,
+                -0.7890670308107033
+              ],
+              "rangeMM": [
+                -2.316209404867408,
+                2.4706361301449924
+              ]
+            }
+          },
+          {
+            "name": "own measured exterior brace 1",
+            "minMM": [
+              -10.4,
+              16.1,
+              26.4
+            ],
+            "maxMM": [
+              14.2,
+              17.8,
+              50
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.7874640002905657,
+              0.0,
+              0.6163606478729642
+            ],
+            "projection": {
+              "originMM": [
+                3.412338104445556,
+                17.29860104593909,
+                34.47682671504114
+              ],
+              "axis": [
+                -0.6163606478729642,
+                0.0,
+                0.7874640002905657
+              ],
+              "rangeMM": [
+                -2.416087492974715,
+                2.519597216044654
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own rough ochre plaster panel 1",
+        "minMM": [
+          -10.4,
+          12.25,
+          26.6
+        ],
+        "maxMM": [
+          14.1,
+          16.7,
+          50
+        ],
+        "kind": "plaster",
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.04,
+        "excludeParts": [
+          {
+            "name": "own southwest Z post",
+            "minMM": [
+              -17.8,
+              -17.8,
+              25.8
+            ],
+            "maxMM": [
+              -10,
+              -13.5,
+              50
+            ]
+          },
+          {
+            "name": "own shared northwest Z post",
+            "minMM": [
+              -17.8,
+              10,
+              25.8
+            ],
+            "maxMM": [
+              -10,
+              17.8,
+              50
+            ]
+          },
+          {
+            "name": "own northeast Z post",
+            "minMM": [
+              13.5,
+              10,
+              25.8
+            ],
+            "maxMM": [
+              17.8,
+              17.8,
+              50
+            ]
+          },
+          {
+            "name": "own measured exterior brace 0",
+            "minMM": [
+              -17.8,
+              -14.2,
+              26.4
+            ],
+            "maxMM": [
+              -16.1,
+              10.4,
+              50
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.0,
+              -0.7890670308107033,
+              0.6143071063300346
+            ],
+            "projection": {
+              "originMM": [
+                -17.259327828631765,
+                -2.673952440600649,
+                33.86911338770673
+              ],
+              "axis": [
+                0.0,
+                -0.6143071063300346,
+                -0.7890670308107033
+              ],
+              "rangeMM": [
+                -2.316209404867408,
+                2.4706361301449924
+              ]
+            }
+          },
+          {
+            "name": "own measured exterior brace 1",
+            "minMM": [
+              -10.4,
+              16.1,
+              26.4
+            ],
+            "maxMM": [
+              14.2,
+              17.8,
+              50
+            ],
+            "axis": "beam",
+            "physicalPigment": true,
+            "roughness": 0.9,
+            "direction": [
+              0.7874640002905657,
+              0.0,
+              0.6163606478729642
+            ],
+            "projection": {
+              "originMM": [
+                3.412338104445556,
+                17.29860104593909,
+                34.47682671504114
+              ],
+              "axis": [
+                -0.6163606478729642,
+                0.0,
+                0.7874640002905657
+              ],
+              "rangeMM": [
+                -2.416087492974715,
+                2.519597216044654
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own iron native cone hoop 1",
+        "minMM": [
+          -13.5,
+          7.023750286102295,
+          25.5
+        ],
+        "maxMM": [
+          13.5,
+          10.649798889160156,
+          49.9
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            -0.009755646697346809,
+            0.0,
+            37.747023373927114
+          ],
+          "axis": [
+            0,
+            -1,
+            0
+          ],
+          "radiusAtOriginMM": 13.048430204213819,
+          "radiusSlope": 0.1561123431538521,
+          "rangeMM": [
+            -10.649798889160156,
+            -7.023750286102295
+          ],
+          "thicknessMM": 1.15,
+          "allowanceMM": 0.09
+        }
+      },
+      {
+        "name": "own hoop 1 protrusion 1",
+        "minMM": [
+          -9.59119903564453,
+          8.40980136871338,
+          44.671099548339846
+        ],
+        "maxMM": [
+          -8.814099197387696,
+          9.476301307678222,
+          45.57159912109375
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "own hoop 1 protrusion 2",
+        "minMM": [
+          10.463500862121583,
+          8.363498573303223,
+          42.04650009155274
+        ],
+        "maxMM": [
+          11.098900909423827,
+          9.32669937133789,
+          42.98550140380859
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "own hoop 1 protrusion 3",
+        "minMM": [
+          4.84850061416626,
+          8.30990016937256,
+          47.982798461914065
+        ],
+        "maxMM": [
+          5.766700382232666,
+          9.280300254821777,
+          48.61710083007812
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "own hoop 1 protrusion 4",
+        "minMM": [
+          10.970400695800782,
+          8.463599090576173,
+          33.773299102783206
+        ],
+        "maxMM": [
+          11.401801223754882,
+          9.191398735046386,
+          34.53699981689453
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "own hoop 1 protrusion 5",
+        "minMM": [
+          -3.1778992366790773,
+          8.255699996948243,
+          49.0065983581543
+        ],
+        "maxMM": [
+          -2.2185992050170897,
+          9.25379955291748,
+          49.56129943847656
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "own iron native cone hoop 2",
+        "minMM": [
+          -13.5,
+          -9.972749729156494,
+          25.5
+        ],
+        "maxMM": [
+          13.5,
+          -6.357800464630127,
+          49.9
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            -0.029883703785993546,
+            0.0,
+            37.789736231719864
+          ],
+          "axis": [
+            0,
+            -1,
+            0
+          ],
+          "radiusAtOriginMM": 12.958919547102102,
+          "radiusSlope": -0.18746815663025573,
+          "rangeMM": [
+            6.357800464630127,
+            9.972749729156494
+          ],
+          "thicknessMM": 1.15,
+          "allowanceMM": 0.09
+        }
+      },
+      {
+        "name": "own hoop 2 protrusion 1",
+        "minMM": [
+          4.900999431610107,
+          -8.702400321960448,
+          47.695898895263674
+        ],
+        "maxMM": [
+          5.818099613189697,
+          -7.7203000831604,
+          48.356400604248044
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "own hoop 2 protrusion 2",
+        "minMM": [
+          10.809498672485352,
+          -9.013900871276855,
+          34.402300720214846
+        ],
+        "maxMM": [
+          11.380799407958984,
+          -8.039100532531739,
+          35.372799987792966
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "own hoop 2 protrusion 3",
+        "minMM": [
+          -9.409800643920898,
+          -8.708499069213866,
+          44.58019912719727
+        ],
+        "maxMM": [
+          -8.635001068115235,
+          -7.693999652862549,
+          45.48059951782226
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "own hoop 2 protrusion 4",
+        "minMM": [
+          -9.426900978088378,
+          -8.782598609924316,
+          30.213000183105468
+        ],
+        "maxMM": [
+          -8.67080104827881,
+          -7.819498901367187,
+          31.05280029296875
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "own hoop 2 protrusion 5",
+        "minMM": [
+          10.352699165344239,
+          -8.768100852966308,
+          41.695498352050784
+        ],
+        "maxMM": [
+          10.943498725891112,
+          -7.848600749969482,
+          42.58969985961914
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "own hoop 2 protrusion 6",
+        "minMM": [
+          -2.605200643539429,
+          -8.799900169372558,
+          48.883101348876956
+        ],
+        "maxMM": [
+          -1.4532004642486571,
+          -7.682599906921387,
+          49.63440048217773
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "own iron south support cap 3",
+        "minMM": [
+          -10.37690029144287,
+          -5.743699169158935,
+          30.00129928588867
+        ],
+        "maxMM": [
+          -9.434099578857422,
+          -5.415298843383789,
+          30.8681999206543
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02,
+        "projection": {
+          "originMM": [
+            -20.829046742354066,
+            -0.0,
+            15.094630170076341
+          ],
+          "axis": [
+            -0.8097291908709079,
+            -0.0,
+            0.5868037469644727
+          ],
+          "rangeMM": [
+            0.025,
+            0.9
+          ]
+        }
+      },
+      {
+        "name": "own iron south support cap 4",
+        "minMM": [
+          -13.085099792480468,
+          -6.403699016571045,
+          25.79489936828613
+        ],
+        "maxMM": [
+          -12.127100372314453,
+          -5.393299007415772,
+          27.354600524902345
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02,
+        "projection": {
+          "originMM": [
+            -20.77786740986765,
+            -0.0,
+            15.057540950113962
+          ],
+          "axis": [
+            -0.8097291908709079,
+            -0.0,
+            0.5868037469644727
+          ],
+          "rangeMM": [
+            0.025,
+            0.9
+          ]
+        }
+      },
+      {
+        "name": "own iron north support cap 1",
+        "minMM": [
+          9.188800239562989,
+          -5.367200946807861,
+          30.33950080871582
+        ],
+        "maxMM": [
+          9.921499824523925,
+          -4.37420072555542,
+          31.12840042114258
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02,
+        "projection": {
+          "originMM": [
+            20.7933992526813,
+            -0.0,
+            15.068796742375213
+          ],
+          "axis": [
+            0.8097291908709079,
+            -0.0,
+            0.5868037469644727
+          ],
+          "rangeMM": [
+            0.025,
+            0.9
+          ]
+        }
+      },
+      {
+        "name": "own iron north support cap 2",
+        "minMM": [
+          12.084700012207032,
+          -5.876600837707519,
+          26.159199142456053
+        ],
+        "maxMM": [
+          12.826000785827636,
+          -4.840101146697998,
+          27.030400848388673
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02,
+        "projection": {
+          "originMM": [
+            20.73820295528984,
+            -0.0,
+            15.02879646266066
+          ],
+          "axis": [
+            0.8097291908709079,
+            -0.0,
+            0.5868037469644727
+          ],
+          "rangeMM": [
+            0.025,
+            0.9
+          ]
+        }
+      },
+      {
+        "name": "own iron north support cap 3",
+        "minMM": [
+          9.458199882507325,
+          4.73919906616211,
+          30.202900314331053
+        ],
+        "maxMM": [
+          10.259199714660644,
+          5.8371988296508786,
+          31.132100677490236
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02,
+        "projection": {
+          "originMM": [
+            20.95007402902929,
+            -0.0,
+            15.182337598815053
+          ],
+          "axis": [
+            0.8097291908709079,
+            -0.0,
+            0.5868037469644727
+          ],
+          "rangeMM": [
+            0.025,
+            0.9
+          ]
+        }
+      },
+      {
+        "name": "own iron north support cap 4",
+        "minMM": [
+          12.44800033569336,
+          5.567299270629883,
+          25.978500747680663
+        ],
+        "maxMM": [
+          13.26499900817871,
+          6.664999103546142,
+          26.913899993896486
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02,
+        "projection": {
+          "originMM": [
+            20.9078822955508,
+            -0.0,
+            15.151761614183108
+          ],
+          "axis": [
+            0.8097291908709079,
+            -0.0,
+            0.5868037469644727
+          ],
+          "rangeMM": [
+            0.025,
+            0.9
+          ]
+        }
+      },
+      {
+        "name": "own iron recessed north upper brace inset",
+        "minMM": [
+          12.121825884874223,
+          16.295199966430665,
+          40.8494320494475
+        ],
+        "maxMM": [
+          13.62114861610847,
+          17.28,
+          42.348754780681745
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            12.871487250491347,
+            16.848800659179688,
+            41.59909341506462
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "radiusAtOriginMM": 0.7496613656171242,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -0.553600692749022,
+            0.43119934082031364
+          ],
+          "thicknessMM": 0.7496613656171242,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron recessed north lower brace inset",
+        "minMM": [
+          -7.398956454389259,
+          16.25019989013672,
+          26.75914330843558
+        ],
+        "maxMM": [
+          -5.954363386337224,
+          17.28,
+          28.203736376487615
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            -6.6766599203632415,
+            16.756900787353516,
+            27.481439842461597
+          ],
+          "axis": [
+            0,
+            1,
+            0
+          ],
+          "radiusAtOriginMM": 0.7222965340260168,
+          "radiusSlope": 0,
+          "rangeMM": [
+            -0.5067008972167955,
+            0.5230992126464855
+          ],
+          "thicknessMM": 0.7222965340260168,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "own iron tap flange and valve handle",
+        "minMM": [
+          -3.3,
+          -14.8,
+          32.7
+        ],
+        "maxMM": [
+          3.3,
+          -11.33,
+          38.1
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.24,
+          0.25,
+          0.225
+        ],
+        "metallic": 0.88,
+        "roughness": 0.6,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "own native flange footprint",
+            "minMM": [
+              -3.3,
+              -11.95,
+              32.7
+            ],
+            "maxMM": [
+              3.3,
+              -11.33,
+              37.3
+            ],
+            "excludeParts": [
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    -2.505600929260254,
+                    -11.737500000000054,
+                    35.71220016479492
+                  ],
+                  "axis": [
+                    -0.9999180270680277,
+                    -1.1,
+                    -0.012803872241753453
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    -2.4876010417938232,
+                    -11.737500000000054,
+                    34.30649948120117
+                  ],
+                  "axis": [
+                    -0.6965224390452233,
+                    -1.1,
+                    -0.7175350109273367
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    -2.1290009021759033,
+                    -11.737500000000054,
+                    33.95840072631836
+                  ],
+                  "axis": [
+                    -0.5454297614558042,
+                    -1.1,
+                    -0.838156533899405
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    -1.3731008768081665,
+                    -11.737500000000054,
+                    33.46649932861328
+                  ],
+                  "axis": [
+                    -0.48661159235854706,
+                    -1.1,
+                    -0.8736184282524488
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    -0.8618009090423584,
+                    -11.737500000000054,
+                    33.18170166015625
+                  ],
+                  "axis": [
+                    -0.15988952381109986,
+                    -1.1,
+                    -0.9871349148801595
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    -0.4395008981227875,
+                    -11.737500000000054,
+                    33.11330032348633
+                  ],
+                  "axis": [
+                    -0.08379515357541306,
+                    -1.1,
+                    -0.9964830014793394
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    0.06589911133050919,
+                    -11.737500000000054,
+                    33.07080078125
+                  ],
+                  "axis": [
+                    0.07589817740884897,
+                    -1.1,
+                    -0.9971155733745286
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    0.5637990832328796,
+                    -11.737500000000054,
+                    33.108699798583984
+                  ],
+                  "axis": [
+                    0.37813774494132796,
+                    -1.1,
+                    -0.925749342884286
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    1.2394992113113403,
+                    -11.737500000000054,
+                    33.384700775146484
+                  ],
+                  "axis": [
+                    0.4634664550567582,
+                    -1.1,
+                    -0.8861144649745438
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    1.8646990060806274,
+                    -11.737500000000054,
+                    33.711700439453125
+                  ],
+                  "axis": [
+                    0.6431500830861755,
+                    -1.1,
+                    -0.7657401456279054
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    2.419999122619629,
+                    -11.737500000000054,
+                    34.1781005859375
+                  ],
+                  "axis": [
+                    0.9565487103404322,
+                    -1.1,
+                    -0.291572572005763
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    2.4598989486694336,
+                    -11.737500000000054,
+                    34.308998107910156
+                  ],
+                  "axis": [
+                    0.9996469518209585,
+                    -1.1,
+                    -0.026570128247080563
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    2.4980990886688232,
+                    -11.737500000000054,
+                    35.74620056152344
+                  ],
+                  "axis": [
+                    0.7108876996539396,
+                    -1.1,
+                    0.7033055370752673
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    2.2477991580963135,
+                    -11.737500000000054,
+                    35.99919891357422
+                  ],
+                  "axis": [
+                    0.6052153340377873,
+                    -1.1,
+                    0.7960618062974316
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    1.6750991344451904,
+                    -11.737500000000054,
+                    36.434600830078125
+                  ],
+                  "axis": [
+                    0.4740188211221633,
+                    -1.1,
+                    0.8805147115306788
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    0.8952990770339966,
+                    -11.737500000000054,
+                    36.854400634765625
+                  ],
+                  "axis": [
+                    0.31636182060290485,
+                    -1.1,
+                    0.9486386026642682
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    0.4727991223335266,
+                    -11.737500000000054,
+                    36.99530029296875
+                  ],
+                  "axis": [
+                    0.022013036556299524,
+                    -1.1,
+                    0.9997576837522035
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    -0.2675009071826935,
+                    -11.737500000000054,
+                    37.011600494384766
+                  ],
+                  "axis": [
+                    -0.2762404082876699,
+                    -1.1,
+                    0.9610885686704745
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    -1.0364007949829102,
+                    -11.737500000000054,
+                    36.79059982299805
+                  ],
+                  "axis": [
+                    -0.4397982737066769,
+                    -1.1,
+                    0.8980965863673166
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    -1.6482007503509521,
+                    -11.737500000000054,
+                    36.49100112915039
+                  ],
+                  "axis": [
+                    -0.5690197364900736,
+                    -1.1,
+                    0.8223238653260447
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    -2.0777008533477783,
+                    -11.737500000000054,
+                    36.19380187988281
+                  ],
+                  "axis": [
+                    -0.6887145773630726,
+                    -1.1,
+                    0.7250325723218263
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              },
+              {
+                "name": "outside own flange bevel",
+                "minMM": [
+                  -3.3,
+                  -11.95,
+                  32.7
+                ],
+                "maxMM": [
+                  3.3,
+                  -11.33,
+                  37.3
+                ],
+                "projection": {
+                  "originMM": [
+                    -2.480901002883911,
+                    -11.737500000000054,
+                    35.81079864501953
+                  ],
+                  "axis": [
+                    -0.9700259363730823,
+                    -1.1,
+                    0.24300140485915908
+                  ],
+                  "rangeMM": [
+                    0.16,
+                    100
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "own valve handle",
+            "minMM": [
+              -2.5,
+              -14.2,
+              35.65
+            ],
+            "maxMM": [
+              2.5,
+              -11.75,
+              38.1
+            ]
+          },
+          {
+            "name": "own closed tap stem",
+            "minMM": [
+              -1.5,
+              -14.8,
+              33.6
+            ],
+            "maxMM": [
+              1.5,
+              -11.75,
+              36.1
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -0.02,
+                -13.5,
+                34.9
+              ],
+              "radiiMM": [
+                1.12,
+                100,
+                1.12
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "own brass projecting CLOSED tap",
+        "minMM": [
+          -1.5,
+          -14.8,
+          33.6
+        ],
+        "maxMM": [
+          1.5,
+          -12.05,
+          36.1
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.57,
+          0.4,
+          0.15
+        ],
+        "metallic": 0.82,
+        "roughness": 0.5,
+        "variation": 0.02,
+        "ellipsoid": {
+          "centerMM": [
+            -0.02,
+            -13.5,
+            34.9
+          ],
+          "radiiMM": [
+            1.12,
+            100,
+            1.12
+          ]
+        }
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      6,
+      16
+    ],
+    "lodMiB": [
+      5,
+      14
+    ],
+    "shadowKiB": [
+      450,
+      1100
+    ],
+    "previewKiB": [
+      12,
+      45
+    ],
+    "basis": "Own499978tri/24998984B cornercask/2roughpanels/2hoops+nativebumps/insetwallheads/6positivesupportcaps/closedtap. Preserve2hoopslabs/frontend+tap/supportfaces/lip,15verifiednativeairsegments.220k/180k1536mapsstart,compare1152. No17.5mmdisc/35mmactorfitsfloor25candidates;surfaceheightremainsmeasuredfloor."
+  },
+  "reviewNotes": "Own source/full4views/2walloutsides/tap/supports andrelatedauthorPDF10 inspected. Source499978tri/24998984B,datum17nativeupperflankcentre16measured. Floorandcaskdifferentrotationsrelative064:floorToOwn90/caskToOwn270; owncylinder385samples nativeaxisY-/centreXZ[-.0102865,37.7131]/R11.52547. Twohoopsownsideplanes+outerSurfacefits828/1058points;11raisedcomponentcandidatesbounded,6positive-ownsupportheads,2recessedNorthbracecircles391/291samples24bins. NaturalWestpostknotWOOD. Twoexteriorbraceaxesfromactualflatfaceareas42/39.9mm2;uncertaininsideplane/PCAfitsREJECTEDandnotused. Actualroughpanelsinterpretedochreplasterwithbrownframing;sourcecolourreviewMUSTcheckwall/caskcontacts. Frontflange100flatvertices22hullpoints,S11.7375;tapCLOSEDnoinventedbore. Lidfollowsvisiblediagonaljoins/relatedcaskorientation(weaknormalcovarianceREJECTED). FloorYgrain2306normalssquaredX.134/Y.06696;25allowedmediumactorcentresnoneclear,explicitfloorheight25.41637/nofakeplacements.15nativeundersupportairsegmentsfrom3connectedregionsmin.878/1.231/1.310mm. Wrappedlog-ycolour/endroughnessPythonJSparitytested. IndividualnativeRLS/material/UV/footprint/gapQArequiredBEFOREUD016/publish.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standRayTopMM": 27,
+  "renderUVAngleLimitRad": 0.3,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.3,
+  "lodUVIslandMargin": 0.0008,
+  "standPointsMM": [],
+  "blockersMM": [
+    [
+      [
+        -17.7,
+        -17.7
+      ],
+      [
+        -10,
+        -17.7
+      ],
+      [
+        -10,
+        17.7
+      ],
+      [
+        -17.7,
+        17.7
+      ]
+    ],
+    [
+      [
+        -17.7,
+        10
+      ],
+      [
+        17.7,
+        10
+      ],
+      [
+        17.7,
+        17.7
+      ],
+      [
+        -17.7,
+        17.7
+      ]
+    ],
+    [
+      [
+        -13.5,
+        -14.9
+      ],
+      [
+        13.5,
+        -14.9
+      ],
+      [
+        13.5,
+        13.5
+      ],
+      [
+        -13.5,
+        13.5
+      ]
+    ]
+  ],
+  "lodDataSize": 1536,
+  "pegCentersMM": [
+    [
+      0.006337165832519531,
+      0.016431808471679688
+    ]
+  ],
+  "placementCells": [],
+  "standRayTopsMM": [],
+  "surfaceHeightMM": 25.416372299194336,
+  "renderColourSize": 1536,
+  "lodColourSize": 1536,
+  "renderDataSize": 1536,
+  "defaultLights": [],
+  "mountCentreFitReview": {
+    "sourceSHA256": "a9347b4ba238ac797daa75c89724006a1fd7fee859278cd121c10c3221d04af9",
+    "nativeCentresMM": [
+      [
+        0.006337165832519531,
+        0.016431808471679688
+      ]
+    ],
+    "fittedCentresMM": [
+      [
+        0.006337165832519531,
+        0.016431808471679688
+      ]
+    ],
+    "preservedCentroidMM": [
+      0.006337165832519531,
+      0.016431808471679688
+    ],
+    "maxCoordinateMoveMM": 0,
+    "requiredDecodedCentreToleranceMM": 0.02,
+    "sourceSections": [
+      {
+        "z": 4,
+        "centreMM": [
+          0.015630722045898438,
+          0.033174991607666016
+        ],
+        "endsMM": [
+          [
+            -12.917490005493164,
+            12.948751449584961
+          ],
+          [
+            -12.902017593383789,
+            12.968367576599121
+          ]
+        ]
+      },
+      {
+        "z": 6,
+        "centreMM": [
+          0.015517711639404297,
+          0.03283500671386719
+        ],
+        "endsMM": [
+          [
+            -12.91771411895752,
+            12.948749542236328
+          ],
+          [
+            -12.902714729309082,
+            12.968384742736816
+          ]
+        ]
+      },
+      {
+        "z": 8,
+        "centreMM": [
+          0.015468597412109375,
+          0.03296804428100586
+        ],
+        "endsMM": [
+          [
+            -12.917814254760742,
+            12.948751449584961
+          ],
+          [
+            -12.902464866638184,
+            12.968400955200195
+          ]
+        ]
+      },
+      {
+        "z": 10,
+        "centreMM": [
+          0.010667800903320312,
+          0.02579641342163086
+        ],
+        "endsMM": [
+          [
+            -12.927468299865723,
+            12.948803901672363
+          ],
+          [
+            -12.916759490966797,
+            12.968352317810059
+          ]
+        ]
+      },
+      {
+        "z": 12,
+        "centreMM": [
+          0.006735324859619141,
+          0.016516685485839844
+        ],
+        "endsMM": [
+          [
+            -13.350287437438965,
+            13.363758087158203
+          ],
+          [
+            -13.341029167175293,
+            13.374062538146973
+          ]
+        ]
+      },
+      {
+        "z": 14,
+        "centreMM": [
+          0.006188392639160156,
+          0.016878604888916016
+        ],
+        "endsMM": [
+          [
+            -15.073339462280273,
+            15.085716247558594
+          ],
+          [
+            -15.06275749206543,
+            15.096514701843262
+          ]
+        ]
+      },
+      {
+        "z": 16,
+        "centreMM": [
+          0.006337165832519531,
+          0.016431808471679688
+        ],
+        "endsMM": [
+          [
+            -16.794057846069336,
+            16.806732177734375
+          ],
+          [
+            -16.784290313720703,
+            16.817153930664062
+          ]
+        ]
+      }
+    ],
+    "method": "Own nativeinsertflank rays4/6/8/10/12/14/16;upper16axis selected separatelyfromlowerstem"
+  },
+  "geometryDetailRegions": [
+    {
+      "name": "own native mounting lip",
+      "minMM": [
+        -17.8,
+        -17.8,
+        16.99
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        17.65
+      ]
+    },
+    {
+      "name": "own native hoop slab 1",
+      "minMM": [
+        -13.5,
+        7.023750286102295,
+        25.5
+      ],
+      "maxMM": [
+        13.5,
+        10.649798889160156,
+        49.9
+      ]
+    },
+    {
+      "name": "own native hoop raised component (0, 0)",
+      "minMM": [
+        -9.59119903564453,
+        8.40980136871338,
+        44.671099548339846
+      ],
+      "maxMM": [
+        -8.814099197387696,
+        9.476301307678222,
+        45.57159912109375
+      ]
+    },
+    {
+      "name": "own native hoop raised component (0, 1)",
+      "minMM": [
+        10.463500862121583,
+        8.363498573303223,
+        42.04650009155274
+      ],
+      "maxMM": [
+        11.098900909423827,
+        9.32669937133789,
+        42.98550140380859
+      ]
+    },
+    {
+      "name": "own native hoop raised component (0, 2)",
+      "minMM": [
+        4.84850061416626,
+        8.30990016937256,
+        47.982798461914065
+      ],
+      "maxMM": [
+        5.766700382232666,
+        9.280300254821777,
+        48.61710083007812
+      ]
+    },
+    {
+      "name": "own native hoop raised component (0, 3)",
+      "minMM": [
+        10.970400695800782,
+        8.463599090576173,
+        33.773299102783206
+      ],
+      "maxMM": [
+        11.401801223754882,
+        9.191398735046386,
+        34.53699981689453
+      ]
+    },
+    {
+      "name": "own native hoop raised component (0, 4)",
+      "minMM": [
+        -3.1778992366790773,
+        8.255699996948243,
+        49.0065983581543
+      ],
+      "maxMM": [
+        -2.2185992050170897,
+        9.25379955291748,
+        49.56129943847656
+      ]
+    },
+    {
+      "name": "own native hoop slab 2",
+      "minMM": [
+        -13.5,
+        -9.972749729156494,
+        25.5
+      ],
+      "maxMM": [
+        13.5,
+        -6.357800464630127,
+        49.9
+      ]
+    },
+    {
+      "name": "own native hoop raised component (1, 0)",
+      "minMM": [
+        4.900999431610107,
+        -8.702400321960448,
+        47.695898895263674
+      ],
+      "maxMM": [
+        5.818099613189697,
+        -7.7203000831604,
+        48.356400604248044
+      ]
+    },
+    {
+      "name": "own native hoop raised component (1, 1)",
+      "minMM": [
+        10.809498672485352,
+        -9.013900871276855,
+        34.402300720214846
+      ],
+      "maxMM": [
+        11.380799407958984,
+        -8.039100532531739,
+        35.372799987792966
+      ]
+    },
+    {
+      "name": "own native hoop raised component (1, 2)",
+      "minMM": [
+        -9.409800643920898,
+        -8.708499069213866,
+        44.58019912719727
+      ],
+      "maxMM": [
+        -8.635001068115235,
+        -7.693999652862549,
+        45.48059951782226
+      ]
+    },
+    {
+      "name": "own native hoop raised component (1, 3)",
+      "minMM": [
+        -9.426900978088378,
+        -8.782598609924316,
+        30.213000183105468
+      ],
+      "maxMM": [
+        -8.67080104827881,
+        -7.819498901367187,
+        31.05280029296875
+      ]
+    },
+    {
+      "name": "own native hoop raised component (1, 4)",
+      "minMM": [
+        10.352699165344239,
+        -8.768100852966308,
+        41.695498352050784
+      ],
+      "maxMM": [
+        10.943498725891112,
+        -7.848600749969482,
+        42.58969985961914
+      ]
+    },
+    {
+      "name": "own native hoop raised component (1, 5)",
+      "minMM": [
+        -2.605200643539429,
+        -8.799900169372558,
+        48.883101348876956
+      ],
+      "maxMM": [
+        -1.4532004642486571,
+        -7.682599906921387,
+        49.63440048217773
+      ]
+    },
+    {
+      "name": "own native south support cap 3",
+      "minMM": [
+        -10.37690029144287,
+        -5.743699169158935,
+        30.00129928588867
+      ],
+      "maxMM": [
+        -9.434099578857422,
+        -5.415298843383789,
+        30.8681999206543
+      ]
+    },
+    {
+      "name": "own native south support cap 4",
+      "minMM": [
+        -13.085099792480468,
+        -6.403699016571045,
+        25.79489936828613
+      ],
+      "maxMM": [
+        -12.127100372314453,
+        -5.393299007415772,
+        27.354600524902345
+      ]
+    },
+    {
+      "name": "own native north support cap 1",
+      "minMM": [
+        9.188800239562989,
+        -5.367200946807861,
+        30.33950080871582
+      ],
+      "maxMM": [
+        9.921499824523925,
+        -4.37420072555542,
+        31.12840042114258
+      ]
+    },
+    {
+      "name": "own native north support cap 2",
+      "minMM": [
+        12.084700012207032,
+        -5.876600837707519,
+        26.159199142456053
+      ],
+      "maxMM": [
+        12.826000785827636,
+        -4.840101146697998,
+        27.030400848388673
+      ]
+    },
+    {
+      "name": "own native north support cap 3",
+      "minMM": [
+        9.458199882507325,
+        4.73919906616211,
+        30.202900314331053
+      ],
+      "maxMM": [
+        10.259199714660644,
+        5.8371988296508786,
+        31.132100677490236
+      ]
+    },
+    {
+      "name": "own native north support cap 4",
+      "minMM": [
+        12.44800033569336,
+        5.567299270629883,
+        25.978500747680663
+      ],
+      "maxMM": [
+        13.26499900817871,
+        6.664999103546142,
+        26.913899993896486
+      ]
+    },
+    {
+      "name": "own inset wall head north upper brace inset",
+      "minMM": [
+        11.921825884874224,
+        16.095199966430666,
+        40.6494320494475
+      ],
+      "maxMM": [
+        13.82114861610847,
+        17.48,
+        42.54875478068175
+      ]
+    },
+    {
+      "name": "own inset wall head north lower brace inset",
+      "minMM": [
+        -7.598956454389259,
+        16.05019989013672,
+        26.55914330843558
+      ],
+      "maxMM": [
+        -5.754363386337224,
+        17.48,
+        28.403736376487615
+      ]
+    },
+    {
+      "name": "own front lid stave ends flange and closed tap",
+      "minMM": [
+        -13,
+        -15.1,
+        25.8
+      ],
+      "maxMM": [
+        13,
+        -10.5,
+        49.9
+      ]
+    },
+    {
+      "name": "own exterior brace profile own measured exterior brace 0",
+      "minMM": [
+        -17.8,
+        -14.2,
+        26.4
+      ],
+      "maxMM": [
+        -16.1,
+        10.4,
+        50
+      ],
+      "sourceSelection": {
+        "projection": {
+          "originMM": [
+            -17.259327828631765,
+            -2.673952440600649,
+            33.86911338770673
+          ],
+          "axis": [
+            0.0,
+            -0.6143071063300346,
+            -0.7890670308107033
+          ],
+          "rangeMM": [
+            -2.316209404867408,
+            2.4706361301449924
+          ]
+        }
+      }
+    },
+    {
+      "name": "own exterior brace profile own measured exterior brace 1",
+      "minMM": [
+        -10.4,
+        16.1,
+        26.4
+      ],
+      "maxMM": [
+        14.2,
+        17.8,
+        50
+      ],
+      "sourceSelection": {
+        "projection": {
+          "originMM": [
+            3.412338104445556,
+            17.29860104593909,
+            34.47682671504114
+          ],
+          "axis": [
+            -0.6163606478729642,
+            0.0,
+            0.7874640002905657
+          ],
+          "rangeMM": [
+            -2.416087492974715,
+            2.519597216044654
+          ]
+        }
+      }
+    },
+    {
+      "name": "own support geometry own native support inclined frame [-6.9, 7.2]",
+      "minMM": [
+        7.2,
+        4.1,
+        25.9
+      ],
+      "maxMM": [
+        13.2,
+        6.9,
+        34.8
+      ]
+    },
+    {
+      "name": "own support geometry own native support inclined frame [3.9, -13.2]",
+      "minMM": [
+        -13.2,
+        -6.8,
+        25.9
+      ],
+      "maxMM": [
+        -7.2,
+        -3.9,
+        34.8
+      ]
+    },
+    {
+      "name": "own support geometry own native support inclined frame [3.9, 7.2]",
+      "minMM": [
+        7.2,
+        -6.8,
+        25.9
+      ],
+      "maxMM": [
+        13.2,
+        -3.9,
+        34.8
+      ]
+    }
+  ],
+  "uvBaseTile": [
+    0.002,
+    0.82,
+    0.64,
+    0.998
+  ],
+  "uvDetailRegions": [
+    {
+      "name": "own core cask and supports",
+      "minMM": [
+        -9.999,
+        -10.5,
+        25.8
+      ],
+      "maxMM": [
+        13.7,
+        10,
+        50
+      ],
+      "tile": [
+        0.002,
+        0.002,
+        0.64,
+        0.55
+      ],
+      "angleLimitRad": 0.3,
+      "islandMargin": 0.0008
+    },
+    {
+      "name": "own front lid closed tap and ends",
+      "minMM": [
+        -9.999,
+        -15.2,
+        25.8
+      ],
+      "maxMM": [
+        13.7,
+        -10.501,
+        50
+      ],
+      "tile": [
+        0.002,
+        0.57,
+        0.64,
+        0.8
+      ],
+      "angleLimitRad": 0.3,
+      "islandMargin": 0.0008
+    },
+    {
+      "name": "own west wall and clipped cask side",
+      "minMM": [
+        -17.8,
+        -17.8,
+        26.6
+      ],
+      "maxMM": [
+        -10,
+        17.8,
+        50
+      ],
+      "tile": [
+        0.65,
+        0.002,
+        0.998,
+        0.4
+      ],
+      "angleLimitRad": 0.3,
+      "islandMargin": 0.0008
+    },
+    {
+      "name": "own north wall and rear ends",
+      "minMM": [
+        -9.999,
+        10.001,
+        26.6
+      ],
+      "maxMM": [
+        17.8,
+        17.8,
+        50
+      ],
+      "tile": [
+        0.65,
+        0.42,
+        0.998,
+        0.83
+      ],
+      "angleLimitRad": 0.3,
+      "islandMargin": 0.0008
+    }
+  ]
+}
