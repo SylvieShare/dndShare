@@ -184,6 +184,7 @@ Small Door Angle Right Opened Tall|Высокая угловая правая д
 Fireplace Unlit|Незажжённый камин
 Fireplace Unlit Tall|Высокий незажжённый камин
 Fireplace|Горящий камин
+Fireplace Tall|Высокий горящий камин
 Balcony|Балкон
 Balcony Angle|Угловой балкон
 Balcony Corridor|Балкон с двумя ограждениями
