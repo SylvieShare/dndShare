@@ -8,15 +8,20 @@ class NativeArchiveStop(RuntimeError):
     pass
 
 
+def queue_mcp(queue):
+    """Authenticate only inside an uncached action that needs server access."""
+    if not hasattr(queue,'mcp'):
+        queue.mcp = MiniatureMCP(configured_token(True))
+    return queue.mcp
+
+
 def archive_stage(queue, entry, stage_name, server_token):
     folder = queue.root/entry['slug']
     inputs = {name:file_hash(path) for name,path in archive_inputs(folder,stage_name).items()}
     changed = queue.stage(entry,'archive-'+stage_name,inputs,lambda:pack_archive(folder,stage_name))
     if server_token:
         def upload():
-            if not hasattr(queue,'mcp'):
-                queue.mcp = MiniatureMCP(configured_token(True))
-            return [publish_archive(folder,stage_name,queue.mcp)]
+            return [publish_archive(folder,stage_name,queue_mcp(queue))]
         changed |= queue.stage(entry,'archive-'+stage_name+'-published',
             {'descriptor':file_hash(folder/'archives'/(stage_name+'-archive.json'))},upload)
     return changed

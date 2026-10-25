@@ -1,0 +1,50 @@
+{
+  "slug": "rat-1558",
+  "itemId": 1558,
+  "itemIds": [
+    1558
+  ],
+  "modelId": "62be94aa-0df7-578f-9e38-b0f363c23797",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1558",
+  "sourceName": "rat-1558-miniature",
+  "name": "Крыса",
+  "nameEn": "Rat",
+  "code": "CRE-rat",
+  "groupName": "Крыса",
+  "groupNameEn": "Rat",
+  "maxHeight": 0.4,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "height": 0.4,
+    "size": 0.5,
+    "lodTriangles": 16000,
+    "rotation": -45
+  },
+  "reviewBase": {
+    "modelId": "dfde5fa7-4bb1-5909-a039-06cd45d0f008",
+    "file": "models/creatures/separated-bases-20261024/dfde5fa7-4bb1-5909-a039-06cd45d0f008.glb",
+    "referenceDiameter": 0.45,
+    "surfaceHeight": 0.06
+  },
+  "calibration": {
+    "sourceDiameter": 1.2940304651856422,
+    "sourceOrigin": [
+      0.12502999999999997,
+      -0.13520500000000002,
+      -0.28804
+    ],
+    "rotation": -45
+  }
+}

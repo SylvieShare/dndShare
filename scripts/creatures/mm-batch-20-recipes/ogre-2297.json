@@ -1,0 +1,50 @@
+{
+  "slug": "ogre-2297",
+  "itemId": 2297,
+  "itemIds": [
+    2297
+  ],
+  "modelId": "5f10938b-697d-5c4d-982c-f63556d2571a",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2297",
+  "sourceName": "ogre-2297-miniature",
+  "name": "Огр",
+  "nameEn": "Ogre",
+  "code": "CRE-ogre",
+  "groupName": "Огр",
+  "groupNameEn": "Ogre",
+  "maxHeight": 1.275555766,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "height": 1.275555766,
+    "size": 2,
+    "lodTriangles": 22000,
+    "rotation": -45
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "calibration": {
+    "sourceDiameter": 0.7065396764958142,
+    "sourceOrigin": [
+      0.025719999999999993,
+      -0.030695,
+      -0.50079
+    ],
+    "rotation": -45
+  }
+}

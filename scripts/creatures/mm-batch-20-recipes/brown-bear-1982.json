@@ -1,0 +1,50 @@
+{
+  "slug": "brown-bear-1982",
+  "itemId": 1982,
+  "itemIds": [
+    1982
+  ],
+  "modelId": "cb7850a5-372b-5331-b911-f00b08aa42a2",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1982",
+  "sourceName": "brown-bear-1982-miniature",
+  "name": "Бурый медведь",
+  "nameEn": "Brown Bear",
+  "code": "CRE-brown-bear",
+  "groupName": "Бурый медведь",
+  "groupNameEn": "Brown Bear",
+  "maxHeight": 0.62,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "height": 0.62,
+    "size": 2,
+    "lodTriangles": 18000,
+    "rotation": -45
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "calibration": {
+    "sourceDiameter": 0.9176332816000908,
+    "sourceOrigin": [
+      0.0012899999999999995,
+      0.059840000000000004,
+      -0.31584
+    ],
+    "rotation": -45
+  }
+}

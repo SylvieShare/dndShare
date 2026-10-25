@@ -1,0 +1,50 @@
+{
+  "slug": "bugbear-2070",
+  "itemId": 2070,
+  "itemIds": [
+    2070
+  ],
+  "modelId": "cdbcf869-6d5e-5024-a01c-bdcfca0ab338",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2070",
+  "sourceName": "bugbear-2070-miniature",
+  "name": "Медвежатник",
+  "nameEn": "Bugbear",
+  "code": "CRE-bugbear",
+  "groupName": "Медвежатник",
+  "groupNameEn": "Bugbear",
+  "maxHeight": 1.65,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "height": 1.191015442,
+    "size": 1,
+    "lodTriangles": 24000,
+    "rotation": -45
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "calibration": {
+    "sourceDiameter": 0.5456680167805066,
+    "sourceOrigin": [
+      0.056629999999999986,
+      0.09426999999999999,
+      -0.50009
+    ],
+    "rotation": -45
+  }
+}

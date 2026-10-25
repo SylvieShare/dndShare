@@ -1,0 +1,50 @@
+{
+  "slug": "scout-1927",
+  "itemId": 1927,
+  "itemIds": [
+    1927
+  ],
+  "modelId": "0324d6b2-1f7c-5996-b2f1-4a1e176607bb",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1927",
+  "sourceName": "scout-1927-miniature",
+  "name": "Разведчик",
+  "nameEn": "Scout",
+  "code": "CRE-scout",
+  "groupName": "Разведчик",
+  "groupNameEn": "Scout",
+  "maxHeight": 1.4,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "height": 1.4,
+    "size": 1,
+    "lodTriangles": 24000,
+    "rotation": -45
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "calibration": {
+    "sourceDiameter": 0.6432297783238548,
+    "sourceOrigin": [
+      -0.04822,
+      -0.050574999999999995,
+      -0.50042
+    ],
+    "rotation": -45
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "slug": "troll-2921",
+  "itemId": 2921,
+  "itemIds": [
+    2921
+  ],
+  "modelId": "d78f56c5-8c08-56cb-a9d0-ef1ad93f782f",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2921",
+  "sourceName": "troll-2921-miniature",
+  "name": "Тролль",
+  "nameEn": "Troll",
+  "code": "CRE-troll",
+  "groupName": "Тролль",
+  "groupNameEn": "Troll",
+  "maxHeight": 1.4,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "height": 1.4,
+    "size": 2,
+    "lodTriangles": 24000,
+    "lodAggression": 4,
+    "shadowTriangles": 8000,
+    "shadowAggression": 4,
+    "rotation": -45
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "calibration": {
+    "sourceDiameter": 0.6425430178642274,
+    "sourceOrigin": [
+      0.01013,
+      0.10702499999999998,
+      -0.49962
+    ],
+    "rotation": -45
+  }
+}

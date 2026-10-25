@@ -1,0 +1,50 @@
+{
+  "slug": "worg-1844",
+  "itemId": 1844,
+  "itemIds": [
+    1844
+  ],
+  "modelId": "dcb316cd-8098-5893-83e4-740912136ad0",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1844",
+  "sourceName": "worg-1844-miniature",
+  "name": "Ворг",
+  "nameEn": "Worg",
+  "code": "CRE-worg",
+  "groupName": "Ворг",
+  "groupNameEn": "Worg",
+  "maxHeight": 0.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "height": 0.7,
+    "size": 2,
+    "lodTriangles": 20000,
+    "rotation": -45
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "calibration": {
+    "sourceDiameter": 0.9081019035407476,
+    "sourceOrigin": [
+      -0.00137000000000001,
+      -0.017024999999999985,
+      -0.35023
+    ],
+    "rotation": -45
+  }
+}

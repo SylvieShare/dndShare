@@ -1,0 +1,50 @@
+{
+  "slug": "animated-armor-2086",
+  "itemId": 2086,
+  "itemIds": [
+    2086
+  ],
+  "modelId": "1d5ff151-a176-51de-940e-2ef212023b93",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2086",
+  "sourceName": "animated-armor-2086-miniature",
+  "name": "Оживлённый доспех",
+  "nameEn": "Animated Armor",
+  "code": "CRE-animated-armor",
+  "groupName": "Оживлённый доспех",
+  "groupNameEn": "Animated Armor",
+  "maxHeight": 1.504355267,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "height": 1.504355267,
+    "size": 1,
+    "lodTriangles": 22000,
+    "rotation": -45
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "calibration": {
+    "sourceDiameter": 0.59904055803033,
+    "sourceOrigin": [
+      0.006595000000000004,
+      0.06628999999999999,
+      -0.50077
+    ],
+    "rotation": -45
+  }
+}

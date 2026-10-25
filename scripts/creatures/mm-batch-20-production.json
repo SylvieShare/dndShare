@@ -1,0 +1,208 @@
+{
+  "schema": 1,
+  "name": "Популярные существа MM — второй набор, 20 видов",
+  "budget": {
+    "maxGenerations": 22,
+    "maxGpuCalls": 44,
+    "minRemainingGpuSeconds": 240,
+    "allowPaidOverquota": false
+  },
+  "entries": [
+    {
+      "slug": "zombie-1739",
+      "itemId": 1739,
+      "name": "Зомби",
+      "nameEn": "Zombie",
+      "size": 1,
+      "height": 1.4,
+      "lodTriangles": 20000
+    },
+    {
+      "slug": "hobgoblin-1963",
+      "itemId": 1963,
+      "name": "Хобгоблин",
+      "nameEn": "Hobgoblin",
+      "size": 1,
+      "height": 1.6,
+      "lodTriangles": 22000
+    },
+    {
+      "slug": "bugbear-2070",
+      "itemId": 2070,
+      "name": "Медвежатник",
+      "nameEn": "Bugbear",
+      "size": 1,
+      "height": 1.191015442,
+      "lodTriangles": 24000
+    },
+    {
+      "slug": "gnoll-1859",
+      "itemId": 1859,
+      "name": "Гнолл",
+      "nameEn": "Gnoll",
+      "size": 1,
+      "height": 1.123108012,
+      "lodTriangles": 24000
+    },
+    {
+      "slug": "ogre-2297",
+      "itemId": 2297,
+      "name": "Огр",
+      "nameEn": "Ogre",
+      "size": 2,
+      "height": 1.275555766,
+      "lodTriangles": 22000
+    },
+    {
+      "slug": "troll-2921",
+      "itemId": 2921,
+      "name": "Тролль",
+      "nameEn": "Troll",
+      "size": 2,
+      "height": 1.4,
+      "lodTriangles": 24000,
+      "lodAggression": 4,
+      "shadowTriangles": 8000,
+      "shadowAggression": 4
+    },
+    {
+      "slug": "mimic-2282",
+      "itemId": 2282,
+      "name": "Мимик",
+      "nameEn": "Mimic",
+      "size": 1,
+      "height": 0.733167033,
+      "lodTriangles": 20000
+    },
+    {
+      "slug": "brown-bear-1982",
+      "itemId": 1982,
+      "name": "Бурый медведь",
+      "nameEn": "Brown Bear",
+      "size": 2,
+      "height": 0.62,
+      "lodTriangles": 18000
+    },
+    {
+      "slug": "rat-1558",
+      "itemId": 1558,
+      "name": "Крыса",
+      "nameEn": "Rat",
+      "size": 0.5,
+      "height": 0.4,
+      "lodTriangles": 16000
+    },
+    {
+      "slug": "giant-rat-1620",
+      "itemId": 1620,
+      "name": "Гигантская крыса",
+      "nameEn": "Giant Rat",
+      "size": 1,
+      "height": 0.62,
+      "lodTriangles": 16000
+    },
+    {
+      "slug": "bandit-1664",
+      "itemId": 1664,
+      "name": "Разбойник",
+      "nameEn": "Bandit",
+      "size": 1,
+      "height": 1.300460682,
+      "lodTriangles": 22000
+    },
+    {
+      "slug": "cultist-1642",
+      "itemId": 1642,
+      "name": "Культист",
+      "nameEn": "Cultist",
+      "size": 1,
+      "height": 1.4,
+      "lodTriangles": 22000
+    },
+    {
+      "slug": "acolyte-1791",
+      "itemId": 1791,
+      "name": "Прислужник",
+      "nameEn": "Acolyte",
+      "size": 1,
+      "height": 1.4,
+      "lodTriangles": 22000,
+      "surfaceClosure": {
+        "pitch": 0.006,
+        "radius": 4,
+        "region": [
+          0.008,
+          -0.008,
+          -0.12,
+          0.05,
+          0.037,
+          -0.055
+        ]
+      }
+    },
+    {
+      "slug": "scout-1927",
+      "itemId": 1927,
+      "name": "Разведчик",
+      "nameEn": "Scout",
+      "size": 1,
+      "height": 1.4,
+      "lodTriangles": 24000
+    },
+    {
+      "slug": "animated-armor-2086",
+      "itemId": 2086,
+      "name": "Оживлённый доспех",
+      "nameEn": "Animated Armor",
+      "size": 1,
+      "height": 1.504355267,
+      "lodTriangles": 22000
+    },
+    {
+      "slug": "ghoul-2132",
+      "itemId": 2132,
+      "name": "Упырь",
+      "nameEn": "Ghoul",
+      "size": 1,
+      "height": 0.984848117,
+      "lodTriangles": 24000
+    },
+    {
+      "slug": "minotaur-2515",
+      "itemId": 2515,
+      "name": "Минотавр",
+      "nameEn": "Minotaur",
+      "size": 2,
+      "height": 1.45,
+      "lodTriangles": 24000
+    },
+    {
+      "slug": "lizardfolk-1899",
+      "itemId": 1899,
+      "name": "Людоящер",
+      "nameEn": "Lizardfolk",
+      "size": 1,
+      "height": 1.202293344,
+      "lodTriangles": 24000
+    },
+    {
+      "slug": "harpy-1995",
+      "itemId": 1995,
+      "name": "Гарпия",
+      "nameEn": "Harpy",
+      "size": 1,
+      "height": 1.4,
+      "lodTriangles": 25000,
+      "lodAggression": 4
+    },
+    {
+      "slug": "worg-1844",
+      "itemId": 1844,
+      "name": "Ворг",
+      "nameEn": "Worg",
+      "size": 2,
+      "height": 0.7,
+      "lodTriangles": 20000
+    }
+  ]
+}

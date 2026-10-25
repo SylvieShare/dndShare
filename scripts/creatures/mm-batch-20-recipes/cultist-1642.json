@@ -1,0 +1,50 @@
+{
+  "slug": "cultist-1642",
+  "itemId": 1642,
+  "itemIds": [
+    1642
+  ],
+  "modelId": "ec729111-ebec-5955-ba48-a8af93e01472",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1642",
+  "sourceName": "cultist-1642-miniature",
+  "name": "Культист",
+  "nameEn": "Cultist",
+  "code": "CRE-cultist",
+  "groupName": "Культист",
+  "groupNameEn": "Cultist",
+  "maxHeight": 1.4,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "height": 1.4,
+    "size": 1,
+    "lodTriangles": 22000,
+    "rotation": -45
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "calibration": {
+    "sourceDiameter": 0.6439055800437928,
+    "sourceOrigin": [
+      0.10192499999999999,
+      -0.011930000000000024,
+      -0.5009
+    ],
+    "rotation": -45
+  }
+}

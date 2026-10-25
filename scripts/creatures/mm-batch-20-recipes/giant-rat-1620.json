@@ -1,0 +1,50 @@
+{
+  "slug": "giant-rat-1620",
+  "itemId": 1620,
+  "itemIds": [
+    1620
+  ],
+  "modelId": "ade16cda-633b-55d7-88f8-86877f4b1077",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1620",
+  "sourceName": "giant-rat-1620-miniature",
+  "name": "Гигантская крыса",
+  "nameEn": "Giant Rat",
+  "code": "CRE-giant-rat",
+  "groupName": "Гигантская крыса",
+  "groupNameEn": "Giant Rat",
+  "maxHeight": 0.62,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "height": 0.62,
+    "size": 1,
+    "lodTriangles": 16000,
+    "rotation": -45
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "calibration": {
+    "sourceDiameter": 0.9418490865538198,
+    "sourceOrigin": [
+      -0.02576500000000001,
+      -0.06848499999999999,
+      -0.32458
+    ],
+    "rotation": -45
+  }
+}

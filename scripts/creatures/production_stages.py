@@ -6,7 +6,7 @@ import shutil
 import subprocess
 import sys
 
-from production_archives import archive_stage
+from production_archives import archive_stage, queue_mcp
 from miniature_review import placement_context, review_base, require_review
 from model_build_queue import file_hash, native_directory
 from trellis_checkpoint import write_json
@@ -76,7 +76,9 @@ def process(queue,entry,until,server_token):
         source=raw;extra=[]
         if entry.get('surfaceClosure'):
             source=geometry/'closed-source.glb';settings=entry['surfaceClosure']
-            execute([sys.executable,SCRIPTS/'close-native-surface.py',raw,source,'--pitch',settings['pitch'],'--radius',settings['radius']],logs/'closure.log')
+            command=[sys.executable,SCRIPTS/'close-native-surface.py',raw,source,'--pitch',settings['pitch'],'--radius',settings['radius']]
+            if settings.get('region'): command += ['--region', *settings['region']]
+            execute(command,logs/'closure.log')
             extra=[source,source.with_suffix('.json')]
         command=[sys.executable,SCRIPTS/'prepare-native-geometry.py',geometry,'--source',source,'--lod-triangles',entry['lodTriangles']]
         if entry.get('dropComponentsBelow'):command+=['--drop-components-below',entry['dropComponentsBelow']]
@@ -158,7 +160,7 @@ def process(queue,entry,until,server_token):
             command=[sys.executable,SCRIPTS/'publish-miniature.py',final,recipe,'--publish']
             receipt=final/'publication.json'
             if receipt.exists():command+=['--update-from',receipt]
-            execute(command,logs/'publish.log',env=dict(os.environ,MCP_AUTH_TOKEN=queue.mcp.token,GOCACHE='/private/tmp/dndshare-go-cache'))
+            execute(command,logs/'publish.log',env=dict(os.environ,MCP_AUTH_TOKEN=queue_mcp(queue).token,GOCACHE='/private/tmp/dndshare-go-cache'))
             return [receipt]
         stage('published',{'catalogue':file_hash(final/'catalogue.json'),'archive':file_hash(folder/'archives/ready-publication.json')},publish)
     return changed

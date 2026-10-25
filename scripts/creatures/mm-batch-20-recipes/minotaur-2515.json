@@ -1,0 +1,50 @@
+{
+  "slug": "minotaur-2515",
+  "itemId": 2515,
+  "itemIds": [
+    2515
+  ],
+  "modelId": "b5fae541-ab3c-55f6-b329-06f51e63689a",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2515",
+  "sourceName": "minotaur-2515-miniature",
+  "name": "Минотавр",
+  "nameEn": "Minotaur",
+  "code": "CRE-minotaur",
+  "groupName": "Минотавр",
+  "groupNameEn": "Minotaur",
+  "maxHeight": 1.45,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "build": {
+    "height": 1.45,
+    "size": 2,
+    "lodTriangles": 24000,
+    "rotation": -45
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "calibration": {
+    "sourceDiameter": 0.6217509590346239,
+    "sourceOrigin": [
+      0.08807,
+      -0.028270000000000003,
+      -0.50093
+    ],
+    "rotation": -45
+  }
+}
