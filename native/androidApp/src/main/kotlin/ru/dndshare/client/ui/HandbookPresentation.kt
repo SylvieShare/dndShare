@@ -112,21 +112,6 @@ internal fun itemStats(type: ItemType?, item: CatalogueItem, metadata: HandbookM
     return collect(fields, item.data).take(9)
 }
 
-internal fun rowIdentity(item: CatalogueItem, type: ItemType?, metadata: HandbookMetadata): Triple<String, String, List<String>> {
-    val data = item.data
-    val metric = when (item.typeId) {
-        5L -> (data["lvl"] as? JsonPrimitive)?.content?.let { if (it == "0") "—" else it }.orEmpty()
-        6L -> ((data["identity"] as? JsonObject)?.get("cr") as? JsonPrimitive)?.content.orEmpty()
-        else -> ""
-    }
-    val subtitle = itemStats(type, item, metadata).filter { it.label.isNotBlank() }.take(2).joinToString(" · ") { it.value }
-    val badges = buildList {
-        if ((data["concentration"] as? JsonPrimitive)?.booleanOrNull == true) add("К")
-        if ((data["ritual"] as? JsonPrimitive)?.booleanOrNull == true) add("Р")
-    }
-    return Triple(metric, subtitle, badges)
-}
-
 internal fun filterChoices(field: JsonObject, metadata: HandbookMetadata): List<Pair<JsonElement, String>> {
     if (field.text("type") in setOf("bool", "boolean")) return listOf(JsonPrimitive(true) to "Да", JsonPrimitive(false) to "Нет")
     if (field.text("type") in setOf("suggest", "suggest_array")) {

@@ -10,6 +10,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.animation.core.animateFloatAsState
+import coil3.ImageLoader
+import coil3.compose.AsyncImage
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
@@ -23,7 +27,7 @@ import ru.dndshare.designsystem.*
 
 @Composable
 internal fun HandbookListPane(
-    rows: List<ItemSummary>, type: ItemType?, metadata: HandbookMetadata, selected: Long?,
+    rows: List<ItemSummary>, type: ItemType?, metadata: HandbookMetadata, selected: Long?, images: ImageLoader, loading: Boolean,
     query: String, search: (String) -> Unit, groupBy: String, group: (String) -> Unit,
     filtered: Boolean, filters: () -> Unit, hasMore: Boolean, more: () -> Unit, open: (Long) -> Unit,
 ) {
@@ -32,7 +36,7 @@ internal fun HandbookListPane(
     val groupFields = schemaLeaves(type?.fields as? JsonArray ?: JsonArray(emptyList()))
         .filter { (_, field) -> (field["group"] as? JsonPrimitive)?.booleanOrNull == true }
         .map { (path, field) -> JsonObject(field + ("key" to JsonPrimitive(path))) }
-    var collapsed by rememberSaveable(groupBy, type?.id) { mutableStateOf(emptyList<String>()) }
+    var expanded by rememberSaveable(groupBy, type?.id) { mutableStateOf(emptyList<String>()) }
     val sections = remember(entries, groupBy, metadata) {
         if (groupBy.isBlank()) mapOf("" to entries) else entries.groupBy { item ->
             val field = groupFields.firstOrNull { it.text("key") == groupBy } ?: JsonObject(emptyMap())
@@ -42,46 +46,45 @@ internal fun HandbookListPane(
     }
     Surface(Modifier.fillMaxSize(), color = WebPalette.Background, border = BorderStroke(1.dp, WebPalette.Border)) {
         Column {
-            Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                ShareSearch(query, search, placeholder = "Поиск по справочнику")
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    ShareAction("Фильтры и источники", filters, active = filtered, icon = Glyph.Filter)
-                    if (groupFields.isNotEmpty()) {
-                        var expanded by remember { mutableStateOf(false) }
-                        Box {
-                            ShareAction("Группировка", { expanded = true }, active = groupBy.isNotBlank())
-                            DropdownMenu(expanded, { expanded = false }) {
-                                DropdownMenuItem(text = { Text("Без группировки") }, onClick = { group(""); expanded = false })
-                                groupFields.forEach { field -> DropdownMenuItem(text = { Text(field.text("name")) },
-                                    onClick = { group(field.text("key")); expanded = false }) }
-                            }
-                        }
-                    }
-                }
-            }
+            HandbookListControls(query, search, groupBy, group, groupFields, filtered, filters, filterFields(type?.fields as? JsonArray ?: JsonArray(emptyList())).isNotEmpty() || metadata.books.isNotEmpty())
             HorizontalDivider()
-            LazyColumn(Modifier.weight(1f), state = listState, contentPadding = PaddingValues(12.dp),
-                verticalArrangement = Arrangement.spacedBy(5.dp)) {
+            LazyColumn(Modifier.weight(1f), state = listState, contentPadding = PaddingValues(start = DesignTokens.List.RowMargin, end = DesignTokens.List.RowMargin, top = DesignTokens.List.BodyTop, bottom = DesignTokens.List.BodyBottom),
+                verticalArrangement = Arrangement.spacedBy(DesignTokens.List.RowGap)) {
                 sections.forEach { (label, entries) ->
                     if (label.isNotBlank()) item(key = "group:$label") {
                         Row(Modifier.fillMaxWidth().heightIn(min = 48.dp).clickable(role = Role.Button) {
-                            collapsed = if (label in collapsed) collapsed - label else collapsed + label
-                        }.semantics { stateDescription = if (label in collapsed) "Свернуто" else "Раскрыто" },
+                            expanded = if (label in expanded) expanded - label else expanded + label
+                        }.semantics { stateDescription = if (label in expanded) "Раскрыто" else "Свернуто" },
                             verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            AppGlyph(Glyph.Chevron, Modifier.size(16.dp).rotate(if (label in collapsed) 0f else 90f))
+                            val rotation by animateFloatAsState(if (label in expanded) 90f else 0f, label = "Group expansion")
+                            AppGlyph(Glyph.Chevron, Modifier.size(13.dp).rotate(rotation))
                             Text(label, style = MaterialTheme.typography.titleSmall)
                             ShareBadge(entries.size.toString(), color = WebPalette.TextSecondary)
                             HorizontalDivider(Modifier.weight(1f))
                         }
                     }
-                    if (label !in collapsed) items(entries, key = { it.id }) { item ->
+                    if (label.isBlank() || label in expanded) items(entries, key = { it.id }) { item ->
                         val itemType = metadata.types.firstOrNull { it.id == item.typeId }
-                        val (metric, subtitle, badges) = remember(item, metadata) { rowIdentity(item, itemType, metadata) }
-                        ShareContentRow(item.name, item.nameEn.orEmpty(), subtitle.ifBlank { if (type == null) itemType?.name.orEmpty() else "" },
-                            item.id == selected, { open(item.id) }, metric = metric, badges = badges)
+                        val row = remember(item, metadata) { handbookRow(item, itemType, metadata) }
+                        ShareContentRow(item.name, row.alternate, row.subtitle,
+                            item.id == selected, { open(item.id) }, modifier = Modifier.animateItem(),
+                            metric = row.metric, metricColor = when {
+                                item.typeId == 6L -> WebPalette.Danger
+                                item.typeId == 5L && row.metric == "—" -> WebPalette.Accent
+                                else -> WebPalette.AccentSoft
+                            },
+                            icon = {
+                                row.imageUrl?.let { AsyncImage(it, null, imageLoader = images,
+                                    contentScale = ContentScale.Fit, modifier = Modifier.size(DesignTokens.List.Icon)) }
+                            }, trailing = {
+                                row.badges.forEach { badge -> ShareBadge(badge, color = if (badge == "Р") WebPalette.Success else WebPalette.AccentSoft) }
+                                if (row.trailing.isNotBlank()) Text(row.trailing, style = MaterialTheme.typography.labelMedium,
+                                    color = WebPalette.TextSecondary, maxLines = 1)
+                            })
                     }
                 }
-                if (rows.isEmpty()) item { EmptyContent("Ничего не найдено", "Попробуйте другое название или снимите фильтры.") }
+                if (loading) item { Box(Modifier.fillMaxWidth().padding(24.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() } }
+                else if (rows.isEmpty()) item { EmptyContent("Ничего не найдено", "Попробуйте другое название или снимите фильтры.") }
                 if (hasMore) item { ShareAction("Показать ещё", more, Modifier.fillMaxWidth()) }
             }
         }

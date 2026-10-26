@@ -5,7 +5,7 @@ from pathlib import Path
 import re
 
 FORMATS = {"phone", "tablet", "wide"}
-STATES = {"collections", "menu", "record"}
+STATES = {"collections", "menu", "list", "record"}
 
 
 def read_exceptions(path):

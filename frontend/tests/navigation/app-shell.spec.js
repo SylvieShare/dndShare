@@ -30,13 +30,11 @@ for (const width of [320, 390, 599, 600, 834, 1199, 1200, 1440]) {
       await expect.poll(async () => (await desktop.boundingBox()).width).toBe(224)
       await expect(page.getByRole('button', { name: 'Открыть меню' })).toHaveCount(0)
     } else {
-      await expect(header.locator('.header-title')).toHaveText('Справочник')
+      await expect(header.locator('.handbook-heading')).toHaveText('Справочник')
       await expect(header.locator('.header-context')).toHaveText('D&D 5e · 2014')
       expect((await header.boundingBox()).height).toBe(65)
-      if (width >= 600) {
-        await expect(rail).toBeVisible()
-        expect((await rail.boundingBox()).width).toBe(64)
-      } else await expect(rail).toHaveCount(0)
+      await expect(rail).toHaveCount(0)
+      expect((await page.locator('.page-transition-stage').boundingBox()).x).toBe(0)
       const trigger = page.getByRole('button', { name: 'Открыть меню', exact: true })
       await trigger.click()
       await expect(drawer).toBeVisible()
@@ -111,4 +109,18 @@ test('game context popover stays above the drawer and Escape closes only the top
   await expect(drawer).toBeVisible()
   await page.keyboard.press('Escape')
   await expect(drawer).toBeHidden()
+})
+
+test('wide navigation resizes its existing column and keeps content beside it', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/handbook')
+  const sidebar = page.locator('.desktop-sidebar--desktop')
+  const stage = page.locator('.page-transition-stage')
+  for (const [action, width] of [['Свернуть панель', 64], ['Раскрыть панель', 224]]) {
+    await page.getByRole('button', { name: action, exact: true }).click()
+    await expect.poll(async () => Math.round((await sidebar.boundingBox()).width)).toBe(width)
+    await expect.poll(async () => Math.round((await stage.boundingBox()).x)).toBe(width)
+    await expect(page.getByRole('dialog', { name: 'Меню приложения' })).toHaveCount(0)
+    await expect(sidebar).toHaveCount(1)
+  }
 })

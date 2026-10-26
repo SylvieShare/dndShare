@@ -48,6 +48,7 @@ fun DndShareApp(controller: AppController, fold: FoldInfo? = null, onBackground:
 private fun AuthenticatedApp(controller: AppController, state: AppState, fold: FoldInfo?) {
     var page by rememberSaveable { mutableStateOf(AppPage.Handbook.name) }
     val pages = rememberSaveableStateHolder()
+    val handbookHeading = remember { HandbookHeadingState() }
     val focus = LocalFocusManager.current
     val keyboard = LocalSoftwareKeyboardController.current
     val context = LocalPlatformContext.current
@@ -77,7 +78,10 @@ private fun AuthenticatedApp(controller: AppController, state: AppState, fold: F
             Scaffold(
                 containerColor = MaterialTheme.colorScheme.background,
                 contentWindowInsets = WindowInsets(0, 0, 0, 0),
-                topBar = { AppHeader(format, selectedPage, state, openMenu) },
+                topBar = { AppHeader(format, selectedPage, state, openMenu,
+                    heading = if (selectedPage == AppPage.Handbook) ({
+                        HandbookHeading(handbookHeading.type, images, handbookHeading::goHome)
+                    }) else null) },
             ) { padding ->
                 Column(Modifier.fillMaxSize().padding(padding)) {
                     ConnectionStatus(state) { controller.refresh(force = true) }
@@ -85,7 +89,7 @@ private fun AuthenticatedApp(controller: AppController, state: AppState, fold: F
                         pages.SaveableStateProvider(displayedPage.name) {
                             when (displayedPage) {
                                 AppPage.Characters -> CharacterScreen(state, format, images) { controller.refresh(force = true) }
-                                AppPage.Handbook -> HandbookScreen(state, format, fold, images) { controller.refresh(force = true) }
+                                AppPage.Handbook -> HandbookScreen(state, format, fold, images, handbookHeading)
                                 else -> PlaceholderScreen(displayedPage)
                             }
                         }

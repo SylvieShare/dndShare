@@ -31,7 +31,7 @@ test.beforeEach(async ({ page }) => {
   })
 })
 
-for (const width of [320, 390, 560, 700, 1280]) {
+for (const width of [320, 390, 560, 700, 834, 1280]) {
   test(`collection and long detail remain usable at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 800 })
     await page.goto('/handbook?type=6')
@@ -39,16 +39,15 @@ for (const width of [320, 390, 560, 700, 1280]) {
     const detail = page.locator('.handbook-detail')
     await expect(list.locator('.list-row')).toHaveCount(30, { timeout: 20000 })
     await expect(page).toHaveTitle('Бестиарий · D&D 5e · 2014')
-    await expect(page.locator('.handbook-col-bar .col-type-name')).toHaveText('Бестиарий')
-    await expect(page.locator('.handbook-col-bar .col-type-count')).toHaveText('45')
-    const icon = page.locator('.handbook-col-bar .col-type-icon img')
+    const heading = page.locator('.handbook-heading:visible')
+    await expect(heading.locator('.handbook-heading-name')).toHaveText('Бестиарий')
+    await expect(page.locator('.handbook-col-bar')).toHaveCount(0)
+    const icon = heading.locator('.handbook-heading-icon img')
     await expect(icon).toHaveAttribute('src', type.iconImageUrl)
     await expect.poll(() => icon.evaluate(img => img.naturalWidth)).toBeGreaterThan(0)
-    const homeLink = page.locator('.handbook-col-bar').getByRole('link', { name: 'Справочник', exact: true })
-    if (width >= 600) {
-      await expect(homeLink).toBeVisible()
-      await expect(homeLink).toHaveAttribute('href', '/handbook')
-    } else await expect(homeLink).toBeHidden()
+    const homeLink = heading.getByRole('link', { name: 'Справочник', exact: true })
+    await expect(homeLink).toBeVisible()
+    await expect(homeLink).toHaveAttribute('href', '/handbook')
     await expect(page.getByText('К коллекциям', { exact: true })).toHaveCount(0)
     await expect(page.locator('.header-chip')).toHaveCount(0)
 
@@ -130,7 +129,7 @@ test('linked collection and item titles keep their edition independently of the 
   await expect(page).toHaveTitle('Существо 01 · D&D 5e · 2024')
   await page.goBack()
   await expect(page).toHaveTitle('Бестиарий · D&D 5e · 2024')
-  await page.locator('.handbook-col-bar').getByRole('link', { name: 'Справочник', exact: true }).click()
+  await page.locator('.handbook-heading:visible').getByRole('link', { name: 'Справочник', exact: true }).click()
   await expect(page).toHaveTitle('Справочник · D&D 5e · 2014')
 })
 
@@ -163,3 +162,20 @@ test.describe('touch scrolling', () => {
     await expect(page).toHaveURL(/item=1/)
   })
 })
+
+for (const reducedMotion of ['no-preference', 'reduce']) {
+  test(`collection transitions allow a quick return with ${reducedMotion}`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion })
+    await page.setViewportSize({ width: 834, height: 900 })
+    await page.goto('/handbook')
+    await page.locator('.hb-collection-card').click()
+    await page.locator('.handbook-heading:visible').getByRole('link', { name: 'Справочник', exact: true }).click()
+    await expect(page.locator('.hb-collection-card')).toBeVisible()
+    await page.locator('.hb-collection-card').click()
+    await expect(page.locator('.handbook-list .list-row').first()).toBeVisible()
+    await page.locator('.handbook-heading:visible').getByRole('link', { name: 'Справочник', exact: true }).click()
+    await expect(page.locator('.hb-landing')).toBeVisible()
+    expect(await page.locator('.hb-landing').evaluate(el => !!el.closest('[inert]'))).toBe(false)
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(834)
+  })
+}

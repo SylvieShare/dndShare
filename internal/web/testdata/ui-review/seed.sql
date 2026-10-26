@@ -11,8 +11,9 @@ VALUES (1,'Оружие',1,'Снаряжение для учебного при�
        (7,'Черты',1,'Таланты и особые умения.','[]',2);
 INSERT INTO dndshare.item(id,type_id,name,data,cover_image_id)
 SELECT id,5,CASE WHEN id=1 THEN $2 ELSE 'Заклинание '||lpad(id::text,3,'0') END,
-       jsonb_build_object('description','<p>'||$3||'</p>'),CASE WHEN id=1 THEN 1 END
+       jsonb_build_object('description','<p>'||$3||'</p>','lvl',CASE WHEN id=1 THEN 1 ELSE 0 END),CASE WHEN id=1 THEN 1 END
 FROM generate_series(1,205) AS id;
+UPDATE dndshare.item SET name_en='flame_primer' WHERE id=1;
 INSERT INTO dndshare.item(id,type_id,name,data)
 VALUES (206,1,'Учебный посох','{}'),(207,2,'Дорожная книга','{}'),
        (208,6,'Лесной светлячок','{}'),(209,7,'Внимательный читатель','{}');

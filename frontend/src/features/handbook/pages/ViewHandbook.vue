@@ -1,28 +1,17 @@
 <template>
   <div class="handbook-outer" :class="[!selectedType ? 'handbook-outer--landing' : mobilePanel]">
 
-    <!-- ── Collection bar: full viewport width ── -->
-    <HandbookCollectionBar
-      v-if="selectedType"
-      :type="selectedType"
-      :can-add="isAuth"
-      :result-count="filteredItems.length"
-      :has-more="hasMore"
-      :filtered="isFiltered"
-      :show-controls="false"
-      class="handbook-col-bar"
-      @add="openAddModal"
-    >
-      <template #before-identity>
-        <span class="handbook-collection-home">
-          <RouterLink to="/handbook">Справочник</RouterLink>
-          <span aria-hidden="true">·</span>
-        </span>
-      </template>
-    </HandbookCollectionBar>
+    <header v-if="selectedType" class="handbook-collection-header">
+      <HandbookHeading :type="selectedType" />
+      <AddButton v-if="isAuth && !compact" label="Добавить" @click="openAddModal" />
+    </header>
 
+    <Teleport v-if="selectedType && isAuth && compact" to="#app-header-actions" defer>
+      <AddButton variant="icon" label="Добавить" @click="openAddModal" />
+    </Teleport>
+    <Transition :name="collectionTransition" mode="out-in" @before-leave="el => { el.inert = true }">
     <!-- ── Inner: max-width centered ── -->
-    <div class="handbook-page">
+    <div :key="selectedType?.id || 'home'" class="handbook-page">
 
       <!-- ── Landing: shown when no type is selected ── -->
       <HandbookLanding
@@ -86,6 +75,8 @@
       </template>
     </div>
 
+    </Transition>
+
     <ItemEditModal
       v-if="itemForm.open && selectedType"
       :type-id="selectedType.id"
@@ -102,10 +93,10 @@
 </template>
 
 <script setup>
-import { ActionButton } from '@sylvieshare/share-ui'
+import { ActionButton, AddButton } from '@sylvieshare/share-ui'
 import { ArrowLeft } from '@lucide/vue'
 import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { fetchGet } from '@/shared/api/http'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { contentSourcesApi } from '@/shared/api/contentSourcesApi'
@@ -115,15 +106,17 @@ import { useSuggestStore } from '@/stores/suggest'
 import { useGameContextStore } from '@/stores/gameContext'
 import { collectSuggestIds, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
 import { useHandbookSwipeBack } from '@/features/handbook/composables/useHandbookSwipeBack'
+import { useAppLayout } from '@/shared/composables/useAppLayout'
 import { useHandbookTitle } from '@/features/handbook/composables/useHandbookTitle'
 import HandbookLanding from '@/features/handbook/pages/HandbookLanding'
-import HandbookCollectionBar from '@/features/handbook/components/HandbookCollectionBar'
+import HandbookHeading from '@/features/handbook/components/HandbookHeading.vue'
 import HandbookItemList from '@/features/handbook/components/HandbookItemList'
 import HandbookItemDetail from '@/features/handbook/components/HandbookItemDetail'
 import { canEditHandbookItem } from '@/features/items/lib/itemPermissions'
 import ItemEditModal from '@/features/character-editor/components/ItemEditModal'
 
 // ── Router ──────────────────────────────────────────────────────────────────
+const { compact } = useAppLayout()
 const route = useRoute()
 const router = useRouter()
 
@@ -136,6 +129,8 @@ const gameContextStore = useGameContextStore()
 // ── State ────────────────────────────────────────────────────────────────────
 const types = ref([])
 const selectedType = ref(null)
+const collectionTransition = ref('handbook-forward')
+watch(selectedType, (next, previous) => { collectionTransition.value = next && !previous ? 'handbook-forward' : 'handbook-backward' }, { flush: 'sync' })
 const items = ref([])
 const selectedItem = ref(null)
 const loading = ref(false)

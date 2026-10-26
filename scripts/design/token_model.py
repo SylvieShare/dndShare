@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / 'design/tokens.json'
-GROUPS = {'layout', 'spacing', 'radius', 'collection', 'canvas'}
+GROUPS = {'layout', 'spacing', 'radius', 'collection', 'canvas', 'list', 'motion'}
 FAMILIES = {'display', 'prose', 'ui'}
 # Match the ranges declared by local @font-face and native font resources.
 FONT_WEIGHTS = {'display': (500, 700), 'prose': (400, 700), 'ui': (100, 900)}
@@ -17,6 +17,8 @@ REQUIRED = {
     'collection': {'min-height', 'padding', 'emblem', 'art-inset', 'grid-gap'},
     'canvas': {'step', 'radius', 'opacity'},
     'spacing': {'xs', 'compact', 'small', 'label', 'medium', 'large', 'page', 'section'},
+    'list': {'min-height', 'icon', 'gap', 'padding-end', 'metric-min', 'metric-max', 'metric-padding-max', 'body-top', 'body-bottom', 'row-margin', 'row-gap'},
+    'motion': {'enter', 'exit', 'navigation', 'feedback', 'distance'},
     'radius': {'xs', 'small', 'medium', 'large', 'xl', 'tile', 'badge', 'row'},
 }
 
@@ -60,6 +62,10 @@ def validate(data):
         raise ValueError('Invalid window/rail ordering')
     if layout['touch-min'] < 48 or data['collection']['min-height'] <= 2 * data['collection']['padding']:
         raise ValueError('Touch target or tile content cannot fit')
+    if data['list']['metric-min'] > data['list']['metric-max'] or data['list']['icon'] > data['list']['min-height']:
+        raise ValueError('Invalid list geometry')
+    if any(not isinstance(value, int) for key, value in data['motion'].items() if key != 'distance'):
+        raise ValueError('Motion durations must be whole milliseconds')
     if not 0 < data['canvas']['opacity'] <= 1:
         raise ValueError('Canvas opacity must be in (0,1]')
     if not data['typography']:

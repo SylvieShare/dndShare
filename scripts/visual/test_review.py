@@ -52,7 +52,7 @@ class ReviewEvidenceTest(unittest.TestCase):
         manifest = {"screenshots": self.entries, "approvedExceptions": [{"reason": "<reviewed>"}],
                     "sourceSHA": "a", "sourceHash": "b", "dataFixtureHash": "c", "edition": "2014", "recordID": 1}
         rendered = render_html(manifest)
-        self.assertEqual(rendered.count('<img src="'), 18)
+        self.assertEqual(rendered.count('<img src="'), len(self.entries))
         self.assertIn("Требуется ручная", rendered)
         self.assertIn("&lt;reviewed&gt;", rendered)
         self.assertIn("insets dp", rendered)
@@ -115,7 +115,8 @@ class ReviewEvidenceTest(unittest.TestCase):
 
 class EmulatorSafetyTest(unittest.TestCase):
     def test_real_device_rejected_before_any_mutation(self):
-        with tempfile.TemporaryDirectory() as directory, patch("adb.run", return_value=b"0") as command:
+        with tempfile.TemporaryDirectory() as directory, patch("adb.adb_path", return_value="adb"), \
+                patch("adb.run", return_value=b"0") as command:
             with self.assertRaisesRegex(RuntimeError, "real devices"):
                 Emulator("phone", directory)
             self.assertEqual(command.call_count, 1)

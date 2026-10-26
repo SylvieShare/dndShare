@@ -266,7 +266,7 @@ function onScroll(e) {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 8px 0 14px;
+  padding: var(--list-body-top) 0 var(--list-body-bottom);
 }
 
 .items-list { display: flex; flex-direction: column; }
@@ -316,7 +316,7 @@ function onScroll(e) {
 }
 
 /* Row appearance belongs to share-ui/ContentRow; only placement is local. */
-.list-row { margin: 2px 8px; flex: none; }
+.list-row { margin: calc(var(--list-row-gap) / 2) var(--list-row-margin); flex: none; }
 .list-spacer { flex: none; pointer-events: none; }
 
 /* ── Load more ── */

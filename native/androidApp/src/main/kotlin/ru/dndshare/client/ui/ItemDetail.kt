@@ -22,14 +22,16 @@ import ru.dndshare.designsystem.*
 @Composable
 fun ItemDetail(cache: CacheDao, sourceId: Long, id: Long, metadata: HandbookMetadata,
     images: ImageLoader, back: () -> Unit, open: (Long) -> Unit) {
+    var resolved by remember(sourceId, id) { mutableStateOf(false) }
     val payload by produceState<String?>(null, sourceId, id) {
-        cache.observeItem(sourceId, id).collect { value = it }
+        cache.observeItem(sourceId, id).collect { value = it; resolved = true }
     }
     val item = remember(payload) { payload?.let { WireJson.decodeFromString<CatalogueItem>(it) } }
     Surface(Modifier.fillMaxSize(), color = WebPalette.Background, border = BorderStroke(1.dp, WebPalette.Border)) {
-        if (item == null) EmptyContent("Запись недоступна", "Она могла быть удалена или ещё не загрузилась.")
+        if (!resolved) Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+        else if (item == null) EmptyContent("Запись недоступна", "Она могла быть удалена или ещё не загрузилась.")
         else key(id) {
-            val record = item!!
+            val record = item
             val type = metadata.types.firstOrNull { it.id == record.typeId }
             Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
                 ItemCover(record, type, metadata, images, back)

@@ -1,7 +1,9 @@
 <template>
-  <DesktopSidebar v-if="!phone" :key="compact ? 'rail' : 'desktop'" :mode="compact ? 'rail' : 'desktop'" @open-menu="openMenu" />
+  <DesktopSidebar v-if="!compact" mode="desktop" />
   <div v-if="compact" class="app-compact-header">
-    <AppHeader :menu-open="menuOpen" @open-menu="openMenu" />
+    <AppHeader :menu-open="menuOpen" @open-menu="openMenu">
+      <template v-if="route.meta?.section === 'handbook'" #title><HandbookHeading /></template>
+    </AppHeader>
   </div>
   <AppDrawer v-if="compact" id="app-navigation-drawer" v-model="menuOpen" aria-label="Меню приложения"
     :show-close="false" :width="layoutTokens.drawer" :z-index="100" swipe-to-close>
@@ -16,13 +18,14 @@ import { useRoute } from 'vue-router'
 import { AppDrawer } from '@sylvieshare/share-ui'
 import { layoutTokens } from '@/app/design-tokens'
 import AppHeader from './AppHeader.vue'
+import HandbookHeading from '@/features/handbook/components/HandbookHeading.vue'
 import AppAuthDialogs from '@/features/auth/components/AppAuthDialogs.vue'
 import DesktopSidebar from './DesktopSidebar.vue'
 import { useAppLayout } from '@/shared/composables/useAppLayout'
 import { useAppDrawerGesture } from '@/shared/composables/useAppDrawerGesture'
 import { useAccountStore } from '@/stores/account'
 
-const { phone, compact } = useAppLayout()
+const { compact } = useAppLayout()
 const route = useRoute()
 const account = useAccountStore()
 const menuOpen = ref(false)

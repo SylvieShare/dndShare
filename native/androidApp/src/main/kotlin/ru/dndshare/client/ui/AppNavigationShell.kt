@@ -31,9 +31,9 @@ internal fun AppNavigationShell(
     LaunchedEffect(isWide) { if (isWide) drawer.close() }
     val panelWidth by animateDpAsState(when (format) {
         LayoutFormat.Phone -> 0.dp
-        LayoutFormat.Tablet -> DesignTokens.Layout.SidebarCollapsed
+        LayoutFormat.Tablet -> 0.dp
         LayoutFormat.Wide -> if (wideExpanded) DesignTokens.Layout.SidebarExpanded else DesignTokens.Layout.SidebarCollapsed
-    }, tween(220), label = "Sidebar width")
+    }, tween(DesignTokens.Motion.Navigation), label = "Sidebar width")
     val openMenu: () -> Unit = {
         if (isWide) wideExpanded = !wideExpanded else scope.launch { drawer.open() }
     }
@@ -57,7 +57,7 @@ internal fun AppNavigationShell(
         },
     ) {
         Row(Modifier.fillMaxSize()) {
-            if (format != LayoutFormat.Phone) Surface(
+            if (isWide) Surface(
                 modifier = Modifier.width(panelWidth).fillMaxHeight(), shadowElevation = 6.dp,
                 border = BorderStroke(1.dp, WebPalette.BorderStrong), color = WebPalette.Surface,
             ) {

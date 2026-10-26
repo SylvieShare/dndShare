@@ -14,11 +14,6 @@
     collapse-label="Свернуть панель"
   >
     <template #brand>
-      <button v-if="mode === 'rail'" class="sidebar-menu-trigger" type="button" aria-label="Открыть меню"
-        aria-controls="app-navigation-drawer" @click="emit('open-menu')">
-        <img class="brand-mark" src="/brand-mark.webp" alt="" />
-      </button>
-      <template v-else>
       <SidebarBrand :as="RouterLink" to="/" label="DnD Share" aria-label="DnD Share">
         <template #icon>
           <img class="brand-mark" src="/brand-mark.webp" alt="" />
@@ -27,7 +22,6 @@
       <button v-if="mode === 'drawer'" class="sidebar-menu-trigger" type="button" aria-label="Закрыть меню" @click="emit('close-menu')">
         <X :size="24" aria-hidden="true" />
       </button>
-      </template>
     </template>
 
     <template #default="{ expanded, toggle }">
@@ -86,8 +80,8 @@ import { resolveAppNavigation } from '@/shared/lib/appNavigation'
 import { useAccountStore } from '@/stores/account'
 import { useGameContextStore } from '@/stores/gameContext'
 
-const props = defineProps({ mode: { type: String, default: 'desktop' } })
-const emit = defineEmits(['open-menu', 'close-menu', 'navigate'])
+defineProps({ mode: { type: String, default: 'desktop' } })
+const emit = defineEmits(['close-menu', 'navigate'])
 const route = useRoute()
 const accountStore = useAccountStore()
 const gameContextStore = useGameContextStore()
@@ -119,7 +113,6 @@ function startsGroup(item) {
 }
 
 async function openSearch(toggle) {
-  if (props.mode === 'rail') { emit('open-menu', 'search'); return }
   toggle()
   await nextTick()
   searchRef.value?.focus()

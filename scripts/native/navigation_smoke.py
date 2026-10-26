@@ -92,7 +92,8 @@ class NavigationSmoke:
     def adaptive(self, layout):
         root = self.tree()
         if layout == "tablet":
-            assert self.described(root, "Раскрыть панель"), "Tablet should have a compact rail"
+            assert self.described(root, "Открыть меню"), "Tablet should have a hidden menu with a header opener"
+            assert not self.described(root, "Раскрыть панель"), "Tablet must not retain a rail behind the drawer"
             self.open_menu()
             self.snapshot("tablet-menu")
             self.navigate("Карты")

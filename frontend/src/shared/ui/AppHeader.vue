@@ -9,11 +9,12 @@
         :aria-expanded="menuOpen" aria-controls="app-navigation-drawer" @click="emit('open-menu')">
         <Menu :size="24" aria-hidden="true" />
       </button>
-      <MobileHeaderBack v-if="mobileBackTarget" :to="mobileBackTarget" />
+      <MobileHeaderBack v-if="mobileBackTarget && (!isHandbook || route.query.item)" :to="mobileBackTarget" :icon-only="isHandbook" />
       <div class="header-heading">
-        <span class="header-title">{{ title }}</span>
+        <slot name="title"><span class="header-title">{{ title }}</span></slot>
         <span v-if="contextLabel" class="header-context">{{ contextLabel }}</span>
       </div>
+      <div id="app-header-actions" class="header-actions" />
       <span v-if="headerContext.chip" class="header-chip"
         :style="headerContext.chip.color ? { '--chip-color': headerContext.chip.color } : {}">
         {{ headerContext.chip.label }}
@@ -46,6 +47,7 @@ const mobileHeaderHidden = computed(() => phone.value && headerMode.value === MO
 const effectiveHeaderHidden = computed(() => headerCollapsible.value && uiStore.headerHidden)
 const mobileBackTarget = computed(() => resolveMobileBackTarget(route))
 const headerContext = computed(() => uiStore.resolveHeader(route.name, route.meta?.title, false))
+const isHandbook = computed(() => route.meta?.section === 'handbook')
 const sectionTitles = { handbook: 'Справочник', rules: 'Правила игрока' }
 const title = computed(() => sectionTitles[route.meta?.section] || headerContext.value.title)
 const contextLabel = computed(() => {
@@ -74,10 +76,12 @@ const contextLabel = computed(() => {
 .header-title { font-family: var(--type-header-family); letter-spacing: var(--type-header-tracking); font-size: var(--type-header-size); line-height: var(--type-header-line-height); font-weight: var(--type-header-weight); }
 .header-context { color: var(--text-2); font-family: var(--type-context-family); letter-spacing: var(--type-context-tracking); font-size: var(--type-context-size); line-height: var(--type-context-line-height); font-weight: var(--type-context-weight); }
 .header-title, .header-context { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.header-actions { display: flex; align-items: center; flex: 0 0 auto; }
+.header-actions:empty { display: none; }
 .header-chip { color: var(--chip-color, var(--text-2)); font-size: 12px; flex-shrink: 0; }
 .app-header--collapsible { position: sticky; top: 0; }
 .app-header--mobile-hidden, .header-hidden { max-height: 0; opacity: 0; overflow: hidden; border-bottom-width: 0; pointer-events: none; }
 @media (--ui-phone) { .header-inner { padding: 0 var(--spacing-small); } }
-@media (--ui-from-tablet) { .header-menu { display: none; } }
+
 @media (prefers-reduced-motion: reduce) { .app-header { transition: none; } }
 </style>

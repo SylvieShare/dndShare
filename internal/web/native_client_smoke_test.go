@@ -77,11 +77,11 @@ func TestNativeClientSmokePostgres(t *testing.T) {
  INSERT INTO dndshare."char"(user_id,template_id,source_version_id,data)
  VALUES($1,1,1,'{"values":{"name":"Лира","lvl":{"level":7}}}');
  INSERT INTO dndshare.item_type(id,name,source_id,fields)
- VALUES(5,'Заклинания',1,'[{"key":"description","name":"Описание","type":"description"}]');
+ VALUES(5,'Заклинания',1,'[{"key":"description","name":"Описание","type":"description"},{"key":"lvl","name":"Уровень","type":"int","filter":true,"filter_values":[0,1]}]');
  INSERT INTO dndshare.storage_image(id,url,type,mime_type) VALUES(1,$2,'ITEM_COVER','image/png');
  INSERT INTO dndshare.item(id,type_id,name,data,cover_image_id)
  SELECT id,5,CASE id WHEN 1 THEN 'Native Flame' WHEN 2 THEN 'Native Retired' ELSE 'Spell '||id END,
- '{"description":"<p>Это описание из локальной базы.</p>"}',CASE WHEN id=1 THEN 1 END
+ '{"description":"<p>Это описание из локальной базы.</p>","lvl":1}',CASE WHEN id=1 THEN 1 END
  FROM generate_series(1,205) AS id;
  INSERT INTO dndshare.item_version_compatibility(item_id,source_version_id,status)
  SELECT id,1,'native' FROM dndshare.item;`, userID, androidURL+"/__test/image.png")

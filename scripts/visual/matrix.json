@@ -1,10 +1,30 @@
 {
   "schemaVersion": 1,
   "formats": [
-    {"name": "phone", "width": 390, "height": 900},
-    {"name": "tablet", "width": 834, "height": 1100},
-    {"name": "wide", "width": 1440, "height": 1000}
+    {
+      "name": "phone",
+      "width": 390,
+      "height": 900
+    },
+    {
+      "name": "tablet",
+      "width": 834,
+      "height": 1100
+    },
+    {
+      "name": "wide",
+      "width": 1440,
+      "height": 1000
+    }
   ],
-  "states": ["collections", "menu", "record"],
-  "platforms": ["web", "android"]
+  "states": [
+    "collections",
+    "menu",
+    "list",
+    "record"
+  ],
+  "platforms": [
+    "web",
+    "android"
+  ]
 }

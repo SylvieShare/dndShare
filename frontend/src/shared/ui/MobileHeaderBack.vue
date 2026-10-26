@@ -1,9 +1,9 @@
 <template>
-  <button class="mobile-header-back" type="button" aria-label="Назад" @click="navigateBack">
+  <button class="mobile-header-back" :class="{ 'mobile-header-back--icon-only': iconOnly }" type="button" aria-label="Назад" @click="navigateBack">
     <svg viewBox="0 0 16 16" fill="none" width="16" height="16" aria-hidden="true">
       <path d="M10 13L5 8L10 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
-    <span>Назад</span>
+    <span v-if="!iconOnly">Назад</span>
   </button>
 </template>
 
@@ -11,6 +11,7 @@
 import { useRouter } from 'vue-router'
 
 const props = defineProps({
+  iconOnly: Boolean,
   to: { type: [String, Object], required: true },
 })
 

@@ -10,12 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun ShareSearch(value: String, onValueChange: (String) -> Unit, modifier: Modifier = Modifier, placeholder: String = "Поиск по названию — RU / EN…") {
     OutlinedTextField(value, onValueChange, modifier.fillMaxWidth().heightIn(min = DesignTokens.Layout.TouchMin).semantics { contentDescription = placeholder }, singleLine = true,
-        placeholder = { Text(placeholder, style = MaterialTheme.typography.bodyMedium) },
+        placeholder = { Text(placeholder, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         leadingIcon = { AppGlyph(Glyph.Search, Modifier.size(20.dp)) },
         trailingIcon = { if (value.isNotEmpty()) IconButton(onClick = { onValueChange("") },
             modifier = Modifier.semantics { contentDescription = "Очистить поиск" }) { AppGlyph(Glyph.Close, Modifier.size(18.dp)) } },

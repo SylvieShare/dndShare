@@ -19,19 +19,19 @@ class HandbookSmoke:
         self.tree()  # The software keyboard must be ready before input text injects key events.
         for character in "Native":
             self.shell("input", "text", character)
-        root = self.wait_for("2")
+        root = self.wait_for("Native Retired")
         assert not any(n.get("text", "").startswith("Spell ") for n in root.iter("node")), "Search leaked unfiltered rows"
         self.shell("input", "keyevent", "4")
-        self.click("Фильтры и источники")
+        self.click("Фильтры")
         self.wait_for("Готово")
         self.snapshot("phone-handbook-filters")
         self.click("Готово")
         root = self.tree()
         clear = next(n for n in root.iter("node") if n.get("content-desc") == "Очистить поиск")
         self.tap(clear)
-        self.wait_for("205")
+        self.wait_for("Spell 100")
         self.snapshot("phone-handbook-collection")
-        print("PASS: collection overview, local search/count, native filters and clear", flush=True)
+        print("PASS: collection overview, local search, native filters and clear", flush=True)
 
     def enter_collection_if_needed(self):
         deadline = time.monotonic() + 55

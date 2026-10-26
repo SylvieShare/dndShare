@@ -143,8 +143,7 @@ def main():
         assert bounds(title)[0] == bounds(edits[0])[0], "Header should expand after hiding the keyboard"
         click("Войти")
         handbook.overview_and_search()
-        wait_for("Обновлено")
-        root = wait_for("205")
+        root = wait_for("Native Flame")
         assert "Native Flame" in texts(root)
         assert json.loads(control("stats"))["images"] == 0, "Handbook prefetched an image"
         start()
@@ -171,7 +170,7 @@ def main():
         snapshot("phone-detail")
         navigation.detail_back()
         shell("input", "keyevent", "4")
-        root = wait_for("205")
+        root = wait_for("Native Flame")
         assert "Это описание из локальной базы." not in texts(root), "Detail Back should return to the list"
         click("Native Flame")
         wait_for("Это описание из локальной базы.")
@@ -191,7 +190,7 @@ def main():
         for name, size in [("tablet", "800x1100"), ("wide", "1440x1000")]:
             shell("wm", "size", size)
             root = wait_for("Это описание из локальной базы.")
-            assert "Поиск по справочнику" in texts(root), "Two panes did not preserve list and detail"
+            assert any("Поиск по названию" in n.get("content-desc", "") for n in root.iter("node")), "Two panes did not preserve list and detail"
             snapshot(name)
             navigation.adaptive(name)
         navigation.transitions()
@@ -200,9 +199,11 @@ def main():
         # Startup must synchronize automatically; the header has no manual refresh action.
         shell("am", "force-stop", PACKAGE)
         start()
-        handbook.enter_collection_if_needed()
-        wait_for("Native Flame Updated")
-        root = wait_for("204")
+        click("Справочник")
+        wait_for("Основные разделы")
+        wait_for("204")
+        click("Заклинания")
+        root = wait_for("Native Flame Updated")
         assert "Native Retired" not in texts(root)
         snapshot("delta-updated")
         account = [n for n in root.iter("node") if n.get("content-desc") == "Аккаунт"]

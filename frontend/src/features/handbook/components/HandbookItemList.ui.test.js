@@ -3,7 +3,6 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 const source = readFileSync(fileURLToPath(new URL('./HandbookItemList.vue', import.meta.url)), 'utf8')
-const handbookPage = readFileSync(fileURLToPath(new URL('../pages/ViewHandbook.vue', import.meta.url)), 'utf8')
 const controls = readFileSync(fileURLToPath(new URL('./HandbookCollectionBar.vue', import.meta.url)), 'utf8')
 const armorList = readFileSync(fileURLToPath(new URL('../../items/list-components/ArmorListItem.vue', import.meta.url)), 'utf8')
 const weaponList = readFileSync(fileURLToPath(new URL('../../items/list-components/WeaponListItem.vue', import.meta.url)), 'utf8')
@@ -80,13 +79,6 @@ describe('handbook list controls', () => {
     expect(itemReference).toContain("defineEmits(['activate', 'details'])")
     expect(weaponList).toContain('#trailing')
     expect(weaponList).toContain('wli-cost')
-  })
-
-  it('keeps the wide collection bar identity-only on the handbook page', () => {
-    expect(handbookPage).toContain(':show-controls="false"')
-    expect(handbookPage).toContain('<HandbookItemList')
-    expect(handbookPage).toContain('show-controls')
-    expect(handbookPage).toContain(':content-sources="contentSources"')
   })
 
   it('keeps only the requested left side frame on the grouping toolbar', () => {

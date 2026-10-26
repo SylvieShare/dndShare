@@ -32,14 +32,6 @@ describe('shared navigation across window formats', () => {
     expect(html).toContain('Создать персонажа')
     expect(html).not.toContain('href="/maps"')
   })
-  it('keeps the tablet rail collapsed with a drawer action', async () => {
-    const html = await renderSidebar('rail', true)
-    expect(html).not.toContain('app-sidebar--expanded')
-    expect(html).toContain('aria-label="Открыть меню"')
-    expect(html).toContain('href="/chars"')
-    expect(html).toContain('href="/maps"')
-    expect(html).not.toContain('Раскрыть панель')
-  })
   it('embeds the same navigation in the expanded drawer', async () => {
     const html = await renderSidebar('drawer', true)
     expect(html).toContain('share-app-sidebar--embedded')

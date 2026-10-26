@@ -126,6 +126,7 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
             device.shell("input", "keyevent", "4")
         device.click(text="Заклинания")
         device.wait(fixture["recordName"])
+        entries.append(snapshot(device, output, format_, "list", fixture, stats))
         before = stats()["images"].get("cover.svg", 0)
         device.click(text=fixture["recordName"])
         device.wait(fixture["description"])

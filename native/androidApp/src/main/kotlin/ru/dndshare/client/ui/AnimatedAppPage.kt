@@ -1,5 +1,7 @@
 package ru.dndshare.client.ui
 
+import ru.dndshare.designsystem.DesignTokens
+
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -21,7 +23,7 @@ internal val LocalAppPageActive = compositionLocalOf { true }
 
 @Composable
 internal fun AnimatedAppPage(page: AppPage, content: @Composable (AppPage) -> Unit) {
-    val distance = with(LocalDensity.current) { 24.dp.roundToPx() }
+    val distance = with(LocalDensity.current) { DesignTokens.Motion.Distance.roundToPx() }
     val readingDirection = if (LocalLayoutDirection.current == LayoutDirection.Ltr) 1 else -1
     AnimatedContent(
         targetState = page,
@@ -29,9 +31,9 @@ internal fun AnimatedAppPage(page: AppPage, content: @Composable (AppPage) -> Un
         contentKey = { it },
         transitionSpec = {
             val direction = if (targetState.ordinal > initialState.ordinal) readingDirection else -readingDirection
-            (fadeIn(tween(180)) + slideInHorizontally(tween(220, easing = FastOutSlowInEasing)) { distance * direction })
-                .togetherWith(fadeOut(tween(100)) +
-                    slideOutHorizontally(tween(220, easing = FastOutSlowInEasing)) { -distance * direction / 2 })
+            (fadeIn(tween(DesignTokens.Motion.Enter)) + slideInHorizontally(tween(DesignTokens.Motion.Navigation, easing = FastOutSlowInEasing)) { distance * direction })
+                .togetherWith(fadeOut(tween(DesignTokens.Motion.Exit)) +
+                    slideOutHorizontally(tween(DesignTokens.Motion.Navigation, easing = FastOutSlowInEasing)) { -distance * direction / 2 })
                 .using(null)
         },
         label = "App section",

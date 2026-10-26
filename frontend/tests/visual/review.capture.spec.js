@@ -57,6 +57,7 @@ for (const format of matrix.formats) {
     mkdirSync(path.join(output, 'web'), { recursive: true })
 
     async function snapshot(state) {
+      await page.mouse.move(format.width - 1, format.height - 1)
       await settle(page)
       const dimensions = await page.evaluate(() => ({ width: innerWidth, height: innerHeight, unit: 'px' }))
       expect(dimensions).toEqual({ width: format.width, height: format.height, unit: 'px' })
@@ -87,7 +88,10 @@ for (const format of matrix.formats) {
     await snapshot('menu')
     if (format.name !== 'wide') await page.keyboard.press('Escape')
     await page.locator('.hb-collection-card').filter({ hasText: 'Заклинания' }).click()
-    await expect(page.locator('.handbook-col-bar .col-type-count')).toHaveText('205')
+    await expect(page.locator('.handbook-heading-name:visible')).toHaveText('Заклинания')
+    await expect(page.locator('.handbook-col-bar .col-type-count')).toHaveCount(0)
+    await expect(page.locator('.handbook-list .list-row').filter({ hasText: fixture.recordName })).toBeVisible()
+    await snapshot('list')
     await page.locator('.handbook-list .list-row').filter({ hasText: fixture.recordName }).click()
     await expect(page.locator('.handbook-detail h1')).toHaveText(fixture.recordName)
     await expect(page.locator('.item-detail-cover')).toBeVisible()

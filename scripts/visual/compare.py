@@ -47,13 +47,14 @@ def main():
         if source_identity(ROOT) != identity:
             raise RuntimeError("Capture sources changed during the run; repeat from a stable prepared checkout")
         # Only complete, source-stable captures receive a success report.
-        from report import write_report
+        from report import write_report, MATRIX
         write_report(output)
     except (OSError, RuntimeError, ValueError, subprocess.CalledProcessError) as error:
         (output / "failure.txt").write_text(str(error), encoding="utf-8")
         print(f"UI review failed: {error}; diagnostics: {output}", file=sys.stderr)
         return 1
-    print(f"Captured 18 images. Human visual review required: {output / 'index.html'}", flush=True)
+    count = len(MATRIX["formats"]) * len(MATRIX["states"]) * len(MATRIX["platforms"])
+    print(f"Captured {count} images. Human visual review required: {output / 'index.html'}", flush=True)
     return 0
 
 

@@ -9,7 +9,7 @@ import zlib
 from exceptions import read_exceptions
 
 MATRIX = json.loads((Path(__file__).with_name("matrix.json")).read_text())
-LABELS = {"collections": "Обзор коллекций", "menu": "Открытое меню", "record": "Карточка записи"}
+LABELS = {"collections": "Обзор коллекций", "menu": "Открытое меню", "list": "Список коллекции", "record": "Карточка записи"}
 
 
 def png_dimensions(data):
@@ -105,7 +105,7 @@ def render_html(manifest):
 img{{display:block;width:100%;height:auto;border:1px solid #415167}}figcaption{{min-height:60px;overflow-wrap:anywhere}}
 section{{margin:32px 0}}pre{{white-space:pre-wrap;overflow-wrap:anywhere}}code{{overflow-wrap:anywhere}}</style>
 <h1>WEB / ANDROID — визуальное сравнение</h1>
-<p>Комплектность: 18/18. Требуется ручная визуальная проверка. Отчёт не устанавливает пиксельную идентичность
+<p>Комплектность: {len(manifest["screenshots"])}/{len(MATRIX["formats"]) * len(MATRIX["states"]) * len(MATRIX["platforms"])}. Требуется ручная визуальная проверка. Отчёт не устанавливает пиксельную идентичность
 и не означает согласование дизайна. Изображения целиком, включая системные панели Android; нажмите для исходного PNG.</p>
 <p>Редакция: {escape(manifest['edition'])} · recordID: {manifest['recordID']} · изолированный API/PostgreSQL.</p>
 <p>Source SHA: <code>{escape(manifest['sourceSHA'])}</code><br>Source hash: <code>{escape(manifest['sourceHash'])}</code>
