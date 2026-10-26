@@ -68,6 +68,8 @@ fun LoginScreen(state: AppState, login: (String, String) -> Unit) {
             if (state.authError != null) Text(state.authError, color = MaterialTheme.colorScheme.error)
             Button(
                 onClick = submit,
+                colors = ButtonDefaults.buttonColors(containerColor = WebPalette.Accent, contentColor = WebPalette.OnAccent),
+                shape = MaterialTheme.shapes.medium,
                 enabled = name.isNotBlank() && password.isNotEmpty() && !state.signingIn,
                 modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
             ) {

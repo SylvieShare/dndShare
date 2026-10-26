@@ -12,6 +12,22 @@ import ru.dndshare.client.device.*
 import ru.dndshare.client.ui.*
 
 class ClientContractsTest {
+    @Test fun accountNavigationRespectsRolesAndCharacterAvailability() {
+        val player = User(1, "player", hasCharacters = true)
+        assertContains(appDestinations(player), AppPage.Characters)
+        assertFalse(AppPage.CreateCharacter in appDestinations(player))
+        assertFalse(AppPage.Admin in appDestinations(player))
+        assertContains(appDestinations(player.copy(roles = listOf("ADMIN"))), AppPage.Admin)
+    }
+
+    @Test fun emptyAccountOffersCreationWithoutAdvertisingAnExistingCharacterList() {
+        val pages = appDestinations(User(1, "new-player"))
+        assertContains(pages, AppPage.CreateCharacter)
+        assertFalse(AppPage.Characters in pages)
+        assertContains(pages, AppPage.Handbook)
+        assertContains(pages, AppPage.Rules)
+    }
+
     @Test fun adaptiveFormatsUseAvailableWindow() {
         assertEquals(LayoutFormat.Phone, layoutFormat(599f))
         assertEquals(LayoutFormat.Tablet, layoutFormat(600f))

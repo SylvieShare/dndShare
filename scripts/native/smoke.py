@@ -9,6 +9,7 @@ import subprocess
 import time
 import urllib.request
 import xml.etree.ElementTree as ET
+from navigation_smoke import NavigationSmoke
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = "ru.dndshare.client.smoke"
@@ -81,6 +82,8 @@ def main():
         flags = ["-f", "0x10008000"] if fresh else []
         shell("am", "start", "-W", *flags, "-n", COMPONENT)
 
+    navigation = NavigationSmoke(shell, tree, tap, wait_for, snapshot)
+
     port = args.url.rsplit(":", 1)[1]
     # adb reverse avoids depending on Windows -> WSL localhost forwarding
     # through the emulator's virtual router.
@@ -142,6 +145,7 @@ def main():
         start()
         root = wait_for("Native Flame")
         assert "Логин" not in texts(root), "Back returned to the login form after authentication"
+        navigation.phone()
         snapshot("phone-catalogue")
         click("Native Flame")
         wait_for("Это описание из локальной базы.")
@@ -150,16 +154,17 @@ def main():
             time.sleep(1)
         assert json.loads(control("stats"))["images"] == 1, "Detail did not request its image once"
         snapshot("phone-detail")
+        navigation.detail_back()
         shell("input", "keyevent", "4")
         root = wait_for("205")
         assert "Это описание из локальной базы." not in texts(root), "Detail Back should return to the list"
         click("Native Flame")
         wait_for("Это описание из локальной базы.")
-        click("Персонажи")
+        navigation.navigate("Персонажи")
         wait_for("Лира")
         wait_for("Уровень 7")
         snapshot("phone-characters")
-        click("Справочник")
+        navigation.navigate("Справочник")
         wait_for("Это описание из локальной базы.")
         control("offline?value=true")
         shell("am", "force-stop", PACKAGE)
@@ -173,6 +178,7 @@ def main():
             root = wait_for("Это описание из локальной базы.")
             assert "Поиск по справочнику" in texts(root), "Two panes did not preserve list and detail"
             snapshot(name)
+            navigation.adaptive(name)
         control("offline?value=false")
         control("change")
         root = tree()
