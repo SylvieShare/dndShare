@@ -32,6 +32,8 @@ def main():
     def shell(*command):
         return run([*adb, "shell", *command]).decode("utf-8", errors="replace").strip()
 
+    assert shell("getprop", "ro.kernel.qemu") == "1", "Smoke requires an emulator; phone data must stay untouched"
+
     def control(path):
         with urllib.request.urlopen(args.url + "/__test/" + path, timeout=10) as response:
             return response.read()
@@ -57,8 +59,11 @@ def main():
             time.sleep(1)
         raise AssertionError(f"UI did not show {text!r}; see {output / 'latest-ui.xml'}")
 
+    def bounds(node):
+        return tuple(map(int, re.findall(r"\d+", node.get("bounds", ""))))
+
     def tap(node):
-        left, top, right, bottom = map(int, re.findall(r"\d+", node.get("bounds", "")))
+        left, top, right, bottom = bounds(node)
         shell("input", "tap", str((left + right) // 2), str((top + bottom) // 2))
 
     def click(text):
@@ -72,8 +77,9 @@ def main():
         (output / f"{name}.png").write_bytes(run([*adb, "exec-out", "cat", "/sdcard/dndshare-smoke.png"]))
         (output / f"{name}.xml").write_bytes(ET.tostring(tree(), encoding="utf-8"))
 
-    def start():
-        shell("am", "start", "-W", "-n", COMPONENT)
+    def start(fresh=False):
+        flags = ["-f", "0x10008000"] if fresh else []
+        shell("am", "start", "-W", *flags, "-n", COMPONENT)
 
     port = args.url.rsplit(":", 1)[1]
     # adb reverse avoids depending on Windows -> WSL localhost forwarding
@@ -92,7 +98,7 @@ def main():
         shell("wm", "density", "160")
         shell("wm", "size", "420x900")
         shell("input", "keyevent", "82")
-        start()
+        start(fresh=True)
         root = wait_for("Логин")
         edits = [n for n in root.iter("node") if n.get("class") == "android.widget.EditText"]
         assert len(edits) == 2
@@ -101,12 +107,41 @@ def main():
         root = tree()
         tap([n for n in root.iter("node") if n.get("class") == "android.widget.EditText"][1])
         shell("input", "text", "Native-pass-42")
+        root = tree()
+        edits = [n for n in root.iter("node") if n.get("class") == "android.widget.EditText"]
+        title = next(n for n in root.iter("node") if n.get("text") == "DnD Share")
+        subtitle = next(n for n in root.iter("node") if "Ваши персонажи" in n.get("text", ""))
+        assert bounds(title)[0] >= bounds(edits[0])[0] + 60, "Compact title should move beside the icon"
+        assert bounds(subtitle)[0] == bounds(title)[0], "Compact subtitle should follow the title"
+        assert edits[1].get("focused") == "true", "Header animation lost field focus"
+        assert "native_tester" in edits[0].get("text", ""), "Header animation lost the login draft"
+        ime = shell("dumpsys", "window")
+        frames = re.findall(r"type=ime[^\n]*?frame=\[\d+,(\d+)\]\[\d+,\d+\][^\n]*?visible=true", ime)
+        assert frames, "Keyboard should be visible during the layout check"
+        keyboard_top = min(map(int, frames))
+        button = next(n for n in root.iter("node") if n.get("text") == "Войти")
+        assert max(bounds(n)[3] for n in [*edits, button]) <= keyboard_top, "Keyboard covers login controls"
+        snapshot("phone-login-keyboard")
         shell("input", "keyevent", "4")
+        root = tree()
+        title = next(n for n in root.iter("node") if n.get("text") == "DnD Share")
+        assert bounds(title)[0] == bounds(edits[0])[0], "Header should expand after hiding the keyboard"
         click("Войти")
         wait_for("Обновлено")
         root = wait_for("205")
         assert "Native Flame" in texts(root)
         assert json.loads(control("stats"))["images"] == 0, "Handbook prefetched an image"
+        start()
+        history = shell("dumpsys", "activity", "activities")
+        assert sum(bool(re.search(r"\bHist\s+#", line)) and PACKAGE + "/" in line
+                   for line in history.splitlines()) == 1, "Relaunch duplicated the activity"
+        shell("input", "keyevent", "4")
+        time.sleep(0.5)
+        focus = next(line for line in shell("dumpsys", "window").splitlines() if "mCurrentFocus=Window{" in line)
+        assert PACKAGE not in focus, "Root Back should background the app"
+        start()
+        root = wait_for("Native Flame")
+        assert "Логин" not in texts(root), "Back returned to the login form after authentication"
         snapshot("phone-catalogue")
         click("Native Flame")
         wait_for("Это описание из локальной базы.")
@@ -115,6 +150,11 @@ def main():
             time.sleep(1)
         assert json.loads(control("stats"))["images"] == 1, "Detail did not request its image once"
         snapshot("phone-detail")
+        shell("input", "keyevent", "4")
+        root = wait_for("205")
+        assert "Это описание из локальной базы." not in texts(root), "Detail Back should return to the list"
+        click("Native Flame")
+        wait_for("Это описание из локальной базы.")
         click("Персонажи")
         wait_for("Лира")
         wait_for("Уровень 7")
@@ -149,7 +189,7 @@ def main():
         click("Выйти")
         wait_for("Логин")
         assert not shell("run-as", PACKAGE, "find", "files/native", "-name", "catalogue.db"), "Logout retained the account database"
-        print("PASS: real login, 205-item bootstrap, lazy image, characters, tab state, offline restart, three layouts, delta and logout cleanup", flush=True)
+        print("PASS: keyboard layout and draft, real login, root/detail Back, single activity, 205-item bootstrap, lazy image, characters, tab state, offline restart, three layouts, delta and logout cleanup", flush=True)
     finally:
         control("offline?value=false")
         shell("am", "force-stop", PACKAGE)

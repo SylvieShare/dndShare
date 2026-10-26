@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
                 model.controller.foreground(lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED))
                 onDispose { lifecycle.removeObserver(observer) }
             }
-            DndShareApp(model.controller, fold)
+            DndShareApp(model.controller, fold, onBackground = { moveTaskToBack(true) })
         }
     }
 }

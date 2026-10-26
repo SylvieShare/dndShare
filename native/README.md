@@ -33,10 +33,12 @@ Android 17 (API 37). Источник этих значений — `androidApp/
 ```
 
 `All` выполняет unit-тесты, Android lint и собирает debug APK. `DeviceTest` требует запущенного
-эмулятора и выполняет instrumented-тесты Room/SQLite, HTTP и отмены проверки
+эмулятора (по умолчанию `emulator-5554`, выбор через `-DeviceSerial`) и выполняет
+instrumented-тесты Room/SQLite, HTTP и отмены проверки
 сессии при выходе. Unit-тесты проверяют поиск, форматы окна, содержимое
 описаний, данные персонажей и cookie-контракт. В `src/testSupport` находится
-общая фикстура тестовых device services.
+общая фикстура тестовых device services. `DeviceTest` ограничен выбранным
+эмулятором и не затрагивает подключённый телефон.
 
 Артефакт: `androidApp/build/outputs/apk/debug/androidApp-debug.apk`.
 Это пробная установка с debug-подписью; production-подпись и публикация в store
@@ -81,11 +83,12 @@ Android 17 (API 37). Источник этих значений — `androidApp/
 
 `TestNativeClientSmokePostgres` с `DNDSHARE_NATIVE_SMOKE=1` поднимает настоящий
 Go API и изолированный PostgreSQL. `scripts/native/smoke.py` собирает и
-проверяет APK через ADB: вход, 205 записей, ленивое изображение, персонажи,
+проверяет APK через ADB: форму с клавиатурой, вход и «Назад», 205 записей,
+ленивое изображение, персонажи,
 сохранение вкладок, перезапуск без сети, три ширины окна, delta и выход.
 Нужен уже запущенный AVD; по умолчанию `emulator-5554`, переопределяется
 `DNDSHARE_ANDROID_SERIAL`. Пользователь Windows для SDK задаётся
-`DNDSHARE_WINDOWS_USER`.
+`DNDSHARE_WINDOWS_USER`. Сценарий разрешён только на эмуляторе.
 
 Скрипт использует временный `adb reverse` для связи из эмулятора с Go API в WSL
 и восстанавливает размер/плотность AVD. После smoke обычную сборку запускают

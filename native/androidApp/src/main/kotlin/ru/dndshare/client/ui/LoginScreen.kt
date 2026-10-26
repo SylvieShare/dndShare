@@ -1,6 +1,8 @@
 package ru.dndshare.client.ui
 
-import androidx.compose.foundation.Image
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -13,30 +15,48 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.unit.lerp
 import ru.dndshare.client.app.AppState
-import ru.dndshare.client.R
 
 @Composable
 fun LoginScreen(state: AppState, login: (String, String) -> Unit) {
     var name by rememberSaveable { mutableStateOf("") }
     // Passwords deliberately stay out of saved instance state and preferences.
     var password by remember { mutableStateOf("") }
-    val submit = { if (name.isNotBlank() && password.isNotBlank()) login(name, password) }
-    Box(Modifier.fillMaxSize().padding(horizontal = 24.dp), contentAlignment = Alignment.Center) {
+    val focus = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
+    val submit = {
+        if (name.isNotBlank() && password.isNotBlank() && !state.signingIn) {
+            focus.clearFocus()
+            keyboard?.hide()
+            login(name, password)
+        }
+    }
+    BoxWithConstraints(
+        Modifier.fillMaxSize()
+            .windowInsetsPadding(WindowInsets.systemBars.union(WindowInsets.displayCutout))
+            .imePadding().padding(horizontal = 24.dp),
+        contentAlignment = Alignment.TopCenter,
+    ) {
+        val compact = maxHeight < 600.dp * LocalDensity.current.fontScale.coerceAtLeast(1f)
+        val collapse by animateFloatAsState(
+            if (compact) 1f else 0f, tween(240, easing = FastOutSlowInEasing), label = "Login header",
+        )
         Column(
-            Modifier.widthIn(max = 420.dp).fillMaxWidth().verticalScroll(rememberScrollState()).padding(vertical = 40.dp),
-            verticalArrangement = Arrangement.spacedBy(18.dp),
+            Modifier.widthIn(max = 420.dp).fillMaxWidth().verticalScroll(rememberScrollState())
+                .heightIn(min = maxHeight).padding(vertical = lerp(40.dp, 16.dp, collapse)),
+            verticalArrangement = Arrangement.spacedBy(lerp(18.dp, 12.dp, collapse), Alignment.CenterVertically),
         ) {
-            Image(painterResource(R.drawable.brand_mark), null, Modifier.size(76.dp))
-            Text("DnD Share", style = MaterialTheme.typography.headlineLarge)
-            Text("Ваши персонажи и справочник — под рукой.",
-                color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyLarge)
-            Spacer(Modifier.height(6.dp))
+            LoginBrand(collapse)
             OutlinedTextField(
                 value = name, onValueChange = { name = it.take(128) }, modifier = Modifier.fillMaxWidth(),
                 label = { Text("Логин") }, singleLine = true, enabled = !state.signingIn,
                 keyboardOptions = KeyboardOptions(autoCorrectEnabled = false, imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(onNext = { focus.moveFocus(FocusDirection.Down) }),
             )
             OutlinedTextField(
                 value = password, onValueChange = { password = it.take(256) }, modifier = Modifier.fillMaxWidth(),

@@ -1,5 +1,6 @@
 package ru.dndshare.client.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -23,8 +24,10 @@ import ru.dndshare.client.app.*
 import ru.dndshare.client.R
 
 @Composable
-fun DndShareApp(controller: AppController, fold: FoldInfo? = null) {
+fun DndShareApp(controller: AppController, fold: FoldInfo? = null, onBackground: () -> Unit) {
     val state by controller.state.collectAsState()
+    // Register before detail handlers: they consume Back first, the signed-in root backgrounds the task.
+    BackHandler(enabled = !state.booting && state.user != null, onBack = onBackground)
     DndTheme {
         Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
             when {
