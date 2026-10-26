@@ -16,12 +16,12 @@ import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker
 import ru.dndshare.client.app.AppController
 import ru.dndshare.client.network.ApiClient
-import ru.dndshare.client.platform.AndroidPlatform
+import ru.dndshare.client.device.AndroidDeviceServices
 import ru.dndshare.client.ui.DndShareApp
 import ru.dndshare.client.ui.FoldInfo
 
 class ClientViewModel(application: Application) : AndroidViewModel(application) {
-    private val platform = AndroidPlatform(application, BuildConfig.API_BASE_URL)
+    private val platform = AndroidDeviceServices(application, BuildConfig.API_BASE_URL)
     val controller = AppController(platform, ApiClient(BuildConfig.API_BASE_URL, platform))
     override fun onCleared() { controller.close() }
 }

@@ -128,7 +128,7 @@ def main():
         click("Native Flame")
         wait_for("Это описание из локальной базы.")
         snapshot("offline-detail")
-        for name, size in [("tablet", "800x1100"), ("desktop", "1440x1000")]:
+        for name, size in [("tablet", "800x1100"), ("wide", "1440x1000")]:
             shell("wm", "size", size)
             root = wait_for("Это описание из локальной базы.")
             assert "Поиск по справочнику" in texts(root), "Two panes did not preserve list and detail"

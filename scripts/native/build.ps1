@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('Android', 'Windows', 'All', 'Test')][string]$Target = 'All',
+    [ValidateSet('Android', 'All', 'Test', 'DeviceTest')][string]$Target = 'All',
     [string]$ApiBaseUrl = 'https://dndshare.ru'
 )
 $ErrorActionPreference = 'Stop'
@@ -10,16 +10,12 @@ $env:JAVA_HOME = [Environment]::GetEnvironmentVariable('JAVA_HOME', 'User')
 if (-not $env:JAVA_HOME) { $env:JAVA_HOME = 'C:\Program Files\Android\Android Studio\jbr' }
 $env:ANDROID_HOME = [Environment]::GetEnvironmentVariable('ANDROID_HOME', 'User')
 if (-not $env:ANDROID_HOME) { $env:ANDROID_HOME = Join-Path $env:LOCALAPPDATA 'Android\Sdk' }
-if (-not $env:JPACKAGE_HOME) { $env:JPACKAGE_HOME = 'C:\Program Files\Java\jdk-17' }
-if ($Target -in @('Windows', 'All') -and -not (Test-Path (Join-Path $env:JPACKAGE_HOME 'bin\jpackage.exe'))) {
-    throw 'Set JPACKAGE_HOME to a full JDK 17+ installation containing jpackage.exe.'
-}
 $env:Path = (Join-Path $env:JAVA_HOME 'bin') + ';' + $env:Path
 [string[]]$nativeTasks = @(switch ($Target) {
     'Android' { @(':androidApp:assembleDebug') }
-    'Windows' { @(':desktopApp:packagePortableWindows') }
-    'Test' { @(':shared:desktopTest') }
-    'All' { @(':shared:desktopTest', ':androidApp:assembleDebug', ':desktopApp:packagePortableWindows') }
+    'Test' { @(':androidApp:testDebugUnitTest') }
+    'DeviceTest' { @(':androidApp:connectedDebugAndroidTest') }
+    'All' { @(':androidApp:testDebugUnitTest', ':androidApp:lintDebug', ':androidApp:assembleDebug') }
 })
 Push-Location -LiteralPath $project
 try {

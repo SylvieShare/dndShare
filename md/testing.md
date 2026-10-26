@@ -18,7 +18,7 @@ build также выполняют `check:bindings`: необъявленные
 | Инструменты документации | Проверка wiki и `python3 -m unittest discover -s scripts/docs -p 'test_*.py'` | Тестировать ссылки, якоря, предупреждения и исключения для отчётов; для Node-инструмента выполнить его `node --test` сценарии. |
 | Frontend | Затронутые Vitest-тесты, затем `cd frontend && npm test -- --run && npm run build` | Для UI-действий — соответствующий browser-набор на desktop/mobile; проверка необъявленных переменных входит в команды. |
 | Backend без изменения БД | `GOCACHE=/private/tmp/dndshare-go-cache go test ./...`, `go vet ./...`, `go build ./...` с тем же GOCACHE | Без DSN DB-тесты пропускаются; это не доказательство интеграционной проверки. |
-| Нативные Android/Windows | `scripts/native/build.ps1 -Target All`; Android/API/PostgreSQL smoke при изменении входа/sync | Общие тесты SQLite/HTTP/cookies, APK, Windows ZIP; телефон, планшет и desktop окно, офлайн и возобновление. |
+| Нативный Android | `scripts/native/build.ps1 -Target All` и `-Target DeviceTest`; Android/API/PostgreSQL smoke при изменении входа/sync | Unit и instrumented SQLite/HTTP/cookies, APK; телефон, планшет и широкое Android-окно, офлайн и возобновление. |
 | SQL, Store, права/атомарность API или формат документа | `python3 scripts/test.py db`, затронутые frontend-тесты при изменении DTO | Только изолированный PostgreSQL; фикстуры текущей схемы и настоящий HTTP-контракт. |
 | Очередь патчей, история или SSE | Unit-контракты JS/Go и DB-профиль; затронутые browser-сценарии | Reload, две вкладки, восстановление, потерянное подтверждение, перестановка ответов, конфликт и закрытие с очередью. |
 | Лист/сессия: навигация, блоки, редактор или права | Проверки соответствующего frontend/API и сценариев обучения | Проверить влияние на цели, действия и тексты; менять их только при изменении контракта. Completed/dismissed не сбрасывать. |
@@ -32,10 +32,12 @@ Vite HMR может перезагрузить страницу и искази�
 ## Профили runner
 
 Нативные Gradle-проверки запускаются отдельно на Windows из
-[инструкции сборки](../native/README.md). `desktopTest` выполняет общие unit
-тесты и интеграционные проверки Room/SQLite + Ktor MockEngine: прерванный bootstrap,
+[инструкции сборки](../native/README.md). `testDebugUnitTest` проверяет чистую
+логику, а `connectedDebugAndroidTest` — Room/SQLite и Ktor MockEngine на Android:
+прерванный bootstrap,
 возобновление с сохранённого cursor, офлайн-поиск/описание, изоляция систем,
-tombstones, visibility manifest, reset и пустой delta. Server DB tests проверяют
+tombstones, visibility manifest, reset, пустой delta и отмену проверки сессии
+при выходе. Server DB tests проверяют
 pagination, права, сохранность строки после soft delete и порядок committed ревизий.
 
 Опциональный `TestNativeClientSmokePostgres` (`DNDSHARE_NATIVE_SMOKE=1`) работает

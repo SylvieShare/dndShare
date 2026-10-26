@@ -12,7 +12,7 @@
 | Устройство проекта | [Архитектура](architecture.md), [структура](../README.md#структура-проекта) | Выбрать предметный маршрут ниже. |
 | Запуск и окружение | [Локальная разработка](../README.md#локальная-разработка), [матрица](testing.md#матрица-проверок) | Профили из testing; конфигурация и deploy при изменении запуска. |
 | Интерфейс | [Frontend](frontend.md), [компоненты](frontend/components.md), [Composition API](composition-api.md), контракт фичи | Frontend; поведение фичи и каталог общего UI при изменении композиции. |
-| Нативные Android/Windows | [Клиент](features/native-client.md), [сборка](../native/README.md), [синхронизация](api/handbook.md#синхронизация-локального-справочника) | Kotlin tests, Android APK, Windows distribution; DB при изменении протокола. |
+| Нативный Android | [Клиент](features/native-client.md), [сборка](../native/README.md), [синхронизация](api/handbook.md#синхронизация-локального-справочника) | Unit/instrumentation tests, APK; DB при изменении протокола. |
 | Создание персонажа | [Создание](features/character-list.md), [стартовый магазин](features/starting-shop.md) | Frontend; восстановление черновика, обе редакции, страница создания и её API. |
 | Лист персонажа | [Лист](features/character-editor.md), [данные](features/character-editor/data.md), [обучение](features/tutorials.md) | Frontend; права desktop/mobile, контракт листа, затронутые цели обучения. |
 | Патчи, сохранение и SSE | [Синхронизация](document-sync.md), данные затронутой фичи, её API/БД | Строка синхронизации в матрице: reload, две вкладки, поздний ответ, повтор и конфликт. |
@@ -34,7 +34,7 @@
 | Страница | Содержание |
 | --- | --- |
 | [Архитектура](architecture.md) | Runtime, зависимости, запуск и путь изменения от UI до хранения. |
-| [Нативный клиент](features/native-client.md) | Android/Windows, три формата окна, локальная база, синхронизация и тёмная тема. |
+| [Нативный клиент](features/native-client.md) | Android, три формата окна, локальная база, синхронизация и тёмная тема. |
 | [Frontend](frontend.md) | Границы кода и ссылки на навигацию, компоненты, взаимодействия и сопровождение share-ui. |
 | [Патчи документов](document-sync.md) | Очередь сохранения, стабильные ID, undo, история персонажа и SSE сессии. |
 | [Composition API](composition-api.md) | Правила Vue-компонентов и composables. |
