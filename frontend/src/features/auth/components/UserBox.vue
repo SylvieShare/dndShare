@@ -1,8 +1,12 @@
 <template>
   <div class="user-box">
     <transition name="fade" mode="out-in">
-      <UserBoxFormAuth v-if="authStatus === 'none' || authStatus === 'process'" key="auth" :expanded="expanded" />
-      <UserBoxInfo v-else-if="authStatus === 'success'" key="info" :expanded="expanded" />
+      <div v-if="authStatus === 'none' || authStatus === 'process'" key="auth">
+        <UserBoxFormAuth :expanded="expanded" />
+      </div>
+      <div v-else-if="authStatus === 'success'" key="info">
+        <UserBoxInfo :expanded="expanded" />
+      </div>
     </transition>
   </div>
 </template>
@@ -28,4 +32,9 @@ const authStatus = computed(() => useAccountStore().authStatus)
 .fade-leave-active { transition: opacity 0.1s ease; }
 .fade-enter-from,
 .fade-leave-to { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-enter-active,
+  .fade-leave-active { transition: none; }
+}
 </style>

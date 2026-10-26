@@ -27,7 +27,7 @@
   display: none;
 }
 
-@media (min-width: 761px) {
+@media (min-width: 600px) {
   .handbook-collection-home {
     display: inline-flex;
     align-items: center;
@@ -88,7 +88,7 @@
 
 /* One viewport, one active scroll pane on narrow screens. Keep the complete
    flex height chain; an auto-height wrapper breaks scrolling in some browsers. */
-@media (max-width: 760px) {
+@media (max-width: 599px) {
   .handbook-page {
     padding: 0;
   }
@@ -122,11 +122,9 @@
   }
 }
 
-@media (min-width: 641px) and (max-width: 760px) {
-  .handbook-detail-back {
-    display: inline-flex;
-    flex: 0 0 auto;
-    align-self: flex-start;
-    margin: 8px 16px;
-  }
+
+@media (min-width: 600px) and (max-width: 1199px) {
+  .handbook-page { padding: 0; }
 }
+
+.handbook-outer--landing .handbook-page { padding: 0; max-width: none; }

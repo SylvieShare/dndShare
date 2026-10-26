@@ -4,7 +4,7 @@ import { createRouter, createMemoryHistory, RouterView } from "vue-router";
 import { useAccountStore } from "../../../src/stores/account";
 import { clickOutside } from "../../../src/shared/lib/clickOutside";
 import DesktopSidebar from "../../../src/shared/ui/DesktopSidebar.vue";
-import AppHeader from "../../../src/shared/ui/AppHeader.vue";
+import AppNavigationShell from "../../../src/shared/ui/AppNavigationShell.vue";
 import ChapterGraphToolbar from "../../../src/features/sessions/components/ChapterGraphToolbar.vue";
 import ViewMaps from "../../../src/features/maps/pages/ViewMaps.vue";
 import ViewMapEditor from "../../../src/features/maps/pages/ViewMapEditor.vue";
@@ -56,7 +56,7 @@ createApp({
     params.has("direct") || params.has("editor")
       ? h(RouterView)
       : h("div", [
-          params.has("mobile") ? h(AppHeader) : h(DesktopSidebar),
+          params.has("mobile") ? h(AppNavigationShell) : h(DesktopSidebar),
           h("main", { style: "margin:100px 10px 0 245px" }, [
             h(ChapterGraphToolbar, {
               isDm: !params.has("player"),

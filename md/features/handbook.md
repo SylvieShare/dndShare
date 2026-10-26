@@ -146,6 +146,15 @@ but all editors and writes use `choices`; there are no admin migration jobs.
 
 ## UI
 
+Веб и Android развивают [общий адаптивный дизайн](../frontend/responsive-design.md).
+Обзор начинается с групп коллекций без суммарной статистики, пометки «только
+чтение», кнопки «Все записи» и общего заголовка «Коллекции». Названия групп,
+счётчики отдельных коллекций и словари сохраняются. Плитки компактные:
+минимум 160 px/dp с увеличением высоты под текст; название 22, описание 12,
+эмблема 96, число записей 32. Сетка выбирает 1/2/3 колонки по доступной ширине
+контейнера на границах 600/1200; шапка и панель не отнимают место у текста плиток.
+
+
 `ViewHandbook` loads item types and collections. Search/filter happens through
 the item API before pagination. The publication filter has its own toolbar
 button for every collection, is passed as `contentSourceIds`, and its selected

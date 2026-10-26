@@ -15,7 +15,7 @@ import ru.dndshare.client.app.AppController
 import ru.dndshare.client.app.AppState
 
 @Composable
-internal fun AppHeader(format: LayoutFormat, page: AppPage, state: AppState, controller: AppController, openMenu: () -> Unit) {
+internal fun AppHeader(format: LayoutFormat, page: AppPage, state: AppState, openMenu: () -> Unit) {
     Surface(color = WebPalette.Background) {
         Column {
             Row(Modifier.fillMaxWidth().heightIn(min = 64.dp).padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -25,13 +25,9 @@ internal fun AppHeader(format: LayoutFormat, page: AppPage, state: AppState, con
                     Text(page.title, style = MaterialTheme.typography.titleLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     val source = state.sources.firstOrNull { it.id == state.sourceId }
                     val edition = source?.versions?.firstOrNull { it.id == state.editionId }
-                    if (source != null) Text(listOfNotNull(source.name, edition?.version).joinToString(" · "),
+                    if (source != null) Text(listOfNotNull(sourceLabel(source.name), edition?.version).joinToString(" · "),
                         style = MaterialTheme.typography.labelSmall, color = WebPalette.TextSecondary, maxLines = 1)
                 }
-                if (page == AppPage.Handbook || page == AppPage.Characters) IconButton(
-                    onClick = { controller.refresh(force = true) }, enabled = !state.synchronizing,
-                    modifier = Modifier.semantics { contentDescription = "Обновить" },
-                ) { AppGlyph(Glyph.Refresh) }
             }
             HorizontalDivider()
         }
@@ -45,21 +41,27 @@ internal fun SourcePicker(state: AppState, controller: AppController) {
     val edition = source?.versions?.firstOrNull { it.id == state.editionId }
     Box {
         TextButton(onClick = { expanded = true }, enabled = state.sources.isNotEmpty(), modifier = Modifier.fillMaxWidth()) {
-            Text(listOfNotNull(source?.name, edition?.version).joinToString(" · ").ifEmpty { "Игровая система" },
+            Text(listOfNotNull(source?.name?.let(::sourceLabel), edition?.version).joinToString(" · ").ifEmpty { "Игровая система" },
                 maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
             Text("  ⌄")
         }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             for (item in state.sources) {
                 if (item.versions.isEmpty()) DropdownMenuItem(
-                    text = { Text(item.name) },
+                    text = { Text(sourceLabel(item.name)) },
                     onClick = { expanded = false; controller.selectSource(item, null) },
                 )
                 for (version in item.versions) DropdownMenuItem(
-                    text = { Text(item.name + " · " + version.version) },
+                    text = { Text(sourceLabel(item.name) + " · " + version.version) },
                     onClick = { expanded = false; controller.selectSource(item, version) },
                 )
             }
         }
     }
+}
+
+private fun sourceLabel(name: String): String = when (name.lowercase()) {
+    "dnd5e" -> "D&D 5e"
+    "vampire: tm" -> "Vampire"
+    else -> name
 }

@@ -9,19 +9,6 @@
         <!-- Header -->
         <div class="hb-header">
           <h1 class="hb-title">Справочник</h1>
-          <p class="hb-subtitle">
-            {{ selectedSource.name }}
-            <template v-if="selectedVersion">· {{ selectedVersion.version }}</template>
-            · {{ itemTypes.length }} коллекций
-            · {{ itemTypes.reduce((sum, type) => sum + type.countItems, 0).toLocaleString('ru') }} записей
-          </p>
-        </div>
-
-        <!-- Collections section -->
-        <div class="hb-section-header">
-          <span class="hb-section-title">Коллекции</span>
-          <span class="hb-section-count">{{ itemTypes.length }}</span>
-          <span class="hb-section-meta">· ядро {{ selectedSource.name }}<template v-if="selectedVersion"> ({{ selectedVersion.version }})</template> · только чтение</span>
         </div>
 
         <LoadingState v-if="loadingTypes" class="hb-loading" label="Загрузка…" compact />
@@ -30,7 +17,6 @@
             <div class="hb-collection-group-header">
               <span class="hb-collection-group-title">{{ group.name }}</span>
               <span class="hb-collection-group-count">{{ group.types.length }}</span>
-              <span class="hb-collection-group-meta">{{ group.description }}</span>
             </div>
 
             <div class="hb-collections-grid">
@@ -114,10 +100,8 @@ import { LoadingState } from '@sylvieshare/share-ui'
 import { visibleHandbookType } from "@/shared/lib/abilityTypes"
 import { computed, ref, watch } from 'vue'
 import { fetchGet } from '@/shared/api/http'
-import { useItemTypesStore } from '@/stores/itemTypes'
 import { useGameContextStore } from '@/stores/gameContext'
 
-const itemTypesStore = useItemTypesStore()
 const gameContextStore = useGameContextStore()
 
 const emit = defineEmits(['select-type'])
@@ -137,7 +121,6 @@ const loadingDicts = ref(false)
 const featureTypeIds = new Set([3, 4, 7, 18])
 
 const selectedSource = computed(() => gameContextStore.selectedSource)
-const selectedVersion = computed(() => gameContextStore.selectedVersion)
 const selectedSourceId = computed(() => selectedSource.value?.id ?? null)
 const selectedSourceVersionId = computed(() => gameContextStore.sourceVersionId)
 const collectionGroups = computed(() => {
@@ -168,7 +151,6 @@ const collectionGroups = computed(() => {
     groups.push({
       key: 'main',
       name: 'Основные разделы',
-      description: 'Самостоятельные коллекции',
       types: independent,
     })
   }
@@ -176,7 +158,6 @@ const collectionGroups = computed(() => {
     groups.push({
       key: 'features',
       name: 'Способности и черты',
-      description: 'Расовые, классовые и сюжетные способности, а также черты',
       types: features,
     })
   }
@@ -184,7 +165,6 @@ const collectionGroups = computed(() => {
     groups.push({
       key: `family-${root.id}`,
       name: root.name,
-      description: 'Основной каталог и связанные подразделы',
       types: [root, ...descendants],
     })
   }

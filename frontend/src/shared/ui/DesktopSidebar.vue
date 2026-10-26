@@ -1,20 +1,33 @@
 <template>
   <AppSidebar
     class="desktop-sidebar"
-    storage-key="dndshare-desktop-sidebar-expanded"
+    :class="`desktop-sidebar--${mode}`"
+    :model-value="mode === 'desktop' ? undefined : mode === 'drawer'"
+    :position="mode === 'drawer' ? 'embedded' : 'fixed'"
+    :show-toggle="mode === 'desktop'"
+    :storage-key="mode === 'desktop' ? 'dndshare-desktop-sidebar-expanded' : ''"
     :default-expanded="true"
     elevated
-    :mobile-breakpoint="640"
+    :mobile-breakpoint="600"
     aria-label="Основная навигация"
     expand-label="Раскрыть панель"
     collapse-label="Свернуть панель"
   >
     <template #brand>
+      <button v-if="mode === 'rail'" class="sidebar-menu-trigger" type="button" aria-label="Открыть меню"
+        aria-controls="app-navigation-drawer" @click="emit('open-menu')">
+        <img class="brand-mark" src="/brand-mark.webp" alt="" />
+      </button>
+      <template v-else>
       <SidebarBrand :as="RouterLink" to="/" label="DnD Share" aria-label="DnD Share">
         <template #icon>
           <img class="brand-mark" src="/brand-mark.webp" alt="" />
         </template>
       </SidebarBrand>
+      <button v-if="mode === 'drawer'" class="sidebar-menu-trigger" type="button" aria-label="Закрыть меню" @click="emit('close-menu')">
+        <X :size="24" aria-hidden="true" />
+      </button>
+      </template>
     </template>
 
     <template #default="{ expanded, toggle }">
@@ -49,6 +62,7 @@
           :title="item.title"
           :active="item.active"
           :icon="icons[item.key]"
+          @click="emit('navigate')"
         />
       </template>
     </template>
@@ -63,7 +77,7 @@
 import ActiveSessionShortcuts from '@/features/sessions/components/ActiveSessionShortcuts.vue'
 import { computed, nextTick, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { BookOpen, BookOpenCheck, Map, ScrollText, Search, Shield, UserRoundPlus, Users } from '@lucide/vue'
+import { BookOpen, BookOpenCheck, Map, ScrollText, Search, Shield, UserRoundPlus, Users, X } from '@lucide/vue'
 import { AppSidebar, SidebarBrand, SidebarNavItem } from '@sylvieshare/share-ui'
 import HeaderSearch from '@/shared/ui/HeaderSearch'
 import GameContextSelector from '@/shared/ui/GameContextSelector.vue'
@@ -72,6 +86,8 @@ import { resolveAppNavigation } from '@/shared/lib/appNavigation'
 import { useAccountStore } from '@/stores/account'
 import { useGameContextStore } from '@/stores/gameContext'
 
+const props = defineProps({ mode: { type: String, default: 'desktop' } })
+const emit = defineEmits(['open-menu', 'close-menu', 'navigate'])
 const route = useRoute()
 const accountStore = useAccountStore()
 const gameContextStore = useGameContextStore()
@@ -103,13 +119,27 @@ function startsGroup(item) {
 }
 
 async function openSearch(toggle) {
+  if (props.mode === 'rail') { emit('open-menu', 'search'); return }
   toggle()
   await nextTick()
   searchRef.value?.focus()
 }
+defineExpose({ focusSearch: () => searchRef.value?.focus() })
 </script>
 
 <style scoped>
+.sidebar-menu-trigger {
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 44px; height: 48px; border: 0; border-radius: 9px; padding: 0;
+  color: var(--text-1); background: transparent; cursor: pointer;
+}
+.sidebar-menu-trigger:hover { background: var(--surface-raised); }
+.desktop-sidebar--drawer :deep(.share-sidebar-brand) { flex: 1; min-width: 0; }
+.desktop-sidebar--drawer :deep(.sidebar-search .hs-dropdown) {
+  position: relative; inset: auto; min-width: 0; width: 100%; margin-top: 8px; max-height: 240px;
+}
+.desktop-sidebar--drawer :deep(.sidebar-search:has(.hs-dropdown)) { height: auto; flex-direction: column; }
+
 .brand-mark {
   display: block;
   width: 40px;
@@ -131,11 +161,11 @@ async function openSearch(toggle) {
   width: 100%;
 }
 
-.desktop-sidebar :deep(.sidebar-search .hs-dropdown) {
+.desktop-sidebar--desktop :deep(.sidebar-search .hs-dropdown) {
   inset: 0 auto auto calc(100% + 12px);
 }
 
-.desktop-sidebar :deep(.share-sidebar-nav:has(.sidebar-search .hs-dropdown)) {
+.desktop-sidebar--desktop :deep(.share-sidebar-nav:has(.sidebar-search .hs-dropdown)) {
   overflow: visible;
 }
 

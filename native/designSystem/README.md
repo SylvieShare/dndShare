@@ -24,6 +24,7 @@ Compose-слотами. В зависимостях только Compose Foundat
 | Android | Соответствующая роль в вебе |
 | --- | --- |
 | `ShareTheme`, `WebPalette` | Палитра/радиусы share-ui, продуктовый фиолетовый акцент |
+| `Modifier.shareCanvas()` | Спокойный точечный фон share-ui: шаг 24, радиус 1, общий цвет границы |
 | `ShareTypography` | Display Cormorant Garamond, prose Literata; UI остаётся системным |
 | `Glyph`, `AppGlyph` | Те же Lucide vector paths, без растровых производных |
 | `ShareAction`, `ShareSearch` | ActionButton, строка поиска/поле ввода |

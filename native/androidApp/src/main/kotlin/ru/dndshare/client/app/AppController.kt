@@ -89,7 +89,7 @@ class AppController(val platform: DeviceServices, val api: ApiClient) {
             catch (error: Exception) {
                 if (state.value.user == null) {
                     mutable.update { it.copy(authError = (error as? ApiException)?.message ?: "Не удалось подключиться к серверу.") }
-                } else mutable.update { it.copy(error = "Не удалось загрузить данные. Нажмите «Обновить».", offline = true) }
+                } else mutable.update { it.copy(error = "Не удалось загрузить данные. Нажмите «Повторить».", offline = true) }
             } finally { mutable.update { it.copy(signingIn = false) } }
         }
     }

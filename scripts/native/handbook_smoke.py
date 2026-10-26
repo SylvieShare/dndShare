@@ -9,7 +9,7 @@ class HandbookSmoke:
 
     def overview_and_search(self):
         self.wait_for("205")
-        self.wait_for("Коллекции")
+        self.wait_for("Основные разделы")
         self.snapshot("phone-handbook-overview")
         self.click("Заклинания")
         self.wait_for("Native Flame")
@@ -38,10 +38,10 @@ class HandbookSmoke:
         while time.monotonic() < deadline:
             root = self.tree()
             texts = [n.get("text") for n in root.iter("node")]
-            if "Все записи" in texts:
-                self.click("Все записи")
+            if "Заклинания" in texts and not any((text or "").startswith("Native Flame") for text in texts):
+                self.click("Заклинания")
                 return self.wait_for("Native Flame")
-            if "Native Flame" in texts:
+            if any((text or "").startswith("Native Flame") for text in texts):
                 return root
             time.sleep(.2)
         raise AssertionError("Handbook did not restore its overview or cached collection")

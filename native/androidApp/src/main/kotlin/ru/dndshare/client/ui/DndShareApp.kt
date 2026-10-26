@@ -77,7 +77,7 @@ private fun AuthenticatedApp(controller: AppController, state: AppState, fold: F
             Scaffold(
                 containerColor = MaterialTheme.colorScheme.background,
                 contentWindowInsets = WindowInsets(0, 0, 0, 0),
-                topBar = { AppHeader(format, selectedPage, state, controller, openMenu) },
+                topBar = { AppHeader(format, selectedPage, state, openMenu) },
             ) { padding ->
                 Column(Modifier.fillMaxSize().padding(padding)) {
                     ConnectionStatus(state) { controller.refresh(force = true) }

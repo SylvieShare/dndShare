@@ -45,7 +45,7 @@ for (const width of [320, 390, 560, 700, 1280]) {
     await expect(icon).toHaveAttribute('src', type.iconImageUrl)
     await expect.poll(() => icon.evaluate(img => img.naturalWidth)).toBeGreaterThan(0)
     const homeLink = page.locator('.handbook-col-bar').getByRole('link', { name: 'Справочник', exact: true })
-    if (width > 760) {
+    if (width >= 600) {
       await expect(homeLink).toBeVisible()
       await expect(homeLink).toHaveAttribute('href', '/handbook')
     } else await expect(homeLink).toBeHidden()
@@ -53,7 +53,7 @@ for (const width of [320, 390, 560, 700, 1280]) {
     await expect(page.locator('.header-chip')).toHaveCount(0)
 
     const body = page.locator('.handbook-body')
-    if (width <= 760) {
+    if (width < 600) {
       expect((await list.boundingBox()).width).toBeCloseTo((await body.boundingBox()).width, 0)
       await expect(detail).toBeHidden()
     }
@@ -67,7 +67,7 @@ for (const width of [320, 390, 560, 700, 1280]) {
     await expect(page).toHaveTitle('Существо 01 · D&D 5e · 2014')
     await detail.getByRole('button', { name: 'Описание', exact: true }).click()
 
-    if (width <= 760) {
+    if (width < 600) {
       await expect(list).toBeHidden()
       await expect(page.locator('.handbook-col-bar')).toBeHidden()
       const bounds = await detail.boundingBox()
@@ -77,7 +77,7 @@ for (const width of [320, 390, 560, 700, 1280]) {
       await expect(detail).toHaveCSS('border-left-width', '0px')
       await expect(detail).toHaveCSS('border-radius', '0px')
       expect(bounds.y + bounds.height).toBeLessThanOrEqual(801)
-      if (width <= 640) await expect(page.getByRole('button', { name: 'К списку', exact: true })).toBeHidden()
+      if (width < 600) await expect(page.getByRole('button', { name: 'К списку', exact: true })).toBeHidden()
     } else {
       await expect(list).toBeVisible()
       expect((await detail.boundingBox()).x).toBeGreaterThan((await list.boundingBox()).x)
@@ -97,7 +97,7 @@ for (const width of [320, 390, 560, 700, 1280]) {
     await expect(page).toHaveURL(/item=1/)
     await expect(page).toHaveTitle('Существо 01 · D&D 5e · 2014')
 
-    if (width <= 760) {
+    if (width < 600) {
       await page.getByRole('button', { name: width <= 640 ? 'Назад' : 'К списку', exact: true }).click()
       await expect(list).toBeVisible()
       await expect(detail).toBeHidden()

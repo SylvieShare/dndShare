@@ -152,7 +152,7 @@ def main():
         assert sum(bool(re.search(r"\bHist\s+#", line)) and PACKAGE + "/" in line
                    for line in history.splitlines()) == 1, "Relaunch duplicated the activity"
         shell("input", "keyevent", "4")
-        wait_for("Все записи")
+        wait_for("Основные разделы")
         shell("input", "keyevent", "4")
         time.sleep(0.5)
         focus = next(line for line in shell("dumpsys", "window").splitlines() if "mCurrentFocus=Window{" in line)
@@ -197,10 +197,10 @@ def main():
         navigation.transitions()
         control("offline?value=false")
         control("change")
-        root = tree()
-        refresh = [n for n in root.iter("node") if n.get("content-desc") == "Обновить"]
-        assert refresh
-        tap(refresh[0])
+        # Startup must synchronize automatically; the header has no manual refresh action.
+        shell("am", "force-stop", PACKAGE)
+        start()
+        handbook.enter_collection_if_needed()
         wait_for("Native Flame Updated")
         root = wait_for("204")
         assert "Native Retired" not in texts(root)

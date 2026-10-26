@@ -212,7 +212,7 @@ function onScroll(e) {
 
 <style scoped>
 .item-list-panel {
-  width: 500px;
+  width: clamp(220px, 40%, 400px);
   min-width: 0;
   min-height: 0;
   flex-shrink: 0;
@@ -340,11 +340,7 @@ function onScroll(e) {
 
 
 /* ── Responsive ── */
-@media (max-width: 1100px) {
-  .item-list-panel { width: 380px; }
-}
-
-@media (max-width: 760px) {
+@media (max-width: 599px) {
   .item-list-panel {
     width: 100%;
     border-right: none;

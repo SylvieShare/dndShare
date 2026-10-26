@@ -108,9 +108,10 @@ body .rc.dnd-rich-content tbody tr:nth-child(even) td {
   transform: translateY(-1px);
 }
 
-@media (max-width: 640px) {
-  :root {
-    --header-h: 50px;
-    --app-sidebar-w: 0px;
-  }
+/* Same window classes as the native Android shell. */
+@media (max-width: 1199px) {
+  :root { --header-h: 65px; }
+}
+@media (max-width: 599px) {
+  :root { --app-sidebar-w: 0px; }
 }

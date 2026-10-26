@@ -1,6 +1,5 @@
 <template>
-  <DesktopSidebar v-if="!isStandaloneRoute && !usesMobileChrome" />
-  <AppHeader v-if="!isStandaloneRoute && usesMobileChrome"/>
+  <AppNavigationShell v-if="!isStandaloneRoute" />
   <!-- The character LIST is kept alive so returning from a character page restores
        its scroll position and avoids a refetch flash. -->
   <div
@@ -29,8 +28,7 @@
 <script setup>
 import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import AppHeader from "@/shared/ui/AppHeader";
-import DesktopSidebar from '@/shared/ui/DesktopSidebar.vue'
+import AppNavigationShell from '@/shared/ui/AppNavigationShell.vue'
 import AppNotifications from '@/features/notifications/components/AppNotifications.vue'
 import ConsoleErrorInbox from '@/features/console-errors/components/ConsoleErrorInbox.vue'
 import { pageTransitionName } from '@/app/router'
@@ -41,7 +39,6 @@ import { useGameContextStore } from '@/stores/gameContext'
 
 const route = useRoute()
 const isMobile = useIsMobile()
-const usesMobileChrome = useIsMobile(640)
 const isPrintRoute = computed(() => !!route.meta?.printView)
 const isStandaloneRoute = computed(() => isPrintRoute.value || !!route.meta?.standaloneView)
 const showsApplicationServices = computed(() => !isStandaloneRoute.value || !!route.meta?.applicationServices)
@@ -84,7 +81,7 @@ body {
   outline-offset: 2px;
 }
 
-@media (min-width: 641px) {
+@media (min-width: 1200px) {
   body:has(.app-sidebar:not(.app-sidebar--expanded)) .review-inbox {
     left: calc(var(--app-sidebar-w) + 16px);
   }

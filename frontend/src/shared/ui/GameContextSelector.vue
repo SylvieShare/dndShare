@@ -98,14 +98,15 @@ function focusSelected() {
   target?.focus()
 }
 
-watch(open, async value => {
-  if (value) {
-    await nextTick()
-    focusSelected()
-  } else if (menu.value?.contains(document.activeElement)) {
-    trigger.value?.focus()
-  }
+watch(open, value => {
+  if (!value && menu.value?.contains(document.activeElement)) trigger.value?.focus()
 })
+// Wait until the child popover has reserved its overlay layer before moving focus.
+watch(open, async value => {
+  if (!value) return
+  await nextTick()
+  focusSelected()
+}, { flush: 'post' })
 
 watch(() => store.loading, async loading => {
   if (!loading && open.value) {

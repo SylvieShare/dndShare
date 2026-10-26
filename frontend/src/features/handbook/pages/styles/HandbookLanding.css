@@ -12,10 +12,9 @@
 .hb-content {
   flex: 1;
   min-width: 0;
-  padding: 24px 28px;
+  padding: 20px;
   overflow-y: auto;
-  border-left: 1px solid var(--border);
-  border-right: 1px solid var(--border);
+  container: handbook-landing / inline-size;
 }
 
 .hb-content-inner {
@@ -38,26 +37,15 @@
   margin: 0;
 }
 
-.hb-subtitle {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin: 0;
-}
-
 /* Section header */
 .hb-section-header {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
   flex-wrap: wrap;
-  margin-top: 4px;
-  margin-left: -28px;
-  margin-right: -28px;
-  padding-top: 16px;
-  padding-left: 28px;
-  padding-right: 28px;
-  border-top: 1px solid var(--border);
+  margin-top: 16px;
 }
+.hb-section-header::after { content: ''; height: 1px; flex: 1; background: var(--border); }
 
 .hb-section-title {
   font-family: var(--font-display);
@@ -90,49 +78,41 @@
 .hb-collection-group {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 14px;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  gap: 12px;
 }
 
 .hb-collection-group-header {
   display: flex;
-  align-items: baseline;
-  gap: 7px;
+  align-items: center;
+  gap: 10px;
   min-width: 0;
-  padding: 0 4px 2px;
+  padding-top: 12px;
 }
 
 .hb-collection-group-title {
   color: var(--text-1);
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
 }
+.hb-collection-group-header::after { content: ''; height: 1px; background: var(--border); flex: 1; }
 
 .hb-collection-group-count {
-  padding: 1px 7px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--accent) 13%, transparent);
+  padding: 3px 7px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--text-2) 13%, transparent);
   color: var(--text-2);
   font-size: 11px;
-  font-weight: 750;
+  line-height: 16px;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
 
-.hb-collection-group-meta {
-  min-width: 0;
-  color: var(--text-muted);
-  font-size: 11px;
-}
-
-/* Compact on wide screens, spacious enough for the emblem on smaller ones. */
+/* Breakpoints follow the content width after the landing's insets. */
 .hb-collections-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  gap: 12px;
 }
 
 .hb-collection-card {
@@ -140,15 +120,16 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 18px 18px 16px;
+  padding: 16px;
   border-radius: 12px;
   border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--text-on-accent) 5%, transparent);
+  background: var(--surface);
   color: var(--text-1);
   cursor: pointer;
   font-family: inherit;
   text-align: left;
-  min-height: 164px;
+  min-height: 160px;
+  box-sizing: border-box;
   overflow: hidden;
   transition: box-shadow 0.15s;
 }
@@ -159,7 +140,7 @@
   inset: 0;
   background: radial-gradient(
     circle at 72% 35%,
-    color-mix(in srgb, var(--accent) 10%, transparent) 0%,
+    color-mix(in srgb, var(--card-color, var(--accent-soft)) 12%, transparent) 0%,
     transparent 65%
   );
   pointer-events: none;
@@ -186,7 +167,7 @@
   line-height: 1.2;
 }
 .hb-card-parent {
-  color: var(--card-color, var(--accent));
+  color: var(--card-color, var(--accent-soft));
   font-size: 9px;
   font-weight: 800;
   letter-spacing: .06em;
@@ -219,16 +200,17 @@
 .hb-card-count {
   display: flex;
   align-items: baseline;
+  flex-wrap: wrap;
   gap: 4px;
-  color: var(--card-color, var(--accent));
+  color: var(--card-color, var(--accent-soft));
 }
 
 .hb-card-count-num {
   font-family: var(--font-ui);
-  font-size: 38px;
+  font-size: 32px;
   font-weight: 600;
   line-height: 1;
-  color: var(--card-color, var(--accent));
+  color: var(--card-color, var(--accent-soft));
   font-variant-numeric: tabular-nums;
 }
 
@@ -239,14 +221,14 @@
 
 .hb-card-icon {
   position: absolute;
-  right: 6px;
+  right: 16px;
   top: 50%;
-  transform: translateY(-54%);
-  width: 120px;
-  height: 120px;
+  transform: translateY(-50%);
+  width: 96px;
+  height: 96px;
   object-fit: contain;
   opacity: 0.78;
-  filter: drop-shadow(0 10px 18px color-mix(in srgb, var(--card-color, var(--accent)) 22%, transparent));
+  filter: drop-shadow(0 10px 18px color-mix(in srgb, var(--card-color, var(--accent-soft)) 22%, transparent));
   pointer-events: none;
 }
 
@@ -360,18 +342,27 @@
 }
 
 /* ── Responsive ── */
-@media (max-width: 1200px) {
-  .hb-collections-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .hb-dicts-grid {
-    grid-template-columns: repeat(3, 1fr);
+@media (width < 1200px) {
+  .hb-header {
+    display: none;
   }
 }
 
-@media (max-width: 900px) {
+@container handbook-landing (width < 1200px) {
+  .hb-collections-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container handbook-landing (width < 600px) {
   .hb-collections-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1200px) {
+  .hb-dicts-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -380,53 +371,21 @@
     flex-direction: column;
   }
   .hb-content {
-    padding: 16px;
+    padding: 20px;
     border-right: none;
     border-left: none;
   }
-  .hb-section-header {
-    margin-left: -16px;
-    margin-right: -16px;
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-  .hb-collections-grid {
-    grid-template-columns: 1fr;
-  }
+
   .hb-dicts-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 520px) {
-  .hb-collection-group {
-    margin: 0 -6px;
-    padding: 10px;
-  }
-
   .hb-collection-group-header {
     flex-wrap: wrap;
   }
 
-  .hb-collection-group-meta {
-    flex-basis: 100%;
-  }
-
-  .hb-collection-card {
-    min-height: 164px;
-    padding: 16px;
-  }
-
-  .hb-card-top,
-  .hb-card-bottom {
-    padding-right: 106px;
-  }
-
-  .hb-card-icon {
-    width: 116px;
-    height: 116px;
-    right: 2px;
-  }
   .hb-dicts-grid {
     grid-template-columns: 1fr;
   }

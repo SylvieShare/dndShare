@@ -7,11 +7,11 @@ for (const mobile of [false, true])
     await page.setViewportSize(mobile ? { width: 430, height: 932 } : { width: 1440, height: 1000 });
     for (const admin of [false, true]) {
       await page.goto(`/tests/maps/fixtures/access.html?${admin ? "admin&" : ""}${mobile ? "mobile" : ""}`);
-      if (mobile) await page.getByRole("button", { name: "DnD Share" }).click();
+      if (mobile) await page.getByRole("button", { name: "Открыть меню" }).click();
       const library = page.getByRole("link", { name: "Карты", exact: true });
       await expect(library).toHaveAttribute("href", "/maps");
       await expect(library).not.toHaveAttribute("aria-disabled", "true");
-      if (mobile) await page.getByRole("button", { name: "DnD Share" }).click();
+      if (mobile) await page.getByRole("button", { name: "Закрыть меню" }).click();
       const tab = page.getByRole("button", { name: "Карта", exact: true });
       await expect(tab).not.toHaveAttribute("aria-disabled", "true");
       await tab.focus();
