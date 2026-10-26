@@ -363435,8 +363435,8 @@
   "socketProbeVersion": 3,
   "final": {
     "assets": {
-      "render": "3e5754c25ebf499a3da56a5105f12cd1678182136e2b4d9185e7e29dd5227350",
-      "lod": "d959eb86173fced1554b66487e726b5b4fd91b207939df1ce7e4248f86b4e327",
+      "render": "819ed1be4c60c433ec336cf306098b04da89b658463488d36e27ea752941695f",
+      "lod": "fd87e9e99ba9fc57b46d78713379e8c07d5f42bb43a3f5f282a5e82b7f1afb38",
       "shadow": "0ac1664ebf831c379345fa7be380cb1486990ce6aa0a7be610ee8887f4ee32bd"
     },
     "mountDepth": 0,
