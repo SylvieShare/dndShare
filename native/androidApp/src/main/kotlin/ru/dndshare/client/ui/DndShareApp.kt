@@ -9,6 +9,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
 import coil3.compose.LocalPlatformContext
@@ -45,6 +47,8 @@ fun DndShareApp(controller: AppController, fold: FoldInfo? = null, onBackground:
 private fun AuthenticatedApp(controller: AppController, state: AppState, fold: FoldInfo?) {
     var page by rememberSaveable { mutableStateOf(AppPage.Handbook.name) }
     val pages = rememberSaveableStateHolder()
+    val focus = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
     val context = LocalPlatformContext.current
     val images = remember(state.user!!.id) {
         ImageLoader.Builder(context).components {
@@ -61,7 +65,13 @@ private fun AuthenticatedApp(controller: AppController, state: AppState, fold: F
     BoxWithConstraints(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
         val format = layoutFormat(maxWidth.value)
         val selectedPage = runCatching { AppPage.valueOf(page) }.getOrDefault(AppPage.Handbook)
-        AppNavigationShell(format, selectedPage, state, controller, navigate = { page = it.name }) { openMenu ->
+        AppNavigationShell(format, selectedPage, state, controller, navigate = {
+            if (it != selectedPage) {
+                focus.clearFocus()
+                keyboard?.hide()
+                page = it.name
+            }
+        }) { openMenu ->
             Scaffold(
                 containerColor = MaterialTheme.colorScheme.background,
                 contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -69,11 +79,13 @@ private fun AuthenticatedApp(controller: AppController, state: AppState, fold: F
             ) { padding ->
                 Column(Modifier.fillMaxSize().padding(padding)) {
                     ConnectionStatus(state) { controller.refresh(force = true) }
-                    pages.SaveableStateProvider(page) {
-                        when (selectedPage) {
-                            AppPage.Characters -> CharacterScreen(state, format, images) { controller.refresh(force = true) }
-                            AppPage.Handbook -> HandbookScreen(state, format, fold, images) { controller.refresh(force = true) }
-                            else -> PlaceholderScreen(selectedPage)
+                    AnimatedAppPage(selectedPage) { displayedPage ->
+                        pages.SaveableStateProvider(displayedPage.name) {
+                            when (displayedPage) {
+                                AppPage.Characters -> CharacterScreen(state, format, images) { controller.refresh(force = true) }
+                                AppPage.Handbook -> HandbookScreen(state, format, fold, images) { controller.refresh(force = true) }
+                                else -> PlaceholderScreen(displayedPage)
+                            }
                         }
                     }
                 }

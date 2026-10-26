@@ -179,6 +179,7 @@ def main():
             assert "Поиск по справочнику" in texts(root), "Two panes did not preserve list and detail"
             snapshot(name)
             navigation.adaptive(name)
+        navigation.transitions()
         control("offline?value=false")
         control("change")
         root = tree()

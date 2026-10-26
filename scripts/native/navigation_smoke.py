@@ -1,4 +1,5 @@
 """Navigation checks for the isolated native/API smoke account."""
+import re
 
 
 class NavigationSmoke:
@@ -58,6 +59,35 @@ class NavigationSmoke:
         root = self.tree()
         assert not self.described(root, "Закрыть меню"), "Drawer Back must preserve the opened record"
         self.wait_for("Это описание из локальной базы.")
+
+    def transitions(self):
+        root = self.tree()
+        positions = {}
+        for title in ["Правила игрока", "Карты", "Персонажи", "Справочник"]:
+            node = self.described(root, "Раздел: " + title)[0]
+            left, top, right, bottom = map(int, re.findall(r"\d+", node.get("bounds", "")))
+            positions[title] = ((left + right) // 2, (top + bottom) // 2)
+
+        def switch_quickly():
+            sequence = ["Правила игрока", "Справочник", "Персонажи", "Карты", "Справочник"] * 2
+            commands = [f"input tap {positions[title][0]} {positions[title][1]}" for title in sequence]
+            self.shell("; ".join(commands))
+            result = self.wait_for("Это описание из локальной базы.")
+            visible = [n for n in result.iter("node") if "Это описание из локальной базы." in n.get("text", "")]
+            assert len(visible) == 1, "Section reversals must retain one visible record and its saved state"
+
+        switch_quickly()
+        previous_scale = self.shell("settings", "get", "global", "animator_duration_scale")
+        try:
+            self.shell("settings", "put", "global", "animator_duration_scale", "0")
+            self.tree()  # Let the app observe the system setting before navigating.
+            switch_quickly()
+        finally:
+            if previous_scale == "null":
+                self.shell("settings", "delete", "global", "animator_duration_scale")
+            else:
+                self.shell("settings", "put", "global", "animator_duration_scale", previous_scale)
+        print("PASS: rapid section reversals, saved record and system animations disabled", flush=True)
 
     def adaptive(self, layout):
         root = self.tree()

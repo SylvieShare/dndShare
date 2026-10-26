@@ -47,7 +47,7 @@ fun HandbookScreen(state: AppState, format: LayoutFormat, fold: FoldInfo?, image
         }
         fun back() { history = history.dropLast(1) }
         fun open(id: Long) { if (id != selected) history = history + id }
-        BackHandler(selected != null && !LocalAppDrawerOpen.current, ::back)
+        BackHandler(selected != null && !LocalAppDrawerOpen.current && LocalAppPageActive.current, ::back)
         val primary: @Composable () -> Unit = {
             Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(query, { query = it }, Modifier.fillMaxWidth(), singleLine = true,
