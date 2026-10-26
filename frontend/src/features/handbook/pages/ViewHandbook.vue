@@ -1,13 +1,8 @@
 <template>
   <div class="handbook-outer" :class="[!selectedType ? 'handbook-outer--landing' : mobilePanel]">
 
-    <header v-if="selectedType" class="handbook-collection-header">
-      <HandbookHeading :type="selectedType" />
-      <AddButton v-if="isAuth && !compact" label="Добавить" @click="openAddModal" />
-    </header>
-
-    <Teleport v-if="selectedType && isAuth && compact" to="#app-header-actions" defer>
-      <AddButton variant="icon" label="Добавить" @click="openAddModal" />
+    <Teleport v-if="selectedType && isAuth" to="#app-header-actions" defer>
+      <AddButton :variant="compact ? 'icon' : 'inline'" label="Добавить" @click="openAddModal" />
     </Teleport>
     <Transition :name="collectionTransition" mode="out-in" @before-leave="el => { el.inert = true }">
     <!-- ── Inner: max-width centered ── -->
@@ -109,7 +104,6 @@ import { useHandbookSwipeBack } from '@/features/handbook/composables/useHandboo
 import { useAppLayout } from '@/shared/composables/useAppLayout'
 import { useHandbookTitle } from '@/features/handbook/composables/useHandbookTitle'
 import HandbookLanding from '@/features/handbook/pages/HandbookLanding'
-import HandbookHeading from '@/features/handbook/components/HandbookHeading.vue'
 import HandbookItemList from '@/features/handbook/components/HandbookItemList'
 import HandbookItemDetail from '@/features/handbook/components/HandbookItemDetail'
 import { canEditHandbookItem } from '@/features/items/lib/itemPermissions'

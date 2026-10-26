@@ -1,5 +1,5 @@
 <template>
-  <WorkspaceHeader class="character-workspace-header">
+  <WorkspaceHeader class="character-workspace-header" :content-width="contentWidth">
     <template #identity>
       <ActionButton variant="quiet" aria-label="К списку персонажей" @click="router.push('/chars')">
         <template #icon><ArrowLeft :size="18" /></template>
@@ -21,7 +21,7 @@ import { ActionButton } from '@sylvieshare/share-ui'
 import { ArrowLeft } from '@lucide/vue'
 import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
 import CharacterSessionControl from './CharacterSessionControl.vue'
-defineProps({ name: String, subtitle: String, session: Object, transfers: Object })
+defineProps({ contentWidth: String, name: String, subtitle: String, session: Object, transfers: Object })
 const router = useRouter()
 </script>
 <style scoped>
@@ -42,13 +42,11 @@ const router = useRouter()
 .character-heading h1 {
   margin: 0;
   color: var(--text-1);
-  font-size: 16px;
-  font-weight: 650;
-  line-height: 1.3;
+  font-family: var(--type-header-family); font-size: var(--type-header-size); font-weight: var(--type-header-weight); line-height: var(--type-header-line-height);
 }
 .character-heading span {
   color: var(--text-muted);
-  font-size: 11px;
-  line-height: 1.3;
+  font-size: var(--type-context-size);
+  line-height: var(--type-context-line-height);
 }
 </style>

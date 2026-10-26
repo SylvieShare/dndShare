@@ -7,6 +7,7 @@
     :class="{
       'page-transition-stage--print': isPrintRoute,
       'page-transition-stage--standalone': isStandaloneRoute,
+      'page-transition-stage--handbook': !isStandaloneRoute && route.meta?.section === 'handbook',
     }"
   >
     <router-view v-slot="{ Component, route }">
@@ -85,7 +86,8 @@ body {
     left: calc(var(--app-sidebar-w) + 16px);
   }
 
-  body:has(.app-sidebar--expanded) .page-transition-stage {
+  body:has(.app-sidebar--expanded) .page-transition-stage,
+  body:has(.app-sidebar--expanded) .app-header-shell {
     margin-left: var(--sidebar-expanded-w);
   }
 
@@ -100,6 +102,8 @@ body {
   margin-left: var(--app-sidebar-w);
   transition: margin-left 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+.page-transition-stage--handbook { --header-h: var(--layout-header); }
 
 .page-transition-stage--print {
   min-height: 100vh;
@@ -202,7 +206,7 @@ body {
      so the destination snapshot captures its final geometry, not frame one of
      a second animation. */
   html.mobile-page-transition .app-header,
-  html.mobile-page-transition .app-header .header-inner {
+  html.mobile-page-transition .app-header .workspace-header-inner {
     transition: none !important;
   }
 

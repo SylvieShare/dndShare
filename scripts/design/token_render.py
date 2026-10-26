@@ -36,7 +36,7 @@ def render(data, source_hash):
         '  --app-canvas-pattern: radial-gradient(circle, var(--app-canvas-dot-color) var(--canvas-radius), transparent var(--canvas-radius));',
         '}',
         f'@media {media_queries(data)["--ui-compact"]} {{',
-        '  :root { --header-h: calc(var(--layout-header) + var(--layout-border)); --app-sidebar-w: 0px; }', '}',
+        '  :root { --header-h: var(--layout-header); --app-sidebar-w: 0px; }', '}',
         f'@media {media_queries(data)["--ui-phone"]} {{',
         '  :root { --app-sidebar-w: 0px; }', '}', '',
     ]

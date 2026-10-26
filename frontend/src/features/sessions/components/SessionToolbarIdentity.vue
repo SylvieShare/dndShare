@@ -115,7 +115,7 @@ function createArc() {
 .chapter-session-context { min-width: 0; display: grid; gap: 3px; }
 .chapter-toolbar-main { min-width: 0; display: flex; }
 .chapter-session { min-width: 0; max-width: 100%; display: flex; align-items: center; gap: 4px; }
-.chapter-session-title { min-width: 0; overflow: hidden; padding: 0; border: 0; border-radius: 6px; background: none; color: var(--text-1); font: inherit; font-family: var(--font-display); font-size: 20px; font-weight: 680; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
+.chapter-session-title { min-width: 0; overflow: hidden; padding: 0; border: 0; border-radius: 6px; background: none; color: var(--text-1); font: inherit; font-family: var(--type-header-family); font-size: var(--type-header-size); font-weight: var(--type-header-weight); line-height: var(--type-header-line-height); text-align: left; text-overflow: ellipsis; white-space: nowrap; }
 .chapter-session-title:not(:disabled) { cursor: pointer; }
 .chapter-session-title:not(:disabled):hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
 .chapter-session-title:disabled { opacity: 1; }

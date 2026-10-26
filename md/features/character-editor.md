@@ -110,15 +110,18 @@ split into semantic `--surface` blocks instead of painting a whole tab: every
 weapon is a card; spell parameters, slots and each spell level are separate
 cards; inventory spaces share one tile while utility widgets are separate; the personality
 profile declares the `Основное`, `Облик`, `Характер` and `История` tile groups
-in `mobile.json`. The character route hides the global app header at the mobile
-breakpoint and gives the full viewport to its own toolbar; that toolbar menu has
+in `mobile.json`. The character route hides the global app header in compact
+windows and gives the full viewport to its own toolbar; that toolbar menu has
 an explicit **К персонажам** action, including on read-only public sheets. Its
 desktop shell also occupies the full viewport because application navigation is
 provided by the fixed side rail and does not reserve a global top-header offset.
 Above the desktop sheet, `CharacterWorkspaceHeader` reuses `WorkspaceHeader`
 from the map editor: the left side has a character-list return action and the
 character name/subtitle; the right side has the session link, current chapter,
-players and event counters. The header stays above the sheet scroller, and long
+players and event counters. The header uses the same title typography and Surface chrome as the application
+and session headers. Its inner content follows the centered width of the active
+sheet tab; controls, tutorial targets and session actions remain in place.
+The header stays above the sheet scroller, and long
 names truncate within it. Without a session the header keeps its identity and
 return action. The former session tile is removed from the desktop utility
 column. Mobile keeps its existing toolbar and session tile in **Предметы**. Its

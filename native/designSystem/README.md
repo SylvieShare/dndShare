@@ -27,6 +27,7 @@ Compose-слотами. В зависимостях только Compose Foundat
 | `Modifier.shareCanvas()` | Спокойный точечный фон share-ui: шаг 24, радиус 1, общий цвет границы |
 | `ShareTypography` | Display Cormorant Garamond, prose Literata; UI остаётся системным |
 | `Glyph`, `AppGlyph` | Те же Lucide vector paths, без растровых производных |
+| `ShareWorkspaceHeader` | Общая шапка: Surface, нижняя граница, тень, центрированное содержимое максимум ContentMax и слот RowScope |
 | `ShareAction`, `ShareSearch` | ActionButton, строка поиска/поле ввода |
 | `ShareTile` | BaseTile, оболочка коллекции или статьи |
 | `ShareContentRow` | ContentRow: метрика, имя, второе имя, подстрока, маркеры |

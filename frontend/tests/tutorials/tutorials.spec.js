@@ -181,3 +181,27 @@ test('mobile panes mount on first visit and survive cyclic swipes', async ({page
   await expect(original).toHaveAttribute('data-retained', 'yes')
   expect(await populated()).toBe(2)
 })
+
+test('sheet header follows the centered width of its active tab', async ({ page }) => {
+  await mockApi(page, 'player', [{ flowId: 'character', sourceKey: 'edition:1', device: 'desktop', status: 'completed', revision: TUTORIAL_REVISION }])
+  await page.setViewportSize({ width: 2560, height: 1000 })
+  await page.goto('/tests/tutorials/fixtures/tutorials.html?page=/char/test')
+  const header = page.locator('.character-workspace-header')
+  const content = page.locator('.desktop-tabs > .container:visible')
+  await expect(content).toBeVisible()
+  await expect(header.locator('h1')).toHaveCSS('font-size', '16px')
+  for (const width of [1440, 1920, 2560]) {
+    await page.setViewportSize({ width, height: 1000 })
+    await expect.poll(async () => {
+      const body = await content.boundingBox()
+      const bar = await header.locator('.workspace-header-inner').boundingBox()
+      return Math.max(Math.abs(body.x - bar.x), Math.abs(body.width - bar.width))
+    }).toBeLessThan(.5)
+  }
+  await page.getByRole('tab', { name: 'Снаряжение', exact: true }).click()
+  await expect.poll(async () => {
+    const body = await content.boundingBox()
+    const bar = await header.locator('.workspace-header-inner').boundingBox()
+    return Math.max(Math.abs(body.x - bar.x), Math.abs(body.width - bar.width))
+  }).toBeLessThan(.5)
+})

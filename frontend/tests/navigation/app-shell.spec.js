@@ -25,14 +25,15 @@ for (const width of [320, 390, 599, 600, 834, 1199, 1200, 1440]) {
     const desktop = page.locator('.desktop-sidebar--desktop')
     const drawer = page.getByRole('dialog', { name: 'Меню приложения' })
     if (width >= 1200) {
-      await expect(header).toHaveCount(0)
+      await expect(header).toHaveCount(1)
+      await expect(header).toHaveClass(/workspace-header/)
       await expect(desktop).toBeVisible()
       await expect.poll(async () => (await desktop.boundingBox()).width).toBe(224)
       await expect(page.getByRole('button', { name: 'Открыть меню' })).toHaveCount(0)
     } else {
       await expect(header.locator('.handbook-heading')).toHaveText('Справочник')
       await expect(header.locator('.header-context')).toHaveText('D&D 5e · 2014')
-      expect((await header.boundingBox()).height).toBe(65)
+      expect((await header.boundingBox()).height).toBe(64)
       await expect(rail).toHaveCount(0)
       expect((await page.locator('.page-transition-stage').boundingBox()).x).toBe(0)
       const trigger = page.getByRole('button', { name: 'Открыть меню', exact: true })
@@ -124,3 +125,49 @@ test('wide navigation resizes its existing column and keeps content beside it', 
     await expect(sidebar).toHaveCount(1)
   }
 })
+
+for (const width of [390, 834, 1440, 1920, 2560]) {
+  test(`header keeps its typography and follows page width at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 1000 })
+    await page.goto('/handbook')
+    const header = page.locator('.app-header')
+    const title = header.locator('.handbook-heading')
+    await expect(page.locator('.hb-collection-card')).toHaveCount(1)
+    const typography = () => title.evaluate(el => {
+      const css = getComputedStyle(el)
+      return [css.fontFamily, css.fontSize, css.fontWeight, css.lineHeight]
+    })
+    const initial = await typography()
+    const initialTitleX = (await title.boundingBox()).x
+    expect(initial[1]).toBe('16px')
+    const inner = header.locator('.workspace-header-inner')
+    if (width >= 1200) {
+      const content = await page.locator('.hb-landing').boundingBox()
+      const bar = await inner.boundingBox()
+      expect(bar.x).toBeCloseTo(content.x, 0)
+      expect(bar.width).toBeCloseTo(content.width, 0)
+      expect(bar.width).toBeLessThanOrEqual(1400)
+    }
+    await page.locator('.hb-collection-card').click()
+    await expect(header.locator('.handbook-heading-name')).toHaveText('Заклинания')
+    await expect(page.locator('.handbook-list')).toBeVisible()
+    await expect(page.locator('.handbook-page')).toHaveCSS('transform', 'none')
+    expect(await typography()).toEqual(initial)
+    await expect(page.locator('.app-header')).toHaveCount(1)
+    if (width >= 1200) {
+      const content = await page.locator('.handbook-page').boundingBox()
+      const bar = await inner.boundingBox()
+      const list = await page.locator('.handbook-list').boundingBox()
+      const label = await title.boundingBox()
+      expect(bar.x).toBeCloseTo(content.x, 0)
+      expect(bar.width).toBeCloseTo(content.width, 0)
+      expect(label.x).toBeCloseTo(list.x, 0)
+      expect(label.x).toBeCloseTo(initialTitleX, 0)
+      expect((await header.boundingBox()).width).toBeGreaterThanOrEqual(bar.width)
+    }
+    await title.getByRole('link', { name: 'Справочник', exact: true }).click()
+    await expect(page.locator('.hb-landing')).toBeVisible()
+    expect(await typography()).toEqual(initial)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
+  })
+}

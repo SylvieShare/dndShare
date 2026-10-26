@@ -1,5 +1,5 @@
 <template>
-  <div class="handbook-heading" :class="{ 'handbook-heading--root': !collection }">
+  <div class="handbook-heading">
     <RouterLink v-if="collection" class="handbook-home-link" to="/handbook">Справочник</RouterLink>
     <span v-else>Справочник</span>
     <Transition name="collection-label">
@@ -30,10 +30,9 @@ const collection = computed(() => props.type !== undefined ? props.type
 <style scoped>
 .handbook-heading {
   display: flex; align-items: center; gap: var(--spacing-small); min-width: 0;
-  font-family: var(--type-breadcrumb-family); font-size: var(--type-breadcrumb-size);
-  font-weight: var(--type-breadcrumb-weight); line-height: var(--type-breadcrumb-line-height);
+  font-family: var(--type-header-family); font-size: var(--type-header-size);
+  font-weight: var(--type-header-weight); line-height: var(--type-header-line-height);
 }
-.handbook-heading--root { font-size: var(--type-header-size); line-height: var(--type-header-line-height); }
 .handbook-home-link { position: relative; flex-shrink: 0; color: var(--text-1); text-decoration: none; transition: color var(--motion-feedback); }
 .handbook-home-link::after { content: ''; position: absolute; inset: -12px 0; }
 .handbook-home-link:hover { color: var(--accent-soft); }

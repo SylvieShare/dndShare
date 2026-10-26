@@ -1,9 +1,14 @@
 import { createPinia } from 'pinia'
 import { createMemoryHistory, createRouter } from 'vue-router'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { renderComponent } from '../../../tests/unit/renderComponent'
 import { useGameContextStore } from '@/stores/gameContext'
 import AppHeader from './AppHeader.vue'
+
+vi.mock('@/shared/composables/useAppLayout', async () => {
+  const { ref } = await import('vue')
+  return { useAppLayout: () => ({ phone: ref(true), compact: ref(true) }) }
+})
 
 async function renderHeader(path = '/handbook', props = {}) {
   const pinia = createPinia()

@@ -48,7 +48,7 @@ internal fun HandbookCollectionPage(
     }
     Box(Modifier.fillMaxSize().imePadding(), contentAlignment = Alignment.TopCenter) {
         Box(Modifier.widthIn(max = DesignTokens.Layout.ContentMax).fillMaxHeight().fillMaxWidth()
-            .padding(horizontal = if (format == LayoutFormat.Wide) DesignTokens.Spacing.Section else 0.dp)) {
+            .padding(horizontal = if (format == LayoutFormat.Wide) DesignTokens.Spacing.Page else 0.dp)) {
         if (format == LayoutFormat.Phone) { if (destination.itemId == null) primary() else detail() }
         else TwoPane(fold, Modifier.fillMaxSize(), primary, detail)
         }

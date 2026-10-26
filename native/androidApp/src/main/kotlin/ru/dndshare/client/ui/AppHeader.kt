@@ -15,22 +15,25 @@ import ru.dndshare.client.app.AppController
 import ru.dndshare.client.app.AppState
 
 @Composable
-internal fun AppHeader(format: LayoutFormat, page: AppPage, state: AppState, openMenu: () -> Unit, heading: (@Composable () -> Unit)? = null) {
-    Surface(color = WebPalette.Background) {
-        Column {
-            Row(Modifier.fillMaxWidth().heightIn(min = DesignTokens.Layout.Header).padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                if (format != LayoutFormat.Wide) IconButton(onClick = openMenu,
-                    modifier = Modifier.semantics { contentDescription = "Открыть меню" }) { AppGlyph(Glyph.Menu) }
-                Column(Modifier.weight(1f).padding(horizontal = 8.dp, vertical = 8.dp)) {
-                    if (heading != null) heading()
-                    else Text(page.title, style = ShareTypography.header, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    val source = state.sources.firstOrNull { it.id == state.sourceId }
-                    val edition = source?.versions?.firstOrNull { it.id == state.editionId }
-                    if (source != null && format != LayoutFormat.Wide) Text(listOfNotNull(sourceLabel(source.name), edition?.version).joinToString(" · "),
-                        style = ShareTypography.context, color = WebPalette.TextSecondary, maxLines = 1)
-                }
-            }
-            HorizontalDivider()
+internal fun AppHeader(
+    format: LayoutFormat, page: AppPage, state: AppState, openMenu: () -> Unit,
+    heading: (@Composable () -> Unit)? = null,
+) {
+    ShareWorkspaceHeader(contentInset = when (format) {
+        LayoutFormat.Wide -> DesignTokens.Spacing.Page
+        LayoutFormat.Phone -> DesignTokens.Spacing.Small
+        else -> DesignTokens.Spacing.Large
+    }) {
+        if (format != LayoutFormat.Wide) IconButton(onClick = openMenu,
+            modifier = Modifier.semantics { contentDescription = "Открыть меню" }) { AppGlyph(Glyph.Menu) }
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            if (heading != null) heading()
+            else Text(page.title, style = ShareTypography.header, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            val source = state.sources.firstOrNull { it.id == state.sourceId }
+            val edition = source?.versions?.firstOrNull { it.id == state.editionId }
+            if (source != null && format != LayoutFormat.Wide) Text(
+                listOfNotNull(sourceLabel(source.name), edition?.version).joinToString(" · "),
+                style = ShareTypography.context, color = WebPalette.TextSecondary, maxLines = 1)
         }
     }
 }

@@ -1,6 +1,6 @@
 <template>
   <DesktopSidebar v-if="!compact" mode="desktop" />
-  <div v-if="compact" class="app-compact-header">
+  <div v-if="(compact || route.meta?.section === 'handbook') && route.meta?.mobileHeader !== 'hidden'" class="app-header-shell">
     <AppHeader :menu-open="menuOpen" @open-menu="openMenu">
       <template v-if="route.meta?.section === 'handbook'" #title><HandbookHeading /></template>
     </AppHeader>
@@ -50,5 +50,6 @@ useAppDrawerGesture(() => compact.value && !menuOpen.value, openMenu)
 </script>
 
 <style scoped>
-.app-compact-header { margin-left: var(--app-sidebar-w); }
+.app-header-shell { margin-left: var(--app-sidebar-w); transition: margin-left .28s cubic-bezier(.22, 1, .36, 1); }
+@media (prefers-reduced-motion: reduce) { .app-header-shell { transition: none; } }
 </style>

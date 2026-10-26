@@ -26,7 +26,6 @@ object ShareTypography {
     val card = textRole(DesignTokens.Typography.Card)
     val row = textRole(DesignTokens.Typography.Row)
     val body = textRole(DesignTokens.Typography.Body)
-    val breadcrumb = textRole(DesignTokens.Typography.Breadcrumb)
     val listAlternate = textRole(DesignTokens.Typography.ListAlternate)
     val listSubtitle = textRole(DesignTokens.Typography.ListSubtitle)
     val listMetric = textRole(DesignTokens.Typography.ListMetric)

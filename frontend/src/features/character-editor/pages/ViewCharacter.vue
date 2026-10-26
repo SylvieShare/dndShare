@@ -3,7 +3,7 @@
     <CharacterEditionDialog :controller="edition" />
     <CharacterTransferDialogs :controller="transfers" :character-uuid="uuid" />
     <PageTutorial :tutorial="characterTutorial" :mobile="isMobile" />
-    <CharacterWorkspaceHeader v-if="!isMobile" :name="charName" :subtitle="charSub" :session="activeSession" :transfers="transfers" />
+    <CharacterWorkspaceHeader v-if="!isMobile" :name="charName" :subtitle="charSub" :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth" />
     <CharEditorToolbar
       v-if="isMobile"
       ref="charToolbarEl"

@@ -1,12 +1,15 @@
 <template>
   <header ref="element" class="workspace-header" :class="{ 'workspace-header--plain': !$slots.navigation }">
+    <div class="workspace-header-inner" :class="{ 'workspace-header-inner--page': page }" :style="{ maxWidth: contentWidth || (page ? 'var(--layout-content-max)' : undefined) }">
     <div class="workspace-header-identity"><slot name="identity" /></div>
     <div v-if="$slots.navigation" class="workspace-header-navigation"><slot name="navigation" /></div>
     <div class="workspace-header-actions"><slot name="actions" /></div>
+    </div>
   </header>
 </template>
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from "vue";
+defineProps({ page: Boolean, contentWidth: String });
 const element = ref(null),
   emit = defineEmits(["resize"]);
 let observer;
@@ -22,25 +25,32 @@ onBeforeUnmount(() => observer?.disconnect());
 .workspace-header {
   position: relative;
   z-index: 20;
-  display: grid;
-  grid-template-columns: minmax(150px, 1fr) auto minmax(142px, 1fr);
-  align-items: center;
-  gap: 12px;
   flex: none;
-  min-height: 64px;
-  box-sizing: border-box;
-  padding: 4px 14px;
   border-bottom: 1px solid var(--border-strong);
   background: var(--surface);
   box-shadow: 0 4px 12px color-mix(in srgb, var(--scrim) 45%, transparent);
 }
+.workspace-header-inner {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) auto minmax(142px, 1fr);
+  align-items: center;
+  gap: var(--spacing-medium);
+  min-height: calc(var(--layout-header) - var(--layout-border));
+  box-sizing: border-box;
+  width: 100%;
+  margin-inline: auto;
+  padding: var(--spacing-xs) 14px;
+  transition: max-width var(--motion-navigation);
+}
+.workspace-header-inner--page { padding-inline: var(--spacing-page); }
 .workspace-header-identity {
   min-width: 0;
-  min-height: 54px;
+  min-height: calc(var(--layout-header) - 2 * var(--spacing-xs) - var(--layout-border));
   display: flex;
   align-items: center;
+  gap: var(--workspace-header-identity-gap, 0px);
 }
-.workspace-header--plain {
+.workspace-header--plain .workspace-header-inner {
   grid-template-columns: minmax(0, 1fr) auto;
 }
 .workspace-header-navigation {
@@ -55,7 +65,7 @@ onBeforeUnmount(() => observer?.disconnect());
   gap: 10px;
 }
 @container (max-width:1100px) {
-  .workspace-header {
+  .workspace-header-inner {
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 4px 14px;
   }
@@ -67,8 +77,8 @@ onBeforeUnmount(() => observer?.disconnect());
     justify-self: center;
   }
 }
-@media (max-width: 760px) {
-  .workspace-header {
+@media (--ui-compact) {
+  .workspace-header-inner {
     grid-template-columns: minmax(0, 1fr) auto;
     padding-inline: 10px;
   }
@@ -78,4 +88,7 @@ onBeforeUnmount(() => observer?.disconnect());
     justify-self: center;
   }
 }
+@media (--ui-compact) { .workspace-header-inner--page { padding-inline: var(--spacing-large); } }
+@media (--ui-phone) { .workspace-header-inner--page { padding-inline: var(--spacing-small); } }
+@media (prefers-reduced-motion: reduce) { .workspace-header-inner { transition: none; } }
 </style>
