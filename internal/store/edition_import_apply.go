@@ -73,7 +73,7 @@ func applyEditionImport(ctx context.Context, tx pgx.Tx, req EditionImportRequest
 				v := "revision"
 				kind = &v
 			}
-			batch.Queue(`INSERT INTO dndshare.item(id,name,name_en,type_id,data,parent_id,derived_from_item_id,derivation_kind,automation_status,automation_note,icon_image_id,icon_svg_id,cover_image_id) VALUES($1,$2,$3,$4,$5::jsonb,$6,$7,$8,$9,$10,(SELECT icon_image_id FROM dndshare.item WHERE id=$7),(SELECT icon_svg_id FROM dndshare.item WHERE id=$7),(SELECT cover_image_id FROM dndshare.item WHERE id=$7))`, result.IDs[r.Key], r.Name, r.NameEn, r.TypeID, string(raw), parent, r.OriginalID, kind, r.AutomationStatus, r.AutomationNote)
+			batch.Queue(`INSERT INTO dndshare.item(id,name,name_en,type_id,data,parent_id,derived_from_item_id,derivation_kind,automation_status,automation_note,icon_image_id,icon_svg_id,cover_image_id) VALUES($1,$2,$3,$4,$5::jsonb,$6,$7,$8,$9,$10,(SELECT icon_image_id FROM dndshare.active_item WHERE id=$7),(SELECT icon_svg_id FROM dndshare.active_item WHERE id=$7),(SELECT cover_image_id FROM dndshare.active_item WHERE id=$7))`, result.IDs[r.Key], r.Name, r.NameEn, r.TypeID, string(raw), parent, r.OriginalID, kind, r.AutomationStatus, r.AutomationNote)
 		}
 		br := tx.SendBatch(ctx, batch)
 		for range group {

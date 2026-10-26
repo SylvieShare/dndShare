@@ -20,7 +20,7 @@ func (s *Store) SetItemCoverImage(ctx context.Context, itemID, actorUserID int64
 	var ownerUserID, oldImageID *int64
 	err = tx.QueryRow(ctx,
 		`SELECT user_id, cover_image_id
-		   FROM dndshare.item
+		   FROM dndshare.active_item
 		  WHERE id = $1 AND ($2 OR user_id = $3)
 		  FOR UPDATE`,
 		itemID, isAdmin, actorUserID,
@@ -62,7 +62,7 @@ func (s *Store) ClearItemCover(ctx context.Context, itemID, actorUserID int64, i
 	err := s.pool.QueryRow(ctx,
 		`WITH previous AS (
 		    SELECT id, cover_image_id
-		      FROM dndshare.item
+		      FROM dndshare.active_item
 		     WHERE id = $1 AND ($2 OR user_id = $3)
 		     FOR UPDATE
 		), updated AS (

@@ -9,7 +9,7 @@ import (
 func (s *Store) ReuseSystemItemIcon(ctx context.Context, itemID, sourceID int64) error {
 	result, err := s.pool.Exec(ctx, `UPDATE dndshare.item target
  SET icon_image_id=source.icon_image_id, icon_svg_id=source.icon_svg_id
- FROM dndshare.item source
+ FROM dndshare.active_item source
  WHERE target.id=$1 AND source.id=$2 AND target.user_id IS NULL AND source.user_id IS NULL
  AND (source.icon_image_id IS NOT NULL OR source.icon_svg_id IS NOT NULL)`, itemID, sourceID)
 	if err == nil && result.RowsAffected() == 0 {
@@ -22,7 +22,7 @@ func (s *Store) ReuseSystemItemIcon(ctx context.Context, itemID, sourceID int64)
 func (s *Store) ReuseSystemItemCover(ctx context.Context, itemID, sourceID int64) error {
 	result, err := s.pool.Exec(ctx, `UPDATE dndshare.item target
  SET cover_image_id=source.cover_image_id
- FROM dndshare.item source
+ FROM dndshare.active_item source
  WHERE target.id=$1 AND source.id=$2 AND target.user_id IS NULL AND source.user_id IS NULL
  AND source.cover_image_id IS NOT NULL`, itemID, sourceID)
 	if err == nil && result.RowsAffected() == 0 {

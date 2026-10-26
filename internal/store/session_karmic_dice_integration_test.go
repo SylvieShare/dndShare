@@ -92,6 +92,7 @@ func testSessionKarmicDicePostgres(t *testing.T, s *Store, sessionID int64) {
  INSERT INTO dndshare.session_encounter(session_id,data) VALUES($1,'{"combatants":[{"uid":"goblin-one","type":"npc","override":{"name":"Гоблин"},"markerLetter":"A"},{"uid":"goblin-two","type":"npc","itemId":30,"markerLetter":"B"}]}')`, sessionID); err != nil {
 		t.Fatal(err)
 	}
+	installActiveItemFixture(t, s.pool)
 	npcReq := request("")
 	npcReq.NPCUID = "goblin-one"
 	npc, err := s.RollSessionD20(ctx, sessionID, 1, npcReq)

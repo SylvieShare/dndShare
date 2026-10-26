@@ -61,7 +61,7 @@ const sessionEventSelect = `
 	JOIN dndshare."session" event_session ON event_session.id = e.session_id
 	LEFT JOIN dndshare."char" c ON c.id = e.actor_char_id
 	LEFT JOIN dndshare.storage_image character_icon ON character_icon.id = c.icon_image_id AND character_icon.deleted = false
-	LEFT JOIN dndshare.item actor_item ON actor_item.id = e.actor_item_id
+	LEFT JOIN dndshare.active_item actor_item ON actor_item.id = e.actor_item_id
 	LEFT JOIN dndshare.storage_image actor_icon ON actor_icon.id = actor_item.icon_image_id AND actor_icon.deleted = false
 	LEFT JOIN dndshare.storage_image actor_cover ON actor_cover.id = actor_item.cover_image_id AND actor_cover.deleted = false
 	LEFT JOIN dndshare.svg_storage actor_svg ON actor_svg.id = actor_item.icon_svg_id
@@ -159,7 +159,7 @@ func (s *Store) ResolveSessionActorItem(ctx context.Context, userID int64, itemI
 	var name string
 	err := s.pool.QueryRow(ctx, `
 		SELECT id, name
-		FROM dndshare.item
+		FROM dndshare.active_item
 		WHERE id = $1 AND type_id = 6 AND (user_id IS NULL OR user_id = $2)`, *itemID, userID).Scan(&id, &name)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil, ErrNotFound

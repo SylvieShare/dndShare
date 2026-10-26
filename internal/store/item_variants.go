@@ -26,7 +26,7 @@ func (s *Store) CreateItemVariant(ctx context.Context, itemID, userID, editionID
 	var id int64
 	err = tx.QueryRow(ctx, `INSERT INTO dndshare.item(user_id,custom_source_id,name,name_en,type_id,parent_id,data,derived_from_item_id,derivation_kind,automation_status,automation_note)
  SELECT $2,cs.id,i.name,i.name_en,i.type_id,i.parent_id,i.data-'edition_key'-'import_fingerprint',i.id,$4,'unreviewed','Проверьте механику и связанные записи для выбранной редакции'
- FROM dndshare.item i JOIN dndshare.item_type t ON t.id=i.type_id
+ FROM dndshare.active_item i JOIN dndshare.item_type t ON t.id=i.type_id
  JOIN dndshare.source_version v ON v.source_id=t.source_id AND v.id=$3
  JOIN dndshare.custom_item_source cs ON cs.user_id=$2 AND cs.is_default
  WHERE i.id=$1 AND (i.user_id IS NULL OR i.user_id=$2) RETURNING id`, itemID, userID, editionID, kind).Scan(&id)

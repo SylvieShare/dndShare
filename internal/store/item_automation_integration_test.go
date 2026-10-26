@@ -36,6 +36,7 @@ func TestItemAutomationPersistence(t *testing.T) {
 	exec(`CREATE TABLE dndshare.item_model(item_id bigint,model_id uuid,is_default boolean,sort_order integer);`)
 	exec(testSchemaColumns(t, "item", "hidden"))
 	exec(`UPDATE dndshare.item SET hidden=true WHERE name_en IN ('Magus','Shaman')`)
+	installActiveItemFixture(t, pool)
 	s := &Store{pool: pool}
 	read := func(id int64) Item {
 		t.Helper()

@@ -9,7 +9,7 @@ import (
 
 const systemItemCoverItemsSQL = `
 	SELECT id, cover_image_id
-	FROM dndshare.item
+	FROM dndshare.active_item
 	WHERE user_id IS NULL
 	  AND type_id = $2
 	  AND (
@@ -23,8 +23,8 @@ const retireItemCoverImageSQL = `
 	SET deleted = true, "type" = 'retired_item_cover'
 	WHERE img.id = $1
 	  AND img.deleted = false
-	  AND NOT EXISTS (SELECT 1 FROM dndshare.item i WHERE i.icon_image_id = img.id)
-	  AND NOT EXISTS (SELECT 1 FROM dndshare.item i WHERE i.cover_image_id = img.id)
+	  AND NOT EXISTS (SELECT 1 FROM dndshare.active_item i WHERE i.icon_image_id = img.id)
+	  AND NOT EXISTS (SELECT 1 FROM dndshare.active_item i WHERE i.cover_image_id = img.id)
 	  AND NOT EXISTS (SELECT 1 FROM dndshare.session_image_catalog catalog WHERE catalog.image_id = img.id)
 	  AND NOT EXISTS (SELECT 1 FROM dndshare.session_chapter chapter WHERE chapter.image_id = img.id)
 	  AND NOT EXISTS (SELECT 1 FROM dndshare.session_scene scene WHERE scene.image_id = img.id)

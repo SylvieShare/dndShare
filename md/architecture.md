@@ -7,12 +7,21 @@ S3-compatible storage — изображения, аудио и файлы 3D-м
 
 ## Runtime и зависимости
 
+`native/` содержит Kotlin Multiplatform клиент для Android и Windows.
+`shared` объединяет Compose UI, модели, HTTP-клиент Ktor и Room/SQLite.
+`androidApp` и `desktopApp` имеют собственные точки входа и задачи сборки;
+Vue и браузерный runtime в эти приложения не входят. Платформенные adapters
+отвечают за HTTP engine, защищённую сессию, пути хранения и системную навигацию.
+Описание границ — [нативный клиент](features/native-client.md).
+
 ```mermaid
 flowchart LR
     Browser[Браузер: Vue, Pinia, Router] -->|HTTP API и SSE| Go[Go: net/http]
     Browser -->|HTML, JS, CSS| Assets[Frontend assets]
     Assets --- Go
     Client[MCP-клиент] -->|JSON-RPC /mcp| Go
+    Native[Android / Windows: Kotlin, Compose] -->|HTTP API и handbook sync| Go
+    Native --> LocalDB[(Локальная SQLite)]
     Go -->|pgx| DB[(PostgreSQL)]
     Go -->|ObjectStorageService| S3[(S3-compatible storage)]
 ```

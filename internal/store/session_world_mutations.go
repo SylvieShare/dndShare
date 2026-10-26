@@ -63,7 +63,7 @@ func validateSessionNPCItemTx(ctx context.Context, tx pgx.Tx, sessionID int64, i
 	err := tx.QueryRow(ctx, `
 		SELECT EXISTS (
 			SELECT 1
-			FROM dndshare.item item
+			FROM dndshare.active_item item
 			JOIN dndshare."session" session ON session.id = $1
 			WHERE item.id = $2 AND item.type_id = $3
 			  AND (item.user_id IS NULL OR item.user_id = session.owner_user_id)

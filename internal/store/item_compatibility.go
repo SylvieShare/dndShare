@@ -60,9 +60,9 @@ func (s *Store) AttachItemCompatibility(ctx context.Context, items []Item, userI
 	rows, err := s.pool.Query(ctx, `SELECT i.id,c.source_version_id,COALESCE(v.version,''),COALESCE(c.status,''),
  CASE WHEN r.user_id IS NULL OR r.user_id=$2 THEN c.replaced_by_item_id END,c.adapter_code,COALESCE(c.note,''),
  CASE WHEN origin.user_id IS NULL OR origin.user_id=$2 THEN i.derived_from_item_id END,i.derivation_kind
- FROM dndshare.item i LEFT JOIN dndshare.item_version_compatibility c ON c.item_id=i.id LEFT JOIN dndshare.source_version v ON v.id=c.source_version_id
- LEFT JOIN dndshare.item origin ON origin.id=i.derived_from_item_id
- LEFT JOIN dndshare.item r ON r.id=c.replaced_by_item_id
+ FROM dndshare.active_item i LEFT JOIN dndshare.item_version_compatibility c ON c.item_id=i.id LEFT JOIN dndshare.source_version v ON v.id=c.source_version_id
+ LEFT JOIN dndshare.active_item origin ON origin.id=i.derived_from_item_id
+ LEFT JOIN dndshare.active_item r ON r.id=c.replaced_by_item_id
  WHERE i.id=ANY($1) ORDER BY c.source_version_id`, ids, userID)
 	if err != nil {
 		return nil, err
@@ -97,7 +97,7 @@ func setItemCompatibility(ctx context.Context, tx pgx.Tx, itemID int64, decision
 	}
 	for _, c := range decisions {
 		var valid bool
-		err := tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.item i
+		err := tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.active_item i
    JOIN dndshare.item_type t ON t.id=i.type_id JOIN dndshare.source_version v ON v.source_id=t.source_id
    WHERE i.id=$1 AND v.id=$2)`, itemID, c.SourceVersionID).Scan(&valid)
 		if err != nil {
@@ -108,7 +108,7 @@ func setItemCompatibility(ctx context.Context, tx pgx.Tx, itemID int64, decision
 		}
 
 		if c.Selectable() {
-			if err = tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.item i WHERE i.id=$1 AND (i.parent_id IS NULL OR EXISTS(SELECT 1 FROM dndshare.item_version_compatibility p WHERE p.item_id=i.parent_id AND p.source_version_id=$2 AND p.status IN ('native','compatible'))))`, itemID, c.SourceVersionID).Scan(&valid); err != nil {
+			if err = tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.active_item i WHERE i.id=$1 AND (i.parent_id IS NULL OR EXISTS(SELECT 1 FROM dndshare.item_version_compatibility p WHERE p.item_id=i.parent_id AND p.source_version_id=$2 AND p.status IN ('native','compatible'))))`, itemID, c.SourceVersionID).Scan(&valid); err != nil {
 				return err
 			}
 			if !valid {
@@ -116,8 +116,8 @@ func setItemCompatibility(ctx context.Context, tx pgx.Tx, itemID int64, decision
 			}
 		}
 		if c.ReplacedByItemID != nil {
-			err = tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.item a
-    JOIN dndshare.item_type at ON at.id=a.type_id JOIN dndshare.item b ON b.id=$2
+			err = tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.active_item a
+    JOIN dndshare.item_type at ON at.id=a.type_id JOIN dndshare.active_item b ON b.id=$2
     JOIN dndshare.item_type bt ON bt.id=b.type_id
     JOIN dndshare.item_version_compatibility bc ON bc.item_id=b.id AND bc.source_version_id=$3
     WHERE a.id=$1 AND a.id<>b.id AND at.source_id=bt.source_id AND a.type_id=b.type_id
@@ -158,7 +158,7 @@ func setItemCompatibility(ctx context.Context, tx pgx.Tx, itemID int64, decision
 	if referenced {
 		return &RulesValidationError{Message: "На эту запись ссылаются прежние версии; сначала обновите их замены"}
 	}
-	if err := tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.item i JOIN dndshare.item_version_compatibility c ON c.item_id=i.id WHERE i.parent_id=$1 AND c.status IN ('native','compatible') AND NOT c.source_version_id=ANY($2::bigint[]))`, itemID, selectable).Scan(&referenced); err != nil {
+	if err := tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.active_item i JOIN dndshare.item_version_compatibility c ON c.item_id=i.id WHERE i.parent_id=$1 AND c.status IN ('native','compatible') AND NOT c.source_version_id=ANY($2::bigint[]))`, itemID, selectable).Scan(&referenced); err != nil {
 		return err
 	}
 	if referenced {
@@ -178,7 +178,7 @@ func setItemCompatibility(ctx context.Context, tx pgx.Tx, itemID int64, decision
 
 func validateParentEditions(ctx context.Context, tx pgx.Tx, ids []int64) error {
 	var invalid bool
-	err := tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.item i JOIN dndshare.item_version_compatibility c ON c.item_id=i.id WHERE i.id=ANY($1) AND i.parent_id IS NOT NULL AND c.status IN ('native','compatible') AND NOT EXISTS(SELECT 1 FROM dndshare.item p JOIN dndshare.item_version_compatibility pc ON pc.item_id=p.id WHERE p.id=i.parent_id AND NOT p.hidden AND (p.user_id IS NULL OR p.user_id=i.user_id) AND pc.source_version_id=c.source_version_id AND pc.status IN ('native','compatible')))`, ids).Scan(&invalid)
+	err := tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.active_item i JOIN dndshare.item_version_compatibility c ON c.item_id=i.id WHERE i.id=ANY($1) AND i.parent_id IS NOT NULL AND c.status IN ('native','compatible') AND NOT EXISTS(SELECT 1 FROM dndshare.active_item p JOIN dndshare.item_version_compatibility pc ON pc.item_id=p.id WHERE p.id=i.parent_id AND NOT p.hidden AND (p.user_id IS NULL OR p.user_id=i.user_id) AND pc.source_version_id=c.source_version_id AND pc.status IN ('native','compatible')))`, ids).Scan(&invalid)
 	if err != nil {
 		return err
 	}
@@ -198,7 +198,7 @@ func (s *Store) SetItemCompatibility(ctx context.Context, itemID, userID int64, 
 		return err
 	}
 	var id int64
-	if err = tx.QueryRow(ctx, `SELECT id FROM dndshare.item WHERE id=$1 AND ($3 OR user_id=$2) FOR UPDATE`, itemID, userID, admin).Scan(&id); err != nil {
+	if err = tx.QueryRow(ctx, `SELECT id FROM dndshare.active_item WHERE id=$1 AND ($3 OR user_id=$2) FOR UPDATE`, itemID, userID, admin).Scan(&id); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return ErrNotFound
 		}

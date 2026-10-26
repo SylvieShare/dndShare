@@ -28,10 +28,11 @@ func (s *Store) CreateBase(ctx context.Context, name, nameEn string, data json.R
 	}
 	data = canonicalItemData(data)
 	var id int64
+	var createdAt, changedAt time.Time
 	err = tx.QueryRow(ctx,
-		"INSERT INTO dndshare.item (user_id, name, name_en, data, type_id, parent_id, automation_status, automation_note, requires_player_interaction, hidden) VALUES (NULL, $1, $2, CAST($3 AS jsonb), $4, $5, $6, $7, $8, $9) RETURNING id",
+		"INSERT INTO dndshare.item (user_id, name, name_en, data, type_id, parent_id, automation_status, automation_note, requires_player_interaction, hidden) VALUES (NULL, $1, $2, CAST($3 AS jsonb), $4, $5, $6, $7, $8, $9) RETURNING id, created_at, changed_at",
 		name, nameEn, string(data), typeID, parentID, meta.AutomationStatus, meta.AutomationNote, meta.RequiresPlayerInteraction, hidden,
-	).Scan(&id)
+	).Scan(&id, &createdAt, &changedAt)
 	if err != nil {
 		return Item{}, err
 	}
@@ -48,7 +49,7 @@ func (s *Store) CreateBase(ctx context.Context, name, nameEn string, data json.R
 	}
 
 	en := nameEn
-	return Item{Compatibility: initialCompatibility(automation), Hidden: hidden, ItemAutomation: meta, ID: id, Name: name, NameEn: &en, Data: data, TypeID: typeID, CreatedAt: time.Now(), ParentID: parentID}, nil
+	return Item{Compatibility: initialCompatibility(automation), Hidden: hidden, ItemAutomation: meta, ID: id, Name: name, NameEn: &en, Data: data, TypeID: typeID, CreatedAt: createdAt, ChangedAt: changedAt, ParentID: parentID}, nil
 }
 
 // Create — создать пользовательский предмет в его default custom source.
@@ -70,6 +71,7 @@ func (s *Store) Create(ctx context.Context, userID int64, name string, data json
 	}
 	data = canonicalItemData(data)
 	var id, customSourceID int64
+	var createdAt, changedAt time.Time
 	err = tx.QueryRow(ctx,
 		`WITH default_source AS (
 		    INSERT INTO dndshare.custom_item_source (user_id, name, is_default)
@@ -80,9 +82,9 @@ func (s *Store) Create(ctx context.Context, userID int64, name string, data json
 		)
 		INSERT INTO dndshare.item (user_id, name, data, type_id, parent_id, custom_source_id, automation_status, automation_note, requires_player_interaction, hidden)
 		SELECT $1, $2, CAST($3 AS jsonb), $4, $5, id, $6, $7, $8, $9 FROM default_source
-		RETURNING id, custom_source_id`,
+		RETURNING id, custom_source_id, created_at, changed_at`,
 		userID, name, string(data), typeID, parentID, meta.AutomationStatus, meta.AutomationNote, meta.RequiresPlayerInteraction, hidden,
-	).Scan(&id, &customSourceID)
+	).Scan(&id, &customSourceID, &createdAt, &changedAt)
 	if err != nil {
 		return Item{}, err
 	}
@@ -99,7 +101,7 @@ func (s *Store) Create(ctx context.Context, userID int64, name string, data json
 	}
 
 	uid := userID
-	return Item{Compatibility: initialCompatibility(automation), Hidden: hidden, ItemAutomation: meta, ID: id, UserID: &uid, Name: name, Data: data, TypeID: typeID, CreatedAt: time.Now(), ParentID: parentID, CustomSourceID: &customSourceID}, nil
+	return Item{Compatibility: initialCompatibility(automation), Hidden: hidden, ItemAutomation: meta, ID: id, UserID: &uid, Name: name, Data: data, TypeID: typeID, CreatedAt: createdAt, ChangedAt: changedAt, ParentID: parentID, CustomSourceID: &customSourceID}, nil
 }
 
 // Update — обновить предмет; isAdmin снимает проверку владельца.
@@ -124,7 +126,7 @@ func (s *Store) Update(ctx context.Context, id, userID int64, isAdmin bool, name
             automation_note = COALESCE($8, automation_note),
             requires_player_interaction = COALESCE($9, requires_player_interaction),
             hidden = COALESCE($10, hidden)
-         WHERE id = $4 AND ($6 OR user_id = $5)`,
+         WHERE id = $4 AND NOT deleted AND ($6 OR user_id = $5)`,
 		name, nameEn, jsonOrEmpty(data), id, userID, isAdmin,
 		automation.AutomationStatus, automation.AutomationNote, automation.RequiresPlayerInteraction, automation.Hidden,
 	)
@@ -161,13 +163,13 @@ func setItemParent(ctx context.Context, tx pgx.Tx, id int64, parentID *int64) er
 	var err error
 	if parentID != nil {
 		var valid, cycle bool
-		if err = tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.item i JOIN dndshare.item p ON p.id=$2 JOIN dndshare.item_type it ON it.id=i.type_id JOIN dndshare.item_type pt ON pt.id=p.type_id WHERE i.id=$1 AND it.source_id=pt.source_id AND (p.user_id IS NULL OR p.user_id=i.user_id) AND NOT p.hidden)`, id, *parentID).Scan(&valid); err != nil {
+		if err = tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.active_item i JOIN dndshare.active_item p ON p.id=$2 JOIN dndshare.item_type it ON it.id=i.type_id JOIN dndshare.item_type pt ON pt.id=p.type_id WHERE i.id=$1 AND it.source_id=pt.source_id AND (p.user_id IS NULL OR p.user_id=i.user_id) AND NOT p.hidden)`, id, *parentID).Scan(&valid); err != nil {
 			return err
 		}
 		if !valid {
 			return &RulesValidationError{Message: "Родитель недоступен или принадлежит другой системе"}
 		}
-		if err = tx.QueryRow(ctx, `WITH RECURSIVE chain(id,path) AS (SELECT $2::bigint,ARRAY[$2::bigint] UNION ALL SELECT i.parent_id,chain.path||i.parent_id FROM chain JOIN dndshare.item i ON i.id=chain.id WHERE i.parent_id IS NOT NULL AND NOT i.parent_id=ANY(chain.path)) SELECT EXISTS(SELECT 1 FROM chain WHERE id=$1)`, id, *parentID).Scan(&cycle); err != nil {
+		if err = tx.QueryRow(ctx, `WITH RECURSIVE chain(id,path) AS (SELECT $2::bigint,ARRAY[$2::bigint] UNION ALL SELECT i.parent_id,chain.path||i.parent_id FROM chain JOIN dndshare.active_item i ON i.id=chain.id WHERE i.parent_id IS NOT NULL AND NOT i.parent_id=ANY(chain.path)) SELECT EXISTS(SELECT 1 FROM chain WHERE id=$1)`, id, *parentID).Scan(&cycle); err != nil {
 			return err
 		}
 		if cycle {
@@ -198,7 +200,7 @@ func (s *Store) MakeBase(ctx context.Context, id int64) error {
 	err = tx.QueryRow(ctx,
 		`UPDATE dndshare.item
 		    SET user_id = NULL, custom_source_id = NULL
-		  WHERE id = $1
+		  WHERE id = $1 AND NOT deleted
 		  RETURNING icon_image_id, cover_image_id`,
 		id,
 	).Scan(&imageID, &coverImageID)
@@ -224,25 +226,26 @@ func (s *Store) MakeBase(ctx context.Context, id int64) error {
 	return tx.Commit(ctx)
 }
 
-// Delete — удалить предмет; isAdmin снимает проверку владельца.
+// Delete marks an item as deleted; retained rows keep their media references.
 func (s *Store) Delete(ctx context.Context, id, userID int64, isAdmin bool) (ItemIconRefs, error) {
 	var refs ItemIconRefs
 	var err error
 	if isAdmin {
 		err = s.pool.QueryRow(ctx,
-			"DELETE FROM dndshare.item WHERE id = $1 RETURNING icon_svg_id, icon_image_id, cover_image_id",
+			"UPDATE dndshare.item SET deleted = true WHERE id = $1 AND NOT deleted RETURNING icon_svg_id, icon_image_id, cover_image_id",
 			id,
 		).Scan(&refs.SVGID, &refs.ImageID, &refs.CoverImageID)
 	} else {
 		err = s.pool.QueryRow(ctx,
-			"DELETE FROM dndshare.item WHERE id = $1 AND user_id = $2 RETURNING icon_svg_id, icon_image_id, cover_image_id",
+			"UPDATE dndshare.item SET deleted = true WHERE id = $1 AND user_id = $2 AND NOT deleted RETURNING icon_svg_id, icon_image_id, cover_image_id",
 			id, userID,
 		).Scan(&refs.SVGID, &refs.ImageID, &refs.CoverImageID)
 	}
 	if errors.Is(err, pgx.ErrNoRows) {
 		return ItemIconRefs{}, ErrNotFound
 	}
-	return refs, err
+	// No media became unreferenced: the retained item still owns it.
+	return ItemIconRefs{}, err
 }
 
 func jsonOrEmpty(data json.RawMessage) string {

@@ -15,9 +15,9 @@ func (s *Store) FindItemEffectSources(ctx context.Context, userID *int64, effect
 	rows, err := s.pool.Query(ctx, `
 SELECT i.id, COALESCE(NULLIF(link->>'key',''),ordinal::text),
  COALESCE(link->>'target','self'), COALESCE(link->>'condition','')
-FROM dndshare.item e
+FROM dndshare.active_item e
 CROSS JOIN LATERAL jsonb_array_elements(CASE WHEN jsonb_typeof(e.data->'application_sources')='array' THEN e.data->'application_sources' ELSE '[]'::jsonb END) WITH ORDINALITY l(link,ordinal)
-JOIN dndshare.item i ON i.id=CASE WHEN COALESCE(link#>>'{item,id}',link->>'item') ~ '^[0-9]{1,18}$' THEN COALESCE(link#>>'{item,id}',link->>'item')::bigint END
+JOIN dndshare.active_item i ON i.id=CASE WHEN COALESCE(link#>>'{item,id}',link->>'item') ~ '^[0-9]{1,18}$' THEN COALESCE(link#>>'{item,id}',link->>'item')::bigint END
 WHERE e.id=$2 AND e.type_id=15 AND (e.user_id IS NULL OR e.user_id=$1)
  AND (i.user_id IS NULL OR i.user_id=$1)
 ORDER BY ordinal LIMIT $3 OFFSET $4`, userID, effectID, limit, offset)

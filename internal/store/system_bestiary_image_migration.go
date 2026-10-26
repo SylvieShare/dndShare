@@ -22,7 +22,7 @@ const auditSystemBestiaryIconMigrationSQL = `
 			  AND NOT (id = ANY($1::bigint[]))
 			  AND cover_image_id IS NULL
 		)
-	FROM dndshare.item
+	FROM dndshare.active_item
 	WHERE user_id IS NULL
 	  AND type_id = 6`
 

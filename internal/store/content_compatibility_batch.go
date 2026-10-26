@@ -40,7 +40,7 @@ func (s *Store) ReviewPublicationCompatibility(ctx context.Context, bookID, edit
 	if !valid {
 		return result, ErrNotFound
 	}
-	rows, err := tx.Query(ctx, `SELECT i.id,i.name,i.data::text,COALESCE(c.status,'') FROM dndshare.item i
+	rows, err := tx.Query(ctx, `SELECT i.id,i.name,i.data::text,COALESCE(c.status,'') FROM dndshare.active_item i
  JOIN dndshare.item_content_source b ON b.item_id=i.id AND b.content_source_id=$1
  LEFT JOIN dndshare.item_version_compatibility c ON c.item_id=i.id AND c.source_version_id=$2
  WHERE i.user_id IS NULL AND NOT i.hidden ORDER BY i.id FOR UPDATE OF i`, bookID, editionID)

@@ -26,6 +26,7 @@ func TestItemRuleReferences(t *testing.T) {
  (6,NULL,'Пустое',4,'{"use_resources":null,"feature_actions":{},"max_use":null}'),
  (7,NULL,'Компетентность',4,'{"choices":[{"key":"expertise","text":"Выберите навыки или инструменты"}]}');`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
+	installActiveItemFixture(t, pool)
 	s := &Store{pool: pool}
 	search := func(user *int64, kind, query string, itemID, excludeID int64, limit, offset int) []ItemRuleReference {
 		t.Helper()

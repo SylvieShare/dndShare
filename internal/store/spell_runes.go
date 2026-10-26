@@ -9,7 +9,7 @@ import (
 
 const systemSpellRuneItemsSQL = `
 	SELECT id, icon_image_id
-	FROM dndshare.item
+	FROM dndshare.active_item
 	WHERE user_id IS NULL
 	  AND type_id = 5
 	  AND (

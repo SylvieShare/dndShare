@@ -143,7 +143,7 @@ func karmicNPCActor(ctx context.Context, tx pgx.Tx, sessionID int64, uid string)
 		}
 		name := textValue(object(c["override"])["name"])
 		if name == "" && number(c["itemId"]) > 0 {
-			if err := tx.QueryRow(ctx, `SELECT name FROM dndshare.item WHERE id=$1`, number(c["itemId"])).Scan(&name); err != nil {
+			if err := tx.QueryRow(ctx, `SELECT name FROM dndshare.active_item WHERE id=$1`, number(c["itemId"])).Scan(&name); err != nil {
 				return "", "", err
 			}
 		}

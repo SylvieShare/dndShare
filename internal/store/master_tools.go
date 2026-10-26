@@ -11,7 +11,7 @@ func (s *Store) TreasurePool(ctx context.Context, userID int64, scope ContentSco
 	where := []string{publicOrOwnedPredicate("i", &userID, 1),
 		"i.type_id IN (1,2,10,12,13,14,19)", "jsonb_typeof(i.data->'treasure')='object'"}
 	where = appendContentScopeSQL(where, &args, scope)
-	rows, err := s.pool.Query(ctx, "SELECT "+itemSelectColumns("i")+" FROM dndshare.item i "+itemMediaJoins("i")+" WHERE "+strings.Join(where, " AND ")+" ORDER BY i.id", args...)
+	rows, err := s.pool.Query(ctx, "SELECT "+itemSelectColumns("i")+" FROM dndshare.active_item i "+itemMediaJoins("i")+" WHERE "+strings.Join(where, " AND ")+" ORDER BY i.id", args...)
 	if err != nil {
 		return nil, err
 	}

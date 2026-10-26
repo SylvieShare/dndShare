@@ -42,7 +42,7 @@ func concentrationTx(ctx context.Context, tx pgx.Tx, charID int64) (*CharacterCo
 	}
 	rows, err := tx.Query(ctx, `SELECT e.effect_uid,e.effect_id,i.name,
  CASE WHEN c.id IS NOT NULL THEN e.target || jsonb_build_object('imageUrl',COALESCE(ci.url,c.data#>>'{values,ava,url}','')) ELSE e.target END
- FROM dndshare.concentration_effect e JOIN dndshare.item i ON i.id=e.effect_id
+ FROM dndshare.concentration_effect e JOIN dndshare.active_item i ON i.id=e.effect_id
  LEFT JOIN dndshare."char" c ON c.id=e.target_char_id
  LEFT JOIN dndshare.storage_image ci ON ci.id=c.icon_image_id AND ci.deleted=false
  LEFT JOIN dndshare.session_encounter n ON n.id=e.encounter_id

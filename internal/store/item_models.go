@@ -18,7 +18,7 @@ type ItemModelBinding struct {
 func (s *Store) GetItemModel(ctx context.Context, itemID int64) (battlemap.Model, error) {
 	return scanMapModel(s.pool.QueryRow(ctx, `SELECT `+mapModelColumns+` FROM dndshare.map_model
         WHERE id=(SELECT b.model_id FROM dndshare.item_model b
-          JOIN dndshare.item i ON i.id=b.item_id
+          JOIN dndshare.active_item i ON i.id=b.item_id
           WHERE b.item_id=$1 AND i.user_id IS NULL AND NOT i.hidden
           ORDER BY b.is_default DESC,b.sort_order,b.model_id LIMIT 1)`, itemID))
 }
@@ -37,7 +37,7 @@ func (s *Store) attachItemModels(ctx context.Context, items []Item) ([]Item, err
 		return items, nil
 	}
 	rows, err := s.pool.Query(ctx, `SELECT DISTINCT ON(b.item_id) b.item_id,b.model_id::text
-        FROM dndshare.item_model b JOIN dndshare.item i ON i.id=b.item_id
+        FROM dndshare.item_model b JOIN dndshare.active_item i ON i.id=b.item_id
         WHERE b.item_id=ANY($1::bigint[]) AND i.user_id IS NULL AND NOT i.hidden
         ORDER BY b.item_id,b.is_default DESC,b.sort_order,b.model_id`, ids)
 	if err != nil {
@@ -64,7 +64,7 @@ func (s *Store) attachItemModels(ctx context.Context, items []Item) ([]Item, err
 
 func (s *Store) ListItemModels(ctx context.Context, itemID int64) ([]ItemModelBinding, error) {
 	rows, err := s.pool.Query(ctx, `SELECT b.item_id,b.model_id::text,b.is_default,b.sort_order
-        FROM dndshare.item_model b JOIN dndshare.item i ON i.id=b.item_id
+        FROM dndshare.item_model b JOIN dndshare.active_item i ON i.id=b.item_id
         WHERE i.user_id IS NULL AND NOT i.hidden AND ($1::bigint=0 OR b.item_id=$1)
         ORDER BY b.item_id,b.is_default DESC,b.sort_order,b.model_id`, itemID)
 	if err != nil {
@@ -105,7 +105,7 @@ func (s *Store) BindItemModel(ctx context.Context, b ItemModelBinding) error {
 	}
 	defer tx.Rollback(ctx)
 	var id int64
-	err = tx.QueryRow(ctx, `SELECT id FROM dndshare.item WHERE id=$1 AND user_id IS NULL AND NOT hidden FOR UPDATE`, b.ItemID).Scan(&id)
+	err = tx.QueryRow(ctx, `SELECT id FROM dndshare.active_item WHERE id=$1 AND user_id IS NULL AND NOT hidden FOR UPDATE`, b.ItemID).Scan(&id)
 	if err != nil {
 		return err
 	}

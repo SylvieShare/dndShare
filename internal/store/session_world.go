@@ -174,8 +174,8 @@ func (s *Store) GetSessionNPC(ctx context.Context, id int64) (SessionNPC, error)
 		       npc.image_id, COALESCE(image.url, ''), catalog.catalog_key, npc.image_focal_x, npc.image_focal_y,
 		       npc.bestiary_item_id, bestiary.name
 		FROM dndshare.session_npc npc
-		LEFT JOIN dndshare.item race ON race.id = npc.race_item_id
-		LEFT JOIN dndshare.item bestiary ON bestiary.id = npc.bestiary_item_id
+		LEFT JOIN dndshare.active_item race ON race.id = npc.race_item_id
+		LEFT JOIN dndshare.active_item bestiary ON bestiary.id = npc.bestiary_item_id
 		LEFT JOIN dndshare.storage_image image ON image.id = npc.image_id AND image.deleted = false
 		LEFT JOIN dndshare.session_image_catalog catalog ON catalog.image_id = npc.image_id
 		WHERE npc.id = $1`, id))
@@ -221,8 +221,8 @@ func (s *Store) GetSessionWorld(ctx context.Context, sessionID int64) (SessionWo
 		       npc.image_id, COALESCE(image.url, ''), catalog.catalog_key, npc.image_focal_x, npc.image_focal_y,
 		       npc.bestiary_item_id, bestiary.name
 		FROM dndshare.session_npc npc
-		LEFT JOIN dndshare.item race ON race.id = npc.race_item_id
-		LEFT JOIN dndshare.item bestiary ON bestiary.id = npc.bestiary_item_id
+		LEFT JOIN dndshare.active_item race ON race.id = npc.race_item_id
+		LEFT JOIN dndshare.active_item bestiary ON bestiary.id = npc.bestiary_item_id
 		LEFT JOIN dndshare.storage_image image ON image.id = npc.image_id AND image.deleted = false
 		LEFT JOIN dndshare.session_image_catalog catalog ON catalog.image_id = npc.image_id
 		WHERE npc.session_id = $1

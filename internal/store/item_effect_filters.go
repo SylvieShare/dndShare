@@ -30,7 +30,7 @@ func effectSourceFilterSQL(values []any, userID *int64, add func(any) string) st
 		}
 		parts = append(parts, `EXISTS (SELECT 1
  FROM jsonb_array_elements(CASE WHEN jsonb_typeof(i.data->'application_sources')='array' THEN i.data->'application_sources' ELSE '[]'::jsonb END) ref
- JOIN dndshare.item source ON source.id=CASE WHEN COALESCE(ref#>>'{item,id}',ref->>'item') ~ '^[0-9]{1,18}$' THEN COALESCE(ref#>>'{item,id}',ref->>'item')::bigint END
+ JOIN dndshare.active_item source ON source.id=CASE WHEN COALESCE(ref#>>'{item,id}',ref->>'item') ~ '^[0-9]{1,18}$' THEN COALESCE(ref#>>'{item,id}',ref->>'item')::bigint END
  WHERE source.type_id = ANY(`+add(typeIDs)+`::bigint[]) AND `+visibility+`)`)
 	}
 	if len(parts) == 0 {

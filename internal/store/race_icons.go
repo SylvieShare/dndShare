@@ -9,7 +9,7 @@ import (
 
 const systemRaceIconItemsSQL = `
 	SELECT id, icon_image_id
-	FROM dndshare.item
+	FROM dndshare.active_item
 	WHERE user_id IS NULL
 	  AND type_id = CASE WHEN $2::boolean THEN 16 ELSE 8 END
 	  AND (($2::boolean AND parent_id IS NOT NULL) OR (NOT $2::boolean AND parent_id IS NULL))

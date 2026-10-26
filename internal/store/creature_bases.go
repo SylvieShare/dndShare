@@ -21,7 +21,7 @@ func (s *Store) ItemModelSize(ctx context.Context, itemID int64) (float64, error
 	err := s.pool.QueryRow(ctx, `SELECT COALESCE(MAX(CASE s.code
         WHEN 'tiny' THEN 0.5 WHEN 'small' THEN 1 WHEN 'medium' THEN 1
         WHEN 'large' THEN 2 WHEN 'huge' THEN 3 WHEN 'gargantuan' THEN 4 END),1)
-        FROM dndshare.item i JOIN dndshare.suggest s ON s.type_id=18 AND s.user_id IS NULL
+        FROM dndshare.active_item i JOIN dndshare.suggest s ON s.type_id=18 AND s.user_id IS NULL
         AND (i.data #> '{identity,size}') @> jsonb_build_array(s.id)
         WHERE i.id=$1 AND i.type_id=6`, itemID).Scan(&size)
 	return size, err

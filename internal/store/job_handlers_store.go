@@ -17,7 +17,7 @@ import (
 func (s *Store) RecountItemTypes(ctx context.Context) error {
 	_, err := s.pool.Exec(ctx,
 		`UPDATE dndshare.item_type it
-		 SET count_items = (SELECT COUNT(*) FROM dndshare.item i WHERE i.type_id = it.id)`,
+		 SET count_items = (SELECT COUNT(*) FROM dndshare.active_item i WHERE i.type_id = it.id)`,
 	)
 	return err
 }
@@ -46,7 +46,7 @@ func (s *Store) RecountSuggestTypes(ctx context.Context) error {
 func (s *Store) BestiaryFindItemByNameEn(ctx context.Context, typeID int64, nameEn string) (bool, error) {
 	var exists bool
 	err := s.pool.QueryRow(ctx,
-		`SELECT EXISTS(SELECT 1 FROM dndshare.item WHERE type_id = $1 AND user_id IS NULL AND lower(name_en) = lower($2))`,
+		`SELECT EXISTS(SELECT 1 FROM dndshare.active_item WHERE type_id = $1 AND user_id IS NULL AND lower(name_en) = lower($2))`,
 		typeID, nameEn,
 	).Scan(&exists)
 	return exists, err
@@ -190,7 +190,7 @@ func setBestiaryItemImage(ctx context.Context, tx pgx.Tx, itemID int64, imageKey
 	if err := tx.QueryRow(ctx,
 		`SELECT i.cover_image_id, cover."type", cover."key",
 		        i.icon_image_id, icon."type", icon."key"
-		 FROM dndshare.item i
+		 FROM dndshare.active_item i
 		 LEFT JOIN dndshare.storage_image cover ON cover.id = i.cover_image_id
 		 LEFT JOIN dndshare.storage_image icon ON icon.id = i.icon_image_id
 		 WHERE i.id = $1

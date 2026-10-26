@@ -165,7 +165,7 @@ func (s *Store) ImportEdition(ctx context.Context, req EditionImportRequest) (Ed
 	}
 	// Lock the original records and include their current data/decisions in the
 	// token. Ordinary editors cannot change an original after this review starts.
-	rows, err := tx.Query(ctx, `SELECT i.id,i.type_id,i.data::text,COALESCE(i.name_en,''),i.name,COALESCE(i.data->>'edition_key',''),COALESCE(i.data->>'import_fingerprint',''),COALESCE((SELECT jsonb_agg(c ORDER BY c.source_version_id)::text FROM dndshare.item_version_compatibility c WHERE c.item_id=i.id),'[]') FROM dndshare.item i JOIN dndshare.item_type t ON t.id=i.type_id JOIN dndshare.source_version v ON v.id=$3 AND v.source_id=t.source_id WHERE i.user_id IS NULL AND (i.id=ANY($1) OR i.data->>'edition_key'=ANY($2)) ORDER BY i.id FOR UPDATE OF i`, originalIDs, keys, req.SourceVersionID)
+	rows, err := tx.Query(ctx, `SELECT i.id,i.type_id,i.data::text,COALESCE(i.name_en,''),i.name,COALESCE(i.data->>'edition_key',''),COALESCE(i.data->>'import_fingerprint',''),COALESCE((SELECT jsonb_agg(c ORDER BY c.source_version_id)::text FROM dndshare.item_version_compatibility c WHERE c.item_id=i.id),'[]') FROM dndshare.active_item i JOIN dndshare.item_type t ON t.id=i.type_id JOIN dndshare.source_version v ON v.id=$3 AND v.source_id=t.source_id WHERE i.user_id IS NULL AND (i.id=ANY($1) OR i.data->>'edition_key'=ANY($2)) ORDER BY i.id FOR UPDATE OF i`, originalIDs, keys, req.SourceVersionID)
 	if err != nil {
 		return result, err
 	}

@@ -20,7 +20,7 @@ type ItemIconRefs struct {
 func (s *Store) CanEditItemIcon(ctx context.Context, itemID, actorUserID int64, isAdmin bool) error {
 	var exists bool
 	err := s.pool.QueryRow(ctx,
-		`SELECT true FROM dndshare.item WHERE id = $1 AND ($2 OR user_id = $3)`,
+		`SELECT true FROM dndshare.active_item WHERE id = $1 AND ($2 OR user_id = $3)`,
 		itemID, isAdmin, actorUserID,
 	).Scan(&exists)
 	if errors.Is(err, pgx.ErrNoRows) {
@@ -42,7 +42,7 @@ func (s *Store) SetItemIconImage(ctx context.Context, itemID, actorUserID int64,
 	var ownerUserID, oldSVGID, oldImageID *int64
 	err = tx.QueryRow(ctx,
 		`SELECT user_id, icon_svg_id, icon_image_id
-		   FROM dndshare.item
+		   FROM dndshare.active_item
 		  WHERE id = $1 AND ($2 OR user_id = $3)
 		  FOR UPDATE`,
 		itemID, isAdmin, actorUserID,
@@ -84,7 +84,7 @@ func (s *Store) ClearItemIcon(ctx context.Context, itemID, actorUserID int64, is
 	err := s.pool.QueryRow(ctx,
 		`WITH previous AS (
 		    SELECT id, icon_svg_id, icon_image_id
-		      FROM dndshare.item
+		      FROM dndshare.active_item
 		     WHERE id = $1 AND ($2 OR user_id = $3)
 		     FOR UPDATE
 		), updated AS (

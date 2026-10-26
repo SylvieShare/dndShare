@@ -25,7 +25,7 @@ func ValidRuleReferenceKind(kind string) bool {
 const itemRuleReferencesSQL = `
 WITH refs AS (
  SELECT i.id, i.name, r.kind, r.block, r.key, COALESCE(NULLIF(r.title,''),i.name) AS title, r.value_id
- FROM dndshare.item i
+ FROM dndshare.active_item i
  CROSS JOIN LATERAL (
   SELECT spec.kind, spec.block, COALESCE(e->>'key','') AS key, COALESCE(NULLIF(e->>'title',''), NULLIF(e->>'label',''), e->>'text') AS title, '' AS value_id
   FROM (VALUES ('resource','use_resources','Отдельный ресурс'),('resource_pool','class_resources','Ресурс класса'),

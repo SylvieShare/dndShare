@@ -73,7 +73,7 @@ func applicationItem(ctx context.Context, tx pgx.Tx, id int64) (string, map[stri
 	var name string
 	var data json.RawMessage
 	var kind int
-	err := tx.QueryRow(ctx, `SELECT name,data,type_id FROM dndshare.item WHERE id=$1`, id).Scan(&name, &data, &kind)
+	err := tx.QueryRow(ctx, `SELECT name,data,type_id FROM dndshare.active_item WHERE id=$1`, id).Scan(&name, &data, &kind)
 	if err != nil {
 		return "", nil, 0, err
 	}
@@ -252,7 +252,7 @@ func effectAppliesIn(link map[string]any, applicationContext string) bool {
 
 func visibleApplicationItem(ctx context.Context, tx pgx.Tx, id, userID int64) (string, map[string]any, int, error) {
 	var visible bool
-	err := tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.item WHERE id=$1 AND (user_id IS NULL OR user_id=$2))`, id, userID).Scan(&visible)
+	err := tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.active_item WHERE id=$1 AND (user_id IS NULL OR user_id=$2))`, id, userID).Scan(&visible)
 	if err != nil {
 		return "", nil, 0, err
 	}

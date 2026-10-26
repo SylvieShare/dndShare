@@ -24,7 +24,7 @@ const upsertSystemItemMediaSQL = `
 
 const lockSystemItemMediaTargetSQL = `
 	SELECT icon_svg_id, icon_image_id, cover_image_id
-	FROM dndshare.item
+	FROM dndshare.active_item
 	WHERE id = $1 AND user_id IS NULL
 	FOR UPDATE`
 
@@ -60,7 +60,7 @@ func (s *Store) SystemItemExists(ctx context.Context, itemID int64) (bool, error
 	var exists bool
 	err := s.pool.QueryRow(ctx, `
 		SELECT true
-		FROM dndshare.item
+		FROM dndshare.active_item
 		WHERE id = $1 AND user_id IS NULL`, itemID).Scan(&exists)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return false, nil

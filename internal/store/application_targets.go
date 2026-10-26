@@ -141,7 +141,7 @@ func (s *Store) sessionApplicationTargets(ctx context.Context, userID, sessionID
 	rows, err = tx.Query(ctx, `SELECT e.id,c.value,COALESCE(i.name,'Существо'),COALESCE(i.data,'{}'::jsonb),COALESCE(icon.url,cover.url,''),COALESCE(svg.data,'')
  FROM (SELECT id,data FROM dndshare.session_encounter WHERE session_id=$1 AND deleted=false ORDER BY id DESC LIMIT 1) e
  CROSS JOIN LATERAL jsonb_array_elements(COALESCE(e.data->'combatants','[]'::jsonb)) c(value)
- LEFT JOIN dndshare.item i ON i.id=CASE WHEN c.value->>'itemId' ~ '^[0-9]+$' THEN (c.value->>'itemId')::bigint END
+ LEFT JOIN dndshare.active_item i ON i.id=CASE WHEN c.value->>'itemId' ~ '^[0-9]+$' THEN (c.value->>'itemId')::bigint END
  LEFT JOIN dndshare.storage_image icon ON icon.id=i.icon_image_id AND icon.deleted=false
  LEFT JOIN dndshare.storage_image cover ON cover.id=i.cover_image_id AND cover.deleted=false
  LEFT JOIN dndshare.svg_storage svg ON svg.id=i.icon_svg_id

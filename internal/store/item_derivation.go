@@ -16,14 +16,14 @@ func setItemDerivation(ctx context.Context, tx pgx.Tx, id int64, p ItemMetadataP
 		return err
 	}
 	var valid bool
-	if err := tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.item i JOIN dndshare.item original ON original.id=$2 WHERE i.id=$1 AND i.type_id=original.type_id AND i.id<>original.id AND (original.user_id IS NULL OR original.user_id=i.user_id))`, id, *p.DerivedFromItemID).Scan(&valid); err != nil {
+	if err := tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.active_item i JOIN dndshare.active_item original ON original.id=$2 WHERE i.id=$1 AND i.type_id=original.type_id AND i.id<>original.id AND (original.user_id IS NULL OR original.user_id=i.user_id))`, id, *p.DerivedFromItemID).Scan(&valid); err != nil {
 		return err
 	}
 	if !valid {
 		return &RulesValidationError{Message: "Исходная запись недоступна или имеет другой тип"}
 	}
 	var cycle bool
-	if err := tx.QueryRow(ctx, `WITH RECURSIVE origins(id,path) AS (SELECT $2::bigint,ARRAY[$2::bigint] UNION ALL SELECT i.derived_from_item_id,path||i.derived_from_item_id FROM origins o JOIN dndshare.item i ON i.id=o.id WHERE i.derived_from_item_id IS NOT NULL AND NOT i.derived_from_item_id=ANY(path)) SELECT EXISTS(SELECT 1 FROM origins WHERE id=$1)`, id, *p.DerivedFromItemID).Scan(&cycle); err != nil {
+	if err := tx.QueryRow(ctx, `WITH RECURSIVE origins(id,path) AS (SELECT $2::bigint,ARRAY[$2::bigint] UNION ALL SELECT i.derived_from_item_id,path||i.derived_from_item_id FROM origins o JOIN dndshare.active_item i ON i.id=o.id WHERE i.derived_from_item_id IS NOT NULL AND NOT i.derived_from_item_id=ANY(path)) SELECT EXISTS(SELECT 1 FROM origins WHERE id=$1)`, id, *p.DerivedFromItemID).Scan(&cycle); err != nil {
 		return err
 	}
 	if cycle {

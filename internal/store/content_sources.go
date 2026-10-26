@@ -61,13 +61,13 @@ func (s *Store) GetContentSources(ctx context.Context, sourceID, sourceVersionID
 		args = append(args, *sourceVersionID)
 		joinTarget = `JOIN dndshare.source_version target ON target.id = $1 AND target.source_id = cs.source_id`
 		where = append(where, `(cs.native_source_version_id = $1 OR EXISTS (
- SELECT 1 FROM dndshare.item_content_source l JOIN dndshare.item i ON i.id=l.item_id
+ SELECT 1 FROM dndshare.item_content_source l JOIN dndshare.active_item i ON i.id=l.item_id
  JOIN dndshare.item_version_compatibility ic ON ic.item_id=i.id AND ic.source_version_id=$1
  WHERE l.content_source_id=cs.id AND i.user_id IS NULL AND NOT i.hidden
  AND ic.status IN ('native','compatible','legacy','requires_adaptation')))`)
 		statusExpr = `CASE WHEN cs.native_source_version_id=$1 THEN 'native'
- WHEN EXISTS(SELECT 1 FROM dndshare.item_content_source l JOIN dndshare.item i ON i.id=l.item_id JOIN dndshare.item_version_compatibility c ON c.item_id=i.id AND c.source_version_id=$1 WHERE l.content_source_id=cs.id AND i.user_id IS NULL AND NOT i.hidden AND c.status IN ('native','compatible')) THEN 'compatible'
- WHEN EXISTS(SELECT 1 FROM dndshare.item_content_source l JOIN dndshare.item i ON i.id=l.item_id JOIN dndshare.item_version_compatibility c ON c.item_id=i.id AND c.source_version_id=$1 WHERE l.content_source_id=cs.id AND i.user_id IS NULL AND NOT i.hidden AND c.status='requires_adaptation') THEN 'requires_adaptation' ELSE 'legacy' END`
+ WHEN EXISTS(SELECT 1 FROM dndshare.item_content_source l JOIN dndshare.active_item i ON i.id=l.item_id JOIN dndshare.item_version_compatibility c ON c.item_id=i.id AND c.source_version_id=$1 WHERE l.content_source_id=cs.id AND i.user_id IS NULL AND NOT i.hidden AND c.status IN ('native','compatible')) THEN 'compatible'
+ WHEN EXISTS(SELECT 1 FROM dndshare.item_content_source l JOIN dndshare.active_item i ON i.id=l.item_id JOIN dndshare.item_version_compatibility c ON c.item_id=i.id AND c.source_version_id=$1 WHERE l.content_source_id=cs.id AND i.user_id IS NULL AND NOT i.hidden AND c.status='requires_adaptation') THEN 'requires_adaptation' ELSE 'legacy' END`
 	} else if sourceID != nil {
 		args = append(args, *sourceID)
 		where = append(where, fmt.Sprintf("cs.source_id = $%d", len(args)))
@@ -118,7 +118,7 @@ func (s *Store) SetItemContentSources(ctx context.Context, itemID, userID int64,
 	var gameSourceID *int64
 	if err := tx.QueryRow(ctx,
 		`SELECT it.source_id
-		   FROM dndshare.item i
+		   FROM dndshare.active_item i
 		   JOIN dndshare.item_type it ON it.id = i.type_id
 		  WHERE i.id = $1 AND ($3 OR i.user_id = $2)`,
 		itemID, userID, isAdmin).Scan(&gameSourceID); err != nil {

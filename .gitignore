@@ -19,6 +19,14 @@ dndshare.log
 /.claude/settings.local.json
 /.idea/
 
+# Native Android / Windows client
+/native/.gradle/
+/native/.kotlin/
+/native/local.properties
+/native/**/build/
+/native/**/local.properties
+/native/.idea/
+
 /output/rules-audit/
 /scripts/spell-rules/__pycache__/
 /scripts/maps/__pycache__/

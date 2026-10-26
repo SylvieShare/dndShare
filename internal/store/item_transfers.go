@@ -268,7 +268,7 @@ func (s *Store) createItemTransferTx(ctx context.Context, tx pgx.Tx, userID, ses
 		itemID = entry["item_id"]
 	}
 	if name == "Предмет" && itemID != nil {
-		err = tx.QueryRow(ctx, `SELECT name FROM dndshare.item WHERE id=$1`, itemID).Scan(&name)
+		err = tx.QueryRow(ctx, `SELECT name FROM dndshare.active_item WHERE id=$1`, itemID).Scan(&name)
 		if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 			return ItemTransfer{}, err
 		}

@@ -276,6 +276,7 @@ func newTransferFixture(t *testing.T) transferFixture {
 	exec(`INSERT INTO dndshare.storage_image(id,url) VALUES(1,'/sender.png'),(2,'/recipient.png');
  UPDATE dndshare."char" SET icon_image_id=id WHERE id IN (1,2);`)
 
+	installActiveItemFixture(t, pool)
 	return transferFixture{store: &Store{pool: pool}, pool: pool, exec: exec}
 }
 

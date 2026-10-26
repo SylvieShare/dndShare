@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.DndShare" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowBackground">#111219</item>
+        <item name="android:colorAccent">#B9A8FF</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+</resources>

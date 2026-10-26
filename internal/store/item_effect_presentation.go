@@ -38,7 +38,7 @@ func (s *Store) attachEffectPresentation(ctx context.Context, items []Item, user
 		return items, nil
 	}
 	visible := map[int64]bool{}
-	rows, err := s.pool.Query(ctx, `SELECT i.id FROM dndshare.item i WHERE i.id=ANY($1) AND (i.user_id IS NULL OR i.user_id=$2)`, ids, userID)
+	rows, err := s.pool.Query(ctx, `SELECT i.id FROM dndshare.active_item i WHERE i.id=ANY($1) AND (i.user_id IS NULL OR i.user_id=$2)`, ids, userID)
 	if err != nil {
 		return nil, err
 	}

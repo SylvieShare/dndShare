@@ -12,7 +12,7 @@ func (s *Store) ListExternalBestiaryImages(ctx context.Context) ([]ExternalBesti
 	rows, err := s.pool.Query(ctx,
 		`SELECT image.id, image.url, COALESCE(NULLIF(item.name_en, ''), item.id::text)
 		 FROM dndshare.storage_image image
-		 JOIN dndshare.item item
+		 JOIN dndshare.active_item item
 		   ON item.cover_image_id = image.id OR item.icon_image_id = image.id
 		 WHERE image."type" IN ('bestiary', 'item_cover')
 		   AND image.deleted = false

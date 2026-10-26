@@ -46,7 +46,13 @@ func businessTableDigests(t *testing.T, pool *pgxpool.Pool) map[string]string {
 	}
 	result := make(map[string]string, len(names))
 	for _, name := range names {
-		query := `SELECT md5(COALESCE(string_agg(md5(row_to_json(r)::text),',' ORDER BY md5(row_to_json(r)::text)),'')) FROM ` + pgx.Identifier{"dndshare", name}.Sanitize() + ` r`
+		row := "row_to_json(r)::text"
+		if name == "item" {
+			// Migration 015 adds structural sync metadata. Compare all columns
+			// that existed at the adoption boundary; validate the new defaults below.
+			row = "(to_jsonb(r) - ARRAY['deleted','changed_at','sync_revision'])::text"
+		}
+		query := "SELECT md5(COALESCE(string_agg(md5(" + row + "),',' ORDER BY md5(" + row + ")),'')) FROM " + pgx.Identifier{"dndshare", name}.Sanitize() + " r"
 		var digest string
 		if err := pool.QueryRow(t.Context(), query).Scan(&digest); err != nil {
 			t.Fatal(err)
@@ -118,6 +124,10 @@ func TestSchemaAdoptsExistingStructureWithoutDataChangesPostgres(t *testing.T) {
 			if _, existed := before[name]; !existed && digest != "d41d8cd98f00b204e9800998ecf8427e" {
 				t.Fatalf("new table %s was populated by a migration", name)
 			}
+		}
+		var validDefaults bool
+		if err := pool.QueryRow(t.Context(), `SELECT NOT deleted AND sync_revision=0 AND changed_at IS NOT NULL FROM dndshare.item WHERE id=1`).Scan(&validDefaults); err != nil || !validDefaults {
+			t.Fatalf("new sync columns must receive structural defaults only: %v", err)
 		}
 		var count int
 		if err := pool.QueryRow(t.Context(), `SELECT count(*) FROM dndshare.schema_migration`).Scan(&count); err != nil || count != len(schemaParts)+2 {

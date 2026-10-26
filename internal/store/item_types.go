@@ -8,7 +8,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-const itemTypeSelect = `SELECT it.id, it.name, it.parent_type_id, it.description, it.fields, it.instance_fields, it.source_id, it.color, (SELECT COUNT(*) FROM dndshare.item i WHERE i.type_id = it.id AND i.user_id IS NULL AND NOT i.hidden), it.important,
+const itemTypeSelect = `SELECT it.id, it.name, it.parent_type_id, it.description, it.fields, it.instance_fields, it.source_id, it.color, (SELECT COUNT(*) FROM dndshare.active_item i WHERE i.type_id = it.id AND i.user_id IS NULL AND NOT i.hidden), it.important,
 		s.name AS source_name,
 		it.icon_image_id,
 		icon.url AS icon_image_url,
@@ -100,7 +100,7 @@ func (s *Store) ItemTypeGetById(ctx context.Context, id int64) (ItemType, error)
 // SourceGetAll — все источники.
 func (s *Store) SourceGetAll(ctx context.Context) ([]Source, error) {
 	rows, err := s.pool.Query(ctx,
-		`SELECT src.id, src.name, (SELECT COUNT(*) FROM dndshare.item i JOIN dndshare.item_type t ON t.id = i.type_id WHERE t.source_id = src.id AND i.user_id IS NULL AND NOT i.hidden), sv.id, sv.version
+		`SELECT src.id, src.name, (SELECT COUNT(*) FROM dndshare.active_item i JOIN dndshare.item_type t ON t.id = i.type_id WHERE t.source_id = src.id AND i.user_id IS NULL AND NOT i.hidden), sv.id, sv.version
 		 FROM dndshare.source src
 		 LEFT JOIN dndshare.source_version sv ON sv.source_id = src.id
 		 ORDER BY src.name, sv.id`,
@@ -145,7 +145,7 @@ func (s *Store) SourceVersionExists(ctx context.Context, id int64) (bool, error)
 // Empty personal catalogues must not become visible because another user has content.
 func (s *Store) VisibleItemTypeCount(ctx context.Context, typeID int64, userID *int64) (int64, error) {
 	var count int64
-	err := s.pool.QueryRow(ctx, `SELECT COUNT(*) FROM dndshare.item
+	err := s.pool.QueryRow(ctx, `SELECT COUNT(*) FROM dndshare.active_item
 		WHERE type_id = $1 AND NOT hidden AND (user_id IS NULL OR user_id = $2)`, typeID, userID).Scan(&count)
 	return count, err
 }
@@ -154,7 +154,7 @@ func (s *Store) VisibleItemTypeCount(ctx context.Context, typeID int64, userID *
 func (s *Store) AttachScopedTypeCounts(ctx context.Context, types []ItemType, userID *int64, scope ContentScope) error {
 	args := []any{userID}
 	where := appendContentScopeSQL([]string{"NOT i.hidden", "(i.user_id IS NULL OR i.user_id=$1)"}, &args, scope)
-	rows, err := s.pool.Query(ctx, "SELECT i.type_id,COUNT(*) FROM dndshare.item i WHERE "+strings.Join(where, " AND ")+" GROUP BY i.type_id", args...)
+	rows, err := s.pool.Query(ctx, "SELECT i.type_id,COUNT(*) FROM dndshare.active_item i WHERE "+strings.Join(where, " AND ")+" GROUP BY i.type_id", args...)
 	if err != nil {
 		return err
 	}

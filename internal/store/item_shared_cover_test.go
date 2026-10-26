@@ -16,6 +16,7 @@ func TestSharedSystemCoverPostgres(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer pool.Exec(ctx, `DROP SCHEMA dndshare CASCADE`)
+	installActiveItemFixture(t, pool)
 	s := &Store{pool: pool}
 	if err = s.ReuseSystemItemCover(ctx, 2, 1); err != nil {
 		t.Fatal(err)

@@ -32,6 +32,7 @@ func TestEffectSourceFilter(t *testing.T) {
  (14,19,NULL,'{"status_effects":{}}'),
  (15,19,NULL,'{"status_effects":[null,17,"str",{"effect":"bad"}]}');`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
+	installActiveItemFixture(t, pool)
 	check := func(userID *int64, values []any, expected []int64) {
 		t.Helper()
 		args := []any{}
