@@ -1,7 +1,8 @@
 # Android-приложение DnD Share
 
-Один модуль `androidApp` на Kotlin и Jetpack Compose: вход, боковое меню всех
-веб-разделов, локальный справочник и список персонажей. Сервером остаётся основной Go API.
+Модуль `androidApp` на Kotlin и Jetpack Compose: вход, боковое меню всех
+веб-разделов, локальный справочник и список персонажей. Общая UI-библиотека
+находится в [`designSystem`](designSystem/README.md). Сервером остаётся основной Go API.
 Поведение описывает [контракт клиента](../md/features/native-client.md).
 
 ## Окружение
@@ -57,7 +58,7 @@ python3 scripts/native/sync_web_design.py --check
 ```
 
 Нужны установленные зависимости `frontend`. Генератор сохраняет `WebPalette.kt`,
-нативные Lucide vector drawables и лицензию в assets. Производные ресурсы
+нативные Lucide vector drawables и лицензию в assets модуля `designSystem`. Производные ресурсы
 коммитятся; обычная Gradle-сборка не требует Node.js или frontend dependencies.
 Проверка `--check` входит в приёмку изменений дизайна. Material использует
 мягкий акцент для читаемых надписей на тёмном фоне, основной веб-акцент — для
@@ -102,7 +103,7 @@ python3 scripts/native/sync_web_design.py --check
 `TestNativeClientSmokePostgres` с `DNDSHARE_NATIVE_SMOKE=1` поднимает настоящий
 Go API и изолированный PostgreSQL. `scripts/native/smoke.py` собирает и
 проверяет APK через ADB: форму с клавиатурой, вход и «Назад», 205 записей,
-ленивое изображение, персонажи,
+обзор коллекций, локальные фильтры, ленивое изображение, персонажи,
 сохранение вкладок, свайп меню, заглушки и профиль, приоритет «Назад»,
 перезапуск без сети, три ширины окна/состояния панели, delta и выход.
 Нужен уже запущенный AVD; по умолчанию `emulator-5554`, переопределяется

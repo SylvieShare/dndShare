@@ -11,6 +11,8 @@ S3-compatible storage — изображения, аудио и файлы 3D-м
 модели, HTTP-клиент Ktor и Room/SQLite. Activity и ViewModel управляют lifecycle,
 Keystore защищает сессию, Jetpack WindowManager передаёт состояние сгиба.
 Ресурсы и системная навигация используют Android API.
+Общие UI-примитивы, тема и офлайн-шрифты вынесены в `native/designSystem`;
+библиотека не зависит от моделей, Room или Ktor.
 Описание границ — [нативный клиент](features/native-client.md).
 
 ```mermaid

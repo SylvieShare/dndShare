@@ -1,5 +1,7 @@
 package ru.dndshare.client.ui
 
+import ru.dndshare.designsystem.*
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*

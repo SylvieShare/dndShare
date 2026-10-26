@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
 import coil3.compose.LocalPlatformContext
+import coil3.svg.SvgDecoder
 import coil3.disk.DiskCache
 import coil3.memory.MemoryCache
 import coil3.network.ktor3.KtorNetworkFetcherFactory
@@ -52,6 +53,7 @@ private fun AuthenticatedApp(controller: AppController, state: AppState, fold: F
     val context = LocalPlatformContext.current
     val images = remember(state.user!!.id) {
         ImageLoader.Builder(context).components {
+            add(SvgDecoder.Factory())
             add(KtorNetworkFetcherFactory(httpClient = { controller.api.client }))
         }.diskCache {
             DiskCache.Builder().directory(controller.platform.mediaDirectory(state.user!!.id).toPath())

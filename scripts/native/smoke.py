@@ -10,6 +10,7 @@ import time
 import urllib.request
 import xml.etree.ElementTree as ET
 from navigation_smoke import NavigationSmoke
+from handbook_smoke import HandbookSmoke
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = "ru.dndshare.client.smoke"
@@ -17,7 +18,11 @@ COMPONENT = PACKAGE + "/ru.dndshare.client.MainActivity"
 
 
 def run(args, **kwargs):
-    return subprocess.run(list(map(str, args)), check=True, capture_output=True, **kwargs).stdout
+    result = subprocess.run(list(map(str, args)), capture_output=True, **kwargs)
+    if result.returncode:
+        print(result.stderr.decode("utf-8", errors="replace"), flush=True)
+        result.check_returncode()
+    return result.stdout
 
 
 def main():
@@ -83,6 +88,7 @@ def main():
         shell("am", "start", "-W", *flags, "-n", COMPONENT)
 
     navigation = NavigationSmoke(shell, tree, tap, wait_for, snapshot)
+    handbook = HandbookSmoke(shell, tree, tap, click, wait_for, snapshot)
 
     port = args.url.rsplit(":", 1)[1]
     # adb reverse avoids depending on Windows -> WSL localhost forwarding
@@ -100,16 +106,21 @@ def main():
     try:
         shell("wm", "density", "160")
         shell("wm", "size", "420x900")
-        shell("input", "keyevent", "82")
+        shell("input", "keyevent", "224")
+        shell("wm", "dismiss-keyguard")
         start(fresh=True)
         root = wait_for("Логин")
         edits = [n for n in root.iter("node") if n.get("class") == "android.widget.EditText"]
         assert len(edits) == 2
         tap(edits[0])
-        shell("input", "text", "native_tester")
+        tree()  # Wait for the IME connection and inset/header animation before injecting hardware keys.
+        for character in "native_tester":
+            shell("input", "text", character)
         root = tree()
         tap([n for n in root.iter("node") if n.get("class") == "android.widget.EditText"][1])
-        shell("input", "text", "Native-pass-42")
+        tree()  # Switching to a password restarts the IME input connection.
+        for character in "Native-pass-42":
+            shell("input", "text", character)
         root = tree()
         edits = [n for n in root.iter("node") if n.get("class") == "android.widget.EditText"]
         title = next(n for n in root.iter("node") if n.get("text") == "DnD Share")
@@ -118,6 +129,7 @@ def main():
         assert bounds(subtitle)[0] == bounds(title)[0], "Compact subtitle should follow the title"
         assert edits[1].get("focused") == "true", "Header animation lost field focus"
         assert "native_tester" in edits[0].get("text", ""), "Header animation lost the login draft"
+        assert len(edits[1].get("text", "")) == len("Native-pass-42"), "IME did not receive the full test password"
         ime = shell("dumpsys", "window")
         frames = re.findall(r"type=ime[^\n]*?frame=\[\d+,(\d+)\]\[\d+,\d+\][^\n]*?visible=true", ime)
         assert frames, "Keyboard should be visible during the layout check"
@@ -130,6 +142,7 @@ def main():
         title = next(n for n in root.iter("node") if n.get("text") == "DnD Share")
         assert bounds(title)[0] == bounds(edits[0])[0], "Header should expand after hiding the keyboard"
         click("Войти")
+        handbook.overview_and_search()
         wait_for("Обновлено")
         root = wait_for("205")
         assert "Native Flame" in texts(root)
@@ -139,11 +152,13 @@ def main():
         assert sum(bool(re.search(r"\bHist\s+#", line)) and PACKAGE + "/" in line
                    for line in history.splitlines()) == 1, "Relaunch duplicated the activity"
         shell("input", "keyevent", "4")
+        wait_for("Все записи")
+        shell("input", "keyevent", "4")
         time.sleep(0.5)
         focus = next(line for line in shell("dumpsys", "window").splitlines() if "mCurrentFocus=Window{" in line)
         assert PACKAGE not in focus, "Root Back should background the app"
         start()
-        root = wait_for("Native Flame")
+        root = handbook.enter_collection_if_needed()
         assert "Логин" not in texts(root), "Back returned to the login form after authentication"
         navigation.phone()
         snapshot("phone-catalogue")
@@ -169,7 +184,7 @@ def main():
         control("offline?value=true")
         shell("am", "force-stop", PACKAGE)
         start()
-        wait_for("Native Flame")
+        handbook.enter_collection_if_needed()
         click("Native Flame")
         wait_for("Это описание из локальной базы.")
         snapshot("offline-detail")

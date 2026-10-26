@@ -34,6 +34,7 @@ data class ItemType(
     val id: Long, val name: String, val parentTypeId: Long? = null,
     val fields: JsonElement = JsonArray(emptyList()), val color: String? = null,
     val important: Boolean = false,
+    val description: String? = null, val iconImageUrl: String? = null, val coverImageUrl: String? = null,
 )
 
 @Serializable
@@ -43,7 +44,7 @@ data class Suggest(
 )
 
 @Serializable
-data class SuggestType(val id: Long, val name: String)
+data class SuggestType(val id: Long, val name: String, val color: String? = null, val svg: String? = null)
 
 @Serializable
 data class Book(val id: Long, val name: String, val code: String = "")

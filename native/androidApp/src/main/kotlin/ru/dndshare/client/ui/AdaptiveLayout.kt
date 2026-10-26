@@ -48,7 +48,7 @@ fun TwoPane(
         val hingeLeft = hinge?.takeIf { it.vertical }?.let { with(density) { (it.left - offset.x).toDp() } }
         val gap = hinge?.takeIf { it.vertical }?.let {
             with(density) { (it.right - it.left).toDp() }.coerceAtLeast(16.dp)
-        } ?: 16.dp
+        } ?: 1.dp
         val listWidth = if (hingeLeft != null && hingeLeft >= 220.dp && maxWidth - hingeLeft - gap >= 260.dp) {
             hingeLeft - 8.dp
         } else (maxWidth * .40f).coerceIn(220.dp, 400.dp)

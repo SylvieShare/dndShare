@@ -1,5 +1,7 @@
 package ru.dndshare.client.ui
 
+import ru.dndshare.designsystem.*
+
 import ru.dndshare.client.model.User
 
 enum class AppPage(val title: String, val icon: Glyph, val group: String = "") {

@@ -31,6 +31,7 @@ android {
     }
 }
 dependencies {
+    implementation(project(":designSystem"))
     implementation(platform("androidx.compose:compose-bom:2026.09.00"))
     implementation("androidx.compose.runtime:runtime")
     implementation("androidx.compose.foundation:foundation")
@@ -46,6 +47,7 @@ dependencies {
     implementation("androidx.room3:room3-runtime:3.0.3")
     implementation("androidx.sqlite:sqlite-bundled:2.7.1")
     implementation("io.coil-kt.coil3:coil-compose:3.6.3")
+    implementation("io.coil-kt.coil3:coil-svg:3.6.3")
     implementation("io.coil-kt.coil3:coil-network-ktor3:3.6.3")
     implementation("com.fleeksoft.ksoup:ksoup:0.2.6")
     ksp("androidx.room3:room3-compiler:3.0.3")

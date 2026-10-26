@@ -1,4 +1,4 @@
-package ru.dndshare.client.ui
+package ru.dndshare.designsystem
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.size
@@ -7,10 +7,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import ru.dndshare.client.R
+import ru.dndshare.designsystem.R
 
 // Lucide geometry is shared with the web; regenerate using scripts/native/sync_web_design.py.
 enum class Glyph(@param:DrawableRes val resource: Int) {
+    Filter(R.drawable.lucide_list_filter),
     Book(R.drawable.lucide_book_open),
     Rules(R.drawable.lucide_book_open_check),
     Characters(R.drawable.lucide_users),

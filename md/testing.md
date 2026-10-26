@@ -36,7 +36,7 @@ Vite HMR может перезагрузить страницу и искази�
 логику, а `connectedDebugAndroidTest` — Room/SQLite и Ktor MockEngine на Android:
 прерванный bootstrap,
 возобновление с сохранённого cursor, офлайн-поиск/описание, изоляция систем,
-tombstones, visibility manifest, reset, пустой delta и отмену проверки сессии
+tombstones, visibility manifest, reset, пустой delta, фильтры/счётчик до LIMIT и отмену проверки сессии
 при выходе. Server DB tests проверяют
 pagination, права, сохранность строки после soft delete и порядок committed ревизий.
 

@@ -12,7 +12,7 @@ data class CachedItem(
     val hidden: Boolean, val revision: Long, val payload: String,
 )
 
-data class ItemSummary(val id: Long, val typeId: Long, val name: String, val nameEn: String)
+data class ItemSummary(val id: Long, val typeId: Long, val name: String, val nameEn: String, val payload: String = "{}")
 data class TypeCount(val typeId: Long, val count: Int)
 data class RemovedItem(val id: Long, val revision: Long)
 
@@ -29,15 +29,28 @@ data class SyncState(
 @Entity(tableName = "characters")
 data class CachedCharacter(@PrimaryKey val id: Long, val payload: String)
 
-@Dao
-abstract class CacheDao {
-    @Query("""SELECT id,typeId,name,nameEn FROM catalogue_items
+private const val CATALOGUE_WHERE = """
         WHERE sourceId=:sourceId AND NOT hidden
         AND (:typeId IS NULL OR typeId=:typeId)
         AND (:editionKey='' OR editionKeys LIKE :editionKey)
         AND searchText LIKE :query ESCAPE '\'
-        ORDER BY name,id LIMIT :limit""")
-    abstract fun observeItems(sourceId: Long, typeId: Long?, editionKey: String, query: String, limit: Int): Flow<List<ItemSummary>>
+        AND (:books='[]' OR EXISTS (SELECT 1 FROM json_each(payload,'$.contentSources') b
+            JOIN json_each(:books) chosen ON json_extract(b.value,'$.id')=chosen.value))
+        AND NOT EXISTS (SELECT 1 FROM json_each(:filters) f WHERE NOT EXISTS (
+            SELECT 1 FROM json_each(f.value) selected WHERE
+                json_extract(payload,'$.data.'||f.key)=selected.value OR
+                EXISTS (SELECT 1 FROM json_each(CASE WHEN json_type(payload,'$.data.'||f.key)='array'
+                    THEN json_extract(payload,'$.data.'||f.key) ELSE '[]' END) v WHERE v.value=selected.value)))
+"""
+
+@Dao
+abstract class CacheDao {
+    @Query("SELECT id,typeId,name,nameEn,payload FROM catalogue_items " + CATALOGUE_WHERE + " ORDER BY name,id LIMIT :limit")
+    abstract fun observeItems(sourceId: Long, typeId: Long?, editionKey: String, query: String, limit: Int, books: String = "[]", filters: String = "{}"): Flow<List<ItemSummary>>
+
+    @Query("SELECT count(*) FROM catalogue_items " + CATALOGUE_WHERE)
+    abstract fun observeFilteredCount(sourceId: Long, typeId: Long?, editionKey: String, query: String, books: String = "[]", filters: String = "{}"): Flow<Int>
+
 
     @Query("""SELECT typeId,count(*) AS count FROM catalogue_items
         WHERE sourceId=:sourceId AND NOT hidden

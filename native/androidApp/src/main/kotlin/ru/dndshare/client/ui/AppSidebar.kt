@@ -1,5 +1,7 @@
 package ru.dndshare.client.ui
 
+import ru.dndshare.designsystem.*
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
