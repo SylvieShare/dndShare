@@ -67,7 +67,7 @@ features/character-editor.md и features/sessions.md сохраняются ка
 | Факт | Источник |
 | --- | --- |
 | Go/toolchain и библиотеки frontend | [go.mod](../go.mod), [package.json](../frontend/package.json), lock-файл. |
-| Лимиты production-сборки | [bundle-budgets.json](../frontend/scripts/bundle-budgets.json). |
+| Состав и измерение production-сборки | [check-bundle.mjs](../frontend/scripts/check-bundle.mjs); размеры выводятся без ограничений. |
 | Версия обучения | [tutorialIdentity.js](../frontend/src/features/tutorials/lib/tutorialIdentity.js). |
 | Хост и механика deploy | [deploy.sh](../deploy/deploy.sh), unit и [runbook](deploy.md). |
 | Текущие UUID, SHA и публикация медиа | Свежий MCP-реестр; журналы фиксируют конкретные операции. |

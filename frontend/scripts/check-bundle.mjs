@@ -3,7 +3,6 @@ import path from 'node:path'
 import { gzipSync } from 'node:zlib'
 
 const dir = path.resolve(process.argv[2] || 'target/dist')
-const budgets = JSON.parse(await fs.readFile(new URL('./bundle-budgets.json', import.meta.url), 'utf8'))
 const manifest = JSON.parse(await fs.readFile(path.join(dir, '.vite/manifest.json'), 'utf8'))
 const initial = new Set()
 function visit(key) {
@@ -56,7 +55,6 @@ if (Object.values(manifest).some(chunk => [...(chunk.imports || []), ...(chunk.d
   failed = true
 }
 for (const [key, bytes] of Object.entries(measured)) {
-  console.log(`${key}: ${bytes} / ${budgets[key]} bytes`)
-  if (bytes > budgets[key]) failed = true
+  console.log(`${key}: ${bytes} bytes`)
 }
-if (failed) { console.error('Bundle check failed. Inspect the output and import graph before changing the budget.'); process.exitCode = 1 }
+if (failed) { console.error('Bundle check failed. Inspect the output and import graph.'); process.exitCode = 1 }

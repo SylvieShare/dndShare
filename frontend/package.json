@@ -9,7 +9,7 @@
     "check:bindings": "eslint src",
     "check:colors": "node scripts/check-colors.mjs",
     "preview": "vite preview",
-    "test": "npm run check:bindings && vitest run src",
+    "test": "npm run check:bindings && node --test scripts/check-bundle.test.mjs && vitest run src",
     "test:visual": "playwright test --project=ui tests/visual",
     "check:bundle": "node scripts/check-bundle.mjs",
     "benchmark": "node scripts/benchmark-frontend.mjs",
