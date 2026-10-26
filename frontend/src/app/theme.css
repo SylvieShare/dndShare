@@ -1,11 +1,6 @@
-:root {
-  /* DnD Share layout. Shared palette/canvas/shape tokens come from share-ui. */
-  --header-h: 0px;
-  --app-sidebar-w: 64px;
-  --sidebar-collapsed-w: 64px;
-  --sidebar-expanded-w: 224px;
-  --content-max: 1400px;
+@import './design-tokens.css';
 
+:root {
   /* Long-form descriptions use an editorial face distinct from UI chrome. */
   --font-prose: "Literata", Georgia, "Times New Roman", serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
@@ -14,11 +9,6 @@
   --font-print-ui: Arial, Helvetica, sans-serif;
   --font-print-display: Georgia, "Times New Roman", serif;
   --font-print-prose: Georgia, "Times New Roman", serif;
-
-  /* Product accent. Exact shades preserve the established DnD Share palette. */
-  --accent: #7c5ce2;
-  --accent-hover: #6847c7;
-  --accent-soft: #b9a8ff;
 
   /* Encounter sides are domain colors, not UI states. */
   --side-enemy: #e85c8a;
@@ -106,12 +96,4 @@ body .rc.dnd-rich-content tbody tr:nth-child(even) td {
   background-color: color-mix(in srgb, var(--accent) 9%, var(--surface)) !important;
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 16%, transparent), 0 8px 24px color-mix(in srgb, var(--bg) 45%, transparent);
   transform: translateY(-1px);
-}
-
-/* Same window classes as the native Android shell. */
-@media (max-width: 1199px) {
-  :root { --header-h: 65px; }
-}
-@media (max-width: 599px) {
-  :root { --app-sidebar-w: 0px; }
 }

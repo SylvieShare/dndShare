@@ -1,6 +1,7 @@
 package ru.dndshare.client.ui
 
 import androidx.compose.foundation.layout.*
+import ru.dndshare.designsystem.DesignTokens
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -12,8 +13,8 @@ import androidx.compose.ui.unit.dp
 enum class LayoutFormat { Phone, Tablet, Wide }
 
 fun layoutFormat(widthDp: Float): LayoutFormat = when {
-    widthDp < 600f -> LayoutFormat.Phone
-    widthDp < 1200f -> LayoutFormat.Tablet
+    widthDp < DesignTokens.Layout.Tablet.value -> LayoutFormat.Phone
+    widthDp < DesignTokens.Layout.Desktop.value -> LayoutFormat.Tablet
     else -> LayoutFormat.Wide
 }
 

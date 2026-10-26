@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.lerp
-import androidx.compose.ui.unit.dp
 
 private val Dark = darkColorScheme(
     primary = WebPalette.AccentSoft, onPrimary = WebPalette.Background,
@@ -38,8 +37,8 @@ fun ShareTheme(colors: ColorScheme = Dark, content: @Composable () -> Unit) {
             titleLarge = typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
             titleMedium = typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
         ),
-        shapes = Shapes(extraSmall = RoundedCornerShape(4.dp), small = RoundedCornerShape(6.dp),
-            medium = RoundedCornerShape(10.dp), large = RoundedCornerShape(14.dp), extraLarge = RoundedCornerShape(20.dp)),
+        shapes = Shapes(extraSmall = RoundedCornerShape(DesignTokens.Radius.Xs), small = RoundedCornerShape(DesignTokens.Radius.Small),
+            medium = RoundedCornerShape(DesignTokens.Radius.Medium), large = RoundedCornerShape(DesignTokens.Radius.Large), extraLarge = RoundedCornerShape(DesignTokens.Radius.Xl)),
         content = content,
     )
 }

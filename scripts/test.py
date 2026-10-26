@@ -63,7 +63,7 @@ def backend(env, database):
 def scripts(env):
     node_tests = sorted((ROOT / "scripts").rglob("*.test.mjs"))
     run(["node", "--test", *node_tests], env=env)
-    for directory in ["deploy", "scripts/docs", "scripts/creatures", "scripts/rules-editions", "scripts/spell-automation", "scripts/spell-automation/review"]:
+    for directory in ["deploy", "scripts/docs", "scripts/design", "scripts/dev", "scripts/visual", "scripts/creatures", "scripts/rules-editions", "scripts/spell-automation", "scripts/spell-automation/review"]:
         run([sys.executable, "-m", "unittest", "discover", "-s", directory, "-p", "test_*.py"], env=env)
 
 

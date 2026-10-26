@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "sourceId": 1,
+  "edition": {"id": 1, "name": "2014", "system": "D&D 5e"},
+  "recordID": 1,
+  "recordName": "Азбука пламени",
+  "description": "Небольшой огонёк освещает страницы книги. Это вымышленная запись для сравнения интерфейсов.",
+  "login": "native_tester",
+  "password": "Native-pass-42",
+  "totalRecords": 209,
+  "types": [
+    {"id": 1, "name": "Оружие", "count": 1},
+    {"id": 2, "name": "Вещи", "count": 1},
+    {"id": 5, "name": "Заклинания", "count": 205},
+    {"id": 6, "name": "Бестиарий", "count": 1},
+    {"id": 7, "name": "Черты", "count": 1}
+  ]
+}

@@ -3,13 +3,12 @@ package ru.dndshare.designsystem
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.unit.dp
 
 /** Same quiet dotted canvas as share-ui/styles/canvas.css. */
 fun Modifier.shareCanvas(): Modifier = drawWithCache {
-    val step = 24.dp.toPx()
-    val radius = 1.dp.toPx()
-    val color = WebPalette.BorderStrong.copy(alpha = .16f * .42f)
+    val step = DesignTokens.Canvas.Step.toPx()
+    val radius = DesignTokens.Canvas.Radius.toPx()
+    val color = WebPalette.BorderStrong.copy(alpha = WebPalette.BorderStrong.alpha * DesignTokens.Canvas.Opacity)
     onDrawBehind {
         drawRect(WebPalette.Background)
         var x = step / 2

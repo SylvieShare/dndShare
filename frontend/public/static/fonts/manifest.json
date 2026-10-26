@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "generator": {
+    "script": {
+      "file": "scripts/design/fonts.py",
+      "sha256": "ed15cad52928b7c51b50121f9a4da60f7e6fa89523dea43402f82eab47ad1449"
+    },
+    "requirements": {
+      "file": "scripts/design/requirements-fonts.lock",
+      "sha256": "a1504c07122e5bd7e352826b02d7f9969518a4d01e2e75d95e54b7d72219bde5"
+    },
+    "packages": {
+      "fonttools": "4.67.0",
+      "brotli": "1.2.1"
+    },
+    "command": "build/dev-tools/fonts/bin/python scripts/design/fonts.py --generate"
+  },
+  "source_manifest": {
+    "file": "native/designSystem/font-sources.json",
+    "sha256": "274c01e27f0f8dab8d68cc5728601bc831e48dd4c129fea0d6074ec89f554149"
+  },
+  "css": {
+    "file": "frontend/src/app/fonts.css",
+    "sha256": "c3777804ef40823d0924d96f2954fa7485ab15d48c76ba7e72b219b4c7942cce"
+  },
+  "fonts": [
+    {
+      "family": "Cormorant Garamond",
+      "style": "normal",
+      "weight": "500 700",
+      "source": {
+        "file": "native/designSystem/src/main/res/font/cormorant_garamond.ttf",
+        "sha256": "b20b7d9626dd956b2c5e558692ad328b1f19e3275e2782db4fa07670d83f35e0",
+        "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/cormorantgaramond/CormorantGaramond%5Bwght%5D.ttf"
+      },
+      "license": "cormorantgaramond-OFL.txt",
+      "output": {
+        "file": "frontend/public/static/fonts/cormorant-garamond-1c7136dcfe2b.woff2",
+        "sha256": "1c7136dcfe2ba0c22bd2e4ab48467813cb6dd7b5728a73920dd9eb6452b8a558",
+        "bytes": 209428
+      }
+    },
+    {
+      "family": "Literata",
+      "style": "normal",
+      "weight": "400 700",
+      "source": {
+        "file": "native/designSystem/src/main/res/font/literata.ttf",
+        "sha256": "b41138c9373112f32abb589cc22e8674b06ed4048b0c513be922bdd26f274440",
+        "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/literata/Literata%5Bopsz%2Cwght%5D.ttf"
+      },
+      "license": "literata-OFL.txt",
+      "output": {
+        "file": "frontend/public/static/fonts/literata-230e5b1de4f4.woff2",
+        "sha256": "230e5b1de4f4ace4d49c9fda9c8cf0851acb5425dce9067d89ff88aed93f325d",
+        "bytes": 397212
+      }
+    },
+    {
+      "family": "Literata",
+      "style": "italic",
+      "weight": "400 700",
+      "source": {
+        "file": "native/designSystem/src/main/res/font/literata_italic.ttf",
+        "sha256": "d483dfaeba9cbf4ce71d32a52ee65df82f7e35b15fff8d1011cdb242d1fcd465",
+        "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/literata/Literata-Italic%5Bopsz%2Cwght%5D.ttf"
+      },
+      "license": "literata-OFL.txt",
+      "output": {
+        "file": "frontend/public/static/fonts/literata-italic-38060b182b46.woff2",
+        "sha256": "38060b182b46a8b6c5f521982e86c59480f8811e77852ed563ce8a66a4adecb6",
+        "bytes": 396676
+      }
+    }
+  ],
+  "licenses": [
+    {
+      "source": {
+        "file": "native/designSystem/src/main/assets/licenses/cormorantgaramond-OFL.txt",
+        "sha256": "6f5a41d57400577a50aae88475b11f292f3d7de78ee7d5113c69577331d8ad31"
+      },
+      "output": {
+        "file": "frontend/public/static/fonts/cormorantgaramond-OFL.txt",
+        "sha256": "6f5a41d57400577a50aae88475b11f292f3d7de78ee7d5113c69577331d8ad31"
+      }
+    },
+    {
+      "source": {
+        "file": "native/designSystem/src/main/assets/licenses/literata-OFL.txt",
+        "sha256": "72ef68216a08669b2a977fe788a4aea6114636adbbe0bc6aa9192f63f8d400d0"
+      },
+      "output": {
+        "file": "frontend/public/static/fonts/literata-OFL.txt",
+        "sha256": "72ef68216a08669b2a977fe788a4aea6114636adbbe0bc6aa9192f63f8d400d0"
+      }
+    }
+  ]
+}

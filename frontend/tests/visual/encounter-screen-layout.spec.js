@@ -26,17 +26,17 @@ async function setup(page, displayScale, mode = 'combat') {
 
 async function expectInsideViewport(page, selector) {
   const { width, height } = page.viewportSize()
-  const bounds = await page.locator(selector).evaluateAll(elements => elements.map(el => {
-    const { x, y, width, height } = el.getBoundingClientRect()
-    return { name: el.className, x, y, width, height }
-  }))
-  expect(bounds.length).toBeGreaterThan(0)
-  for (const box of bounds) {
-    expect(box.x).toBeGreaterThanOrEqual(-1)
-    expect(box.y).toBeGreaterThanOrEqual(-1)
-    expect(box.x + box.width, box.name).toBeLessThanOrEqual(width + 1)
-    expect(box.y + box.height, box.name).toBeLessThanOrEqual(height + 1)
-  }
+  await page.evaluate(() => document.fonts.ready)
+  // Text visibility can precede the routed screen's entry transition.
+  await expect.poll(async () => {
+    const bounds = await page.locator(selector).evaluateAll(elements => elements.map(el => {
+      const { x, y, width, height } = el.getBoundingClientRect()
+      return { name: el.className, x, y, width, height }
+    }))
+    if (!bounds.length) return ['missing layout']
+    return bounds.filter(box => box.x < -1 || box.y < -1 ||
+      box.x + box.width > width + 1 || box.y + box.height > height + 1)
+  }, { message: 'screen geometry settles inside the viewport' }).toEqual([])
   expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(height)
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
 }

@@ -1,2 +1,10 @@
 # Embedded migration bytes participate in immutable database checksums.
 internal/store/schema/*.sql text eol=lf
+# Reproducible font provenance and generated assets are hashed byte-for-byte.
+scripts/design/* text eol=lf
+native/designSystem/font-sources.json text eol=lf
+native/designSystem/src/main/assets/licenses/*-OFL.txt text eol=lf
+frontend/src/app/fonts.css text eol=lf
+frontend/public/static/fonts/*.json text eol=lf
+frontend/public/static/fonts/*.txt text eol=lf
+frontend/public/static/fonts/*.woff2 binary

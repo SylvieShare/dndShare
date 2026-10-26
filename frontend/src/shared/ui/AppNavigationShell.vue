@@ -4,7 +4,7 @@
     <AppHeader :menu-open="menuOpen" @open-menu="openMenu" />
   </div>
   <AppDrawer v-if="compact" id="app-navigation-drawer" v-model="menuOpen" aria-label="Меню приложения"
-    :show-close="false" :width="288" :z-index="100" swipe-to-close>
+    :show-close="false" :width="layoutTokens.drawer" :z-index="100" swipe-to-close>
     <DesktopSidebar ref="drawerSidebar" mode="drawer" @close-menu="menuOpen = false" @navigate="menuOpen = false" />
   </AppDrawer>
   <AppAuthDialogs />
@@ -14,6 +14,7 @@
 import { nextTick, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { AppDrawer } from '@sylvieshare/share-ui'
+import { layoutTokens } from '@/app/design-tokens'
 import AppHeader from './AppHeader.vue'
 import AppAuthDialogs from '@/features/auth/components/AppAuthDialogs.vue'
 import DesktopSidebar from './DesktopSidebar.vue'

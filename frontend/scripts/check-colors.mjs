@@ -4,6 +4,7 @@ import path from 'node:path'
 const sourceRoot = path.resolve(import.meta.dirname, '../src')
 const allowedRawColorFiles = new Set([
   path.join(sourceRoot, 'app/theme.css'),
+  path.join(sourceRoot, 'app/design-tokens.css'), // Generated and checksum-verified before build.
   // These are data visualizations whose colors describe the object itself, not application chrome.
   path.join(sourceRoot, 'features/items/components/PotionVial.vue'),
   path.join(sourceRoot, 'features/items/components/SpellSlotSphere.vue'),

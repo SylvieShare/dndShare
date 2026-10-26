@@ -3,16 +3,35 @@ package ru.dndshare.designsystem
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.*
-import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalTextApi::class)
+private fun textRole(token: DesignType): TextStyle {
+    val weight = FontVariation.weight(token.weight.weight)
+    val family = when (token.family) {
+        DesignFont.Ui -> FontFamily.Default
+        DesignFont.Display -> FontFamily(Font(R.font.cormorant_garamond, token.weight,
+            variationSettings = FontVariation.Settings(weight)))
+        DesignFont.Prose -> {
+            val settings = FontVariation.Settings(weight, FontVariation.Setting("opsz", token.size.value))
+            FontFamily(Font(R.font.literata, token.weight, variationSettings = settings),
+                Font(R.font.literata_italic, token.weight, style = FontStyle.Italic, variationSettings = settings))
+        }
+    }
+    return TextStyle(fontFamily = family, fontSize = token.size, lineHeight = token.lineHeight, fontWeight = token.weight, letterSpacing = token.tracking)
+}
+
 object ShareTypography {
-    private val display = FontFamily(Font(R.font.cormorant_garamond, FontWeight.SemiBold, variationSettings = FontVariation.Settings(FontVariation.weight(600))))
-    private val prose = FontFamily(Font(R.font.literata, variationSettings = FontVariation.Settings(FontVariation.weight(400), FontVariation.Setting("opsz", 16f))),
-        Font(R.font.literata_italic, style = FontStyle.Italic, variationSettings = FontVariation.Settings(FontVariation.weight(400), FontVariation.Setting("opsz", 16f))))
-    val title = TextStyle(fontFamily = display, fontSize = 32.sp, lineHeight = 36.sp, fontWeight = FontWeight.SemiBold)
-    val section = TextStyle(fontFamily = display, fontSize = 25.sp, lineHeight = 29.sp, fontWeight = FontWeight.SemiBold)
-    val card = TextStyle(fontFamily = display, fontSize = 23.sp, lineHeight = 27.sp, fontWeight = FontWeight.SemiBold)
-    val row = TextStyle(fontFamily = display, fontSize = 19.sp, lineHeight = 23.sp, fontWeight = FontWeight.SemiBold)
-    val body = TextStyle(fontFamily = prose, fontSize = 16.sp, lineHeight = 26.sp)
+    val title = textRole(DesignTokens.Typography.Title)
+    val section = textRole(DesignTokens.Typography.Section)
+    val card = textRole(DesignTokens.Typography.Card)
+    val row = textRole(DesignTokens.Typography.Row)
+    val body = textRole(DesignTokens.Typography.Body)
+    val header = textRole(DesignTokens.Typography.Header)
+    val context = textRole(DesignTokens.Typography.Context)
+    val group = textRole(DesignTokens.Typography.Group)
+    val collectionTitle = textRole(DesignTokens.Typography.CollectionTitle)
+    val collectionDescription = textRole(DesignTokens.Typography.CollectionDescription)
+    val collectionCount = textRole(DesignTokens.Typography.CollectionCount)
+    val collectionRelation = textRole(DesignTokens.Typography.CollectionRelation)
+    val collectionChildren = textRole(DesignTokens.Typography.CollectionChildren)
 }

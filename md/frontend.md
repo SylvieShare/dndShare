@@ -8,6 +8,7 @@
 | --- | --- |
 | [Общие UI-компоненты](frontend/components.md) | Основной каталог выбора стандартного компонента и граница между share-ui и предметной композицией DnD Share. |
 | [Навигация приложения](frontend/navigation.md) | Меню, главная, маскоты, игровые системы и маршруты Vue Router. |
+| [UI-процесс](frontend/ui-workflow.md) | Окружение, стабильная копия, узкие/полные проверки, парный отчёт. |
 | [Единый адаптивный дизайн](frontend/responsive-design.md) | Синхронные изменения веба/Android и три формата окна. |
 | [Общие frontend-взаимодействия](frontend/interactions.md) | Drag-and-drop, rich content, загрузка, обучение, уведомления и общие оптимизации списков. |
 | [Сопровождение share-ui](frontend/share-ui.md) | Разрешённый межрепозиторный workflow и обновление фиксированного release tag. |
@@ -64,10 +65,14 @@ icon сохраняют PNG/ICO. Обычные JS/CSS и их gzip-копии �
 ## CSS
 
 Общая палитра и canvas приходят из `@sylvieshare/share-ui/styles.css`, который
-импортируется один раз в `main.js`. `src/app/theme.css` задаёт DnD-акцент,
-layout, доменные цвета и продуктовые prose/mono/print font stacks. Cormorant
-Garamond и Literata подключаются как variable web fonts; display-роль не
-запрашивает веса выше поддерживаемого `700`. `npm run check:colors` входит в production build и
+импортируется один раз в `main.js`. Затем подключаются локальные `fonts.css` и product `theme.css`, который
+импортирует генерируемые `design-tokens.css` для всех потребителей темы. Источник общих размеров,
+радиусов, типографических ролей, порогов и DnD-акцента —
+[design/tokens.json](../design/tokens.json); доменные цвета и prose/mono/print
+font stacks остаются в product theme. Cormorant Garamond и Literata поставляются
+локально как WOFF2 из тех же TTF, что Android, с именами по хешу содержимого;
+внешняя загрузка Google Fonts не требуется. Display не запрашивает веса выше `700`.
+Генерация и проверка — [исходники оформления](../design/README.md). `npm run check:colors` входит в production build и
 запрещает новые прямые hex/RGB/HSL значения. Подробности — [CSS-токены](css-variables.md).
 
 ## Анимации и переходы

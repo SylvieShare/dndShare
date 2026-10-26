@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ShareBadge(text: String, modifier: Modifier = Modifier, color: Color = WebPalette.AccentSoft) {
-    Surface(modifier, color = color.copy(alpha = .13f), contentColor = color, shape = RoundedCornerShape(5.dp)) {
+    Surface(modifier, color = color.copy(alpha = .13f), contentColor = color, shape = RoundedCornerShape(DesignTokens.Radius.Badge)) {
         Text(text, Modifier.padding(horizontal = 7.dp, vertical = 3.dp), style = MaterialTheme.typography.labelSmall)
     }
 }
@@ -33,7 +33,7 @@ fun ShareSection(label: String, modifier: Modifier = Modifier, count: Int? = nul
     content: @Composable ColumnScope.() -> Unit) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(14.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text(label, style = if (prominent) ShareTypography.section else MaterialTheme.typography.titleSmall)
+            Text(label, style = if (prominent) ShareTypography.section else ShareTypography.group)
             count?.let { ShareBadge(it.toString(), color = WebPalette.TextSecondary) }
             HorizontalDivider(Modifier.weight(1f))
         }
@@ -45,7 +45,7 @@ fun ShareSection(label: String, modifier: Modifier = Modifier, count: Int? = nul
 fun ShareDetailSection(label: String, collapsible: Boolean = false, defaultOpen: Boolean = true, content: @Composable ColumnScope.() -> Unit) {
     var open by rememberSaveable(label) { mutableStateOf(defaultOpen) }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Row(if (collapsible) Modifier.fillMaxWidth().heightIn(min = 48.dp).clickable(role = Role.Button) { open = !open }
+        Row(if (collapsible) Modifier.fillMaxWidth().heightIn(min = DesignTokens.Layout.TouchMin).clickable(role = Role.Button) { open = !open }
             .semantics { stateDescription = if (open) "Раскрыто" else "Свернуто" } else Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Text(label.uppercase(), style = MaterialTheme.typography.labelMedium, color = WebPalette.TextSecondary,
@@ -58,8 +58,9 @@ fun ShareDetailSection(label: String, collapsible: Boolean = false, defaultOpen:
 }
 
 @Composable
-fun ShareTile(modifier: Modifier = Modifier, onClick: (() -> Unit)? = null, tint: Color? = null, content: @Composable ColumnScope.() -> Unit) {
-    val shape = RoundedCornerShape(12.dp)
+fun ShareTile(modifier: Modifier = Modifier, onClick: (() -> Unit)? = null, tint: Color? = null,
+    contentPadding: PaddingValues = PaddingValues(DesignTokens.Spacing.Large), content: @Composable ColumnScope.() -> Unit) {
+    val shape = RoundedCornerShape(DesignTokens.Radius.Tile)
     val border = BorderStroke(1.dp, WebPalette.Border)
     val glow = if (tint == null) Modifier else Modifier.drawWithCache {
         val brush = Brush.radialGradient(listOf(tint.copy(alpha = .12f), Color.Transparent),
@@ -67,9 +68,9 @@ fun ShareTile(modifier: Modifier = Modifier, onClick: (() -> Unit)? = null, tint
         onDrawBehind { drawRect(brush) }
     }
     if (onClick == null) Surface(modifier, shape = shape, border = border, color = WebPalette.Surface) {
-        Column(glow.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp), content = content)
+        Column(glow.padding(contentPadding), verticalArrangement = Arrangement.spacedBy(10.dp), content = content)
     } else Surface(onClick, modifier, shape = shape, border = border, color = WebPalette.Surface) {
-        Column(glow.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp), content = content)
+        Column(glow.padding(contentPadding), verticalArrangement = Arrangement.spacedBy(10.dp), content = content)
     }
 }
 

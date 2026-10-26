@@ -18,15 +18,15 @@ import ru.dndshare.client.app.AppState
 internal fun AppHeader(format: LayoutFormat, page: AppPage, state: AppState, openMenu: () -> Unit) {
     Surface(color = WebPalette.Background) {
         Column {
-            Row(Modifier.fillMaxWidth().heightIn(min = 64.dp).padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(Modifier.fillMaxWidth().heightIn(min = DesignTokens.Layout.Header).padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
                 if (format == LayoutFormat.Phone) IconButton(onClick = openMenu,
                     modifier = Modifier.semantics { contentDescription = "Открыть меню" }) { AppGlyph(Glyph.Menu) }
                 Column(Modifier.weight(1f).padding(horizontal = 8.dp, vertical = 8.dp)) {
-                    Text(page.title, style = MaterialTheme.typography.titleLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(page.title, style = ShareTypography.header, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     val source = state.sources.firstOrNull { it.id == state.sourceId }
                     val edition = source?.versions?.firstOrNull { it.id == state.editionId }
                     if (source != null) Text(listOfNotNull(sourceLabel(source.name), edition?.version).joinToString(" · "),
-                        style = MaterialTheme.typography.labelSmall, color = WebPalette.TextSecondary, maxLines = 1)
+                        style = ShareTypography.context, color = WebPalette.TextSecondary, maxLines = 1)
                 }
             }
             HorizontalDivider()

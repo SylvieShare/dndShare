@@ -57,6 +57,6 @@ for (const mode of ["editor", "board"])
     await page.getByTitle("Вид сверху", { exact: true }).click();
     await page
       .locator(".map-canvas canvas")
-      .screenshot({ path: `/private/tmp/dndshare-animated-fog-${mode}.png` });
+      .screenshot({ path: test.info().outputPath(`animated-fog-${mode}.png`) });
     expect(errors).toEqual([]);
   });

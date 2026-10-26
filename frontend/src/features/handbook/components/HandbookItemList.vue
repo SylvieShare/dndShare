@@ -340,7 +340,7 @@ function onScroll(e) {
 
 
 /* ── Responsive ── */
-@media (max-width: 599px) {
+@media (--ui-phone) {
   .item-list-panel {
     width: 100%;
     border-right: none;

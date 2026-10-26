@@ -32,7 +32,7 @@ internal fun AppSidebar(
     toggleLabel: String, toggleIcon: Glyph, toggle: () -> Unit, navigate: (AppPage) -> Unit,
 ) {
     Column(Modifier.fillMaxSize().background(WebPalette.Surface)) {
-        Row(Modifier.fillMaxWidth().height(64.dp).padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.fillMaxWidth().height(DesignTokens.Layout.Header).padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
             if (expanded) {
                 Image(painterResource(R.drawable.brand_mark), null, Modifier.size(36.dp))
                 Text("DnD Share", Modifier.weight(1f).padding(start = 8.dp), maxLines = 1,
@@ -77,7 +77,7 @@ private fun SidebarItem(page: AppPage, expanded: Boolean, selected: Boolean, onC
         if (selected) Box(Modifier.align(Alignment.CenterStart).offset(x = (-10).dp).width(3.dp).height(28.dp)
             .background(WebPalette.Accent, RoundedCornerShape(topEnd = 3.dp, bottomEnd = 3.dp)))
         Row(
-            Modifier.fillMaxWidth().heightIn(min = 48.dp).clip(RoundedCornerShape(9.dp)).background(background)
+            Modifier.fillMaxWidth().heightIn(min = DesignTokens.Layout.TouchMin).clip(RoundedCornerShape(9.dp)).background(background)
                 .selectable(selected, onClick = onClick, role = Role.Tab)
                 .semantics { contentDescription = "Раздел: ${page.title}" },
             verticalAlignment = Alignment.CenterVertically,
@@ -96,7 +96,7 @@ private fun SidebarItem(page: AppPage, expanded: Boolean, selected: Boolean, onC
 private fun SidebarAccount(expanded: Boolean, state: AppState, controller: AppController, navigate: (AppPage) -> Unit) {
     var open by remember { mutableStateOf(false) }
     Box(Modifier.padding(8.dp)) {
-        Row(Modifier.fillMaxWidth().heightIn(min = 48.dp).clip(MaterialTheme.shapes.medium)
+        Row(Modifier.fillMaxWidth().heightIn(min = DesignTokens.Layout.TouchMin).clip(MaterialTheme.shapes.medium)
             .clickable { open = true }.semantics(mergeDescendants = true) { contentDescription = "Аккаунт" },
             verticalAlignment = Alignment.CenterVertically) {
             Box(Modifier.size(48.dp), contentAlignment = Alignment.Center) { AppGlyph(Glyph.Account) }

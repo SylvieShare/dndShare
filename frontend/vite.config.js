@@ -1,3 +1,4 @@
+import { designMedia } from './scripts/design-media.mjs'
 import { compressedAssets } from './scripts/compressedAssets.mjs'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -6,6 +7,7 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig({
   cacheDir: process.env.DNDSHARE_VITE_CACHE || undefined,
   plugins: [vue(), compressedAssets()],
+  css: { postcss: { plugins: [designMedia()] } },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

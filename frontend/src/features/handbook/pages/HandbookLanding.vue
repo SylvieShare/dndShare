@@ -20,34 +20,9 @@
             </div>
 
             <div class="hb-collections-grid">
-              <button
-                v-for="type in group.types"
-                :key="type.id"
-                class="hb-collection-card"
-                :style="cardStyle(type)"
-                @click="emit('select-type', type, selectedSourceVersionId)"
-              >
-                <div class="hb-card-top">
-                  <span v-if="parentTypeName(type)" class="hb-card-parent">Раздел «{{ parentTypeName(type) }}»</span>
-                  <span v-else-if="childTypeNames(type)" class="hb-card-parent">Основной каталог</span>
-                  <span class="hb-card-name">{{ type.name }}</span>
-                  <p v-if="type.description" class="hb-card-desc">{{ type.description }}</p>
-                  <p v-if="childTypeNames(type)" class="hb-card-children">Подразделы: {{ childTypeNames(type) }}</p>
-                </div>
-                <div class="hb-card-bottom">
-                  <span class="hb-card-count">
-                    <strong class="hb-card-count-num">{{ type.countItems }}</strong>
-                    <span class="hb-card-count-label"> записей</span>
-                  </span>
-                </div>
-                <img
-                  v-if="type.iconImageUrl"
-                  class="hb-card-icon"
-                  :src="type.iconImageUrl"
-                  alt=""
-                  aria-hidden="true"
-                />
-              </button>
+              <HandbookCollectionTile v-for="type in group.types" :key="type.id" :type="type"
+                :parent-name="parentTypeName(type)" :child-names="childTypeNames(type)"
+                @select="emit('select-type', type, selectedSourceVersionId)" />
             </div>
           </section>
         </div>
@@ -96,6 +71,7 @@
 </template>
 
 <script setup>
+import HandbookCollectionTile from '@/features/handbook/components/HandbookCollectionTile.vue'
 import { LoadingState } from '@sylvieshare/share-ui'
 import { visibleHandbookType } from "@/shared/lib/abilityTypes"
 import { computed, ref, watch } from 'vue'
@@ -171,10 +147,6 @@ const collectionGroups = computed(() => {
   return groups
 })
 
-function cardStyle(type) {
-  if (!type.color) return {}
-  return { '--card-color': type.color }
-}
 function parentTypeName(type) {
   return itemTypes.value.find(candidate => Number(candidate.id) === Number(type.parentTypeId))?.name || ''
 }

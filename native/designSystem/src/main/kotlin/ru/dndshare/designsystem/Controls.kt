@@ -14,20 +14,20 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ShareSearch(value: String, onValueChange: (String) -> Unit, modifier: Modifier = Modifier, placeholder: String = "Поиск по названию — RU / EN…") {
-    OutlinedTextField(value, onValueChange, modifier.fillMaxWidth().heightIn(min = 48.dp).semantics { contentDescription = placeholder }, singleLine = true,
+    OutlinedTextField(value, onValueChange, modifier.fillMaxWidth().heightIn(min = DesignTokens.Layout.TouchMin).semantics { contentDescription = placeholder }, singleLine = true,
         placeholder = { Text(placeholder, style = MaterialTheme.typography.bodyMedium) },
         leadingIcon = { AppGlyph(Glyph.Search, Modifier.size(20.dp)) },
         trailingIcon = { if (value.isNotEmpty()) IconButton(onClick = { onValueChange("") },
             modifier = Modifier.semantics { contentDescription = "Очистить поиск" }) { AppGlyph(Glyph.Close, Modifier.size(18.dp)) } },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        shape = RoundedCornerShape(6.dp),
+        shape = RoundedCornerShape(DesignTokens.Radius.Small),
         colors = OutlinedTextFieldDefaults.colors(unfocusedContainerColor = WebPalette.Raised,
             focusedContainerColor = WebPalette.Raised, unfocusedBorderColor = WebPalette.BorderStrong))
 }
 
 @Composable
 fun ShareAction(label: String, onClick: () -> Unit, modifier: Modifier = Modifier, icon: Glyph? = null, active: Boolean = false) {
-    OutlinedButton(onClick, modifier.heightIn(min = 48.dp), shape = RoundedCornerShape(6.dp),
+    OutlinedButton(onClick, modifier.heightIn(min = DesignTokens.Layout.TouchMin), shape = RoundedCornerShape(DesignTokens.Radius.Small),
         border = BorderStroke(1.dp, if (active) WebPalette.Accent else WebPalette.BorderStrong),
         colors = ButtonDefaults.outlinedButtonColors(containerColor = if (active) WebPalette.Accent.copy(alpha = .12f) else WebPalette.Raised,
             contentColor = if (active) WebPalette.AccentSoft else WebPalette.TextSecondary),

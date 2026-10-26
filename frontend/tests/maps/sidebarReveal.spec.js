@@ -7,7 +7,9 @@ async function ready(page, mobile = false) {
   );
   await page.goto("/tests/maps/fixtures/maps.html?mode=editor");
   await expect(page.getByText("Подготавливаем карту…")).toHaveCount(0);
-  return page.getByRole("navigation", { name: "Боковые вкладки редактора" });
+  const nav = page.getByRole("navigation", { name: "Боковые вкладки редактора" });
+  await expect(nav.getByRole("button", { name: "Плитки", exact: true })).toBeVisible();
+  return nav;
 }
 test("map navigation groups content, scene and tools with visible captions", async ({page}) => {
   const nav = await ready(page);

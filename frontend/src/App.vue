@@ -54,7 +54,6 @@ watch(showsApplicationServices, enabled => {
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500..700&family=Literata:ital,opsz,wght@0,7..72,400..700;1,7..72,400..700&display=swap');
 
 html, body {
   padding: 0;
@@ -81,7 +80,7 @@ body {
   outline-offset: 2px;
 }
 
-@media (min-width: 1200px) {
+@media (--ui-desktop) {
   body:has(.app-sidebar:not(.app-sidebar--expanded)) .review-inbox {
     left: calc(var(--app-sidebar-w) + 16px);
   }

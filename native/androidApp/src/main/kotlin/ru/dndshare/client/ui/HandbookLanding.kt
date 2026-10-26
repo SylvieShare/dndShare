@@ -24,10 +24,10 @@ internal fun HandbookLanding(
     val visibleTypes = metadata.types.filter { it.id !in setOf(16L, 17L) && (it.id != 18L || (countMap[it.id] ?: 0) > 0) }
     val groups = collectionGroups(visibleTypes)
     Box(Modifier.fillMaxSize().shareCanvas(), contentAlignment = Alignment.TopCenter) {
-        BoxWithConstraints(Modifier.widthIn(max = 1400.dp).fillMaxSize().padding(horizontal = 20.dp)) {
-            val columns = when { maxWidth >= 1200.dp -> 3; maxWidth >= 600.dp -> 2; else -> 1 }
-            LazyVerticalGrid(GridCells.Fixed(columns), Modifier.fillMaxSize(), contentPadding = PaddingValues(vertical = 20.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        BoxWithConstraints(Modifier.widthIn(max = DesignTokens.Layout.ContentMax).fillMaxSize().padding(horizontal = DesignTokens.Spacing.Page)) {
+            val columns = when { maxWidth >= DesignTokens.Layout.Desktop -> 3; maxWidth >= DesignTokens.Layout.Tablet -> 2; else -> 1 }
+            LazyVerticalGrid(GridCells.Fixed(columns), Modifier.fillMaxSize(), contentPadding = PaddingValues(vertical = DesignTokens.Spacing.Page),
+                horizontalArrangement = Arrangement.spacedBy(DesignTokens.Collection.GridGap), verticalArrangement = Arrangement.spacedBy(DesignTokens.Collection.GridGap)) {
                 groups.forEach { group ->
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         ShareSection(group.name, Modifier.padding(top = 12.dp), count = group.types.size) { }
@@ -47,7 +47,7 @@ internal fun HandbookLanding(
                     }
                     items(metadata.suggestTypes, key = { "dictionary-${it.id}" }) { dictionary ->
                         ShareTile(Modifier.fillMaxWidth(), onClick = { openDictionary(dictionary.id) }) {
-                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(DesignTokens.Collection.GridGap)) {
                                 if (dictionary.svg != null) AsyncImage(remember(dictionary.svg) { dictionary.svg.toByteArray() }, null, imageLoader = images,
                                     colorFilter = ColorFilter.tint(catalogueColor(dictionary.color)), modifier = Modifier.size(32.dp))
                                 else ShareBadge(dictionary.name.take(1), color = catalogueColor(dictionary.color))

@@ -17,6 +17,7 @@ build также выполняют `check:bindings`: необъявленные
 | Только Markdown | `python3 scripts/check-wiki.py --strict`, чистый diff и проверка перенесённого текста | Runtime build и deploy не нужны; не менять продуктовые контракты под видом переноса. |
 | Инструменты документации | Проверка wiki и `python3 -m unittest discover -s scripts/docs -p 'test_*.py'` | Тестировать ссылки, якоря, предупреждения и исключения для отчётов; для Node-инструмента выполнить его `node --test` сценарии. |
 | Frontend | Затронутые Vitest-тесты, затем `cd frontend && npm test -- --run && npm run build` | Для UI-действий — соответствующий browser-набор на desktop/mobile; проверка необъявленных переменных входит в команды. |
+| Общий UI веба/Android и его инструменты | Строки Frontend + Android; `scripts/ui.py verify`, парный `review`, unit-тесты изменённых инструментов в `scripts/design`, `scripts/dev`, `scripts/visual` | Три формата, одинаковые фикстуры, явные согласованные исключения; [UI-процесс](frontend/ui-workflow.md). |
 | Backend без изменения БД | `GOCACHE=/private/tmp/dndshare-go-cache go test ./...`, `go vet ./...`, `go build ./...` с тем же GOCACHE | Без DSN DB-тесты пропускаются; это не доказательство интеграционной проверки. |
 | Нативный Android | `scripts/native/build.ps1 -Target All` и `-Target DeviceTest`; Android/API/PostgreSQL smoke при изменении входа/sync | Unit и instrumented SQLite/HTTP/cookies, APK; телефон, планшет и широкое Android-окно, офлайн и возобновление. |
 | SQL, Store, права/атомарность API или формат документа | `python3 scripts/test.py db`, затронутые frontend-тесты при изменении DTO | Только изолированный PostgreSQL; фикстуры текущей схемы и настоящий HTTP-контракт. |
@@ -54,7 +55,7 @@ pagination, права, сохранность строки после soft dele
 
 | Профиль | Что выполняет |
 | --- | --- |
-| `fast` (по умолчанию) | Go unit, vet/build, Vitest и frontend build, Node-тесты инструментов, Python-тесты deploy/справочника/миниатюр, проверка wiki. |
+| `fast` (по умолчанию) | Go unit, vet/build, Vitest и frontend build, Node-тесты инструментов, Python-тесты deploy/справочника/миниатюр/дизайна/UI-инструментов, проверка wiki. |
 | `db` | Все Go-тесты с обязательным PostgreSQL, затем vet/build. |
 | `browser` | Браузерные UI/карты/production-проверки и отдельный frontend → Go → PostgreSQL smoke авторизации. |
 | `models` | Python/Blender-проверки геометрии и браузерная диагностика локальных моделей/GPU. |

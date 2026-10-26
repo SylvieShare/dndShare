@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "source": "design/tokens.json",
+  "sourceSha256": "6045ed79807eb136fea9131f33b0e2c298838c761671aa63871464e6f246ec3d",
+  "outputs": {
+    "frontend/src/app/design-tokens.css": "9125ba1d88417ebd910f8dd39b66ac57c475f8909b4f478d19280748a1bd6b93",
+    "frontend/src/app/design-tokens.js": "4438c8ddb018ab292dd2a3b6a86c309a3353afa432390cedf1062be5ff407c1e",
+    "native/designSystem/src/main/kotlin/ru/dndshare/designsystem/DesignTokens.kt": "1cb87269ed4811b1de03dc98241a9cb7607f1a9d90e85f7987206590721382db"
+  }
+}

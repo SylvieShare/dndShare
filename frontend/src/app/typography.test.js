@@ -4,7 +4,8 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 const srcDir = fileURLToPath(new URL('..', import.meta.url))
-const appSource = readFileSync(fileURLToPath(new URL('../App.vue', import.meta.url)), 'utf8')
+const fontPath = fileURLToPath(new URL('./fonts.css', import.meta.url))
+const fontSource = readFileSync(fontPath, 'utf8')
 const themeSource = readFileSync(fileURLToPath(new URL('./theme.css', import.meta.url)), 'utf8')
 
 function runtimeStyleSources(directory = srcDir) {
@@ -25,14 +26,20 @@ describe('typography roles', () => {
   })
 
   it('loads variable editorial faces for the supported weight ranges', () => {
-    expect(appSource).toContain('Cormorant+Garamond:wght@500..700')
-    expect(appSource).toContain('Literata:ital,opsz,wght@0,7..72,400..700;1,7..72,400..700')
+    expect(fontSource).toContain('font-family: "Cormorant Garamond"')
+    expect(fontSource).toContain('font-family: "Literata"')
+    expect(fontSource).toContain('font-weight: 500 700')
+    expect(fontSource).toContain('font-weight: 400 700')
+    expect(fontSource).not.toContain('https://')
+    const localFaces = [...fontSource.matchAll(/src:\s*url\("([^"]+)"\)/g)]
+    expect(localFaces).toHaveLength(3)
+    expect(localFaces.every(match => match[1].startsWith('/static/fonts/'))).toBe(true)
   })
 
   it('does not bypass typography tokens with component-local font stacks', () => {
     const forbidden = /font(?:-family)?\s*:\s*[^;}]*(?:Arial|Georgia|Times New Roman|Cormorant Garamond|\bmonospace\b)/
     const violations = styleSources
-      .filter(({ source }) => forbidden.test(source))
+      .filter(({ path, source }) => path !== fontPath && forbidden.test(source))
       .map(({ path }) => relative(srcDir, path))
     expect(violations).toEqual([])
   })

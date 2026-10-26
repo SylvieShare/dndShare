@@ -27,7 +27,7 @@
   display: none;
 }
 
-@media (min-width: 600px) {
+@media (--ui-from-tablet) {
   .handbook-collection-home {
     display: inline-flex;
     align-items: center;
@@ -58,7 +58,7 @@
   display: flex;
   flex-direction: column;
   padding: 0 24px;
-  max-width: 1400px;
+  max-width: var(--layout-content-max);
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
@@ -88,7 +88,7 @@
 
 /* One viewport, one active scroll pane on narrow screens. Keep the complete
    flex height chain; an auto-height wrapper breaks scrolling in some browsers. */
-@media (max-width: 599px) {
+@media (--ui-phone) {
   .handbook-page {
     padding: 0;
   }
@@ -123,7 +123,7 @@
 }
 
 
-@media (min-width: 600px) and (max-width: 1199px) {
+@media (--ui-tablet) {
   .handbook-page { padding: 0; }
 }
 

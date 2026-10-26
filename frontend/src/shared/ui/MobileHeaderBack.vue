@@ -24,14 +24,14 @@ function navigateBack() {
 <style scoped>
 .mobile-header-back { display: none; }
 
-@media (max-width: 1199px) {
+@media (--ui-compact) {
   .mobile-header-back {
     display: inline-flex;
     align-items: center;
     flex: 0 0 auto;
     gap: 3px;
-    min-width: 48px;
-    height: 48px;
+    min-width: var(--layout-touch-min);
+    height: var(--layout-touch-min);
     padding: 0 5px 0 2px;
     border: 0;
     border-radius: 7px;

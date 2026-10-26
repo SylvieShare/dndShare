@@ -1,8 +1,13 @@
 # CSS variables
 
 The shared application palette lives in `@sylvieshare/share-ui/styles.css`.
-`frontend/src/app/theme.css` contains only DnD Share layout, its exact purple
-accent shades, domain colors, product typography and the player-handout paper palettes. Component styles must use these tokens;
+Product dimensions, responsive thresholds, typography roles and the exact purple
+accent shades come from [design/tokens.json](../design/tokens.json), generated into
+`frontend/src/app/design-tokens.css`/JS and Android Compose tokens.
+The product `theme.css` imports generated CSS, including for isolated UI fixtures.
+`frontend/src/app/theme.css` contains domain colors, product font stacks and the
+player-handout paper palettes. Local `fonts.css` supplies variable WOFF2 from the
+same pinned TTF files as Android; see [design sources](../design/README.md). Component styles must use these tokens;
 `npm run check:colors` rejects direct hex/RGB/HSL colors and removed legacy
 tokens.
 
@@ -36,8 +41,8 @@ The dark UI uses one application canvas plus a compact surface scale. Do not cre
 Canvas rule: every routed screen inherits the shared `--app-canvas-bg` plus
 `--app-canvas-pattern` backdrop from `App.vue`; print mode explicitly removes
 the pattern. Full-page features stay transparent unless their working canvas
-must deliberately hide the global grid: the full character-creation wizard and
-the handbook use opaque `--bg`, while handbook list rows use `--surface`. The
+must deliberately hide the global grid: the full character-creation wizard uses opaque `--bg`; the handbook overview
+stays transparent and handbook list rows use `--surface`. The
 pannable session chapter grid may reposition and scale the pattern, but must use
 the same background and dot-color tokens. The global header and regular forms,
 editors and modal bodies use `--bg`; toolbar chrome inside a `--bg` editor uses

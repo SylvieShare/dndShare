@@ -5,17 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run check:bindings && npm run check:colors && vite build && npm run check:bundle",
+    "build": "npm run check:design && npm run check:bindings && npm run check:colors && vite build && npm run check:bundle",
     "check:bindings": "eslint src",
     "check:colors": "node scripts/check-colors.mjs",
     "preview": "vite preview",
-    "test": "npm run check:bindings && node --test scripts/check-bundle.test.mjs && vitest run src",
+    "test": "npm run check:design && npm run check:bindings && node --test scripts/check-bundle.test.mjs scripts/design-media.test.mjs scripts/check-design.test.mjs && vitest run src",
     "test:visual": "playwright test --project=ui tests/visual",
     "check:bundle": "node scripts/check-bundle.mjs",
     "benchmark": "node scripts/benchmark-frontend.mjs",
     "test:performance": "playwright test --project=ui tests/performance",
     "test:browser": "playwright test -c playwright.suite.config.js",
-    "test:models": "DNDSHARE_TEST_MODELS=1 playwright test -c playwright.suite.config.js --project=models"
+    "test:models": "DNDSHARE_TEST_MODELS=1 playwright test -c playwright.suite.config.js --project=models",
+    "check:design": "node scripts/check-design.mjs"
   },
   "dependencies": {
     "@lucide/vue": "^1.46.0",
