@@ -92,7 +92,7 @@ private fun SchemaFields(fields: JsonArray, data: JsonObject, metadata: Handbook
                 "blocks" -> (value as? JsonArray)?.forEach { block ->
                     (block as? JsonObject)?.let {
                         if (it.text("name").isNotBlank()) Text(it.text("name"), style = MaterialTheme.typography.titleSmall)
-                        RichDescription(it.text("desc"), openItem = open)
+                        RichDescription(it.text("value"), openItem = open)
                     }
                 }
                 "int_by_suggest" -> (value as? JsonObject)?.forEach { (id, amount) ->
