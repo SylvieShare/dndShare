@@ -40,6 +40,7 @@ renderer и ограничения аппаратных/программных �
 - [Сентябрьские замеры](reports/frontend-performance-2026-09.md).
 - [Замеры 1–6 октября](reports/frontend-performance-2026-10.md).
 - [История состава и бюджетов](reports/frontend-bundle-history-2026-10.md).
+- [Шапка персонажа: сравнение с main, 26 октября](reports/character-header-bundle-2026-10-26.md).
 
 ## Связанные страницы
 

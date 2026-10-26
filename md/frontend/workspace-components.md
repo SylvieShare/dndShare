@@ -30,8 +30,12 @@ viewBox по реальной ширине, 20 столбцов, линия/за
 
 ## Общие композиции рабочих мест
 
-`shared/ui/WorkspaceHeader.vue` объединяет шапки сессии и редактора карт:
-слоты identity/navigation/actions, высота 64px и ResizeObserver для dock-layout.
+`shared/ui/WorkspaceHeader.vue` объединяет шапки сессии, редактора карт и desktop-листа персонажа:
+слоты identity/navigation/actions, минимальная высота 64px и ResizeObserver для dock-layout.
+Без navigation-slot шапка использует две колонки. `CharacterWorkspaceHeader.vue`
+показывает возврат и идентичность слева, компактный `CharacterSessionControl`
+с названием/главой, игроками и событиями справа. Мобильный `CampaignBadge`
+использует тот же контрол в прежнем карточном виде во вкладке «Предметы».
 `SessionToolbarTools.vue` располагается в actions-slot шапки и собирает
 `ActionButton`, `BasePopover` и `ActionMenuItem`: hover раскрывает список вниз,
 нажатие работает на сенсорном экране, стрелки перемещают фокус. Вложенные

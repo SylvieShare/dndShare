@@ -3,6 +3,7 @@
     <CharacterEditionDialog :controller="edition" />
     <CharacterTransferDialogs :controller="transfers" :character-uuid="uuid" />
     <PageTutorial :tutorial="characterTutorial" :mobile="isMobile" />
+    <CharacterWorkspaceHeader v-if="!isMobile" :name="charName" :subtitle="charSub" :session="activeSession" :transfers="transfers" />
     <CharEditorToolbar
       v-if="isMobile"
       ref="charToolbarEl"
@@ -172,6 +173,7 @@
 </template>
 
 <script setup>
+import CharacterWorkspaceHeader from '@/features/character-editor/components/CharacterWorkspaceHeader.vue'
 import CharacterTransferDialogs from '@/features/character-editor/components/CharacterTransferDialogs.vue'
 import { useCharacterTransfers } from '@/features/character-editor/composables/useCharacterTransfers'
 import PageTutorial from '@/features/tutorials/components/PageTutorial.vue'
@@ -266,8 +268,8 @@ charCtx.itemTransfers = transfers
 const edition = useCharacterEdition({ uuid, isOwner, sourceVersionId, version, flushSave, applyCharacter, canStart: () => !transfers.busy })
 charCtx.edition = edition
 
-// Expose menu/session state to in-sheet blocks (SettingsMenuTile, CampaignBadge) on desktop, where the
-// toolbar is gone. charCtx is reactive, so assigned refs auto-unwrap on read.
+// Share menu/session state with sheet blocks and header controls.
+// charCtx is reactive, so assigned refs auto-unwrap on read.
 Object.assign(charCtx, {
   canEdit: isOwner,
   publicVisible,

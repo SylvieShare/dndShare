@@ -114,7 +114,14 @@ in `mobile.json`. The character route hides the global app header at the mobile
 breakpoint and gives the full viewport to its own toolbar; that toolbar menu has
 an explicit **К персонажам** action, including on read-only public sheets. Its
 desktop shell also occupies the full viewport because application navigation is
-provided by the fixed side rail and does not reserve a top-header offset. Its
+provided by the fixed side rail and does not reserve a global top-header offset.
+Above the desktop sheet, `CharacterWorkspaceHeader` reuses `WorkspaceHeader`
+from the map editor: the left side has a character-list return action and the
+character name/subtitle; the right side has the session link, current chapter,
+players and event counters. The header stays above the sheet scroller, and long
+names truncate within it. Without a session the header keeps its identity and
+return action. The former session tile is removed from the desktop utility
+column. Mobile keeps its existing toolbar and session tile in **Предметы**. Its
 desktop identity summary uses the top-aligned frameless dedicated character icon to the left of the
 visible name, race, class list and HP. The full portrait lives in the inner **Личность** tab beside the
 appearance fields. The class list stays below the name and race and wraps by

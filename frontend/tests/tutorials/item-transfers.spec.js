@@ -12,7 +12,7 @@ for (const mobile of [false, true]) test(`item transfer request, refusal and acc
     STR: { value: 10 }, DEX: { value: 10 }, CON: { value: 10 }, INT: { value: 10 }, WIS: { value: 10 }, CHA: { value: 10 },
   }, var: { stats: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 } } } })
   const chars = { sender: character('Лиора', [item]), recipient: character('Торин', []) }
-  const session = { uuid: 'campaign', name: 'Тайны долины' }
+  const session = { uuid: 'campaign', name: 'Тайны долины', chapterNumber: 3, chapterName: 'Забытый храм' }
   let transfers = [], nextId = 1
   const requests = []
   await page.route(url => url.pathname.startsWith('/api/'), async route => {
@@ -59,8 +59,24 @@ for (const mobile of [false, true]) test(`item transfer request, refusal and acc
   async function openSheet(uuid) {
     await page.goto(`/tests/tutorials/fixtures/tutorials.html?page=/char/${uuid}`)
     await expect(page.locator('.view')).toBeVisible()
-    if (mobile) await page.getByRole('button', { name: 'Предметы', exact: true }).click()
-    else await page.getByRole('tab', { name: 'Снаряжение', exact: true }).click()
+    const header = page.locator('.character-workspace-header')
+    if (mobile) {
+      await expect(header).toHaveCount(0)
+      await expect(page.locator('.campaign-block:visible')).toHaveCount(0)
+      await page.getByRole('button', { name: 'Предметы', exact: true }).click()
+      await expect(page.locator('.campaign-block:visible')).not.toHaveClass(/campaign-block--compact/)
+    } else {
+      await expect(header).toBeVisible()
+      await expect(header.locator('[data-tutorial="character-session"]')).toHaveCount(1)
+      await expect(header.getByRole('link', { name: /Тайны долины/ })).toHaveAttribute('href', '/sessions/campaign')
+      await expect(header).toContainText('Гл. 3 · Забытый храм')
+      await expect(header.getByRole('button', { name: 'К списку персонажей' })).toBeVisible()
+      const bounds = await header.boundingBox()
+      const sheet = await page.locator('.sheet-scroll').boundingBox()
+      expect(bounds.y + bounds.height).toBeLessThanOrEqual(sheet.y)
+    }
+
+    if (!mobile) await page.getByRole('tab', { name: 'Снаряжение', exact: true }).click()
     await expect(page.locator('.campaign-block:visible')).toBeVisible()
     if (mobile) await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/settling/)
     await page.evaluate(async () => {

@@ -11,10 +11,6 @@
   },
   "children": [
     {
-      "ref": "campaign",
-      "kind": "block"
-    },
-    {
       "kind": "layout",
       "type": "grid",
       "props": {

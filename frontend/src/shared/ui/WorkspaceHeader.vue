@@ -1,7 +1,7 @@
 <template>
-  <header ref="element" class="workspace-header">
+  <header ref="element" class="workspace-header" :class="{ 'workspace-header--plain': !$slots.navigation }">
     <div class="workspace-header-identity"><slot name="identity" /></div>
-    <div class="workspace-header-navigation"><slot name="navigation" /></div>
+    <div v-if="$slots.navigation" class="workspace-header-navigation"><slot name="navigation" /></div>
     <div class="workspace-header-actions"><slot name="actions" /></div>
   </header>
 </template>
@@ -39,6 +39,9 @@ onBeforeUnmount(() => observer?.disconnect());
   min-height: 54px;
   display: flex;
   align-items: center;
+}
+.workspace-header--plain {
+  grid-template-columns: minmax(0, 1fr) auto;
 }
 .workspace-header-navigation {
   min-width: 0;

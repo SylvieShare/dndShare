@@ -13,7 +13,9 @@ const pinia = createPinia()
 const ownerMode = !new URLSearchParams(location.search).has('readonly')
 const values = reactive(blankValues())
 const ctx = reactive({ ownerMode, canEdit: ownerMode, rulesVersion: '2014', values })
-const grid = schema.layouts.desktop.tabs[0].content.children[2].children[1]
+const grid = schema.layouts.desktop.tabs[0].content.children[2].children.find(node =>
+  node.type === 'grid' && node.children?.some(child => child.ref === 'rest'),
+)
 window.rolls = []
 window.writes = []
 const dice = useDiceStore(pinia)
