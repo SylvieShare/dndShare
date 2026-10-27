@@ -3,7 +3,7 @@ from pathlib import Path
 import platform
 
 from . import windows
-from .common import UIError, read_json, write_json
+from .common import UIError, capture, read_json, write_json
 from .dependencies import browser_libraries, choose_modules, environment
 
 
@@ -16,6 +16,17 @@ def load(source):
         if config.get("schema") != 1 or Path(config["source"]).resolve() != source:
             raise UIError(f"Invalid local tool configuration: {location}")
         return config
+    if (source / '.git').is_file():
+        common = Path(capture(['git', 'rev-parse', '--path-format=absolute', '--git-common-dir'], cwd=source))
+        primary = common.parent
+        shared = primary / 'build/dev-tools/local-tools.json'
+        if shared.is_file():
+            inherited = read_json(shared)
+            if inherited.get('schema') != 1 or Path(inherited['source']).resolve() != primary:
+                raise UIError(f'Invalid primary tool configuration: {shared}')
+            config = dict(inherited, source=str(source))
+            write_json(location, config)
+            return config
     tools = source / "build/header-linux-tools"
     pg = source / "build/native-setup/pg-runtime/usr"
     config = {"schema": 1, "source": str(source),
