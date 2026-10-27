@@ -2,6 +2,13 @@ package ru.dndshare.client.ui.designsystem
 
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.focusGroup
+import androidx.compose.foundation.focusable
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -24,18 +31,15 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.dialog
 import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.*
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.DialogWindowProvider
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.first
 
-/** Moves the original subtree into the native modal; only its width reflows each frame. */
+/** Same-window modal overlay. Place after the background content in a full-size Box. */
 @Composable
 fun ShareMorphDialog(state: ShareMorphState, visibleKey: String?, label: String, dismissEnabled: Boolean,
     onDismiss: () -> Unit, editor: @Composable () -> Unit) {
@@ -45,8 +49,9 @@ fun ShareMorphDialog(state: ShareMorphState, visibleKey: String?, label: String,
             if (state.activeKey != visibleKey) {
                 if (state.activeKey == null) state.fraction.snapTo(0f)
                 readyKey = null
+                snapshotFlow { state.hostPlaced }.first { it }
                 state.activeKey = visibleKey
-                // Native window creation must not consume the opening animation.
+                // Wait for the overlay layout before beginning the transition.
                 snapshotFlow { readyKey }.first { it == visibleKey }
                 repeat(2) { withFrameNanos { } }
             }
@@ -59,29 +64,31 @@ fun ShareMorphDialog(state: ShareMorphState, visibleKey: String?, label: String,
     DisposableEffect(state) { onDispose { state.finish() } }
     val key = state.activeKey ?: return
     val entry = state.entry(key)
-    Dialog(onDismissRequest = { if (dismissEnabled) onDismiss() }, properties = DialogProperties(
-        usePlatformDefaultWidth = false, decorFitsSystemWindows = false, dismissOnClickOutside = false)) {
-        val focus = LocalFocusManager.current
-        val keyboard = LocalSoftwareKeyboardController.current
-        LaunchedEffect(visibleKey) {
-            if (visibleKey == null) { focus.clearFocus(); keyboard?.hide() }
+    BackHandler { if (dismissEnabled) onDismiss() }
+    val focus = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
+    val modalFocus = remember { FocusRequester() }
+    LaunchedEffect(key, visibleKey) {
+        if (visibleKey != null) {
+            withFrameNanos { }
+            modalFocus.requestFocus()
         }
-        val window = (LocalView.current.parent as? DialogWindowProvider)?.window
-        DisposableEffect(window) {
-            window?.setDimAmount(0f)
-            window?.setWindowAnimations(0)
-            onDispose { }
-        }
+    }
+    LaunchedEffect(visibleKey) {
+        if (visibleKey == null) { focus.clearFocus(); keyboard?.hide() }
+    }
+    Box(Modifier.fillMaxSize().focusProperties { onExit = {
+        if (requestedFocusDirection != FocusDirection.Exit) cancelFocusChange()
+    } }.focusGroup()) {
         CompositionLocalProvider(LocalContentColor provides WebPalette.Text) {
-            Box(Modifier.fillMaxSize()) {
+            Box(Modifier.fillMaxSize().focusRequester(modalFocus).focusable().semantics { dialog() }) {
                 val interaction = remember { MutableInteractionSource() }
                 Box(Modifier.matchParentSize().drawBehind { drawRect(Color.Black.copy(alpha = .48f * state.progress)) }
-                    .clickable(interactionSource = interaction, indication = null, enabled = dismissEnabled, onClick = onDismiss)
+                    .focusProperties { canFocus = false }
+                    .clickable(interactionSource = interaction, indication = null) { if (dismissEnabled) onDismiss() }
                     .clearAndSetSemantics { })
                 val density = LocalDensity.current
                 val direction = LocalLayoutDirection.current
-                val safe = WindowInsets.safeDrawing
-                var offset by remember { mutableStateOf(Offset(safe.getLeft(density, direction).toFloat(), safe.getTop(density).toFloat())) }
                 Layout(content = {
                     Box(Modifier.drawBehind { drawRect(WebPalette.Surface) }.pointerInput(Unit) { detectTapGestures { } })
                     Box(Modifier.background(WebPalette.Background))
@@ -89,10 +96,10 @@ fun ShareMorphDialog(state: ShareMorphState, visibleKey: String?, label: String,
                         entry?.movable?.invoke(state.expanded)
                     }
                     Box(Modifier.verticalScroll(rememberScrollState())) { editor() }
-                }, modifier = Modifier.fillMaxSize().windowInsetsPadding(safe).imePadding().clipToBounds()
-                    .onGloballyPositioned { offset = it.positionInWindow(); readyKey = key }.semantics { paneTitle = label }) { children, constraints ->
+                }, modifier = Modifier.fillMaxSize().clipToBounds()
+                    .onGloballyPositioned { readyKey = key }.semantics { paneTitle = label }) { children, constraints ->
                     val plan = morphPlan(Size(constraints.maxWidth.toFloat(), constraints.maxHeight.toFloat()),
-                        entry?.bounds?.translate(-offset), entry?.lastVisibleBounds?.translate(-offset), density.density)
+                        entry?.bounds?.translate(-state.hostOrigin), entry?.lastVisibleBounds?.translate(-state.hostOrigin), density.density)
                     val p = state.progress
                     val previewWidth = lerp(plan.source.width, plan.previewWidth, p).roundToInt().coerceAtLeast(1)
                     val previewHeight = lerp(plan.source.height, plan.previewLimit, p).roundToInt().coerceAtLeast(1)
@@ -108,7 +115,8 @@ fun ShareMorphDialog(state: ShareMorphState, visibleKey: String?, label: String,
                     val formBackdropWidth = (frame.width.roundToInt() - editorX).coerceAtLeast(0)
                     val formBackdropHeight = (frame.height.roundToInt() - editorY).coerceAtLeast(0)
                     val formBackdrop = children[1].measure(Constraints.fixed(formBackdropWidth.coerceAtLeast(1), formBackdropHeight.coerceAtLeast(1)))
-                    val radius = if (plan.stacked) 0f else DesignTokens.Radius.Morph.toPx() * p
+                    val radius = lerp(entry?.cornerRadius?.toPx() ?: 0f,
+                        if (plan.stacked) 0f else DesignTokens.Radius.Morph.toPx(), p)
                     layout(constraints.maxWidth, constraints.maxHeight) {
                         backing.placeWithLayer(frame.left.roundToInt(), frame.top.roundToInt()) {
                             shape = MorphClip(Rect(0f, 0f, frame.width, frame.height), radius)

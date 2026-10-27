@@ -41,19 +41,22 @@ class MorphContentIdentityTest {
         val compositions = AtomicInteger(0)
         val sizes = CopyOnWriteArrayList<Pair<Float, Int>>()
         val identities = CopyOnWriteArrayList<Int>()
+        val views = CopyOnWriteArrayList<android.view.View>()
         val state = AtomicReference<ShareMorphState>()
         ActivityScenario.launch(ComponentActivity::class.java).use { activity ->
             activity.onActivity { host -> host.setContent {
                 val morph = rememberShareMorphState()
                 SideEffect { state.set(morph) }
                 CompositionLocalProvider(LocalShareMorphState provides morph) {
+                ShareMorphHost(morph, background = {
                     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp)) {
-                        ShareMorphSource("stat", Modifier.width(260.dp), scrollPreview = false) { presentation ->
+                        ShareMorphSource("stat", Modifier.width(260.dp), scrollPreview = false, cornerRadius = 0.dp) { presentation ->
                             val identity = remember { creations.incrementAndGet() }
                             val foreground = LocalContentColor.current
                             val view = LocalView.current
                             val height = with(LocalDensity.current) { 40.dp.roundToPx() * 40 }
                             SideEffect {
+                                views.add(view)
                                 identities.add(identity)
                                 compositions.incrementAndGet()
                                 atSource.set(!presentation.expanded)
@@ -75,9 +78,11 @@ class MorphContentIdentityTest {
                             }
                         }
                     }
+                }) {
                     if (hostVisible.value) ShareMorphDialog(morph, if (open.value) "stat" else null, "Stat", true, { open.value = false }) {
                         Text("Editor", Modifier.fillMaxWidth().height(240.dp))
                     }
+                }
                 }
             } }
             await { sizes.isNotEmpty() && sourceHeight.get() > 0 }
@@ -98,6 +103,7 @@ class MorphContentIdentityTest {
             await { state.get().progress == 0f && atSource.get() && sizes.last().first == 0f }
             assertEquals(1, creations.get(), "Source, preview and restored source must be the same remembered instance")
             assertEquals(setOf(1), identities.toSet())
+            assertEquals(1, views.toSet().size, "The content must keep the same Android Compose owner throughout the morph")
             activity.onActivity { open.value = true }
             await { state.get().progress == 1f }
             activity.onActivity { hostVisible.value = false }

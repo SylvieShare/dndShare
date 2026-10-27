@@ -45,7 +45,8 @@ internal fun CharacterSheetScreen(ui: CharacterSheetUiState, model: CharacterShe
     }
     val mechanics = remember(sheet, ui.content) { sheet?.let { DndDerivedValues(it, ui.content.items, ui.content.metadata) } }
     CompositionLocalProvider(LocalShareMorphState provides morph) {
-    Column(Modifier.fillMaxSize().shareMorphBackground(morph)) {
+    ShareMorphHost(morph, background = {
+    Column(Modifier.fillMaxSize()) {
         CharacterSheetHeader(sheet, format, sections, visibleSection, images, model::selectSection, close)
         if (ui.snapshot?.draft?.edits?.isNotEmpty() == true) {
             SheetSaveStatus(ui.snapshot.draft.blocked ?: ui.saveMessage, model::retrySave, reload = { model.confirmReload(true) })
@@ -79,7 +80,6 @@ internal fun CharacterSheetScreen(ui: CharacterSheetUiState, model: CharacterShe
                 }
                 ui.editor?.takeUnless { it.isDndStat() }?.let { editor -> CharacterSheetEditor(editor, ui.content.availableStates,
                     model::dismissEditor, model::number, model::inspiration, model::status, model::submitEditor) }
-                SheetStatMorph(morph, ui.editor, model::dismissEditor, model::number, model::submitEditor)
                 navigation.overlay?.let { target -> SheetInformationDialog(target, sheet, model::dismissOverlay, close, model::refresh) }
                 if (navigation.itemStack.isNotEmpty()) Dialog(onDismissRequest = model::closeItem,
                     properties = DialogProperties(usePlatformDefaultWidth = false)) {
@@ -88,6 +88,9 @@ internal fun CharacterSheetScreen(ui: CharacterSheetUiState, model: CharacterShe
                 }
             }
         }
+    }
+    }) {
+    SheetStatMorph(morph, ui.editor, model::dismissEditor, model::number, model::submitEditor)
     }
     if (navigation.discardDialog) AlertDialog(onDismissRequest = { model.confirmReload(false) }, title = { Text("Загрузить серверную версию?") },
         text = { Text("Локальный черновик будет заменён текущим листом с сервера.") },

@@ -39,11 +39,14 @@ class MorphBenchmarkActivity : ComponentActivity() {
                         edit = { target -> editor = SheetEditorState(initialForm(target, sheet), sheet) }, openItem = {},
                         mechanics = remember { DndDerivedValues(sheet, emptyMap(), metadata) }, journal = SheetJournalState(), editor = editor)
                     CompositionLocalProvider(LocalCharacterSheet provides context, LocalShareMorphState provides morph) {
-                        Column(Modifier.fillMaxSize().shareMorphBackground(morph).verticalScroll(rememberScrollState())
+                        ShareMorphHost(morph, background = {
+                        Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())
                             .padding(DesignTokens.Spacing.Page)) { DndStats() }
+                        }) {
                         SheetStatMorph(morph, editor, close = { editor = null }, number = { _, value ->
                             editor = editor?.let { it.copy(fields = it.fields.copy(number = value)) }
                         }, submit = { editor = null })
+                        }
                     }
                 }
             }
