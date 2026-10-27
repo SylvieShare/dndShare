@@ -4,7 +4,8 @@ import { describe, expect, it } from 'vitest'
 
 const source = ['./DndItems.vue', './components/InventoryItemRow.vue', './composables/useInventoryRowActions.js', './composables/useInventoryEquipmentActions.js']
   .map(path => readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8')).join('\n')
-const blocks = JSON.parse(readFileSync(fileURLToPath(new URL('../../settings/dnd/blocks.json', import.meta.url)), 'utf8'))
+import definition from '../../settings/dnd/definition'
+const blocks = definition.blocks
 
 describe('inventory item actions', () => {
   it('uses quantity actions and only edits simplified custom items', () => {

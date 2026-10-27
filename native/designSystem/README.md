@@ -29,10 +29,12 @@ Compose-слотами. В зависимостях только Compose Foundat
 | `Glyph`, `AppGlyph` | Те же Lucide vector paths, без растровых производных |
 | `ShareWorkspaceHeader` | Общая шапка: Surface, нижняя граница, тень, центрированное содержимое максимум ContentMax и слот RowScope |
 | `ShareAction`, `ShareSearch` | ActionButton, строка поиска/поле ввода |
-| `ShareTile` | BaseTile, оболочка коллекции или статьи |
+| `ShareTile` | BaseTile, оболочка коллекции или статьи; optional `accent` соответствует TileAccentStrip |
 | `ShareContentRow` | ContentRow: метрика, имя, второе имя, подстрока, маркеры |
 | `ShareBadge` | Малые цветные маркеры/счётчики |
 | `ShareSection`, `ShareDetailSection` | SectionLabel/DetailSection, в том числе раскрывающаяся секция |
+| `ShareIconNavigation` | IconNavigation: именованные разделы, скользящее фиолетовое выделение и доступные вкладки |
+| `ShareBalancedColumns` | Адаптивные колонки, максимум три, балансировка высоты без изменения порядка чтения |
 | `ShareStats` | Карточки параметров в области обложки |
 | `ShareTable` | Читаемая таблица описания с горизонтальной прокруткой и inline-ссылками |
 

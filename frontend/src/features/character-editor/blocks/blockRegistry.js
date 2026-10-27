@@ -38,7 +38,6 @@ import DndRest from '@/features/character-editor/blocks/dnd/DndRest'
 import DndSpells from '@/features/character-editor/blocks/dnd/DndSpells'
 import DndStatusOverview from '@/features/character-editor/blocks/dnd/DndStatusOverview'
 import DndWeapons from '@/features/character-editor/blocks/dnd/DndWeapons'
-import LayoutInnerTabs from '@/features/character-editor/blocks/layout/LayoutInnerTabs'
 import SectionHeader from '@/features/character-editor/blocks/layout/SectionHeader'
 import VtmBloodPool from '@/features/character-editor/blocks/vtm/VtmBloodPool'
 import VtmHealth from '@/features/character-editor/blocks/vtm/VtmHealth'
@@ -90,7 +89,6 @@ export const BLOCK_REGISTRY = {
   INPUT_TEXT:       { component: InputText },
   LINE_POINTS:      { component: LinePoints },
   LINE_POINTS_LIST: { component: LinePointsList },
-  INNER_TABS:       { component: LayoutInnerTabs, noValue: true, passValues: true },
   SECTION_HEADER:   { component: SectionHeader, noValue: true },
   SETTINGS_MENU:    { component: SettingsMenuTile, noValue: true },
   STUB_TILE:        { component: StubTile, noValue: true },

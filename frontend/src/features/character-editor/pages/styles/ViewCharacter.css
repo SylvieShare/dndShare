@@ -45,7 +45,7 @@
   min-height: 0;
 }
 
-@media (max-width: 640px) {
+@media (--ui-phone) {
   .container {
     padding: 18px 14px 24px;
   }
@@ -227,3 +227,7 @@
 }
 
 .character-loading { min-height: 100%; display: grid; place-items: center; padding: 32px; box-sizing: border-box; }
+
+.tablet-tab-pane { animation: character-tablet-tab-in var(--motion-navigation); }
+@keyframes character-tablet-tab-in { from { opacity: 0; transform: translateY(6px); } }
+@media (prefers-reduced-motion: reduce) { .tablet-tab-pane { animation: none; } }

@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"sync"
 	"testing"
 
@@ -25,7 +26,7 @@ func TestUIReviewPostgres(t *testing.T) {
 	directory := "testdata/ui-review"
 	files := map[string][]byte{}
 	hash := sha256.New()
-	for _, name := range []string{"fixture.json", "seed.sql", "cover.svg", "emblem.svg"} {
+	for _, name := range []string{"fixture.json", "seed.sql", "characters.json", "cover.svg", "emblem.svg"} {
 		data, err := os.ReadFile(filepath.Join(directory, name))
 		if err != nil {
 			t.Fatal(err)
@@ -70,7 +71,7 @@ func TestUIReviewPostgres(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 	if _, err := f.pool.Exec(t.Context(), string(files["seed.sql"]), server.URL,
-		fixture["recordName"], fixture["description"]); err != nil {
+		fixture["recordName"], fixture["description"], strings.ReplaceAll(string(files["characters.json"]), "__API__", server.URL)); err != nil {
 		t.Fatal(err)
 	}
 	// Check the served contract before starting either consumer.

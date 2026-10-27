@@ -59,6 +59,8 @@ abstract class CacheDao {
 
     @Query("SELECT payload FROM catalogue_items WHERE sourceId=:sourceId AND id=:id")
     abstract fun observeItem(sourceId: Long, id: Long): Flow<String?>
+    @Query("SELECT * FROM catalogue_items WHERE sourceId=:sourceId AND id IN (:ids)")
+    abstract fun observeReferencedItems(sourceId: Long, ids: List<Long>): Flow<List<CachedItem>>
 
     @Query("SELECT * FROM catalogue_metadata WHERE sourceId=:sourceId")
     abstract fun observeMetadata(sourceId: Long): Flow<CachedMetadata?>
@@ -116,12 +118,13 @@ abstract class CacheDao {
 }
 
 @Database(
-    entities = [CachedItem::class, CachedMetadata::class, SyncState::class, CachedCharacter::class],
-    version = 1, exportSchema = true,
+    entities = [CachedItem::class, CachedMetadata::class, SyncState::class, CachedCharacter::class, CachedCharacterSheet::class, CachedSheetSection::class],
+    version = 2, exportSchema = true,
 )
 abstract class ClientDatabase : RoomDatabase() {
     abstract fun cache(): CacheDao
+    abstract fun characterSheets(): CharacterSheetDao
 }
 
 fun buildDatabase(builder: RoomDatabase.Builder<ClientDatabase>): ClientDatabase =
-    builder.setDriver(BundledSQLiteDriver()).setQueryCoroutineContext(Dispatchers.IO).build()
+    builder.addMigrations(characterSheetsMigration).setDriver(BundledSQLiteDriver()).setQueryCoroutineContext(Dispatchers.IO).build()

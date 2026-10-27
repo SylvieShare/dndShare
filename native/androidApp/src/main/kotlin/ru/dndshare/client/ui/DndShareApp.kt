@@ -22,6 +22,8 @@ import okio.Path.Companion.toPath
 import androidx.compose.ui.res.painterResource
 import ru.dndshare.client.app.*
 import ru.dndshare.client.R
+import ru.dndshare.client.ui.character.CharacterDestination
+import ru.dndshare.client.ui.character.CharacterSheetScreen
 
 @Composable
 fun DndShareApp(controller: AppController, fold: FoldInfo? = null, onBackground: () -> Unit) {
@@ -40,6 +42,11 @@ fun DndShareApp(controller: AppController, fold: FoldInfo? = null, onBackground:
                 state.user == null -> LoginScreen(state, controller::login)
                 else -> key(state.user!!.id) { AuthenticatedApp(controller, state, fold) }
             }
+            if (state.confirmLogout) AlertDialog(onDismissRequest = controller::cancelLogout,
+                title = { Text("Выйти и удалить несохранённые правки?") },
+                text = { Text("На устройстве остались изменения, которые ещё не принял сервер. Можно отменить выход и дождаться сохранения.") },
+                confirmButton = { TextButton(onClick = { controller.confirmLogout() }) { Text("Выйти и удалить") } },
+                dismissButton = { TextButton(onClick = controller::cancelLogout) { Text("Остаться") } })
         }
     }
 }
@@ -48,6 +55,7 @@ fun DndShareApp(controller: AppController, fold: FoldInfo? = null, onBackground:
 private fun AuthenticatedApp(controller: AppController, state: AppState, fold: FoldInfo?) {
     var page by rememberSaveable { mutableStateOf(AppPage.Handbook.name) }
     val pages = rememberSaveableStateHolder()
+    var characterUuid by rememberSaveable { mutableStateOf<String?>(null) }
     val handbookHeading = remember { HandbookHeadingState() }
     val focus = LocalFocusManager.current
     val keyboard = LocalSoftwareKeyboardController.current
@@ -68,6 +76,10 @@ private fun AuthenticatedApp(controller: AppController, state: AppState, fold: F
     BoxWithConstraints(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
         val format = layoutFormat(maxWidth.value)
         val selectedPage = runCatching { AppPage.valueOf(page) }.getOrDefault(AppPage.Handbook)
+        CharacterDestination(characterUuid) { displayedUuid, active ->
+            if (displayedUuid != null) pages.SaveableStateProvider("sheet:$displayedUuid") {
+                CharacterSheetScreen(displayedUuid, state, format, images, active, close = { characterUuid = null })
+            } else pages.SaveableStateProvider("application-shell") {
         AppNavigationShell(format, selectedPage, state, controller, navigate = {
             if (it != selectedPage) {
                 focus.clearFocus()
@@ -88,13 +100,15 @@ private fun AuthenticatedApp(controller: AppController, state: AppState, fold: F
                     AnimatedAppPage(selectedPage) { displayedPage ->
                         pages.SaveableStateProvider(displayedPage.name) {
                             when (displayedPage) {
-                                AppPage.Characters -> CharacterScreen(state, format, images) { controller.refresh(force = true) }
+                                AppPage.Characters -> CharacterScreen(state, format, images, refresh = { controller.refresh(force = true) }, open = { characterUuid = it })
                                 AppPage.Handbook -> HandbookScreen(state, format, fold, images, handbookHeading)
                                 else -> PlaceholderScreen(displayedPage)
                             }
                         }
                     }
                 }
+            }
+        }
             }
         }
     }

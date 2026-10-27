@@ -1,0 +1,8 @@
+.character-sheet { min-width: 0; width: 100%; container: character-sheet / inline-size; }
+.character-sheet .sheet-stack { display: flex; flex-direction: column; min-width: 0; }
+.character-sheet .sheet-row { display: flex; min-width: 0; }
+.character-sheet .sheet-grid { display: grid; min-width: 0; }
+.character-sheet .sheet-scroll-x { display: flex; overflow-x: auto; }
+.character-sheet--tablet, .character-sheet--phone { padding: 20px; box-sizing: border-box; }
+.character-sheet--phone { padding: 0; }
+.character-sheet--tablet { min-height: 100%; }

@@ -26,6 +26,7 @@ await router.push(params.get('page') || '/char/test')
 await router.isReady()
 window.tutorialNavigateAway = () => router.push('/done')
 window.tutorialRoute = () => router.currentRoute.value.fullPath
+window.characterHistoryBack = () => router.back()
 const root = params.has('fullApp') ? (await import('../../../src/App.vue')).default : {
   render: () => [h(RouterView, null, { default: ({ Component, route }) => h(Component, { key: route.path }) }), h(AppNotifications)],
 }

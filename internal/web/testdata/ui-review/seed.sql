@@ -19,3 +19,26 @@ VALUES (206,1,'Учебный посох','{}'),(207,2,'Дорожная кни�
        (208,6,'Лесной светлячок','{}'),(209,7,'Внимательный читатель','{}');
 INSERT INTO dndshare.item_version_compatibility(item_id,source_version_id,status)
 SELECT id,1,'native' FROM dndshare.item;
+
+INSERT INTO dndshare.source(id,name) VALUES(2,'Vampire: TM');
+INSERT INTO dndshare.source_version(id,source_id,version) VALUES(2,2,'V20');
+INSERT INTO dndshare.char_template(name) VALUES('DND5'),('VTM20');
+INSERT INTO dndshare.suggest_type(id,name,source_id) VALUES(15,'Навыки',1),(16,'Характеристики',1),(17,'Монеты',1);
+INSERT INTO dndshare.suggest(type_id,id,value,color)
+SELECT 16,ordinality,value,'#b9a8ff' FROM unnest(ARRAY['Сила','Ловкость','Телосложение','Интеллект','Мудрость','Харизма']) WITH ORDINALITY AS s(value,ordinality);
+INSERT INTO dndshare.suggest(type_id,id,value)
+SELECT 15,ordinality,value FROM unnest(ARRAY['Атлетика','Акробатика','Ловкость рук','Скрытность','Анализ','История','Магия','Природа','Религия','Внимательность','Выживание','Медицина','Проницательность','Уход за животными','Выступление','Запугивание','Обман','Убеждение']) WITH ORDINALITY AS s(value,ordinality);
+UPDATE dndshare.item SET data='{"desc":"<p>За каждый уровень персонаж получает два дополнительных хита.</p>","hp_bonuses":[{"level":1,"per_level":2}]}' WHERE id=209;
+INSERT INTO dndshare.item_type(id,name,source_id,fields,icon_image_id) VALUES(8,'Расы',1,'[]',2),(9,'Классы',1,'[]',2);
+INSERT INTO dndshare.item(id,type_id,name,data) VALUES(210,8,'Эльф','{}'),(211,9,'Волшебник','{}');
+INSERT INTO dndshare.item_version_compatibility(item_id,source_version_id,status) VALUES(210,1,'native'),(211,1,'native');
+
+INSERT INTO dndshare."char"(id,uuid,user_id,template_id,data,public_visible,source_version_id,icon_image_id)
+SELECT ordinality,(entry->>'uuid')::uuid,(SELECT id FROM dndshare.users WHERE login='native_tester'),
+       (SELECT id FROM dndshare.char_template WHERE name=entry->>'templateName'),entry->'data',false,
+       (entry->>'sourceVersionId')::bigint,(entry->>'iconImageId')::bigint
+FROM jsonb_array_elements($4::jsonb) WITH ORDINALITY AS s(entry,ordinality);
+INSERT INTO dndshare.user_tutorial(user_id,flow_id,source_key,device,revision,status)
+SELECT u.id,'character','edition:'||edition,device,58,'completed'
+FROM dndshare.users u CROSS JOIN generate_series(1,2) edition CROSS JOIN unnest(ARRAY['mobile','desktop']) device
+WHERE u.login='native_tester';

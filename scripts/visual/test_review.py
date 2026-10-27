@@ -28,7 +28,7 @@ class ReviewEvidenceTest(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.output = Path(self.temp.name)
-        self.fixture = {"recordID": 1}
+        self.fixture = {"recordID": 1, "characters": [{"uuid": "dnd"}, {"uuid": "vtm"}]}
         self.entries = []
         for platform in MATRIX["platforms"]:
             (self.output / platform).mkdir()
@@ -42,6 +42,7 @@ class ReviewEvidenceTest(unittest.TestCase):
                                          "file": relative, "sha256": hashlib.sha256(image).hexdigest(),
                                          "dimensions": viewport, "viewport": viewport,
                                          "recordID": 1 if state == "record" else None,
+                                         "characterUUID": "dnd" if state.startswith("sheet-") else "vtm" if state == "vtm-base" else None,
                                          "insetsDp": {"top": 24}, "contentDp": {"height": format_["height"] - 24}})
 
     def validate(self, entries=None):

@@ -15,6 +15,7 @@ ICONS = {
     "Admin": "shield", "Account": "user-round", "Menu": "menu", "Close": "x",
     "Collapse": "panel-left-close", "Expand": "panel-left-open", "Refresh": "refresh-cw",
     "Filter": "list-filter", "Back": "arrow-left", "Exit": "log-out", "Search": "search", "Chevron": "chevron-right",
+    "Rest": "coffee",
 }
 COLORS = {
     "Background": "bg", "Surface": "surface", "Raised": "surface-raised",
@@ -89,6 +90,8 @@ def outputs():
                     '        android:pathData=' + quoteattr(path) + ' />']
         yield NATIVE / f"res/drawable/lucide_{slug.replace('-', '_')}.xml", "\n".join([*xml, "</vector>", ""])
     yield NATIVE / "assets/licenses/lucide.txt", (package / "LICENSE").read_text()
+    for filename in ("tab-stats.svg", "tab-weapons.svg", "tab-magic.svg", "tab-skills.svg", "tab-personality.svg", "container-box.svg", "edit-note.svg", "hp-pulse.svg", "shield.svg", "initiative.svg", "speed.svg", "prof-bonus.svg"):
+        yield NATIVE / "assets/character-sheet" / filename, (FRONTEND / "public/static" / filename).read_text()
 
 
 def main():

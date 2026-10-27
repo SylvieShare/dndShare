@@ -1,5 +1,5 @@
 import { encounterEventData } from '../lib/encounterEventData'
-import { settingRenderSchema } from '@/features/character-editor/settings'
+import { settingSheetDefinition } from '@/features/character-editor/settings'
 import { getByPath } from '@/features/sessions/lib/encounterHelpers'
 import { abilityModByPath, abilityModifier, d20Expr, resolveNumValue } from '@/shared/lib/dnd'
 import { useDiceStore } from '@/stores/dice'
@@ -8,7 +8,7 @@ import { useTemplateStore } from '@/stores/template'
 function findFirstBlockByType(templateStore, templateId, type) {
   if (!templateId) return null
   const tpl = templateStore.byId(templateId)
-  const blocks = settingRenderSchema(tpl)?.blocks
+  const blocks = settingSheetDefinition(tpl)?.blocks
   if (!blocks || typeof blocks !== 'object') return null
   for (const [id, b] of Object.entries(blocks)) {
     if (b?.type === type) return { blockId: id, content: b.content || {} }

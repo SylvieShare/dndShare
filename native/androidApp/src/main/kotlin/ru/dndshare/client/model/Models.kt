@@ -40,7 +40,7 @@ data class ItemType(
 @Serializable
 data class Suggest(
     val id: Long, val typeId: Long, val value: String,
-    val desc: String? = null, val color: String? = null,
+    val desc: String? = null, val color: String? = null, val svg: String? = null,
 )
 
 @Serializable

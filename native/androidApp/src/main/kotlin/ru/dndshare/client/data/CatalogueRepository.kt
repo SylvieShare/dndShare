@@ -5,12 +5,22 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.*
 import ru.dndshare.client.model.*
 import ru.dndshare.client.network.*
 
-class CatalogueRepository(private val api: ApiClient, val database: ClientDatabase) {
+class CatalogueRepository(private val api: ApiClient, val database: ClientDatabase, accountId: Long = 0) {
     private val synchronization = Mutex()
     val cache get() = database.cache()
+    val sheets = ru.dndshare.client.character.CharacterSheetRepository(api, database.characterSheets(), accountId)
+    suspend fun refreshCharacterJournal(uuid: String) {
+        var response = api.characterJournal(uuid)
+        if (response["journal"] == JsonNull && response["canSelectSource"] == JsonPrimitive(true)) {
+            api.createCharacterJournal(uuid)
+            response = api.characterJournal(uuid)
+        }
+        database.characterSheets().putSection(CachedSheetSection(uuid, "journal", response.toString()))
+    }
 
     suspend fun synchronize(sourceId: Long, progress: (Int) -> Unit) = withContext(Dispatchers.IO) {
         synchronization.withLock { synchronizePages(sourceId, progress) }

@@ -1,5 +1,7 @@
 """Capture clean native defaults at every logical format, preserving the AVD."""
 import hashlib
+import http.cookiejar
+import urllib.request
 import json
 from pathlib import Path
 import re
@@ -96,12 +98,55 @@ def snapshot(device, output, format_, state, fixture, stats):
     dump = device.shell("dumpsys", "window")
     (output / f"{prefix}-window.txt").write_text(dump)
     metrics = window_metrics(dump, format_["width"], format_["height"])
+    character = fixture["characters"][0] if state.startswith("sheet-") else fixture["characters"][1] if state == "vtm-base" else None
     return {"platform": "android", "format": format_["name"], "state": state,
+            "characterUUID": character["uuid"] if character else None,
             "recordID": fixture["recordID"] if state == "record" else None,
             "viewport": {"width": format_["width"], "height": format_["height"], "unit": "dp"},
             "dimensions": {"width": format_["width"], "height": format_["height"], "unit": "px"},
             "file": f"android/{image.name}", "sha256": hashlib.sha256(pixels).hexdigest(),
             "apiStats": stats(), **metrics}
+
+
+def verify_character_edit(device, url, fixture):
+    """Use the real Compose form and API, then restore the shared visual data."""
+    opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
+    def request(path, data=None):
+        req = urllib.request.Request(url + path, data=json.dumps(data).encode() if data is not None else None,
+                                     headers={"Content-Type": "application/json"})
+        with opener.open(req, timeout=20) as response:
+            return json.load(response)
+    request('/api/user/auth', {key: fixture[key] for key in ('login', 'password')})
+    path = '/api/char/' + fixture['characters'][0]['uuid']
+    original = request(path)
+    initial = original['data']['values']['hp']['current']
+    evidence = []
+    for expected in (initial - 1, initial):
+        device.click(text=str(initial if expected != initial else initial - 1))
+        root = device.wait('Текущие хиты')
+        edits = [n for n in root.iter('node') if n.get('class') == 'android.widget.EditText']
+        if len(edits) != 3:
+            raise AssertionError('Native HP editor must show current, temporary and maximum values')
+        device.tap(edits[0])
+        device.tree()
+        device.shell('input', 'keyevent', '123')
+        for _ in range(len(edits[0].get('text', '')) + 2):
+            device.shell('input', 'keyevent', '67')
+        device.shell('input', 'text', str(expected))
+        device.shell('input', 'keyevent', '4')
+        device.click(text='Сохранить')
+        deadline = time.monotonic() + 30
+        while True:
+            current = request(path)
+            if current['data']['values']['hp']['current'] == expected:
+                break
+            if time.monotonic() > deadline:
+                raise AssertionError('Native HP edit did not reach the real versioned API')
+            time.sleep(.25)
+        evidence.append({'current': expected, 'version': current['version']})
+    if current['data'] != original['data'] or current['version'] <= original['version']:
+        raise AssertionError('Native edit verification must restore exactly the original character data')
+    return {'realComposeForm': True, 'realAPI': True, 'originalRestored': True, 'changes': evidence}
 
 
 def capture_android(device, root, url, output, matrix, fixture, stats):
@@ -136,6 +181,25 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
                 raise AssertionError("Native record did not lazily fetch its cover from the shared API")
             time.sleep(.25)
         entries.append(snapshot(device, output, format_, "record", fixture, stats))
+        device.shell("input", "keyevent", "4")
+        device.shell("input", "keyevent", "4")
+        if format_["name"] != "wide":
+            device.click(description="Открыть меню")
+        device.click(text="Персонажи")
+        device.click(text=fixture["characters"][0]["name"])
+        device.wait("Волшебник 4" if format_["name"] == "tablet" else "СИЛА" if format_["name"] == "phone" else fixture["characters"][0]["name"])
+        entries.append(snapshot(device, output, format_, "sheet-base", fixture, stats))
+        if format_["name"] == "tablet":
+            device.click(text="Статы")
+        device.wait("ТЕЛОСЛОЖЕНИЕ")
+        entries.append(snapshot(device, output, format_, "sheet-stats", fixture, stats))
+        if format_["name"] == "phone":
+            proof = verify_character_edit(device, url, fixture)
+            (output.parent / "native-character-edit.json").write_text(json.dumps(proof, ensure_ascii=False, indent=2))
+        device.shell("input", "keyevent", "4")
+        device.click(text=fixture["characters"][1]["name"])
+        device.wait("Тореадор")
+        entries.append(snapshot(device, output, format_, "vtm-base", fixture, stats))
     for entry in entries:
         entry["apkSHA256"] = apk_hash
     (output.parent / "android.json").write_text(json.dumps(entries, ensure_ascii=False, indent=2))

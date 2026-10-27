@@ -9,7 +9,8 @@ import zlib
 from exceptions import read_exceptions
 
 MATRIX = json.loads((Path(__file__).with_name("matrix.json")).read_text())
-LABELS = {"collections": "Обзор коллекций", "menu": "Открытое меню", "list": "Список коллекции", "record": "Карточка записи"}
+LABELS = {"collections": "Обзор коллекций", "menu": "Открытое меню", "list": "Список коллекции", "record": "Карточка записи",
+          "sheet-base": "D&D · База", "sheet-stats": "D&D · Характеристики", "vtm-base": "VTM · База"}
 
 
 def png_dimensions(data):
@@ -69,6 +70,9 @@ def validate_entries(output, entries, fixture):
                 raise ValueError(f"Incorrect measured {field}: {relative}")
         if entry["recordID"] != (fixture["recordID"] if key[2] == "record" else None):
             raise ValueError(f"Wrong scenario record: {relative}")
+        character = fixture["characters"][0] if key[2].startswith("sheet-") else fixture["characters"][1] if key[2] == "vtm-base" else None
+        if entry.get("characterUUID") != (character["uuid"] if character else None):
+            raise ValueError(f"Wrong scenario character: {relative}")
         if key[0] == "android" and ("insetsDp" not in entry or "contentDp" not in entry):
             raise ValueError("Native screenshot requires measured insets and content dp")
     if observed != set(expected):
@@ -132,7 +136,8 @@ def write_report(output):
         entries.extend(read(f"web-{format_['name']}.json"))
     validate_entries(output, entries, fixture)
     for entry in entries:
-        entry.update(identity, edition=fixture["edition"], dataFixtureHash=fixture["dataFixtureHash"])
+        edition = fixture["characters"][1]["edition"] if entry["state"] == "vtm-base" else fixture["edition"]
+        entry.update(identity, edition=edition, dataFixtureHash=fixture["dataFixtureHash"])
     manifest = {"schemaVersion": 1, **identity, "dataFixtureHash": fixture["dataFixtureHash"],
                 "edition": fixture["edition"], "recordID": fixture["recordID"], "matrix": MATRIX,
                 "captureComplete": True, "visualApproval": "requires-human-review",

@@ -14,10 +14,11 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.*
 import ru.dndshare.client.model.*
 import ru.dndshare.client.device.DeviceServices
+import ru.dndshare.client.character.*
 
 class ApiException(val status: Int, val code: String, message: String) : Exception(message)
 
-class ApiClient(val baseUrl: String, platform: DeviceServices, engine: HttpClientEngine = OkHttp.create()) {
+class ApiClient(val baseUrl: String, platform: DeviceServices, engine: HttpClientEngine = OkHttp.create()) : CharacterSheetApi {
     val cookies = SessionCookies(platform, baseUrl)
     val client = HttpClient(engine) {
         expectSuccess = false
@@ -52,6 +53,30 @@ class ApiClient(val baseUrl: String, platform: DeviceServices, engine: HttpClien
     suspend fun logout() { client.post("$baseUrl/api/user/logout").checked() }
     suspend fun sources(): List<GameSource> = client.get("$baseUrl/api/sources").checked().body<SourcesReply>().sources
     suspend fun characters(): List<Character> = client.get("$baseUrl/api/chars").checked().body<CharactersReply>().chars
+    override suspend fun character(uuid: String): CharacterSheet = client.get("$baseUrl/api/char/$uuid").checked().body()
+    suspend fun characterJournal(uuid: String): JsonObject = client.get("$baseUrl/api/char/$uuid/journal").checked().body()
+    suspend fun createCharacterJournal(uuid: String) {
+        client.post("$baseUrl/api/char/$uuid/journals") {
+            contentType(ContentType.Application.Json)
+            setBody(buildJsonObject { put("name", "") })
+        }.checked()
+    }
+    override suspend fun saveCharacter(uuid: String, packet: SheetPacket): SheetChange =
+        client.patch("$baseUrl/api/char/$uuid/data") {
+            contentType(ContentType.Application.Json)
+            setBody(buildJsonObject {
+                put("baseVersion", packet.baseVersion)
+                put("mutationId", packet.mutationId)
+                put("patches", buildJsonArray {
+                    packet.patches.forEach { patch -> add(buildJsonObject {
+                        put("op", patch.op); put("path", JsonArray(patch.path))
+                        if (patch.op != "remove") put("value", patch.value)
+                        patch.idField?.let { put("idField", it) }
+                        patch.beforeId?.let { put("beforeId", it) }
+                    }) }
+                })
+            })
+        }.checked().body()
 
     suspend fun sync(sourceId: Long, cursor: String?): SyncPage =
         client.get("$baseUrl/api/handbook/sync") {

@@ -1,9 +1,9 @@
 <template>
-  <div ref="tutorialRoot" class="view" :style="viewStyle" :inert="transfers.busy || edition.busy">
+  <div ref="tutorialRoot" class="view" :class="'view--' + format" :style="viewStyle" :inert="transfers.busy || edition.busy">
     <CharacterEditionDialog :controller="edition" />
     <CharacterTransferDialogs :controller="transfers" :character-uuid="uuid" />
     <PageTutorial :tutorial="characterTutorial" :mobile="isMobile" />
-    <CharacterWorkspaceHeader v-if="!isMobile" :name="charName" :subtitle="charSub" :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth" />
+    <CharacterWorkspaceHeader v-if="!isMobile" :name="charName" :subtitle="charSub" :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="format === 'tablet' || template?.system === 'vtm-v20' ? activeTabs : []" :active-tab="activeTab" @select-tab="onSetActiveTab" />
     <CharEditorToolbar
       v-if="isMobile"
       ref="charToolbarEl"
@@ -34,7 +34,7 @@
     />
 
     <div v-if="mobileIdentityEditorBlock" class="mobile-identity-editor">
-      <TemplateBlockInner
+      <CharacterBlock
         :block="mobileIdentityEditorBlock"
         :values="data.values"
         :vars="data.var"
@@ -44,7 +44,7 @@
     </div>
 
     <div
-      v-if="isMobile && (commonMobileBlockNode || mobileTabs.length)"
+      v-if="isMobile && (showMobileSummary || mobileTabs.length)"
       class="mobile-sticky-header"
       :style="{ top: toolbarHeight + 'px' }"
       @wheel.prevent="onFixedHeaderWheel"
@@ -54,17 +54,11 @@
       @touchcancel.passive="onFixedHeaderTouchEnd"
     >
       <div
-        v-if="commonMobileBlockNode"
+        v-if="showMobileSummary"
         class="common-mobile-strip"
         :class="{ 'strip-hidden': stripHidden && commonMobileScrollHide }"
       >
-        <TemplateBlockInner
-          :block="commonMobileBlockNode"
-          :values="data.values"
-          :vars="data.var"
-          @update:value="onUpdateValue"
-          @update:var="onUpdateVar"
-        />
+        <CharacterMobileSummary :definition="template" :values="data.values" @update:value="onUpdateValue" />
       </div>
 
       <nav
@@ -130,8 +124,7 @@
                 <component
                   v-if="visitedTabIndexes.includes(index)"
                   :is="tabRenderComponent(index, TabPane)"
-                  :tab-index="index"
-                  :blocks="blocksForTab(index)"
+                  :definition="template" :format="format" :section="activeTabs[index]?.id"
                   :values="data.values"
                   :vars="data.var"
                   @update:value="onUpdateValue"
@@ -143,23 +136,18 @@
         </div>
       </div>
       <div v-else-if="template" class="desktop-tabs">
-        <div
-          v-for="index in visitedTabIndexes"
-          :key="'desktop-tab-' + index"
-          v-show="index === activeTab"
-          class="container"
-          :style="containerWidthForTab(index)"
-        >
-          <component
-            :is="tabRenderComponent(index, TabPane)"
-            :tab-index="index"
-            :blocks="blocksForTab(index)"
-            :values="data.values"
-            :vars="data.var"
-            @update:value="onUpdateValue"
-            @update:var="onUpdateVar"
-          />
+        <div v-if="format === 'desktop'" class="container" :style="containerWidthForTab(activeTab)">
+          <CharacterTabPane :definition="template" :format="format" :section="activeTabs[activeTab]?.id"
+            :values="data.values" :vars="data.var" @select-tab="onSetActiveTab"
+            @update:value="onUpdateValue" @update:var="onUpdateVar" />
         </div>
+        <template v-else>
+          <div v-for="index in visitedTabIndexes" :key="activeTabs[index]?.id" v-show="index === activeTab"
+            :inert="index !== activeTab" class="container tablet-tab-pane">
+            <CharacterTabPane :definition="template" :format="format" :section="activeTabs[index]?.id"
+              :values="data.values" :vars="data.var" @update:value="onUpdateValue" @update:var="onUpdateVar" />
+          </div>
+        </template>
       </div>
     </div>
 
@@ -181,7 +169,7 @@ import { useCharacterTutorial } from '@/features/tutorials/composables/useCharac
 import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { ref, watch, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import TemplateBlockInner from '@/features/character-editor/components/TemplateBlockInner'
+import CharacterBlock from '@/features/character-editor/components/CharacterBlock'
 import CharacterTabPane from '@/features/character-editor/components/CharacterTabPane.vue'
 import CharEditorToolbar from '@/features/character-editor/components/CharEditorToolbar'
 import CharacterSaveErrorToast from '@/features/character-editor/components/CharacterSaveErrorToast.vue'
@@ -196,7 +184,9 @@ import { useCharacterViewport } from '@/features/character-editor/composables/ch
 import { createCharacterSnapshotRecorder } from '@/features/character-editor/lib/characterSnapshots'
 import { useUiStore } from '@/stores/ui'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
-import { initialTabs, layoutNodeToBlock } from '@/features/character-editor/lib/templateSchema'
+import { sheetBlock, sheetTabs, sheetTabIndex } from '../lib/sheetPresentation'
+import { useAppLayout } from '@/shared/composables/useAppLayout'
+import CharacterMobileSummary from '../components/sheet/CharacterMobileSummary.vue'
 import { defaultTabIndex, parseTabQuery, queryForTab } from '@/features/character-editor/lib/tabQuery'
 
 const route = useRoute()
@@ -208,9 +198,7 @@ const sessionEventsStore = useSessionEventsStore()
 const uuid = route.params.uuid || router.currentRoute.value.params.uuid
 
 // ── Mobile detection ──────────────────────────────────────────────────
-const isMobile = ref(false)
-let mediaQuery = null
-let onMediaQueryChange = null
+const { phone: isMobile, format } = useAppLayout()
 
 // ── Template refs ─────────────────────────────────────────────────────
 const tutorialRoot = ref(null)
@@ -231,14 +219,14 @@ const {
   version, serverDocument, sourceVersionId, contentSources, sessions, topSession, hasSessionContext,
   loadSessions, applyCharacter, applyMetadata,
   activeTabs, toolbarTabs, mobileTabs,
-  headerTitle, charName, charSub, toolbarBlocksList, commonMobileBlockNode, commonMobileScrollHide,
-  load, loadSync, blocksForTab, containerWidthForTab, getInitialTabs,
-  updateValue, updateValues, updateVar, updateContentSources, onPublicToggle, invalidateTabCache,
-} = useCharacterData(uuid, isMobile)
+  headerTitle, charName, charSub, toolbarBlocksList, showMobileSummary, commonMobileScrollHide,
+  load, loadSync, containerWidthForTab, getInitialTabs,
+  updateValue, updateValues, updateVar, updateContentSources, onPublicToggle,
+} = useCharacterData(uuid, format)
 
 const mobileIdentityEditorBlock = computed(() =>
-  isMobile.value && template.value
-    ? layoutNodeToBlock({ kind: 'block', ref: 'char_identity' }, template.value)
+  isMobile.value && template.value?.system === 'dnd5e'
+    ? sheetBlock(template.value, 'char_identity')
     : null
 )
 const activeSession = computed(() => {
@@ -320,11 +308,16 @@ const {
 
 const { startViewportHeightSync, stopViewportHeightSync } = useCharacterViewport(isMobile)
 
-const characterTutorial = useCharacterTutorial({ root: tutorialRoot, mobile: isMobile, ready: tutorialReady, template, sourceVersionId, activeTab, isOwner })
+const characterTutorial = useCharacterTutorial({ root: tutorialRoot, mobile: isMobile, ready: tutorialReady, template, sourceVersionId, activeTab, activeTabs, format, isOwner })
 
 // ── Watchers ──────────────────────────────────────────────────────────
 
-watch(activeTabs, () => { invalidateTabCache() })
+watch(format, (nextFormat, previousFormat) => {
+  const id = sheetTabs(template.value, previousFormat)[activeTab.value]?.id
+  resetSwipe()
+  activeTab.value = sheetTabIndex(activeTabs.value, id)
+  markTabVisited(activeTab.value)
+}, { flush: 'sync' })
 
 watch(headerTitle, () => { uiStore.setHeaderTitle(headerTitle.value) })
 
@@ -332,7 +325,7 @@ watch(activeTab, () => { pushQueryState() })
 
 watch(() => route.query.tab, tab => {
   if (!ready) return
-  const nextTab = parseTabQuery(tab, activeTabs.value.length, defaultTabIndex(getInitialTabs()))
+  const nextTab = parseTabQuery(tab, activeTabs.value, defaultTabIndex(getInitialTabs()))
   if (nextTab === activeTab.value) return
   syncingTabFromRoute = true
   // History navigation must win over an in-flight swipe animation. Applying the
@@ -386,7 +379,8 @@ function recordSnapshot() {
   if (isOwner.value) snapshotRecorder.schedule()
 }
 
-function onSetActiveTab(index) {
+function onSetActiveTab(value) {
+  const index = typeof value === 'string' ? sheetTabIndex(activeTabs.value, value) : value
   updateMobileTabRects(mobileTabbarEl.value)
   setActiveTab(index, mobileTrackEl.value, mobileTabbarEl.value)
 }
@@ -473,7 +467,7 @@ async function syncEventSessionContext(requested = route.query.session) {
 function pushQueryState() {
   if (!ready || syncingTabFromRoute || characterTutorial.tour.active) return
   const tabs = getInitialTabs()
-  const query = queryForTab(route.query, activeTab.value, defaultTabIndex(tabs))
+  const query = queryForTab(route.query, activeTab.value, defaultTabIndex(tabs), tabs)
   router.push({ query })
 }
 
@@ -484,12 +478,6 @@ onMounted(async () => {
   startViewportHeightSync()
   window.scrollTo(0, 0)
 
-  mediaQuery = window.matchMedia('(max-width: 640px)')
-  isMobile.value = mediaQuery.matches
-  onMediaQueryChange = e => {
-    isMobile.value = e.matches
-  }
-  mediaQuery.addEventListener('change', onMediaQueryChange)
 
   await initializeCharacter()
 })
@@ -499,9 +487,9 @@ async function initializeCharacter() {
   const res = await load()
   if (!res) return
 
-  const tabs = initialTabs(res.template)
+  const tabs = getInitialTabs()
   const defaultIdx = defaultTabIndex(tabs)
-  activeTab.value = parseTabQuery(savedQueryTab, activeTabs.value.length, defaultIdx)
+  activeTab.value = parseTabQuery(savedQueryTab, activeTabs.value, defaultIdx)
   markTabVisited(activeTab.value)
 
   uiStore.setHeaderTitle(headerTitle.value)
@@ -527,7 +515,6 @@ async function initializeCharacter() {
 onBeforeUnmount(() => {
   document.body.classList.remove('character-view-active')
   stopViewportHeightSync()
-  mediaQuery?.removeEventListener('change', onMediaQueryChange)
   window.removeEventListener('resize', onResize)
   stopScrollListener()
   disconnectToolbar()

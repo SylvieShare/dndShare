@@ -28,6 +28,7 @@ android {
     sourceSets {
         getByName("test").kotlin.directories += "src/testSupport/kotlin"
         getByName("androidTest").kotlin.directories += "src/testSupport/kotlin"
+        getByName("androidTest").assets.srcDir("schemas")
     }
 }
 dependencies {

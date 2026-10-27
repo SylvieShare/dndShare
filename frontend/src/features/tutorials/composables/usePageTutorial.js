@@ -7,7 +7,7 @@ import { TUTORIAL_REVISION, tutorialKey } from '../lib/tutorialIdentity'
 
 export const pageTutorialKey = Symbol('page-tutorial')
 
-export function usePageTutorial({ flowId, sourceKey, mobile, ready, createSteps }) {
+export function usePageTutorial({ flowId, sourceKey, mobile, layout, ready, createSteps }) {
   const store = useTutorialsStore()
   const account = useAccountStore()
   const route = useRoute()
@@ -57,6 +57,9 @@ export function usePageTutorial({ flowId, sourceKey, mobile, ready, createSteps 
   }, { immediate: true })
   // Query changes are allowed: steps switch sections. A page/UUID change cancels.
   watch(() => route.path, cancel)
+  if (layout) watch([layout, mobile], ([, nextDevice], [, previousDevice]) => {
+    if (nextDevice === previousDevice) cancel()
+  })
   onBeforeUnmount(() => { disposed = true; cancel() })
   const controls = { restart: () => start(true), tour, loadError }
   provide(pageTutorialKey, controls)

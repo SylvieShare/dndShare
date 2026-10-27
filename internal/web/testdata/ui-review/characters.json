@@ -1,0 +1,357 @@
+[
+  {
+    "uuid": "11111111-1111-4111-8111-111111111111",
+    "name": "Лира",
+    "templateName": "DND5",
+    "sourceVersionId": 1,
+    "iconImageId": 2,
+    "data": {
+      "values": {
+        "name": "Лира",
+        "lvl": {
+          "level": 4,
+          "exp": 3000
+        },
+        "classes": [
+          {
+            "id": 211,
+            "name": "Волшебник",
+            "level": 4
+          }
+        ],
+        "hp": {
+          "current": 18,
+          "max": {
+            "base": 20,
+            "bonuses": []
+          },
+          "temp": 4,
+          "hitDice": [
+            {
+              "die": "d8",
+              "total": 4,
+              "used": 1
+            }
+          ],
+          "ds_success": 0,
+          "ds_failure": 0
+        },
+        "prof_bonus": {
+          "auto": true,
+          "v": 2,
+          "bonuses": []
+        },
+        "armor": {
+          "bonuses": []
+        },
+        "speed": {
+          "base": 30,
+          "bonuses": []
+        },
+        "initiative": {
+          "base": 0,
+          "bonuses": [],
+          "use_dex": true
+        },
+        "states": [],
+        "exhaustion": {
+          "level": 0
+        },
+        "inspiration": false,
+        "abilities_feats": [
+          {
+            "id": 209,
+            "resource_version": 1
+          }
+        ],
+        "abilities_class": [],
+        "abilities_race": [],
+        "abilities_story": [],
+        "items": {
+          "equipped": [
+            {
+              "uid": "staff",
+              "item_id": 206,
+              "count": 1,
+              "params": {},
+              "override": {}
+            }
+          ],
+          "sections": [
+            {
+              "id": "bag",
+              "name": "Рюкзак",
+              "items": [
+                {
+                  "uid": "book",
+                  "item_id": 207,
+                  "count": 1,
+                  "params": {},
+                  "override": {}
+                }
+              ]
+            }
+          ]
+        },
+        "weapon": [],
+        "money": {
+          "order": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "amounts": {
+            "1": 8,
+            "2": 0,
+            "3": 3,
+            "4": 12,
+            "5": 0
+          }
+        },
+        "spells": {
+          "schema_version": 2,
+          "slot_pools": {
+            "long_rest": [
+              {
+                "level": 1,
+                "total": 4,
+                "used": 1
+              }
+            ],
+            "short_rest": []
+          },
+          "tabs": [
+            {
+              "key": "custom",
+              "name": "Книга заклинаний",
+              "class_item_id": null,
+              "casting_ability": "INT",
+              "mode": "spellbook",
+              "save_bonus": 0,
+              "attack_bonus": 0,
+              "spells": [
+                {
+                  "key": "primer",
+                  "id": 1,
+                  "prepared": true
+                }
+              ]
+            }
+          ],
+          "grants": []
+        },
+        "proficiencies": {
+          "Языки": [
+            "Общий",
+            "Эльфийский"
+          ]
+        },
+        "ava": {
+          "url": "__API__/__test/emblem.svg"
+        },
+        "person_origin": "Странница",
+        "person_traits": "Внимательна к деталям.",
+        "STR": {
+          "value": {
+            "base": 12,
+            "bonuses": []
+          },
+          "save_up": false,
+          "save_bonuses": [],
+          "skills": {
+            "1": {
+              "up": 1,
+              "bonuses": []
+            }
+          }
+        },
+        "DEX": {
+          "value": {
+            "base": 16,
+            "bonuses": []
+          },
+          "save_up": false,
+          "save_bonuses": [],
+          "skills": {
+            "2": {
+              "up": 0,
+              "bonuses": []
+            },
+            "3": {
+              "up": 0,
+              "bonuses": []
+            },
+            "4": {
+              "up": 1,
+              "bonuses": []
+            }
+          }
+        },
+        "CON": {
+          "value": {
+            "base": 14,
+            "bonuses": []
+          },
+          "save_up": false,
+          "save_bonuses": [],
+          "skills": {}
+        },
+        "INT": {
+          "value": {
+            "base": 18,
+            "bonuses": []
+          },
+          "save_up": true,
+          "save_bonuses": [],
+          "skills": {
+            "5": {
+              "up": 0,
+              "bonuses": []
+            },
+            "6": {
+              "up": 0,
+              "bonuses": []
+            },
+            "7": {
+              "up": 1,
+              "bonuses": []
+            },
+            "8": {
+              "up": 0,
+              "bonuses": []
+            },
+            "9": {
+              "up": 0,
+              "bonuses": []
+            }
+          }
+        },
+        "WIS": {
+          "value": {
+            "base": 13,
+            "bonuses": []
+          },
+          "save_up": true,
+          "save_bonuses": [],
+          "skills": {
+            "10": {
+              "up": 1,
+              "bonuses": []
+            },
+            "11": {
+              "up": 0,
+              "bonuses": []
+            },
+            "12": {
+              "up": 0,
+              "bonuses": []
+            },
+            "13": {
+              "up": 0,
+              "bonuses": []
+            },
+            "14": {
+              "up": 0,
+              "bonuses": []
+            }
+          }
+        },
+        "CHA": {
+          "value": {
+            "base": 10,
+            "bonuses": []
+          },
+          "save_up": false,
+          "save_bonuses": [],
+          "skills": {
+            "15": {
+              "up": 0,
+              "bonuses": []
+            },
+            "16": {
+              "up": 0,
+              "bonuses": []
+            },
+            "17": {
+              "up": 0,
+              "bonuses": []
+            },
+            "18": {
+              "up": 1,
+              "bonuses": []
+            }
+          }
+        },
+        "race": {
+          "id": 210,
+          "name": "Эльф"
+        }
+      },
+      "var": {
+        "stats": {
+          "1": 1,
+          "2": 3,
+          "3": 2,
+          "4": 4,
+          "5": 1,
+          "6": 0
+        }
+      }
+    }
+  },
+  {
+    "uuid": "22222222-2222-4222-8222-222222222222",
+    "name": "Алекс",
+    "templateName": "VTM20",
+    "sourceVersionId": 2,
+    "iconImageId": 2,
+    "data": {
+      "values": {
+        "char_name": "Алекс",
+        "clan": "Тореадор",
+        "nature": "Творец",
+        "mask": "Дипломат",
+        "persona": "Художник",
+        "sire": "Элиза",
+        "ava": {
+          "url": "__API__/__test/emblem.svg"
+        },
+        "health": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "xp_total": 15,
+        "xp_spent": 7,
+        "blood_pool": {
+          "current": 8,
+          "max": 10
+        },
+        "clan_weakness": "<p>Красота способна отвлечь от опасности.</p>",
+        "notes": "<p>Встретиться с союзниками после заката.</p>",
+        "humanity": 7,
+        "willpower_perm": 5,
+        "willpower_temp": 4,
+        "conscience": 3,
+        "self_control": 3,
+        "courage": 3,
+        "strength": 2,
+        "dexterity": 3,
+        "stamina": 2,
+        "charisma": 4,
+        "manipulation": 3,
+        "appearance": 3,
+        "perception": 3,
+        "intelligence": 3,
+        "wits": 2
+      },
+      "var": {}
+    }
+  }
+]

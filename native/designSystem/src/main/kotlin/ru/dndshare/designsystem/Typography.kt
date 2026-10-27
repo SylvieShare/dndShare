@@ -21,6 +21,8 @@ private fun textRole(token: DesignType): TextStyle {
 }
 
 object ShareTypography {
+    val sheetStat = textRole(DesignTokens.Typography.SheetStat)
+    val sheetStatCompact = textRole(DesignTokens.Typography.SheetStatCompact)
     val title = textRole(DesignTokens.Typography.Title)
     val section = textRole(DesignTokens.Typography.Section)
     val card = textRole(DesignTokens.Typography.Card)

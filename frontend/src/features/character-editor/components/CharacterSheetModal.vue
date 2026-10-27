@@ -23,6 +23,8 @@
         @close="emit('close')"
       />
 
+      <CharacterSheetTabs v-if="format !== 'desktop'" :tabs="activeTabs" :active-tab="activeTab" @select="setActiveTab" />
+
       <div v-if="previewMode" class="csm-preview-note">Предпросмотр черновика · только чтение</div>
 
       <div class="csm-body">
@@ -33,21 +35,15 @@
         <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="initializeCharacter">Повторить</button></div>
         <div v-else-if="template" class="desktop-tabs">
           <div
-            v-for="index in visitedTabIndexes"
+            v-for="index in (format === 'desktop' && template.system === 'dnd5e' ? [0] : visitedTabIndexes)"
             :key="'csm-tab-' + index"
-            v-show="index === activeTab"
+            v-show="format === 'desktop' && template.system === 'dnd5e' || index === activeTab"
             class="container"
             :style="containerWidthForTab(index)"
           >
-            <TemplateBlockInner
-              v-for="(block, bi) in blocksForTab(index)"
-              :key="bi"
-              :block="block"
-              :values="data.values"
-              :vars="data.var"
-              @update:value="onUpdateValue"
-              @update:var="onUpdateVar"
-            />
+            <CharacterTabPane :definition="template" :format="format" :section="activeTabs[format === 'desktop' && template.system === 'dnd5e' ? activeTab : index]?.id"
+              :values="data.values" :vars="data.var" @select-tab="setActiveTab"
+              @update:value="onUpdateValue" @update:var="onUpdateVar" />
           </div>
         </div>
       </div>
@@ -64,11 +60,14 @@
 
 <script setup>
 import { LoadingIndicator } from '@sylvieshare/share-ui'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { AppModal } from '@sylvieshare/share-ui'
 import CharEditorToolbar from '@/features/character-editor/components/CharEditorToolbar'
 import CharacterSaveErrorToast from '@/features/character-editor/components/CharacterSaveErrorToast.vue'
-import TemplateBlockInner from '@/features/character-editor/components/TemplateBlockInner'
+import CharacterTabPane from './CharacterTabPane.vue'
+import { useAppLayout } from '@/shared/composables/useAppLayout'
+import { sheetTabIndex, sheetTabs } from '../lib/sheetPresentation'
+import CharacterSheetTabs from './sheet/CharacterSheetTabs.vue'
 import { useCharacterData } from '@/features/character-editor/composables/useCharacterData'
 import CharacterEditionDialog from './CharacterEditionDialog.vue'
 import { useCharacterEdition } from '@/features/character-editor/composables/useCharacterEdition'
@@ -85,14 +84,16 @@ const props = defineProps({
 const emit = defineEmits(['close'])
 const sessionEventsStore = useSessionEventsStore()
 const previewMode = computed(() => Boolean(props.draft))
-const isMobile = ref(false)
+const { format: windowFormat } = useAppLayout()
+// A modal opens on identity/HP even on a phone, then offers compact content tabs.
+const format = computed(() => windowFormat.value === 'phone' ? 'tablet' : windowFormat.value)
 
 const {
   loading, loadError, template, data, charCtx, isOwner, publicVisible, version, serverDocument, sourceVersionId, applyCharacter, applyMetadata,
-  toolbarTabs, charName, charSub, toolbarBlocksList,
-  load, loadPreview, blocksForTab, containerWidthForTab, getInitialTabs,
+  activeTabs, toolbarTabs, charName, charSub, toolbarBlocksList,
+  load, loadPreview, containerWidthForTab, getInitialTabs,
   updateValue, updateValues, updateVar, onPublicToggle: updatePublicVisible,
-} = useCharacterData(props.uuid, isMobile)
+} = useCharacterData(props.uuid, format)
 
 const pendingSessionEvents = []
 const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError, reloadSave, flushSave, sync: documentSync } = useSaveDebounce(props.uuid, data, {
@@ -127,9 +128,14 @@ charCtx.logSessionEvent = event => {
 
 const activeTab = ref(0)
 const visited = ref(new Set([0]))
-const visitedTabIndexes = computed(() => [...visited.value])
+const visitedTabIndexes = computed(() => [...visited.value].filter(index => index < activeTabs.value.length))
+watch(format, (next, previous) => {
+  const id = sheetTabs(template.value, previous)[activeTab.value]?.id
+  setActiveTab(sheetTabIndex(activeTabs.value, id))
+}, { flush: 'sync' })
 
-function setActiveTab(index) {
+function setActiveTab(value) {
+  const index = typeof value === 'string' ? sheetTabIndex(activeTabs.value, value) : value
   activeTab.value = index
   visited.value = new Set([...visited.value, index])
 }

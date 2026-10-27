@@ -10,6 +10,9 @@
         <span v-if="subtitle" :title="subtitle">{{ subtitle }}</span>
       </div>
     </template>
+    <template v-if="tabs.length" #navigation>
+      <CharacterSheetTabs :tabs="tabs" :active-tab="activeTab" @select="emit('select-tab', $event)" />
+    </template>
     <template #actions>
       <CharacterSessionControl compact :session="session" :controller="transfers" />
     </template>
@@ -21,7 +24,10 @@ import { ActionButton } from '@sylvieshare/share-ui'
 import { ArrowLeft } from '@lucide/vue'
 import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
 import CharacterSessionControl from './CharacterSessionControl.vue'
-defineProps({ contentWidth: String, name: String, subtitle: String, session: Object, transfers: Object })
+import CharacterSheetTabs from './sheet/CharacterSheetTabs.vue'
+defineProps({ contentWidth: String, name: String, subtitle: String, session: Object, transfers: Object,
+  tabs: { type: Array, default: () => [] }, activeTab: Number })
+const emit = defineEmits(['select-tab'])
 const router = useRouter()
 </script>
 <style scoped>

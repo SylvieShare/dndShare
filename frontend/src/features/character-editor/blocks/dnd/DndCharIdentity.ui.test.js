@@ -4,9 +4,9 @@ import { describe, expect, it } from 'vitest'
 import { createSSRApp, h } from 'vue'
 import { renderToString } from '@vue/server-renderer'
 import DndCharIdentity from './DndCharIdentity.vue'
-import TemplateBlockInner from '@/features/character-editor/components/TemplateBlockInner.vue'
-import schema from '@/features/character-editor/settings/dnd/schema'
-import { layoutNodeToBlock } from '@/features/character-editor/lib/templateSchema'
+import CharacterBlock from '../../components/CharacterBlock.vue'
+import definition from '../../settings/dnd/definition'
+import { sheetBlock } from '../../lib/sheetPresentation'
 
 const source = readFileSync(fileURLToPath(new URL('./DndCharIdentity.vue', import.meta.url)), 'utf8')
 
@@ -36,22 +36,7 @@ describe('character identity summary', () => {
   })
 
   it('keeps identity data in the rendered desktop header layout', async () => {
-    const base = schema.layouts.desktop.tabs.find(tab => tab.title === 'База')
-    const findNode = (node, predicate) => {
-      if (!node) return null
-      if (predicate(node)) return node
-      for (const child of node.children || []) {
-        const found = findNode(child, predicate)
-        if (found) return found
-      }
-      return null
-    }
-    const summary = findNode(
-      base.content,
-      node => node.type === 'column'
-        && node.children?.map(child => child.ref).join(',') === 'char_identity,hp',
-    )
-    const block = layoutNodeToBlock(summary, schema)
+    const block = sheetBlock(definition, 'char_identity')
     const values = {
       name: 'Лиссара',
       race: { id: 8, name: 'Эльф' },
@@ -59,7 +44,7 @@ describe('character identity summary', () => {
       lvl: { level: 4 },
       hp: { current: 24, max: { base: 24 } },
     }
-    const app = createSSRApp({ render: () => h(TemplateBlockInner, { block, values, vars: {} }) })
+    const app = createSSRApp({ render: () => h(CharacterBlock, { block, values, vars: {} }) })
     app.provide('charCtx', { ownerMode: true })
 
     const html = await renderToString(app)

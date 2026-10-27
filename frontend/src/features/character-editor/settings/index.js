@@ -1,13 +1,13 @@
 /**
  * Hardcoded per-setting registry.
  *
- * Each setting owns its sheet schema (code, not DB JSON) and its semantic
+ * Each setting owns its native sheet field definitions and its semantic
  * accessors. A character template is mapped to its setting purely by
- * `char_template.name`; render schemas live in this registry.
+ * `char_template.name`; Vue composition belongs to each setting component.
  */
-import dndSchema from '@/features/character-editor/settings/dnd/schema'
+import dndDefinition from './dnd/definition'
 import { dndAccessors } from '@/features/character-editor/settings/dnd/accessors'
-import vtmSchema from '../../../../../resources/char_template_vtm_v20.json'
+import vtmDefinition from './vtm/definition'
 
 const vtmAccessors = {
   system: 'vtm-v20',
@@ -34,7 +34,7 @@ const SETTINGS = [
     system: 'dnd5e',
     // char_template.name values that map to this setting.
     names: ['DND5'],
-    schema: dndSchema,
+    sheet: dndDefinition,
     accessors: dndAccessors,
     sourceName: 'DND5e',
     sourceVersion: '2014',
@@ -42,7 +42,7 @@ const SETTINGS = [
   {
     system: 'vtm-v20',
     names: ['VTM20'],
-    schema: vtmSchema,
+    sheet: vtmDefinition,
     accessors: vtmAccessors,
     sourceName: 'Vampire: TM',
     sourceVersion: 'V20',
@@ -59,8 +59,8 @@ export function resolveSetting(template) {
   return SETTINGS.find(s => s.names.includes(name)) || null
 }
 
-export function settingRenderSchema(template) {
-  return resolveSetting(template)?.schema ?? null
+export function settingSheetDefinition(template) {
+  return resolveSetting(template)?.sheet ?? null
 }
 
 export function settingAccessors(template) {

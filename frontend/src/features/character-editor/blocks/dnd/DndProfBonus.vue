@@ -2,7 +2,7 @@
   <StatTile
     :variant="variant"
     :embedded="block.props?.embedded"
-    label="Бонус умения"
+    label="Мастерство"
     :mini-label="block.title || 'Бонус'"
     :value="displayValue"
     pre="+"
@@ -12,7 +12,7 @@
   >
     <!-- compact / default (mobile) look: tap the value to roll, the pencil to edit -->
     <template #tile="{ open, action, canEdit, attrs }">
-      <MorphTile v-bind="attrs" compact-header :title="block.title || 'Бонус умения'" :show-edit="canEdit" edit-label="Редактировать" @edit="open" class="skill-bonus-tile" :class="{ 'skill-bonus-tile-compact': variant === 'compact' }">
+      <MorphTile v-bind="attrs" compact-header :title="block.title || 'Мастерство'" :show-edit="canEdit" edit-label="Редактировать" @edit="open" class="skill-bonus-tile" :class="{ 'skill-bonus-tile-compact': variant === 'compact' }">
         <div class="sb-display" @click="action">
           <span class="sb-plus">+</span>
           <span class="sb-value" :class="{ 'sb-manual': stored.auto === false }">{{ displayValue }}</span>

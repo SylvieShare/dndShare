@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 fun ShareWorkspaceHeader(
     modifier: Modifier = Modifier,
     contentInset: Dp = DesignTokens.Spacing.Page,
+    maxContentWidth: Dp = DesignTokens.Layout.ContentMax,
     content: @Composable RowScope.() -> Unit,
 ) {
     Surface(modifier.fillMaxWidth(), color = WebPalette.Surface, shadowElevation = 4.dp) {
@@ -24,7 +25,7 @@ fun ShareWorkspaceHeader(
             val y = size.height - stroke / 2
             drawLine(WebPalette.BorderStrong, Offset(0f, y), Offset(size.width, y), strokeWidth = stroke)
         }, contentAlignment = Alignment.Center) {
-            Row(Modifier.widthIn(max = DesignTokens.Layout.ContentMax).fillMaxWidth()
+            Row(Modifier.widthIn(max = maxContentWidth).fillMaxWidth()
                 .heightIn(min = DesignTokens.Layout.Header)
                 .padding(horizontal = contentInset, vertical = DesignTokens.Spacing.Xs),
                 verticalAlignment = Alignment.CenterVertically,

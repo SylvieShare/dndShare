@@ -43,7 +43,7 @@
           :key="i"
           class="toolbar-block-wrap"
         >
-          <TemplateBlockInner
+          <CharacterBlock
             :block="block"
             :values="toolbarValues"
             :vars="toolbarVars"
@@ -146,7 +146,7 @@ import { ToggleSwitch } from '@sylvieshare/share-ui'
 import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 
-import TemplateBlockInner from "./TemplateBlockInner.vue"
+import CharacterBlock from "./CharacterBlock.vue"
 
 const props = defineProps({
   publicVisible: Boolean,

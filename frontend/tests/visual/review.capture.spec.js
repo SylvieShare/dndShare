@@ -66,6 +66,7 @@ for (const format of matrix.formats) {
       entries.push({ platform: 'web', format: format.name, state, file, dimensions,
         viewport: { width: format.width, height: format.height, unit: 'CSS px' },
         recordID: state === 'record' ? fixture.recordID : null,
+        characterUUID: state.startsWith('sheet-') ? fixture.characters[0].uuid : state === 'vtm-base' ? fixture.characters[1].uuid : null,
         sha256: createHash('sha256').update(buffer).digest('hex'),
         browserVersion: browser.version(), apiRequests: [...apiRequests],
       })
@@ -96,6 +97,17 @@ for (const format of matrix.formats) {
     await expect(page.locator('.handbook-detail h1')).toHaveText(fixture.recordName)
     await expect(page.locator('.item-detail-cover')).toBeVisible()
     await snapshot('record')
+    const dnd = fixture.characters[0], vtm = fixture.characters[1]
+    await page.goto(`/char/${dnd.uuid}`, { waitUntil: 'networkidle' })
+    if (format.name === 'tablet') await expect(page.locator('.dnd-tablet-base')).toBeVisible()
+    else await expect(page.locator('[data-tutorial="character-stat"]:visible').first()).toBeVisible({ timeout: 30000 })
+    await snapshot('sheet-base')
+    if (format.name === 'tablet') await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Статы', exact: true }).click()
+    await expect(page.locator('.dnd-stats:visible')).toBeVisible()
+    await snapshot('sheet-stats')
+    await page.goto(`/char/${vtm.uuid}`, { waitUntil: 'networkidle' })
+    await expect(page.getByText(vtm.name, { exact: true }).first()).toBeVisible()
+    await snapshot('vtm-base')
     expect(errors).toEqual([])
     expect(external).toEqual([])
     expect(apiRequests.some(request => request.startsWith('/api/items'))).toBe(true)

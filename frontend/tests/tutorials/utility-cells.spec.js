@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 test('all grouped utility cells share hover, padding and full-cell activation', async ({ page }) => {
   page.on('pageerror', error => { throw error })
   await page.goto('/tests/tutorials/fixtures/utility-cells.html')
-  const grid = page.locator('.layout-table')
+  const grid = page.locator('.dnd-utility-grid')
   const cells = grid.locator('.utility-cell')
   await expect(cells).toHaveCount(6)
   await expect(grid.locator('.base-tile, .morph-tile-pencil, .stf-roll')).toHaveCount(0)
@@ -40,8 +40,8 @@ test('all grouped utility cells share hover, padding and full-cell activation', 
 for (const readonly of [false, true]) test(`initiative and proficiency menu preserve actions and permissions (${readonly ? 'readonly' : 'owner'})`, async ({ page }) => {
   page.on('pageerror', error => { throw error })
   await page.goto('/tests/tutorials/fixtures/utility-cells.html' + (readonly ? '?readonly' : ''))
-  const grid = page.locator('.layout-table')
-  for (const [index, name] of ['Инициатива', 'Бонус умения'].entries()) {
+  const grid = page.locator('.dnd-utility-grid')
+  for (const [index, name] of ['Инициатива', 'Мастерство'].entries()) {
     const cell = grid.getByRole('button', { name, exact: true })
     await cell.focus()
     await page.keyboard.press(index ? 'Space' : 'Enter')

@@ -70,7 +70,16 @@ def validate_fixture(url, fixture):
     if record["name"] != fixture["recordName"] or fixture["description"] not in record["data"]["description"]:
         raise AssertionError("Fixture target record mismatch")
     canonical = json.dumps({"entries": entries, "metadata": metadata}, sort_keys=True, ensure_ascii=False).encode()
+    characters = []
+    for character in fixture.get("characters", []):
+        sheet = fetch(url + "/api/char/" + character["uuid"], opener)
+        if sheet["templateName"] != character["templateName"]:
+            raise AssertionError("Wrong character system in the shared fixture")
+        characters.append({"uuid": character["uuid"], "templateName": sheet["templateName"],
+                           "data": sheet["data"]})
+    character_hash = hashlib.sha256(json.dumps(characters, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
     return {"recordCount": len(entries), "restAndNativeMatch": True,
+            "charactersHash": character_hash,
             "servedDataHash": hashlib.sha256(canonical).hexdigest(), "gameContext": context,
             "nativeSyncPages": (len(entries) + 199) // 200}
 

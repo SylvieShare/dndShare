@@ -73,7 +73,7 @@ editing/canvas use and does not expose another user's object. A multipart upload
 to `POST /api/storage/images` with `purpose=character_icon` accepts only PNG/WebP
 up to 256×256 and records a staged icon that can be consumed by character create.
 
-Editor определяет schema по `templateName` через frontend setting registry.
+Editor определяет систему и её параметры полей по `templateName` через setting registry; размещение задаётся компонентами Vue/Compose.
 `PATCH /api/char/{uuid}/data` использует [общий протокол](../document-sync.md).
 Ответ `{fromVersion,version,mutationId,patches}` подтверждает атомарный пакет.
 События передаются в `metadata[].events`, каждое содержит

@@ -6,7 +6,7 @@ import { consumeCharSeed } from '@/shared/lib/charSeed'
 import { fetchGet, fetchPut } from '@/shared/api/http'
 import { useAccountStore } from '@/stores/account'
 import { useTemplateStore } from '@/stores/template'
-import { settingAccessors, settingRenderSchema } from '@/features/character-editor/settings'
+import { settingAccessors, settingSheetDefinition } from '@/features/character-editor/settings'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 import { useCharacterResources } from '@/features/character-editor/composables/useCharacterResources'
 import { useCharacterArmor } from '@/features/character-editor/composables/useCharacterArmor'
@@ -17,14 +17,9 @@ import { useCharacterPassiveEffects } from '@/features/character-editor/composab
 import { useCharacterCombatEffects } from '@/features/character-editor/composables/useCharacterCombatEffects'
 import { useCharacterDerivedEffects } from '@/features/character-editor/composables/useCharacterDerivedEffects'
 import { useCharacterStatuses } from '@/features/character-editor/composables/useCharacterStatuses'
-import {
-  activeLayoutProfile,
-  initialTabs,
-  layoutNodeToBlock,
-  profileTabs,
-} from '@/features/character-editor/lib/templateSchema'
+import { sheetTabs, sheetBlock } from '../lib/sheetPresentation'
 
-export function useCharacterData(uuid, isMobile) {
+export function useCharacterData(uuid, format) {
   const loading = ref(true)
   const loadError = ref('')
   const template = ref(null)
@@ -82,7 +77,7 @@ export function useCharacterData(uuid, isMobile) {
     }
 
     const snapshot={data:copyDocument(res.data),version:Number(res.version)||0}
-    template.value = settingRenderSchema(res.templateName)
+    template.value = settingSheetDefinition(res.templateName)
     if (!template.value) throw new Error(`Unsupported character template: ${res.templateName}`)
     accessors.value = settingAccessors(res.templateName)
     data.value = { values: {}, var: {}, ...res.data }
@@ -166,61 +161,20 @@ export function useCharacterData(uuid, isMobile) {
     return apply(preview, { updateDocumentTitle: false })
   }
 
-  const layout = computed(() => activeLayoutProfile(template.value, isMobile.value))
-
-  const activeTabs = computed(() => {
-    const layouts = template.value?.layouts || {}
-    if (isMobile.value && layouts.mobile) return profileTabs(layouts.mobile)
-    return profileTabs(layouts.desktop)
-  })
-
-  const toolbarTabs = computed(() =>
-    !isMobile.value && activeTabs.value.length > 1 ? activeTabs.value : []
-  )
-
-  const mobileTabs = computed(() =>
-    isMobile.value && activeTabs.value.length > 1 ? activeTabs.value : []
-  )
-
+  const activeTabs = computed(() => sheetTabs(template.value, format.value))
+  const toolbarTabs = computed(() => format.value === 'desktop' && template.value?.system !== 'dnd5e' ? activeTabs.value : [])
+  const mobileTabs = computed(() => format.value === 'phone' ? activeTabs.value : [])
   const headerTitle = computed(() => accessors.value?.headerTitle(data.value) || '')
   const charName = computed(() => accessors.value?.displayName(data.value) || '')
   const charSub = computed(() => accessors.value?.subtitle(data.value) || '')
-
-  const toolbarBlocksList = computed(() => {
-    const blocks = layout.value?.toolbar_blocks
-    if (!Array.isArray(blocks) || !template.value) return null
-    return blocks.map(node => layoutNodeToBlock(node, template.value)).filter(Boolean)
-  })
-
-  const commonMobileBlockNode = computed(() => {
-    const node = layout.value?.common_mobile_blocks
-    if (!node || !template.value || !isMobile.value) return null
-    return layoutNodeToBlock(node, template.value)
-  })
-
-  const commonMobileScrollHide = computed(() =>
-    !!layout.value?.common_mobile_blocks_scroll_hide
-  )
-
-  const tabBlockCache = ref({})
-
-  function blocksForTab(index) {
-    if (tabBlockCache.value[index]) return tabBlockCache.value[index]
-    const tab = activeTabs.value[index]
-    const blocks = tab?.content ? [layoutNodeToBlock(tab.content, template.value)] : []
-    tabBlockCache.value[index] = blocks
-    return blocks
+  const toolbarBlocksList = computed(() => format.value === 'phone' && template.value?.system === 'dnd5e'
+    ? ['armor', 'initiative', 'speed', 'prof_bonus', 'lvl'].map(id => sheetBlock(template.value, id, { variant: 'mini' })) : null)
+  const showMobileSummary = computed(() => format.value === 'phone' && template.value?.system === 'dnd5e')
+  const commonMobileScrollHide = computed(() => false)
+  function containerWidthForTab() {
+    return format.value === 'desktop' ? { maxWidth: template.value?.width + 'px' } : {}
   }
-
-  function containerWidthForTab(index) {
-    const tab = activeTabs.value[index]
-    const w = tab?.width ?? template.value?.common?.width ?? layout.value?.width
-    return w ? { maxWidth: w + 'px' } : {}
-  }
-
-  function getInitialTabs() {
-    return initialTabs(template.value)
-  }
+  function getInitialTabs() { return activeTabs.value }
 
   function updateValue({ id, value }) {
     updateValues({ [id]: value })
@@ -305,10 +259,6 @@ export function useCharacterData(uuid, isMobile) {
     iconImageUrl.value = null
   }
 
-  function invalidateTabCache() {
-    tabBlockCache.value = {}
-  }
-
   return {
     loading,
     loadError,
@@ -336,12 +286,11 @@ export function useCharacterData(uuid, isMobile) {
     charName,
     charSub,
     toolbarBlocksList,
-    commonMobileBlockNode,
+    showMobileSummary,
     commonMobileScrollHide,
     load,
     loadPreview,
     loadSync,
-    blocksForTab,
     containerWidthForTab,
     getInitialTabs,
     updateValue,
@@ -349,6 +298,5 @@ export function useCharacterData(uuid, isMobile) {
     updateVar,
     updateContentSources,
     onPublicToggle,
-    invalidateTabCache,
   }
 }

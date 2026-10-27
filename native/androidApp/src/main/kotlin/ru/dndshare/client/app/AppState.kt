@@ -17,4 +17,5 @@ data class AppState(
     val error: String? = null,
     val characterError: String? = null,
     val authError: String? = null,
+    val confirmLogout: Boolean = false,
 )

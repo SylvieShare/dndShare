@@ -21,7 +21,10 @@
     "collections",
     "menu",
     "list",
-    "record"
+    "record",
+    "sheet-base",
+    "sheet-stats",
+    "vtm-base"
   ],
   "platforms": [
     "web",

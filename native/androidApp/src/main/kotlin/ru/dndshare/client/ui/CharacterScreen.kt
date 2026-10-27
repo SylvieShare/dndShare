@@ -19,7 +19,7 @@ import ru.dndshare.client.app.AppState
 import ru.dndshare.client.model.*
 
 @Composable
-fun CharacterScreen(state: AppState, format: LayoutFormat, images: ImageLoader, refresh: () -> Unit) {
+fun CharacterScreen(state: AppState, format: LayoutFormat, images: ImageLoader, refresh: () -> Unit, open: (String) -> Unit) {
     val repository = state.repository ?: return
     var query by rememberSaveable { mutableStateOf("") }
     val characters by produceState<List<Character>?>(null, repository) {
@@ -52,7 +52,7 @@ fun CharacterScreen(state: AppState, format: LayoutFormat, images: ImageLoader, 
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 items(visible, key = { it.id }) { character ->
-                    OutlinedCard(Modifier.fillMaxWidth()) {
+                    OutlinedCard(onClick = { open(character.uuid) }, modifier = Modifier.fillMaxWidth()) {
                         Row(Modifier.padding(18.dp), horizontalArrangement = Arrangement.spacedBy(16.dp),
                             verticalAlignment = Alignment.CenterVertically) {
                             if (character.iconImageUrl != null) AsyncImage(

@@ -3,17 +3,15 @@ export function defaultTabIndex(tabs) {
   return index >= 0 ? index : 0
 }
 
-export function parseTabQuery(value, tabCount, fallback = 0) {
+export function parseTabQuery(value, tabs, fallback = 0) {
   const raw = Array.isArray(value) ? value[0] : value
-  const text = typeof raw === 'number' ? String(raw) : raw
-  if (typeof text !== 'string' || !/^\d+$/.test(text)) return fallback
-  const index = Number(text)
-  return Number.isSafeInteger(index) && index >= 0 && index < tabCount ? index : fallback
+  const index = tabs.findIndex(tab => tab.id === raw)
+  return index >= 0 ? index : fallback
 }
 
-export function queryForTab(currentQuery, index, defaultIndex) {
+export function queryForTab(currentQuery, index, defaultIndex, tabs) {
   const query = { ...(currentQuery || {}) }
   if (index === defaultIndex) delete query.tab
-  else query.tab = String(index)
+  else query.tab = tabs[index].id
   return query
 }

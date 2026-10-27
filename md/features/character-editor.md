@@ -31,38 +31,42 @@
 и не зависит от публичности листа; проверка применяется также к чтению версии.
 Другие игроки могут открывать чужой лист только при включённой публичной ссылке.
 
-Character editor lives in `frontend/src/features/character-editor`. It is a
-recursive code-schema renderer shared by supported game systems, not a set of
-DB-defined templates.
+Лист находится в `frontend/src/features/character-editor`. Его размещение описано
+обычными Vue-компонентами для каждой системы; Android использует Compose-функции.
+JSON документа персонажа хранит значения и игровые связи, а не дерево интерфейса.
 
 ## Реестр настроек
 
-`settings/index.js` maps `char_template.name` to:
-
-- render schema/layout;
-- semantic accessors;
-- source name/version;
-- optional simple create payload.
-
-Registered systems are D&D 5e (`DND5`) and VTM V20 (`VTM20`). D&D schema is
-assembled by `settings/dnd/schema.js` from `blocks.json`, `desktop.js` (композиция `desktop/stats.json`, `main.json`, `sidebar.json`) and
-`mobile.json`; VTM schema is imported as a code resource. Unknown template name
-is rejected. DB template schema, create form and path maps do not exist.
+`settings/index.js` связывает `char_template.name` с определением полей,
+семантическими accessors, именем системы/редакции и простым payload создания.
+Поддерживаются D&D 5e (`DND5`) и VTM V20 (`VTM20`). Определения находятся в
+`settings/dnd/definition.js` и `settings/vtm/definition.js`; они содержат параметры
+игровых контролов и названия вкладок, без контейнеров или рекурсивных layout-узлов.
+Неизвестная система отклоняется. Сервер возвращает descriptor шаблона без UI-схемы.
 
 ## Отрисовка листа
 
-`ViewCharacter.vue` owns page orchestration. `useCharacterData` loads the
-character, resolves setting schema/accessors, exposes `charCtx`, sessions,
-ownership and save state. Header/list/session identity all use the same semantic
-accessors; layout JSON does not contain a second title resolver.
+`ViewCharacter.vue` управляет страницей, `useCharacterData` — данными, правами,
+контекстом и сохранением. `CharacterTabPane` выбирает компонент системы.
+`components/sheet` содержит явные композиции D&D/VTM; `CharacterBlock` связывает
+один игровой контрол с его значением и событиями, но не строит контейнеры.
+Существующие предметные блоки и механики остаются в `blocks/generic`, `blocks/dnd`
+и `blocks/vtm`. Создание и сессионное окно используют те же композиции.
 
-`TemplateBlockInner.vue` recursively renders layout nodes and blocks registered
-in `blockRegistry.js`. Generic blocks live in `blocks/generic`, D&D blocks in
-`blocks/dnd`, VTM blocks in `blocks/vtm`. New blocks are registered once and
-receive data by block id.
+Есть три формата доступного окна: телефон до 600, планшет 600–1199 и большой
+от 1200 CSS px / dp. В среднем D&D-формате над содержимым находится навигация
+`IconNavigation`, как в сессии. Первая вкладка **База** содержит карточку с иконкой,
+именем, HP и состояниями, служебную группу КД/инициативы/меню/скорости/мастерства/
+отдыха и отдельный уровень. Шесть характеристик остаются во **Статах**.
+Остальные разделы соответствуют телефонным. Статы занимают всю ширину в одну,
+две или три колонки с минимальной шириной SheetStatMin; колонки балансируются
+по высоте с подбором групп характеристик; внутри каждой колонки порядок остаётся стабильным. Ширины и крупные числа заданы общими
+токенами. У VTM есть собственные прямые композиции трёх форматов.
+Модальный лист открывает **Базу** и компактные вкладки также на телефоне,
+чтобы имя, HP и редактирование личности были доступны сразу.
 
 Desktop and mobile share block definitions but have separate placement
-profiles. The desktop base layout moves class, race and feat entries out of the
+compositions. The desktop base layout moves class, race and feat entries out of the
 side column into the visible inner **Способности** tab alongside **Оружие**,
 **Магия** and **Снаряжение**. It shows expanded cards with a 64×64 handbook icon
 and the full description inline. Class abilities, racial abilities and feats
@@ -110,7 +114,7 @@ split into semantic `--surface` blocks instead of painting a whole tab: every
 weapon is a card; spell parameters, slots and each spell level are separate
 cards; inventory spaces share one tile while utility widgets are separate; the personality
 profile declares the `Основное`, `Облик`, `Характер` and `История` tile groups
-in `mobile.json`. The character route hides the global app header in compact
+in `DndPersonalityCompact.vue`. The character route hides the global app header in compact
 windows and gives the full viewport to its own toolbar; that toolbar menu has
 an explicit **К персонажам** action, including on read-only public sheets. Its
 desktop shell also occupies the full viewport because application navigation is
@@ -136,10 +140,12 @@ keep the header in document flow. Completed tab changes are pushed into the
 `tab` route query. Browser Back and Forward therefore restore prior tabs (even
 after rapid history navigation), while **К персонажам** provides a direct exit
 to the character list.
-Desktop `LayoutInnerTabs` groups also keep their selected pane in independent,
-schema-stable `innerTab-*` query keys. Reload and browser history restore both
-the outer character tab and its inner pane; invalid or stale inner indexes fall
-back to the first pane. Every weapon uses its own shared desktop/mobile `BaseTile`.
+Все форматы используют стабильные имена разделов в `?tab=spells` и аналогичных
+значениях. Раскрытие Fold сохраняет выбранный раздел, если он присутствует в новом
+формате; иначе выбирается начальный раздел. Back/Forward и перезагрузка
+восстанавливают раздел по имени. В desktop сохраняется одна непрерывная композиция
+из характеристик слева, карточки/разделов в центре и инструментов справа.
+Every weapon uses its own shared desktop/mobile `BaseTile`.
 Кошелёк расположен сверху справа внутри общей карточки предметов на desktop
 и mobile: иконка кошелька и суммы монет без отдельного заголовка и подложки.
 Иконка владельца открывает калькулятор мышью и с клавиатуры; режим просмотра

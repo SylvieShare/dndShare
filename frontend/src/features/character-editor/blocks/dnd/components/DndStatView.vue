@@ -267,13 +267,13 @@ onBeforeUnmount(hideTooltip)
 .stat-body:hover .stat-mod { color: var(--accent); }
 
 .stat-mod {
-  font-family: inherit;
+  font-family: var(--type-sheet-stat-family);
   font-variant-numeric: tabular-nums;
-  font-size: 26px;
-  font-weight: 700;
+  font-size: var(--type-sheet-stat-size);
+  font-weight: var(--type-sheet-stat-weight);
   color: var(--sc, var(--text-1));
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--type-sheet-stat-tracking);
 }
 
 .stat-raw { color: var(--text-2); font-size: 15px; font-weight: 500; }
@@ -344,7 +344,7 @@ onBeforeUnmount(hideTooltip)
 .stat-view--mobile .save-chip { padding: 5px 12px 5px 9px; gap: 7px; border-radius: 10px; }
 .stat-view--mobile .save-chip-val { font-size: 15px; }
 .stat-view--mobile .save-label { font-size: 13px; }
-.stat-view--mobile .stat-mod { font-size: 44px; }
+.stat-view--mobile .stat-mod { font-size: var(--type-sheet-stat-compact-size); letter-spacing: var(--type-sheet-stat-compact-tracking); }
 .stat-view--mobile .stat-raw { font-size: 18px; }
 .stat-view--mobile .stat-icon { width: 32px; height: 32px; }
 .stat-view--mobile .skills { gap: 2px; }

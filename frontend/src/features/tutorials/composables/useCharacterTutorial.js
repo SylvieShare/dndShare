@@ -3,25 +3,31 @@ import { usePageTutorial } from './usePageTutorial'
 import { characterSteps } from '../flows/character'
 import { createTutorialActions, tutorialActionsKey, visibleTarget } from '../lib/targets'
 
-export function useCharacterTutorial({ root, mobile, ready, template, sourceVersionId, activeTab, isOwner }) {
+export function useCharacterTutorial({ root, mobile, ready, template, sourceVersionId, activeTab, activeTabs, format, isOwner }) {
   const actions = createTutorialActions()
   provide(tutorialActionsKey, actions)
-  const mobileSections = { stats: 0, weapons: 1, spells: 2, inventory: 3, abilities: 4, journal: 6 }
   async function action(name, context) {
-    if (mobile.value && name.startsWith('character-section:')) {
-      const saved = activeTab.value
-      context.onCleanup(() => { activeTab.value = saved })
-      activeTab.value = mobileSections[name.split(':')[1]]
+    if (name.startsWith('character-section:')) {
+      const index = activeTabs.value.findIndex(tab => tab.id === name.split(':')[1])
+      if (index < 0) return
+      const saved = activeTabs.value[activeTab.value]?.id
+      context.onCleanup(() => {
+        activeTab.value = Math.max(0, activeTabs.value.findIndex(tab => tab.id === saved))
+      })
+      activeTab.value = index
       await nextTick()
-    } else if (name === 'character-section:stats') {
-      // Characteristics are always present in the desktop sheet.
-    } else await actions.run(name, context)
+    } else {
+      if (format.value === 'tablet' && ['character-health', 'character-menu'].includes(name)) {
+        await action('character-section:base', context)
+      }
+      await actions.run(name, context)
+    }
   }
   return usePageTutorial({
     flowId: computed(() => 'character'),
     sourceKey: computed(() => sourceVersionId.value ? `edition:${sourceVersionId.value}` : null),
-    mobile, ready: computed(() => ready.value && isOwner.value),
-    createSteps: () => characterSteps({ mobile: mobile.value, dnd: template.value?.system === 'dnd5e',
+    mobile, layout: format, ready: computed(() => ready.value && isOwner.value),
+    createSteps: () => characterSteps({ mobile: mobile.value, tablet: format.value === 'tablet', dnd: template.value?.system === 'dnd5e',
       target: name => visibleTarget(['character-hp-editor', 'character-menu'].includes(name) ? document : root.value, name), action }),
   })
 }
