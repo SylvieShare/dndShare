@@ -3,23 +3,54 @@ package ru.dndshare.client
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.unit.dp
 import androidx.test.core.app.ActivityScenario
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.junit.Test
 import ru.dndshare.client.ui.LayoutFormat
 import ru.dndshare.client.ui.character.*
+import ru.dndshare.client.ui.designsystem.ShareIconNavigation
+import ru.dndshare.client.ui.designsystem.ShareNavigationItem
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.*
 import kotlin.test.*
 
 class SheetPagerStateTest {
+    @Test fun selectedTabIsRevealedInANarrowPhoneBar() {
+        val selected = mutableStateOf("0")
+        val viewport = AtomicReference(Rect.Zero)
+        val lastIcon = AtomicReference(Rect.Zero)
+        ActivityScenario.launch(ComponentActivity::class.java).use { activity ->
+            activity.onActivity { host -> host.setContent {
+                Box(Modifier.width(320.dp).onGloballyPositioned { viewport.set(it.boundsInWindow()) }) {
+                    ShareIconNavigation((0..7).map { ShareNavigationItem(it.toString(), "Раздел $it") },
+                        selected.value, { selected.value = it }, compact = true) { key ->
+                        Box(Modifier.size(22.dp).onGloballyPositioned { if (key == "7") lastIcon.set(it.boundsInWindow()) })
+                    }
+                }
+            } }
+            await { viewport.get().width > 0 }
+            activity.onActivity { selected.value = "7" }
+            await {
+                val icon = lastIcon.get(); val bounds = viewport.get()
+                icon.width > 0 && icon.left >= bounds.left && icon.right <= bounds.right
+            }
+        }
+    }
+
     @Test fun semanticSelectionOwnsRestorationAcrossRecreationAndWindowFormats() {
         val format = mutableStateOf(LayoutFormat.Phone)
         val selected = mutableStateOf(SheetSection.Stats)
@@ -44,10 +75,10 @@ class SheetPagerStateTest {
         ActivityScenario.launch(ComponentActivity::class.java).use { activity ->
             fun install() = activity.onActivity { it.setContent(content = content) }
             install()
-            await { state.get()?.settledPage == 0 }
-            activity.onActivity { scope.get().launch { state.get().scrollToPage(1) } }
+            await { state.get()?.settledPage == 1 }
+            activity.onActivity { scope.get().launch { state.get().scrollToPage(2) } }
             await { selected.value == SheetSection.Weapons }
-            activity.onActivity { scope.get().launch { state.get().scrollToPage(0) } }
+            activity.onActivity { scope.get().launch { state.get().scrollToPage(1) } }
             await { selected.value == SheetSection.Stats }
             activity.onActivity { format.value = LayoutFormat.Tablet }
             await { state.get().pageCount == 8 && state.get().settledPage == 1 && state.get().layoutInfo.visiblePagesInfo.any { it.index == 1 } }
@@ -68,7 +99,7 @@ class SheetPagerStateTest {
             changes.clear()
             acceptSelection.set(true)
             activity.onActivity { format.value = LayoutFormat.Phone }
-            await { state.get().pageCount == 7 && state.get().settledPage == 0 && state.get().layoutInfo.visiblePagesInfo.any { it.index == 0 } }
+            await { state.get().pageCount == 8 && state.get().settledPage == 1 && state.get().layoutInfo.visiblePagesInfo.any { it.index == 1 } }
             assertEquals(SheetSection.Stats, selected.value)
             assertTrue(changes.all { it == SheetSection.Stats }, "A stale pager must not map its index through another format")
         }

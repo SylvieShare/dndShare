@@ -30,7 +30,7 @@ class Device:
         if description == 'Редактировать: Сила':
             assert self.screen == 'dnd'
             self.screen = 'editor'
-        elif text == 'База':
+        elif text == 'База' or description == 'База':
             assert self.screen == 'dnd'
             self.section = 'base'
         elif text in ('Персонажи', 'Справочник'):

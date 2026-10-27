@@ -46,7 +46,7 @@ internal fun CharacterSheetScreen(ui: CharacterSheetUiState, model: CharacterShe
     val mechanics = remember(sheet, ui.content) { sheet?.let { DndDerivedValues(it, ui.content.items, ui.content.metadata) } }
     CompositionLocalProvider(LocalShareMorphState provides morph) {
     Column(Modifier.fillMaxSize().shareMorphBackground(morph)) {
-        CharacterSheetHeader(sheet, format, sections, visibleSection, images, model::selectSection, close, mechanics, menu = { model.edit("menu") })
+        CharacterSheetHeader(sheet, format, sections, visibleSection, images, model::selectSection, close)
         if (ui.snapshot?.draft?.edits?.isNotEmpty() == true) {
             SheetSaveStatus(ui.snapshot.draft.blocked ?: ui.saveMessage, model::retrySave, reload = { model.confirmReload(true) })
         }
@@ -64,7 +64,6 @@ internal fun CharacterSheetScreen(ui: CharacterSheetUiState, model: CharacterShe
                 edit = { if (canEdit || it in listOf("menu", "rest")) model.edit(it) }, openItem = model::openItem,
                 mechanics = requireNotNull(mechanics), journal = ui.journal, editor = ui.editor)) {
                 if (!canEdit) Text("Режим просмотра", Modifier.padding(horizontal = 20.dp, vertical = 4.dp), style = ShareTypography.context, color = WebPalette.TextSecondary)
-                if (format == LayoutFormat.Phone && sheet.templateName == "DND5") DndPhoneSummary()
                 if (format == LayoutFormat.Phone) SheetNavigation(sections, visibleSection, images, model::selectSection, compact = true, template = sheet.templateName)
                 Box(Modifier.weight(1f).fillMaxWidth()) {
                     if (wideDnd) DndWideSheet(section, sections, model::selectSection, swipeEnabled)

@@ -36,7 +36,7 @@ internal fun DndStats(adaptive: Boolean = true) {
 }
 
 @Composable
-internal fun DndIdentityCard() {
+internal fun DndIdentityCard(compactHealth: Boolean = false) {
     val context = LocalCharacterSheet.current
     val sheet = context.sheet
     ShareTile(contentPadding = PaddingValues(0.dp), modifier = Modifier.fillMaxWidth()) {
@@ -57,7 +57,7 @@ internal fun DndIdentityCard() {
                     Text(sheet.values["race"].objectValue().label(), fontSize = 14.sp, color = WebPalette.TextSecondary)
                 }
                 Text(sheet.values["classes"].arrayValue().joinToString(" · ") { val row = it.objectValue(); "${row.label()} ${row["level"].number()}" }, fontSize = 14.sp, color = WebPalette.TextSecondary)
-                DndHealth()
+                DndHealth(compact = compactHealth)
             }
         }
         DndStatuses()
@@ -111,19 +111,6 @@ internal fun DndStatuses(showEmpty: Boolean = false) {
         }, style = ShareTypography.context, color = WebPalette.AccentSoft)
         if (values["inspiration"]?.jsonPrimitive?.booleanOrNull == true) Text("Вдохновение", style = ShareTypography.context, color = WebPalette.AccentSoft)
         if (values["exhaustion"].objectValue()["level"].number() > 0) Text("Истощение ${values["exhaustion"].objectValue()["level"].number()}", style = ShareTypography.context, color = WebPalette.Warning)
-    }
-}
-
-@Composable
-internal fun DndPhoneSummary() {
-    Surface(color = WebPalette.Surface) {
-        Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-            DndHealth(compact = true)
-            val active = LocalCharacterSheet.current.sheet.values
-            if (active["states"].arrayValue().isNotEmpty() || active["inspiration"] == JsonPrimitive(true) || active["exhaustion"].objectValue()["level"].number() > 0) {
-                Box(Modifier.weight(1f)) { DndStatuses(showEmpty = true) }
-            }
-        }
     }
 }
 

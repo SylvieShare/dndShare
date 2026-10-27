@@ -101,10 +101,10 @@ for (const format of matrix.formats) {
     await snapshot('record')
     const dnd = fixture.characters[0], vtm = fixture.characters[1]
     await page.goto(`/char/${dnd.uuid}`, { waitUntil: 'networkidle' })
-    if (format.name === 'tablet') await expect(page.locator('.dnd-tablet-base')).toBeVisible()
+    if (format.name !== 'wide') await expect(page.locator('.dnd-tablet-base')).toBeVisible()
     else await expect(page.locator('[data-tutorial="character-stat"]:visible').first()).toBeVisible({ timeout: 30000 })
     await snapshot('sheet-base')
-    if (format.name === 'tablet') await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Статы', exact: true }).click()
+    if (format.name !== 'wide') await page.getByRole('navigation', { name: format.name === 'phone' ? 'Вкладки персонажа' : 'Раздел персонажа' }).getByRole('button', { name: 'Статы', exact: true }).click()
     await expect(page.locator('.dnd-stats:visible')).toBeVisible()
     await snapshot('sheet-stats')
     await page.locator('[data-tutorial="character-stat"]:visible').first().getByRole('button', { name: 'Редактировать: Сила', exact: true }).click()

@@ -46,10 +46,10 @@ def verify_swipes(device, format_):
         expected = "Ячейки заклинаний"
     else:
         left, right, y = int(width * .15), int(width * .85), int(height * .65)
-        expected = "СИЛА" if format_["name"] == "tablet" else "Учебный посох"
+        expected = "СИЛА"
     device.shell("input", "swipe", str(right), str(y), str(left), str(y), "450")
     device.wait(expected)
-    if format_["name"] != "tablet":
+    if format_["name"] == "wide":
         device.shell("input", "swipe", str(left), str(y), str(right), str(y), "450")
         device.wait("СИЛА" if format_["name"] == "phone" else "Учебный посох")
     return {"format": format_["name"], "realHorizontalGesture": True, "forwardContent": expected}
@@ -110,7 +110,7 @@ def verify_form_restoration(device, url, fixture, stats):
     device.shell("wm", "size", "390x900")
     # wm returns before Activity recreation and Compose BackHandler registration.
     # Wait for the new phone content before sending Back to the restored activity.
-    device.wait(description="Меню персонажа")
+    device.wait(description="К списку персонажей")
     device.wait("СИЛА")
     (device.output / "lifecycle-phone-before-back.xml").write_bytes(ET.tostring(device.tree(), encoding="utf-8"))
     device.shell("input", "keyevent", "4")

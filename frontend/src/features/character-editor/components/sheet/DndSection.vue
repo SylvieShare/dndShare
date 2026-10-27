@@ -2,7 +2,7 @@
   <div class="sheet-stack dnd-section" :data-sheet-section="section">
     <CharacterBlock v-if="format !== 'desktop' && section !== 'base'" block-id="read_only_notice" />
     <div v-if="section === 'base'" class="dnd-tablet-base">
-      <DndIdentityCard compact />
+      <DndIdentityCard compact :compact-health="format === 'phone'" />
       <DndUtilities />
     </div>
     <DndStats v-else-if="section === 'stats'" :format="format" />
@@ -10,7 +10,6 @@
       :options="{ variant: 'list', show_add_in_view: true }" />
     <CharacterBlock v-else-if="section === 'spells'" block-id="spells" :options="{ show_add_in_view: true }" />
     <template v-else-if="section === 'inventory'">
-      <CharacterBlock v-if="format === 'phone'" block-id="campaign" />
       <CharacterBlock block-id="items" />
     </template>
     <DndAbilities v-else-if="section === 'abilities'" :format="format" />

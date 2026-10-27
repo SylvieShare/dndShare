@@ -14,11 +14,11 @@ describe('character tab query', () => {
     for (const invalid of ['-1', '4', 'unknown', '', undefined]) {
       expect(parseTabQuery(invalid, tabs, 1)).toBe(1)
     }
-    expect(parseTabQuery(['journal'], tabs)).toBe(6)
+    expect(parseTabQuery(['journal'], tabs)).toBe(7)
   })
   it('keeps unrelated query values and omits the default tab', () => {
     expect(queryForTab({ mode: 'compact', tab: 'journal' }, 0, 0, tabs)).toEqual({ mode: 'compact' })
-    expect(queryForTab({ mode: 'compact' }, 2, 0, tabs)).toEqual({ mode: 'compact', tab: 'spells' })
+    expect(queryForTab({ mode: 'compact' }, 3, 0, tabs)).toEqual({ mode: 'compact', tab: 'spells' })
     expect(defaultTabIndex([{ default: false }, { default: true }])).toBe(1)
   })
   it('restores sections through router Back and Forward', async () => {
@@ -26,12 +26,12 @@ describe('character tab query', () => {
       routes: [{ path: '/char/:uuid', component: { template: '<div />' } }] })
     await router.push('/char/test?tab=weapons')
     await router.push('/char/test?tab=journal')
-    expect(parseTabQuery(router.currentRoute.value.query.tab, tabs)).toBe(6)
+    expect(parseTabQuery(router.currentRoute.value.query.tab, tabs)).toBe(7)
     router.back()
     await new Promise(resolve => setTimeout(resolve, 0))
-    expect(parseTabQuery(router.currentRoute.value.query.tab, tabs)).toBe(1)
+    expect(parseTabQuery(router.currentRoute.value.query.tab, tabs)).toBe(2)
     router.forward()
     await new Promise(resolve => setTimeout(resolve, 0))
-    expect(parseTabQuery(router.currentRoute.value.query.tab, tabs)).toBe(6)
+    expect(parseTabQuery(router.currentRoute.value.query.tab, tabs)).toBe(7)
   })
 })

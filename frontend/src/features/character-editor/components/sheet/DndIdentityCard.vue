@@ -10,7 +10,7 @@
           </div>
           <div class="sheet-stack" style="padding: 15px; flex-grow: 1; gap: 14px">
             <CharacterBlock block-id="char_identity" :options="{&quot;style&quot;:{&quot;min-width&quot;:&quot;0&quot;}}" />
-            <CharacterBlock block-id="hp" />
+            <CharacterBlock block-id="hp" :options="compactHealth ? { variant: 'compact' } : {}" />
           </div>
         </div>
         <CharacterBlock block-id="desktop_statuses" />
@@ -21,5 +21,5 @@
 <script setup>
 import { BaseTile } from '@sylvieshare/share-ui'
 import CharacterBlock from '../CharacterBlock.vue'
-defineProps({ compact: Boolean })
+defineProps({ compact: Boolean, compactHealth: Boolean })
 </script>

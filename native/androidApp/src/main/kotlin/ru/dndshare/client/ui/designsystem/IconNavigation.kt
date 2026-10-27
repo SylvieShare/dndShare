@@ -10,6 +10,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.font.FontWeight
@@ -28,13 +31,28 @@ fun ShareIconNavigation(items: List<ShareNavigationItem>, selected: String, onSe
     val height = if (compact) 40.dp else 56.dp
     val index = items.indexOfFirst { it.key == selected }.coerceAtLeast(0)
     val x by animateDpAsState((size + gap) * index, label = "Navigation indicator")
-    Box(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = horizontalPadding, vertical = 4.dp).selectableGroup()) {
+    val scroll = rememberScrollState()
+    val density = LocalDensity.current
+    LaunchedEffect(selected, maxWidth, scroll.maxValue) {
+        if (compact) {
+            val start = with(density) { ((size + gap) * index).roundToPx() }
+            val end = with(density) { ((size + gap) * index + size + horizontalPadding * 2).roundToPx() }
+            val viewport = with(density) { maxWidth.roundToPx() }
+            val target = when {
+                start < scroll.value -> start
+                end > scroll.value + viewport -> end - viewport
+                else -> scroll.value
+            }
+            scroll.animateScrollTo(target.coerceIn(0, scroll.maxValue))
+        }
+    }
+    Box(Modifier.horizontalScroll(scroll).padding(horizontal = horizontalPadding, vertical = 4.dp).selectableGroup()) {
         if (compact) Box(Modifier.offset(x = x, y = height - 3.dp).width(size).height(3.dp).background(WebPalette.Accent, RoundedCornerShape(5.dp)))
         else Box(Modifier.offset(x = x).size(size).background(WebPalette.Accent, RoundedCornerShape(10.dp)))
         Row(horizontalArrangement = Arrangement.spacedBy(gap)) {
             items.forEach { item ->
                 Column(Modifier.width(size).height(height).selectable(item.key == selected, role = Role.Tab,
-                    onClick = { onSelect(item.key) }), horizontalAlignment = Alignment.CenterHorizontally,
+                    onClick = { onSelect(item.key) }).semantics { contentDescription = item.label }, horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center) {
                     icon(item.key)
                     if (!compact) Text(item.label, maxLines = 1, overflow = TextOverflow.Ellipsis,

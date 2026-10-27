@@ -17,7 +17,7 @@ export function useCharacterTutorial({ root, mobile, ready, template, sourceVers
       activeTab.value = index
       await nextTick()
     } else {
-      if (format.value === 'tablet' && ['character-health', 'character-menu'].includes(name)) {
+      if (format.value !== 'desktop' && ['character-health', 'character-menu'].includes(name)) {
         await action('character-section:base', context)
       }
       await actions.run(name, context)

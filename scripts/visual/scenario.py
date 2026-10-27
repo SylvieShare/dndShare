@@ -17,6 +17,7 @@ def form_lifecycle(device, root, url, output, fixture, stats):
         device.click(description='Открыть меню')
         device.click(text='Персонажи')
         device.click(text=fixture['characters'][0]['name'])
+        device.click(description='Статы')
         device.wait('СИЛА')
         device.click(description='Редактировать: Сила')
         device.wait('Основное значение')

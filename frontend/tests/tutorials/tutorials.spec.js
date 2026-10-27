@@ -103,7 +103,7 @@ for (const mobile of [false, true]) {
         const writes = await mockApi(page, role, [{ flowId, sourceKey: isCharacter ? 'edition:1' : 'source:1',
           device: mobile ? 'mobile' : 'desktop', revision: TUTORIAL_REVISION - 1, status }])
         await page.goto(`/tests/tutorials/fixtures/tutorials.html${isCharacter ? '' : '?page=/sessions/test'}`)
-        const menuName = isCharacter ? (mobile ? 'Меню' : 'Меню персонажа') : 'Настройки'
+        const menuName = isCharacter ? 'Меню персонажа' : 'Настройки'
         const menu = page.getByRole('button', { name: menuName, exact: true })
         await expect(menu).toBeVisible()
         await menu.click()
@@ -159,7 +159,7 @@ test('mobile panes mount on first visit and survive cyclic swipes', async ({page
   await mockApi(page, 'player', [{flowId: 'character', sourceKey: 'edition:1', device: 'mobile', revision: TUTORIAL_REVISION, status: 'completed'}])
   await page.goto('/tests/tutorials/fixtures/tutorials.html')
   const populated = () => page.locator('.mobile-swipe-pane .container').evaluateAll(els => els.filter(el => el.children.length).length)
-  await expect(page.locator('.mobile-swipe-pane')).toHaveCount(7)
+  await expect(page.locator('.mobile-swipe-pane')).toHaveCount(8)
   await expect.poll(populated).toBe(1)
   const firstPane = page.locator('.mobile-pane-scroll').first()
   await firstPane.evaluate(el => { el.dataset.retained = 'yes' })

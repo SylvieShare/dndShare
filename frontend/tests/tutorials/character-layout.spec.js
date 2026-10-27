@@ -41,6 +41,7 @@ for (const width of [600, 834, 1100]) test(`tablet sheet uses its own base and b
   await expect(page.locator('.dnd-tablet-base')).toBeVisible()
   await expect(page.locator('[data-tutorial="character-hp"]')).toBeVisible()
   await nav.getByRole('button', { name: 'Статы', exact: true }).click()
+  await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/dragging|settling/)
   const stats = page.locator('.dnd-stats:visible')
   await expect(stats.locator('[data-sheet-field]')).toHaveCount(6)
   const columns = await stats.locator('[data-sheet-field]').evaluateAll(nodes => new Set(nodes.map(node => Math.round(node.getBoundingClientRect().x))).size)
@@ -83,4 +84,58 @@ for (const width of [390, 834, 1440]) test(`VTM uses native composition at ${wid
   await expect.poll(() => page.locator('[data-sheet-field="clan"]:visible').evaluate(node => node.textContent.includes('Тореадор') || [...node.querySelectorAll('input')].some(input => input.value === 'Тореадор'))).toBe(true)
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
   expect(errors).toEqual([])
+})
+
+test.describe('compact character gestures', () => {
+  test.use({ hasTouch: true })
+
+  async function swipe(page, { reverse = false, vertical = false } = {}) {
+    const { width, height } = page.viewportSize()
+    const client = await page.context().newCDPSession(page)
+    const start = { x: Math.round(width * (reverse ? .2 : .8)), y: height - 180 }
+    await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [start] })
+    for (const part of [.2, .4, .6, .8, 1]) {
+      await client.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{
+        x: vertical ? start.x : Math.round(start.x + width * (reverse ? .6 : -.6) * part),
+        y: start.y - (vertical ? 200 * part : 0),
+      }] })
+    }
+    await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+    await client.detach()
+    await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/dragging|settling/)
+  }
+
+  for (const width of [390, 834]) test(`page swipes both ways and keeps vertical scrolling at ${width}`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 1100 })
+    await page.emulateMedia({ reducedMotion: 'no-preference' })
+    const api = await fixture(page)
+    await page.goto('/tests/tutorials/fixtures/tutorials.html')
+    const nav = page.getByRole('navigation', { name: width < 600 ? 'Вкладки персонажа' : 'Раздел персонажа' })
+    await expect(page.locator('.character-workspace-header')).toBeVisible()
+    await expect(nav.getByRole('button', { name: 'База', exact: true })).toHaveAttribute('aria-current', 'page')
+    await expect(page.locator('.dnd-tablet-base')).toBeVisible()
+    if (width < 600) await expect(page.locator('.dnd-tablet-base .hp-compact')).toBeVisible()
+    await swipe(page)
+    await expect(nav.getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
+    await expect(page.locator('.dnd-stats:visible')).toBeVisible()
+    await expect(page.locator('[data-tutorial="character-hp"]:visible')).toHaveCount(0)
+    await swipe(page, { vertical: true })
+    await expect(nav.getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
+    if (width < 600) await expect.poll(() => page.locator('.mobile-swipe-pane:not([inert]) .mobile-pane-scroll').evaluate(node => node.scrollTop)).toBeGreaterThan(0)
+    await swipe(page, { reverse: true })
+    await expect(nav.getByRole('button', { name: 'База', exact: true })).toHaveAttribute('aria-current', 'page')
+    await nav.getByRole('button', { name: 'Статы', exact: true }).click()
+    await nav.getByRole('button', { name: 'Магия', exact: true }).click()
+    await expect(nav.getByRole('button', { name: 'Магия', exact: true })).toHaveAttribute('aria-current', 'page')
+    expect(api.writes).toEqual([])
+  })
+
+  test('modal tablet sheet uses the same swipe pager', async ({ page }) => {
+    await page.setViewportSize({ width: 834, height: 1100 })
+    await page.goto('/tests/tutorials/fixtures/character-sheet-save.html')
+    await expect(page.locator('.dci-name')).toHaveText('Торин')
+    await swipe(page)
+    await expect(page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
+    await expect(page.locator('.dnd-stats:visible')).toBeVisible()
+  })
 })

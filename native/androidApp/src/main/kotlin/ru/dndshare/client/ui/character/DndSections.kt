@@ -22,10 +22,10 @@ internal fun DndSheetSection(section: SheetSection, format: LayoutFormat) {
         SheetSection.Base -> BoxWithConstraints(Modifier.fillMaxWidth()) {
             if (maxWidth >= DesignTokens.Layout.SheetBaseMin * 2 + DesignTokens.Spacing.Page) {
                 Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-                    Box(Modifier.weight(1f)) { DndIdentityCard() }
+                    Box(Modifier.weight(1f)) { DndIdentityCard(compactHealth = format == LayoutFormat.Phone) }
                     Box(Modifier.weight(1f)) { DndUtilities() }
                 }
-            } else Column(verticalArrangement = Arrangement.spacedBy(20.dp)) { DndIdentityCard(); DndUtilities() }
+            } else Column(verticalArrangement = Arrangement.spacedBy(20.dp)) { DndIdentityCard(compactHealth = format == LayoutFormat.Phone); DndUtilities() }
         }
         SheetSection.Stats -> DndStats()
         SheetSection.Weapons -> DndWeapons()

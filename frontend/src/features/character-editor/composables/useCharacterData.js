@@ -17,7 +17,7 @@ import { useCharacterPassiveEffects } from '@/features/character-editor/composab
 import { useCharacterCombatEffects } from '@/features/character-editor/composables/useCharacterCombatEffects'
 import { useCharacterDerivedEffects } from '@/features/character-editor/composables/useCharacterDerivedEffects'
 import { useCharacterStatuses } from '@/features/character-editor/composables/useCharacterStatuses'
-import { sheetTabs, sheetBlock } from '../lib/sheetPresentation'
+import { sheetTabs } from '../lib/sheetPresentation'
 
 export function useCharacterData(uuid, format) {
   const loading = ref(true)
@@ -167,9 +167,6 @@ export function useCharacterData(uuid, format) {
   const headerTitle = computed(() => accessors.value?.headerTitle(data.value) || '')
   const charName = computed(() => accessors.value?.displayName(data.value) || '')
   const charSub = computed(() => accessors.value?.subtitle(data.value) || '')
-  const toolbarBlocksList = computed(() => format.value === 'phone' && template.value?.system === 'dnd5e'
-    ? ['armor', 'initiative', 'speed', 'prof_bonus', 'lvl'].map(id => sheetBlock(template.value, id, { variant: 'mini' })) : null)
-  const showMobileSummary = computed(() => format.value === 'phone' && template.value?.system === 'dnd5e')
   const commonMobileScrollHide = computed(() => false)
   function containerWidthForTab() {
     return format.value === 'desktop' ? { maxWidth: template.value?.width + 'px' } : {}
@@ -285,8 +282,6 @@ export function useCharacterData(uuid, format) {
     headerTitle,
     charName,
     charSub,
-    toolbarBlocksList,
-    showMobileSummary,
     commonMobileScrollHide,
     load,
     loadPreview,

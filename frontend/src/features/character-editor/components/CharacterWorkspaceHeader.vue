@@ -1,9 +1,9 @@
 <template>
-  <WorkspaceHeader class="character-workspace-header" :content-width="contentWidth" :split-navigation="stackedNavigation">
+  <WorkspaceHeader class="character-workspace-header" :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" :split-navigation="stackedNavigation">
     <template #identity>
-      <ActionButton variant="quiet" aria-label="К списку персонажей" @click="router.push('/chars')">
+      <ActionButton variant="quiet" :icon-only="compact" aria-label="К списку персонажей" @click="router.push('/chars')">
         <template #icon><ArrowLeft :size="18" /></template>
-        Персонажи
+        <span v-if="!compact">Персонажи</span>
       </ActionButton>
       <div class="character-heading">
         <h1 :title="name">{{ name || 'Лист персонажа' }}</h1>
@@ -25,7 +25,7 @@ import { ArrowLeft } from '@lucide/vue'
 import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
 import CharacterSessionControl from './CharacterSessionControl.vue'
 import CharacterSheetTabs from './sheet/CharacterSheetTabs.vue'
-defineProps({ contentWidth: String, name: String, subtitle: String, session: Object, transfers: Object, stackedNavigation: Boolean,
+defineProps({ contentWidth: String, name: String, subtitle: String, session: Object, transfers: Object, stackedNavigation: Boolean, compact: Boolean,
   tabs: { type: Array, default: () => [] }, activeTab: Number })
 const emit = defineEmits(['select-tab'])
 const router = useRouter()
@@ -55,4 +55,6 @@ const router = useRouter()
   font-size: var(--type-context-size);
   line-height: var(--type-context-line-height);
 }
+.character-workspace-header--compact { --workspace-header-identity-gap: var(--spacing-small); }
+.character-workspace-header--compact .character-heading { margin-left: 0; padding-left: 0; border-left: 0; }
 </style>

@@ -3,9 +3,9 @@
     <CharacterEditionDialog :controller="edition" />
     <CharacterTransferDialogs :controller="transfers" :character-uuid="uuid" />
     <PageTutorial :tutorial="characterTutorial" :mobile="isMobile" />
-    <CharacterWorkspaceHeader :stacked-navigation="format === 'tablet'" v-if="!isMobile" :name="charName" :subtitle="charSub" :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="format === 'tablet' || template?.system === 'vtm-v20' ? activeTabs : []" :active-tab="activeTab" @select-tab="onSetActiveTab" />
+    <CharacterWorkspaceHeader :stacked-navigation="format === 'tablet'" v-if="!isMobile || template?.system === 'dnd5e'" :compact="isMobile" :name="charName" :subtitle="charSub" :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="format === 'tablet' || template?.system === 'vtm-v20' ? activeTabs : []" :active-tab="activeTab" @select-tab="onSetActiveTab" />
     <CharEditorToolbar
-      v-if="isMobile"
+      v-if="isMobile && template?.system !== 'dnd5e'"
       ref="charToolbarEl"
       :publicVisible="publicVisible"
       :saveStatus="saveStatus"
@@ -13,7 +13,6 @@
       :canEdit="isOwner"
       :tabs="toolbarTabs"
       :activeTab="activeTab"
-      :toolbarBlocksList="toolbarBlocksList"
       :toolbarValues="data.values"
       :toolbarVars="data.var"
       :charName="charName"
@@ -33,18 +32,8 @@
       @touchcancel.passive="onFixedHeaderTouchEnd"
     />
 
-    <div v-if="mobileIdentityEditorBlock" class="mobile-identity-editor">
-      <CharacterBlock
-        :block="mobileIdentityEditorBlock"
-        :values="data.values"
-        :vars="data.var"
-        @update:value="onUpdateValue"
-        @update:var="onUpdateVar"
-      />
-    </div>
-
     <div
-      v-if="isMobile && (showMobileSummary || mobileTabs.length)"
+      v-if="isMobile && mobileTabs.length"
       class="mobile-sticky-header"
       :style="{ top: toolbarHeight + 'px' }"
       @wheel.prevent="onFixedHeaderWheel"
@@ -53,14 +42,6 @@
       @touchend.passive="onFixedHeaderTouchEnd"
       @touchcancel.passive="onFixedHeaderTouchEnd"
     >
-      <div
-        v-if="showMobileSummary"
-        class="common-mobile-strip"
-        :class="{ 'strip-hidden': stripHidden && commonMobileScrollHide }"
-      >
-        <CharacterMobileSummary :definition="template" :values="data.values" @update:value="onUpdateValue" />
-      </div>
-
       <nav
         v-if="mobileTabs.length"
         ref="mobileTabbarEl"
@@ -76,6 +57,7 @@
           :ref="el => setMobileTabButtonRef(el, i)"
           class="mobile-tab-btn"
           :class="{ active: highlightedMobileTab === i }"
+          :aria-current="activeTab === i ? 'page' : undefined"
           type="button"
           :title="tab.title || 'Раздел'"
           @click="onSetActiveTab(i)"
@@ -96,58 +78,26 @@
       ref="sheetScrollEl"
       class="sheet-scroll"
       data-tutorial="character-content"
-      @touchstart.passive="e => { if (!isMobile) onTouchStart(e, sheetScrollEl) }"
-      @touchmove="e => { if (!isMobile) onTouchMove(e) }"
-      @touchend.passive="e => { if (!isMobile) onTouchEnd(e) }"
-      @touchcancel.passive="() => { if (!isMobile) cancelTouch() }"
     >
       <div v-if="loading" class="character-loading">
           <LoadingIndicator label="Загружаем лист персонажа…" size="lg" show-label />
         </div>
       <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="initializeCharacter">Повторить</button></div>
-      <div v-else-if="isMobile && template" class="mobile-swipe-stage" :class="{ dragging: tabDragActive, settling: tabDragSettling }">
-        <div ref="mobileTrackEl" class="mobile-swipe-track" :style="mobileSwipeTrackStyle">
-          <div
-            v-for="index in mobileTrackIndexes"
-            :key="'mobile-tab-' + index"
-            class="mobile-swipe-pane"
-          >
-            <div
-              :ref="el => setMobilePaneScrollRef(el, index)"
-              class="mobile-pane-scroll"
-              @touchstart.passive="e => onTouchStart(e, mobileTrackEl)"
-              @touchmove="onTouchMove"
-              @touchend.passive="onTouchEnd"
-              @touchcancel.passive="cancelTouch"
-            >
-              <div class="container" :style="containerWidthForTab(index)">
-                <component
-                  v-if="visitedTabIndexes.includes(index)"
-                  :is="tabRenderComponent(index, TabPane)"
-                  :definition="template" :format="format" :section="activeTabs[index]?.id"
-                  :values="data.values"
-                  :vars="data.var"
-                  @update:value="onUpdateValue"
-                  @update:var="onUpdateVar"
-                />
-              </div>
-            </div>
+      <CharacterSwipePager v-else-if="compactLayout && template" ref="swipePagerEl" :controller="swipe" :tabs="activeTabs">
+        <template #default="{ index }">
+          <div class="container" :style="containerWidthForTab(index)">
+            <component :is="tabRenderComponent(index, TabPane)" :definition="template" :format="format" :section="activeTabs[index]?.id"
+              :values="data.values" :vars="data.var" @update:value="onUpdateValue" @update:var="onUpdateVar" />
           </div>
-        </div>
-      </div>
+        </template>
+      </CharacterSwipePager>
       <div v-else-if="template" class="desktop-tabs">
-        <div v-if="format === 'desktop'" class="container" :style="containerWidthForTab(activeTab)">
+        <div class="container" :style="containerWidthForTab(activeTab)">
           <CharacterTabPane :definition="template" :format="format" :section="activeTabs[activeTab]?.id"
             :values="data.values" :vars="data.var" @select-tab="onSetActiveTab"
             @update:value="onUpdateValue" @update:var="onUpdateVar" />
         </div>
-        <template v-else>
-          <div v-for="index in visitedTabIndexes" :key="activeTabs[index]?.id" v-show="index === activeTab"
-            :inert="index !== activeTab" class="container tablet-tab-pane">
-            <CharacterTabPane :definition="template" :format="format" :section="activeTabs[index]?.id"
-              :values="data.values" :vars="data.var" @update:value="onUpdateValue" @update:var="onUpdateVar" />
-          </div>
-        </template>
+
       </div>
     </div>
 
@@ -169,7 +119,6 @@ import { useCharacterTutorial } from '@/features/tutorials/composables/useCharac
 import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { ref, watch, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import CharacterBlock from '@/features/character-editor/components/CharacterBlock'
 import CharacterTabPane from '@/features/character-editor/components/CharacterTabPane.vue'
 import CharEditorToolbar from '@/features/character-editor/components/CharEditorToolbar'
 import CharacterSaveErrorToast from '@/features/character-editor/components/CharacterSaveErrorToast.vue'
@@ -184,9 +133,9 @@ import { useCharacterViewport } from '@/features/character-editor/composables/ch
 import { createCharacterSnapshotRecorder } from '@/features/character-editor/lib/characterSnapshots'
 import { useUiStore } from '@/stores/ui'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
-import { sheetBlock, sheetTabs, sheetTabIndex } from '../lib/sheetPresentation'
+import { sheetTabs, sheetTabIndex } from '../lib/sheetPresentation'
 import { useAppLayout } from '@/shared/composables/useAppLayout'
-import CharacterMobileSummary from '../components/sheet/CharacterMobileSummary.vue'
+import CharacterSwipePager from '../components/sheet/CharacterSwipePager.vue'
 import { defaultTabIndex, parseTabQuery, queryForTab } from '@/features/character-editor/lib/tabQuery'
 
 const route = useRoute()
@@ -199,6 +148,7 @@ const uuid = route.params.uuid || router.currentRoute.value.params.uuid
 
 // ── Mobile detection ──────────────────────────────────────────────────
 const { phone: isMobile, format } = useAppLayout()
+const compactLayout = computed(() => format.value !== 'desktop')
 
 // ── Template refs ─────────────────────────────────────────────────────
 const tutorialRoot = ref(null)
@@ -206,8 +156,7 @@ const tutorialReady = ref(false)
 const charToolbarEl = ref(null)
 const sheetScrollEl = ref(null)
 const mobileTabbarEl = ref(null)
-const mobileTrackEl = ref(null)
-const mobilePaneScrollRefs = ref([])
+const swipePagerEl = ref(null)
 const fixedHeaderTouch = ref(null)
 
 const TabPane = CharacterTabPane
@@ -219,16 +168,11 @@ const {
   version, serverDocument, sourceVersionId, contentSources, sessions, topSession, hasSessionContext,
   loadSessions, applyCharacter, applyMetadata,
   activeTabs, toolbarTabs, mobileTabs,
-  headerTitle, charName, charSub, toolbarBlocksList, showMobileSummary, commonMobileScrollHide,
+  headerTitle, charName, charSub, commonMobileScrollHide,
   load, loadSync, containerWidthForTab, getInitialTabs,
   updateValue, updateValues, updateVar, updateContentSources, onPublicToggle,
 } = useCharacterData(uuid, format)
 
-const mobileIdentityEditorBlock = computed(() =>
-  isMobile.value && template.value?.system === 'dnd5e'
-    ? sheetBlock(template.value, 'char_identity')
-    : null
-)
 const activeSession = computed(() => {
   const requested = String(route.query.session || '')
   return sessions.value.find(session => session.uuid === requested)
@@ -290,16 +234,16 @@ Object.assign(charCtx, {
   },
 })
 
+const swipe = useTabSwipe(activeTabs, compactLayout, mobileTabbarEl)
 const {
-  activeTab, visitedTabIndexes, highlightedMobileTab,
+  activeTab, highlightedMobileTab,
   tabDragActive, tabDragSettling,
-  mobileTrackIndexes, mobileSwipeTrackStyle, mobileTabIndicatorStyle,
+  mobileTabIndicatorStyle,
   markTabVisited, setMobileTabButtonRef, updateMobileTabRects,
   scrollActiveMobileTabIntoView, setActiveTab,
   resetSwipe,
-  onTouchStart, onTouchMove, onTouchEnd, cancelTouch,
   tabRenderComponent, tabKey,
-} = useTabSwipe(activeTabs, isMobile, mobileTabbarEl)
+} = swipe
 
 const {
   toolbarHeight, stripHidden, viewStyle,
@@ -340,7 +284,7 @@ watch(() => route.query.session, async requested => {
   await syncEventSessionContext(requested)
 })
 
-watch([activeTab, isMobile], () => {
+watch([activeTab, format], () => {
   const preserveHeaderHidden = uiStore.headerHidden
   nextTick(() => {
     syncActiveScrollListener({ preserveHeaderHidden })
@@ -382,20 +326,16 @@ function recordSnapshot() {
 function onSetActiveTab(value) {
   const index = typeof value === 'string' ? sheetTabIndex(activeTabs.value, value) : value
   updateMobileTabRects(mobileTabbarEl.value)
-  setActiveTab(index, mobileTrackEl.value, mobileTabbarEl.value)
+  setActiveTab(index, swipePagerEl.value?.trackElement(), mobileTabbarEl.value)
 }
 
 function onResize() {
   updateMobileTabRects(mobileTabbarEl.value)
 }
 
-function setMobilePaneScrollRef(el, index) {
-  if (el) mobilePaneScrollRefs.value[index] = el
-}
-
 function activeScrollElement() {
-  return isMobile.value
-    ? mobilePaneScrollRefs.value[activeTab.value]
+  return compactLayout.value
+    ? swipePagerEl.value?.scrollElement(activeTab.value)
     : sheetScrollEl.value
 }
 

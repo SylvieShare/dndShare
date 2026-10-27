@@ -11,8 +11,7 @@
         :pendingSecondsLeft="pendingSecondsLeft"
         :tabs="toolbarTabs"
         :activeTab="activeTab"
-        :toolbarBlocksList="toolbarBlocksList"
-        :toolbarValues="data.values"
+          :toolbarValues="data.values"
         :toolbarVars="data.var"
         :charName="charName"
         :charSub="charSub"
@@ -27,12 +26,20 @@
 
       <div v-if="previewMode" class="csm-preview-note">Предпросмотр черновика · только чтение</div>
 
-      <div class="csm-body">
+      <div class="csm-body" :class="{ 'csm-body--pager': compactLayout }">
         <div v-if="loading" class="character-loading">
           <LoadingIndicator label="Загружаем лист персонажа…" size="lg" show-label />
         </div>
 
         <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="initializeCharacter">Повторить</button></div>
+        <CharacterSwipePager v-else-if="template && compactLayout" ref="swipePagerEl" :controller="swipe" :tabs="activeTabs">
+          <template #default="{ index }">
+            <div class="container" :style="containerWidthForTab(index)">
+              <CharacterTabPane :definition="template" :format="format" :section="activeTabs[index]?.id"
+                :values="data.values" :vars="data.var" @update:value="onUpdateValue" @update:var="onUpdateVar" />
+            </div>
+          </template>
+        </CharacterSwipePager>
         <div v-else-if="template" class="desktop-tabs">
           <div
             v-for="index in (format === 'desktop' && template.system === 'dnd5e' ? [0] : visitedTabIndexes)"
@@ -68,6 +75,8 @@ import CharacterTabPane from './CharacterTabPane.vue'
 import { useAppLayout } from '@/shared/composables/useAppLayout'
 import { sheetTabIndex, sheetTabs } from '../lib/sheetPresentation'
 import CharacterSheetTabs from './sheet/CharacterSheetTabs.vue'
+import CharacterSwipePager from './sheet/CharacterSwipePager.vue'
+import { useTabSwipe } from '../composables/useTabSwipe'
 import { useCharacterData } from '@/features/character-editor/composables/useCharacterData'
 import CharacterEditionDialog from './CharacterEditionDialog.vue'
 import { useCharacterEdition } from '@/features/character-editor/composables/useCharacterEdition'
@@ -90,7 +99,7 @@ const format = computed(() => windowFormat.value === 'phone' ? 'tablet' : window
 
 const {
   loading, loadError, template, data, charCtx, isOwner, publicVisible, version, serverDocument, sourceVersionId, applyCharacter, applyMetadata,
-  activeTabs, toolbarTabs, charName, charSub, toolbarBlocksList,
+  activeTabs, toolbarTabs, charName, charSub,
   load, loadPreview, containerWidthForTab, getInitialTabs,
   updateValue, updateValues, updateVar, onPublicToggle: updatePublicVisible,
 } = useCharacterData(props.uuid, format)
@@ -126,18 +135,21 @@ charCtx.logSessionEvent = event => {
   }
 }
 
-const activeTab = ref(0)
-const visited = ref(new Set([0]))
-const visitedTabIndexes = computed(() => [...visited.value].filter(index => index < activeTabs.value.length))
+const compactLayout = computed(() => format.value !== 'desktop')
+const swipePagerEl = ref(null)
+const swipe = useTabSwipe(activeTabs, compactLayout)
+const { activeTab, visitedTabIndexes, markTabVisited, resetSwipe } = swipe
 watch(format, (next, previous) => {
   const id = sheetTabs(template.value, previous)[activeTab.value]?.id
-  setActiveTab(sheetTabIndex(activeTabs.value, id))
+  resetSwipe()
+  activeTab.value = sheetTabIndex(activeTabs.value, id)
+  markTabVisited(activeTab.value)
 }, { flush: 'sync' })
 
 function setActiveTab(value) {
   const index = typeof value === 'string' ? sheetTabIndex(activeTabs.value, value) : value
-  activeTab.value = index
-  visited.value = new Set([...visited.value, index])
+  markTabVisited(index)
+  swipe.setActiveTab(index, swipePagerEl.value?.trackElement())
 }
 
 function onPublicToggle(value) {
@@ -173,7 +185,9 @@ onMounted(initializeCharacter)
 .csm-preview-note { flex: none; padding: 5px 14px; border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--accent) 8%, var(--bg)); color: var(--accent-soft); font-size: 10px; font-weight: 700; letter-spacing: .04em; text-align: center; text-transform: uppercase; }
 .csm--preview .desktop-tabs :deep(button[title='Редактировать']) { display: none; }
 .csm-body { flex: 1; min-height: 0; overflow-x: auto; overflow-y: auto; background: transparent; }
-.container { margin: 0 auto; padding: 18px 16px 28px; background: transparent; }
+.csm-body--pager { overflow: hidden; }
+.csm-body--pager .container { padding: 0; }
+.container { box-sizing: border-box; width: 100%; margin: 0 auto; padding: 18px 16px 28px; background: transparent; }
 .desktop-tabs { display: flex; flex-direction: column; min-height: 100%; }
 .desktop-tabs > .container { display: flex; flex: 1 1 auto; flex-direction: column; width: 100%; min-height: 0; }
 .character-loading { min-height: 100%; display: grid; place-items: center; padding: 32px; box-sizing: border-box; }

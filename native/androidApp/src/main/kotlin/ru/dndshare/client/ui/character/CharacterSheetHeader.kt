@@ -16,18 +16,13 @@ import coil3.ImageLoader
 import coil3.compose.AsyncImage
 import ru.dndshare.client.character.CharacterSheet
 import ru.dndshare.client.character.subtitle
-import ru.dndshare.client.character.DndDerivedValues
 import ru.dndshare.client.ui.LayoutFormat
 import ru.dndshare.client.ui.designsystem.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 
 @Composable
 internal fun CharacterSheetHeader(sheet: CharacterSheet?, format: LayoutFormat, sections: List<SheetSection>, section: SheetSection,
-    images: ImageLoader, select: (SheetSection) -> Unit, close: () -> Unit, mechanics: DndDerivedValues?, menu: () -> Unit) {
-    if (format == LayoutFormat.Phone && sheet?.templateName == "DND5" && mechanics != null) {
-        CharacterPhoneToolbar(sheet, mechanics, menu)
-        return
-    }
+    images: ImageLoader, select: (SheetSection) -> Unit, close: () -> Unit) {
     ShareWorkspaceHeader(contentInset = if (format == LayoutFormat.Phone) 8.dp else 14.dp,
         maxContentWidth = DesignTokens.Layout.SheetMax,
         navigation = if (format == LayoutFormat.Tablet) ({
@@ -50,8 +45,8 @@ internal fun CharacterSheetHeader(sheet: CharacterSheet?, format: LayoutFormat, 
 @Composable
 private fun SheetIdentity(sheet: CharacterSheet?, format: LayoutFormat, close: () -> Unit) {
             Row(Modifier.fillMaxWidth().heightIn(min = if (format == LayoutFormat.Tablet) 56.dp else 48.dp),
-                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                TextButton(onClick = close, colors = ButtonDefaults.textButtonColors(contentColor = WebPalette.TextSecondary), modifier = Modifier.semantics { contentDescription = "К списку персонажей" }) {
+                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(if (format == LayoutFormat.Phone) 8.dp else 14.dp)) {
+                TextButton(onClick = close, colors = ButtonDefaults.textButtonColors(contentColor = WebPalette.TextSecondary), modifier = Modifier.then(if (format == LayoutFormat.Phone) Modifier.width(48.dp) else Modifier).semantics { contentDescription = "К списку персонажей" }) {
                     AppGlyph(Glyph.Back, Modifier.size(18.dp))
                     if (format != LayoutFormat.Phone) { Spacer(Modifier.width(8.dp)); Text("Персонажи") }
                 }

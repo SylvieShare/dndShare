@@ -54,11 +54,11 @@ JSON документа персонажа хранит значения и иг
 и `blocks/vtm`. Создание и сессионное окно используют те же композиции.
 
 Есть три формата доступного окна: телефон до 600, планшет 600–1199 и большой
-от 1200 CSS px / dp. В среднем D&D-формате над содержимым находится навигация
-`IconNavigation`, как в сессии. Вкладки находятся в отдельной нижней полосе шапки: фон Background и тонкий разделитель отделяют её от верхнего ряда с именем и действиями. Первая вкладка **База** содержит карточку с иконкой,
+от 1200 CSS px / dp. В телефонном и среднем D&D-формате первая вкладка — «База»; над содержимым находится навигация
+`IconNavigation`, как в сессии. В среднем формате вкладки находятся в отдельной нижней полосе шапки: фон Background и тонкий разделитель отделяют её от верхнего ряда с именем и действиями. Первая вкладка **База** содержит карточку с иконкой,
 именем, HP и состояниями, служебную группу КД/инициативы/меню/скорости/мастерства/
 отдыха и отдельный уровень. Шесть характеристик остаются во **Статах**.
-Остальные разделы соответствуют телефонным. Статы занимают всю ширину в одну,
+Телефон и средний формат используют одинаковые разделы и общий свайп-пейджер страницы/модального листа. Соседние вкладки следуют за пальцем, вертикальная прокрутка сохраняется отдельно в каждой панели; свайпы и клики учитывают reduced motion. На телефоне возвращена шапка с именем и кнопкой возврата, сводка HP и служебные показатели находятся только в «Базе». Статы занимают всю ширину в одну,
 две или три колонки с минимальной шириной SheetStatMin; колонки балансируются
 по высоте с подбором групп характеристик; внутри каждой колонки порядок остаётся стабильным. Ширины и крупные числа заданы общими
 токенами. У VTM есть собственные прямые композиции трёх форматов.
@@ -133,14 +133,14 @@ sheet tab; controls, tutorial targets and session actions remain in place.
 The header stays above the sheet scroller, and long
 names truncate within it. Without a session the header keeps its identity and
 return action. The former session tile is removed from the desktop utility
-column. Mobile keeps its existing toolbar and session tile in **Предметы**. Its
+column. On phones the identity/return header and session control sit above the icon tabs; identity, HP and utility controls live in **База**. Its
 desktop identity summary uses the top-aligned frameless dedicated character icon to the left of the
 visible name, race, class list and HP. The full portrait lives in the inner **Личность** tab beside the
 appearance fields. The class list stays below the name and race and wraps by
 whole class entries without increasing the sheet width; an individual entry
 that is wider than the available row is ellipsized. The active tab still registers its DOM scroller
 through `useAppHeaderCollapse` so
-the compact common strip has one shared scroll/settle observer; regular routes
+each compact pane keeps its own scroll position; regular routes
 keep the header in document flow. Completed tab changes are pushed into the
 `tab` route query. Browser Back and Forward therefore restore prior tabs (even
 after rapid history navigation), while **К персонажам** provides a direct exit
@@ -271,13 +271,7 @@ Catalogue levels are copied into runtime status parameters, so changing one
 character never mutates the shared item. Exhaustion and inspiration are system
 effect items with their own icons and covers, while their live level/flag remain
 in the existing rules-owned character fields for rest compatibility.
-The compact mobile strip
-keeps HP at its intrinsic number width and never lets
-the HP numbers shrink. Its right side contains a fixed **Статусы** action
-button with editors for conditions, exhaustion and heroic inspiration. Active
-condition icons, a non-zero exhaustion level and active inspiration stay visible
-in a horizontally scrollable summary; the non-zero exhaustion badge opens its
-editor directly for an owner. The larger condition icons are frameless
+On phones, HP and status controls are placed in **База**, with the avatar, identity and utility cells. The global mobile summary strip is removed. The larger condition icons are frameless
 and show the condition description on hover. Empty and zero values render no placeholder.
 Heroic inspiration is stored as the boolean `values.inspiration`.
 

@@ -204,9 +204,11 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
             device.click(text='Персонажи')
         if wanted & {'sheet-base', 'sheet-stats', 'sheet-stat-editor'}:
             device.click(text=fixture['characters'][0]['name'])
-            if format_['name'] == 'tablet':
+            if format_['name'] == 'phone':
+                device.click(description='База')
+            elif format_['name'] == 'tablet':
                 device.click(text='База')
-            device.wait('Волшебник 4' if format_['name'] == 'tablet' else 'СИЛА' if format_['name'] == 'phone' else fixture['characters'][0]['name'])
+            device.wait('Волшебник 4' if format_['name'] != 'wide' else fixture['characters'][0]['name'])
             take(format_, 'sheet-base')
             if wanted & {'sheet-stats', 'sheet-stat-editor'}:
                 gesture = verify_swipes(device, format_)

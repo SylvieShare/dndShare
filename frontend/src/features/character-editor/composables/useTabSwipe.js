@@ -22,7 +22,7 @@ export function mobileTabRectsEqual(current, next) {
   })
 }
 
-export function useTabSwipe(activeTabs, isMobile, mobileTabbarRef = null) {
+export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
   const activeTab = ref(0)
   const visitedTabs = ref([])
   const highlightedMobileTab = ref(0)
@@ -153,7 +153,7 @@ export function useTabSwipe(activeTabs, isMobile, mobileTabbarRef = null) {
       mobileTabRects.value[highlightedMobileTab.value] ||
       mobileTabRects.value[activeTab.value] ||
       { x: 10, width: 44 }
-    if (!isMobile.value || !tabDragWidth.value || !mobileTabRects.value.length) return fallback
+    if (!swipeEnabled.value || !tabDragWidth.value || !mobileTabRects.value.length) return fallback
     if (!tabDragActive.value && !tabDragSettling.value) return fallback
 
     const offset = currentMobileTrackOffsetValue.value
@@ -175,7 +175,7 @@ export function useTabSwipe(activeTabs, isMobile, mobileTabbarRef = null) {
   // ── Swipe state ───────────────────────────────────────────────────────
 
   function syncHighlightedTabFromOffset(offset = currentMobileTrackOffsetValue.value) {
-    if (!isMobile.value || !tabDragWidth.value || !mobileTrackIndexes.value.length) return
+    if (!swipeEnabled.value || !tabDragWidth.value || !mobileTrackIndexes.value.length) return
     const slot = Math.max(
       0,
       Math.min(mobileTrackIndexes.value.length - 1, Math.round(-offset / tabDragWidth.value))
@@ -185,6 +185,8 @@ export function useTabSwipe(activeTabs, isMobile, mobileTabbarRef = null) {
   }
 
   function resetSwipe() {
+    touchStartX = null
+    touchStartY = null
     clearTimeout(swipeSettleTimer)
     clearTimeout(highlightSettleTimer)
     tabDragActive.value = false
@@ -219,6 +221,11 @@ export function useTabSwipe(activeTabs, isMobile, mobileTabbarRef = null) {
 
   function settleSwipeTo(targetIndex) {
     markTabVisited(targetIndex)
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      activeTab.value = targetIndex
+      resetSwipe()
+      return
+    }
     const targetSlot = mobileTrackIndexes.value.indexOf(targetIndex)
     const targetOffset = -(targetSlot >= 0 ? targetSlot : mobileActiveSlot.value) * tabDragWidth.value
     const fromOffset = currentMobileTrackOffsetValue.value
@@ -252,7 +259,7 @@ export function useTabSwipe(activeTabs, isMobile, mobileTabbarRef = null) {
   }
 
   function onTouchStart(event, containerEl) {
-    if (!isMobile.value || activeTabs.value.length < 2) return
+    if (!swipeEnabled.value || activeTabs.value.length < 2) return
     if (isSwipeBlocked(event.target)) return
     if (tabDragSettling.value) return
     const touch = event.changedTouches?.[0]
@@ -270,7 +277,7 @@ export function useTabSwipe(activeTabs, isMobile, mobileTabbarRef = null) {
   }
 
   function onTouchMove(event) {
-    if (!isMobile.value || activeTabs.value.length < 2 || touchStartX == null) return
+    if (!swipeEnabled.value || activeTabs.value.length < 2 || touchStartX == null) return
     const touch = event.changedTouches?.[0]
     if (!touch) return
     const dx = touch.clientX - touchStartX
@@ -294,13 +301,17 @@ export function useTabSwipe(activeTabs, isMobile, mobileTabbarRef = null) {
   }
 
   function onTouchEnd(event) {
-    if (!isMobile.value || activeTabs.value.length < 2 || touchStartX == null) return
+    if (!swipeEnabled.value || activeTabs.value.length < 2 || touchStartX == null) return
     const touch = event.changedTouches?.[0]
     if (!touch) return
     const dx = tabDragActive.value ? tabDragX.value : touch.clientX - touchStartX
     const dy = touch.clientY - touchStartY
     touchStartX = null
     touchStartY = null
+    if (!tabDragActive.value) {
+      resetSwipe()
+      return
+    }
     const enoughDistance = Math.abs(dx) >= Math.min(32, tabDragWidth.value * 0.12)
     const enoughIntent = Math.abs(dx) >= Math.abs(dy) * 0.75
     if (!tabDragActive.value || !enoughDistance || !enoughIntent) {
@@ -320,9 +331,19 @@ export function useTabSwipe(activeTabs, isMobile, mobileTabbarRef = null) {
   // ── Public setActiveTab (also used by tabbar click) ──────────────────
 
   function setActiveTab(index, mobileTrackEl, tabbarEl) {
-    if (index === activeTab.value) return
-    if (isMobile.value) {
-      if (tabDragSettling.value) return
+    if (index === activeTab.value && !tabDragActive.value && !tabDragSettling.value) return
+    if (swipeEnabled.value) {
+      if (tabDragActive.value || tabDragSettling.value) {
+        clearTimeout(swipeSettleTimer)
+        clearTimeout(highlightSettleTimer)
+        const visibleOffset = mobileTrackEl?.parentElement
+          ? mobileTrackEl.getBoundingClientRect().left - mobileTrackEl.parentElement.getBoundingClientRect().left
+          : currentMobileTrackOffsetValue.value
+        tabSwipeBaseOffset.value = visibleOffset
+        tabDragX.value = 0
+        settleSwipeTo(index)
+        return
+      }
       tabDragWidth.value =
         mobileTrackEl?.clientWidth ||
         tabbarEl?.clientWidth ||

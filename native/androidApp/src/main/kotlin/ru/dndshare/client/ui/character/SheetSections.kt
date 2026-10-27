@@ -15,7 +15,7 @@ fun sheetSections(template: String, format: LayoutFormat): List<SheetSection> = 
 } else {
     val content = listOf(SheetSection.Weapons, SheetSection.Spells, SheetSection.Inventory, SheetSection.Abilities, SheetSection.Personality, SheetSection.Journal)
     when (format) {
-        LayoutFormat.Phone -> listOf(SheetSection.Stats) + content
+        LayoutFormat.Phone -> listOf(SheetSection.Base, SheetSection.Stats) + content
         LayoutFormat.Wide -> listOf(content[0], content[1], content[3], content[2], content[4], content[5])
         else -> listOf(SheetSection.Base, SheetSection.Stats) + content
     }
