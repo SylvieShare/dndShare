@@ -21,6 +21,18 @@ android {
         buildConfigField("String", "API_BASE_URL", "\"" + baseUrl + "\"")
     }
     buildFeatures { compose = true; buildConfig = true }
+    buildTypes {
+        create("benchmark") {
+            initWith(getByName("release"))
+            signingConfig = signingConfigs.getByName("debug")
+            applicationIdSuffix = ".benchmark"
+            isDebuggable = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
+            matchingFallbacks += "release"
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -64,5 +76,7 @@ dependencies {
     androidTestImplementation("androidx.test:runner:1.7.0")
     androidTestImplementation("androidx.test:core:1.7.0")
     androidTestImplementation("androidx.test.ext:junit:1.3.0")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.12.1")
+    add("benchmarkImplementation", "androidx.profileinstaller:profileinstaller:1.4.1")
 }
 room3 { schemaDirectory("$projectDir/schemas") }

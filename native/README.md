@@ -31,6 +31,7 @@ Android 17 (API 37). Источник этих значений — `androidApp/
 .\scripts\native\build.ps1 -Target Android
 .\scripts\native\build.ps1 -Target Test
 .\scripts\native\build.ps1 -Target DeviceTest
+.\scripts\native\build.ps1 -Target DeviceTest -TestClass ru.dndshare.client.SheetPagerStateTest
 ```
 
 `All` выполняет unit-тесты, Android lint и собирает debug APK. `DeviceTest` требует запущенного
@@ -44,11 +45,48 @@ instrumentation проверяет миграции Room и атомарное �
 В `src/testSupport` также находится
 общая фикстура тестовых device services. `DeviceTest` ограничен выбранным
 эмулятором и не затрагивает подключённый телефон.
+Для короткого цикла `-TestClass` выбирает один класс или `package.Class#method`;
+результаты предыдущего запуска удаляются перед instrumentation. Полный проектный
+набор запускается только по прямой команде пользователя.
+CLI-сборки используют `--no-daemon`, чтобы фоновая JVM не удерживала
+Windows/WSL-процесс после завершения автоматической сборки.
+Нулевое число выполненных instrumentation-кейсов считается ошибкой, даже если
+Gradle сообщил успех; проверка читает реальные JUnit `testcase`, исключая skip.
+Проверка валидатора: `scripts/native/test-results.tests.ps1`.
 
 Артефакт: `androidApp/build/outputs/apk/debug/androidApp-debug.apk`.
 Это пробная установка с debug-подписью; production-подпись и публикация в store
 оформляются отдельно. Скрипт нормализует `PATHEXT` только текущего процесса при
 запуске из WSL.
+
+## Быстродействие эмулятора
+
+Проверять ускорение VM (`emulator -accel-check`) и графический backend отдельно.
+На Windows при рабочем GPU использовать `auto` или `host`; `swiftshader` выполняет
+графику программно на CPU и остаётся вариантом совместимости. Доступные режимы —
+[официальная инструкция Android](https://developer.android.com/studio/run/emulator-acceleration).
+Перед увеличением RAM/числа CPU проверять свободные ресурсы хоста; нехватку
+графического ускорения увеличение RAM не исправляет. Локальные параметры AVD
+и их резервные копии не переносят в Git. Метрики производительности приложения
+снимают на настоящем устройстве, как описано ниже.
+Автоматический AVD запускают без окна, чтобы ввод рабочего стола не вмешивался
+в сценарий. Пример для установленного локального AVD (не запускать второй
+экземпляр уже работающего устройства):
+
+```powershell
+& "$env:LOCALAPPDATA\Android\Sdk\emulator\emulator.exe" -avd DnDShare_API_37 -gpu host -no-window
+```
+
+## Замер морфа на устройстве
+
+`scripts/native/benchmark.ps1 -Serial SERIAL` собирает отдельный недебажный
+R8-вариант `ru.dndshare.client.benchmark` и запускает AndroidX Macrobenchmark:
+10 повторений обычного блока и длинного превью с клавиатурой, FrameTimingMetric
+и Perfetto. Вариант имеет синтетического персонажа, не использует API/аккаунт
+и сохраняет основное приложение. Телефон должен быть разблокирован;
+скрипт отвергает эмулятор. Исходники до/после фиксируются раздельно, результаты
+и трассы находятся в `macrobenchmark/build/outputs/`.
+Данные кадра телефона нельзя подменять замерами SwiftShader эмулятора.
 
 ## Общий дизайн с вебом
 
@@ -122,5 +160,9 @@ Go API и изолированный PostgreSQL. `scripts/native/smoke.py` со�
 и восстанавливает размер/плотность AVD. После smoke обычную сборку запускают
 без `ApiBaseUrl`, чтобы получить APK основного приложения. Production-аккаунты
 для автоматической проверки не используются.
+В UI-процессе smoke APK использует постоянный порт устройства из
+`scripts/visual/endpoint.json`; случайный порт API подключается через reverse.
+Неизменённая сборка с проверенным SHA-256 переиспользуется из
+`build/native-apk-cache`, но проверки выполняются заново.
 
 [README проекта](../README.md) · [Проверки](../md/testing.md)

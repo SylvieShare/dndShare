@@ -38,13 +38,20 @@ test('compact utility headings and values stay within the 64px grid rows', async
   expect(await page.locator('.stat-body').evaluate(el => getComputedStyle(el).paddingTop)).toBe('8px')
 })
 
-test('each shared face owns one surface and embeds without a second tile', async ({ page }) => {
+test('shared faces keep their intended surface and previews avoid nested tiles', async ({ page }) => {
   page.on('pageerror', error => { throw error })
   await page.goto('/tests/tutorials/fixtures/tile-faces.html')
   const sources = page.locator('[data-testid$="-source"]')
   await expect(sources).toHaveCount(12)
   for (const source of await sources.all()) {
-    await expect(source).toHaveClass(/base-tile/)
+    if (await source.getAttribute('data-testid') === 'DndStatView-source') {
+      await expect(source).not.toHaveClass(/base-tile/)
+      const face = await source.evaluate(el => {
+        const style = getComputedStyle(el)
+        return { background: style.backgroundColor, border: style.borderTopWidth }
+      })
+      expect(face).toEqual({ background: 'rgba(0, 0, 0, 0)', border: '0px' })
+    } else await expect(source).toHaveClass(/base-tile/)
     await expect(source).toHaveClass(/morph-tile/)
     await expect(source.locator('.morph-tile')).toHaveCount(0)
     const preview = page.getByTestId((await source.getAttribute('data-testid')).replace('-source', '-preview'))

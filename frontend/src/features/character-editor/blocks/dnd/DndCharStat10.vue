@@ -27,6 +27,7 @@
   />
 
   <MorphEditorShell
+    origin-radius="0px"
     v-if="editorOpen"
     :origin-rect="originRect"
     :origin-el="originEl"

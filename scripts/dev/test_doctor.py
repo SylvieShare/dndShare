@@ -96,7 +96,8 @@ class DoctorTest(unittest.TestCase):
         def convert(value):
             return self.root / ("sdk" if value == "sdk" else "java")
         with patch("scripts.dev.windows.linux_path", side_effect=convert), \
-                patch("scripts.dev.windows.capture", side_effect=capture):
+                patch("scripts.dev.windows.capture", side_effect=capture), \
+                patch("scripts.dev.windows.runtime_health", return_value={"headless": True}):
             result = probe({"android_home": "sdk", "java_home": "java"}, self.root)
         self.assertEqual(result["serial"], "emulator-1234")
         for command in calls:

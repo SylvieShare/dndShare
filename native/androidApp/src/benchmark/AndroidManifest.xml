@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+    <application android:label="DnD Share Benchmark" tools:replace="android:label">
+        <profileable android:shell="true" />
+        <activity android:name=".benchmark.MorphBenchmarkActivity" android:exported="true" android:windowSoftInputMode="adjustResize" />
+    </application>
+</manifest>

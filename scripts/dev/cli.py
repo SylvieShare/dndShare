@@ -4,19 +4,29 @@ from contextlib import ExitStack
 from pathlib import Path
 import subprocess
 import sys
+import signal
 
 from . import config, doctor, snapshot
 from .common import UIError
 from .plan import make_plan
+from .policy import check_scope
 from .runner import Run, lock, ports, run_plan
 
 
 def parser():
     root = argparse.ArgumentParser(description=__doc__)
     commands = root.add_subparsers(dest="command", required=True)
-    for name in ("doctor", "prepare", "focus", "verify", "review"):
+    for name in ("doctor", "prepare", "pin", "status", "focus", "verify", "review"):
         command = commands.add_parser(name)
+        command.add_argument("--allow-visible-emulator", action="store_true", help="explicit manual UI session; automated runs default to headless")
         command.add_argument("--emulator", help="explicit emulator serial; never a physical device")
+        if name == "status":
+            command.add_argument("--run", type=Path, required=True)
+        if name in {"focus", "verify", "review"}:
+            command.add_argument("--full", action="store_true", help="only after a direct user request")
+        if name == "review":
+            command.add_argument("--scenario", choices=("form-lifecycle",))
+            command.add_argument("--state", action="append", default=[])
         if name == "prepare":
             command.add_argument("--workspace", type=Path, help="new path under build/ui-workspaces")
             command.add_argument("--snapshot", action="store_true", help="freeze copied files while the checkout changes")
@@ -25,9 +35,12 @@ def parser():
             command.add_argument("--snapshot", action="store_true", help="explicitly check a historical frozen source")
             command.add_argument("--timeout", type=int, default=3600, help="timeout per stage in seconds")
         if name == "focus":
-            command.add_argument("kind", choices=("webunit", "browser", "native"))
+            command.add_argument("kind", choices=("webunit", "browser", "native", "tools"))
+            command.add_argument("--area", choices=("dev", "visual", "design"))
+            command.add_argument("--grep", help="browser test title filter")
             command.add_argument("--file", action="append", default=[], help="frontend-relative existing test file")
             command.add_argument("--project", choices=("ui", "maps", "production"), default="ui")
+            command.add_argument("--test-class", help="qualified native instrumentation test class or class#method")
             command.add_argument("--target", choices=("Test", "All", "Android", "DeviceTest"), default="Test")
         if name == "verify":
             command.add_argument("--tag", action="append", choices=("backend",), default=[])
@@ -35,10 +48,14 @@ def parser():
 
 
 def capabilities(args):
+    if args.command == 'review' and args.scenario == 'form-lifecycle':
+        return {'go', 'postgres16', 'android'}, True
     if args.command in {"doctor", "verify", "review"}:
         return None, True
-    if args.command == "prepare" or args.kind == "webunit":
+    if args.command in {"prepare", "pin"} or (args.command == "focus" and args.kind == "webunit"):
         return {"node", "dependencies"}, False
+    if args.command == "focus" and args.kind == "tools":
+        return set(), False
     if args.kind == "browser":
         return {"node", "dependencies", "playwright-chromium"}, False
     return {"android"}, args.target == "DeviceTest"
@@ -65,11 +82,25 @@ def main(argv=None, source=None):
         if args.kind == "native" and args.file:
             cli.error("--file applies only to focus webunit/browser")
     source = Path(source or Path(__file__).resolve().parents[2]).resolve()
+    if args.command == "status":
+        from .runner import read_status
+        import json
+        print(json.dumps(read_status(args.run), ensure_ascii=False, indent=2))
+        return 0
+    try:
+        check_scope(args)
+    except UIError as error:
+        print(str(error), file=sys.stderr)
+        return 2
+    def interrupted(signum, frame):
+        raise KeyboardInterrupt(f"Runner interrupted by signal {signum}")
+    previous_term = signal.signal(signal.SIGTERM, interrupted)
     run = Run(source, args.command)
     args.report_dir = run.directory
+    run.receipt["fullRequested"] = getattr(args, "full", False)
     try:
         with lock(source / "build/dev-tools/config.lock"):
-            tools = config.load(source)
+            tools = dict(config.load(source), allow_visible_emulator=args.allow_visible_emulator)
         required, require_device = capabilities(args)
         diagnostic_source = source
         if args.command in {"focus", "verify", "review"} and (args.workspace / snapshot.MANIFEST).is_file():
@@ -80,7 +111,12 @@ def main(argv=None, source=None):
         run.receipt["toolConfig"] = str(source / "build/dev-tools/local-tools.json")
         serial = next((c["detail"].get("serial") for c in diagnosis["checks"] if c["name"] == "android"), None)
         run.receipt["emulator"] = serial
-        if args.command == "prepare":
+        if args.command == "pin":
+            with lock(source / ".ui-run.lock"):
+                workspace, manifest = snapshot.pin(source, tools)
+            run.receipt.update(workspace=str(workspace), sourceSHA=manifest["sourceSHA"], sourceHash=manifest["sourceHash"])
+            print("workspace: " + str(workspace), flush=True)
+        elif args.command == "prepare":
             workspace, manifest = snapshot.prepare(source, tools, args.workspace, frozen=args.snapshot)
             run.receipt.update(workspace=str(workspace), sourceSHA=manifest["sourceSHA"], sourceHash=manifest["sourceHash"])
             print("workspace: " + str(workspace), flush=True)
@@ -92,11 +128,11 @@ def main(argv=None, source=None):
                 run.receipt["selection"] = "snapshot" if args.snapshot else "current"
                 allocated = ports(3)
                 plan = make_plan(args, tools, workspace, serial, allocated[2])
-                if any(stage.native or stage.name == "review" for stage in plan):
-                    stack.enter_context(lock(source / "build/dev-tools/emulator.lock"))
                 run_plan(run, plan, tools, workspace, manifest, allocated, args.timeout)
                 snapshot.validate(source, workspace, tools, frozen=True)
         return run.finish()
     except (UIError, OSError, ValueError, KeyError, subprocess.SubprocessError, KeyboardInterrupt) as error:
         print(str(error) or "Interrupted", file=sys.stderr)
         return run.finish(error or "Interrupted")
+    finally:
+        signal.signal(signal.SIGTERM, previous_term)

@@ -1,7 +1,8 @@
 param(
     [ValidateSet('Android', 'All', 'Test', 'DeviceTest')][string]$Target = 'All',
     [string]$ApiBaseUrl = 'https://dndshare.ru',
-    [string]$DeviceSerial = 'emulator-5554'
+    [string]$DeviceSerial = 'emulator-5554',
+    [string]$TestClass
 )
 $ErrorActionPreference = 'Stop'
 # WSL may pass a reduced PATHEXT; use Windows' executable extensions locally.
@@ -20,6 +21,9 @@ if ($Target -eq 'DeviceTest') {
         throw 'DeviceTest requires an emulator. Choose its serial with -DeviceSerial.'
     }
     $env:ANDROID_SERIAL = $DeviceSerial
+    # Old XML must not turn a zero-test Gradle run into a passing result.
+    $resultDirectory = Join-Path $project 'androidApp\build\outputs\androidTest-results\connected\debug'
+    if (Test-Path -LiteralPath $resultDirectory) { Remove-Item -LiteralPath $resultDirectory -Recurse -Force }
 }
 [string[]]$nativeTasks = @(switch ($Target) {
     'Android' { @(':androidApp:assembleDebug') }
@@ -27,12 +31,22 @@ if ($Target -eq 'DeviceTest') {
     'DeviceTest' { @(':androidApp:connectedDebugAndroidTest') }
     'All' { @(':androidApp:testDebugUnitTest', ':androidApp:lintDebug', ':androidApp:assembleDebug') }
 })
+$testArguments = @()
+if ($TestClass) {
+    if ($Target -ne 'DeviceTest' -or $TestClass -notmatch '^[A-Za-z0-9_.$#]+$') { throw 'TestClass requires DeviceTest and a qualified test name.' }
+    $testArguments += "-Pandroid.testInstrumentationRunnerArguments.class=$TestClass"
+}
 Push-Location -LiteralPath $project
 try {
     $ErrorActionPreference = 'Continue'
-    & (Join-Path $project 'gradlew.bat') --console=plain @nativeTasks "-PapiBaseUrl=$ApiBaseUrl"
+    & (Join-Path $project 'gradlew.bat') --console=plain --no-daemon @nativeTasks @testArguments "-PapiBaseUrl=$ApiBaseUrl"
     $code = $LASTEXITCODE
     if ($code -ne 0) { exit $code }
+    if ($Target -eq 'DeviceTest') {
+        . (Join-Path $PSScriptRoot 'test-results.ps1')
+        $executed = Assert-NativeInstrumentationResults -Directory $resultDirectory
+        Write-Host "Instrumented tests executed: $executed"
+    }
 } finally {
     Pop-Location
     $env:ANDROID_SERIAL = $previousSerial

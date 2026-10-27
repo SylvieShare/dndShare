@@ -110,6 +110,9 @@ def prepare(source, config, destination=None, frozen=False):
 def resolve_workspace(source, workspace):
     workspace = Path(workspace).resolve()
     base = (source / "build/ui-workspaces").resolve()
+    if workspace == source and (workspace / '.git').is_file() and (workspace / MANIFEST).is_file():
+        if read_json(workspace / MANIFEST).get('mode') == 'worktree':
+            return workspace
     if not workspace.is_relative_to(base) or not (workspace / MANIFEST).is_file():
         raise UIError("Select an explicit prepared --workspace under " + str(base))
     return workspace
@@ -126,6 +129,8 @@ def workspace_files(workspace):
                           if name not in RUNTIME_PARTS and (relative.parts or name in SOURCE_ROOTS)]
         for name in files:
             path = relative / name
+            if name == '.env.example':
+                continue  # Tracked example in a pinned checkout; never loaded or copied as credentials.
             if name.lower().startswith(".env") or name.lower().endswith(".env"):
                 raise UIError("Environment files are forbidden in a prepared workspace: " + str(path))
             if included(path):
@@ -158,3 +163,28 @@ def validate(source, workspace, config, frozen=False):
     if not frozen and (current(source) != manifest["sourceHash"] or sha != manifest["sourceSHA"]):
         raise UIError("Stale source selection; prepare again or explicitly use --snapshot")
     return workspace, manifest
+
+
+def pin(source, config):
+    """Register an isolated checkout in place; keep all expensive build outputs/caches."""
+    if not (source / '.git').is_file():
+        raise UIError('pin requires a separate Git worktree, not the shared primary checkout')
+    top = Path(capture(['git', 'rev-parse', '--show-toplevel'], cwd=source)).resolve()
+    if top != source:
+        raise UIError('pin must run at the worktree root')
+    names = source_files(source)
+    entries = content(source, names)
+    location = source / MANIFEST
+    previous = read_json(location) if location.exists() else {}
+    hot = Path(previous['hotCache']) if previous.get('mode') == 'worktree' else Path(tempfile.mkdtemp(prefix='dndshare-ui-'))
+    hot.mkdir(exist_ok=True)
+    modules = source / 'frontend/node_modules'
+    if not modules.exists():
+        link_modules(Path(config['node_modules']), modules, hot)
+    manifest = {'schema': 1, 'mode': 'worktree', 'source': str(source), 'workspace': str(source),
+                'sourceSHA': capture(['git', 'rev-parse', 'HEAD'], cwd=source), 'sourceHash': content_hash(entries),
+                'selection': 'current', 'files': entries, 'hotCache': str(hot),
+                'lockHash': digest(source / 'frontend/package-lock.json'), 'nodeModules': config['node_modules'],
+                'config': str(source / 'build/dev-tools/local-tools.json')}
+    write_json(location, manifest)
+    return source, manifest

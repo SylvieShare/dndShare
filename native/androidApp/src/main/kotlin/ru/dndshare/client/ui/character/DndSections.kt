@@ -49,8 +49,8 @@ internal fun DndWideSheet(section: SheetSection, sections: List<SheetSection>, s
             Column(Modifier.weight(1f).padding(top = 20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 DndIdentityCard()
                 SheetNavigation(sections, sections[pager.currentPage], context.images, select, textOnly = true)
-                HorizontalPager(pager, Modifier.fillMaxWidth().animateContentSize(tween(DesignTokens.Motion.Navigation)),
-                    beyondViewportPageCount = 0, key = { sections[it].name }, userScrollEnabled = swipeEnabled,
+                SheetPagerContent(pager, sections, Modifier.fillMaxWidth().animateContentSize(tween(DesignTokens.Motion.Navigation)),
+                    beyondViewportPageCount = 0, userScrollEnabled = swipeEnabled,
                     verticalAlignment = androidx.compose.ui.Alignment.Top) { page ->
                     Column(Modifier.fillMaxWidth()) { DndSheetSection(sections[page], LayoutFormat.Wide) }
                 }

@@ -13,6 +13,7 @@ class Stage:
     command: list
     cwd: Path
     native: bool = False
+    device: bool = False
 
 
 def npm(config, *args):
@@ -48,9 +49,13 @@ def make_plan(args, config, workspace, serial, api_port):
         return Stage(name, [sys.executable, script, "--check"], workspace)
 
     def native(name, target):
-        return Stage(name, native_command(config, workspace, target, serial, api_port), workspace, True)
+        return Stage(name, native_command(config, workspace, target, serial, getattr(args, "test_class", None)), workspace, True, target == "DeviceTest")
 
     if args.command == "focus":
+        if args.kind == "tools":
+            if not args.area:
+                raise UIError("Choose --area dev, visual or design for tooling checks")
+            return [Stage("tools-" + args.area, [sys.executable, "-m", "unittest", "discover", "-s", "scripts/" + args.area, "-p", "test_*.py"], workspace)]
         files = selected_files(workspace, args.kind, args.file)
         if args.kind == "webunit":
             if not files:
@@ -59,7 +64,7 @@ def make_plan(args, config, workspace, serial, api_port):
                     Stage("webunit", [config["node"], "node_modules/vitest/vitest.mjs", "run", *files,
                                       "--no-cache"], frontend)]
         if args.kind == "browser":
-            return [node("browser", "run", "test:browser", "--", "--project=" + args.project, *files)]
+            return [node("browser", "run", "test:browser", "--", "--project=" + args.project, *files, *(["--grep", args.grep] if args.grep else []))]
         if files:
             raise UIError("--file applies to webunit/browser only")
         return [native("native" + args.target, args.target)]
@@ -70,8 +75,11 @@ def make_plan(args, config, workspace, serial, api_port):
         if any(value in {"--output", "--serial"} or value.startswith(("--output=", "--serial="))
                for value in args.visual_args):
             raise UIError("review owns --output/--serial; choose the emulator with --emulator")
+        scope = (["--full"] if args.full else []) + (["--scenario", args.scenario] if args.scenario else [])
+        for state in args.state:
+            scope += ["--state", state]
         return [Stage("review", [sys.executable, str(script), "--output", str(args.report_dir / "review"),
-                                  "--serial", serial, *args.visual_args], workspace)]
+                                  "--serial", serial, *scope, *args.visual_args], workspace, device=True)]
     stages = [node("webunit", "test", "--", "--run", "--no-cache"),
               node("webbuild", "run", "build"),
               node("browser", "run", "test:browser", "--"),

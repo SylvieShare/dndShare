@@ -2,6 +2,9 @@ package ru.dndshare.client.ui.character
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.material3.*
@@ -10,8 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.semantics.contentDescription
@@ -24,7 +29,28 @@ import ru.dndshare.client.BuildConfig
 import ru.dndshare.designsystem.*
 
 @Composable
-internal fun DndAbilityTile(ability: DndAbility, compact: Boolean, preview: Boolean = false) {
+internal fun DndAbilityTile(ability: DndAbility, compact: Boolean) {
+    val context = LocalCharacterSheet.current
+    val current = context.editor?.takeIf { it.fields.target == ability.id }
+    var retained by remember { mutableStateOf(current) }
+    SideEffect { if (current != null) retained = current }
+    ShareMorphSource(ability.id, Modifier.fillMaxWidth(), scrollPreview = false) { presentation ->
+        val fields = (current ?: retained)?.fields.takeIf { presentation.expanded }
+        val value = fields?.number?.toIntOrNull()?.takeIf { it >= 0 }
+        val projected = remember(context.sheet, value) {
+            if (value == null) context.sheet else context.sheet.copy(data = applySheetPatches(context.sheet.data,
+                listOf(context.sheet.manualStatPatch(ability.id, value))))
+        }
+        val mechanics = remember(projected, context.items, context.metadata) { DndDerivedValues(projected, context.items, context.metadata) }
+        CompositionLocalProvider(LocalCharacterSheet provides context.copy(sheet = projected,
+            canEdit = context.canEdit && !presentation.expanded, mechanics = mechanics)) {
+            DndAbilityFace(ability, compact, presentation)
+        }
+    }
+}
+
+@Composable
+private fun DndAbilityFace(ability: DndAbility, compact: Boolean, presentation: ShareMorphPresentation) {
     val context = LocalCharacterSheet.current
     val sheet = context.sheet
     val data = sheet.values[ability.id].objectValue()
@@ -37,15 +63,18 @@ internal fun DndAbilityTile(ability: DndAbility, compact: Boolean, preview: Bool
     val titleSuggest = context.metadata.suggests["16"]?.firstOrNull { it.id == ability.suggestId }
     val color = titleSuggest?.color
         ?.let { runCatching { Color(android.graphics.Color.parseColor(it)) }.getOrNull() } ?: WebPalette.TextMuted
-    val source = if (preview) Modifier else Modifier.shareMorphSource(ability.id)
-    ShareTile(contentPadding = PaddingValues(0.dp), modifier = Modifier.fillMaxWidth().then(source), accent = color, framed = !preview) {
-        Column(Modifier.fillMaxWidth().padding(start = 3.dp)) {
+    // A finite upper bound permits natural full height inside the sheet's scroll container.
+    // In the modal the viewport is bounded, so only visible rows are remeasured during reflow.
+    val sourceLimit = LocalConfiguration.current.screenHeightDp.coerceAtLeast(1).dp * (skills.size + 2)
+    LazyColumn(Modifier.fillMaxWidth().heightIn(max = sourceLimit).shareAccentStrip(color).padding(start = 3.dp),
+        userScrollEnabled = presentation.expanded, contentPadding = PaddingValues(bottom = 12.dp)) {
+        item("heading") {
             Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 7.dp), verticalAlignment = Alignment.CenterVertically) {
                 Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
                 Text(ability.title.uppercase(), Modifier.clickable(enabled = context.canEdit) { context.edit(ability.id) },
                     fontSize = 13.sp, lineHeight = 16.sp, fontWeight = FontWeight.Bold, color = WebPalette.TextMuted)
-                if (preview) Spacer(Modifier.size(32.dp))
-                else if (context.canEdit) IconButton(onClick = { context.edit(ability.id) }, modifier = Modifier.size(32.dp)
+                if (context.canEdit || presentation.expanded) IconButton(onClick = { context.edit(ability.id) }, enabled = context.canEdit, modifier = Modifier.size(32.dp)
+                    .graphicsLayer { alpha = 1f - presentation.progress() }
                     .semantics { contentDescription = "Редактировать: ${ability.title}" }) {
                     AppGlyph(Glyph.Edit, Modifier.size(13.dp))
                 }
@@ -58,6 +87,8 @@ internal fun DndAbilityTile(ability: DndAbility, compact: Boolean, preview: Bool
                     }
                 }
             }
+        }
+        item("score") {
             Row(Modifier.fillMaxWidth().clickable(enabled = context.canEdit) { context.edit(ability.id) }
                 .padding(horizontal = 14.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -69,26 +100,28 @@ internal fun DndAbilityTile(ability: DndAbility, compact: Boolean, preview: Bool
                     style = if (compact) ShareTypography.sheetStatCompact else ShareTypography.sheetStat, color = color)
                 Text("($score)", color = WebPalette.TextMuted, fontSize = if (compact) 18.sp else 15.sp)
             }
-            Column(Modifier.fillMaxWidth().padding(start = 12.dp, end = 12.dp, bottom = 12.dp)) {
-                skills.forEach { id ->
-                    val skill = data["skills"].objectValue()[id].objectValue()
-                    val skillContext = RuleContext(kind = "skill_check", skill = id.toLongOrNull(), ability = ability.suggestId)
-                    val rank = maxOf(skill["up"].number(), context.mechanics.rank("skill_proficiency", skillContext))
-                    val title = skill.text("override_title").ifBlank {
-                        context.metadata.suggests["15"]?.firstOrNull { it.id.toString() == id }?.value ?: skillNames[id.toIntOrNull()] ?: "Навык $id"
-                    }
-                    Row(Modifier.fillMaxWidth().heightIn(min = if (compact) 34.dp else 27.dp), verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Text(title, fontSize = if (compact) 15.sp else 13.sp, color = if (rank > 0) WebPalette.Text else WebPalette.TextSecondary)
-                        HorizontalDivider(Modifier.weight(1f))
-                        Surface(color = WebPalette.Raised, shape = RoundedCornerShape(if (compact) 9.dp else 7.dp),
-                            border = BorderStroke(1.dp, if (rank > 0) color.copy(alpha = .5f) else WebPalette.Border)) {
-                            Text(signed(modifier + rank * sheet.proficiency() + skill["bonuses"].bonusTotal() + context.mechanics.bonus("check_bonus", skillContext.copy(proficient = rank > 0))),
-                                Modifier.padding(horizontal = if (compact) 10.dp else 7.dp, vertical = if (compact) 4.dp else 2.dp),
-                                fontSize = if (compact) 16.sp else 13.sp, lineHeight = if (compact) 16.sp else 13.sp, fontWeight = FontWeight.Bold,
-                                color = if (rank > 0) WebPalette.Text else WebPalette.TextSecondary)
-                        }
-                    }
+        }
+        items(skills, key = { "skill:$it" }) { id ->
+            val skill = data["skills"].objectValue()[id].objectValue()
+            val skillContext = RuleContext(kind = "skill_check", skill = id.toLongOrNull(), ability = ability.suggestId)
+            val rank = maxOf(skill["up"].number(), context.mechanics.rank("skill_proficiency", skillContext))
+            val title = skill.text("override_title").ifBlank {
+                context.metadata.suggests["15"]?.firstOrNull { it.id.toString() == id }?.value ?: skillNames[id.toIntOrNull()] ?: "Навык $id"
+            }
+            Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp).heightIn(min = if (compact) 34.dp else 27.dp), verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis,
+                        fontSize = if (compact) 15.sp else 13.sp, color = if (rank > 0) WebPalette.Text else WebPalette.TextSecondary)
+                    HorizontalDivider(Modifier.weight(1f))
+                }
+                Surface(color = WebPalette.Raised, shape = RoundedCornerShape(if (compact) 9.dp else 7.dp),
+                    border = BorderStroke(1.dp, if (rank > 0) color.copy(alpha = .5f) else WebPalette.Border)) {
+                    Text(signed(modifier + rank * sheet.proficiency() + skill["bonuses"].bonusTotal() + context.mechanics.bonus("check_bonus", skillContext.copy(proficient = rank > 0))),
+                        Modifier.padding(horizontal = if (compact) 10.dp else 7.dp, vertical = if (compact) 4.dp else 2.dp),
+                        fontSize = if (compact) 16.sp else 13.sp, lineHeight = if (compact) 16.sp else 13.sp, fontWeight = FontWeight.Bold,
+                        color = if (rank > 0) WebPalette.Text else WebPalette.TextSecondary)
                 }
             }
         }

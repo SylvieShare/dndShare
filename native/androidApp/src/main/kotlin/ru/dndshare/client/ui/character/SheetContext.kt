@@ -10,7 +10,7 @@ import ru.dndshare.client.model.*
 data class SheetContext(val sheet: CharacterSheet, val metadata: HandbookMetadata,
     val items: Map<Long, CatalogueItem>, val images: ImageLoader, val canEdit: Boolean,
     val edit: (String) -> Unit, val openItem: (Long) -> Unit,
-    val mechanics: DndDerivedValues, val journal: SheetJournalState)
+    val mechanics: DndDerivedValues, val journal: SheetJournalState, val editor: SheetEditorState? = null)
 
 val LocalCharacterSheet = compositionLocalOf<SheetContext> { error("Character sheet context is required") }
 

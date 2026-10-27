@@ -1,13 +1,15 @@
 """Unique run evidence and guarded execution of prepared sources."""
-from contextlib import contextmanager
+from contextlib import contextmanager, ExitStack
 import fcntl
 from pathlib import Path
 import shutil
+import os
+import hashlib
 import socket
 import subprocess
 import time
 
-from .common import UIError, execute, identifier, write_json
+from .common import UIError, execute, identifier, write_json, read_json, capture
 from .dependencies import environment
 
 
@@ -40,13 +42,16 @@ def ports(count):
 
 class Run:
     def __init__(self, source, command):
+        self.source = source
         self.directory = source / "build/ui-runs" / identifier()
         self.directory.mkdir(parents=True)
         self.receipt = {"schema": 1, "command": command, "status": "running", "stages": [],
-                        "run": str(self.directory), "started": time.time()}
+                        "run": str(self.directory), "started": time.time(), "runnerPid": os.getpid(),
+                        "runnerStart": process_identity(os.getpid()), "heartbeat": time.time()}
         self.save()
 
     def save(self):
+        self.receipt["heartbeat"] = time.time()
         write_json(self.directory / "receipt.json", self.receipt)
 
     def finish(self, error=None):
@@ -85,12 +90,15 @@ def run_plan(run, plan, config, workspace, manifest, selected_ports, timeout):
         run.receipt["stages"].append(record)
         run.save()
         try:
-            if stage.native:
-                for relative in ("native/.gradle", "native/androidApp/build", "native/designSystem/build"):
-                    path = workspace / relative
-                    if path.exists():
-                        shutil.rmtree(path)
-            code = execute(stage.command, stage.cwd, env, log, timeout)
+            def progress(pid):
+                record["childPid"] = pid
+                run.save()
+            with ExitStack() as guards:
+                if stage.device:
+                    guards.enter_context(lock(shared_locks(workspace) / "emulator.lock"))
+                if stage.native:
+                    guards.enter_context(lock(shared_locks(workspace) / "native-build.lock"))
+                code = execute(stage.command, stage.cwd, env, log, timeout, on_progress=progress)
             record.update(status="passed" if code == 0 else "failed", exitCode=code)
         except (OSError, subprocess.TimeoutExpired) as error:
             record.update(status="failed", error=str(error))
@@ -106,5 +114,40 @@ def run_plan(run, plan, config, workspace, manifest, selected_ports, timeout):
                         if report.is_dir():
                             shutil.copytree(report, run.directory / stage.name / module / relative, dirs_exist_ok=True)
             record["finished"] = time.time()
+            if record['status'] == 'failed':
+                record['signature'] = hashlib.sha256((stage.name + '\n' + (log.read_text(errors='replace')[-4000:] if log.exists() else record.get("error", "failed"))).encode()).hexdigest()
+                run.save()
+                from .triage import repeated_failure
+                if repeated_failure(run.source / 'build/ui-runs', record['signature']):
+                    record['nextAction'] = 'Collect a targeted repro and trace before another broad run.'
             run.save()
         print(f"{stage.name}: {record['status']} ({log})", flush=True)
+        if record['status'] != 'passed' and not run.receipt.get('fullRequested', False):
+            break
+
+
+def process_identity(pid):
+    try:
+        return Path(f'/proc/{pid}/stat').read_text().rsplit(')', 1)[1].split()[19]
+    except OSError:
+        return None
+
+
+def shared_locks(workspace):
+    """Coordinate all worktrees of this repository, not just one checkout."""
+    manifest = read_json(workspace / '.ui-workspace.json')
+    source = Path(manifest['source'])
+    common = Path(capture(['git', 'rev-parse', '--path-format=absolute', '--git-common-dir'], cwd=source))
+    return common / 'ui-locks'
+
+
+def read_status(directory):
+    receipt = read_json(Path(directory) / 'receipt.json')
+    if receipt['status'] == 'running' and process_identity(receipt.get('runnerPid', -1)) != receipt.get('runnerStart', 'unknown'):
+        receipt = dict(receipt, status='interrupted', staleReceipt=True,
+                       error='Runner is no longer alive; recorded stage passes remain historical evidence only.')
+    browser = Path(directory) / 'browser.json'
+    if browser.exists():
+        from .triage import browser_failures
+        receipt = dict(receipt, failures=browser_failures(read_json(browser)))
+    return receipt

@@ -109,8 +109,19 @@ def main():
     with socket.socket() as listener:
         listener.bind(("127.0.0.1", 0))
         port = listener.getsockname()[1]
+    selected_states = json.loads(os.environ.get('DNDSHARE_REVIEW_STATES', '[]'))
     env = dict(os.environ, DNDSHARE_REVIEW_WEB_PORT=str(port), DNDSHARE_REVIEW_API=args.url)
+    if selected_states:
+        matrix['states'] = [entry for entry in matrix['states'] if (entry['name'] if isinstance(entry, dict) else entry) in selected_states]
     with device.configured(urllib.parse.urlparse(args.url).port):
+        if os.environ.get('DNDSHARE_REVIEW_SCENARIO') == 'form-lifecycle':
+            from scenario import form_lifecycle
+            form_lifecycle(device, ROOT, args.url, output, fixture, lambda: fetch(args.url + '/__test/stats'))
+            final = validate_fixture(args.url, fixture)
+            if final != evidence:
+                raise AssertionError('Scenario changed the shared fixture')
+            (output / 'scenario.json').write_text(json.dumps({'scenario': 'form-lifecycle', 'passed': True, 'realAPI': True, 'isolatedPostgres': True, 'fixtureRestored': True}, indent=2))
+            return
         print("Capturing WEB with package-lock Playwright Chromium", flush=True)
         with (output / "web-capture.log").open("wb") as log:
             subprocess.run(["node", "node_modules/@playwright/test/cli.js", "test", "-c",

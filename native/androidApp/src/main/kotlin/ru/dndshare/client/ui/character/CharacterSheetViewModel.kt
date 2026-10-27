@@ -68,12 +68,18 @@ internal class CharacterSheetViewModel(
         saved[NAVIGATION] = WireJson.encodeToString(change(current))
     }
 
-    fun selectSection(section: SheetSection) = navigate { it.copy(sectionName = section.name) }
+    fun selectSection(section: SheetSection) {
+        traceSheetNavigation { "model select=${section.name}" }
+        navigate { it.copy(sectionName = section.name) }
+    }
     fun formatChanged(format: LayoutFormat) {
         val sheet = snapshot.value?.displayed ?: return
         val sections = sheetSections(sheet.templateName, format)
         val current = WireJson.decodeFromString<SheetNavigationState>(saved[NAVIGATION] ?: "{}")
-        if (sections.none { it.name == current.sectionName }) selectSection(sections.first())
+        traceSheetNavigation { "format=$format saved=${current.sectionName}" }
+        // A viewport fallback is presentation only. A transient wide window must not
+        // replace Stats with its centre pane (Weapons) and save that as user intent.
+        if (current.sectionName.isBlank()) selectSection(sections.first())
     }
 
     fun edit(target: String) {

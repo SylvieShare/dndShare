@@ -68,6 +68,22 @@ class ReviewEvidenceTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "files and manifest"):
             self.validate()
 
+    def test_scoped_matrix_requires_all_selected_formats_and_reports_its_own_count(self):
+        matrix = {**MATRIX, 'states': ['sheet-stats', 'sheet-stat-editor']}
+        entries = [entry for entry in self.entries if entry['state'] in matrix['states']]
+        for entry in self.entries:
+            if entry['state'] not in matrix['states']:
+                (self.output / entry['file']).unlink()
+        validate_entries(self.output, entries, self.fixture, matrix)
+        with self.assertRaisesRegex(ValueError, 'Incomplete screenshot matrix'):
+            validate_entries(self.output, entries[:-1], self.fixture, matrix)
+        manifest = {'screenshots': entries, 'matrix': matrix, 'approvedExceptions': [],
+                    'sourceSHA': 'a', 'sourceHash': 'b', 'dataFixtureHash': 'c', 'edition': '2014', 'recordID': 1}
+        rendered = render_html(manifest)
+        self.assertIn('12/12', rendered)
+        self.assertNotIn('48/48', rendered)
+        self.assertEqual(rendered.count('<img src="'), 12)
+
     def test_changed_pixels_wrong_dimensions_record_and_escaping_path_fail(self):
         for field, value in (("sha256", "wrong"), ("recordID", 44), ("file", "../outside.png"),
                              ("dimensions", {"width": 1, "height": 2})):

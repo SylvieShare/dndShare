@@ -33,14 +33,25 @@ def capture(command, *, cwd=None, env=None, timeout=45):
     return result.stdout.strip()
 
 
-def execute(command, cwd, env, log, timeout):
+def execute(command, cwd, env, log, timeout, on_progress=None):
     """Keep evidence on disk; stop the whole Linux child group on timeout/interrupt."""
     with Path(log).open("w", encoding="utf-8") as output:
         process = subprocess.Popen(list(map(str, command)), cwd=cwd, env=env,
                                    stdout=output, stderr=subprocess.STDOUT,
                                    start_new_session=True)
         try:
-            return process.wait(timeout=timeout)
+            deadline = time.monotonic() + timeout
+            while True:
+                if on_progress:
+                    on_progress(process.pid)
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise subprocess.TimeoutExpired(command, timeout)
+                try:
+                    return process.wait(timeout=min(5, remaining))
+                except subprocess.TimeoutExpired:
+                    if time.monotonic() >= deadline:
+                        raise
         except (subprocess.TimeoutExpired, KeyboardInterrupt):
             os.killpg(process.pid, signal.SIGTERM)
             try:

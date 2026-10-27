@@ -1,5 +1,5 @@
 <template>
-  <MorphTile :embedded="mode === 'panel'" :color="color" padding="0" edit-label="Редактировать"
+  <MorphTile embedded :color="color" padding="0" edit-label="Редактировать"
       :title="title"
       :show-edit="showEdit"
       :edit-fade="editFade"

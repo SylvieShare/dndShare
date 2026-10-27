@@ -5,6 +5,7 @@ import re
 import time
 import urllib.request
 import uuid
+import xml.etree.ElementTree as ET
 
 from adb import COMPONENT, PACKAGE
 
@@ -107,7 +108,13 @@ def verify_form_restoration(device, url, fixture, stats):
     wait_absent(device, "Основное значение")
     change_base(base)
     device.shell("wm", "size", "390x900")
+    # wm returns before Activity recreation and Compose BackHandler registration.
+    # Wait for the new phone content before sending Back to the restored activity.
+    device.wait(description="Меню персонажа")
+    device.wait("СИЛА")
+    (device.output / "lifecycle-phone-before-back.xml").write_bytes(ET.tostring(device.tree(), encoding="utf-8"))
     device.shell("input", "keyevent", "4")
+    device.wait(fixture["characters"][0]["name"])
     device.click(text=fixture["characters"][0]["name"])
     device.wait("СИЛА")
     if request(path)["data"] != original["data"]:

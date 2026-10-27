@@ -69,18 +69,21 @@ fun ShareTile(modifier: Modifier = Modifier, onClick: (() -> Unit)? = null, tint
             center = Offset(size.width * .72f, size.height * .35f), radius = size.width * .7f)
         onDrawBehind { drawRect(brush) }
     }
-    val edge = if (accent == null) Modifier else Modifier.drawWithCache {
-        val inset = 14.dp.toPx().coerceAtMost(size.height / 2)
-        val stroke = 3.dp.toPx()
-        onDrawWithContent {
-            drawContent()
-            drawLine(accent, Offset(stroke / 2, inset), Offset(stroke / 2, size.height - inset), stroke, StrokeCap.Round)
-        }
-    }
+    val edge = if (accent == null) Modifier else Modifier.shareAccentStrip(accent)
     if (onClick == null) Surface(modifier, shape = shape, border = border, color = WebPalette.Surface) {
         Column(glow.then(edge).padding(contentPadding), verticalArrangement = Arrangement.spacedBy(10.dp), content = content)
     } else Surface(onClick, modifier, shape = shape, border = border, color = WebPalette.Surface) {
         Column(glow.then(edge).padding(contentPadding), verticalArrangement = Arrangement.spacedBy(10.dp), content = content)
+    }
+}
+
+/** Quiet section accent without adding a card surface or frame. */
+fun Modifier.shareAccentStrip(accent: Color): Modifier = drawWithCache {
+    val inset = 14.dp.toPx().coerceAtMost(size.height / 2)
+    val stroke = 3.dp.toPx()
+    onDrawWithContent {
+        drawContent()
+        drawLine(accent, Offset(stroke / 2, inset), Offset(stroke / 2, size.height - inset), stroke, StrokeCap.Round)
     }
 }
 

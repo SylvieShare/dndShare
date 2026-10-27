@@ -93,13 +93,16 @@ class Emulator:
     def configured(self, port):
         original = {key: self.shell("wm", key) for key in ("size", "density")}
         scales = {key: self.shell("settings", "get", "global", key) for key in ANIMATIONS}
+        from apk import DEVICE_PORT
         mappings = run([*self.command, "reverse", "--list"]).decode()
-        if f"tcp:{port} " in mappings:
-            raise RuntimeError("Review port already has an ADB reverse mapping")
+        forwards = {DEVICE_PORT: port, port: port}  # API stable; absolute media URLs retain the host port.
+        if any(f"tcp:{value} " in mappings for value in forwards):
+            raise RuntimeError("A review port already has an ADB reverse mapping; another run may own it")
         before = {"wm": original, "animations": scales}
         (self.output / "device-before.json").write_text(json.dumps(before, indent=2))
         try:
-            run([*self.command, "reverse", f"tcp:{port}", f"tcp:{port}"])
+            for device_port, host_port in forwards.items():
+                run([*self.command, "reverse", f"tcp:{device_port}", f"tcp:{host_port}"])
             for key in ANIMATIONS:
                 self.shell("settings", "put", "global", key, "0")
             self.shell("input", "keyevent", "224")
@@ -120,7 +123,8 @@ class Emulator:
                 except RuntimeError as error:
                     errors.append(str(error))
             try:
-                run([*self.command, "reverse", "--remove", f"tcp:{port}"])
+                for device_port in forwards:
+                    run([*self.command, "reverse", "--remove", f"tcp:{device_port}"])
             except RuntimeError as error:
                 errors.append(str(error))
             after = {"wm": {key: self.shell("wm", key) for key in original},

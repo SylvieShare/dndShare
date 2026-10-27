@@ -35,3 +35,7 @@ dndshare.log
 # Python documentation/tooling caches
 __pycache__/
 *.py[cod]
+
+# Pinned, source-addressed worktree candidate
+/.ui-workspace.json
+/.ui-run.lock

@@ -40,9 +40,10 @@ def png_dimensions(data):
     return dimensions
 
 
-def validate_entries(output, entries, fixture):
-    expected = {(platform, format_["name"], state): format_ for platform in MATRIX["platforms"]
-                for format_ in MATRIX["formats"] for state in MATRIX["states"]}
+def validate_entries(output, entries, fixture, matrix=None):
+    matrix = matrix or MATRIX
+    expected = {(platform, format_["name"], state): format_ for platform in matrix["platforms"]
+                for format_ in matrix["formats"] for state in matrix["states"]}
     observed, files = set(), set()
     for entry in entries:
         key = (entry["platform"], entry["format"], entry["state"])
@@ -77,19 +78,20 @@ def validate_entries(output, entries, fixture):
             raise ValueError("Native screenshot requires measured insets and content dp")
     if observed != set(expected):
         raise ValueError(f"Incomplete screenshot matrix; missing: {sorted(set(expected) - observed)}")
-    actual = {path.relative_to(output).as_posix() for platform in MATRIX["platforms"]
+    actual = {path.relative_to(output).as_posix() for platform in matrix["platforms"]
               for path in (output / platform).glob("*.png")}
     if actual != files:
         raise ValueError("Screenshot files and manifest entries do not match")
 
 
 def render_html(manifest):
+    matrix = manifest.get('matrix', MATRIX)
     escape = lambda value: html.escape(str(value), quote=True)
     sections = []
-    for format_ in MATRIX["formats"]:
-        for state in MATRIX["states"]:
+    for format_ in matrix["formats"]:
+        for state in matrix["states"]:
             figures = []
-            for platform in MATRIX["platforms"]:
+            for platform in matrix["platforms"]:
                 entry = next(entry for entry in manifest["screenshots"] if
                              (entry["platform"], entry["format"], entry["state"]) == (platform, format_["name"], state))
                 viewport = entry["viewport"]
@@ -113,7 +115,7 @@ def render_html(manifest):
 img{{display:block;width:100%;height:auto;border:1px solid #415167}}figcaption{{min-height:60px;overflow-wrap:anywhere}}
 section{{margin:32px 0}}pre{{white-space:pre-wrap;overflow-wrap:anywhere}}code{{overflow-wrap:anywhere}}</style>
 <h1>WEB / ANDROID — визуальное сравнение</h1>
-<p>Комплектность: {len(manifest["screenshots"])}/{len(MATRIX["formats"]) * len(MATRIX["states"]) * len(MATRIX["platforms"])}. Требуется ручная визуальная проверка. Отчёт не устанавливает пиксельную идентичность
+<p>Комплектность: {len(manifest["screenshots"])}/{len(matrix["formats"]) * len(matrix["states"]) * len(matrix["platforms"])}. Требуется ручная визуальная проверка. Отчёт не устанавливает пиксельную идентичность
 и не означает согласование дизайна. Изображения целиком, включая системные панели Android; нажмите для исходного PNG.</p>
 <p>Редакция: {escape(manifest['edition'])} · recordID: {manifest['recordID']} · изолированный API/PostgreSQL.</p>
 <p>Source SHA: <code>{escape(manifest['sourceSHA'])}</code><br>Source hash: <code>{escape(manifest['sourceHash'])}</code>
@@ -126,7 +128,8 @@ section{{margin:32px 0}}pre{{white-space:pre-wrap;overflow-wrap:anywhere}}code{{
 {''.join(sections)}</html>'''
 
 
-def write_report(output):
+def write_report(output, matrix=None):
+    matrix = matrix or MATRIX
     output = Path(output)
     read = lambda name: json.loads((output / name).read_text(encoding="utf-8"))
     fixture, identity = read("fixture.json"), read("source.json")
@@ -137,15 +140,15 @@ def write_report(output):
     if read("android/device-before.json") != read("android/device-after.json"):
         raise ValueError("Emulator configuration was not restored")
     entries = read("android.json")
-    for format_ in MATRIX["formats"]:
+    for format_ in matrix["formats"]:
         entries.extend(read(f"web-{format_['name']}.json"))
-    validate_entries(output, entries, fixture)
-    interactions = validate_interactions(output)
+    validate_entries(output, entries, fixture, matrix)
+    interactions = validate_interactions(output) if matrix == MATRIX else {}
     for entry in entries:
         edition = fixture["characters"][1]["edition"] if entry["state"] == "vtm-base" else fixture["edition"]
         entry.update(identity, edition=edition, dataFixtureHash=fixture["dataFixtureHash"])
     manifest = {"schemaVersion": 1, **identity, "dataFixtureHash": fixture["dataFixtureHash"],
-                "edition": fixture["edition"], "recordID": fixture["recordID"], "matrix": MATRIX,
+                "edition": fixture["edition"], "recordID": fixture["recordID"], "matrix": matrix,
                 "captureComplete": True, "visualApproval": "requires-human-review",
                 "approvedExceptions": exceptions["exceptions"], "apiEvidence": evidence,
                 "exceptionsSHA256": hashlib.sha256((output / "exceptions.json").read_bytes()).hexdigest(),

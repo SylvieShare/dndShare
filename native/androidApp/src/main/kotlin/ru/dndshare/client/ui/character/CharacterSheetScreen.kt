@@ -62,14 +62,14 @@ internal fun CharacterSheetScreen(ui: CharacterSheetUiState, model: CharacterShe
             sheet != null -> CompositionLocalProvider(LocalCharacterSheet provides SheetContext(
                 sheet, ui.content.metadata, ui.content.items, images, canEdit,
                 edit = { if (canEdit || it in listOf("menu", "rest")) model.edit(it) }, openItem = model::openItem,
-                mechanics = requireNotNull(mechanics), journal = ui.journal)) {
+                mechanics = requireNotNull(mechanics), journal = ui.journal, editor = ui.editor)) {
                 if (!canEdit) Text("Режим просмотра", Modifier.padding(horizontal = 20.dp, vertical = 4.dp), style = ShareTypography.context, color = WebPalette.TextSecondary)
                 if (format == LayoutFormat.Phone && sheet.templateName == "DND5") DndPhoneSummary()
                 if (format == LayoutFormat.Phone) SheetNavigation(sections, visibleSection, images, model::selectSection, compact = true, template = sheet.templateName)
                 Box(Modifier.weight(1f).fillMaxWidth()) {
                     if (wideDnd) DndWideSheet(section, sections, model::selectSection, swipeEnabled)
-                    else HorizontalPager(requireNotNull(pager), Modifier.fillMaxSize(), beyondViewportPageCount = 1,
-                        key = { sections[it].name }, userScrollEnabled = swipeEnabled) { page -> panes.SaveableStateProvider(sections[page].name) {
+                    else SheetPagerContent(requireNotNull(pager), sections, Modifier.fillMaxSize(), beyondViewportPageCount = 1,
+                        userScrollEnabled = swipeEnabled) { page -> panes.SaveableStateProvider(sections[page].name) {
                         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
                         Column(Modifier.widthIn(max = DesignTokens.Layout.SheetMax).fillMaxSize().verticalScroll(rememberScrollState())
                             .padding(DesignTokens.Spacing.Page), verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -80,7 +80,7 @@ internal fun CharacterSheetScreen(ui: CharacterSheetUiState, model: CharacterShe
                 }
                 ui.editor?.takeUnless { it.isDndStat() }?.let { editor -> CharacterSheetEditor(editor, ui.content.availableStates,
                     model::dismissEditor, model::number, model::inspiration, model::status, model::submitEditor) }
-                SheetStatMorph(morph, ui.editor, format, model::dismissEditor, model::number, model::submitEditor)
+                SheetStatMorph(morph, ui.editor, model::dismissEditor, model::number, model::submitEditor)
                 navigation.overlay?.let { target -> SheetInformationDialog(target, sheet, model::dismissOverlay, close, model::refresh) }
                 if (navigation.itemStack.isNotEmpty()) Dialog(onDismissRequest = model::closeItem,
                     properties = DialogProperties(usePlatformDefaultWidth = false)) {

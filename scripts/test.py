@@ -127,7 +127,10 @@ def models(env):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("profile", nargs="?", default="fast", choices=["fast", "db", "browser", "models", "all"])
+    parser.add_argument('--full', action='store_true', help='broad profile, only after a direct user request')
     args = parser.parse_args()
+    if args.profile in {'fast', 'browser', 'all'} and not args.full:
+        parser.error('Broad profiles require --full after a direct user request. Use scripts/ui.py focus with explicit files for normal work.')
     env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
     env.setdefault("GOCACHE", str(Path(tempfile.gettempdir()) / "dndshare-go-cache"))
     stages = {

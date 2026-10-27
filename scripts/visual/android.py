@@ -16,16 +16,12 @@ from character import verify_swipes, verify_form_restoration, wait_absent
 def build_install(device, root, url, output):
     if not re.match(r"^http://127\.0\.0\.1:\d+$", url):
         raise RuntimeError("APK capture requires the isolated loopback API")
-    windows_root = native_path(root)
-    if not re.match(r"^[A-Za-z]:\\", windows_root):
-        raise RuntimeError("Prepared Android build checkout must be on a Windows drive")
-    with (output / "apk-build.log").open("wb") as log:
-        subprocess.run([powershell_path(), "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
-                        windows_root + "\\scripts\\native\\build.ps1", "-Target", "Android",
-                        "-ApiBaseUrl", url], stdout=log, stderr=subprocess.STDOUT, check=True, timeout=900)
-    apk = Path(root) / "native/androidApp/build/outputs/apk/debug/androidApp-debug.apk"
-    run([*device.command, "install", "-r", native_path(apk)])
-    return hashlib.sha256(apk.read_bytes()).hexdigest()
+    from apk import obtain
+    artifact, receipt = obtain(Path(root), output)
+    run([*device.command, "install", "-r", native_path(artifact)])
+    (output / "apk-artifact.json").write_text(json.dumps(receipt, indent=2))
+    return receipt['apkHash']
+
 
 
 def login(device, fixture):
@@ -153,63 +149,75 @@ def verify_character_edit(device, url, fixture):
 def capture_android(device, root, url, output, matrix, fixture, stats):
     apk_hash = build_install(device, root, url, output.parent)
     entries = []
-    for format_ in matrix["formats"]:
+    wanted = set(matrix['states'])
+    full = wanted == {'collections', 'menu', 'list', 'record', 'sheet-base', 'sheet-stats', 'sheet-stat-editor', 'vtm-base'}
+
+    def take(format_, state):
+        if state in wanted:
+            entries.append(snapshot(device, output, format_, state, fixture, stats))
+
+    for format_ in matrix['formats']:
         print(f"Capturing ANDROID {format_['name']}", flush=True)
-        device.shell("am", "force-stop", PACKAGE)
-        device.shell("wm", "density", "160")
-        device.shell("wm", "size", f"{format_['width']}x{format_['height']}")
+        device.shell('am', 'force-stop', PACKAGE)
+        device.shell('wm', 'density', '160')
+        device.shell('wm', 'size', f"{format_['width']}x{format_['height']}")
         login(device, fixture)
-        entries.append(snapshot(device, output, format_, "collections", fixture, stats))
-        if format_["name"] != "wide":
-            root_ui = device.tree()
-            controls = [n for n in root_ui.iter("node") if n.get("content-desc") in ("Открыть меню", "Раскрыть панель")]
-            if not controls:
-                raise AssertionError("Missing native menu opener")
-            device.tap(controls[0])
-        device.wait("ДЛЯ ИГРОКА")
-        entries.append(snapshot(device, output, format_, "menu", fixture, stats))
-        if format_["name"] != "wide":
-            device.shell("input", "keyevent", "4")
-        device.click(text="Заклинания")
-        device.wait(fixture["recordName"])
-        entries.append(snapshot(device, output, format_, "list", fixture, stats))
-        before = stats()["images"].get("cover.svg", 0)
-        device.click(text=fixture["recordName"])
-        device.wait(fixture["description"])
-        deadline = time.monotonic() + 30
-        while stats()["images"].get("cover.svg", 0) <= before:
-            if time.monotonic() > deadline:
-                raise AssertionError("Native record did not lazily fetch its cover from the shared API")
-            time.sleep(.25)
-        entries.append(snapshot(device, output, format_, "record", fixture, stats))
-        device.shell("input", "keyevent", "4")
-        device.shell("input", "keyevent", "4")
-        if format_["name"] != "wide":
-            device.click(description="Открыть меню")
-        device.click(text="Персонажи")
-        device.click(text=fixture["characters"][0]["name"])
-        device.wait("Волшебник 4" if format_["name"] == "tablet" else "СИЛА" if format_["name"] == "phone" else fixture["characters"][0]["name"])
-        entries.append(snapshot(device, output, format_, "sheet-base", fixture, stats))
-        gesture = verify_swipes(device, format_)
-        (output.parent / ("native-swipe-" + format_["name"] + ".json")).write_text(json.dumps(gesture, ensure_ascii=False, indent=2))
-        device.wait("ТЕЛОСЛОЖЕНИЕ")
-        entries.append(snapshot(device, output, format_, "sheet-stats", fixture, stats))
-        device.click(description="Редактировать: Сила")
-        device.wait("Основное значение")
-        entries.append(snapshot(device, output, format_, "sheet-stat-editor", fixture, stats))
-        if format_["name"] == "phone":
-            lifecycle = verify_form_restoration(device, url, fixture, stats)
-            (output.parent / "native-form-lifecycle.json").write_text(json.dumps(lifecycle, ensure_ascii=False, indent=2))
-        else:
-            device.click(text="Отмена")
-            wait_absent(device, "Основное значение")
-        if format_["name"] == "phone":
-            proof = verify_character_edit(device, url, fixture)
-            (output.parent / "native-character-edit.json").write_text(json.dumps(proof, ensure_ascii=False, indent=2))
-        device.shell("input", "keyevent", "4")
-        device.click(text=fixture["characters"][1]["name"])
-        device.wait("Тореадор")
-        entries.append(snapshot(device, output, format_, "vtm-base", fixture, stats))
+        if wanted & {'collections', 'menu', 'list', 'record'}:
+            take(format_, 'collections')
+            if format_['name'] != 'wide':
+                device.click(description='Открыть меню')
+            device.wait('ДЛЯ ИГРОКА')
+            take(format_, 'menu')
+            if format_['name'] != 'wide':
+                device.shell('input', 'keyevent', '4')
+            if wanted & {'list', 'record'}:
+                device.click(text='Заклинания')
+                device.wait(fixture['recordName'])
+                take(format_, 'list')
+                if 'record' in wanted:
+                    before = stats()['images'].get('cover.svg', 0)
+                    device.click(text=fixture['recordName'])
+                    device.wait(fixture['description'])
+                    deadline = time.monotonic() + 30
+                    while stats()['images'].get('cover.svg', 0) <= before:
+                        if time.monotonic() > deadline:
+                            raise AssertionError('Native record did not lazily fetch its cover')
+                        time.sleep(.25)
+                    take(format_, 'record')
+                    device.shell('input', 'keyevent', '4')
+                device.shell('input', 'keyevent', '4')
+        if not (wanted & {'sheet-base', 'sheet-stats', 'sheet-stat-editor', 'vtm-base'}):
+            continue
+        if format_['name'] != 'wide':
+            device.click(description='Открыть меню')
+        device.click(text='Персонажи')
+        if wanted & {'sheet-base', 'sheet-stats', 'sheet-stat-editor'}:
+            device.click(text=fixture['characters'][0]['name'])
+            device.wait('Волшебник 4' if format_['name'] == 'tablet' else 'СИЛА' if format_['name'] == 'phone' else fixture['characters'][0]['name'])
+            take(format_, 'sheet-base')
+            if wanted & {'sheet-stats', 'sheet-stat-editor'}:
+                gesture = verify_swipes(device, format_)
+                (output.parent / ('native-swipe-' + format_['name'] + '.json')).write_text(json.dumps(gesture, ensure_ascii=False, indent=2))
+                device.wait('ТЕЛОСЛОЖЕНИЕ')
+                take(format_, 'sheet-stats')
+            if 'sheet-stat-editor' in wanted:
+                device.click(description='Редактировать: Сила')
+                device.wait('Основное значение')
+                take(format_, 'sheet-stat-editor')
+                if full and format_['name'] == 'phone':
+                    lifecycle = verify_form_restoration(device, url, fixture, stats)
+                    (output.parent / 'native-form-lifecycle.json').write_text(json.dumps(lifecycle, ensure_ascii=False, indent=2))
+                else:
+                    device.click(text='Отмена')
+                    wait_absent(device, 'Основное значение')
+            if full and format_['name'] == 'phone':
+                proof = verify_character_edit(device, url, fixture)
+                (output.parent / 'native-character-edit.json').write_text(json.dumps(proof, ensure_ascii=False, indent=2))
+            device.shell('input', 'keyevent', '4')
+        if 'vtm-base' in wanted:
+            device.click(text=fixture['characters'][1]['name'])
+            device.wait('Тореадор')
+            take(format_, 'vtm-base')
     for entry in entries:
-        entry["apkSHA256"] = apk_hash
-    (output.parent / "android.json").write_text(json.dumps(entries, ensure_ascii=False, indent=2))
+        entry['apkSHA256'] = apk_hash
+    (output.parent / 'android.json').write_text(json.dumps(entries, ensure_ascii=False, indent=2))

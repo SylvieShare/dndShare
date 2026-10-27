@@ -37,10 +37,10 @@ class RoutesTest(unittest.TestCase):
                 parser().parse_args(["focus", "webunit"])
 
     def test_unit_browser_native_routes(self):
-        unit = self.plan(self.arguments("focus", "webunit"))
+        unit = self.plan(self.arguments("focus", "webunit", "--full"))
         self.assertEqual([stage.name for stage in unit], ["webunit"])
         self.assertIn("--no-cache", unit[0].command)
-        browser = self.plan(self.arguments("focus", "browser", "--project", "maps"))
+        browser = self.plan(self.arguments("focus", "browser", "--project", "maps", "--full"))
         self.assertIn("--project=maps", browser[0].command)
         native = self.plan(self.arguments("focus", "native", "--target", "DeviceTest"))
         self.assertTrue(native[0].native)
@@ -89,7 +89,7 @@ class RoutesTest(unittest.TestCase):
         with self.assertRaises(UIError):
             select_emulator(devices + "emulator-5678 device\n")
         with self.assertRaises(UIError):
-            native_command(self.config, self.root, "DeviceTest", "phone123", 11111)
+            native_command(self.config, self.root, "DeviceTest", "phone123")
 
     def test_ports_are_unique_and_workspace_lock_is_exclusive(self):
         self.assertEqual(len(set(ports(8))), 8)
@@ -98,11 +98,25 @@ class RoutesTest(unittest.TestCase):
                 with lock(self.root / "lock"):
                     self.fail("acquired twice")
 
+    def test_device_instrumentation_locks_both_emulator_and_compilation(self):
+        from scripts.dev.plan import Stage
+        from contextlib import nullcontext
+        manifest = {'sourceSHA': 'sha', 'sourceHash': 'hash', 'hotCache': str(self.root / 'hot')}
+        run = Run(self.root, 'focus')
+        stage = Stage('device', ['stub'], self.root, native=True, device=True)
+        with patch('scripts.dev.runner.environment', return_value={}), \
+                patch('scripts.dev.runner.shared_locks', return_value=self.root / 'locks'), \
+                patch('scripts.dev.runner.lock', side_effect=lambda path: nullcontext()) as guard, \
+                patch('scripts.dev.runner.execute', return_value=0):
+            run_plan(run, [stage], {}, self.root, manifest, [1, 2, 3], 1)
+        self.assertEqual([call.args[0].name for call in guard.call_args_list], ['emulator.lock', 'native-build.lock'])
+
     def test_failed_stages_continue_and_receipts_never_reuse_pass(self):
         from scripts.dev.plan import Stage
         manifest = {"sourceSHA": "sha", "sourceHash": "hash", "hotCache": str(self.root / "hot")}
         run = Run(self.root, "verify")
         run.receipt["emulator"] = "emulator-1234"
+        run.receipt["fullRequested"] = True
         stages = [Stage("one", ["stub"], self.root), Stage("two", ["stub"], self.root)]
         with patch("scripts.dev.runner.environment", return_value={}), \
                 patch("scripts.dev.runner.execute", side_effect=[2, 0]):
@@ -121,7 +135,7 @@ class RoutesTest(unittest.TestCase):
         with patch("scripts.dev.cli.config.load", return_value={}), \
                 patch("scripts.dev.cli.doctor.inspect", side_effect=UIError("fixture doctor failure")) as inspect:
             for command in commands:
-                args = command if command[0] in {"doctor", "prepare"} else command + ["--workspace", str(self.root)]
+                args = command if command[0] in {"doctor", "prepare"} else command + ["--workspace", str(self.root), "--full"]
                 self.assertEqual(main(args, self.root), 1)
         self.assertEqual(inspect.call_count, 5)
         receipts = list((self.root / "build/ui-runs").glob("*/receipt.json"))
@@ -143,7 +157,7 @@ class RoutesTest(unittest.TestCase):
 
     def test_capabilities_follow_job_and_only_device_tests_require_running_emulator(self):
         from scripts.dev.cli import capabilities
-        self.assertEqual(capabilities(self.arguments("focus", "webunit")), ({"node", "dependencies"}, False))
+        self.assertEqual(capabilities(self.arguments("focus", "webunit", "--full")), ({"node", "dependencies"}, False))
         self.assertEqual(capabilities(self.arguments("focus", "browser")),
                          ({"node", "dependencies", "playwright-chromium"}, False))
         self.assertEqual(capabilities(self.arguments("focus", "native")), ({"android"}, False))

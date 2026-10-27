@@ -67,4 +67,39 @@ class SheetViewModelStateTest {
             sheets.closeAndJoin(); database.close()
         }
     }
+
+    @Test fun viewportFallbackDoesNotRewriteTheSavedSemanticSection() = runBlocking {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val database = buildDatabase(Room.inMemoryDatabaseBuilder<ClientDatabase>(context))
+        val sheets = CharacterSheetRepository(SheetStateServer(), database.characterSheets(), 1)
+        val owners = mutableListOf<Owner>()
+        suspend fun model(handle: SavedStateHandle): CharacterSheetViewModel = withContext(Dispatchers.Main) {
+            val owner = Owner().also(owners::add)
+            ViewModelProvider(owner, viewModelFactory { initializer {
+                CharacterSheetViewModel("hero", 1, 1, sheets, database.cache(), database.characterSheets(), SheetServices({}, {}), handle)
+            } })[CharacterSheetViewModel::class.java]
+        }
+        try {
+            database.cache().upsertState(SyncState(1, ready = true))
+            val saved = SavedStateHandle()
+            val first = model(saved)
+            withTimeout(10_000) { first.uiState.first { it.sheet != null } }
+            withContext(Dispatchers.Main) { first.selectSection(SheetSection.Stats) }
+            withTimeout(10_000) { first.uiState.first { it.navigation.sectionName == SheetSection.Stats.name } }
+            val handle = withContext(Dispatchers.Main) {
+                first.formatChanged(ru.dndshare.client.ui.LayoutFormat.Wide)
+                SavedStateHandle(saved.keys().associateWith { saved.get<Any?>(it) }).also { owners.first().viewModelStore.clear() }
+            }
+            val restored = model(handle)
+            val state = withTimeout(10_000) { restored.uiState.first { it.sheet != null && it.navigation.sectionName.isNotBlank() } }
+            assertEquals(SheetSection.Stats.name, state.navigation.sectionName,
+                "A wide-layout fallback must not save Weapons over the user's Stats selection")
+            withContext(Dispatchers.Main) { restored.formatChanged(ru.dndshare.client.ui.LayoutFormat.Phone) }
+            assertEquals(SheetSection.Stats.name, restored.uiState.value.navigation.sectionName)
+        } finally {
+            withContext(Dispatchers.Main) { owners.forEach { it.viewModelStore.clear() } }
+            sheets.closeAndJoin(); database.close()
+        }
+    }
+
 }

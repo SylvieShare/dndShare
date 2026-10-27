@@ -57,6 +57,8 @@ for (const format of matrix.formats) {
     mkdirSync(path.join(output, 'web'), { recursive: true })
 
     async function snapshot(state) {
+      const selectedStates = JSON.parse(process.env.DNDSHARE_REVIEW_STATES || '[]')
+      if (selectedStates.length && !selectedStates.includes(state)) return
       await page.mouse.move(format.width - 1, format.height - 1)
       await settle(page)
       const dimensions = await page.evaluate(() => ({ width: innerWidth, height: innerHeight, unit: 'px' }))

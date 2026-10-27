@@ -1,6 +1,8 @@
 # Проверки проекта
 
-Единая точка входа из корня — `python3 scripts/test.py all`. `npm test` и frontend
+Полный набор выполняется **только по прямой команде пользователя**:
+`python3 scripts/test.py all --full` или `python3 scripts/ui.py verify --full`.
+Обычная разработка и выпуск не являются разрешением на полный прогон. `npm test` и frontend
 build также выполняют `check:bindings`: необъявленные переменные JS/Vue являются
 ошибкой проверки. Результат содержит
 статус и время каждого набора; ошибка одного набора не скрывает остальные.
@@ -10,16 +12,20 @@ build также выполняют `check:bindings`: необъявленные
 ## Матрица проверок
 
 Набор определяется изменённым поведением. Если задача затрагивает несколько
-строк, выполняется их объединение. Строгая проверка wiki (`python3 scripts/check-wiki.py --strict`) обязательна для каждой строки.
+строк, выбираются их относящиеся к изменению проверки; это не запускает
+автоматически все тесты проекта. Неограниченные web-unit и общие
+browser/fast/all профили требуют прямой команды пользователя. Для Android
+выбираются затронутый модуль и instrumentation-классы. Строгая проверка wiki
+(`python3 scripts/check-wiki.py --strict`) обязательна для каждой строки.
 
 | Изменение | Обязательный набор | Дополнительные условия |
 | --- | --- | --- |
 | Только Markdown | `python3 scripts/check-wiki.py --strict`, чистый diff и проверка перенесённого текста | Runtime build и deploy не нужны; не менять продуктовые контракты под видом переноса. |
 | Инструменты документации | Проверка wiki и `python3 -m unittest discover -s scripts/docs -p 'test_*.py'` | Тестировать ссылки, якоря, предупреждения и исключения для отчётов; для Node-инструмента выполнить его `node --test` сценарии. |
-| Frontend | Затронутые Vitest-тесты, затем `cd frontend && npm test -- --run && npm run build` | Для UI-действий — соответствующий browser-набор на desktop/mobile; проверка необъявленных переменных входит в команды. |
-| Общий UI веба/Android и его инструменты | Строки Frontend + Android; `scripts/ui.py verify`, парный `review`, unit-тесты изменённых инструментов в `scripts/design`, `scripts/dev`, `scripts/visual` | Три формата, одинаковые фикстуры, явные согласованные исключения; [UI-процесс](frontend/ui-workflow.md). |
+| Frontend | Затронутые Vitest-тесты и browser-сценарии с явными файлами; production build перед выпуском изменённого frontend | Для UI-действий — соответствующий browser-набор на desktop/mobile; проверка необъявленных переменных входит в команды. |
+| Общий UI веба/Android и его инструменты | Затронутые строки Frontend + Android; scoped `focus`, `review --state …` или один `review --scenario …`; unit-тесты изменённых инструментов | Три формата, одинаковые фикстуры, явные согласованные исключения; [UI-процесс](frontend/ui-workflow.md). |
 | Backend без изменения БД | `GOCACHE=/private/tmp/dndshare-go-cache go test ./...`, `go vet ./...`, `go build ./...` с тем же GOCACHE | Без DSN DB-тесты пропускаются; это не доказательство интеграционной проверки. |
-| Нативный Android | `scripts/native/build.ps1 -Target All` и `-Target DeviceTest`; Android/API/PostgreSQL smoke при изменении входа/sync | Unit и instrumented SQLite/HTTP/cookies, APK; телефон, планшет и широкое Android-окно, офлайн и возобновление. |
+| Нативный Android | `scripts/native/build.ps1 -Target All` и `-Target DeviceTest`; Android/API/PostgreSQL smoke при изменении входа/sync | Выбранный нативный модуль; реальное ненулевое число instrumented-кейсов, APK; телефон, планшет и широкое Android-окно, офлайн и возобновление. |
 | SQL, Store, права/атомарность API или формат документа | `python3 scripts/test.py db`, затронутые frontend-тесты при изменении DTO | Только изолированный PostgreSQL; фикстуры текущей схемы и настоящий HTTP-контракт. |
 | Очередь патчей, история или SSE | Unit-контракты JS/Go и DB-профиль; затронутые browser-сценарии | Reload, две вкладки, восстановление, потерянное подтверждение, перестановка ответов, конфликт и закрытие с очередью. |
 | Лист/сессия: навигация, блоки, редактор или права | Проверки соответствующего frontend/API и сценариев обучения | Проверить влияние на цели, действия и тексты; менять их только при изменении контракта. Completed/dismissed не сбрасывать. |
@@ -142,7 +148,7 @@ gl.finish/readPixels **только в тесте**, отдельно от ас�
 Примеры узких запусков из `frontend`:
 
 ```bash
-npm test
+npm test -- --run src/features/handbook/pages/ViewHandbook.test.js
 npm run test:browser -- --project=maps tests/maps/resilience.spec.js
 npm run test:browser -- --project=production tests/global-maps
 npm run test:models

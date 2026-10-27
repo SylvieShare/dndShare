@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "policy": "Annotations only. A known failure still fails the run; no skipped or green substitution.",
+  "entries": [
+    {"project": "ui", "file": "tests/tutorials/creature-tile-refinements.spec.js", "title": "narrow creature tile, fitted name and roll overlay desktop", "owner": "encounter-ui", "baseCommit": "cadb860213e0c0a2b419fa86f8b08de1d707d7c7", "status": "reproduced-on-clean-base", "reason": "Name overlaps initiative; independently reproduced before morph changes", "reviewBy": "2026-11-10"},
+    {"project": "ui", "file": "tests/tutorials/morph-tiles.spec.js", "title": "compact utility headings and values stay within the 64px grid rows", "owner": "sheet-utilities", "baseCommit": "cadb860213e0c0a2b419fa86f8b08de1d707d7c7", "status": "reproduced-on-clean-base", "reason": "Utility content exceeds the cell width", "reviewBy": "2026-11-10"},
+    {"project": "maps", "file": "tests/maps/mountAnimation.spec.js", "title": "a moving tile rises above its body datum and smoothly returns after release", "owner": "maps-placement", "baseCommit": "cadb860213e0c0a2b419fa86f8b08de1d707d7c7", "status": "reproduced-on-clean-base", "reason": "Expected lift does not appear", "reviewBy": "2026-11-10"},
+    {"project": "maps", "file": "tests/maps/outlineCache.spec.js", "title": "cached output preserves the previous outline colours and occlusion, and cuts repeated draw work", "owner": "maps-rendering", "baseCommit": "cadb860213e0c0a2b419fa86f8b08de1d707d7c7", "status": "reproduced-on-clean-base", "reason": "Timeout on local software Chromium renderer", "reviewBy": "2026-11-10"}
+  ]
+}
