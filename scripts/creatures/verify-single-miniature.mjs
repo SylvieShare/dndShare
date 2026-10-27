@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { geometryTargets } from "./geometry_targets.mjs";
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -28,10 +29,12 @@ const stats = JSON.parse(
 const placement = JSON.parse(
   await fs.readFile(path.join(folder, "placement.json")),
 );
+const targets = geometryTargets(recipe);
 const limits = { render: 90000, lod: lodTriangleLimit(recipe), shadow: 12000, source: 600000 };
 const policy = texturePolicy(recipe),
   textureUsage = {};
 assert.equal(placement.embeddedBase, false);
+assert.deepEqual(placement.sourceRepair ?? null, recipe.sourceRepair ?? null, "Authored source changed since baking");
 assert.ok(
   recipe.referenceDiameter > 0 && recipe.referenceDiameter <= 32,
   "reviewed reference diameter",
@@ -79,7 +82,8 @@ for (const entry of stats) {
   assert.equal(r.listAnimations().length, 0);
   assert.equal(r.listSkins().length, 0);
   assert.equal(r.listCameras().length, 0);
-  assert.ok(entry.triangles > 1000 && entry.triangles <= limits[entry.role]);
+  assert.ok(entry.triangles > 0 && entry.triangles <= limits[entry.role]);
+  if (targets[entry.role] != null) assert.ok(entry.triangles <= targets[entry.role], `${entry.role} exceeds its authored triangle target`);
   assert.ok(Math.abs(entry.bounds[0][1]) < 0.005, "foot datum");
   assert.ok(
     entry.bounds[1][1] > 0.2 && entry.bounds[1][1] < 2,
@@ -173,9 +177,11 @@ for (const role of ["render", "lod"])
   );
 const result = {
   passed: true,
+  geometryTargets: targets,
   lodBudget: recipe.lodBudget ?? null,
   lodTriangleLimit: limits.lod,
   originalServiceMeshExported: !!placement.originalServiceMeshExported,
+  sourceRepair: placement.sourceRepair ?? null,
   nominalFootprintCells: placement.nominalFootprintCells,
   referenceDiameter: recipe.referenceDiameter,
   maxHeight: render.bounds[1][1],

@@ -35,10 +35,12 @@
   "build": {
     "height": 1.3,
     "size": 1,
-    "lodTriangles": 25000,
-    "lodAggression": 4,
-    "shadowTriangles": 6000,
-    "shadowAggression": 4,
+    "renderTriangles": 18000,
+    "lodTriangles": 6000,
+    "geometryBaseline": "source-refinement/baseline-render.glb",
+    "lodAggression": 3,
+    "shadowTriangles": 1500,
+    "shadowAggression": 7,
     "rotation": -45
   },
   "calibration": {

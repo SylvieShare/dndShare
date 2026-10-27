@@ -109,6 +109,9 @@ def main():
                         waiting = True
                         continue
                     progress |= result
+                    if args.until != 'native':
+                        from production_stages import prepare_recipe
+                        prepare_recipe(entry,queue.root/entry['slug'])
                     progress |= archive_native(queue,entry,args.server_token)
                     if args.until != 'native':
                         from production_stages import process

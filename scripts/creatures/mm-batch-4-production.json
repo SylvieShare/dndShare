@@ -15,10 +15,12 @@
       "nameEn": "Mage",
       "size": 1,
       "height": 1.7,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 10000,
+      "lodAggression": 3,
+      "shadowTriangles": 1500,
+      "shadowAggression": 7,
+      "renderTriangles": 18000,
+      "geometryBaseline": "source-refinement/baseline-render.glb"
     },
     {
       "slug": "druid-2231",
@@ -27,10 +29,12 @@
       "nameEn": "Druid",
       "size": 1,
       "height": 1.65,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 18000,
+      "lodAggression": 3,
+      "shadowTriangles": 1500,
+      "shadowAggression": 7,
+      "renderTriangles": 18000,
+      "geometryBaseline": "source-refinement/baseline-render.glb"
     },
     {
       "slug": "veteran-2424",
@@ -39,10 +43,12 @@
       "nameEn": "Veteran",
       "size": 1,
       "height": 1.8,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 26000,
+      "lodAggression": 3,
+      "shadowTriangles": 1500,
+      "shadowAggression": 7,
+      "renderTriangles": 26000,
+      "geometryBaseline": "source-refinement/baseline-render.glb"
     },
     {
       "slug": "berserker-2165",
@@ -51,10 +57,18 @@
       "nameEn": "Berserker",
       "size": 1,
       "height": 1.8,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
+      "lodTriangles": 26000,
+      "lodAggression": 3,
       "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "shadowAggression": 7,
+      "sourceRepair": {
+        "kind": "fur",
+        "voxelSize": 0.012,
+        "rearMin": 0.08,
+        "minimumZ": -0.27,
+        "maximumZ": 0.49
+      },
+      "renderTriangles": 30000
     },
     {
       "slug": "assassin-3205",
@@ -63,10 +77,12 @@
       "nameEn": "Assassin",
       "size": 1,
       "height": 1.65,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 14000,
+      "lodAggression": 3,
+      "shadowTriangles": 1500,
+      "shadowAggression": 7,
+      "renderTriangles": 18000,
+      "geometryBaseline": "source-refinement/baseline-render.glb"
     },
     {
       "slug": "drow-1728",
@@ -75,10 +91,12 @@
       "nameEn": "Drow",
       "size": 1,
       "height": 1.7,
-      "lodTriangles": 44000,
+      "lodTriangles": 18000,
       "lodAggression": 3,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "shadowTriangles": 1500,
+      "shadowAggression": 7,
+      "renderTriangles": 18000,
+      "geometryBaseline": "source-refinement/baseline-render.glb"
     },
     {
       "slug": "duergar-2029",
@@ -87,10 +105,12 @@
       "nameEn": "Duergar",
       "size": 1,
       "height": 1.3,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 6000,
+      "lodAggression": 3,
+      "shadowTriangles": 1500,
+      "shadowAggression": 7,
+      "renderTriangles": 18000,
+      "geometryBaseline": "source-refinement/baseline-render.glb"
     },
     {
       "slug": "werewolf-2423",
@@ -99,10 +119,15 @@
       "nameEn": "Werewolf",
       "size": 1,
       "height": 1.75,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 34000,
+      "lodAggression": 3,
+      "shadowTriangles": 1500,
+      "shadowAggression": 7,
+      "sourceRepair": {
+        "kind": "dark-fur"
+      },
+      "renderTriangles": 34000,
+      "geometryBaseline": "source-refinement/baseline-render.glb"
     },
     {
       "slug": "vampire-spawn-2880",
@@ -111,10 +136,18 @@
       "nameEn": "Vampire Spawn",
       "size": 1,
       "height": 1.7,
-      "lodTriangles": 28000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 26000,
+      "lodAggression": 3,
+      "shadowTriangles": 2500,
+      "shadowAggression": 7,
+      "sourceRepair": {
+        "kind": "hair",
+        "voxelSize": 0.008,
+        "rearMin": 0.015,
+        "minimumZ": 0.04,
+        "maximumZ": 1
+      },
+      "renderTriangles": 26000
     },
     {
       "slug": "yuan-ti-pureblood-2139",
@@ -123,10 +156,12 @@
       "nameEn": "Yuan-ti Pureblood",
       "size": 1,
       "height": 1.7,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 18000,
+      "lodAggression": 3,
+      "shadowTriangles": 1500,
+      "shadowAggression": 7,
+      "renderTriangles": 18000,
+      "geometryBaseline": "source-refinement/baseline-render.glb"
     },
     {
       "slug": "mind-flayer-3128",
@@ -135,10 +170,12 @@
       "nameEn": "Mind Flayer",
       "size": 1,
       "height": 1.85,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 14000,
+      "lodAggression": 3,
+      "shadowTriangles": 1500,
+      "shadowAggression": 7,
+      "renderTriangles": 18000,
+      "geometryBaseline": "source-refinement/baseline-render.glb"
     },
     {
       "slug": "beholder-3604",
@@ -147,10 +184,12 @@
       "nameEn": "Beholder",
       "size": 2,
       "height": 1.1,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 6000,
+      "lodAggression": 3,
+      "shadowTriangles": 2500,
+      "shadowAggression": 7,
+      "renderTriangles": 18000,
+      "geometryBaseline": "source-refinement/baseline-render.glb"
     },
     {
       "slug": "gelatinous-cube-2363",
@@ -159,10 +198,15 @@
       "nameEn": "Gelatinous Cube",
       "size": 2,
       "height": 0.9,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 3000,
+      "lodAggression": 3,
+      "shadowTriangles": 500,
+      "shadowAggression": 7,
+      "sourceRepair": {
+        "kind": "gel"
+      },
+      "renderTriangles": 6000,
+      "shadowHull": true
     },
     {
       "slug": "black-pudding-2739",
@@ -171,10 +215,15 @@
       "nameEn": "Black Pudding",
       "size": 2,
       "height": 0.4,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 14000,
+      "lodAggression": 3,
+      "shadowTriangles": 2500,
+      "shadowAggression": 7,
+      "sourceRepair": {
+        "kind": "dark-ooze"
+      },
+      "renderTriangles": 18000,
+      "geometryBaseline": "source-refinement/baseline-render.glb"
     },
     {
       "slug": "ochre-jelly-2257",
@@ -183,10 +232,15 @@
       "nameEn": "Ochre Jelly",
       "size": 2,
       "height": 0.35,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 6000,
+      "lodAggression": 3,
+      "shadowTriangles": 2500,
+      "shadowAggression": 7,
+      "sourceRepair": {
+        "kind": "ochre"
+      },
+      "renderTriangles": 6000,
+      "geometryBaseline": "source-refinement/baseline-render.glb"
     },
     {
       "slug": "hill-giant-2929",
@@ -195,10 +249,12 @@
       "nameEn": "Hill Giant",
       "size": 3,
       "height": 1.7,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 10000,
+      "lodAggression": 3,
+      "shadowTriangles": 2500,
+      "shadowAggression": 7,
+      "renderTriangles": 18000,
+      "geometryBaseline": "source-refinement/baseline-render.glb"
     },
     {
       "slug": "ettin-2744",
@@ -207,10 +263,12 @@
       "nameEn": "Ettin",
       "size": 2,
       "height": 1.7,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 44000,
+      "lodAggression": 3,
+      "shadowTriangles": 2500,
+      "shadowAggression": 7,
+      "renderTriangles": 44000,
+      "geometryBaseline": "source-refinement/baseline-render.glb"
     },
     {
       "slug": "banshee-2611",
@@ -219,10 +277,12 @@
       "nameEn": "Banshee",
       "size": 1,
       "height": 1.7,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 44000,
+      "lodAggression": 3,
+      "shadowTriangles": 1500,
+      "shadowAggression": 7,
+      "renderTriangles": 44000,
+      "geometryBaseline": "source-refinement/baseline-render.glb"
     },
     {
       "slug": "nothic-2295",
@@ -231,10 +291,12 @@
       "nameEn": "Nothic",
       "size": 1,
       "height": 1.15,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 18000,
+      "lodAggression": 3,
+      "shadowTriangles": 1500,
+      "shadowAggression": 7,
+      "renderTriangles": 18000,
+      "geometryBaseline": "source-refinement/baseline-render.glb"
     },
     {
       "slug": "young-red-dragon-3406",
@@ -243,10 +305,12 @@
       "nameEn": "Young Red Dragon",
       "size": 2,
       "height": 1.2,
-      "lodTriangles": 25000,
-      "lodAggression": 4,
-      "shadowTriangles": 6000,
-      "shadowAggression": 4
+      "lodTriangles": 14000,
+      "lodAggression": 3,
+      "shadowTriangles": 2500,
+      "shadowAggression": 7,
+      "renderTriangles": 18000,
+      "geometryBaseline": "source-refinement/baseline-render.glb"
     }
   ]
 }

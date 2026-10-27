@@ -20,7 +20,8 @@ class MiniatureUpdate(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
-        self.folder = Path(self.temporary.name)
+        self.folder = Path(self.temporary.name)/'final'
+        self.folder.mkdir()
         (self.folder/'publish').mkdir()
         assets = {}
         for role in ['render', 'lod', 'shadow', 'source', 'preview']:
@@ -43,6 +44,7 @@ class MiniatureUpdate(unittest.TestCase):
         recipe=reviewed_fixture(self.folder,{'itemId':2579,'modelId':'model-1','referenceDiameter':.9})
         self.recipe.write_text(json.dumps(recipe))
         verification=json.loads((self.folder/'verification.json').read_text())
+        verification['geometryTargets']={role:None for role in ['render','lod','shadow']}
         verification['textureBudget']={'passed':True,'override':None,'policySHA256':hashlib.sha256(SCRIPT.with_name('texture-policy.json').read_bytes()).hexdigest()}
         (self.folder/'verification.json').write_text(json.dumps(verification))
         old = copy.deepcopy(assets)
@@ -87,6 +89,29 @@ class MiniatureUpdate(unittest.TestCase):
         self.assertEqual(receipt['bindings'], self.bindings)
         for file in self.folder.rglob('*.json'):
             self.assertNotIn('offline-test-token', file.read_text())
+
+    def test_changed_triangle_target_stops_before_upload(self):
+        value=json.loads(self.recipe.read_text());value['build']['renderTriangles']=12000
+        self.recipe.write_text(json.dumps(value))
+        with self.assertRaisesRegex(AssertionError,'Triangle targets changed'):
+            self.run_update()
+        self.assertEqual(self.uploads,0)
+
+    def test_repaired_source_requires_both_archives(self):
+        recipe=json.loads(self.recipe.read_text());recipe['sourceRepair']={'kind':'gel'}
+        self.recipe.write_text(json.dumps(recipe))
+        path=self.folder/'verification.json';value=json.loads(path.read_text())
+        value.update(sourceRepair=recipe['sourceRepair'],originalServiceMeshExported=False)
+        path.write_text(json.dumps(value))
+        with self.assertRaisesRegex(AssertionError,'archives must be published'):
+            self.run_update()
+        self.assertEqual(self.uploads,0)
+        archives=self.folder.parent/'archives';archives.mkdir(exist_ok=True)
+        for stage in ['native','ready']:
+            (archives/(stage+'-publication.json')).write_text(json.dumps({'verified':True,'stage':stage,'itemId':2579,'modelId':'model-1','sha256':'ready-sha'}))
+        (archives/'ready-archive.json').write_text(json.dumps({'sha256':'ready-sha','manifest':{'files':[{'path':'recipe.json','sha256':hashlib.sha256(self.recipe.read_bytes()).hexdigest()},{'path':'final/model-source.glb','sha256':value['assetHashes']['source']}]}}))
+        self.run_update()
+        self.assertFalse(json.loads((self.folder/'publication.json').read_text())['originalServiceMeshExported'])
 
     def test_stale_lod_budget_stops_before_upload(self):
         path=self.folder/'verification.json';value=json.loads(path.read_text())

@@ -35,10 +35,11 @@
   "build": {
     "height": 1.7,
     "size": 1,
-    "lodTriangles": 28000,
-    "lodAggression": 4,
-    "shadowTriangles": 6000,
-    "shadowAggression": 4,
+    "renderTriangles": 26000,
+    "lodTriangles": 26000,
+    "lodAggression": 3,
+    "shadowTriangles": 2500,
+    "shadowAggression": 7,
     "rotation": -45
   },
   "calibration": {
@@ -50,8 +51,15 @@
     ],
     "rotation": -45
   },
+  "sourceRepair": {
+    "kind": "hair",
+    "voxelSize": 0.008,
+    "rearMin": 0.015,
+    "minimumZ": 0.04,
+    "maximumZ": 1
+  },
   "lodBudget": {
-    "maxTriangles": 28000,
-    "reason": "Волосы и рваные края одежды требуют сохранения сложного контура: при 25k проекция yaw-315-elev-30 дала IoU 0,969691 при пороге 0,97. Выбран отдельный бюджет 28k, пороги силуэта и текстур сохранены."
+    "maxTriangles": 26000,
+    "reason": "17 проекций проверены после поворота и сохранения нижней опоры. Более дешёвые LOD теряют тонкие части силуэта; выбран минимальный прошедший проверку бюджет без ослабления порогов. Лимит текстур LOD — 2 MiB."
   }
 }

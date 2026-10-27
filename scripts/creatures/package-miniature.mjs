@@ -1,5 +1,6 @@
 // Build an ignored, content-addressed upload folder; publication uses the MCP CLI.
 import fs from "node:fs/promises";
+import { geometryTargets } from "./geometry_targets.mjs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
@@ -35,6 +36,10 @@ const output = path.join(folder, "publish");
 const verification = JSON.parse(
   await fs.readFile(path.join(folder, "verification.json"), "utf8"),
 );
+if (!isDeepStrictEqual(verification.sourceRepair ?? null, recipe.sourceRepair ?? null))
+  throw new Error("Authored source changed since verification");
+if (!isDeepStrictEqual(verification.geometryTargets, geometryTargets(recipe)))
+  throw new Error("Triangle targets changed since verification");
 if (verification.lodTriangleLimit !== lodTriangleLimit(recipe) ||
     !isDeepStrictEqual(verification.lodBudget, recipe.lodBudget ?? null))
   throw new Error("Verify the current authored LOD budget before packaging");
@@ -112,6 +117,7 @@ const {
   assetFiles,
   slug,
   materialProfile,
+  sourceRepair,
   calibration,
   build,
   lodSilhouette,

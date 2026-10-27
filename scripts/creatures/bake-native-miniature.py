@@ -102,7 +102,7 @@ def bake(high, low, folder, role):
         for obj in high + low:
             obj.select_set(True)
         bpy.context.view_layer.objects.active = low[0]
-        print('Baking', role, channel, flush=True)
+        print('Baking', role, channel, 'device='+context.cycles.device, flush=True)
         bpy.ops.object.bake(type='NORMAL' if channel == 'normal' else 'EMIT',
             use_selected_to_active=True, max_ray_distance=.035, cage_extrusion=.006, margin=8)
         image.filepath_raw = str(folder / f'{role}-{channel}.png')
@@ -195,5 +195,6 @@ for role in ['render', 'lod', 'shadow']:
     'nativeFootprintDiameter': args.footprint,
     'calibration': calibration, 'embeddedBase': args.embedded_base,
     'nominalFootprintCells': [args.token_size, args.token_size],
-    'originalServiceMeshExported': True,
+    'originalServiceMeshExported': not bool(recipe.get('sourceRepair')),
+    'sourceRepair': recipe.get('sourceRepair'),
     'transform': [list(row) for row in transform]}, indent=2) + '\n')

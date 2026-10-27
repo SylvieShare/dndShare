@@ -108,6 +108,8 @@ def models(env):
     miniature_python = env.get("MODEL_PYTHON") or (str(miniature_runtime) if miniature_runtime.is_file() else python)
     run([miniature_python, "-m", "unittest", "discover", "-s", "scripts/creatures", "-p", "test_lod_silhouette.py"],
         env=dict(env, DNDSHARE_TEST_MODELS="1"))
+    run([miniature_python, "-m", "unittest", "discover", "-s", "scripts/creatures", "-p", "test_native_geometry.py"],
+        env=dict(env, DNDSHARE_TEST_MODELS="1"))
     failures = []
     for file in sorted((ROOT / "scripts/maps").glob("test*.py")):
         if re.search(r"(^import (bpy|bmesh)|^from mathutils)", file.read_text(), re.M):

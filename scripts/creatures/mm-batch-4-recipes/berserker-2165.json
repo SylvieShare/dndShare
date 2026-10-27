@@ -35,10 +35,11 @@
   "build": {
     "height": 1.8,
     "size": 1,
-    "lodTriangles": 25000,
-    "lodAggression": 4,
+    "renderTriangles": 30000,
+    "lodTriangles": 26000,
+    "lodAggression": 3,
     "shadowTriangles": 6000,
-    "shadowAggression": 4,
+    "shadowAggression": 7,
     "rotation": -45
   },
   "calibration": {
@@ -49,5 +50,16 @@
       -0.5001083016395569
     ],
     "rotation": -45
+  },
+  "sourceRepair": {
+    "kind": "fur",
+    "voxelSize": 0.012,
+    "rearMin": 0.08,
+    "minimumZ": -0.27,
+    "maximumZ": 0.49
+  },
+  "lodBudget": {
+    "maxTriangles": 26000,
+    "reason": "17 проекций проверены после поворота и сохранения нижней опоры. Более дешёвые LOD теряют тонкие части силуэта; выбран минимальный прошедший проверку бюджет без ослабления порогов. Лимит текстур LOD — 2 MiB."
   }
 }

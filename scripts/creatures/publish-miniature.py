@@ -26,12 +26,25 @@ recipe = json.loads(args.recipe.read_text())
 models = json.loads((folder/'publish/catalogue.json').read_text())
 verification = json.loads((folder/'verification.json').read_text())
 require_review(folder,recipe,recipe['build']['size'],folder/'model-review.json')
+assert verification.get('geometryTargets') == {role:recipe.get('build',{}).get(role+'Triangles') for role in ['render','lod','shadow']}, 'Triangle targets changed since verification'
 assert verification.get('lodBudget') == recipe.get('lodBudget'), 'LOD budget changed since verification'
 assert verification.get('textureBudget',{}).get('passed'), 'Decoded texture budget verification required'
 assert verification['textureBudget']['policySHA256'] == hashlib.sha256(Path(__file__).with_name('texture-policy.json').read_bytes()).hexdigest(), 'Texture policy changed since verification'
 assert verification['textureBudget'].get('override') == recipe.get('texturePolicy'), 'Texture policy override changed since verification'
 assert verification['passed'] and len(models) == 1
-assert verification['originalServiceMeshExported'], 'Native mesh export required'
+assert verification.get('sourceRepair') == recipe.get('sourceRepair'), 'Authored source changed since verification'
+assert verification['originalServiceMeshExported'] == (not bool(recipe.get('sourceRepair'))), 'Source provenance differs from recipe'
+if recipe.get('sourceRepair'):
+    for stage in ['native','ready']:
+        path=folder.parent/'archives'/(stage+'-publication.json')
+        assert path.is_file(), 'Native and authored source archives must be published before repair publication'
+        archive=json.loads(path.read_text())
+        assert archive.get('verified') and archive.get('stage')==stage and archive.get('modelId')==recipe['modelId'] and archive.get('itemId')==recipe['itemId'], 'Source archive receipt differs from repair recipe'
+    descriptor=json.loads((folder.parent/'archives/ready-archive.json').read_text())
+    assert archive['sha256']==descriptor['sha256'], 'Ready archive receipt is stale'
+    archived={file['path']:file['sha256'] for file in descriptor['manifest']['files']}
+    assert archived.get('recipe.json')==hashlib.sha256(args.recipe.read_bytes()).hexdigest(), 'Ready archive recipe is stale'
+    assert archived.get('final/model-source.glb')==verification['assetHashes']['source'], 'Authored source is missing from the ready archive'
 assert verification['silhouette']['passed'], 'LOD silhouette verification required'
 assert hashlib.sha256((folder/'lod-silhouette.json').read_bytes()).hexdigest() == verification['silhouetteReportSHA256'], 'Silhouette report changed since verification'
 silhouette = json.loads((folder/'lod-silhouette.json').read_text())
@@ -89,7 +102,7 @@ if previous:
 else:
     assert any(b['modelId'] == model['id'] and b['default'] for b in bindings)
 receipt = {'verified': True, 'itemId': recipe['itemId'], 'modelId': model['id'],
-    'originalServiceMeshExported': verification['originalServiceMeshExported'],
+    'originalServiceMeshExported': verification['originalServiceMeshExported'], 'sourceRepair':recipe.get('sourceRepair'),
     'assets': actual['assets'], 'bindings': bindings}
 (folder/'publication.json').write_text(json.dumps(receipt, indent=2)+'\n')
 print(json.dumps({'verified': True, 'itemId': recipe['itemId'], 'modelId': model['id']}))

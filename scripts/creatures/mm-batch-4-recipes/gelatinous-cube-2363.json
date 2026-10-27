@@ -35,10 +35,12 @@
   "build": {
     "height": 0.9,
     "size": 2,
-    "lodTriangles": 25000,
-    "lodAggression": 4,
-    "shadowTriangles": 6000,
-    "shadowAggression": 4,
+    "renderTriangles": 6000,
+    "lodTriangles": 3000,
+    "lodAggression": 3,
+    "shadowTriangles": 500,
+    "shadowAggression": 7,
+    "shadowHull": true,
     "rotation": -45
   },
   "calibration": {
@@ -49,5 +51,8 @@
       -0.4279109239578247
     ],
     "rotation": -45
+  },
+  "sourceRepair": {
+    "kind": "gel"
   }
 }

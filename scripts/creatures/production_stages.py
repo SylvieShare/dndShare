@@ -10,6 +10,7 @@ from production_archives import archive_stage, queue_mcp
 from miniature_review import placement_context, review_base, require_review
 from model_build_queue import file_hash, native_directory
 from trellis_checkpoint import write_json
+from production_sources import source_file, geometry_source, refine_source
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT/'scripts/creatures'
@@ -29,24 +30,27 @@ def scripts_hash(*names):
 
 
 def build_settings(entry):
-    return {key:entry[key] for key in ['height','footprint','size','lodTriangles','dropComponentsBelow','fillSmallHoles','lodAggression','shadowTriangles','shadowAggression','nativeAttempt','seed','surfaceClosure'] if key in entry} | {'rotation':-45}
+    return {key:entry[key] for key in ['height','footprint','size','renderTriangles','lodTriangles','geometryBaseline','dropComponentsBelow','fillSmallHoles','lodAggression','shadowTriangles','shadowAggression','shadowHull','nativeAttempt','seed','surfaceClosure'] if key in entry} | {'rotation':-45}
 
 
 def prepare_recipe(entry,folder):
     path=folder/'recipe.json'
     recipe=json.loads(path.read_text())
     recipe['build']=build_settings(entry)
+    if entry.get('sourceRepair'):recipe['sourceRepair']=entry['sourceRepair']
+    else:recipe.pop('sourceRepair',None)
     if path.read_text()!=json.dumps(recipe,ensure_ascii=False,indent=2)+'\n':
         path.write_text(json.dumps(recipe,ensure_ascii=False,indent=2)+'\n')
     return path
 
 
 def geometry_inputs(entry,folder):
-    inputs = {'native':file_hash(native_directory(folder,entry.get('nativeAttempt',1))/'generated-original.glb'),
-            'lodTriangles':entry['lodTriangles'],'dropComponentsBelow':entry.get('dropComponentsBelow',0),
+    inputs = {'native':file_hash(geometry_source(entry,folder)),
+            'renderTriangles':entry.get('renderTriangles',44000),'lodTriangles':entry['lodTriangles'],'dropComponentsBelow':entry.get('dropComponentsBelow',0),
             'fillSmallHoles':entry.get('fillSmallHoles',False),'lodAggression':entry.get('lodAggression',3),
             'shadowTriangles':entry.get('shadowTriangles',3500),'shadowAggression':entry.get('shadowAggression',7),
             'scripts':scripts_hash('prepare-native-geometry.py')}
+    if entry.get('shadowHull'):inputs['shadowHull']=True
     if entry.get('surfaceClosure'):
         inputs['surfaceClosure'] = entry['surfaceClosure']
         inputs['scripts'].update(scripts_hash('close-native-surface.py'))
@@ -55,7 +59,7 @@ def geometry_inputs(entry,folder):
 
 def bake_inputs(entry,folder):
     recipe=json.loads((folder/'recipe.json').read_text())
-    return {'native':file_hash(native_directory(folder,entry.get('nativeAttempt',1))/'generated-original.glb'),
+    return {'native':file_hash(source_file(entry,folder)),
         'geometry':{r:file_hash(folder/'geometry'/f'geometry-{r}.glb') for r in ROLES},
         'build':build_settings(entry),'calibration':recipe.get('calibration'),
         'materialProfile':recipe.get('materialProfile'),'referenceDiameter':recipe['referenceDiameter'],
@@ -65,15 +69,17 @@ def bake_inputs(entry,folder):
 def process(queue,entry,until,server_token):
     folder=queue.root/entry['slug'];logs=folder/'logs';changed=False
     recipe=prepare_recipe(entry,folder)
-    raw=native_directory(folder,entry.get('nativeAttempt',1))/'generated-original.glb'
+    raw=source_file(entry,folder)
     geometry=folder/'geometry';baked=folder/'baked';final=folder/'final'
 
     def stage(name,inputs,action):
         nonlocal changed
         changed |= queue.stage(entry,name,inputs,action)
 
+    refine_source(entry,folder,stage,execute,BLENDER,SCRIPTS,scripts_hash)
+
     def geometry_stage():
-        source=raw;extra=[]
+        source=geometry_source(entry,folder);extra=[]
         if entry.get('surfaceClosure'):
             source=geometry/'closed-source.glb';settings=entry['surfaceClosure']
             command=[sys.executable,SCRIPTS/'close-native-surface.py',raw,source]
@@ -86,9 +92,10 @@ def process(queue,entry,until,server_token):
                 if settings.get('region'): command += ['--region', *settings['region']]
             execute(command,logs/'closure.log')
             extra=[source,source.with_suffix('.json')]
-        command=[sys.executable,SCRIPTS/'prepare-native-geometry.py',geometry,'--source',source,'--lod-triangles',entry['lodTriangles']]
+        command=[sys.executable,SCRIPTS/'prepare-native-geometry.py',geometry,'--source',source,'--render-triangles',entry.get('renderTriangles',44000),'--lod-triangles',entry['lodTriangles']]
         if entry.get('dropComponentsBelow'):command+=['--drop-components-below',entry['dropComponentsBelow']]
         if entry.get('fillSmallHoles'):command+=['--fill-small-holes']
+        if entry.get('shadowHull'):command+=['--shadow-hull']
         for key,flag in [('lodAggression','--lod-aggression'),('shadowTriangles','--shadow-triangles'),('shadowAggression','--shadow-aggression')]:
             if key in entry:command+=[flag,entry[key]]
         execute(command,logs/'geometry.log')
@@ -139,7 +146,7 @@ def process(queue,entry,until,server_token):
         return [final/'verification.json']
     stage('verify',{'assets':{f:file_hash(final/f) for f in FILES},'stats':file_hash(final/'model-stats.json'),
         'placement':file_hash(final/'placement.json'),'silhouette':file_hash(final/'lod-silhouette.json'),
-        'recipe':file_hash(recipe),'scripts':scripts_hash('verify-single-miniature.mjs','texture_policy.mjs','texture-policy.json','lod_budget.mjs')},verify)
+        'recipe':file_hash(recipe),'scripts':scripts_hash('verify-single-miniature.mjs','geometry_targets.mjs','texture_policy.mjs','texture-policy.json','lod_budget.mjs')},verify)
 
     review_file=final/'model-review.json'
     if not review_file.exists():

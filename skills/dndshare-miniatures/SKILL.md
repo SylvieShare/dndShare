@@ -101,6 +101,18 @@ an expired session, stop; do not bypass that guard by creating another generatio
 without the current task authorizing a new attempt. `--status` is local and does
 not request a key. A completed local GLB needs no service calls.
 
+Choose geometry budgets per shape. Test cheaper render against the accepted
+silhouette, then derive LOD from that render. Cubes/slimes need far fewer faces
+than thin weapons, fur or wings. Preserve an accepted mesh as geometryBaseline
+when reducing an existing asset; keep native materials and its archive intact.
+Do not spend silhouette tolerances or decoded texture budget to hide a defect.
+
+At map scale, gel must read as soft mass, fur/hair as coarse connected clumps.
+Avoid ice-like facets, plastic orange jelly and wire/feather detail. Check dark
+creatures in the actual lit room; selectively lift midtones while preserving
+cavities and bright details. For local remeshing, inspect the authored region
+and grey geometry before accepting colour. Preserve unaffected native UVs.
+
 Review neutral light, grey material, front/back/both sides/top, render versus
 LOD, and actual placement against walls. Record visible weaknesses. Run the
 silhouette comparison after optimization, then the verifier on the exact final

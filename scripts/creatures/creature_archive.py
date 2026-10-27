@@ -8,11 +8,13 @@ import tarfile
 import urllib.parse
 
 from model_build_queue import file_hash, native_directory
+from production_sources import geometry_source
 from trellis_checkpoint import write_json
 from creature_archive_restore import restore_archive
 
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW = ['generate-trellis.py','trellis_checkpoint.py','trellis_transport.py','requirements.txt',
+            'production_sources.py','repair-native-source.py','repair_source_art.py','geometry_targets.mjs',
             'prepare-native-geometry.py','close-native-surface.py','bake-native-miniature.py','miniature_scene.py',
             'optimize-miniature.mjs','render-final-miniature.py','lod_silhouette.py',
             'compare-lod-silhouette.py','lod-silhouette-policy.json','verify-single-miniature.mjs',
@@ -35,7 +37,13 @@ def archive_inputs(folder,stage):
     for name in WORKFLOW:
         file = ROOT/'scripts/creatures'/name
         inputs['workflow/'+name] = file
+    baseline=recipe.get('build',{}).get('geometryBaseline')
+    if baseline:inputs['inputs/baseline-render.glb']=geometry_source({'geometryBaseline':baseline},folder)
     if stage=='ready':
+        repair=folder/'source-repair'
+        if recipe.get('sourceRepair'):
+            for name in ['repaired-source.glb','repair.blend','repair-report.json']:inputs['source-repair/'+name]=repair/name
+            for file in list(repair.glob('colour-*.png'))+list(repair.glob('orm-*.png')):inputs['source-repair/'+file.name]=file
         inputs['final/model-review.json']=folder/'final/model-review.json'
         base=Path(recipe['reviewBase']['file'])
         inputs['review/base.glb']=base if base.is_absolute() else ROOT/base
