@@ -14,6 +14,7 @@ models/creatures/.generation-runtime/bin/python scripts/creatures/production-que
 ```
 
 Рабочий пример — восемь видов MM с [принятыми рецептами](../../scripts/creatures/pilot-recipes/).
+
 Состав, визуальные ограничения и замер поля описаны в
 [отчёте пилота](../reports/creature-miniatures-pilot-2026-10-25.md).
 Следующий набор из 20 видов использует
@@ -25,6 +26,19 @@ models/creatures/.generation-runtime/bin/python scripts/creatures/production-que
 [принятые рецепты](../../scripts/creatures/mm-batch-3-recipes/) и
 [отчёт 25–26 октября](../reports/creature-miniatures-mm-batch-3-2026-10-26.md)
 содержат калибровку, проверку всех 80 GLB и восстановление исходников.
+
+Четвёртый набор — следующие 20 видов MM: [манифест](../../scripts/creatures/mm-batch-4-production.json),
+[рецепты](../../scripts/creatures/mm-batch-4-recipes/) и
+[отчёт 27 октября](../reports/creature-miniatures-mm-batch-4-2026-10-27.md).
+
+Исполняемый файл Blender задаётся через `BLENDER_BIN`; без переменной очередь
+ищет `blender` в `PATH`, затем использует стандартный путь приложения macOS.
+В WSL при использовании Windows Blender нужен launcher, переводящий абсолютные
+пути аргументов через `wslpath -w`. Обработка выполняется в отдельных фоновых
+процессах с `--factory-startup`, независимо от открытой сцены Blender MCP.
+Сама очередь выполняется в POSIX Python, на Windows — в WSL; модули хешей
+и приёмки импортируются в Windows Blender без POSIX-блокировок. Загрузчик
+миниатюр наследует обычное окружение Go, включая явно заданный `GOCACHE`.
 
 Запуск генерации добавляет `--run --until native --token-stdin --server-token`. Это скрытый
 ввод личного HF-ключа; автоматизация может передать его через наследуемый pipe

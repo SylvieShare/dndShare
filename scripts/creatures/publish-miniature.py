@@ -79,7 +79,7 @@ command = ['go', 'run', './cmd/map-model-upload', '-assets', str(upload), '-work
 if not previous:
     command += ['-item-id', str(recipe['itemId'])]
 subprocess.run(command, cwd=root,
-    env=dict(os.environ, MCP_AUTH_TOKEN=token, GOCACHE='/private/tmp/dndshare-go-cache'), check=True)
+    env=dict(os.environ, MCP_AUTH_TOKEN=token), check=True)
 actual = call('map_tile_model_get', {'id': model['id']})
 bindings = call('item_models_list', {'itemId': recipe['itemId']})
 assert actual['assets'] == model['assets'] and actual['maxHeight'] == model['maxHeight']

@@ -1,6 +1,5 @@
 """Durable, private stage receipts; no credentials and no implicit GPU replay."""
 from contextlib import contextmanager
-import fcntl
 import hashlib
 import json
 import os
@@ -34,6 +33,8 @@ def write_json(path, value):
 
 @contextmanager
 def output_lock(folder):
+    import fcntl  # Only the POSIX queue takes locks; Windows Blender reads hashes.
+
     folder.mkdir(parents=True, exist_ok=True)
     with (folder/'.trellis.lock').open('a') as lock:
         try:

@@ -1,0 +1,53 @@
+{
+  "slug": "mage-2992",
+  "itemId": 2992,
+  "itemIds": [
+    2992
+  ],
+  "modelId": "b8336386-922e-5288-b400-4f87129cbdf9",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2992",
+  "sourceName": "mage-2992-miniature",
+  "name": "Маг",
+  "nameEn": "Mage",
+  "code": "CRE-mage",
+  "groupName": "Маг",
+  "groupNameEn": "Mage",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "lodTriangles": 25000,
+    "lodAggression": 4,
+    "shadowTriangles": 6000,
+    "shadowAggression": 4,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.6009140610694884,
+    "sourceOrigin": [
+      0.02068900467791014,
+      0.05048689928543169,
+      -0.5008238554000854
+    ],
+    "rotation": -45
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "slug": "hill-giant-2929",
+  "itemId": 2929,
+  "itemIds": [
+    2929
+  ],
+  "modelId": "aaa0941b-aa45-58b0-aff1-03e43e4d285b",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2929",
+  "sourceName": "hill-giant-2929-miniature",
+  "name": "Холмовой великан",
+  "nameEn": "Hill Giant",
+  "code": "CRE-hill-giant",
+  "groupName": "Холмовой великан",
+  "groupNameEn": "Hill Giant",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "c14c9163-3e8d-5e01-a615-b9490cf230d5",
+    "file": "models/creatures/separated-bases-20261024/c14c9163-3e8d-5e01-a615-b9490cf230d5.glb",
+    "referenceDiameter": 2.7,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 3,
+    "lodTriangles": 25000,
+    "lodAggression": 4,
+    "shadowTriangles": 6000,
+    "shadowAggression": 4,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5095818147939795,
+    "sourceOrigin": [
+      0.15919999999999998,
+      -0.01215,
+      -0.4867638945579529
+    ],
+    "rotation": -45
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "slug": "assassin-3205",
+  "itemId": 3205,
+  "itemIds": [
+    3205
+  ],
+  "modelId": "795b3ee2-0a42-5787-8a5d-ecc196cb0cbd",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3205",
+  "sourceName": "assassin-3205-miniature",
+  "name": "Наёмный убийца",
+  "nameEn": "Assassin",
+  "code": "CRE-assassin",
+  "groupName": "Наёмный убийца",
+  "groupNameEn": "Assassin",
+  "maxHeight": 1.65,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.65,
+    "size": 1,
+    "lodTriangles": 25000,
+    "lodAggression": 4,
+    "shadowTriangles": 6000,
+    "shadowAggression": 4,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5897944450378417,
+    "sourceOrigin": [
+      0.008660668837180259,
+      0.11711060667065451,
+      -0.4917011857032776
+    ],
+    "rotation": -45
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "slug": "beholder-3604",
+  "itemId": 3604,
+  "itemIds": [
+    3604
+  ],
+  "modelId": "91a81109-0bad-5620-bd76-5a0673e44407",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3604",
+  "sourceName": "beholder-3604-miniature",
+  "name": "Бехолдер",
+  "nameEn": "Beholder",
+  "code": "CRE-beholder",
+  "groupName": "Бехолдер",
+  "groupNameEn": "Beholder",
+  "maxHeight": 1.1,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "flight",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.1,
+    "size": 2,
+    "lodTriangles": 25000,
+    "lodAggression": 4,
+    "shadowTriangles": 6000,
+    "shadowAggression": 4,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.7013374296101657,
+    "sourceOrigin": [
+      0.0,
+      0.0,
+      -0.42823973298072815
+    ],
+    "rotation": -45
+  }
+}

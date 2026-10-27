@@ -1,0 +1,53 @@
+{
+  "slug": "yuan-ti-pureblood-2139",
+  "itemId": 2139,
+  "itemIds": [
+    2139
+  ],
+  "modelId": "0880b990-0a50-5c07-8309-c0628f6b6c0d",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2139",
+  "sourceName": "yuan-ti-pureblood-2139-miniature",
+  "name": "Чистокровная юань-ти",
+  "nameEn": "Yuan-ti Pureblood",
+  "code": "CRE-yuan-ti-pureblood",
+  "groupName": "Чистокровная юань-ти",
+  "groupNameEn": "Yuan-ti Pureblood",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "lodTriangles": 25000,
+    "lodAggression": 4,
+    "shadowTriangles": 6000,
+    "shadowAggression": 4,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.6010616540908814,
+    "sourceOrigin": [
+      0.024832498967850572,
+      0.0561016328694723,
+      -0.5009239912033081
+    ],
+    "rotation": -45
+  }
+}

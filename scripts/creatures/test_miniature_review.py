@@ -1,5 +1,7 @@
 import json
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import unittest
 from miniature_review import require_review
@@ -7,6 +9,25 @@ from review_test_support import reviewed_fixture
 
 
 class ReviewTests(unittest.TestCase):
+    def test_blender_review_import_does_not_require_posix_locks(self):
+        code = '''
+import builtins, sys
+sys.path.insert(0, sys.argv[1])
+original_import = builtins.__import__
+def without_posix_locks(name, *args, **kwargs):
+    if name == 'fcntl':
+        raise ModuleNotFoundError('fcntl is unavailable in Windows Blender')
+    return original_import(name, *args, **kwargs)
+builtins.__import__ = without_posix_locks
+from miniature_review import placement_context
+from model_build_queue import fingerprint
+assert fingerprint({'review': True})
+'''
+        result = subprocess.run([sys.executable, '-I', '-c', code,
+                                 str(Path(__file__).resolve().parent)],
+                                capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
         self.folder=Path(self.temp.name)

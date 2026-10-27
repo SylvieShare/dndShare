@@ -1,0 +1,57 @@
+{
+  "slug": "drow-1728",
+  "itemId": 1728,
+  "itemIds": [
+    1728
+  ],
+  "modelId": "3d128184-d45d-5679-b4ae-f1551af56025",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1728",
+  "sourceName": "drow-1728-miniature",
+  "name": "Дроу",
+  "nameEn": "Drow",
+  "code": "CRE-drow",
+  "groupName": "Дроу",
+  "groupNameEn": "Drow",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "lodTriangles": 44000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 4,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.6009502172470093,
+    "sourceOrigin": [
+      0.05566878781543044,
+      -0.04733677325775263,
+      -0.5008376836776733
+    ],
+    "rotation": -45
+  },
+  "lodBudget": {
+    "maxTriangles": 44000,
+    "reason": "При 25k и 32k три боковые проекции теряли длинный тонкий контур оружия, максимальное отклонение 14,42 пикселя. Для этой модели LOD сохраняет геометрию render 44k с тем же QEM aggression 3; разрешения текстур и предел 2 MiB для LOD остаются обычными. Пороги силуэта не ослабляются."
+  }
+}

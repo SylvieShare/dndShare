@@ -1,0 +1,53 @@
+{
+  "slug": "duergar-2029",
+  "itemId": 2029,
+  "itemIds": [
+    2029
+  ],
+  "modelId": "c1710d10-e64b-5aca-8c17-1ebc91cfcf66",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2029",
+  "sourceName": "duergar-2029-miniature",
+  "name": "Дуэргар",
+  "nameEn": "Duergar",
+  "code": "CRE-duergar",
+  "groupName": "Дуэргар",
+  "groupNameEn": "Duergar",
+  "maxHeight": 1.3,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.3,
+    "size": 1,
+    "lodTriangles": 25000,
+    "lodAggression": 4,
+    "shadowTriangles": 6000,
+    "shadowAggression": 4,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.8584554025105067,
+    "sourceOrigin": [
+      -0.012867182281278283,
+      0.08500652391067662,
+      -0.5009705424308777
+    ],
+    "rotation": -45
+  }
+}

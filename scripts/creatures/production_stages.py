@@ -13,7 +13,7 @@ from trellis_checkpoint import write_json
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT/'scripts/creatures'
-BLENDER = '/Applications/Blender.app/Contents/MacOS/Blender'
+BLENDER = os.environ.get('BLENDER_BIN') or shutil.which('blender') or '/Applications/Blender.app/Contents/MacOS/Blender'
 ROLES = ['render','lod','shadow']
 FILES = ['model.glb','model-lod.glb','model-shadow.glb','model-source.glb']
 
@@ -166,7 +166,7 @@ def process(queue,entry,until,server_token):
             command=[sys.executable,SCRIPTS/'publish-miniature.py',final,recipe,'--publish']
             receipt=final/'publication.json'
             if receipt.exists():command+=['--update-from',receipt]
-            execute(command,logs/'publish.log',env=dict(os.environ,MCP_AUTH_TOKEN=queue_mcp(queue).token,GOCACHE='/private/tmp/dndshare-go-cache'))
+            execute(command,logs/'publish.log',env=dict(os.environ,MCP_AUTH_TOKEN=queue_mcp(queue).token))
             return [receipt]
         stage('published',{'catalogue':file_hash(final/'catalogue.json'),'archive':file_hash(folder/'archives/ready-publication.json')},publish)
     return changed
