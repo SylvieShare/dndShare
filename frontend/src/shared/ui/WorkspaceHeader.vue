@@ -1,15 +1,18 @@
 <template>
-  <header ref="element" class="workspace-header" :class="{ 'workspace-header--plain': !$slots.navigation }">
+  <header ref="element" class="workspace-header" :class="{ 'workspace-header--plain': !$slots.navigation || splitNavigation }">
     <div class="workspace-header-inner" :class="{ 'workspace-header-inner--page': page }" :style="{ maxWidth: contentWidth || (page ? 'var(--layout-content-max)' : undefined) }">
     <div class="workspace-header-identity"><slot name="identity" /></div>
-    <div v-if="$slots.navigation" class="workspace-header-navigation"><slot name="navigation" /></div>
+    <div v-if="$slots.navigation && !splitNavigation" class="workspace-header-navigation"><slot name="navigation" /></div>
     <div class="workspace-header-actions"><slot name="actions" /></div>
+    </div>
+    <div v-if="$slots.navigation && splitNavigation" class="workspace-subheader">
+      <div class="workspace-subheader-inner" :style="{ maxWidth: contentWidth || (page ? 'var(--layout-content-max)' : undefined) }"><slot name="navigation" /></div>
     </div>
   </header>
 </template>
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from "vue";
-defineProps({ page: Boolean, contentWidth: String });
+defineProps({ page: Boolean, contentWidth: String, splitNavigation: Boolean });
 const element = ref(null),
   emit = defineEmits(["resize"]);
 let observer;
@@ -43,6 +46,8 @@ onBeforeUnmount(() => observer?.disconnect());
   transition: max-width var(--motion-navigation);
 }
 .workspace-header-inner--page { padding-inline: var(--spacing-page); }
+.workspace-subheader { border-top: 1px solid var(--border); background: var(--bg); }
+.workspace-subheader-inner { display: flex; justify-content: center; box-sizing: border-box; width: 100%; min-width: 0; margin-inline: auto; padding: var(--spacing-xs) 14px; overflow-x: auto; }
 .workspace-header-identity {
   min-width: 0;
   min-height: calc(var(--layout-header) - 2 * var(--spacing-xs) - var(--layout-border));

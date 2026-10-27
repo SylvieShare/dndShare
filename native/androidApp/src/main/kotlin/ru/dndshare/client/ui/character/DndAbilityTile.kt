@@ -66,7 +66,10 @@ private fun DndAbilityFace(ability: DndAbility, compact: Boolean, presentation: 
     // A finite upper bound permits natural full height inside the sheet's scroll container.
     // In the modal the viewport is bounded, so only visible rows are remeasured during reflow.
     val sourceLimit = LocalConfiguration.current.screenHeightDp.coerceAtLeast(1).dp * (skills.size + 2)
-    LazyColumn(Modifier.fillMaxWidth().heightIn(max = sourceLimit).shareAccentStrip(color).padding(start = 3.dp),
+    val valueHeight = if (compact) DesignTokens.Layout.SheetValueCompactHeight else DesignTokens.Layout.SheetValueHeight
+    val valueWidth = if (compact) DesignTokens.Layout.SheetValueCompactWidth else DesignTokens.Layout.SheetValueWidth
+    LazyColumn(Modifier.fillMaxWidth().heightIn(max = sourceLimit)
+        .clip(RoundedCornerShape(DesignTokens.Radius.Tile)).background(WebPalette.Surface).shareAccentStrip(color).padding(start = 3.dp),
         userScrollEnabled = presentation.expanded, contentPadding = PaddingValues(bottom = 12.dp)) {
         item("heading") {
             Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 7.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -80,8 +83,9 @@ private fun DndAbilityFace(ability: DndAbility, compact: Boolean, presentation: 
                 }
                 }
                 Surface(color = WebPalette.Raised, border = BorderStroke(1.dp, if (proficient) color else WebPalette.Border), shape = RoundedCornerShape(8.dp)) {
-                    Row(Modifier.padding(horizontal = if (compact) 9.dp else 6.dp, vertical = if (compact) 5.dp else 3.dp),
-                        horizontalArrangement = Arrangement.spacedBy(5.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Row(Modifier.sizeIn(minWidth = valueWidth + 12.dp, minHeight = valueHeight)
+                        .padding(horizontal = if (compact) 9.dp else 6.dp, vertical = if (compact) 5.dp else 3.dp),
+                        horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterHorizontally), verticalAlignment = Alignment.CenterVertically) {
                         Text("спас", style = ShareTypography.row.copy(fontSize = if (compact) 13.sp else 11.sp, lineHeight = if (compact) 13.sp else 11.sp), color = WebPalette.TextMuted)
                         Text(signed(save), fontSize = if (compact) 15.sp else 13.sp, lineHeight = if (compact) 15.sp else 13.sp, fontWeight = FontWeight.Bold)
                     }
@@ -108,7 +112,7 @@ private fun DndAbilityFace(ability: DndAbility, compact: Boolean, presentation: 
             val title = skill.text("override_title").ifBlank {
                 context.metadata.suggests["15"]?.firstOrNull { it.id.toString() == id }?.value ?: skillNames[id.toIntOrNull()] ?: "Навык $id"
             }
-            Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp).heightIn(min = if (compact) 34.dp else 27.dp), verticalAlignment = Alignment.CenterVertically,
+            Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 2.dp).heightIn(min = valueHeight), verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -118,10 +122,12 @@ private fun DndAbilityFace(ability: DndAbility, compact: Boolean, presentation: 
                 }
                 Surface(color = WebPalette.Raised, shape = RoundedCornerShape(if (compact) 9.dp else 7.dp),
                     border = BorderStroke(1.dp, if (rank > 0) color.copy(alpha = .5f) else WebPalette.Border)) {
+                    Box(Modifier.sizeIn(minWidth = valueWidth, minHeight = valueHeight)
+                        .padding(horizontal = if (compact) 10.dp else 7.dp, vertical = if (compact) 4.dp else 2.dp), contentAlignment = Alignment.Center) {
                     Text(signed(modifier + rank * sheet.proficiency() + skill["bonuses"].bonusTotal() + context.mechanics.bonus("check_bonus", skillContext.copy(proficient = rank > 0))),
-                        Modifier.padding(horizontal = if (compact) 10.dp else 7.dp, vertical = if (compact) 4.dp else 2.dp),
                         fontSize = if (compact) 16.sp else 13.sp, lineHeight = if (compact) 16.sp else 13.sp, fontWeight = FontWeight.Bold,
                         color = if (rank > 0) WebPalette.Text else WebPalette.TextSecondary)
+                    }
                 }
             }
         }

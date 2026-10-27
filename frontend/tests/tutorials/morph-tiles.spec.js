@@ -45,12 +45,15 @@ test('shared faces keep their intended surface and previews avoid nested tiles',
   await expect(sources).toHaveCount(12)
   for (const source of await sources.all()) {
     if (await source.getAttribute('data-testid') === 'DndStatView-source') {
-      await expect(source).not.toHaveClass(/base-tile/)
+      await expect(source).toHaveClass(/base-tile/)
+      await expect(source).not.toHaveClass(/base-tile--outlined/)
       const face = await source.evaluate(el => {
         const style = getComputedStyle(el)
-        return { background: style.backgroundColor, border: style.borderTopWidth }
+        return { background: style.backgroundColor, surface: style.getPropertyValue('--surface').trim(), border: style.borderTopWidth, shadow: style.boxShadow }
       })
-      expect(face).toEqual({ background: 'rgba(0, 0, 0, 0)', border: '0px' })
+      expect(face.background).not.toBe('rgba(0, 0, 0, 0)')
+      expect(face.border).toBe('0px')
+      expect(face.shadow).toBe('none')
     } else await expect(source).toHaveClass(/base-tile/)
     await expect(source).toHaveClass(/morph-tile/)
     await expect(source.locator('.morph-tile')).toHaveCount(0)

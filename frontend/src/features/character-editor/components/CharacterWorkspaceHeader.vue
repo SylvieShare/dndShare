@@ -1,5 +1,5 @@
 <template>
-  <WorkspaceHeader class="character-workspace-header" :content-width="contentWidth">
+  <WorkspaceHeader class="character-workspace-header" :content-width="contentWidth" :split-navigation="stackedNavigation">
     <template #identity>
       <ActionButton variant="quiet" aria-label="К списку персонажей" @click="router.push('/chars')">
         <template #icon><ArrowLeft :size="18" /></template>
@@ -25,7 +25,7 @@ import { ArrowLeft } from '@lucide/vue'
 import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
 import CharacterSessionControl from './CharacterSessionControl.vue'
 import CharacterSheetTabs from './sheet/CharacterSheetTabs.vue'
-defineProps({ contentWidth: String, name: String, subtitle: String, session: Object, transfers: Object,
+defineProps({ contentWidth: String, name: String, subtitle: String, session: Object, transfers: Object, stackedNavigation: Boolean,
   tabs: { type: Array, default: () => [] }, activeTab: Number })
 const emit = defineEmits(['select-tab'])
 const router = useRouter()

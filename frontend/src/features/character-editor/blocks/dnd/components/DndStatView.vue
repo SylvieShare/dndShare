@@ -1,5 +1,5 @@
 <template>
-  <MorphTile embedded :color="color" padding="0" edit-label="Редактировать"
+  <MorphTile :embedded="mode === 'panel'" :outlined="false" :color="color" padding="0" edit-label="Редактировать"
       :title="title"
       :show-edit="showEdit"
       :edit-fade="editFade"
@@ -236,6 +236,10 @@ onBeforeUnmount(hideTooltip)
   cursor: pointer;
   transition: border-color 0.15s;
   flex-shrink: 0;
+  box-sizing: border-box;
+  min-height: var(--layout-sheet-value-height);
+  min-width: calc(var(--layout-sheet-value-width) + 12px);
+  justify-content: center;
 }
 @media (hover: hover) { .save-chip:hover { border-color: var(--border-strong); } }
 .save-chip-active { border-color: var(--sc, var(--accent)); }
@@ -311,6 +315,11 @@ onBeforeUnmount(hideTooltip)
 }
 
 .skill-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: var(--layout-sheet-value-height);
   background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 7px;
@@ -319,7 +328,7 @@ onBeforeUnmount(hideTooltip)
   font-size: 13px;
   font-weight: 700;
   flex-shrink: 0;
-  min-width: 36px;
+  min-width: var(--layout-sheet-value-width);
   text-align: center;
   line-height: 1.3;
   cursor: pointer;
@@ -337,6 +346,9 @@ onBeforeUnmount(hideTooltip)
 .skill-tooltip-total strong { color: var(--sc, var(--accent)); }
 
 /* ── Mobile variant ── */
+.stat-view--mobile .skill-chip, .stat-view--mobile .save-chip { min-height: var(--layout-sheet-value-compact-height); }
+.stat-view--mobile .skill-chip { min-width: var(--layout-sheet-value-compact-width); }
+.stat-view--mobile .save-chip { min-width: calc(var(--layout-sheet-value-compact-width) + 12px); }
 .stat-view--mobile .skill-item { min-height: 32px; padding: 2px 4px; border-radius: 10px; gap: 8px; }
 .stat-view--mobile .skill-name { font-size: 15px; }
 .stat-view--mobile .skill-line { margin-bottom: 6px; }

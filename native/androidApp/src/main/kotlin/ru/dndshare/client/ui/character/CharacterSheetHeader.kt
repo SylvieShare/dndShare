@@ -29,7 +29,10 @@ internal fun CharacterSheetHeader(sheet: CharacterSheet?, format: LayoutFormat, 
         return
     }
     ShareWorkspaceHeader(contentInset = if (format == LayoutFormat.Phone) 8.dp else 14.dp,
-        maxContentWidth = DesignTokens.Layout.SheetMax) {
+        maxContentWidth = DesignTokens.Layout.SheetMax,
+        navigation = if (format == LayoutFormat.Tablet) ({
+            SheetNavigation(sections, section, images, select, template = sheet?.templateName.orEmpty())
+        }) else null) {
         if (format == LayoutFormat.Wide && sheet?.templateName == "VTM20") {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Box(Modifier.weight(1f)) { SheetIdentity(sheet, format, close) }
@@ -39,9 +42,6 @@ internal fun CharacterSheetHeader(sheet: CharacterSheet?, format: LayoutFormat, 
         } else {
         Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             SheetIdentity(sheet, format, close)
-            if (format == LayoutFormat.Tablet) Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                SheetNavigation(sections, section, images, select, template = sheet?.templateName.orEmpty())
-            }
         }
         }
     }
