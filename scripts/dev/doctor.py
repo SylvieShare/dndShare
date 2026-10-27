@@ -10,6 +10,14 @@ from .dependencies import check_packages, environment
 def inspect(source, config, directory, emulator=None, capabilities=None, require_device=True):
     env = environment(config)
     checks = []
+    installed_version = None
+
+    def installed_packages():
+        nonlocal installed_version
+        if installed_version is None:
+            from pathlib import Path
+            installed_version = check_packages(source, Path(config['node_modules']))
+        return installed_version
 
     def check(name, operation):
         if capabilities is not None and name not in capabilities:
@@ -37,7 +45,7 @@ def inspect(source, config, directory, emulator=None, capabilities=None, require
     def dependencies():
         from pathlib import Path
         modules = Path(config["node_modules"])
-        installed = check_packages(source, modules)
+        installed = installed_packages()
         entry = modules / "vite/dist/node/index.js"
         capture([config["node"], "--input-type=module", "-e", f"await import({str(entry)!r})"], env=env)
         return {"playwright": installed, "viteImport": "passed"}
@@ -47,7 +55,7 @@ def inspect(source, config, directory, emulator=None, capabilities=None, require
     def browser():
         from pathlib import Path
         modules = Path(config["node_modules"])
-        installed = check_packages(source, modules)
+        installed = installed_packages()
         browsers = read_json(modules / "playwright-core/browsers.json")["browsers"]
         revision = next(item["revision"] for item in browsers if item["name"] == "chromium-headless-shell")
         executables = list(Path(config["playwright_cache"]).glob(f"chromium_headless_shell-{revision}/**/chrome-headless-shell"))

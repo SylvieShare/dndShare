@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.json.JsonObject
 import ru.dndshare.client.model.text
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 
 @Composable
 internal fun HandbookListControls(query: String, search: (String) -> Unit, groupBy: String, group: (String) -> Unit,

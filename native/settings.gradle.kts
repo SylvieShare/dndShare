@@ -6,4 +6,4 @@ dependencyResolutionManagement {
     repositories { google(); mavenCentral() }
 }
 rootProject.name = "DnDShareAndroid"
-include(":androidApp", ":designSystem", ":macrobenchmark")
+include(":androidApp", ":macrobenchmark")

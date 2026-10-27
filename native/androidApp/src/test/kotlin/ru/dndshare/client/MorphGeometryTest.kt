@@ -3,7 +3,7 @@ package ru.dndshare.client
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import org.junit.Test
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 import kotlin.test.*
 
 class MorphGeometryTest {

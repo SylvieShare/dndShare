@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url'
 const expectedOutputs = [
   'frontend/src/app/design-tokens.css',
   'frontend/src/app/design-tokens.js',
-  'native/designSystem/src/main/kotlin/ru/dndshare/designsystem/DesignTokens.kt',
+  'native/androidApp/src/main/kotlin/ru/dndshare/client/ui/designsystem/DesignTokens.kt',
 ]
 const hash = text => createHash('sha256').update(text.replaceAll('\r\n', '\n')).digest('hex')
 

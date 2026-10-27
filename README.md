@@ -44,7 +44,7 @@ AGENTS.md и CLAUDE.md только направляют сюда. Темати�
   сверить [каталог](md/frontend/components.md). Не копировать примитивы и не
   обходить недостаток API базовым CSS. Разрешённый межрепозиторный процесс —
   [сопровождение share-ui](md/frontend/share-ui.md). Общие Android-примитивы
-  принадлежат [native/designSystem](native/designSystem/README.md); API и игровые
+  принадлежат [Android design system](native/androidApp/DESIGN_SYSTEM.md); API и игровые
   модели остаются в приложении.
 - Интерфейс учитывает [анимации и reduced motion](md/frontend.md#анимации-и-переходы).
 - Веб и Android развивают единый визуальный интерфейс. Изменение общей композиции,
@@ -71,7 +71,7 @@ AGENTS.md и CLAUDE.md только направляют сюда. Темати�
 
 Нативный Android-клиент находится в [native/](native/README.md).
 `native/androidApp` содержит экраны, данные и синхронизацию;
-`native/designSystem` — независимую Compose-библиотеку общего оформления. Используется только тёмная тема.
+`native/androidApp/.../ui/designsystem` — отдельный пакет общего оформления внутри приложения. Используется только тёмная тема.
 Минимальная версия — Android 8.0 (API 26). Обновление подключённого телефона
 по команде пользователя выполняет `scripts/native/install.ps1` с сохранением
 данных; подключение и выбор устройства описаны в инструкции native.

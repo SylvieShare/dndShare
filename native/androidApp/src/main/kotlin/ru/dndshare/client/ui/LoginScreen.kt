@@ -1,6 +1,6 @@
 package ru.dndshare.client.ui
 
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState

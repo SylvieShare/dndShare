@@ -1,4 +1,6 @@
-package ru.dndshare.designsystem
+package ru.dndshare.client.ui.designsystem
+
+import ru.dndshare.client.R
 
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.ExperimentalTextApi

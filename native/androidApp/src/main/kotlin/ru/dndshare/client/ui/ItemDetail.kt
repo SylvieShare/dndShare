@@ -17,7 +17,7 @@ import coil3.ImageLoader
 import coil3.compose.AsyncImage
 import ru.dndshare.client.data.CacheDao
 import ru.dndshare.client.model.*
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 
 @Composable
 fun ItemDetail(cache: CacheDao, sourceId: Long, id: Long, metadata: HandbookMetadata,

@@ -7,7 +7,7 @@ import sys
 import signal
 
 from . import config, doctor, snapshot
-from .common import UIError
+from .common import UIError, write_json
 from .plan import make_plan
 from .policy import check_scope
 from .runner import Run, lock, ports, run_plan
@@ -31,6 +31,7 @@ def parser():
             command.add_argument("--workspace", type=Path, help="new path under build/ui-workspaces")
             command.add_argument("--snapshot", action="store_true", help="freeze copied files while the checkout changes")
         if name in ("focus", "verify", "review"):
+            command.add_argument('--pin', action='store_true', help='pin this isolated worktree and check it in one guarded run')
             command.add_argument("--workspace", type=Path, required=True)
             command.add_argument("--snapshot", action="store_true", help="explicitly check a historical frozen source")
             command.add_argument("--timeout", type=int, default=3600, help="timeout per stage in seconds")
@@ -122,14 +123,30 @@ def main(argv=None, source=None):
             print("workspace: " + str(workspace), flush=True)
         elif args.command != "doctor":
             with ExitStack() as stack:
-                selected = snapshot.resolve_workspace(source, args.workspace)
+                selected = args.workspace.resolve() if args.pin else snapshot.resolve_workspace(source, args.workspace)
+                if args.pin and (selected != source or args.snapshot):
+                    raise UIError('--pin requires the current isolated worktree, without --snapshot')
                 stack.enter_context(lock(selected / ".ui-run.lock"))
-                workspace, manifest = snapshot.validate(source, args.workspace, tools, args.snapshot)
+                if args.pin:
+                    workspace, manifest = snapshot.pin(source, tools)
+                else:
+                    workspace, manifest = snapshot.validate(source, args.workspace, tools, args.snapshot)
+                import time
+                run.receipt['sourceVerification'] = {'beforeHash': manifest['sourceHash'], 'beforeChecked': time.time()}
                 run.receipt["selection"] = "snapshot" if args.snapshot else "current"
                 allocated = ports(3)
                 plan = make_plan(args, tools, workspace, serial, allocated[2])
                 run_plan(run, plan, tools, workspace, manifest, allocated, args.timeout)
-                snapshot.validate(source, workspace, tools, frozen=True)
+                _, after = snapshot.validate(source, workspace, tools, frozen=True)
+                if any(after[key] != manifest[key] for key in ('sourceHash', 'sourceSHA')):
+                    raise UIError('Candidate identity changed during the run')
+                run.receipt['sourceVerification'].update(afterHash=after['sourceHash'], afterChecked=time.time())
+                if args.command == 'review' and all(row['status'] == 'passed' for row in run.receipt['stages']):
+                    output = run.directory / 'review'
+                    write_json(output / 'source-verification.json', {'sourceStable': True,
+                        'sourceSHA': manifest['sourceSHA'], 'sourceHash': manifest['sourceHash']})
+                    if not args.scenario:
+                        subprocess.run([sys.executable, str(workspace / 'scripts/visual/report.py'), '--output', str(output)], check=True)
         return run.finish()
     except (UIError, OSError, ValueError, KeyError, subprocess.SubprocessError, KeyboardInterrupt) as error:
         print(str(error) or "Interrupted", file=sys.stderr)

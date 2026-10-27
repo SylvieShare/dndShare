@@ -18,7 +18,7 @@ import ru.dndshare.client.character.CharacterSheet
 import ru.dndshare.client.character.subtitle
 import ru.dndshare.client.character.DndDerivedValues
 import ru.dndshare.client.ui.LayoutFormat
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 
 @Composable

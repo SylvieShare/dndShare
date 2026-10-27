@@ -9,10 +9,10 @@ import androidx.compose.ui.layout.ContentScale
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
 import ru.dndshare.client.model.ItemType
-import ru.dndshare.designsystem.DesignTokens
-import ru.dndshare.designsystem.ShareTile
-import ru.dndshare.designsystem.ShareTypography
-import ru.dndshare.designsystem.WebPalette
+import ru.dndshare.client.ui.designsystem.DesignTokens
+import ru.dndshare.client.ui.designsystem.ShareTile
+import ru.dndshare.client.ui.designsystem.ShareTypography
+import ru.dndshare.client.ui.designsystem.WebPalette
 
 @Composable
 internal fun CollectionTile(

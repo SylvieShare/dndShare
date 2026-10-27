@@ -1,7 +1,7 @@
 package ru.dndshare.client.ui
 
 import androidx.compose.foundation.layout.*
-import ru.dndshare.designsystem.DesignTokens
+import ru.dndshare.client.ui.designsystem.DesignTokens
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset

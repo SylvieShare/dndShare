@@ -77,6 +77,14 @@ class DoctorTest(unittest.TestCase):
             self.invoke(android=UIError("not an emulator"))
         self.assertEqual(read_json(self.root / "doctor.json")["checks"][-1]["status"], "failed")
 
+    def test_dependencies_are_checked_once_per_invocation(self):
+        with patch('scripts.dev.doctor.environment', return_value={}), \
+                patch('scripts.dev.doctor.capture', side_effect=self.capture), \
+                patch('scripts.dev.doctor.check_packages', return_value='1.63.0') as packages, \
+                patch('scripts.dev.doctor.read_json', return_value={'browsers': [{'name': 'chromium-headless-shell', 'revision': '1243'}]}):
+            doctor.inspect(self.root, self.config, self.root, capabilities={'node', 'dependencies', 'playwright-chromium'})
+        packages.assert_called_once()
+
     def test_sdk_37_decimal_and_phone_is_never_targeted(self):
         native = self.root / "native/androidApp"
         native.mkdir(parents=True)

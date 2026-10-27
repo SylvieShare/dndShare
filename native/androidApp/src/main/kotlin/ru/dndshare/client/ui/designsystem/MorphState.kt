@@ -1,4 +1,4 @@
-package ru.dndshare.designsystem
+package ru.dndshare.client.ui.designsystem
 
 import android.os.Build
 import androidx.compose.animation.core.Animatable

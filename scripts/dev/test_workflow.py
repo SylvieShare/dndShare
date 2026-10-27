@@ -38,6 +38,40 @@ class WorkflowTest(unittest.TestCase):
                 self.assertEqual(read_status(run.directory)['status'], 'interrupted')
             self.assertEqual(json.loads((run.directory/'receipt.json').read_text())['status'], 'running')
 
+    def test_pin_and_focus_share_one_before_check_and_one_after_check(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            identity = {'sourceHash': 'candidate', 'sourceSHA': 'sha'}
+            def execute(run, *args):
+                run.receipt['stages'].append({'name': 'fixture', 'status': 'passed'})
+            with patch('scripts.dev.cli.config.load', return_value={}), \
+                    patch('scripts.dev.cli.doctor.inspect', return_value={'checks': []}), \
+                    patch('scripts.dev.cli.snapshot.resolve_workspace', return_value=root), \
+                    patch('scripts.dev.cli.snapshot.pin', return_value=(root, identity)) as pin, \
+                    patch('scripts.dev.cli.snapshot.validate', return_value=(root, identity)) as validate, \
+                    patch('scripts.dev.cli.run_plan', side_effect=execute):
+                self.assertEqual(main(['focus', 'tools', '--area', 'dev', '--pin', '--workspace', str(root)], root), 0)
+            pin.assert_called_once()
+            validate.assert_called_once_with(root, root, {'allow_visible_emulator': False}, frozen=True)
+
+    def test_changed_sources_do_not_publish_a_guarded_review(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            identity = {'sourceHash': 'candidate', 'sourceSHA': 'sha'}
+            def execute(run, *args):
+                run.receipt['stages'].append({'name': 'review', 'status': 'passed'})
+                (run.directory / 'review').mkdir()
+            with patch('scripts.dev.cli.config.load', return_value={}), \
+                    patch('scripts.dev.cli.doctor.inspect', return_value={'checks': []}), \
+                    patch('scripts.dev.cli.snapshot.pin', return_value=(root, identity)), \
+                    patch('scripts.dev.cli.snapshot.validate', side_effect=UIError('Source changed')), \
+                    patch('scripts.dev.cli.make_plan', return_value=[]), \
+                    patch('scripts.dev.cli.run_plan', side_effect=execute), \
+                    patch('scripts.dev.cli.subprocess.run') as publish:
+                self.assertEqual(main(['review', '--pin', '--state', 'sheet-stats', '--workspace', str(root)], root), 1)
+            publish.assert_not_called()
+            self.assertEqual(list(root.glob('build/ui-runs/*/review/source-verification.json')), [])
+
     def test_pin_preserves_build_outputs_and_reuses_the_same_worktree(self):
         with tempfile.TemporaryDirectory() as tmp:
             base = Path(tmp)/'main';base.mkdir()

@@ -44,7 +44,6 @@ android {
     }
 }
 dependencies {
-    implementation(project(":designSystem"))
     implementation(platform("androidx.compose:compose-bom:2026.09.00"))
     implementation("androidx.compose.runtime:runtime")
     implementation("androidx.compose.foundation:foundation")
@@ -80,3 +79,19 @@ dependencies {
     add("benchmarkImplementation", "androidx.profileinstaller:profileinstaller:1.4.1")
 }
 room3 { schemaDirectory("$projectDir/schemas") }
+
+// Keep the in-app design package independent from features so it can be extracted later.
+val checkDesignSystemBoundary by tasks.registering {
+    val sources = fileTree("src/main/kotlin/ru/dndshare/client/ui/designsystem") { include("**/*.kt") }
+    inputs.files(sources)
+    doLast {
+        sources.forEach { source ->
+            source.readLines().map(String::trim).filter { it.startsWith("import ru.dndshare.client.") }.forEach { line ->
+                require(line == "import ru.dndshare.client.R" || line.startsWith("import ru.dndshare.client.ui.designsystem.")) {
+                    "Design system cannot import application features: ${source.name}: $line"
+                }
+            }
+        }
+    }
+}
+tasks.named("preBuild") { dependsOn(checkDesignSystemBoundary) }

@@ -10,7 +10,7 @@ import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.clearAndSetSemantics
-import ru.dndshare.designsystem.DesignTokens
+import ru.dndshare.client.ui.designsystem.DesignTokens
 
 @Composable
 internal fun CharacterDestination(uuid: String?, content: @Composable (String?, Boolean) -> Unit) {

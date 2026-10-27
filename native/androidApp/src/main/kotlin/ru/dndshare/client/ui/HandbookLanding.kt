@@ -13,7 +13,7 @@ import coil3.ImageLoader
 import coil3.compose.AsyncImage
 import ru.dndshare.client.data.TypeCount
 import ru.dndshare.client.model.*
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 
 @Composable
 internal fun HandbookLanding(

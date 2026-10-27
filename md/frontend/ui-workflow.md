@@ -20,14 +20,14 @@
 
 ```bash
 python3 scripts/ui.py doctor --emulator emulator-5554
-python3 scripts/ui.py pin
+# Отдельный pin нужен для экспорта кандидата; для обычной проверки используйте --pin ниже.
 ```
 
 `pin` фиксирует хеш текущих исходников изолированного worktree **на месте**,
 сохраняя Node/Gradle-кеши и сборочные результаты. После изменений кандидат
 обновляется повторным `pin`, без нового полного копирования. Во время проверки
 исходники кандидата не редактируются; fingerprint проверяется до и после.
-Первичный общий checkout для `pin` запрещён.
+Первичный общий checkout для `pin` запрещён. `review/focus --pin` фиксирует исходники и запускает проверку под одной блокировкой: полный обход выполняется до и после цепочки. Дочерний visual runner использует подтверждённую идентичность живого родителя с удерживаемой блокировкой. HTML публикуется только после завершающего контроля исходников. Проверка зависимостей внутри doctor не дублируется для Chromium.
 `prepare` остаётся отдельным экспортом неизменяемого среза для выпуска или
 исторического сравнения; создавать его после каждой мелкой правки не требуется.
 
@@ -39,7 +39,7 @@ python3 scripts/ui.py focus browser --workspace "$UI_WORKSPACE" --project ui --f
 python3 scripts/ui.py focus native --workspace "$UI_WORKSPACE" --target Test
 python3 scripts/ui.py focus native --workspace "$UI_WORKSPACE" --target DeviceTest --test-class ru.dndshare.client.SheetPagerStateTest --emulator emulator-5554
 python3 scripts/ui.py focus tools --workspace "$UI_WORKSPACE" --area dev
-python3 scripts/ui.py review --workspace "$UI_WORKSPACE" --scenario form-lifecycle --emulator emulator-5554
+python3 scripts/ui.py review --pin --workspace "$UI_WORKSPACE" --scenario form-lifecycle --emulator emulator-5554
 ```
 
 `$UI_WORKSPACE` — абсолютный путь текущего pinned worktree. Web-проверки требуют
@@ -100,11 +100,11 @@ runner как interrupted; старый running не считается живо
 ## Парное сравнение
 
 ```bash
-python3 scripts/ui.py review --workspace "$UI_WORKSPACE" --state sheet-stats --state sheet-stat-editor --emulator emulator-5554
+python3 scripts/ui.py review --pin --workspace "$UI_WORKSPACE" --state sheet-stats --state sheet-stat-editor --emulator emulator-5554
 ```
 
 Проверяются выбранные состояния в трёх форматах (390×900, 834×1100, 1920×1000),
-на одинаковой фикстуре и реальном изолированном Go API/PostgreSQL.
+на одинаковой фикстуре и реальном изолированном Go API/PostgreSQL. Нативный visual-сценарий входит один раз, затем меняет три размера окна без очистки данных; каждый проход возвращается в список персонажей или справочник. `native-session.json` фиксирует число входов. Проверки авторизации и process-death запускаются отдельными сценариями.
 `--scenario form-lifecycle` проверяет только сохранённый ввод/resize/завершение
 процесса/конфликт, не запускает браузер и весь обход справочника.
 
@@ -116,3 +116,19 @@ python3 scripts/ui.py review --workspace "$UI_WORKSPACE" --state sheet-stats --s
 [реестре](../../design/visual-exceptions.json).
 
 [Адаптивный дизайн](responsive-design.md) · [Проверки](../testing.md)
+
+## Тёплый выпуск
+
+```bash
+python3 scripts/release.py --commit COMMIT_SHA --web --phone ADB_SERIAL
+```
+
+Общая чистая release-копия находится на C в `build/ui-release/current` основной
+копии репозитория. Блокировка удерживается от переключения commit до завершения
+поставки. Изменённые исходники останавливают выпуск; ignored Gradle/Vite-результаты
+сохраняются. Web и Android можно собирать параллельно из одного точного SHA.
+Без `--web/--native/--phone` команда только подготавливает и проверяет копию.
+`--native` собирает APK без установки. Штатные `deploy/deploy.sh` и
+`native/install.ps1` сохраняют свои проверки готовности, подписи и данных.
+Для SSH можно указать `ssh_key` и `ssh_known_hosts` в локальной конфигурации
+инструментов; ключ временно получает Linux permissions и не попадает в отчёты.

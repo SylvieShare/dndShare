@@ -60,10 +60,11 @@ def main():
         with runner.postgres(env) as pg_env:
             subprocess.run(["go", "test", "-count=1", "-timeout=25m", "-v", "-run",
                             "^TestUIReviewPostgres$", "./internal/web"], cwd=ROOT, env=pg_env, check=True)
-        if source_identity(ROOT) != identity:
+        guarded = bool(os.environ.get('DNDSHARE_UI_GUARD_RECEIPT'))
+        if not guarded and source_identity(ROOT) != identity:
             raise RuntimeError("Capture sources changed during the run; repeat from a stable prepared checkout")
         # Only complete, source-stable captures receive a success report.
-        if not args.scenario:
+        if not args.scenario and not guarded:
             from report import write_report
             write_report(output, matrix=matrix)
     except (OSError, RuntimeError, ValueError, subprocess.CalledProcessError) as error:
@@ -71,7 +72,9 @@ def main():
         print(f"UI review failed: {error}; diagnostics: {output}", file=sys.stderr)
         return 1
     count = len(matrix['formats']) * len(matrix['states']) * len(matrix['platforms'])
-    if args.scenario:
+    if guarded:
+        print('Capture completed; owning runner will verify sources and publish the report', flush=True)
+    elif args.scenario:
         print(f"Scenario {args.scenario} passed: {output / 'scenario.json'}", flush=True)
     else:
         print(f"Captured {count} images. Human visual review required: {output / 'index.html'}", flush=True)

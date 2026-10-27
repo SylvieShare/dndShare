@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import ru.dndshare.client.character.*
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 
 @Composable
 internal fun DndUtilities() {

@@ -1,6 +1,6 @@
 package ru.dndshare.client.ui
 
-import ru.dndshare.designsystem.DesignTokens
+import ru.dndshare.client.ui.designsystem.DesignTokens
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FastOutSlowInEasing

@@ -160,7 +160,10 @@ def validate(source, workspace, config, frozen=False):
     for name in (".vite", ".vite-temp", ".cache"):
         (hot / name).mkdir(exist_ok=True)
     sha = capture(["git", "rev-parse", "HEAD"], cwd=source)
-    if not frozen and (current(source) != manifest["sourceHash"] or sha != manifest["sourceSHA"]):
+    # A pinned worktree is the source itself, already verified above. Only an
+    # exported copy needs a second comparison with its separate source tree.
+    source_changed = not frozen and workspace != source and current(source) != manifest["sourceHash"]
+    if not frozen and (source_changed or sha != manifest["sourceSHA"]):
         raise UIError("Stale source selection; prepare again or explicitly use --snapshot")
     return workspace, manifest
 
@@ -174,6 +177,8 @@ def pin(source, config):
         raise UIError('pin must run at the worktree root')
     names = source_files(source)
     entries = content(source, names)
+    if workspace_files(source) != set(entries):
+        raise UIError('Worktree contains unselected source or environment files')
     location = source / MANIFEST
     previous = read_json(location) if location.exists() else {}
     hot = Path(previous['hotCache']) if previous.get('mode') == 'worktree' else Path(tempfile.mkdtemp(prefix='dndshare-ui-'))

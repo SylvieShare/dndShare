@@ -10,7 +10,7 @@ import coil3.compose.AsyncImage
 import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
 import ru.dndshare.client.model.text
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 
 @Composable
 internal fun SheetCatalogueEntry(reference: JsonElement, expanded: Boolean = true) {

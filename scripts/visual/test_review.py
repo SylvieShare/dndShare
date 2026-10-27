@@ -2,6 +2,8 @@
 import copy
 import hashlib
 import json
+import os
+import fcntl
 from pathlib import Path
 import struct
 import tempfile
@@ -128,6 +130,22 @@ class ReviewEvidenceTest(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "requires a prepared workspace"):
                 source_identity(self.output)
             git.assert_not_called()
+
+    def test_a_guarded_capture_borrows_only_a_live_locked_parent_verification(self):
+        identity = {'sourceSHA': 'sha', 'sourceHash': 'hash'}
+        (self.output / '.ui-workspace.json').write_text(json.dumps(dict(identity, files={})))
+        pid = os.getpid()
+        start = Path(f'/proc/{pid}/stat').read_text().rsplit(')', 1)[1].split()[19]
+        receipt = self.output / 'receipt.json'
+        receipt.write_text(json.dumps(dict(identity, runnerPid=pid, runnerStart=start, status='running',
+            workspace=str(self.output.resolve()), sourceVerification={'beforeHash': 'hash'})))
+        with patch.dict(os.environ, {'DNDSHARE_UI_GUARD_RECEIPT': str(receipt)}), patch('source.os.getppid', return_value=pid):
+            with (self.output / '.ui-run.lock').open('a') as owner:
+                fcntl.flock(owner, fcntl.LOCK_EX)
+                with patch.object(Path, 'read_bytes', side_effect=AssertionError('No child source rescan')):
+                    self.assertEqual(source_identity(self.output), identity)
+            with self.assertRaisesRegex(RuntimeError, 'does not hold'):
+                source_identity(self.output)
 
 
 class EmulatorSafetyTest(unittest.TestCase):

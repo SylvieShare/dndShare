@@ -1,4 +1,4 @@
-package ru.dndshare.designsystem
+package ru.dndshare.client.ui.designsystem
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

@@ -3,7 +3,7 @@ package ru.dndshare.client.ui
 import androidx.compose.ui.graphics.Color
 import kotlinx.serialization.json.*
 import ru.dndshare.client.model.*
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 
 internal fun catalogueColor(value: String?): Color = runCatching {
     Color(android.graphics.Color.parseColor(value))

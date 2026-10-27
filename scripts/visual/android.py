@@ -149,6 +149,8 @@ def verify_character_edit(device, url, fixture):
 def capture_android(device, root, url, output, matrix, fixture, stats):
     apk_hash = build_install(device, root, url, output.parent)
     entries = []
+    login_count = 0
+    cover_verified = False
     wanted = set(matrix['states'])
     full = wanted == {'collections', 'menu', 'list', 'record', 'sheet-base', 'sheet-stats', 'sheet-stat-editor', 'vtm-base'}
 
@@ -156,13 +158,20 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
         if state in wanted:
             entries.append(snapshot(device, output, format_, state, fixture, stats))
 
-    for format_ in matrix['formats']:
+    handbook = bool(wanted & {'collections', 'menu', 'list', 'record'})
+    for index, format_ in enumerate(matrix['formats']):
         print(f"Capturing ANDROID {format_['name']}", flush=True)
-        device.shell('am', 'force-stop', PACKAGE)
         device.shell('wm', 'density', '160')
         device.shell('wm', 'size', f"{format_['width']}x{format_['height']}")
-        login(device, fixture)
-        if wanted & {'collections', 'menu', 'list', 'record'}:
+        if index == 0:
+            login(device, fixture)
+            login_count += 1
+        elif handbook:
+            if format_['name'] != 'wide':
+                device.click(description='Открыть меню')
+            device.click(text='Справочник')
+            device.wait('Основные разделы')
+        if handbook:
             take(format_, 'collections')
             if format_['name'] != 'wide':
                 device.click(description='Открыть меню')
@@ -179,20 +188,24 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
                     device.click(text=fixture['recordName'])
                     device.wait(fixture['description'])
                     deadline = time.monotonic() + 30
-                    while stats()['images'].get('cover.svg', 0) <= before:
+                    while not cover_verified and stats()['images'].get('cover.svg', 0) <= before:
                         if time.monotonic() > deadline:
                             raise AssertionError('Native record did not lazily fetch its cover')
                         time.sleep(.25)
+                    cover_verified = True
                     take(format_, 'record')
                     device.shell('input', 'keyevent', '4')
                 device.shell('input', 'keyevent', '4')
         if not (wanted & {'sheet-base', 'sheet-stats', 'sheet-stat-editor', 'vtm-base'}):
             continue
-        if format_['name'] != 'wide':
-            device.click(description='Открыть меню')
-        device.click(text='Персонажи')
+        if index == 0 or handbook:
+            if format_['name'] != 'wide':
+                device.click(description='Открыть меню')
+            device.click(text='Персонажи')
         if wanted & {'sheet-base', 'sheet-stats', 'sheet-stat-editor'}:
             device.click(text=fixture['characters'][0]['name'])
+            if format_['name'] == 'tablet':
+                device.click(text='База')
             device.wait('Волшебник 4' if format_['name'] == 'tablet' else 'СИЛА' if format_['name'] == 'phone' else fixture['characters'][0]['name'])
             take(format_, 'sheet-base')
             if wanted & {'sheet-stats', 'sheet-stat-editor'}:
@@ -214,10 +227,15 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
                 proof = verify_character_edit(device, url, fixture)
                 (output.parent / 'native-character-edit.json').write_text(json.dumps(proof, ensure_ascii=False, indent=2))
             device.shell('input', 'keyevent', '4')
+            device.wait('Найти персонажа')
         if 'vtm-base' in wanted:
             device.click(text=fixture['characters'][1]['name'])
             device.wait('Тореадор')
             take(format_, 'vtm-base')
+            device.shell('input', 'keyevent', '4')
+            device.wait('Найти персонажа')
     for entry in entries:
         entry['apkSHA256'] = apk_hash
     (output.parent / 'android.json').write_text(json.dumps(entries, ensure_ascii=False, indent=2))
+    (output.parent / 'native-session.json').write_text(json.dumps({'loginCount': login_count, 'firstCoverFetchVerified': cover_verified,
+        'formats': [row['name'] for row in matrix['formats']], 'resizeWithoutReset': True}, indent=2))

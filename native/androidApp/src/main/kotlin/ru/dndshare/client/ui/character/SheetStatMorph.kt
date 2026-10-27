@@ -10,7 +10,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.json.JsonObject
 import ru.dndshare.client.character.*
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 
 internal fun SheetEditorState.isDndStat() = baseline.templateName == "DND5" && dndAbilities.any { it.id == fields.target }
 

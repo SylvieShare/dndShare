@@ -1,6 +1,6 @@
 package ru.dndshare.client
 
-import ru.dndshare.designsystem.balancedColumnBreaks
+import ru.dndshare.client.ui.designsystem.balancedColumnBreaks
 import ru.dndshare.client.ui.character.statColumnOrder
 
 import kotlin.test.*

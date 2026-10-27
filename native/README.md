@@ -1,8 +1,8 @@
 # Android-приложение DnD Share
 
 Модуль `androidApp` на Kotlin и Jetpack Compose: вход, боковое меню всех
-веб-разделов, локальный справочник, список персонажей и адаптивный лист D&D/VTM. Общая UI-библиотека
-находится в [`designSystem`](designSystem/README.md). Сервером остаётся основной Go API.
+веб-разделов, локальный справочник, список персонажей и адаптивный лист D&D/VTM. Общий UI-пакет
+находится в [`ui.designsystem`](androidApp/DESIGN_SYSTEM.md). Сервером остаётся основной Go API.
 Поведение описывает [контракт клиента](../md/features/native-client.md).
 
 ## Окружение
@@ -104,7 +104,7 @@ python3 scripts/native/sync_web_design.py --check
 ```
 
 Нужны установленные зависимости `frontend`. Генератор сохраняет `WebPalette.kt`,
-нативные Lucide vector drawables и лицензию в assets модуля `designSystem`. Производные ресурсы
+нативные Lucide vector drawables и лицензию в assets приложения. Производные ресурсы
 коммитятся; обычная Gradle-сборка не требует Node.js или frontend dependencies.
 Проверка `--check` входит в приёмку изменений дизайна. Material использует
 мягкий акцент для читаемых надписей на тёмном фоне, основной веб-акцент — для

@@ -11,7 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.dndshare.client.character.*
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 
 @Composable
 internal fun CharacterPhoneToolbar(sheet: CharacterSheet, mechanics: DndDerivedValues, menu: () -> Unit) {

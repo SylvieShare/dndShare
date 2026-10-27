@@ -5,6 +5,6 @@
   "outputs": {
     "frontend/src/app/design-tokens.css": "012e32a372a5f9ea9cbb17a1a726a4a207adb56fff5efa8c9baf57f930e497a3",
     "frontend/src/app/design-tokens.js": "80bd16602b44461b88624b369dfe2effe473ca8cc73b6f61f876fd0ba5b834e6",
-    "native/designSystem/src/main/kotlin/ru/dndshare/designsystem/DesignTokens.kt": "bad850e104d71d02158fe4f3995049ba41814ace55a00456b82fd158a56698b9"
+    "native/androidApp/src/main/kotlin/ru/dndshare/client/ui/designsystem/DesignTokens.kt": "fa3f5067d5ddb8662977bae65850f0f533b3f0918567de76ad1faab8846543df"
   }
 }

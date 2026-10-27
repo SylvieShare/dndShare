@@ -22,7 +22,7 @@ import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
-NATIVE = Path('native/designSystem')
+NATIVE = Path('native/androidApp')
 PUBLIC = Path('frontend/public/static/fonts')
 CSS = Path('frontend/src/app/fonts.css')
 SCRIPT = Path('scripts/design/fonts.py')

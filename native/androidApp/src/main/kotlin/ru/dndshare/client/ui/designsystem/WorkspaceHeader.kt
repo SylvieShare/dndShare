@@ -1,4 +1,4 @@
-package ru.dndshare.designsystem
+package ru.dndshare.client.ui.designsystem
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.background

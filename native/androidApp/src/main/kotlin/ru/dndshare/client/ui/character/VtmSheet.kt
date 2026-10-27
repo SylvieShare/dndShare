@@ -12,7 +12,7 @@ import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
 import ru.dndshare.client.model.text
 import ru.dndshare.client.ui.LayoutFormat
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 
 private val physical = listOf("strength" to "Сила", "dexterity" to "Ловкость", "stamina" to "Выносливость")
 private val social = listOf("charisma" to "Обаяние", "manipulation" to "Манипуляция", "appearance" to "Внешность")

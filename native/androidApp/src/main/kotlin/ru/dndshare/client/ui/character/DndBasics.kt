@@ -19,7 +19,7 @@ import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
 import ru.dndshare.client.model.text
 import ru.dndshare.client.BuildConfig
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 
 @Composable
 internal fun DndStats(adaptive: Boolean = true) {

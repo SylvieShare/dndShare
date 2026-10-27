@@ -1,4 +1,4 @@
-package ru.dndshare.designsystem
+package ru.dndshare.client.ui.designsystem
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween

@@ -76,6 +76,7 @@ def run_plan(run, plan, config, workspace, manifest, selected_ports, timeout):
                DNDSHARE_BROWSER_REPORT=str(run.directory / "browser.json"),
                DNDSHARE_BROWSER_OUTPUT=str(run.directory / "browser-output"),
                DNDSHARE_UI_REPORT_DIR=str(run.directory), DNDSHARE_UI_WORKSPACE=str(workspace),
+               DNDSHARE_UI_GUARD_RECEIPT=str(run.directory / 'receipt.json'),
                DNDSHARE_UI_SOURCE_SHA=manifest["sourceSHA"], DNDSHARE_UI_SOURCE_HASH=manifest["sourceHash"])
     if run.receipt.get("emulator"):
         env["DNDSHARE_ANDROID_SERIAL"] = run.receipt["emulator"]
@@ -107,7 +108,7 @@ def run_plan(run, plan, config, workspace, manifest, selected_ports, timeout):
             raise
         finally:
             if stage.native:
-                for module in ("androidApp", "designSystem"):
+                for module in ("androidApp",):
                     base = workspace / "native" / module / "build"
                     for relative in ("reports", "test-results", "outputs/androidTest-results"):
                         report = base / relative

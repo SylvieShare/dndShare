@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import ru.dndshare.client.model.CatalogueItem
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 
 @Composable
 internal fun CharacterSheetEditor(editor: SheetEditorState, availableStates: List<CatalogueItem>, close: () -> Unit,

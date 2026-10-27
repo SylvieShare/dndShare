@@ -10,7 +10,7 @@ const hash = text => createHash('sha256').update(text).digest('hex')
 test('fresh outputs pass; changed source and edited/missing outputs fail the build guard', () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'dnd-design-'))
   const names = ['frontend/src/app/design-tokens.css', 'frontend/src/app/design-tokens.js',
-    'native/designSystem/src/main/kotlin/ru/dndshare/designsystem/DesignTokens.kt']
+    'native/androidApp/src/main/kotlin/ru/dndshare/client/ui/designsystem/DesignTokens.kt']
   function write(name, content) {
     fs.mkdirSync(path.dirname(path.join(root, name)), { recursive: true })
     fs.writeFileSync(path.join(root, name), content)

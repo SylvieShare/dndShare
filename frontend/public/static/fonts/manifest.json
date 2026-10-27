@@ -3,7 +3,7 @@
   "generator": {
     "script": {
       "file": "scripts/design/fonts.py",
-      "sha256": "ed15cad52928b7c51b50121f9a4da60f7e6fa89523dea43402f82eab47ad1449"
+      "sha256": "a3b485694759bb0c5ffd6fe849d8b3bba70217050a0d6f3dfc2f670ba34b8b22"
     },
     "requirements": {
       "file": "scripts/design/requirements-fonts.lock",
@@ -16,7 +16,7 @@
     "command": "build/dev-tools/fonts/bin/python scripts/design/fonts.py --generate"
   },
   "source_manifest": {
-    "file": "native/designSystem/font-sources.json",
+    "file": "native/androidApp/font-sources.json",
     "sha256": "274c01e27f0f8dab8d68cc5728601bc831e48dd4c129fea0d6074ec89f554149"
   },
   "css": {
@@ -29,7 +29,7 @@
       "style": "normal",
       "weight": "500 700",
       "source": {
-        "file": "native/designSystem/src/main/res/font/cormorant_garamond.ttf",
+        "file": "native/androidApp/src/main/res/font/cormorant_garamond.ttf",
         "sha256": "b20b7d9626dd956b2c5e558692ad328b1f19e3275e2782db4fa07670d83f35e0",
         "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/cormorantgaramond/CormorantGaramond%5Bwght%5D.ttf"
       },
@@ -45,7 +45,7 @@
       "style": "normal",
       "weight": "400 700",
       "source": {
-        "file": "native/designSystem/src/main/res/font/literata.ttf",
+        "file": "native/androidApp/src/main/res/font/literata.ttf",
         "sha256": "b41138c9373112f32abb589cc22e8674b06ed4048b0c513be922bdd26f274440",
         "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/literata/Literata%5Bopsz%2Cwght%5D.ttf"
       },
@@ -61,7 +61,7 @@
       "style": "italic",
       "weight": "400 700",
       "source": {
-        "file": "native/designSystem/src/main/res/font/literata_italic.ttf",
+        "file": "native/androidApp/src/main/res/font/literata_italic.ttf",
         "sha256": "d483dfaeba9cbf4ce71d32a52ee65df82f7e35b15fff8d1011cdb242d1fcd465",
         "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/literata/Literata-Italic%5Bopsz%2Cwght%5D.ttf"
       },
@@ -76,7 +76,7 @@
   "licenses": [
     {
       "source": {
-        "file": "native/designSystem/src/main/assets/licenses/cormorantgaramond-OFL.txt",
+        "file": "native/androidApp/src/main/assets/licenses/cormorantgaramond-OFL.txt",
         "sha256": "6f5a41d57400577a50aae88475b11f292f3d7de78ee7d5113c69577331d8ad31"
       },
       "output": {
@@ -86,7 +86,7 @@
     },
     {
       "source": {
-        "file": "native/designSystem/src/main/assets/licenses/literata-OFL.txt",
+        "file": "native/androidApp/src/main/assets/licenses/literata-OFL.txt",
         "sha256": "72ef68216a08669b2a977fe788a4aea6114636adbbe0bc6aa9192f63f8d400d0"
       },
       "output": {

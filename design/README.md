@@ -31,7 +31,7 @@ python3 scripts/native/sync_web_design.py --check
 `frontend/src/app/design-tokens.css` содержит переменные и правила ширины,
 импортируется из product `theme.css`, включая отдельные тестовые страницы;
 `design-tokens.js` — численные значения и media queries для JS/PostCSS;
-`native/designSystem/.../DesignTokens.kt` — типизированные dp/sp и роли Compose.
+`native/androidApp/.../ui/designsystem/DesignTokens.kt` — типизированные dp/sp и роли Compose.
 CSS использует `@media (--ui-phone)`, `(--ui-tablet)`, `(--ui-compact)`,
 `(--ui-desktop)` и `(--ui-from-tablet)`: локальный PostCSS-плагин подставляет
 пороги из того же источника. CSS custom properties не подставляются в media query.
@@ -47,7 +47,7 @@ CSS использует `@media (--ui-phone)`, `(--ui-tablet)`, `(--ui-compact)
 ## Шрифты и иконки
 
 TTF и лицензии в Android закреплены в
-[font-sources.json](../native/designSystem/font-sources.json). Из тех же TTF
+[font-sources.json](../native/androidApp/font-sources.json). Из тех же TTF
 получаются локальные WOFF2 веба с полным набором символов и variable axes:
 
 ```bash

@@ -18,9 +18,9 @@
 ## Устройство клиента
 
 `native/androidApp` владеет экранами, моделями, Ktor, Room 3/SQLite, локальным
-поиском и синхронизацией. `native/designSystem` — отдельный Android library module
+поиском и синхронизацией. `ui.designsystem` — изолированный пакет внутри `androidApp`
 с Compose-примитивами, палитрой, шрифтами и иконками, без зависимостей от API/БД
-и игровых моделей. Граница и каталог — [дизайн-система](../../native/designSystem/README.md). Activity/ViewModel обслуживают
+и игровых моделей. Граница и каталог — [дизайн-система](../../native/androidApp/DESIGN_SYSTEM.md). Activity/ViewModel обслуживают
 lifecycle, WindowManager передаёт состояние сгиба, ресурсы загружаются через
 Android R, HTTP использует OkHttp. Вход, списки и описания отрисовывает Compose.
 Команды и пути артефактов — [сборка](../../native/README.md).

@@ -173,3 +173,15 @@ def validate_interactions(output):
             raise ValueError("Missing native horizontal gesture evidence")
         gestures.append(row)
     return {"formLifecycle": lifecycle, "horizontalGestures": gestures}
+
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='Publish captured evidence after the owning runner verified sources')
+    parser.add_argument('--output', type=Path, required=True)
+    args = parser.parse_args()
+    verification = json.loads((args.output / 'source-verification.json').read_text())
+    identity = json.loads((args.output / 'source.json').read_text())
+    if verification != dict(identity, sourceStable=True):
+        parser.error('Missing final source verification')
+    write_report(args.output, matrix=json.loads((args.output / 'matrix.json').read_text()))

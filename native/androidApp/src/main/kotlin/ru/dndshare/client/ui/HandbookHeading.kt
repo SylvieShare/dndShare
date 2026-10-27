@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
 import ru.dndshare.client.model.ItemType
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 
 @Stable
 internal class HandbookHeadingState {

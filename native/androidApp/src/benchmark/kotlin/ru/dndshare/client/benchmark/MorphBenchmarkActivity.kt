@@ -16,7 +16,7 @@ import ru.dndshare.client.model.HandbookMetadata
 import ru.dndshare.client.ui.DndTheme
 import ru.dndshare.client.ui.LayoutFormat
 import ru.dndshare.client.ui.character.*
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 
 /** Benchmark-only entry point: actual UI components, synthetic data, no account or API. */
 class MorphBenchmarkActivity : ComponentActivity() {

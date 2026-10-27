@@ -4,7 +4,7 @@ from token_model import digest, literal, media_queries, pascal
 
 CSS = 'frontend/src/app/design-tokens.css'
 JS = 'frontend/src/app/design-tokens.js'
-KOTLIN = 'native/designSystem/src/main/kotlin/ru/dndshare/designsystem/DesignTokens.kt'
+KOTLIN = 'native/androidApp/src/main/kotlin/ru/dndshare/client/ui/designsystem/DesignTokens.kt'
 
 
 def render(data, source_hash):
@@ -42,7 +42,7 @@ def render(data, source_hash):
     ]
     js = [f'// {header}', f'export const layoutTokens = Object.freeze({json.dumps(data["layout"], indent=2)});',
           f'export const designMediaQueries = Object.freeze({json.dumps(media_queries(data), indent=2)});', '']
-    kt = [f'// {header}', 'package ru.dndshare.designsystem', '',
+    kt = [f'// {header}', 'package ru.dndshare.client.ui.designsystem', '',
           'import androidx.compose.ui.unit.dp', 'import androidx.compose.ui.unit.sp',
           'import androidx.compose.ui.unit.TextUnit', 'import androidx.compose.ui.text.font.FontWeight', '',
           'enum class DesignFont { Display, Prose, Ui }',

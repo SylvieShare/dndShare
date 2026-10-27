@@ -17,7 +17,7 @@ import coil3.ImageLoader
 import ru.dndshare.client.character.*
 import ru.dndshare.client.data.CacheDao
 import ru.dndshare.client.ui.*
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 
 @Composable
 internal fun CharacterSheetScreen(ui: CharacterSheetUiState, model: CharacterSheetViewModel,

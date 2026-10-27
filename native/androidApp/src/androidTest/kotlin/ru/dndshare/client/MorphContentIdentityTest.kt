@@ -18,7 +18,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
 import androidx.test.core.app.ActivityScenario
 import org.junit.Test
-import ru.dndshare.designsystem.*
+import ru.dndshare.client.ui.designsystem.*
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit

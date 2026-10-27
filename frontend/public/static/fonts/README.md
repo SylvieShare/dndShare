@@ -1,8 +1,8 @@
 # Offline display and prose fonts
 
 These WOFF2 files are lossless conversions of the official Google Fonts TTFs
-already shipped with Android in `native/designSystem/src/main/res/font/`.
-`native/designSystem/font-sources.json` is the authority for source URLs and
+already shipped with Android in `native/androidApp/src/main/res/font/`.
+`native/androidApp/font-sources.json` is the authority for source URLs and
 SHA-256. The two `*-OFL.txt` files are byte-for-byte copies of Android's licenses.
 `manifest.json` records source/output hashes, licenses, CSS, generator and lock.
 Each WOFF2 filename contains the first 12 hexadecimal digits of its output
