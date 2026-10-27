@@ -16,6 +16,10 @@ import ru.dndshare.client.network.ApiException
 class CharacterSheetQueueTest {
     private class MemorySheets : CharacterSheetDao {
         val rows = MutableStateFlow<Map<String, CachedCharacterSheet>>(emptyMap())
+        val forms = mutableMapOf<String, CachedSheetForm>()
+        override suspend fun form(uuid: String, id: String) = forms[uuid]?.takeIf { it.id == id }
+        override suspend fun putForm(form: CachedSheetForm) { forms[form.uuid] = form }
+        override suspend fun removeForm(uuid: String, id: String) { if (forms[uuid]?.id == id) forms.remove(uuid) }
         override fun observeSection(uuid: String, section: String): Flow<String?> = flowOf(null)
         override suspend fun putSection(section: CachedSheetSection) = Unit
         override fun observe(uuid: String): Flow<CachedCharacterSheet?> = rows.map { it[uuid] }

@@ -60,10 +60,10 @@ fun ShareDetailSection(label: String, collapsible: Boolean = false, defaultOpen:
 
 @Composable
 fun ShareTile(modifier: Modifier = Modifier, onClick: (() -> Unit)? = null, tint: Color? = null,
-    contentPadding: PaddingValues = PaddingValues(DesignTokens.Spacing.Large), accent: Color? = null,
+    contentPadding: PaddingValues = PaddingValues(DesignTokens.Spacing.Large), accent: Color? = null, framed: Boolean = true,
     content: @Composable ColumnScope.() -> Unit) {
     val shape = RoundedCornerShape(DesignTokens.Radius.Tile)
-    val border = BorderStroke(1.dp, WebPalette.Border)
+    val border = if (framed) BorderStroke(1.dp, WebPalette.Border) else null
     val glow = if (tint == null) Modifier else Modifier.drawWithCache {
         val brush = Brush.radialGradient(listOf(tint.copy(alpha = .12f), Color.Transparent),
             center = Offset(size.width * .72f, size.height * .35f), radius = size.width * .7f)

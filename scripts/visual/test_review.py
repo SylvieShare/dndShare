@@ -11,7 +11,7 @@ import zlib
 
 from adb import ANIMATIONS, Emulator, PACKAGE
 from android import window_metrics
-from report import MATRIX, png_dimensions, render_html, validate_entries
+from report import MATRIX, png_dimensions, render_html, validate_entries, validate_interactions
 from source import source_identity
 
 
@@ -153,6 +153,26 @@ class EmulatorSafetyTest(unittest.TestCase):
         self.assertEqual(metrics["contentDp"], {"width": 390, "height": 852})
         with self.assertRaisesRegex(AssertionError, "foreground"):
             window_metrics(dump.replace(PACKAGE, "launcher"), 390, 900)
+
+
+class InteractionEvidenceTest(unittest.TestCase):
+    def test_all_formats_and_actual_process_death_are_required(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            form = {"foldResize": True, "systemProcessDeath": True, "originalRestored": True, "realAPI": True,
+                    "inputRestored": 13, "newerServerValueProtected": 14}
+            path = output / "native-form-lifecycle.json"
+            path.write_text(json.dumps(form))
+            for format_ in MATRIX["formats"]:
+                (output / f"native-swipe-{format_['name']}.json").write_text(json.dumps({"format": format_["name"], "realHorizontalGesture": True}))
+            self.assertEqual(len(validate_interactions(output)["horizontalGestures"]), 3)
+            path.write_text(json.dumps({**form, "systemProcessDeath": False}))
+            with self.assertRaisesRegex(ValueError, "lifecycle"):
+                validate_interactions(output)
+            path.write_text(json.dumps(form))
+            (output / "native-swipe-wide.json").unlink()
+            with self.assertRaises(OSError):
+                validate_interactions(output)
 
 
 if __name__ == "__main__":

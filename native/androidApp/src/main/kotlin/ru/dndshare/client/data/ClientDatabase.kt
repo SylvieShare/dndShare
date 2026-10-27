@@ -118,8 +118,8 @@ abstract class CacheDao {
 }
 
 @Database(
-    entities = [CachedItem::class, CachedMetadata::class, SyncState::class, CachedCharacter::class, CachedCharacterSheet::class, CachedSheetSection::class],
-    version = 2, exportSchema = true,
+    entities = [CachedItem::class, CachedMetadata::class, SyncState::class, CachedCharacter::class, CachedCharacterSheet::class, CachedSheetSection::class, CachedSheetForm::class],
+    version = 3, exportSchema = true,
 )
 abstract class ClientDatabase : RoomDatabase() {
     abstract fun cache(): CacheDao
@@ -127,4 +127,4 @@ abstract class ClientDatabase : RoomDatabase() {
 }
 
 fun buildDatabase(builder: RoomDatabase.Builder<ClientDatabase>): ClientDatabase =
-    builder.addMigrations(characterSheetsMigration).setDriver(BundledSQLiteDriver()).setQueryCoroutineContext(Dispatchers.IO).build()
+    builder.addMigrations(characterSheetsMigration, characterFormsMigration).setDriver(BundledSQLiteDriver()).setQueryCoroutineContext(Dispatchers.IO).build()

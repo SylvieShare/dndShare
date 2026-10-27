@@ -10,6 +10,7 @@ import time
 import xml.etree.ElementTree as ET
 
 from adb import COMPONENT, PACKAGE, native_path, powershell_path, run
+from character import verify_swipes, verify_form_restoration, wait_absent
 
 
 def build_install(device, root, url, output):
@@ -189,10 +190,19 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
         device.click(text=fixture["characters"][0]["name"])
         device.wait("Волшебник 4" if format_["name"] == "tablet" else "СИЛА" if format_["name"] == "phone" else fixture["characters"][0]["name"])
         entries.append(snapshot(device, output, format_, "sheet-base", fixture, stats))
-        if format_["name"] == "tablet":
-            device.click(text="Статы")
+        gesture = verify_swipes(device, format_)
+        (output.parent / ("native-swipe-" + format_["name"] + ".json")).write_text(json.dumps(gesture, ensure_ascii=False, indent=2))
         device.wait("ТЕЛОСЛОЖЕНИЕ")
         entries.append(snapshot(device, output, format_, "sheet-stats", fixture, stats))
+        device.click(description="Редактировать: Сила")
+        device.wait("Основное значение")
+        entries.append(snapshot(device, output, format_, "sheet-stat-editor", fixture, stats))
+        if format_["name"] == "phone":
+            lifecycle = verify_form_restoration(device, url, fixture, stats)
+            (output.parent / "native-form-lifecycle.json").write_text(json.dumps(lifecycle, ensure_ascii=False, indent=2))
+        else:
+            device.click(text="Отмена")
+            wait_absent(device, "Основное значение")
         if format_["name"] == "phone":
             proof = verify_character_edit(device, url, fixture)
             (output.parent / "native-character-edit.json").write_text(json.dumps(proof, ensure_ascii=False, indent=2))

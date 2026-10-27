@@ -23,7 +23,7 @@ import androidx.compose.ui.res.painterResource
 import ru.dndshare.client.app.*
 import ru.dndshare.client.R
 import ru.dndshare.client.ui.character.CharacterDestination
-import ru.dndshare.client.ui.character.CharacterSheetScreen
+import ru.dndshare.client.ui.character.CharacterSheetRoute
 
 @Composable
 fun DndShareApp(controller: AppController, fold: FoldInfo? = null, onBackground: () -> Unit) {
@@ -78,7 +78,7 @@ private fun AuthenticatedApp(controller: AppController, state: AppState, fold: F
         val selectedPage = runCatching { AppPage.valueOf(page) }.getOrDefault(AppPage.Handbook)
         CharacterDestination(characterUuid) { displayedUuid, active ->
             if (displayedUuid != null) pages.SaveableStateProvider("sheet:$displayedUuid") {
-                CharacterSheetScreen(displayedUuid, state, format, images, active, close = { characterUuid = null })
+                CharacterSheetRoute(displayedUuid, state, format, images, active, close = { characterUuid = null })
             } else pages.SaveableStateProvider("application-shell") {
         AppNavigationShell(format, selectedPage, state, controller, navigate = {
             if (it != selectedPage) {

@@ -14,13 +14,14 @@ FONT_WEIGHTS = {'display': (500, 700), 'prose': (400, 700), 'ui': (100, 900)}
 KEY = re.compile(r'^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$')
 REQUIRED = {
     'layout': {'tablet', 'desktop', 'sidebar-collapsed', 'sidebar-expanded', 'drawer', 'content-max', 'header', 'border', 'touch-min',
-               'sheet-max', 'sheet-stat-min', 'sheet-base-min', 'sheet-stats-column', 'sheet-utilities-column'},
+               'sheet-max', 'sheet-stat-min', 'sheet-base-min', 'sheet-stats-column', 'sheet-utilities-column',
+               'morph-stacked-max', 'morph-editor-width', 'morph-preview-min', 'morph-margin'},
     'collection': {'min-height', 'padding', 'emblem', 'art-inset', 'grid-gap'},
     'canvas': {'step', 'radius', 'opacity'},
     'spacing': {'xs', 'compact', 'small', 'label', 'medium', 'large', 'page', 'section'},
     'list': {'min-height', 'icon', 'gap', 'padding-end', 'metric-min', 'metric-max', 'metric-padding-max', 'body-top', 'body-bottom', 'row-margin', 'row-gap'},
-    'motion': {'enter', 'exit', 'navigation', 'feedback', 'distance'},
-    'radius': {'xs', 'small', 'medium', 'large', 'xl', 'tile', 'badge', 'row'},
+    'motion': {'enter', 'exit', 'navigation', 'feedback', 'distance', 'morph-open', 'morph-close'},
+    'radius': {'xs', 'small', 'medium', 'large', 'xl', 'tile', 'badge', 'row', 'morph'},
 }
 
 
@@ -110,4 +111,5 @@ def media_queries(data):
         '--ui-compact': f'(width < {desktop}px)',
         '--ui-desktop': f'(width >= {desktop}px)',
         '--ui-from-tablet': f'(width >= {tablet}px)',
+        '--ui-morph-stacked': f'(width <= {literal(data["layout"]["morph-stacked-max"])}px)',
     }

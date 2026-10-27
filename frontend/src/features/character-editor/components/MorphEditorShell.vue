@@ -6,13 +6,14 @@
 // Optional `nav` (useSheetSubpages) enables a `sub` slot (e.g. per-skill editing).
 import { computed } from 'vue'
 import { MorphSheet, TileAccentStrip } from '@sylvieshare/share-ui'
+import { layoutTokens } from '@/app/design-tokens'
 
 const props = defineProps({
   originRect: { type: Object, default: null },
   originEl: { type: Object, default: null },
   originRadius: { type: String, default: 'var(--r-lg)' },
   color: { type: String, default: 'var(--accent)' },   // strip color + --sc for the view slot
-  editorWidth: { type: Number, default: 360 },          // width of the revealed editor column (horizontal)
+  editorWidth: { type: Number, default: layoutTokens['morph-editor-width'] },
   minViewWidth: { type: Number, default: 0 },           // floor for the view (tiny origins)
   viewWidth: { type: Number, default: 0 },              // optional fixed view/panel width (vertical)
   orientation: { type: String, default: 'horizontal' }, // 'horizontal' (editor right) | 'vertical' (editor below)
@@ -33,7 +34,7 @@ const panelWidth = computed(() => {
   const vw = typeof window !== 'undefined' ? window.innerWidth : 1280
   // vertical: editor stacks under the view → panel keeps the view width; horizontal: grows rightward
   const target = vertical.value ? leftWidth.value : leftWidth.value + props.editorWidth
-  return Math.min(target, vw - 32)
+  return Math.min(target, vw - 2 * layoutTokens['morph-margin'])
 })
 const showBack = computed(() => !!props.nav && props.nav.view.value !== 'detail')
 </script>
@@ -95,7 +96,7 @@ const showBack = computed(() => !!props.nav && props.nav.view.value !== 'detail'
 .mes-vertical .mes-view { flex: none; width: 100%; }
 .mes-vertical .mes-rest { flex: none; width: 100%; flex-direction: column; }
 
-@media (max-width: 768px) {
+@media (--ui-morph-stacked) {
   /* The sheet body fills the viewport on mobile. Keep this wrapper equally tall so the
      editor backing reaches the bottom even when the form is shorter than the viewport.
      The preview remains the block surface; .mes-rest paints the form canvas below it. */

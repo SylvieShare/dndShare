@@ -10,7 +10,7 @@ from exceptions import read_exceptions
 
 MATRIX = json.loads((Path(__file__).with_name("matrix.json")).read_text())
 LABELS = {"collections": "Обзор коллекций", "menu": "Открытое меню", "list": "Список коллекции", "record": "Карточка записи",
-          "sheet-base": "D&D · База", "sheet-stats": "D&D · Характеристики", "vtm-base": "VTM · База"}
+          "sheet-base": "D&D · База", "sheet-stats": "D&D · Характеристики", "sheet-stat-editor": "D&D · Морф характеристики", "vtm-base": "VTM · База"}
 
 
 def png_dimensions(data):
@@ -102,6 +102,10 @@ def render_html(manifest):
             sections.append(f'<section><h2>{escape(format_["name"])} · {escape(LABELS[state])}</h2><div class="pair">'
                             + "".join(figures) + '</div></section>')
     exceptions = escape(json.dumps(manifest["approvedExceptions"], ensure_ascii=False, indent=2))
+    interactions = ('<p>Нативные проверки: <a href="native-form-lifecycle.json">восстановление формы и конфликт</a> · '
+                    '<a href="native-swipe-phone.json">свайп телефона</a> · '
+                    '<a href="native-swipe-tablet.json">свайп планшета</a> · '
+                    '<a href="native-swipe-wide.json">свайп широкого окна</a></p>') if manifest.get("nativeInteractions") else ''
     return f'''<!doctype html><html lang="ru"><meta charset="utf-8"><title>WEB / ANDROID UI review</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>body{{margin:24px;background:#111820;color:#e5e8ed;font:15px system-ui}}a{{color:#a9caff}}
@@ -114,6 +118,7 @@ section{{margin:32px 0}}pre{{white-space:pre-wrap;overflow-wrap:anywhere}}code{{
 <p>Редакция: {escape(manifest['edition'])} · recordID: {manifest['recordID']} · изолированный API/PostgreSQL.</p>
 <p>Source SHA: <code>{escape(manifest['sourceSHA'])}</code><br>Source hash: <code>{escape(manifest['sourceHash'])}</code>
 <br>Fixture hash: <code>{escape(manifest['dataFixtureHash'])}</code> · <a href="manifest.json">manifest.json</a></p>
+{interactions}
 <h2>Approved exceptions из предоставленного JSON</h2>
 <p>Автор, дата и reference приведены из реестра. Отчёт проверяет структуру записи,
 но не верифицирует источник человеческого согласования и никогда не одобряет исключения автоматически.</p>
@@ -135,6 +140,7 @@ def write_report(output):
     for format_ in MATRIX["formats"]:
         entries.extend(read(f"web-{format_['name']}.json"))
     validate_entries(output, entries, fixture)
+    interactions = validate_interactions(output)
     for entry in entries:
         edition = fixture["characters"][1]["edition"] if entry["state"] == "vtm-base" else fixture["edition"]
         entry.update(identity, edition=edition, dataFixtureHash=fixture["dataFixtureHash"])
@@ -144,6 +150,23 @@ def write_report(output):
                 "approvedExceptions": exceptions["exceptions"], "apiEvidence": evidence,
                 "exceptionsSHA256": hashlib.sha256((output / "exceptions.json").read_bytes()).hexdigest(),
                 "emulatorConfigurationRestored": True,
+                "nativeInteractions": interactions,
                 "screenshots": entries}
     (output / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     (output / "index.html").write_text(render_html(manifest), encoding="utf-8")
+
+
+def validate_interactions(output):
+    output = Path(output)
+    lifecycle = json.loads((output / "native-form-lifecycle.json").read_text())
+    if not all(lifecycle.get(key) is True for key in ("foldResize", "systemProcessDeath", "originalRestored", "realAPI")):
+        raise ValueError("Missing native form lifecycle evidence")
+    if lifecycle.get("inputRestored") == lifecycle.get("newerServerValueProtected"):
+        raise ValueError("Restored input must stay distinct from the protected newer value")
+    gestures = []
+    for format_ in MATRIX["formats"]:
+        row = json.loads((output / f"native-swipe-{format_['name']}.json").read_text())
+        if row.get("format") != format_["name"] or row.get("realHorizontalGesture") is not True:
+            raise ValueError("Missing native horizontal gesture evidence")
+        gestures.append(row)
+    return {"formLifecycle": lifecycle, "horizontalGestures": gestures}

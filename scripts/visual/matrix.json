@@ -24,6 +24,7 @@
     "record",
     "sheet-base",
     "sheet-stats",
+    "sheet-stat-editor",
     "vtm-base"
   ],
   "platforms": [

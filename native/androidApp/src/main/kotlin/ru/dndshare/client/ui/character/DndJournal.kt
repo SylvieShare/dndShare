@@ -4,28 +4,17 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
-import ru.dndshare.client.model.WireJson
 import ru.dndshare.client.model.text
 import ru.dndshare.designsystem.*
 
 @Composable
 internal fun DndJournal() {
     val context = LocalCharacterSheet.current
-    val payload by remember(context.uuid, context.repository) {
-        context.repository.database.characterSheets().observeSection(context.uuid, "journal")
-    }.collectAsState(null)
-    var error by remember(context.uuid) { mutableStateOf<String?>(null) }
-    var loading by remember(context.uuid) { mutableStateOf(true) }
-    LaunchedEffect(context.uuid) {
-        try { context.repository.refreshCharacterJournal(context.uuid) }
-        catch (cancelled: CancellationException) { throw cancelled }
-        catch (failed: Exception) { error = failed.message }
-        finally { loading = false }
-    }
-    val response = remember(payload) { payload?.let { WireJson.parseToJsonElement(it).jsonObject } }
+    val response = context.journal.payload
+    val loading = context.journal.loading
+    val error = context.journal.error
     val journal = response?.get("journal") as? JsonObject
     if (loading && journal == null) LinearProgressIndicator()
     error?.let { Text(it, color = WebPalette.Warning, style = ShareTypography.context) }

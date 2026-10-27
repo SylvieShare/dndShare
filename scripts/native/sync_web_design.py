@@ -15,7 +15,7 @@ ICONS = {
     "Admin": "shield", "Account": "user-round", "Menu": "menu", "Close": "x",
     "Collapse": "panel-left-close", "Expand": "panel-left-open", "Refresh": "refresh-cw",
     "Filter": "list-filter", "Back": "arrow-left", "Exit": "log-out", "Search": "search", "Chevron": "chevron-right",
-    "Rest": "coffee",
+    "Rest": "coffee", "Edit": "pencil",
 }
 COLORS = {
     "Background": "bg", "Surface": "surface", "Raised": "surface-raised",

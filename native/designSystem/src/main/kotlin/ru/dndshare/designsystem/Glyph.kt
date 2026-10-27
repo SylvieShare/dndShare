@@ -12,6 +12,7 @@ import ru.dndshare.designsystem.R
 // Lucide geometry is shared with the web; regenerate using scripts/native/sync_web_design.py.
 enum class Glyph(@param:DrawableRes val resource: Int) {
     Rest(R.drawable.lucide_coffee),
+    Edit(R.drawable.lucide_pencil),
     Filter(R.drawable.lucide_list_filter),
     Book(R.drawable.lucide_book_open),
     Rules(R.drawable.lucide_book_open_check),

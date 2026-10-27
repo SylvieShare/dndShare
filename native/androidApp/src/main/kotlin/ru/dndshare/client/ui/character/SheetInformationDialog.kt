@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
 import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
 import ru.dndshare.client.model.text
@@ -12,8 +11,7 @@ import ru.dndshare.designsystem.*
 
 @Composable
 internal fun SheetInformationDialog(target: String, sheet: CharacterSheet, close: () -> Unit,
-    back: () -> Unit, refresh: suspend () -> Unit) {
-    val scope = rememberCoroutineScope()
+    back: () -> Unit, refresh: () -> Unit) {
     val context = LocalCharacterSheet.current
     AlertDialog(onDismissRequest = close, title = { Text(if (target == "rest") "Отдых" else sheet.name, style = ShareTypography.section) },
         text = { Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -30,7 +28,7 @@ internal fun SheetInformationDialog(target: String, sheet: CharacterSheet, close
                     TextButton(onClick = { close(); context.edit("hp") }) { Text("Здоровье") }
                     TextButton(onClick = { close(); context.edit("statuses") }) { Text("Состояния") }
                 }
-                TextButton(onClick = { scope.launch { refresh(); close() } }) { Text("Обновить лист") }
+                TextButton(onClick = { refresh(); close() }) { Text("Обновить лист") }
                 TextButton(onClick = { close(); back() }) { Text("К персонажам") }
             }
         } }, confirmButton = { TextButton(onClick = close) { Text("Закрыть") } })

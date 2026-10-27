@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -36,16 +39,21 @@ internal fun DndSheetSection(section: SheetSection, format: LayoutFormat) {
 }
 
 @Composable
-internal fun DndWideSheet(section: SheetSection, sections: List<SheetSection>, select: (SheetSection) -> Unit) {
+internal fun DndWideSheet(section: SheetSection, sections: List<SheetSection>, select: (SheetSection) -> Unit, swipeEnabled: Boolean = true) {
     val context = LocalCharacterSheet.current
+    val pager = rememberSheetPager(sections, section, select)
     Box(Modifier.fillMaxSize()) {
         Row(Modifier.widthIn(max = DesignTokens.Layout.SheetMax).fillMaxWidth().verticalScroll(rememberScrollState())
             .align(androidx.compose.ui.Alignment.TopCenter), horizontalArrangement = Arrangement.spacedBy(15.dp)) {
             Box(Modifier.width(DesignTokens.Layout.SheetStatsColumn).padding(20.dp)) { DndStats(adaptive = false) }
             Column(Modifier.weight(1f).padding(top = 20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 DndIdentityCard()
-                SheetNavigation(sections, section, context.images, select, textOnly = true)
-                DndSheetSection(section, LayoutFormat.Wide)
+                SheetNavigation(sections, sections[pager.currentPage], context.images, select, textOnly = true)
+                HorizontalPager(pager, Modifier.fillMaxWidth().animateContentSize(tween(DesignTokens.Motion.Navigation)),
+                    beyondViewportPageCount = 0, key = { sections[it].name }, userScrollEnabled = swipeEnabled,
+                    verticalAlignment = androidx.compose.ui.Alignment.Top) { page ->
+                    Column(Modifier.fillMaxWidth()) { DndSheetSection(sections[page], LayoutFormat.Wide) }
+                }
             }
             Column(Modifier.width(DesignTokens.Layout.SheetUtilitiesColumn).padding(20.dp), verticalArrangement = Arrangement.spacedBy(15.dp)) {
                 DndUtilities()

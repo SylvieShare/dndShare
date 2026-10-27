@@ -47,15 +47,19 @@ class CharacterSheetRepository(
         retry(uuid)
     }
 
-    suspend fun enqueue(uuid: String, patches: List<SheetPatch>, expected: JsonObject? = null) = withContext(scope.coroutineContext) {
+    suspend fun enqueue(uuid: String, patches: List<SheetPatch>, expected: JsonObject? = null, formId: String? = null) = withContext(scope.coroutineContext) {
         lock(uuid).withLock {
+            // A restored UI can still contain an already accepted form ID.
+            if (formId != null && cache.form(uuid, formId) == null) return@withLock
             val current = requireNotNull(cache.get(uuid)).snapshot()
             require(current.sheet.userId == accountId) { "Этот лист доступен только для просмотра." }
             val requested = createSheetEdit(expected ?: current.document, patches)
             val edit = rebaseSheetEdit(requested, current.document)
                 ?: error("Этот показатель изменился после открытия формы. Ваш ввод сохранён; закройте форму, чтобы проверить новое значение.")
-            if (edit.patches.isEmpty()) return@withLock
-            put(uuid, current.sheet, current.draft.copy(edits = current.draft.edits + edit))
+            val draft = if (edit.patches.isEmpty()) current.draft else current.draft.copy(edits = current.draft.edits + edit)
+            if (formId == null) put(uuid, current.sheet, draft)
+            else cache.acceptForm(CachedCharacterSheet(uuid, WireJson.encodeToString(current.sheet),
+                if (draft.edits.isEmpty() && draft.sending == null && draft.blocked == null) "{}" else WireJson.encodeToString(draft)), formId)
         }
         retry(uuid)
     }
