@@ -1,0 +1,55 @@
+{
+  "slug": "gladiator-2795",
+  "itemId": 2795,
+  "itemIds": [
+    2795
+  ],
+  "modelId": "577481d7-560c-5e58-b45c-c572e3c1aac6",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2795",
+  "sourceName": "gladiator-2795-miniature",
+  "name": "Гладиатор",
+  "nameEn": "Gladiator",
+  "code": "CRE-gladiator",
+  "groupName": "Гладиатор",
+  "groupNameEn": "Gladiator",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2795,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5297838659847485,
+    "sourceOrigin": [
+      0.15864741802215576,
+      -0.03215264342725277,
+      -0.5006833076477051
+    ],
+    "rotation": -45
+  }
+}

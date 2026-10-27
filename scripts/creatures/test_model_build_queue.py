@@ -38,6 +38,28 @@ class QueueTests(unittest.TestCase):
         self.assertEqual(self.queue.path.stat().st_mode & 0o777,0o600)
         self.assertEqual(saved['jobs']['wolf']['stages']['native']['errorType'],'QuotaStop')
 
+    def test_export_can_finish_below_the_new_model_reserve_without_new_generation(self):
+        self.manifest['budget']['minExportGpuSeconds']=120
+        quota=SimpleNamespace(remaining=200,overquota_used=0,base=2400)
+        with self.assertRaises(QuotaStop):self.queue.reserve_gpu(self.entry,'image_to_3d',quota)
+        self.assertEqual(self.queue.data['gpuCalls'],0)
+        self.queue.reserve_gpu(self.entry,'extract_glb',quota)
+        self.assertEqual(self.queue.data['gpuCalls'],1)
+        self.assertEqual(self.queue.data['generations'],0)
+        quota.overquota_used=1
+        with self.assertRaises(QuotaStop):self.queue.reserve_gpu(self.entry,'extract_glb',quota)
+        quota.overquota_used=0;quota.remaining=119
+        with self.assertRaises(QuotaStop):self.queue.reserve_gpu(self.entry,'extract_glb',quota)
+        self.assertEqual(self.queue.data['gpuCalls'],1)
+
+    def test_invalid_export_reserve_stops_before_counting_a_call(self):
+        quota=SimpleNamespace(remaining=500,overquota_used=0,base=2400)
+        for value in [0,-1,241]:
+            self.manifest['budget']['minExportGpuSeconds']=value
+            with self.subTest(value=value),self.assertRaises(ValueError):
+                self.queue.reserve_gpu(self.entry,'extract_glb',quota)
+        self.assertEqual(self.queue.data['gpuCalls'],0)
+
     def test_quota_and_batch_caps_apply_before_submission(self):
         quota = SimpleNamespace(remaining=239,overquota_used=0,base=2400)
         with self.assertRaises(QuotaStop): self.queue.reserve_gpu(self.entry,'image_to_3d',quota)

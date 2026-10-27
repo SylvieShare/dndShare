@@ -1,5 +1,5 @@
 /build/
-/models/
+/models
 /internal/assets/dist/*
 !/internal/assets/dist/.gitkeep
 /frontend/node_modules/

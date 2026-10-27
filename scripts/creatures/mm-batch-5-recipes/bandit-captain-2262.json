@@ -1,0 +1,97 @@
+{
+  "slug": "bandit-captain-2262",
+  "itemId": 2262,
+  "itemIds": [
+    2262
+  ],
+  "modelId": "bcb093ce-7e6e-5971-b87e-5fa9b8baae66",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2262",
+  "sourceName": "bandit-captain-2262-miniature",
+  "name": "Капитан разбойников",
+  "nameEn": "Bandit Captain",
+  "code": "CRE-bandit-captain",
+  "groupName": "Капитан разбойников",
+  "groupNameEn": "Bandit Captain",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2262,
+    "surfaceClosure": {
+      "method": "cap",
+      "rim": [
+        [
+          0.06200795620679855,
+          0.34919703006744385,
+          -0.08832932263612747
+        ],
+        [
+          0.029700104147195816,
+          0.34390753507614136,
+          -0.0970923900604248
+        ],
+        [
+          0.00443500280380249,
+          0.3261541724205017,
+          -0.09815513342618942
+        ],
+        [
+          0.019739016890525818,
+          0.3167423605918884,
+          -0.13159455358982086
+        ],
+        [
+          0.055325791239738464,
+          0.31508833169937134,
+          -0.13457705080509186
+        ],
+        [
+          0.06990224123001099,
+          0.32404279708862305,
+          -0.1025710180401802
+        ]
+      ],
+      "normal": [
+        0.274402379989624,
+        0.5375717282295227,
+        -0.797320544719696
+      ],
+      "offset": 0.0003,
+      "thickness": 0.004
+    },
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5290864600854761,
+    "sourceOrigin": [
+      0.19559476524591446,
+      -0.005640465999022126,
+      -0.5005679130554199
+    ],
+    "rotation": -45
+  }
+}

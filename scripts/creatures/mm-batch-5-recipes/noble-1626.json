@@ -1,0 +1,55 @@
+{
+  "slug": "noble-1626",
+  "itemId": 1626,
+  "itemIds": [
+    1626
+  ],
+  "modelId": "c2530a2b-8f21-5a4a-bcad-a8567ef317bc",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1626",
+  "sourceName": "noble-1626-miniature",
+  "name": "Дворянин",
+  "nameEn": "Noble",
+  "code": "CRE-noble",
+  "groupName": "Дворянин",
+  "groupNameEn": "Noble",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 1626,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5302158278577468,
+    "sourceOrigin": [
+      0.05025353282690048,
+      0.06327249854803085,
+      -0.5009089708328247
+    ],
+    "rotation": -45
+  }
+}

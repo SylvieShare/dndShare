@@ -1,0 +1,167 @@
+{
+  "schema": 1,
+  "name": "Базовый бестиарий MM — пятый набор до исчерпания включённой HF-квоты",
+  "budget": {
+    "maxGenerations": 8,
+    "maxGpuCalls": 16,
+    "minRemainingGpuSeconds": 240,
+    "allowPaidOverquota": false,
+    "minExportGpuSeconds": 120
+  },
+  "entries": [
+    {
+      "slug": "bandit-captain-2262",
+      "itemId": 2262,
+      "name": "Капитан разбойников",
+      "nameEn": "Bandit Captain",
+      "height": 1.7,
+      "size": 1,
+      "seed": 2262,
+      "renderTriangles": 26000,
+      "lodTriangles": 18000,
+      "lodAggression": 3,
+      "shadowTriangles": 6000,
+      "shadowAggression": 5,
+      "surfaceClosure": {
+        "method": "cap",
+        "rim": [
+          [
+            0.06200795620679855,
+            0.34919703006744385,
+            -0.08832932263612747
+          ],
+          [
+            0.029700104147195816,
+            0.34390753507614136,
+            -0.0970923900604248
+          ],
+          [
+            0.00443500280380249,
+            0.3261541724205017,
+            -0.09815513342618942
+          ],
+          [
+            0.019739016890525818,
+            0.3167423605918884,
+            -0.13159455358982086
+          ],
+          [
+            0.055325791239738464,
+            0.31508833169937134,
+            -0.13457705080509186
+          ],
+          [
+            0.06990224123001099,
+            0.32404279708862305,
+            -0.1025710180401802
+          ]
+        ],
+        "normal": [
+          0.274402379989624,
+          0.5375717282295227,
+          -0.797320544719696
+        ],
+        "offset": 0.0003,
+        "thickness": 0.004
+      }
+    },
+    {
+      "slug": "cult-fanatic-2382",
+      "itemId": 2382,
+      "name": "Фанатик культа",
+      "nameEn": "Cult fanatic",
+      "height": 1.7,
+      "size": 1,
+      "seed": 2382,
+      "renderTriangles": 18000,
+      "lodTriangles": 12000,
+      "lodAggression": 3,
+      "shadowTriangles": 3500,
+      "shadowAggression": 5
+    },
+    {
+      "slug": "doppelganger-2465",
+      "itemId": 2465,
+      "name": "Доппельгангер",
+      "nameEn": "Doppelganger",
+      "height": 1.7,
+      "size": 1,
+      "seed": 2465,
+      "renderTriangles": 18000,
+      "lodTriangles": 12000,
+      "lodAggression": 3,
+      "shadowTriangles": 3500,
+      "shadowAggression": 5
+    },
+    {
+      "slug": "specter-2119",
+      "itemId": 2119,
+      "name": "Спектр",
+      "nameEn": "Specter",
+      "height": 1.7,
+      "size": 1,
+      "seed": 2119,
+      "renderTriangles": 18000,
+      "lodTriangles": 12000,
+      "lodAggression": 3,
+      "shadowTriangles": 3500,
+      "shadowAggression": 5
+    },
+    {
+      "slug": "wraith-2883",
+      "itemId": 2883,
+      "name": "Призрак",
+      "nameEn": "Wraith",
+      "height": 1.7,
+      "size": 1,
+      "seed": 2883,
+      "renderTriangles": 18000,
+      "lodTriangles": 18000,
+      "lodAggression": 3,
+      "shadowTriangles": 3500,
+      "shadowAggression": 5
+    },
+    {
+      "slug": "gladiator-2795",
+      "itemId": 2795,
+      "name": "Гладиатор",
+      "nameEn": "Gladiator",
+      "height": 1.7,
+      "size": 1,
+      "seed": 2795,
+      "renderTriangles": 26000,
+      "lodTriangles": 18000,
+      "lodAggression": 3,
+      "shadowTriangles": 6000,
+      "shadowAggression": 5
+    },
+    {
+      "slug": "commoner-1571",
+      "itemId": 1571,
+      "name": "Обыватель",
+      "nameEn": "Commoner",
+      "height": 1.7,
+      "size": 1,
+      "seed": 1571,
+      "renderTriangles": 18000,
+      "lodTriangles": 12000,
+      "lodAggression": 3,
+      "shadowTriangles": 3500,
+      "shadowAggression": 5
+    },
+    {
+      "slug": "noble-1626",
+      "itemId": 1626,
+      "name": "Дворянин",
+      "nameEn": "Noble",
+      "height": 1.7,
+      "size": 1,
+      "seed": 1626,
+      "renderTriangles": 18000,
+      "lodTriangles": 12000,
+      "lodAggression": 3,
+      "shadowTriangles": 3500,
+      "shadowAggression": 5
+    }
+  ]
+}

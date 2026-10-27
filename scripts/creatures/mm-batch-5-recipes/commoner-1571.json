@@ -1,0 +1,55 @@
+{
+  "slug": "commoner-1571",
+  "itemId": 1571,
+  "itemIds": [
+    1571
+  ],
+  "modelId": "5e8ea7d4-7c1c-563b-a1e9-507d71a699d5",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1571",
+  "sourceName": "commoner-1571-miniature",
+  "name": "Обыватель",
+  "nameEn": "Commoner",
+  "code": "CRE-commoner",
+  "groupName": "Обыватель",
+  "groupNameEn": "Commoner",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 1571,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5301822529119604,
+    "sourceOrigin": [
+      -0.04242486134171486,
+      -0.0032738884910941124,
+      -0.5009363889694214
+    ],
+    "rotation": -45
+  }
+}

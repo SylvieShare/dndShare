@@ -94,7 +94,14 @@ class BuildQueue:
 
     def reserve_gpu(self, entry, endpoint, quota):
         limits = self.manifest['budget']
-        if quota.remaining < limits['minRemainingGpuSeconds'] or (quota.overquota_used or 0) > 0:
+        minimum = limits['minRemainingGpuSeconds']
+        if endpoint == 'extract_glb':
+            minimum = limits.get('minExportGpuSeconds', minimum)
+        if not isinstance(minimum, (int, float)) or minimum <= 0:
+            raise ValueError('GPU quota reserve must be positive')
+        if minimum > limits['minRemainingGpuSeconds']:
+            raise ValueError('Export reserve cannot exceed the new-model reserve')
+        if quota.remaining < minimum or (quota.overquota_used or 0) > 0:
             raise QuotaStop('Included GPU quota is too low; queue paused before submission')
         if self.data['gpuCalls'] >= limits['maxGpuCalls']:
             raise QuotaStop('Pilot GPU-call limit reached')
