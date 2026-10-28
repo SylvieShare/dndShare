@@ -179,3 +179,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) { .mobile-tab-indicator { transition: none; } }
+
+@media (--ui-phone) {
+  .mobile-sticky-header { background: transparent; border: 0; padding: 0 var(--layout-compact-header-inset) var(--layout-compact-header-inset); box-sizing: border-box; }
+  .mobile-sticky-header::after { display: none; }
+  .mobile-tabbar { background: var(--surface); border: 0; border-radius: var(--radius-compact-navigation); padding: 4px; min-height: 48px; }
+  .mobile-tab-indicator { top: 4px; bottom: 4px; height: auto; border-radius: 999px; background: color-mix(in srgb, var(--accent) 18%, var(--surface)); }
+  .mobile-tab-btn { border-radius: 999px; }
+  .mobile-tab-btn.active { color: var(--accent-soft); }
+}

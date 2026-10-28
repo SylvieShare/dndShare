@@ -21,7 +21,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
@@ -73,7 +72,7 @@ internal fun RichImageViewer(url: String, label: String, images: ImageLoader?, c
         }
     }
     LaunchedEffect(viewport, imageSize) { translation = bound(translation, zoom) }
-    Dialog(
+    ShareFullscreenDialog(
         close,
         properties =
             DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false),
@@ -160,7 +159,7 @@ internal fun RichImageViewer(url: String, label: String, images: ImageLoader?, c
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text("Не удалось открыть изображение", color = WebPalette.Text)
-                    TextButton({ retry++ }) { Text("Повторить") }
+                    ShareTextButton({ retry++ }) { Text("Повторить") }
                 }
             Surface(
                 Modifier.align(Alignment.TopEnd).padding(8.dp),
@@ -180,7 +179,7 @@ internal fun RichImageViewer(url: String, label: String, images: ImageLoader?, c
                 shape = MaterialTheme.shapes.small,
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    TextButton(
+                    ShareTextButton(
                         { animateZoom(zoom / 1.5f) },
                         enabled = zoom > 1f,
                         modifier =
@@ -188,7 +187,7 @@ internal fun RichImageViewer(url: String, label: String, images: ImageLoader?, c
                     ) {
                         Text("−")
                     }
-                    TextButton(
+                    ShareTextButton(
                         { animateZoom(1f) },
                         modifier =
                             Modifier.semantics {
@@ -197,7 +196,7 @@ internal fun RichImageViewer(url: String, label: String, images: ImageLoader?, c
                     ) {
                         Text("${(zoom*100).toInt()}%")
                     }
-                    TextButton(
+                    ShareTextButton(
                         { animateZoom(zoom * 1.5f) },
                         enabled = zoom < 6f,
                         modifier =

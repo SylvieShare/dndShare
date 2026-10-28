@@ -22,7 +22,7 @@ internal fun ContentSourceFields(
     val selected = settings.text("mode") == "selected"
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text("Все доступные книги", Modifier.weight(1f), style = ShareTypography.group)
-        Switch(
+        ShareSwitch(
             !selected,
             {
                 change(
@@ -36,7 +36,7 @@ internal fun ContentSourceFields(
         val ids = settings["ids"].arrayValue().mapNotNull { it.referenceId() }
         books.forEach { book ->
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(
+                ShareCheckbox(
                     book.id in ids,
                     { checked ->
                         change(
@@ -69,7 +69,7 @@ internal fun ContentSourceFields(
                 Modifier.weight(1f),
                 style = ShareTypography.group,
             )
-            Switch(
+            ShareSwitch(
                 settings["allowLegacy"] == JsonPrimitive(true),
                 { change(JsonObject(settings + ("allowLegacy" to JsonPrimitive(it)))) },
                 enabled = enabled,

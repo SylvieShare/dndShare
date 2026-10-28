@@ -18,7 +18,7 @@ internal fun CreationStats(ui: CreationUiState, model: CharacterCreationViewMode
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         listOf("array" to "Стандартный набор", "point" to "Покупка очков", "roll" to "Броски")
             .forEach { (key, title) ->
-                FilterChip(
+                ShareChoiceChip(
                     draft.method == key,
                     {
                         model.update {
@@ -64,7 +64,7 @@ internal fun CreationStats(ui: CreationUiState, model: CharacterCreationViewMode
                 )
                 if (draft.method == "point") {
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        Button(
+                        ShareButton(
                             onClick = {
                                 model.update {
                                     it.copy(scores = it.scores + (stat to ((value ?: 8) - 1)))
@@ -74,7 +74,7 @@ internal fun CreationStats(ui: CreationUiState, model: CharacterCreationViewMode
                         ) {
                             Text("−")
                         }
-                        Button(
+                        ShareButton(
                             onClick = {
                                 model.update {
                                     it.copy(scores = it.scores + (stat to ((value ?: 8) + 1)))
@@ -92,7 +92,7 @@ internal fun CreationStats(ui: CreationUiState, model: CharacterCreationViewMode
                         pool.forEachIndexed { slot, number ->
                             val used = draft.assignments.any { it.key != stat && it.value == slot }
                             if (!used)
-                                FilterChip(
+                                ShareChoiceChip(
                                     draft.assignments[stat] == slot,
                                     {
                                         model.update {
@@ -120,7 +120,7 @@ internal fun CreationStats(ui: CreationUiState, model: CharacterCreationViewMode
                     if (allowed.isEmpty() || index + 1 in allowed)
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                             listOf(0, 1, 2).forEach { bonus ->
-                                FilterChip(
+                                ShareChoiceChip(
                                     (draft.backgroundAsi[stat] ?: 0) == bonus,
                                     {
                                         model.update {
@@ -143,7 +143,7 @@ internal fun CreationStats(ui: CreationUiState, model: CharacterCreationViewMode
         }
     }
     if (confirmRoll)
-        AlertDialog(
+        ShareAlertDialog(
             onDismissRequest = { confirmRoll = false },
             title = { Text("Испытать судьбу ещё раз?") },
             text = {
@@ -152,7 +152,7 @@ internal fun CreationStats(ui: CreationUiState, model: CharacterCreationViewMode
                 )
             },
             confirmButton = {
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         confirmRoll = false
                         model.rollScores()
@@ -161,6 +161,8 @@ internal fun CreationStats(ui: CreationUiState, model: CharacterCreationViewMode
                     Text("Перебросить")
                 }
             },
-            dismissButton = { TextButton(onClick = { confirmRoll = false }) { Text("Оставить") } },
+            dismissButton = {
+                ShareTextButton(onClick = { confirmRoll = false }) { Text("Оставить") }
+            },
         )
 }

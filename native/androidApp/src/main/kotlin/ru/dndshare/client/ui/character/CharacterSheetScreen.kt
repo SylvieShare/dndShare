@@ -10,7 +10,6 @@ import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil3.ImageLoader
 import ru.dndshare.client.character.*
@@ -108,7 +107,7 @@ internal fun CharacterSheetScreen(
                                         style = ShareTypography.context,
                                     )
                                     if (!ui.commands.busy && ui.commands.pending)
-                                        TextButton(onClick = model::retryCommand) {
+                                        ShareTextButton(onClick = model::retryCommand) {
                                             Text("Повторить")
                                         }
                                 }
@@ -124,7 +123,7 @@ internal fun CharacterSheetScreen(
                                         Modifier.weight(1f),
                                         style = ShareTypography.context,
                                     )
-                                    TextButton(onClick = model::refresh) { Text("Повторить") }
+                                    ShareTextButton(onClick = model::refresh) { Text("Повторить") }
                                 }
                             }
                         }
@@ -195,14 +194,17 @@ internal fun CharacterSheetScreen(
                                             color = WebPalette.TextSecondary,
                                         )
                                     if (format == LayoutFormat.Phone)
-                                        SheetNavigation(
-                                            sections,
-                                            visibleSection,
-                                            images,
-                                            model::selectSection,
-                                            compact = true,
-                                            template = sheet.templateName,
-                                        )
+                                        ShareSubheader {
+                                            SheetNavigation(
+                                                sections,
+                                                visibleSection,
+                                                images,
+                                                model::selectSection,
+                                                compact = true,
+                                                pill = true,
+                                                template = sheet.templateName,
+                                            )
+                                        }
                                     Box(Modifier.weight(1f).fillMaxWidth()) {
                                         if (wideDnd)
                                             DndWideSheet(
@@ -325,7 +327,7 @@ internal fun CharacterSheetScreen(
                                             )
                                     }
                                     if (navigation.itemStack.isNotEmpty())
-                                        Dialog(
+                                        ShareFullscreenDialog(
                                             onDismissRequest = model::closeItem,
                                             properties =
                                                 DialogProperties(usePlatformDefaultWidth = false),
@@ -400,13 +402,15 @@ internal fun CharacterSheetScreen(
                     model.rolls::reroll,
                 )
             if (navigation.discardDialog)
-                AlertDialog(
+                ShareAlertDialog(
                     onDismissRequest = { model.confirmReload(false) },
                     title = { Text("Загрузить серверную версию?") },
                     text = { Text("Локальный черновик будет заменён текущим листом с сервера.") },
-                    confirmButton = { TextButton(onClick = model::reload) { Text("Загрузить") } },
+                    confirmButton = {
+                        ShareTextButton(onClick = model::reload) { Text("Загрузить") }
+                    },
                     dismissButton = {
-                        TextButton(onClick = { model.confirmReload(false) }) { Text("Отмена") }
+                        ShareTextButton(onClick = { model.confirmReload(false) }) { Text("Отмена") }
                     },
                 )
         }
@@ -427,8 +431,8 @@ private fun SheetSaveStatus(message: String?, retry: () -> Unit, reload: () -> U
                 color = if (message != null) WebPalette.Warning else WebPalette.TextSecondary,
             )
             if (message != null) {
-                TextButton(onClick = retry) { Text("Повторить") }
-                TextButton(onClick = reload) { Text("Версия сервера") }
+                ShareTextButton(onClick = retry) { Text("Повторить") }
+                ShareTextButton(onClick = reload) { Text("Версия сервера") }
             }
         }
     }

@@ -53,7 +53,7 @@ private fun JournalWorkspace(journal: JsonObject, response: JsonObject) {
         if (sources.any { it.text("kind") == "session" })
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 sources.forEach { source ->
-                    FilterChip(
+                    ShareChoiceChip(
                         journal.text("uuid") == source.text("uuid"),
                         { context.edit("journal-source:${source.text("uuid")}") },
                         label = {
@@ -71,7 +71,7 @@ private fun JournalWorkspace(journal: JsonObject, response: JsonObject) {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             sections.forEach { row ->
-                FilterChip(
+                ShareChoiceChip(
                     row["id"] == section?.get("id"),
                     { sectionId = row["id"].referenceId() },
                     label = {
@@ -89,16 +89,18 @@ private fun JournalWorkspace(journal: JsonObject, response: JsonObject) {
             }
         }
         if (canEdit && personal)
-            TextButton(onClick = { context.edit("journal-section:new") }) { Text("Новый раздел") }
+            ShareTextButton(onClick = { context.edit("journal-section:new") }) {
+                Text("Новый раздел")
+            }
     }
     ShareTile(Modifier.fillMaxWidth(), framed = false) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             listOf("all" to "Всё", "quest" to "Задания", "dialog" to "Диалоги").forEach {
                 (key, title) ->
-                FilterChip(filter == key, { filter = key }, label = { Text(title) })
+                ShareChoiceChip(filter == key, { filter = key }, label = { Text(title) })
             }
             if (canEdit && section != null) {
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         context.edit("journal-entry:new:${section["id"].referenceId()}:event")
                     }
@@ -106,16 +108,16 @@ private fun JournalWorkspace(journal: JsonObject, response: JsonObject) {
                     Text("Добавить запись")
                 }
                 if (personal)
-                    TextButton(
+                    ShareTextButton(
                         onClick = { context.edit("journal-section:${section["id"].referenceId()}") }
                     ) {
                         Text("Изменить раздел")
                     }
-                TextButton(onClick = { ordering = !ordering }, enabled = filter == "all") {
+                ShareTextButton(onClick = { ordering = !ordering }, enabled = filter == "all") {
                     Text(if (ordering) "Готово" else "Порядок")
                 }
             }
-            TextButton(onClick = { context.edit("journal-refresh") }) { Text("Обновить") }
+            ShareTextButton(onClick = { context.edit("journal-refresh") }) { Text("Обновить") }
         }
         val events = section?.get("events").arrayValue().map { it.objectValue() }.asReversed()
         if (events.isEmpty())
@@ -128,13 +130,13 @@ private fun JournalWorkspace(journal: JsonObject, response: JsonObject) {
                     Row {
                         val target =
                             "journal-order:${section?.get("id").referenceId()}:${event["id"].referenceId()}"
-                        TextButton(
+                        ShareTextButton(
                             onClick = { context.edit("$target:up") },
                             enabled = events.firstOrNull() != event,
                         ) {
                             Text("Поднять")
                         }
-                        TextButton(
+                        ShareTextButton(
                             onClick = { context.edit("$target:down") },
                             enabled = events.lastOrNull() != event,
                         ) {
@@ -174,9 +176,9 @@ private fun JournalEntryView(event: JsonObject, canEdit: Boolean, info: () -> Un
                     if (event.text("type") in setOf("header", "newday")) ShareTypography.section
                     else ShareTypography.group,
             )
-            TextButton(onClick = info) { Text("Информация") }
+            ShareTextButton(onClick = info) { Text("Информация") }
             if (canEdit)
-                TextButton(
+                ShareTextButton(
                     onClick = { context.edit("journal-entry:${event["id"].referenceId()}") }
                 ) {
                     Text("Изменить")
@@ -192,7 +194,7 @@ private fun JournalEntryView(event: JsonObject, canEdit: Boolean, info: () -> Un
         payload["combatants"].arrayValue().forEach { raw ->
             val row = raw.objectValue()
             val id = row["itemId"].referenceId()
-            TextButton(onClick = { id?.let(context.openItem) }, enabled = id != null) {
+            ShareTextButton(onClick = { id?.let(context.openItem) }, enabled = id != null) {
                 Text(
                     "${row.text("itemName").ifBlank {row.text("name")}} × ${row["count"].number(1)}"
                 )
@@ -215,7 +217,7 @@ private fun JournalEntryView(event: JsonObject, canEdit: Boolean, info: () -> Un
             quest["objectives"].arrayValue().forEach { raw ->
                 val row = raw.objectValue()
                 Row {
-                    Checkbox(row["done"] == JsonPrimitive(true), null)
+                    ShareCheckbox(row["done"] == JsonPrimitive(true), null)
                     Text(row.text("text"), Modifier.weight(1f), style = ShareTypography.context)
                 }
             }

@@ -26,10 +26,11 @@ internal fun InventoryToolDialog(uid: String, close: () -> Unit) {
                     context.items,
                     context.metadata,
                 )
-            }.getOrNull()
+            }
+                .getOrNull()
             if (request != null) {
                 val mode = automaticRollMode("auto", rollEffects(context.mechanics, request).first)
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         close()
                         context.roll(request)

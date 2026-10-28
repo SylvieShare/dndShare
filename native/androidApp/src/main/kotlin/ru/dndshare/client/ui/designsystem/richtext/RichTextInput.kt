@@ -58,7 +58,7 @@ internal fun RichTextInputContent(
         }
     }
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        Text(label, style = ShareTypography.group)
+        FieldCaption(label)
         // Reading revision also observes edits made inside the native View.
         val historyState = remember(buffer.revision) { buffer.canUndo to buffer.canRedo }
         RichToolbar(

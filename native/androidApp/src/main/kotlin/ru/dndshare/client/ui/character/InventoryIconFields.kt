@@ -33,7 +33,7 @@ internal fun InventoryIconFields(form: FeatureFormScope) {
                 style = ShareTypography.context,
                 color = WebPalette.TextMuted,
             )
-            TextButton(context.reloadIcons) { Text("Повторить") }
+            ShareTextButton(context.reloadIcons) { Text("Повторить") }
         }
     }
     BoxWithConstraints(Modifier.fillMaxWidth()) {

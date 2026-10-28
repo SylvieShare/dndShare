@@ -132,7 +132,7 @@ internal fun CommandFeatureFields(form: FeatureFormScope, participants: List<Jso
                             emptyList()
                         else peers)
                     .forEach { (id, name) ->
-                        FilterChip(
+                        ShareChoiceChip(
                             id in targets,
                             {
                                 form.input(

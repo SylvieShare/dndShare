@@ -19,7 +19,7 @@ internal fun CreationEquipmentFields(ui: CreationUiState, model: CharacterCreati
     if (draft.version == "2014")
         Row {
             Text("Закупиться позже в магазине", Modifier.weight(1f), style = ShareTypography.group)
-            Switch(
+            ShareSwitch(
                 draft.buyEquipment,
                 { enabled ->
                     model.update { current ->
@@ -77,7 +77,7 @@ internal fun CreationEquipmentFields(ui: CreationUiState, model: CharacterCreati
                     },
                 ) {
                     Row {
-                        RadioButton(
+                        ShareRadioButton(
                             active,
                             onClick = {
                                 model.update {
@@ -137,9 +137,9 @@ private fun EquipmentPicks(
                     { expanded = true },
                     Modifier.fillMaxWidth(),
                 )
-                DropdownMenu(expanded, { expanded = false }) {
+                ShareDropdownMenu(expanded, { expanded = false }) {
                     pick.options.forEach { option ->
-                        DropdownMenuItem(
+                        ShareDropdownMenuItem(
                             text = { Text(option.name) },
                             onClick = {
                                 model.update { draft ->
@@ -191,7 +191,7 @@ internal fun CreationShop(ui: CreationUiState, model: CharacterCreationViewModel
         val item = context.items[row["item_id"].referenceId()]
         Row {
             Text("${item?.name ?: "Предмет"} ×${row["count"].number(1)}", Modifier.weight(1f))
-            TextButton(
+            ShareTextButton(
                 onClick = {
                     model.update { it.copy(cart = it.cart.filterIndexed { i, _ -> i != index }) }
                 }
@@ -221,7 +221,7 @@ internal fun CreationShop(ui: CreationUiState, model: CharacterCreationViewModel
                 Modifier.weight(1f),
                 style = ShareTypography.group,
             )
-            TextButton(
+            ShareTextButton(
                 onClick = {
                     model.update { draft ->
                         draft.copy(
@@ -246,5 +246,5 @@ internal fun CreationShop(ui: CreationUiState, model: CharacterCreationViewModel
             }
         }
     }
-    if (items.size > count) TextButton(onClick = { count += 25 }) { Text("Показать ещё") }
+    if (items.size > count) ShareTextButton(onClick = { count += 25 }) { Text("Показать ещё") }
 }

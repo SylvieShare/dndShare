@@ -22,7 +22,7 @@ internal fun MagicInstanceFields(form: FeatureFormScope, item: CatalogueItem, ca
         val base = magicEquipmentBase(item, params, kind)
         val name = context.items[base]?.name ?: "Выбрать основу"
         Text(kind.title, style = ShareTypography.group)
-        TextButton(onClick = { choosing = kind }, enabled = form.enabled) { Text(name) }
+        ShareTextButton(onClick = { choosing = kind }, enabled = form.enabled) { Text(name) }
     }
     choosing?.let { kind ->
         SheetItemPicker(
@@ -42,7 +42,7 @@ internal fun MagicInstanceFields(form: FeatureFormScope, item: CatalogueItem, ca
     if (item.data.text("attunement") != "none")
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text("Настройка", Modifier.weight(1f), style = ShareTypography.group)
-            Switch(
+            ShareSwitch(
                 state["attuned"] == JsonPrimitive(true),
                 {
                     form.field(listOf("params", "magic", "attuned"), JsonPrimitive(it))
@@ -98,7 +98,7 @@ internal fun MagicInstanceFields(form: FeatureFormScope, item: CatalogueItem, ca
                 form.field(path, JsonPrimitive(it))
             }
             var error by remember(item.id, stock.key) { mutableStateOf<String?>(null) }
-            TextButton(
+            ShareTextButton(
                 onClick = {
                     try {
                         val total = rollDice(stock.rule.text("formula")).total

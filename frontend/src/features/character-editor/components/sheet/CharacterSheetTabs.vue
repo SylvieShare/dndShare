@@ -1,5 +1,5 @@
 <template>
-  <IconNavigation :items="items" :model-value="activeTab" label="Раздел персонажа"
+  <IconNavigation :items="items" :model-value="activeTab" :pill="pill" label="Раздел персонажа"
     data-tutorial="character-tabs" @select="emit('select', $event)">
     <template #icon="{ item }">
       <span class="character-tab-icon" :style="{ maskImage: `url(${item.svg})`, WebkitMaskImage: `url(${item.svg})` }" aria-hidden="true" />
@@ -9,7 +9,7 @@
 <script setup>
 import { computed } from 'vue'
 import { IconNavigation } from '@sylvieshare/share-ui'
-const props = defineProps({ tabs: Array, activeTab: Number })
+const props = defineProps({ tabs: Array, activeTab: Number, pill: Boolean })
 const emit = defineEmits(['select'])
 const items = computed(() => (props.tabs || []).map((tab, index) => ({ key: index, label: tab.title, svg: tab.svg })))
 </script>

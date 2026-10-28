@@ -57,7 +57,7 @@ internal fun SheetStatMorph(
                             Text(
                                 ability.title,
                                 Modifier.weight(1f),
-                                style = ShareTypography.section,
+                                style = ShareTypography.header,
                             )
                             IconButton(
                                 onClick = dismiss,
@@ -85,10 +85,10 @@ internal fun SheetStatMorph(
                             Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
                         ) {
-                            TextButton(onClick = dismiss, enabled = !shown.saving) {
+                            ShareTextButton(onClick = dismiss, enabled = !shown.saving) {
                                 Text("Отмена")
                             }
-                            Button(
+                            ShareButton(
                                 onClick = {
                                     focus.clearFocus()
                                     keyboard?.hide()

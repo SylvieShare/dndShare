@@ -20,6 +20,7 @@ for (const width of [320, 390, 599, 600, 834, 1199, 1200, 1440]) {
     await page.setViewportSize({ width, height: 900 })
     await page.goto('/handbook')
     await expect(page.locator('.hb-collection-card')).toHaveCount(1, { timeout: 20000 })
+    await expect(page.locator('.page-transition-stage')).toHaveCSS('background-image', 'none')
     const header = page.locator('.app-header')
     const rail = page.locator('.desktop-sidebar--rail')
     const desktop = page.locator('.desktop-sidebar--desktop')
@@ -31,6 +32,9 @@ for (const width of [320, 390, 599, 600, 834, 1199, 1200, 1440]) {
       await expect.poll(async () => (await desktop.boundingBox()).width).toBe(224)
       await expect(page.getByRole('button', { name: 'Открыть меню' })).toHaveCount(0)
     } else {
+      await expect(header).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)')
+      await expect(header).toHaveCSS('border-bottom-width', '0px')
+      await expect(header).toHaveCSS('box-shadow', 'none')
       await expect(header.locator('.handbook-heading')).toHaveText('Справочник')
       await expect(header.locator('.header-context')).toHaveText('D&D 5e · 2014')
       expect((await header.boundingBox()).height).toBe(64)

@@ -35,7 +35,7 @@ internal fun CharacterRichInput(
                     "suggest" to "Термин",
                     "stat" to "Показатель",
                 )) {
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         insert(
                             "<span data-rich-node=\"$kind\" data-rich-payload=\"%7B%7D\"></span>",
@@ -89,9 +89,11 @@ private fun RichNodeEditor(html: String, close: () -> Unit, save: (String?) -> U
             },
             close,
             actions = {
-                TextButton(onClick = { save(null) }) { Text("Удалить", color = WebPalette.Danger) }
-                TextButton(close) { Text("Отмена") }
-                Button(
+                ShareTextButton(onClick = { save(null) }) {
+                    Text("Удалить", color = WebPalette.Danger)
+                }
+                ShareTextButton(close) { Text("Отмена") }
+                ShareButton(
                     onClick = {
                         inputs.flush()
                         try {

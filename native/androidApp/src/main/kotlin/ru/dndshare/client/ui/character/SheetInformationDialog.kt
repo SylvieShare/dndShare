@@ -33,7 +33,7 @@ internal fun SheetInformationDialog(
         remote.error?.let { Text(it, color = WebPalette.Danger, style = ShareTypography.context) }
         if (history) {
             if (!remote.historyLoaded && !remote.busy)
-                TextButton(onClick = { commands.history() }) { Text("Загрузить историю") }
+                ShareTextButton(onClick = { commands.history() }) { Text("Загрузить историю") }
             if (remote.historyLoaded && remote.history.isEmpty()) SheetEmpty("История пока пуста")
             remote.history.forEach { row ->
                 ShareTile(framed = false) {
@@ -82,10 +82,13 @@ internal fun SheetInformationDialog(
                 }
             }
             if (remote.historyLoaded && remote.historyMore)
-                TextButton(onClick = { commands.history(more = true) }, enabled = !remote.busy) {
+                ShareTextButton(
+                    onClick = { commands.history(more = true) },
+                    enabled = !remote.busy,
+                ) {
                     Text("Показать ещё")
                 }
-            TextButton(onClick = { history = false }) { Text("К меню персонажа") }
+            ShareTextButton(onClick = { history = false }) { Text("К меню персонажа") }
         } else {
             Text(
                 listOf(sheet.sourceName, sheet.sourceVersion)
@@ -95,13 +98,13 @@ internal fun SheetInformationDialog(
             )
             if (context.canEdit) {
                 Row {
-                    TextButton(
+                    ShareTextButton(
                         onClick = { context.history(false) },
                         enabled = context.canUndo && !remote.busy,
                     ) {
                         Text("Отменить изменение")
                     }
-                    TextButton(
+                    ShareTextButton(
                         onClick = { context.history(true) },
                         enabled = context.canRedo && !remote.busy,
                     ) {
@@ -110,9 +113,9 @@ internal fun SheetInformationDialog(
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text("Публичная ссылка", Modifier.weight(1f), style = ShareTypography.group)
-                    Switch(sheet.publicVisible, commands::visibility, enabled = !remote.busy)
+                    ShareSwitch(sheet.publicVisible, commands::visibility, enabled = !remote.busy)
                 }
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         close()
                         context.edit("portrait")
@@ -120,7 +123,7 @@ internal fun SheetInformationDialog(
                 ) {
                     Text("Портрет")
                 }
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         close()
                         context.edit("icon")
@@ -128,7 +131,7 @@ internal fun SheetInformationDialog(
                 ) {
                     Text("Иконка")
                 }
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         close()
                         context.edit("identity")
@@ -136,7 +139,7 @@ internal fun SheetInformationDialog(
                 ) {
                     Text("Имя персонажа")
                 }
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         close()
                         context.edit("statuses")
@@ -145,7 +148,7 @@ internal fun SheetInformationDialog(
                     Text("Состояния и вдохновение")
                 }
                 if (sheet.templateName == "DND5") {
-                    TextButton(
+                    ShareTextButton(
                         onClick = {
                             close()
                             context.edit("sources")
@@ -153,7 +156,7 @@ internal fun SheetInformationDialog(
                     ) {
                         Text("Источники контента")
                     }
-                    TextButton(
+                    ShareTextButton(
                         onClick = {
                             close()
                             context.edit("proficiencies")
@@ -167,7 +170,7 @@ internal fun SheetInformationDialog(
                         Text("Редакция правил", style = ShareTypography.group)
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             editions.forEach { version ->
-                                FilterChip(
+                                ShareChoiceChip(
                                     version.id == sheet.sourceVersionId,
                                     onClick = {
                                         if (version.id != sheet.sourceVersionId) edition = version
@@ -179,7 +182,7 @@ internal fun SheetInformationDialog(
                         }
                     }
                 }
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         history = true
                         commands.history()
@@ -190,10 +193,10 @@ internal fun SheetInformationDialog(
                 }
             }
             CharacterExportActions()
-            TextButton(onClick = commands::clone, enabled = !remote.busy) {
+            ShareTextButton(onClick = commands::clone, enabled = !remote.busy) {
                 Text("Клонировать персонажа")
             }
-            TextButton(
+            ShareTextButton(
                 onClick = {
                     refresh()
                     close()
@@ -202,7 +205,7 @@ internal fun SheetInformationDialog(
             ) {
                 Text("Обновить лист")
             }
-            TextButton(
+            ShareTextButton(
                 onClick = {
                     close()
                     back()
@@ -212,18 +215,18 @@ internal fun SheetInformationDialog(
                 Text("К персонажам")
             }
             if (context.canEdit)
-                TextButton(onClick = { confirming = true }, enabled = !remote.busy) {
+                ShareTextButton(onClick = { confirming = true }, enabled = !remote.busy) {
                     Text("Удалить персонажа", color = WebPalette.Danger)
                 }
         }
     }
     if (confirming)
-        AlertDialog(
+        ShareAlertDialog(
             onDismissRequest = { confirming = false },
             title = { Text("Удалить персонажа?") },
             text = { Text(sheet.name) },
             confirmButton = {
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         confirming = false
                         commands.delete()
@@ -232,10 +235,12 @@ internal fun SheetInformationDialog(
                     Text("Удалить", color = WebPalette.Danger)
                 }
             },
-            dismissButton = { TextButton(onClick = { confirming = false }) { Text("Отмена") } },
+            dismissButton = {
+                ShareTextButton(onClick = { confirming = false }) { Text("Отмена") }
+            },
         )
     edition?.let { selected ->
-        AlertDialog(
+        ShareAlertDialog(
             onDismissRequest = { edition = null },
             title = { Text("Переключить редакцию на ${selected.version}?") },
             text = {
@@ -244,7 +249,7 @@ internal fun SheetInformationDialog(
                 )
             },
             confirmButton = {
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         edition = null
                         commands.edition(selected.id)
@@ -253,7 +258,7 @@ internal fun SheetInformationDialog(
                     Text("Переключить")
                 }
             },
-            dismissButton = { TextButton(onClick = { edition = null }) { Text("Отмена") } },
+            dismissButton = { ShareTextButton(onClick = { edition = null }) { Text("Отмена") } },
         )
     }
 }

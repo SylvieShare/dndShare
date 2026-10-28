@@ -129,10 +129,10 @@ private fun SelectedTargetPanel(source: SelectedWeaponTarget) {
             if (context.canEdit && state.isNotEmpty())
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     if (state.text("status") == "active")
-                        TextButton(onClick = { confirming = "defeat" }, enabled = !busy) {
+                        ShareTextButton(onClick = { confirming = "defeat" }, enabled = !busy) {
                             Text("Враг погиб")
                         }
-                    TextButton(onClick = { confirming = "correct" }, enabled = !busy) {
+                    ShareTextButton(onClick = { confirming = "correct" }, enabled = !busy) {
                         Text("Исправить выбор")
                     }
                 }
@@ -140,7 +140,7 @@ private fun SelectedTargetPanel(source: SelectedWeaponTarget) {
         }
     }
     confirming?.let { operation ->
-        AlertDialog(
+        ShareAlertDialog(
             onDismissRequest = { confirming = null },
             title = {
                 Text(if (operation == "defeat") "Враг погиб?" else "Сбросить ошибочный выбор?")
@@ -154,7 +154,7 @@ private fun SelectedTargetPanel(source: SelectedWeaponTarget) {
                 )
             },
             confirmButton = {
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         confirming = null
                         perform(operation, buildJsonObject { put("id", source.state.text("id")) })
@@ -163,7 +163,7 @@ private fun SelectedTargetPanel(source: SelectedWeaponTarget) {
                     Text("Подтвердить")
                 }
             },
-            dismissButton = { TextButton(onClick = { confirming = null }) { Text("Отмена") } },
+            dismissButton = { ShareTextButton(onClick = { confirming = null }) { Text("Отмена") } },
         )
     }
 }
@@ -185,7 +185,7 @@ private fun BonusTransferPanel(uid: String, transfer: WeaponBonusTransfer) {
             "Атака / урон: +${transfer.max - amount.toInt()} · защита: +${amount.toInt()}",
             style = ShareTypography.context,
         )
-        Slider(
+        ShareSlider(
             amount,
             { amount = it },
             valueRange = 0f..transfer.max.toFloat(),

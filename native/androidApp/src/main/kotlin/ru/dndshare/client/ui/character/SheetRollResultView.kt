@@ -51,7 +51,7 @@ internal fun SheetRollResultView(result: SheetRollResult?, threshold: Int = 20) 
                         style = ShareTypography.group,
                     )
                 if (current.rolls.size > 50)
-                    TextButton(onClick = { expanded = !expanded }) {
+                    ShareTextButton(onClick = { expanded = !expanded }) {
                         Text(if (expanded) "Свернуть кости" else "Показать все кости")
                     }
                 if (current.bonusDice.isNotEmpty())

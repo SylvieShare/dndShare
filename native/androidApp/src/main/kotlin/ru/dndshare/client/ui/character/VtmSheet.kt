@@ -153,13 +153,13 @@ private fun VtmIdentity(format: LayoutFormat) {
             },
             style = ShareTypography.group,
         )
-        TextButton(
+        ShareTextButton(
             onClick = { context.edit("vtm:xp_total:Всего опыта") },
             enabled = context.canEdit,
         ) {
             Text("Опыт: ${values["xp_total"].number()}")
         }
-        TextButton(
+        ShareTextButton(
             onClick = { context.edit("vtm:xp_spent:Потрачено опыта") },
             enabled = context.canEdit,
         ) {

@@ -26,9 +26,9 @@ internal fun CreationStep(
         0 -> {
             Text("Система", style = ShareTypography.section)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                FilterChip(true, {}, label = { Text("D&D 5e") })
+                ShareChoiceChip(true, {}, label = { Text("D&D 5e") })
                 if (ui.templates.any { it.name == "VTM20" })
-                    FilterChip(
+                    ShareChoiceChip(
                         false,
                         { model.system("VTM20", "V20") },
                         label = { Text("Vampire V20") },
@@ -41,7 +41,7 @@ internal fun CreationStep(
                     ?.versions
                     ?.filter { it.version in listOf("2014", "2024") }
                     ?.forEach { edition ->
-                        FilterChip(
+                        ShareChoiceChip(
                             draft.version == edition.version,
                             { model.edition(edition.version) },
                             label = { Text(edition.version) },

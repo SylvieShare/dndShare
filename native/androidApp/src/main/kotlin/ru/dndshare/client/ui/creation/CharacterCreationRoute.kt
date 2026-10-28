@@ -7,7 +7,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.rememberViewModelStoreOwner
@@ -67,7 +66,7 @@ internal fun CharacterCreationRoute(
     LaunchedEffect(ui.needsAuth, account.user?.id) {
         if (ui.needsAuth && account.user != null) model.create(ui.partialAfterAuth)
     }
-    Dialog(
+    ShareFullscreenDialog(
         onDismissRequest = { if (!ui.busy) close() },
         properties = DialogProperties(usePlatformDefaultWidth = false, dismissOnBackPress = false),
     ) {
@@ -75,7 +74,10 @@ internal fun CharacterCreationRoute(
             if (ui.needsAuth && account.user == null) {
                 BackHandler { model.cancelAuth() }
                 Column {
-                    TextButton(onClick = model::cancelAuth, modifier = Modifier.padding(12.dp)) {
+                    ShareTextButton(
+                        onClick = model::cancelAuth,
+                        modifier = Modifier.padding(12.dp),
+                    ) {
                         Text("К черновику персонажа")
                     }
                     Box(Modifier.weight(1f)) { LoginScreen(account, app::login) }

@@ -125,9 +125,9 @@ internal fun SpellActionsDialog(
             close,
             dismissEnabled = !busy && !saving,
             actions = {
-                TextButton(close, enabled = !busy && !saving) { Text("Закрыть") }
+                ShareTextButton(close, enabled = !busy && !saving) { Text("Закрыть") }
                 if (rules.isNotEmpty())
-                    Button(
+                    ShareButton(
                         onClick = { roll(options) },
                         enabled = context.canEdit && !busy && !saving && plan.isSuccess,
                     ) {
@@ -253,7 +253,7 @@ internal fun SpellActionsDialog(
                         "Спасбросок: $ability · Сл ${it["dc"].number()}${if(it.text("onSuccess")=="half")" · половина урона при успехе" else ""}",
                         style = ShareTypography.context,
                     )
-                    TextButton(
+                    ShareTextButton(
                         onClick = {
                             saving = true
                             scope.launch {
@@ -290,7 +290,7 @@ internal fun SpellActionsDialog(
                 plan.exceptionOrNull()?.message?.let {
                     Text(it, color = WebPalette.Warning, style = ShareTypography.context)
                 }
-            TextButton(
+            ShareTextButton(
                 onClick = { context.edit("spell-cast:$key") },
                 enabled = context.canEdit && !busy && !saving && !blocked,
             ) {

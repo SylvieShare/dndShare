@@ -10,7 +10,7 @@ from exceptions import read_exceptions
 
 MATRIX = json.loads((Path(__file__).with_name("matrix.json")).read_text())
 LABELS = {"collections": "Обзор коллекций", "menu": "Открытое меню", "list": "Список коллекции", "record": "Карточка записи",
-          "character-list": "Список персонажей", "sheet-personality": "D&D · Личность", "sheet-base": "D&D · База", "sheet-death-saves": "D&D · Спасброски от смерти", "sheet-stats": "D&D · Характеристики", "sheet-stat-editor": "D&D · Морф характеристики", "sheet-weapons": "D&D · Оружие", "sheet-magic": "D&D · Магия", "sheet-inventory": "D&D · Предметы", "vtm-base": "VTM · База"}
+          "character-list": "Список персонажей", "character-menu": "Действия персонажа", "sheet-personality": "D&D · Личность", "sheet-base": "D&D · База", "sheet-death-saves": "D&D · Спасброски от смерти", "sheet-stats": "D&D · Характеристики", "sheet-stat-editor": "D&D · Морф характеристики", "sheet-weapons": "D&D · Оружие", "sheet-magic": "D&D · Магия", "sheet-inventory": "D&D · Предметы", "vtm-base": "VTM · База"}
 
 
 def validate_state_labels(matrix):

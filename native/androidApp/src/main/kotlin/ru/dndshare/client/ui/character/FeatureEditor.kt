@@ -88,10 +88,10 @@ internal fun FeatureEditor(
             close,
             dismissEnabled = !editor.saving,
             actions = {
-                TextButton(onClick = close, enabled = !editor.saving) {
+                ShareTextButton(onClick = close, enabled = !editor.saving) {
                     Text(if (editor.commandPending) "Закрыть" else "Отмена")
                 }
-                Button(
+                ShareButton(
                     onClick = {
                         inputs.flush()
                         if (form.data["remove"] == JsonPrimitive(true)) confirmRemoval = true
@@ -214,11 +214,11 @@ internal fun FeatureEditor(
         }
     }
     if (confirmRemoval)
-        AlertDialog(
+        ShareAlertDialog(
             onDismissRequest = { confirmRemoval = false },
             title = { Text("Удалить выбранное содержимое?") },
             confirmButton = {
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         confirmRemoval = false
                         submit()
@@ -227,7 +227,9 @@ internal fun FeatureEditor(
                     Text("Удалить", color = WebPalette.Danger)
                 }
             },
-            dismissButton = { TextButton(onClick = { confirmRemoval = false }) { Text("Отмена") } },
+            dismissButton = {
+                ShareTextButton(onClick = { confirmRemoval = false }) { Text("Отмена") }
+            },
         )
 }
 
@@ -265,7 +267,7 @@ internal fun FeatureFormScope.Choice(
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         options.forEach { (value, title) ->
-            FilterChip(
+            ShareChoiceChip(
                 text(key) == value,
                 { set(key, value) },
                 label = { Text(title) },
@@ -316,8 +318,8 @@ private fun UtilityFeatureFields(form: FeatureFormScope) {
 
 @Composable
 internal fun BonusFields(form: FeatureFormScope) {
-    Text("Бонусы", style = ShareTypography.group)
     val bonuses = form.data["bonuses"].arrayValue()
+    if (bonuses.isNotEmpty()) Text("Бонусы", style = ShareTypography.context)
     key(bonuses.size) {
         bonuses.forEachIndexed { index, raw ->
             val row = raw.objectValue()
@@ -335,7 +337,7 @@ internal fun BonusFields(form: FeatureFormScope) {
                     "Название бонуса",
                 )
                 SheetNumberInput("Значение", row.text("value")) { change("value", it) }
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         form.input(
                             "bonuses",
@@ -352,7 +354,8 @@ internal fun BonusFields(form: FeatureFormScope) {
             }
         }
     }
-    TextButton(
+    ShareDashedAction(
+        "Добавить бонус",
         onClick = {
             form.input(
                 "bonuses",
@@ -364,8 +367,8 @@ internal fun BonusFields(form: FeatureFormScope) {
                         }
                 ),
             )
-        }
-    ) {
-        Text("Добавить бонус")
-    }
+        },
+        enabled = form.enabled,
+        compact = true,
+    )
 }

@@ -141,7 +141,9 @@ private fun InventoryContent() {
                     if (context.canEdit)
                         ShareAction("Изменить", { local.edit("inventory:$uid") }, icon = Glyph.Edit)
                     (entry["magic_item_id"] ?: entry["item_id"]).referenceId()?.let { id ->
-                        TextButton(onClick = { local.openItem(id) }) { Text("Открыть справочник") }
+                        ShareTextButton(onClick = { local.openItem(id) }) {
+                            Text("Открыть справочник")
+                        }
                     }
                 }
             } else Text("Предмет был удалён или перемещён.", style = ShareTypography.context)
@@ -153,14 +155,14 @@ private fun InventoryContent() {
                 .arrayValue()
                 .map { it.objectValue() }
                 .firstOrNull { it.text("id") == id }
-        AlertDialog(
+        ShareAlertDialog(
             onDismissRequest = { deletingSpace = null },
             title = { Text("Удалить секцию?") },
             text = {
                 Text("Секция «${section?.text("name").orEmpty()}» и все её предметы будут удалены.")
             },
             confirmButton = {
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         deletingSpace = null
                         perform(id, "inventory-section-delete", JsonObject(emptyMap()))
@@ -170,12 +172,14 @@ private fun InventoryContent() {
                     Text("Удалить", color = WebPalette.Danger)
                 }
             },
-            dismissButton = { TextButton(onClick = { deletingSpace = null }) { Text("Отмена") } },
+            dismissButton = {
+                ShareTextButton(onClick = { deletingSpace = null }) { Text("Отмена") }
+            },
         )
     }
     deleting?.let { uid ->
         val entry = inventoryEntry(model, uid)
-        AlertDialog(
+        ShareAlertDialog(
             onDismissRequest = { deleting = null },
             title = { Text("Удалить предмет?") },
             text = {
@@ -186,7 +190,7 @@ private fun InventoryContent() {
                 )
             },
             confirmButton = {
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         deleting = null
                         perform(uid, "inventory-delete", JsonObject(emptyMap()))
@@ -196,7 +200,7 @@ private fun InventoryContent() {
                     Text("Удалить", color = WebPalette.Danger)
                 }
             },
-            dismissButton = { TextButton(onClick = { deleting = null }) { Text("Отмена") } },
+            dismissButton = { ShareTextButton(onClick = { deleting = null }) { Text("Отмена") } },
         )
     }
 }

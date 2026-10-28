@@ -45,13 +45,13 @@ internal fun StatusInstanceFields(form: FeatureFormScope, cache: CacheDao) {
                 color = WebPalette.TextMuted,
             )
         Row {
-            TextButton(
+            ShareTextButton(
                 onClick = { expanded = if (expanded == uid) null else uid },
                 enabled = form.enabled,
             ) {
                 Text("Изменить длительность")
             }
-            TextButton(
+            ShareTextButton(
                 onClick = { form.field(listOf("statusEdits", uid, "remove"), JsonPrimitive(true)) },
                 enabled = form.enabled,
             ) {

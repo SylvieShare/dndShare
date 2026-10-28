@@ -35,6 +35,7 @@ internal fun CharacterSheetHeader(
     ShareWorkspaceHeader(
         contentInset = if (format == LayoutFormat.Phone) 8.dp else 14.dp,
         maxContentWidth = DesignTokens.Layout.SheetMax,
+        compact = format != LayoutFormat.Wide,
         navigation =
             if (format == LayoutFormat.Tablet)
                 ({
@@ -44,6 +45,7 @@ internal fun CharacterSheetHeader(
                         images,
                         select,
                         template = sheet?.templateName.orEmpty(),
+                        pill = true,
                     )
                 })
             else null,
@@ -76,7 +78,7 @@ private fun SheetIdentity(
         horizontalArrangement =
             Arrangement.spacedBy(if (format == LayoutFormat.Phone) 8.dp else 14.dp),
     ) {
-        TextButton(
+        ShareTextButton(
             onClick = close,
             colors = ButtonDefaults.textButtonColors(contentColor = WebPalette.TextSecondary),
             modifier =
@@ -93,7 +95,7 @@ private fun SheetIdentity(
                 Text(backTitle)
             }
         }
-        if (format != LayoutFormat.Phone) VerticalDivider(Modifier.height(32.dp))
+        if (format == LayoutFormat.Wide) VerticalDivider(Modifier.height(32.dp))
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
             Text(
                 sheet?.name ?: "Лист персонажа",
@@ -133,6 +135,7 @@ internal fun SheetNavigation(
     compact: Boolean = false,
     template: String = "DND5",
     textOnly: Boolean = false,
+    pill: Boolean = false,
 ) {
     fun title(entry: SheetSection) =
         when {
@@ -171,6 +174,7 @@ internal fun SheetNavigation(
         section.name,
         onSelect = { key -> select(sections.first { it.name == key }) },
         compact = compact,
+        pill = pill,
     ) { key ->
         val entry = sections.first { it.name == key }
         AsyncImage(
@@ -178,7 +182,10 @@ internal fun SheetNavigation(
             null,
             imageLoader = images,
             colorFilter =
-                ColorFilter.tint(if (entry == section) WebPalette.Text else WebPalette.TextMuted),
+                ColorFilter.tint(
+                    if (entry == section) if (pill) WebPalette.AccentSoft else WebPalette.Text
+                    else WebPalette.TextMuted
+                ),
             modifier = Modifier.size(if (compact) 22.dp else 24.dp),
         )
     }

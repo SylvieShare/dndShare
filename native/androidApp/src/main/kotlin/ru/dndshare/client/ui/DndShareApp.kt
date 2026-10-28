@@ -25,6 +25,7 @@ import ru.dndshare.client.app.*
 import ru.dndshare.client.ui.character.CharacterDestination
 import ru.dndshare.client.ui.character.CharacterSheetRoute
 import ru.dndshare.client.ui.creation.CharacterCreationRoute
+import ru.dndshare.client.ui.designsystem.*
 import ru.dndshare.client.ui.designsystem.ShareMorphRoot
 
 @Composable
@@ -81,7 +82,7 @@ fun DndShareApp(controller: AppController, fold: FoldInfo? = null, onBackground:
                     },
                 )
             if (state.confirmLogout)
-                AlertDialog(
+                ShareAlertDialog(
                     onDismissRequest = controller::cancelLogout,
                     title = { Text("Выйти и удалить несохранённые правки?") },
                     text = {
@@ -90,12 +91,12 @@ fun DndShareApp(controller: AppController, fold: FoldInfo? = null, onBackground:
                         )
                     },
                     confirmButton = {
-                        TextButton(onClick = { controller.confirmLogout() }) {
+                        ShareTextButton(onClick = { controller.confirmLogout() }) {
                             Text("Выйти и удалить")
                         }
                     },
                     dismissButton = {
-                        TextButton(onClick = controller::cancelLogout) { Text("Остаться") }
+                        ShareTextButton(onClick = controller::cancelLogout) { Text("Остаться") }
                     },
                 )
         }
@@ -275,7 +276,9 @@ private fun ConnectionStatus(state: AppState, retry: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(state.error, Modifier.weight(1f), style = MaterialTheme.typography.bodySmall)
-                TextButton(onClick = retry, enabled = !state.synchronizing) { Text("Повторить") }
+                ShareTextButton(onClick = retry, enabled = !state.synchronizing) {
+                    Text("Повторить")
+                }
             }
         }
 }

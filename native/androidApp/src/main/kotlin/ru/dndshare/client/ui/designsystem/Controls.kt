@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -20,39 +19,29 @@ fun ShareSearch(
     modifier: Modifier = Modifier,
     placeholder: String = "Поиск по названию — RU / EN…",
 ) {
-    OutlinedTextField(
+    ShareValueInput(
         value,
         onValueChange,
-        modifier.fillMaxWidth().heightIn(min = DesignTokens.Layout.TouchMin).semantics {
-            contentDescription = placeholder
-        },
-        singleLine = true,
-        placeholder = {
-            Text(
-                placeholder,
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        },
-        leadingIcon = { AppGlyph(Glyph.Search, Modifier.size(20.dp)) },
-        trailingIcon = {
-            if (value.isNotEmpty())
-                IconButton(
-                    onClick = { onValueChange("") },
-                    modifier = Modifier.semantics { contentDescription = "Очистить поиск" },
-                ) {
-                    AppGlyph(Glyph.Close, Modifier.size(18.dp))
-                }
-        },
+        placeholder,
+        modifier,
+        showLabel = false,
+        placeholder = placeholder,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        shape = RoundedCornerShape(DesignTokens.Radius.Small),
-        colors =
-            OutlinedTextFieldDefaults.colors(
-                unfocusedContainerColor = WebPalette.Raised,
-                focusedContainerColor = WebPalette.Raised,
-                unfocusedBorderColor = WebPalette.BorderStrong,
-            ),
+        leading = { AppGlyph(Glyph.Search, Modifier.size(20.dp), WebPalette.TextMuted) },
+        trailing =
+            if (value.isNotEmpty())
+                ({
+                    IconButton(
+                        onClick = { onValueChange("") },
+                        modifier =
+                            Modifier.size(24.dp).semantics {
+                                contentDescription = "Очистить поиск"
+                            },
+                    ) {
+                        AppGlyph(Glyph.Close, Modifier.size(16.dp))
+                    }
+                })
+            else null,
     )
 }
 
@@ -65,7 +54,7 @@ fun ShareAction(
     active: Boolean = false,
     enabled: Boolean = true,
 ) {
-    OutlinedButton(
+    ShareOutlinedButton(
         onClick,
         modifier.heightIn(min = DesignTokens.Layout.TouchMin),
         shape = RoundedCornerShape(DesignTokens.Radius.Small),

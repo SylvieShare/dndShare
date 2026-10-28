@@ -95,15 +95,15 @@ internal fun CharacterListCard(
                         ) {
                             Text("⋯", style = ShareTypography.section)
                         }
-                        DropdownMenu(menu, { menu = false }) {
-                            DropdownMenuItem(
+                        ShareDropdownMenu(menu, { menu = false }) {
+                            ShareDropdownMenuItem(
                                 text = { Text("Клонировать") },
                                 onClick = {
                                     menu = false
                                     clone()
                                 },
                             )
-                            DropdownMenuItem(
+                            ShareDropdownMenuItem(
                                 text = { Text("Удалить", color = WebPalette.Danger) },
                                 onClick = {
                                     menu = false

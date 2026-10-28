@@ -26,7 +26,7 @@ internal fun AbilityStatusPanel(bucket: String, entry: JsonObject, item: Catalog
         links.forEach { link ->
             val active = linkedStatusActive(context.sheet, feature, link)
             val effect = context.items[statusEffectId(link)]
-            TextButton(
+            ShareTextButton(
                 onClick = {
                     busy = true
                     scope.launch {
@@ -53,7 +53,7 @@ internal fun AbilityStatusPanel(bucket: String, entry: JsonObject, item: Catalog
         resourceControls(context.sheet, context.items)
             .firstOrNull { it.key == "abilities:$bucket:${featureEntryKey(feature)}" }
             ?.let { resource ->
-                TextButton(
+                ShareTextButton(
                     onClick = { context.adjustResource(resource.key, -1) },
                     enabled = context.canEdit && resource.value > 0,
                 ) {

@@ -32,7 +32,7 @@ internal fun CreationSelection(
     Text(title, style = ShareTypography.section)
     if (selected != null && !browsing) {
         CreationChoiceCard(selected, true, images, {}, { detail = selected })
-        TextButton(onClick = { browsing = true }) { Text("Выбрать другой вариант") }
+        ShareTextButton(onClick = { browsing = true }) { Text("Выбрать другой вариант") }
     } else {
         ShareSearch(
             query,
@@ -66,7 +66,7 @@ internal fun CreationSelection(
                 "Подходящих вариантов нет. Проверьте редакцию и выбранные книги.",
                 style = ShareTypography.context,
             )
-        if (rows.size > shown) TextButton(onClick = { shown += 24 }) { Text("Показать ещё") }
+        if (rows.size > shown) ShareTextButton(onClick = { shown += 24 }) { Text("Показать ещё") }
     }
     detail?.let { item ->
         ShareFormDialog(item.name, { detail = null }) {
@@ -129,7 +129,7 @@ private fun CreationChoiceCard(
                     Text(it, style = ShareTypography.context, color = WebPalette.TextMuted)
                 }
             }
-            TextButton(onClick = detail) { Text("Подробнее") }
+            ShareTextButton(onClick = detail) { Text("Подробнее") }
         }
     }
 }
@@ -160,7 +160,7 @@ internal fun CreationChoiceRows(
                     .filter { it.second.contains(query, true) }
                     .forEach { (value, label) ->
                         val selected = value in draft.choices[row.key].orEmpty()
-                        FilterChip(
+                        ShareChoiceChip(
                             selected,
                             { choose(row.key, value, row.count) },
                             label = { Text(label) },

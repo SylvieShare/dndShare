@@ -128,7 +128,7 @@ internal fun SpellFeatureFields(form: FeatureFormScope, cache: CacheDao) {
                                 }
                             }
                         }
-                        TextButton(
+                        ShareTextButton(
                             onClick = {
                                 form.input(
                                     pool,
@@ -144,7 +144,7 @@ internal fun SpellFeatureFields(form: FeatureFormScope, cache: CacheDao) {
                         }
                     }
                 }
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         form.input(
                             pool,

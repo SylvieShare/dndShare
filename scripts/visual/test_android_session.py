@@ -72,7 +72,7 @@ class AndroidSessionTest(unittest.TestCase):
                     device.screen = 'overview'
                 def snapshot(device, output, format_, state, *args):
                     expected = {'collections': 'overview', 'menu': 'overview', 'list': 'list', 'record': 'record',
-                                'character-list': 'characters', 'sheet-personality': 'dnd', 'sheet-base': 'dnd', 'sheet-death-saves': 'dnd', 'sheet-stats': 'dnd', 'sheet-stat-editor': 'editor', 'sheet-weapons': 'dnd', 'sheet-magic': 'dnd', 'sheet-inventory': 'dnd', 'vtm-base': 'vtm'}
+                                'character-list': 'characters', 'character-menu': 'characters', 'sheet-personality': 'dnd', 'sheet-base': 'dnd', 'sheet-death-saves': 'dnd', 'sheet-stats': 'dnd', 'sheet-stat-editor': 'editor', 'sheet-weapons': 'dnd', 'sheet-magic': 'dnd', 'sheet-inventory': 'dnd', 'vtm-base': 'vtm'}
                     self.assertEqual(device.screen, expected[state])
                     return {'format': format_['name'], 'state': state}
                 def restore(*args):

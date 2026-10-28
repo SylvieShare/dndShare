@@ -103,10 +103,16 @@ for (const format of matrix.formats) {
     await expect(page.locator('.item-detail-cover')).toBeVisible()
     await snapshot('record')
     }
-    if (wanted.has('character-list')) {
+    if (wanted.has('character-list') || wanted.has('character-menu')) {
       await page.goto('/chars', { waitUntil: 'networkidle' })
       await expect(page.getByPlaceholder('Найти персонажа')).toBeVisible()
       await snapshot('character-list')
+      if(wanted.has('character-menu')) {
+        await page.locator('.char-card').filter({hasText: fixture.characters[0].name}).getByTitle('Действия',{exact:true}).click()
+        await expect(page.getByText('Клонировать',{exact:true})).toBeVisible()
+        await snapshot('character-menu')
+        await page.keyboard.press('Escape')
+      }
     }
     const dnd = fixture.characters[0], vtm = fixture.characters[1]
     if (['sheet-base','sheet-death-saves','sheet-stats','sheet-stat-editor','sheet-weapons','sheet-magic','sheet-inventory','sheet-personality'].some(state => wanted.has(state))) {

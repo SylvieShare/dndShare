@@ -36,6 +36,8 @@ CSS использует `@media (--ui-phone)`, `(--ui-tablet)`, `(--ui-compact)
 `(--ui-desktop)` и `(--ui-from-tablet)`: локальный PostCSS-плагин подставляет
 пороги из того же источника. CSS custom properties не подставляются в media query.
 
+Роли input/number/toggle/checkbox/slider и compact-navigation задают общий вид веб-контролов и их нативной реализации. Default canvas ровный, сюжетный grid включается явно.
+
 Роль Header едина для шапок приложения, справочника, листа и сессии: 16/21.
 Отдельной роли для пути коллекции нет; открытие коллекции не меняет размер
 названия раздела.

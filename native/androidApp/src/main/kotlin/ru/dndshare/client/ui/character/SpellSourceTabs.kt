@@ -69,7 +69,9 @@ internal fun SpellSourceTabs(tabs: List<JsonObject>, selected: String?, select: 
                 )
         }
         if (context.canEdit && tabs.size > 1)
-            TextButton(onClick = { context.edit("reorder:spell-tabs") }) { Text("Порядок книг") }
+            ShareTextButton(onClick = { context.edit("reorder:spell-tabs") }) {
+                Text("Порядок книг")
+            }
         HorizontalDivider(color = WebPalette.Border)
     }
 }

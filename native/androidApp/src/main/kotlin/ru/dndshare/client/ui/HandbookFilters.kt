@@ -13,35 +13,80 @@ import ru.dndshare.client.ui.designsystem.*
 
 @Composable
 internal fun HandbookFilters(
-    type: ItemType?, metadata: HandbookMetadata, selected: JsonObject, books: List<Long>,
-    update: (JsonObject) -> Unit, updateBooks: (List<Long>) -> Unit, dismiss: () -> Unit,
+    type: ItemType?,
+    metadata: HandbookMetadata,
+    selected: JsonObject,
+    books: List<Long>,
+    update: (JsonObject) -> Unit,
+    updateBooks: (List<Long>) -> Unit,
+    dismiss: () -> Unit,
 ) {
-    AlertDialog(onDismissRequest = dismiss, title = { Text("Фильтры и источники", style = ShareTypography.section) },
-        confirmButton = { TextButton(onClick = dismiss) { Text("Готово") } },
-        dismissButton = { TextButton(onClick = { update(JsonObject(emptyMap())); updateBooks(emptyList()) }) { Text("Сбросить") } },
+    ShareAlertDialog(
+        onDismissRequest = dismiss,
+        title = { Text("Фильтры и источники", style = ShareTypography.header) },
+        confirmButton = { ShareTextButton(onClick = dismiss) { Text("Готово") } },
+        dismissButton = {
+            ShareTextButton(
+                onClick = {
+                    update(JsonObject(emptyMap()))
+                    updateBooks(emptyList())
+                }
+            ) {
+                Text("Сбросить")
+            }
+        },
         text = {
-            Column(Modifier.heightIn(max = 480.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                filterFields(type?.fields as? JsonArray ?: JsonArray(emptyList())).forEach { (path, field) ->
+            Column(
+                Modifier.heightIn(max = 480.dp).verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                filterFields(type?.fields as? JsonArray ?: JsonArray(emptyList())).forEach {
+                    (path, field) ->
                     val options = filterChoices(field, metadata)
-                    if (options.isNotEmpty()) ShareSection(field.text("name").ifBlank { path }) {
-                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                            options.forEach { (value, label) ->
-                                val values = (selected[path] as? JsonArray)?.toList().orEmpty()
-                                ShareAction(label, {
-                                    val next = if (value in values) values - value else values + value
-                                    update(JsonObject(selected.toMutableMap().apply { if (next.isEmpty()) remove(path) else put(path, JsonArray(next)) }))
-                                }, active = value in values)
+                    if (options.isNotEmpty())
+                        ShareSection(field.text("name").ifBlank { path }) {
+                            FlowRow(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp),
+                            ) {
+                                options.forEach { (value, label) ->
+                                    val values = (selected[path] as? JsonArray)?.toList().orEmpty()
+                                    ShareAction(
+                                        label,
+                                        {
+                                            val next =
+                                                if (value in values) values - value
+                                                else values + value
+                                            update(
+                                                JsonObject(
+                                                    selected.toMutableMap().apply {
+                                                        if (next.isEmpty()) remove(path)
+                                                        else put(path, JsonArray(next))
+                                                    }
+                                                )
+                                            )
+                                        },
+                                        active = value in values,
+                                    )
+                                }
                             }
                         }
-                    }
                 }
                 ShareSection("Источники") {
                     metadata.books.forEach { book ->
-                        ShareAction(book.name, { updateBooks(if (book.id in books) books - book.id else books + book.id) },
-                            active = book.id in books)
+                        ShareAction(
+                            book.name,
+                            {
+                                updateBooks(
+                                    if (book.id in books) books - book.id else books + book.id
+                                )
+                            },
+                            active = book.id in books,
+                        )
                     }
                     if (metadata.books.isEmpty()) Text("Источники для этой системы не указаны")
                 }
             }
-        })
+        },
+    )
 }

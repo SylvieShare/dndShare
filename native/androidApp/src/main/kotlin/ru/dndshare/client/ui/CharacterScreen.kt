@@ -94,7 +94,7 @@ fun CharacterScreen(
                             fontWeight = FontWeight.Bold,
                         ),
                 )
-                Button(
+                ShareButton(
                     onClick = create,
                     colors =
                         ButtonDefaults.buttonColors(
@@ -117,7 +117,7 @@ fun CharacterScreen(
             (failure ?: state.characterError)?.let { message ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(message, Modifier.weight(1f), color = WebPalette.Danger)
-                    TextButton(
+                    ShareTextButton(
                         onClick = {
                             failure = null
                             refresh()
@@ -193,12 +193,12 @@ fun CharacterScreen(
         }
     }
     deleting?.let { character ->
-        AlertDialog(
+        ShareAlertDialog(
             onDismissRequest = { if (!busy) deleting = null },
             title = { Text("Удалить персонажа?") },
             text = { Text(character.name) },
             confirmButton = {
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         deleting = null
                         action { api.deleteCharacter(character.uuid) }
@@ -208,7 +208,7 @@ fun CharacterScreen(
                     Text("Удалить", color = WebPalette.Danger)
                 }
             },
-            dismissButton = { TextButton(onClick = { deleting = null }) { Text("Отмена") } },
+            dismissButton = { ShareTextButton(onClick = { deleting = null }) { Text("Отмена") } },
         )
     }
 }

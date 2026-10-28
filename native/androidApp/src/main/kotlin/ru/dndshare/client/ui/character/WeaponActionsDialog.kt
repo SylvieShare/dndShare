@@ -72,8 +72,8 @@ internal fun WeaponActionsDialog(
         close,
         dismissEnabled = !busy,
         actions = {
-            TextButton(close, enabled = !busy) { Text("Закрыть") }
-            Button(
+            ShareTextButton(close, enabled = !busy) { Text("Закрыть") }
+            ShareButton(
                 onClick = { damage(options) },
                 enabled = !busy && context.canEdit && plan.isSuccess,
             ) {
@@ -89,7 +89,7 @@ internal fun WeaponActionsDialog(
                     "disadvantage" to "Помеха",
                 )
                 .forEach { (value, title) ->
-                    FilterChip(
+                    ShareChoiceChip(
                         mode == value,
                         { mode = value },
                         label = { Text(title) },

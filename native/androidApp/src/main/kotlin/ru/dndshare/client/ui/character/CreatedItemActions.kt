@@ -40,7 +40,7 @@ private fun createdItemActionsForEntry(entry: JsonObject): List<ShareMenuAction>
         }
     }
     if (confirming)
-        AlertDialog(
+        ShareAlertDialog(
             onDismissRequest = { confirming = false },
             title = { Text("Срок действия закончился?") },
             text = {
@@ -48,15 +48,19 @@ private fun createdItemActionsForEntry(entry: JsonObject): List<ShareMenuAction>
                     "Остаток этой стопки (${entry["count"].number(1)} шт.) исчезнет из инвентаря. Отмечайте это по игровому времени."
                 )
             },
-            confirmButton = { TextButton(onClick = { expire() }) { Text("Предметы исчезли") } },
-            dismissButton = { TextButton(onClick = { confirming = false }) { Text("Отмена") } },
+            confirmButton = {
+                ShareTextButton(onClick = { expire() }) { Text("Предметы исчезли") }
+            },
+            dismissButton = {
+                ShareTextButton(onClick = { confirming = false }) { Text("Отмена") }
+            },
         )
     error?.let { message ->
-        AlertDialog(
+        ShareAlertDialog(
             onDismissRequest = { error = null },
             title = { Text("Не удалось изменить предмет") },
             text = { Text(message) },
-            confirmButton = { TextButton(onClick = { error = null }) { Text("Закрыть") } },
+            confirmButton = { ShareTextButton(onClick = { error = null }) { Text("Закрыть") } },
         )
     }
     return listOf(

@@ -264,24 +264,24 @@ internal fun SheetDiceNotificationCard(
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 if (notice.request.repeatable)
-                    TextButton(repeat, enabled = !locked) {
+                    ShareTextButton(repeat, enabled = !locked) {
                         Text(if (notice.error == null) "Ещё раз" else "Повторить")
                     }
                 if (result != null)
-                    TextButton({ expanded = !expanded }) {
+                    ShareTextButton({ expanded = !expanded }) {
                         Text(if (expanded) "Свернуть" else "Подробности")
                     }
                 if (notice.request.formula == null && notice.request.repeatable)
                     Box {
-                        TextButton({ selectingMode = true }, enabled = !locked) {
+                        ShareTextButton({ selectingMode = true }, enabled = !locked) {
                             Text(
                                 rollModeOptions.firstOrNull { it.first == notice.mode }?.second
                                     ?: "Авто"
                             )
                         }
-                        DropdownMenu(selectingMode, { selectingMode = false }) {
+                        ShareDropdownMenu(selectingMode, { selectingMode = false }) {
                             rollModeOptions.forEach { (key, title) ->
-                                DropdownMenuItem(
+                                ShareDropdownMenuItem(
                                     text = { Text(title) },
                                     onClick = {
                                         selectingMode = false
@@ -293,7 +293,7 @@ internal fun SheetDiceNotificationCard(
                     }
             }
             notice.actions.forEach { action ->
-                TextButton({ reroll(action.key) }, enabled = !locked) { Text(action.label) }
+                ShareTextButton({ reroll(action.key) }, enabled = !locked) { Text(action.label) }
             }
         }
     }

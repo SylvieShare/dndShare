@@ -14,3 +14,21 @@ class VisibleInputTest(unittest.TestCase):
         root = ET.fromstring('<hierarchy><node bounds="[0,0][390,500]"><node bounds="[10,600][380,650]" /></node></hierarchy>')
         with self.assertRaisesRegex(AssertionError, 'no visible'):
             visible_input_bounds(root, list(root.iter('node'))[-1])
+
+
+class ExternalCaptionTest(unittest.TestCase):
+    def test_enter_uses_the_editable_inside_its_description_instead_of_the_caption(self):
+        from native_controls import NativeControls
+        class Device:
+            tapped = None
+            typed = None
+            def tree(self):
+                return ET.fromstring('<hierarchy><node bounds="[0,0][390,900]"><node text="Количество" bounds="[0,0][80,20]"/><node class="android.widget.EditText" text="12" bounds="[100,40][148,60]"/><node content-desc="Количество" bounds="[72,32][176,68]"/></node></hierarchy>')
+            def shell(self,*command):
+                if command[:2] == ('input','text'):self.typed=command[2]
+                return ''
+            def tap(self,node):self.tapped=node.get('bounds')
+        device=Device()
+        NativeControls(device).enter('Количество','37')
+        self.assertEqual(device.tapped,'[100,40][148,60]')
+        self.assertEqual(device.typed,'37')

@@ -157,17 +157,20 @@ internal fun LastChargePanel(uid: String) {
         if (context.canEdit)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 if (check.text("status") == "pending")
-                    TextButton({ action("roll") }, enabled = !busy && lastChargeRuleValid(rule)) {
+                    ShareTextButton(
+                        { action("roll") },
+                        enabled = !busy && lastChargeRuleValid(rule),
+                    ) {
                         Text("Проверить")
                     }
-                TextButton({ confirming = true }, enabled = !busy) {
+                ShareTextButton({ confirming = true }, enabled = !busy) {
                     Text(if (lost) "Отменить утрату магии" else "Отменить проверку")
                 }
             }
         error?.let { Text(it, color = WebPalette.Danger, style = ShareTypography.context) }
     }
     if (confirming)
-        AlertDialog(
+        ShareAlertDialog(
             onDismissRequest = { confirming = false },
             title = { Text("Отменить проверку?") },
             text = {
@@ -176,13 +179,13 @@ internal fun LastChargePanel(uid: String) {
                 )
             },
             confirmButton = {
-                TextButton({
+                ShareTextButton({
                     confirming = false
                     action("undo")
                 }) {
                     Text("Подтвердить")
                 }
             },
-            dismissButton = { TextButton({ confirming = false }) { Text("Отмена") } },
+            dismissButton = { ShareTextButton({ confirming = false }) { Text("Отмена") } },
         )
 }

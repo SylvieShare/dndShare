@@ -34,7 +34,7 @@ internal fun FeatureFormScope.ItemChoice(
             }
     ShareAction(name, { choosing = true }, Modifier.fillMaxWidth(), icon = Glyph.Book)
     if (id != null)
-        TextButton(onClick = { context.openItem(id) }) { Text("Посмотреть в справочнике") }
+        ShareTextButton(onClick = { context.openItem(id) }) { Text("Посмотреть в справочнике") }
     if (choosing)
         SheetItemPicker(
             cache,

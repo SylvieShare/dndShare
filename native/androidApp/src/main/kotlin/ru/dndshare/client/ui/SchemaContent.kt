@@ -116,7 +116,7 @@ private fun ItemReference(cache: CacheDao, sourceId: Long, id: Long, open: (Long
                 value = payload?.let { WireJson.decodeFromString<CatalogueItem>(it).name }
             }
         }
-    TextButton(
+    ShareTextButton(
         onClick = { open(id) },
         enabled = name != null,
         contentPadding = PaddingValues(0.dp),

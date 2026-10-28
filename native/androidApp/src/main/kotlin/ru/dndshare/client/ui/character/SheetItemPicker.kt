@@ -8,8 +8,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
 import ru.dndshare.client.character.*
 import ru.dndshare.client.data.CacheDao
@@ -57,97 +55,85 @@ internal fun SheetItemPicker(
                     value = it.map { row -> WireJson.decodeFromString<CatalogueItem>(row.payload) }
                 }
         }
-    Dialog(close, properties = DialogProperties(usePlatformDefaultWidth = false)) {
-        Surface(
-            Modifier.widthIn(max = 900.dp)
-                .fillMaxWidth()
-                .fillMaxHeight(.92f)
-                .imePadding()
-                .padding(12.dp),
-            color = WebPalette.Surface,
-            shape = MaterialTheme.shapes.large,
-        ) {
-            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Row {
-                    Text("Справочник", Modifier.weight(1f), style = ShareTypography.section)
-                    TextButton(close) { Text("Закрыть") }
-                }
-                ShareSearch(
-                    query,
-                    {
-                        query = it
-                        count = 100
-                    },
-                )
-                if (types.size > 1)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        types.forEach { id ->
-                            FilterChip(
-                                type == id,
-                                {
-                                    type = id
-                                    count = 100
-                                },
-                                label = {
-                                    Text(
-                                        context.metadata.types.firstOrNull { it.id == id }?.name
-                                            ?: "Коллекция $id"
-                                    )
-                                },
+    ShareWindow(
+        onDismissRequest = close,
+        title = { Text("Справочник", style = ShareTypography.header) },
+        scrollContent = false,
+    ) {
+        ShareSearch(
+            query,
+            {
+                query = it
+                count = 100
+            },
+        )
+        if (types.size > 1)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                types.forEach { id ->
+                    ShareChoiceChip(
+                        type == id,
+                        {
+                            type = id
+                            count = 100
+                        },
+                        label = {
+                            Text(
+                                context.metadata.types.firstOrNull { it.id == id }?.name
+                                    ?: "Коллекция $id"
                             )
-                        }
+                        },
+                    )
+                }
+            }
+        if (rows == null) CircularProgressIndicator()
+        else
+            LazyColumn(
+                Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                if (rows.isNullOrEmpty())
+                    item {
+                        SheetEmpty(
+                            "Ничего не найдено. Проверьте синхронизацию справочника и редакцию."
+                        )
                     }
-                if (rows == null) CircularProgressIndicator()
-                else
-                    LazyColumn(
-                        Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                items(rows.orEmpty(), key = { it.id }) { item ->
+                    val reasons = eligibility(item)
+                    ShareTile(
+                        onClick = if (reasons.isEmpty()) ({ select(item) }) else null,
+                        framed = false,
                     ) {
-                        if (rows.isNullOrEmpty())
-                            item {
-                                SheetEmpty(
-                                    "Ничего не найдено. Проверьте синхронизацию справочника и редакцию."
+                        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                            item.iconImageUrl?.let {
+                                AsyncImage(
+                                    it,
+                                    null,
+                                    imageLoader = context.images,
+                                    modifier = Modifier.size(48.dp),
                                 )
                             }
-                        items(rows.orEmpty(), key = { it.id }) { item ->
-                            val reasons = eligibility(item)
-                            ShareTile(
-                                onClick = if (reasons.isEmpty()) ({ select(item) }) else null,
-                                framed = false,
-                            ) {
-                                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                                    item.iconImageUrl?.let {
-                                        AsyncImage(
-                                            it,
-                                            null,
-                                            imageLoader = context.images,
-                                            modifier = Modifier.size(48.dp),
-                                        )
-                                    }
-                                    Column(Modifier.weight(1f)) {
-                                        Text(item.name, style = ShareTypography.group)
-                                        item.nameEn?.let {
-                                            Text(
-                                                it,
-                                                style = ShareTypography.context,
-                                                color = WebPalette.TextMuted,
-                                            )
-                                        }
-                                        reasons.forEach {
-                                            Text(
-                                                it,
-                                                style = ShareTypography.context,
-                                                color = WebPalette.Warning,
-                                            )
-                                        }
-                                    }
+                            Column(Modifier.weight(1f)) {
+                                Text(item.name, style = ShareTypography.group)
+                                item.nameEn?.let {
+                                    Text(
+                                        it,
+                                        style = ShareTypography.context,
+                                        color = WebPalette.TextMuted,
+                                    )
+                                }
+                                reasons.forEach {
+                                    Text(
+                                        it,
+                                        style = ShareTypography.context,
+                                        color = WebPalette.Warning,
+                                    )
                                 }
                             }
                         }
-                        if (rows.orEmpty().size >= count)
-                            item { TextButton(onClick = { count += 100 }) { Text("Показать ещё") } }
                     }
+                }
+                if (rows.orEmpty().size >= count)
+                    item { ShareTextButton(onClick = { count += 100 }) { Text("Показать ещё") } }
             }
-        }
     }
 }

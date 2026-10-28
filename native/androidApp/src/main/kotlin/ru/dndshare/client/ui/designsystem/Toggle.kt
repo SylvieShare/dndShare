@@ -23,6 +23,6 @@ fun ShareToggle(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(label, Modifier.weight(1f), style = ShareTypography.group)
-        Switch(checked, null, enabled = enabled)
+        ShareSwitch(checked, null, enabled = enabled)
     }
 }

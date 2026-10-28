@@ -48,18 +48,20 @@ internal fun RichObjectDialog(value: RichObject, close: () -> Unit, save: (RichO
             value.label,
             close,
             actions = {
-                TextButton(onClick = { save(null) }) { Text("Удалить", color = WebPalette.Danger) }
-                TextButton(close) { Text("Отмена") }
-                Button(
+                ShareTextButton(onClick = { save(null) }) {
+                    Text("Удалить", color = WebPalette.Danger)
+                }
+                ShareTextButton(close) { Text("Отмена") }
+                ShareButton(
                     onClick = {
                         inputs.flush()
                         if (element == null) {
                             error = "Не удалось прочитать элемент."
-                            return@Button
+                            return@ShareButton
                         }
                         if (text == initialText && url == element.attr("src")) {
                             save(value)
-                            return@Button
+                            return@ShareButton
                         }
                         when (element.tagName()) {
                             "img" -> {
@@ -70,7 +72,7 @@ internal fun RichObjectDialog(value: RichObject, close: () -> Unit, save: (RichO
                                         url.startsWith('/'))
                                 ) {
                                     error = "Укажите адрес изображения."
-                                    return@Button
+                                    return@ShareButton
                                 }
                                 element.attr("src", url)
                                 element.attr("alt", text)
@@ -154,11 +156,11 @@ private fun RichTableDialog(value: RichObject, close: () -> Unit, save: (RichObj
             "Таблица",
             close,
             actions = {
-                TextButton(onClick = { save(null) }) {
+                ShareTextButton(onClick = { save(null) }) {
                     Text("Удалить таблицу", color = WebPalette.Danger)
                 }
-                TextButton(close) { Text("Отмена") }
-                Button(
+                ShareTextButton(close) { Text("Отмена") }
+                ShareButton(
                     onClick = {
                         inputs.flush()
                         save(value.copy(html = table.html()))
@@ -170,22 +172,25 @@ private fun RichTableDialog(value: RichObject, close: () -> Unit, save: (RichObj
         ) {
             Text("${table.rows} × ${table.columns}", style = ShareTypography.group)
             Row {
-                TextButton(
+                ShareTextButton(
                     onClick = { rowStart = (rowStart - 10).coerceAtLeast(0) },
                     enabled = rowStart > 0,
                 ) {
                     Text("↑ 10 строк")
                 }
-                TextButton(onClick = { rowStart += 10 }, enabled = rowStart + 10 < table.rows) {
+                ShareTextButton(
+                    onClick = { rowStart += 10 },
+                    enabled = rowStart + 10 < table.rows,
+                ) {
                     Text("↓ 10 строк")
                 }
-                TextButton(
+                ShareTextButton(
                     onClick = { columnStart = (columnStart - 8).coerceAtLeast(0) },
                     enabled = columnStart > 0,
                 ) {
                     Text("← 8")
                 }
-                TextButton(
+                ShareTextButton(
                     onClick = { columnStart += 8 },
                     enabled = columnStart + 8 < table.columns,
                 ) {
@@ -247,9 +252,9 @@ private fun RichTableDialog(value: RichObject, close: () -> Unit, save: (RichObj
                 ShareRichTextInput(cell.html, { cell.html = it }, "Содержимое ячейки")
             }
             Row {
-                Checkbox(cell.header, { action { cell.header = it } })
+                ShareCheckbox(cell.header, { action { cell.header = it } })
                 Text("Ячейка заголовка")
-                Checkbox(
+                ShareCheckbox(
                     range,
                     {
                         range = it
@@ -260,17 +265,21 @@ private fun RichTableDialog(value: RichObject, close: () -> Unit, save: (RichObj
                 Text("Диапазон")
             }
             FlowRow {
-                TextButton(onClick = { action { table.addRow(cell.row) } }) { Text("+ Строка") }
-                TextButton(onClick = { action { table.addColumn(cell.column) } }) {
+                ShareTextButton(onClick = { action { table.addRow(cell.row) } }) {
+                    Text("+ Строка")
+                }
+                ShareTextButton(onClick = { action { table.addColumn(cell.column) } }) {
                     Text("+ Столбец")
                 }
-                TextButton(onClick = { action { table.removeRow(cell.row) } }) { Text("− Строка") }
-                TextButton(onClick = { action { table.removeColumn(cell.column) } }) {
+                ShareTextButton(onClick = { action { table.removeRow(cell.row) } }) {
+                    Text("− Строка")
+                }
+                ShareTextButton(onClick = { action { table.removeColumn(cell.column) } }) {
                     Text("− Столбец")
                 }
-                TextButton(onClick = { action { table.split(cell) } }) { Text("Разделить") }
+                ShareTextButton(onClick = { action { table.split(cell) } }) { Text("Разделить") }
                 if (anchor != null && extent != null)
-                    TextButton(
+                    ShareTextButton(
                         onClick = {
                             action {
                                 selected = table.merge(anchor!!, extent!!).id

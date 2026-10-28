@@ -7,7 +7,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil3.ImageLoader
 import ru.dndshare.client.character.*
@@ -19,7 +18,7 @@ import ru.dndshare.client.ui.designsystem.*
 @Composable
 internal fun CreationPreview(ui: CreationUiState, images: ImageLoader, close: () -> Unit) {
     val result = remember(ui.draft, ui.catalogue) { runCatching { assembleCharacter(ui.context) } }
-    Dialog(close, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+    ShareFullscreenDialog(close, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         Surface(Modifier.fillMaxSize(), color = WebPalette.Background) {
             BoxWithConstraints(
                 Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)
@@ -67,14 +66,27 @@ internal fun CreationPreview(ui: CreationUiState, images: ImageLoader, close: ()
                             if (format == LayoutFormat.Wide)
                                 DndWideSheet(section, sections, { selected = it })
                             else
-                                Column(
-                                    Modifier.fillMaxSize()
-                                        .verticalScroll(rememberScrollState())
-                                        .padding(20.dp),
-                                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                                ) {
-                                    SheetNavigation(sections, section, images, { selected = it })
-                                    DndSheetSection(section, format)
+                                Column(Modifier.fillMaxSize()) {
+                                    if (format == LayoutFormat.Phone)
+                                        ShareSubheader {
+                                            SheetNavigation(
+                                                sections,
+                                                section,
+                                                images,
+                                                { selected = it },
+                                                compact = true,
+                                                pill = true,
+                                            )
+                                        }
+                                    Column(
+                                        Modifier.weight(1f)
+                                            .fillMaxWidth()
+                                            .verticalScroll(rememberScrollState())
+                                            .padding(20.dp),
+                                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                                    ) {
+                                        DndSheetSection(section, format)
+                                    }
                                 }
                         }
                     }

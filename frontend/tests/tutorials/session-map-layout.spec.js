@@ -115,7 +115,10 @@ for (const mobile of [false, true])
     await page.goto(
       "/tests/tutorials/fixtures/tutorials.html?page=/sessions/test",
     );
+    await page.getByRole("button", { name: "Сюжет", exact: true }).click();
+    await expect(page.locator(".chapter-canvas-stage")).toHaveCSS("background-image", /radial-gradient/);
     await page.getByRole("button", { name: "Карта", exact: true }).click();
+    await expect(page.locator(".chapter-canvas-stage")).toHaveCSS("background-image", "none");
     await expect(page.locator(".session-map-workspace")).toBeVisible();
     await expect(page.getByText("Подготавливаем карту…")).toHaveCount(0);
     const before = await page.locator(".map-canvas canvas").elementHandle();

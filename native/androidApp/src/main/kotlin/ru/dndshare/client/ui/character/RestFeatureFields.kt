@@ -31,7 +31,7 @@ internal fun RestFeatureFields(form: FeatureFormScope) {
                 row["total"].number() -
                     row["used"].number() -
                     spent.count { it.objectValue().text("die") == die }
-            Button(
+            ShareButton(
                 onClick = {
                     val con = abilityModifier(context.mechanics.score("CON"))
                     val result = rollDice("1$die${signed(con)}")
@@ -93,7 +93,7 @@ internal fun RestFeatureFields(form: FeatureFormScope) {
                 if (result != null)
                     Text("Бросок: ${result.jsonPrimitive.content}", color = WebPalette.Success)
                 else
-                    TextButton(
+                    ShareTextButton(
                         onClick = {
                             val roll = rollDice(dawn.text("formula"))
                             form.input(

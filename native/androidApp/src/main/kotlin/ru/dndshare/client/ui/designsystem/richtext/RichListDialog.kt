@@ -22,9 +22,11 @@ internal fun RichListDialog(value: RichObject, close: () -> Unit, save: (RichObj
             value.label,
             close,
             actions = {
-                TextButton({ save(null) }) { Text("Удалить список", color = WebPalette.Danger) }
-                TextButton(close) { Text("Отмена") }
-                Button({
+                ShareTextButton({ save(null) }) {
+                    Text("Удалить список", color = WebPalette.Danger)
+                }
+                ShareTextButton(close) { Text("Отмена") }
+                ShareButton({
                     inputs.flush()
                     save(value.copy(html = model.html()))
                 }) {
@@ -34,13 +36,13 @@ internal fun RichListDialog(value: RichObject, close: () -> Unit, save: (RichObj
         ) {
             val entries = remember(revision) { model.entries.toList() }
             Row {
-                TextButton(
+                ShareTextButton(
                     { change { start = (start - 10).coerceAtLeast(0) } },
                     enabled = start > 0,
                 ) {
                     Text("Предыдущие")
                 }
-                TextButton({ change { start += 10 } }, enabled = start + 10 < entries.size) {
+                ShareTextButton({ change { start += 10 } }, enabled = start + 10 < entries.size) {
                     Text("Следующие")
                 }
             }
@@ -48,23 +50,25 @@ internal fun RichListDialog(value: RichObject, close: () -> Unit, save: (RichObj
                 key(entry.key) {
                     ShareRichTextInput(entry.html, { entry.html = it }, "Пункт ${start+index+1}")
                     Row {
-                        TextButton(
+                        ShareTextButton(
                             { change { model.move(entry.key, -1) } },
                             enabled = start + index > 0,
                         ) {
                             Text("Вверх")
                         }
-                        TextButton(
+                        ShareTextButton(
                             { change { model.move(entry.key, 1) } },
                             enabled = start + index < entries.lastIndex,
                         ) {
                             Text("Вниз")
                         }
-                        TextButton({ change { model.remove(entry.key) } }) { Text("Удалить пункт") }
+                        ShareTextButton({ change { model.remove(entry.key) } }) {
+                            Text("Удалить пункт")
+                        }
                     }
                 }
             }
-            TextButton({
+            ShareTextButton({
                 change {
                     model.add()
                     start = ((model.entries.size - 1) / 10) * 10

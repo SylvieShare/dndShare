@@ -147,14 +147,14 @@ internal fun WeaponUsePanel(uid: String, compact: Boolean = false, onlyKey: Stri
                     else ->
                         if (event.text("status") == "active" && context.canEdit)
                             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                TextButton(
+                                ShareTextButton(
                                     onClick = { action("step", step.text("key")) },
                                     enabled = !busy,
                                 ) {
                                     Text("Бросить урон: ${step.text("title")}")
                                 }
                                 if (step.text("kind") == "weapon_damage")
-                                    TextButton(
+                                    ShareTextButton(
                                         onClick = { action("miss", step.text("key")) },
                                         enabled = !busy,
                                     ) {
@@ -164,7 +164,7 @@ internal fun WeaponUsePanel(uid: String, compact: Boolean = false, onlyKey: Stri
                 }
             }
             if (event.text("status") == "active" && context.canEdit)
-                TextButton(onClick = { confirm = true }, enabled = !busy) {
+                ShareTextButton(onClick = { confirm = true }, enabled = !busy) {
                     Text("Завершить применение")
                 }
         }
@@ -172,12 +172,12 @@ internal fun WeaponUsePanel(uid: String, compact: Boolean = false, onlyKey: Stri
         error?.let { Text(it, color = WebPalette.Danger) }
     }
     if (confirm)
-        AlertDialog(
+        ShareAlertDialog(
             onDismissRequest = { confirm = false },
             title = { Text("Завершить применение?") },
             text = { Text("Оставшиеся шаги будут закрыты. Потраченный ресурс не возвращается.") },
             confirmButton = {
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         confirm = false
                         action("finish")
@@ -186,6 +186,6 @@ internal fun WeaponUsePanel(uid: String, compact: Boolean = false, onlyKey: Stri
                     Text("Завершить")
                 }
             },
-            dismissButton = { TextButton(onClick = { confirm = false }) { Text("Отмена") } },
+            dismissButton = { ShareTextButton(onClick = { confirm = false }) { Text("Отмена") } },
         )
 }

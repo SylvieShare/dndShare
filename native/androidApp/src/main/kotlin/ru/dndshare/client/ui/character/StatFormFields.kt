@@ -1,9 +1,13 @@
 package ru.dndshare.client.ui.character
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import java.util.UUID
 import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
@@ -98,23 +102,23 @@ internal fun StatFormFields(
     metadata: ru.dndshare.client.model.HandbookMetadata,
 ) {
     val ability = dndAbilities.first { it.id == form.editor.fields.target }
-    ShareSection("Значение") {
+    ShareFormSection("Значение") {
         SheetNumberInput("Основное значение", form.editor.fields.number, form.enabled) {
             number(SheetNumberField.Current, it)
         }
         BonusFields(form)
     }
-    ShareSection("Проверка характеристики") {
-        ShareSelect(
+    ShareFormSection("Проверка характеристики") {
+        ShareSegmentedInput(
             "Режим проверки",
             form.text("check_roll_mode").ifBlank { "auto" },
-            rollModeOptions,
+            rollModeOptions.map { if (it.first == "auto") it.first to "Авто" else it },
             form.enabled,
         ) {
             form.set("check_roll_mode", it)
         }
     }
-    ShareSection("Спасбросок") {
+    ShareFormSection("Спасбросок") {
         form.Toggle("save_up", "Владение спасброском")
         val sources =
             mechanics.rules(
@@ -127,16 +131,16 @@ internal fun StatFormFields(
                 style = ShareTypography.context,
             )
         BonusFields(form.bonusesAt("save_bonuses"))
-        ShareSelect(
+        ShareSegmentedInput(
             "Режим спасброска",
             form.text("save_roll_mode").ifBlank { "auto" },
-            rollModeOptions,
+            rollModeOptions.map { if (it.first == "auto") it.first to "Авто" else it },
             form.enabled,
         ) {
             form.set("save_roll_mode", it)
         }
     }
-    ShareSection("Навыки") {
+    ShareFormSection("Навыки") {
         var opened by rememberSaveable(form.editor.fields.id) { mutableStateOf<String?>(null) }
         val skills = form.data["skills"].objectValue()
         val ids = (ability.skills.map(Long::toString) + skills.keys).distinct()
@@ -148,11 +152,30 @@ internal fun StatFormFields(
                         ?: skillNames[id.toIntOrNull()]
                         ?: "Навык"
                 }
-            TextButton(
+            Surface(
                 onClick = { opened = if (opened == id) null else id },
                 enabled = form.enabled,
+                color = WebPalette.Raised,
+                shape = RoundedCornerShape(DesignTokens.Radius.Input),
+                modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(title)
+                Row(
+                    Modifier.heightIn(min = 36.dp).padding(horizontal = 12.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(title, Modifier.weight(1f), style = ShareTypography.group)
+                    Text(
+                        when (skill.data["up"].number()) {
+                            2 -> "Компетентность"
+                            1 -> "Владение"
+                            else -> "Без владения"
+                        },
+                        style = ShareTypography.context,
+                        color = WebPalette.TextMuted,
+                    )
+                    AppGlyph(Glyph.Chevron, Modifier.size(14.dp), WebPalette.TextMuted)
+                }
             }
             if (opened == id) {
                 skill.TextField("override_title", "Своё название")
@@ -164,17 +187,17 @@ internal fun StatFormFields(
                 ) {
                     skill.set("up", it)
                 }
-                ShareSelect(
+                ShareSegmentedInput(
                     "Режим броска",
                     skill.text("roll_mode").ifBlank { "auto" },
-                    rollModeOptions,
+                    rollModeOptions.map { if (it.first == "auto") it.first to "Авто" else it },
                     form.enabled,
                 ) {
                     skill.set("roll_mode", it)
                 }
                 BonusFields(skill)
                 if (id.toLongOrNull() == null)
-                    TextButton(
+                    ShareTextButton(
                         onClick = {
                             form.input("skills", JsonObject(form.data["skills"].objectValue() - id))
                             opened = null
@@ -186,7 +209,7 @@ internal fun StatFormFields(
         }
         var revision by rememberSaveable(form.editor.fields.id) { mutableIntStateOf(0) }
         key(revision) { form.TextField("_newSkill", "Название нового навыка") }
-        TextButton(
+        ShareTextButton(
             onClick = {
                 val name = form.text("_newSkill").trim()
                 if (name.isNotEmpty()) {

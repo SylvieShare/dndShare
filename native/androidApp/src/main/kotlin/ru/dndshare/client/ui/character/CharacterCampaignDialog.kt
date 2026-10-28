@@ -29,7 +29,7 @@ internal fun CharacterCampaignDialog(
             if (remote.sessions.size > 1)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     remote.sessions.forEach { session ->
-                        FilterChip(
+                        ShareChoiceChip(
                             session.uuid == remote.sessionUuid,
                             { selectSession(session.uuid) },
                             label = { Text(session.name) },
@@ -39,7 +39,7 @@ internal fun CharacterCampaignDialog(
             if (ui.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
             ui.error?.let { Text(it, color = WebPalette.Danger) }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                FilterChip(
+                ShareChoiceChip(
                     tab == "players",
                     {
                         tab = "players"
@@ -47,7 +47,7 @@ internal fun CharacterCampaignDialog(
                     },
                     label = { Text("Игроки") },
                 )
-                FilterChip(
+                ShareChoiceChip(
                     tab == "events",
                     {
                         tab = "events"
@@ -55,10 +55,10 @@ internal fun CharacterCampaignDialog(
                     },
                     label = { Text("События") },
                 )
-                TextButton(onClick = commands::refresh) { Text("Обновить") }
+                ShareTextButton(onClick = commands::refresh) { Text("Обновить") }
             }
             if (ui.peer != null) {
-                if (ui.hasMore) TextButton(onClick = commands::older) { Text("Ранее") }
+                if (ui.hasMore) ShareTextButton(onClick = commands::older) { Text("Ранее") }
                 ui.conversation.forEach { event -> InteractionView(event, context.uuid, commands) }
                 key(ui.peer, ui.messagesSent) {
                     ShareTextInput(
@@ -70,7 +70,7 @@ internal fun CharacterCampaignDialog(
                     )
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(
+                    ShareButton(
                         onClick = {
                             registry.flush()
                             commands.message(message)
@@ -79,7 +79,7 @@ internal fun CharacterCampaignDialog(
                     ) {
                         Text("Отправить")
                     }
-                    TextButton(onClick = commands::challenge, enabled = !ui.busy) {
+                    ShareTextButton(onClick = commands::challenge, enabled = !ui.busy) {
                         Text("Камень / ножницы / бумага")
                     }
                 }
@@ -110,13 +110,13 @@ internal fun CharacterCampaignDialog(
                                 Text(name, style = ShareTypography.group)
                             }
                             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                TextButton(
+                                ShareTextButton(
                                     onClick = { commands.openPeer(player.text("charUuid")) }
                                 ) {
                                     Text("Чат и вызовы")
                                 }
                                 if (player["canOpenSheet"] == JsonPrimitive(true))
-                                    TextButton(
+                                    ShareTextButton(
                                         onClick = {
                                             close()
                                             openCharacter(player.text("charUuid"))
@@ -125,7 +125,7 @@ internal fun CharacterCampaignDialog(
                                         Text("Открыть лист")
                                     }
                                 if (context.canEdit)
-                                    TextButton(
+                                    ShareTextButton(
                                         onClick = {
                                             close()
                                             context.edit("money-transfer")
@@ -147,11 +147,11 @@ internal fun CharacterCampaignDialog(
                         Text(transfer.text("senderName"), style = ShareTypography.context)
                         if (transfer.text("recipientCharUuid") == context.uuid)
                             Row {
-                                TextButton(
+                                ShareTextButton(
                                     onClick = {
                                         commands.resolveTransfer(
                                             transfer["id"]?.jsonPrimitive?.long
-                                                ?: return@TextButton,
+                                                ?: return@ShareTextButton,
                                             "accept",
                                         )
                                     },
@@ -159,11 +159,11 @@ internal fun CharacterCampaignDialog(
                                 ) {
                                     Text("Принять")
                                 }
-                                TextButton(
+                                ShareTextButton(
                                     onClick = {
                                         commands.resolveTransfer(
                                             transfer["id"]?.jsonPrimitive?.long
-                                                ?: return@TextButton,
+                                                ?: return@ShareTextButton,
                                             "reject",
                                         )
                                     },
@@ -173,10 +173,11 @@ internal fun CharacterCampaignDialog(
                                 }
                             }
                         else
-                            TextButton(
+                            ShareTextButton(
                                 onClick = {
                                     commands.resolveTransfer(
-                                        transfer["id"]?.jsonPrimitive?.long ?: return@TextButton,
+                                        transfer["id"]?.jsonPrimitive?.long
+                                            ?: return@ShareTextButton,
                                         "reject",
                                     )
                                 },
@@ -215,14 +216,20 @@ private fun InteractionView(
                     )
                     Row {
                         if (incoming) {
-                            TextButton(onClick = { commands.resolveInteraction(id, "accept") }) {
+                            ShareTextButton(
+                                onClick = { commands.resolveInteraction(id, "accept") }
+                            ) {
                                 Text("Принять")
                             }
-                            TextButton(onClick = { commands.resolveInteraction(id, "decline") }) {
+                            ShareTextButton(
+                                onClick = { commands.resolveInteraction(id, "decline") }
+                            ) {
                                 Text("Отклонить")
                             }
                         } else
-                            TextButton(onClick = { commands.resolveInteraction(id, "cancel") }) {
+                            ShareTextButton(
+                                onClick = { commands.resolveInteraction(id, "cancel") }
+                            ) {
                                 Text("Отозвать")
                             }
                     }
@@ -239,7 +246,9 @@ private fun InteractionView(
                         FlowRow {
                             listOf("rock" to "Камень", "scissors" to "Ножницы", "paper" to "Бумага")
                                 .forEach { (key, label) ->
-                                    TextButton(onClick = { commands.resolveInteraction(id, key) }) {
+                                    ShareTextButton(
+                                        onClick = { commands.resolveInteraction(id, key) }
+                                    ) {
                                         Text(label)
                                     }
                                 }

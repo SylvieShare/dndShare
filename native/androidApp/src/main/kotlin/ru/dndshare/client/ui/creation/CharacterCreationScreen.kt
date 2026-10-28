@@ -59,7 +59,7 @@ internal fun CharacterCreationScreen(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
                                 steps.forEachIndexed { index, label ->
-                                    FilterChip(
+                                    ShareChoiceChip(
                                         draft.step == index,
                                         { model.update { it.copy(step = index) } },
                                         enabled = index <= draft.step && !ui.busy,
@@ -72,7 +72,7 @@ internal fun CharacterCreationScreen(
             ) {
                 IconButton(onClick = close, enabled = !ui.busy) { AppGlyph(Glyph.Back) }
                 Text("Создание персонажа", Modifier.weight(1f), style = ShareTypography.header)
-                TextButton(onClick = { confirmReset = true }, enabled = !ui.busy) {
+                ShareTextButton(onClick = { confirmReset = true }, enabled = !ui.busy) {
                     Text("Сбросить")
                 }
             }
@@ -88,7 +88,7 @@ internal fun CharacterCreationScreen(
                     if (ui.error != null) {
                         Text(ui.error, style = ShareTypography.group, color = WebPalette.Danger)
                         if (ui.catalogue.isEmpty())
-                            TextButton(onClick = model::load) { Text("Повторить загрузку") }
+                            ShareTextButton(onClick = model::load) { Text("Повторить загрузку") }
                     }
                     if (draft.template == "VTM20") {
                         ShareTextInput(
@@ -98,7 +98,7 @@ internal fun CharacterCreationScreen(
                         )
                         Text("Vampire: The Masquerade V20", style = ShareTypography.group)
                         CreationMediaFields(ui, model)
-                        TextButton(onClick = { model.system("DND5", "2014") }) {
+                        ShareTextButton(onClick = { model.system("DND5", "2014") }) {
                             Text("Выбрать D&D 5e")
                         }
                     } else
@@ -115,18 +115,18 @@ internal fun CharacterCreationScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
                 ) {
                     if (draft.template == "DND5")
-                        TextButton(onClick = { preview = true }, enabled = !ui.loading) {
+                        ShareTextButton(onClick = { preview = true }, enabled = !ui.loading) {
                             Text("Предпросмотр")
                         }
                     if (draft.step > 0)
-                        TextButton(
+                        ShareTextButton(
                             onClick = { model.update { it.copy(step = it.step - 1) } },
                             enabled = !ui.busy,
                         ) {
                             Text("Назад")
                         }
                     if (draft.template == "DND5" && draft.step < steps.lastIndex)
-                        Button(
+                        ShareButton(
                             onClick = {
                                 inputs.flush()
                                 model.next()
@@ -136,7 +136,7 @@ internal fun CharacterCreationScreen(
                             Text("Дальше")
                         }
                     else
-                        Button(
+                        ShareButton(
                             onClick = {
                                 inputs.flush()
                                 val current = model.state.value
@@ -157,11 +157,11 @@ internal fun CharacterCreationScreen(
         }
     }
     if (confirmReset)
-        AlertDialog(
+        ShareAlertDialog(
             onDismissRequest = { confirmReset = false },
             title = { Text("Сбросить черновик?") },
             confirmButton = {
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         confirmReset = false
                         model.reset()
@@ -170,10 +170,12 @@ internal fun CharacterCreationScreen(
                     Text("Сбросить")
                 }
             },
-            dismissButton = { TextButton(onClick = { confirmReset = false }) { Text("Отмена") } },
+            dismissButton = {
+                ShareTextButton(onClick = { confirmReset = false }) { Text("Отмена") }
+            },
         )
     if (partial)
-        AlertDialog(
+        ShareAlertDialog(
             onDismissRequest = { partial = false },
             title = { Text("Создать неполного персонажа?") },
             text = {
@@ -185,7 +187,7 @@ internal fun CharacterCreationScreen(
                 )
             },
             confirmButton = {
-                TextButton(
+                ShareTextButton(
                     onClick = {
                         partial = false
                         model.create(partial = true)
@@ -195,7 +197,7 @@ internal fun CharacterCreationScreen(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { partial = false }) { Text("Продолжить заполнение") }
+                ShareTextButton(onClick = { partial = false }) { Text("Продолжить заполнение") }
             },
         )
     if (preview) CreationPreview(ui, images, { preview = false })

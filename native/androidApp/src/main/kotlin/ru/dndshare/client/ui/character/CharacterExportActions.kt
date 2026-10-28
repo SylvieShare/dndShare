@@ -55,7 +55,7 @@ internal fun CharacterExportActions() {
                     }
                 }
         }
-    TextButton(
+    ShareTextButton(
         onClick = {
             createPdf.launch(
                 sheet.sheet.name.replace(Regex("[^\\p{L}\\p{N} _-]"), "").take(100).ifBlank {
@@ -67,7 +67,7 @@ internal fun CharacterExportActions() {
     ) {
         Text(if (exporting) "Создаём PDF…" else "Сохранить PDF")
     }
-    TextButton(
+    ShareTextButton(
         onClick = {
             val url = BuildConfig.API_BASE_URL.trimEnd('/') + "/char/" + sheet.uuid
             context.startActivity(

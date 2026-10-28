@@ -28,7 +28,7 @@ internal fun LevelFeatureFields(form: FeatureFormScope, cache: CacheDao) {
     Text("Класс", style = ShareTypography.group)
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         plan.oldClasses.forEach { row ->
-            FilterChip(
+            ShareChoiceChip(
                 row["id"].referenceId() == plan.classId,
                 {
                     form.input("classId", row.getValue("id"))
@@ -41,7 +41,7 @@ internal fun LevelFeatureFields(form: FeatureFormScope, cache: CacheDao) {
                 enabled = form.enabled,
             )
         }
-        TextButton(onClick = { picker = "class" }, enabled = form.enabled) {
+        ShareTextButton(onClick = { picker = "class" }, enabled = form.enabled) {
             Text(if (plan.oldClasses.isEmpty()) "Выбрать класс" else "Мультикласс")
         }
     }
@@ -49,7 +49,7 @@ internal fun LevelFeatureFields(form: FeatureFormScope, cache: CacheDao) {
         Text("${it.name} · уровень ${plan.classLevel}", style = ShareTypography.card)
     }
     if (plan.charClass != null) {
-        TextButton(onClick = { picker = "subclass" }, enabled = form.enabled) {
+        ShareTextButton(onClick = { picker = "subclass" }, enabled = form.enabled) {
             Text(plan.subclass?.name ?: "Выбрать подкласс")
         }
         form.Choice(
@@ -59,7 +59,7 @@ internal fun LevelFeatureFields(form: FeatureFormScope, cache: CacheDao) {
         )
         if (form.text("hpMethod") == "roll") {
             form.NumberField("hpRoll", "Результат кости (1–${plan.face})")
-            TextButton(
+            ShareTextButton(
                 onClick = {
                     form.input(
                         "hpRoll",
@@ -82,7 +82,7 @@ internal fun LevelFeatureFields(form: FeatureFormScope, cache: CacheDao) {
                 listOf("stats" to "+2 / +1 и +1", "feat" to "Черта", "skip" to "Пропустить"),
             )
             if (form.text("asiMode") == "feat") {
-                TextButton(onClick = { picker = "feat" }, enabled = form.enabled) {
+                ShareTextButton(onClick = { picker = "feat" }, enabled = form.enabled) {
                     Text(plan.feat?.name ?: "Выбрать черту")
                 }
                 plan.feat?.let { AdvancementChoices(form, it, cache) }
@@ -90,7 +90,7 @@ internal fun LevelFeatureFields(form: FeatureFormScope, cache: CacheDao) {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     creationStats.zip(statTitles).forEach { (stat, title) ->
                         val amount = form.data["asi"].objectValue()[stat].number()
-                        TextButton(
+                        ShareTextButton(
                             onClick = {
                                 val map = form.data["asi"].objectValue()
                                 form.input(
@@ -151,7 +151,7 @@ internal fun LevelFeatureFields(form: FeatureFormScope, cache: CacheDao) {
                 .forEach { child ->
                     val chosen = selected.any { it.referenceId() == child.id }
                     val errors = selectedAbilityEligibility(child, parent, projected)
-                    FilterChip(
+                    ShareChoiceChip(
                         chosen,
                         {
                             val next =

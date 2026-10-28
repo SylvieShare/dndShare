@@ -113,9 +113,9 @@ private fun PresetAttack(title: String, unarmed: Boolean) {
             ) {
                 damage = true
             }
-            DropdownMenu(damage, { damage = false }) {
+            ShareDropdownMenu(damage, { damage = false }) {
                 listOf(false to "Урон", true to "Критический урон").forEach { (critical, text) ->
-                    DropdownMenuItem(
+                    ShareDropdownMenuItem(
                         text = { Text(text) },
                         onClick = {
                             damage = false

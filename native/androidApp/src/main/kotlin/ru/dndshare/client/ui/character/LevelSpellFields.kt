@@ -25,7 +25,7 @@ internal fun LevelSpellFields(form: FeatureFormScope, plan: LevelAdvancement, ca
     model.selected.forEach { id ->
         ShareTile(framed = false) {
             Text(plan.items[id]?.name ?: "Заклинание", style = ShareTypography.group)
-            TextButton(
+            ShareTextButton(
                 onClick = {
                     form.input(
                         "spells",
@@ -38,7 +38,9 @@ internal fun LevelSpellFields(form: FeatureFormScope, plan: LevelAdvancement, ca
             }
         }
     }
-    TextButton(onClick = { picking = true }, enabled = form.enabled) { Text("Изучить заклинание") }
+    ShareTextButton(onClick = { picking = true }, enabled = form.enabled) {
+        Text("Изучить заклинание")
+    }
     model.errors().distinct().forEach {
         Text(it, color = WebPalette.Warning, style = ShareTypography.context)
     }

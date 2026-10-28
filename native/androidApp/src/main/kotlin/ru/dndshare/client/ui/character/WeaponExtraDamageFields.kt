@@ -49,7 +49,7 @@ internal fun WeaponExtraDamageFields(form: FeatureFormScope) {
                             if (it.isBlank()) JsonNull else JsonPrimitive(it.toLong()),
                         )
                     }
-                    TextButton(
+                    ShareTextButton(
                         onClick = {
                             form.rows(listOf("add_attacks")) {
                                 it.filterIndexed { position, _ -> position != index }
@@ -63,7 +63,7 @@ internal fun WeaponExtraDamageFields(form: FeatureFormScope) {
             }
         }
     }
-    TextButton(
+    ShareTextButton(
         onClick = {
             form.rows(listOf("add_attacks")) {
                 it +

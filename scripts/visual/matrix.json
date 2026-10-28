@@ -23,6 +23,7 @@
     "list",
     "record",
     "character-list",
+    "character-menu",
     "sheet-base",
     "sheet-death-saves",
     "sheet-stats",

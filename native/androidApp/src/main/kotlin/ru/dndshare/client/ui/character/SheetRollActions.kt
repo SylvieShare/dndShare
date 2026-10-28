@@ -27,15 +27,19 @@ internal fun SheetRollActions(
             disadvantage = "disadvantage" in modes
         }
     }
-    DropdownMenu(open, close) {
+    ShareDropdownMenu(open, close) {
         Row(
             Modifier.padding(horizontal = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            FilterChip(disadvantage, { disadvantage = !disadvantage }, label = { Text("Помеха") })
-            FilterChip(advantage, { advantage = !advantage }, label = { Text("Преимущество") })
+            ShareChoiceChip(
+                disadvantage,
+                { disadvantage = !disadvantage },
+                label = { Text("Помеха") },
+            )
+            ShareChoiceChip(advantage, { advantage = !advantage }, label = { Text("Преимущество") })
         }
-        DropdownMenuItem(
+        ShareDropdownMenuItem(
             text = { Text("Бросить кубик") },
             onClick = {
                 close()
@@ -49,7 +53,7 @@ internal fun SheetRollActions(
             },
         )
         if (context.canEdit && editTarget != null)
-            DropdownMenuItem(
+            ShareDropdownMenuItem(
                 text = { Text("Изменить") },
                 onClick = {
                     close()

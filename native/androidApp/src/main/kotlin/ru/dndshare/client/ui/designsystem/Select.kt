@@ -20,17 +20,25 @@ fun ShareSelect(
 ) {
     var open by remember { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        Text(label, style = ShareTypography.context, color = WebPalette.TextMuted)
+        FieldCaption(label)
         Box {
             Surface(
                 onClick = { open = true },
                 enabled = enabled,
                 color = WebPalette.Raised,
-                shape = MaterialTheme.shapes.small,
+                shape =
+                    androidx.compose.foundation.shape.RoundedCornerShape(DesignTokens.Radius.Input),
+                border =
+                    androidx.compose.foundation.BorderStroke(
+                        DesignTokens.Layout.Border,
+                        if (open) WebPalette.Accent else WebPalette.BorderStrong,
+                    ),
                 modifier =
-                    Modifier.fillMaxWidth().heightIn(min = 48.dp).semantics {
-                        contentDescription = label
-                    },
+                    Modifier.fillMaxWidth()
+                        .heightIn(min = DesignTokens.Layout.InputHeight)
+                        .semantics {
+                            contentDescription = label
+                        },
             ) {
                 Row(
                     Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
@@ -39,14 +47,14 @@ fun ShareSelect(
                     Text(
                         options.firstOrNull { it.first == value }?.second ?: "Выбрать",
                         Modifier.weight(1f),
-                        style = ShareTypography.group,
+                        style = fieldTextStyle,
                     )
-                    AppGlyph(Glyph.Chevron)
+                    AppGlyph(Glyph.Chevron, Modifier.size(16.dp), WebPalette.TextMuted)
                 }
             }
-            DropdownMenu(open, { open = false }, Modifier.heightIn(max = 360.dp)) {
+            ShareDropdownMenu(open, { open = false }, Modifier.heightIn(max = 360.dp)) {
                 options.forEach { (key, title) ->
-                    DropdownMenuItem(
+                    ShareDropdownMenuItem(
                         text = {
                             Text(
                                 title,

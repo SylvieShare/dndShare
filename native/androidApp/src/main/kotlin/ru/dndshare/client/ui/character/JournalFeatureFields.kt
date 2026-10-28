@@ -78,7 +78,7 @@ private fun JournalDialogueFields(form: FeatureFormScope, payload: JsonObject) {
                 enabled = form.enabled,
                 multiline = true,
             )
-            TextButton(
+            ShareTextButton(
                 onClick = {
                     form.rows(listOf("payload", "dialogue")) {
                         it.filterIndexed { i, _ -> i != index }
@@ -90,7 +90,7 @@ private fun JournalDialogueFields(form: FeatureFormScope, payload: JsonObject) {
             }
         }
     }
-    TextButton(
+    ShareTextButton(
         onClick = {
             form.rows(listOf("payload", "dialogue")) {
                 it +
@@ -118,7 +118,7 @@ private fun JournalQuestFields(form: FeatureFormScope, payload: JsonObject) {
             fun change(key: String, value: JsonElement) =
                 form.row(listOf("payload", "quest", "objectives"), index, key, value)
             Row {
-                Checkbox(
+                ShareCheckbox(
                     row["done"] == JsonPrimitive(true),
                     { change("done", JsonPrimitive(it)) },
                     enabled = form.enabled,
@@ -132,7 +132,7 @@ private fun JournalQuestFields(form: FeatureFormScope, payload: JsonObject) {
                 enabled = form.enabled,
                 multiline = true,
             )
-            TextButton(
+            ShareTextButton(
                 onClick = {
                     form.rows(listOf("payload", "quest", "objectives")) {
                         it.filterIndexed { i, _ -> i != index }
@@ -144,7 +144,7 @@ private fun JournalQuestFields(form: FeatureFormScope, payload: JsonObject) {
             }
         }
     }
-    TextButton(
+    ShareTextButton(
         onClick = {
             form.rows(listOf("payload", "quest", "objectives")) {
                 it +
@@ -179,13 +179,13 @@ private fun JournalBattleFields(form: FeatureFormScope, payload: JsonObject, cac
         key(row.text("id").ifBlank { index.toString() }) {
             Text("Участник ${index+1}", style = ShareTypography.group)
             Row {
-                FilterChip(
+                ShareChoiceChip(
                     row.text("source") != "handbook",
                     { change(index, "source", JsonPrimitive("custom")) },
                     label = { Text("Своё существо") },
                     enabled = form.enabled,
                 )
-                FilterChip(
+                ShareChoiceChip(
                     row.text("source") == "handbook",
                     { change(index, "source", JsonPrimitive("handbook")) },
                     label = { Text("Из бестиария") },
@@ -193,7 +193,7 @@ private fun JournalBattleFields(form: FeatureFormScope, payload: JsonObject, cac
                 )
             }
             if (row.text("source") == "handbook")
-                TextButton(onClick = { picking = index }, enabled = form.enabled) {
+                ShareTextButton(onClick = { picking = index }, enabled = form.enabled) {
                     Text(row.text("itemName").ifBlank { "Выбрать существо" })
                 }
             else
@@ -217,7 +217,7 @@ private fun JournalBattleFields(form: FeatureFormScope, payload: JsonObject, cac
                 enabled = form.enabled,
                 multiline = true,
             )
-            TextButton(
+            ShareTextButton(
                 onClick = {
                     form.rows(listOf("payload", "combatants")) {
                         it.filterIndexed { i, _ -> i != index }
@@ -229,7 +229,7 @@ private fun JournalBattleFields(form: FeatureFormScope, payload: JsonObject, cac
             }
         }
     }
-    TextButton(
+    ShareTextButton(
         onClick = {
             form.rows(listOf("payload", "combatants")) {
                 it +

@@ -23,9 +23,11 @@ import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -75,6 +77,25 @@ fun ShareMorphDialog(
     DisposableEffect(state) { onDispose { state.finish() } }
     val key = state.activeKey ?: return
     val entry = state.entry(key)
+    val dragScope = rememberCoroutineScope()
+    val densityForDrag = LocalDensity.current
+    val compactDrag =
+        LocalConfiguration.current.screenWidthDp <= DesignTokens.Layout.MorphStackedMax.value
+    val latestDismiss by rememberUpdatedState(onDismiss)
+    val dragEnabled by rememberUpdatedState(dismissEnabled && visibleKey != null && compactDrag)
+    val dismissDrag =
+        remember(key, densityForDrag) {
+            MorphDismissState(
+                dragScope,
+                with(densityForDrag) { DesignTokens.Layout.MorphDismissDistance.toPx() },
+                with(densityForDrag) { 12.dp.toPx() },
+                with(densityForDrag) { 1200.dp.toPx() },
+                { dragEnabled && state.progress >= .999f },
+                { latestDismiss() },
+            )
+        }
+    LaunchedEffect(visibleKey) { if (visibleKey != null) dismissDrag.reopened() }
+
     BackHandler { if (dismissEnabled) onDismiss() }
     val focus = LocalFocusManager.current
     val keyboard = LocalSoftwareKeyboardController.current
@@ -120,6 +141,7 @@ fun ShareMorphDialog(
                     content = {
                         Box(
                             Modifier.drawBehind { drawRect(WebPalette.Surface) }
+                                .morphDragSurface(dismissDrag, dismissEnabled && compactDrag)
                                 .pointerInput(Unit) { detectTapGestures {} }
                         )
                         Box(Modifier.background(WebPalette.Background))
@@ -131,9 +153,11 @@ fun ShareMorphDialog(
                             entry?.movable?.invoke(state.expanded)
                         }
                         Box(Modifier.verticalScroll(rememberScrollState())) { editor() }
+                        Box { if (compactDrag) MorphDismissHandle(dismissDrag, dismissEnabled) }
                     },
                     modifier =
                         Modifier.fillMaxSize()
+                            .nestedScroll(dismissDrag.connection)
                             .clipToBounds()
                             .onGloballyPositioned { readyKey = key }
                             .semantics { paneTitle = label },
@@ -164,7 +188,8 @@ fun ShareMorphDialog(
                             Constraints.fixedWidth(plan.editorWidth.roundToInt().coerceAtLeast(1))
                                 .copy(maxHeight = editorLimit.roundToInt().coerceAtLeast(1))
                         )
-                    val frame = plan.frame(p, form.height.toFloat())
+                    val frame =
+                        plan.frame(p, form.height.toFloat()).translate(0f, dismissDrag.offset * p)
                     val backing =
                         children[0].measure(
                             Constraints.fixed(
@@ -183,6 +208,13 @@ fun ShareMorphDialog(
                                 formBackdropHeight.coerceAtLeast(1),
                             )
                         )
+                    val handle =
+                        children[4].measure(
+                            Constraints(
+                                maxWidth = constraints.maxWidth,
+                                maxHeight = 48.dp.roundToPx(),
+                            )
+                        )
                     val radius =
                         lerp(
                             entry?.cornerRadius?.toPx() ?: 0f,
@@ -190,6 +222,8 @@ fun ShareMorphDialog(
                             p,
                         )
                     layout(constraints.maxWidth, constraints.maxHeight) {
+                        // Position follows the exact same moving frame as the original preview.
+
                         backing.placeWithLayer(frame.left.roundToInt(), frame.top.roundToInt()) {
                             shape = MorphClip(Rect(0f, 0f, frame.width, frame.height), radius)
                             clip = true
@@ -234,6 +268,13 @@ fun ShareMorphDialog(
                             clip = true
                             alpha = ((state.progress - .25f) / .75f).coerceIn(0f, 1f)
                         }
+                        if (compactDrag)
+                            handle.placeWithLayer(
+                                (frame.left + (frame.width - handle.width) / 2).roundToInt(),
+                                frame.top.roundToInt(),
+                            ) {
+                                alpha = p
+                            }
                     }
                 }
             }

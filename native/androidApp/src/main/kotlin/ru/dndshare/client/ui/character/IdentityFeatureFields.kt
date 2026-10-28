@@ -30,9 +30,10 @@ internal fun IdentityFeatureFields(form: FeatureFormScope, cache: CacheDao) {
     for ((key, title) in listOf("race" to "Раса", "subrace" to "Происхождение")) {
         Text(title, style = ShareTypography.group)
         Row {
-            TextButton(
+            ShareTextButton(
                 { picker = key },
-                enabled = form.enabled && (key == "race" || form.data["race"].referenceId() != null),
+                enabled =
+                    form.enabled && (key == "race" || form.data["race"].referenceId() != null),
             ) {
                 Text(
                     form.data[key].objectValue().label().ifBlank {
@@ -41,7 +42,7 @@ internal fun IdentityFeatureFields(form: FeatureFormScope, cache: CacheDao) {
                 )
             }
             if (form.data[key].referenceId() != null)
-                TextButton(
+                ShareTextButton(
                     {
                         form.input(key, JsonNull)
                         if (key == "race") form.input("subrace", JsonNull)
@@ -52,7 +53,7 @@ internal fun IdentityFeatureFields(form: FeatureFormScope, cache: CacheDao) {
                 }
         }
     }
-    TextButton(
+    ShareTextButton(
         {
             form.input(
                 "_classesOpen",
@@ -82,11 +83,11 @@ internal fun IdentityFeatureFields(form: FeatureFormScope, cache: CacheDao) {
                             AppGlyph(Glyph.Trash)
                         }
                     }
-                    TextButton({ picker = "class:$key" }, enabled = form.enabled) {
+                    ShareTextButton({ picker = "class:$key" }, enabled = form.enabled) {
                         Text(current.text("name").ifBlank { "Выбрать класс" })
                     }
                     Row {
-                        TextButton(
+                        ShareTextButton(
                             { picker = "subclass:$key" },
                             enabled = form.enabled && current["id"].referenceId() != null,
                         ) {
@@ -97,7 +98,7 @@ internal fun IdentityFeatureFields(form: FeatureFormScope, cache: CacheDao) {
                             )
                         }
                         if (current["subclass"].referenceId() != null)
-                            TextButton(
+                            ShareTextButton(
                                 { updateRow(key) { JsonObject(it + ("subclass" to JsonNull)) } },
                                 enabled = form.enabled,
                             ) {

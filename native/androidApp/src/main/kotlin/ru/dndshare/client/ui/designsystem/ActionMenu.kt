@@ -32,9 +32,9 @@ fun ShareActionMenu(
             ) {
                 Text("⋯", style = ShareTypography.section)
             }
-        DropdownMenu(open, { open = false }) {
+        ShareDropdownMenu(open, { open = false }) {
             actions.forEach { action ->
-                DropdownMenuItem(
+                ShareDropdownMenuItem(
                     text = {
                         Text(
                             action.label,

@@ -11,6 +11,7 @@ class AnimatorScaleRule : ExternalResource() {
     override fun before() {
         previous = shell("settings get global animator_duration_scale").trim()
         shell("settings put global animator_duration_scale 1")
+        Thread.sleep(200) // Let Android/Compose duration-scale observers see the restored value.
     }
 
     override fun after() {

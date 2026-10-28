@@ -71,7 +71,7 @@ internal fun FeatureWidgetCards() {
             widget.resource?.let { resource ->
                 if (resource.total <= 12)
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        for (pip in 1..resource.total) FilterChip(
+                        for (pip in 1..resource.total) ShareChoiceChip(
                             pip <= resource.value,
                             {
                                 val next = if (pip <= resource.value) pip - 1 else pip
@@ -100,13 +100,13 @@ internal fun FeatureWidgetCards() {
                             Modifier.weight(1f),
                             style = ShareTypography.context,
                         )
-                        TextButton(
+                        ShareTextButton(
                             onClick = { context.adjustResource(resource.key, -1) },
                             enabled = context.canEdit && resource.value > 0,
                         ) {
                             Text("−")
                         }
-                        TextButton(
+                        ShareTextButton(
                             onClick = { context.adjustResource(resource.key, 1) },
                             enabled = context.canEdit && resource.value < resource.total,
                         ) {
@@ -115,7 +115,7 @@ internal fun FeatureWidgetCards() {
                     }
             }
             if (widget.kind == "toggle")
-                Button(
+                ShareButton(
                     onClick = {
                         busy = true
                         scope.launch {

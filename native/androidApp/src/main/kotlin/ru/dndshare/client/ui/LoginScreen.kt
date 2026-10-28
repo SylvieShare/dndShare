@@ -61,24 +61,22 @@ fun LoginScreen(state: AppState, login: (String, String) -> Unit, create: (() ->
                 Arrangement.spacedBy(lerp(18.dp, 12.dp, collapse), Alignment.CenterVertically),
         ) {
             LoginBrand(collapse)
-            OutlinedTextField(
+            ShareValueInput(
                 value = name,
                 onValueChange = { name = it.take(128) },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Логин") },
-                singleLine = true,
+                label = "Логин",
                 enabled = !state.signingIn,
                 keyboardOptions =
                     KeyboardOptions(autoCorrectEnabled = false, imeAction = ImeAction.Next),
                 keyboardActions =
                     KeyboardActions(onNext = { focus.moveFocus(FocusDirection.Down) }),
             )
-            OutlinedTextField(
+            ShareValueInput(
                 value = password,
                 onValueChange = { password = it.take(256) },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Пароль") },
-                singleLine = true,
+                label = "Пароль",
                 enabled = !state.signingIn,
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions =
@@ -90,7 +88,7 @@ fun LoginScreen(state: AppState, login: (String, String) -> Unit, create: (() ->
             )
             if (state.authError != null)
                 Text(state.authError, color = MaterialTheme.colorScheme.error)
-            Button(
+            ShareButton(
                 onClick = submit,
                 colors =
                     ButtonDefaults.buttonColors(
@@ -113,7 +111,7 @@ fun LoginScreen(state: AppState, login: (String, String) -> Unit, create: (() ->
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             create?.let {
-                TextButton(onClick = it, modifier = Modifier.fillMaxWidth()) {
+                ShareTextButton(onClick = it, modifier = Modifier.fillMaxWidth()) {
                     Text("Сначала создать персонажа")
                 }
             }

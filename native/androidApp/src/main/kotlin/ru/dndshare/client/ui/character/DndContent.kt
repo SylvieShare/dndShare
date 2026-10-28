@@ -137,7 +137,7 @@ internal fun DndFeatureSummary() {
                             ) {
                                 Text(row.title, Modifier.weight(1f), style = ShareTypography.group)
                                 if (context.canEdit)
-                                    TextButton(
+                                    ShareTextButton(
                                         onClick = { context.adjustResource(row.key, -1) },
                                         modifier = Modifier.width(48.dp),
                                         enabled = row.value > 0,
@@ -150,7 +150,7 @@ internal fun DndFeatureSummary() {
                                     style = ShareTypography.group,
                                 )
                                 if (context.canEdit)
-                                    TextButton(
+                                    ShareTextButton(
                                         onClick = { context.adjustResource(row.key, 1) },
                                         modifier = Modifier.width(48.dp),
                                         enabled = row.value < row.total,

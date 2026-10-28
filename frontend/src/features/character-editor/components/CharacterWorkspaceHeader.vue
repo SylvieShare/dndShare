@@ -11,7 +11,7 @@
       </div>
     </template>
     <template v-if="tabs.length" #navigation>
-      <CharacterSheetTabs :tabs="tabs" :active-tab="activeTab" @select="emit('select-tab', $event)" />
+      <CharacterSheetTabs :pill="compact || stackedNavigation" :tabs="tabs" :active-tab="activeTab" @select="emit('select-tab', $event)" />
     </template>
     <template #actions>
       <SettingsMenuTile v-if="showMenu" :block="{ props: { embedded: true } }" />
@@ -59,4 +59,5 @@ const router = useRouter()
 }
 .character-workspace-header--compact { --workspace-header-identity-gap: var(--spacing-small); }
 .character-workspace-header--compact .character-heading { margin-left: 0; padding-left: 0; border-left: 0; }
+@media (--ui-compact) { .character-heading { margin-left: 0; padding-left: 0; border-left: 0; } }
 </style>

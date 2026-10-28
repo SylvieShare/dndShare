@@ -95,5 +95,14 @@ onBeforeUnmount(() => observer?.disconnect());
 }
 @media (--ui-compact) { .workspace-header-inner--page { padding-inline: var(--spacing-large); } }
 @media (--ui-phone) { .workspace-header-inner--page { padding-inline: var(--spacing-small); } }
+@media (--ui-compact) {
+  .workspace-header { background: transparent; border: 0; box-shadow: none; }
+  .workspace-header-inner { min-height: var(--layout-header); }
+  .workspace-subheader { border: 0; background: transparent; padding: 0 var(--layout-compact-header-inset) var(--layout-compact-header-inset); }
+  .workspace-subheader-inner, .workspace-header-navigation {
+    background: var(--surface); border: 0; border-radius: var(--radius-compact-navigation);
+  }
+  .workspace-header-navigation { padding: var(--spacing-xs); }
+}
 @media (prefers-reduced-motion: reduce) { .workspace-header-inner { transition: none; } }
 </style>

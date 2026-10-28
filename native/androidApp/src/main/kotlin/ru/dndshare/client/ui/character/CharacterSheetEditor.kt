@@ -2,12 +2,10 @@ package ru.dndshare.client.ui.character
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
@@ -38,9 +36,9 @@ internal fun CharacterSheetEditor(
         }
     val inputs = remember(editor.fields.id) { ShareFormInputs() }
     CompositionLocalProvider(LocalShareFormInputs provides inputs) {
-        AlertDialog(
+        ShareAlertDialog(
             onDismissRequest = { if (!editor.saving) close() },
-            title = { Text(title, style = ShareTypography.section) },
+            title = { Text(title, style = ShareTypography.header) },
             text = {
                 Column(
                     Modifier.fillMaxWidth()
@@ -52,7 +50,7 @@ internal fun CharacterSheetEditor(
                     if (fields.target == "statuses") {
                         Row {
                             Text("Вдохновение", Modifier.weight(1f))
-                            Switch(fields.inspiration, inspiration, enabled = !editor.saving)
+                            ShareSwitch(fields.inspiration, inspiration, enabled = !editor.saving)
                         }
                         SheetNumberInput("Истощение", fields.exhaustion, !editor.saving) {
                             number(SheetNumberField.Exhaustion, it)
@@ -67,7 +65,7 @@ internal fun CharacterSheetEditor(
                                         "damage" to "Урон",
                                         "heal" to "Лечение",
                                         "temp" to "Временные",
-                                    )) TextButton(
+                                    )) ShareTextButton(
                                     onClick = {
                                         inputs.flush()
                                         calculateHealth(kind, expression)
@@ -109,7 +107,7 @@ internal fun CharacterSheetEditor(
                 }
             },
             confirmButton = {
-                TextButton(
+                ShareTextButton(
                     enabled = !editor.saving,
                     onClick = {
                         inputs.flush()
@@ -120,7 +118,7 @@ internal fun CharacterSheetEditor(
                 }
             },
             dismissButton = {
-                TextButton(enabled = !editor.saving, onClick = close) { Text("Отмена") }
+                ShareTextButton(enabled = !editor.saving, onClick = close) { Text("Отмена") }
             },
         )
     }
@@ -139,7 +137,7 @@ private fun DeathSaveFields(
         val count = (editor.fields.input[key] ?: hp[key]).number().coerceIn(0, 3)
         Text(label, style = ShareTypography.context)
         Row {
-            for (index in 1..3) FilterChip(
+            for (index in 1..3) ShareChoiceChip(
                 count >= index,
                 {
                     val projected =
@@ -170,11 +168,5 @@ internal fun SheetNumberInput(
     enabled: Boolean = true,
     change: (String) -> Unit,
 ) {
-    ShareTextInput(
-        value,
-        change,
-        label,
-        enabled = enabled,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-    )
+    ShareNumberInput(label, value, enabled, change)
 }

@@ -63,8 +63,31 @@ def login(device, fixture):
     device.wait("205")
 
 
-def window_metrics(dump, width, height):
-    if not re.search(r"mCurrentFocus=Window\{[^\n]*" + re.escape(PACKAGE), dump):
+def owns_foreground(dump, allow_popup):
+    if re.search(r"mCurrentFocus=Window\{[^\n]*" + re.escape(PACKAGE) + r"/", dump):
+        return True
+    if not allow_popup:
+        return False
+    focus = re.search(r"mCurrentFocus=Window\{(\S+) ", dump)
+    headers = list(re.finditer(r"(?m)^[ \t]*Window #\d+ Window\{(\S+) [^\n]*", dump))
+    blocks = {
+        header.group(1): dump[header.start():headers[i + 1].start() if i + 1 < len(headers) else len(dump)]
+        for i, header in enumerate(headers)
+    }
+    current = blocks.get(focus.group(1), '') if focus else ''
+    owner = re.search(r"mOwnerUid=(\d+)[^\n]* package=(\S+)", current)
+    app_uids = set()
+    for block in blocks.values():
+        if PACKAGE + '/' in block.split('\n', 1)[0]:
+            match = re.search(r"mOwnerUid=(\d+)[^\n]* package=" + re.escape(PACKAGE) + r"\b", block)
+            if match:
+                app_uids.add(match.group(1))
+    return bool(owner and owner.group(2) == PACKAGE and owner.group(1) in app_uids
+                and re.search(r"mFocusedApp=[^\n]*" + re.escape(PACKAGE) + r"/", dump))
+
+
+def window_metrics(dump, width, height, allow_popup=False):
+    if not owns_foreground(dump, allow_popup):
         raise AssertionError("Smoke activity does not own the foreground window")
     sources = []
     pattern = r"InsetsSource id=\S+ type=(\w+) frame=\[(-?\d+),(-?\d+)\]\[(-?\d+),(-?\d+)\] visible=(\w+)"
@@ -112,7 +135,7 @@ def snapshot(device, output, format_, state, fixture, stats):
     (output / f"{prefix}.xml").write_bytes(ET.tostring(tree, encoding="utf-8"))
     dump = device.shell("dumpsys", "window")
     (output / f"{prefix}-window.txt").write_text(dump)
-    metrics = window_metrics(dump, format_["width"], format_["height"])
+    metrics = window_metrics(dump, format_["width"], format_["height"], allow_popup=state == "character-menu")
     character = fixture["characters"][0] if state.startswith("sheet-") else fixture["characters"][1] if state == "vtm-base" else None
     return {"platform": "android", "format": format_["name"], "state": state,
             "characterUUID": character["uuid"] if character else None,
@@ -170,7 +193,7 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
     login_count = 0
     cover_verified = False
     wanted = set(matrix['states'])
-    full = wanted == {'collections', 'menu', 'list', 'record', 'character-list', 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality', 'vtm-base'}
+    full = wanted == {'collections', 'menu', 'list', 'record', 'character-list', 'character-menu', 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality', 'vtm-base'}
 
     def take(format_, state):
         if state in wanted:
@@ -214,13 +237,19 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
                     take(format_, 'record')
                     device.shell('input', 'keyevent', '4')
                 device.shell('input', 'keyevent', '4')
-        if not (wanted & {'character-list', 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality', 'vtm-base'}):
+        if not (wanted & {'character-list', 'character-menu', 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality', 'vtm-base'}):
             continue
         if index == 0 or handbook:
             if format_['name'] != 'wide':
                 device.click(description='Открыть меню')
             device.click(text='Персонажи')
         take(format_, 'character-list')
+        if 'character-menu' in wanted:
+            device.click(description='Действия: '+fixture['characters'][0]['name'])
+            device.wait('Клонировать')
+            take(format_,'character-menu')
+            device.shell('input','keyevent','4')
+            device.wait('Найти персонажа')
         if wanted & { 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality'}:
             device.click(text=fixture['characters'][0]['name'])
             if format_['name'] == 'phone':

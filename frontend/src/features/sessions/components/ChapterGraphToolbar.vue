@@ -1,5 +1,5 @@
 <template>
-  <WorkspaceHeader class="chapter-toolbar" @resize="emit('resize', $event)">
+  <WorkspaceHeader :split-navigation="compact" class="chapter-toolbar" @resize="emit('resize', $event)">
     <template #identity>
     <SessionBackButton />
     <SessionToolbarIdentity
@@ -11,7 +11,7 @@
     />
     </template>
     <template #navigation><div class="chapter-toolbar-center">
-      <IconNavigation data-tutorial="session-navigation" class="chapter-primary-nav"
+      <IconNavigation :pill="compact" data-tutorial="session-navigation" class="chapter-primary-nav"
         :items="navigationItems" :model-value="navigationKey" label="Раздел сессии" @select="selectView">
         <template #icon="{ item }">
           <component :is="item.icon" :size="24" :style="item.key === 'combat' && encounterActive && navigationKey !== 'combat' ? { color: 'var(--danger)' } : undefined" aria-hidden="true" />
@@ -32,6 +32,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useAppLayout } from '@/shared/composables/useAppLayout'
 import { IconNavigation } from '@sylvieshare/share-ui'
 import { sessionNavigationItems, selectedSessionNavigation } from '../lib/sessionNavigation'
 import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
@@ -58,6 +59,7 @@ const emit = defineEmits([
   'select-view', 'resize',
   'edit-session', 'session-updated', 'open-combat',
 ])
+const { compact } = useAppLayout()
 const shortcutLabels = sessionShortcutLabels()
 const navigationItems = computed(() => sessionNavigationItems(props))
 const navigationKey = computed(() => selectedSessionNavigation(props.primaryView, props.combatActive))

@@ -56,7 +56,7 @@ internal fun StagedImageFields(
                     }
                 }
         }
-    TextButton(onClick = { picker.launch(arrayOf("image/*")) }, enabled = enabled && !busy) {
+    ShareTextButton(onClick = { picker.launch(arrayOf("image/*")) }, enabled = enabled && !busy) {
         Text("Выбрать изображение")
     }
     if (busy) LinearProgressIndicator(Modifier.fillMaxWidth())
@@ -70,7 +70,7 @@ internal fun StagedImageFields(
             imageLoader = images,
             modifier = Modifier.fillMaxWidth().heightIn(max = 300.dp),
         )
-        TextButton(
+        ShareTextButton(
             onClick = {
                 scope.launch {
                     busy = true
@@ -116,7 +116,9 @@ internal fun StagedImageFields(
             "Подготовленное изображение",
             modifier = Modifier.fillMaxWidth().heightIn(max = 300.dp),
         )
-        TextButton(onClick = { change("path", "") }, enabled = enabled) { Text("Изменить обрезку") }
+        ShareTextButton(onClick = { change("path", "") }, enabled = enabled) {
+            Text("Изменить обрезку")
+        }
     }
 }
 
@@ -183,7 +185,7 @@ private fun NativeImageCrop(
         )
     }
     Text("Переместите изображение и измените масштаб", style = ShareTypography.context)
-    Slider(
+    ShareSlider(
         zoom,
         {
             zoom = it
@@ -192,7 +194,7 @@ private fun NativeImageCrop(
         valueRange = 1f..5f,
         enabled = enabled,
     )
-    TextButton(onClick = { apply(zoom, x, y, ratio) }, enabled = enabled) {
+    ShareTextButton(onClick = { apply(zoom, x, y, ratio) }, enabled = enabled) {
         Text("Применить обрезку")
     }
 }

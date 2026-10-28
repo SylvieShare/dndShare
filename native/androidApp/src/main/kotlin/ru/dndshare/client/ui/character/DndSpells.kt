@@ -45,7 +45,7 @@ internal fun DndSpells() {
                 style = ShareTypography.group,
             )
             if (context.canEdit)
-                TextButton(onClick = { context.edit("concentration-end") }) {
+                ShareTextButton(onClick = { context.edit("concentration-end") }) {
                     Text("Завершить концентрацию")
                 }
         }
@@ -68,7 +68,7 @@ internal fun DndSpells() {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     SpellBookStats(source)
                     if (context.canEdit && source["spells"].arrayValue().size > 1)
-                        TextButton(
+                        ShareTextButton(
                             onClick = { context.edit("reorder:spells|${source.text("key")}") }
                         ) {
                             Text("Изменить порядок")

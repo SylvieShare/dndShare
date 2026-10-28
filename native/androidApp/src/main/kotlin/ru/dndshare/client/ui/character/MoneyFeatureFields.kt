@@ -39,7 +39,7 @@ internal fun MoneyFeatureFields(form: FeatureFormScope) {
             form.enabled,
         )
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            for ((label, sign) in listOf("Дать" to -1, "Взять" to 1)) FilledTonalButton(
+            for ((label, sign) in listOf("Дать" to -1, "Взять" to 1)) ShareTonalButton(
                 onClick = {
                     try {
                         val latest = form.data

@@ -85,7 +85,7 @@ internal fun AbilityChoiceFields(
         }
         if (source == "item") {
             selected.forEach { id ->
-                TextButton(onClick = { change(selected - id) }, enabled = form.enabled) {
+                ShareTextButton(onClick = { change(selected - id) }, enabled = form.enabled) {
                     Text("${context.items[id.toLongOrNull()]?.name ?: id} ×")
                 }
             }
@@ -136,7 +136,7 @@ internal fun AbilityChoiceFields(
         } else
             FlowRow {
                 options.forEach { (id, title) ->
-                    FilterChip(
+                    ShareChoiceChip(
                         id in selected,
                         {
                             change(
@@ -163,7 +163,7 @@ internal fun AbilityChoiceFields(
         Text("Прибавка характеристики +${asi["bonus"].number()}", style = ShareTypography.group)
         FlowRow {
             dndAbilities.forEach { ability ->
-                FilterChip(
+                ShareChoiceChip(
                     ability.suggestId in selected,
                     {
                         val next =
@@ -214,7 +214,7 @@ internal fun AbilitySelectionFields(form: FeatureFormScope, cache: CacheDao) {
                 cache,
                 projected,
             )
-        TextButton(
+        ShareTextButton(
             onClick = { form.rows(listOf("entries")) { it.filterIndexed { i, _ -> i != index } } },
             enabled = form.enabled,
         ) {

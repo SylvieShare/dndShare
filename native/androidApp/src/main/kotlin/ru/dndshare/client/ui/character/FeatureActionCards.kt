@@ -121,13 +121,13 @@ internal fun FeatureActionCards() {
                             style = ShareTypography.group,
                         )
                         if (context.canEdit) {
-                            TextButton(
+                            ShareTextButton(
                                 onClick = { context.adjustResource(resource.key, -1) },
                                 enabled = !busy && resource.value > 0,
                             ) {
                                 Text("−")
                             }
-                            TextButton(
+                            ShareTextButton(
                                 onClick = { context.adjustResource(resource.key, 1) },
                                 enabled = !busy && resource.value < resource.total,
                             ) {
@@ -154,7 +154,7 @@ internal fun FeatureActionCards() {
         }
     }
     if (context.canEdit)
-        TextButton(onClick = { context.edit("action:new") }) { Text("Добавить действие") }
+        ShareTextButton(onClick = { context.edit("action:new") }) { Text("Добавить действие") }
     error?.let { Text(it, color = WebPalette.Danger) }
     target?.let { action ->
         ShareFormDialog(action.title, { if (!busy) target = null }, dismissEnabled = !busy) {

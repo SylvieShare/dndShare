@@ -122,13 +122,13 @@ internal fun SpellSlotPanels() {
                                 (total - used).toString() + " / " + total,
                                 style = ShareTypography.group,
                             )
-                            TextButton(
+                            ShareTextButton(
                                 { set(pool, level, used - 1) },
                                 enabled = context.canEdit && !busy && used > 0,
                             ) {
                                 Text("Восстановить")
                             }
-                            TextButton(
+                            ShareTextButton(
                                 { set(pool, level, used + 1) },
                                 enabled = context.canEdit && !busy && used < total,
                             ) {

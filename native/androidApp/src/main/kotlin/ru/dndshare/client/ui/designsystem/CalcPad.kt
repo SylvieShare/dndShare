@@ -28,7 +28,7 @@ fun ShareCalcPad(expression: String, change: (String) -> Unit, enabled: Boolean 
             .forEach { row ->
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     row.forEach { key ->
-                        FilledTonalButton(
+                        ShareTonalButton(
                             onClick = {
                                 change(
                                     when (key) {

@@ -61,7 +61,7 @@ internal fun RichToolbar(
             ) {
                 AppGlyph(Glyph.More)
             }
-            DropdownMenu(more, { more = false }) {
+            ShareDropdownMenu(more, { more = false }) {
                 for ((key, title) in
                     listOf(
                         "strike" to "Зачёркнутый",
@@ -72,14 +72,14 @@ internal fun RichToolbar(
                         "h1" to "Заголовок 1",
                         "h2" to "Заголовок 2",
                         "h3" to "Заголовок 3",
-                    )) DropdownMenuItem(
+                    )) ShareDropdownMenuItem(
                     text = { Text(title) },
                     onClick = {
                         more = false
                         format(key)
                     },
                 )
-                DropdownMenuItem(
+                ShareDropdownMenuItem(
                     text = { Text("Ссылка") },
                     onClick = {
                         more = false
@@ -98,7 +98,7 @@ internal fun RichToolbar(
                         RichObject("<img src=\"\" alt=\"\">", "Изображение", false),
                     )
                 objects.forEach { value ->
-                    DropdownMenuItem(
+                    ShareDropdownMenuItem(
                         text = { Text(value.label) },
                         onClick = {
                             more = false
@@ -112,7 +112,7 @@ internal fun RichToolbar(
                         insert(RichObject(html, title, block))
                     }
                 }
-                DropdownMenuItem(
+                ShareDropdownMenuItem(
                     text = { Text("Изменить встроенный элемент") },
                     onClick = {
                         more = false

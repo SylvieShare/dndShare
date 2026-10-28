@@ -17,13 +17,16 @@ REQUIRED = {
                'sheet-value-height', 'sheet-value-width', 'sheet-value-compact-height', 'sheet-value-compact-width',
                'sheet-max', 'sheet-stat-min', 'sheet-base-min', 'sheet-stats-column', 'sheet-utilities-column',
                'sheet-stats-column-min', 'sheet-utilities-column-min',
+               'input-height', 'number-input-height', 'number-input-width', 'input-stepper-width',
+               'input-padding-horizontal', 'input-padding-vertical', 'toggle-width', 'toggle-height', 'toggle-thumb',
+               'checkbox-size', 'slider-track', 'slider-thumb', 'compact-header-inset', 'morph-dismiss-distance',
                'morph-stacked-max', 'morph-editor-width', 'morph-preview-min', 'morph-preview-max-height', 'morph-margin'},
     'collection': {'min-height', 'padding', 'emblem', 'art-inset', 'grid-gap'},
     'canvas': {'step', 'radius', 'opacity'},
     'spacing': {'xs', 'compact', 'small', 'label', 'medium', 'large', 'page', 'section'},
     'list': {'min-height', 'icon', 'gap', 'padding-end', 'metric-min', 'metric-max', 'metric-padding-max', 'body-top', 'body-bottom', 'row-margin', 'row-gap'},
     'motion': {'enter', 'exit', 'navigation', 'feedback', 'distance', 'morph-open', 'morph-close'},
-    'radius': {'xs', 'small', 'medium', 'large', 'xl', 'tile', 'badge', 'row', 'morph'},
+    'radius': {'xs', 'small', 'medium', 'large', 'xl', 'tile', 'badge', 'row', 'morph', 'input', 'compact-navigation'},
 }
 
 

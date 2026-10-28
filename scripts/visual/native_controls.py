@@ -62,6 +62,15 @@ class NativeControls:
                 edits=[n for n in tree.iter('node') if n.get('class')=='android.widget.EditText']
                 selected=next((n for n in edits if n.get('content-desc')==label),None)
                 if selected is None:
+                    descriptions=[n for n in tree.iter('node') if n.get('content-desc')==label]
+                    for description in descriptions:
+                        area=list(map(int,re.findall(r'\d+',description.get('bounds',''))))
+                        for candidate in edits:
+                            box=list(map(int,re.findall(r'\d+',candidate.get('bounds',''))))
+                            if len(area)==4 and len(box)==4 and area[0]<=(box[0]+box[2])//2<area[2] and area[1]<=(box[1]+box[3])//2<area[3]:
+                                selected=candidate;break
+
+                if selected is None:
                     for caption in tree.iter('node'):
                         if caption.get('text')!=label:continue
                         box=list(map(int,re.findall(r'\d+',caption.get('bounds',''))))

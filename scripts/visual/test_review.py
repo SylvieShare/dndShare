@@ -188,6 +188,23 @@ class EmulatorSafetyTest(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, "foreground"):
             window_metrics(dump.replace(PACKAGE, "launcher"), 390, 900)
 
+    def test_popup_requires_explicit_state_and_verified_app_owner(self):
+        dump = (f"mCurrentFocus=Window{{popup u0 Pop-Up Window}}\n"
+                f"mFocusedApp=ActivityRecord{{main u0 {PACKAGE}/MainActivity}}\n"
+                f"  Window #0 Window{{popup u0 Pop-Up Window}}:\n"
+                f"    mOwnerUid=10384 package={PACKAGE} appop=NONE\n"
+                f"  Window #1 Window{{main u0 {PACKAGE}/MainActivity}}:\n"
+                f"    mOwnerUid=10384 package={PACKAGE} appop=NONE\n"
+                "InsetsSource id=1 type=statusBars frame=[0,0][390,24] visible=true\n")
+        self.assertEqual(window_metrics(dump, 390, 900, allow_popup=True)['insetsDp']['top'], 24)
+        for invalid, allowed in ((dump, False),
+                                 (dump.replace('mOwnerUid=10384', 'mOwnerUid=12345', 1), True),
+                                 (dump.replace(f'package={PACKAGE}', 'package=foreign.app', 1), True),
+                                 (dump.replace(f'mFocusedApp=ActivityRecord{{main u0 {PACKAGE}',
+                                               'mFocusedApp=ActivityRecord{main u0 foreign.app'), True)):
+            with self.subTest(allowed=allowed, dump=invalid), self.assertRaisesRegex(AssertionError, 'foreground'):
+                window_metrics(invalid, 390, 900, allow_popup=allowed)
+
 
 class InteractionEvidenceTest(unittest.TestCase):
     def test_all_formats_and_actual_process_death_are_required(self):

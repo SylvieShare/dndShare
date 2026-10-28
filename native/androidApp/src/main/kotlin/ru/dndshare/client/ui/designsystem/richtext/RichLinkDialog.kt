@@ -22,9 +22,10 @@ internal fun RichLinkDialog(
             "Ссылка",
             close,
             actions = {
-                if (hasLink) TextButton(clear) { Text("Убрать ссылку", color = WebPalette.Danger) }
-                TextButton(close) { Text("Отмена") }
-                Button(
+                if (hasLink)
+                    ShareTextButton(clear) { Text("Убрать ссылку", color = WebPalette.Danger) }
+                ShareTextButton(close) { Text("Отмена") }
+                ShareButton(
                     onClick = {
                         inputs.flush()
                         if (!Regex("^(https?://|mailto:).+", RegexOption.IGNORE_CASE).matches(url))
