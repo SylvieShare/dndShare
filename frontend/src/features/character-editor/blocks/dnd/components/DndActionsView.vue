@@ -1,12 +1,12 @@
 <template>
-  <MorphTile :embedded="panel" padding="0" edit-label="Редактировать"
+  <MorphTile :outlined="false" :embedded="panel" padding="0" edit-label="Редактировать"
       title="Действия"
       :show-edit="manage"
       :edit-fade="editFade"
       @edit="$emit('manage')"
      class="dav" :class="{ 'dav--panel': panel }">
 
-    <SectionList v-for="group in groups" embedded :key="group.value" class="dav-group" :class="`dav-group--${group.value}`">
+    <SectionList :outlined="false" v-for="group in groups" embedded :key="group.value" class="dav-group" :class="`dav-group--${group.value}`">
       <template #header>
         <div class="dav-group-head">
           <ActionTiming :time="{ kind: group.value }" :label="group.label" />

@@ -42,7 +42,7 @@
 
   <!-- ── Default variant: statuses as tiles (strip + icon + name) ── -->
   <div v-else class="bs-block bs-tiles" ref="root" :class="{ 'bs-chips-one-line': isOneLine }">
-      <MorphTile padding="0"
+      <MorphTile :outlined="false" padding="0"
         v-for="item in activeItems"
         :key="item.id"
         class="bs-tile"

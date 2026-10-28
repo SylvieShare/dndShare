@@ -19,7 +19,7 @@
   </div>
 
   <!-- widget -->
-  <MorphTile v-else :embedded="panel" color="var(--accent)" :interactive="!panel" padding="0" class="lvl-widget" @click="$emit('open', $event)">
+  <MorphTile :outlined="false" v-else :embedded="panel" color="var(--accent)" :interactive="!panel" padding="0" class="lvl-widget" @click="$emit('open', $event)">
     <div class="lvl-w-level">
       <div class="lvl-w-sup">УР.</div>
       <span class="lvl-w-num">{{ level }}</span>

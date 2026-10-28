@@ -12,78 +12,134 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.*
-import ru.dndshare.client.model.*
-import ru.dndshare.client.device.DeviceServices
 import ru.dndshare.client.character.*
+import ru.dndshare.client.device.DeviceServices
+import ru.dndshare.client.model.*
 
 class ApiException(val status: Int, val code: String, message: String) : Exception(message)
 
-class ApiClient(val baseUrl: String, platform: DeviceServices, engine: HttpClientEngine = OkHttp.create()) : CharacterSheetApi {
+class ApiClient(
+    val baseUrl: String,
+    platform: DeviceServices,
+    engine: HttpClientEngine = OkHttp.create(),
+) : CharacterSheetApi {
     val cookies = SessionCookies(platform, baseUrl)
-    val client = HttpClient(engine) {
-        expectSuccess = false
-        install(ContentNegotiation) { json(WireJson) }
-        install(HttpCookies) { storage = cookies }
-        install(HttpTimeout) { requestTimeoutMillis = 45_000; connectTimeoutMillis = 15_000 }
-    }
+    val client =
+        HttpClient(engine) {
+            expectSuccess = false
+            install(ContentNegotiation) { json(WireJson) }
+            install(HttpCookies) { storage = cookies }
+            install(HttpTimeout) {
+                requestTimeoutMillis = 45_000
+                connectTimeoutMillis = 15_000
+            }
+        }
 
-    private suspend fun HttpResponse.checked(): HttpResponse {
+    internal suspend fun HttpResponse.checked(): HttpResponse {
         if (status.isSuccess()) return this
         val error = runCatching { body<JsonObject>() }.getOrNull()
-        val description = when (status.value) {
-            401 -> "Сессия завершилась. Войдите снова."
-            429 -> "Слишком много попыток. Попробуйте немного позже."
-            else -> error?.text("desc").orEmpty().ifBlank { "Сервер временно недоступен." }
-        }
+        val description =
+            when (status.value) {
+                401 -> "Сессия завершилась. Войдите снова."
+                429 -> "Слишком много попыток. Попробуйте немного позже."
+                else -> error?.text("desc").orEmpty().ifBlank { "Сервер временно недоступен." }
+            }
         throw ApiException(status.value, error?.text("type").orEmpty(), description)
     }
 
     suspend fun login(login: String, password: String): User {
-        val reply = client.post("$baseUrl/api/user/auth") {
-            contentType(ContentType.Application.Json)
-            setBody(buildJsonObject { put("login", login); put("password", password) })
-        }.checked().body<AuthReply>()
+        val reply =
+            client
+                .post("$baseUrl/api/user/auth") {
+                    contentType(ContentType.Application.Json)
+                    setBody(
+                        buildJsonObject {
+                            put("login", login)
+                            put("password", password)
+                        }
+                    )
+                }
+                .checked()
+                .body<AuthReply>()
         return reply.user?.takeIf { reply.auth }
             ?: throw ApiException(200, "INVALID_CREDENTIALS", "Неверный логин или пароль.")
     }
 
-    suspend fun checkAuth(): User? = client.get("$baseUrl/api/user/checkAuth")
-        .checked().body<AuthReply>().let { if (it.auth) it.user else null }
+    suspend fun checkAuth(): User? =
+        client.get("$baseUrl/api/user/checkAuth").checked().body<AuthReply>().let {
+            if (it.auth) it.user else null
+        }
 
-    suspend fun logout() { client.post("$baseUrl/api/user/logout").checked() }
-    suspend fun sources(): List<GameSource> = client.get("$baseUrl/api/sources").checked().body<SourcesReply>().sources
-    suspend fun characters(): List<Character> = client.get("$baseUrl/api/chars").checked().body<CharactersReply>().chars
-    override suspend fun character(uuid: String): CharacterSheet = client.get("$baseUrl/api/char/$uuid").checked().body()
-    suspend fun characterJournal(uuid: String): JsonObject = client.get("$baseUrl/api/char/$uuid/journal").checked().body()
-    suspend fun createCharacterJournal(uuid: String) {
-        client.post("$baseUrl/api/char/$uuid/journals") {
-            contentType(ContentType.Application.Json)
-            setBody(buildJsonObject { put("name", "") })
-        }.checked()
+    suspend fun logout() {
+        client.post("$baseUrl/api/user/logout").checked()
     }
+
+    suspend fun sources(): List<GameSource> =
+        client.get("$baseUrl/api/sources").checked().body<SourcesReply>().sources
+
+    suspend fun characters(): List<Character> =
+        client.get("$baseUrl/api/chars").checked().body<CharactersReply>().let { reply ->
+            reply.chars.map { it.copy(sessions = reply.sessionsByChar[it.uuid].orEmpty()) }
+        }
+
+    override suspend fun character(uuid: String): CharacterSheet =
+        client.get("$baseUrl/api/char/$uuid").checked().body()
+
+    suspend fun characterJournal(uuid: String): JsonObject =
+        client.get("$baseUrl/api/char/$uuid/journal").checked().body()
+
+    suspend fun createCharacterJournal(uuid: String) {
+        client
+            .post("$baseUrl/api/char/$uuid/journals") {
+                contentType(ContentType.Application.Json)
+                setBody(buildJsonObject { put("name", "") })
+            }
+            .checked()
+    }
+
     override suspend fun saveCharacter(uuid: String, packet: SheetPacket): SheetChange =
-        client.patch("$baseUrl/api/char/$uuid/data") {
-            contentType(ContentType.Application.Json)
-            setBody(buildJsonObject {
-                put("baseVersion", packet.baseVersion)
-                put("mutationId", packet.mutationId)
-                put("patches", buildJsonArray {
-                    packet.patches.forEach { patch -> add(buildJsonObject {
-                        put("op", patch.op); put("path", JsonArray(patch.path))
-                        if (patch.op != "remove") put("value", patch.value)
-                        patch.idField?.let { put("idField", it) }
-                        patch.beforeId?.let { put("beforeId", it) }
-                    }) }
-                })
-            })
-        }.checked().body()
+        client
+            .patch("$baseUrl/api/char/$uuid/data") {
+                contentType(ContentType.Application.Json)
+                setBody(
+                    buildJsonObject {
+                        put("baseVersion", packet.baseVersion)
+                        put("mutationId", packet.mutationId)
+                        put(
+                            "patches",
+                            buildJsonArray {
+                                packet.patches.forEach { patch ->
+                                    add(
+                                        buildJsonObject {
+                                            put("op", patch.op)
+                                            put("path", JsonArray(patch.path))
+                                            if (patch.op != "remove") put("value", patch.value)
+                                            patch.idField?.let { put("idField", it) }
+                                            patch.beforeId?.let { put("beforeId", it) }
+                                        }
+                                    )
+                                }
+                            },
+                        )
+                        if (packet.metadata.isNotEmpty())
+                            put("metadata", JsonArray(packet.metadata))
+                    }
+                )
+            }
+            .checked()
+            .body()
 
     suspend fun sync(sourceId: Long, cursor: String?): SyncPage =
-        client.get("$baseUrl/api/handbook/sync") {
-            parameter("sourceId", sourceId)
-            parameter("limit", 200)
-            if (cursor != null) parameter("cursor", cursor)
-        }.checked().body<SyncPage>()
+        client
+            .get("$baseUrl/api/handbook/sync") {
+                parameter("sourceId", sourceId)
+                parameter("limit", 200)
+                if (cursor != null) parameter("cursor", cursor)
+            }
+            .checked()
+            .body<SyncPage>()
 
-    fun close() { client.close() }
+    fun close() {
+        client.close()
+    }
 }

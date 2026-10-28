@@ -23,20 +23,21 @@ describe('chronicle resource events', () => {
     expect(log).toHaveBeenCalledTimes(3)
   })
   it('records a paid cast exactly once with its source and slot, and does not charge slotless magic', async () => {
-    const log = vi.fn(), ctx = { ownerMode: true, logSessionEvent: log }
+    const castSpell = vi.fn().mockResolvedValue(true), log = vi.fn()
+    const ctx = { ownerMode: true, logSessionEvent: log, itemTransfers: { castSpell } }
     const slots = useSpellSlots({ canInteract: ref(true), emitChange: vi.fn(), logSessionEvent: log })
     slots.loadSlotPools({ slot_pools: { short_rest: [{ level: 3, total: 2, used: 0 }] } })
-    const casting = useSpellCasting({ charCtx: ctx, spellcastingBlocked: ref(false), ...slots, spellTitle: entry => entry.item.name })
+    const casting = useSpellCasting({ charCtx: ctx, spellcastingBlocked: ref(false), ...slots })
     const entry = { item: { id: 42, name: 'Огненный шар', data: { lvl: 3 } }, ref: {} }
     expect(await casting.useSpell(entry, { pool: 'short_rest', level: 3 })).toBe(true)
-    expect(log).toHaveBeenCalledTimes(1)
-    expect(log.mock.calls[0][0].data).toMatchObject({ source: { itemId: 42 }, resourceChanges: [{ delta: -1, level: 3, pool: 'short_rest' }] })
-    expect(slots.serializedSlotPools().short_rest[0].used).toBe(1)
-    casting.useSpell({ ...entry, ref: { slotless: true } }, { pool: 'slotless', level: 3 })
-    expect(log.mock.calls[1][0].data.resourceChanges).toEqual([])
-    expect(slots.serializedSlotPools().short_rest[0].used).toBe(1)
+    expect(castSpell).toHaveBeenLastCalledWith(entry, { manual: true, targets: [], dmCount: 0, castLevel: 3, pool: 'short_rest', spendSlot: true })
+    const slotless = { ...entry, ref: { slotless: true } }
+    expect(await casting.useSpell(slotless, { pool: 'slotless', level: 3 })).toBe(true)
+    expect(castSpell).toHaveBeenLastCalledWith(slotless, { manual: true, targets: [], dmCount: 0, castLevel: 3, pool: 'slotless', spendSlot: false })
     expect(await casting.useSpell(entry, { pool: 'long_rest', level: 9 })).toBe(false)
-    expect(log).toHaveBeenCalledTimes(2)
+    expect(castSpell).toHaveBeenCalledTimes(2)
+    expect(log).not.toHaveBeenCalled()
+    expect(slots.serializedSlotPools().short_rest[0].used).toBe(0)
   })
   it('preserves resource color, item source and actual clamped count in both directions', () => {
     const ctx = { logSessionEvent: vi.fn() }

@@ -1,5 +1,5 @@
 <template>
-  <BaseTile class="char-card" @click="navigate">
+  <BaseTile class="char-card" :outlined="false" @click="navigate">
     <div class="char-ava">
       <img v-if="avaUrl" :src="avaUrl" class="ava-img" alt="" />
       <div v-else class="ava-placeholder" />

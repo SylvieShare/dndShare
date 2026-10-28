@@ -1,5 +1,5 @@
 <template>
-  <BaseTile class="item-mechanic-panel" framed :color="presentation.color" :style="{ '--mechanic-tone': presentation.color }" @click.stop @pointerdown.stop>
+  <BaseTile class="item-mechanic-panel" :outlined="false" tint :color="presentation.color" :style="{ '--mechanic-tone': presentation.color }" @click.stop @pointerdown.stop>
     <component :is="collapse ? 'details' : 'div'" ref="disclosure" class="item-mechanic-disclosure" @toggle="syncDisclosure">
       <component :is="collapse ? 'summary' : 'div'" ref="heading" class="item-mechanic-heading" :aria-expanded="collapse ? expanded : undefined" @click="toggleDisclosure">
         <div class="item-mechanic-icon"><slot name="icon"><component :is="presentation.icon" :size="24" /></slot></div>

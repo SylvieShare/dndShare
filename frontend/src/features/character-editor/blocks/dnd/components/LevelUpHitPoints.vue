@@ -1,5 +1,5 @@
 <template>
-  <BaseTile class="lu-health" color="var(--danger)" framed>
+  <BaseTile :outlined="false" class="lu-health" color="var(--danger)" framed>
     <div class="lu-health-heading"><HeartPulse :size="18" aria-hidden="true" /><h3>Хиты</h3></div>
     <div class="lu-health-result" aria-live="polite">
       <strong>{{ hp.hpReady ? `+${hp.hpGain}` : '—' }}</strong>

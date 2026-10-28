@@ -8,7 +8,7 @@
 
     <AppModalFrame v-if="shortOpen" title="Короткий отдых" @close="shortOpen = false">
       <DndShortRestEditor
-        :hp="hp"
+        :hp="effectiveHp"
         :con-mod="conMod"
         @spend="spendDie"
         @finish="finishShort"
@@ -17,7 +17,7 @@
 
     <AppModalFrame v-if="longOpen" title="Длинный отдых" @close="longOpen = false">
       <DndLongRestEditor
-        :hp="hp"
+        :hp="effectiveHp"
         :recovery-count="longRestRecoveryCount(hp, charCtx.rulesVersion)"
         @confirm="applyLong"
         @cancel="longOpen = false"
@@ -47,7 +47,7 @@ import {
   spendHitDie,
   statMod,
 } from '@/features/character-editor/blocks/dnd/lib/rest'
-import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
+import { hpMaximum, normalizeHpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 import { normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 
 const SHORT_COLOR = 'var(--warning)'
@@ -76,6 +76,10 @@ const ids = computed(() => {
 })
 
 const hp = computed(() => props.values?.[ids.value.hp] || {})
+const effectiveHp = computed(() => {
+  const maximum = normalizeHpMaximum(hp.value.max)
+  return { ...hp.value, max: { ...maximum, bonuses: [...maximum.bonuses, ...(charCtx.characterHitPoints?.bonuses || [])] } }
+})
 const conMod = computed(() => statMod(props.values?.[ids.value.con]))
 
 function onShort() {
@@ -97,7 +101,7 @@ function spendDie(die) {
   const mod = conMod.value
   const expr = `1d${sides}${mod >= 0 ? '+' + mod : mod}`
   const result = dice.roll(`Кость хитов ${die}`, expr, { color: 'var(--success)' })
-  emit('update:value', ids.value.hp, spendHitDie(hp.value, result?.total ?? 0, die))
+  emit('update:value', ids.value.hp, spendHitDie(hp.value, result?.total ?? 0, die, hpMaximum(effectiveHp.value)))
 }
 
 async function finishShort() {
@@ -131,7 +135,7 @@ async function applyLong(recovery) {
   const i = ids.value
   const recoveredCount = longRestRecoveryCount(hp.value, charCtx.rulesVersion)
   const resourceRecovery = await restoreAllResources('long')
-  emit('update:value', i.hp, longRestHp(hp.value, recovery, charCtx.rulesVersion))
+  emit('update:value', i.hp, longRestHp(hp.value, recovery, charCtx.rulesVersion, hpMaximum(effectiveHp.value)))
   const spells = props.values?.[i.spells]
   if (spells && typeof spells === 'object') {
     const next = longRestSpells(spells)
@@ -146,7 +150,7 @@ async function applyLong(recovery) {
     action: 'Длинный отдых',
     data: {
       kind: 'long',
-      hpRecovered: Math.max(0, hpMaximum(hp.value) - (Number(hp.value.current) || 0)),
+      hpRecovered: Math.max(0, hpMaximum(effectiveHp.value) - (Number(hp.value.current) || 0)),
       hitDiceRecovered: recoveredCount,
       resourcesRecovered: resourceRecovery.recoveredNames,
     },

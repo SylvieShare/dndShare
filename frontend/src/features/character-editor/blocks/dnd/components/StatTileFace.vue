@@ -48,7 +48,7 @@ const emit = defineEmits(['edit', 'open', 'roll'])
 const cell = computed(() => props.embedded && !props.panel)
 const faceProps = computed(() => cell.value
   ? { label: props.label, stacked: true, disabled: !props.interactive, active: props.active }
-  : { class: 'stf', compactHeader: true, embedded: props.panel, color: props.color, padding: '0',
+  : { class: 'stf', outlined: false, compactHeader: true, embedded: props.panel, color: props.color, padding: '0',
       editLabel: 'Редактировать', title: props.label, showEdit: props.showEdit, editFade: props.editFade })
 
 function onFaceClick(event) { if (cell.value) emit('open', event) }

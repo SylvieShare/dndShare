@@ -1,5 +1,6 @@
 """Content-addressed source copies, excluding runtime files and secrets."""
 import hashlib
+from concurrent.futures import ThreadPoolExecutor
 import os
 from pathlib import Path
 import tempfile
@@ -46,17 +47,23 @@ def normalized(data):
 
 def source_files(source):
     names = capture(["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"], cwd=source)
-    return sorted({name for name in names.split("\0") if included(name) and (source / name).is_file()})
+    candidates = sorted({name for name in names.split("\0") if included(name)})
+    # Windows/WSL metadata round-trips dominate this check; keep the same exact file selection.
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        present = pool.map(lambda name: (source / name).is_file(), candidates)
+        return [name for name, exists in zip(candidates, present) if exists]
 
 
 def content(source, names):
-    entries = {}
-    for name in names:
+    def read(name):
         file = source / name
         if file.is_symlink():
             raise UIError(f"Source symlinks are not accepted: {name}")
-        entries[name] = hashlib.sha256(normalized(file.read_bytes())).hexdigest()
-    return entries
+        return name, hashlib.sha256(normalized(file.read_bytes())).hexdigest()
+
+    # Hash bytes on every run, including unchanged timestamps. No mtime cache or skipped roots.
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        return dict(pool.map(read, names))
 
 
 def content_hash(entries):

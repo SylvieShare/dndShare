@@ -1,5 +1,5 @@
 <template>
-  <MorphTile v-if="current" class="spell-concentration" title="Концентрация" :show-edit="false" aria-label="Концентрация">
+  <MorphTile :outlined="false" v-if="current" class="spell-concentration" title="Концентрация" :show-edit="false" aria-label="Концентрация">
     <template #aside>
       <ActionButton v-if="current && ctx.ownerMode" variant="quiet" :disabled="ctx.itemTransfers.busy" @click="controller.end()">Прекратить</ActionButton>
     </template>

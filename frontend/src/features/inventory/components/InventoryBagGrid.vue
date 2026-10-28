@@ -1,6 +1,6 @@
 <template>
   <div ref="grid" class="inventory-bag-grid" :class="{ 'inventory-bag-grid--adaptive': adaptive }" :style="{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }" :data-sortable-container="group" :aria-label="label">
-    <BaseTile v-for="(entry, index) in cells" :key="index" class="inventory-bag-cell"
+    <BaseTile v-for="(entry, index) in cells" :key="index" :outlined="false" class="inventory-bag-cell"
       :class="{ 'inventory-bag-cell--simplified': entry && isSimplified(entry), 'inventory-bag-cell--equipped': entry && isEquipped(entry), 'inventory-bag-cell--target': sortable?.dragging && sortable?.targetGroup === group && sortable?.targetIndex === index }"
       :data-sortable-slot="index" :aria-label="!entry ? `Свободная ячейка ${index + 1}` : undefined">
       <slot v-if="entry" :entry="entry" :index="index" />
@@ -69,7 +69,7 @@ watch(() => [props.adaptive, props.sortable?.dragging], updateColumns)
 .inventory-bag-grid { position: relative; display: grid; gap: 8px; width: 100%; max-width: 360px; align-self: center; }
 .inventory-bag-grid--adaptive { max-width: none; align-self: stretch; }
 .inventory-bag-cell { aspect-ratio: 1; min-width: 0; display: flex; align-items: center; justify-content: center; box-shadow: none; }
-.inventory-bag-cell::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--border); border-radius: inherit; pointer-events: none; z-index: 1; }
+.inventory-bag-cell::after { content: ''; position: absolute; inset: 0; border: 2px solid transparent; border-radius: inherit; pointer-events: none; z-index: 1; }
 .inventory-bag-cell--simplified::after { border-style: dashed; }
 .inventory-bag-cell--equipped::after { border-color: var(--accent); }
 .inventory-bag-cell--target { outline: 2px solid var(--accent); outline-offset: 2px; }

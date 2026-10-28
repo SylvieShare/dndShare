@@ -1,6 +1,6 @@
 <template>
   <div v-show="!blockHidden" class="spells-block">
-    <BaseTile class="sp-rule-note" role="note">{{ rules.spellcastingRule }}</BaseTile>
+    <BaseTile :outlined="false" class="sp-rule-note" role="note">{{ rules.spellcastingRule }}</BaseTile>
     <SpellConcentrationBlock />
 
     <div v-if="spellcastingBlocked" class="sp-casting-warning" role="status">
@@ -35,7 +35,7 @@
     <section v-if="grantedSpellsByLevel.length" class="sp-standalone">
       <div class="sp-standalone-title">Дарованные заклинания</div>
       <div class="spells-groups">
-        <SectionList v-for="group in grantedSpellsByLevel" :key="`grant:${group.level}`" :title="groupTitle(group.level)">
+        <SectionList :outlined="false" v-for="group in grantedSpellsByLevel" :key="`grant:${group.level}`" :title="groupTitle(group.level)">
           <SpellCard
             v-for="(entry, idx) in group.items"
             :key="entry.ref.key"
@@ -102,7 +102,7 @@
         </span>
       </div>
 
-      <SectionList
+      <SectionList :outlined="false"
         v-for="group in spellsByLevel"
         :key="group.level"
         :title="groupTitle(group.level)"

@@ -1,6 +1,6 @@
 <template>
   <div v-if="widgets.length" class="fw-list">
-    <BaseTile
+    <BaseTile :outlined="false"
       v-for="widget in widgets"
       :key="widget.key"
       class="fw-card"

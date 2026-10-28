@@ -42,3 +42,14 @@ INSERT INTO dndshare.user_tutorial(user_id,flow_id,source_key,device,revision,st
 SELECT u.id,'character','edition:'||edition,device,58,'completed'
 FROM dndshare.users u CROSS JOIN generate_series(1,2) edition CROSS JOIN unnest(ARRAY['mobile','desktop']) device
 WHERE u.login='native_tester';
+
+-- Character CRUD scenarios create copies through the real API after explicit seed ids.
+SELECT setval(pg_get_serial_sequence('dndshare."char"','id'),(SELECT max(id) FROM dndshare."char"));
+
+-- Canonical currencies are required by real money-transfer commands.
+INSERT INTO dndshare.suggest(type_id,id,value) VALUES
+(17,1,'Медные монеты'),(17,2,'Серебряные монеты'),(17,3,'Золотые монеты'),(17,4,'Электрумовые монеты'),(17,5,'Платиновые монеты');
+
+-- Explicit media/catalogue fixture ids must not collide with later API inserts.
+SELECT setval(pg_get_serial_sequence('dndshare.storage_image','id'),(SELECT max(id) FROM dndshare.storage_image));
+SELECT setval(pg_get_serial_sequence('dndshare.item','id'),(SELECT max(id) FROM dndshare.item));

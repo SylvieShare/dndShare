@@ -8,7 +8,7 @@
       <template v-else>
         <CharacterInteractionInbox v-if="controller.interactions" :controller="controller.interactions" :character-uuid="characterUuid" />
         <p v-if="!state.transfers.length && !controller.interactions?.state.pending.length" class="transfer-hint">Незавершённых событий нет.</p>
-        <BaseTile v-for="transfer in state.transfers" :key="transfer.id" framed role="article" class="transfer-event">
+        <BaseTile :outlined="false" v-for="transfer in state.transfers" :key="transfer.id" framed role="article" class="transfer-event">
           <div class="transfer-offer">
             <template v-if="transfer.senderCharUuid === characterUuid">
               <ArrowRight :size="18" aria-label="Кому" />

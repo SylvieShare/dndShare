@@ -1,7 +1,7 @@
 <template>
   <AppModalFrame title="Классы и уровни" subtitle="Ручное редактирование" :z-index="3200" @close="$emit('close')">
     <div class="manual-classes">
-      <BaseTile class="manual-classes-warning" color="var(--warning)" tint>
+      <BaseTile :outlined="false" class="manual-classes-warning" color="var(--warning)" tint>
         <strong>Сохраните последовательность развития персонажа</strong>
         <p>Для обычного повышения используйте блок уровня: он проведёт вас через получение новых возможностей.
           Ручная правка меняет только классы, подклассы и их уровни. Полученные способности, хиты и заклинания
@@ -14,7 +14,7 @@
         <ActionButton variant="secondary" @click="load">Повторить загрузку</ActionButton>
       </div>
       <template v-else>
-        <BaseTile v-for="(row, index) in rows" :key="row.key" class="manual-class">
+        <BaseTile :outlined="false" v-for="(row, index) in rows" :key="row.key" class="manual-class">
           <div class="manual-class-heading">
             <span>Класс {{ index + 1 }}</span>
             <RemoveButton icon="trash" :label="`Удалить класс ${row.name || index + 1}`" @click="remove(row)" />

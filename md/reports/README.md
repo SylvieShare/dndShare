@@ -31,6 +31,8 @@
 
 - [Реорганизация инструкций и wiki](documentation-restructure-2026-10-26.md)
 
+- [Перенос персонажей в Android — 28 октября 2026](native-character-parity-2026-10-28.md)
+
 ## Связанные страницы
 
 [Оглавление wiki](../README.md)

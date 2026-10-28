@@ -1,6 +1,7 @@
 package web
 
 import (
+	"dndshare/internal/store"
 	"net/http"
 )
 
@@ -14,7 +15,7 @@ func (s *Server) writeReloadedJournal(w http.ResponseWriter, r *http.Request, uu
 }
 
 func (s *Server) handleCreateJournalSection(w http.ResponseWriter, r *http.Request) {
-	_, journal, ok := s.requireJournalWrite(w, r)
+	userID, journal, ok := s.requireJournalWrite(w, r)
 	if !ok {
 		return
 	}
@@ -31,7 +32,7 @@ func (s *Server) handleCreateJournalSection(w http.ResponseWriter, r *http.Reque
 	if !ok {
 		return
 	}
-	if _, err := s.store.CreateJournalSection(r.Context(), journal.ID, req.Title, req.Date); err != nil {
+	if _, err := s.store.CreateJournalSection(r.Context(), journal.ID, req.Title, req.Date, store.JournalCreationIdentity{UserID: userID, ClientActionID: req.ClientActionID}); err != nil {
 		writeJournalError(w, err)
 		return
 	}

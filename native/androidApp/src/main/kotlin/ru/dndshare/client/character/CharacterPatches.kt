@@ -1,17 +1,20 @@
 package ru.dndshare.client.character
 
-import kotlinx.serialization.json.*
 import java.util.UUID
+import kotlinx.serialization.json.*
 
 fun sheetValue(document: JsonElement?, path: List<JsonElement>): JsonElement? {
     var current = document
-    for (part in path) current = when (part) {
-        is JsonPrimitive -> (current as? JsonObject)?.get(part.content)
-        is JsonObject -> (current as? JsonArray)?.singleOrNull { row ->
-            (row as? JsonObject)?.get(part.getValue("idField").jsonPrimitive.content) == part["id"]
+    for (part in path) current =
+        when (part) {
+            is JsonPrimitive -> (current as? JsonObject)?.get(part.content)
+            is JsonObject ->
+                (current as? JsonArray)?.singleOrNull { row ->
+                    (row as? JsonObject)?.get(part.getValue("idField").jsonPrimitive.content) ==
+                        part["id"]
+                }
+            else -> error("Недопустимый путь изменения.")
         }
-        else -> error("Недопустимый путь изменения.")
-    }
     return current
 }
 
@@ -22,7 +25,11 @@ private fun selectorIndex(array: JsonArray, selector: JsonObject): Int {
     return matches.firstOrNull() ?: -1
 }
 
-private fun changeAt(node: JsonElement, path: List<JsonElement>, replacement: (JsonElement?) -> JsonElement?): JsonElement {
+private fun changeAt(
+    node: JsonElement,
+    path: List<JsonElement>,
+    replacement: (JsonElement?) -> JsonElement?,
+): JsonElement {
     require(path.isNotEmpty())
     val part = path.first()
     val rest = path.drop(1)
@@ -30,56 +37,96 @@ private fun changeAt(node: JsonElement, path: List<JsonElement>, replacement: (J
         is JsonPrimitive -> {
             require(part.isString && node is JsonObject) { "Путь не указывает на поле документа." }
             val old = node[part.content]
-            val next = if (rest.isEmpty()) replacement(old) else changeAt(requireNotNull(old), rest, replacement)
-            JsonObject(node.toMutableMap().apply { if (next == null) remove(part.content) else put(part.content, next) })
+            val next =
+                if (rest.isEmpty()) replacement(old)
+                else changeAt(requireNotNull(old), rest, replacement)
+            JsonObject(
+                node.toMutableMap().apply {
+                    if (next == null) remove(part.content) else put(part.content, next)
+                }
+            )
         }
         is JsonObject -> {
             require(node is JsonArray)
             val index = selectorIndex(node, part)
             require(index >= 0) { "Запись больше не существует." }
-            val next = if (rest.isEmpty()) replacement(node[index]) else changeAt(node[index], rest, replacement)
-            JsonArray(node.toMutableList().apply { if (next == null) removeAt(index) else set(index, next) })
+            val next =
+                if (rest.isEmpty()) replacement(node[index])
+                else changeAt(node[index], rest, replacement)
+            JsonArray(
+                node.toMutableList().apply {
+                    if (next == null) removeAt(index) else set(index, next)
+                }
+            )
         }
         else -> error("Недопустимый путь изменения.")
     }
 }
 
-fun applySheetPatches(document: JsonObject, patches: List<SheetPatch>): JsonObject = patches.fold(document) { current, patch ->
-    val changed = when (patch.op) {
-        "set" -> changeAt(current, patch.path) { patch.value }
-        "remove" -> changeAt(current, patch.path) { null }
-        "insert" -> {
-            val selector = patch.path.last().jsonObject
-            changeAt(current, patch.path.dropLast(1)) { old ->
-                val array = old as? JsonArray ?: error("Путь не указывает на список.")
-                require(selectorIndex(array, selector) < 0)
-                require(patch.value.jsonObject[selector.getValue("idField").jsonPrimitive.content] == selector["id"])
-                val list = array.toMutableList()
-                val before = patch.beforeId?.let { id -> list.indexOfFirst { it.jsonObject[selector.getValue("idField").jsonPrimitive.content] == id } }
-                if (before != null && before >= 0) list.add(before, patch.value) else list.add(patch.value)
-                JsonArray(list)
+fun applySheetPatches(document: JsonObject, patches: List<SheetPatch>): JsonObject =
+    patches.fold(document) { current, patch ->
+        val changed =
+            when (patch.op) {
+                "set" -> changeAt(current, patch.path) { patch.value }
+                "remove" -> changeAt(current, patch.path) { null }
+                "insert" -> {
+                    val selector = patch.path.last().jsonObject
+                    changeAt(current, patch.path.dropLast(1)) { old ->
+                        val array = old as? JsonArray ?: error("Путь не указывает на список.")
+                        require(selectorIndex(array, selector) < 0)
+                        require(
+                            patch.value.jsonObject[
+                                    selector.getValue("idField").jsonPrimitive.content] ==
+                                selector["id"]
+                        )
+                        val list = array.toMutableList()
+                        val before =
+                            patch.beforeId?.let { id ->
+                                list.indexOfFirst {
+                                    it.jsonObject[
+                                            selector.getValue("idField").jsonPrimitive.content] ==
+                                        id
+                                }
+                            }
+                        if (before != null && before >= 0) list.add(before, patch.value)
+                        else list.add(patch.value)
+                        JsonArray(list)
+                    }
+                }
+                "order" ->
+                    changeAt(current, patch.path) { old ->
+                        val array = old as? JsonArray ?: error("Путь не указывает на список.")
+                        val field = requireNotNull(patch.idField)
+                        val rows = array.associateBy { it.jsonObject[field] }
+                        val ids = patch.value.jsonArray
+                        require(
+                            rows.size == array.size &&
+                                ids.size == rows.size &&
+                                ids.toSet() == rows.keys
+                        )
+                        JsonArray(ids.map { rows.getValue(it) })
+                    }
+                else -> error("Неизвестная операция документа: ${patch.op}")
             }
-        }
-        "order" -> changeAt(current, patch.path) { old ->
-            val array = old as? JsonArray ?: error("Путь не указывает на список.")
-            val field = requireNotNull(patch.idField)
-            val rows = array.associateBy { it.jsonObject[field] }
-            val ids = patch.value.jsonArray
-            require(rows.size == array.size && ids.size == rows.size && ids.toSet() == rows.keys)
-            JsonArray(ids.map { rows.getValue(it) })
-        }
-        else -> error("Неизвестная операция документа: ${patch.op}")
+        changed.jsonObject
     }
-    changed.jsonObject
-}
 
-fun createSheetEdit(document: JsonObject, patches: List<SheetPatch>): SheetEdit {
-    require(patches.isNotEmpty())
+fun createSheetEdit(
+    document: JsonObject,
+    patches: List<SheetPatch>,
+    metadata: List<JsonObject> = emptyList(),
+): SheetEdit {
+    require(patches.isNotEmpty() || metadata.isNotEmpty())
     applySheetPatches(document, patches)
-    return SheetEdit(UUID.randomUUID().toString(), patches, patches.map { patch ->
-        val previous = sheetValue(document, patch.path)
-        SheetPrecondition(patch.path, previous != null, previous ?: JsonNull)
-    })
+    return SheetEdit(
+        UUID.randomUUID().toString(),
+        patches,
+        patches.map { patch ->
+            val previous = sheetValue(document, patch.path)
+            SheetPrecondition(patch.path, previous != null, previous ?: JsonNull)
+        },
+        metadata,
+    )
 }
 
 /** Null means conflict. Matching remote results are already applied. */
@@ -88,11 +135,21 @@ fun rebaseSheetEdit(edit: SheetEdit, remote: JsonObject): SheetEdit? {
     for ((index, patch) in edit.patches.withIndex()) {
         val actual = sheetValue(remote, patch.path)
         val desired = if (patch.op == "remove") null else patch.value
-        if (actual == desired) continue
+        if (actual == desired) {
+            if (edit.metadata.isNotEmpty()) return null
+            continue
+        }
         val previous = edit.before[index]
-        if ((actual != null) != previous.exists || actual != previous.value.takeIf { previous.exists }) return null
+        if (
+            (actual != null) != previous.exists ||
+                actual != previous.value.takeIf { previous.exists }
+        )
+            return null
         remaining += index
     }
-    return edit.copy(id = UUID.randomUUID().toString(), patches = remaining.map(edit.patches::get),
-        before = remaining.map(edit.before::get))
+    return edit.copy(
+        id = UUID.randomUUID().toString(),
+        patches = remaining.map(edit.patches::get),
+        before = remaining.map(edit.before::get),
+    )
 }

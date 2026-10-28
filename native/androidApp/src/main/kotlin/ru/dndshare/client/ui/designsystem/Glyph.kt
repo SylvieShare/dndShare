@@ -1,18 +1,34 @@
 package ru.dndshare.client.ui.designsystem
 
-import ru.dndshare.client.R
-
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import ru.dndshare.client.R
 
 // Lucide geometry is shared with the web; regenerate using scripts/native/sync_web_design.py.
 enum class Glyph(@param:DrawableRes val resource: Int) {
-    Rest(R.drawable.lucide_coffee),
+    Wallet(R.drawable.lucide_wallet),
+    Weight(R.drawable.lucide_weight),
+    Backpack(R.drawable.lucide_backpack),
+    Shirt(R.drawable.lucide_shirt),
+    Trash(R.drawable.lucide_trash),
+    CircleCheck(R.drawable.lucide_circle_check),
+    Swords(R.drawable.lucide_swords),
+    Target(R.drawable.lucide_crosshair),
+    ShieldCheck(R.drawable.lucide_shield_check),
+    Bold(R.drawable.lucide_bold),
+    Italic(R.drawable.lucide_italic),
+    Underline(R.drawable.lucide_underline),
+    Undo(R.drawable.lucide_undo_2),
+    Redo(R.drawable.lucide_redo_2),
+    More(R.drawable.lucide_ellipsis),
+    Rest(R.drawable.lucide_moon),
+    Settings(R.drawable.lucide_settings),
     Edit(R.drawable.lucide_pencil),
     Filter(R.drawable.lucide_list_filter),
     Book(R.drawable.lucide_book_open),
@@ -35,6 +51,15 @@ enum class Glyph(@param:DrawableRes val resource: Int) {
 }
 
 @Composable
-fun AppGlyph(glyph: Glyph, modifier: Modifier = Modifier) {
-    Icon(painterResource(glyph.resource), contentDescription = null, modifier = modifier.size(24.dp))
+fun AppGlyph(
+    glyph: Glyph,
+    modifier: Modifier = Modifier,
+    tint: androidx.compose.ui.graphics.Color = LocalContentColor.current,
+) {
+    Icon(
+        painterResource(glyph.resource),
+        contentDescription = null,
+        modifier = modifier.size(24.dp),
+        tint = tint,
+    )
 }

@@ -10,7 +10,7 @@ import time
 import xml.etree.ElementTree as ET
 
 from adb import COMPONENT, PACKAGE, native_path, powershell_path, run
-from character import verify_swipes, verify_form_restoration, wait_absent
+from character import verify_swipes, verify_form_restoration, wait_absent, verify_vtm_menu
 
 
 def build_install(device, root, url, output):
@@ -28,7 +28,14 @@ def login(device, fixture):
     device.shell("am", "force-stop", PACKAGE)
     device.shell("pm", "clear", PACKAGE)
     device.shell("am", "start", "-W", "-n", COMPONENT)
-    root = device.wait("Логин")
+    try:
+        root = device.wait("Логин", timeout=20)
+    except AssertionError:
+        # AVD accessibility can lose the first window after SystemUI restarts.
+        # Retry this disposable app's cold start once, never the shared ADB server.
+        device.shell("am", "force-stop", PACKAGE)
+        device.shell("am", "start", "-W", "-n", COMPONENT)
+        root = device.wait("Логин")
     edits = [n for n in root.iter("node") if n.get("class") == "android.widget.EditText"]
     if len(edits) != 2:
         raise AssertionError("Expected two native login fields")
@@ -40,7 +47,18 @@ def login(device, fixture):
         root = device.tree()
         edits = [n for n in root.iter("node") if n.get("class") == "android.widget.EditText"]
     device.shell("input", "keyevent", "4")
-    device.click(text="Войти")
+    # Keyboard dismissal also changes the compact brand layout. Wait for the
+    # actual button bounds to settle before injecting a coordinate tap.
+    previous = None
+    for _ in range(8):
+        tree = device.tree()
+        button = next((n for n in tree.iter("node") if n.get("text") == "Войти"), None)
+        if button is not None and button.get("bounds") == previous:
+            device.tap(button)
+            break
+        previous = button.get("bounds") if button is not None else None
+    else:
+        raise AssertionError("Login button did not settle after keyboard dismissal")
     device.wait("Основные разделы")
     device.wait("205")
 
@@ -152,7 +170,7 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
     login_count = 0
     cover_verified = False
     wanted = set(matrix['states'])
-    full = wanted == {'collections', 'menu', 'list', 'record', 'sheet-base', 'sheet-stats', 'sheet-stat-editor', 'vtm-base'}
+    full = wanted == {'collections', 'menu', 'list', 'record', 'character-list', 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality', 'vtm-base'}
 
     def take(format_, state):
         if state in wanted:
@@ -196,20 +214,25 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
                     take(format_, 'record')
                     device.shell('input', 'keyevent', '4')
                 device.shell('input', 'keyevent', '4')
-        if not (wanted & {'sheet-base', 'sheet-stats', 'sheet-stat-editor', 'vtm-base'}):
+        if not (wanted & {'character-list', 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality', 'vtm-base'}):
             continue
         if index == 0 or handbook:
             if format_['name'] != 'wide':
                 device.click(description='Открыть меню')
             device.click(text='Персонажи')
-        if wanted & {'sheet-base', 'sheet-stats', 'sheet-stat-editor'}:
+        take(format_, 'character-list')
+        if wanted & { 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality'}:
             device.click(text=fixture['characters'][0]['name'])
             if format_['name'] == 'phone':
                 device.click(description='База')
             elif format_['name'] == 'tablet':
                 device.click(text='База')
             device.wait('Волшебник 4' if format_['name'] != 'wide' else fixture['characters'][0]['name'])
+            if format_['name']=='wide': device.click(text='Оружие')
             take(format_, 'sheet-base')
+            if 'sheet-death-saves' in wanted:
+                if format_['name']!='phone': device.wait(description='Успехи: 3')
+                take(format_, 'sheet-death-saves')
             if wanted & {'sheet-stats', 'sheet-stat-editor'}:
                 gesture = verify_swipes(device, format_)
                 (output.parent / ('native-swipe-' + format_['name'] + '.json')).write_text(json.dumps(gesture, ensure_ascii=False, indent=2))
@@ -223,8 +246,26 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
                     lifecycle = verify_form_restoration(device, url, fixture, stats)
                     (output.parent / 'native-form-lifecycle.json').write_text(json.dumps(lifecycle, ensure_ascii=False, indent=2))
                 else:
-                    device.click(text='Отмена')
+                    device.click(description='Закрыть редактор')
                     wait_absent(device, 'Основное значение')
+            if 'sheet-weapons' in wanted:
+                device.click(description='Оружие') if format_['name']=='phone' else device.click(text='Оружие')
+                device.wait('Посох молнии')
+                take(format_, 'sheet-weapons')
+            if 'sheet-inventory' in wanted:
+                if format_['name']=='phone': device.click(description='Предметы')
+                else: device.click(text='Снаряжение' if format_['name']=='wide' else 'Предметы')
+                device.wait('фунт.')
+                take(format_,'sheet-inventory')
+            if 'sheet-magic' in wanted:
+                if format_['name']=='phone': device.click(description='Магия')
+                else: device.click(text='Магия')
+                device.wait('ЯЧЕЙКИ ЗАКЛИНАНИЙ')
+                take(format_,'sheet-magic')
+            if 'sheet-personality' in wanted:
+                device.click(description='Личность') if format_['name']=='phone' else device.click(text='Личность')
+                device.wait('Странница')
+                take(format_, 'sheet-personality')
             if full and format_['name'] == 'phone':
                 proof = verify_character_edit(device, url, fixture)
                 (output.parent / 'native-character-edit.json').write_text(json.dumps(proof, ensure_ascii=False, indent=2))
@@ -233,6 +274,8 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
         if 'vtm-base' in wanted:
             device.click(text=fixture['characters'][1]['name'])
             device.wait('Тореадор')
+            proof = verify_vtm_menu(device)
+            (output.parent / ('native-vtm-menu-' + format_['name'] + '.json')).write_text(json.dumps(proof))
             take(format_, 'vtm-base')
             device.shell('input', 'keyevent', '4')
             device.wait('Найти персонажа')

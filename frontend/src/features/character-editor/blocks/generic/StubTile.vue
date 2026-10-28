@@ -1,5 +1,5 @@
 <template>
-  <BaseTile class="stub-tile" :color="accent">
+  <BaseTile :outlined="false" class="stub-tile" :color="accent">
       <TileAccentStrip />
     <div class="stub-tile-title">{{ title }}</div>
     <div class="stub-tile-body">

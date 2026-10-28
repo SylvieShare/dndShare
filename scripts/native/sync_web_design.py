@@ -10,12 +10,14 @@ ROOT = Path(__file__).resolve().parents[2]
 FRONTEND = ROOT / "frontend"
 NATIVE = ROOT / "native/androidApp/src/main"
 ICONS = {
+    "Wallet": "wallet", "Weight": "weight", "Backpack": "backpack", "Shirt": "shirt", "Trash": "trash",
     "Book": "book-open", "Rules": "book-open-check", "Characters": "users",
     "CreateCharacter": "user-round-plus", "Sessions": "scroll-text", "Maps": "map",
     "Admin": "shield", "Account": "user-round", "Menu": "menu", "Close": "x",
     "Collapse": "panel-left-close", "Expand": "panel-left-open", "Refresh": "refresh-cw",
     "Filter": "list-filter", "Back": "arrow-left", "Exit": "log-out", "Search": "search", "Chevron": "chevron-right",
-    "Rest": "coffee", "Edit": "pencil",
+    "Rest": "moon", "Settings": "settings", "Edit": "pencil", "CircleCheck": "circle-check", "Swords": "swords", "Target": "crosshair", "ShieldCheck": "shield-check",
+    "Bold": "bold", "Italic": "italic", "Underline": "underline", "Undo": "undo-2", "Redo": "redo-2", "More": "ellipsis",
 }
 COLORS = {
     "Background": "bg", "Surface": "surface", "Raised": "surface-raised",
@@ -94,12 +96,30 @@ def outputs():
         yield NATIVE / "assets/character-sheet" / filename, (FRONTEND / "public/static" / filename).read_text()
 
 
+def dice_shapes():
+    source = (FRONTEND / "src/shared/ui/SystemDie.vue").read_text()
+    raw = re.search(r"const SHAPES = (\{.*?\n\})", source, re.S).group(1)
+    raw = re.sub(r"(\b\w+):", r'"\1":', raw).replace("'", '"')
+    raw = re.sub(r",\s*([}\]])", r"\1", raw)
+    shapes = json.loads(raw)
+    lines = ["// Generated from frontend/src/shared/ui/SystemDie.vue. Do not edit.",
+             "package ru.dndshare.client.ui.designsystem", "",
+             "internal data class ShareDieShape(val path: String, val liquidY: Float, val shineY: Float, val textY: Float, val fontSizes: List<Float>)",
+             "internal val shareDieShapes = mapOf("]
+    for key, row in shapes.items():
+        sizes = ", ".join(str(value) + "f" for value in row["fontSizes"])
+        lines.append(f'    {key[1:]} to ShareDieShape({json.dumps(row["path"])}, {row["liquidY"]}f, {row["shineY"]}f, {row["textY"]}f, listOf({sizes})),')
+    lines.extend([")", ""])
+    return "\n".join(lines)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="Fail if committed native resources differ from web")
     args = parser.parse_args()
     stale = []
-    for path, content in outputs():
+    generated = list(outputs()) + [(NATIVE / "kotlin/ru/dndshare/client/ui/designsystem/DieShapes.kt", dice_shapes())]
+    for path, content in generated:
         if args.check:
             if not path.exists() or path.read_text() != content:
                 stale.append(str(path.relative_to(ROOT)))

@@ -22,9 +22,15 @@
     "menu",
     "list",
     "record",
+    "character-list",
     "sheet-base",
+    "sheet-death-saves",
     "sheet-stats",
     "sheet-stat-editor",
+    "sheet-weapons",
+    "sheet-magic",
+    "sheet-inventory",
+    "sheet-personality",
     "vtm-base"
   ],
   "platforms": [

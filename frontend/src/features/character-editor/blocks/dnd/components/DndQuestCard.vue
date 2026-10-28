@@ -1,5 +1,5 @@
 <template>
-  <MorphTile :embedded="panel" padding="0" edit-label="Редактировать" :title="quest.title || 'Без названия'" :show-edit="editable" @edit="$emit('edit', $event)" class="dqc" :style="{ '--qc': meta.color }">
+  <MorphTile :outlined="false" :embedded="panel" padding="0" edit-label="Редактировать" :title="quest.title || 'Без названия'" :show-edit="editable" @edit="$emit('edit', $event)" class="dqc" :style="{ '--qc': meta.color }">
     <template #decoration><slot name="decoration" /></template>
     <template #aside><span class="dqc-chip"><span class="dqc-dot"></span>{{ meta.label }}</span></template>
     <div v-if="quest.desc" class="dqc-desc">{{ quest.desc }}</div>

@@ -14,6 +14,7 @@
       <CharacterSheetTabs :tabs="tabs" :active-tab="activeTab" @select="emit('select-tab', $event)" />
     </template>
     <template #actions>
+      <SettingsMenuTile v-if="showMenu" :block="{ props: { embedded: true } }" />
       <CharacterSessionControl compact :session="session" :controller="transfers" />
     </template>
   </WorkspaceHeader>
@@ -24,8 +25,9 @@ import { ActionButton } from '@sylvieshare/share-ui'
 import { ArrowLeft } from '@lucide/vue'
 import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
 import CharacterSessionControl from './CharacterSessionControl.vue'
+import SettingsMenuTile from '../blocks/generic/SettingsMenuTile.vue'
 import CharacterSheetTabs from './sheet/CharacterSheetTabs.vue'
-defineProps({ contentWidth: String, name: String, subtitle: String, session: Object, transfers: Object, stackedNavigation: Boolean, compact: Boolean,
+defineProps({ contentWidth: String, name: String, subtitle: String, session: Object, transfers: Object, stackedNavigation: Boolean, compact: Boolean, showMenu: Boolean,
   tabs: { type: Array, default: () => [] }, activeTab: Number })
 const emit = defineEmits(['select-tab'])
 const router = useRouter()

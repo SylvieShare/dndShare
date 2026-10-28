@@ -35,9 +35,9 @@ function recoveryFor(recovery, die) {
 }
 
 // Long rest: full HP, drop temp + death saves, regain half the spent hit dice.
-export function longRestHp(hp, recovery = null, version = '2014') {
+export function longRestHp(hp, recovery = null, version = '2014', maximum = hpMaximum(hp)) {
   let h = { ...(hp || {}) }
-  const max = hpMaximum(h)
+  const max = Math.max(0, Number(maximum) || 0)
   const pools = normalizeHitDice(h).map((row) => ({ ...row }))
   let left = longRestRecoveryCount(h, version)
   for (const row of pools) {
@@ -99,9 +99,9 @@ export function exhaustionLevel(ex) {
 }
 
 // Apply one spent hit die: heal by `amount` (rolled elsewhere), clamp to max, mark one die used.
-export function spendHitDie(hp, amount, die = null) {
+export function spendHitDie(hp, amount, die = null, maximum = hpMaximum(hp)) {
   let h = { ...(hp || {}) }
-  const max = hpMaximum(h)
+  const max = Math.max(0, Number(maximum) || 0)
   const current = Number(h.current) || 0
   const pools = normalizeHitDice(h).map((row) => ({ ...row }))
   const selected = die

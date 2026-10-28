@@ -1,8 +1,7 @@
-import { itemEventData } from '@/features/character-editor/lib/sessionEventData'
 import { ref } from 'vue'
 import { groupedSpellSlotOptions as groupedSlotOptions, availableSpellSlotOptions as availableSlotOptions } from '../lib/spellUse'
 
-export function useSpellCasting({ charCtx, spellcastingBlocked, slotPools, adjustSlotUsed, spellTitle }) {
+export function useSpellCasting({ charCtx, spellcastingBlocked, slotPools }) {
   const rollLevels = ref({})
   const key = entry => entry.ref?.key || `${entry.item?.id}:${entry.ref?.source_key || ''}`
   const spellRollLevel = (entry, fallback) => rollLevels.value[key(entry)] ?? fallback
@@ -27,24 +26,12 @@ export function useSpellCasting({ charCtx, spellcastingBlocked, slotPools, adjus
       if (!available.some((candidate) => candidate.pool === option.pool && candidate.level === option.level)) return false
 
     }
-    if (entry.item.data?.concentration && !await charCtx.itemTransfers?.concentration.start(entry.item)) return false
-    if (spellLevel > 0 && !entry.ref?.slotless) adjustSlotUsed(option.pool, option.level, 1, { log: false })
-    charCtx.logSessionEvent?.({
-      type: 'spell_used',
-      action: `Использовано: ${spellTitle(entry)}`,
-      data: {
-        ...itemEventData(entry.item),
-        resourceChanges: spellLevel > 0 && !entry.ref?.slotless ? [{ key: `spell:${option.pool}:${option.level}`, name: `Ячейка ${option.level} круга`,
-          level: option.level, pool: option.pool, delta: -1 }] : [],
-        spellId: entry?.item?.id || entry?.ref?.id || null,
-        spellLevel,
-        slotLevel: spellLevel === 0 ? 0 : option.level,
-        slotPool: spellLevel === 0 ? 'cantrip' : option.pool,
-      },
-    })
-    const states = charCtx.characterStatuses?.endOn?.('spell_cast')
-    if (states) charCtx.updateValues({ states })
-    return true
+    return await charCtx.itemTransfers?.castSpell(entry, {
+      manual: true, targets: [], dmCount: 0,
+      castLevel: spellLevel === 0 ? 0 : option.level,
+      pool: spellLevel === 0 ? 'cantrip' : entry.ref?.slotless ? 'slotless' : option.pool,
+      spendSlot: spellLevel > 0 && !entry.ref?.slotless,
+    }) === true
   }
 
   return { groupedSpellSlotOptions, availableSpellSlotOptions, useSpell, spellRollLevel, rememberSpellRollLevel }

@@ -7,7 +7,7 @@
     </div>
     <template v-else>
       <div v-if="groups.length" class="lus-budgets">
-        <BaseTile v-for="group in groups" :key="group.kind" class="lus-budget" :tint="group.remaining !== 0">
+        <BaseTile :outlined="false" v-for="group in groups" :key="group.kind" class="lus-budget" :tint="group.remaining !== 0">
           <div class="lus-budget-heading"><span>{{ group.title }}</span><b>{{ group.limit == null ? group.added : `${group.added} / ${group.limit}` }}</b></div>
           <p>{{ group.remaining === 0 ? 'Всё выбрано' : group.remaining == null ? 'Число не задано в справочнике' : `Осталось выбрать: ${group.remaining}` }}</p>
           <div v-if="group.entries.length" class="lus-budget-list">

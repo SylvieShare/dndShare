@@ -39,6 +39,7 @@ android {
     }
     sourceSets {
         getByName("test").kotlin.directories += "src/testSupport/kotlin"
+        getByName("test").resources.srcDir("../fixtures")
         getByName("androidTest").kotlin.directories += "src/testSupport/kotlin"
         getByName("androidTest").assets.srcDir("schemas")
     }
@@ -54,6 +55,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.11.0")
     implementation("androidx.window:window:1.5.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+    implementation("androidx.exifinterface:exifinterface:1.4.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     implementation("io.ktor:ktor-client-core:3.6.0")
     implementation("io.ktor:ktor-client-okhttp:3.6.0")

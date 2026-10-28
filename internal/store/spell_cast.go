@@ -10,6 +10,7 @@ import (
 )
 
 type SpellCastRequest struct {
+	Manual         bool     `json:"manual,omitempty"`
 	CreationKey    string   `json:"creationKey,omitempty"`
 	CreatedCount   int      `json:"createdCount,omitempty"`
 	SpellID        int64    `json:"spellId"`
@@ -104,10 +105,13 @@ func (s *Store) CastSpell(ctx context.Context, userID, charID int64, r SpellCast
 	if reference == nil {
 		return result, ErrApplication
 	}
-	if r.CastLevel < base || r.CastLevel > 9 || r.DMCount < 0 || len(r.Targets)+r.DMCount < 1 {
+	if r.CastLevel < base || r.CastLevel > 9 || r.DMCount < 0 || (!r.Manual && len(r.Targets)+r.DMCount < 1) {
 		return result, ErrApplication
 	}
 	if reference["slotless"] == true && (r.SpendSlot || r.CastLevel != max(base, number(reference["cast_level"]))) {
+		return result, ErrApplication
+	}
+	if r.Manual && (len(r.Targets) > 0 || r.DMCount > 0 || r.CreationKey != "" || r.CreatedCount != 0) {
 		return result, ErrApplication
 	}
 	targetRule := object(data["application_targets"])
@@ -123,7 +127,7 @@ func (s *Store) CastSpell(ctx context.Context, userID, charID int64, r SpellCast
 	} else if r.CreatedCount != 0 {
 		return result, ErrApplication
 	}
-	if targetRule["self_only"] == true && (r.DMCount > 0 || len(r.Targets) != 1 || r.Targets[0] != "self") {
+	if !r.Manual && targetRule["self_only"] == true && (r.DMCount > 0 || len(r.Targets) != 1 || r.Targets[0] != "self") {
 		return result, ErrApplication
 	}
 	maxTargets := min(50, max(1, number(targetRule["count"]))+max(0, number(targetRule["per_slot"]))*max(0, r.CastLevel-base))
@@ -164,8 +168,8 @@ func (s *Store) CastSpell(ctx context.Context, userID, charID int64, r SpellCast
 	for i := 0; i < r.DMCount; i++ {
 		destinations = append(destinations, 0)
 	}
-	plan := ApplicationPlan{ItemID: r.SpellID, Name: name, SourceKind: "spell", Effects: []ApplicationEffect{}}
-	if !creating {
+	plan := ApplicationPlan{ItemID: r.SpellID, Name: name, SourceKind: "spell", Effects: []ApplicationEffect{}, Concentration: data["concentration"] == true}
+	if !creating && !r.Manual {
 		plan, err = buildCatalogueApplication(ctx, tx, map[string]any{"item_id": int(r.SpellID)}, r.OptionKey, userID, 5, "cast")
 		if err != nil {
 			return result, err
@@ -176,7 +180,7 @@ func (s *Store) CastSpell(ctx context.Context, userID, charID int64, r SpellCast
 	if err = prepareSpellEffectBindings(&plan, data, doc.values(), r.CastLevel, ability, r.EntryKey); err != nil {
 		return result, err
 	}
-	if !creating && object(data["heal"])["apply"] != false && len(array(object(data["heal"])["dices"])) > 0 {
+	if !creating && !r.Manual && object(data["heal"])["apply"] != false && len(array(object(data["heal"])["dices"])) > 0 {
 		plan.Healing = spellHealFormula(data, doc.values(), r.CastLevel, ability)
 		if _, err = rollApplication(plan.Healing, func(int) (int, error) { return 1, nil }); err != nil {
 			return result, err

@@ -8,7 +8,7 @@
       <button class="hpe-btn hpe-temp" type="button" @click="applyCalc('temp')">Временные</button>
     </div>
 
-    <BaseTile class="hpe-section hpe-maximum" color="var(--success)" tint>
+    <BaseTile :outlined="false" class="hpe-section hpe-maximum" color="var(--success)" tint>
       <DndHpHistory :hp="hp" />
       <div class="hpe-equation">
         <span>База <b>{{ maximum.base }}</b></span>
@@ -28,7 +28,7 @@
       </div>
     </section>
 
-    <BaseTile v-if="hitDice.length" class="hpe-section">
+    <BaseTile :outlined="false" v-if="hitDice.length" class="hpe-section">
       <div class="hpe-section-heading">
         <h3 class="hpe-label">Кости хитов</h3>
         <span class="hpe-hint">Доступно</span>

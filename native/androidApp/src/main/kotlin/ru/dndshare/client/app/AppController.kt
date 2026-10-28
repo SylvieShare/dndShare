@@ -3,14 +3,16 @@ package ru.dndshare.client.app
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.serialization.encodeToString
+import ru.dndshare.client.character.*
 import ru.dndshare.client.data.*
+import ru.dndshare.client.device.DeviceServices
 import ru.dndshare.client.model.*
 import ru.dndshare.client.network.*
-import ru.dndshare.client.device.DeviceServices
-import ru.dndshare.client.character.*
 
 class AppController(val platform: DeviceServices, val api: ApiClient) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    val inventoryIcons =
+        InventoryIconCache({ api.inventoryIconPresets() }, platform.secureStore, scope)
     private val mutable = MutableStateFlow(AppState())
     val state: StateFlow<AppState> = mutable.asStateFlow()
     private var refreshJob: Job? = null
@@ -32,20 +34,34 @@ class AppController(val platform: DeviceServices, val api: ApiClient) {
     private val startupJob = scope.launch { boot() }
 
     private inline fun <reified T> restored(key: String): T? =
-        platform.secureStore.read(key)?.let { runCatching { WireJson.decodeFromString<T>(it) }.getOrNull() }
+        platform.secureStore.read(key)?.let {
+            runCatching { WireJson.decodeFromString<T>(it) }.getOrNull()
+        }
 
     private suspend fun activate(user: User) {
         require(user.id > 0)
         if (state.value.user?.id != user.id) {
             val previous = state.value.user?.id
             releaseMediaCache()
-            state.value.repository?.sheets?.closeAndJoin()
-            if (previous != null) state.value.repository?.database?.let { retainCharacterDrafts(platform, previous, it) }
+            state.value.repository?.closeAndJoin()
+            if (previous != null)
+                state.value.repository?.database?.let {
+                    retainCharacterDrafts(platform, previous, it)
+                }
             state.value.repository?.database?.close()
             if (previous != null) platform.eraseAccount(previous)
             val db = withContext(Dispatchers.IO) { platform.database(user.id) }
             restoreCharacterDrafts(platform, user.id, db)
-            mutable.update { it.copy(user = user, repository = CatalogueRepository(api, db, user.id)) }
+            try {
+                cleanStagedCharacterMedia(platform, db)
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                /* Maintenance never blocks opening retained work. */
+            }
+            mutable.update {
+                it.copy(user = user, repository = CatalogueRepository(api, db, user.id))
+            }
         } else mutable.update { it.copy(user = user) }
         platform.secureStore.write("user", WireJson.encodeToString(user))
     }
@@ -67,16 +83,24 @@ class AppController(val platform: DeviceServices, val api: ApiClient) {
             if (current == null) forgetSession()
             else {
                 activate(current)
-                state.value.repository?.sheets?.resume()
+                state.value.repository?.resume()
                 loadSources()
                 mutable.update { it.copy(booting = false, offline = false) }
                 refresh(force = true)
             }
-        } catch (cancelled: CancellationException) { throw cancelled }
-        catch (error: Exception) {
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (error: Exception) {
             if ((error as? ApiException)?.status == 401) forgetSession()
-            mutable.update { it.copy(booting = false, offline = true,
-                error = if (it.user != null) "Нет связи с сервером. Доступна сохранённая копия." else null) }
+            mutable.update {
+                it.copy(
+                    booting = false,
+                    offline = true,
+                    error =
+                        if (it.user != null) "Нет связи с сервером. Доступна сохранённая копия."
+                        else null,
+                )
+            }
         }
         mutable.update { it.copy(booting = false) }
     }
@@ -87,26 +111,49 @@ class AppController(val platform: DeviceServices, val api: ApiClient) {
             mutable.update { it.copy(signingIn = true, authError = null) }
             try {
                 activate(api.login(login.trim(), password))
-                state.value.repository?.sheets?.resume()
+                state.value.repository?.resume()
                 mutable.update { it.copy(offline = false) }
                 loadSources()
                 refresh(force = true)
-            } catch (cancelled: CancellationException) { throw cancelled }
-            catch (error: Exception) {
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
                 if (state.value.user == null) {
-                    mutable.update { it.copy(authError = (error as? ApiException)?.message ?: "Не удалось подключиться к серверу.") }
-                } else mutable.update { it.copy(error = "Не удалось загрузить данные. Нажмите «Повторить».", offline = true) }
-            } finally { mutable.update { it.copy(signingIn = false) } }
+                    mutable.update {
+                        it.copy(
+                            authError =
+                                (error as? ApiException)?.message
+                                    ?: "Не удалось подключиться к серверу."
+                        )
+                    }
+                } else
+                    mutable.update {
+                        it.copy(
+                            error = "Не удалось загрузить данные. Нажмите «Повторить».",
+                            offline = true,
+                        )
+                    }
+            } finally {
+                mutable.update { it.copy(signingIn = false) }
+            }
         }
     }
 
     private fun selectInitialContext(user: User, sources: List<GameSource>) {
         val preferred = restored<GameContext>("selection")
-        val source = sources.firstOrNull { it.id == (preferred?.sourceId ?: user.gameContext.sourceId) }
-            ?: sources.firstOrNull()
-        val edition = source?.versions?.firstOrNull { it.id == (preferred?.sourceVersionId ?: user.gameContext.sourceVersionId) }
-            ?: source?.versions?.firstOrNull()
-        mutable.update { it.copy(sourceId = source?.id ?: user.gameContext.sourceId, editionId = edition?.id ?: user.gameContext.sourceVersionId) }
+        val source =
+            sources.firstOrNull { it.id == (preferred?.sourceId ?: user.gameContext.sourceId) }
+                ?: sources.firstOrNull()
+        val edition =
+            source?.versions?.firstOrNull {
+                it.id == (preferred?.sourceVersionId ?: user.gameContext.sourceVersionId)
+            } ?: source?.versions?.firstOrNull()
+        mutable.update {
+            it.copy(
+                sourceId = source?.id ?: user.gameContext.sourceId,
+                editionId = edition?.id ?: user.gameContext.sourceVersionId,
+            )
+        }
     }
 
     private suspend fun loadSources() {
@@ -117,7 +164,8 @@ class AppController(val platform: DeviceServices, val api: ApiClient) {
     }
 
     fun selectSource(source: GameSource, edition: Edition?) {
-        val context = GameContext(source.id, source.name, edition?.id ?: 0, edition?.version.orEmpty())
+        val context =
+            GameContext(source.id, source.name, edition?.id ?: 0, edition?.version.orEmpty())
         platform.secureStore.write("selection", WireJson.encodeToString(context))
         mutable.update { it.copy(sourceId = source.id, editionId = edition?.id ?: 0, error = null) }
         refresh(force = true)
@@ -132,27 +180,50 @@ class AppController(val platform: DeviceServices, val api: ApiClient) {
         val sourceId = state.value.sourceId
         val repository = state.value.repository ?: return
         refreshJob = scope.launch {
-            mutable.update { it.copy(synchronizing = true, received = 0, error = null, characterError = null) }
+            mutable.update {
+                it.copy(synchronizing = true, received = 0, error = null, characterError = null)
+            }
             try {
                 if (state.value.sources.isEmpty()) loadSources()
-                try { repository.refreshCharacters(); repository.sheets.resume() }
-                catch (cancelled: CancellationException) { throw cancelled }
-                catch (error: Exception) {
+                try {
+                    val hasCharacters = repository.refreshCharacters()
+                    mutable.update { it.copy(user = it.user?.copy(hasCharacters = hasCharacters)) }
+                    state.value.user?.let {
+                        platform.secureStore.write("user", WireJson.encodeToString(it))
+                    }
+                    repository.resume()
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (error: Exception) {
                     if ((error as? ApiException)?.status == 401) throw error
-                    mutable.update { it.copy(characterError = "Не удалось обновить список персонажей.") }
+                    mutable.update {
+                        it.copy(characterError = "Не удалось обновить список персонажей.")
+                    }
                 }
                 val selected = if (sourceId > 0) sourceId else state.value.sourceId
-                if (selected > 0) repository.synchronize(selected) { count ->
-                    mutable.update { if (it.sourceId == selected) it.copy(received = count) else it }
-                }
+                if (selected > 0)
+                    repository.synchronize(selected) { count ->
+                        mutable.update {
+                            if (it.sourceId == selected) it.copy(received = count) else it
+                        }
+                    }
                 mutable.update { it.copy(offline = false, error = null) }
-            } catch (cancelled: CancellationException) { throw cancelled }
-            catch (error: Exception) {
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
                 if ((error as? ApiException)?.status == 401) forgetSession()
-                else mutable.update { it.copy(offline = true,
-                    error = (error as? ApiException)?.message ?: "Нет связи с сервером. Доступны сохранённые данные.") }
+                else
+                    mutable.update {
+                        it.copy(
+                            offline = true,
+                            error =
+                                (error as? ApiException)?.message
+                                    ?: "Нет связи с сервером. Доступны сохранённые данные.",
+                        )
+                    }
             } finally {
-                if (refreshGeneration == generation) mutable.update { it.copy(synchronizing = false) }
+                if (refreshGeneration == generation)
+                    mutable.update { it.copy(synchronizing = false) }
             }
         }
     }
@@ -161,19 +232,32 @@ class AppController(val platform: DeviceServices, val api: ApiClient) {
         foregroundJob?.cancel()
         if (active) {
             refresh()
-            foregroundJob = scope.launch { while (isActive) { delay(300_000); refresh() } }
+            foregroundJob = scope.launch {
+                while (isActive) {
+                    delay(300_000)
+                    refresh()
+                }
+            }
         }
     }
 
     fun logout() = scope.launch {
-        if (state.value.repository?.database?.characterSheets()?.pending()?.isNotEmpty() == true) {
+        val dao = state.value.repository?.database?.characterSheets()
+        if (
+            dao?.pending()?.isNotEmpty() == true ||
+                dao?.pendingCommands()?.isNotEmpty() == true ||
+                dao?.openForms()?.isNotEmpty() == true
+        ) {
             mutable.update { it.copy(confirmLogout = true) }
             return@launch
         }
         performLogout()
     }
 
-    fun cancelLogout() { mutable.update { it.copy(confirmLogout = false) } }
+    fun cancelLogout() {
+        mutable.update { it.copy(confirmLogout = false) }
+    }
+
     fun confirmLogout() = scope.launch { performLogout() }
 
     private suspend fun performLogout() {
@@ -188,8 +272,10 @@ class AppController(val platform: DeviceServices, val api: ApiClient) {
         val repository = state.value.repository
         mutable.value = AppState(booting = true)
         if (refreshJob != currentCoroutineContext()[Job]) refreshJob?.cancelAndJoin()
-        repository?.sheets?.closeAndJoin()
-        val db = repository?.database ?: userId?.let { withContext(Dispatchers.IO) { platform.database(it) } }
+        repository?.closeAndJoin()
+        val db =
+            repository?.database
+                ?: userId?.let { withContext(Dispatchers.IO) { platform.database(it) } }
         releaseMediaCache()
         api.cookies.clear()
         for (key in listOf("user", "sources", "selection")) platform.secureStore.write(key, null)
@@ -208,7 +294,7 @@ class AppController(val platform: DeviceServices, val api: ApiClient) {
         scope.cancel()
         releaseMediaCache()
         api.close()
-        state.value.repository?.sheets?.close()
+        state.value.repository?.close()
         state.value.repository?.database?.close()
     }
 }

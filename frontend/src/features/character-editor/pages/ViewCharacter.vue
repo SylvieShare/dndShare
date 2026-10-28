@@ -3,34 +3,8 @@
     <CharacterEditionDialog :controller="edition" />
     <CharacterTransferDialogs :controller="transfers" :character-uuid="uuid" />
     <PageTutorial :tutorial="characterTutorial" :mobile="isMobile" />
-    <CharacterWorkspaceHeader :stacked-navigation="format === 'tablet'" v-if="!isMobile || template?.system === 'dnd5e'" :compact="isMobile" :name="charName" :subtitle="charSub" :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="format === 'tablet' || template?.system === 'vtm-v20' ? activeTabs : []" :active-tab="activeTab" @select-tab="onSetActiveTab" />
-    <CharEditorToolbar
-      v-if="isMobile && template?.system !== 'dnd5e'"
-      ref="charToolbarEl"
-      :publicVisible="publicVisible"
-      :saveStatus="saveStatus"
-      :pendingSecondsLeft="pendingSecondsLeft"
-      :canEdit="isOwner"
-      :tabs="toolbarTabs"
-      :activeTab="activeTab"
-      :toolbarValues="data.values"
-      :toolbarVars="data.var"
-      :charName="charName"
-      :charSub="charSub"
-      :sourceVersionId="sourceVersionId"
-      :contentSources="contentSources"
-      :topSession="activeSession"
-      @update:publicVisible="onPublicToggle"
-      @update:activeTab="onSetActiveTab"
-      @update:value="onUpdateValue"
-      @update:var="onUpdateVar"
-      @update:contentSources="onUpdateContentSources"
-      @wheel.prevent="onFixedHeaderWheel"
-      @touchstart.passive="onFixedHeaderTouchStart"
-      @touchmove="onFixedHeaderTouchMove"
-      @touchend.passive="onFixedHeaderTouchEnd"
-      @touchcancel.passive="onFixedHeaderTouchEnd"
-    />
+    <CharacterWorkspaceHeader :stacked-navigation="format === 'tablet'" ref="workspaceHeaderEl" :show-menu="template?.system === 'vtm-v20'" :compact="isMobile" :name="charName" :subtitle="charSub" :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="format === 'tablet' || format === 'desktop' && template?.system === 'vtm-v20' ? activeTabs : []" :active-tab="activeTab" @select-tab="onSetActiveTab" />
+
 
     <div
       v-if="isMobile && mobileTabs.length"
@@ -120,7 +94,6 @@ import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { ref, watch, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CharacterTabPane from '@/features/character-editor/components/CharacterTabPane.vue'
-import CharEditorToolbar from '@/features/character-editor/components/CharEditorToolbar'
 import CharacterSaveErrorToast from '@/features/character-editor/components/CharacterSaveErrorToast.vue'
 import { useCharacterData } from '@/features/character-editor/composables/useCharacterData'
 import CharacterEditionDialog from '@/features/character-editor/components/CharacterEditionDialog.vue'
@@ -153,7 +126,7 @@ const compactLayout = computed(() => format.value !== 'desktop')
 // ── Template refs ─────────────────────────────────────────────────────
 const tutorialRoot = ref(null)
 const tutorialReady = ref(false)
-const charToolbarEl = ref(null)
+const workspaceHeaderEl = ref(null)
 const sheetScrollEl = ref(null)
 const mobileTabbarEl = ref(null)
 const swipePagerEl = ref(null)
@@ -167,7 +140,7 @@ const {
   loading, loadError, template, data, charCtx, isOwner, publicVisible,
   version, serverDocument, sourceVersionId, contentSources, sessions, topSession, hasSessionContext,
   loadSessions, applyCharacter, applyMetadata,
-  activeTabs, toolbarTabs, mobileTabs,
+  activeTabs, mobileTabs,
   headerTitle, charName, charSub, commonMobileScrollHide,
   load, loadSync, containerWidthForTab, getInitialTabs,
   updateValue, updateValues, updateVar, updateContentSources, onPublicToggle,
@@ -187,11 +160,13 @@ const snapshotRecorder = createCharacterSnapshotRecorder(uuid, () => isOwner.val
 onBeforeUnmount(() => snapshotRecorder.dispose())
 
 const pendingSessionEvents = []
-const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError, reloadSave, flushSave, sync: documentSync } = useSaveDebounce(uuid, data, {
+const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError, reloadSave, flushSave, historyState, sync: documentSync } = useSaveDebounce(uuid, data, {
   version, serverDocument, canSave:()=>isOwner.value,
   takeEvents: () => pendingSessionEvents.splice(0),
   onMetadata: applyMetadata,
 })
+
+Object.assign(charCtx, { historyState, undo: () => documentSync.undo(), redo: () => documentSync.redo() })
 
 useCharacterLive({ uuid, sessionUuid: computed(() => activeSession.value?.uuid), sync: documentSync, onMetadata: applyMetadata })
 
@@ -442,7 +417,7 @@ async function initializeCharacter() {
   tutorialReady.value = true
 
   nextTick(() => {
-    observeToolbar(charToolbarEl.value?.rootElement?.())
+    observeToolbar(workspaceHeaderEl.value?.$el)
     updateMobileTabRects(mobileTabbarEl.value)
     scrollActiveMobileTabIntoView()
     syncActiveScrollListener()

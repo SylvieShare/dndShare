@@ -4,10 +4,12 @@
       <div class="ds-tracks">
         <div class="ds-side ds-side-fail">
           <div class="ds-pips">
-            <span
+            <button
+              type="button"
               v-for="i in [3, 2, 1]"
               :key="i"
               class="ds-pip ds-pip-fail"
+              :aria-label="`Провалы: ${i}`" :aria-pressed="i <= ds.failure"
               :class="{ filled: i <= ds.failure }"
               @click="togglePip('failure', i)"
             />
@@ -17,10 +19,12 @@
         <img class="ds-heart" src="/static/hp-pulse.svg" alt="" />
         <div class="ds-side ds-side-success">
           <div class="ds-pips">
-            <span
+            <button
+              type="button"
               v-for="i in [1, 2, 3]"
               :key="i"
               class="ds-pip ds-pip-success"
+              :aria-label="`Успехи: ${i}`" :aria-pressed="i <= ds.success"
               :class="{ filled: i <= ds.success }"
               @click="togglePip('success', i)"
             />
@@ -70,8 +74,8 @@ function togglePip(type, index) {
 }
 
 .ds-tracks { display: flex; align-items: center; gap: 14px; }
-.ds-side   { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.ds-pips   { display: flex; gap: 7px; }
+.ds-side   { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.ds-pips   { display: flex; gap: 0; }
 
 .ds-heart {
   width: 30px;
@@ -90,18 +94,19 @@ function togglePip(type, index) {
 }
 
 .ds-pip {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 1px solid var(--border-strong);
-  background-color: var(--surface-raised);
-  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--scrim) 81%, transparent);
-  cursor: pointer;
+  width: 48px; height: 48px; display: grid; place-items: center;
+  padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer;
+}
+.ds-pip::before {
+  content: ''; width: 16px; height: 16px; box-sizing: border-box;
+  border-radius: 50%; border: 1px solid var(--border-strong);
+  background: var(--surface-raised);
   transition: background-color 0.2s, border-color 0.2s, transform 0.15s;
 }
-.ds-pip:hover { transform: scale(1.15); }
-.ds-pip-success.filled { background-color: var(--success); border-color: var(--success); box-shadow: 0 0 10px color-mix(in srgb, var(--success) 35%, transparent); }
-.ds-pip-fail.filled    { background-color: var(--danger); border-color: var(--danger); box-shadow: 0 0 10px color-mix(in srgb, var(--danger) 35%, transparent); }
+.ds-pip:hover::before { transform: scale(1.15); }
+.ds-pip:focus-visible { outline: 2px solid var(--accent-soft); outline-offset: -6px; }
+.ds-pip-success.filled::before { background: var(--success); border-color: var(--success); }
+.ds-pip-fail.filled::before { background: var(--danger); border-color: var(--danger); }
 
 .ds-label  { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
 .ds-label-fail    { color: var(--danger); }

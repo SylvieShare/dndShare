@@ -1,6 +1,6 @@
 <template>
   <div class="sheet-stack" style="gap: 15px">
-    <BaseTile class="sheet-grid dnd-utility-grid">
+    <BaseTile :outlined="false" class="sheet-grid dnd-utility-grid">
       <CharacterBlock block-id="armor" :options="{&quot;variant&quot;:&quot;tile&quot;,&quot;embedded&quot;:true}" />
       <CharacterBlock block-id="initiative" :options="{&quot;variant&quot;:&quot;tile&quot;,&quot;embedded&quot;:true}" />
       <CharacterBlock block-id="settings" :options="{&quot;embedded&quot;:true}" />

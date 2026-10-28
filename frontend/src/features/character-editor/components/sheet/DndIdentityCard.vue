@@ -2,7 +2,7 @@
   <div class="sheet-stack" :style="{ marginTop: compact ? 0 : '20px', gap: '11px' }">
     <CharacterBlock block-id="read_only_notice" />
     <div class="sheet-stack" style="flex-grow: 1; gap: 11px">
-      <BaseTile class="sheet-stack" style="padding: 0; overflow: hidden; align-items: stretch; gap: 0">
+      <BaseTile :outlined="false" class="sheet-stack" style="padding: 0; overflow: hidden; align-items: stretch; gap: 0">
         <div class="sheet-row" style="align-items: stretch; gap: 0">
           <div class="sheet-stack" style="flex: 0 0 110px; gap: 0">
             <CharacterBlock block-id="character_icon" />

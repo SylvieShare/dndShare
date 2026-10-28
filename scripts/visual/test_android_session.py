@@ -33,6 +33,9 @@ class Device:
         elif text == 'База' or description == 'База':
             assert self.screen == 'dnd'
             self.section = 'base'
+        elif text == 'Магия' or description == 'Магия':
+            assert self.screen == 'dnd'
+            self.section = 'magic'
         elif text in ('Персонажи', 'Справочник'):
             self.screen = 'characters' if text == 'Персонажи' else 'overview'
         elif text in ('Dnd', 'Vtm'):
@@ -47,10 +50,10 @@ class Device:
             if not self.cover_loaded:
                 self.images += 1
                 self.cover_loaded = True
-        elif text == 'Отмена':
+        elif text == 'Отмена' or description == 'Закрыть редактор':
             self.screen = 'dnd'
 
-    def wait(self, text):
+    def wait(self, text=None, description=None):
         if text == 'Найти персонажа':
             assert self.screen == 'characters'
         elif text == 'Волшебник 4':
@@ -59,7 +62,7 @@ class Device:
 
 class AndroidSessionTest(unittest.TestCase):
     def test_one_login_for_sheet_handbook_vtm_and_combined_formats(self):
-        for states in (['sheet-stats', 'sheet-stat-editor'], ['vtm-base'], ['collections', 'menu', 'list', 'record'], MATRIX['states']):
+        for states in (['sheet-magic'], ['sheet-stats', 'sheet-stat-editor'], ['vtm-base'], ['collections', 'menu', 'list', 'record'], MATRIX['states']):
             with self.subTest(states=states), tempfile.TemporaryDirectory() as tmp:
                 device = Device()
                 output = Path(tmp) / 'android'; output.mkdir()
@@ -69,7 +72,7 @@ class AndroidSessionTest(unittest.TestCase):
                     device.screen = 'overview'
                 def snapshot(device, output, format_, state, *args):
                     expected = {'collections': 'overview', 'menu': 'overview', 'list': 'list', 'record': 'record',
-                                'sheet-base': 'dnd', 'sheet-stats': 'dnd', 'sheet-stat-editor': 'editor', 'vtm-base': 'vtm'}
+                                'character-list': 'characters', 'sheet-personality': 'dnd', 'sheet-base': 'dnd', 'sheet-death-saves': 'dnd', 'sheet-stats': 'dnd', 'sheet-stat-editor': 'editor', 'sheet-weapons': 'dnd', 'sheet-magic': 'dnd', 'sheet-inventory': 'dnd', 'vtm-base': 'vtm'}
                     self.assertEqual(device.screen, expected[state])
                     return {'format': format_['name'], 'state': state}
                 def restore(*args):
@@ -81,7 +84,7 @@ class AndroidSessionTest(unittest.TestCase):
                 with patch('android.build_install', return_value='apk'), patch('android.login', side_effect=login), \
                         patch('android.snapshot', side_effect=snapshot), patch('android.verify_swipes', side_effect=swipes), \
                         patch('android.wait_absent'), patch('android.verify_form_restoration', side_effect=restore), \
-                        patch('android.verify_character_edit', return_value={}):
+                        patch('android.verify_character_edit', return_value={}), patch('android.verify_vtm_menu', return_value={}):
                     capture_android(device, Path(tmp), 'http://127.0.0.1:1234', output, dict(MATRIX, states=states), fixture,
                                     lambda: {'images': {'cover.svg': device.images}})
                 self.assertEqual(device.logins, 1)

@@ -13,8 +13,8 @@
 
     <template v-if="!contentHidden">
       <p v-if="catalogError" role="alert">{{ catalogError }} <ActionButton variant="quiet" @click="reloadCatalog">Повторить</ActionButton></p>
-      <BaseTile class="di-inventory">
-        <InventoryWallet v-if="block.content?.wallet" :wallet="block.content.wallet" />
+      <div class="di-inventory">
+        <BaseTile v-if="block.content?.wallet" :outlined="false"><InventoryWallet :wallet="block.content.wallet" /></BaseTile>
         <InventorySkeleton v-if="loading" :sections="allSections" />
         <template v-else>
           <section v-for="section in allSections" :key="section.id" class="di-space">
@@ -45,7 +45,7 @@
         </section>
         <div v-if="canManage" class="di-add-section-row"><AddButton block label="Добавить секцию" @click="addSection" /></div>
         </template>
-      </BaseTile>
+      </div>
     </template>
 
     <InventoryItemTooltip :tooltip="tooltip" />
@@ -98,6 +98,7 @@
 </template>
 
 <script setup>
+import { toolProficiencyRankFor, toolCheckBonusFor } from './lib/toolChecks'
 import { useInventoryRowActions } from './composables/useInventoryRowActions'
 import { useInventoryRemoval } from './composables/useInventoryRemoval'
 import InventorySkeleton from './components/InventorySkeleton.vue'
@@ -234,14 +235,7 @@ function entryHasProficiency(entry) {
 }
 
 function toolProficiencyRank(entry) {
-  const ids = Array.isArray(entry.display?.base?.data?.required_tool_proficiencies)
-    ? entry.display.base.data.required_tool_proficiencies
-    : []
-  const derived = ids.reduce((rank, id) => Math.max(
-    rank,
-    Number(charCtx.characterDerivedEffects?.toolProficiency?.(id)?.rank) || 0,
-  ), 0)
-  return Math.max(entryHasProficiency(entry) ? 1 : 0, derived)
+  return toolProficiencyRankFor(entry.display?.base, entryHasProficiency(entry), id => charCtx.characterDerivedEffects?.toolProficiency?.(id)?.rank)
 }
 
 function armorMeta(entry) {
@@ -269,13 +263,11 @@ function characterProficiencyBonus() {
 
 function toolCheckBonus(entry, ability) {
   const values = charCtx.values || {}
-  const modifier = abilityModifier(resolveNumValue(values?.[ability.key]?.value ?? 10))
-  const proficiencyRank = toolProficiencyRank(entry)
-  const proficient = proficiencyRank > 0
+  const rank = toolProficiencyRank(entry)
   const derived = charCtx.characterDerivedEffects?.bonus?.('check_bonus', {
-    kind: 'tool', abilitySuggestId: ability.suggestId, proficient, item: entry.display.base,
+    kind: 'tool', abilitySuggestId: ability.suggestId, proficient: rank > 0, item: entry.display.base,
   })?.total || 0
-  return modifier + proficiencyRank * characterProficiencyBonus() + derived
+  return toolCheckBonusFor(values, ability.key, rank, characterProficiencyBonus(), derived)
 }
 
 function rollTool(entry, ability, closeAbilities, closeMenu) {

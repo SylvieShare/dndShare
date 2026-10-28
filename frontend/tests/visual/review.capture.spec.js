@@ -74,6 +74,9 @@ for (const format of matrix.formats) {
       })
     }
 
+    const selectedStates = JSON.parse(process.env.DNDSHARE_REVIEW_STATES || '[]')
+    const wanted = new Set(selectedStates.length ? selectedStates : matrix.states)
+    if (['collections','menu','list','record'].some(state => wanted.has(state))) {
     await page.goto('/handbook')
     await expect(page).toHaveTitle('Справочник · D&D 5e · 2014')
     await expect(page.locator('.hb-collection-card')).toHaveCount(fixture.types.length)
@@ -99,22 +102,64 @@ for (const format of matrix.formats) {
     await expect(page.locator('.handbook-detail h1')).toHaveText(fixture.recordName)
     await expect(page.locator('.item-detail-cover')).toBeVisible()
     await snapshot('record')
+    }
+    if (wanted.has('character-list')) {
+      await page.goto('/chars', { waitUntil: 'networkidle' })
+      await expect(page.getByPlaceholder('Найти персонажа')).toBeVisible()
+      await snapshot('character-list')
+    }
     const dnd = fixture.characters[0], vtm = fixture.characters[1]
+    if (['sheet-base','sheet-death-saves','sheet-stats','sheet-stat-editor','sheet-weapons','sheet-magic','sheet-inventory','sheet-personality'].some(state => wanted.has(state))) {
     await page.goto(`/char/${dnd.uuid}`, { waitUntil: 'networkidle' })
     if (format.name !== 'wide') await expect(page.locator('.dnd-tablet-base')).toBeVisible()
     else await expect(page.locator('[data-tutorial="character-stat"]:visible').first()).toBeVisible({ timeout: 30000 })
     await snapshot('sheet-base')
+    if (wanted.has('sheet-death-saves')) {
+      if (format.name !== 'phone') await expect(page.getByRole('button', { name: 'Успехи: 3', exact: true })).toBeVisible()
+      await snapshot('sheet-death-saves')
+    }
+    if (['sheet-stats','sheet-stat-editor'].some(state => wanted.has(state))) {
     if (format.name !== 'wide') await page.getByRole('navigation', { name: format.name === 'phone' ? 'Вкладки персонажа' : 'Раздел персонажа' }).getByRole('button', { name: 'Статы', exact: true }).click()
     await expect(page.locator('.dnd-stats:visible')).toBeVisible()
     await snapshot('sheet-stats')
+    if (wanted.has('sheet-stat-editor')) {
     await page.locator('[data-tutorial="character-stat"]:visible').first().getByRole('button', { name: 'Редактировать: Сила', exact: true }).click()
     await expect(page.getByText('Основное значение', { exact: true })).toBeVisible()
     await snapshot('sheet-stat-editor')
     await page.keyboard.press('Escape')
     await expect(page.getByText('Основное значение', { exact: true })).not.toBeVisible()
+    }
+    }
+    if (wanted.has('sheet-weapons')) {
+      await page.getByRole(format.name === 'wide' ? 'tab' : 'button', { name: 'Оружие', exact: true }).last().click()
+      await expect(page.getByText('Посох молнии', { exact: true }).first()).toBeVisible()
+      await snapshot('sheet-weapons')
+    }
+    if (wanted.has('sheet-inventory')) {
+      await page.getByRole(format.name === 'wide' ? 'tab' : 'button', { name: format.name === 'wide' ? 'Снаряжение' : 'Предметы', exact: true }).last().click()
+      await expect(page.locator('.inventory-bag-grid').first()).toBeVisible()
+      await snapshot('sheet-inventory')
+    }
+    if (wanted.has('sheet-personality')) {
+      await page.getByRole(format.name === 'wide' ? 'tab' : 'button', { name: 'Личность', exact: true }).last().click()
+      await expect(page.getByText('Странница', { exact: true }).first()).toBeVisible()
+      await snapshot('sheet-personality')
+    }
+    if (wanted.has('sheet-magic')) {
+      await page.getByRole(format.name === 'wide' ? 'tab' : 'button', { name: 'Магия', exact: true }).last().click()
+      await expect(page.getByText('Ячейки заклинаний', {exact:true}).first()).toBeVisible()
+      await snapshot('sheet-magic')
+    }
+    }
+    if (wanted.has('vtm-base')) {
     await page.goto(`/char/${vtm.uuid}`, { waitUntil: 'networkidle' })
     await expect(page.getByText(vtm.name, { exact: true }).first()).toBeVisible()
+    await page.getByRole('button', { name: 'Меню персонажа', exact: true }).click()
+    await expect(page.getByText('Получить PDF', { exact: true })).toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(page.getByText('Получить PDF', { exact: true })).not.toBeVisible()
     await snapshot('vtm-base')
+    }
     expect(errors).toEqual([])
     expect(external).toEqual([])
     expect(apiRequests.some(request => request.startsWith('/api/items'))).toBe(true)

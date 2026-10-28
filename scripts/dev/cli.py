@@ -25,7 +25,7 @@ def parser():
         if name in {"focus", "verify", "review"}:
             command.add_argument("--full", action="store_true", help="only after a direct user request")
         if name == "review":
-            command.add_argument("--scenario", choices=("form-lifecycle",))
+            command.add_argument("--scenario", choices=("form-lifecycle", "character-actions", "character-session", "character-media", "character-weapons", "character-inventory", "character-identity", "character-spells", "character-creation"))
             command.add_argument("--state", action="append", default=[])
         if name == "prepare":
             command.add_argument("--workspace", type=Path, help="new path under build/ui-workspaces")
@@ -49,7 +49,7 @@ def parser():
 
 
 def capabilities(args):
-    if args.command == 'review' and args.scenario == 'form-lifecycle':
+    if args.command == 'review' and args.scenario in {'form-lifecycle', 'character-actions', 'character-session', 'character-media', 'character-weapons', 'character-inventory', 'character-identity', 'character-spells'}:
         return {'go', 'postgres16', 'android'}, True
     if args.command in {"doctor", "verify", "review"}:
         return None, True

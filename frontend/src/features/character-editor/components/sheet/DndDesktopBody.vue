@@ -36,9 +36,11 @@ watch(() => props.section, id => { if (id && !visited.value.includes(id)) visite
 const tabs = computed(() => definition.tabs.desktop.map(tab => ({ key: tab.id, title: tab.title })))
 </script>
 <style scoped>
-.dnd-desktop-body { display: grid; grid-template-columns: var(--layout-sheet-stats-column) minmax(0, 1fr) var(--layout-sheet-utilities-column); gap: 15px; }
-.dnd-desktop-stats, .dnd-desktop-utilities { padding: 20px; min-width: 0; }
-.dnd-desktop-main { min-width: 0; display: flex; flex-direction: column; gap: 11px; }
+.dnd-desktop-body { display: flex; align-items: flex-start; gap: 15px; }
+.dnd-desktop-stats { flex: 0 1 var(--layout-sheet-stats-column); min-width: var(--layout-sheet-stats-column-min); }
+.dnd-desktop-utilities { flex: 0 1 var(--layout-sheet-utilities-column); min-width: var(--layout-sheet-utilities-column-min); }
+.dnd-desktop-stats, .dnd-desktop-utilities { padding: 20px; }
+.dnd-desktop-main { flex: 1 1 calc(var(--layout-sheet-max) - var(--layout-sheet-stats-column) - var(--layout-sheet-utilities-column) - 30px); min-width: 0; display: flex; flex-direction: column; gap: 11px; }
 .dnd-desktop-utilities { gap: 15px; }
 .inner-tabs-content { padding-top: 3px; min-width: 0; }
 .inner-tab-pane { animation: sheet-section-in var(--motion-navigation); }

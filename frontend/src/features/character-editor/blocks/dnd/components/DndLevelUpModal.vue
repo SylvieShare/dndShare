@@ -76,7 +76,7 @@
       <div class="lu-workspace" :class="{ 'lu-workspace-plain': isPlain }">
       <aside v-if="!isPlain" class="lu-sidebar">
         <LevelUpHitPoints :hp="hp" :sides="hitDieFace" :die-label="hitDieLabel" :current-max="hpMaximum(values.hp)" />
-        <BaseTile class="lu-summary">
+        <BaseTile :outlined="false" class="lu-summary">
           <h3>С этим уровнем</h3>
           <div class="lu-summary-line"><span>Уровень персонажа</span><b>{{ newTotal }}</b></div>
           <div v-if="hitDieLabel" class="lu-summary-line"><span>Кости хитов</span><b>+1 {{ hitDieLabel }}</b></div>

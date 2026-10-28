@@ -1,5 +1,5 @@
 <template>
-  <BaseTile v-if="!ctx.ownerMode && ctx.characterUuid" class="read-only-notice" role="status">
+  <BaseTile :outlined="false" v-if="!ctx.ownerMode && ctx.characterUuid" class="read-only-notice" role="status">
     <Eye :size="20" aria-hidden="true" />
     <div><strong>Режим просмотра</strong><p>{{ signedIn ? 'Этот персонаж принадлежит другому игроку. Изменения недоступны.' : 'Вы не авторизованы. Войдите, чтобы редактировать своего персонажа.' }}</p></div>
   </BaseTile>

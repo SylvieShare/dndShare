@@ -1,5 +1,5 @@
 <template>
-  <MorphTile :embedded="panel" padding="0" edit-label="Редактировать" :title="level > 0 ? 'Истощение' : 'Истощения нет'" :show-edit="editable" @edit="$emit('edit', $event)" class="exh-view" :class="{ 'exh-view--panel': panel }">
+  <MorphTile :outlined="false" :embedded="panel" padding="0" edit-label="Редактировать" :title="level > 0 ? 'Истощение' : 'Истощения нет'" :show-edit="editable" @edit="$emit('edit', $event)" class="exh-view" :class="{ 'exh-view--panel': panel }">
     <template #decoration><slot name="decoration" /></template>
     <template #aside><span v-if="level > 0" class="exh-value exh-value--on">{{ valueText }}</span></template>
     <ul v-if="level > 0" class="exh-lines">

@@ -1,6 +1,6 @@
 <template>
   <div class="sp-bar">
-    <MorphTile v-if="showStats && hasStatConfig" class="sp-stats-panel" edit-label="Редактировать"
+    <MorphTile :outlined="false" v-if="showStats && hasStatConfig" class="sp-stats-panel" edit-label="Редактировать"
         :title="castingPanelTitle"
         :show-edit="canInteract && showCastingConfig"
         @edit="openEditor"
@@ -32,7 +32,7 @@
       </div>
     </MorphTile>
 
-    <MorphTile v-if="showSlots && (activeSlotPools.length > 0 || canInteract)" class="sp-slots-panel" edit-label="Редактировать"
+    <MorphTile :outlined="false" v-if="showSlots && (activeSlotPools.length > 0 || canInteract)" class="sp-slots-panel" edit-label="Редактировать"
         title="Ячейки заклинаний"
         :show-edit="canInteract"
         @edit="editOpen = true"
@@ -50,14 +50,18 @@
                 <span class="sp-lvl-unit">круг</span>
               </div>
               <div class="sp-orbs">
-                <SpellSlotSphere
-                  v-for="i in orbOrder(slot.total)"
-                  :key="i"
-                  :spent="i <= slot.used"
-                  :level="slot.level"
-                  :interactive="canInteract"
-                  @click="$emit('toggle-slot', pool.rest, slot.level, i)"
-                />
+                <template v-if="slot.total <= 100">
+                  <ActionButton v-for="i in orbOrder(slot.total)" :key="i" icon-only variant="quiet" class="sp-orb-hit"
+                    :disabled="!canInteract" :aria-label="`Ячейка ${slot.level} круга · ${i}`"
+                    :aria-pressed="i > slot.used" @click="$emit('toggle-slot', pool.rest, slot.level, i)">
+                    <SpellSlotSphere :spent="i <= slot.used" :level="slot.level" :interactive="canInteract" />
+                  </ActionButton>
+                </template>
+                <template v-else>
+                  <span>{{ slot.total - slot.used }} / {{ slot.total }}</span>
+                  <ActionButton variant="quiet" :disabled="!canInteract || !slot.used" @click="$emit('toggle-slot', pool.rest, slot.level, slot.used)">Восстановить</ActionButton>
+                  <ActionButton variant="quiet" :disabled="!canInteract || slot.used >= slot.total" @click="$emit('toggle-slot', pool.rest, slot.level, slot.used + 1)">Потратить</ActionButton>
+                </template>
               </div>
             </div>
           </div>
@@ -89,7 +93,7 @@ import { computed, ref } from 'vue'
 
 import DndSpellbookSettingsModal from '@/features/character-editor/blocks/dnd/DndSpellbookSettingsModal.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
-import { MorphTile } from '@sylvieshare/share-ui'
+import { ActionButton, MorphTile } from '@sylvieshare/share-ui'
 
 const editOpen = ref(false)
 
@@ -170,7 +174,7 @@ const castingPanelTitle = computed(() => props.castingStats.length <= 1 && props
   gap: 9px;
   overflow: hidden;
   background: var(--bg);
-  border: 1.5px solid var(--surface-active);
+  border: none;
   border-radius: var(--r-md);
   padding: 12px 13px;
   --c: var(--accent);
@@ -254,11 +258,13 @@ const castingPanelTitle = computed(() => props.castingStats.length <= 1 && props
   flex: 1;
   display: flex;
   flex-wrap: wrap;
-  gap: 9px;
+  gap: 0;
   align-items: center;
   min-width: 0;
-  min-height: 24px;
+  min-height: 48px;
 }
+
+.sp-orb-hit:disabled { opacity: 1; }
 
 .sp-orbs-empty {
   color: var(--text-muted);

@@ -1,5 +1,5 @@
 <template>
-  <MorphTile embedded padding="0" class="w-card" :class="{ 'sortable-placeholder': ctx.sortable.isSource(entry) }" :data-sortable-key="entry._key">
+  <MorphTile :outlined="false" embedded padding="0" class="w-card" :class="{ 'sortable-placeholder': ctx.sortable.isSource(entry) }" :data-sortable-key="entry._key">
     <RowActionMenu
       block
       :title="`Действия: ${ctx.itemTitle(entry)}`"

@@ -21,7 +21,7 @@ def main():
     parser.add_argument("--serial", default=os.environ.get("DNDSHARE_ANDROID_SERIAL", "emulator-5554"))
     parser.add_argument("--exceptions", type=Path, default=ROOT / "design/visual-exceptions.json")
     parser.add_argument('--full', action='store_true', help='complete matrix, only after direct user request')
-    parser.add_argument('--scenario', choices=['form-lifecycle'])
+    parser.add_argument('--scenario', choices=['form-lifecycle', 'character-actions', 'character-session', 'character-media', 'character-weapons', 'character-inventory', 'character-identity', 'character-spells', 'character-creation'])
     parser.add_argument('--state', action='append', default=[])
     args = parser.parse_args()
     if not args.full and not args.scenario and not args.state:
@@ -40,6 +40,8 @@ def main():
         parser.error(str(error))
     (output / "exceptions.json").write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding="utf-8")
     matrix = json.loads((ROOT / 'scripts/visual/matrix.json').read_text())
+    from report import validate_state_labels
+    validate_state_labels(matrix)
     valid_states = {entry['name'] if isinstance(entry, dict) else entry for entry in matrix['states']}
     if set(args.state) - valid_states:
         parser.error('Unknown review states: ' + ', '.join(set(args.state) - valid_states))

@@ -73,6 +73,7 @@ export default {
     "type": "BLOCK_MONEY",
     "preset": [
       {
+        "id": 1,
         "title": "Доллары",
         "short_title": "$",
         "color": "var(--success)",

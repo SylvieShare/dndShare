@@ -114,13 +114,39 @@ def main():
     if selected_states:
         matrix['states'] = [entry for entry in matrix['states'] if (entry['name'] if isinstance(entry, dict) else entry) in selected_states]
     with device.configured(urllib.parse.urlparse(args.url).port):
-        if os.environ.get('DNDSHARE_REVIEW_SCENARIO') == 'form-lifecycle':
-            from scenario import form_lifecycle
-            form_lifecycle(device, ROOT, args.url, output, fixture, lambda: fetch(args.url + '/__test/stats'))
+        if os.environ.get('DNDSHARE_REVIEW_SCENARIO') in {'form-lifecycle', 'character-actions', 'character-session', 'character-media', 'character-weapons', 'character-inventory', 'character-identity', 'character-spells', 'character-creation'}:
+            scenario = os.environ['DNDSHARE_REVIEW_SCENARIO']
+            if scenario == 'form-lifecycle':
+                from scenario import form_lifecycle
+                form_lifecycle(device, ROOT, args.url, output, fixture, lambda: fetch(args.url + '/__test/stats'))
+            elif scenario == 'character-actions':
+                from character_actions import character_actions
+                character_actions(device, ROOT, args.url, output, fixture, lambda: fetch(args.url + '/__test/stats'))
+            elif scenario == 'character-creation':
+                from character_creation import creation_actions
+                creation_actions(device, ROOT, args.url, output, fixture)
+            elif scenario == 'character-spells':
+                from character_spells import spell_actions
+                spell_actions(device, ROOT, args.url, output, fixture, lambda: fetch(args.url + '/__test/stats'))
+            elif scenario == 'character-identity':
+                from character_identity import identity_actions
+                identity_actions(device, ROOT, args.url, output, fixture)
+            elif scenario == 'character-inventory':
+                from character_inventory import inventory_actions
+                inventory_actions(device, ROOT, args.url, output, fixture, lambda: fetch(args.url + '/__test/stats'))
+            elif scenario == 'character-weapons':
+                from character_weapons import weapon_actions
+                weapon_actions(device, ROOT, args.url, output, fixture, lambda: fetch(args.url + '/__test/stats'))
+            elif scenario == 'character-media':
+                from character_media import media_actions
+                media_actions(device, ROOT, args.url, output, fixture, lambda: fetch(args.url + '/__test/stats'))
+            else:
+                from character_session import session_actions
+                session_actions(device, ROOT, args.url, output, fixture, lambda: fetch(args.url + '/__test/stats'))
             final = validate_fixture(args.url, fixture)
             if final != evidence:
                 raise AssertionError('Scenario changed the shared fixture')
-            (output / 'scenario.json').write_text(json.dumps({'scenario': 'form-lifecycle', 'passed': True, 'realAPI': True, 'isolatedPostgres': True, 'fixtureRestored': True}, indent=2))
+            (output / 'scenario.json').write_text(json.dumps({'scenario': scenario, 'passed': True, 'realAPI': True, 'isolatedPostgres': True, 'fixtureRestored': True}, indent=2))
             return
         print("Capturing WEB with package-lock Playwright Chromium", flush=True)
         with (output / "web-capture.log").open("wb") as log:

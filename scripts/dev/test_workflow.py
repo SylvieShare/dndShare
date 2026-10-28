@@ -27,7 +27,7 @@ class WorkflowTest(unittest.TestCase):
             self.assertEqual(main(['verify', '--workspace', '/tmp/project'], Path('/tmp/project')), 2)
             doctor.assert_not_called()
         for args in [('verify', '--full'), ('focus', 'browser', '--file', 'tests/a.spec.js'),
-                     ('review', '--scenario', 'form-lifecycle'), ('review', '--state', 'sheet-stats')]:
+                     ('review', '--scenario', 'form-lifecycle'), ('review', '--scenario', 'character-actions'), ('review', '--scenario', 'character-session'), ('review', '--scenario', 'character-media'), ('review', '--scenario', 'character-weapons'), ('review', '--scenario', 'character-spells'), ('review', '--scenario', 'character-creation'), ('review', '--state', 'sheet-stats')]:
             check_scope(self.args(*args))
 
     def test_a_dead_runner_is_not_reported_as_running_or_passed(self):

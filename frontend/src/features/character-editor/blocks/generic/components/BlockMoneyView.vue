@@ -1,5 +1,5 @@
 <template>
-  <MorphTile :embedded="panel || inline" padding="0" edit-label="Редактировать" :title="inline ? '' : title"
+  <MorphTile :outlined="false" :embedded="panel || inline" padding="0" edit-label="Редактировать" :title="inline ? '' : title"
     :show-edit="editable && !inline" @edit="$emit('edit', $event)" class="money-view"
     :class="{ 'money-view--inline': inline, 'money-view--panel': panel, 'money-view--morph-preview': morphPreview }"
     :role="morphPreview ? 'group' : undefined" :aria-label="morphPreview ? 'Кошелёк' : undefined"

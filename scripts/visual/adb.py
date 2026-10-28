@@ -54,12 +54,28 @@ class Emulator:
         return run([*self.command, "shell", *command]).decode(errors="replace").strip()
 
     def tree(self):
-        self.shell("uiautomator", "dump", "--compressed", "/sdcard/dndshare-ui-review.xml")
-        xml = run([*self.command, "exec-out", "cat", "/sdcard/dndshare-ui-review.xml"])
-        (self.output / "latest-ui.xml").write_bytes(xml)
-        return ET.fromstring(xml)
+        problem = ""
+        for attempt in range(3):
+            try:
+                self.shell("rm", "-f", "/sdcard/dndshare-ui-review.xml")
+                result = self.shell("uiautomator", "dump", "--compressed", "/sdcard/dndshare-ui-review.xml")
+                if "ERROR:" in result.upper():
+                    raise RuntimeError(result)
+                # Some platform-tools builds omit the success message. Reading a
+                # file removed above proves freshness independently of stdout.
+                xml = run([*self.command, "exec-out", "cat", "/sdcard/dndshare-ui-review.xml"])
+                root = ET.fromstring(xml)
+                (self.output / "latest-ui.xml").write_bytes(xml)
+                return root
+            except (RuntimeError, ET.ParseError) as error:
+                problem = str(error)
+                if attempt < 2:
+                    time.sleep(.25)
+        (self.output / "uiautomator-error.txt").write_text(problem)
+        raise RuntimeError("Android did not produce a fresh UI hierarchy: " + problem)
 
     def wait(self, text=None, description=None, timeout=70):
+        started = time.monotonic()
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
             try:
@@ -70,6 +86,15 @@ class Emulator:
                     return root
             except (RuntimeError, ET.ParseError):
                 pass
+            if time.monotonic() - started > 3:
+                try:
+                    alive = bool(self.shell('pidof', PACKAGE))
+                except RuntimeError:
+                    alive = False
+                if not alive:
+                    diagnostics = run([*self.command, 'logcat', '-d', '-t', '500', '-s', 'AndroidRuntime:E', '*:S'])
+                    (self.output / 'runtime-error.log').write_bytes(diagnostics)
+                    raise RuntimeError(f"Smoke client exited while waiting for {text or description!r}; see {self.output / 'runtime-error.log'}")
             time.sleep(.3)
         raise AssertionError(f"Android did not show {text or description!r}; see {self.output}")
 

@@ -19,7 +19,7 @@
     </template>
     <template v-else-if="section === 'journal'">
       <CharacterBlock block-id="diary" />
-      <BaseTile class="sheet-notes"><CharacterBlock block-id="notes" /></BaseTile>
+      <BaseTile :outlined="false" class="sheet-notes"><CharacterBlock block-id="notes" /></BaseTile>
     </template>
   </div>
 </template>
@@ -39,8 +39,5 @@ defineProps({ section: String, format: String })
 .dnd-tablet-base { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--layout-sheet-base-min)), 1fr)); align-items: start; gap: 20px; }
 .dnd-tablet-base :deep(> *) { min-width: 0; }
 .sheet-notes { padding: 18px; }
-@container character-sheet (min-width: 720px) {
-  .dnd-personality-compact { columns: 2; display: block; column-gap: 16px; }
-  .dnd-personality-compact :deep(> *) { break-inside: avoid; margin-bottom: 16px; }
-}
+
 </style>

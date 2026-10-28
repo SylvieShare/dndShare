@@ -63,7 +63,8 @@ const calcError = ref(false)
 
 const blockTitle = computed(() => props.block.props?.title || props.block.content?.title || '')
 const suggestTypeId = computed(() => props.block.content?.suggest_type_id)
-const items = computed(() => useSuggestStore().items(suggestTypeId.value) || [])
+const items = computed(() => suggestTypeId.value ? useSuggestStore().items(suggestTypeId.value) || []
+  : (props.block.preset || []).filter(coin => coin.id != null).map(coin => ({ ...coin, value: coin.title })))
 
 const coins = computed(() => {
   const normalized = items.value.map(item => normalizeCoin(item))

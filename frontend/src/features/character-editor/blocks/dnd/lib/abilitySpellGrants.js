@@ -124,5 +124,5 @@ export function syncAbilityGrantedSpells(grants, grantRows) {
       ...(row.countsAsKnown ? { counts_as_known: true } : {}),
     })
   }
-  return [...retained, ...desired.values()]
+  return [...retained, ...[...desired.values()].sort((left, right) => left.key < right.key ? -1 : left.key > right.key ? 1 : 0)]
 }

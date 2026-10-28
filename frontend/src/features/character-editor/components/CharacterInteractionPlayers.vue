@@ -2,7 +2,7 @@
   <div class="interaction-players">
     <RowActionMenu v-for="player in players" :key="player.charUuid" :title="`Действия: ${pvName(player) || 'Без имени'}`">
       <template #trigger="{ open }">
-        <BaseTile interactive role="button" tabindex="0" aria-haspopup="menu" :aria-expanded="open" :aria-label="`Действия: ${pvName(player) || 'Без имени'}`" @keydown.enter.prevent="$event.currentTarget.click()" @keydown.space.prevent="$event.currentTarget.click()" class="interaction-player" :class="{ 'action-menu-source--open': open }">
+        <BaseTile :outlined="false" interactive role="button" tabindex="0" aria-haspopup="menu" :aria-expanded="open" :aria-label="`Действия: ${pvName(player) || 'Без имени'}`" @keydown.enter.prevent="$event.currentTarget.click()" @keydown.space.prevent="$event.currentTarget.click()" class="interaction-player" :class="{ 'action-menu-source--open': open }">
           <TransferPerson class="interaction-player-person" :name="pvName(player) || 'Без имени'" :image-url="pvAvatar(player)" :size="48">
             <SessionHpBar v-if="pvHp(player)" :hp="pvHp(player)" />
           </TransferPerson>

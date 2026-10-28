@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <SectionList v-else embedded>
+    <SectionList :outlined="false" v-else embedded>
       <div v-if="!entries.length" class="abv-empty">—</div>
 
       <RowActionMenu

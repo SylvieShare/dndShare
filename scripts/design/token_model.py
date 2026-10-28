@@ -16,6 +16,7 @@ REQUIRED = {
     'layout': {'tablet', 'desktop', 'sidebar-collapsed', 'sidebar-expanded', 'drawer', 'content-max', 'header', 'border', 'touch-min',
                'sheet-value-height', 'sheet-value-width', 'sheet-value-compact-height', 'sheet-value-compact-width',
                'sheet-max', 'sheet-stat-min', 'sheet-base-min', 'sheet-stats-column', 'sheet-utilities-column',
+               'sheet-stats-column-min', 'sheet-utilities-column-min',
                'morph-stacked-max', 'morph-editor-width', 'morph-preview-min', 'morph-preview-max-height', 'morph-margin'},
     'collection': {'min-height', 'padding', 'emblem', 'art-inset', 'grid-gap'},
     'canvas': {'step', 'radius', 'opacity'},
@@ -65,6 +66,9 @@ def validate(data):
         raise ValueError('Invalid window/rail ordering')
     if layout['touch-min'] < 48 or data['collection']['min-height'] <= 2 * data['collection']['padding']:
         raise ValueError('Touch target or tile content cannot fit')
+    for side in ('stats', 'utilities'):
+        if not 0 < layout[f'sheet-{side}-column-min'] <= layout[f'sheet-{side}-column']:
+            raise ValueError('Invalid sheet column minimum')
     if data['list']['metric-min'] > data['list']['metric-max'] or data['list']['icon'] > data['list']['min-height']:
         raise ValueError('Invalid list geometry')
     if any(not isinstance(value, int) for key, value in data['motion'].items() if key != 'distance'):

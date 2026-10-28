@@ -29,7 +29,7 @@ func TestPersonalJournalSourcesAndLifecycle(t *testing.T) {
 		UPDATE dndshare."char" SET uuid='cc503ec7-8250-4c00-a9a4-b830f39cdaf1' WHERE id=1;
 		INSERT INTO dndshare."session" (id,owner_user_id,name,deleted) VALUES (1,1,'Кампания',false), (2,1,'Удалённая',true);
 		INSERT INTO dndshare.session_participant VALUES (1,1,1), (2,25,1);`)
-	exec(testSchemaTables(t, "journal", "journal_section", "journal_entry", "journal_node", "journal_link", "character_journal", "session_occurrence"))
+	exec(testSchemaTables(t, "journal", "journal_section", "journal_entry", "journal_node", "journal_link", "character_journal", "session_occurrence", "journal_creation_receipt"))
 	exec(`INSERT INTO dndshare.journal (uuid,owner_user_id,personal_char_id,name) VALUES
 		('95cba40e-807d-463d-9f80-9e43b8c0a0b4',1,1,'Полный дневник'),
 		('690207c5-4770-4e09-b9b2-1f2d08be59ef',1,25,'Копия персонажа'),
@@ -100,4 +100,5 @@ func TestPersonalJournalSourcesAndLifecycle(t *testing.T) {
 	t.Run("graph branches, merges and conflicts", func(t *testing.T) { testJournalGraph(t, s) })
 	t.Run("timeline order preserves content and graph", func(t *testing.T) { testJournalTimelineOrder(t, s) })
 	t.Run("quest checklist persists with conflict protection", func(t *testing.T) { testJournalQuest(t, s) })
+	t.Run("creation receipts", func(t *testing.T) { testJournalCreationReceipts(t, s) })
 }

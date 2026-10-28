@@ -157,4 +157,33 @@ func testSpellCast(t *testing.T, s *Store, pool *pgxpool.Pool, npc ApplicationTa
 	if application.Healing != nil || application.TemporaryHP == nil || application.TemporaryHP.Total != result.Self.TemporaryHP.Total || application.TemporaryHP.Total < 16 || application.TemporaryHP.Total > 22 {
 		t.Fatal("shared temporary HP roll/upcast", application)
 	}
+	t.Run("manual cast is atomic and retry does not spend twice", func(t *testing.T) {
+		exec(`UPDATE dndshare.item SET data='{"lvl":1,"concentration":true}' WHERE id=802;
+        UPDATE dndshare."char" SET data=jsonb_set(data,'{values,spells,slot_pools,long_rest}','[{"level":1,"total":2,"used":0}]') WHERE id=10;`)
+		manual := SpellCastRequest{Manual: true, SpellID: 802, EntryKey: "spell", Version: version(), ClientActionID: id(), SessionUUID: sessionUUID, CastLevel: 1, Pool: "long_rest", SpendSlot: true}
+		for retry := 0; retry < 2; retry++ {
+			result, err := s.CastSpell(ctx, 1, 10, manual)
+			if err != nil || result.Self != nil || len(result.Transfers) != 0 {
+				t.Fatalf("manual cast %d: %+v %v", retry, result, err)
+			}
+		}
+		var used, events int
+		if err := pool.QueryRow(ctx, `SELECT (data#>>'{values,spells,slot_pools,long_rest,0,used}')::int FROM dndshare."char" WHERE id=10`).Scan(&used); err != nil {
+			t.Fatal(err)
+		}
+		if err := pool.QueryRow(ctx, `SELECT count(*) FROM dndshare.session_event WHERE client_action_id=$1::uuid`, manual.ClientActionID).Scan(&events); err != nil {
+			t.Fatal(err)
+		}
+		if used != 1 || events != 1 {
+			t.Fatalf("manual cast spent/logged more than once: used=%d events=%d", used, events)
+		}
+		invalid := manual
+		invalid.ClientActionID = id()
+		invalid.Version = version()
+		invalid.Targets = []string{"self"}
+		if _, err := s.CastSpell(ctx, 1, 10, invalid); err == nil {
+			t.Fatal("manual cast accepted automatic targets")
+		}
+	})
+
 }

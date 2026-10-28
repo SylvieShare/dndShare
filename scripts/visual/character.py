@@ -40,10 +40,10 @@ def wait_absent(device, text):
 def verify_swipes(device, format_):
     width, height = format_["width"], format_["height"]
     if format_["name"] == "wide":
-        row = next(n for n in device.wait("Учебный посох").iter("node") if n.get("text") == "Учебный посох")
-        _, top, _, bottom = map(int, re.findall(r"\d+", row.get("bounds", "")))
-        left, right, y = int(width * .35), int(width * .60), (top + bottom) // 2
-        expected = "Ячейки заклинаний"
+        row = next(n for n in device.wait("Оружие").iter("node") if n.get("text") == "Оружие")
+        tab_left, _, _, bottom = map(int, re.findall(r"\d+", row.get("bounds", "")))
+        left, right, y = tab_left + 16, tab_left + 16 + int(width * .25), bottom + 100
+        expected = "ЯЧЕЙКИ ЗАКЛИНАНИЙ"
     else:
         left, right, y = int(width * .15), int(width * .85), int(height * .65)
         expected = "СИЛА"
@@ -51,7 +51,12 @@ def verify_swipes(device, format_):
     device.wait(expected)
     if format_["name"] == "wide":
         device.shell("input", "swipe", str(left), str(y), str(right), str(y), "450")
-        device.wait("СИЛА" if format_["name"] == "phone" else "Учебный посох")
+        device.wait("СИЛА" if format_["name"] == "phone" else "ОРУЖИЕ")
+    else:
+        device.shell("input", "swipe", str(left), str(y), str(right), str(y), "450")
+        device.wait("Волшебник 4")
+        device.shell("input", "swipe", str(right), str(y), str(left), str(y), "450")
+        device.wait("СИЛА")
     return {"format": format_["name"], "realHorizontalGesture": True, "forwardContent": expected}
 
 
@@ -121,3 +126,13 @@ def verify_form_restoration(device, url, fixture, stats):
         raise AssertionError("Lifecycle smoke must restore the exact shared character data")
     return {"foldResize": True, "systemProcessDeath": True, "inputRestored": base + 1,
         "newerServerValueProtected": base + 2, "originalRestored": True, "realAPI": True}
+
+
+def verify_vtm_menu(device):
+    from native_controls import NativeControls
+    controls = NativeControls(device)
+    controls.click('Меню персонажа', True)
+    controls.find('Сохранить PDF')
+    device.click(text='Закрыть')
+    device.wait('Тореадор')
+    return {'realCompose': True, 'menuReachable': True, 'pdfActionReachable': True}

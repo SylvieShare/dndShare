@@ -1,5 +1,5 @@
 <template>
-  <BaseTile class="lu-item" :tint="highlighted">
+  <BaseTile :outlined="false" class="lu-item" :tint="highlighted">
     <button type="button" class="lu-item-open" :aria-label="`Открыть «${item.name}»`" @click="emit('details', item)">
       <HandbookListItem :item="item" :type="{ id: typeId }" />
     </button>

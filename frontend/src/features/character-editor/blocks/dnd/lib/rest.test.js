@@ -58,3 +58,16 @@ describe('multiclass spell-slot recovery', () => {
     })
   })
 })
+
+
+describe('passive hit point contributions during rest', () => {
+  it('heals to the effective maximum without storing readonly feature bonuses', () => {
+    const hp = { current: 8, max: { base: 20, bonuses: [] }, hitDice: [{ die: 'd8', total: 4, used: 1 }] }
+    const rested = longRestHp(hp, null, '2014', 28)
+    expect(rested.current).toBe(28)
+    expect(rested.max).toEqual(hp.max)
+    const spent = spendHitDie(hp, 100, 'd8', 28)
+    expect(spent.current).toBe(28)
+    expect(spent.max).toEqual(hp.max)
+  })
+})

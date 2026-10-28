@@ -24,11 +24,13 @@ type journalResponse struct {
 }
 
 type journalSectionRequest struct {
-	Title string `json:"title"`
-	Date  string `json:"date"`
+	ClientActionID string `json:"clientActionId,omitempty"`
+	Title          string `json:"title"`
+	Date           string `json:"date"`
 }
 
 type journalEntryRequest struct {
+	ClientActionID        string             `json:"clientActionId,omitempty"`
 	ExpectedGraphRevision *int64             `json:"expectedGraphRevision"`
 	ParentIDs             []int64            `json:"parentIds"`
 	GraphPosition         *store.JournalNode `json:"graphPosition"`
@@ -255,6 +257,10 @@ func journalPathID(w http.ResponseWriter, r *http.Request, key string) (int64, b
 }
 
 func cleanJournalSection(w http.ResponseWriter, req journalSectionRequest) (journalSectionRequest, bool) {
+	if req.ClientActionID != "" && !isUUID(req.ClientActionID) {
+		badRequest(w, "Некорректный идентификатор операции")
+		return journalSectionRequest{}, false
+	}
 	req.Title = strings.TrimSpace(req.Title)
 	req.Date = strings.TrimSpace(req.Date)
 	if len([]rune(req.Title)) > 160 || len([]rune(req.Date)) > 32 {
@@ -265,6 +271,10 @@ func cleanJournalSection(w http.ResponseWriter, req journalSectionRequest) (jour
 }
 
 func cleanJournalEntry(w http.ResponseWriter, req journalEntryRequest) (store.JournalEntryMutation, bool) {
+	if req.ClientActionID != "" && !isUUID(req.ClientActionID) {
+		badRequest(w, "Некорректный идентификатор операции")
+		return store.JournalEntryMutation{}, false
+	}
 	req.Type = strings.TrimSpace(req.Type)
 	req.Title = strings.TrimSpace(req.Title)
 	if !journalEntryTypes[req.Type] || len([]rune(req.Title)) > 255 || len([]rune(req.Description)) > 20000 {
@@ -282,11 +292,15 @@ func cleanJournalEntry(w http.ResponseWriter, req journalEntryRequest) (store.Jo
 		badRequest(w, "Некорректное задание: до 100 пунктов с уникальными идентификаторами, текст до 500 символов, награда до 2000 символов")
 		return store.JournalEntryMutation{}, false
 	}
-	return store.JournalEntryMutation{Type: req.Type, Title: req.Title, Description: req.Description, Payload: req.Payload, ExpectedChangedAt: req.ExpectedChangedAt,
+	return store.JournalEntryMutation{ClientActionID: req.ClientActionID, Type: req.Type, Title: req.Title, Description: req.Description, Payload: req.Payload, ExpectedChangedAt: req.ExpectedChangedAt,
 		ExpectedGraphRevision: req.ExpectedGraphRevision, ParentIDs: req.ParentIDs, GraphPosition: req.GraphPosition}, true
 }
 
 func writeJournalError(w http.ResponseWriter, err error) {
+	if errors.Is(err, store.ErrJournalCreationIdentity) {
+		conflict(w, "Идентификатор операции уже использован для другой записи.")
+		return
+	}
 	if errors.Is(err, store.ErrJournalSectionManaged) {
 		conflict(w, "Раздел дневника привязан к сессии. Измените её в расписании кампании.")
 		return

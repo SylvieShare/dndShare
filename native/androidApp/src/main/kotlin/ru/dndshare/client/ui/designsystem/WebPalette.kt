@@ -4,14 +4,14 @@ package ru.dndshare.client.ui.designsystem
 import androidx.compose.ui.graphics.Color
 
 object WebPalette {
-    val Background = Color(0xFF1B1B1D)
-    val Surface = Color(0xFF242427)
-    val Raised = Color(0xFF2C2C30)
-    val Active = Color(0xFF35353B)
-    val Popover = Color(0xFF202024)
+    val Background = Color(0xFF17171B)
+    val Surface = Color(0xFF27272E)
+    val Raised = Color(0xFF34343E)
+    val Active = Color(0xFF42424F)
+    val Popover = Color(0xFF2C2C34)
     val Text = Color(0xFFECECED)
     val TextSecondary = Color(0xFFA6A6AB)
-    val TextMuted = Color(0xFF8A8A92)
+    val TextMuted = Color(0xFFA0A0AD)
     val OnAccent = Color(0xFFFFFFFF)
     val Accent = Color(0xFF7C5CE2)
     val AccentHover = Color(0xFF6847C7)

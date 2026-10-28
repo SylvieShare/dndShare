@@ -26,7 +26,7 @@ func TestUIReviewPostgres(t *testing.T) {
 	directory := "testdata/ui-review"
 	files := map[string][]byte{}
 	hash := sha256.New()
-	for _, name := range []string{"fixture.json", "seed.sql", "characters.json", "cover.svg", "emblem.svg"} {
+	for _, name := range []string{"fixture.json", "seed.sql", "characters.json", "cover.svg", "emblem.svg", "character-weapons.sql", "character-inventory.sql", "character-identity.sql", "character-weapons-visual.sql", "character-spells.sql", "character-creation.sql"} {
 		data, err := os.ReadFile(filepath.Join(directory, name))
 		if err != nil {
 			t.Fatal(err)
@@ -42,7 +42,8 @@ func TestUIReviewPostgres(t *testing.T) {
 	fixture["dataFixtureHash"] = hex.EncodeToString(hash.Sum(nil))
 	credentials, _ := json.Marshal(map[string]any{"login": fixture["login"], "password": fixture["password"]})
 	f.request(authClient(t), "POST", "/api/user/registration", string(credentials), 200)
-	api := New(config.Config{SecureCookie: "false"}, f.store, nil).Handler()
+	storageFactory, media := reviewStorage(t)
+	var api http.Handler
 	var mutex sync.Mutex
 	images := map[string]int{}
 	requests := map[string]int{}
@@ -50,6 +51,10 @@ func TestUIReviewPostgres(t *testing.T) {
 		mutex.Lock()
 		requests[r.URL.Path]++
 		mutex.Unlock()
+		if strings.HasPrefix(r.URL.Path, "/__test/media/") {
+			media.ServeHTTP(w, r)
+			return
+		}
 		switch r.URL.Path {
 		case "/__test/fixture":
 			writeJSON(w, 200, fixture)
@@ -69,10 +74,64 @@ func TestUIReviewPostgres(t *testing.T) {
 			api.ServeHTTP(w, r)
 		}
 	}))
+	api = New(config.Config{SecureCookie: "false"}, f.store, storageFactory(server.URL)).Handler()
 	t.Cleanup(server.Close)
 	if _, err := f.pool.Exec(t.Context(), string(files["seed.sql"]), server.URL,
 		fixture["recordName"], fixture["description"], strings.ReplaceAll(string(files["characters.json"]), "__API__", server.URL)); err != nil {
 		t.Fatal(err)
+	}
+	if os.Getenv("DNDSHARE_REVIEW_SCENARIO") == "character-weapons" || strings.Contains(os.Getenv("DNDSHARE_REVIEW_STATES"), "sheet-weapons") {
+		if _, err := f.pool.Exec(t.Context(), string(files["character-weapons.sql"])); err != nil {
+			t.Fatal(err)
+		}
+		fixture["types"] = append(fixture["types"].([]any), map[string]any{"id": 4, "name": "Классовые способности", "count": 1}, map[string]any{"id": 19, "name": "Магические предметы", "count": 1})
+		fixture["totalRecords"] = fixture["totalRecords"].(float64) + 2
+	}
+	if os.Getenv("DNDSHARE_REVIEW_SCENARIO") == "character-inventory" {
+		if _, err := f.pool.Exec(t.Context(), string(files["character-inventory.sql"])); err != nil {
+			t.Fatal(err)
+		}
+		fixture["types"] = append(fixture["types"].([]any), map[string]any{"id": 14, "name": "Инструменты", "count": 1})
+		fixture["totalRecords"] = fixture["totalRecords"].(float64) + 1
+	}
+	if os.Getenv("DNDSHARE_REVIEW_SCENARIO") == "character-identity" {
+		if _, err := f.pool.Exec(t.Context(), string(files["character-identity.sql"])); err != nil {
+			t.Fatal(err)
+		}
+		for _, raw := range fixture["types"].([]any) {
+			row := raw.(map[string]any)
+			if row["id"] == float64(8) || row["id"] == float64(9) {
+				row["count"] = row["count"].(float64) + 1
+			}
+		}
+		fixture["types"] = append(fixture["types"].([]any), map[string]any{"id": 16, "name": "Происхождения", "count": 1}, map[string]any{"id": 17, "name": "Подклассы", "count": 1})
+		fixture["totalRecords"] = fixture["totalRecords"].(float64) + 4
+	}
+	if os.Getenv("DNDSHARE_REVIEW_SCENARIO") == "character-spells" {
+		if _, err := f.pool.Exec(t.Context(), string(files["character-spells.sql"])); err != nil {
+			t.Fatal(err)
+		}
+		fixture["types"] = append(fixture["types"].([]any), map[string]any{"id": 15, "name": "Состояния", "count": 1})
+		fixture["totalRecords"] = fixture["totalRecords"].(float64) + 1
+	}
+	if os.Getenv("DNDSHARE_REVIEW_SCENARIO") == "character-creation" {
+		if _, err := f.pool.Exec(t.Context(), string(files["character-creation.sql"])); err != nil {
+			t.Fatal(err)
+		}
+		fixture["types"] = append(fixture["types"].([]any), map[string]any{"id": 11, "name": "Предыстории", "count": 1})
+		fixture["totalRecords"] = fixture["totalRecords"].(float64) + 1
+	}
+	if strings.Contains(os.Getenv("DNDSHARE_REVIEW_STATES"), "sheet-death-saves") {
+		if _, err := f.pool.Exec(t.Context(), `UPDATE dndshare."char" SET data=jsonb_set(data,'{values,hp,current}','0'::jsonb) WHERE template_id=(SELECT id FROM dndshare.char_template WHERE name='DND5')`); err != nil {
+			t.Fatal(err)
+		}
+		fixture["healthState"] = "dying"
+	}
+	if strings.Contains(os.Getenv("DNDSHARE_REVIEW_STATES"), "sheet-weapons") {
+		if _, err := f.pool.Exec(t.Context(), string(files["character-weapons-visual.sql"])); err != nil {
+			t.Fatal(err)
+		}
+		fixture["weaponState"] = "owned"
 	}
 	// Check the served contract before starting either consumer.
 	client := authClient(t)

@@ -318,6 +318,7 @@ func TestCharacterSessionPersistencePostgres(t *testing.T) {
 		{"inventory grid", func(t *testing.T, f transferFixture) { testSessionInventoryGrid(t, f.store) }},
 		{"prepared initiative", func(t *testing.T, f transferFixture) { testPreparedInitiative(t, f.store, f.pool) }},
 		{"chronicle targets", func(t *testing.T, f transferFixture) { testChronicleTargets(t, f.store, f.pool) }},
+		{"atomic character rolls", func(t *testing.T, f transferFixture) { testAtomicCharacterRoll(t, f) }},
 		{"roll sequences", func(t *testing.T, f transferFixture) { testSessionSequences(t, f.store, f.pool) }},
 	} {
 		t.Run(scenario.name, func(t *testing.T) { scenario.run(t, newTransferFixture(t)) })

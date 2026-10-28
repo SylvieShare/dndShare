@@ -3,16 +3,16 @@
   <p v-else-if="error" role="alert">{{ error }} <ActionButton variant="quiet" @click="load">Повторить</ActionButton></p>
   <template v-else>
     <div class="dawn-resources">
-      <BaseTile v-for="resource in candidates" :key="resource.key" class="dawn-resource">
+      <BaseTile :outlined="false" v-for="resource in candidates" :key="resource.key" class="dawn-resource">
         <strong>{{ resource.title }}</strong>
         <span>{{ resource.value }} / {{ resource.total }}</span>
         <small>{{ resource.dawn_recovery.mode === 'full' ? 'Восстановить полностью' : `Восстановить ${resource.dawn_recovery.formula.replace(/d/g, 'к')}` }}</small>
       </BaseTile>
-      <BaseTile v-for="target in targetCandidates" :key="target.uid" class="dawn-resource"><strong>{{ target.item.name }}: {{ target.state.name }}</strong><span>{{ target.state.dawns_left }} → {{ Math.max(0, target.state.dawns_left - 1) }}</span><small>Рассветов до {{ target.state.status === 'defeated' ? 'выбора новой цели' : 'истечения срока' }}</small></BaseTile>
-      <BaseTile v-for="row in [...cooldownCandidates, ...cooldownResults]" :key="`${row.uid}:${row.key}`" class="dawn-resource"><strong>{{ row.title }}</strong><span>{{ row.before }} → {{ row.after }}</span><small>{{ row.after ? 'Рассветов до следующего применения' : 'Можно использовать снова; заряды не восполняются' }}</small></BaseTile>
+      <BaseTile :outlined="false" v-for="target in targetCandidates" :key="target.uid" class="dawn-resource"><strong>{{ target.item.name }}: {{ target.state.name }}</strong><span>{{ target.state.dawns_left }} → {{ Math.max(0, target.state.dawns_left - 1) }}</span><small>Рассветов до {{ target.state.status === 'defeated' ? 'выбора новой цели' : 'истечения срока' }}</small></BaseTile>
+      <BaseTile :outlined="false" v-for="row in [...cooldownCandidates, ...cooldownResults]" :key="`${row.uid}:${row.key}`" class="dawn-resource"><strong>{{ row.title }}</strong><span>{{ row.before }} → {{ row.after }}</span><small>{{ row.after ? 'Рассветов до следующего применения' : 'Можно использовать снова; заряды не восполняются' }}</small></BaseTile>
       <p v-if="!candidates.length && !targetCandidates.length && !cooldownCandidates.length && !done">Нет изменений на рассвете.</p>
-      <BaseTile v-for="row in targetResults" :key="row.uid" class="dawn-resource"><strong>{{ row.title }}</strong><span>{{ row.before }} → {{ row.after }}</span><small>{{ row.after ? 'Осталось рассветов' : 'Можно объявить новую цель' }}</small></BaseTile>
-      <BaseTile v-for="row in results" :key="row.key" class="dawn-resource">
+      <BaseTile :outlined="false" v-for="row in targetResults" :key="row.uid" class="dawn-resource"><strong>{{ row.title }}</strong><span>{{ row.before }} → {{ row.after }}</span><small>{{ row.after ? 'Осталось рассветов' : 'Можно объявить новую цель' }}</small></BaseTile>
+      <BaseTile :outlined="false" v-for="row in results" :key="row.key" class="dawn-resource">
         <strong>{{ row.title }}</strong><span>{{ row.before }} → {{ row.after }} / {{ row.total }}</span>
         <small v-if="row.formula">{{ row.formula.replace(/d/g, 'к') }}: выпало {{ row.rolled }}</small>
       </BaseTile>

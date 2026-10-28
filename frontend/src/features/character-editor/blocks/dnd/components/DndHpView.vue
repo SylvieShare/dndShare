@@ -20,7 +20,7 @@
   </div>
 
   <!-- Main widget -->
-  <MorphTile v-else ref="rootElement" :embedded="panel" :color="barColor" :framed="!panel" padding="0" class="hp-widget" :style="{ '--hp-color': barColor }">
+  <MorphTile :outlined="false" v-else ref="rootElement" :embedded="panel" :color="barColor" :framed="false" padding="0" class="hp-widget" :style="{ '--hp-color': barColor }">
     <div class="hp-content" :class="{ 'hp-dead': isDead }" @click="$emit('open', $event)">
       <div class="hp-main">
         <img class="hp-heart-icon" :class="heartbeatClass" src="/static/hp-pulse.svg" :style="{ filter: svgColorFilter }" alt="" />
@@ -109,8 +109,9 @@ const svgColorFilter = computed(() => {
   gap: 12px;
   min-width: 200px;
   padding: 14px 16px;
+  background: color-mix(in srgb, var(--hp-color) 5.5%, var(--surface));
 }
-.hp-content { display: flex; align-items: center; gap: 18px; transition: opacity 0.4s ease; cursor: pointer; }
+.hp-content { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 18px; transition: opacity 0.4s ease; cursor: pointer; }
 .hp-content.hp-dead { opacity: 0.18; filter: blur(4px); pointer-events: none; user-select: none; transition: opacity 0.4s ease, filter 0.4s ease; }
 .hp-main { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; white-space: nowrap; }
 .hp-bar { flex: 1 1 auto; min-width: 120px; }

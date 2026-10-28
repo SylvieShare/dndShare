@@ -8,6 +8,8 @@
       </button>
     </div>
 
+    <FormTextInput v-model:value="query" class="character-search" placeholder="Найти персонажа" aria-label="Найти персонажа" />
+
     <LoadingState v-if="loading" label="Загружаем персонажей…" />
 
     <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="loadChars()">Повторить</button></div>
@@ -59,7 +61,7 @@ export default { name: 'ViewListCharacters' }
 </script>
 
 <script setup>
-import { LoadingState } from '@sylvieshare/share-ui'
+import { LoadingState, FormTextInput } from '@sylvieshare/share-ui'
 import { computed, onActivated, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CharBox from "@/features/character-list/components/CharBox"
@@ -75,6 +77,7 @@ const route = useRoute()
 const accountStore = useAccountStore()
 const templateStore = useTemplateStore()
 const chars = ref([])
+const query = ref('')
 const sessionsByChar = ref({})
 const loadError = ref('')
 const loading = ref(true)
@@ -87,6 +90,7 @@ const templates = computed(() => templateStore.all)
 const groupedChars = computed(() => {
   const groups = new Map()
   for (const char of chars.value) {
+    if (query.value.trim() && !(accessorsFor(char.templateId)?.displayName(char.data) || '').toLocaleLowerCase('ru').includes(query.value.trim().toLocaleLowerCase('ru'))) continue
     const key = char.sourceId != null ? `source:${char.sourceId}` : 'source:unknown'
     if (!groups.has(key)) {
       groups.set(key, {
@@ -253,6 +257,8 @@ onActivated(() => {
   grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
   gap: 16px;
 }
+
+.character-search { margin-bottom: 20px; min-height: 48px; }
 
 .char-section + .char-section {
   margin-top: 28px;

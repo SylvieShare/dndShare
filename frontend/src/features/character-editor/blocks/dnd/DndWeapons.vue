@@ -7,7 +7,7 @@
     <div v-if="armorAttackWarning" class="w-armor-warning">
       Атаки Силой и Ловкостью совершаются с помехой: нет владения {{ armorState.nonproficient.map(row => `«${row.name}»`).join(', ') }}.
     </div>
-    <SectionList title="Оружие" :list-attrs="{ 'data-sortable-container': 'weapons' }">
+    <SectionList :outlined="false" title="Оружие" :list-attrs="{ 'data-sortable-container': 'weapons' }">
       <template v-if="variant !== 'list' && entries.length" #body>
         <table class="w-table" :class="{ 'w-edit': charCtx.ownerMode }">
           <colgroup v-if="charCtx.ownerMode">
@@ -58,7 +58,7 @@
       </template>
     </SectionList>
 
-    <SectionList title="Базовые атаки">
+    <SectionList :outlined="false" title="Базовые атаки">
       <PresetAttackCard
         title="Рукопашный удар"
         subtitle="Сила · урон 1 + модификатор"

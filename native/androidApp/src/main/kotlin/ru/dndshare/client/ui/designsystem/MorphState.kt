@@ -3,12 +3,12 @@ package ru.dndshare.client.ui.designsystem
 import android.os.Build
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.BlurEffect
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.graphicsLayer
@@ -17,11 +17,11 @@ import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.constrainWidth
-import androidx.compose.ui.unit.constrainHeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.constrainHeight
+import androidx.compose.ui.unit.constrainWidth
+import androidx.compose.ui.unit.dp
 
 @Stable
 class ShareMorphPresentation internal constructor(val expanded: Boolean, val progress: () -> Float)
@@ -46,17 +46,29 @@ class ShareMorphState {
     internal var revision by mutableIntStateOf(0)
     internal var hostOrigin by mutableStateOf(Offset.Zero)
     internal var hostPlaced by mutableStateOf(false)
-    val isActive get() = activeKey != null
-    val progress get() = if (activeKey == null) 0f else fraction.value
+    val isActive
+        get() = activeKey != null
+
+    val progress
+        get() = if (activeKey == null) 0f else fraction.value
+
     internal val original = ShareMorphPresentation(false) { 0f }
     internal val expanded = ShareMorphPresentation(true) { progress }
 
-    internal fun entry(key: String, content: @Composable (ShareMorphPresentation) -> Unit) = contents.getOrPut(key) { MorphContent(content) }
-    internal fun entry(key: String): MorphContent? { revision; return contents[key]?.takeIf { it.placed } }
+    internal fun entry(key: String, content: @Composable (ShareMorphPresentation) -> Unit) =
+        contents.getOrPut(key) { MorphContent(content) }
+
+    internal fun entry(key: String): MorphContent? {
+        revision
+        return contents[key]?.takeIf { it.placed }
+    }
+
     internal fun release(key: String, entry: MorphContent, token: Any) {
         entry.bindings.remove(token)
-        if (entry.bindings.isEmpty() && activeKey != key && contents[key] === entry) contents.remove(key)
+        if (entry.bindings.isEmpty() && activeKey != key && contents[key] === entry)
+            contents.remove(key)
     }
+
     internal fun finish() {
         activeKey = null
         contents.entries.removeAll { it.value.bindings.isEmpty() }
@@ -65,18 +77,39 @@ class ShareMorphState {
 
 val LocalShareMorphState = staticCompositionLocalOf<ShareMorphState?> { null }
 
-@Composable
-fun rememberShareMorphState() = remember { ShareMorphState() }
+@Composable fun rememberShareMorphState() = remember { ShareMorphState() }
 
 /** The host owns one coordinate space; its caller applies system/IME insets once. */
 @Composable
-fun ShareMorphHost(state: ShareMorphState, modifier: Modifier = Modifier,
-    background: @Composable () -> Unit, overlay: @Composable () -> Unit) {
+fun ShareMorphHost(
+    state: ShareMorphState,
+    modifier: Modifier = Modifier,
+    background: @Composable () -> Unit,
+    overlay: @Composable () -> Unit,
+) {
+    val root = LocalMorphLayers.current
+    if (root != null) {
+        val token = remember { Any() }
+        val currentOverlay by rememberUpdatedState(overlay)
+        val context = currentCompositionLocalContext
+        val layer = remember(state, context) { MorphLayer(state, context) { currentOverlay() } }
+        DisposableEffect(root, token, layer) {
+            root.entries[token] = layer
+            onDispose {
+                root.entries.remove(token)
+                state.hostPlaced = false
+            }
+        }
+        Box(modifier.fillMaxSize()) { background() }
+        return
+    }
     DisposableEffect(state) { onDispose { state.hostPlaced = false } }
-    Box(modifier.fillMaxSize().onGloballyPositioned {
-        state.hostOrigin = it.positionInWindow()
-        state.hostPlaced = true
-    }) {
+    Box(
+        modifier.fillMaxSize().onGloballyPositioned {
+            state.hostOrigin = it.positionInWindow()
+            state.hostPlaced = true
+        }
+    ) {
         Box(Modifier.fillMaxSize().shareMorphBackground(state)) { background() }
         overlay()
     }
@@ -84,17 +117,29 @@ fun ShareMorphHost(state: ShareMorphState, modifier: Modifier = Modifier,
 
 /** One movable subtree: its measured placeholder remains in the document while editing. */
 @Composable
-fun ShareMorphSource(key: String, modifier: Modifier = Modifier, scrollPreview: Boolean = true,
-    cornerRadius: Dp = DesignTokens.Radius.Tile, content: @Composable (ShareMorphPresentation) -> Unit) {
+fun ShareMorphSource(
+    key: String,
+    modifier: Modifier = Modifier,
+    scrollPreview: Boolean = true,
+    cornerRadius: Dp = DesignTokens.Radius.Tile,
+    content: @Composable (ShareMorphPresentation) -> Unit,
+) {
     val state = LocalShareMorphState.current
-    if (state == null) { Box(modifier) { content(ShareMorphPresentation(false) { 0f }) }; return }
+    if (state == null) {
+        Box(modifier) { content(ShareMorphPresentation(false) { 0f }) }
+        return
+    }
     val entry = remember(state, key) { state.entry(key, content) }
     val token = remember { Any() }
     DisposableEffect(entry) {
         entry.bindings.add(token)
         onDispose { state.release(key, entry, token) }
     }
-    SideEffect { entry.renderer = content; entry.scrollPreview = scrollPreview; entry.cornerRadius = cornerRadius }
+    SideEffect {
+        entry.renderer = content
+        entry.scrollPreview = scrollPreview
+        entry.cornerRadius = cornerRadius
+    }
     val moving = state.activeKey == key && entry.placed
     val coordinates = modifier.onGloballyPositioned {
         if (!it.isAttached) return@onGloballyPositioned
@@ -103,17 +148,26 @@ fun ShareMorphSource(key: String, modifier: Modifier = Modifier, scrollPreview: 
         entry.bounds = raw
         if (visible.width > 0 && visible.height > 0) entry.lastVisibleBounds = raw
         if (!moving) entry.sourceSize = it.size
-        if (!entry.placed && it.size.width > 0 && it.size.height > 0) { entry.placed = true; state.revision++ }
+        if (!entry.placed && it.size.width > 0 && it.size.height > 0) {
+            entry.placed = true
+            state.revision++
+        }
     }
-    if (moving) Layout({}, coordinates.fillMaxWidth().clearAndSetSemantics { }) { _, constraints ->
-        layout(constraints.constrainWidth(entry.sourceSize.width), constraints.constrainHeight(entry.sourceSize.height)) { }
-    } else Box(coordinates) { entry.movable(state.original) }
+    if (moving)
+        Layout({}, coordinates.fillMaxWidth().clearAndSetSemantics {}) { _, constraints ->
+            layout(
+                constraints.constrainWidth(entry.sourceSize.width),
+                constraints.constrainHeight(entry.sourceSize.height),
+            ) {}
+        }
+    else Box(coordinates) { entry.movable(state.original) }
 }
 
 fun Modifier.shareMorphBackground(state: ShareMorphState): Modifier =
-    then(if (state.isActive) Modifier.clearAndSetSemantics { } else Modifier).graphicsLayer {
-    renderEffect = if (Build.VERSION.SDK_INT >= 31 && state.progress > 0f) {
-        val radius = 8.dp.toPx() * state.progress
-        BlurEffect(radius, radius, TileMode.Clamp)
-    } else null
-}
+    then(if (state.isActive) Modifier.clearAndSetSemantics {} else Modifier).graphicsLayer {
+        renderEffect =
+            if (Build.VERSION.SDK_INT >= 31 && state.progress > 0f) {
+                val radius = 8.dp.toPx() * state.progress
+                BlurEffect(radius, radius, TileMode.Clamp)
+            } else null
+    }
