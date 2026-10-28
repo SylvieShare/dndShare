@@ -61,7 +61,7 @@ def link_modules(modules, destination, hot):
             (destination / package.name).symlink_to(package, target_is_directory=package.is_dir())
     for name in (".vite", ".vite-temp", ".cache"):
         cache = hot / name
-        cache.mkdir(parents=True)
+        cache.mkdir(parents=True, exist_ok=True)
         (destination / name).symlink_to(cache, target_is_directory=True)
 
 

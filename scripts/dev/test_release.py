@@ -1,12 +1,13 @@
 """Warm releases preserve compiler outputs and refuse source changes."""
 from pathlib import Path
+import json
 import subprocess
 import tempfile
 import sys
 import unittest
 
 from scripts.dev.common import UIError
-from scripts.dev.release_checkout import prepared_release
+from scripts.dev.release_checkout import prepared_release, ensure_web_dependencies
 from scripts.dev.release_delivery import deliver
 from scripts.dev.release_delivery import web_environment
 from scripts.dev.runner import Run
@@ -41,6 +42,36 @@ class ReleaseTest(unittest.TestCase):
                 with prepared_release(root, one):
                     self.fail('Dirty release source must never be overwritten')
             self.assertEqual((checkout / 'source.txt').read_text(), 'uncommitted work')
+
+    def test_dependency_upgrade_preserves_existing_vite_caches(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            checkout = root / 'release'
+            frontend = checkout / 'frontend'
+            frontend.mkdir(parents=True)
+            modules = root / 'installed/node_modules'
+            packages = {'node_modules/@scope/ui': {'version': '0.46.0'},
+                        'node_modules/playwright-core': {'version': '1.63.0'}}
+            (frontend / 'package-lock.json').write_text(json.dumps({'packages': packages}))
+            for name, package in packages.items():
+                installed = modules.parent / name
+                installed.mkdir(parents=True)
+                (installed / 'package.json').write_text(json.dumps(package))
+                old = frontend / name
+                old.mkdir(parents=True)
+                (old / 'package.json').write_text(json.dumps({'version': '0.45.1'}))
+            hot = checkout / 'build/vite-cache'
+            for name in ('.vite', '.vite-temp', '.cache'):
+                cached = hot / name
+                cached.mkdir(parents=True)
+                (cached / 'compiled').write_bytes(b'keep existing cache')
+            config = {'node_modules': str(modules)}
+            ensure_web_dependencies(checkout, config)
+            ensure_web_dependencies(checkout, config)
+            self.assertEqual(json.loads((frontend / 'node_modules/@scope/ui/package.json').read_text())['version'], '0.46.0')
+            for name in ('.vite', '.vite-temp', '.cache'):
+                self.assertEqual((frontend / 'node_modules' / name).resolve(), (hot / name).resolve())
+                self.assertEqual((hot / name / 'compiled').read_bytes(), b'keep existing cache')
 
     def test_failed_delivery_keeps_real_exit_codes(self):
         with tempfile.TemporaryDirectory() as tmp:
