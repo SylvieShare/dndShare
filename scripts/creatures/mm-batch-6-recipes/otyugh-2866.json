@@ -1,0 +1,147 @@
+{
+  "slug": "otyugh-2866",
+  "itemId": 2866,
+  "itemIds": [
+    2866
+  ],
+  "modelId": "3654526e-f0b5-5470-bddc-9ff5b231bb65",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2866",
+  "sourceName": "otyugh-2866-miniature",
+  "name": "Отидж",
+  "nameEn": "Otyugh",
+  "code": "CRE-otyugh",
+  "groupName": "Отидж",
+  "groupNameEn": "Otyugh",
+  "maxHeight": 1.35,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.35,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "geometryBaseline": "source-refinement/baseline-render.glb",
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2866,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.47479003667831415,
+    "sourceOrigin": [
+      0.11766737699508667,
+      0.041103795170784,
+      -0.35563600063323975
+    ],
+    "rotation": -45
+  },
+  "geometryRepair": {
+    "method": "ordered-source-surface-caps",
+    "caps": [
+      {
+        "method": "cap",
+        "rim": [
+          [
+            0.11402522027492523,
+            0.029983043670654297,
+            -0.35452020168304443
+          ],
+          [
+            0.08471225202083588,
+            0.02867308259010315,
+            -0.36665353178977966
+          ],
+          [
+            0.06859093904495239,
+            -0.005970358848571777,
+            -0.3809133768081665
+          ],
+          [
+            0.06353306770324707,
+            -0.0650181770324707,
+            -0.38262462615966797
+          ],
+          [
+            0.09703671932220459,
+            -0.07626307010650635,
+            -0.3726334571838379
+          ],
+          [
+            0.11958891153335571,
+            -0.03292587399482727,
+            -0.3645572364330292
+          ]
+        ],
+        "normal": [
+          0.38759565353393555,
+          0.04030933231115341,
+          -0.920947790145874
+        ],
+        "offset": 0.0003,
+        "thickness": 0.004
+      },
+      {
+        "method": "cap",
+        "rim": [
+          [
+            0.17108315229415894,
+            -0.13884612917900085,
+            -0.35451436042785645
+          ],
+          [
+            0.1397114396095276,
+            -0.14515112340450287,
+            -0.35209786891937256
+          ],
+          [
+            0.1427619308233261,
+            -0.18134014308452606,
+            -0.36843690276145935
+          ],
+          [
+            0.15151774883270264,
+            -0.24078217148780823,
+            -0.3788147568702698
+          ],
+          [
+            0.19123812019824982,
+            -0.23338347673416138,
+            -0.3800392150878906
+          ],
+          [
+            0.19912201166152954,
+            -0.17179760336875916,
+            -0.3671724796295166
+          ]
+        ],
+        "normal": [
+          -0.008828938938677311,
+          0.05965800955891609,
+          -0.9981798529624939
+        ],
+        "offset": 0.0003,
+        "thickness": 0.004
+      }
+    ],
+    "preservedNative": true,
+    "command": "Apply close-native-surface.py sequentially with these cap rim/normal/offset/thickness values, then use the result as geometryBaseline."
+  }
+}

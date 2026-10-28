@@ -1,0 +1,89 @@
+{
+  "slug": "cyclops-3039",
+  "itemId": 3039,
+  "itemIds": [
+    3039
+  ],
+  "modelId": "d2433540-b0a4-5cc8-9efd-3ce7c6cd0b17",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3039",
+  "sourceName": "cyclops-3039-miniature",
+  "name": "Циклоп",
+  "nameEn": "Cyclops",
+  "code": "CRE-cyclops",
+  "groupName": "Циклоп",
+  "groupNameEn": "Cyclops",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "c14c9163-3e8d-5e01-a615-b9490cf230d5",
+    "file": "models/creatures/separated-bases-20261024/c14c9163-3e8d-5e01-a615-b9490cf230d5.glb",
+    "referenceDiameter": 2.7,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 3,
+    "renderTriangles": 20000,
+    "lodTriangles": 20000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 3039,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5286224221481997,
+    "sourceOrigin": [
+      0.1297253519296646,
+      0.02434929646551609,
+      -0.4980216324329376
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "two-reviewed-foot-pad-centres-preserve-body-scale",
+    "rawGltfXZRegions": [
+      [
+        -0.26,
+        -0.14,
+        -0.015,
+        0.14
+      ],
+      [
+        0.26,
+        -0.14,
+        0.51,
+        0.14
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.1635119616985321,
+        -0.021996786817908287
+      ],
+      [
+        0.42296266555786133,
+        -0.026701806113123894
+      ]
+    ],
+    "previousSourceOrigin": [
+      -0.06400932371616364,
+      0.02416672557592392,
+      -0.4980216324329376
+    ],
+    "sourceDiameterPreserved": 0.5286224221481997,
+    "notes": "Centre both feet while retaining the giant body scale; a small toe overhang is permitted."
+  }
+}

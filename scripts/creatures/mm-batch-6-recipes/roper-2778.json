@@ -1,0 +1,55 @@
+{
+  "slug": "roper-2778",
+  "itemId": 2778,
+  "itemIds": [
+    2778
+  ],
+  "modelId": "6d0e1f1c-27e0-58e0-be60-9408a5b75776",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2778",
+  "sourceName": "roper-2778-miniature",
+  "name": "Верёвочник",
+  "nameEn": "Roper",
+  "code": "CRE-roper",
+  "groupName": "Верёвочник",
+  "groupNameEn": "Roper",
+  "maxHeight": 1.8,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.8,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2778,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.41904705762863165,
+    "sourceOrigin": [
+      -0.01577024906873703,
+      -0.028101755306124687,
+      -0.4185110032558441
+    ],
+    "rotation": -45
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "slug": "nightmare-2496",
+  "itemId": 2496,
+  "itemIds": [
+    2496
+  ],
+  "modelId": "85c0ec21-c346-5aad-964f-a77df8d63411",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2496",
+  "sourceName": "nightmare-2496-miniature",
+  "name": "Кошмар",
+  "nameEn": "Nightmare",
+  "code": "CRE-nightmare",
+  "groupName": "Кошмар",
+  "groupNameEn": "Nightmare",
+  "maxHeight": 0.9137195669435809,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 0.9137195669435809,
+    "size": 2,
+    "renderTriangles": 18000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2496,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.7852352906170097,
+    "sourceOrigin": [
+      -0.038177505135536194,
+      -0.11845691874623299,
+      -0.3986220359802246
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "four-authored-foot-regions",
+    "rawGltfXZRegions": [
+      [
+        -0.29,
+        -0.28,
+        -0.12,
+        -0.07
+      ],
+      [
+        0,
+        -0.22,
+        0.15,
+        -0.02
+      ],
+      [
+        -0.23,
+        0.26,
+        -0.08,
+        0.46
+      ],
+      [
+        0.02,
+        0.27,
+        0.17,
+        0.46
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.19944599270820618,
+        -0.17292624711990356
+      ],
+      [
+        0.08524489402770996,
+        -0.10289143025875092
+      ],
+      [
+        -0.14604580402374268,
+        0.37513452768325806
+      ],
+      [
+        0.10753688216209412,
+        0.37451082468032837
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.18,
+    "withinFootHeightQuantile": 0.35,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Wings, tail, weapon and lowest-vertex density do not define the standing circle."
+  }
+}

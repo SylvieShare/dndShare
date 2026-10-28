@@ -1,0 +1,78 @@
+{
+  "slug": "hydra-3164",
+  "itemId": 3164,
+  "itemIds": [
+    3164
+  ],
+  "modelId": "d1b671a4-ca7a-5e76-8c59-ea1f56772813",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3164",
+  "sourceName": "hydra-3164-miniature",
+  "name": "Гидра",
+  "nameEn": "Hydra",
+  "code": "CRE-hydra",
+  "groupName": "Гидра",
+  "groupNameEn": "Hydra",
+  "maxHeight": 1.6,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "c14c9163-3e8d-5e01-a615-b9490cf230d5",
+    "file": "models/creatures/separated-bases-20261024/c14c9163-3e8d-5e01-a615-b9490cf230d5.glb",
+    "referenceDiameter": 2.7,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.6,
+    "size": 3,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "geometryBaseline": "source-refinement/baseline-render.glb",
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 3164,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.4296219237148761,
+    "sourceOrigin": [
+      0.0941844955086708,
+      -0.18724766373634338,
+      -0.3820191025733948
+    ],
+    "rotation": -45
+  },
+  "geometryRepair": {
+    "preservedNativeSHA256": "29ed9418a4abb9cdb75f67187fc1af7870a8c0939df644c1004054b4a38d7d93",
+    "method": "remove-two-measured-detached-islands",
+    "components": [
+      {
+        "faces": 1884,
+        "center": [
+          -0.4738878582756477,
+          -0.1886972002869619,
+          -0.4276924554603961
+        ]
+      },
+      {
+        "faces": 3036,
+        "center": [
+          -0.37098112856813004,
+          -0.11048228708969093,
+          -0.33603473730159533
+        ]
+      }
+    ]
+  }
+}

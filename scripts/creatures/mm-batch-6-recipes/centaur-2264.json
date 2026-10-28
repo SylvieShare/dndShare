@@ -1,0 +1,107 @@
+{
+  "slug": "centaur-2264",
+  "itemId": 2264,
+  "itemIds": [
+    2264
+  ],
+  "modelId": "f4968b03-7ddd-5d3a-b546-feb197eda550",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2264",
+  "sourceName": "centaur-2264-miniature",
+  "name": "Кентавр",
+  "nameEn": "Centaur",
+  "code": "CRE-centaur",
+  "groupName": "Кентавр",
+  "groupNameEn": "Centaur",
+  "maxHeight": 1.0420129734443937,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.0420129734443937,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 24000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2264,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.7981123990740797,
+    "sourceOrigin": [
+      -0.018747450783848763,
+      -0.038950808346271515,
+      -0.46241188049316406
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "four-authored-foot-regions",
+    "rawGltfXZRegions": [
+      [
+        -0.18,
+        -0.41,
+        -0.07,
+        -0.23
+      ],
+      [
+        -0.05,
+        -0.24,
+        0.06,
+        -0.06
+      ],
+      [
+        -0.23,
+        0.24,
+        -0.09,
+        0.4
+      ],
+      [
+        -0.035,
+        0.18,
+        0.09,
+        0.37
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.0848168134689331,
+        -0.3062705993652344
+      ],
+      [
+        0.045643001794815063,
+        -0.1370895355939865
+      ],
+      [
+        -0.11044684797525406,
+        0.3339023143053055
+      ],
+      [
+        0.07463085651397705,
+        0.26526105403900146
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.18,
+    "withinFootHeightQuantile": 0.35,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.00013947486877441406,
+    "excluded": "Wings, tail, weapon and lowest-vertex density do not define the standing circle."
+  }
+}

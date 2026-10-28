@@ -1,0 +1,55 @@
+{
+  "slug": "giant-constrictor-snake-2209",
+  "itemId": 2209,
+  "itemIds": [
+    2209
+  ],
+  "modelId": "20e8200d-61c9-564f-ba5d-c402d9fb2dc5",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2209",
+  "sourceName": "giant-constrictor-snake-2209-miniature",
+  "name": "Гигантский удав",
+  "nameEn": "Giant Constrictor Snake",
+  "code": "CRE-giant-constrictor-snake",
+  "groupName": "Гигантский удав",
+  "groupNameEn": "Giant Constrictor Snake",
+  "maxHeight": 0.75,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "c14c9163-3e8d-5e01-a615-b9490cf230d5",
+    "file": "models/creatures/separated-bases-20261024/c14c9163-3e8d-5e01-a615-b9490cf230d5.glb",
+    "referenceDiameter": 2.7,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 0.75,
+    "size": 3,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2209,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.830729627609253,
+    "sourceOrigin": [
+      0.01831129938364029,
+      0.031475313007831573,
+      -0.3468804359436035
+    ],
+    "rotation": -45
+  }
+}

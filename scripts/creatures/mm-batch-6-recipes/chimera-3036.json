@@ -1,0 +1,240 @@
+{
+  "slug": "chimera-3036",
+  "itemId": 3036,
+  "itemIds": [
+    3036
+  ],
+  "modelId": "0737a5b4-3e2e-506c-855f-2dde44b3f0d2",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3036",
+  "sourceName": "chimera-3036-miniature",
+  "name": "Химера",
+  "nameEn": "Chimera",
+  "code": "CRE-chimera",
+  "groupName": "Химера",
+  "groupNameEn": "Chimera",
+  "maxHeight": 0.9053776994455398,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 0.9053776994455398,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 26000,
+    "geometryBaseline": "source-refinement/baseline-render.glb",
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 3036,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.8045965812806267,
+    "sourceOrigin": [
+      -0.017422810196876526,
+      -0.04863873403519392,
+      -0.4044581949710846
+    ],
+    "rotation": -45
+  },
+  "geometryRepair": {
+    "method": "ordered-source-surface-caps",
+    "caps": [
+      {
+        "method": "cap",
+        "rim": [
+          [
+            -0.07937439531087875,
+            0.20774468779563904,
+            -0.23957441747188568
+          ],
+          [
+            -0.12957003712654114,
+            0.2158541977405548,
+            -0.275104284286499
+          ],
+          [
+            -0.12957829236984253,
+            0.19803592562675476,
+            -0.3079812526702881
+          ],
+          [
+            -0.08139627426862717,
+            0.1819154918193817,
+            -0.30171072483062744
+          ],
+          [
+            -0.05448474735021591,
+            0.18942216038703918,
+            -0.2570669651031494
+          ]
+        ],
+        "normal": [
+          0.5844460129737854,
+          0.6508829593658447,
+          -0.4845351278781891
+        ],
+        "offset": 0.0003,
+        "thickness": 0.004
+      },
+      {
+        "method": "cap",
+        "rim": [
+          [
+            -0.21370995044708252,
+            0.16273555159568787,
+            -0.4303020238876343
+          ],
+          [
+            -0.24322786927223206,
+            0.16151627898216248,
+            -0.44283390045166016
+          ],
+          [
+            -0.2516726553440094,
+            0.13170769810676575,
+            -0.460490882396698
+          ],
+          [
+            -0.22253289818763733,
+            0.11808046698570251,
+            -0.4637226164340973
+          ],
+          [
+            -0.1887669563293457,
+            0.13945868611335754,
+            -0.45885467529296875
+          ]
+        ],
+        "normal": [
+          0.1607264131307602,
+          0.6949360966682434,
+          -0.7008786797523499
+        ],
+        "offset": 0.0003,
+        "thickness": 0.004
+      },
+      {
+        "method": "cap",
+        "rim": [
+          [
+            -0.11560191959142685,
+            0.13962700963020325,
+            -0.40994274616241455
+          ],
+          [
+            -0.20189309120178223,
+            0.14049604535102844,
+            -0.45162034034729004
+          ],
+          [
+            -0.2924574017524719,
+            0.0944090485572815,
+            -0.4636605381965637
+          ],
+          [
+            -0.2656329870223999,
+            0.03054177761077881,
+            -0.4791615307331085
+          ],
+          [
+            -0.17374783754348755,
+            0.039288222789764404,
+            -0.42016613483428955
+          ],
+          [
+            -0.09599887579679489,
+            0.09428822994232178,
+            -0.4343435764312744
+          ]
+        ],
+        "normal": [
+          0.11773589253425598,
+          0.4446507394313812,
+          -0.887932300567627
+        ],
+        "offset": 0.0003,
+        "thickness": 0.004
+      }
+    ],
+    "preservedNative": true,
+    "command": "Apply close-native-surface.py sequentially with these cap rim/normal/offset/thickness values, then use the result as geometryBaseline."
+  },
+  "lodBudget": {
+    "maxTriangles": 26000,
+    "reason": "Три головы, грива и два перепончатых крыла: LOD 18k давал 15.65 px, 24k — 9 px при неизменённом пределе 8. Сохранена render-геометрия 26k, LOD уменьшает только карты."
+  },
+  "poseNotes": "Динамичный выпад: нулевая высота по передним лапам, задние подняты. Круг и центр измерены по четырём горизонтальным проекциям лап, без крыльев и хвоста.",
+  "standingSupport": {
+    "method": "four-authored-foot-regions",
+    "rawGltfXZRegions": [
+      [
+        -0.23,
+        -0.36,
+        -0.05,
+        -0.22
+      ],
+      [
+        0.02,
+        -0.26,
+        0.13,
+        -0.07
+      ],
+      [
+        -0.25,
+        0.17,
+        -0.1,
+        0.34
+      ],
+      [
+        0.08,
+        0.22,
+        0.23,
+        0.4
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.13793426752090454,
+        -0.2704748511314392
+      ],
+      [
+        0.07490915060043335,
+        -0.11360185220837593
+      ],
+      [
+        -0.14865458011627197,
+        0.2551828622817993
+      ],
+      [
+        0.14198845624923706,
+        0.3234487771987915
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.45,
+    "withinFootHeightQuantile": 0.35,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Wings, tail, weapon and lowest-vertex density do not define the standing circle.",
+    "contactFootRegionIndices": [
+      2,
+      3
+    ]
+  }
+}

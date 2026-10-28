@@ -1,0 +1,55 @@
+{
+  "slug": "spectator-2522",
+  "itemId": 2522,
+  "itemIds": [
+    2522
+  ],
+  "modelId": "960a3a12-f83d-51cc-88ff-8136194b2d54",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2522",
+  "sourceName": "spectator-2522-miniature",
+  "name": "Наблюдатель",
+  "nameEn": "Spectator",
+  "code": "CRE-spectator",
+  "groupName": "Наблюдатель",
+  "groupNameEn": "Spectator",
+  "maxHeight": 1.2,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "flight",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.2,
+    "size": 1,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2522,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.6596771702170372,
+    "sourceOrigin": [
+      -0.0026428430574014783,
+      -0.027245961129665375,
+      -0.44137606024742126
+    ],
+    "rotation": -45
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "slug": "manticore-2512",
+  "itemId": 2512,
+  "itemIds": [
+    2512
+  ],
+  "modelId": "994d4afd-f45a-56bb-bd7e-965da31e5f91",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2512",
+  "sourceName": "manticore-2512-miniature",
+  "name": "Мантикора",
+  "nameEn": "Manticore",
+  "code": "CRE-manticore",
+  "groupName": "Мантикора",
+  "groupNameEn": "Manticore",
+  "maxHeight": 0.7985965339299266,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 0.7985965339299266,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2512,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.7895257229166166,
+    "sourceOrigin": [
+      -0.001402009278535843,
+      -0.058611877262592316,
+      -0.35111725330352783
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "four-authored-foot-regions",
+    "rawGltfXZRegions": [
+      [
+        -0.26,
+        -0.3,
+        -0.09,
+        -0.09
+      ],
+      [
+        0.07,
+        -0.36,
+        0.25,
+        -0.13
+      ],
+      [
+        -0.27,
+        0.12,
+        -0.1,
+        0.35
+      ],
+      [
+        0.08,
+        0.15,
+        0.25,
+        0.36
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.18199539184570312,
+        -0.13830417394638062
+      ],
+      [
+        0.1896100789308548,
+        -0.20713846385478973
+      ],
+      [
+        -0.20342864096164703,
+        0.27731068432331085
+      ],
+      [
+        0.190205916762352,
+        0.30257946252822876
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.18,
+    "withinFootHeightQuantile": 0.35,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Wings, tail, weapon and lowest-vertex density do not define the standing circle."
+  }
+}

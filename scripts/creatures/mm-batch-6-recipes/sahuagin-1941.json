@@ -1,0 +1,75 @@
+{
+  "slug": "sahuagin-1941",
+  "itemId": 1941,
+  "itemIds": [
+    1941
+  ],
+  "modelId": "3810b251-6d8f-5945-8330-efd2254d5be6",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1941",
+  "sourceName": "sahuagin-1941-miniature",
+  "name": "Сахуагин",
+  "nameEn": "Sahuagin",
+  "code": "CRE-sahuagin",
+  "groupName": "Сахуагин",
+  "groupNameEn": "Sahuagin",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 18000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 1941,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.4559204368030324,
+    "sourceOrigin": [
+      0.10500000000000001,
+      0.1225,
+      -0.43157923221588135
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "two-reviewed-heel-centres-preserve-body-scale",
+    "rawGltfXZCenters": [
+      [
+        -0.065,
+        -0.22
+      ],
+      [
+        0.275,
+        -0.025
+      ]
+    ],
+    "previousSourceOrigin": [
+      0.2337409406900406,
+      0.07805075496435165,
+      -0.43157923221588135
+    ],
+    "sourceDiameterPreserved": 0.4559204368030324,
+    "notes": "Centre the two heel pads, preserve the reviewed body height and wide stance; webbed toes may overhang the base."
+  }
+}

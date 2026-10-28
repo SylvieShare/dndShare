@@ -1,0 +1,55 @@
+{
+  "slug": "troglodyte-1825",
+  "itemId": 1825,
+  "itemIds": [
+    1825
+  ],
+  "modelId": "f4becc37-9c95-55c0-ba73-355f0e751484",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1825",
+  "sourceName": "troglodyte-1825-miniature",
+  "name": "Троглодит",
+  "nameEn": "Troglodyte",
+  "code": "CRE-troglodyte",
+  "groupName": "Троглодит",
+  "groupNameEn": "Troglodyte",
+  "maxHeight": 1.6,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.6,
+    "size": 1,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 1825,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.44148669205605984,
+    "sourceOrigin": [
+      0.12463071942329407,
+      -0.08978686481714249,
+      -0.3879604935646057
+    ],
+    "rotation": -45
+  }
+}

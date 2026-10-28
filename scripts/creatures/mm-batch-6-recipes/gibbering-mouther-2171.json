@@ -1,0 +1,55 @@
+{
+  "slug": "gibbering-mouther-2171",
+  "itemId": 2171,
+  "itemIds": [
+    2171
+  ],
+  "modelId": "2de3ef44-8663-51f0-9af3-01c5529bc7c8",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2171",
+  "sourceName": "gibbering-mouther-2171-miniature",
+  "name": "Бормочущий ротовик",
+  "nameEn": "Gibbering Mouther",
+  "code": "CRE-gibbering-mouther",
+  "groupName": "Бормочущий ротовик",
+  "groupNameEn": "Gibbering Mouther",
+  "maxHeight": 0.6,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "amorphous",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 0.6,
+    "size": 1,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2171,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.7054343372583389,
+    "sourceOrigin": [
+      -0.04162019118666649,
+      -0.09113948792219162,
+      -0.23793083429336548
+    ],
+    "rotation": -45
+  }
+}

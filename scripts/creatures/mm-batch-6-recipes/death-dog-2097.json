@@ -1,0 +1,111 @@
+{
+  "slug": "death-dog-2097",
+  "itemId": 2097,
+  "itemIds": [
+    2097
+  ],
+  "modelId": "bb012276-8c19-507c-bd86-71fbabded9d6",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2097",
+  "sourceName": "death-dog-2097-miniature",
+  "name": "Пёс смерти",
+  "nameEn": "Death Dog",
+  "code": "CRE-death-dog",
+  "groupName": "Пёс смерти",
+  "groupNameEn": "Death Dog",
+  "maxHeight": 0.6426387861359806,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 0.6426387861359806,
+    "size": 1,
+    "renderTriangles": 26000,
+    "lodTriangles": 26000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2097,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.8810166302589094,
+    "sourceOrigin": [
+      -0.03382549062371254,
+      0.009285256266593933,
+      -0.31671857833862305
+    ],
+    "rotation": -45
+  },
+  "lodBudget": {
+    "maxTriangles": 26000,
+    "reason": "Две головы и связная длинная грива: LOD 18k терял до 11.18 px силуэта, 24k также превышает неизменённый предел 8 px. Сохранена принятая render-геометрия 26k, уменьшены текстуры LOD без ослабления проверки контура."
+  },
+  "standingSupport": {
+    "method": "four-authored-foot-regions",
+    "rawGltfXZRegions": [
+      [
+        -0.23,
+        -0.43,
+        -0.05,
+        -0.22
+      ],
+      [
+        0.08,
+        -0.48,
+        0.26,
+        -0.23
+      ],
+      [
+        -0.36,
+        0.03,
+        -0.18,
+        0.31
+      ],
+      [
+        0,
+        0.12,
+        0.16,
+        0.38
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.1166965439915657,
+        -0.2627938687801361
+      ],
+      [
+        0.17716602981090546,
+        -0.3103264570236206
+      ],
+      [
+        -0.2722126245498657,
+        0.2269069254398346
+      ],
+      [
+        0.07644117623567581,
+        0.3090723752975464
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.18,
+    "withinFootHeightQuantile": 0.35,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Wings, tail, weapon and lowest-vertex density do not define the standing circle."
+  }
+}

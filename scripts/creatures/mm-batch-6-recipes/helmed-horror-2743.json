@@ -1,0 +1,55 @@
+{
+  "slug": "helmed-horror-2743",
+  "itemId": 2743,
+  "itemIds": [
+    2743
+  ],
+  "modelId": "199f4457-d8f1-5cfb-b011-4e776f777eac",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2743",
+  "sourceName": "helmed-horror-2743-miniature",
+  "name": "Шлемоносный ужас",
+  "nameEn": "Helmed Horror",
+  "code": "CRE-helmed-horror",
+  "groupName": "Шлемоносный ужас",
+  "groupNameEn": "Helmed Horror",
+  "maxHeight": 1.85,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.85,
+    "size": 1,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2743,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.4872239924765922,
+    "sourceOrigin": [
+      -0.09616842865943909,
+      0.14386963844299316,
+      -0.5008341073989868
+    ],
+    "rotation": -45
+  }
+}

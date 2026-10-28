@@ -1,0 +1,110 @@
+{
+  "slug": "air-elemental-2788",
+  "itemId": 2788,
+  "itemIds": [
+    2788
+  ],
+  "modelId": "c6c63819-0459-5afa-8896-b531c005e5d3",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2788",
+  "sourceName": "air-elemental-2788-miniature",
+  "name": "Воздушный элементаль",
+  "nameEn": "Air Elemental",
+  "code": "CRE-air-elemental",
+  "groupName": "Воздушный элементаль",
+  "groupNameEn": "Air Elemental",
+  "maxHeight": 1.9,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "flight",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.9,
+    "size": 2,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "geometryBaseline": "source-refinement/baseline-render.glb",
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2788,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.4737498964134016,
+    "sourceOrigin": [
+      0.020049456506967545,
+      0.00287705659866333,
+      -0.5004348754882812
+    ],
+    "rotation": -45
+  },
+  "geometryRepair": {
+    "method": "ordered-source-surface-caps",
+    "caps": [
+      {
+        "method": "cap",
+        "rim": [
+          [
+            0.07956916093826294,
+            0.327487587928772,
+            -0.18929946422576904
+          ],
+          [
+            0.039528775960206985,
+            0.3217654824256897,
+            -0.18558670580387115
+          ],
+          [
+            0.008695665746927261,
+            0.2934061288833618,
+            -0.16911770403385162
+          ],
+          [
+            0.02415107563138008,
+            0.2741163969039917,
+            -0.18721117079257965
+          ],
+          [
+            0.03941904380917549,
+            0.2523220181465149,
+            -0.1658109426498413
+          ],
+          [
+            0.05372028425335884,
+            0.25795477628707886,
+            -0.12798358500003815
+          ],
+          [
+            0.051399994641542435,
+            0.27426499128341675,
+            -0.10911442339420319
+          ]
+        ],
+        "normal": [
+          0.4881690442562103,
+          0.29309651255607605,
+          -0.8220616579055786
+        ],
+        "offset": 0.0003,
+        "thickness": 0.004
+      }
+    ],
+    "preservedNative": true,
+    "command": "Apply close-native-surface.py sequentially with these cap rim/normal/offset/thickness values, then use the result as geometryBaseline."
+  }
+}

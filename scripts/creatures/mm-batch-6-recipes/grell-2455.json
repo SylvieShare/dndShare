@@ -1,0 +1,55 @@
+{
+  "slug": "grell-2455",
+  "itemId": 2455,
+  "itemIds": [
+    2455
+  ],
+  "modelId": "0c9da9d6-84ea-539b-998e-8088a53fb0cf",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2455",
+  "sourceName": "grell-2455-miniature",
+  "name": "Грелл",
+  "nameEn": "Grell",
+  "code": "CRE-grell",
+  "groupName": "Грелл",
+  "groupNameEn": "Grell",
+  "maxHeight": 1.25,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "flight",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.25,
+    "size": 1,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2455,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.7201007223129273,
+    "sourceOrigin": [
+      -0.0030273268930613995,
+      0.08417971432209015,
+      -0.5006053447723389
+    ],
+    "rotation": -45
+  }
+}

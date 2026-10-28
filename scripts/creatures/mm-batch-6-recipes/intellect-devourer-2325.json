@@ -1,0 +1,107 @@
+{
+  "slug": "intellect-devourer-2325",
+  "itemId": 2325,
+  "itemIds": [
+    2325
+  ],
+  "modelId": "e4430c48-fbbe-5470-ad28-99b3c4034133",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2325",
+  "sourceName": "intellect-devourer-2325-miniature",
+  "name": "Пожиратель интеллекта",
+  "nameEn": "Intellect Devourer",
+  "code": "CRE-intellect-devourer",
+  "groupName": "Пожиратель интеллекта",
+  "groupNameEn": "Intellect Devourer",
+  "maxHeight": 0.5821783013207994,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 0.5821783013207994,
+    "size": 0.5,
+    "renderTriangles": 22000,
+    "lodTriangles": 22000,
+    "lodAggression": 5,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2325,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 1.1903689213511779,
+    "sourceOrigin": [
+      0.011332038789987564,
+      -0.07603127136826515,
+      -0.385721892118454
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "four-authored-foot-regions",
+    "rawGltfXZRegions": [
+      [
+        -0.49,
+        -0.41,
+        -0.23,
+        -0.12
+      ],
+      [
+        0.22,
+        -0.41,
+        0.51,
+        -0.11
+      ],
+      [
+        -0.48,
+        0.18,
+        -0.15,
+        0.51
+      ],
+      [
+        0.21,
+        0.13,
+        0.51,
+        0.42
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.33166585862636566,
+        -0.2317788302898407
+      ],
+      [
+        0.33294743299484253,
+        -0.1954444795846939
+      ],
+      [
+        -0.29061126708984375,
+        0.3948272168636322
+      ],
+      [
+        0.33465784788131714,
+        0.336521178483963
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.18,
+    "withinFootHeightQuantile": 0.35,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Wings, tail, weapon and lowest-vertex density do not define the standing circle."
+  }
+}

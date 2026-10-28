@@ -1,0 +1,107 @@
+{
+  "slug": "pegasus-2317",
+  "itemId": 2317,
+  "itemIds": [
+    2317
+  ],
+  "modelId": "3f76484e-f168-550b-8a9e-73bdf158f502",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2317",
+  "sourceName": "pegasus-2317-miniature",
+  "name": "Пегас",
+  "nameEn": "Pegasus",
+  "code": "CRE-pegasus",
+  "groupName": "Пегас",
+  "groupNameEn": "Pegasus",
+  "maxHeight": 1.179418262666999,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.179418262666999,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 24000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2317,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.643517270703249,
+    "sourceOrigin": [
+      -0.006983916740864515,
+      -0.09004695201292634,
+      -0.4216655492782593
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "four-authored-foot-regions",
+    "rawGltfXZRegions": [
+      [
+        -0.15,
+        -0.25,
+        -0.07,
+        -0.12
+      ],
+      [
+        -0.015,
+        -0.1,
+        0.07,
+        0.05
+      ],
+      [
+        -0.06,
+        0.13,
+        0.02,
+        0.27
+      ],
+      [
+        0.04,
+        0.27,
+        0.14,
+        0.4
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.10148128867149353,
+        -0.17105317115783691
+      ],
+      [
+        0.010127807036042213,
+        -0.02270936779677868
+      ],
+      [
+        -0.016248874366283417,
+        0.21218542009592056
+      ],
+      [
+        0.07966668903827667,
+        0.3417649269104004
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.18,
+    "withinFootHeightQuantile": 0.35,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Wings, tail, weapon and lowest-vertex density do not define the standing circle."
+  }
+}
