@@ -1,0 +1,87 @@
+{
+  "slug": "frost-giant-3191",
+  "itemId": 3191,
+  "itemIds": [
+    3191
+  ],
+  "modelId": "a35a1591-c8e0-5b15-9a1c-a37daf373923",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3191",
+  "sourceName": "frost-giant-3191-miniature",
+  "name": "Ледяной великан",
+  "nameEn": "Frost Giant",
+  "code": "CRE-frost-giant",
+  "groupName": "Ледяной великан",
+  "groupNameEn": "Frost Giant",
+  "maxHeight": 1.8,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "c14c9163-3e8d-5e01-a615-b9490cf230d5",
+    "file": "models/creatures/separated-bases-20261024/c14c9163-3e8d-5e01-a615-b9490cf230d5.glb",
+    "referenceDiameter": 2.7,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.8,
+    "size": 3,
+    "renderTriangles": 24000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 3191,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5007326006889343,
+    "sourceOrigin": [
+      0.0243639275431633,
+      0.048954594880342484,
+      -0.500839352607727
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.27,
+        -0.16,
+        -0.06,
+        0.1
+      ],
+      [
+        0.1,
+        -0.15,
+        0.34,
+        0.12
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.15460526943206787,
+        -0.06303282082080841
+      ],
+      [
+        0.20333312451839447,
+        -0.034876368939876556
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "slug": "tyrannosaurus-rex-3236",
+  "itemId": 3236,
+  "itemIds": [
+    3236
+  ],
+  "modelId": "32845289-a99a-5189-9edb-237eb1b5edce",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3236",
+  "sourceName": "tyrannosaurus-rex-3236-miniature",
+  "name": "Тираннозавр рекс",
+  "nameEn": "Tyrannosaurus Rex",
+  "code": "CRE-tyrannosaurus-rex",
+  "groupName": "Тираннозавр рекс",
+  "groupNameEn": "Tyrannosaurus Rex",
+  "maxHeight": 1.5,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "c14c9163-3e8d-5e01-a615-b9490cf230d5",
+    "file": "models/creatures/separated-bases-20261024/c14c9163-3e8d-5e01-a615-b9490cf230d5.glb",
+    "referenceDiameter": 2.7,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.5,
+    "size": 3,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 3236,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.32104586362838744,
+    "sourceOrigin": [
+      0.004512187093496323,
+      -0.06852738559246063,
+      -0.26625674962997437
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.27,
+        -0.09,
+        -0.07,
+        0.13
+      ],
+      [
+        0.07,
+        -0.05,
+        0.3,
+        0.23
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.16580567508935928,
+        0.021230824291706085
+      ],
+      [
+        0.17483004927635193,
+        0.11582394689321518
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "slug": "stirge-1639",
+  "itemId": 1639,
+  "itemIds": [
+    1639
+  ],
+  "modelId": "87efc757-5c91-51fd-b397-edefded5dbf0",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1639",
+  "sourceName": "stirge-1639-miniature",
+  "name": "Кровопийца",
+  "nameEn": "Stirge",
+  "code": "CRE-stirge",
+  "groupName": "Кровопийца",
+  "groupNameEn": "Stirge",
+  "maxHeight": 1.1,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "flight",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.1,
+    "size": 0.5,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 1639,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.3807520175522024,
+    "sourceOrigin": [
+      0.0021692083682864904,
+      0.039605751633644104,
+      -0.22440336644649506
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-flight-datum",
+    "datum": "lowest point of the complete static silhouette",
+    "centre": "thorax/middle body, checked in four side views and top",
+    "physicalStand": false
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "slug": "dretch-1727",
+  "itemId": 1727,
+  "itemIds": [
+    1727
+  ],
+  "modelId": "a57d46a6-255b-5014-ba05-ab737c5b0bc4",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1727",
+  "sourceName": "dretch-1727-miniature",
+  "name": "Дретч",
+  "nameEn": "Dretch",
+  "code": "CRE-dretch",
+  "groupName": "Дретч",
+  "groupNameEn": "Dretch",
+  "maxHeight": 1.25,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.25,
+    "size": 1,
+    "renderTriangles": 14000,
+    "lodTriangles": 9000,
+    "lodAggression": 3,
+    "shadowTriangles": 2500,
+    "shadowAggression": 5,
+    "seed": 1727,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.68221027135849,
+    "sourceOrigin": [
+      0.00045859068632125854,
+      -0.03741224482655525,
+      -0.47399842739105225
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.37,
+        -0.16,
+        -0.12,
+        0.16
+      ],
+      [
+        0.12,
+        -0.16,
+        0.37,
+        0.16
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.24459336698055267,
+        0.03998609632253647
+      ],
+      [
+        0.2455105483531952,
+        0.034838393330574036
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

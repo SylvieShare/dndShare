@@ -1,0 +1,87 @@
+{
+  "slug": "umber-hulk-2772",
+  "itemId": 2772,
+  "itemIds": [
+    2772
+  ],
+  "modelId": "361075d5-905f-5f1e-a285-2b318000f10f",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2772",
+  "sourceName": "umber-hulk-2772-miniature",
+  "name": "Бурый увалень",
+  "nameEn": "Umber Hulk",
+  "code": "CRE-umber-hulk",
+  "groupName": "Бурый увалень",
+  "groupNameEn": "Umber Hulk",
+  "maxHeight": 1.4,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.4,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2772,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.6014714049441474,
+    "sourceOrigin": [
+      0.016428709030151367,
+      0.013155147433280945,
+      -0.46627581119537354
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.39,
+        -0.16,
+        -0.11,
+        0.2
+      ],
+      [
+        0.11,
+        -0.23,
+        0.41,
+        0.13
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.21934348344802856,
+        0.017165744677186012
+      ],
+      [
+        0.2522009015083313,
+        -0.0434760395437479
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

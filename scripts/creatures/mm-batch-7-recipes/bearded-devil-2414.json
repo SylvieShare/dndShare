@@ -1,0 +1,87 @@
+{
+  "slug": "bearded-devil-2414",
+  "itemId": 2414,
+  "itemIds": [
+    2414
+  ],
+  "modelId": "7509b1e5-c3c0-5267-921c-8ea0fdc594b9",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2414",
+  "sourceName": "bearded-devil-2414-miniature",
+  "name": "Бородатый дьявол",
+  "nameEn": "Bearded Devil",
+  "code": "CRE-bearded-devil",
+  "groupName": "Бородатый дьявол",
+  "groupNameEn": "Bearded Devil",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2414,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5299605131149292,
+    "sourceOrigin": [
+      -0.03721362724900246,
+      -0.0749682392925024,
+      -0.5006793737411499
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.31,
+        -0.1,
+        -0.11,
+        0.16
+      ],
+      [
+        0.08,
+        -0.07,
+        0.29,
+        0.2
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.2218306064605713,
+        0.05117703229188919
+      ],
+      [
+        0.14740335196256638,
+        0.09875944629311562
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

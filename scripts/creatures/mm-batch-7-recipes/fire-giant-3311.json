@@ -1,0 +1,87 @@
+{
+  "slug": "fire-giant-3311",
+  "itemId": 3311,
+  "itemIds": [
+    3311
+  ],
+  "modelId": "71342daa-2264-5ea8-bde2-00ddaa949b50",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3311",
+  "sourceName": "fire-giant-3311-miniature",
+  "name": "Огненный великан",
+  "nameEn": "Fire Giant",
+  "code": "CRE-fire-giant",
+  "groupName": "Огненный великан",
+  "groupNameEn": "Fire Giant",
+  "maxHeight": 1.8,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "c14c9163-3e8d-5e01-a615-b9490cf230d5",
+    "file": "models/creatures/separated-bases-20261024/c14c9163-3e8d-5e01-a615-b9490cf230d5.glb",
+    "referenceDiameter": 2.7,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.8,
+    "size": 3,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 3311,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5006132125854492,
+    "sourceOrigin": [
+      0.04144015163183212,
+      0.014047989388927817,
+      -0.5007489919662476
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.3,
+        -0.16,
+        -0.04,
+        0.1
+      ],
+      [
+        0.12,
+        -0.16,
+        0.36,
+        0.13
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.18214744329452515,
+        -0.020940260961651802
+      ],
+      [
+        0.2650277465581894,
+        -0.007155717816203833
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

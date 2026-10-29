@@ -45,6 +45,12 @@ models/creatures/.generation-runtime/bin/python scripts/creatures/production-que
 [промпты](../../scripts/creatures/mm-batch-6-prompts/). Отчёт сохраняет выбранные
 пятна опоры, ограничения LOD, исходные архивы и результат публикации.
 
+Седьмой набор — [31 вид до предела следующего окна квоты](../reports/creature-miniatures-mm-batch-7-quota-2026-10-29.md):
+[манифест](../../scripts/creatures/mm-batch-7-production.json),
+[рецепты](../../scripts/creatures/mm-batch-7-recipes/) и
+[промпты](../../scripts/creatures/mm-batch-7-prompts/). В отчёте отделены
+три отклонённых native-попытки, локальная коррекция материалов и итоговые проверки.
+
 Исполняемый файл Blender задаётся через `BLENDER_BIN`; без переменной очередь
 ищет `blender` в `PATH`, затем использует стандартный путь приложения macOS.
 В WSL при использовании Windows Blender нужен launcher, переводящий абсолютные

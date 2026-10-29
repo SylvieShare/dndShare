@@ -1,0 +1,108 @@
+{
+  "slug": "elephant-2718",
+  "itemId": 2718,
+  "itemIds": [
+    2718
+  ],
+  "modelId": "89411b14-f449-5e68-9ce7-2f0480c6f264",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2718",
+  "sourceName": "elephant-2718-miniature",
+  "name": "Слон",
+  "nameEn": "Elephant",
+  "code": "CRE-elephant",
+  "groupName": "Слон",
+  "groupNameEn": "Elephant",
+  "maxHeight": 1.35,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "c14c9163-3e8d-5e01-a615-b9490cf230d5",
+    "file": "models/creatures/separated-bases-20261024/c14c9163-3e8d-5e01-a615-b9490cf230d5.glb",
+    "referenceDiameter": 2.7,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.35,
+    "size": 3,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "nativeAttempt": 2,
+    "seed": 102718,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.6942776369314018,
+    "sourceOrigin": [
+      -0.004573010839521885,
+      0.15026719868183136,
+      -0.30568572878837585
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.14,
+        -0.39,
+        -0.02,
+        -0.24
+      ],
+      [
+        0.01,
+        -0.51,
+        0.13,
+        -0.35
+      ],
+      [
+        -0.12,
+        0.06,
+        0.0,
+        0.21
+      ],
+      [
+        0.0,
+        -0.14,
+        0.13,
+        0.03
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.0744636207818985,
+        -0.2951125502586365
+      ],
+      [
+        0.0644724927842617,
+        -0.4132689833641052
+      ],
+      [
+        -0.06210799515247345,
+        0.14457689225673676
+      ],
+      [
+        0.053807079792022705,
+        -0.037264153361320496
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

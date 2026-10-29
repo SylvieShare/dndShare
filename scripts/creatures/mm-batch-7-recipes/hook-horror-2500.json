@@ -1,0 +1,87 @@
+{
+  "slug": "hook-horror-2500",
+  "itemId": 2500,
+  "itemIds": [
+    2500
+  ],
+  "modelId": "7d8ec6e9-2cc2-5210-aaf6-3e00c0cbb63c",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2500",
+  "sourceName": "hook-horror-2500-miniature",
+  "name": "Крюкастый ужас",
+  "nameEn": "Hook Horror",
+  "code": "CRE-hook-horror",
+  "groupName": "Крюкастый ужас",
+  "groupNameEn": "Hook Horror",
+  "maxHeight": 1.4,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.4,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2500,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.6279796766383309,
+    "sourceOrigin": [
+      0.01565464586019516,
+      0.0004132864996790886,
+      -0.4884567856788635
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.36,
+        -0.21,
+        -0.08,
+        0.12
+      ],
+      [
+        0.14,
+        -0.17,
+        0.36,
+        0.19
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.19242967665195465,
+        -0.04261242039501667
+      ],
+      [
+        0.22373896837234497,
+        0.04178584739565849
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

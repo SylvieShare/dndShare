@@ -1,0 +1,107 @@
+{
+  "slug": "ankylosaurus-2409",
+  "itemId": 2409,
+  "itemIds": [
+    2409
+  ],
+  "modelId": "efa3b713-6ab2-5c6f-a8db-81d2678b6b6e",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2409",
+  "sourceName": "ankylosaurus-2409-miniature",
+  "name": "Анкилозавр",
+  "nameEn": "Ankylosaurus",
+  "code": "CRE-ankylosaurus",
+  "groupName": "Анкилозавр",
+  "groupNameEn": "Ankylosaurus",
+  "maxHeight": 0.9,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "c14c9163-3e8d-5e01-a615-b9490cf230d5",
+    "file": "models/creatures/separated-bases-20261024/c14c9163-3e8d-5e01-a615-b9490cf230d5.glb",
+    "referenceDiameter": 2.7,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 0.9,
+    "size": 3,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2409,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.7102169455573151,
+    "sourceOrigin": [
+      -0.035700103268027306,
+      -0.14729319047182798,
+      -0.22979438304901123
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.15,
+        -0.2,
+        0.0,
+        -0.05
+      ],
+      [
+        0.1,
+        -0.07,
+        0.27,
+        0.1
+      ],
+      [
+        -0.37,
+        0.15,
+        -0.23,
+        0.31
+      ],
+      [
+        -0.02,
+        0.34,
+        0.12,
+        0.51
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.07020018994808197,
+        -0.12484206259250641
+      ],
+      [
+        0.19039803743362427,
+        0.03262021020054817
+      ],
+      [
+        -0.2992434799671173,
+        0.24216068536043167
+      ],
+      [
+        0.03624521940946579,
+        0.4392339289188385
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

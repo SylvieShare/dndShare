@@ -1,0 +1,87 @@
+{
+  "slug": "medusa-2995",
+  "itemId": 2995,
+  "itemIds": [
+    2995
+  ],
+  "modelId": "f7582ccf-56ca-5d03-897b-0e8271d319bc",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2995",
+  "sourceName": "medusa-2995-miniature",
+  "name": "Медуза",
+  "nameEn": "Medusa",
+  "code": "CRE-medusa",
+  "groupName": "Медуза",
+  "groupNameEn": "Medusa",
+  "maxHeight": 1.75,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.75,
+    "size": 1,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2995,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5149801458631244,
+    "sourceOrigin": [
+      -0.12207167968153954,
+      -0.04874757956713438,
+      -0.5008504390716553
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.31,
+        -0.04,
+        -0.19,
+        0.11
+      ],
+      [
+        -0.01,
+        -0.04,
+        0.07,
+        0.12
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.27454930543899536,
+        0.0397031307220459
+      ],
+      [
+        0.03040594607591629,
+        0.05779202841222286
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

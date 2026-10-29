@@ -1,0 +1,147 @@
+{
+  "slug": "giant-scorpion-2443",
+  "itemId": 2443,
+  "itemIds": [
+    2443
+  ],
+  "modelId": "a46a72dc-0b1a-5bae-829a-4b8e13b943ac",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2443",
+  "sourceName": "giant-scorpion-2443-miniature",
+  "name": "Гигантский скорпион",
+  "nameEn": "Giant Scorpion",
+  "code": "CRE-giant-scorpion",
+  "groupName": "Гигантский скорпион",
+  "groupNameEn": "Giant Scorpion",
+  "maxHeight": 1.0,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.0,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 22000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2443,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 1.0848667256069147,
+    "sourceOrigin": [
+      0.006028639152646065,
+      0.13675316228182055,
+      -0.3074713349342346
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.44,
+        -0.49,
+        -0.31,
+        -0.39
+      ],
+      [
+        -0.49,
+        -0.35,
+        -0.36,
+        -0.24
+      ],
+      [
+        -0.52,
+        -0.12,
+        -0.39,
+        -0.03
+      ],
+      [
+        -0.48,
+        0.08,
+        -0.34,
+        0.17
+      ],
+      [
+        0.35,
+        -0.42,
+        0.49,
+        -0.31
+      ],
+      [
+        0.36,
+        -0.25,
+        0.5,
+        -0.15
+      ],
+      [
+        0.37,
+        -0.04,
+        0.51,
+        0.05
+      ],
+      [
+        0.33,
+        0.1,
+        0.48,
+        0.19
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.37966734170913696,
+        -0.4569716453552246
+      ],
+      [
+        -0.4429328441619873,
+        -0.2981070280075073
+      ],
+      [
+        -0.4824920892715454,
+        -0.06877245008945465
+      ],
+      [
+        -0.43662363290786743,
+        0.13830430805683136
+      ],
+      [
+        0.43436506390571594,
+        -0.36472776532173157
+      ],
+      [
+        0.44055429100990295,
+        -0.18567976355552673
+      ],
+      [
+        0.47770078480243683,
+        -0.0018441223073750734
+      ],
+      [
+        0.4373248815536499,
+        0.1437731683254242
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

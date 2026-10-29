@@ -1,0 +1,87 @@
+{
+  "slug": "cockatrice-1893",
+  "itemId": 1893,
+  "itemIds": [
+    1893
+  ],
+  "modelId": "77dd7b75-2843-5dd5-b541-a561791d5281",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1893",
+  "sourceName": "cockatrice-1893-miniature",
+  "name": "Куролиск",
+  "nameEn": "Cockatrice",
+  "code": "CRE-cockatrice",
+  "groupName": "Куролиск",
+  "groupNameEn": "Cockatrice",
+  "maxHeight": 1.0,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.0,
+    "size": 1,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 1893,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.6959144443273545,
+    "sourceOrigin": [
+      -0.0047388263046741486,
+      -0.05829041451215744,
+      -0.3892483711242676
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.31,
+        -0.06,
+        -0.08,
+        0.2
+      ],
+      [
+        0.06,
+        -0.06,
+        0.3,
+        0.2
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.16403120756149292,
+        0.057158492505550385
+      ],
+      [
+        0.15455355495214462,
+        0.059422336518764496
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

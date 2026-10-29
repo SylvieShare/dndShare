@@ -1,0 +1,110 @@
+{
+  "slug": "giant-ape-3061",
+  "itemId": 3061,
+  "itemIds": [
+    3061
+  ],
+  "modelId": "f0cc7477-d708-502e-a4d7-aa0ae6b03384",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3061",
+  "sourceName": "giant-ape-3061-miniature",
+  "name": "Гигантская человекообразная обезьяна",
+  "nameEn": "Giant Ape",
+  "code": "CRE-giant-ape",
+  "groupName": "Гигантская человекообразная обезьяна",
+  "groupNameEn": "Giant Ape",
+  "maxHeight": 1.5,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "c14c9163-3e8d-5e01-a615-b9490cf230d5",
+    "file": "models/creatures/separated-bases-20261024/c14c9163-3e8d-5e01-a615-b9490cf230d5.glb",
+    "referenceDiameter": 2.7,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.5,
+    "size": 3,
+    "renderTriangles": 22000,
+    "lodTriangles": 16000,
+    "lodAggression": 3,
+    "shadowTriangles": 4500,
+    "shadowAggression": 7,
+    "nativeAttempt": 2,
+    "seed": 103061,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 1.0543544325885443,
+    "sourceOrigin": [
+      0.0002751201391220093,
+      -0.06675739586353302,
+      -0.45440125465393066
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "four-authored-contact-centres-with-digit-overhang",
+    "rawGltfXZRegions": [
+      [
+        -0.5,
+        -0.5,
+        -0.2,
+        -0.12
+      ],
+      [
+        0.2,
+        -0.5,
+        0.5,
+        -0.12
+      ],
+      [
+        -0.36,
+        0.29,
+        -0.14,
+        0.51
+      ],
+      [
+        0.12,
+        0.29,
+        0.35,
+        0.51
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.36498576402664185,
+        -0.29938022792339325
+      ],
+      [
+        0.3648248314857483,
+        -0.2876397967338562
+      ],
+      [
+        -0.23474904894828796,
+        0.4274110645055771
+      ],
+      [
+        0.23601046204566956,
+        0.42663854360580444
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre.",
+    "sourceDiameterRule": "twice the farthest authored support centre radius plus0.02native units; broad fist/toe edges may use the separate base clearance",
+    "previousOuterPadDiameter": 1.3365865420429766
+  }
+}

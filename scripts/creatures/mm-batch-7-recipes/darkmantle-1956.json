@@ -1,0 +1,62 @@
+{
+  "slug": "darkmantle-1956",
+  "itemId": 1956,
+  "itemIds": [
+    1956
+  ],
+  "modelId": "68600b1d-7c08-5e77-b3c5-281a66ea5f94",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1956",
+  "sourceName": "darkmantle-1956-miniature",
+  "name": "Тёмная мантия",
+  "nameEn": "Darkmantle",
+  "code": "CRE-darkmantle",
+  "groupName": "Тёмная мантия",
+  "groupNameEn": "Darkmantle",
+  "maxHeight": 1.1,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "flight",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.1,
+    "size": 1,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "nativeAttempt": 2,
+    "seed": 101956,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.3558978031982075,
+    "sourceOrigin": [
+      -0.0009473850950598717,
+      0.06466278433799744,
+      -0.2171533852815628
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-flight-datum",
+    "datum": "lowest point of the complete intact silhouette",
+    "centre": "middle central body, checked in front/back/both sides/top",
+    "physicalStand": false
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "slug": "barlgura-2763",
+  "itemId": 2763,
+  "itemIds": [
+    2763
+  ],
+  "modelId": "a925d998-fe5b-5d09-9fe1-584683d32a17",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2763",
+  "sourceName": "barlgura-2763-miniature",
+  "name": "Барлгура",
+  "nameEn": "Barlgura",
+  "code": "CRE-barlgura",
+  "groupName": "Барлгура",
+  "groupNameEn": "Barlgura",
+  "maxHeight": 1.35,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.35,
+    "size": 2,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2763,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.6563148895899455,
+    "sourceOrigin": [
+      0.000626683235168457,
+      0.05414754897356033,
+      -0.49238157272338867
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.3,
+        -0.21,
+        -0.07,
+        0.07
+      ],
+      [
+        0.07,
+        -0.21,
+        0.31,
+        0.08
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.2018054723739624,
+        -0.06704909354448318
+      ],
+      [
+        0.20305883884429932,
+        -0.04124600440263748
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "slug": "wyvern-2957",
+  "itemId": 2957,
+  "itemIds": [
+    2957
+  ],
+  "modelId": "1de22f27-4a20-5127-91c5-480a70adec9c",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2957",
+  "sourceName": "wyvern-2957-miniature",
+  "name": "Виверна",
+  "nameEn": "Wyvern",
+  "code": "CRE-wyvern",
+  "groupName": "Виверна",
+  "groupNameEn": "Wyvern",
+  "maxHeight": 1.5,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.5,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "nativeAttempt": 2,
+    "seed": 102957,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.49276497960090637,
+    "sourceOrigin": [
+      0.03318137302994728,
+      -0.06445523165166378,
+      -0.4132322669029236
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.24,
+        -0.1,
+        -0.02,
+        0.15
+      ],
+      [
+        0.11,
+        -0.07,
+        0.3,
+        0.2
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.10894136875867844,
+        0.045647360384464264
+      ],
+      [
+        0.175304114818573,
+        0.0832631029188633
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

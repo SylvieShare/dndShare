@@ -1,0 +1,88 @@
+{
+  "slug": "peryton-2321",
+  "itemId": 2321,
+  "itemIds": [
+    2321
+  ],
+  "modelId": "6e6e6aec-8bff-57e0-a809-21ae18af8433",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2321",
+  "sourceName": "peryton-2321-miniature",
+  "name": "Перитон",
+  "nameEn": "Peryton",
+  "code": "CRE-peryton",
+  "groupName": "Перитон",
+  "groupNameEn": "Peryton",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 26000,
+    "lodTriangles": 24000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2321,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.4620756647166084,
+    "sourceOrigin": [
+      0.18253372609615326,
+      0.005340442061424255,
+      -0.43605339527130127
+    ],
+    "rotation": -135
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        0.02,
+        -0.25,
+        0.27,
+        -0.07
+      ],
+      [
+        0.02,
+        0.06,
+        0.27,
+        0.23
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        0.18223604559898376,
+        -0.13434742391109467
+      ],
+      [
+        0.18283140659332275,
+        0.12366653978824615
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre.",
+    "orientation": "Half turn from the first final trial so the main preview shows the stag face and chest."
+  }
+}

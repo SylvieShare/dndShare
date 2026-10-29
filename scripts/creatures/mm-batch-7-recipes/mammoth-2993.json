@@ -1,0 +1,107 @@
+{
+  "slug": "mammoth-2993",
+  "itemId": 2993,
+  "itemIds": [
+    2993
+  ],
+  "modelId": "3148ea72-1a87-5bcd-9409-6f22b0a84a82",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2993",
+  "sourceName": "mammoth-2993-miniature",
+  "name": "Мамонт",
+  "nameEn": "Mammoth",
+  "code": "CRE-mammoth",
+  "groupName": "Мамонт",
+  "groupNameEn": "Mammoth",
+  "maxHeight": 1.4,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "c14c9163-3e8d-5e01-a615-b9490cf230d5",
+    "file": "models/creatures/separated-bases-20261024/c14c9163-3e8d-5e01-a615-b9490cf230d5.glb",
+    "referenceDiameter": 2.7,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.4,
+    "size": 3,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2993,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.7288453627034079,
+    "sourceOrigin": [
+      0.049193594604730606,
+      0.0008698143064975739,
+      -0.3539378046989441
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.22,
+        -0.24,
+        -0.04,
+        -0.06
+      ],
+      [
+        -0.22,
+        0.06,
+        -0.04,
+        0.23
+      ],
+      [
+        0.2,
+        -0.24,
+        0.38,
+        -0.06
+      ],
+      [
+        0.2,
+        0.07,
+        0.38,
+        0.24
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.16907045245170593,
+        -0.13960346579551697
+      ],
+      [
+        -0.16863135993480682,
+        0.13660550117492676
+      ],
+      [
+        0.26662078499794006,
+        -0.1726953238248825
+      ],
+      [
+        0.2678554058074951,
+        0.17221403121948242
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

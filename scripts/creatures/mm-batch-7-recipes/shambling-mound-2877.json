@@ -1,0 +1,91 @@
+{
+  "slug": "shambling-mound-2877",
+  "itemId": 2877,
+  "itemIds": [
+    2877
+  ],
+  "modelId": "0d192870-3719-599b-bdc0-955c9ee95919",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2877",
+  "sourceName": "shambling-mound-2877-miniature",
+  "name": "Ползающая насыпь",
+  "nameEn": "Shambling Mound",
+  "code": "CRE-shambling-mound",
+  "groupName": "Ползающая насыпь",
+  "groupNameEn": "Shambling Mound",
+  "maxHeight": 1.5,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "amorphous",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.5,
+    "size": 2,
+    "renderTriangles": 32000,
+    "lodTriangles": 32000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 9,
+    "seed": 2877,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5183033108711242,
+    "sourceOrigin": [
+      0.03556354343891144,
+      0.07642464898526669,
+      -0.4321257174015045
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.3,
+        -0.15,
+        -0.03,
+        0.27
+      ],
+      [
+        0.08,
+        -0.37,
+        0.38,
+        0.02
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.16859540343284607,
+        0.060399848967790604
+      ],
+      [
+        0.23972249031066895,
+        -0.21324914693832397
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  },
+  "lodBudget": {
+    "maxTriangles": 32000,
+    "reason": "Render18k was below the measured QEM floor30792. Authored render32k is retained: LOD22k and28k both lose thin silhouette elements, reaching15.81px against the unchanged8px maximum. Use the same32k geometry for LOD while reducing decoded textures to the normal2MiB budget."
+  }
+}

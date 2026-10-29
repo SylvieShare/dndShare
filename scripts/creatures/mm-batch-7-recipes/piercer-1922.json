@@ -1,0 +1,62 @@
+{
+  "slug": "piercer-1922",
+  "itemId": 1922,
+  "itemIds": [
+    1922
+  ],
+  "modelId": "8654a454-6037-51d0-874d-6230544c3bb2",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1922",
+  "sourceName": "piercer-1922-miniature",
+  "name": "Пронзатель",
+  "nameEn": "Piercer",
+  "code": "CRE-piercer",
+  "groupName": "Пронзатель",
+  "groupNameEn": "Piercer",
+  "maxHeight": 1.2,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "flight",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.2,
+    "size": 1,
+    "renderTriangles": 10000,
+    "lodTriangles": 6000,
+    "lodAggression": 3,
+    "shadowTriangles": 1500,
+    "shadowAggression": 5,
+    "seed": 1922,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.7502300888299943,
+    "sourceOrigin": [
+      -0.019221186637878418,
+      0.019420132040977478,
+      -0.500206708908081
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-flight-datum",
+    "datum": "lowest shell tip",
+    "centre": "axis of the middle stone cone, checked against all source views",
+    "physicalStand": false,
+    "pose": "static falling or hanging, shell point downward"
+  }
+}

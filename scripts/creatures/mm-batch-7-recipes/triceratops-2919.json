@@ -1,0 +1,107 @@
+{
+  "slug": "triceratops-2919",
+  "itemId": 2919,
+  "itemIds": [
+    2919
+  ],
+  "modelId": "10824570-559a-5e9b-8723-c1e42eae16e4",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2919",
+  "sourceName": "triceratops-2919-miniature",
+  "name": "Трицератопс",
+  "nameEn": "Triceratops",
+  "code": "CRE-triceratops",
+  "groupName": "Трицератопс",
+  "groupNameEn": "Triceratops",
+  "maxHeight": 1.15,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "c14c9163-3e8d-5e01-a615-b9490cf230d5",
+    "file": "models/creatures/separated-bases-20261024/c14c9163-3e8d-5e01-a615-b9490cf230d5.glb",
+    "referenceDiameter": 2.7,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.15,
+    "size": 3,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2919,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5273344321941831,
+    "sourceOrigin": [
+      0.0012367544695734978,
+      -0.04832725878804922,
+      -0.24132025241851807
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.18,
+        -0.21,
+        -0.04,
+        -0.08
+      ],
+      [
+        0.05,
+        -0.21,
+        0.18,
+        -0.08
+      ],
+      [
+        -0.19,
+        0.13,
+        -0.06,
+        0.28
+      ],
+      [
+        0.06,
+        0.12,
+        0.2,
+        0.28
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.10431282222270966,
+        -0.12191468477249146
+      ],
+      [
+        0.1084723137319088,
+        -0.12194006517529488
+      ],
+      [
+        -0.13266019523143768,
+        0.21558049321174622
+      ],
+      [
+        0.13344772160053253,
+        0.221583291888237
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

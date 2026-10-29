@@ -1,0 +1,107 @@
+{
+  "slug": "lamia-2680",
+  "itemId": 2680,
+  "itemIds": [
+    2680
+  ],
+  "modelId": "16e712c3-cdb9-5233-9507-1fb7450a9850",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2680",
+  "sourceName": "lamia-2680-miniature",
+  "name": "Ламия",
+  "nameEn": "Lamia",
+  "code": "CRE-lamia",
+  "groupName": "Ламия",
+  "groupNameEn": "Lamia",
+  "maxHeight": 1.65,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.65,
+    "size": 2,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2680,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.8068368111331968,
+    "sourceOrigin": [
+      -0.010640062391757965,
+      -0.1190862376242876,
+      -0.47343385219573975
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.18,
+        -0.31,
+        -0.03,
+        -0.14
+      ],
+      [
+        0.06,
+        -0.2,
+        0.22,
+        0.0
+      ],
+      [
+        -0.22,
+        0.17,
+        -0.06,
+        0.35
+      ],
+      [
+        0.01,
+        0.29,
+        0.15,
+        0.5
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.10626587271690369,
+        -0.20126467943191528
+      ],
+      [
+        0.14919524639844894,
+        -0.06439637392759323
+      ],
+      [
+        -0.15083256363868713,
+        0.297538161277771
+      ],
+      [
+        0.06534294039011002,
+        0.44446784257888794
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}
