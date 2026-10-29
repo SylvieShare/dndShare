@@ -72,14 +72,10 @@ class NativeControlsInteractionTest {
                                 ) {
                                     Text("Прибавить пять")
                                 }
-                                ShareSwitch(
-                                    checked,
-                                    {
-                                        checked = it
-                                        switches.incrementAndGet()
-                                    },
-                                    Modifier.semantics { contentDescription = "Переключатель" },
-                                )
+                                ShareToggle("Переключатель", checked) {
+                                    checked = it
+                                    switches.incrementAndGet()
+                                }
                                 ShareCheckbox(
                                     choice,
                                     { choice = it },
@@ -90,12 +86,9 @@ class NativeControlsInteractionTest {
                                     { range = it },
                                     Modifier.semantics { contentDescription = "Диапазон" },
                                 )
-                                ShareSwitch(
-                                    false,
-                                    {},
-                                    Modifier.semantics { contentDescription = "Отключено" },
-                                    enabled = false,
-                                )
+                                ShareToggle("Отключено", false, enabled = false) {
+                                    error("Disabled toggle changed")
+                                }
                             }
                         }
                     }
@@ -124,7 +117,10 @@ class NativeControlsInteractionTest {
                     },
                 )
             )
-            assertFalse(requireNotNull(TouchRobot.find("Отключено")).isEnabled)
+            var disabled = requireNotNull(TouchRobot.find("Отключено"))
+            while (!disabled.isCheckable && disabled.parent != null) disabled = disabled.parent
+            assertTrue(disabled.isCheckable, "The labelled row exposes switch semantics")
+            assertFalse(disabled.isEnabled)
             TouchRobot.click("Применить")
             TouchRobot.await { result.get().startsWith("Native name|42|true|true|") }
             assertEquals("Native name|42|true|true|0.75|advantage", result.get())

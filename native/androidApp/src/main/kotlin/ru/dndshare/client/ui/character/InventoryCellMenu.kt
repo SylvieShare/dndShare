@@ -23,16 +23,17 @@ internal fun inventoryCellActions(
         val uid = entry.text("uid")
         val item = resolveInventoryItem(entry, context.items)
         val worn = model["equipped"].arrayValue().any { it.objectValue().text("uid") == uid }
-        add(ShareMenuAction("Свойства", { properties(uid) }))
+        add(ShareMenuAction("Свойства", Glyph.InfoCircle, { properties(uid) }))
         addAll(created)
         if (context.canEdit) {
             if (item?.typeId == 14L)
-                add(ShareMenuAction("Проверка инструментом", { tool(uid) }, !busy))
-            add(ShareMenuAction("Изменить", { context.edit("inventory:$uid") }, !busy))
+                add(ShareMenuAction("Проверка инструментом", Glyph.Dice, { tool(uid) }, !busy))
+            add(ShareMenuAction("Изменить", Glyph.Edit, { context.edit("inventory:$uid") }, !busy))
             if (worn || canEquipInventoryItem(item))
                 add(
                     ShareMenuAction(
                         if (worn) "Снять" else "Экипировать",
+                        Glyph.Shirt,
                         { perform(uid, "inventory-equip", JsonObject(emptyMap())) },
                         !busy,
                     )
@@ -45,6 +46,7 @@ internal fun inventoryCellActions(
                 add(
                     ShareMenuAction(
                         "Использовать на себе",
+                        Glyph.Account,
                         { context.edit("item-use:items|$uid") },
                         !busy,
                     )
@@ -52,6 +54,7 @@ internal fun inventoryCellActions(
             add(
                 ShareMenuAction(
                     "Добавить 1",
+                    Glyph.Plus,
                     { perform(uid, "inventory-count", buildJsonObject { put("delta", 1) }) },
                     !busy,
                 )
@@ -59,6 +62,7 @@ internal fun inventoryCellActions(
             add(
                 ShareMenuAction(
                     "Убрать 1",
+                    Glyph.Minus,
                     {
                         if (entry["count"].number(1) == 1) remove(uid)
                         else perform(uid, "inventory-count", buildJsonObject { put("delta", -1) })
@@ -72,6 +76,7 @@ internal fun inventoryCellActions(
                     add(
                         ShareMenuAction(
                             "Переместить: ${space.text("name")}",
+                            Glyph.Move,
                             {
                                 perform(
                                     uid,
@@ -87,12 +92,26 @@ internal fun inventoryCellActions(
                     )
             }
             if (item?.typeId == 1L || item?.typeId == 19L && item.data["weapon"] is JsonObject)
-                add(ShareMenuAction("Переместить в оружие", { context.edit("weapon:$uid") }, !busy))
+                add(
+                    ShareMenuAction(
+                        "Переместить в оружие",
+                        Glyph.Swords,
+                        { context.edit("weapon:$uid") },
+                        !busy,
+                    )
+                )
             if (context.sessionUuid != null)
-                add(ShareMenuAction("Передать", { context.edit("transfer:items|$uid") }, !busy))
-            add(ShareMenuAction("Удалить", { remove(uid) }, !busy, danger = true))
+                add(
+                    ShareMenuAction(
+                        "Передать",
+                        Glyph.Transfer,
+                        { context.edit("transfer:items|$uid") },
+                        !busy,
+                    )
+                )
+            add(ShareMenuAction("Удалить", Glyph.Trash, { remove(uid) }, !busy, danger = true))
         }
         val id = (entry["magic_item_id"] ?: entry["item_id"]).referenceId()
-        if (id != null) add(ShareMenuAction("Справочник", { context.openItem(id) }))
+        if (id != null) add(ShareMenuAction("Справочник", Glyph.Book, { context.openItem(id) }))
     }
 }

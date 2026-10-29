@@ -4,7 +4,6 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.toggleable
@@ -14,9 +13,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -62,17 +61,11 @@ fun ShareSwitch(
     ) {
         Canvas(Modifier.size(DesignTokens.Layout.ToggleWidth, DesignTokens.Layout.ToggleHeight)) {
             drawRoundRect(track, cornerRadius = CornerRadius(size.height / 2))
-            if (!checked)
-                drawRoundRect(
-                    WebPalette.BorderStrong,
-                    cornerRadius = CornerRadius(size.height / 2),
-                    style = Stroke(1.dp.toPx()),
-                )
             val radius = DesignTokens.Layout.ToggleThumb.toPx() / 2
             drawCircle(
                 thumb,
                 radius,
-                Offset(3.dp.toPx() + radius + 16.dp.toPx() * fraction, size.height / 2),
+                Offset(size.height / 2 + (size.width - size.height) * fraction, size.height / 2),
             )
         }
     }
@@ -87,7 +80,7 @@ fun ShareCheckbox(
 ) {
     val fill by
         animateColorAsState(
-            if (checked) WebPalette.Accent else Color.White.copy(alpha = .04f),
+            if (checked) WebPalette.Accent else WebPalette.Raised,
             label = "Checkbox fill",
         )
     Box(
@@ -107,15 +100,7 @@ fun ShareCheckbox(
         contentAlignment = Alignment.Center,
     ) {
         Canvas(Modifier.size(DesignTokens.Layout.CheckboxSize)) {
-            val inset = .75.dp.toPx()
             drawRoundRect(fill, cornerRadius = CornerRadius(5.dp.toPx()))
-            drawRoundRect(
-                if (checked) WebPalette.Accent else WebPalette.BorderStrong,
-                Offset(inset, inset),
-                androidx.compose.ui.geometry.Size(size.width - 2 * inset, size.height - 2 * inset),
-                CornerRadius(5.dp.toPx()),
-                style = Stroke(1.5.dp.toPx()),
-            )
             if (checked)
                 drawPath(
                     Path().apply {
@@ -154,12 +139,8 @@ fun ShareRadioButton(
         contentAlignment = Alignment.Center,
     ) {
         Canvas(Modifier.size(18.dp)) {
-            drawCircle(
-                if (selected) WebPalette.Accent else WebPalette.BorderStrong,
-                8.dp.toPx(),
-                style = Stroke(1.5.dp.toPx()),
-            )
-            if (selected) drawCircle(WebPalette.Accent, 4.dp.toPx())
+            drawCircle(if (selected) WebPalette.Accent else WebPalette.Raised, 9.dp.toPx())
+            if (selected) drawCircle(WebPalette.OnAccent, 3.5.dp.toPx())
         }
     }
 }
@@ -182,12 +163,8 @@ fun ShareChoiceChip(
     Row(
         modifier
             .heightIn(min = 32.dp)
-            .background(color, RoundedCornerShape(6.dp))
-            .border(
-                1.dp,
-                if (selected) WebPalette.Accent else WebPalette.BorderStrong,
-                RoundedCornerShape(6.dp),
-            )
+            .clip(RoundedCornerShape(6.dp))
+            .background(color)
             .selectable(selected, enabled = enabled, role = Role.Checkbox, onClick = onClick)
             .alpha(if (enabled) 1f else .5f)
             .padding(horizontal = 12.dp, vertical = 6.dp),

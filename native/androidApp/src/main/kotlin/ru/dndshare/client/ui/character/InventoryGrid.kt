@@ -228,6 +228,7 @@ internal fun InventoryGrid(
                                             listOf(
                                                 ShareMenuAction(
                                                     "Из справочника",
+                                                    Glyph.Book,
                                                     {
                                                         context.edit(
                                                             "inventory:new|$id|$index|catalog"
@@ -237,6 +238,7 @@ internal fun InventoryGrid(
                                                 ),
                                                 ShareMenuAction(
                                                     "Своя вещь",
+                                                    Glyph.Plus,
                                                     { context.edit("inventory:new|$id|$index") },
                                                     !busy,
                                                 ),
@@ -265,11 +267,15 @@ internal fun InventoryGrid(
                                             ownerKey = entry?.text("uid") ?: address,
                                             trigger = { modifier, open ->
                                                 ShareCellSurface(
-                                                    modifier.testTag("sheet-entry:${entry?.text("uid") ?: "$id:$index"}").semantics {
-                                                        testTagsAsResourceId = true
-                                                        stateDescription =
-                                                            if (selected) "Экипировано" else ""
-                                                    },
+                                                    modifier
+                                                        .testTag(
+                                                            "sheet-entry:${entry?.text("uid") ?: "$id:$index"}"
+                                                        )
+                                                        .semantics {
+                                                            testTagsAsResourceId = true
+                                                            stateDescription =
+                                                                if (selected) "Экипировано" else ""
+                                                        },
                                                     selected = selected,
                                                     dropTarget = held != null && target == address,
                                                     onClick = open,

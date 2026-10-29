@@ -20,7 +20,13 @@ internal fun DndWeapons() {
             SheetSummaryHeading(
                 "Оружие",
                 if (context.canEdit && direct.size > 1)
-                    listOf(ShareMenuAction("Изменить порядок", { context.edit("reorder:weapons") }))
+                    listOf(
+                        ShareMenuAction(
+                            "Изменить порядок",
+                            Glyph.Move,
+                            { context.edit("reorder:weapons") },
+                        )
+                    )
                 else emptyList(),
                 divider = true,
             )
@@ -35,7 +41,7 @@ internal fun DndWeapons() {
                 }
             }
             if (context.canEdit)
-                ShareDashedAction(
+                ShareAddAction(
                     "+ Добавить оружие",
                     { context.edit("weapon:new") },
                     compact = true,
@@ -117,6 +123,7 @@ private fun PresetAttack(title: String, unarmed: Boolean) {
                 listOf(false to "Урон", true to "Критический урон").forEach { (critical, text) ->
                     ShareDropdownMenuItem(
                         text = { Text(text) },
+                        leadingIcon = { AppGlyph(Glyph.Dice, Modifier.size(18.dp)) },
                         onClick = {
                             damage = false
                             val amount = strength + extra

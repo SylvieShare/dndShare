@@ -67,6 +67,7 @@ private fun createdItemActionsForEntry(entry: JsonObject): List<ShareMenuAction>
         ShareMenuAction(
             if (creation["expired"] == JsonPrimitive(true)) "Вернуть срок действия"
             else "Отметить окончание срока",
+            Glyph.Refresh,
             { if (creation.text("on_expire") == "vanish") confirming = true else expire() },
             enabled = !busy,
         )

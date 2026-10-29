@@ -48,10 +48,12 @@ internal fun CharacterSheetEditor(
                     verticalArrangement = Arrangement.spacedBy(14.dp),
                 ) {
                     if (fields.target == "statuses") {
-                        Row {
-                            Text("Вдохновение", Modifier.weight(1f))
-                            ShareSwitch(fields.inspiration, inspiration, enabled = !editor.saving)
-                        }
+                        ShareToggle(
+                            "Вдохновение",
+                            fields.inspiration,
+                            enabled = !editor.saving,
+                            change = inspiration,
+                        )
                         SheetNumberInput("Истощение", fields.exhaustion, !editor.saving) {
                             number(SheetNumberField.Exhaustion, it)
                         }

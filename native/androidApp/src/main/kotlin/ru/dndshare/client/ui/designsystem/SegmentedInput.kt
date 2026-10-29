@@ -1,6 +1,5 @@
 package ru.dndshare.client.ui.designsystem
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -48,11 +47,6 @@ fun ShareSegmentedInput(
                     if (selected)
                         WebPalette.Accent.copy(alpha = .15f).compositeOver(WebPalette.Raised)
                     else WebPalette.Raised,
-                border =
-                    BorderStroke(
-                        1.dp,
-                        if (selected) WebPalette.Accent else WebPalette.BorderStrong,
-                    ),
             ) {
                 Box(
                     Modifier.padding(horizontal = 4.dp, vertical = 5.dp),

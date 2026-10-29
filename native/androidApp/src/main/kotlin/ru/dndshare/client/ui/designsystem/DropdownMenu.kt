@@ -43,7 +43,7 @@ fun ShareDropdownMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = WebPalette.Popover,
+    containerColor: Color = WebPalette.Subheader,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val transition = remember { MutableTransitionState(false) }
@@ -107,7 +107,8 @@ fun ShareDropdownMenuItem(
         contentColor = if (enabled) WebPalette.Text else WebPalette.TextMuted.copy(alpha = .5f),
     ) {
         Row(
-            Modifier.heightIn(min = 40.dp).padding(horizontal = 10.dp, vertical = 8.dp),
+            Modifier.heightIn(min = DesignTokens.Layout.TouchMin)
+                .padding(horizontal = 10.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {

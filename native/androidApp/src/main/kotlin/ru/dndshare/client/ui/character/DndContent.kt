@@ -42,6 +42,7 @@ internal fun DndAbilities(format: LayoutFormat) {
                                 add(
                                     ShareMenuAction(
                                         "Выбрать способности",
+                                        Glyph.List,
                                         { context.edit("ability-selection:${item.id}") },
                                     )
                                 )
@@ -67,7 +68,13 @@ internal fun DndFeatureSummary() {
             SheetSummaryHeading(
                 "Действия",
                 if (context.canEdit)
-                    listOf(ShareMenuAction("Добавить действие", { context.edit("action:new") }))
+                    listOf(
+                        ShareMenuAction(
+                            "Добавить действие",
+                            Glyph.Plus,
+                            { context.edit("action:new") },
+                        )
+                    )
                 else emptyList(),
             )
             Text("нет", style = ShareTypography.group, color = WebPalette.TextMuted)
@@ -105,11 +112,18 @@ internal fun DndFeatureSummary() {
                 "Ресурсы",
                 if (context.canEdit)
                     buildList {
-                        add(ShareMenuAction("Добавить ресурс", { context.edit("resource:new") }))
+                        add(
+                            ShareMenuAction(
+                                "Добавить ресурс",
+                                Glyph.Plus,
+                                { context.edit("resource:new") },
+                            )
+                        )
                         values["resources"].arrayValue().forEachIndexed { index, raw ->
                             add(
                                 ShareMenuAction(
                                     "Изменить: ${raw.objectValue().text("title")}",
+                                    Glyph.Edit,
                                     { context.edit("resource:$index") },
                                 )
                             )
@@ -172,11 +186,18 @@ internal fun DndFeatureSummary() {
                 "Защиты",
                 if (context.canEdit)
                     buildList {
-                        add(ShareMenuAction("Добавить защиту", { context.edit("defense:new") }))
+                        add(
+                            ShareMenuAction(
+                                "Добавить защиту",
+                                Glyph.Plus,
+                                { context.edit("defense:new") },
+                            )
+                        )
                         values["defenses"].arrayValue().forEachIndexed { index, _ ->
                             add(
                                 ShareMenuAction(
                                     "Изменить защиту ${index + 1}",
+                                    Glyph.Edit,
                                     { context.edit("defense:$index") },
                                 )
                             )
@@ -207,7 +228,13 @@ internal fun DndFeatureSummary() {
             SheetSummaryHeading(
                 "Владения",
                 if (context.canEdit)
-                    listOf(ShareMenuAction("Изменить владения", { context.edit("proficiencies") }))
+                    listOf(
+                        ShareMenuAction(
+                            "Изменить владения",
+                            Glyph.Edit,
+                            { context.edit("proficiencies") },
+                        )
+                    )
                 else emptyList(),
             )
             groups.forEach { (label, entries) ->

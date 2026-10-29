@@ -109,17 +109,19 @@ internal fun SheetCatalogueEntry(
                     addAll(extraActions)
                     addAll(creationActions)
                     if (editTarget != null)
-                        add(ShareMenuAction("Изменить", { context.edit(editTarget) }))
+                        add(ShareMenuAction("Изменить", Glyph.Edit, { context.edit(editTarget) }))
                     if (item?.typeId == 5L && entry.text("key").isNotBlank()) {
                         add(
                             ShareMenuAction(
                                 "Броски заклинания",
+                                Glyph.Dice,
                                 { context.edit("spell-roll:${entry.text("key")}") },
                             )
                         )
                         add(
                             ShareMenuAction(
                                 "Сотворить",
+                                Glyph.Wand,
                                 { context.edit("spell-cast:${entry.text("key")}") },
                             )
                         )
@@ -133,12 +135,19 @@ internal fun SheetCatalogueEntry(
                         add(
                             ShareMenuAction(
                                 "Использовать на себе",
+                                Glyph.Account,
                                 { context.edit("item-use:$source|$uid") },
                             )
                         )
                     if (uid.isNotBlank() && context.sessionUuid != null)
-                        add(ShareMenuAction("Передать", { context.edit("transfer:$source|$uid") }))
-                    if (id != null) add(ShareMenuAction("Справочник", { open() }))
+                        add(
+                            ShareMenuAction(
+                                "Передать",
+                                Glyph.Transfer,
+                                { context.edit("transfer:$source|$uid") },
+                            )
+                        )
+                    if (id != null) add(ShareMenuAction("Справочник", Glyph.Book, { open() }))
                 }
                 if (actions.isNotEmpty())
                     ShareActionMenu(

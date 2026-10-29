@@ -52,7 +52,7 @@ fun ShareTextInput(
 ) {
     val state = rememberShareInputState(value, onValueChange)
     val interactions = remember { MutableInteractionSource() }
-    val border = inputBorder(interactions, enabled)
+    val fill = inputFill(interactions, enabled)
     Column(
         modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(DesignTokens.Spacing.Compact),
@@ -64,9 +64,12 @@ fun ShareTextInput(
             modifier =
                 Modifier.fillMaxWidth()
                     .heightIn(min = DesignTokens.Layout.InputHeight)
-                    .inputSurface(border)
+                    .inputSurface(fill)
                     .semantics { contentDescription = label },
-            textStyle = fieldTextStyle.copy(color = WebPalette.Text),
+            textStyle =
+                fieldTextStyle.copy(
+                    color = WebPalette.Text.copy(alpha = if (enabled) 1f else .55f)
+                ),
             cursorBrush = SolidColor(WebPalette.Accent),
             interactionSource = interactions,
             keyboardOptions = keyboardOptions,

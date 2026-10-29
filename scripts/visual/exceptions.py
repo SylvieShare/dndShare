@@ -5,7 +5,10 @@ from pathlib import Path
 import re
 
 FORMATS = {"phone", "tablet", "wide"}
-STATES = {"collections", "menu", "list", "record"}
+FEATURE_STATES = {
+    "handbook": {"collections", "menu", "list", "record"},
+    "forms": {"list", "record", "character-menu", "sheet-stat-editor"},
+}
 
 
 def read_exceptions(path):
@@ -52,10 +55,10 @@ def validate_exceptions(document):
         if identifier in identifiers:
             raise ValueError(f"Duplicate exception id: {identifier}")
         identifiers.add(identifier)
-        if entry["feature"] != "handbook":
-            raise ValueError(f"{location}.feature must be handbook")
+        if entry["feature"] not in FEATURE_STATES:
+            raise ValueError(f"{location}.feature must be one of {sorted(FEATURE_STATES)}")
         subset(entry["formats"], FORMATS, location + ".formats")
-        subset(entry["states"], STATES, location + ".states")
+        subset(entry["states"], FEATURE_STATES[entry["feature"]], location + ".states")
         nonempty(entry["difference"], location + ".difference")
         if not re.search(r"[А-Яа-яЁё]", entry["difference"]):
             raise ValueError(f"{location}.difference requires a Russian description")

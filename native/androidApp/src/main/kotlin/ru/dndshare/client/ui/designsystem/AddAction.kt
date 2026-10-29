@@ -9,19 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 
 @Composable
-fun ShareDashedAction(
+fun ShareAddAction(
     label: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -30,31 +24,12 @@ fun ShareDashedAction(
     textStyle: TextStyle =
         ShareTypography.context.copy(fontSize = 13.sp, fontWeight = FontWeight.Normal),
 ) {
-    val border = WebPalette.BorderStrong
     Row(
         modifier
             .fillMaxWidth()
             .heightIn(min = if (compact) 28.dp else DesignTokens.Layout.TouchMin)
             .clip(RoundedCornerShape(8.dp))
-            .background(WebPalette.Text.copy(alpha = .02f))
-            .drawWithCache {
-                val stroke = 1.dp.toPx()
-                val style =
-                    Stroke(
-                        stroke,
-                        pathEffect =
-                            PathEffect.dashPathEffect(floatArrayOf(4.dp.toPx(), 4.dp.toPx())),
-                    )
-                onDrawBehind {
-                    drawRoundRect(
-                        border,
-                        Offset(stroke / 2, stroke / 2),
-                        Size(size.width - stroke, size.height - stroke),
-                        CornerRadius(8.dp.toPx()),
-                        style = style,
-                    )
-                }
-            }
+            .background(WebPalette.Raised)
             .clickable(enabled = enabled, role = Role.Button, onClick = onClick)
             .padding(horizontal = 12.dp, vertical = if (compact) 4.dp else 8.dp),
         horizontalArrangement = if (compact) Arrangement.Start else Arrangement.Center,

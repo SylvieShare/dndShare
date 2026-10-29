@@ -5,8 +5,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.json.JsonObject
 import ru.dndshare.client.character.*
@@ -53,21 +51,7 @@ internal fun SheetStatMorph(
                         Modifier.fillMaxWidth().padding(20.dp),
                         verticalArrangement = Arrangement.spacedBy(18.dp),
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                ability.title,
-                                Modifier.weight(1f),
-                                style = ShareTypography.header,
-                            )
-                            IconButton(
-                                onClick = dismiss,
-                                enabled = !shown.saving,
-                                modifier =
-                                    Modifier.semantics { contentDescription = "Закрыть редактор" },
-                            ) {
-                                AppGlyph(Glyph.Close)
-                            }
-                        }
+                        Text(ability.title, style = ShareTypography.header)
                         val mechanics =
                             remember(shown.baseline, items, metadata) {
                                 DndDerivedValues(shown.baseline, items, metadata)

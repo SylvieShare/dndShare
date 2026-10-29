@@ -41,6 +41,7 @@ internal fun SheetRollActions(
         }
         ShareDropdownMenuItem(
             text = { Text("Бросить кубик") },
+            leadingIcon = { AppGlyph(Glyph.Dice, Modifier.size(18.dp)) },
             onClick = {
                 close()
                 context.roll(
@@ -55,6 +56,7 @@ internal fun SheetRollActions(
         if (context.canEdit && editTarget != null)
             ShareDropdownMenuItem(
                 text = { Text("Изменить") },
+                leadingIcon = { AppGlyph(Glyph.Edit, Modifier.size(18.dp)) },
                 onClick = {
                     close()
                     context.edit(editTarget)

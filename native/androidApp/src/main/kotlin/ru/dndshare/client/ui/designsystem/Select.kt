@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
@@ -25,14 +26,11 @@ fun ShareSelect(
             Surface(
                 onClick = { open = true },
                 enabled = enabled,
-                color = WebPalette.Raised,
+                color =
+                    if (open) WebPalette.Accent.copy(alpha = .18f).compositeOver(WebPalette.Raised)
+                    else WebPalette.Raised,
                 shape =
                     androidx.compose.foundation.shape.RoundedCornerShape(DesignTokens.Radius.Input),
-                border =
-                    androidx.compose.foundation.BorderStroke(
-                        DesignTokens.Layout.Border,
-                        if (open) WebPalette.Accent else WebPalette.BorderStrong,
-                    ),
                 modifier =
                     Modifier.fillMaxWidth()
                         .heightIn(min = DesignTokens.Layout.InputHeight)

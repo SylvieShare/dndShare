@@ -17,6 +17,10 @@ ICONS = {
     "Collapse": "panel-left-close", "Expand": "panel-left-open", "Refresh": "refresh-cw",
     "Filter": "list-filter", "Back": "arrow-left", "Exit": "log-out", "Search": "search", "Chevron": "chevron-right",
     "Rest": "moon", "Settings": "settings", "Edit": "pencil", "CircleCheck": "circle-check", "Swords": "swords", "Target": "crosshair", "ShieldCheck": "shield-check",
+    "Copy": "copy", "InfoCircle": "info", "Dice": "dices", "Plus": "plus", "Minus": "minus",
+    "Transfer": "arrow-right-left", "Move": "folder-input", "Up": "arrow-up", "Down": "arrow-down",
+    "Wand": "wand-sparkles", "Link": "link", "Code": "code", "Quote": "quote", "List": "list", "ListOrdered": "list-ordered",
+    "Image": "image", "Table": "table", "Heading": "heading", "Strikethrough": "strikethrough",
     "Bold": "bold", "Italic": "italic", "Underline": "underline", "Undo": "undo-2", "Redo": "redo-2", "More": "ellipsis",
 }
 COLORS = {

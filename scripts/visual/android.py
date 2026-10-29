@@ -263,8 +263,11 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
                 if format_['name']!='phone': device.wait(description='Успехи: 3')
                 take(format_, 'sheet-death-saves')
             if wanted & {'sheet-stats', 'sheet-stat-editor'}:
-                gesture = verify_swipes(device, format_)
-                (output.parent / ('native-swipe-' + format_['name'] + '.json')).write_text(json.dumps(gesture, ensure_ascii=False, indent=2))
+                if 'sheet-stats' in wanted:
+                    gesture = verify_swipes(device, format_)
+                    (output.parent / ('native-swipe-' + format_['name'] + '.json')).write_text(json.dumps(gesture, ensure_ascii=False, indent=2))
+                elif format_['name'] != 'wide':
+                    device.click(description='Статы') if format_['name'] == 'phone' else device.click(text='Статы')
                 device.wait('ТЕЛОСЛОЖЕНИЕ')
                 take(format_, 'sheet-stats')
             if 'sheet-stat-editor' in wanted:
@@ -275,7 +278,7 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
                     lifecycle = verify_form_restoration(device, url, fixture, stats)
                     (output.parent / 'native-form-lifecycle.json').write_text(json.dumps(lifecycle, ensure_ascii=False, indent=2))
                 else:
-                    device.click(description='Закрыть редактор')
+                    device.shell('input', 'keyevent', '4')
                     wait_absent(device, 'Основное значение')
             if 'sheet-weapons' in wanted:
                 device.click(description='Оружие') if format_['name']=='phone' else device.click(text='Оружие')

@@ -160,11 +160,13 @@ fun ShareReorderList(
                     listOf(
                         ShareMenuAction(
                             "Выше",
+                            Glyph.Up,
                             { moveAdjacent(row.first, -1) },
                             enabled && index > 0,
                         ),
                         ShareMenuAction(
                             "Ниже",
+                            Glyph.Down,
                             { moveAdjacent(row.first, 1) },
                             enabled && index < rows.lastIndex,
                         ),

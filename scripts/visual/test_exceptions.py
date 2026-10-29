@@ -29,6 +29,16 @@ class ExceptionRegistryTest(unittest.TestCase):
         self.assertEqual(validate_exceptions({"schemaVersion": 1, "exceptions": []})["exceptions"], [])
         self.assertEqual(self.validate_entry(example())["exceptions"], [example()])
 
+    def test_native_form_scope_requires_explicit_complete_metadata(self):
+        entry = example()
+        entry.update(feature="forms", states=["character-menu", "sheet-stat-editor"])
+        self.assertEqual(self.validate_entry(entry)["exceptions"], [entry])
+        for feature, states in [("handbook", ["character-menu"]), ("forms", ["collections"])]:
+            invalid = copy.deepcopy(entry)
+            invalid.update(feature=feature, states=states)
+            with self.assertRaises(ValueError):
+                self.validate_entry(invalid)
+
     def test_every_entry_and_approval_field_is_required_and_unknown_keys_fail(self):
         for key in example():
             with self.subTest(key=key), self.assertRaises(ValueError):

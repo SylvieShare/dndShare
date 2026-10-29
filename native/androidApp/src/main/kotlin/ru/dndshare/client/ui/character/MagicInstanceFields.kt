@@ -3,8 +3,6 @@ package ru.dndshare.client.ui.character
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
 import ru.dndshare.client.data.CacheDao
@@ -40,15 +38,8 @@ internal fun MagicInstanceFields(form: FeatureFormScope, item: CatalogueItem, ca
         }
     }
     if (item.data.text("attunement") != "none")
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Text("Настройка", Modifier.weight(1f), style = ShareTypography.group)
-            ShareSwitch(
-                state["attuned"] == JsonPrimitive(true),
-                {
-                    form.field(listOf("params", "magic", "attuned"), JsonPrimitive(it))
-                },
-                enabled = form.enabled,
-            )
+        ShareToggle("Настройка", state["attuned"] == JsonPrimitive(true), enabled = form.enabled) {
+            form.field(listOf("params", "magic", "attuned"), JsonPrimitive(it))
         }
     val original =
         inventoryInstances(form.editor.baseline)

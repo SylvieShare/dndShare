@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.dialog
+import androidx.compose.ui.semantics.dismiss
 import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.*
@@ -123,7 +124,14 @@ fun ShareMorphDialog(
     ) {
         CompositionLocalProvider(LocalContentColor provides WebPalette.Text) {
             Box(
-                Modifier.fillMaxSize().focusRequester(modalFocus).focusable().semantics { dialog() }
+                Modifier.fillMaxSize().focusRequester(modalFocus).focusable().semantics {
+                    dialog()
+                    if (dismissEnabled)
+                        dismiss {
+                            onDismiss()
+                            true
+                        }
+                }
             ) {
                 val interaction = remember { MutableInteractionSource() }
                 Box(

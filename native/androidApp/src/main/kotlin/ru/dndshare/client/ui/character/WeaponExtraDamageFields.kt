@@ -18,7 +18,7 @@ internal fun WeaponExtraDamageFields(form: FeatureFormScope) {
     key(rows.size) {
         rows.forEachIndexed { index, raw ->
             val row = raw.objectValue()
-            Surface(color = WebPalette.Raised, shape = MaterialTheme.shapes.small) {
+            Surface(color = WebPalette.Surface, shape = MaterialTheme.shapes.small) {
                 Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     SheetNumberInput("Количество костей", row.text("count"), form.enabled) {
                         form.row(listOf("add_attacks"), index, "count", JsonPrimitive(it))

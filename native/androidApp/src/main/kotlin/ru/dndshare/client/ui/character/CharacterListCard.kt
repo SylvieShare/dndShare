@@ -93,11 +93,12 @@ internal fun CharacterListCard(
                                     contentDescription = "Действия: ${character.name}"
                                 },
                         ) {
-                            Text("⋯", style = ShareTypography.section)
+                            AppGlyph(Glyph.More)
                         }
                         ShareDropdownMenu(menu, { menu = false }) {
                             ShareDropdownMenuItem(
                                 text = { Text("Клонировать") },
+                                leadingIcon = { AppGlyph(Glyph.Copy, Modifier.size(18.dp)) },
                                 onClick = {
                                     menu = false
                                     clone()
@@ -105,6 +106,9 @@ internal fun CharacterListCard(
                             )
                             ShareDropdownMenuItem(
                                 text = { Text("Удалить", color = WebPalette.Danger) },
+                                leadingIcon = {
+                                    AppGlyph(Glyph.Trash, Modifier.size(18.dp), WebPalette.Danger)
+                                },
                                 onClick = {
                                     menu = false
                                     delete()

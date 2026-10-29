@@ -35,22 +35,36 @@ internal fun WeaponSheetCard(entry: JsonObject, weapon: WeaponReadout?) {
     val creation = createdItemActions(entry)
     var properties by remember(uid) { mutableStateOf(false) }
     val actions = buildList {
-        add(ShareMenuAction("Свойства", { properties = true }))
+        add(ShareMenuAction("Свойства", Glyph.InfoCircle, { properties = true }))
         addAll(creation)
         if (context.canEdit) {
-            add(ShareMenuAction("Бросок оружием", { context.edit("weapon-roll:$uid") }, !expired))
-            add(ShareMenuAction("Изменить", { context.edit("weapon:$uid") }))
+            add(
+                ShareMenuAction(
+                    "Бросок оружием",
+                    Glyph.Dice,
+                    { context.edit("weapon-roll:$uid") },
+                    !expired,
+                )
+            )
+            add(ShareMenuAction("Изменить", Glyph.Edit, { context.edit("weapon:$uid") }))
             if (item?.data?.get("usable") is JsonObject)
                 add(
                     ShareMenuAction(
                         "Использовать на себе",
+                        Glyph.Account,
                         { context.edit("item-use:weapon|$uid") },
                     )
                 )
             if (context.sessionUuid != null)
-                add(ShareMenuAction("Передать", { context.edit("transfer:weapon|$uid") }))
+                add(
+                    ShareMenuAction(
+                        "Передать",
+                        Glyph.Transfer,
+                        { context.edit("transfer:weapon|$uid") },
+                    )
+                )
         }
-        if (id != null) add(ShareMenuAction("Справочник", { context.openItem(id) }))
+        if (id != null) add(ShareMenuAction("Справочник", Glyph.Book, { context.openItem(id) }))
     }
     BoxWithConstraints(Modifier.fillMaxWidth()) {
         val inline = maxWidth >= 600.dp

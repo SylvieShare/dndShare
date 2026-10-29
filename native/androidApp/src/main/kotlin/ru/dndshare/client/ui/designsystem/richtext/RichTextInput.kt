@@ -152,11 +152,12 @@ internal fun RichTextInputContent(
                         GradientDrawable().apply {
                             setColor(WebPalette.Raised.toArgb())
                             cornerRadius = 8 * density
-                            setStroke(
-                                density.toInt().coerceAtLeast(1),
-                                WebPalette.BorderStrong.toArgb(),
-                            )
                         }
+                    view.setOnFocusChangeListener { _, focused ->
+                        (view.background as GradientDrawable).setColor(
+                            inputFillColor(focused).toArgb()
+                        )
+                    }
                     val doc =
                         RichHtmlCodec.decode(
                             value,

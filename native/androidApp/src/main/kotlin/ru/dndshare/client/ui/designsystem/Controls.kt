@@ -1,6 +1,5 @@
 package ru.dndshare.client.ui.designsystem
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -54,13 +53,12 @@ fun ShareAction(
     active: Boolean = false,
     enabled: Boolean = true,
 ) {
-    ShareOutlinedButton(
+    ShareButton(
         onClick,
         modifier.heightIn(min = DesignTokens.Layout.TouchMin),
         shape = RoundedCornerShape(DesignTokens.Radius.Small),
-        border = BorderStroke(1.dp, if (active) WebPalette.Accent else WebPalette.BorderStrong),
         colors =
-            ButtonDefaults.outlinedButtonColors(
+            ButtonDefaults.buttonColors(
                 containerColor =
                     if (active) WebPalette.Accent.copy(alpha = .12f) else WebPalette.Raised,
                 contentColor = if (active) WebPalette.AccentSoft else WebPalette.TextSecondary,

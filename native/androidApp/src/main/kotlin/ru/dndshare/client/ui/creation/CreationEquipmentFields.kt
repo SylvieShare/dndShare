@@ -17,28 +17,26 @@ internal fun CreationEquipmentFields(ui: CreationUiState, model: CharacterCreati
     val draft = ui.draft
     val plan = remember(context) { equipmentPlan(context) } ?: return
     if (draft.version == "2014")
-        Row {
-            Text("Закупиться позже в магазине", Modifier.weight(1f), style = ShareTypography.group)
-            ShareSwitch(
-                draft.buyEquipment,
-                { enabled ->
-                    model.update { current ->
-                        val rule = ui.rules["wealth"].objectValue()[plan.key].objectValue()
-                        val dice = List(rule["dice"].number()) { Random.nextInt(1, 5) }
-                        current.copy(
-                            buyEquipment = enabled,
-                            wealth =
-                                current.wealth
-                                    ?: buildJsonObject {
-                                        put("rolls", JsonArray(dice.map(::JsonPrimitive)))
-                                        put("multiplier", rule["multiplier"].number(1))
-                                        put("gold", dice.sum() * rule["multiplier"].number(1))
-                                    },
-                        )
-                    }
-                },
-            )
-        }
+        ShareToggle(
+            "Закупиться позже в магазине",
+            draft.buyEquipment,
+            change = { enabled ->
+                model.update { current ->
+                    val rule = ui.rules["wealth"].objectValue()[plan.key].objectValue()
+                    val dice = List(rule["dice"].number()) { Random.nextInt(1, 5) }
+                    current.copy(
+                        buyEquipment = enabled,
+                        wealth =
+                            current.wealth
+                                ?: buildJsonObject {
+                                    put("rolls", JsonArray(dice.map(::JsonPrimitive)))
+                                    put("multiplier", rule["multiplier"].number(1))
+                                    put("gold", dice.sum() * rule["multiplier"].number(1))
+                                },
+                    )
+                }
+            },
+        )
     if (draft.buyEquipment && draft.version == "2014") {
         Text(
             "Стартовые деньги: ${draft.wealth?.get("gold").number()} зм. Комплекты класса и предыстории заменяются покупками.",

@@ -2,7 +2,6 @@ package ru.dndshare.client.ui.designsystem
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
@@ -14,7 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -41,24 +42,29 @@ internal fun FieldCaption(label: String) {
 }
 
 @Composable
-internal fun inputBorder(
+internal fun inputFill(
     interactions: MutableInteractionSource,
     enabled: Boolean,
     invalid: Boolean = false,
-): androidx.compose.ui.graphics.Color {
+): Color {
     val focused by interactions.collectIsFocusedAsState()
     val color by
         animateColorAsState(
-            if (invalid) WebPalette.Danger
-            else if (focused) WebPalette.Accent else WebPalette.BorderStrong,
+            inputFillColor(focused, invalid),
             label = "Input focus",
         )
     return color.copy(alpha = color.alpha * if (enabled) 1f else .55f)
 }
 
-internal fun Modifier.inputSurface(border: androidx.compose.ui.graphics.Color) =
-    background(WebPalette.Raised, RoundedCornerShape(DesignTokens.Radius.Input))
-        .border(DesignTokens.Layout.Border, border, RoundedCornerShape(DesignTokens.Radius.Input))
+internal fun inputFillColor(focused: Boolean, invalid: Boolean = false): Color =
+    when {
+        invalid -> WebPalette.Danger.copy(alpha = .16f).compositeOver(WebPalette.Raised)
+        focused -> WebPalette.Accent.copy(alpha = .18f).compositeOver(WebPalette.Raised)
+        else -> WebPalette.Raised
+    }
+
+internal fun Modifier.inputSurface(fill: Color) =
+    background(fill, RoundedCornerShape(DesignTokens.Radius.Input))
 
 /**
  * Controlled input for search/login: Android IME, selection, password and autofill remain native.
@@ -79,7 +85,7 @@ fun ShareValueInput(
     trailing: (@Composable () -> Unit)? = null,
 ) {
     val interactions = remember { MutableInteractionSource() }
-    val border = inputBorder(interactions, enabled)
+    val fill = inputFill(interactions, enabled)
     Column(
         modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(DesignTokens.Spacing.Compact),
@@ -91,7 +97,7 @@ fun ShareValueInput(
             modifier =
                 Modifier.fillMaxWidth()
                     .heightIn(min = DesignTokens.Layout.InputHeight)
-                    .inputSurface(border)
+                    .inputSurface(fill)
                     .semantics { contentDescription = label },
             enabled = enabled,
             textStyle =

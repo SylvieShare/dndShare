@@ -39,6 +39,7 @@ internal fun SpellCatalogueCard(reference: JsonElement, tab: JsonObject? = null)
             add(
                 ShareMenuAction(
                     if (prepared) "Снять подготовку" else "Подготовить",
+                    Glyph.CircleCheck,
                     {
                         busy = true
                         scope.launch {

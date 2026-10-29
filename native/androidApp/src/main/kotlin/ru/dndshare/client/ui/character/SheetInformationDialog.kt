@@ -3,7 +3,6 @@ package ru.dndshare.client.ui.character
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.json.*
@@ -111,10 +110,12 @@ internal fun SheetInformationDialog(
                         Text("Повторить изменение")
                     }
                 }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Публичная ссылка", Modifier.weight(1f), style = ShareTypography.group)
-                    ShareSwitch(sheet.publicVisible, commands::visibility, enabled = !remote.busy)
-                }
+                ShareToggle(
+                    "Публичная ссылка",
+                    sheet.publicVisible,
+                    enabled = !remote.busy,
+                    change = commands::visibility,
+                )
                 ShareTextButton(
                     onClick = {
                         close()

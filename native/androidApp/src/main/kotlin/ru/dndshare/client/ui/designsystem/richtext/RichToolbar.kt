@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.dp
 import ru.dndshare.client.ui.designsystem.*
 
 @Composable
@@ -74,6 +75,18 @@ internal fun RichToolbar(
                         "h3" to "Заголовок 3",
                     )) ShareDropdownMenuItem(
                     text = { Text(title) },
+                    leadingIcon = {
+                        AppGlyph(
+                            when (key) {
+                                "strike" -> Glyph.Strikethrough
+                                "code" -> Glyph.Code
+                                "quote" -> Glyph.Quote
+                                "bullet" -> Glyph.List
+                                else -> Glyph.Heading
+                            },
+                            Modifier.size(18.dp),
+                        )
+                    },
                     onClick = {
                         more = false
                         format(key)
@@ -81,6 +94,7 @@ internal fun RichToolbar(
                 )
                 ShareDropdownMenuItem(
                     text = { Text("Ссылка") },
+                    leadingIcon = { AppGlyph(Glyph.Link, Modifier.size(18.dp)) },
                     onClick = {
                         more = false
                         link()
@@ -100,6 +114,17 @@ internal fun RichToolbar(
                 objects.forEach { value ->
                     ShareDropdownMenuItem(
                         text = { Text(value.label) },
+                        leadingIcon = {
+                            AppGlyph(
+                                when {
+                                    value.html.startsWith("<ol>") -> Glyph.ListOrdered
+                                    value.html.startsWith("<pre>") -> Glyph.Code
+                                    value.html.startsWith("<table>") -> Glyph.Table
+                                    else -> Glyph.Image
+                                },
+                                Modifier.size(18.dp),
+                            )
+                        },
                         onClick = {
                             more = false
                             insert(value)
@@ -114,6 +139,7 @@ internal fun RichToolbar(
                 }
                 ShareDropdownMenuItem(
                     text = { Text("Изменить встроенный элемент") },
+                    leadingIcon = { AppGlyph(Glyph.Edit, Modifier.size(18.dp)) },
                     onClick = {
                         more = false
                         editObject()

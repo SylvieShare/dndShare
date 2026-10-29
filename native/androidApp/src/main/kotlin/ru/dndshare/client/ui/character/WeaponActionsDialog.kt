@@ -209,4 +209,4 @@ internal fun WeaponOptionSwitch(
     selected: Boolean,
     enabled: Boolean,
     change: (Boolean) -> Unit,
-) = ShareToggle(title, selected, enabled, change)
+) = ShareToggle(title, selected, enabled, change = change)

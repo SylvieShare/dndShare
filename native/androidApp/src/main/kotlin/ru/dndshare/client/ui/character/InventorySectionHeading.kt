@@ -40,6 +40,7 @@ internal fun InventorySectionHeading(
                     add(
                         ShareMenuAction(
                             "Переименовать",
+                            Glyph.Edit,
                             { context.edit("inventory-section:$id") },
                             !busy,
                         )
@@ -48,12 +49,21 @@ internal fun InventorySectionHeading(
                         add(
                             ShareMenuAction(
                                 "Изменить порядок",
+                                Glyph.Move,
                                 { context.edit("reorder:inventory|$id") },
                                 !busy,
                             )
                         )
                     if (model["sections"].arrayValue().size > 1)
-                        add(ShareMenuAction("Удалить секцию", { remove(id) }, !busy, danger = true))
+                        add(
+                            ShareMenuAction(
+                                "Удалить секцию",
+                                Glyph.Trash,
+                                { remove(id) },
+                                !busy,
+                                danger = true,
+                            )
+                        )
                 }
             },
             trigger = { modifier, open ->

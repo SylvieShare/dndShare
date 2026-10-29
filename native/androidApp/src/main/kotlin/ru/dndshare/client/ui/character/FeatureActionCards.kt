@@ -43,6 +43,7 @@ internal fun FeatureActionCards() {
                         listOf(
                             ShareMenuAction(
                                 "Изменить порядок",
+                                Glyph.Move,
                                 { context.edit("reorder:actions|$type") },
                             )
                         ),
@@ -56,7 +57,13 @@ internal fun FeatureActionCards() {
                             "Действия: ${action.title}",
                             buildList {
                                 action.manualIndex?.let {
-                                    add(ShareMenuAction("Изменить", { context.edit("action:$it") }))
+                                    add(
+                                        ShareMenuAction(
+                                            "Изменить",
+                                            Glyph.Edit,
+                                            { context.edit("action:$it") },
+                                        )
+                                    )
                                 }
                                 action.definition["menu_effects"].arrayValue().forEachIndexed {
                                     index,
@@ -68,6 +75,7 @@ internal fun FeatureActionCards() {
                                                 effect.text("title").ifBlank {
                                                     "Применить последствие"
                                                 },
+                                                Glyph.Wand,
                                                 {
                                                     perform(
                                                         action,
@@ -89,6 +97,7 @@ internal fun FeatureActionCards() {
                                     add(
                                         ShareMenuAction(
                                             "Справочник",
+                                            Glyph.Book,
                                             { context.openItem(it.item.id) },
                                         )
                                     )

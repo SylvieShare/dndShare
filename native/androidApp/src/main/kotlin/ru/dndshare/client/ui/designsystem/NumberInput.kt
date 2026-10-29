@@ -30,7 +30,7 @@ fun ShareNumberInput(
 ) {
     val state = rememberShareInputState(value, change)
     val interactions = remember { MutableInteractionSource() }
-    val border = inputBorder(interactions, enabled)
+    val fill = inputFill(interactions, enabled)
     Row(
         Modifier.fillMaxWidth().heightIn(min = DesignTokens.Layout.TouchMin),
         verticalAlignment = Alignment.CenterVertically,
@@ -52,7 +52,7 @@ fun ShareNumberInput(
                                 DesignTokens.Layout.InputStepperWidth * 2
                     )
                     .heightIn(min = DesignTokens.Layout.NumberInputHeight)
-                    .inputSurface(border)
+                    .inputSurface(fill)
                     .semantics { contentDescription = label },
             textStyle =
                 fieldTextStyle.copy(

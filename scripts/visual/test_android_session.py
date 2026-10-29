@@ -22,7 +22,7 @@ class Device:
         if args[:2] == ('am', 'force-stop') or args[:2] == ('pm', 'clear'):
             self.resets.append(args)
         if args == ('input', 'keyevent', '4'):
-            self.screen = {'record': 'list', 'list': 'overview', 'dnd': 'characters', 'vtm': 'characters'}.get(self.screen, self.screen)
+            self.screen = {'record': 'list', 'list': 'overview', 'dnd': 'characters', 'vtm': 'characters', 'editor': 'dnd'}.get(self.screen, self.screen)
 
     def click(self, text=None, description=None):
         if description == 'Открыть меню':
@@ -33,6 +33,9 @@ class Device:
         elif text == 'База' or description == 'База':
             assert self.screen == 'dnd'
             self.section = 'base'
+        elif text == 'Статы' or description == 'Статы':
+            assert self.screen == 'dnd'
+            self.section = 'stats'
         elif text == 'Магия' or description == 'Магия':
             assert self.screen == 'dnd'
             self.section = 'magic'
@@ -50,7 +53,7 @@ class Device:
             if not self.cover_loaded:
                 self.images += 1
                 self.cover_loaded = True
-        elif text == 'Отмена' or description == 'Закрыть редактор':
+        elif text == 'Отмена':
             self.screen = 'dnd'
 
     def wait(self, text=None, description=None):
@@ -62,7 +65,7 @@ class Device:
 
 class AndroidSessionTest(unittest.TestCase):
     def test_one_login_for_sheet_handbook_vtm_and_combined_formats(self):
-        for states in (['sheet-magic'], ['sheet-stats', 'sheet-stat-editor'], ['vtm-base'], ['collections', 'menu', 'list', 'record'], MATRIX['states']):
+        for states in (['sheet-magic'], ['sheet-stat-editor'], ['sheet-stats', 'sheet-stat-editor'], ['vtm-base'], ['collections', 'menu', 'list', 'record'], MATRIX['states']):
             with self.subTest(states=states), tempfile.TemporaryDirectory() as tmp:
                 device = Device()
                 output = Path(tmp) / 'android'; output.mkdir()
