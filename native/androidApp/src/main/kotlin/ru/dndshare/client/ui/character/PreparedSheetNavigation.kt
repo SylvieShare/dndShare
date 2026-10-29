@@ -20,6 +20,7 @@ internal fun PreparedSheetHeader(
     backTitle: String,
     menu: (() -> Unit)? = null,
     navigationInHeader: Boolean = true,
+    actions: (@Composable () -> Unit)? = null,
 ) {
     CharacterSheetHeader(
         sheet,
@@ -32,6 +33,7 @@ internal fun PreparedSheetHeader(
         backTitle,
         menu,
         navigationInHeader,
+        actions,
     )
 }
 

@@ -13,7 +13,9 @@ from adb import COMPONENT, PACKAGE
 def input_value(device, expected=None):
     root = device.wait("Основное значение")
     fields = [node for node in root.iter("node") if node.get("class") == "android.widget.EditText"]
-    if len(fields) != 1 or expected is not None and fields[0].get("text") != str(expected):
+    named = [node for node in fields if node.get("content-desc") == "Основное значение"]
+    fields = named or fields[:1]
+    if not fields or expected is not None and fields[0].get("text") != str(expected):
         raise AssertionError(f"Expected one restored stat input {expected!r}; see {device.output}")
     return fields[0]
 
@@ -24,7 +26,7 @@ def set_stat_input(device, value):
     device.shell("input", "keyevent", "123")
     for _ in range(len(field.get("text", "")) + 2):
         device.shell("input", "keyevent", "67")
-    device.shell("input", "text", str(value))
+    if str(value): device.shell("input", "text", str(value))
     device.shell("input", "keyevent", "4")
     input_value(device, value)
 
@@ -79,12 +81,22 @@ def verify_form_restoration(device, url, fixture, stats):
         request(path + "/data", {"baseVersion": current["version"], "mutationId": str(uuid.uuid4()),
             "patches": [{"op": "set", "path": ["values", "STR", "value", "base"], "value": value}]}, "PATCH")
 
+    def wait_server(value):
+        deadline = time.monotonic() + 30
+        while request(path)["data"]["values"]["STR"]["value"]["base"] != value:
+            if time.monotonic() > deadline: raise AssertionError("Live stat input did not reach the server")
+            time.sleep(.2)
+
     set_stat_input(device, base + 1)
+    wait_server(base + 1)
+    if any(n.get("text") in ("Сохранить", "Отмена") for n in device.tree().iter("node")):
+        raise AssertionError("A live morph must not require explicit save/cancel")
     device.shell("wm", "size", "834x1100")
     input_value(device, base + 1)
+    set_stat_input(device, "")
     old_pid = device.shell("pidof", PACKAGE)
     device.shell("input", "keyevent", "3")
-    device.tree()  # Wait for the launcher and Activity.onStop to save Android state.
+    device.tree()
     device.shell("am", "kill", PACKAGE)
     deadline = time.monotonic() + 25
     while True:
@@ -96,36 +108,35 @@ def verify_form_restoration(device, url, fixture, stats):
     change_base(base + 2)
     reads = stats().get("requests", {}).get(path, 0)
     device.shell("am", "start", "-W", "-a", "android.intent.action.MAIN", "-c", "android.intent.category.LAUNCHER", "-f", "0x10200000", "-n", COMPONENT)
-    input_value(device, base + 1)
-    if device.shell("pidof", PACKAGE) == old_pid:
-        raise AssertionError("Restoration must run in a new Android process")
+    input_value(device, "")
+    if device.shell("pidof", PACKAGE) == old_pid: raise AssertionError("Restoration must start a new process")
     deadline = time.monotonic() + 25
     while stats().get("requests", {}).get(path, 0) <= reads:
-        if time.monotonic() > deadline: raise AssertionError("Restored sheet did not read the current server document")
+        if time.monotonic() > deadline: raise AssertionError("Restored sheet did not read the server")
         time.sleep(.2)
-    input_value(device, base + 1)
-    device.click(text="Сохранить")
+    set_stat_input(device, base + 3)
     device.wait("Этот показатель изменился")
-    input_value(device, base + 1)
     if request(path)["data"]["values"]["STR"]["value"]["base"] != base + 2:
-        raise AssertionError("Restored form overwrote a newer external change")
-    device.click(text="Отмена")
+        raise AssertionError("Restored draft overwrote a newer server value")
+    device.shell("input", "keyevent", "4")
     wait_absent(device, "Основное значение")
-    change_base(base)
+    status = next(n for n in device.tree().iter("node") if n.get("content-desc", "").startswith("Изменения остались в черновике"))
+    device.tap(status)
+    device.click(text="Версия сервера")
+    device.click(text="Загрузить")
+    deadline = time.monotonic() + 25
+    while any(n.get("text") == "Загрузить серверную версию?" for n in device.tree().iter("node")):
+        if time.monotonic() > deadline: raise AssertionError("Server reload did not finish")
+        time.sleep(.2)
+    current = request(path)
+    request(path + "/data", {"baseVersion": current["version"], "mutationId": str(uuid.uuid4()),
+        "patches": [{"op":"set","path":[key],"value":value} for key,value in original["data"].items()]}, "PATCH")
     device.shell("wm", "size", "390x900")
-    # wm returns before Activity recreation and Compose BackHandler registration.
-    # Wait for the new phone content before sending Back to the restored activity.
     device.wait(description="К списку персонажей")
     device.wait("СИЛА")
-    (device.output / "lifecycle-phone-before-back.xml").write_bytes(ET.tostring(device.tree(), encoding="utf-8"))
-    device.shell("input", "keyevent", "4")
-    device.wait(fixture["characters"][0]["name"])
-    device.click(text=fixture["characters"][0]["name"])
-    device.wait("СИЛА")
-    if request(path)["data"] != original["data"]:
-        raise AssertionError("Lifecycle smoke must restore the exact shared character data")
-    return {"foldResize": True, "systemProcessDeath": True, "inputRestored": base + 1,
-        "newerServerValueProtected": base + 2, "originalRestored": True, "realAPI": True}
+    if request(path)["data"] != original["data"]: raise AssertionError("Lifecycle smoke did not restore original data")
+    return {"autosaveWithoutButtons": True, "foldResize": True, "systemProcessDeath": True,
+        "invalidDraftRestored": True, "newerServerValueProtected": base + 2, "originalRestored": True, "realAPI": True}
 
 
 def verify_vtm_menu(device):

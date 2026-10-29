@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -156,8 +157,9 @@ private fun DndAbilityFace(
                     modifier =
                         Modifier.semantics { contentDescription = "${ability.title} — спасбросок" },
                     enabled = !presentation.expanded,
-                    color = WebPalette.Raised,
-                    border = BorderStroke(1.dp, if (proficient) color else WebPalette.Border),
+                    color =
+                        if (proficient) color.copy(alpha = .18f).compositeOver(WebPalette.Raised)
+                        else WebPalette.Raised,
                     shape = RoundedCornerShape(8.dp),
                 ) {
                     Row(
@@ -307,13 +309,13 @@ private fun DndAbilityFace(
                 Surface(
                     onClick = { skillActions = true },
                     enabled = !presentation.expanded,
-                    color = WebPalette.Raised,
+                    color =
+                        if (rank > 0)
+                            color
+                                .copy(alpha = if (rank > 1) .28f else .18f)
+                                .compositeOver(WebPalette.Raised)
+                        else WebPalette.Raised,
                     shape = RoundedCornerShape(if (compact) 9.dp else 7.dp),
-                    border =
-                        BorderStroke(
-                            1.dp,
-                            if (rank > 0) color.copy(alpha = .5f) else WebPalette.Border,
-                        ),
                 ) {
                     Box(
                         Modifier.sizeIn(minWidth = valueWidth, minHeight = valueHeight)

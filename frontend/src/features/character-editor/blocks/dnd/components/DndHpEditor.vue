@@ -47,7 +47,7 @@
       <summary><span>Настройка хитов</span><span v-if="manualBonuses.length" class="hpe-hint">Бонусов: {{ manualBonuses.length }}</span></summary>
       <div class="hpe-settings-body">
         <FormField label="База хитов">
-          <FormNumberInput :value="maximum.base" :min="0" :max="999" @change="setMaximumBase" />
+          <FormNumberInput live :value="maximum.base" :min="0" :max="999" @change="setMaximumBase" />
         </FormField>
         <div class="hpe-field">
           <h3 class="hpe-label">Ручные бонусы</h3>

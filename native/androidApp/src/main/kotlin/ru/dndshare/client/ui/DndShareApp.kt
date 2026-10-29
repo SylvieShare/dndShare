@@ -161,104 +161,107 @@ private fun AuthenticatedApp(
         val format = layoutFormat(maxWidth.value)
         val selectedPage = runCatching { AppPage.valueOf(page) }.getOrDefault(AppPage.Handbook)
         ShareMorphRoot {
-            pages.SaveableStateProvider("application-shell") {
-                AppNavigationShell(
-                    format,
-                    selectedPage,
-                    state,
-                    controller,
-                    navigate = {
-                        if (it == AppPage.CreateCharacter) create()
-                        else {
-                            focus.clearFocus()
-                            keyboard?.hide()
-                            characterHistory = emptyList()
-                            page = it.name
-                        }
-                    },
-                ) { openMenu ->
-                    CharacterDestination(characterUuid, characterHistory.size) {
-                        displayedUuid,
-                        active ->
-                        if (displayedUuid != null)
-                            pages.SaveableStateProvider("sheet:$displayedUuid") {
-                                CharacterSheetRoute(
-                                    displayedUuid,
-                                    state,
-                                    format,
-                                    images,
-                                    active,
-                                    close = { characterHistory = characterHistory.dropLast(1) },
-                                    replace = {
-                                        if (it != characterUuid)
-                                            characterHistory = characterHistory + it
-                                    },
-                                    api = controller.api,
-                                    icons = controller.inventoryIcons,
-                                    backTitle =
-                                        if (characterHistory.size > 1) "Назад" else "Персонажи",
-                                )
+            CompositionLocalProvider(
+                LocalHeaderConnection provides state.headerConnection(),
+                LocalHeaderRetry provides { controller.refresh(force = true) },
+            ) {
+                pages.SaveableStateProvider("application-shell") {
+                    AppNavigationShell(
+                        format,
+                        selectedPage,
+                        state,
+                        controller,
+                        navigate = {
+                            if (it == AppPage.CreateCharacter) create()
+                            else {
+                                focus.clearFocus()
+                                keyboard?.hide()
+                                characterHistory = emptyList()
+                                page = it.name
                             }
-                        else {
-                            AnimatedAppPage(selectedPage) { displayedPage ->
-                                pages.SaveableStateProvider(displayedPage.name) {
-                                    val header: @Composable () -> Unit = {
-                                        AppHeader(
-                                            format,
-                                            displayedPage,
-                                            state,
-                                            openMenu,
-                                            heading =
-                                                if (displayedPage == AppPage.Handbook)
-                                                    ({
-                                                        HandbookHeading(
-                                                            handbookHeading.type,
-                                                            images,
-                                                            handbookHeading::goHome,
-                                                        )
-                                                    })
-                                                else null,
-                                        )
-                                    }
-                                    val status: @Composable () -> Unit = {
-                                        ConnectionStatus(state) { controller.refresh(force = true) }
-                                    }
-                                    if (displayedPage == AppPage.Handbook) {
-                                        HandbookScreen(
-                                            state,
-                                            format,
-                                            fold,
-                                            images,
-                                            handbookHeading,
-                                            header,
-                                            status,
-                                        )
-                                    } else
-                                        ShareChromeLayout(
-                                            header = header,
-                                            subheader = {
-                                                Column {
-                                                    if (displayedPage == AppPage.Characters)
-                                                        CharacterListSubheader(create)
-                                                    status()
-                                                }
-                                            },
-                                        ) { padding ->
-                                            if (displayedPage == AppPage.Characters)
-                                                CharacterScreen(
-                                                    state,
-                                                    format,
-                                                    images,
-                                                    controller.api,
-                                                    refresh = { controller.refresh(force = true) },
-                                                    contentPadding = padding,
-                                                    open = { characterHistory = listOf(it) },
-                                                )
-                                            else
-                                                Box(Modifier.fillMaxSize().padding(padding)) {
-                                                    PlaceholderScreen(displayedPage)
-                                                }
+                        },
+                    ) { openMenu ->
+                        CharacterDestination(characterUuid, characterHistory.size) {
+                            displayedUuid,
+                            active ->
+                            if (displayedUuid != null)
+                                pages.SaveableStateProvider("sheet:$displayedUuid") {
+                                    CharacterSheetRoute(
+                                        displayedUuid,
+                                        state,
+                                        format,
+                                        images,
+                                        active,
+                                        close = { characterHistory = characterHistory.dropLast(1) },
+                                        replace = {
+                                            if (it != characterUuid)
+                                                characterHistory = characterHistory + it
+                                        },
+                                        api = controller.api,
+                                        icons = controller.inventoryIcons,
+                                        backTitle =
+                                            if (characterHistory.size > 1) "Назад" else "Персонажи",
+                                    )
+                                }
+                            else {
+                                AnimatedAppPage(selectedPage) { displayedPage ->
+                                    pages.SaveableStateProvider(displayedPage.name) {
+                                        val header: @Composable () -> Unit = {
+                                            AppHeader(
+                                                format,
+                                                displayedPage,
+                                                state,
+                                                openMenu,
+                                                retry = { controller.refresh(force = true) },
+                                                heading =
+                                                    if (displayedPage == AppPage.Handbook)
+                                                        ({
+                                                            HandbookHeading(
+                                                                handbookHeading.type,
+                                                                images,
+                                                                handbookHeading::goHome,
+                                                            )
+                                                        })
+                                                    else null,
+                                            )
                                         }
+                                        if (displayedPage == AppPage.Handbook) {
+                                            HandbookScreen(
+                                                state,
+                                                format,
+                                                fold,
+                                                images,
+                                                handbookHeading,
+                                                header,
+                                            )
+                                        } else
+                                            ShareChromeLayout(
+                                                header = header,
+                                                subheader = {
+                                                    Column {
+                                                        if (displayedPage == AppPage.Characters)
+                                                            CharacterListSubheader(create)
+                                                    }
+                                                },
+                                            ) { padding ->
+                                                if (displayedPage == AppPage.Characters)
+                                                    CharacterScreen(
+                                                        state,
+                                                        format,
+                                                        images,
+                                                        controller.api,
+                                                        refresh = {
+                                                            controller.refresh(force = true)
+                                                        },
+                                                        contentPadding = padding,
+                                                        open = { characterHistory = listOf(it) },
+                                                    )
+                                                else
+                                                    Box(Modifier.fillMaxSize().padding(padding)) {
+                                                        PlaceholderScreen(displayedPage)
+                                                    }
+                                            }
+                                    }
                                 }
                             }
                         }
@@ -267,30 +270,4 @@ private fun AuthenticatedApp(
             }
         }
     }
-}
-
-@Composable
-private fun ConnectionStatus(state: AppState, retry: () -> Unit) {
-    if (state.synchronizing) {
-        LinearProgressIndicator(Modifier.fillMaxWidth())
-        Text(
-            if (state.received > 0) "Синхронизация · получено " + state.received
-            else "Обновляем данные…",
-            Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
-    if (state.error != null)
-        Surface(color = MaterialTheme.colorScheme.errorContainer) {
-            Row(
-                Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(state.error, Modifier.weight(1f), style = MaterialTheme.typography.bodySmall)
-                ShareTextButton(onClick = retry, enabled = !state.synchronizing) {
-                    Text("Повторить")
-                }
-            }
-        }
 }

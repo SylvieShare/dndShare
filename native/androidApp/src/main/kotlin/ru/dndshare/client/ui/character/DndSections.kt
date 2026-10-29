@@ -23,14 +23,12 @@ internal fun DndSheetSection(section: SheetSection, format: LayoutFormat) {
                             verticalArrangement = Arrangement.spacedBy(14.dp),
                         ) {
                             DndIdentityCard(compactHealth = format == LayoutFormat.Phone)
-                            CharacterCampaignBadge()
                         }
                         Box(Modifier.weight(1f)) { DndUtilities() }
                     }
                 } else
                     Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
                         DndIdentityCard(compactHealth = format == LayoutFormat.Phone)
-                        CharacterCampaignBadge()
                         DndUtilities()
                     }
             }
@@ -72,7 +70,6 @@ internal fun DndWideSheet(
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
                 DndIdentityCard()
-                CharacterCampaignBadge()
                 SheetNavigation(
                     sections,
                     sections[pager.currentPage],

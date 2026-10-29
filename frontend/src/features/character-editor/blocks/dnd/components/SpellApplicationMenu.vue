@@ -20,7 +20,7 @@
           <RowActionItem v-else :icon="UserRound" :disabled="cannotApply(cast)" @click="apply(cast, ['self'], 0, close)">На себя</RowActionItem>
           <template v-if="othersAllowed">
             <fieldset v-if="maximum(cast) > 1" class="spell-dm-count" aria-label="Целей мастеру" :disabled="cast.disabled"><span>Целей мастеру</span>
-              <FormNumberInput :value="dmCount" @change="dmCount = $event" :min="0" :max="Math.max(0, maximum(cast) - selected.length)" />
+              <FormNumberInput live :value="dmCount" @change="dmCount = $event" :min="0" :max="Math.max(0, maximum(cast) - selected.length)" />
             </fieldset>
             <RowActionItem v-else :icon="Crown" :disabled="cannotApply(cast)" @click="apply(cast, [], 1, close)">Мастер — выберет цель</RowActionItem>
             <LoadingIndicator v-if="controller?.state.loading" label="Загрузка игроков" />

@@ -41,7 +41,7 @@ internal fun DndWeapons() {
                 }
             }
             if (context.canEdit)
-                ShareAddAction(
+                ShareDashedAction(
                     "+ Добавить оружие",
                     { context.edit("weapon:new") },
                     compact = true,

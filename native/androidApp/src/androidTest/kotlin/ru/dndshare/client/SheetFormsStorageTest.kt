@@ -129,4 +129,43 @@ class SheetFormsStorageTest {
             context.deleteDatabase(name)
         }
     }
+
+    @Test
+    fun liveCheckpointPreservesNewerInputAndRollsBackWithTheOutbox() = runTest {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val name = "live-checkpoint-${UUID.randomUUID()}.db"
+        var database = buildDatabase(Room.databaseBuilder<ClientDatabase>(context, name))
+        try {
+            var dao = database.characterSheets()
+            dao.put(CachedCharacterSheet("hero", "original", "old-outbox"))
+            dao.putForm(CachedSheetForm("hero", "live", "base-1", "latest-input"))
+            dao.checkpointForm(
+                CachedCharacterSheet("hero", "original", "accepted-outbox"),
+                CachedSheetForm("hero", "live", "base-2", "stale-input"),
+            )
+            assertEquals("latest-input", dao.form("hero", "live")?.inputs)
+            assertEquals("base-2", dao.form("hero", "live")?.baseline)
+            database.close()
+            BundledSQLiteDriver().open(context.getDatabasePath(name).absolutePath).use { connection
+                ->
+                connection.execSQL(
+                    "CREATE TRIGGER reject_checkpoint BEFORE UPDATE OF baseline ON character_sheet_forms BEGIN SELECT RAISE(ABORT,'test interruption'); END"
+                )
+            }
+            database = buildDatabase(Room.databaseBuilder<ClientDatabase>(context, name))
+            dao = database.characterSheets()
+            assertFails {
+                dao.checkpointForm(
+                    CachedCharacterSheet("hero", "original", "uncommitted-outbox"),
+                    CachedSheetForm("hero", "live", "base-3"),
+                )
+            }
+            assertEquals("accepted-outbox", dao.get("hero")?.draft)
+            assertEquals("base-2", dao.form("hero", "live")?.baseline)
+            assertEquals("latest-input", dao.form("hero", "live")?.inputs)
+        } finally {
+            database.close()
+            context.deleteDatabase(name)
+        }
+    }
 }

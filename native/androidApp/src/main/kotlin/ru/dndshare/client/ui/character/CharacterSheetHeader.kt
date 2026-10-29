@@ -32,11 +32,13 @@ internal fun CharacterSheetHeader(
     backTitle: String = "Персонажи",
     menu: (() -> Unit)? = null,
     navigationInHeader: Boolean = true,
+    actions: (@Composable () -> Unit)? = null,
 ) {
     ShareWorkspaceHeader(
         contentInset = if (format == LayoutFormat.Phone) 8.dp else 14.dp,
         maxContentWidth = DesignTokens.Layout.SheetMax,
         compact = format != LayoutFormat.Wide,
+        actions = actions,
         navigation =
             if (navigationInHeader && format == LayoutFormat.Tablet)
                 ({
@@ -52,13 +54,13 @@ internal fun CharacterSheetHeader(
             else null,
     ) {
         if (format == LayoutFormat.Wide && sheet?.templateName == "VTM20") {
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
                 Box(Modifier.weight(1f)) { SheetIdentity(sheet, format, close, backTitle, menu) }
                 SheetNavigation(sections, section, images, select, template = "VTM20")
                 Spacer(Modifier.weight(1f))
             }
         } else {
-            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 SheetIdentity(sheet, format, close, backTitle, menu)
             }
         }

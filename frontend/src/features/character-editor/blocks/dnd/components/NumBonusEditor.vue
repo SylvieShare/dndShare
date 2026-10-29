@@ -1,7 +1,7 @@
 <template>
   <EditorPanel :title="title">
     <FormField label="Основное значение">
-      <FormNumberInput :value="data.base" :min="min" :max="max" @change="setBase" />
+      <FormNumberInput live :value="data.base" :min="min" :max="max" @change="setBase" />
     </FormField>
     <slot></slot>
     <BonusList :bonuses="data.bonuses || []" @update:bonuses="setBonuses" />

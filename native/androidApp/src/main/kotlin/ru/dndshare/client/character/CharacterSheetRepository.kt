@@ -8,6 +8,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.JsonObject
 import ru.dndshare.client.data.CachedCharacterSheet
+import ru.dndshare.client.data.CachedSheetForm
 import ru.dndshare.client.data.CachedSheetSection
 import ru.dndshare.client.data.CharacterSheetDao
 import ru.dndshare.client.model.WireJson
@@ -132,11 +133,17 @@ class CharacterSheetRepository(
         metadata: List<kotlinx.serialization.json.JsonObject> = emptyList(),
         checkpoint: CachedSheetSection? = null,
         recordHistory: Boolean = checkpoint == null,
+        liveForm: CachedSheetForm? = null,
     ) =
         withContext(scope.coroutineContext) {
             lock(uuid).withLock {
                 // A restored UI can still contain an already accepted form ID.
                 if (formId != null && cache.form(uuid, formId) == null) return@withLock
+                if (liveForm != null && cache.form(uuid, liveForm.id) == null) return@withLock
+                require(
+                    liveForm == null ||
+                        liveForm.uuid == uuid && formId == null && checkpoint == null
+                )
                 val current = requireNotNull(cache.get(uuid)).snapshot()
                 require(current.sheet.userId == accountId) {
                     "Этот лист доступен только для просмотра."
@@ -144,6 +151,8 @@ class CharacterSheetRepository(
                 require(checkpoint == null || checkpoint.uuid == uuid && formId == null)
                 if (patches.isEmpty() && metadata.isEmpty()) {
                     if (checkpoint != null) cache.putSection(checkpoint)
+                    if (liveForm != null)
+                        cache.updateFormBaseline(uuid, liveForm.id, liveForm.baseline)
                     if (formId != null) cache.removeForm(uuid, formId)
                     return@withLock
                 }
@@ -176,6 +185,15 @@ class CharacterSheetRepository(
                             draft.cacheJson(),
                         ),
                         checkpoint,
+                    )
+                else if (liveForm != null)
+                    cache.checkpointForm(
+                        CachedCharacterSheet(
+                            uuid,
+                            WireJson.encodeToString(current.sheet),
+                            draft.cacheJson(),
+                        ),
+                        liveForm,
                     )
                 else if (formId == null) put(uuid, current.sheet, draft)
                 else

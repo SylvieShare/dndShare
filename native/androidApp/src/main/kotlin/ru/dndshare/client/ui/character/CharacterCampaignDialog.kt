@@ -19,9 +19,10 @@ internal fun CharacterCampaignDialog(
     selectSession: (String) -> Unit,
     close: () -> Unit,
     openCharacter: (String) -> Unit,
+    initialTab: String = "players",
 ) {
     val context = LocalCharacterSheet.current
-    var tab by remember { mutableStateOf("players") }
+    var tab by remember { mutableStateOf(initialTab) }
     var message by remember(ui.peer, ui.messagesSent) { mutableStateOf("") }
     val registry = remember { ShareFormInputs() }
     CompositionLocalProvider(LocalShareFormInputs provides registry) {

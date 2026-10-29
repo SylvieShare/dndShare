@@ -28,6 +28,12 @@ class CharacterSheetQueueTest {
             return 1
         }
 
+        override suspend fun updateFormBaseline(uuid: String, id: String, baseline: String): Int {
+            val current = forms[uuid]?.takeIf { it.id == id } ?: return 0
+            forms[uuid] = current.copy(baseline = baseline)
+            return 1
+        }
+
         override suspend fun putForm(form: CachedSheetForm) {
             forms[form.uuid] = form
         }

@@ -21,6 +21,7 @@ fun ShareWorkspaceHeader(
     maxContentWidth: Dp = DesignTokens.Layout.ContentMax,
     navigation: (@Composable () -> Unit)? = null,
     compact: Boolean = LocalConfiguration.current.screenWidthDp < DesignTokens.Layout.Desktop.value,
+    actions: (@Composable () -> Unit)? = null,
     content: @Composable RowScope.() -> Unit,
 ) {
     val managed = LocalChromeManaged.current
@@ -56,8 +57,10 @@ fun ShareWorkspaceHeader(
                     .padding(horizontal = contentInset, vertical = DesignTokens.Spacing.Xs),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(DesignTokens.Spacing.Small),
-                content = content,
-            )
+            ) {
+                content()
+                actions?.invoke()
+            }
             navigation?.let { tabs ->
                 androidx.compose.runtime.CompositionLocalProvider(
                     LocalChromeManaged provides true

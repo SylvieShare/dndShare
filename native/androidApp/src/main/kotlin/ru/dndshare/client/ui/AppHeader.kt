@@ -19,6 +19,7 @@ internal fun AppHeader(
     state: AppState,
     openMenu: () -> Unit,
     heading: (@Composable () -> Unit)? = null,
+    retry: () -> Unit = {},
 ) {
     ShareWorkspaceHeader(
         contentInset =
@@ -26,7 +27,8 @@ internal fun AppHeader(
                 LayoutFormat.Wide -> DesignTokens.Spacing.Page
                 LayoutFormat.Phone -> DesignTokens.Spacing.Small
                 else -> DesignTokens.Spacing.Large
-            }
+            },
+        actions = { HeaderConnectionWidget(state.headerConnection(), retry) },
     ) {
         if (format != LayoutFormat.Wide)
             IconButton(

@@ -4,7 +4,7 @@
   /* Frameless groups need distinguishable surfaces in both web and Compose. */
   --surface-raised: #34343e;
   --surface-active: #42424f;
-  --popover-bg: #2c2c34;
+  --popover-bg: var(--subheader);
   --text-muted: #a0a0ad;
   /* Long-form descriptions use an editorial face distinct from UI chrome. */
   --font-prose: "Literata", Georgia, "Times New Roman", serif;

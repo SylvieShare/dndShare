@@ -8,10 +8,10 @@
   </FormField>
   <FormField v-else label="Имя участника" vertical><FormTextInput :value="value.name" aria-label="Имя участника" placeholder="Имя участника" @update:value="update({ name: $event })" /></FormField>
   <div class="diary-combatant-fields">
-    <label>Количество<FormNumberInput :value="value.count" :min="1" :max="999" @change="update({ count: $event })" /></label>
+    <label>Количество<FormNumberInput live :value="value.count" :min="1" :max="999" @change="update({ count: $event })" /></label>
     <template v-if="value.source === 'custom'">
-      <label>Класс брони<FormNumberInput :value="value.ac" :min="0" :max="99" @change="update({ ac: $event })" /></label>
-      <label>HP<FormNumberInput :value="value.hp" :min="0" :max="9999" @change="update({ hp: $event })" /></label>
+      <label>Класс брони<FormNumberInput live :value="value.ac" :min="0" :max="99" @change="update({ ac: $event })" /></label>
+      <label>HP<FormNumberInput live :value="value.hp" :min="0" :max="9999" @change="update({ hp: $event })" /></label>
     </template>
   </div>
   <FormField label="Заметка" vertical><FormTextarea :value="value.desc" aria-label="Заметка об участнике" placeholder="Особенности или итог встречи" :rows="2" :maxlength="2000" @update:value="update({ desc: $event })" /></FormField>

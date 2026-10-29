@@ -30,7 +30,7 @@
             @update:modelValue="setAuto"
           />
           <FormField v-if="stored.auto === false" label="Значение">
-            <FormNumberInput :value="stored.v" :min="0" :max="20" @change="setV" />
+            <FormNumberInput live :value="stored.v" :min="0" :max="20" @change="setV" />
           </FormField>
         </EditorSection>
         <EditorSection title="Бонусы">

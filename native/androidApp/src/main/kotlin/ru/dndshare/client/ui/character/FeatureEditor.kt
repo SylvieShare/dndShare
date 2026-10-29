@@ -354,7 +354,7 @@ internal fun BonusFields(form: FeatureFormScope) {
             }
         }
     }
-    ShareAddAction(
+    ShareDashedAction(
         "Добавить бонус",
         onClick = {
             form.input(

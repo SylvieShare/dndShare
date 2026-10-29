@@ -31,6 +31,28 @@ internal class SheetEditorController(
     private var operation: Job? = null
     private val persistence = Mutex()
     private var inputWrite: Job? = null
+    var liveContext: (() -> LiveStatContext)? = null
+    private val live =
+        SheetLiveStats(
+            uuid,
+            cache,
+            sheets,
+            scope,
+            workDispatcher,
+            { mutable.value },
+            { liveContext?.invoke() },
+            { inputWrite?.join() },
+            ::persist,
+        )
+
+    init {
+        scope.launch {
+            state
+                .map { it?.fields?.copy(error = null) }
+                .distinctUntilChanged()
+                .collect { if (mutable.value?.let(live::supports) == true) live.request() }
+        }
+    }
 
     init {
         operation = scope.launch {
@@ -98,6 +120,23 @@ internal class SheetEditorController(
         operation = scope.launch {
             loading.value = true
             try {
+                val retained =
+                    if (dndAbilities.any { it.id == target })
+                        cache.openForms().lastOrNull {
+                            it.uuid == uuid &&
+                                runCatching {
+                                        WireJson.decodeFromString<SheetFormFields>(it.inputs)
+                                            .target == target
+                                    }
+                                    .getOrDefault(false)
+                        }
+                    else null
+                if (retained != null) {
+                    val fields = WireJson.decodeFromString<SheetFormFields>(retained.inputs)
+                    val original = WireJson.decodeFromString<CharacterSheet>(retained.baseline)
+                    persist(SheetEditorState(fields, original))
+                    return@launch
+                }
                 val initial = initialForm(target, baseline, items, sessionUuid)
                 val fields = if (seedInput == null) initial else initial.copy(input = seedInput)
                 val encoded = withContext(workDispatcher) { WireJson.encodeToString(baseline) }
@@ -115,6 +154,11 @@ internal class SheetEditorController(
     }
 
     private fun persist(editor: SheetEditorState) {
+        if (
+            editor.fields.error == null &&
+                failures.value?.startsWith("Изменения остались в черновике") == true
+        )
+            failures.value = null
         val encoded = WireJson.encodeToString(editor.fields)
         saved[KEY] =
             if (encoded.length <= 8_000) encoded
@@ -175,25 +219,47 @@ internal class SheetEditorController(
     fun dismiss() {
         val current = mutable.value ?: return
         if (current.saving || operation?.isActive == true) return
+        mutable.value = current.copy(saving = true)
         operation = scope.launch {
             try {
+                val accepted = if (live.supports(current)) live.flush() else LiveStatResult.Saved
+                if (
+                    accepted == LiveStatResult.Failed &&
+                        failures.value?.startsWith("Не удалось сохранить ввод") == true
+                ) {
+                    mutable.value = mutable.value?.copy(saving = false)
+                    return@launch
+                }
                 inputWrite?.join()
-                cache.removeForm(uuid, current.fields.id)
+                if (accepted == LiveStatResult.Saved) cache.removeForm(uuid, current.fields.id)
+                else
+                    failures.value =
+                        "Изменения остались в черновике: " +
+                            (mutable.value?.fields?.error ?: "проверьте значения")
                 saved[KEY] = null
                 mutable.value = null
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (_: Exception) {
                 persist(
-                    current.copy(
+                    (mutable.value ?: current).copy(
+                        saving = false,
                         fields =
                             current.fields.copy(
                                 error = "Не удалось закрыть форму. Повторите попытку."
-                            )
+                            ),
                     )
                 )
             }
         }
+    }
+
+    suspend fun discardDrafts() = live.discard {
+        inputWrite?.join()
+        cache.openForms().filter { it.uuid == uuid }.forEach { cache.removeForm(uuid, it.id) }
+        mutable.value = null
+        saved[KEY] = null
+        failures.value = null
     }
 
     fun submit(

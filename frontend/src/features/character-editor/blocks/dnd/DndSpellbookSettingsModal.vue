@@ -35,11 +35,11 @@
     <EditorSection v-if="showCastingConfig" title="Бонусы">
       <div class="ssm-bonus">
         <span class="ssm-bonus-label">Спасбросок</span>
-        <FormNumberInput :value="saveBonus" @change="$emit('set-save-bonus', $event)" />
+        <FormNumberInput live :value="saveBonus" @change="$emit('set-save-bonus', $event)" />
       </div>
       <div class="ssm-bonus">
         <span class="ssm-bonus-label">Атака заклинаний</span>
-        <FormNumberInput :value="attackBonus" @change="$emit('set-attack-bonus', $event)" />
+        <FormNumberInput live :value="attackBonus" @change="$emit('set-attack-bonus', $event)" />
       </div>
     </EditorSection>
 
@@ -53,7 +53,7 @@
       <div class="ssm-grid">
         <div v-for="sl in slots" :key="sl.level" class="ssm-cell">
           <span class="ssm-lvl">{{ sl.level }} круг</span>
-          <FormNumberInput :value="sl.total" :min="0" @change="$emit('change', editingRest, sl.level, $event)" />
+          <FormNumberInput live :value="sl.total" :min="0" @change="$emit('change', editingRest, sl.level, $event)" />
         </div>
       </div>
     </EditorSection>

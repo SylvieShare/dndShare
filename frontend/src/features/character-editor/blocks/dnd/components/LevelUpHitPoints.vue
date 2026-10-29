@@ -8,7 +8,7 @@
     <MultiToggle :options="modes" :model-value="hp.hpMode" @update:model-value="hp.setHpMode" />
     <div v-if="hp.hpMode === 'manual'" class="lu-health-manual">
       <FormField label="Итоговый прирост" hint="С учётом модификатора Телосложения и договорённостей с мастером.">
-        <FormNumberInput :value="hp.hpManual ?? hp.hpAvg" :min="1" :max="99" @change="hp.hpManual = $event" />
+        <FormNumberInput live :value="hp.hpManual ?? hp.hpAvg" :min="1" :max="99" @change="hp.hpManual = $event" />
       </FormField>
     </div>
     <template v-else>

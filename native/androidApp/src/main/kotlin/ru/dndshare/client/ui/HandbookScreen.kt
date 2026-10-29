@@ -22,7 +22,6 @@ internal fun HandbookScreen(
     images: ImageLoader,
     heading: HandbookHeadingState,
     header: @Composable () -> Unit,
-    status: @Composable () -> Unit,
 ) {
     val cache = state.repository?.cache ?: return
     key(state.sourceId, state.editionId) {
@@ -94,7 +93,6 @@ internal fun HandbookScreen(
             header = {
                 Column {
                     header()
-                    status()
                 }
             },
             subheader = {

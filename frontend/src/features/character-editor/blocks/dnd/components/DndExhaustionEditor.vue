@@ -28,7 +28,7 @@
     <template v-else>
       <div class="exh-cfg-max">
         <span class="exh-cfg-label">Максимальный уровень</span>
-        <FormNumberInput :value="max" :min="1" :max="20" @change="setMax" />
+        <FormNumberInput live :value="max" :min="1" :max="20" @change="setMax" />
       </div>
       <div class="exh-cfg-list">
         <div v-for="(effect, index) in effects" :key="index" class="exh-cfg-row">

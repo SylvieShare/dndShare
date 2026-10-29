@@ -85,6 +85,7 @@ internal fun CharacterSheetScreen(
                                 close,
                                 backTitle,
                                 navigationInHeader = false,
+                                actions = { SheetHeaderWidgets(ui, model, format) },
                                 menu =
                                     if (sheet?.templateName == "VTM20") ({ model.edit("menu") })
                                     else null,
@@ -104,7 +105,7 @@ internal fun CharacterSheetScreen(
                                             template = sheet.templateName,
                                         )
                                     }
-                                SheetStatusPanels(ui, model, sheet != null && !canEdit)
+                                SheetStatusPanels(sheet != null && !canEdit)
                             }
                         },
                     ) { chromePadding ->
@@ -282,7 +283,7 @@ internal fun CharacterSheetScreen(
                                                     model.dismissOverlay()
                                                     model.rolls.spell(key, options)
                                                 }
-                                            } else if (target == "campaign")
+                                            } else if (target.startsWith("campaign"))
                                                 CharacterCampaignDialog(
                                                     ui.remote,
                                                     ui.campaign,
@@ -290,6 +291,7 @@ internal fun CharacterSheetScreen(
                                                     model.remote::selectSession,
                                                     model::dismissOverlay,
                                                     model.remote::openCharacter,
+                                                    initialTab = if (target.endsWith(":events")) "events" else "players",
                                                 )
                                             else
                                                 SheetInformationDialog(
@@ -366,7 +368,6 @@ internal fun CharacterSheetScreen(
                     ui.editor,
                     model::dismissEditor,
                     model::number,
-                    model::submitEditor,
                     model::input,
                     model::formInput,
                     ui.content.items,

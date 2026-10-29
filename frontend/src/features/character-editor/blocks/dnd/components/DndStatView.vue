@@ -229,20 +229,20 @@ onBeforeUnmount(hideTooltip)
   align-items: center;
   gap: 5px;
   background: var(--surface-raised);
-  border: 1px solid var(--border);
+  border: 0;
   border-radius: 8px;
   padding: 3px 8px 3px 6px;
   user-select: none;
   cursor: pointer;
-  transition: border-color 0.15s;
+  transition: background-color 0.15s;
   flex-shrink: 0;
   box-sizing: border-box;
   min-height: var(--layout-sheet-value-height);
   min-width: calc(var(--layout-sheet-value-width) + 12px);
   justify-content: center;
 }
-@media (hover: hover) { .save-chip:hover { border-color: var(--border-strong); } }
-.save-chip-active { border-color: var(--sc, var(--accent)); }
+@media (hover: hover) { .save-chip:hover { background: var(--surface-active); } }
+.save-chip-active { background: color-mix(in srgb, var(--sc, var(--accent)) 18%, var(--surface-raised)); }
 
 .save-label {
   color: var(--text-muted);
@@ -321,7 +321,7 @@ onBeforeUnmount(hideTooltip)
   box-sizing: border-box;
   min-height: var(--layout-sheet-value-height);
   background: var(--surface-raised);
-  border: 1px solid var(--border);
+  border: 0;
   border-radius: 7px;
   padding: 2px 7px 3px;
   color: var(--text-2);
@@ -334,9 +334,9 @@ onBeforeUnmount(hideTooltip)
   cursor: pointer;
   transition: border-color 0.12s, background 0.12s;
 }
-.skill-chip-active { color: var(--text-1); border-color: color-mix(in srgb, var(--sc, var(--accent)) 50%, transparent); }
-.skill-chip-master { border-width: 2px; border-color: color-mix(in srgb, var(--sc, var(--accent)) 75%, transparent); }
-@media (hover: hover) { .skill-chip:hover { border-color: var(--accent); background: var(--surface-active); } }
+.skill-chip-active { color: var(--text-1); background: color-mix(in srgb, var(--sc, var(--accent)) 18%, var(--surface-raised)); }
+.skill-chip-master { background: color-mix(in srgb, var(--sc, var(--accent)) 28%, var(--surface-raised)); }
+@media (hover: hover) { .skill-chip:hover { background: var(--surface-active); } }
 
 .skill-tooltip-breakdown { display: grid; gap: 6px; width: min(100%, 340px); min-width: 0; margin-left: auto; }
 .skill-tooltip-row { display: grid; grid-template-columns: minmax(0, 1fr) 3.25ch; align-items: baseline; column-gap: 12px; color: var(--text-muted); font-size: 11px; line-height: 1.25; }

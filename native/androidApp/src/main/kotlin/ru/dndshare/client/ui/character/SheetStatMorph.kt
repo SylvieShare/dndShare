@@ -3,7 +3,6 @@ package ru.dndshare.client.ui.character
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.json.JsonObject
@@ -19,7 +18,6 @@ internal fun SheetStatMorph(
     editor: SheetEditorState?,
     close: () -> Unit,
     number: (SheetNumberField, String) -> Unit,
-    submit: () -> Unit,
     input: (String, kotlinx.serialization.json.JsonElement) -> Unit,
     readInput: () -> JsonObject,
     items: Map<Long, ru.dndshare.client.model.CatalogueItem>,
@@ -37,15 +35,14 @@ internal fun SheetStatMorph(
             current?.fields?.target,
             ability?.title ?: "Характеристика",
             current?.saving != true,
-            close,
+            {
+                inputs.flush()
+                close()
+            },
             editor = {
                 val focus = androidx.compose.ui.platform.LocalFocusManager.current
                 val keyboard = androidx.compose.ui.platform.LocalSoftwareKeyboardController.current
-                val dismiss = {
-                    focus.clearFocus()
-                    keyboard?.hide()
-                    close()
-                }
+
                 if (shown != null && ability != null)
                     Column(
                         Modifier.fillMaxWidth().padding(20.dp),
@@ -64,25 +61,6 @@ internal fun SheetStatMorph(
                         )
                         shown.fields.error?.let {
                             Text(it, color = WebPalette.Danger, style = ShareTypography.context)
-                        }
-                        Row(
-                            Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-                        ) {
-                            ShareTextButton(onClick = dismiss, enabled = !shown.saving) {
-                                Text("Отмена")
-                            }
-                            ShareButton(
-                                onClick = {
-                                    focus.clearFocus()
-                                    keyboard?.hide()
-                                    inputs.flush()
-                                    submit()
-                                },
-                                enabled = !shown.saving,
-                            ) {
-                                Text(if (shown.saving) "Сохраняем…" else "Сохранить")
-                            }
                         }
                     }
             },

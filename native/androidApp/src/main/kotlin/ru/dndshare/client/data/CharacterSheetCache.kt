@@ -87,6 +87,17 @@ interface CharacterSheetDao {
     @Query("DELETE FROM character_sheet_forms WHERE uuid=:uuid AND id=:id")
     suspend fun removeForm(uuid: String, id: String)
 
+    @Query("UPDATE character_sheet_forms SET baseline=:baseline WHERE uuid=:uuid AND id=:id")
+    suspend fun updateFormBaseline(uuid: String, id: String, baseline: String): Int
+
+    @Transaction
+    suspend fun checkpointForm(sheet: CachedCharacterSheet, form: CachedSheetForm) {
+        require(sheet.uuid == form.uuid)
+        put(sheet)
+        // Preserve the newest input writer, including edits made during this transaction.
+        updateFormBaseline(form.uuid, form.id, form.baseline)
+    }
+
     @Transaction
     suspend fun acceptForm(sheet: CachedCharacterSheet, id: String) {
         put(sheet)

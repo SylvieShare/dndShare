@@ -6,7 +6,7 @@
         <strong>{{ timing }} · {{ ability }}</strong>
         <p v-if="rule.condition">{{ rule.condition }}</p>
         <FormField v-if="!rule.dc && (!dc || instance.source?.kind === 'manual')" label="Сложность" title="Сохраняется от заклинателя при наложении. Для эффекта, добавленного вручную, задайте Сл источника.">
-          <FormNumberInput :value="dc" :min="1" :max="100" @change="setDC" />
+          <FormNumberInput live :value="dc" :min="1" :max="100" @change="setDC" />
         </FormField>
         <ToggleSwitch v-if="rule.condition" v-model="confirmed" label="Условия выполнены" />
       </div>

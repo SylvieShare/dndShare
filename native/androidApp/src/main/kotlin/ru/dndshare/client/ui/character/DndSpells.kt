@@ -117,7 +117,7 @@ internal fun DndSpells() {
                                 color = WebPalette.TextMuted,
                             )
                         }
-                        ShareAddAction(
+                        ShareDashedAction(
                             "+ Найти заклинание…",
                             { context.edit("spell:${source.text("key")}|new") },
                         )

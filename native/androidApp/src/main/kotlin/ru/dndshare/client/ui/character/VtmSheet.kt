@@ -27,7 +27,6 @@ internal fun VtmSheetSection(section: SheetSection, format: LayoutFormat) {
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         VtmIdentity(format)
-                        CharacterCampaignBadge()
                     }
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(20.dp)) {
                         VtmStats()
@@ -37,7 +36,6 @@ internal fun VtmSheetSection(section: SheetSection, format: LayoutFormat) {
                 }
             else {
                 VtmIdentity(format)
-                CharacterCampaignBadge()
             }
         }
         SheetSection.Stats -> VtmStats()

@@ -16,6 +16,7 @@ data class CharacterSheetUiState(
     val editor: SheetEditorState? = null,
     val restoringEditor: Boolean = false,
     val loadError: String? = null,
+    val connecting: Boolean = false,
     val saveMessage: String? = null,
     val journal: SheetJournalState = SheetJournalState(),
     val remote: SheetRemoteState = SheetRemoteState(),

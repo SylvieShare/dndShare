@@ -29,7 +29,7 @@
               aria-label="Подкласс" placeholder="Без подкласса" @update:model-value="changeSubclass(row, $event)" />
           </FormField>
           <FormField label="Уровень класса">
-            <FormNumberInput :value="row.level" :min="1" :max="20" @change="row.level = $event" />
+            <FormNumberInput live :value="row.level" :min="1" :max="20" @change="row.level = $event" />
           </FormField>
         </BaseTile>
         <AddButton block @click="add">Добавить класс</AddButton>

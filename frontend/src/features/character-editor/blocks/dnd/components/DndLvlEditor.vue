@@ -16,7 +16,7 @@
 
     <ActionButton variant="secondary" @click="$emit('manual')">Изменить уровни вручную</ActionButton>
     <FormField label="Опыт">
-      <FormNumberInput :value="data.exp || 0" :min="0" :max="355000" @change="set('exp', $event)" />
+      <FormNumberInput live :value="data.exp || 0" :min="0" :max="355000" @change="set('exp', $event)" />
     </FormField>
   </EditorPanel>
   <ConfirmDialog

@@ -33,7 +33,7 @@ const autoModeLabel = computed(() => ({
 <style scoped>
 .rm-control { display: flex; flex-direction: column; gap: 5px; }
 .rm-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
-.rm-options button { min-width: 0; border: 1px solid var(--border); border-radius: 7px; padding: 6px 4px; background: var(--surface-raised); color: var(--text-muted); font: inherit; font-size: 10px; cursor: pointer; }
-.rm-options button.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface-raised)); color: var(--accent); font-weight: 700; }
+.rm-options button { min-width: 0; border: var(--control-border-width) solid var(--border); border-radius: 7px; padding: 6px 4px; background: var(--surface-raised); color: var(--text-muted); font: inherit; font-size: 10px; cursor: pointer; }
+.rm-options button.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 18%, var(--surface-raised)); color: var(--accent-soft); font-weight: 700; }
 .rm-control small { color: var(--text-muted); font-size: 10px; line-height: 1.4; }
 </style>

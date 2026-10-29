@@ -89,7 +89,7 @@ internal fun DndIdentityCard(compactHealth: Boolean = false) {
                     }
                 }
                 Box(Modifier.fillMaxWidth().padding(start = 15.dp, end = 6.dp, bottom = 15.dp)) {
-                    ShareAddAction(
+                    ShareDashedAction(
                         "+ Состояние",
                         { context.edit("statuses") },
                         compact = true,

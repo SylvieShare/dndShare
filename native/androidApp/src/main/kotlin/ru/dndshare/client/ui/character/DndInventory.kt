@@ -88,7 +88,7 @@ private fun InventoryContent() {
         )
         if (context.canEdit)
             Row(Modifier.padding(top = 4.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                ShareAddAction(
+                ShareDashedAction(
                     "+ Добавить секцию",
                     { context.edit("inventory-section:new") },
                     modifier = Modifier.weight(1f),

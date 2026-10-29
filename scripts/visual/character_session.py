@@ -80,6 +80,24 @@ def session_actions(device, root, url, output, fixture, stats):
         build_install(device,root,url,output)
         device.shell('wm','density','160');device.shell('wm','size','390x900');login(device,fixture)
         click('Открыть меню',True);click('Персонажи');click('PartyHero')
+        # The session entry now lives in the header; verify all formats before the action flow.
+        for name,width,height in [('phone',390,900),('tablet',834,1100),('wide',1920,1000)]:
+            device.shell('wm','size',f'{width}x{height}')
+            tree=device.wait('Parity Session')
+            import re
+            import xml.etree.ElementTree as ET
+            nodes=[n for n in tree.iter('node') if n.get('text')=='Parity Session']
+            top=min(int(re.findall(r'\d+',n.get('bounds'))[1]) for n in nodes)
+            if top>180:raise AssertionError('Session entry must be in the header')
+            device.wait(description='Игроки: 2')
+            (output/f'session-header-{name}.png').write_bytes(device.pixels())
+            (output/f'session-header-{name}.xml').write_bytes(ET.tostring(tree,encoding='utf-8'))
+            click('Игроки: 2',True);device.wait('Чат и вызовы');device.shell('input','keyevent','4')
+            click('События: 0',True);device.wait('События')
+            if any(n.get('text')=='Чат и вызовы' for n in device.tree().iter('node')):
+                raise AssertionError('Events header action opened the player tab')
+            device.shell('input','keyevent','4')
+        device.shell('wm','size','390x900')
         click('Parity Session');click('Чат и вызовы')
         device.wait('Сообщение');text('HelloPeer');click('Отправить')
         def conversations():return request(peer,f'/api/char/{peer_uuid}/interactions?sessionUuid={session}&peer={own}')['events']

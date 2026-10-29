@@ -150,7 +150,7 @@ function update(field, value) {
   flex: 1;
   min-width: 0;
   background: var(--surface-raised);
-  border: 1px solid var(--accent);
+  border: 0;
   border-radius: 8px;
   color: var(--text-1);
   font: inherit;
@@ -162,14 +162,14 @@ function update(field, value) {
 .sk-rename::placeholder { color: var(--text-muted); font-weight: 400; }
 
 .sk-prof-row { display: flex; gap: 6px; }
-.sk-source { padding: 7px 9px; border: 1px solid var(--border); border-radius: 8px; color: var(--text-muted); font-size: 10px; }
+.sk-source { padding: 7px 9px; border: 0; border-radius: 8px; color: var(--text-muted); font-size: 10px; }
 
 .sk-prof-btn {
   flex: 1;
   height: 32px;
   border-radius: 7px;
-  border: 1px solid var(--border-strong);
-  background: transparent;
+  border: 0;
+  background: var(--surface-raised);
   color: var(--text-muted);
   font: inherit;
   font-size: 12px;

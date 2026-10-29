@@ -10,7 +10,7 @@
               <template #leading="{ row }"><strong>×{{ row.count }}</strong></template>
               <template #description="{ row }"><small v-if="row.duration">{{ statusDuration(row.duration) }}</small></template>
             </HandbookReferenceRows>
-            <label v-if="choice?.choose_count && choice.outputs?.length === 1" class="creation-quantity">Количество<FormNumberInput :value="quantity || maximum(cast.castLevel)" :min="1" :max="maximum(cast.castLevel)" @change="quantity = $event" /></label>
+            <label v-if="choice?.choose_count && choice.outputs?.length === 1" class="creation-quantity">Количество<FormNumberInput live :value="quantity || maximum(cast.castLevel)" :min="1" :max="maximum(cast.castLevel)" @change="quantity = $event" /></label>
             <template v-if="choice?.condition"><p>{{ choice.condition }}</p><ToggleSwitch v-model="conditionsMet" label="Условия выполнены" /></template>
             <p v-if="controller?.state.error" role="alert" class="creation-error">{{ controller.state.error }}</p>
             <ActionButton :disabled="cast.disabled || (choice?.condition && !conditionsMet)" @click="create(cast, close)">Создать в рюкзаке</ActionButton>

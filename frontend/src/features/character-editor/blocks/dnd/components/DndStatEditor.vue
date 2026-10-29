@@ -3,7 +3,7 @@
     <!-- ── Значение характеристики ── -->
     <EditorSection title="Значение">
       <FormField label="Основное значение">
-        <FormNumberInput :value="baseData.base" @change="setBase" />
+        <FormNumberInput live :value="baseData.base" @change="setBase" />
       </FormField>
       <BonusList :bonuses="baseData.bonuses || []" @update:bonuses="setBaseBonuses" />
     </EditorSection>
@@ -132,7 +132,7 @@ function onAddSubmit() {
   gap: 8px;
   width: 100%;
   background: var(--surface-raised);
-  border: 1px solid var(--border);
+  border: 0;
   border-radius: 9px;
   padding: 8px 12px;
   cursor: pointer;
@@ -140,14 +140,14 @@ function onAddSubmit() {
   transition: border-color 0.15s, background 0.15s;
   text-align: left;
 }
-.se-prof-toggle:hover { border-color: var(--border-strong); }
-.se-prof-on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--surface-raised)); }
+.se-prof-toggle:hover { background: var(--surface-active); }
+.se-prof-on { background: color-mix(in srgb, var(--accent) 18%, var(--surface-raised)); }
 
 .se-prof-dot {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  border: 1.5px solid var(--border-strong);
+  border: 0; background: var(--text-muted);
   flex-shrink: 0;
   transition: background 0.15s, border-color 0.15s;
 }
@@ -157,7 +157,7 @@ function onAddSubmit() {
 .se-prof-on .se-prof-label { color: var(--text-1); }
 .se-prof-badge { font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.04em; }
 .se-prof-on .se-prof-badge { color: var(--accent); }
-.se-readonly-source { padding: 7px 9px; border: 1px solid var(--border); border-radius: 8px; color: var(--text-muted); font-size: 10px; }
+.se-readonly-source { padding: 7px 9px; border: 0; border-radius: 8px; color: var(--text-muted); font-size: 10px; }
 
 /* ── Skill rows ── */
 .se-skill-row {
@@ -166,7 +166,7 @@ function onAddSubmit() {
   gap: 8px;
   width: 100%;
   background: var(--surface-raised);
-  border: 1px solid var(--border);
+  border: 0;
   border-radius: 8px;
   padding: 7px 10px;
   cursor: pointer;
@@ -218,7 +218,7 @@ function onAddSubmit() {
   flex: 1;
   min-width: 0;
   background: var(--surface-raised);
-  border: 1px solid var(--border-strong);
+  border: 0;
   border-radius: 8px;
   color: var(--text-1);
   font-size: 13px;

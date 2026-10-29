@@ -1,7 +1,7 @@
 <template>
   <AppModalFrame :title="title || 'Значение'" @close="$emit('close')">
     <FormField label="Основное значение">
-      <FormNumberInput :value="data.base" @change="setBase" />
+      <FormNumberInput live :value="data.base" @change="setBase" />
     </FormField>
     <BonusList :bonuses="data.bonuses || []" @update:bonuses="v => emit('change', { ...data, bonuses: v })" />
     <slot />

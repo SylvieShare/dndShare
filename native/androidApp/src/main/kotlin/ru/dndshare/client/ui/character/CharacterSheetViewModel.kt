@@ -80,6 +80,8 @@ internal class CharacterSheetViewModel(
             accountId = accountId,
         )
     private val loadError = MutableStateFlow<String?>(null)
+    private val pollError = MutableStateFlow<String?>(null)
+    private val connecting = MutableStateFlow(false)
     private val journalController =
         SheetJournalController(uuid, sheetCache, services, viewModelScope)
     private val journal = journalController.state
@@ -111,8 +113,13 @@ internal class CharacterSheetViewModel(
             ui.copy(campaign = campaign, commands = commands, roll = roll)
         }
     private val messages =
-        combine(loadError, editor.error, sheets.message(uuid)) { load, form, save ->
-            (load ?: form) to save
+        combine(loadError, editor.error, sheets.message(uuid), pollError, connecting) {
+            load,
+            form,
+            save,
+            poll,
+            busy ->
+            Triple(load ?: form ?: poll, save, busy)
         }
     val uiState =
         combine(snapshot, content.state, sessionPresentation, messages) {
@@ -125,11 +132,19 @@ internal class CharacterSheetViewModel(
                     content = content,
                     loadError = messages.first,
                     saveMessage = messages.second,
+                    connecting = messages.third,
                 )
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), CharacterSheetUiState())
 
     init {
+        editor.liveContext = {
+            LiveStatContext(
+                content.state.value.items,
+                content.state.value.metadata,
+                remote.state.value.sessionUuid,
+            )
+        }
         refresh()
         viewModelScope.launch {
             if (snapshot.filterNotNull().first().displayed.templateName == "DND5")
@@ -259,7 +274,8 @@ internal class CharacterSheetViewModel(
                 sheet.userId == accountId
         )
             navigate { it.copy(overlay = target) }
-        else if (target in setOf("menu", "campaign")) navigate { it.copy(overlay = target) }
+        else if (target == "menu" || target.startsWith("campaign"))
+            navigate { it.copy(overlay = target) }
         else if (sheet.userId == accountId) {
             navigate { it.copy(overlay = null) }
             val seed =
@@ -388,12 +404,16 @@ internal class CharacterSheetViewModel(
         if (refreshJob?.isActive == true) return
         refreshJob = viewModelScope.launch {
             loadError.value = null
+            pollError.value = null
+            connecting.value = true
             try {
                 sheets.refresh(uuid)
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (error: Exception) {
                 loadError.value = error.message ?: "Не удалось загрузить лист персонажа."
+            } finally {
+                connecting.value = false
             }
         }
     }
@@ -419,12 +439,27 @@ internal class CharacterSheetViewModel(
     }
 
     suspend fun poll() {
-        remote.poll()
-        campaign.reload()
-        journalController.poll(
-            navigation.value.sectionName == SheetSection.Journal.name,
-            editor.state.value != null,
-        )
+        val reconnect = pollError.value != null
+        if (reconnect) {
+            connecting.value = true
+            pollError.value = null
+        }
+        try {
+            remote.poll()
+            campaign.reload()
+            journalController.poll(
+                navigation.value.sectionName == SheetSection.Journal.name,
+                editor.state.value != null,
+            )
+            pollError.value = null
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (error: Exception) {
+            pollError.value = error.message ?: "Не удалось соединиться с сервером."
+            throw error
+        } finally {
+            if (reconnect) connecting.value = false
+        }
     }
 
     fun retrySave() {
@@ -434,6 +469,7 @@ internal class CharacterSheetViewModel(
     fun reload() {
         viewModelScope.launch {
             try {
+                editor.discardDrafts()
                 sheets.reload(uuid)
                 confirmReload(false)
             } catch (cancelled: CancellationException) {

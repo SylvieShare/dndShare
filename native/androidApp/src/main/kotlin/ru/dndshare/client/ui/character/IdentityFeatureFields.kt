@@ -116,7 +116,7 @@ internal fun IdentityFeatureFields(form: FeatureFormScope, cache: CacheDao) {
                 }
             }
         }
-        ShareAddAction(
+        ShareDashedAction(
             "+ Добавить класс",
             {
                 updateRows {
