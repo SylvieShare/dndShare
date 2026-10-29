@@ -45,8 +45,9 @@ onBeforeUnmount(() => observer?.disconnect());
   background: color-mix(in srgb, var(--bg) calc(var(--chrome-tint) * 100%), transparent);
   backdrop-filter: blur(var(--chrome-blur));
   -webkit-backdrop-filter: blur(var(--chrome-blur));
-  mask-image: linear-gradient(to bottom, black var(--workspace-main-height), transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black var(--workspace-main-height), transparent 100%);
+  mask-mode: alpha;
+  mask-image: linear-gradient(to bottom, var(--text-on-accent) var(--workspace-main-height), transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, var(--text-on-accent) var(--workspace-main-height), transparent 100%);
 }
 .workspace-header-inner {
   display: grid;
