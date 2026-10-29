@@ -39,7 +39,7 @@ internal fun AppHeader(
             if (heading != null) heading()
             else
                 Text(
-                    page.title,
+                    if (page == AppPage.Characters) "DnD Share" else page.title,
                     style = ShareTypography.header,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,

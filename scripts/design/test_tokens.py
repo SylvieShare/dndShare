@@ -23,6 +23,20 @@ class TokenContractTests(unittest.TestCase):
         self.assertIn('--type-collection-title-size: 24px;', css)
         self.assertIn('val CollectionTitle = DesignType(24.sp', compose)
 
+    def test_chrome_opacity_stays_unitless_and_blur_has_matching_units(self):
+        data = load()
+        result = render(data, 'chrome')
+        css = next(value for key, value in result.items() if key.endswith('.css'))
+        native = next(value for key, value in result.items() if key.endswith('.kt'))
+        self.assertIn('--chrome-tint: 0.72;', css)
+        self.assertIn('--chrome-blur: 16px;', css)
+        self.assertIn('val Tint = 0.72f', native)
+        self.assertIn('val Blur = 16.dp', native)
+        for field, value in [('tint', 1.1), ('tint', 0), ('blur', 0)]:
+            invalid = copy.deepcopy(data)
+            invalid['chrome'][field] = value
+            with self.assertRaises(ValueError): validate(invalid)
+
     def test_window_boundaries_move_together(self):
         data = load()
         data['layout']['tablet'] = 700

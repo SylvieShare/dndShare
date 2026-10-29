@@ -168,7 +168,10 @@ for (const format of matrix.formats) {
     }
     expect(errors).toEqual([])
     expect(external).toEqual([])
-    expect(apiRequests.some(request => request.startsWith('/api/items'))).toBe(true)
+    if ([...wanted].some(state => ['list', 'record', 'vtm-base'].includes(state) || state.startsWith('sheet-')))
+      expect(apiRequests.some(request => request.startsWith('/api/items'))).toBe(true)
+    if (wanted.has('character-list') || wanted.has('character-menu'))
+      expect(apiRequests.some(request => request.startsWith('/api/chars'))).toBe(true)
     writeFileSync(path.join(output, `web-${format.name}.json`), JSON.stringify(entries, null, 2))
   })
 }

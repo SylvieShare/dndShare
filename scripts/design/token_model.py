@@ -7,12 +7,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / 'design/tokens.json'
-GROUPS = {'layout', 'spacing', 'radius', 'collection', 'canvas', 'list', 'motion'}
+GROUPS = {'layout', 'spacing', 'radius', 'collection', 'canvas', 'list', 'motion', 'chrome'}
 FAMILIES = {'display', 'prose', 'ui'}
 # Match the ranges declared by local @font-face and native font resources.
 FONT_WEIGHTS = {'display': (500, 700), 'prose': (400, 700), 'ui': (100, 900)}
 KEY = re.compile(r'^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$')
 REQUIRED = {
+    'chrome': {'blur', 'tint', 'fade-tail'},
     'layout': {'tablet', 'desktop', 'sidebar-collapsed', 'sidebar-expanded', 'drawer', 'content-max', 'header', 'border', 'touch-min',
                'sheet-value-height', 'sheet-value-width', 'sheet-value-compact-height', 'sheet-value-compact-width',
                'sheet-max', 'sheet-stat-min', 'sheet-base-min', 'sheet-stats-column', 'sheet-utilities-column',
@@ -78,6 +79,10 @@ def validate(data):
         raise ValueError('Motion durations must be whole milliseconds')
     if not 0 < data['canvas']['opacity'] <= 1:
         raise ValueError('Canvas opacity must be in (0,1]')
+    if data['chrome']['blur'] <= 0:
+        raise ValueError('Chrome blur must be positive')
+    if not 0 < data['chrome']['tint'] <= 1:
+        raise ValueError('Chrome tint must be in (0,1]')
     if not data['typography']:
         raise ValueError('Typography roles cannot be empty')
     for name, role in data['typography'].items():

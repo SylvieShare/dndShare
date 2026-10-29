@@ -1,5 +1,5 @@
 <template>
-  <WorkspaceHeader page class="app-header" :style="{ '--workspace-header-identity-gap': 'var(--spacing-small)' }" :class="{
+  <WorkspaceHeader page class="app-header" :split-navigation="isCharacterList" @resize="emit('resize', $event)" :style="{ '--workspace-header-identity-gap': 'var(--spacing-small)' }" :class="{
     'app-header--collapsible': headerCollapsible,
     'app-header--mobile-hidden': mobileHeaderHidden,
     'header-hidden': effectiveHeaderHidden,
@@ -15,6 +15,7 @@
         <span v-if="contextLabel && compact" class="header-context">{{ contextLabel }}</span>
       </div>
     </template>
+    <template v-if="isCharacterList" #navigation><div id="app-character-subheader" class="character-subheader-outlet" /></template>
     <template #actions>
       <div id="app-header-actions" class="header-actions" />
       <span v-if="headerContext.chip" class="header-chip"
@@ -39,7 +40,7 @@ import { useGameContextStore } from '@/stores/gameContext'
 import { MOBILE_HEADER_COLLAPSIBLE, MOBILE_HEADER_HIDDEN, resolveMobileHeaderMode } from '@/shared/lib/mobileHeader'
 
 defineProps({ menuOpen: Boolean })
-const emit = defineEmits(['open-menu'])
+const emit = defineEmits(['open-menu', 'resize'])
 const route = useRoute()
 const uiStore = useUiStore()
 const gameContext = useGameContextStore()
@@ -50,9 +51,10 @@ const mobileHeaderHidden = computed(() => phone.value && headerMode.value === MO
 const effectiveHeaderHidden = computed(() => headerCollapsible.value && uiStore.headerHidden)
 const mobileBackTarget = computed(() => resolveMobileBackTarget(route))
 const headerContext = computed(() => uiStore.resolveHeader(route.name, route.meta?.title, false))
+const isCharacterList = computed(() => route.path === '/chars')
 const isHandbook = computed(() => route.meta?.section === 'handbook')
 const sectionTitles = { handbook: 'Справочник', rules: 'Правила игрока' }
-const title = computed(() => sectionTitles[route.meta?.section] || headerContext.value.title)
+const title = computed(() => isCharacterList.value ? 'DnD Share' : sectionTitles[route.meta?.section] || headerContext.value.title)
 const contextLabel = computed(() => {
   const current = gameContextPresentation(gameContext.selectedSource, gameContext.selectedVersion)
   return [current.name, current.edition].filter(Boolean).join(' · ')
@@ -63,9 +65,10 @@ const contextLabel = computed(() => {
 .app-header {
   position: relative;
   z-index: 30;
-  max-height: var(--layout-header);
+  max-height: none;
   transition: max-height .22s ease, opacity .18s ease, border-color .22s ease;
 }
+.character-subheader-outlet { width: 100%; min-width: 0; }
 .header-menu {
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   width: var(--layout-touch-min); height: var(--layout-touch-min); padding: 0; border: 0; border-radius: var(--radius-row);

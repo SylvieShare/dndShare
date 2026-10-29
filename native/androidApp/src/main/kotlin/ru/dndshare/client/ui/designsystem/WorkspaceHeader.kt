@@ -2,13 +2,12 @@ package ru.dndshare.client.ui.designsystem
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
@@ -24,23 +23,29 @@ fun ShareWorkspaceHeader(
     compact: Boolean = LocalConfiguration.current.screenWidthDp < DesignTokens.Layout.Desktop.value,
     content: @Composable RowScope.() -> Unit,
 ) {
+    val managed = LocalChromeManaged.current
     Surface(
         modifier.fillMaxWidth(),
-        color = if (compact) Color.Transparent else WebPalette.Surface,
-        shadowElevation = if (compact) 0.dp else 4.dp,
+        color = Color.Transparent,
     ) {
         Column(
             Modifier.fillMaxWidth().drawWithContent {
-                drawContent()
-                if (!compact) {
-                    val stroke = DesignTokens.Layout.Border.toPx()
-                    drawLine(
-                        WebPalette.BorderStrong,
-                        Offset(0f, size.height - stroke / 2),
-                        Offset(size.width, size.height - stroke / 2),
-                        strokeWidth = stroke,
-                    )
+                if (!managed) {
+                    val tint = WebPalette.Background.copy(alpha = DesignTokens.Chrome.Tint)
+                    if (navigation == null) drawRect(tint)
+                    else
+                        drawRect(
+                            Brush.verticalGradient(
+                                0f to tint,
+                                (DesignTokens.Layout.Header.toPx() / size.height).coerceIn(
+                                    0f,
+                                    1f,
+                                ) to tint,
+                                1f to Color.Transparent,
+                            )
+                        )
                 }
+                drawContent()
             },
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -54,13 +59,16 @@ fun ShareWorkspaceHeader(
                 content = content,
             )
             navigation?.let { tabs ->
-                if (!compact) HorizontalDivider(color = WebPalette.Border)
-                ShareSubheader(
-                    compact = compact,
-                    maxContentWidth = maxContentWidth,
-                    contentInset = contentInset,
-                    content = tabs,
-                )
+                androidx.compose.runtime.CompositionLocalProvider(
+                    LocalChromeManaged provides true
+                ) {
+                    ShareSubheader(
+                        compact = compact,
+                        maxContentWidth = maxContentWidth,
+                        contentInset = contentInset,
+                        content = tabs,
+                    )
+                }
             }
         }
     }
@@ -74,9 +82,22 @@ fun ShareSubheader(
     contentInset: Dp = DesignTokens.Layout.CompactHeaderInset,
     content: @Composable () -> Unit,
 ) {
+    val managed = LocalChromeManaged.current
     Box(
         modifier
             .fillMaxWidth()
+            .drawWithContent {
+                if (!managed)
+                    drawRect(
+                        Brush.verticalGradient(
+                            listOf(
+                                WebPalette.Background.copy(alpha = DesignTokens.Chrome.Tint),
+                                Color.Transparent,
+                            )
+                        )
+                    )
+                drawContent()
+            }
             .padding(
                 horizontal = if (compact) DesignTokens.Layout.CompactHeaderInset else 0.dp,
                 vertical = if (compact) DesignTokens.Spacing.Xs else 0.dp,

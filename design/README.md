@@ -82,3 +82,6 @@ Lucide и нативную палитру обновляет `sync_web_design.py
 
 [Адаптивный дизайн](../md/frontend/responsive-design.md) ·
 [UI-процесс](../md/frontend/ui-workflow.md)
+
+Группа `chrome` задаёт размытие, прозрачность затемнения и хвост затухания шапки.
+Затемнение безразмерно, размеры генерируются в CSS px/Android dp.

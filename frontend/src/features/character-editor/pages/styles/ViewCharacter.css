@@ -58,7 +58,7 @@
 
   .mobile-sticky-header {
     position: sticky;
-    z-index: 19;
+    z-index: 21;
     background: var(--surface);
   }
 

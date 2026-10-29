@@ -23,6 +23,7 @@ import okio.Path.Companion.toPath
 import ru.dndshare.client.R
 import ru.dndshare.client.app.*
 import ru.dndshare.client.ui.character.CharacterDestination
+import ru.dndshare.client.ui.character.CharacterListSubheader
 import ru.dndshare.client.ui.character.CharacterSheetRoute
 import ru.dndshare.client.ui.creation.CharacterCreationRoute
 import ru.dndshare.client.ui.designsystem.*
@@ -196,10 +197,8 @@ private fun AuthenticatedApp(
                                 )
                             }
                         else {
-                            Scaffold(
-                                containerColor = MaterialTheme.colorScheme.background,
-                                contentWindowInsets = WindowInsets(0, 0, 0, 0),
-                                topBar = {
+                            ShareChromeLayout(
+                                header = {
                                     AppHeader(
                                         format,
                                         selectedPage,
@@ -217,9 +216,15 @@ private fun AuthenticatedApp(
                                             else null,
                                     )
                                 },
+                                subheader = {
+                                    Column {
+                                        if (selectedPage == AppPage.Characters)
+                                            CharacterListSubheader(create)
+                                        ConnectionStatus(state) { controller.refresh(force = true) }
+                                    }
+                                },
                             ) { padding ->
-                                Column(Modifier.fillMaxSize().padding(padding)) {
-                                    ConnectionStatus(state) { controller.refresh(force = true) }
+                                Column(Modifier.fillMaxSize()) {
                                     AnimatedAppPage(selectedPage) { displayedPage ->
                                         pages.SaveableStateProvider(displayedPage.name) {
                                             when (displayedPage) {
@@ -232,18 +237,23 @@ private fun AuthenticatedApp(
                                                         refresh = {
                                                             controller.refresh(force = true)
                                                         },
-                                                        create = create,
+                                                        contentPadding = padding,
                                                         open = { characterHistory = listOf(it) },
                                                     )
                                                 AppPage.Handbook ->
-                                                    HandbookScreen(
-                                                        state,
-                                                        format,
-                                                        fold,
-                                                        images,
-                                                        handbookHeading,
-                                                    )
-                                                else -> PlaceholderScreen(displayedPage)
+                                                    Box(Modifier.fillMaxSize().padding(padding)) {
+                                                        HandbookScreen(
+                                                            state,
+                                                            format,
+                                                            fold,
+                                                            images,
+                                                            handbookHeading,
+                                                        )
+                                                    }
+                                                else ->
+                                                    Box(Modifier.fillMaxSize().padding(padding)) {
+                                                        PlaceholderScreen(displayedPage)
+                                                    }
                                             }
                                         }
                                     }

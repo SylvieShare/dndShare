@@ -1,5 +1,6 @@
 <template>
   <div class="page">
+    <Teleport v-if="route.path === '/chars'" defer to="#app-character-subheader">
     <div class="page-header">
       <h1 class="page-title">Персонажи</h1>
       <button class="create-btn" type="button" @click="openCreateModal">
@@ -7,12 +8,14 @@
         Новый персонаж
       </button>
     </div>
+    </Teleport>
 
     <FormTextInput v-model:value="query" class="character-search" placeholder="Найти персонажа" aria-label="Найти персонажа" />
 
-    <LoadingState v-if="loading" label="Загружаем персонажей…" />
+    <p v-if="loadError && chars.length" role="alert">{{ loadError }} <button type="button" @click="loadChars()">Повторить</button></p>
+    <CharacterListSkeleton v-if="loading && !chars.length" />
 
-    <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="loadChars()">Повторить</button></div>
+    <div v-else-if="loadError && !chars.length" role="alert">{{ loadError }} <button type="button" @click="loadChars()">Повторить</button></div>
 
     <template v-else>
       <section v-for="group in groupedChars" :key="group.key" class="char-section">
@@ -61,7 +64,8 @@ export default { name: 'ViewListCharacters' }
 </script>
 
 <script setup>
-import { LoadingState, FormTextInput } from '@sylvieshare/share-ui'
+import { FormTextInput } from '@sylvieshare/share-ui'
+import CharacterListSkeleton from '../components/CharacterListSkeleton.vue'
 import { computed, onActivated, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CharBox from "@/features/character-list/components/CharBox"
@@ -197,7 +201,7 @@ onActivated(() => {
 
 <style scoped>
 .page {
-  padding: 24px;
+  padding: 20px;
   min-height: calc(100vh - var(--header-h));
   max-width: 1400px;
   margin: 0 auto;
@@ -208,11 +212,16 @@ onActivated(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: 8px 12px;
+  flex-wrap: wrap;
+  width: 100%;
+  min-height: 48px;
+  padding-inline: 16px;
+  box-sizing: border-box;
 }
 
 .page-title {
+  flex: 1 1 110px;
   font-size: 22px;
   font-weight: 700;
   color: var(--text-1, var(--text-on-accent));

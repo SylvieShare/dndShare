@@ -1,7 +1,7 @@
 <template>
   <DesktopSidebar v-if="!compact" mode="desktop" />
-  <div v-if="(compact || route.meta?.section === 'handbook') && route.meta?.mobileHeader !== 'hidden'" class="app-header-shell">
-    <AppHeader :menu-open="menuOpen" @open-menu="openMenu">
+  <div v-if="headerShown" class="app-header-shell">
+    <AppHeader :menu-open="menuOpen" @open-menu="openMenu" @resize="setHeaderHeight">
       <template v-if="route.meta?.section === 'handbook'" #title><HandbookHeading /></template>
     </AppHeader>
   </div>
@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { nextTick, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { AppDrawer } from '@sylvieshare/share-ui'
 import { layoutTokens } from '@/app/design-tokens'
@@ -28,8 +28,16 @@ import { useAccountStore } from '@/stores/account'
 const { compact } = useAppLayout()
 const route = useRoute()
 const account = useAccountStore()
+const headerShown = computed(() => (compact.value || route.meta?.section === 'handbook' || route.path === '/chars') && route.meta?.mobileHeader !== 'hidden')
 const menuOpen = ref(false)
 const drawerSidebar = ref(null)
+function setHeaderHeight(height) {
+  document.documentElement.style.setProperty('--header-h', `${height}px`)
+}
+watch(headerShown, shown => {
+  if (!shown) document.documentElement.style.setProperty('--header-h', '0px')
+})
+onBeforeUnmount(() => document.documentElement.style.removeProperty('--header-h'))
 async function openMenu(intent) {
   if (!compact.value) return
   menuOpen.value = true
@@ -50,6 +58,6 @@ useAppDrawerGesture(() => compact.value && !menuOpen.value, openMenu)
 </script>
 
 <style scoped>
-.app-header-shell { margin-left: var(--app-sidebar-w); transition: margin-left .28s cubic-bezier(.22, 1, .36, 1); }
+.app-header-shell { position: sticky; top: 0; z-index: 30; margin-left: var(--app-sidebar-w); transition: margin-left .28s cubic-bezier(.22, 1, .36, 1); }
 @media (prefers-reduced-motion: reduce) { .app-header-shell { transition: none; } }
 </style>

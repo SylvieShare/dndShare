@@ -17,6 +17,7 @@ async function renderHeader(path = '/handbook', props = {}) {
   context.sourceVersionId = 1
   const router = createRouter({ history: createMemoryHistory(), routes: [
     { path: '/handbook', name: 'Handbook', component: { render: () => null }, meta: { title: 'Справочник', section: 'handbook' } },
+    { path: '/chars', name: 'Characters', component: { render: () => null }, meta: { title: 'Персонажи', section: 'characters' } },
     { path: '/account', name: 'Account', component: { render: () => null }, meta: { title: 'Аккаунт', mobileBackTo: { name: 'Handbook' } } },
   ] })
   await router.push(path)
@@ -32,6 +33,12 @@ describe('app header', () => {
     expect(html).toContain('aria-expanded="true"')
     expect(html).not.toContain('brand-menu')
     expect(html).not.toContain('Обновить')
+  })
+  it('keeps the page title in its subheader outlet without repeating it in the main row', async () => {
+    const html = await renderHeader('/chars')
+    expect(html).toContain('DnD Share')
+    expect(html).toContain('id="app-character-subheader"')
+    expect(html).not.toContain('class="header-title">Персонажи')
   })
   it('retains a semantic parent action on a nested page', async () => {
     const html = await renderHeader('/account')
