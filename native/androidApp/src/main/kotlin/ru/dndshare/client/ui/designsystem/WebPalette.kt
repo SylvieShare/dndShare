@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 object WebPalette {
     val Background = Color(0xFF17171B)
     val Surface = Color(0xFF27272E)
+    val Subheader = Color(0xFF35313F)
     val Raised = Color(0xFF34343E)
     val Active = Color(0xFF42424F)
     val Popover = Color(0xFF2C2C34)

@@ -408,13 +408,15 @@ onMounted(() => initialize())
   gap: 24px;
   padding-inline: 24px;
 }
+.cc-head { position: relative; z-index: 20; isolation: isolate; }
+.cc-head::before { content: ''; position: absolute; inset: 0 0 calc(-1 * var(--chrome-fade-tail)); z-index: -1; pointer-events: none; background: color-mix(in srgb, var(--bg) calc(var(--chrome-tint) * 100%), transparent); backdrop-filter: blur(var(--chrome-blur)); -webkit-backdrop-filter: blur(var(--chrome-blur)); mask-image: linear-gradient(to bottom, var(--text-on-accent) 64px, transparent); -webkit-mask-image: linear-gradient(to bottom, var(--text-on-accent) 64px, transparent); }
 .cc-head-main {
   grid-column: 2;
   display: flex;
   align-items: center;
   gap: 14px;
   padding: 16px 16px 12px;
-  background: var(--bg);
+  background: transparent;
 }
 .cc-head-main,
 .cc-main,

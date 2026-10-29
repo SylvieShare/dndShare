@@ -54,7 +54,7 @@ class Device:
             self.screen = 'dnd'
 
     def wait(self, text=None, description=None):
-        if text == 'Найти персонажа':
+        if text == 'Новый персонаж':
             assert self.screen == 'characters'
         elif text == 'Волшебник 4':
             assert self.section == 'base', 'Saved Stats selection must be explicitly switched to Base'

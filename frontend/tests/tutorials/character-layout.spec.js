@@ -178,3 +178,28 @@ test('prepared inventory keeps real sections visible and replaces only a pending
   await expect(inventory.locator('.share-skeleton')).toHaveCount(0)
   expect(api.writes).toEqual([])
 })
+
+for (const width of [390, 834, 1440]) test(`sheet content scrolls behind sharp chrome at ${width}`, async ({ page }) => {
+  await page.setViewportSize({ width, height: 700 })
+  await fixture(page)
+  await page.goto('/tests/tutorials/fixtures/tutorials.html')
+  const header = page.locator('.character-workspace-header')
+  await expect(header).toBeVisible()
+  await expect.poll(() => page.locator('.view').evaluate(element =>
+    parseFloat(getComputedStyle(element).getPropertyValue('--sheet-chrome-height')))).toBeGreaterThan(60)
+  const viewport = page.locator('.sheet-scroll')
+  expect((await viewport.boundingBox()).y).toBeCloseTo((await page.locator('.view').boundingBox()).y, 0)
+  if (width < 1200) {
+    const button = page.getByRole('button', { name: 'Статы', exact: true })
+    await button.click()
+    await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/settling/)
+  }
+  const scroller = width < 1200 ? page.locator('.mobile-swipe-pane:not([inert]) .mobile-pane-scroll') : viewport
+  await expect(scroller).toBeVisible()
+  await expect.poll(() => scroller.evaluate(element => element.scrollHeight - element.clientHeight)).toBeGreaterThan(20)
+  const before = await header.boundingBox()
+  await scroller.evaluate(element => { element.scrollTop = 200 })
+  expect(await scroller.evaluate(element => element.scrollTop)).toBeGreaterThan(20)
+  expect((await header.boundingBox()).y).toBeCloseTo(before.y, 0)
+  await expect(header).toHaveCSS('filter', 'none')
+})

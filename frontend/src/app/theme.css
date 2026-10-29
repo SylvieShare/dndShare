@@ -2,8 +2,6 @@
 
 :root {
   /* Frameless groups need distinguishable surfaces in both web and Compose. */
-  --bg: #17171b;
-  --surface: #27272e;
   --surface-raised: #34343e;
   --surface-active: #42424f;
   --popover-bg: #2c2c34;

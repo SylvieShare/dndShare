@@ -28,7 +28,7 @@ defineExpose({ trackElement: () => track.value, scrollElement: index => panes[in
 .mobile-swipe-stage { width: 100%; height: 100%; overflow: hidden; }
 .mobile-swipe-track { display: flex; width: 100%; height: 100%; will-change: transform; }
 .mobile-swipe-pane { flex: 0 0 100%; height: 100%; min-width: 0; overflow: hidden; }
-.mobile-pane-scroll { height: 100%; overflow-x: hidden; overflow-y: auto; overflow-anchor: none; overscroll-behavior-y: none; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
+.mobile-pane-scroll { box-sizing: border-box; padding-top: var(--sheet-chrome-height, 0px); scroll-padding-top: var(--sheet-chrome-height, 0px); height: 100%; overflow-x: hidden; overflow-y: auto; overflow-anchor: none; overscroll-behavior-y: none; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
 .mobile-pane-scroll :deep(> .container) { display: flex; flex-direction: column; min-height: 100%; }
 .mobile-pane-skeleton { box-sizing: border-box; padding: var(--spacing-large); }
 .settling .mobile-swipe-track { transition: transform .26s cubic-bezier(.25,.1,.25,1); }

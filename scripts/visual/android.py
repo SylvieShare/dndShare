@@ -249,7 +249,7 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
             device.wait('Клонировать')
             take(format_,'character-menu')
             device.shell('input','keyevent','4')
-            device.wait('Найти персонажа')
+            device.wait('Новый персонаж')
         if wanted & { 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality'}:
             device.click(text=fixture['characters'][0]['name'])
             if format_['name'] == 'phone':
@@ -299,7 +299,7 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
                 proof = verify_character_edit(device, url, fixture)
                 (output.parent / 'native-character-edit.json').write_text(json.dumps(proof, ensure_ascii=False, indent=2))
             device.shell('input', 'keyevent', '4')
-            device.wait('Найти персонажа')
+            device.wait('Новый персонаж')
         if 'vtm-base' in wanted:
             device.click(text=fixture['characters'][1]['name'])
             device.wait('Тореадор')
@@ -307,7 +307,7 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
             (output.parent / ('native-vtm-menu-' + format_['name'] + '.json')).write_text(json.dumps(proof))
             take(format_, 'vtm-base')
             device.shell('input', 'keyevent', '4')
-            device.wait('Найти персонажа')
+            device.wait('Новый персонаж')
     for entry in entries:
         entry['apkSHA256'] = apk_hash
     (output.parent / 'android.json').write_text(json.dumps(entries, ensure_ascii=False, indent=2))

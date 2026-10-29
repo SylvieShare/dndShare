@@ -386,3 +386,13 @@
     display: contents;
   }
 }
+
+.toolbar { isolation: isolate; flex: none; }
+.toolbar::before {
+  content: ''; position: absolute; inset: 0 0 calc(-1 * (var(--chrome-fade-tail) + var(--workspace-extra-fade, 0px))); z-index: -1; pointer-events: none;
+  background: color-mix(in srgb, var(--bg) calc(var(--chrome-tint) * 100%), transparent);
+  backdrop-filter: blur(var(--chrome-blur)); -webkit-backdrop-filter: blur(var(--chrome-blur));
+  mask-image: linear-gradient(to bottom, var(--text-on-accent) var(--layout-header), transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, var(--text-on-accent) var(--layout-header), transparent 100%);
+}
+.toolbar-inner { background: transparent; border-bottom: 0; min-height: var(--layout-header); height: auto; }

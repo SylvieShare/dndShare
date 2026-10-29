@@ -47,7 +47,7 @@ defineExpose({ toggleCombat: () => encounterTab.value?.toggleCombat() })
   --session-workspace-content-top: 172px;
   position: absolute;
   z-index: 12;
-  top: 14px;
+  top: calc(var(--chapter-chrome-height, 0px) + 14px);
   right: var(--chapter-safe-right, 0px);
   bottom: 0;
   left: var(--chapter-safe-left, 0px);
@@ -81,7 +81,7 @@ defineExpose({ toggleCombat: () => encounterTab.value?.toggleCombat() })
 
 @media (max-width: 760px) {
   .session-center-workspace {
-    top: 14px;
+    top: calc(var(--chapter-chrome-height, 0px) + 14px);
     right: 0;
     bottom: 0;
     left: 0;

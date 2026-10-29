@@ -93,7 +93,7 @@ R8-вариант `ru.dndshare.client.benchmark` и запускает AndroidX 
 Источник общих размеров, типографики, порогов и акцентов —
 [design/tokens.json](../design/tokens.json), с генерацией CSS/JS/Compose через
 `python3 scripts/design/tokens.py`. Парный отчёт, окружение и порядок проверок —
-[UI-процесс](../md/frontend/ui-workflow.md). Источник остальных цветов —
+[UI-процесс](../md/frontend/ui-workflow.md). Три основные поверхности берутся из colors тех же токенов. Источник остальных цветов —
 `frontend/src/app/theme.css` и tokens установленного
 `@sylvieshare/share-ui`; иконок — `@lucide/vue`, как в `DesktopSidebar.vue`.
 После обновления веб-палитры или пакетов выполнить из корня репозитория:

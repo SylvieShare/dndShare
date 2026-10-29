@@ -27,14 +27,15 @@ The dark UI uses one application canvas plus a compact surface scale. Do not cre
 
 | Token | Value | Purpose |
 | --- | --- | --- |
-| `--bg` | `#1b1b1d` | Background of every form, wizard and editor, plus global header chrome. |
+| `--bg` | `#17171b` | Background of every form, wizard and editor, plus global header chrome. |
 | `--app-canvas-bg` | `var(--bg)` | Shared routed-page and session-canvas background. |
 | `--app-canvas-dot-color` | 42% of `--border-strong` | Shared color for the global and session-canvas dot grid. |
 | `--app-canvas-dot-size` | `24px` | Shared static dot-grid step; session zoom scales the same base step. |
 | `--app-canvas-pattern` | 1px radial dot | Reusable global page backdrop pattern. |
-| `--surface` | `#242427` | Cards, tiles, unified content panels and toolbar chrome on `--bg`. |
-| `--surface-raised` | `#2c2c30` | Inputs, selects, toggles and quiet buttons. This is the default control background on `--bg`. |
-| `--surface-active` | `#35353b` | Hovered, pressed and selected neutral controls. |
+| `--surface` | `#27272e` | Cards, tiles and unified content panels on `--bg`. |
+| `--subheader` | `#35313f` | Navigation capsules, visually separate from base cards. |
+| `--surface-raised` | `#34343e` | Inputs, selects, toggles and quiet buttons. This is the default control background on `--bg`. |
+| `--surface-active` | `#42424f` | Hovered, pressed and selected neutral controls. |
 | `--popover-bg` | `#202024` | Dropdowns, tooltips and detached popovers. |
 | `--scrim` | black at 62% | Modal/overlay dimming. |
 

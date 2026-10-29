@@ -49,40 +49,95 @@ internal fun CharacterCreationScreen(
         }
     }
     CompositionLocalProvider(LocalShareFormInputs provides inputs) {
-        Column(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing).imePadding()) {
-            ShareWorkspaceHeader(
-                navigation =
-                    if (draft.template == "DND5")
-                        ({
-                            Row(
-                                Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            ) {
-                                steps.forEachIndexed { index, label ->
-                                    ShareChoiceChip(
-                                        draft.step == index,
-                                        { model.update { it.copy(step = index) } },
-                                        enabled = index <= draft.step && !ui.busy,
-                                        label = { Text("${index+1}. $label") },
-                                    )
+        ShareChromeLayout(
+            header = {
+                ShareWorkspaceHeader(
+                    navigation =
+                        if (draft.template == "DND5")
+                            ({
+                                Row(
+                                    Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                ) {
+                                    steps.forEachIndexed { index, label ->
+                                        ShareChoiceChip(
+                                            draft.step == index,
+                                            { model.update { it.copy(step = index) } },
+                                            enabled = index <= draft.step && !ui.busy,
+                                            label = { Text("${index+1}. $label") },
+                                        )
+                                    }
                                 }
-                            }
-                        })
-                    else null
-            ) {
-                IconButton(onClick = close, enabled = !ui.busy) { AppGlyph(Glyph.Back) }
-                Text("Создание персонажа", Modifier.weight(1f), style = ShareTypography.header)
-                ShareTextButton(onClick = { confirmReset = true }, enabled = !ui.busy) {
-                    Text("Сбросить")
+                            })
+                        else null
+                ) {
+                    IconButton(onClick = close, enabled = !ui.busy) { AppGlyph(Glyph.Back) }
+                    Text("Создание персонажа", Modifier.weight(1f), style = ShareTypography.header)
+                    ShareTextButton(onClick = { confirmReset = true }, enabled = !ui.busy) {
+                        Text("Сбросить")
+                    }
                 }
-            }
-            if (ui.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
-            Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
+            },
+            subheader = { if (ui.loading) LinearProgressIndicator(Modifier.fillMaxWidth()) },
+            footer = {
+                Surface(color = WebPalette.Surface, shadowElevation = 4.dp) {
+                    Row(
+                        Modifier.fillMaxWidth().padding(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                    ) {
+                        if (draft.template == "DND5")
+                            ShareTextButton(onClick = { preview = true }, enabled = !ui.loading) {
+                                Text("Предпросмотр")
+                            }
+                        if (draft.step > 0)
+                            ShareTextButton(
+                                onClick = { model.update { it.copy(step = it.step - 1) } },
+                                enabled = !ui.busy,
+                            ) {
+                                Text("Назад")
+                            }
+                        if (draft.template == "DND5" && draft.step < steps.lastIndex)
+                            ShareButton(
+                                onClick = {
+                                    inputs.flush()
+                                    model.next()
+                                },
+                                enabled = !ui.loading && !ui.busy,
+                            ) {
+                                Text("Дальше")
+                            }
+                        else
+                            ShareButton(
+                                onClick = {
+                                    inputs.flush()
+                                    val current = model.state.value
+                                    val errors =
+                                        if (current.draft.template == "VTM20")
+                                            creationErrors(current.context, 0)
+                                        else
+                                            (0..5).flatMap { creationErrors(current.context, it) } +
+                                                equipmentErrors(current.context)
+                                    if (errors.isEmpty()) model.create() else partial = true
+                                },
+                                enabled = !ui.loading && !ui.busy,
+                            ) {
+                                Text(if (ui.busy) "Создаём…" else "Создать")
+                            }
+                    }
+                }
+            },
+        ) { padding ->
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
                 Column(
                     Modifier.widthIn(max = 1200.dp)
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
-                        .padding(20.dp),
+                        .padding(
+                            start = 20.dp,
+                            end = 20.dp,
+                            top = padding.calculateTopPadding() + 20.dp,
+                            bottom = padding.calculateBottomPadding() + 20.dp,
+                        ),
                     verticalArrangement = Arrangement.spacedBy(18.dp),
                 ) {
                     if (ui.error != null) {
@@ -106,51 +161,6 @@ internal fun CharacterCreationScreen(
                             Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
                                 CreationStep(step, ui, model, images)
                             }
-                        }
-                }
-            }
-            Surface(color = WebPalette.Surface, shadowElevation = 4.dp) {
-                Row(
-                    Modifier.fillMaxWidth().padding(12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-                ) {
-                    if (draft.template == "DND5")
-                        ShareTextButton(onClick = { preview = true }, enabled = !ui.loading) {
-                            Text("Предпросмотр")
-                        }
-                    if (draft.step > 0)
-                        ShareTextButton(
-                            onClick = { model.update { it.copy(step = it.step - 1) } },
-                            enabled = !ui.busy,
-                        ) {
-                            Text("Назад")
-                        }
-                    if (draft.template == "DND5" && draft.step < steps.lastIndex)
-                        ShareButton(
-                            onClick = {
-                                inputs.flush()
-                                model.next()
-                            },
-                            enabled = !ui.loading && !ui.busy,
-                        ) {
-                            Text("Дальше")
-                        }
-                    else
-                        ShareButton(
-                            onClick = {
-                                inputs.flush()
-                                val current = model.state.value
-                                val errors =
-                                    if (current.draft.template == "VTM20")
-                                        creationErrors(current.context, 0)
-                                    else
-                                        (0..5).flatMap { creationErrors(current.context, it) } +
-                                            equipmentErrors(current.context)
-                                if (errors.isEmpty()) model.create() else partial = true
-                            },
-                            enabled = !ui.loading && !ui.busy,
-                        ) {
-                            Text(if (ui.busy) "Создаём…" else "Создать")
                         }
                 }
             }

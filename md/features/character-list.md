@@ -37,7 +37,7 @@
 
 `GET /api/chars` returns `chars` and batched `sessionsByChar`. Cards are grouped
 by `sourceId/sourceName`, show the concrete rules edition and the most recently
-changed session.
+changed session. В обоих клиентах список не имеет поля поиска; название и действие создания находятся в сабхеадере.
 
 The list route remains cached for scroll/transition continuity, but every
 reactivation consumes the fresh router prefetch (or refetches directly). A

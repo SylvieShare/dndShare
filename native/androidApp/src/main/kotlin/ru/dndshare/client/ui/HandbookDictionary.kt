@@ -12,22 +12,43 @@ import ru.dndshare.client.model.*
 import ru.dndshare.client.ui.designsystem.*
 
 @Composable
-internal fun HandbookDictionary(id: Long, metadata: HandbookMetadata, back: () -> Unit, open: (Long) -> Unit) {
+internal fun HandbookDictionary(
+    id: Long,
+    metadata: HandbookMetadata,
+    back: () -> Unit,
+    open: (Long) -> Unit,
+) {
     var query by rememberSaveable(id) { mutableStateOf("") }
     val dictionary = metadata.suggestTypes.firstOrNull { it.id == id }
-    val entries = metadata.suggests[id.toString()].orEmpty().filter { it.value.contains(query, ignoreCase = true) }
-    Column(Modifier.fillMaxSize().padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-        ShareAction("Справочник", back, icon = Glyph.Back)
-        Text(dictionary?.name ?: "Словарь", style = ShareTypography.title)
-        ShareSearch(query, { query = it }, placeholder = "Поиск по словарю")
-        LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(entries, key = { it.id }) { entry ->
-                ShareTile(Modifier.fillMaxWidth()) {
-                    Text(entry.value, style = ShareTypography.card, color = catalogueColor(entry.color))
-                    entry.desc?.takeIf { it.isNotBlank() }?.let { RichDescription(it, openItem = open) }
-                }
-            }
-            if (entries.isEmpty()) item { Text("Ничего не найдено", color = WebPalette.TextMuted) }
+    val entries =
+        metadata.suggests[id.toString()].orEmpty().filter {
+            it.value.contains(query, ignoreCase = true)
         }
+    val chrome = LocalChromePadding.current
+    LazyColumn(
+        Modifier.fillMaxSize(),
+        contentPadding =
+            PaddingValues(
+                start = 20.dp,
+                end = 20.dp,
+                top = chrome.calculateTopPadding() + 20.dp,
+                bottom = chrome.calculateBottomPadding() + 20.dp,
+            ),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
+    ) {
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                ShareAction("Справочник", back, icon = Glyph.Back)
+                Text(dictionary?.name ?: "Словарь", style = ShareTypography.title)
+                ShareSearch(query, { query = it }, placeholder = "Поиск по словарю")
+            }
+        }
+        items(entries, key = { it.id }) { entry ->
+            ShareTile(Modifier.fillMaxWidth()) {
+                Text(entry.value, style = ShareTypography.card, color = catalogueColor(entry.color))
+                entry.desc?.takeIf { it.isNotBlank() }?.let { RichDescription(it, openItem = open) }
+            }
+        }
+        if (entries.isEmpty()) item { Text("Ничего не найдено", color = WebPalette.TextMuted) }
     }
 }

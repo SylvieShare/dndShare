@@ -21,7 +21,10 @@ internal fun CreationPreview(ui: CreationUiState, images: ImageLoader, close: ()
     ShareFullscreenDialog(close, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         Surface(Modifier.fillMaxSize(), color = WebPalette.Background) {
             BoxWithConstraints(
-                Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)
+                Modifier.fillMaxSize()
+                    .windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal)
+                    )
             ) {
                 val format = layoutFormat(maxWidth.value)
                 val sheet =
@@ -53,40 +56,48 @@ internal fun CreationPreview(ui: CreationUiState, images: ImageLoader, close: ()
                                 SheetJournalState(),
                             )
                     ) {
-                        Column {
-                            CharacterSheetHeader(
-                                sheet,
-                                format,
-                                sections,
-                                section,
-                                images,
-                                { selected = it },
-                                close,
-                            )
+                        ShareChromeLayout(
+                            header = {
+                                CharacterSheetHeader(
+                                    sheet,
+                                    format,
+                                    sections,
+                                    section,
+                                    images,
+                                    { selected = it },
+                                    close,
+                                    navigationInHeader = false,
+                                )
+                            },
+                            subheader = {
+                                if (format != LayoutFormat.Wide)
+                                    ShareSubheader {
+                                        SheetNavigation(
+                                            sections,
+                                            section,
+                                            images,
+                                            { selected = it },
+                                            compact = format == LayoutFormat.Phone,
+                                            pill = true,
+                                        )
+                                    }
+                            },
+                        ) { padding ->
                             if (format == LayoutFormat.Wide)
                                 DndWideSheet(section, sections, { selected = it })
                             else
-                                Column(Modifier.fillMaxSize()) {
-                                    if (format == LayoutFormat.Phone)
-                                        ShareSubheader {
-                                            SheetNavigation(
-                                                sections,
-                                                section,
-                                                images,
-                                                { selected = it },
-                                                compact = true,
-                                                pill = true,
-                                            )
-                                        }
-                                    Column(
-                                        Modifier.weight(1f)
-                                            .fillMaxWidth()
-                                            .verticalScroll(rememberScrollState())
-                                            .padding(20.dp),
-                                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                                    ) {
-                                        DndSheetSection(section, format)
-                                    }
+                                Column(
+                                    Modifier.fillMaxSize()
+                                        .verticalScroll(rememberScrollState())
+                                        .padding(
+                                            start = 20.dp,
+                                            end = 20.dp,
+                                            top = padding.calculateTopPadding() + 20.dp,
+                                            bottom = padding.calculateBottomPadding() + 20.dp,
+                                        ),
+                                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                                ) {
+                                    DndSheetSection(section, format)
                                 }
                         }
                     }

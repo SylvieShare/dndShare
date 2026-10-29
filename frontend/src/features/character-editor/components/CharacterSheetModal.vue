@@ -1,8 +1,8 @@
 <template>
   <AppModal fullscreen :z-index="zIndex" @close="emit('close')">
     <CharacterEditionDialog :controller="edition" />
-    <div :inert="edition.busy" class="csm share-app-canvas" :class="{ 'csm--preview': previewMode }">
-      <CharEditorToolbar
+    <div ref="chromeRoot" :inert="edition.busy" class="csm share-app-canvas" :class="{ 'csm--preview': previewMode }">
+      <CharEditorToolbar data-sheet-chrome
         modal
         :publicVisible="publicVisible"
         :canEdit="canEdit"
@@ -22,9 +22,9 @@
         @close="emit('close')"
       />
 
-      <CharacterSheetTabs v-if="format !== 'desktop'" :tabs="activeTabs" :active-tab="activeTab" @select="setActiveTab" />
+      <CharacterSheetTabs data-sheet-chrome class="csm-tabs" pill v-if="format !== 'desktop'" :tabs="activeTabs" :active-tab="activeTab" @select="setActiveTab" />
 
-      <div v-if="previewMode" class="csm-preview-note">Предпросмотр черновика · только чтение</div>
+      <div data-sheet-chrome v-if="previewMode" class="csm-preview-note">Предпросмотр черновика · только чтение</div>
 
       <div class="csm-body" :class="{ 'csm-body--pager': compactLayout }">
         <div v-if="loading" class="character-loading">
@@ -66,6 +66,7 @@
 </template>
 
 <script setup>
+import { useSheetChrome } from '../composables/useSheetChrome'
 import CharacterSheetSkeleton from './sheet/CharacterSheetSkeleton.vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import { AppModal } from '@sylvieshare/share-ui'
@@ -90,6 +91,8 @@ const props = defineProps({
   isDm: { type: Boolean, default: false },
   zIndex: { type: Number, default: 3000 },
 })
+const chromeRoot = ref(null)
+useSheetChrome(chromeRoot)
 const emit = defineEmits(['close'])
 const sessionEventsStore = useSessionEventsStore()
 const previewMode = computed(() => Boolean(props.draft))
@@ -186,8 +189,9 @@ onMounted(initializeCharacter)
 .csm { display: flex; flex-direction: column; height: 100%; min-height: 0; }
 .csm-preview-note { flex: none; padding: 5px 14px; border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--accent) 8%, var(--bg)); color: var(--accent-soft); font-size: 10px; font-weight: 700; letter-spacing: .04em; text-align: center; text-transform: uppercase; }
 .csm--preview .desktop-tabs :deep(button[title='Редактировать']) { display: none; }
-.csm-body { flex: 1; min-height: 0; overflow-x: auto; overflow-y: auto; background: transparent; }
-.csm-body--pager { overflow: hidden; }
+.csm-body { margin-top: calc(-1 * var(--sheet-chrome-height, 64px)); padding-top: var(--sheet-chrome-height, 64px); box-sizing: border-box; scroll-padding-top: var(--sheet-chrome-height, 64px); flex: 1; min-height: 0; overflow-x: auto; overflow-y: auto; background: transparent; }
+.csm-body--pager { overflow: hidden; padding-top: 0; }
+.csm-tabs { --surface: var(--subheader); position: relative; z-index: 21; flex: none; border-radius: var(--radius-compact-navigation); background: var(--subheader); margin: 4px 8px; padding: 4px; }
 .csm-body--pager .container { padding: 0; }
 .container { box-sizing: border-box; width: 100%; margin: 0 auto; padding: 18px 16px 28px; background: transparent; }
 .desktop-tabs { display: flex; flex-direction: column; min-height: 100%; }

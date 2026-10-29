@@ -55,8 +55,8 @@ def load(path=SOURCE):
 def validate(data):
     if set(data) != GROUPS | {'schemaVersion', 'colors', 'typography'} or data['schemaVersion'] != 1:
         raise ValueError('Unsupported design token schema')
-    if set(data['colors']) != {'accent', 'accent-hover', 'accent-soft'}:
-        raise ValueError('Product colors must define the three accent roles')
+    if set(data['colors']) != {'accent', 'accent-hover', 'accent-soft', 'bg', 'surface', 'subheader'}:
+        raise ValueError('Product colors must define accent and surface roles')
     for key, value in data['colors'].items():
         if not isinstance(value, str) or not re.fullmatch(r'#[0-9a-fA-F]{6}', value):
             raise ValueError(f'Invalid color: {key}')

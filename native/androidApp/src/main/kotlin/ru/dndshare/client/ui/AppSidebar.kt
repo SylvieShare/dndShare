@@ -36,7 +36,11 @@ internal fun AppSidebar(
     toggle: () -> Unit,
     navigate: (AppPage) -> Unit,
 ) {
-    Column(Modifier.fillMaxSize().background(WebPalette.Surface)) {
+    Column(
+        Modifier.fillMaxSize()
+            .background(WebPalette.Surface)
+            .windowInsetsPadding(WindowInsets.safeDrawing)
+    ) {
         Row(
             Modifier.fillMaxWidth().height(DesignTokens.Layout.Header).padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically,

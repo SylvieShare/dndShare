@@ -10,8 +10,6 @@
     </div>
     </Teleport>
 
-    <FormTextInput v-model:value="query" class="character-search" placeholder="Найти персонажа" aria-label="Найти персонажа" />
-
     <p v-if="loadError && chars.length" role="alert">{{ loadError }} <button type="button" @click="loadChars()">Повторить</button></p>
     <CharacterListSkeleton v-if="loading && !chars.length" />
 
@@ -64,7 +62,6 @@ export default { name: 'ViewListCharacters' }
 </script>
 
 <script setup>
-import { FormTextInput } from '@sylvieshare/share-ui'
 import CharacterListSkeleton from '../components/CharacterListSkeleton.vue'
 import { computed, onActivated, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -81,7 +78,6 @@ const route = useRoute()
 const accountStore = useAccountStore()
 const templateStore = useTemplateStore()
 const chars = ref([])
-const query = ref('')
 const sessionsByChar = ref({})
 const loadError = ref('')
 const loading = ref(true)
@@ -94,7 +90,6 @@ const templates = computed(() => templateStore.all)
 const groupedChars = computed(() => {
   const groups = new Map()
   for (const char of chars.value) {
-    if (query.value.trim() && !(accessorsFor(char.templateId)?.displayName(char.data) || '').toLocaleLowerCase('ru').includes(query.value.trim().toLocaleLowerCase('ru'))) continue
     const key = char.sourceId != null ? `source:${char.sourceId}` : 'source:unknown'
     if (!groups.has(key)) {
       groups.set(key, {
@@ -267,7 +262,6 @@ onActivated(() => {
   gap: 16px;
 }
 
-.character-search { margin-bottom: 20px; min-height: 48px; }
 
 .char-section + .char-section {
   margin-top: 28px;

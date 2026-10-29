@@ -71,302 +71,292 @@ internal fun CharacterSheetScreen(
             ShareMorphHost(
                 morph,
                 background = {
-                    Column(Modifier.fillMaxSize().shareCanvas()) {
-                        PreparedSheetHeader(
-                            sheet,
-                            format,
-                            sections,
-                            pager,
-                            section,
-                            images,
-                            model::selectSection,
-                            close,
-                            backTitle,
-                            menu =
-                                if (sheet?.templateName == "VTM20") ({ model.edit("menu") })
-                                else null,
-                        )
-                        if (ui.snapshot?.draft?.edits?.isNotEmpty() == true) {
-                            SheetSaveStatus(
-                                ui.snapshot.draft.blocked ?: ui.saveMessage,
-                                model::retrySave,
-                                reload = { model.confirmReload(true) },
+                    ShareChromeLayout(
+                        modifier = Modifier.shareCanvas(),
+                        header = {
+                            PreparedSheetHeader(
+                                sheet,
+                                format,
+                                sections,
+                                pager,
+                                section,
+                                images,
+                                model::selectSection,
+                                close,
+                                backTitle,
+                                navigationInHeader = false,
+                                menu =
+                                    if (sheet?.templateName == "VTM20") ({ model.edit("menu") })
+                                    else null,
                             )
-                        }
-                        if (ui.commands.pending || ui.commands.message != null)
-                            Surface(color = WebPalette.Raised) {
-                                Row(
-                                    Modifier.fillMaxWidth().padding(12.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    Text(
-                                        ui.commands.message ?: "Отправляем действие…",
-                                        Modifier.weight(1f),
-                                        style = ShareTypography.context,
-                                    )
-                                    if (!ui.commands.busy && ui.commands.pending)
-                                        ShareTextButton(onClick = model::retryCommand) {
-                                            Text("Повторить")
-                                        }
-                                }
-                            }
-                        ui.loadError?.let { message ->
-                            Surface(color = WebPalette.Raised) {
-                                Row(
-                                    Modifier.fillMaxWidth().padding(12.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    Text(
-                                        message,
-                                        Modifier.weight(1f),
-                                        style = ShareTypography.context,
-                                    )
-                                    ShareTextButton(onClick = model::refresh) { Text("Повторить") }
-                                }
-                            }
-                        }
-                        when {
-                            sheet == null && ui.loadError == null ->
-                                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                    SheetPageSkeleton()
-                                }
-                            sheet != null && sheet.templateName !in listOf("DND5", "VTM20") ->
-                                EmptyContent("Система пока не поддерживается", sheet.sourceName)
-                            sheet != null ->
-                                CompositionLocalProvider(
-                                    LocalCharacterSheet provides
-                                        SheetContext(
-                                            sheet,
-                                            ui.content.metadata,
-                                            ui.content.items,
+                        },
+                        subheader = {
+                            Column {
+                                if (sheet != null && pager != null && format != LayoutFormat.Wide)
+                                    ShareSubheader {
+                                        PreparedSheetNavigation(
+                                            sections,
+                                            requireNotNull(pager),
                                             images,
-                                            canEdit,
-                                            edit = {
-                                                if (canEdit || it in listOf("menu", "rest"))
-                                                    model.edit(it)
-                                            },
-                                            openItem = model::openItem,
-                                            mechanics = requireNotNull(mechanics),
-                                            journal = ui.journal,
-                                            adjustResource = model::adjustResource,
-                                            uuid = model.uuid,
-                                            icons = ui.content.icons,
-                                            canUndo =
-                                                ui.snapshot?.draft?.undo?.isNotEmpty() == true,
-                                            canRedo =
-                                                ui.snapshot?.draft?.redo?.isNotEmpty() == true,
-                                            history = model::history,
-                                            deathSave = model.health::deathSave,
-                                            reloadIcons = model::reloadInventoryIcons,
-                                            sessionUuid = ui.remote.sessionUuid,
-                                            sessionName =
-                                                ui.remote.sessions
-                                                    .firstOrNull {
-                                                        it.uuid == ui.remote.sessionUuid
-                                                    }
-                                                    ?.name
-                                                    .orEmpty(),
-                                            concentration = ui.campaign.concentration,
-                                            roll = model.rolls::open,
-                                            itemMechanic = model.itemMechanics::perform,
-                                            openSpell = model::openSpell,
-                                            rollBusy = ui.roll.busy,
-                                            rerollForUse = model.rolls::rerollForUse,
-                                            reroll = model.rolls::reroll,
-                                            resolvedItemIds = ui.content.resolvedIds,
-                                            fetchingContent = ui.content.fetching,
-                                            refreshContent = model::refreshContent,
-                                        ),
-                                    LocalSheetEditorPreview provides ui.editor,
-                                    ru.dndshare.client.ui.LocalRichInteractions provides
-                                        rememberSheetRichInteractions(
-                                            sheet,
-                                            requireNotNull(mechanics),
-                                            ui.content.metadata,
-                                            images,
-                                            model.rolls::open,
-                                        ),
-                                ) {
-                                    if (!canEdit)
-                                        Text(
-                                            "Режим просмотра",
-                                            Modifier.padding(horizontal = 20.dp, vertical = 4.dp),
-                                            style = ShareTypography.context,
-                                            color = WebPalette.TextSecondary,
+                                            model::selectSection,
+                                            compact = format == LayoutFormat.Phone,
+                                            pill = true,
+                                            template = sheet.templateName,
                                         )
-                                    if (format == LayoutFormat.Phone)
-                                        ShareSubheader {
-                                            PreparedSheetNavigation(
-                                                sections,
-                                                requireNotNull(pager),
-                                                images,
-                                                model::selectSection,
-                                                compact = true,
-                                                pill = true,
-                                                template = sheet.templateName,
-                                            )
-                                        }
-                                    Box(Modifier.weight(1f).fillMaxWidth()) {
-                                        if (wideDnd)
-                                            DndWideSheet(
-                                                section,
-                                                sections,
-                                                model::selectSection,
-                                                swipeEnabled,
-                                            )
-                                        else
-                                            PreparedSheetPager(
-                                                requireNotNull(pager),
-                                                sections,
-                                                Modifier.fillMaxSize(),
-                                                enabled = swipeEnabled,
-                                                active = active,
-                                            ) { page ->
-                                                Box(
-                                                    Modifier.fillMaxSize(),
-                                                    contentAlignment = Alignment.TopCenter,
-                                                ) {
-                                                    Column(
-                                                        Modifier.widthIn(
-                                                                max = DesignTokens.Layout.SheetMax
-                                                            )
-                                                            .fillMaxSize()
-                                                            .verticalScroll(rememberScrollState())
-                                                            .padding(DesignTokens.Spacing.Page),
-                                                        verticalArrangement =
-                                                            Arrangement.spacedBy(16.dp),
-                                                    ) {
-                                                        if (sheet.templateName == "DND5")
-                                                            DndSheetSection(page, format)
-                                                        else VtmSheetSection(page, format)
-                                                    }
-                                                }
-                                            }
                                     }
-
-                                    ui.editor
-                                        ?.takeUnless { it.isDndStat() }
-                                        ?.let { editor ->
-                                            if (isFeatureForm(editor.fields.target))
-                                                FeatureEditor(
-                                                    editor,
-                                                    cache,
-                                                    model::dismissEditor,
-                                                    model::input,
-                                                    model::submitEditor,
-                                                    ui.campaign.players,
-                                                    model::formInput,
+                                SheetStatusPanels(ui, model, sheet != null && !canEdit)
+                            }
+                        },
+                    ) { chromePadding ->
+                        Column(Modifier.fillMaxSize()) {
+                            when {
+                                sheet == null && ui.loadError == null ->
+                                    Box(
+                                        Modifier.fillMaxSize(),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        SheetPageSkeleton()
+                                    }
+                                sheet != null && sheet.templateName !in listOf("DND5", "VTM20") ->
+                                    EmptyContent("Система пока не поддерживается", sheet.sourceName)
+                                sheet != null ->
+                                    CompositionLocalProvider(
+                                        LocalCharacterSheet provides
+                                            SheetContext(
+                                                sheet,
+                                                ui.content.metadata,
+                                                ui.content.items,
+                                                images,
+                                                canEdit,
+                                                edit = {
+                                                    if (canEdit || it in listOf("menu", "rest"))
+                                                        model.edit(it)
+                                                },
+                                                openItem = model::openItem,
+                                                mechanics = requireNotNull(mechanics),
+                                                journal = ui.journal,
+                                                adjustResource = model::adjustResource,
+                                                uuid = model.uuid,
+                                                icons = ui.content.icons,
+                                                canUndo =
+                                                    ui.snapshot?.draft?.undo?.isNotEmpty() == true,
+                                                canRedo =
+                                                    ui.snapshot?.draft?.redo?.isNotEmpty() == true,
+                                                history = model::history,
+                                                deathSave = model.health::deathSave,
+                                                reloadIcons = model::reloadInventoryIcons,
+                                                sessionUuid = ui.remote.sessionUuid,
+                                                sessionName =
+                                                    ui.remote.sessions
+                                                        .firstOrNull {
+                                                            it.uuid == ui.remote.sessionUuid
+                                                        }
+                                                        ?.name
+                                                        .orEmpty(),
+                                                concentration = ui.campaign.concentration,
+                                                roll = model.rolls::open,
+                                                itemMechanic = model.itemMechanics::perform,
+                                                openSpell = model::openSpell,
+                                                rollBusy = ui.roll.busy,
+                                                rerollForUse = model.rolls::rerollForUse,
+                                                reroll = model.rolls::reroll,
+                                                resolvedItemIds = ui.content.resolvedIds,
+                                                fetchingContent = ui.content.fetching,
+                                                refreshContent = model::refreshContent,
+                                            ),
+                                        LocalSheetEditorPreview provides ui.editor,
+                                        ru.dndshare.client.ui.LocalRichInteractions provides
+                                            rememberSheetRichInteractions(
+                                                sheet,
+                                                requireNotNull(mechanics),
+                                                ui.content.metadata,
+                                                images,
+                                                model.rolls::open,
+                                            ),
+                                    ) {
+                                        Box(Modifier.weight(1f).fillMaxWidth()) {
+                                            if (wideDnd)
+                                                DndWideSheet(
+                                                    section,
+                                                    sections,
+                                                    model::selectSection,
+                                                    swipeEnabled,
                                                 )
                                             else
-                                                CharacterSheetEditor(
-                                                    editor,
-                                                    cache,
-                                                    model::dismissEditor,
-                                                    model::number,
-                                                    model::inspiration,
-                                                    model::submitEditor,
-                                                    model::calculateHealth,
-                                                    model::input,
-                                                    model::formInput,
-                                                )
-                                        }
-                                    navigation.overlay?.let { target ->
-                                        if (target.startsWith("weapon-roll:")) {
-                                            val uid = target.substringAfter(':')
-                                            WeaponActionsDialog(
-                                                uid,
-                                                ui.roll.busy,
-                                                model::dismissOverlay,
-                                                attack = { options ->
-                                                    model.dismissOverlay()
-                                                    model.rolls.attack(uid, options)
-                                                },
-                                                damage = { options ->
-                                                    model.dismissOverlay()
-                                                    model.rolls.damage(uid, options)
-                                                },
-                                            )
-                                        } else if (target.startsWith("spell-roll:")) {
-                                            val key = target.substringAfter(':')
-                                            SpellActionsDialog(
-                                                key,
-                                                ui.roll.busy,
-                                                model::dismissOverlay,
-                                                model.rolls.spellOptions(key),
-                                            ) { options ->
-                                                model.dismissOverlay()
-                                                model.rolls.spell(key, options)
-                                            }
-                                        } else if (target == "campaign")
-                                            CharacterCampaignDialog(
-                                                ui.remote,
-                                                ui.campaign,
-                                                model.campaign,
-                                                model.remote::selectSession,
-                                                model::dismissOverlay,
-                                                model.remote::openCharacter,
-                                            )
-                                        else
-                                            SheetInformationDialog(
-                                                sheet,
-                                                ui.remote,
-                                                model.remote,
-                                                model::dismissOverlay,
-                                                close,
-                                                model::refresh,
-                                            )
-                                    }
-                                    if (navigation.itemStack.isNotEmpty())
-                                        ShareFullscreenDialog(
-                                            onDismissRequest = model::closeItem,
-                                            properties =
-                                                DialogProperties(usePlatformDefaultWidth = false),
-                                        ) {
-                                            val destination = navigation.itemStack.last()
-                                            val source = destination.spellKey
-                                            val readout =
-                                                source?.takeIf(String::isNotBlank)?.let {
-                                                    runCatching {
-                                                        spellReadout(
-                                                            sheet,
-                                                            it,
-                                                            ui.content.items,
-                                                            ui.content.metadata,
-                                                        )
+                                                PreparedSheetPager(
+                                                    requireNotNull(pager),
+                                                    sections,
+                                                    Modifier.fillMaxSize(),
+                                                    enabled = swipeEnabled,
+                                                    active = active,
+                                                ) { page ->
+                                                    Box(
+                                                        Modifier.fillMaxSize(),
+                                                        contentAlignment = Alignment.TopCenter,
+                                                    ) {
+                                                        Column(
+                                                            Modifier.widthIn(
+                                                                    max =
+                                                                        DesignTokens.Layout.SheetMax
+                                                                )
+                                                                .fillMaxSize()
+                                                                .verticalScroll(
+                                                                    rememberScrollState()
+                                                                )
+                                                                .padding(
+                                                                    start =
+                                                                        DesignTokens.Spacing.Page,
+                                                                    end = DesignTokens.Spacing.Page,
+                                                                    top =
+                                                                        chromePadding
+                                                                            .calculateTopPadding() +
+                                                                            DesignTokens.Spacing
+                                                                                .Page,
+                                                                    bottom =
+                                                                        chromePadding
+                                                                            .calculateBottomPadding() +
+                                                                            DesignTokens.Spacing
+                                                                                .Page,
+                                                                ),
+                                                            verticalArrangement =
+                                                                Arrangement.spacedBy(16.dp),
+                                                        ) {
+                                                            if (sheet.templateName == "DND5")
+                                                                DndSheetSection(page, format)
+                                                            else VtmSheetSection(page, format)
+                                                        }
                                                     }
-                                                        .getOrNull()
                                                 }
-                                            val base =
-                                                ru.dndshare.client.ui.LocalRichInteractions.current
-                                            val interactions =
-                                                readout?.let {
-                                                    spellRichInteractions(
-                                                        base,
-                                                        it,
-                                                        model.rolls
-                                                            .spellOptions(source.orEmpty())
-                                                            ?.castLevel
-                                                            ?: it.reference["cast_level"].number(
-                                                                it.item.data["lvl"].number()
-                                                            ),
-                                                    )
-                                                } ?: base
-                                            CompositionLocalProvider(
-                                                ru.dndshare.client.ui.LocalRichInteractions provides
-                                                    interactions
-                                            ) {
-                                                ItemDetail(
-                                                    cache,
-                                                    sheet.sourceId,
-                                                    destination.id,
-                                                    ui.content.metadata,
-                                                    images,
-                                                    back = model::closeItem,
-                                                    open = model::openItem,
-                                                )
-                                            }
                                         }
-                                }
+
+                                        ui.editor
+                                            ?.takeUnless { it.isDndStat() }
+                                            ?.let { editor ->
+                                                if (isFeatureForm(editor.fields.target))
+                                                    FeatureEditor(
+                                                        editor,
+                                                        cache,
+                                                        model::dismissEditor,
+                                                        model::input,
+                                                        model::submitEditor,
+                                                        ui.campaign.players,
+                                                        model::formInput,
+                                                    )
+                                                else
+                                                    CharacterSheetEditor(
+                                                        editor,
+                                                        cache,
+                                                        model::dismissEditor,
+                                                        model::number,
+                                                        model::inspiration,
+                                                        model::submitEditor,
+                                                        model::calculateHealth,
+                                                        model::input,
+                                                        model::formInput,
+                                                    )
+                                            }
+                                        navigation.overlay?.let { target ->
+                                            if (target.startsWith("weapon-roll:")) {
+                                                val uid = target.substringAfter(':')
+                                                WeaponActionsDialog(
+                                                    uid,
+                                                    ui.roll.busy,
+                                                    model::dismissOverlay,
+                                                    attack = { options ->
+                                                        model.dismissOverlay()
+                                                        model.rolls.attack(uid, options)
+                                                    },
+                                                    damage = { options ->
+                                                        model.dismissOverlay()
+                                                        model.rolls.damage(uid, options)
+                                                    },
+                                                )
+                                            } else if (target.startsWith("spell-roll:")) {
+                                                val key = target.substringAfter(':')
+                                                SpellActionsDialog(
+                                                    key,
+                                                    ui.roll.busy,
+                                                    model::dismissOverlay,
+                                                    model.rolls.spellOptions(key),
+                                                ) { options ->
+                                                    model.dismissOverlay()
+                                                    model.rolls.spell(key, options)
+                                                }
+                                            } else if (target == "campaign")
+                                                CharacterCampaignDialog(
+                                                    ui.remote,
+                                                    ui.campaign,
+                                                    model.campaign,
+                                                    model.remote::selectSession,
+                                                    model::dismissOverlay,
+                                                    model.remote::openCharacter,
+                                                )
+                                            else
+                                                SheetInformationDialog(
+                                                    sheet,
+                                                    ui.remote,
+                                                    model.remote,
+                                                    model::dismissOverlay,
+                                                    close,
+                                                    model::refresh,
+                                                )
+                                        }
+                                        if (navigation.itemStack.isNotEmpty())
+                                            ShareFullscreenDialog(
+                                                onDismissRequest = model::closeItem,
+                                                properties =
+                                                    DialogProperties(
+                                                        usePlatformDefaultWidth = false
+                                                    ),
+                                            ) {
+                                                val destination = navigation.itemStack.last()
+                                                val source = destination.spellKey
+                                                val readout =
+                                                    source?.takeIf(String::isNotBlank)?.let {
+                                                        runCatching {
+                                                            spellReadout(
+                                                                sheet,
+                                                                it,
+                                                                ui.content.items,
+                                                                ui.content.metadata,
+                                                            )
+                                                        }
+                                                            .getOrNull()
+                                                    }
+                                                val base =
+                                                    ru.dndshare.client.ui.LocalRichInteractions
+                                                        .current
+                                                val interactions =
+                                                    readout?.let {
+                                                        spellRichInteractions(
+                                                            base,
+                                                            it,
+                                                            model.rolls
+                                                                .spellOptions(source.orEmpty())
+                                                                ?.castLevel
+                                                                ?: it.reference["cast_level"]
+                                                                    .number(
+                                                                        it.item.data["lvl"].number()
+                                                                    ),
+                                                        )
+                                                    } ?: base
+                                                CompositionLocalProvider(
+                                                    ru.dndshare.client.ui
+                                                        .LocalRichInteractions provides interactions
+                                                ) {
+                                                    ItemDetail(
+                                                        cache,
+                                                        sheet.sourceId,
+                                                        destination.id,
+                                                        ui.content.metadata,
+                                                        images,
+                                                        back = model::closeItem,
+                                                        open = model::openItem,
+                                                    )
+                                                }
+                                            }
+                                    }
+                            }
                         }
                     }
                 },
@@ -403,27 +393,6 @@ internal fun CharacterSheetScreen(
                         ShareTextButton(onClick = { model.confirmReload(false) }) { Text("Отмена") }
                     },
                 )
-        }
-    }
-}
-
-@Composable
-private fun SheetSaveStatus(message: String?, retry: () -> Unit, reload: () -> Unit) {
-    Surface(color = WebPalette.Raised) {
-        Row(
-            Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                message ?: "Сохраняем изменения…",
-                Modifier.weight(1f),
-                style = ShareTypography.context,
-                color = if (message != null) WebPalette.Warning else WebPalette.TextSecondary,
-            )
-            if (message != null) {
-                ShareTextButton(onClick = retry) { Text("Повторить") }
-                ShareTextButton(onClick = reload) { Text("Версия сервера") }
-            }
         }
     }
 }

@@ -106,7 +106,7 @@ fun ShareSubheader(
     ) {
         Surface(
             Modifier.widthIn(max = maxContentWidth).fillMaxWidth(),
-            color = if (compact) WebPalette.Surface else WebPalette.Background,
+            color = WebPalette.Subheader,
             shape =
                 RoundedCornerShape(if (compact) DesignTokens.Radius.CompactNavigation else 0.dp),
         ) {

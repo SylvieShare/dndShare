@@ -19,6 +19,7 @@ internal fun PreparedSheetHeader(
     close: () -> Unit,
     backTitle: String,
     menu: (() -> Unit)? = null,
+    navigationInHeader: Boolean = true,
 ) {
     CharacterSheetHeader(
         sheet,
@@ -30,6 +31,7 @@ internal fun PreparedSheetHeader(
         close,
         backTitle,
         menu,
+        navigationInHeader,
     )
 }
 

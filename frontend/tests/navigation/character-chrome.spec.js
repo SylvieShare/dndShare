@@ -31,6 +31,11 @@ for (const width of [320, 834, 1440]) test(`character actions stay in sharp subh
   await expect(subheader.getByRole('heading', { name: 'Персонажи', exact: true })).toBeVisible()
   await expect(subheader.getByRole('button', { name: 'Новый персонаж', exact: true })).toBeVisible()
   expect(await page.locator('.page > .page-header').count()).toBe(0)
+  await expect(page.getByPlaceholder('Найти персонажа')).toHaveCount(0)
+  const colors = await page.locator('.workspace-subheader-inner').evaluate(element => {
+    const css = getComputedStyle(element); return { surface: css.getPropertyValue('--subheader'), block: css.getPropertyValue('--surface'), bg: css.backgroundColor }
+  })
+  expect(colors.bg).toBe('rgb(53, 49, 63)')
   await expect(page.locator('.workspace-subheader-inner')).toHaveCSS('filter', 'none')
   const effect = await page.locator('.app-header').evaluate(element => {
     const css = getComputedStyle(element, '::before')

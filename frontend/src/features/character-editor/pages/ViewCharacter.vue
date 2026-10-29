@@ -3,11 +3,12 @@
     <CharacterEditionDialog :controller="edition" />
     <CharacterTransferDialogs :controller="transfers" :character-uuid="uuid" />
     <PageTutorial :tutorial="characterTutorial" :mobile="isMobile" />
-    <CharacterWorkspaceHeader :stacked-navigation="format === 'tablet'" ref="workspaceHeaderEl" :show-menu="template?.system === 'vtm-v20'" :compact="isMobile" :name="charName" :subtitle="charSub" :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="format === 'tablet' || format === 'desktop' && template?.system === 'vtm-v20' ? activeTabs : []" :active-tab="activeTab" @select-tab="onSetActiveTab" />
+    <CharacterWorkspaceHeader data-sheet-chrome :stacked-navigation="format === 'tablet'" ref="workspaceHeaderEl" :show-menu="template?.system === 'vtm-v20'" :compact="isMobile" :name="charName" :subtitle="charSub" :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="format === 'tablet' || format === 'desktop' && template?.system === 'vtm-v20' ? activeTabs : []" :active-tab="activeTab" @select-tab="onSetActiveTab" />
 
 
     <div
       v-if="isMobile && mobileTabs.length"
+      data-sheet-chrome
       class="mobile-sticky-header"
       :style="{ top: toolbarHeight + 'px' }"
       @wheel.prevent="onFixedHeaderWheel"
@@ -85,6 +86,7 @@
 </template>
 
 <script setup>
+import { useSheetChrome } from '../composables/useSheetChrome'
 import CharacterWorkspaceHeader from '@/features/character-editor/components/CharacterWorkspaceHeader.vue'
 import CharacterTransferDialogs from '@/features/character-editor/components/CharacterTransferDialogs.vue'
 import { useCharacterTransfers } from '@/features/character-editor/composables/useCharacterTransfers'
@@ -208,6 +210,8 @@ Object.assign(charCtx, {
     }
   },
 })
+
+useSheetChrome(tutorialRoot)
 
 const swipe = useTabSwipe(activeTabs, compactLayout, mobileTabbarEl)
 const {

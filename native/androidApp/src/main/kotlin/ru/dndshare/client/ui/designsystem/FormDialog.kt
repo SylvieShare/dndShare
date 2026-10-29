@@ -11,12 +11,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.dialog
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.DialogWindowProvider
 
 @Composable
 fun ShareFormDialog(
@@ -135,5 +137,39 @@ fun ShareFullscreenDialog(
     properties: DialogProperties = DialogProperties(usePlatformDefaultWidth = false),
     content: @Composable () -> Unit,
 ) {
-    Dialog(onDismissRequest, properties = properties) { content() }
+    Dialog(
+        onDismissRequest,
+        properties =
+            DialogProperties(
+                dismissOnBackPress = properties.dismissOnBackPress,
+                dismissOnClickOutside = properties.dismissOnClickOutside,
+                securePolicy = properties.securePolicy,
+                usePlatformDefaultWidth = false,
+                decorFitsSystemWindows = false,
+            ),
+    ) {
+        val view = LocalView.current
+        SideEffect {
+            (view.parent as? DialogWindowProvider)?.window?.let { window ->
+                @Suppress("DEPRECATION")
+                run {
+                    window.statusBarColor = android.graphics.Color.TRANSPARENT
+                    window.navigationBarColor = android.graphics.Color.TRANSPARENT
+                }
+                if (android.os.Build.VERSION.SDK_INT >= 29) {
+                    window.isNavigationBarContrastEnforced = false
+                    window.isStatusBarContrastEnforced = false
+                }
+                androidx.core.view.WindowCompat.getInsetsController(window, view).apply {
+                    isAppearanceLightStatusBars = false
+                    isAppearanceLightNavigationBars = false
+                }
+            }
+        }
+        CompositionLocalProvider(
+            LocalChromePadding provides WindowInsets.safeDrawing.asPaddingValues()
+        ) {
+            content()
+        }
+    }
 }

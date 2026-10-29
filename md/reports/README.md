@@ -4,6 +4,7 @@
 
 Это датированные результаты и история решений. Они не заменяют текущие контракты [оглавления wiki](../README.md).
 
+- [Общая палитра, шапки и Android edge-to-edge — 29 октября 2026](global-chrome-edge-to-edge-2026-10-29.md)
 - [Замеры frontend сентября](frontend-performance-2026-09.md)
 - [Замеры frontend октября](frontend-performance-2026-10.md)
 - [История состава сборки](frontend-bundle-history-2026-10.md)

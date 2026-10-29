@@ -19,7 +19,7 @@ defineProps({ mode: { type: String, default: 'column', validator: value => ['ful
   min-height: 0;
   box-sizing: border-box;
   /* The canvas safe area already includes 28px after the participant rail. */
-  padding: 28px calc(var(--chapter-safe-right, 0px) + 28px) 28px max(28px, var(--chapter-safe-left, 28px));
+  padding: calc(var(--chapter-chrome-height, 0px) + 28px) calc(var(--chapter-safe-right, 0px) + 28px) 28px max(28px, var(--chapter-safe-left, 28px));
   background-color: var(--app-canvas-bg);
   background-image: var(--app-canvas-pattern);
   background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);
@@ -34,10 +34,10 @@ defineProps({ mode: { type: String, default: 'column', validator: value => ['ful
   min-height: 0;
 }
 
-.session-tab-workspace--full { padding: 0; background: transparent; }
+.session-tab-workspace--full { padding: var(--chapter-chrome-height, 0px) 0 0; background: transparent; }
 .session-tab-workspace--full .session-tab-workspace-content { max-width: none; }
 
 @media (max-width: 760px) {
-  .session-tab-workspace--column { padding: 16px calc(var(--chapter-safe-right, 0px) + 12px) 16px 16px; }
+  .session-tab-workspace--column { padding: calc(var(--chapter-chrome-height, 0px) + 16px) calc(var(--chapter-safe-right, 0px) + 12px) 16px 16px; }
 }
 </style>

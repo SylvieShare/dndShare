@@ -20,7 +20,7 @@ ICONS = {
     "Bold": "bold", "Italic": "italic", "Underline": "underline", "Undo": "undo-2", "Redo": "redo-2", "More": "ellipsis",
 }
 COLORS = {
-    "Background": "bg", "Surface": "surface", "Raised": "surface-raised",
+    "Background": "bg", "Surface": "surface", "Subheader": "subheader", "Raised": "surface-raised",
     "Active": "surface-active", "Popover": "popover-bg", "Text": "text-1",
     "TextSecondary": "text-2", "TextMuted": "text-muted", "OnAccent": "text-on-accent",
     "Accent": "accent", "AccentHover": "accent-hover", "AccentSoft": "accent-soft",

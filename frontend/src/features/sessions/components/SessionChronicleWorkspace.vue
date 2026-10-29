@@ -16,7 +16,7 @@ defineProps({ liveStatus: { type: String, default: 'idle' } })
 .session-chronicle-workspace {
   position: absolute;
   z-index: 5;
-  inset: 0;
+  inset: var(--chapter-chrome-height, 0px) 0 0;
   min-width: 0;
   min-height: 0;
 }

@@ -26,7 +26,7 @@ internal fun SheetDiceNotifications(
         retained = all.values.toList()
     }
     BoxWithConstraints(
-        Modifier.fillMaxSize().imePadding().padding(16.dp),
+        Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing).padding(16.dp),
         contentAlignment = Alignment.BottomEnd,
     ) {
         Column(

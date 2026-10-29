@@ -11,6 +11,10 @@ import androidx.compose.ui.graphics.layer.*
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.unit.*
 
+val LocalChromePadding = staticCompositionLocalOf { PaddingValues() }
+
+val LocalChromeHeaderPadding = staticCompositionLocalOf { PaddingValues() }
+
 internal val LocalChromeManaged = staticCompositionLocalOf { false }
 
 /** A single content subtree, sampled only behind the chrome. Foreground controls stay sharp. */
@@ -20,16 +24,23 @@ fun ShareChromeLayout(
     blurEnabled: Boolean = true,
     header: @Composable () -> Unit,
     subheader: @Composable () -> Unit = {},
+    footer: (@Composable () -> Unit)? = null,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     val supported = Build.VERSION.SDK_INT >= 31 && blurEnabled
     val source = if (supported) rememberGraphicsLayer() else null
     val blurred = if (supported) rememberGraphicsLayer() else null
-    SubcomposeLayout(modifier.fillMaxSize()) { constraints ->
+    val safe = WindowInsets.safeDrawing.exclude(WindowInsets.ime).asPaddingValues()
+    val bottom = safe.calculateBottomPadding()
+    SubcomposeLayout(modifier.fillMaxSize().imePadding()) { constraints ->
         val chromeBounds = constraints.copy(minHeight = 0)
         val main =
             subcompose("header") {
-                    CompositionLocalProvider(LocalChromeManaged provides true) { header() }
+                    CompositionLocalProvider(LocalChromeManaged provides true) {
+                        Box(Modifier.fillMaxWidth().padding(top = safe.calculateTopPadding())) {
+                            header()
+                        }
+                    }
                 }
                 .map { it.measure(chromeBounds) }
         val mainHeight = main.maxOfOrNull { it.height } ?: 0
@@ -39,7 +50,16 @@ fun ShareChromeLayout(
                 }
                 .map { it.measure(chromeBounds) }
         val lowerHeight = lower.maxOfOrNull { it.height } ?: 0
+        val foot =
+            subcompose("footer") {
+                    if (footer != null)
+                        Box(Modifier.fillMaxWidth().padding(bottom = bottom)) { footer() }
+                }
+                .map { it.measure(chromeBounds) }
+        val footerHeight = foot.maxOfOrNull { it.height } ?: 0
         val top = (mainHeight + lowerHeight).toDp()
+        val padding =
+            PaddingValues(top = top, bottom = if (footer != null) footerHeight.toDp() else bottom)
         val body =
             subcompose("content") {
                     Box(
@@ -53,7 +73,13 @@ fun ShareChromeLayout(
                                     }
                             )
                     ) {
-                        content(PaddingValues(top = top))
+                        CompositionLocalProvider(
+                            LocalChromePadding provides padding,
+                            LocalChromeHeaderPadding provides
+                                PaddingValues(top = mainHeight.toDp(), bottom = bottom),
+                        ) {
+                            content(padding)
+                        }
                     }
                 }
                 .map { it.measure(constraints) }
@@ -113,6 +139,7 @@ fun ShareChromeLayout(
             backdrop.forEach { it.placeRelative(0, 0) }
             main.forEach { it.placeRelative(0, 0) }
             lower.forEach { it.placeRelative(0, mainHeight) }
+            foot.forEach { it.placeRelative(0, constraints.maxHeight - footerHeight) }
         }
     }
 }

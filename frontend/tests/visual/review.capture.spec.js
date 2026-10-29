@@ -105,7 +105,7 @@ for (const format of matrix.formats) {
     }
     if (wanted.has('character-list') || wanted.has('character-menu')) {
       await page.goto('/chars', { waitUntil: 'networkidle' })
-      await expect(page.getByPlaceholder('Найти персонажа')).toBeVisible()
+      await expect(page.getByRole('button', { name: 'Новый персонаж', exact: true })).toBeVisible()
       await snapshot('character-list')
       if(wanted.has('character-menu')) {
         await page.locator('.char-card').filter({hasText: fixture.characters[0].name}).getByTitle('Действия',{exact:true}).click()

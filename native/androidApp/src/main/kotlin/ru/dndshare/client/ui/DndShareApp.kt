@@ -154,7 +154,10 @@ private fun AuthenticatedApp(
             images.shutdown()
         }
     }
-    BoxWithConstraints(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
+    BoxWithConstraints(
+        Modifier.fillMaxSize()
+            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
+    ) {
         val format = layoutFormat(maxWidth.value)
         val selectedPage = runCatching { AppPage.valueOf(page) }.getOrDefault(AppPage.Handbook)
         ShareMorphRoot {
@@ -197,66 +200,65 @@ private fun AuthenticatedApp(
                                 )
                             }
                         else {
-                            ShareChromeLayout(
-                                header = {
-                                    AppHeader(
-                                        format,
-                                        selectedPage,
-                                        state,
-                                        openMenu,
-                                        heading =
-                                            if (selectedPage == AppPage.Handbook)
-                                                ({
-                                                    HandbookHeading(
-                                                        handbookHeading.type,
-                                                        images,
-                                                        handbookHeading::goHome,
-                                                    )
-                                                })
-                                            else null,
-                                    )
-                                },
-                                subheader = {
-                                    Column {
-                                        if (selectedPage == AppPage.Characters)
-                                            CharacterListSubheader(create)
+                            AnimatedAppPage(selectedPage) { displayedPage ->
+                                pages.SaveableStateProvider(displayedPage.name) {
+                                    val header: @Composable () -> Unit = {
+                                        AppHeader(
+                                            format,
+                                            displayedPage,
+                                            state,
+                                            openMenu,
+                                            heading =
+                                                if (displayedPage == AppPage.Handbook)
+                                                    ({
+                                                        HandbookHeading(
+                                                            handbookHeading.type,
+                                                            images,
+                                                            handbookHeading::goHome,
+                                                        )
+                                                    })
+                                                else null,
+                                        )
+                                    }
+                                    val status: @Composable () -> Unit = {
                                         ConnectionStatus(state) { controller.refresh(force = true) }
                                     }
-                                },
-                            ) { padding ->
-                                Column(Modifier.fillMaxSize()) {
-                                    AnimatedAppPage(selectedPage) { displayedPage ->
-                                        pages.SaveableStateProvider(displayedPage.name) {
-                                            when (displayedPage) {
-                                                AppPage.Characters ->
-                                                    CharacterScreen(
-                                                        state,
-                                                        format,
-                                                        images,
-                                                        controller.api,
-                                                        refresh = {
-                                                            controller.refresh(force = true)
-                                                        },
-                                                        contentPadding = padding,
-                                                        open = { characterHistory = listOf(it) },
-                                                    )
-                                                AppPage.Handbook ->
-                                                    Box(Modifier.fillMaxSize().padding(padding)) {
-                                                        HandbookScreen(
-                                                            state,
-                                                            format,
-                                                            fold,
-                                                            images,
-                                                            handbookHeading,
-                                                        )
-                                                    }
-                                                else ->
-                                                    Box(Modifier.fillMaxSize().padding(padding)) {
-                                                        PlaceholderScreen(displayedPage)
-                                                    }
-                                            }
+                                    if (displayedPage == AppPage.Handbook) {
+                                        HandbookScreen(
+                                            state,
+                                            format,
+                                            fold,
+                                            images,
+                                            handbookHeading,
+                                            header,
+                                            status,
+                                        )
+                                    } else
+                                        ShareChromeLayout(
+                                            header = header,
+                                            subheader = {
+                                                Column {
+                                                    if (displayedPage == AppPage.Characters)
+                                                        CharacterListSubheader(create)
+                                                    status()
+                                                }
+                                            },
+                                        ) { padding ->
+                                            if (displayedPage == AppPage.Characters)
+                                                CharacterScreen(
+                                                    state,
+                                                    format,
+                                                    images,
+                                                    controller.api,
+                                                    refresh = { controller.refresh(force = true) },
+                                                    contentPadding = padding,
+                                                    open = { characterHistory = listOf(it) },
+                                                )
+                                            else
+                                                Box(Modifier.fillMaxSize().padding(padding)) {
+                                                    PlaceholderScreen(displayedPage)
+                                                }
                                         }
-                                    }
                                 }
                             }
                         }

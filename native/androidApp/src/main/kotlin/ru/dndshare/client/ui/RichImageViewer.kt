@@ -77,11 +77,7 @@ internal fun RichImageViewer(url: String, label: String, images: ImageLoader?, c
         properties =
             DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false),
     ) {
-        Box(
-            Modifier.fillMaxSize()
-                .background(WebPalette.Background)
-                .windowInsetsPadding(WindowInsets.safeDrawing)
-        ) {
+        Box(Modifier.fillMaxSize().background(WebPalette.Background)) {
             val context = LocalContext.current
             val resolution = (maxOf(viewport.width, viewport.height) * 2).coerceIn(1, 2048)
             val request =
@@ -162,7 +158,13 @@ internal fun RichImageViewer(url: String, label: String, images: ImageLoader?, c
                     ShareTextButton({ retry++ }) { Text("Повторить") }
                 }
             Surface(
-                Modifier.align(Alignment.TopEnd).padding(8.dp),
+                Modifier.align(Alignment.TopEnd)
+                    .windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.Top + WindowInsetsSides.Horizontal
+                        )
+                    )
+                    .padding(8.dp),
                 color = WebPalette.Surface,
                 shape = MaterialTheme.shapes.small,
             ) {
@@ -174,7 +176,13 @@ internal fun RichImageViewer(url: String, label: String, images: ImageLoader?, c
                 }
             }
             Surface(
-                Modifier.align(Alignment.BottomCenter).padding(16.dp),
+                Modifier.align(Alignment.BottomCenter)
+                    .windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal
+                        )
+                    )
+                    .padding(16.dp),
                 color = WebPalette.Surface,
                 shape = MaterialTheme.shapes.small,
             ) {

@@ -183,8 +183,12 @@
 @media (--ui-phone) {
   .mobile-sticky-header { background: transparent; border: 0; padding: 0 var(--layout-compact-header-inset) var(--layout-compact-header-inset); box-sizing: border-box; }
   .mobile-sticky-header::after { display: none; }
-  .mobile-tabbar { background: var(--surface); border: 0; border-radius: var(--radius-compact-navigation); padding: 4px; min-height: 48px; }
+  .mobile-tabbar { --surface: var(--subheader); background: var(--subheader); border: 0; border-radius: var(--radius-compact-navigation); padding: 4px; min-height: 48px; }
   .mobile-tab-indicator { top: 4px; bottom: 4px; height: auto; border-radius: 999px; background: color-mix(in srgb, var(--accent) 18%, var(--surface)); }
   .mobile-tab-btn { border-radius: 999px; }
   .mobile-tab-btn.active { color: var(--accent-soft); }
 }
+
+/* The scroller paints beneath both chrome rows; padding belongs to its content. */
+.sheet-scroll { margin-top: calc(-1 * var(--sheet-chrome-height, 64px)); padding-top: var(--sheet-chrome-height, 64px); box-sizing: border-box; scroll-padding-top: var(--sheet-chrome-height, 64px); }
+@media (--ui-compact) { .sheet-scroll { padding-top: 0; } }

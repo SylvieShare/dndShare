@@ -44,10 +44,12 @@ fun ShareMorphRoot(modifier: Modifier = Modifier, content: @Composable () -> Uni
         entries.forEach { (token, layer) ->
             key(token) {
                 Box(
-                    Modifier.fillMaxSize().onGloballyPositioned {
-                        layer.state.hostOrigin = it.positionInWindow()
-                        layer.state.hostPlaced = true
-                    }
+                    Modifier.fillMaxSize()
+                        .windowInsetsPadding(WindowInsets.safeDrawing)
+                        .onGloballyPositioned {
+                            layer.state.hostOrigin = it.positionInWindow()
+                            layer.state.hostPlaced = true
+                        }
                 ) {
                     CompositionLocalProvider(layer.context) { layer.content() }
                 }

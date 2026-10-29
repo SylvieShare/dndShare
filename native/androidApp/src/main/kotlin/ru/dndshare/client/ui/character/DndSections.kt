@@ -60,6 +60,7 @@ internal fun DndWideSheet(
             Modifier.widthIn(max = DesignTokens.Layout.SheetMax)
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
+                .padding(LocalChromePadding.current)
                 .align(androidx.compose.ui.Alignment.TopCenter),
             horizontalArrangement = Arrangement.spacedBy(15.dp),
         ) {

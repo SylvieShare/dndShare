@@ -83,7 +83,7 @@ fun ShareIconNavigation(
                         .background(
                             if (pill)
                                 WebPalette.Accent.copy(alpha = .18f)
-                                    .compositeOver(WebPalette.Surface)
+                                    .compositeOver(WebPalette.Subheader)
                             else WebPalette.Accent,
                             if (pill) RoundedCornerShape(percent = 50)
                             else RoundedCornerShape(10.dp),

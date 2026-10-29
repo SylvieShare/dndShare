@@ -39,7 +39,7 @@ onBeforeUnmount(() => observer?.disconnect());
 .workspace-header::before {
   content: '';
   position: absolute;
-  inset: 0 0 calc(-1 * var(--chrome-fade-tail));
+  inset: 0 0 calc(-1 * (var(--chrome-fade-tail) + var(--workspace-extra-fade, 0px)));
   z-index: -1;
   pointer-events: none;
   background: color-mix(in srgb, var(--bg) calc(var(--chrome-tint) * 100%), transparent);
@@ -63,7 +63,7 @@ onBeforeUnmount(() => observer?.disconnect());
 }
 .workspace-header-inner--page { padding-inline: var(--spacing-page); }
 .workspace-subheader { padding: 4px 8px; }
-.workspace-subheader-inner { display: flex; justify-content: center; box-sizing: border-box; width: 100%; min-width: 0; margin-inline: auto; padding: var(--spacing-xs); border-radius: var(--radius-compact-navigation); background: var(--surface); overflow-x: auto; }
+.workspace-subheader-inner { --surface: var(--subheader); display: flex; justify-content: center; box-sizing: border-box; width: 100%; min-width: 0; margin-inline: auto; padding: var(--spacing-xs); border-radius: var(--radius-compact-navigation); background: var(--subheader); overflow-x: auto; }
 .workspace-header-identity {
   min-width: 0;
   min-height: calc(var(--layout-header) - 2 * var(--spacing-xs) - var(--layout-border));
@@ -75,6 +75,7 @@ onBeforeUnmount(() => observer?.disconnect());
   grid-template-columns: minmax(0, 1fr) auto;
 }
 .workspace-header-navigation {
+  --surface: var(--subheader);
   min-width: 0;
   justify-self: center;
 }
@@ -116,7 +117,7 @@ onBeforeUnmount(() => observer?.disconnect());
   .workspace-header-inner { min-height: var(--layout-header); }
   .workspace-subheader { border: 0; background: transparent; padding: var(--spacing-xs) var(--layout-compact-header-inset); }
   .workspace-subheader-inner, .workspace-header-navigation {
-    background: var(--surface); border: 0; border-radius: var(--radius-compact-navigation);
+    background: var(--subheader); border: 0; border-radius: var(--radius-compact-navigation);
   }
   .workspace-header-navigation { padding: var(--spacing-xs); }
 }

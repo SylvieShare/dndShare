@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -33,7 +32,6 @@ fun CharacterScreen(
     open: (String) -> Unit,
 ) {
     val repository = state.repository ?: return
-    var query by rememberSaveable { mutableStateOf("") }
     var deleting by remember { mutableStateOf<Character?>(null) }
     var refreshing by remember { mutableStateOf(true) }
     var busy by remember { mutableStateOf(false) }
@@ -81,7 +79,7 @@ fun CharacterScreen(
                 .collect { value = it }
         }
     val errorMessage = failure ?: state.characterError
-    val visible = characters.orEmpty().filter { it.name.contains(query, true) }
+    val visible = characters.orEmpty()
     Box(Modifier.fillMaxSize().shareCanvas(), contentAlignment = Alignment.TopCenter) {
         LazyVerticalGrid(
             columns = GridCells.Adaptive(if (format == LayoutFormat.Phone) 280.dp else 400.dp),
@@ -98,9 +96,6 @@ fun CharacterScreen(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            item(key = "character-search", span = { GridItemSpan(maxLineSpan) }) {
-                ShareSearch(query, { query = it }, placeholder = "Найти персонажа")
-            }
             errorMessage?.let { message ->
                 item(key = "character-error", span = { GridItemSpan(maxLineSpan) }) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -131,9 +126,8 @@ fun CharacterScreen(
             else if (visible.isEmpty() && errorMessage == null)
                 item(key = "empty", span = { GridItemSpan(maxLineSpan) }) {
                     EmptyContent(
-                        if (query.isBlank()) "Персонажей пока нет" else "Ничего не найдено",
-                        if (query.isBlank()) "Создайте первого персонажа."
-                        else "Попробуйте другое имя.",
+                        "Персонажей пока нет",
+                        "Создайте первого персонажа.",
                     )
                 }
             else {

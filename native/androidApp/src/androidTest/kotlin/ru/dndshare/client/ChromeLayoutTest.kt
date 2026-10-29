@@ -1,9 +1,14 @@
 package ru.dndshare.client
 
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -13,11 +18,12 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
-import androidx.test.filters.SdkSuppress
 import androidx.test.core.app.ActivityScenario
+import androidx.test.filters.SdkSuppress
 import androidx.test.platform.app.InstrumentationRegistry
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
@@ -137,6 +143,127 @@ class ChromeLayoutTest {
             await { clicked.get() == 1 }
             assertNotNull(TouchRobot.find("Персонажи"))
             assertNotNull(TouchRobot.find("Содержимое"))
+        }
+    }
+
+    @Test
+    fun edgeToEdgeScrollUsesSystemBarAreasAndKeepsControlsSafe() {
+        val viewport = AtomicReference(Rect.Zero)
+        val first = AtomicReference(0f)
+        val last = AtomicReference(Rect.Zero)
+        val safeBottom = AtomicReference(0f)
+        val scroll = AtomicReference<ScrollState>()
+        ActivityScenario.launch(ComponentActivity::class.java).use { activity ->
+            activity.onActivity { host ->
+                host.enableEdgeToEdge(
+                    statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+                    navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+                )
+                host.setContent {
+                    DndTheme {
+                        val density = LocalDensity.current
+                        val bottom = WindowInsets.safeDrawing.getBottom(density).toFloat()
+                        val state = rememberScrollState()
+                        SideEffect {
+                            scroll.set(state)
+                            safeBottom.set(bottom)
+                        }
+                        ShareChromeLayout(header = { ShareWorkspaceHeader { Text("Toolbar") } }) {
+                            padding ->
+                            Column(
+                                Modifier.fillMaxSize()
+                                    .onGloballyPositioned {
+                                        viewport.set(
+                                            Rect(
+                                                it.positionInWindow(),
+                                                Size(
+                                                    it.size.width.toFloat(),
+                                                    it.size.height.toFloat(),
+                                                ),
+                                            )
+                                        )
+                                    }
+                                    .verticalScroll(state)
+                                    .padding(padding)
+                            ) {
+                                Text(
+                                    "First",
+                                    Modifier.onGloballyPositioned {
+                                        first.set(it.positionInWindow().y)
+                                    },
+                                )
+                                Spacer(Modifier.height(1600.dp))
+                                ShareButton(
+                                    {},
+                                    Modifier.onGloballyPositioned { last.set(it.boundsInWindow()) },
+                                ) {
+                                    Text("Last action")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            await { viewport.get().height > 0 && scroll.get()?.maxValue?.let { it > 0 } == true }
+            assertEquals(0f, viewport.get().top, 1f)
+            assertTrue(first.get() > 64f)
+            kotlinx.coroutines.runBlocking { scroll.get().scrollTo(scroll.get().maxValue) }
+            await { first.get() < 0 && last.get().height > 0 }
+            val screenshot =
+                requireNotNull(
+                    InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
+                )
+            assertEquals(screenshot.height.toFloat(), viewport.get().bottom, 1f)
+            screenshot.recycle()
+            assertTrue(last.get().bottom <= viewport.get().bottom - safeBottom.get() + 1f)
+        }
+    }
+
+    @Test
+    fun keyboardResizesScrollViewportAndKeepsFooterReachable() {
+        val viewport = AtomicReference(Rect.Zero)
+        val action = AtomicReference(Rect.Zero)
+        val keyboard = AtomicReference(0)
+        ActivityScenario.launch(ComponentActivity::class.java).use { activity ->
+            activity.onActivity { host ->
+                host.enableEdgeToEdge()
+                host.setContent {
+                    DndTheme {
+                        val density = LocalDensity.current
+                        val ime = WindowInsets.ime.getBottom(density)
+                        SideEffect { keyboard.set(ime) }
+                        ShareChromeLayout(
+                            header = { ShareWorkspaceHeader { Text("Toolbar") } },
+                            footer = {
+                                ShareButton(
+                                    {},
+                                    Modifier.onGloballyPositioned {
+                                        action.set(it.boundsInWindow())
+                                    },
+                                ) {
+                                    Text("Safe action")
+                                }
+                            },
+                        ) { padding ->
+                            Column(
+                                Modifier.fillMaxSize()
+                                    .onGloballyPositioned { viewport.set(it.boundsInWindow()) }
+                                    .verticalScroll(rememberScrollState())
+                                    .padding(padding)
+                            ) {
+                                ShareTextInput("Entry", {}, "Field")
+                                Spacer(Modifier.height(1200.dp))
+                            }
+                        }
+                    }
+                }
+            }
+            await { action.get().height > 0 }
+            val initial = viewport.get()
+            TouchRobot.click("Entry")
+            await { keyboard.get() > 0 && viewport.get().height < initial.height - 80 }
+            assertTrue(action.get().bottom <= viewport.get().bottom + 1f)
+            assertTrue(action.get().top >= viewport.get().top)
         }
     }
 

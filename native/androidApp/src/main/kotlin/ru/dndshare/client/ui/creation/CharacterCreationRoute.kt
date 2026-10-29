@@ -73,7 +73,13 @@ internal fun CharacterCreationRoute(
         Surface(Modifier.fillMaxSize(), color = WebPalette.Background) {
             if (ui.needsAuth && account.user == null) {
                 BackHandler { model.cancelAuth() }
-                Column {
+                Column(
+                    Modifier.windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.Top + WindowInsetsSides.Horizontal
+                        )
+                    )
+                ) {
                     ShareTextButton(
                         onClick = model::cancelAuth,
                         modifier = Modifier.padding(12.dp),

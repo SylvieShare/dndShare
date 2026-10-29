@@ -31,13 +31,14 @@ internal fun CharacterSheetHeader(
     close: () -> Unit,
     backTitle: String = "Персонажи",
     menu: (() -> Unit)? = null,
+    navigationInHeader: Boolean = true,
 ) {
     ShareWorkspaceHeader(
         contentInset = if (format == LayoutFormat.Phone) 8.dp else 14.dp,
         maxContentWidth = DesignTokens.Layout.SheetMax,
         compact = format != LayoutFormat.Wide,
         navigation =
-            if (format == LayoutFormat.Tablet)
+            if (navigationInHeader && format == LayoutFormat.Tablet)
                 ({
                     SheetNavigation(
                         sections,
