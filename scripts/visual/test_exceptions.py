@@ -39,6 +39,13 @@ class ExceptionRegistryTest(unittest.TestCase):
             with self.assertRaises(ValueError):
                 self.validate_entry(invalid)
 
+    def test_weapon_gestures_use_their_own_screenshot_states(self):
+        entry = example()
+        entry.update(feature="weapons", states=["sheet-weapons", "sheet-magic"])
+        self.assertEqual(self.validate_entry(entry)["exceptions"], [entry])
+        entry["states"]=["record"]
+        with self.assertRaises(ValueError): self.validate_entry(entry)
+
     def test_every_entry_and_approval_field_is_required_and_unknown_keys_fail(self):
         for key in example():
             with self.subTest(key=key), self.assertRaises(ValueError):

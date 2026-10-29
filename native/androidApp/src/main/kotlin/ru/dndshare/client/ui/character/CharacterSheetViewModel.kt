@@ -303,6 +303,30 @@ internal class CharacterSheetViewModel(
         }
     }
 
+    suspend fun reorderWeapons(order: List<String>): String? =
+        try {
+            adjustments.withLock {
+                val current = requireNotNull(sheets.local(uuid)).displayed
+                val sorted =
+                    orderedWeapons(
+                        current.values["weapon"].arrayValue().map { it.objectValue() },
+                        order,
+                    )
+                sheets.enqueue(
+                    uuid,
+                    listOf(
+                        SheetPatch(path = sheetPath("values", "weapon"), value = JsonArray(sorted))
+                    ),
+                    current.data,
+                )
+            }
+            null
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (error: Exception) {
+            error.message ?: "Не удалось изменить порядок."
+        }
+
     fun number(field: SheetNumberField, value: String) = editor.number(field, value)
 
     fun calculateHealth(kind: String, expression: String) =

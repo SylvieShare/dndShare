@@ -66,7 +66,7 @@ internal fun InventorySectionHeading(
                         )
                 }
             },
-            trigger = { modifier, open ->
+            trigger = { modifier, open, _ ->
                 Text(
                     name.uppercase(Locale.forLanguageTag("ru-RU")),
                     modifier.combinedClickable(

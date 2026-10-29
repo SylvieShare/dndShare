@@ -24,6 +24,7 @@
         <WeaponAttunementStatus :entry="entry" :item="ctx.itemMap?.[entry.magic_item_id]" />
         <span v-if="ctx.isWeaponProficient(entry)" class="w-proficiency">Владение</span>
       </div>
+      <div class="w-card-controls">
       <AttackDamage
         :attack="ctx.formatBonus(ctx.attackBonus(entry))"
         :damage-parts="ctx.damagePartsRaw(entry)"
@@ -39,6 +40,7 @@
           @mouseenter="interactive && ctx.showPropertyTooltip($event, property)"
           @mouseleave="interactive && ctx.hidePropertyTooltip()"
         >{{ property.label }}</span>
+      </div>
       </div>
     </div>
   </div>
@@ -80,7 +82,7 @@ const weaponItem = computed(() => ctx.item(props.entry))
 .w-card-view {
   flex: 1 1 auto;
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, auto) minmax(0, 1.5fr);
+  grid-template-columns: minmax(0, .9fr) minmax(0, 2.5fr);
   align-items: center;
   gap: 14px;
   min-width: 0;
@@ -142,16 +144,19 @@ const weaponItem = computed(() => ctx.item(props.entry))
   min-width: 0;
 }
 
-.w-prop { font-size: 11px; padding: 2px 8px; }
+.w-prop { font-size: 11px; padding: 2px 8px; overflow-wrap: normal; }
 
-@media (max-width: 760px) {
-  .w-card-view {
-    grid-template-columns: minmax(0, 1fr);
-    align-items: start;
-    gap: 10px;
-  }
-
-  .w-name { font-size: 15px; }
-  .w-range { margin-top: 4px; white-space: normal; }
+.w-card-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; min-width: 0; }
+.w-card-controls > .ad { flex: none; }
+.w-props-inline { flex: 1 1 80px; }
+@media (--ui-compact) {
+  .w-card-main { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 10px 12px; padding: 14px 16px; }
+  .w-icon { grid-column: 1; grid-row: 1; }
+  .w-card-view { display: contents; }
+  .w-card-title { grid-column: 2; grid-row: 1; }
+  .w-card-controls { grid-column: 1 / -1; grid-row: 2; }
+  .w-props-inline { flex-basis: 160px; }
+  .w-name { font-size: 15px; white-space: normal; }
+  .w-range { white-space: normal; }
 }
 </style>

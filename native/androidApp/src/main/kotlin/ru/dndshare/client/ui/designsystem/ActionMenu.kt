@@ -21,13 +21,13 @@ data class ShareMenuAction(
 fun ShareActionMenu(
     label: String,
     actions: List<ShareMenuAction>,
-    trigger: (@Composable (Modifier, () -> Unit) -> Unit)? = null,
+    trigger: (@Composable (Modifier, () -> Unit, Boolean) -> Unit)? = null,
     ownerKey: Any? = label,
 ) {
     var open by remember(ownerKey) { mutableStateOf(false) }
     Box {
         if (trigger != null)
-            trigger(Modifier.semantics { contentDescription = label }, { open = true })
+            trigger(Modifier.semantics { contentDescription = label }, { open = true }, open)
         else
             IconButton(
                 onClick = { open = true },

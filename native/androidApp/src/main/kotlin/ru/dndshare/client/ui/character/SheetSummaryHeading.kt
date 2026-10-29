@@ -43,7 +43,7 @@ internal fun SheetSummaryHeading(
         ShareActionMenu(
             "Настроить: $title",
             actions,
-            trigger = { modifier, open ->
+            trigger = { modifier, open, _ ->
                 face(modifier.fillMaxWidth().clickable(onClick = open))
             },
         )

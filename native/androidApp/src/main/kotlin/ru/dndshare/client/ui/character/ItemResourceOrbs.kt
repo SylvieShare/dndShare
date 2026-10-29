@@ -7,20 +7,19 @@ import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
-import ru.dndshare.client.model.text
 import ru.dndshare.client.ui.designsystem.*
 
 @Composable
 internal fun ItemResourceOrbs(
     resource: ResourceControl,
     error: (String?) -> Unit,
-    fallback: Color = WebPalette.Danger,
+    fallback: Color = WebPalette.Accent,
 ) {
     val context = LocalCharacterSheet.current
     val scope = rememberCoroutineScope()
     var busy by remember(resource.key) { mutableStateOf(false) }
     val color =
-        resource.rule.text("color").takeIf(String::isNotBlank)?.let {
+        resourceDisplayColor(resource, context.items).takeIf(String::isNotBlank)?.let {
             runCatching { Color(android.graphics.Color.parseColor(it)) }.getOrNull()
         } ?: fallback
     if (resource.total > 9)

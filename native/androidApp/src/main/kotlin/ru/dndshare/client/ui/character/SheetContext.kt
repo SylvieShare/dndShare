@@ -38,6 +38,7 @@ data class SheetContext(
     val resolvedItemIds: Set<Long>? = null,
     val fetchingContent: Boolean = false,
     val refreshContent: () -> Unit = {},
+    val reorderWeapons: suspend (List<String>) -> String? = { "Изменение порядка недоступно." },
 )
 
 val LocalCharacterSheet =

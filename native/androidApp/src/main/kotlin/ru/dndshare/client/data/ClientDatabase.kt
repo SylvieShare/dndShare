@@ -64,6 +64,11 @@ private const val CATALOGUE_WHERE =
 @Dao
 abstract class CacheDao {
     @Query(
+        "SELECT EXISTS(SELECT 1 FROM catalogue_items WHERE sourceId=:sourceId AND json_type(payload,'$.svg') IS NULL)"
+    )
+    abstract suspend fun hasLegacyVisualPayload(sourceId: Long): Boolean
+
+    @Query(
         "SELECT id,typeId,name,nameEn,payload FROM catalogue_items " +
             CATALOGUE_WHERE +
             " ORDER BY name,id LIMIT :limit"

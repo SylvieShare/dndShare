@@ -9,10 +9,11 @@ import androidx.compose.ui.unit.sp
 import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
 import ru.dndshare.client.model.text
+import ru.dndshare.client.ui.LayoutFormat
 import ru.dndshare.client.ui.designsystem.*
 
 @Composable
-internal fun DndWeapons() {
+internal fun DndWeapons(format: LayoutFormat) {
     val context = LocalCharacterSheet.current
     val direct = context.sheet.values["weapon"].arrayValue().map { it.objectValue() }
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -31,14 +32,17 @@ internal fun DndWeapons() {
                 divider = true,
             )
             if (direct.isEmpty()) SheetEmpty("Нет оружия")
-            direct.forEach { entry ->
-                key(entry.text("uid")) {
-                    val weapon =
-                        remember(context.sheet, context.items, entry) {
-                            weaponReadout(context.sheet, entry, context.items, context.metadata)
-                        }
-                    WeaponSheetCard(entry, weapon)
-                }
+            WeaponGrid(
+                direct,
+                if (format == LayoutFormat.Tablet) 2 else 1,
+                context.canEdit && format != LayoutFormat.Wide,
+                context.reorderWeapons,
+            ) { entry, modifier, dragging ->
+                val weapon =
+                    remember(context.sheet, context.items, entry) {
+                        weaponReadout(context.sheet, entry, context.items, context.metadata)
+                    }
+                WeaponSheetCard(entry, weapon, format, modifier, dragging)
             }
             if (context.canEdit)
                 ShareDashedAction(

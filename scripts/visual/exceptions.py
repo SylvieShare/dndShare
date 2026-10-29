@@ -8,6 +8,7 @@ FORMATS = {"phone", "tablet", "wide"}
 FEATURE_STATES = {
     "handbook": {"collections", "menu", "list", "record"},
     "forms": {"list", "record", "character-menu", "sheet-stat-editor"},
+    "weapons": {"sheet-weapons", "sheet-magic"},
 }
 
 

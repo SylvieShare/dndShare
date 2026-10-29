@@ -164,6 +164,7 @@ internal fun CharacterSheetScreen(
                                                 resolvedItemIds = ui.content.resolvedIds,
                                                 fetchingContent = ui.content.fetching,
                                                 refreshContent = model::refreshContent,
+                                                reorderWeapons = model::reorderWeapons,
                                             ),
                                         LocalSheetEditorPreview provides ui.editor,
                                         ru.dndshare.client.ui.LocalRichInteractions provides
@@ -195,15 +196,14 @@ internal fun CharacterSheetScreen(
                                                         Modifier.fillMaxSize(),
                                                         contentAlignment = Alignment.TopCenter,
                                                     ) {
+                                                        val pageScroll = rememberScrollState()
                                                         Column(
                                                             Modifier.widthIn(
                                                                     max =
                                                                         DesignTokens.Layout.SheetMax
                                                                 )
                                                                 .fillMaxSize()
-                                                                .verticalScroll(
-                                                                    rememberScrollState()
-                                                                )
+                                                                .verticalScroll(pageScroll)
                                                                 .padding(
                                                                     start =
                                                                         DesignTokens.Spacing.Page,
@@ -222,9 +222,14 @@ internal fun CharacterSheetScreen(
                                                             verticalArrangement =
                                                                 Arrangement.spacedBy(16.dp),
                                                         ) {
-                                                            if (sheet.templateName == "DND5")
-                                                                DndSheetSection(page, format)
-                                                            else VtmSheetSection(page, format)
+                                                            CompositionLocalProvider(
+                                                                LocalWeaponScroll provides
+                                                                    pageScroll
+                                                            ) {
+                                                                if (sheet.templateName == "DND5")
+                                                                    DndSheetSection(page, format)
+                                                                else VtmSheetSection(page, format)
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -291,7 +296,9 @@ internal fun CharacterSheetScreen(
                                                     model.remote::selectSession,
                                                     model::dismissOverlay,
                                                     model.remote::openCharacter,
-                                                    initialTab = if (target.endsWith(":events")) "events" else "players",
+                                                    initialTab =
+                                                        if (target.endsWith(":events")) "events"
+                                                        else "players",
                                                 )
                                             else
                                                 SheetInformationDialog(

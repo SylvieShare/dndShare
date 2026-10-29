@@ -33,7 +33,7 @@ internal fun DndSheetSection(section: SheetSection, format: LayoutFormat) {
                     }
             }
         SheetSection.Stats -> DndStats()
-        SheetSection.Weapons -> DndWeapons()
+        SheetSection.Weapons -> DndWeapons(format)
         SheetSection.Spells -> DndSpells()
         SheetSection.Inventory -> DndInventory()
         SheetSection.Abilities -> DndAbilities(format)

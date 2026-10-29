@@ -69,10 +69,11 @@ Lucide и нативную палитру обновляет `sync_web_design.py
 
 [visual-exceptions.json](visual-exceptions.json) изначально пуст. Новое исключение
 добавляется после явного согласования с пользователем, вместе с реализацией.
-Реестр поддерживает `feature: handbook` и `forms` с собственными допустимыми состояниями; `difference` описывается по-русски.
+Реестр поддерживает `feature: handbook`, `forms` и `weapons` с собственными допустимыми состояниями; `difference` описывается по-русски.
 Каждая запись содержит уникальный `id`, `feature`, непустые `formats`
 (`phone`, `tablet`, `wide`), `states` (для handbook: `collections`, `menu`, `list`, `record`;
-для forms: `list`, `record`, `character-menu`, `sheet-stat-editor`),
+для forms: `list`, `record`, `character-menu`, `sheet-stat-editor`;
+для weapons: `sheet-weapons`, `sheet-magic`),
 `difference`, `reason` и `approval`: имя в `by`, ссылку или прямую цитату решения
 в `reference`, дату `YYYY-MM-DD` в `date`. При расширении набора экранов
 расширяется и контракт состояний. Реестр фиксирует конкретную границу различия,

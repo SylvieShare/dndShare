@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Copy the installed web palette and Lucide geometry into native Android resources."""
 import argparse
+from web_effect_specs import render as render_effect_specs
 import json
 from pathlib import Path
 import re
@@ -127,7 +128,7 @@ def main():
     parser.add_argument("--check", action="store_true", help="Fail if committed native resources differ from web")
     args = parser.parse_args()
     stale = []
-    generated = list(outputs()) + [(NATIVE / "kotlin/ru/dndshare/client/ui/designsystem/DieShapes.kt", dice_shapes())]
+    generated = list(outputs()) + [(NATIVE / "kotlin/ru/dndshare/client/ui/designsystem/DieShapes.kt", dice_shapes()), (NATIVE / "kotlin/ru/dndshare/client/ui/designsystem/WebEffectSpec.kt", render_effect_specs(ROOT))]
     for path, content in generated:
         if args.check:
             if not path.exists() or path.read_text() != content:

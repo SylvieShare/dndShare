@@ -265,7 +265,7 @@ internal fun InventoryGrid(
                                             label,
                                             actions,
                                             ownerKey = entry?.text("uid") ?: address,
-                                            trigger = { modifier, open ->
+                                            trigger = { modifier, open, _ ->
                                                 ShareCellSurface(
                                                     modifier
                                                         .testTag(

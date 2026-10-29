@@ -112,6 +112,7 @@ internal fun SpellSlotPanels() {
                             for (pip in total downTo 1) ShareResourceOrb(
                                 pip > used,
                                 "Ячейка " + level + " круга · " + pip,
+                                level = level,
                                 enabled = context.canEdit && !busy,
                                 onClick = { set(pool, level, if (pip <= used) pip - 1 else pip) },
                             )

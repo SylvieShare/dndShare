@@ -26,6 +26,7 @@ internal fun ConfirmedItemUsePanels(uid: String, compact: Boolean = false) {
         uses.forEach { use ->
             key(uid, use.key) {
                 val body: @Composable () -> Unit = {
+                    val dismissDetails = LocalDetailsDismiss.current
                     if (!compact) Text(use.rule.text("title"), style = ShareTypography.group)
                     use.rule.text("description").takeIf(String::isNotBlank)?.let {
                         SheetDescription(it)
@@ -46,7 +47,10 @@ internal fun ConfirmedItemUsePanels(uid: String, compact: Boolean = false) {
                             ?.let { offer ->
                                 ShareAction(
                                     "Перебросить: " + offer.title,
-                                    { context.reroll(offer) },
+                                    {
+                                        context.reroll(offer)
+                                        dismissDetails()
+                                    },
                                     enabled = !busy && !context.rollBusy && use.error.isBlank(),
                                 )
                             }
@@ -64,6 +68,7 @@ internal fun ConfirmedItemUsePanels(uid: String, compact: Boolean = false) {
                                                     "confirmed-use",
                                                     buildJsonObject { put("key", use.key) },
                                                 )
+                                            if (error == null) dismissDetails()
                                         } finally {
                                             busy = false
                                         }
@@ -115,6 +120,20 @@ internal fun LastChargePanel(uid: String) {
             ?: return
     val lost = entry["params"].objectValue()["magic"].objectValue()["lost"] == JsonPrimitive(true)
     if (check.text("status") != "pending" && !lost) return
+    if (LocalDisclosureSheets.current) {
+        var expanded by rememberSaveable(uid, "last-charge") { mutableStateOf(false) }
+        ShareActionDisclosure(
+            "Заряды",
+            if (lost) "Магические свойства утрачены" else "Проверка последнего заряда",
+            expanded,
+            { expanded = it },
+            leading = { AppGlyph(Glyph.Dice) },
+        ) {
+            CompositionLocalProvider(LocalDisclosureSheets provides false) { LastChargePanel(uid) }
+        }
+        return
+    }
+    val dismissDetails = LocalDetailsDismiss.current
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     var confirming by remember { mutableStateOf(false) }
@@ -130,6 +149,7 @@ internal fun LastChargePanel(uid: String) {
                         "last-charge-$operation",
                         buildJsonObject { put("id", check.text("id")) },
                     )
+                if (error == null) dismissDetails()
             } finally {
                 busy = false
             }

@@ -41,6 +41,7 @@ fun ShareActionDisclosure(
             label = "Disclosure arrow",
         )
     val saved = rememberSaveableStateHolder()
+    val inSheet = LocalDisclosureSheets.current
     Surface(
         modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
@@ -101,7 +102,7 @@ fun ShareActionDisclosure(
                 )
             }
             AnimatedVisibility(
-                expanded,
+                expanded && !inSheet,
                 enter =
                     expandVertically(tween(DesignTokens.Motion.Feedback)) +
                         fadeIn(tween(DesignTokens.Motion.Feedback)),
@@ -119,4 +120,10 @@ fun ShareActionDisclosure(
             }
         }
     }
+    if (expanded && inSheet)
+        ShareBottomSheet(title, { change(false) }) {
+            saved.SaveableStateProvider("body") {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp), content = content)
+            }
+        }
 }

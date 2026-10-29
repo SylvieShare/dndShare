@@ -66,8 +66,8 @@ internal fun SheetDiceNotificationCard(
                 else 6_000
             )
         }
-    LaunchedEffect(notice.id, notice.completedAt, busy, paused) {
-        if (!busy && !paused && notice.completedAt > 0) {
+    LaunchedEffect(notice.id, notice.completedAt, notice.error, busy, paused) {
+        if (!busy && !paused && notice.error == null && notice.completedAt > 0) {
             val start = SystemClock.elapsedRealtime()
             try {
                 delay(remaining)

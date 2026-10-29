@@ -7,9 +7,9 @@
     <div v-if="armorAttackWarning" class="w-armor-warning">
       Атаки Силой и Ловкостью совершаются с помехой: нет владения {{ armorState.nonproficient.map(row => `«${row.name}»`).join(', ') }}.
     </div>
-    <SectionList :outlined="false" title="Оружие" :list-attrs="{ 'data-sortable-container': 'weapons' }">
-      <template v-if="variant !== 'list' && entries.length" #body>
-        <table class="w-table" :class="{ 'w-edit': charCtx.ownerMode }">
+    <SectionList :outlined="false" title="Оружие">
+      <template #body>
+        <table v-if="variant !== 'list' && entries.length" class="w-table" :class="{ 'w-edit': charCtx.ownerMode }">
           <colgroup v-if="charCtx.ownerMode">
             <col class="w-order-col" />
             <col class="w-name-col" />
@@ -45,14 +45,11 @@
             />
           </tbody>
         </table>
+        <div v-else class="weapon-card-grid" data-sortable-container="weapons">
+          <div v-if="!entries.length" class="w-empty">Нет оружия</div>
+          <WeaponCard v-for="(entry, index) in displayEntries" :key="entry._key" :entry="entry" :index="index" />
+        </div>
       </template>
-      <div v-if="!entries.length" class="w-empty">Нет оружия</div>
-      <WeaponCard
-        v-for="(entry, index) in displayEntries"
-        :key="entry._key"
-        :entry="entry"
-        :index="index"
-      />
       <template v-if="canAddItems" #footer>
         <AddButton block label="Добавить оружие" @click="pickerOpen = true" />
       </template>

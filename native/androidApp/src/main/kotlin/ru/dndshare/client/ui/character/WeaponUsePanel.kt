@@ -23,6 +23,7 @@ internal fun WeaponUsePanel(uid: String, compact: Boolean = false, onlyKey: Stri
         weaponUseState(context.sheet, uid)
             .takeIf { onlyKey == null || it.text("key") == onlyKey }
             .objectValue()
+    val asSheet = LocalDisclosureSheets.current
     if (compact) {
         val rows =
             choices.map { it.rule } +
@@ -32,12 +33,17 @@ internal fun WeaponUsePanel(uid: String, compact: Boolean = false, onlyKey: Stri
                 var expanded by
                     rememberSaveable(uid, rule.text("key")) {
                         mutableStateOf(
-                            event.text("key") == rule.text("key") &&
+                            !asSheet &&
+                                event.text("key") == rule.text("key") &&
                                 event.text("status") == "active"
                         )
                     }
                 LaunchedEffect(event.text("id"), event.text("status")) {
-                    if (event.text("key") == rule.text("key") && event.text("status") == "active")
+                    if (
+                        !asSheet &&
+                            event.text("key") == rule.text("key") &&
+                            event.text("status") == "active"
+                    )
                         expanded = true
                 }
                 ShareActionDisclosure(
@@ -55,6 +61,7 @@ internal fun WeaponUsePanel(uid: String, compact: Boolean = false, onlyKey: Stri
     }
     if (choices.isEmpty() && event.isEmpty()) return
     val scope = rememberCoroutineScope()
+    val dismissDetails = LocalDetailsDismiss.current
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     var mode by rememberSaveable(uid) { mutableStateOf("auto") }
@@ -80,6 +87,7 @@ internal fun WeaponUsePanel(uid: String, compact: Boolean = false, onlyKey: Stri
                             put("critical", critical)
                         },
                     )
+                if (error == null) dismissDetails()
             } finally {
                 busy = false
             }

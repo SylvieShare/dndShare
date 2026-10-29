@@ -95,6 +95,11 @@ class CatalogueRepository(
 
     private suspend fun synchronizePages(sourceId: Long, progress: (Int) -> Unit) {
         var state = cache.syncState(sourceId) ?: SyncState(sourceId)
+        if (state.resumeCursor == null && cache.hasLegacyVisualPayload(sourceId)) {
+            // One-time DTO hydration. Keep ready/local records available while refreshing.
+            state = state.copy(cursor = null)
+            cache.upsertState(state)
+        }
         var cursor = state.resumeCursor ?: state.cursor
         var received = 0
         var resetAttempted = false

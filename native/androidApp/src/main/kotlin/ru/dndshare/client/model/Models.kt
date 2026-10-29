@@ -70,6 +70,7 @@ data class SuggestType(
 
 @Serializable data class Compatibility(val sourceVersionId: Long, val status: String)
 
+@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 @Serializable
 data class CatalogueItem(
     val id: Long,
@@ -84,6 +85,7 @@ data class CatalogueItem(
     val coverImageUrl: String? = null,
     val contentSources: List<Book> = emptyList(),
     val compatibility: List<Compatibility> = emptyList(),
+    @kotlinx.serialization.EncodeDefault val svg: String? = null,
 ) {
     fun editionKeys(): String =
         compatibility

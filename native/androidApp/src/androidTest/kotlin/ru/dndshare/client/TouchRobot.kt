@@ -85,6 +85,17 @@ internal object TouchRobot {
     fun bounds(label: String): Rect =
         Rect().also { requireNotNull(find(label)).getBoundsInScreen(it) }
 
+    fun longPressDrag(x: Float, y: Float, toX: Float, toY: Float, duration: Int = 420) =
+        performDrag(
+            x,
+            y,
+            toX,
+            toY,
+            duration,
+            null,
+            android.view.ViewConfiguration.getLongPressTimeout() + 120,
+        )
+
     fun drag(
         x: Float,
         y: Float,
@@ -92,6 +103,16 @@ internal object TouchRobot {
         toY: Float,
         duration: Int = 420,
         beforeRelease: (() -> Unit)? = null,
+    ) = performDrag(x, y, toX, toY, duration, beforeRelease, 0)
+
+    private fun performDrag(
+        x: Float,
+        y: Float,
+        toX: Float,
+        toY: Float,
+        duration: Int = 420,
+        beforeRelease: (() -> Unit)?,
+        hold: Int,
     ) {
         val down = SystemClock.uptimeMillis()
         fun event(action: Int, px: Float, py: Float) {
@@ -132,6 +153,7 @@ internal object TouchRobot {
         }
 
         event(MotionEvent.ACTION_DOWN, x, y)
+        if (hold > 0) SystemClock.sleep(hold.toLong())
         var lastX = x
         var lastY = y
         try {
