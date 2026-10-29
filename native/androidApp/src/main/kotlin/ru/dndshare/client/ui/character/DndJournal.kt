@@ -18,7 +18,7 @@ internal fun DndJournal() {
     val context = LocalCharacterSheet.current
     val response = context.journal.payload
     val journal = response?.get("journal") as? JsonObject
-    if (context.journal.loading && journal == null) LinearProgressIndicator()
+    if (context.journal.loading && journal == null) SheetItemSkeleton()
     context.journal.error?.let {
         Text(it, color = WebPalette.Warning, style = ShareTypography.context)
     }

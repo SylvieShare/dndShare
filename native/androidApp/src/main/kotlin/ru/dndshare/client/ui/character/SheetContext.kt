@@ -16,7 +16,6 @@ data class SheetContext(
     val openItem: (Long) -> Unit,
     val mechanics: DndDerivedValues,
     val journal: SheetJournalState,
-    val editor: SheetEditorState? = null,
     val adjustResource: (String, Int) -> Unit = { _, _ -> },
     val uuid: String = "",
     val sessionUuid: String? = null,
@@ -36,10 +35,15 @@ data class SheetContext(
     val rollBusy: Boolean = false,
     val rerollForUse: (String, String) -> SheetRerollOffer? = { _, _ -> null },
     val reroll: (SheetRerollOffer) -> Unit = {},
+    val resolvedItemIds: Set<Long>? = null,
+    val fetchingContent: Boolean = false,
+    val refreshContent: () -> Unit = {},
 )
 
 val LocalCharacterSheet =
     compositionLocalOf<SheetContext> { error("Character sheet context is required") }
+
+val LocalSheetEditorPreview = compositionLocalOf<SheetEditorState?> { null }
 
 fun referencedItems(value: JsonElement): List<Long> = buildSet {
     fun collect(node: JsonElement) {

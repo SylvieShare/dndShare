@@ -5,8 +5,9 @@
       <DndIdentityCard />
       <SlidingTabs data-tutorial="character-tabs" :tabs="tabs" :model-value="section" @update:model-value="emit('select-tab', $event)" />
       <div class="inner-tabs-content">
-        <section v-for="id in visited" :key="id" v-show="id === section" :inert="id !== section" class="inner-tab-pane">
-          <DndSection :section="id" format="desktop" />
+        <section v-for="(tab, index) in tabs" :key="tab.key" v-show="tab.key === section" :inert="tab.key !== section" class="inner-tab-pane">
+          <DndSection v-if="isReady(index)" :section="tab.key" format="desktop" />
+          <CharacterSheetSkeleton v-else />
         </section>
       </div>
     </main>
@@ -21,7 +22,9 @@
   </div>
 </template>
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
+import { usePreparedTabs } from '../../composables/usePreparedTabs'
+import CharacterSheetSkeleton from './CharacterSheetSkeleton.vue'
 import { SlidingTabs } from '@sylvieshare/share-ui'
 import CharacterBlock from '../CharacterBlock.vue'
 import DndStats from './DndStats.vue'
@@ -31,9 +34,9 @@ import DndSection from './DndSection.vue'
 import definition from '../../settings/dnd/definition'
 const props = defineProps({ section: String })
 const emit = defineEmits(['select-tab'])
-const visited = ref([])
-watch(() => props.section, id => { if (id && !visited.value.includes(id)) visited.value.push(id) }, { immediate: true })
-const tabs = computed(() => definition.tabs.desktop.map(tab => ({ key: tab.id, title: tab.title })))
+const tabs = computed(() => definition.tabs.desktop.map(tab => ({ id: tab.id, key: tab.id, title: tab.title })))
+const { isReady } = usePreparedTabs(tabs, computed(() => tabs.value.findIndex(tab => tab.key === props.section)), computed(() => false))
+
 </script>
 <style scoped>
 .dnd-desktop-body { display: flex; align-items: flex-start; gap: 15px; }

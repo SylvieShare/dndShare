@@ -1,5 +1,6 @@
 <template>
-  <RowActionMenu block :disabled="draggedThisGesture">
+  <CharacterItemSkeleton v-if="!entry.item && ctx.itemLoading?.(entry.ref.id)" />
+  <RowActionMenu v-else block :disabled="draggedThisGesture">
     <template #trigger="{ open: menuOpen }">
       <div
         class="spell-row action-menu-source"
@@ -13,6 +14,7 @@
         :data-sortable-key="entry.ref.key"
         @pointerdown="onRowDown"
       >
+    <button v-if="!entry.item" type="button" @click.stop="ctx.retryItems?.()">Повторить загрузку</button>
     <PreparedSpellBrackets
       v-if="isPrepared"
       class="sp-prepared-brackets"
@@ -164,6 +166,7 @@ import { hasInlineSpellScaling, spellScalingHint, spellInstances } from '../lib/
 import { computed, inject, ref, watch } from 'vue'
 
 import SpellRollMenu from './SpellRollMenu.vue'
+import CharacterItemSkeleton from '@/features/character-editor/components/sheet/CharacterItemSkeleton.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
 import PreparedSpellBrackets from '@/features/character-editor/blocks/dnd/components/PreparedSpellBrackets.vue'

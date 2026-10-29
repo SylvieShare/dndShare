@@ -12,7 +12,11 @@ data class SheetContentState(
     val items: Map<Long, CatalogueItem> = emptyMap(),
     val availableStates: List<CatalogueItem> = emptyList(),
     val icons: InventoryIconsState = InventoryIconsState(),
+    val resolvedIds: Set<Long> = emptySet(),
+    val fetching: Boolean = true,
 )
+
+private data class ResolvedSheetItems(val ids: Set<Long>, val items: Map<Long, CatalogueItem>)
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class SheetContentReader(
@@ -23,6 +27,7 @@ internal class SheetContentReader(
     scope: CoroutineScope,
     extraIds: Flow<List<Long>> = flowOf(emptyList()),
     icons: Flow<InventoryIconsState> = flowOf(InventoryIconsState()),
+    fetching: Flow<Boolean> = flowOf(false),
 ) {
     val sourceId =
         snapshot
@@ -53,19 +58,22 @@ internal class SheetContentReader(
         combine(sourceId, ids) { source, keys -> source to keys }
             .flatMapLatest { (source, keys) ->
                 val queries = keys.chunked(300).map { cache.observeReferencedItems(source, it) }
-                if (queries.isEmpty()) flowOf(emptyMap())
+                if (queries.isEmpty()) flowOf(ResolvedSheetItems(emptySet(), emptyMap()))
                 else
                     combine(queries) { rows ->
-                        rows
-                            .flatMap { it }
-                            .associate {
-                                it.id to WireJson.decodeFromString<CatalogueItem>(it.payload)
-                            }
+                        ResolvedSheetItems(
+                            keys.toSet(),
+                            rows
+                                .flatMap { it }
+                                .associate {
+                                    it.id to WireJson.decodeFromString<CatalogueItem>(it.payload)
+                                },
+                        )
                     }
             }
     private val items =
         combine(queriedItems, snapshot, roots) { rows, sheet, root ->
-            dependencies.value = sheetContentDependencies(sheet?.displayed, rows, root)
+            dependencies.value = sheetContentDependencies(sheet?.displayed, rows.items, root)
             rows
         }
     private val states =
@@ -122,11 +130,16 @@ internal class SheetContentReader(
             }
     private val effectiveItems =
         combine(items, advancement, states) { referenced, available, statuses ->
-            available + statuses.associateBy { it.id } + referenced
+            referenced.copy(items = available + statuses.associateBy { it.id } + referenced.items)
         }
     val state =
-        combine(metadata, effectiveItems, states, icons) { metadata, items, states, presets ->
-                SheetContentState(metadata, items, states, presets)
+        combine(metadata, effectiveItems, states, icons, fetching) {
+                metadata,
+                items,
+                states,
+                presets,
+                fetching ->
+                SheetContentState(metadata, items.items, states, presets, items.ids, fetching)
             }
             .flowOn(Dispatchers.Default)
             .stateIn(scope, SharingStarted.WhileSubscribed(5_000), SheetContentState())

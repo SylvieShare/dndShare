@@ -15,22 +15,20 @@
       <p v-if="catalogError" role="alert">{{ catalogError }} <ActionButton variant="quiet" @click="reloadCatalog">Повторить</ActionButton></p>
       <div class="di-inventory">
         <BaseTile v-if="block.content?.wallet" :outlined="false"><InventoryWallet :wallet="block.content.wallet" /></BaseTile>
-        <InventorySkeleton v-if="loading" :sections="allSections" />
-        <template v-else>
-          <section v-for="section in allSections" :key="section.id" class="di-space">
-            <div class="di-section-head">
-              <input v-if="canManage && renamingId === section.id" ref="renameInputs" class="di-section-rename" :value="section.name"
-                @blur="finishRename(section.id, $event.target.value)" @keydown.enter.prevent="finishRename(section.id, $event.target.value)" @keydown.escape.prevent="renamingId = null" />
-              <button v-else class="di-section-name" :class="{ 'di-section-name-editable': canManage }" :disabled="!canManage"
-                :title="canManage ? 'Переименовать' : ''" @click="canManage && startRename(section.id)">{{ section.name }}</button>
-              <span class="di-section-line" aria-hidden="true"></span>
-              <div class="di-section-actions">
-                <span class="di-section-weight" role="img" :aria-label="`Суммарный вес: ${weightFormatter.format(section.weight)} фунт.`">
-                  <Weight :size="14" aria-hidden="true" />{{ weightFormatter.format(section.weight) }} фунт.
-                </span>
-                <template v-if="canManage && model.sections.length > 1">
-                  <span class="di-section-divider" aria-hidden="true"></span>
-                  <RemoveButton icon="trash" label="Удалить секцию" @click="askDeleteSection(section)" />
+        <section v-for="section in allSections" :key="section.id" class="di-space">
+          <div class="di-section-head">
+            <input v-if="canManage && renamingId === section.id" ref="renameInputs" class="di-section-rename" :value="section.name"
+              @blur="finishRename(section.id, $event.target.value)" @keydown.enter.prevent="finishRename(section.id, $event.target.value)" @keydown.escape.prevent="renamingId = null" />
+            <button v-else class="di-section-name" :class="{ 'di-section-name-editable': canManage }" :disabled="!canManage"
+              :title="canManage ? 'Переименовать' : ''" @click="canManage && startRename(section.id)">{{ section.name }}</button>
+            <span class="di-section-line" aria-hidden="true"></span>
+            <div class="di-section-actions">
+              <span class="di-section-weight" role="img" :aria-label="`Суммарный вес: ${weightFormatter.format(section.weight)} фунт.`">
+                <Weight :size="14" aria-hidden="true" />{{ weightFormatter.format(section.weight) }} фунт.
+              </span>
+              <template v-if="canManage && model.sections.length > 1">
+                <span class="di-section-divider" aria-hidden="true"></span>
+                <RemoveButton icon="trash" label="Удалить секцию" @click="askDeleteSection(section)" />
               </template>
             </div>
           </div>
@@ -44,7 +42,6 @@
           </InventoryBagGrid>
         </section>
         <div v-if="canManage" class="di-add-section-row"><AddButton block label="Добавить секцию" @click="addSection" /></div>
-        </template>
       </div>
     </template>
 
@@ -101,7 +98,6 @@
 import { toolProficiencyRankFor, toolCheckBonusFor } from './lib/toolChecks'
 import { useInventoryRowActions } from './composables/useInventoryRowActions'
 import { useInventoryRemoval } from './composables/useInventoryRemoval'
-import InventorySkeleton from './components/InventorySkeleton.vue'
 import InventoryWallet from './components/InventoryWallet.vue'
 import InventoryItemRow from './components/InventoryItemRow.vue'
 import MagicItemInstanceModal from './components/MagicItemInstanceModal.vue'
@@ -170,7 +166,7 @@ const diceStore = useDiceStore()
 const toolAbilityOptions = STAT_KEYS.map((key, index) => ({ key, suggestId: index + 1, label: STAT_FULL[key] }))
 
 const model = computed(() => normalizeValue(props.value))
-const { catalog, loading, error: catalogError, reload: reloadCatalog } = useInventoryCatalog(() => model.value)
+const { catalog, itemLoading, error: catalogError, reload: reloadCatalog } = useInventoryCatalog(() => model.value)
 const { decrement, removeEntry, removeSection } = useInventoryRemoval({ model, emitModel, charCtx, entryWithDisplay })
 const { tooltip, showTooltip, hideTooltip, viewEntry, deleteOneEntry, addEntry, editEntry, deleteEntry } = useInventoryRowActions({ model, modalSelection, charCtx, increment, decrement, openInlineForm, removeEntry })
 
@@ -213,7 +209,7 @@ const toolTypeId = computed(() => Number(props.block.content?.tool_type_id) || 1
 
 
 function entryWithDisplay(entry) {
-  return { ...entry, display: entryDisplayData(entry, catalog, typeById.value, rootTypeId.value, iconPresetsStore.byId) }
+  return { ...entry, loading: itemLoading(entry), display: entryDisplayData(entry, catalog, typeById.value, rootTypeId.value, iconPresetsStore.byId) }
 }
 
 function entryTypeId(entry) {

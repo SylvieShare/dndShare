@@ -23,6 +23,8 @@ Compose-слотами. Пакет использует Android/Compose и corou
 
 | Android | Соответствующая роль в вебе |
 | --- | --- |
+| `SharePreparedContent`, `SharePreparationQueue` | Подготовка одного сохраняемого поддерева через pausable precomposition с общим бюджетом, скелетон до готовности |
+| `ShareSkeletonBlock` | Нейтральный статический каркас без лишней фоновой анимации |
 | `ShareTheme`, `WebPalette` | Палитра/радиусы share-ui, продуктовый фиолетовый акцент |
 | `Modifier.shareCanvas()` | Ровный фон приложения; shareDottedCanvas — явный опциональный холст сюжета |
 | `ShareTypography` | Display Cormorant Garamond, prose Literata; UI остаётся системным |

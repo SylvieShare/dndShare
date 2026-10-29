@@ -451,7 +451,7 @@ const {
   deleteTarget, emitChange, profBonus, statOptions,
 })
 const {
-  loadDetails, togglePrepared, removeSpell, sortable, displayLevel, onSpellDragStart,
+  loadDetails, itemLoading, togglePrepared, removeSpell, sortable, displayLevel, onSpellDragStart,
   addSpell, abilityIds, syncExternalAbilitySpells,
 } = useSpellbookEntries({
   props, charCtx, tabs, grants, itemMap, activeTabSpells, activeTab, preparation, preparationLimit,
@@ -501,7 +501,7 @@ const { groupedSpellSlotOptions, availableSpellSlotOptions, useSpell, spellRollL
 })
 
 provide('spellsBlockCtx', reactive({
-  charCtx,
+  charCtx, itemLoading, retryItems: loadDetails,
   sortable,
   onSpellDragStart,
   togglePrepared,
@@ -547,13 +547,13 @@ onMounted(async () => {
   tabs.value = normalizedSpellTabs(raw.tabs)
   grants.value = (Array.isArray(raw.grants) ? raw.grants : []).map(grantedSpell)
   loadSlotPools(raw)
-  await loadClassItems()
+  const details = loadDetails()
+  const classes = loadClassItems()
   const { school_suggest_id, stat_suggest_type_id } = props.block.content || {}
   const ensures = [school_suggest_id, stat_suggest_type_id, damageTypeSuggestTypeId.value]
     .filter(Boolean)
     .map(id => useSuggestStore().ensure(id))
-  await Promise.all([syncExternalAbilitySpells(), ...ensures])
-  await loadDetails()
+  await Promise.allSettled([details, classes, syncExternalAbilitySpells(), ...ensures])
 })
 
 watch(

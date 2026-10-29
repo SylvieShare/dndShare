@@ -25,6 +25,8 @@ export function mobileTabRectsEqual(current, next) {
 export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
   const activeTab = ref(0)
   const visitedTabs = ref([])
+  const requestedTab = ref(null)
+  let swipeGeneration = 0
   const highlightedMobileTab = ref(0)
 
   const tabDragActive = ref(false)
@@ -109,6 +111,7 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
   })
 
   onBeforeUnmount(() => {
+    swipeGeneration++
     clearTimeout(swipeSettleTimer)
     clearTimeout(highlightSettleTimer)
   })
@@ -185,6 +188,8 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
   }
 
   function resetSwipe() {
+    swipeGeneration++
+    requestedTab.value = null
     touchStartX = null
     touchStartY = null
     clearTimeout(swipeSettleTimer)
@@ -220,6 +225,8 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
   }
 
   function settleSwipeTo(targetIndex) {
+    const generation = ++swipeGeneration
+    requestedTab.value = activeTabs.value[targetIndex]?.id ?? null
     markTabVisited(targetIndex)
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
       activeTab.value = targetIndex
@@ -234,12 +241,16 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
     tabSwipeBaseOffset.value = fromOffset
     tabDragX.value = 0
     requestAnimationFrame(() => {
+      if (generation !== swipeGeneration) return
       tabDragSettling.value = true
       requestAnimationFrame(() => {
+        if (generation !== swipeGeneration) return
         tabDragX.value = targetOffset - tabSwipeBaseOffset.value
         scheduleSettleHighlight(fromOffset, targetOffset, targetIndex)
         clearTimeout(swipeSettleTimer)
         swipeSettleTimer = setTimeout(() => {
+          if (generation !== swipeGeneration) return
+          requestedTab.value = null
           activeTab.value = targetIndex
           tabDragActive.value = false
           tabDragSettling.value = false
@@ -357,6 +368,7 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
       return
     }
     activeTab.value = index
+    resetSwipe()
   }
 
   // ── Tab pane cache ────────────────────────────────────────────────────
@@ -375,6 +387,7 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
   return {
     activeTab,
     visitedTabs,
+    requestedTab,
     visitedTabIndexes,
     highlightedMobileTab,
     tabDragActive,

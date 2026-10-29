@@ -1,5 +1,6 @@
 <template>
-<RowActionMenu
+<SkeletonBlock v-if="entry.loading" width="100%" height="72px" aria-label="Загружаем предмет" />
+<RowActionMenu v-else
   block
   :disabled="draggedThisGesture || (!canManage && entry.item_id == null)"
 >
@@ -109,7 +110,7 @@ import { computed, inject, toRefs, unref } from 'vue'
 import { inventoryCellTraits } from '@/features/inventory/lib/cellTraits'
 import WeaponNotePanels from '@/features/items/components/WeaponNotePanels.vue'
 import { visibleWeaponNotes } from '@/features/character-editor/lib/weaponNotes'
-import { RowActionMenu, RowActionSubmenu } from '@sylvieshare/share-ui'
+import { RowActionMenu, RowActionSubmenu, SkeletonBlock } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { ArrowRightLeft, Dices, ShieldCheck, Shirt } from '@lucide/vue'
 import { MAGIC_ITEM_TYPE_ID } from '@/features/character-editor/lib/characterMagicItems'

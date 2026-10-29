@@ -28,7 +28,7 @@
 
       <div class="csm-body" :class="{ 'csm-body--pager': compactLayout }">
         <div v-if="loading" class="character-loading">
-          <LoadingIndicator label="Загружаем лист персонажа…" size="lg" show-label />
+          <CharacterSheetSkeleton />
         </div>
 
         <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="initializeCharacter">Повторить</button></div>
@@ -66,7 +66,7 @@
 </template>
 
 <script setup>
-import { LoadingIndicator } from '@sylvieshare/share-ui'
+import CharacterSheetSkeleton from './sheet/CharacterSheetSkeleton.vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import { AppModal } from '@sylvieshare/share-ui'
 import CharEditorToolbar from '@/features/character-editor/components/CharEditorToolbar'
@@ -142,7 +142,7 @@ const swipePagerEl = ref(null)
 const swipe = useTabSwipe(activeTabs, compactLayout)
 const { activeTab, visitedTabIndexes, markTabVisited, resetSwipe } = swipe
 watch(format, (next, previous) => {
-  const id = sheetTabs(template.value, previous)[activeTab.value]?.id
+  const id = swipe.requestedTab.value ?? sheetTabs(template.value, previous)[activeTab.value]?.id
   resetSwipe()
   activeTab.value = sheetTabIndex(activeTabs.value, id)
   markTabVisited(activeTab.value)

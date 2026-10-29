@@ -31,6 +31,15 @@ internal fun InventoryCellFace(
     equipped: Boolean = false,
 ) {
     val context = LocalCharacterSheet.current
+    val itemId = (entry["magic_item_id"] ?: entry["item_id"]).referenceId()
+    if (
+        itemId != null &&
+            context.items[itemId] == null &&
+            (context.fetchingContent || context.resolvedItemIds?.let { itemId !in it } == true)
+    ) {
+        ShareSkeletonBlock(Modifier.fillMaxSize(), 72.dp)
+        return
+    }
     val item = resolveInventoryItem(entry, context.items)
     val name = inventoryEntryName(entry, context.items)
     val preset =

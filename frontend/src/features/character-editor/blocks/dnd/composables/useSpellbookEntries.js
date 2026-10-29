@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, reactive } from 'vue'
 import { useSortable } from '@sylvieshare/share-ui'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { SPELL_LEVELS } from '../lib/spellEntry'
@@ -8,16 +8,26 @@ import { abilitySpellGrantRows, syncAbilityGrantedSpells } from '../lib/abilityS
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 
 export function useSpellbookEntries({ props, charCtx, tabs, grants, itemMap, activeTabSpells, activeTab, preparation, preparationLimit = null, spellsByLevel, emitChange, spellPickerEligibility, spellStatusSource }) {
+  const pendingIds = reactive(new Set())
+  const resolvedIds = reactive(new Set())
+  const itemLoading = id => !itemMap[id] && (pendingIds.has(String(id)) || !resolvedIds.has(String(id)))
   async function loadDetails() {
-    const ids = spellbookItemIds({ tabs: tabs.value, grants: grants.value }).filter(id => !itemMap[id])
-    if (ids.length) {
-      const res = await itemsApi.byIds(ids)
-      for (const item of res.items || []) itemMap[item.id] = item
-      charCtx.characterResources?.rememberItems?.(res.items || [])
+    const ids = spellbookItemIds({ tabs: tabs.value, grants: grants.value }).filter(id => !itemMap[id] && !pendingIds.has(String(id)))
+    ids.forEach(id => pendingIds.add(String(id)))
+    try {
+      if (ids.length) {
+        const res = await itemsApi.byIds(ids)
+        for (const item of res.items || []) itemMap[item.id] = item
+        charCtx.characterResources?.rememberItems?.(res.items || [])
+      }
+      await Promise.allSettled(spellbookItemIds({ tabs: tabs.value, grants: grants.value })
+        .map(id => charCtx.characterStatuses?.ensureLinks?.(itemMap[id])))
+      normalizePreparationStatuses()
+    } catch {
+      // Settled missing records render a retry action instead of an endless skeleton.
+    } finally {
+      ids.forEach(id => { pendingIds.delete(String(id)); resolvedIds.add(String(id)) })
     }
-    await Promise.all(spellbookItemIds({ tabs: tabs.value, grants: grants.value })
-      .map((id) => charCtx.characterStatuses?.ensureLinks?.(itemMap[id])))
-    normalizePreparationStatuses()
   }
 
   function normalizePreparationStatuses() {
@@ -145,5 +155,5 @@ export function useSpellbookEntries({ props, charCtx, tabs, grants, itemMap, act
     await loadDetails()
   }
 
-  return { loadDetails, togglePrepared, removeSpell, sortable, displayLevel, onSpellDragStart, addSpell, abilityIds, syncExternalAbilitySpells }
+  return { loadDetails, itemLoading, togglePrepared, removeSpell, sortable, displayLevel, onSpellDragStart, addSpell, abilityIds, syncExternalAbilitySpells }
 }

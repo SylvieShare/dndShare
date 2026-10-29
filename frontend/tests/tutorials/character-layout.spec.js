@@ -139,3 +139,42 @@ test.describe('compact character gestures', () => {
     await expect(page.locator('.dnd-stats:visible')).toBeVisible()
   })
 })
+
+for (const width of [390, 834, 1440]) test(`all sheet tabs are retained before direct selection at ${width}`, async ({ page }) => {
+  const errors = []; page.on('pageerror', error => errors.push(error.message))
+  await page.setViewportSize({ width, height: 1100 })
+  const api = await fixture(page)
+  await page.goto('/tests/tutorials/fixtures/tutorials.html')
+  const panes = page.locator(width < 1200 ? '.mobile-swipe-pane .character-sheet' : '.inner-tab-pane')
+  await expect(panes).toHaveCount(width < 1200 ? 8 : 6, { timeout: 20000 })
+  if (width >= 1200) await expect(page.locator('.inner-tab-pane .sheet-skeleton')).toHaveCount(0)
+  await panes.evaluateAll(nodes => nodes.forEach((node, index) => { node.dataset.retainedIdentity = 'pane-' + index }))
+  if (width < 600) await page.getByRole('button', { name: 'Дневник', exact: true }).click()
+  else if (width < 1200) await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Дневник', exact: true }).click()
+  else await page.locator('.dnd-desktop-main').getByRole('tab', { name: 'Дневник', exact: true }).click()
+  await expect.poll(() => panes.evaluateAll(nodes => nodes.map(node => node.dataset.retainedIdentity))).toEqual(Array.from({ length: width < 1200 ? 8 : 6 }, (_, index) => 'pane-' + index))
+  expect(api.writes).toEqual([])
+  expect(errors).toEqual([])
+})
+
+test('prepared inventory keeps real sections visible and replaces only a pending item', async ({ page }) => {
+  await page.setViewportSize({ width: 834, height: 1100 })
+  const api = await fixture(page)
+  api.document().values.items = { equipped: [], sections: [{ id: 'bag', name: 'Рюкзак', items: [{ uid: 'ready-staff', item_id: 206, count: 1 }], slots: {} }] }
+  let release
+  const waiting = new Promise(resolve => { release = resolve })
+  await page.route('**/api/items/by-ids?*', async route => {
+    await waiting
+    await route.fulfill({ json: { items: [{ id: 206, typeId: 2, name: 'Учебный посох', data: { weight: 1 } }] } })
+  })
+  await page.goto('/tests/tutorials/fixtures/tutorials.html')
+  await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Предметы', exact: true }).click()
+  const inventory = page.locator('[data-sheet-section="inventory"]:visible')
+  await expect(inventory.getByRole('button', { name: 'Рюкзак', exact: true })).toBeVisible()
+  await expect(inventory.locator('.inventory-bag-grid')).toBeVisible()
+  await expect(inventory.locator('.share-skeleton')).toBeVisible()
+  release()
+  await expect(inventory.getByRole('button', { name: 'Учебный посох', exact: true })).toBeVisible()
+  await expect(inventory.locator('.share-skeleton')).toHaveCount(0)
+  expect(api.writes).toEqual([])
+})

@@ -36,7 +36,7 @@ internal fun CharacterCampaignDialog(
                         )
                     }
                 }
-            if (ui.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
+            if (ui.loading) ShareSkeletonBlock(Modifier.fillMaxWidth(), 36.dp)
             ui.error?.let { Text(it, color = WebPalette.Danger) }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 ShareChoiceChip(

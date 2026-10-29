@@ -32,20 +32,72 @@ class MorphBenchmarkActivity : ComponentActivity() {
                 val images = remember { ImageLoader.Builder(applicationContext).build() }
                 DisposableEffect(images) { onDispose { images.shutdown() } }
                 var editor by remember { mutableStateOf<SheetEditorState?>(null) }
-                BoxWithConstraints(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
-                    val format = when { maxWidth.value < 600 -> LayoutFormat.Phone; maxWidth.value < 1200 -> LayoutFormat.Tablet; else -> LayoutFormat.Wide }
+                BoxWithConstraints(
+                    Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)
+                ) {
+                    val format =
+                        when {
+                            maxWidth.value < 600 -> LayoutFormat.Phone
+                            maxWidth.value < 1200 -> LayoutFormat.Tablet
+                            else -> LayoutFormat.Wide
+                        }
                     val metadata = remember { HandbookMetadata() }
-                    val context = SheetContext(sheet, metadata, emptyMap(), images, true,
-                        edit = { target -> editor = SheetEditorState(initialForm(target, sheet), sheet) }, openItem = {},
-                        mechanics = remember { DndDerivedValues(sheet, emptyMap(), metadata) }, journal = SheetJournalState(), editor = editor)
-                    CompositionLocalProvider(LocalCharacterSheet provides context, LocalShareMorphState provides morph) {
-                        ShareMorphHost(morph, background = {
-                        Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())
-                            .padding(DesignTokens.Spacing.Page)) { DndStats() }
-                        }) {
-                        SheetStatMorph(morph, editor, close = { editor = null }, number = { _, value ->
-                            editor = editor?.let { it.copy(fields = it.fields.copy(number = value)) }
-                        }, submit = { editor = null })
+                    val context =
+                        SheetContext(
+                            sheet,
+                            metadata,
+                            emptyMap(),
+                            images,
+                            true,
+                            edit = { target ->
+                                editor = SheetEditorState(initialForm(target, sheet), sheet)
+                            },
+                            openItem = {},
+                            mechanics = remember { DndDerivedValues(sheet, emptyMap(), metadata) },
+                            journal = SheetJournalState(),
+                        )
+                    CompositionLocalProvider(
+                        LocalCharacterSheet provides context,
+                        LocalSheetEditorPreview provides editor,
+                        LocalShareMorphState provides morph,
+                    ) {
+                        ShareMorphHost(
+                            morph,
+                            background = {
+                                Column(
+                                    Modifier.fillMaxSize()
+                                        .verticalScroll(rememberScrollState())
+                                        .padding(DesignTokens.Spacing.Page)
+                                ) {
+                                    DndStats()
+                                }
+                            },
+                        ) {
+                            SheetStatMorph(
+                                morph,
+                                editor,
+                                close = { editor = null },
+                                number = { _, value ->
+                                    editor = editor?.let {
+                                        it.copy(fields = it.fields.copy(number = value))
+                                    }
+                                },
+                                submit = { editor = null },
+                                input = { key, value ->
+                                    editor = editor?.let {
+                                        it.copy(
+                                            fields =
+                                                it.fields.copy(
+                                                    input =
+                                                        JsonObject(it.fields.input + (key to value))
+                                                )
+                                        )
+                                    }
+                                },
+                                readInput = { editor?.fields?.input ?: JsonObject(emptyMap()) },
+                                items = emptyMap(),
+                                metadata = metadata,
+                            )
                         }
                     }
                 }
@@ -54,19 +106,52 @@ class MorphBenchmarkActivity : ComponentActivity() {
     }
 }
 
-private fun benchmarkSheet(extraSkills: Int) = CharacterSheet("DND5", 1, buildJsonObject {
-    put("values", buildJsonObject {
-        put("name", "Проверка морфа")
-        put("lvl", buildJsonObject { put("level", 5) })
-        dndAbilities.forEach { ability -> put(ability.id, buildJsonObject {
-            put("value", buildJsonObject { put("base", 12); put("bonuses", JsonArray(emptyList())) })
-            put("save_up", false)
-            put("skills", buildJsonObject {
-                if (ability.id == "STR") repeat(extraSkills) { index -> put("benchmark-$index", buildJsonObject {
-                    put("override_title", "Дополнительный навык с длинным названием ${index + 1}")
-                    put("up", index % 3)
-                }) }
-            })
-        }) }
-    })
-}, 1, sourceVersion = "2014")
+private fun benchmarkSheet(extraSkills: Int) =
+    CharacterSheet(
+        "DND5",
+        1,
+        buildJsonObject {
+            put(
+                "values",
+                buildJsonObject {
+                    put("name", "Проверка морфа")
+                    put("lvl", buildJsonObject { put("level", 5) })
+                    dndAbilities.forEach { ability ->
+                        put(
+                            ability.id,
+                            buildJsonObject {
+                                put(
+                                    "value",
+                                    buildJsonObject {
+                                        put("base", 12)
+                                        put("bonuses", JsonArray(emptyList()))
+                                    },
+                                )
+                                put("save_up", false)
+                                put(
+                                    "skills",
+                                    buildJsonObject {
+                                        if (ability.id == "STR")
+                                            repeat(extraSkills) { index ->
+                                                put(
+                                                    "benchmark-$index",
+                                                    buildJsonObject {
+                                                        put(
+                                                            "override_title",
+                                                            "Дополнительный навык с длинным названием ${index + 1}",
+                                                        )
+                                                        put("up", index % 3)
+                                                    },
+                                                )
+                                            }
+                                    },
+                                )
+                            },
+                        )
+                    }
+                },
+            )
+        },
+        1,
+        sourceVersion = "2014",
+    )

@@ -1,7 +1,5 @@
 package ru.dndshare.client.ui.character
 
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -81,20 +79,18 @@ internal fun DndWideSheet(
                     select,
                     textOnly = true,
                 )
-                SheetPagerContent(
+                PreparedSheetPager(
                     pager,
                     sections,
-                    Modifier.fillMaxWidth()
-                        .animateContentSize(tween(DesignTokens.Motion.Navigation)),
-                    beyondViewportPageCount = 0,
-                    userScrollEnabled = swipeEnabled,
-                    verticalAlignment = androidx.compose.ui.Alignment.Top,
+                    Modifier.fillMaxWidth(),
+                    enabled = swipeEnabled,
+                    fillHeight = false,
                 ) { page ->
                     Column(
                         Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
-                        DndSheetSection(sections[page], LayoutFormat.Wide)
+                        DndSheetSection(page, LayoutFormat.Wide)
                     }
                 }
             }

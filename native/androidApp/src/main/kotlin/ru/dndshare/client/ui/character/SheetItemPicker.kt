@@ -85,7 +85,10 @@ internal fun SheetItemPicker(
                     )
                 }
             }
-        if (rows == null) CircularProgressIndicator()
+        if (rows == null)
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                repeat(3) { SheetItemSkeleton() }
+            }
         else
             LazyColumn(
                 Modifier.weight(1f),

@@ -42,6 +42,8 @@ internal class CharacterSheetViewModel(
         SheetEditorController(uuid, accountId, saved, sheetCache, sheets, viewModelScope)
     val remote = SheetRemoteController(uuid, services, sheets, viewModelScope)
     val campaign = CharacterCampaignController(uuid, services.api, commands, viewModelScope)
+    private val fetchingContent = MutableStateFlow(true)
+    private var contentRefreshJob: Job? = null
     private val content =
         SheetContentReader(
             cache,
@@ -51,6 +53,7 @@ internal class CharacterSheetViewModel(
             viewModelScope,
             editor.state.map { it?.fields?.input?.let(::referencedItems).orEmpty() },
             services.icons?.state ?: flowOf(InventoryIconsState()),
+            fetchingContent,
         )
     val health = SheetHealthController(uuid, accountId, sheets)
     val itemMechanics =
@@ -128,6 +131,10 @@ internal class CharacterSheetViewModel(
 
     init {
         refresh()
+        viewModelScope.launch {
+            if (snapshot.filterNotNull().first().displayed.templateName == "DND5")
+                journalController.refresh()
+        }
         commands?.resume()
         viewModelScope.synchronizeSheetGrants(uuid, accountId, sheets, snapshot, content.state)
         viewModelScope.launch {
@@ -160,14 +167,19 @@ internal class CharacterSheetViewModel(
                 .map { it.displayed.sourceId }
                 .distinctUntilChanged()
                 .collectLatest { source ->
-                    if (source > 0 && cache.syncState(source)?.ready != true) {
-                        try {
-                            services.synchronize(source)
-                        } catch (cancelled: CancellationException) {
-                            throw cancelled
-                        } catch (_: Exception) {
-                            /* Cached content remains available offline. */
+                    fetchingContent.value = true
+                    try {
+                        if (source > 0 && cache.syncState(source)?.ready != true) {
+                            try {
+                                services.synchronize(source)
+                            } catch (cancelled: CancellationException) {
+                                throw cancelled
+                            } catch (_: Exception) {
+                                /* Cached content remains available offline. */
+                            }
                         }
+                    } finally {
+                        fetchingContent.value = false
                     }
                 }
         }
@@ -382,6 +394,22 @@ internal class CharacterSheetViewModel(
                 throw cancelled
             } catch (error: Exception) {
                 loadError.value = error.message ?: "Не удалось загрузить лист персонажа."
+            }
+        }
+    }
+
+    fun refreshContent() {
+        if (contentRefreshJob?.isActive == true) return
+        contentRefreshJob = viewModelScope.launch {
+            fetchingContent.value = true
+            try {
+                services.synchronize(snapshot.value?.displayed?.sourceId ?: return@launch)
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                // A failed attempt settles the skeleton; each unresolved card can retry.
+            } finally {
+                fetchingContent.value = false
             }
         }
     }

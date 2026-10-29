@@ -29,7 +29,7 @@ import ru.dndshare.client.ui.designsystem.*
 @Composable
 internal fun DndAbilityTile(ability: DndAbility, compact: Boolean) {
     val context = LocalCharacterSheet.current
-    val current = context.editor?.takeIf { it.fields.target == ability.id }
+    val current = LocalSheetEditorPreview.current?.takeIf { it.fields.target == ability.id }
     var retained by remember { mutableStateOf(current) }
     SideEffect { if (current != null) retained = current }
     ShareMorphSource(ability.id, Modifier.fillMaxWidth(), scrollPreview = false) { presentation ->

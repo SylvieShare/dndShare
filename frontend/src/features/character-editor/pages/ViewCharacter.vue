@@ -54,7 +54,7 @@
       data-tutorial="character-content"
     >
       <div v-if="loading" class="character-loading">
-          <LoadingIndicator label="Загружаем лист персонажа…" size="lg" show-label />
+          <CharacterSheetSkeleton />
         </div>
       <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="initializeCharacter">Повторить</button></div>
       <CharacterSwipePager v-else-if="compactLayout && template" ref="swipePagerEl" :controller="swipe" :tabs="activeTabs">
@@ -90,10 +90,10 @@ import CharacterTransferDialogs from '@/features/character-editor/components/Cha
 import { useCharacterTransfers } from '@/features/character-editor/composables/useCharacterTransfers'
 import PageTutorial from '@/features/tutorials/components/PageTutorial.vue'
 import { useCharacterTutorial } from '@/features/tutorials/composables/useCharacterTutorial'
-import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { ref, watch, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CharacterTabPane from '@/features/character-editor/components/CharacterTabPane.vue'
+import CharacterSheetSkeleton from '@/features/character-editor/components/sheet/CharacterSheetSkeleton.vue'
 import CharacterSaveErrorToast from '@/features/character-editor/components/CharacterSaveErrorToast.vue'
 import { useCharacterData } from '@/features/character-editor/composables/useCharacterData'
 import CharacterEditionDialog from '@/features/character-editor/components/CharacterEditionDialog.vue'
@@ -232,7 +232,7 @@ const characterTutorial = useCharacterTutorial({ root: tutorialRoot, mobile: isM
 // ── Watchers ──────────────────────────────────────────────────────────
 
 watch(format, (nextFormat, previousFormat) => {
-  const id = sheetTabs(template.value, previousFormat)[activeTab.value]?.id
+  const id = swipe.requestedTab.value ?? sheetTabs(template.value, previousFormat)[activeTab.value]?.id
   resetSwipe()
   activeTab.value = sheetTabIndex(activeTabs.value, id)
   markTabVisited(activeTab.value)

@@ -24,7 +24,7 @@ internal fun InventoryIconFields(form: FeatureFormScope) {
         listOf<InventoryIconPreset?>(null) +
             context.icons.presets.filter { it.purpose == "item" && it.itemTypeId in allowed }
     Text("Иконка", style = ShareTypography.group)
-    if (context.icons.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
+    if (context.icons.loading) ShareSkeletonBlock(Modifier.fillMaxWidth(), 48.dp)
     context.icons.error?.let { message ->
         Row {
             Text(

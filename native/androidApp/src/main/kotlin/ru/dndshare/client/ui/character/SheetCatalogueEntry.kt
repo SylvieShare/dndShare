@@ -36,6 +36,14 @@ internal fun SheetCatalogueEntry(
     val creationActions = createdItemActions(entry)
     val id = (entry["magic_item_id"] ?: entry["item_id"] ?: entry["id"])?.jsonPrimitive?.longOrNull
     val item = context.items[id]
+    if (
+        id != null &&
+            item == null &&
+            (context.fetchingContent || context.resolvedItemIds?.let { id !in it } == true)
+    ) {
+        SheetItemSkeleton()
+        return
+    }
     val display = displayItem ?: item
     val title =
         entry["override"]
@@ -77,6 +85,14 @@ internal fun SheetCatalogueEntry(
                     titleSuffix()
                 }
                 titleDetails()
+                if (id != null && item == null) {
+                    Text(
+                        "Запись недоступна",
+                        style = ShareTypography.context,
+                        color = WebPalette.TextMuted,
+                    )
+                    ShareTextButton(onClick = context.refreshContent) { Text("Повторить загрузку") }
+                }
             }
             entry["count"]
                 ?.takeIf { "item_id" in entry }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -29,7 +28,7 @@ internal fun CharacterSheetScreen(
     close: () -> Unit,
     backTitle: String = "Персонажи",
 ) {
-    val sheet = ui.sheet
+    val sheet = rememberPresentedSheet(ui.snapshot)
     val navigation = ui.navigation
     val sections = sheetSections(sheet?.templateName ?: "DND5", format)
     val section = sections.firstOrNull { it.name == navigation.sectionName } ?: sections.first()
@@ -37,10 +36,8 @@ internal fun CharacterSheetScreen(
     val pager =
         if (sheet != null && !wideDnd) rememberSheetPager(sections, section, model::selectSection)
         else null
-    val visibleSection = pager?.let { sections.getOrNull(it.currentPage) } ?: section
     val swipeEnabled =
         active && ui.editor == null && !ui.restoringEditor && navigation.overlay == null
-    val panes = rememberSaveableStateHolder()
     val canEdit = active && sheet?.userId == accountId
     val morph = rememberShareMorphState()
     LaunchedEffect(format, sheet?.templateName) { model.formatChanged(format) }
@@ -54,7 +51,7 @@ internal fun CharacterSheetScreen(
         }
     }
     val mechanics =
-        remember(sheet, ui.content) {
+        remember(sheet, ui.content.items, ui.content.metadata) {
             sheet?.let { DndDerivedValues(it, ui.content.items, ui.content.metadata) }
         }
     CompositionLocalProvider(LocalShareMorphState provides morph) {
@@ -75,11 +72,12 @@ internal fun CharacterSheetScreen(
                 morph,
                 background = {
                     Column(Modifier.fillMaxSize().shareCanvas()) {
-                        CharacterSheetHeader(
+                        PreparedSheetHeader(
                             sheet,
                             format,
                             sections,
-                            visibleSection,
+                            pager,
+                            section,
                             images,
                             model::selectSection,
                             close,
@@ -130,7 +128,7 @@ internal fun CharacterSheetScreen(
                         when {
                             sheet == null && ui.loadError == null ->
                                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                    CircularProgressIndicator()
+                                    SheetPageSkeleton()
                                 }
                             sheet != null && sheet.templateName !in listOf("DND5", "VTM20") ->
                                 EmptyContent("Система пока не поддерживается", sheet.sourceName)
@@ -150,7 +148,6 @@ internal fun CharacterSheetScreen(
                                             openItem = model::openItem,
                                             mechanics = requireNotNull(mechanics),
                                             journal = ui.journal,
-                                            editor = ui.editor,
                                             adjustResource = model::adjustResource,
                                             uuid = model.uuid,
                                             icons = ui.content.icons,
@@ -176,9 +173,13 @@ internal fun CharacterSheetScreen(
                                             rollBusy = ui.roll.busy,
                                             rerollForUse = model.rolls::rerollForUse,
                                             reroll = model.rolls::reroll,
+                                            resolvedItemIds = ui.content.resolvedIds,
+                                            fetchingContent = ui.content.fetching,
+                                            refreshContent = model::refreshContent,
                                         ),
+                                    LocalSheetEditorPreview provides ui.editor,
                                     ru.dndshare.client.ui.LocalRichInteractions provides
-                                        sheetRichInteractions(
+                                        rememberSheetRichInteractions(
                                             sheet,
                                             requireNotNull(mechanics),
                                             ui.content.metadata,
@@ -195,9 +196,9 @@ internal fun CharacterSheetScreen(
                                         )
                                     if (format == LayoutFormat.Phone)
                                         ShareSubheader {
-                                            SheetNavigation(
+                                            PreparedSheetNavigation(
                                                 sections,
-                                                visibleSection,
+                                                requireNotNull(pager),
                                                 images,
                                                 model::selectSection,
                                                 compact = true,
@@ -214,46 +215,35 @@ internal fun CharacterSheetScreen(
                                                 swipeEnabled,
                                             )
                                         else
-                                            SheetPagerContent(
+                                            PreparedSheetPager(
                                                 requireNotNull(pager),
                                                 sections,
                                                 Modifier.fillMaxSize(),
-                                                beyondViewportPageCount = 1,
-                                                userScrollEnabled = swipeEnabled,
+                                                enabled = swipeEnabled,
+                                                active = active,
                                             ) { page ->
-                                                panes.SaveableStateProvider(sections[page].name) {
-                                                    Box(
-                                                        Modifier.fillMaxSize(),
-                                                        contentAlignment = Alignment.TopCenter,
+                                                Box(
+                                                    Modifier.fillMaxSize(),
+                                                    contentAlignment = Alignment.TopCenter,
+                                                ) {
+                                                    Column(
+                                                        Modifier.widthIn(
+                                                                max = DesignTokens.Layout.SheetMax
+                                                            )
+                                                            .fillMaxSize()
+                                                            .verticalScroll(rememberScrollState())
+                                                            .padding(DesignTokens.Spacing.Page),
+                                                        verticalArrangement =
+                                                            Arrangement.spacedBy(16.dp),
                                                     ) {
-                                                        Column(
-                                                            Modifier.widthIn(
-                                                                    max =
-                                                                        DesignTokens.Layout.SheetMax
-                                                                )
-                                                                .fillMaxSize()
-                                                                .verticalScroll(
-                                                                    rememberScrollState()
-                                                                )
-                                                                .padding(DesignTokens.Spacing.Page),
-                                                            verticalArrangement =
-                                                                Arrangement.spacedBy(16.dp),
-                                                        ) {
-                                                            if (sheet.templateName == "DND5")
-                                                                DndSheetSection(
-                                                                    sections[page],
-                                                                    format,
-                                                                )
-                                                            else
-                                                                VtmSheetSection(
-                                                                    sections[page],
-                                                                    format,
-                                                                )
-                                                        }
+                                                        if (sheet.templateName == "DND5")
+                                                            DndSheetSection(page, format)
+                                                        else VtmSheetSection(page, format)
                                                     }
                                                 }
                                             }
                                     }
+
                                     ui.editor
                                         ?.takeUnless { it.isDndStat() }
                                         ?.let { editor ->
