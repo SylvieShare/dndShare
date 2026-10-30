@@ -38,7 +38,7 @@ internal fun WeaponGrid(
     var origin by remember { mutableStateOf(Offset.Zero) }
     var anchor by remember { mutableStateOf(Offset.Zero) }
     var pendingOrder by remember { mutableStateOf<List<String>?>(null) }
-    var lastTarget by remember { mutableStateOf<String?>(null) }
+    var lastDropBounds by remember { mutableStateOf<Rect?>(null) }
     var before by remember { mutableStateOf(ids) }
     val rectangles = remember { mutableMapOf<String, Rect>() }
     val latest by rememberUpdatedState(rows)
@@ -61,12 +61,15 @@ internal fun WeaponGrid(
     }
     fun nearest() {
         val held = active ?: return
+        val local = pointer - origin
+        // Block the occupied destination slot, not the item that moved out of it.
+        // The same neighbour can be crossed again when returning to the original slot.
+        if (lastDropBounds?.contains(local) == true) return
         val target =
             order.firstOrNull {
-                it != held && rectangles[it]?.translate(origin)?.contains(pointer) == true
+                it != held && rectangles[it]?.contains(local) == true
             } ?: return
-        if (target == lastTarget) return
-        lastTarget = target
+        lastDropBounds = rectangles[target]
         val from = order.indexOf(held)
         val to = order.indexOf(target)
         if (from >= 0 && to >= 0) order = order.toMutableList().apply { add(to, removeAt(from)) }
@@ -74,6 +77,7 @@ internal fun WeaponGrid(
     fun finish(cancelled: Boolean) {
         val changed = active != null && before != order
         active = null
+        lastDropBounds = null
         if (cancelled) {
             order = before
             return
@@ -133,7 +137,7 @@ internal fun WeaponGrid(
                     else {
                         active = id
                         before = order
-                        lastTarget = null
+                        lastDropBounds = null
                         pointer = point
                         anchor = point - (rectangles[id]?.translate(origin)?.center ?: point)
                         haptics.performHapticFeedback(HapticFeedbackType.LongPress)

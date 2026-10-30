@@ -1,5 +1,5 @@
 <template>
-  <span class="dd" :style="{ '--dd-size': `${size}px`, '--dd-font-size': `${Math.max(12, Math.round(size * .38))}px` }">
+  <span class="dd" :class="{ 'dd--wrap': wrap }" :style="{ '--dd-size': `${size}px`, '--dd-font-size': `${Math.max(12, Math.round(size * .38))}px` }">
     <template v-for="(g, gi) in groups" :key="gi">
       <span v-if="gi > 0" class="dd-op dd-op-between">+</span>
       <span class="dd-grp" :style="{ '--dc': g.typeColor }">
@@ -53,6 +53,7 @@ const props = defineProps({
   modifier: { type: Number, default: 0 },
   defaultColor: { type: String, default: 'var(--warning)' },
   size: { type: Number, default: 42 },
+  wrap: { type: Boolean, default: false },
 })
 
 const groups = computed(() => {
@@ -154,4 +155,6 @@ function dieText(part) {
   align-items: center;
   height: var(--dd-size);
 }
+.dd--wrap, .dd--wrap .dd-grp { max-width: 100%; min-width: 0; }
+.dd--wrap .dd-dice { flex-wrap: wrap; }
 </style>

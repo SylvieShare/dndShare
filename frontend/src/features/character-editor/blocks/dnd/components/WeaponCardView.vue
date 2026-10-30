@@ -24,24 +24,13 @@
         <WeaponAttunementStatus :entry="entry" :item="ctx.itemMap?.[entry.magic_item_id]" />
         <span v-if="ctx.isWeaponProficient(entry)" class="w-proficiency">Владение</span>
       </div>
-      <div class="w-card-controls">
-      <AttackDamage
-        :attack="ctx.formatBonus(ctx.attackBonus(entry))"
-        :damage-parts="ctx.damagePartsRaw(entry)"
-        :modifier="ctx.damageBonus(entry)"
-        :two-handed-parts="ctx.twoHandedParts(entry)"
+      <WeaponMetricsTable class="w-card-controls"
+        :attack="ctx.formatBonus(ctx.attackBonus(entry))" :damage-parts="ctx.damagePartsRaw(entry)"
+        :modifier="ctx.damageBonus(entry)" :two-handed-parts="ctx.twoHandedParts(entry)"
+        :properties="ctx.propertyItems(entry)" :interactive="interactive"
+        @property-enter="(event, property) => ctx.showPropertyTooltip(event, property)"
+        @property-leave="ctx.hidePropertyTooltip()"
       />
-      <div class="w-props-inline">
-        <span
-          v-for="(property, propertyIndex) in ctx.propertyItems(entry)"
-          :key="property.id ?? propertyIndex"
-          class="w-prop sheet-tag-chip"
-          :class="{ 'sheet-tag-has-desc': interactive && property.desc }"
-          @mouseenter="interactive && ctx.showPropertyTooltip($event, property)"
-          @mouseleave="interactive && ctx.hidePropertyTooltip()"
-        >{{ property.label }}</span>
-      </div>
-      </div>
     </div>
   </div>
 </template>
@@ -49,7 +38,7 @@
 <script setup>
 import WeaponAttunementStatus from './WeaponAttunementStatus.vue'
 import { computed, inject } from 'vue'
-import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
+import WeaponMetricsTable from './WeaponMetricsTable.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 const props = defineProps({
@@ -136,26 +125,12 @@ const weaponItem = computed(() => ctx.item(props.entry))
   font-weight: 700;
 }
 
-.w-props-inline {
-  display: inline-flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 4px;
-  min-width: 0;
-}
-
-.w-prop { font-size: 11px; padding: 2px 8px; overflow-wrap: normal; }
-
-.w-card-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; min-width: 0; }
-.w-card-controls > .ad { flex: none; }
-.w-props-inline { flex: 1 1 80px; }
 @media (--ui-compact) {
   .w-card-main { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 10px 12px; padding: 14px 16px; }
   .w-icon { grid-column: 1; grid-row: 1; }
   .w-card-view { display: contents; }
   .w-card-title { grid-column: 2; grid-row: 1; }
   .w-card-controls { grid-column: 1 / -1; grid-row: 2; }
-  .w-props-inline { flex-basis: 160px; }
   .w-name { font-size: 15px; white-space: normal; }
   .w-range { white-space: normal; }
 }

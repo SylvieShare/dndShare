@@ -165,23 +165,6 @@ internal fun WeaponSheetCard(
                                 )
                         }
                     }
-                    val controls: @Composable () -> Unit = {
-                        if (weapon != null) {
-                            WeaponAttackValue(title, weapon.attack, false, null)
-                            WeaponDamageFace(
-                                title,
-                                weapon.parts,
-                                weapon.twoHanded,
-                                weapon.damageBonus,
-                                false,
-                                null,
-                            )
-                            WeaponPropertyPills(
-                                weapon.properties,
-                                Modifier.widthIn(max = if (compact) maxWidth else 140.dp),
-                            )
-                        }
-                    }
                     if (compact)
                         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                             Row(
@@ -191,13 +174,7 @@ internal fun WeaponSheetCard(
                                 icon()
                                 Box(Modifier.weight(1f)) { heading() }
                             }
-                            FlowRow(
-                                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
-                                itemVerticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                controls()
-                            }
+                            if (weapon != null) WeaponMetricsTable(title, weapon)
                         }
                     else
                         Row(
@@ -205,8 +182,9 @@ internal fun WeaponSheetCard(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             icon()
-                            Box(Modifier.weight(1f)) { heading() }
-                            controls()
+                            Box(Modifier.weight(.9f)) { heading() }
+                            if (weapon != null)
+                                WeaponMetricsTable(title, weapon, Modifier.weight(2.5f))
                         }
                 }
                 CompositionLocalProvider(
@@ -253,24 +231,5 @@ internal fun WeaponSheetCard(
         if (format == LayoutFormat.Wide)
             ShareFormDialog(title, { properties = false }, content = content)
         else ShareBottomSheet(title, { properties = false }, content)
-    }
-}
-
-@Composable
-private fun WeaponPropertyPills(properties: List<String>, modifier: Modifier = Modifier) {
-    FlowRow(
-        modifier,
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-    ) {
-        properties.forEach {
-            Text(
-                it,
-                Modifier.background(WebPalette.Raised, RoundedCornerShape(6.dp))
-                    .padding(horizontal = 8.dp, vertical = 2.dp),
-                style = ShareTypography.context.copy(fontSize = 11.sp),
-                color = WebPalette.TextMuted,
-            )
-        }
     }
 }

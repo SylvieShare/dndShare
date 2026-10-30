@@ -2,6 +2,7 @@ package ru.dndshare.client.ui.designsystem
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -10,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
@@ -91,33 +93,47 @@ fun ShareIconNavigation(
                 )
             Row(horizontalArrangement = Arrangement.spacedBy(gap)) {
                 items.forEach { item ->
-                    Column(
+                    val interactions = remember(item.key) { MutableInteractionSource() }
+                    Box(
                         Modifier.width(size)
                             .height(height)
                             .selectable(
                                 item.key == selected,
+                                interactionSource = interactions,
+                                indication = null,
                                 role = Role.Tab,
                                 onClick = { onSelect(item.key) },
                             )
-                            .semantics { contentDescription = item.label },
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
+                            .semantics { contentDescription = item.label }
                     ) {
-                        icon(item.key)
-                        if (!compact)
-                            Text(
-                                item.label,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                fontSize = 10.sp,
-                                lineHeight = 14.sp,
-                                letterSpacing = 0.sp,
-                                fontWeight = FontWeight.Bold,
-                                color =
-                                    if (item.key == selected)
-                                        if (pill) WebPalette.AccentSoft else WebPalette.OnAccent
-                                    else WebPalette.TextMuted,
-                            )
+                        Column(
+                            Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            icon(item.key)
+                            if (!compact)
+                                Text(
+                                    item.label,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    fontSize = 10.sp,
+                                    lineHeight = 14.sp,
+                                    letterSpacing = 0.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color =
+                                        if (item.key == selected)
+                                            if (pill) WebPalette.AccentSoft else WebPalette.OnAccent
+                                        else WebPalette.TextMuted,
+                                )
+                        }
+                        Box(
+                            Modifier.matchParentSize()
+                                .clip(
+                                    if (pill) RoundedCornerShape(50) else RoundedCornerShape(10.dp)
+                                )
+                                .indication(interactions, LocalIndication.current)
+                        )
                     }
                 }
             }

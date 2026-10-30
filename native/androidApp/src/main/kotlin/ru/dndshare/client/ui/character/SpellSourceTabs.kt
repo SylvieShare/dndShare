@@ -12,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -44,6 +45,7 @@ internal fun SpellSourceTabs(tabs: List<JsonObject>, selected: String?, select: 
                             if (active) WebPalette.Accent.copy(alpha = .1f) else Color.Transparent,
                             shape,
                         )
+                        .clip(shape)
                         .selectable(selected = active, role = Role.Tab) { select(tab.text("key")) }
                         .padding(horizontal = 10.dp, vertical = 5.dp),
                     style =
@@ -58,6 +60,7 @@ internal fun SpellSourceTabs(tabs: List<JsonObject>, selected: String?, select: 
                 Text(
                     "+ Вкладка",
                     Modifier.border(1.dp, WebPalette.Border, RoundedCornerShape(50))
+                        .clip(RoundedCornerShape(50))
                         .clickable(role = Role.Button) { context.edit("spell-tab:new") }
                         .padding(horizontal = 10.dp, vertical = 5.dp),
                     style =

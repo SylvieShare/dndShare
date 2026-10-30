@@ -3,10 +3,16 @@ package ru.dndshare.client.ui.designsystem
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.*
@@ -72,7 +78,8 @@ fun ShareResourceOrb(
                 )
             }
         }
-    Canvas(
+    val interactions = remember { MutableInteractionSource() }
+    Box(
         modifier
             .size(if (compact) 32.dp else 48.dp)
             .onGloballyPositioned { visible = !it.boundsInWindow().isEmpty }
@@ -82,75 +89,96 @@ fun ShareResourceOrb(
             }
             .then(
                 if (onClick != null)
-                    Modifier.clickable(enabled = enabled, role = Role.Button, onClick = onClick)
+                    Modifier.clickable(
+                        interactionSource = interactions,
+                        indication = null,
+                        enabled = enabled,
+                        role = Role.Button,
+                        onClick = onClick,
+                    )
                 else Modifier
             )
     ) {
-        val diameter = (if (compact) 28.dp else 30.dp).toPx()
-        val k = diameter / 58f
-        val center = Offset(size.width / 2, size.height / 2)
-        val radius = diameter / 2
-        val glass = WebEffectSpec.OrbRimWidth.dp.toPx()
-        val well = radius - glass - 3 * k
-        val glow = flash.value
-        if (glow > 0) {
-            val strength = .85f + ((level - 1).coerceIn(0, 8) / 8f) * .9f
-            val outer = radius + (if (charged) 18 else 22) * k * strength
-            drawCircle(
-                Brush.radialGradient(
-                    listOf(color.copy(alpha = .55f * glow), Color.Transparent),
-                    center,
+        Canvas(Modifier.matchParentSize()) {
+            val diameter = (if (compact) 28.dp else 30.dp).toPx()
+            val k = diameter / 58f
+            val center = Offset(size.width / 2, size.height / 2)
+            val radius = diameter / 2
+            val glass = WebEffectSpec.OrbRimWidth.dp.toPx()
+            val well = radius - glass - 3 * k
+            val glow = flash.value
+            if (glow > 0) {
+                val strength = .85f + ((level - 1).coerceIn(0, 8) / 8f) * .9f
+                val outer = radius + (if (charged) 18 else 22) * k * strength
+                drawCircle(
+                    Brush.radialGradient(
+                        listOf(color.copy(alpha = .55f * glow), Color.Transparent),
+                        center,
+                        outer,
+                    ),
                     outer,
-                ),
-                outer,
-                center,
-            )
-        }
-        drawCircle(Color(WebEffectSpec.OrbBody), radius, center)
-        drawCircle(rim.value, radius - glass / 2, center, style = Stroke(glass))
-        val clip =
-            Path().apply { addOval(Rect(center - Offset(well, well), Size(well * 2, well * 2))) }
-        clipPath(clip) {
-            val top = center.y + well - well * 2 * fill.value
-            drawRect(color, Offset(center.x - well, top), Size(well * 2, well * 2 * fill.value))
-            if (fill.value > 0)
-                drawLine(
-                    Color.White.copy(alpha = .5f),
-                    Offset(center.x - well, top),
-                    Offset(center.x + well, top),
-                    2.dp.toPx(),
+                    center,
                 )
-            val elapsed = phase.value * 4.4f
-            bubbles.forEach { b ->
-                if (charged && elapsed >= b[4]) {
-                    val p = ((elapsed - b[4]) / b[3]) % 1f
-                    val opacity = if (p < .18f) p / .18f * .6f else .6f * (1 - p) / .82f
-                    drawCircle(
-                        Color.White.copy(alpha = .4f * opacity),
-                        b[2] * k / 2 * (.6f + .4f * p),
-                        Offset(
-                            center.x - well + b[0] * well * 2,
-                            center.y + well - b[1] * well * 2 - 30 * k * p,
-                        ),
-                    )
-                }
             }
-            drawCircle(
-                Color.White.copy(alpha = .45f),
-                well * .26f,
-                Offset(center.x - well * .30f, center.y - well * .38f),
-            )
+            drawCircle(Color(WebEffectSpec.OrbBody), radius, center)
+            drawCircle(rim.value, radius - glass / 2, center, style = Stroke(glass))
+            val clip =
+                Path().apply {
+                    addOval(Rect(center - Offset(well, well), Size(well * 2, well * 2)))
+                }
+            clipPath(clip) {
+                val top = center.y + well - well * 2 * fill.value
+                drawRect(color, Offset(center.x - well, top), Size(well * 2, well * 2 * fill.value))
+                if (fill.value > 0)
+                    drawLine(
+                        Color.White.copy(alpha = .5f),
+                        Offset(center.x - well, top),
+                        Offset(center.x + well, top),
+                        2.dp.toPx(),
+                    )
+                val elapsed = phase.value * 4.4f
+                bubbles.forEach { b ->
+                    if (charged && elapsed >= b[4]) {
+                        val p = ((elapsed - b[4]) / b[3]) % 1f
+                        val opacity = if (p < .18f) p / .18f * .6f else .6f * (1 - p) / .82f
+                        drawCircle(
+                            Color.White.copy(alpha = .4f * opacity),
+                            b[2] * k / 2 * (.6f + .4f * p),
+                            Offset(
+                                center.x - well + b[0] * well * 2,
+                                center.y + well - b[1] * well * 2 - 30 * k * p,
+                            ),
+                        )
+                    }
+                }
+                drawCircle(
+                    Color.White.copy(alpha = .45f),
+                    well * .26f,
+                    Offset(center.x - well * .30f, center.y - well * .38f),
+                )
+            }
+            if (!charged && glow > 0) {
+                val progress = 1 - glow
+                val wisp = Offset(center.x, center.y - radius + diameter * .4f - 30 * k * progress)
+                val r = 8 * k * (.5f + 1.2f * progress)
+                val alpha =
+                    if (progress < .25f) progress / .25f * .8f else .8f * (1 - progress) / .75f
+                drawCircle(
+                    Brush.radialGradient(
+                        listOf(color.copy(alpha = alpha), Color.Transparent),
+                        wisp,
+                        r,
+                    ),
+                    r,
+                    wisp,
+                )
+            }
         }
-        if (!charged && glow > 0) {
-            val progress = 1 - glow
-            val wisp = Offset(center.x, center.y - radius + diameter * .4f - 30 * k * progress)
-            val r = 8 * k * (.5f + 1.2f * progress)
-            val alpha = if (progress < .25f) progress / .25f * .8f else .8f * (1 - progress) / .75f
-            drawCircle(
-                Brush.radialGradient(listOf(color.copy(alpha = alpha), Color.Transparent), wisp, r),
-                r,
-                wisp,
+        if (onClick != null)
+            Box(
+                Modifier.matchParentSize()
+                    .clip(CircleShape)
+                    .indication(interactions, LocalIndication.current)
             )
-        }
     }
 }

@@ -26,7 +26,7 @@
               <strong>{{ flatDamage }}</strong>
               <small v-if="flatDamageType">{{ flatDamageType }}</small>
             </span>
-            <DamageDice v-else :parts="damageParts" :alternative-parts="twoHandedParts" :modifier="modifier" />
+            <DamageDice v-else :parts="damageParts" :alternative-parts="twoHandedParts" :modifier="modifier" :wrap="wrapDamage" />
           </button>
         </template>
         <template #default="{ close }">
@@ -48,7 +48,7 @@
         <strong>{{ flatDamage }}</strong>
         <small v-if="flatDamageType">{{ flatDamageType }}</small>
       </span>
-      <DamageDice v-else :parts="damageParts" :alternative-parts="twoHandedParts" :modifier="modifier" />
+      <DamageDice v-else :parts="damageParts" :alternative-parts="twoHandedParts" :modifier="modifier" :wrap="wrapDamage" />
       <slot name="damage-suffix" />
     </component>
 
@@ -93,6 +93,7 @@ const props = defineProps({
   flatDamageTitle: { type: String, default: '' },
   rollable: { type: Boolean, default: false },
   damageMenu: { type: Boolean, default: false },
+  wrapDamage: { type: Boolean, default: false },
 })
 const emit = defineEmits(['roll-attack', 'roll-damage', 'roll-critical', 'roll-heal'])
 

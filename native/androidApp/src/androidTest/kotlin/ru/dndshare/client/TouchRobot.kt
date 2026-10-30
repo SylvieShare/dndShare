@@ -96,6 +96,21 @@ internal object TouchRobot {
             android.view.ViewConfiguration.getLongPressTimeout() + 120,
         )
 
+    fun longPressDragPath(points: List<Pair<Float, Float>>, reached: (Int) -> Unit) {
+        require(points.size >= 2)
+        performDrag(
+            points.first().first,
+            points.first().second,
+            points.last().first,
+            points.last().second,
+            420,
+            null,
+            android.view.ViewConfiguration.getLongPressTimeout() + 120,
+            points.drop(1).dropLast(1),
+            reached,
+        )
+    }
+
     fun drag(
         x: Float,
         y: Float,
@@ -113,6 +128,8 @@ internal object TouchRobot {
         duration: Int = 420,
         beforeRelease: (() -> Unit)?,
         hold: Int,
+        via: List<Pair<Float, Float>> = emptyList(),
+        reached: ((Int) -> Unit)? = null,
     ) {
         val down = SystemClock.uptimeMillis()
         fun event(action: Int, px: Float, py: Float) {
@@ -157,11 +174,17 @@ internal object TouchRobot {
         var lastX = x
         var lastY = y
         try {
-            for (i in 1..20) {
-                SystemClock.sleep((duration / 20).toLong())
-                lastX = x + (toX - x) * i / 20
-                lastY = y + (toY - y) * i / 20
-                event(MotionEvent.ACTION_MOVE, lastX, lastY)
+            (via + (toX to toY)).forEachIndexed { index, target ->
+                val fromX = lastX
+                val fromY = lastY
+                for (i in 1..20) {
+                    SystemClock.sleep((duration / 20).toLong())
+                    lastX = fromX + (target.first - fromX) * i / 20
+                    lastY = fromY + (target.second - fromY) * i / 20
+                    event(MotionEvent.ACTION_MOVE, lastX, lastY)
+                }
+                instrumentation.waitForIdleSync()
+                reached?.invoke(index)
             }
             instrumentation.waitForIdleSync()
             beforeRelease?.invoke()
