@@ -25,9 +25,11 @@ export function useCharacterResources(values, sources = DND_CHARACTER_RESOURCE_S
     let missing = requested.filter((id) => !itemsById.value.has(id))
     if (!missing.length) return { items: requested.map((id) => itemsById.value.get(id)).filter(Boolean) }
 
-    if (hydrationPromise) await hydrationPromise
-    missing = missing.filter((id) => !itemsById.value.has(id))
-    if (!missing.length) return { items: requested.map((id) => itemsById.value.get(id)).filter(Boolean) }
+    while (hydrationPromise) {
+      await hydrationPromise
+      missing = missing.filter((id) => !itemsById.value.has(id))
+      if (!missing.length) return { items: requested.map((id) => itemsById.value.get(id)).filter(Boolean) }
+    }
 
     const request = itemsApi.byIds(missing)
       .then((response) => {

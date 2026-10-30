@@ -1,9 +1,11 @@
 import { resolveSpellSaveDC } from '@/shared/lib/spellSaveDC'
 import { createSpellbookKey, spellTab, normalizedClassItemId } from '../lib/spellbook'
 import { spellcastingRulesAt } from '../lib/spellcastingRules'
-import { itemsApi } from '@/shared/api/itemsApi'
+import { useCharacterItemCatalog } from '../../../composables/useCharacterItemCatalog'
 
 export function useSpellbookTabs({ props, charCtx, tabs, grants, activeTab, activeSpellTab, tabEditorOpen, classItemMap, deleteTarget, emitChange, profBonus, statOptions }) {
+  const catalog = useCharacterItemCatalog(charCtx)
+  Object.assign(classItemMap, catalog.snapshot())
   function updateActiveTab(field, value) {
     if (!activeTab.value) return
     activeTab.value[field] = value
@@ -104,7 +106,7 @@ export function useSpellbookTabs({ props, charCtx, tabs, grants, activeTab, acti
       .flatMap((entry) => [entry?.id, entry?.subclass?.id]).filter((id) => id != null))]
     const missing = classIds.filter((id) => !classItemMap[id])
     if (missing.length) {
-      const response = await itemsApi.byIds(missing)
+      const response = await catalog.load(missing)
       for (const item of response?.items || []) classItemMap[item.id] = item
     }
     if (!tabs.value.some((tab) => tab.key === activeSpellTab.value)) {

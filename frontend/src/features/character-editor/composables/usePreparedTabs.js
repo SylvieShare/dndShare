@@ -2,7 +2,8 @@ import { computed, onBeforeUnmount, shallowRef, watch } from 'vue'
 
 // Each retained pane mounts in a separate idle task. A drag never starts a new mount.
 export function usePreparedTabs(tabs, selected, busy) {
-  const prepared = shallowRef(new Set())
+  const initial = tabs.value[selected.value]
+  const prepared = shallowRef(new Set(initial ? [String(initial.id ?? selected.value)] : []))
   let ticket = null
   let stopped = false
   const key = (tab, index) => String(tab?.id ?? index)

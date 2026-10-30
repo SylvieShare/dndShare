@@ -12,16 +12,17 @@
 <script setup>
 import { ref, watch } from 'vue'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem.vue'
-import { itemsApi } from '@/shared/api/itemsApi'
+import { useCharacterItemCatalog } from '../../../composables/useCharacterItemCatalog'
 
 const props = defineProps({ entries: { type: Array, required: true } })
-const items = ref({})
+const catalog = useCharacterItemCatalog()
+const items = ref(catalog.snapshot())
 watch(() => props.entries.map(entry => entry.id).join(','), async (ids, _, onCleanup) => {
   let active = true
   onCleanup(() => { active = false })
   if (!ids) return
   try {
-    const result = await itemsApi.byIds(ids.split(','))
+    const result = await catalog.load(ids.split(','))
     if (active) items.value = Object.fromEntries((result.items || []).map(item => [item.id, item]))
   } catch {
     // Stored references keep the list readable if handbook artwork is unavailable.

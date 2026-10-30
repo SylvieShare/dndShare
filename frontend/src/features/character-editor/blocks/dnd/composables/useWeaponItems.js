@@ -1,10 +1,11 @@
 import { ref } from 'vue'
-import { itemsApi } from '@/shared/api/itemsApi'
+import { useCharacterItemCatalog } from '../../../composables/useCharacterItemCatalog'
 
 import { resolveWeaponItem } from '@/features/character-editor/lib/magicWeapons'
 
 export function useWeaponItems({ tagMap, tagDetailsMap }) {
-  const itemMap = ref({})
+  const catalog = useCharacterItemCatalog()
+  const itemMap = ref(catalog.snapshot())
 
   function item(entry) {
     return resolveWeaponItem(entry, itemMap.value)
@@ -61,7 +62,7 @@ export function useWeaponItems({ tagMap, tagDetailsMap }) {
   async function loadItems(entries) {
     const ids = [...new Set(entries.flatMap(e => [e.item_id, e.magic_item_id]).filter(Boolean))]
     const missing = ids.filter(id => !itemMap.value[id])
-    const res = missing.length ? await itemsApi.byIds(missing) : { items: [] }
+    const res = missing.length ? await catalog.load(missing) : { items: [] }
     const next = { ...itemMap.value }
     for (const it of res.items || []) next[it.id] = it
     if (missing.length) itemMap.value = { ...itemMap.value, ...next }
@@ -69,6 +70,7 @@ export function useWeaponItems({ tagMap, tagDetailsMap }) {
   }
 
   function addItem(it) {
+    catalog.remember([it])
     itemMap.value = { ...itemMap.value, [it.id]: it }
   }
 

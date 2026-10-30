@@ -33,7 +33,7 @@ describe('prepared sheet tabs', () => {
 
   it('prepares every tab without visits and prioritizes a direct header selection', async () => {
     const { api, selected, app, step, tasks } = setup()
-    expect(api.isReady(0)).toBe(false)
+    expect(api.isReady(0)).toBe(true)
     await step()
     selected.value = 7; await nextTick(); await step()
     expect(api.isReady(7)).toBe(true)
@@ -46,12 +46,13 @@ describe('prepared sheet tabs', () => {
   })
 
   it('defers preparation throughout a drag and cancels work when the sheet closes', async () => {
-    const { api, busy, app, step, tasks } = setup()
+    const { api, selected, busy, app, step, tasks } = setup()
     busy.value = true
-    await step(); await step()
-    expect(api.isReady(0)).toBe(false)
+    selected.value = 3
+    await nextTick(); await step(); await step()
+    expect(api.isReady(3)).toBe(false)
     busy.value = false; await step()
-    expect(api.isReady(0)).toBe(true)
+    expect(api.isReady(3)).toBe(true)
     app.unmount()
     expect(tasks.size).toBe(0)
   })

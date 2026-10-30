@@ -1,14 +1,16 @@
 import { computed, ref, watch } from 'vue'
-import { itemsApi } from '@/shared/api/itemsApi'
+import { useCharacterItemCatalog } from '../../../composables/useCharacterItemCatalog'
 
 export function useGrantedSpellNames(grantedIds) {
-  const spellNames = ref({})
-  const spellItems = ref({})
-  const spellLevels = ref({})
+  const catalog = useCharacterItemCatalog()
+  const initial = catalog.snapshot()
+  const spellNames = ref(Object.fromEntries(Object.values(initial).map(item => [item.id, item.name])))
+  const spellItems = ref(initial)
+  const spellLevels = ref(Object.fromEntries(Object.values(initial).map(item => [item.id, Number(item.data?.lvl) || 0])))
   watch(grantedIds, async (ids) => {
     const missing = ids.filter(id => !spellNames.value[id])
     if (!missing.length) return
-    const response = await itemsApi.byIds(missing)
+    const response = await catalog.load(missing)
     const nextNames = { ...spellNames.value }
     const nextLevels = { ...spellLevels.value }
     for (const item of response?.items || []) {

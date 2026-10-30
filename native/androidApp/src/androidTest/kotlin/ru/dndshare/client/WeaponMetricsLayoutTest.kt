@@ -56,6 +56,11 @@ class WeaponMetricsLayoutTest {
                                         Modifier.width(width.dp).semantics {
                                             contentDescription = "Таблица оружия"
                                         },
+                                        propertyDescriptions =
+                                            mapOf(
+                                                "Универсальное" to
+                                                    "<p>Можно использовать двумя руками.</p>"
+                                            ),
                                     )
                                 }
                             }
@@ -63,22 +68,35 @@ class WeaponMetricsLayoutTest {
                     }
                 }
                 TouchRobot.await("table at $width dp") {
-                    TouchRobot.find("Свойства") != null && TouchRobot.bounds("Таблица оружия").width() == width
+                    TouchRobot.find("Свойства") != null &&
+                        TouchRobot.bounds("Таблица оружия").width() == width
                 }
                 val table = TouchRobot.bounds("Таблица оружия")
                 val attack = TouchRobot.bounds("Атака")
                 val damage = TouchRobot.bounds("Урон")
                 val properties = TouchRobot.bounds("Свойства")
                 assertEquals(attack.top, damage.top)
-                if (width < 380 * scale) assertTrue(properties.top > damage.bottom)
+                if (width < 392 * scale) assertTrue(properties.top > damage.bottom)
                 else assertEquals(attack.top, properties.top)
-                listOf("к6: 6", "к8: 8", "Универсальное · Метательное").forEach { label ->
+                listOf("к6: 6", "к8: 8", "Универсальное", "Метательное").forEach { label ->
                     val item = TouchRobot.bounds(label)
-                    assertTrue(
-                        table.contains(item),
-                        "$label clipped at width $width, text scale $scale: $item outside $table",
-                    )
+                    if (label.startsWith("к")) {
+                        assertTrue(table.contains(item), "$label clipped at width $width, text scale $scale")
+                    } else {
+                        // Accessibility bounds include the expanded minimum touch target, not just glyphs.
+                        assertTrue(item.left >= table.left && item.right <= table.right)
+                        assertTrue(table.contains(item.centerX(), item.centerY()))
+                        assertTrue(item.height() >= 48)
+                    }
                     assertTrue(item.height() > 0)
+                }
+                TouchRobot.click("Универсальное")
+                TouchRobot.await("property description opens") {
+                    TouchRobot.findNode { it.text?.toString()?.trim() == "Можно использовать двумя руками." } != null
+                }
+                TouchRobot.click("Понятно")
+                TouchRobot.await("property description closes") {
+                    TouchRobot.findNode { it.text?.toString()?.trim() == "Можно использовать двумя руками." } == null
                 }
             }
         }

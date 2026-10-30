@@ -1,28 +1,50 @@
 package ru.dndshare.client.ui.designsystem
 
-import ru.dndshare.client.R
-
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.*
+import ru.dndshare.client.R
 
 @OptIn(ExperimentalTextApi::class)
 private fun textRole(token: DesignType): TextStyle {
     val weight = FontVariation.weight(token.weight.weight)
-    val family = when (token.family) {
-        DesignFont.Ui -> FontFamily.Default
-        DesignFont.Display -> FontFamily(Font(R.font.cormorant_garamond, token.weight,
-            variationSettings = FontVariation.Settings(weight)))
-        DesignFont.Prose -> {
-            val settings = FontVariation.Settings(weight, FontVariation.Setting("opsz", token.size.value))
-            FontFamily(Font(R.font.literata, token.weight, variationSettings = settings),
-                Font(R.font.literata_italic, token.weight, style = FontStyle.Italic, variationSettings = settings))
+    val family =
+        when (token.family) {
+            DesignFont.Ui -> FontFamily.Default
+            DesignFont.Display ->
+                FontFamily(
+                    Font(
+                        R.font.cormorant_garamond,
+                        token.weight,
+                        variationSettings = FontVariation.Settings(weight),
+                    )
+                )
+            DesignFont.Prose -> {
+                val settings =
+                    FontVariation.Settings(weight, FontVariation.Setting("opsz", token.size.value))
+                FontFamily(
+                    Font(R.font.literata, token.weight, variationSettings = settings),
+                    Font(
+                        R.font.literata_italic,
+                        token.weight,
+                        style = FontStyle.Italic,
+                        variationSettings = settings,
+                    ),
+                )
+            }
         }
-    }
-    return TextStyle(fontFamily = family, fontSize = token.size, lineHeight = token.lineHeight, fontWeight = token.weight, letterSpacing = token.tracking)
+    return TextStyle(
+        fontFamily = family,
+        fontSize = token.size,
+        lineHeight = token.lineHeight,
+        fontWeight = token.weight,
+        letterSpacing = token.tracking,
+    )
 }
 
 object ShareTypography {
+    val weaponAttack = textRole(DesignTokens.Typography.WeaponAttack)
+    val weaponProperty = textRole(DesignTokens.Typography.WeaponProperty)
     val sheetStat = textRole(DesignTokens.Typography.SheetStat)
     val sheetStatCompact = textRole(DesignTokens.Typography.SheetStatCompact)
     val title = textRole(DesignTokens.Typography.Title)

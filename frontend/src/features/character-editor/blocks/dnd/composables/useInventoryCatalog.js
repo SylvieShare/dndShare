@@ -1,9 +1,10 @@
 import { reactive, ref, watch } from 'vue'
-import { itemsApi } from '@/shared/api/itemsApi'
+import { useCharacterItemCatalog } from '../../../composables/useCharacterItemCatalog'
 import { allCatalogIds } from '../lib/itemSection'
 
 export function useInventoryCatalog(model) {
-  const catalog = reactive({}), loading = ref(true), error = ref('')
+  const shared = useCharacterItemCatalog()
+  const catalog = reactive(shared.snapshot()), loading = ref(true), error = ref('')
   const pending = reactive(new Set()), resolved = reactive(new Set())
   const itemLoading = entry => [entry.item_id, entry.magic_item_id].filter(Boolean).some(id => !catalog[id] && (pending.has(String(id)) || !resolved.has(String(id))))
   let request = 0
@@ -14,7 +15,7 @@ export function useInventoryCatalog(model) {
     missing.forEach(id => pending.add(String(id)))
     try {
       if (missing.length) {
-        const items = (await itemsApi.byIds(missing)).items || []
+        const items = (await shared.load(missing)).items || []
         for (const item of items) catalog[item.id] = item
         if (missing.some(id => !catalog[id])) throw new Error('Missing item reference')
       }

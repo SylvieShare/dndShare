@@ -1,6 +1,6 @@
 import { computed, reactive } from 'vue'
 import { useSortable } from '@sylvieshare/share-ui'
-import { itemsApi } from '@/shared/api/itemsApi'
+import { useCharacterItemCatalog } from '../../../composables/useCharacterItemCatalog'
 import { SPELL_LEVELS } from '../lib/spellEntry'
 import { spellEntry, spellbookItemIds } from '../lib/spellbook'
 import { featureItemIds } from '@/features/character-editor/lib/characterMagicItems'
@@ -8,6 +8,8 @@ import { abilitySpellGrantRows, syncAbilityGrantedSpells } from '../lib/abilityS
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 
 export function useSpellbookEntries({ props, charCtx, tabs, grants, itemMap, activeTabSpells, activeTab, preparation, preparationLimit = null, spellsByLevel, emitChange, spellPickerEligibility, spellStatusSource }) {
+  const catalog = useCharacterItemCatalog(charCtx)
+  Object.assign(itemMap, catalog.snapshot())
   const pendingIds = reactive(new Set())
   const resolvedIds = reactive(new Set())
   const itemLoading = id => !itemMap[id] && (pendingIds.has(String(id)) || !resolvedIds.has(String(id)))
@@ -16,7 +18,7 @@ export function useSpellbookEntries({ props, charCtx, tabs, grants, itemMap, act
     ids.forEach(id => pendingIds.add(String(id)))
     try {
       if (ids.length) {
-        const res = await itemsApi.byIds(ids)
+        const res = await catalog.load(ids)
         for (const item of res.items || []) itemMap[item.id] = item
         charCtx.characterResources?.rememberItems?.(res.items || [])
       }
@@ -142,7 +144,7 @@ export function useSpellbookEntries({ props, charCtx, tabs, grants, itemMap, act
     const ids = abilityIds()
     const response = charCtx.characterResources?.ensureItems
       ? await charCtx.characterResources.ensureItems(ids)
-      : (ids.length ? await itemsApi.byIds(ids) : { items: [] })
+      : (ids.length ? await catalog.load(ids) : { items: [] })
     if (sequence !== grantSyncSequence) return
     const items = response?.items || []
     const resolvedIds = new Set(items.map((item) => String(item.id)))

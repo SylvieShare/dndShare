@@ -39,6 +39,20 @@ internal fun WeaponSheetCard(
     val expired =
         entry["params"].objectValue()["creation"].objectValue()["expired"] == JsonPrimitive(true)
     var properties by remember(uid) { mutableStateOf(false) }
+    val descriptions =
+        remember(context.metadata, item) {
+            context.metadata.suggests["14"].orEmpty().associate { it.value to it.desc.orEmpty() } +
+                item
+                    ?.data
+                    ?.get("tags")
+                    .arrayValue()
+                    .filterIsInstance<JsonObject>()
+                    .associate {
+                        it.text("value").ifBlank { it.text("label").ifBlank { it.text("name") } } to
+                            it.text("desc")
+                    }
+                    .filterValues(String::isNotBlank)
+        }
     val actions = buildList {
         add(ShareMenuAction("Свойства", Glyph.InfoCircle, { properties = true }))
         addAll(createdItemActions(entry))
@@ -174,7 +188,13 @@ internal fun WeaponSheetCard(
                                 icon()
                                 Box(Modifier.weight(1f)) { heading() }
                             }
-                            if (weapon != null) WeaponMetricsTable(title, weapon)
+                            if (weapon != null)
+                                WeaponMetricsTable(
+                                    title,
+                                    weapon,
+                                    propertyDescriptions = descriptions,
+                                    openItem = context.openItem,
+                                )
                         }
                     else
                         Row(
@@ -184,7 +204,13 @@ internal fun WeaponSheetCard(
                             icon()
                             Box(Modifier.weight(.9f)) { heading() }
                             if (weapon != null)
-                                WeaponMetricsTable(title, weapon, Modifier.weight(2.5f))
+                                WeaponMetricsTable(
+                                    title,
+                                    weapon,
+                                    Modifier.weight(2.5f),
+                                    descriptions,
+                                    context.openItem,
+                                )
                         }
                 }
                 CompositionLocalProvider(
