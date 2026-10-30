@@ -21,7 +21,7 @@ REQUIRED = {
                'input-height', 'number-input-height', 'number-input-width', 'input-stepper-width',
                'input-padding-horizontal', 'input-padding-vertical', 'toggle-width', 'toggle-height', 'toggle-thumb',
                'checkbox-size', 'slider-track', 'slider-thumb', 'compact-header-inset', 'morph-dismiss-distance',
-               'weapon-metrics-wide-min', 'weapon-metrics-attack-width', 'weapon-metrics-gap', 'weapon-metrics-properties-min',
+               'weapon-metrics-attack-width', 'weapon-metrics-gap', 'weapon-metrics-attack-min-height',
                'morph-stacked-max', 'morph-editor-width', 'morph-preview-min', 'morph-preview-max-height', 'morph-margin'},
     'collection': {'min-height', 'padding', 'emblem', 'art-inset', 'grid-gap'},
     'canvas': {'step', 'radius', 'opacity'},

@@ -19,10 +19,11 @@ import ru.dndshare.client.model.CatalogueItem
 import ru.dndshare.client.ui.character.WeaponMetricsTable
 import ru.dndshare.client.ui.designsystem.*
 
+@OptIn(androidx.compose.ui.ExperimentalComposeUiApi::class)
 class WeaponMetricsLayoutTest {
     @Test
-    fun labelledTableAdaptsToCardWidthAndLargeText() {
-        val weapon =
+    fun cellsFitEachWeaponsContentAndKeepAttackCentered() {
+        val base =
             WeaponReadout(
                 JsonObject(emptyMap()),
                 CatalogueItem(1, 1, "Посох"),
@@ -38,11 +39,29 @@ class WeaponMetricsLayoutTest {
                 20,
                 0,
             )
+        val simple =
+            base.copy(
+                parts = listOf(WeaponDamagePart(1, 6, "Колющий", color = "#94a3b8")),
+                twoHanded = emptyList(),
+                damageBonus = 0,
+                properties = listOf("Метательное"),
+            )
+        val cases =
+            listOf(
+                Case(282, 1f, base, false),
+                Case(340, 1f, base, null),
+                Case(550, 1f, base, true),
+                Case(282, 1.5f, base, false),
+                Case(282, 1f, simple, true),
+                Case(282, 1f, simple.copy(properties = emptyList()), false),
+                Case(282, 1f, simple.copy(parts = List(6) { simple.parts.first() }), false),
+            )
         ActivityScenario.launch(ComponentActivity::class.java).use { scenario ->
-            for ((width, scale) in listOf(282 to 1f, 340 to 1f, 550 to 1f, 282 to 1.5f)) {
+            cases.forEachIndexed { index, case ->
+                val title = "Таблица оружия $index"
                 scenario.onActivity { host ->
                     host.setContent {
-                        CompositionLocalProvider(LocalDensity provides Density(1f, scale)) {
+                        CompositionLocalProvider(LocalDensity provides Density(1f, case.scale)) {
                             ShareTheme {
                                 Box(
                                     Modifier.fillMaxSize()
@@ -52,14 +71,16 @@ class WeaponMetricsLayoutTest {
                                 ) {
                                     WeaponMetricsTable(
                                         "Посох",
-                                        weapon,
-                                        Modifier.width(width.dp).semantics {
-                                            contentDescription = "Таблица оружия"
+                                        case.weapon,
+                                        Modifier.width(case.width.dp).semantics {
+                                            contentDescription = title
+                                            testTagsAsResourceId = true
                                         },
                                         propertyDescriptions =
                                             mapOf(
                                                 "Универсальное" to
-                                                    "<p>Можно использовать двумя руками.</p>"
+                                                    "<p>Можно использовать двумя руками.</p>",
+                                                "Метательное" to "<p>Можно метнуть.</p>",
                                             ),
                                     )
                                 }
@@ -67,38 +88,62 @@ class WeaponMetricsLayoutTest {
                         }
                     }
                 }
-                TouchRobot.await("table at $width dp") {
-                    TouchRobot.find("Свойства") != null &&
-                        TouchRobot.bounds("Таблица оружия").width() == width
+                TouchRobot.await(title) {
+                    TouchRobot.find(title) != null && TouchRobot.bounds(title).width() == case.width
                 }
-                val table = TouchRobot.bounds("Таблица оружия")
-                val attack = TouchRobot.bounds("Атака")
-                val damage = TouchRobot.bounds("Урон")
-                val properties = TouchRobot.bounds("Свойства")
-                assertEquals(attack.top, damage.top)
-                if (width < 392 * scale) assertTrue(properties.top > damage.bottom)
-                else assertEquals(attack.top, properties.top)
-                listOf("к6: 6", "к8: 8", "Универсальное", "Метательное").forEach { label ->
-                    val item = TouchRobot.bounds(label)
-                    if (label.startsWith("к")) {
-                        assertTrue(table.contains(item), "$label clipped at width $width, text scale $scale")
-                    } else {
-                        // Accessibility bounds include the expanded minimum touch target, not just glyphs.
+                val table = TouchRobot.bounds(title)
+                val attack =
+                    android.graphics.Rect().also {
+                        requireNotNull(
+                                TouchRobot.findNode {
+                                    it.viewIdResourceName == "weapon-attack-cell"
+                                }
+                            )
+                            .getBoundsInScreen(it)
+                    }
+                val value = TouchRobot.bounds("Атака: Посох")
+                assertTrue(
+                    kotlin.math.abs(attack.exactCenterX() - value.exactCenterX()) <= 1f,
+                    "Attack horizontal centre, case $index",
+                )
+                assertTrue(
+                    kotlin.math.abs(attack.exactCenterY() - value.exactCenterY()) <= 1f,
+                    "Attack vertical centre, case $index",
+                )
+                if (case.weapon.properties.isEmpty()) assertNull(TouchRobot.find("Свойства"))
+                else {
+                    val properties = TouchRobot.bounds("Свойства")
+                    if (case.inline == true) assertEquals(TouchRobot.bounds("Атака").top, properties.top)
+                    else if (case.inline == false) assertTrue(properties.top > TouchRobot.bounds("Урон").bottom)
+                    case.weapon.properties.forEach { label ->
+                        val item = TouchRobot.bounds(label)
                         assertTrue(item.left >= table.left && item.right <= table.right)
                         assertTrue(table.contains(item.centerX(), item.centerY()))
-                        assertTrue(item.height() >= 48)
                     }
-                    assertTrue(item.height() > 0)
+                    val property = case.weapon.properties.first()
+                    val description =
+                        if (property == "Универсальное") "Можно использовать двумя руками."
+                        else "Можно метнуть."
+                    TouchRobot.click(property)
+                    TouchRobot.await("description opens") {
+                        TouchRobot.findNode { it.text?.toString()?.trim() == description } != null
+                    }
+                    TouchRobot.click("Понятно")
+                    TouchRobot.await("description closes") {
+                        TouchRobot.find(title) != null && TouchRobot.find("к6: 6") != null &&
+                            TouchRobot.findNode { it.text?.toString()?.trim() == description } == null
+                    }
                 }
-                TouchRobot.click("Универсальное")
-                TouchRobot.await("property description opens") {
-                    TouchRobot.findNode { it.text?.toString()?.trim() == "Можно использовать двумя руками." } != null
-                }
-                TouchRobot.click("Понятно")
-                TouchRobot.await("property description closes") {
-                    TouchRobot.findNode { it.text?.toString()?.trim() == "Можно использовать двумя руками." } == null
-                }
+                val die = TouchRobot.bounds("к6: 6")
+                assertTrue(table.contains(die) && die.height() > 0, "Damage must fit, case $index")
             }
         }
     }
+
+    private data class Case(
+        val width: Int,
+        val scale: Float,
+        val weapon: WeaponReadout,
+        val inline: Boolean?,
+    )
 }

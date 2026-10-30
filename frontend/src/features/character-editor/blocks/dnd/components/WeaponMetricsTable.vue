@@ -9,36 +9,35 @@
       <AttackDamage v-if="damageParts.length || modifier !== 0" :damage-parts="damageParts" :modifier="modifier" :two-handed-parts="twoHandedParts" wrap-damage />
       <span v-else>—</span>
     </div>
-    <div class="weapon-metrics__cell weapon-metrics__properties">
+    <div v-if="visibleProperties.length" class="weapon-metrics__cell weapon-metrics__properties">
       <span class="weapon-metrics__label">Свойства</span>
       <div class="weapon-metrics__property-list">
-        <component :is="interactive ? 'button' : 'span'" v-for="(property, index) in properties" :key="property.id ?? index"
+        <component :is="interactive ? 'button' : 'span'" v-for="(property, index) in visibleProperties" :key="property.id ?? index"
           :type="interactive ? 'button' : undefined" class="weapon-metrics__property"
           :class="{ 'weapon-metrics__property--described': interactive }"
-          :aria-expanded="interactive ? opened === property : undefined"
+          :aria-expanded="interactive ? openedKey === keyOf(property) : undefined"
           @click.stop="interactive && showDescription($event, property)" @pointerdown.stop
           @mouseenter="interactive && property.desc && !opened && $emit('property-enter', $event, property)"
           @focus="interactive && property.desc && !opened && $emit('property-enter', $event, property)"
           @mouseleave="$emit('property-leave')" @blur="$emit('property-leave')"
         >{{ property.label }}</component>
-        <span v-if="!properties.length">—</span>
       </div>
     </div>
     <BasePopover :open="!!opened" :anchor="anchor" :z-index="4100" transition-preset="action-menu"
-      role="dialog" :aria-label="opened?.label" @update:open="!$event && (opened = null)">
+      role="dialog" :aria-label="opened?.label" @update:open="!$event && (openedKey = null)">
       <div class="weapon-property-description" v-if="opened">
         <strong>{{ opened.label }}</strong>
         <RichContent :html="opened.desc || 'Описание свойства пока недоступно.'" />
-        <ActionButton variant="secondary" @click="opened = null">Понятно</ActionButton>
+        <ActionButton variant="secondary" @click="openedKey = null">Понятно</ActionButton>
       </div>
     </BasePopover>
   </div>
 </template>
 <script setup>
 import AttackDamage from './AttackDamage.vue'
-import { shallowRef } from 'vue'
+import { computed, shallowRef } from 'vue'
 import { BasePopover, RichContent, ActionButton } from '@sylvieshare/share-ui'
-defineProps({
+const props = defineProps({
   attack: { type: String, default: '' },
   damageParts: { type: Array, default: () => [] },
   modifier: { type: Number, default: 0 },
@@ -47,11 +46,14 @@ defineProps({
   interactive: { type: Boolean, default: false },
 })
 const emit = defineEmits(['property-enter', 'property-leave'])
-const opened = shallowRef(null), anchor = shallowRef(null)
+const openedKey = shallowRef(null), anchor = shallowRef(null)
+const keyOf = property => property.id ?? property.label
+const visibleProperties = computed(() => props.properties.filter(property => String(property.label || '').trim()))
+const opened = computed(() => visibleProperties.value.find(property => keyOf(property) === openedKey.value) || null)
 function showDescription(event, property) {
   emit('property-leave')
   anchor.value = event.currentTarget
-  opened.value = opened.value === property ? null : property
+  openedKey.value = openedKey.value === keyOf(property) ? null : keyOf(property)
 }
 </script>
 <style scoped>
@@ -63,7 +65,6 @@ function showDescription(event, property) {
   border: 0;
   min-width: 0;
   background: transparent;
-  --wm-damage-basis: calc(var(--layout-weapon-metrics-wide-min) - var(--layout-weapon-metrics-attack-width) - var(--layout-weapon-metrics-properties-min) - var(--layout-weapon-metrics-gap) * 2);
 }
 .weapon-metrics__cell {
   display: flex;
@@ -77,12 +78,19 @@ function showDescription(event, property) {
   color: var(--text-2);
 }
 .weapon-metrics__label { color: var(--text-muted); font-size: 10px; line-height: 12px; }
-.weapon-metrics__attack { flex: 0 0 var(--layout-weapon-metrics-attack-width); }
+.weapon-metrics__attack {
+  flex: 0 0 var(--layout-weapon-metrics-attack-width);
+  min-height: var(--layout-weapon-metrics-attack-min-height);
+  position: relative;
+  justify-content: center;
+  align-items: center;
+}
+.weapon-metrics__attack .weapon-metrics__label { position: absolute; top: 8px; left: 8px; }
 .weapon-metrics__bonus { color: var(--accent-soft); font-size: var(--type-weapon-attack-size); line-height: var(--type-weapon-attack-line-height); margin-block: 0; }
-.weapon-metrics__damage { flex: 1.25 1 var(--wm-damage-basis); }
-.weapon-metrics__properties { flex: 1 1 var(--layout-weapon-metrics-properties-min); }
-.weapon-metrics__property-list { display: flex; flex-wrap: wrap; gap: 2px 8px; font-size: var(--type-weapon-property-size); line-height: var(--type-weapon-property-line-height); overflow-wrap: anywhere; }
-.weapon-metrics__property { appearance: none; font: inherit; color: inherit; text-align: left; background: none; border: 0; padding: 3px 0; }
+.weapon-metrics__damage { flex: 1.25 1 max-content; max-width: calc(100% - var(--layout-weapon-metrics-attack-width) - var(--layout-weapon-metrics-gap)); }
+.weapon-metrics__properties { flex: 1 1 min-content; max-width: 100%; }
+.weapon-metrics__property-list { display: flex; flex-wrap: wrap; gap: 2px 8px; font-size: var(--type-weapon-property-size); line-height: var(--type-weapon-property-line-height); overflow-wrap: break-word; }
+.weapon-metrics__property { appearance: none; font: inherit; color: inherit; text-align: left; min-width: 0; max-width: 100%; background: none; border: 0; padding: 3px 0; }
 .weapon-metrics__property--described { cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; }
 .weapon-metrics__property--described:focus-visible { outline: 1px solid var(--accent); border-radius: 2px; }
 .weapon-property-description { width: min(296px, calc(100vw - 32px)); padding: 10px; display: grid; gap: 10px; font-size: 14px; line-height: 1.5; }
