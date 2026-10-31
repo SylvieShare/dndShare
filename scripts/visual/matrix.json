@@ -33,7 +33,9 @@
     "sheet-inventory",
     "sheet-personality",
     "vtm-base",
-    "sheet-item-view"
+    "sheet-item-view",
+    "sheet-weapon-item",
+    "sheet-weapon-details"
   ],
   "platforms": [
     "web",

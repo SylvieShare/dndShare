@@ -26,7 +26,7 @@ func TestUIReviewPostgres(t *testing.T) {
 	directory := "testdata/ui-review"
 	files := map[string][]byte{}
 	hash := sha256.New()
-	for _, name := range []string{"fixture.json", "seed.sql", "characters.json", "cover.svg", "emblem.svg", "character-weapons.sql", "character-inventory.sql", "character-identity.sql", "character-weapons-visual.sql", "character-spells.sql", "character-creation.sql"} {
+	for _, name := range []string{"fixture.json", "seed.sql", "characters.json", "cover.svg", "emblem.svg", "character-weapons.sql", "character-inventory.sql", "character-identity.sql", "character-weapons-visual.sql", "character-weapon-preview.sql", "character-spells.sql", "character-creation.sql"} {
 		data, err := os.ReadFile(filepath.Join(directory, name))
 		if err != nil {
 			t.Fatal(err)
@@ -80,7 +80,7 @@ func TestUIReviewPostgres(t *testing.T) {
 		fixture["recordName"], fixture["description"], strings.ReplaceAll(string(files["characters.json"]), "__API__", server.URL)); err != nil {
 		t.Fatal(err)
 	}
-	if os.Getenv("DNDSHARE_REVIEW_SCENARIO") == "character-weapons" || strings.Contains(os.Getenv("DNDSHARE_REVIEW_STATES"), "sheet-weapons") {
+	if os.Getenv("DNDSHARE_REVIEW_SCENARIO") == "character-weapons" || strings.Contains(os.Getenv("DNDSHARE_REVIEW_STATES"), "sheet-weapon") {
 		if _, err := f.pool.Exec(t.Context(), string(files["character-weapons.sql"])); err != nil {
 			t.Fatal(err)
 		}
@@ -127,11 +127,16 @@ func TestUIReviewPostgres(t *testing.T) {
 		}
 		fixture["healthState"] = "dying"
 	}
-	if strings.Contains(os.Getenv("DNDSHARE_REVIEW_STATES"), "sheet-weapons") {
+	if strings.Contains(os.Getenv("DNDSHARE_REVIEW_STATES"), "sheet-weapon") {
 		if _, err := f.pool.Exec(t.Context(), string(files["character-weapons-visual.sql"])); err != nil {
 			t.Fatal(err)
 		}
 		fixture["weaponState"] = "owned"
+	}
+	if strings.Contains(os.Getenv("DNDSHARE_REVIEW_STATES"), "sheet-weapon-item") || strings.Contains(os.Getenv("DNDSHARE_REVIEW_STATES"), "sheet-weapon-details") {
+		if _, err := f.pool.Exec(t.Context(), string(files["character-weapon-preview.sql"])); err != nil {
+			t.Fatal(err)
+		}
 	}
 	// Check the served contract before starting either consumer.
 	client := authClient(t)

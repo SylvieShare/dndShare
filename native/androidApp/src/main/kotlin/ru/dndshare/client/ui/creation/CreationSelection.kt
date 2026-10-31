@@ -90,6 +90,7 @@ internal fun CreationSelection(
                     related.firstOrNull { it.id == id }?.let { detailIds = detailIds + it.id }
                 },
                 headerInset = 64,
+                knownItems = (related + listOfNotNull(selected)).associateBy { it.id },
             )
         }
     }

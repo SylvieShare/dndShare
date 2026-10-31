@@ -24,11 +24,16 @@ internal fun ItemDetailCover(
     images: ImageLoader,
     headerInset: Int = 0,
     back: (() -> Unit)? = null,
+    open: (Long) -> Unit = {},
 ) {
     val cover =
         item.coverImageUrl?.takeIf(String::isNotBlank)
             ?: type?.coverImageUrl?.takeIf(String::isNotBlank)
-    val summary = remember(item, type, metadata) { catalogueSummary(item, type, metadata) }
+    val preview = LocalCataloguePreview.current
+    val summary =
+        remember(item, type, metadata, preview.instance) {
+            catalogueSummary(item, type, metadata, preview.instance)
+        }
     var ratio by remember(cover) { mutableStateOf<Float?>(null) }
     var loading by remember(cover) { mutableStateOf(cover != null) }
     val viewport = LocalWindowInfo.current.containerDpSize.width
@@ -116,11 +121,6 @@ internal fun ItemDetailCover(
                                     WebPalette.Background.copy(alpha = .68f),
                                     RoundedCornerShape(9.dp),
                                 )
-                                .border(
-                                    1.dp,
-                                    WebPalette.Text.copy(alpha = .14f),
-                                    RoundedCornerShape(9.dp),
-                                )
                                 .padding(horizontal = 10.dp, vertical = 7.dp)
                         ) {
                             Text(
@@ -175,145 +175,38 @@ internal fun ItemDetailCover(
                     )
                 if (summary.left.isNotEmpty() || summary.right.isNotEmpty()) {
                     Row(
-                        Modifier.fillMaxWidth(),
+                        Modifier.fillMaxWidth()
+                            .heightIn(min = if (viewport > 520.dp) 205.dp else 0.dp),
                         horizontalArrangement = Arrangement.spacedBy(summaryGap),
                     ) {
                         Column(
                             Modifier.width(sideWidth),
                             verticalArrangement = Arrangement.spacedBy(9.dp),
                         ) {
-                            summary.left.forEach { CoverStat(it) }
+                            summary.left.forEach { ItemCoverStat(it) }
                         }
                         Spacer(Modifier.widthIn(min = 16.dp).weight(1f))
                         Column(
                             Modifier.width(sideWidth),
                             verticalArrangement = Arrangement.spacedBy(9.dp),
                         ) {
-                            summary.right.forEach { CoverStat(it) }
+                            summary.right.forEach { ItemCoverStat(it) }
                         }
                     }
                 } else Spacer(Modifier.weight(1f))
-                if (summary.rail.isNotEmpty())
-                    Row(
-                        Modifier.fillMaxWidth()
-                            .background(
-                                WebPalette.Surface.copy(alpha = .74f),
-                                RoundedCornerShape(10.dp),
-                            )
-                            .border(
-                                1.dp,
-                                WebPalette.Text.copy(alpha = .18f),
-                                RoundedCornerShape(10.dp),
-                            )
-                            .padding(12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    ) {
-                        summary.rail.forEach { stat ->
-                            Column(
-                                Modifier.weight(1f),
-                                verticalArrangement = Arrangement.spacedBy(4.dp),
-                            ) {
-                                Text(
-                                    stat.label,
-                                    fontSize = 9.sp,
-                                    lineHeight = 11.sp,
-                                    color = WebPalette.TextSecondary,
-                                )
-                                Text(
-                                    stat.value,
-                                    fontSize = 12.sp,
-                                    lineHeight = 16.sp,
-                                    color = WebPalette.Text,
-                                )
-                            }
-                        }
+                Spacer(Modifier.weight(1f))
+                if (summary.rail.isNotEmpty()) ItemCoverRail(summary.rail, viewport <= 520.dp)
+                selectedEquipmentBases(item, preview.instance).forEach { (kind, id) ->
+                    Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        Text(
+                            if (kind == "weapon") "Основа оружия" else "Основа доспеха",
+                            style = ShareTypography.context,
+                            color = WebPalette.Text,
+                        )
+                        EquipmentReference(id, metadata, open)
                     }
+                }
             }
         }
-    }
-}
-
-@Composable
-private fun CoverStat(stat: CoverValue, modifier: Modifier = Modifier, compact: Boolean = false) {
-    val glyph =
-        when (stat.label) {
-            "Урон",
-            "Двумя руками" -> Glyph.Swords
-            "Категория" -> Glyph.Badge
-            "Дистанция" -> Glyph.Target
-            "Стоимость" -> Glyph.Coins
-            "Вес" -> Glyph.Weight
-            "Время" -> Glyph.Clock
-            "Длительность" -> Glyph.Hourglass
-            "Компоненты" -> Glyph.Shapes
-            "Редкость" -> Glyph.Gem
-            "Зарядов" -> Glyph.Zap
-            "Хиты" -> Glyph.Heart
-            "Класс доспеха",
-            "КД" -> Glyph.Shield
-            else -> Glyph.Book
-        }
-    val tone =
-        when (stat.label) {
-            "Урон" -> WebPalette.Danger
-            "Стоимость" -> WebPalette.Warning
-            "Редкость" -> WebPalette.AccentSoft
-            else -> WebPalette.Text
-        }
-    val large =
-        !compact &&
-            stat.label in
-                setOf(
-                    "Урон",
-                    "Двумя руками",
-                    "Магический бонус",
-                    "Хиты",
-                    "Класс доспеха",
-                    "КД",
-                    "Вес",
-                ) &&
-            stat.value.length < 12
-    Row(
-        modifier
-            .fillMaxWidth()
-            .background(WebPalette.Surface.copy(alpha = .74f), RoundedCornerShape(10.dp))
-            .border(
-                1.dp,
-                tone.copy(alpha = if (tone == WebPalette.Text) .18f else .44f),
-                RoundedCornerShape(10.dp),
-            )
-            .padding(horizontal = 12.dp, vertical = 10.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(
-                stat.label.uppercase(),
-                style =
-                    ShareTypography.context.copy(
-                        fontSize = 9.sp,
-                        lineHeight = 11.sp,
-                        fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                    ),
-                color = tone,
-            )
-            Text(
-                stat.value,
-                style =
-                    ShareTypography.group.copy(
-                        fontSize = if (large) 27.sp else 17.sp,
-                        lineHeight = if (large) 29.sp else 20.sp,
-                    ),
-                color = WebPalette.Text,
-            )
-            if (stat.note.isNotBlank())
-                Text(
-                    stat.note,
-                    fontSize = 10.sp,
-                    lineHeight = 13.sp,
-                    color = WebPalette.TextSecondary,
-                )
-        }
-        AppGlyph(glyph, Modifier.size(27.dp), tone.copy(alpha = .72f))
     }
 }

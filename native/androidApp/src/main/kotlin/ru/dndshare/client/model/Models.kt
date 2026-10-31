@@ -56,6 +56,7 @@ data class Suggest(
     val color: String? = null,
     val svg: String? = null,
     val iconImageUrl: String? = null,
+    val code: String? = null,
 )
 
 @Serializable

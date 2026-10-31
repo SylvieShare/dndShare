@@ -6,7 +6,8 @@
     <div v-else class="magic-bases-grid" :class="{ 'magic-bases-grid--single': singleColumn }" :role="selectable ? 'radiogroup' : undefined" :aria-label="label">
       <BaseTile v-for="base in bases" :key="base.id" interactive class="magic-base-tile"
         :tint="selectable && Number(modelValue) === Number(base.id)"
-        :framed="singleColumn || selectable && Number(modelValue) === Number(base.id)"
+        :framed="selectable && Number(modelValue) === Number(base.id)"
+        :outlined="selectable && Number(modelValue) === Number(base.id)"
         :role="selectable ? 'radio' : 'button'" :tabindex="0" :aria-label="base.name"
         :aria-checked="selectable ? Number(modelValue) === Number(base.id) : undefined"
         @click="activate(base)" @keydown.enter.prevent="activate(base)" @keydown.space.prevent="activate(base)">

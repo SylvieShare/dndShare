@@ -47,7 +47,7 @@ class ItemPreviewWindowTest {
                         put("die", 2)
                         if (magic) {
                             put("type", "Жезл")
-                            put("rarity", "legendary")
+                            put("rarity", 4)
                             put("max_use", 7)
                             put("attunement", "none")
                         }
@@ -158,7 +158,7 @@ class ItemPreviewWindowTest {
                     if (magic) {
                         val rarity = TouchRobot.bounds("Легендарный")
                         val charges = TouchRobot.bounds("7")
-                        val tuning = TouchRobot.bounds("Не требуется")
+                        val tuning = TouchRobot.bounds("Без настройки")
                         assertTrue(rarity.width() > 0 && rarity.height() > 0)
                         assertTrue(charges.width() > 0 && charges.height() > 0)
                         assertTrue(rarity.bottom <= tuning.top, "Rarity must fit before the rail")

@@ -418,6 +418,10 @@ internal class CharacterSheetViewModel(
 
     fun openItem(id: Long) = navigate { it.pushItem(id) }
 
+    fun openEquipment(id: Long, uid: String) = navigate {
+        it.copy(itemStack = it.itemStack + SheetItemDestination(id, equipmentUid = uid))
+    }
+
     fun openSpell(key: String, id: Long) = navigate { it.pushItem(id, key) }
 
     fun closeItem() = navigate { it.popItem() }

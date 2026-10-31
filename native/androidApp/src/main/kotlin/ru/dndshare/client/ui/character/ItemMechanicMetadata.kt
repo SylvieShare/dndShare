@@ -12,6 +12,32 @@ internal fun itemMechanicMetadata(
     items: Map<Long, CatalogueItem>,
     session: String?,
 ): List<JsonObject> {
+    if (operation == "weapon-delete") {
+        val entry =
+            sheet.values["weapon"]
+                .arrayValue()
+                .firstOrNull { it.objectValue().text("uid") == uid }
+                ?.objectValue() ?: return emptyList()
+        val item = items[(entry["magic_item_id"] ?: entry["item_id"]).referenceId()]
+        val name = entry["override"].objectValue().text("name").ifBlank { item?.name ?: "Оружие" }
+        return sessionMetadata(
+            session,
+            "item_removed",
+            "Удалено: $name",
+            buildJsonObject {
+                put(
+                    "source",
+                    buildJsonObject {
+                        put("itemId", item?.id?.let(::JsonPrimitive) ?: JsonNull)
+                        put("name", name)
+                        put("instanceUid", uid)
+                    },
+                )
+                put("count", 1)
+                put("remaining", 0)
+            },
+        )
+    }
     if (operation == "inventory-section-delete") {
         val model = normalizeInventorySpaces(sheet.values["items"].objectValue())
         val section =

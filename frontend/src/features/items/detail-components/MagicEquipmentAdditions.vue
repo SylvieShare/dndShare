@@ -2,7 +2,7 @@
   <DetailSection v-if="effects.length" :label="kind === 'weapon' ? 'Что добавляется к оружию' : 'Что меняется у доспеха'" tone="danger">
     <template #icon><Sparkles /></template>
     <div class="equipment-additions">
-      <BaseTile v-for="effect in effects" :key="effect.key" class="equipment-addition">
+      <BaseTile :outlined="false" v-for="effect in effects" :key="effect.key" class="equipment-addition">
         <component :is="effect.icon" class="equipment-addition-icon" aria-hidden="true" />
         <div class="equipment-addition-copy">
           <span class="equipment-addition-label">{{ effect.label }}</span>

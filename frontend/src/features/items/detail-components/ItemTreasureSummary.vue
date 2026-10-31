@@ -1,7 +1,7 @@
 <template>
   <DetailSection v-if="treasure" label="Генератор сокровищ">
     <template #icon><Gem /></template>
-    <BaseTile framed color="var(--warning)" class="treasure-summary">
+    <BaseTile :outlined="false" color="var(--warning)" class="treasure-summary">
       <div class="treasure-summary-status">
         <CircleCheck :size="18" aria-hidden="true" />
         <span>Участвует в случайном подборе</span>

@@ -115,7 +115,7 @@ for (const format of matrix.formats) {
       }
     }
     const dnd = fixture.characters[0], vtm = fixture.characters[1]
-    if (['sheet-base','sheet-death-saves','sheet-stats','sheet-stat-editor','sheet-weapons','sheet-magic','sheet-inventory','sheet-personality','sheet-item-view'].some(state => wanted.has(state))) {
+    if (['sheet-base','sheet-death-saves','sheet-stats','sheet-stat-editor','sheet-weapons','sheet-magic','sheet-inventory','sheet-personality','sheet-item-view','sheet-weapon-item','sheet-weapon-details'].some(state => wanted.has(state))) {
     await page.goto(`/char/${dnd.uuid}`, { waitUntil: 'networkidle' })
     if (format.name !== 'wide') await expect(page.locator('.dnd-tablet-base')).toBeVisible()
     else await expect(page.locator('[data-tutorial="character-stat"]:visible').first()).toBeVisible({ timeout: 30000 })
@@ -136,10 +136,25 @@ for (const format of matrix.formats) {
     await expect(page.getByText('Основное значение', { exact: true })).not.toBeVisible()
     }
     }
-    if (wanted.has('sheet-weapons')) {
+    if (wanted.has('sheet-weapons') || wanted.has('sheet-weapon-item') || wanted.has('sheet-weapon-details')) {
       await page.getByRole(format.name === 'wide' ? 'tab' : 'button', { name: 'Оружие', exact: true }).last().click()
       await expect(page.getByText('Посох молнии', { exact: true }).first()).toBeVisible()
       await snapshot('sheet-weapons')
+      if (wanted.has('sheet-weapon-item') || wanted.has('sheet-weapon-details')) {
+        await page.locator('.w-card').filter({ hasText: 'Посох молнии' }).locator('.action-menu-source').first().click()
+        await expect(page.getByRole('menuitem', { name: 'Удалить', exact: true })).toBeVisible()
+        await page.getByRole('menuitem', { name: 'Открыть описание', exact: true }).click()
+        await expect(page.locator('.iv-shell h1')).toHaveText('Посох молнии')
+        await expect(page.locator('.iv-shell').getByText('Основа оружия', { exact: true })).toBeVisible()
+        await snapshot('sheet-weapon-item')
+        if (wanted.has('sheet-weapon-details')) {
+          await page.locator('.iv-body .detail-panel').evaluate(el => { el.scrollTop = el.scrollHeight })
+          await expect.poll(() => page.locator('.iv-body .detail-panel').evaluate(el => el.scrollTop)).toBeGreaterThan(0)
+          await expect(page.locator('.iv-shell').getByText('Урон оружия +', { exact: true })).toBeVisible()
+          await snapshot('sheet-weapon-details')
+        }
+        await page.locator('.iv-close').click()
+      }
     }
     if (wanted.has('sheet-inventory')) {
       await page.getByRole(format.name === 'wide' ? 'tab' : 'button', { name: format.name === 'wide' ? 'Снаряжение' : 'Предметы', exact: true }).last().click()

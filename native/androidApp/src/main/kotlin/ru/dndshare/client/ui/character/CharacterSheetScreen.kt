@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
 import ru.dndshare.client.character.*
 import ru.dndshare.client.data.CacheDao
+import ru.dndshare.client.model.text
 import ru.dndshare.client.ui.*
 import ru.dndshare.client.ui.designsystem.*
 
@@ -133,6 +134,7 @@ internal fun CharacterSheetScreen(
                                                         model.edit(it)
                                                 },
                                                 openItem = model::openItem,
+                                                openEquipment = model::openEquipment,
                                                 mechanics = requireNotNull(mechanics),
                                                 journal = ui.journal,
                                                 adjustResource = model::adjustResource,
@@ -355,6 +357,17 @@ internal fun CharacterSheetScreen(
                                                         close = model::closeItem,
                                                         open = model::openItem,
                                                         canGoBack = navigation.itemStack.size > 1,
+                                                        instance =
+                                                            destination.equipmentUid?.let { uid ->
+                                                                sheet.values["weapon"]
+                                                                    .arrayValue()
+                                                                    .firstOrNull {
+                                                                        it.objectValue()
+                                                                            .text("uid") == uid
+                                                                    }
+                                                                    ?.objectValue()
+                                                            },
+                                                        knownItems = ui.content.items,
                                                         initialItem =
                                                             ui.content.items[destination.id],
                                                     )

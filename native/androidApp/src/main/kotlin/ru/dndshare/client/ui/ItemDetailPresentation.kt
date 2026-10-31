@@ -3,8 +3,15 @@ package ru.dndshare.client.ui
 import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
 import ru.dndshare.client.model.*
+import ru.dndshare.client.ui.designsystem.Glyph
 
-internal data class CoverValue(val label: String, val value: String, val note: String = "")
+internal data class CoverValue(
+    val label: String,
+    val value: String,
+    val note: String = "",
+    val glyph: Glyph? = null,
+    val dawn: Boolean = false,
+)
 
 internal data class CatalogueSummary(
     val left: List<CoverValue> = emptyList(),
@@ -18,6 +25,7 @@ internal fun catalogueSummary(
     item: CatalogueItem,
     type: ItemType?,
     metadata: HandbookMetadata,
+    instance: JsonObject? = null,
 ): CatalogueSummary {
     val d = item.data
     fun value(key: String) =
@@ -31,15 +39,10 @@ internal fun catalogueSummary(
                 else if (raw is JsonPrimitive) raw.contentOrNull.orEmpty() else ""
             }
             .orEmpty()
-    fun cost(): String {
-        val data = d["cost"]
-        if (data is JsonPrimitive) return data.contentOrNull.orEmpty()
-        val obj = data.objectValue()
-        val unit = metadata.suggest(obj["suggest_id"].referenceId() ?: 0, null)?.value.orEmpty()
-        return value("cost").ifBlank { (obj.text("value") + " " + unit).trim() }
-    }
     val economy = buildList {
-        cost().takeIf(String::isNotBlank)?.let { add(CoverValue("Стоимость", it)) }
+        catalogueCost(d["cost"], metadata).takeIf(String::isNotBlank)?.let {
+            add(CoverValue("Стоимость", it))
+        }
         value("weight").takeIf(String::isNotBlank)?.let { add(CoverValue("Вес", it, "фунт.")) }
     }
     fun names(key: String, typeId: Long) =
@@ -87,6 +90,9 @@ internal fun catalogueSummary(
                             .distinct()
                             .joinToString("/")
                     if (range.isNotBlank()) add(CoverValue("Дистанция", "$range фт."))
+                    value("mastery").takeIf(String::isNotBlank)?.let {
+                        add(CoverValue("Искусность", it, glyph = Glyph.Swords))
+                    }
                     addAll(economy)
                 },
                 listOf(
@@ -104,6 +110,7 @@ internal fun catalogueSummary(
                 setOf(
                     "attacks",
                     "universe_attacks",
+                    "mastery",
                     "is_military",
                     "is_long_range",
                     "range_min",
@@ -191,47 +198,7 @@ internal fun catalogueSummary(
                 kind = kind,
             )
         }
-        19L -> {
-            val rarity =
-                mapOf(
-                    "common" to "Обычный",
-                    "uncommon" to "Необычный",
-                    "rare" to "Редкий",
-                    "very_rare" to "Очень редкий",
-                    "legendary" to "Легендарный",
-                    "artifact" to "Артефакт",
-                )
-            val left = buildList {
-                add(CoverValue("Вид предмета", value("type").ifBlank { "Магический предмет" }))
-                value("rarity").takeIf(String::isNotBlank)?.let {
-                    add(CoverValue("Редкость", rarity[it] ?: it))
-                }
-                val bonus =
-                    d["weapon"].objectValue()["magic_bonus"]
-                        ?: d["armor_base"].objectValue()["magic_bonus"]
-                bonus
-                    ?.number()
-                    ?.takeIf { it != 0 }
-                    ?.let { add(CoverValue("Магический бонус", signed(it))) }
-            }
-            CatalogueSummary(
-                left,
-                economy +
-                    listOfNotNull(
-                        value("max_use").takeIf(String::isNotBlank)?.let {
-                            CoverValue("Зарядов", it)
-                        }
-                    ),
-                listOf(
-                    CoverValue(
-                        "Настройка",
-                        if (d.text("attunement") in setOf("", "none")) "Не требуется"
-                        else "Требуется настройка",
-                    )
-                ),
-                setOf("type", "rarity", "cost", "weight", "max_use", "attunement"),
-            )
-        }
+        19L -> magicCatalogueSummary(item, metadata, instance)
         2L,
         12L,
         13L,

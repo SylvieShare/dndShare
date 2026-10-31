@@ -44,7 +44,7 @@ defineProps({
   min-width: 0;
   padding: 10px 12px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--text-on-accent) 18%, transparent);
+  border: 0;
   border-radius: 10px;
   background: color-mix(in srgb, var(--surface) 74%, transparent);
   box-shadow: 0 8px 24px color-mix(in srgb, var(--scrim) 42%, transparent);
@@ -54,19 +54,16 @@ defineProps({
 
 .cover-stat-card-accent {
   --cover-stat-tone: var(--accent-soft);
-  border-color: color-mix(in srgb, var(--accent) 46%, transparent);
   background: color-mix(in srgb, var(--accent) 15%, var(--surface) 62%);
 }
 
 .cover-stat-card-danger {
   --cover-stat-tone: var(--danger);
-  border-color: color-mix(in srgb, var(--danger) 48%, transparent);
   background: color-mix(in srgb, var(--danger) 16%, var(--surface) 61%);
 }
 
 .cover-stat-card-warning {
   --cover-stat-tone: var(--warning);
-  border-color: color-mix(in srgb, var(--warning) 44%, transparent);
   background: color-mix(in srgb, var(--warning) 13%, var(--surface) 64%);
 }
 

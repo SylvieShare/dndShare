@@ -135,7 +135,7 @@ def snapshot(device, output, format_, state, fixture, stats):
     (output / f"{prefix}.xml").write_bytes(ET.tostring(tree, encoding="utf-8"))
     dump = device.shell("dumpsys", "window")
     (output / f"{prefix}-window.txt").write_text(dump)
-    metrics = window_metrics(dump, format_["width"], format_["height"], allow_popup=state in {'character-menu','sheet-item-view'})
+    metrics = window_metrics(dump, format_["width"], format_["height"], allow_popup=state in {'character-menu','sheet-item-view','sheet-weapon-item','sheet-weapon-details'})
     character = fixture["characters"][0] if state.startswith("sheet-") else fixture["characters"][1] if state == "vtm-base" else None
     return {"platform": "android", "format": format_["name"], "state": state,
             "characterUUID": character["uuid"] if character else None,
@@ -193,7 +193,7 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
     login_count = 0
     cover_verified = False
     wanted = set(matrix['states'])
-    full = wanted == {'collections', 'menu', 'list', 'record', 'character-list', 'character-menu', 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality', 'sheet-item-view', 'vtm-base'}
+    full = wanted == {'collections', 'menu', 'list', 'record', 'character-list', 'character-menu', 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality', 'sheet-item-view', 'sheet-weapon-item', 'sheet-weapon-details', 'vtm-base'}
 
     def take(format_, state):
         if state in wanted:
@@ -237,7 +237,7 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
                     take(format_, 'record')
                     device.shell('input', 'keyevent', '4')
                 device.shell('input', 'keyevent', '4')
-        if not (wanted & {'character-list', 'character-menu', 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality', 'sheet-item-view', 'vtm-base'}):
+        if not (wanted & {'character-list', 'character-menu', 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality', 'sheet-item-view', 'sheet-weapon-item', 'sheet-weapon-details', 'vtm-base'}):
             continue
         if index == 0 or handbook:
             if format_['name'] != 'wide':
@@ -250,7 +250,7 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
             take(format_,'character-menu')
             device.shell('input','keyevent','4')
             device.wait('Новый персонаж')
-        if wanted & { 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality', 'sheet-item-view'}:
+        if wanted & { 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality', 'sheet-item-view', 'sheet-weapon-item', 'sheet-weapon-details'}:
             device.click(text=fixture['characters'][0]['name'])
             if format_['name'] == 'phone':
                 device.click(description='База')
@@ -280,10 +280,23 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
                 else:
                     device.shell('input', 'keyevent', '4')
                     wait_absent(device, 'Основное значение')
-            if 'sheet-weapons' in wanted:
+            if wanted & {'sheet-weapons','sheet-weapon-item','sheet-weapon-details'}:
                 device.click(description='Оружие') if format_['name']=='phone' else device.click(text='Оружие')
                 device.wait('Посох молнии')
                 take(format_, 'sheet-weapons')
+                if wanted & {'sheet-weapon-item','sheet-weapon-details'}:
+                    device.click(text='Посох молнии')
+                    device.wait('Удалить')
+                    device.click(text='Справочник')
+                    device.wait(description='Закрыть просмотр')
+                    device.wait('Основа оружия')
+                    take(format_, 'sheet-weapon-item')
+                    if 'sheet-weapon-details' in wanted:
+                        for _ in range(5):
+                            device.shell('input','swipe',str(format_['width']//2),str(int(format_['height']*.85)),str(format_['width']//2),str(int(format_['height']*.32)),'250')
+                        take(format_, 'sheet-weapon-details')
+                    device.click(description='Закрыть просмотр')
+                    device.wait('Посох молнии')
             if 'sheet-inventory' in wanted:
                 if format_['name']=='phone': device.click(description='Предметы')
                 else: device.click(text='Снаряжение' if format_['name']=='wide' else 'Предметы')

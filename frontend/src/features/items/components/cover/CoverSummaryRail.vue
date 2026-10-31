@@ -22,7 +22,7 @@ const railStyle = computed(() => ({
   grid-template-columns: var(--cover-summary-rail-columns);
   gap: 0;
   padding: 5px 4px;
-  border: 1px solid color-mix(in srgb, var(--text-on-accent) 18%, transparent);
+  border: 0;
   border-radius: 10px;
   background: color-mix(in srgb, var(--surface) 74%, transparent);
   box-shadow: 0 8px 24px color-mix(in srgb, var(--scrim) 34%, transparent);

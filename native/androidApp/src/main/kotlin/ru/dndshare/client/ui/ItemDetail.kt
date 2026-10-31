@@ -82,6 +82,8 @@ internal fun ItemRecordView(
     open: (Long) -> Unit,
     headerInset: Int = 0,
     pageBack: (() -> Unit)? = null,
+    instance: JsonObject? = null,
+    knownItems: Map<Long, CatalogueItem> = emptyMap(),
 ) {
     val saved = rememberSaveableStateHolder()
     when {
@@ -110,57 +112,62 @@ internal fun ItemRecordView(
             saved.SaveableStateProvider(state.item.id) {
                 val item = state.item
                 val type = metadata.types.firstOrNull { it.id == item.typeId }
-                Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
-                    ItemDetailCover(item, type, metadata, images, headerInset, pageBack)
-                    Column(
-                        Modifier.padding(20.dp),
-                        verticalArrangement = Arrangement.spacedBy(18.dp),
-                    ) {
-                        val editions = LocalCatalogueEditions.current
-                        val rules =
-                            item.compatibility
-                                .mapNotNull { compatibility ->
-                                    editions
-                                        .firstOrNull { it.id == compatibility.sourceVersionId }
-                                        ?.let {
-                                            it.version +
-                                                when (compatibility.status) {
-                                                    "legacy" -> " (наследие)"
-                                                    "requires_adaptation" -> " (адаптация)"
-                                                    else -> ""
-                                                }
-                                        }
+                CompositionLocalProvider(
+                    LocalCataloguePreview provides
+                        CataloguePreviewContext(cache, sourceId, knownItems, instance, images)
+                ) {
+                    Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
+                        ItemDetailCover(item, type, metadata, images, headerInset, pageBack, open)
+                        Column(
+                            Modifier.padding(20.dp),
+                            verticalArrangement = Arrangement.spacedBy(18.dp),
+                        ) {
+                            val editions = LocalCatalogueEditions.current
+                            val rules =
+                                item.compatibility
+                                    .mapNotNull { compatibility ->
+                                        editions
+                                            .firstOrNull { it.id == compatibility.sourceVersionId }
+                                            ?.let {
+                                                it.version +
+                                                    when (compatibility.status) {
+                                                        "legacy" -> " (наследие)"
+                                                        "requires_adaptation" -> " (адаптация)"
+                                                        else -> ""
+                                                    }
+                                            }
+                                    }
+                                    .distinct()
+                            if (rules.isNotEmpty())
+                                Text(
+                                    "Правила: " + rules.joinToString(" · "),
+                                    style = ShareTypography.context,
+                                    color = WebPalette.TextMuted,
+                                )
+                            CompositionLocalProvider(
+                                LocalRichDescriptionStyle provides
+                                    ShareTypography.itemDescription.copy(
+                                        color = WebPalette.TextSecondary
+                                    )
+                            ) {
+                                ItemRecordBody(item, type, metadata, cache, sourceId, open)
+                            }
+                            if (item.contentSources.isNotEmpty())
+                                ShareDetailSection("Источники") {
+                                    item.contentSources.forEach {
+                                        Text(
+                                            it.name,
+                                            style = ShareTypography.context,
+                                            color = WebPalette.TextSecondary,
+                                        )
+                                    }
                                 }
-                                .distinct()
-                        if (rules.isNotEmpty())
                             Text(
-                                "Правила: " + rules.joinToString(" · "),
+                                "ID: ${item.id}",
                                 style = ShareTypography.context,
                                 color = WebPalette.TextMuted,
                             )
-                        CompositionLocalProvider(
-                            LocalRichDescriptionStyle provides
-                                ShareTypography.itemDescription.copy(
-                                    color = WebPalette.TextSecondary
-                                )
-                        ) {
-                            ItemRecordBody(item, type, metadata, cache, sourceId, open)
                         }
-                        if (item.contentSources.isNotEmpty())
-                            ShareDetailSection("Источники") {
-                                item.contentSources.forEach {
-                                    Text(
-                                        it.name,
-                                        style = ShareTypography.context,
-                                        color = WebPalette.TextSecondary,
-                                    )
-                                }
-                            }
-                        Text(
-                            "ID: ${item.id}",
-                            style = ShareTypography.context,
-                            color = WebPalette.TextMuted,
-                        )
                     }
                 }
             }
@@ -176,6 +183,10 @@ private fun ItemRecordBody(
     sourceId: Long,
     open: (Long) -> Unit,
 ) {
+    if (item.typeId in setOf(1L, 19L)) {
+        ItemEquipmentContent(item, type, metadata, open)
+        return
+    }
     val fields = (type?.fields as? JsonArray).orEmpty()
     val summarized = catalogueSummary(item, type, metadata).keys
     val completeFields =

@@ -3,8 +3,8 @@
     <template #icon><Crosshair /></template>
     <p v-if="rule.condition">{{ rule.condition }}</p>
     <div class="target-summary">
-      <BaseTile v-if="rule.damage"><span>Дополнительный урон по цели</span><DamageDice :parts="damageParts" :size="32" /></BaseTile>
-      <BaseTile v-for="text in facts" :key="text">{{ text }}</BaseTile>
+      <BaseTile :outlined="false" v-if="rule.damage"><span>Дополнительный урон по цели</span><DamageDice :parts="damageParts" :size="32" /></BaseTile>
+      <BaseTile :outlined="false" v-for="text in facts" :key="text">{{ text }}</BaseTile>
     </div>
   </DetailSection>
 </template>

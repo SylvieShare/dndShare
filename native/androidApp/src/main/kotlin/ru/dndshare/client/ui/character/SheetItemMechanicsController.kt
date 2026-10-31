@@ -65,7 +65,8 @@ internal class SheetItemMechanicsController(
                     return@withLock
                 }
                 val patches =
-                    if (operation.startsWith("inventory-"))
+                    if (operation == "weapon-delete") weaponRemovalPatches(sheet, uid)
+                    else if (operation.startsWith("inventory-"))
                         inventoryActionPatches(sheet, uid, operation, input, items)
                     else if (operation == "created-expire") expireCreatedItemPatches(sheet, uid)
                     else if (operation == "spell-prepare")

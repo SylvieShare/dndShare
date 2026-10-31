@@ -97,7 +97,7 @@ class ItemDetailPresentationTest {
                 type,
                 HandbookMetadata(),
             )
-        assertEquals("Не требуется", summary("none").rail.single().value)
-        assertEquals("Требуется настройка", summary("required").rail.single().value)
+        assertEquals("Без настройки", summary("none").rail.first().value)
+        assertEquals("Требует настройки", summary("required").rail.first().value)
     }
 }

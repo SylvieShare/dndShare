@@ -5,7 +5,12 @@ import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
 import ru.dndshare.client.model.*
 
-@Serializable data class SheetItemDestination(val id: Long, val spellKey: String? = null)
+@Serializable
+data class SheetItemDestination(
+    val id: Long,
+    val spellKey: String? = null,
+    val equipmentUid: String? = null,
+)
 
 @Serializable
 data class SheetNavigationState(

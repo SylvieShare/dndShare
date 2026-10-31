@@ -1,7 +1,7 @@
 <template>
   <DetailSection v-if="uses.length" label="Особое применение оружия" tone="danger">
     <ItemMechanicPanel kind="weapon_use" v-for="use in uses" :key="use.key" :title="use.title" :subtitle="subtitle(use)">
-      <BaseTile v-for="step in use.steps" :key="step.key" class="weapon-use-summary-step">
+      <BaseTile :outlined="false" v-for="step in use.steps" :key="step.key" class="weapon-use-summary-step">
         <strong>{{ step.title }}</strong>
         <div class="weapon-use-summary-dice"><span v-if="step.kind === 'weapon_damage'">Урон оружия +</span><DamageDice :parts="parts(step)" :size="28" /></div>
         <MechanicTheses :lines="weaponUseRequirements(step, use.range_ft)" />

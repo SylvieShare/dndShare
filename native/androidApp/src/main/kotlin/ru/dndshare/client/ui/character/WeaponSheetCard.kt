@@ -38,7 +38,6 @@ internal fun WeaponSheetCard(
         entry["override"].objectValue().text("name").ifBlank { item?.name ?: "Авторское оружие" }
     val expired =
         entry["params"].objectValue()["creation"].objectValue()["expired"] == JsonPrimitive(true)
-    var properties by remember(uid) { mutableStateOf(false) }
     val descriptions =
         remember(context.metadata, item) {
             context.metadata.suggests["14"].orEmpty().associate { it.value to it.desc.orEmpty() } +
@@ -53,8 +52,8 @@ internal fun WeaponSheetCard(
                     }
                     .filterValues(String::isNotBlank)
         }
+    var deleting by remember(uid) { mutableStateOf(false) }
     val actions = buildList {
-        add(ShareMenuAction("Свойства", Glyph.InfoCircle, { properties = true }))
         addAll(createdItemActions(entry))
         if (context.canEdit) {
             add(
@@ -83,7 +82,10 @@ internal fun WeaponSheetCard(
                     )
                 )
         }
-        if (id != null) add(ShareMenuAction("Справочник", Glyph.Book, { context.openItem(id) }))
+        if (id != null)
+            add(ShareMenuAction("Справочник", Glyph.Book, { context.openEquipment(id, uid) }))
+        if (context.canEdit)
+            add(ShareMenuAction("Удалить", Glyph.Trash, { deleting = true }, danger = true))
     }
     ShareActionMenu(
         "Действия с записью: $title",
@@ -227,35 +229,5 @@ internal fun WeaponSheetCard(
             }
         },
     )
-    if (properties) {
-        val content: @Composable ColumnScope.() -> Unit = {
-            val description =
-                entry["override"].objectValue().text("desc").ifBlank {
-                    entry.text("desc").ifBlank { item?.data?.text("desc").orEmpty() }
-                }
-            if (description.isNotBlank()) SheetDescription(description)
-            weapon?.properties?.forEach { label ->
-                val desc =
-                    context.metadata.suggests["14"]
-                        .orEmpty()
-                        .firstOrNull { it.value == label }
-                        ?.desc
-                        .orEmpty()
-                Text(label, style = ShareTypography.group)
-                if (desc.isNotBlank()) SheetDescription(desc)
-            }
-            ItemMechanicsPanels(entry)
-            if (context.canEdit)
-                ShareAction(
-                    "Изменить",
-                    {
-                        properties = false
-                        context.edit("weapon:$uid")
-                    },
-                )
-        }
-        if (format == LayoutFormat.Wide)
-            ShareFormDialog(title, { properties = false }, content = content)
-        else ShareBottomSheet(title, { properties = false }, content)
-    }
+    if (deleting) WeaponDeleteDialog(entry, title) { deleting = false }
 }

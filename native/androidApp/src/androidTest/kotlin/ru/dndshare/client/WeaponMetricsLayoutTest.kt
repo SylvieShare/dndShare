@@ -101,6 +101,7 @@ class WeaponMetricsLayoutTest {
                             )
                             .getBoundsInScreen(it)
                     }
+                assertEquals(attack.width(), attack.height(), "Attack cell must be square")
                 val value = TouchRobot.bounds("Атака: Посох")
                 assertTrue(
                     kotlin.math.abs(attack.exactCenterX() - value.exactCenterX()) <= 1f,
@@ -113,8 +114,7 @@ class WeaponMetricsLayoutTest {
                 if (case.weapon.properties.isEmpty()) assertNull(TouchRobot.find("Свойства"))
                 else {
                     val properties = TouchRobot.bounds("Свойства")
-                    if (case.inline == true) assertEquals(TouchRobot.bounds("Атака").top, properties.top)
-                    else if (case.inline == false) assertTrue(properties.top > TouchRobot.bounds("Урон").bottom)
+                    assertTrue(properties.top > TouchRobot.bounds("Урон").bottom)
                     case.weapon.properties.forEach { label ->
                         val item = TouchRobot.bounds(label)
                         assertTrue(item.left >= table.left && item.right <= table.right)
@@ -130,8 +130,10 @@ class WeaponMetricsLayoutTest {
                     }
                     TouchRobot.click("Понятно")
                     TouchRobot.await("description closes") {
-                        TouchRobot.find(title) != null && TouchRobot.find("к6: 6") != null &&
-                            TouchRobot.findNode { it.text?.toString()?.trim() == description } == null
+                        TouchRobot.find(title) != null &&
+                            TouchRobot.find("к6: 6") != null &&
+                            TouchRobot.findNode { it.text?.toString()?.trim() == description } ==
+                                null
                     }
                 }
                 val die = TouchRobot.bounds("к6: 6")
