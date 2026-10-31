@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 FRONTEND = ROOT / "frontend"
 NATIVE = ROOT / "native/androidApp/src/main"
 ICONS = {
+    "Clock": "clock-3", "Hourglass": "hourglass", "Shapes": "shapes", "Coins": "coins", "Gem": "gem", "Zap": "zap", "Heart": "heart", "Badge": "badge", "Shield": "shield",
     "Wallet": "wallet", "Weight": "weight", "Backpack": "backpack", "Shirt": "shirt", "Trash": "trash",
     "Book": "book-open", "Rules": "book-open-check", "Characters": "users",
     "CreateCharacter": "user-round-plus", "Sessions": "scroll-text", "Maps": "map",

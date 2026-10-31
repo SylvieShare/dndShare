@@ -11,10 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.dialog
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -135,6 +137,8 @@ fun ShareAlertDialog(
 fun ShareFullscreenDialog(
     onDismissRequest: () -> Unit,
     properties: DialogProperties = DialogProperties(usePlatformDefaultWidth = false),
+    dimAmount: Float? = null,
+    blurBehind: Dp = 0.dp,
     content: @Composable () -> Unit,
 ) {
     Dialog(
@@ -149,8 +153,14 @@ fun ShareFullscreenDialog(
             ),
     ) {
         val view = LocalView.current
+        val blurPixels = with(LocalDensity.current) { blurBehind.roundToPx() }
         SideEffect {
             (view.parent as? DialogWindowProvider)?.window?.let { window ->
+                dimAmount?.let(window::setDimAmount)
+                if (android.os.Build.VERSION.SDK_INT >= 31 && blurPixels > 0) {
+                    window.addFlags(android.view.WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
+                    window.attributes = window.attributes.apply { blurBehindRadius = blurPixels }
+                }
                 @Suppress("DEPRECATION")
                 run {
                     window.statusBarColor = android.graphics.Color.TRANSPARENT

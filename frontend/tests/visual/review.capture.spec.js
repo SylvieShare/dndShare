@@ -115,7 +115,7 @@ for (const format of matrix.formats) {
       }
     }
     const dnd = fixture.characters[0], vtm = fixture.characters[1]
-    if (['sheet-base','sheet-death-saves','sheet-stats','sheet-stat-editor','sheet-weapons','sheet-magic','sheet-inventory','sheet-personality'].some(state => wanted.has(state))) {
+    if (['sheet-base','sheet-death-saves','sheet-stats','sheet-stat-editor','sheet-weapons','sheet-magic','sheet-inventory','sheet-personality','sheet-item-view'].some(state => wanted.has(state))) {
     await page.goto(`/char/${dnd.uuid}`, { waitUntil: 'networkidle' })
     if (format.name !== 'wide') await expect(page.locator('.dnd-tablet-base')).toBeVisible()
     else await expect(page.locator('[data-tutorial="character-stat"]:visible').first()).toBeVisible({ timeout: 30000 })
@@ -151,10 +151,18 @@ for (const format of matrix.formats) {
       await expect(page.getByText('Странница', { exact: true }).first()).toBeVisible()
       await snapshot('sheet-personality')
     }
-    if (wanted.has('sheet-magic')) {
+    if (wanted.has('sheet-magic') || wanted.has('sheet-item-view')) {
       await page.getByRole(format.name === 'wide' ? 'tab' : 'button', { name: 'Магия', exact: true }).last().click()
       await expect(page.getByText('Ячейки заклинаний', {exact:true}).first()).toBeVisible()
       await snapshot('sheet-magic')
+      if (wanted.has('sheet-item-view')) {
+        await page.locator('.spell-row').filter({ hasText: fixture.recordName }).first().click()
+        await page.getByRole('menuitem', { name: 'Открыть описание', exact: true }).click()
+        await expect(page.locator('.iv-shell')).toBeVisible()
+        await expect(page.locator('.iv-shell h1')).toHaveText(fixture.recordName)
+        await snapshot('sheet-item-view')
+        await page.locator('.iv-close').click()
+      }
     }
     }
     if (wanted.has('vtm-base')) {

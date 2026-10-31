@@ -1,21 +1,60 @@
 package ru.dndshare.client.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
-import coil3.compose.AsyncImage
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.catch
+import kotlinx.serialization.json.*
 import ru.dndshare.client.data.CacheDao
 import ru.dndshare.client.model.*
 import ru.dndshare.client.ui.designsystem.*
+
+val LocalCatalogueEditions = staticCompositionLocalOf { emptyList<Edition>() }
+
+internal data class ItemRecordState(
+    val item: CatalogueItem?,
+    val resolved: Boolean,
+    val error: String? = null,
+    val retry: () -> Unit = {},
+)
+
+@Composable
+internal fun rememberItemRecord(
+    cache: CacheDao,
+    sourceId: Long,
+    id: Long,
+    initial: CatalogueItem? = null,
+): ItemRecordState {
+    val known = remember(cache, sourceId) { mutableMapOf<Long, CatalogueItem>() }
+    var attempt by remember(sourceId, id) { mutableIntStateOf(0) }
+    val seed = initial?.takeIf { it.id == id } ?: known[id]
+    val state by
+        key(sourceId, id, attempt) {
+            produceState(ItemRecordState(seed, seed != null), cache, sourceId, id) {
+                cache
+                    .observeItem(sourceId, id)
+                    .catch { error ->
+                        if (error is CancellationException) throw error
+                        value = ItemRecordState(value.item, true, "Не удалось прочитать запись.")
+                    }
+                    .collect { payload ->
+                        val record = payload?.let {
+                            runCatching { WireJson.decodeFromString<CatalogueItem>(it) }.getOrNull()
+                        }
+                        if (record != null) known[id] = record else known.remove(id)
+                        value = ItemRecordState(record, true)
+                    }
+            }
+        }
+    return state.copy(retry = { attempt++ })
+}
 
 @Composable
 fun ItemDetail(
@@ -27,84 +66,99 @@ fun ItemDetail(
     back: () -> Unit,
     open: (Long) -> Unit,
 ) {
-    var resolved by remember(sourceId, id) { mutableStateOf(false) }
-    val payload by
-        produceState<String?>(null, sourceId, id) {
-            cache.observeItem(sourceId, id).collect {
-                value = it
-                resolved = true
+    val state = rememberItemRecord(cache, sourceId, id)
+    Box(Modifier.fillMaxSize().padding(LocalChromePadding.current)) {
+        ItemRecordView(state, cache, sourceId, metadata, images, open, pageBack = back)
+    }
+}
+
+@Composable
+internal fun ItemRecordView(
+    state: ItemRecordState,
+    cache: CacheDao?,
+    sourceId: Long,
+    metadata: HandbookMetadata,
+    images: ImageLoader,
+    open: (Long) -> Unit,
+    headerInset: Int = 0,
+    pageBack: (() -> Unit)? = null,
+) {
+    val saved = rememberSaveableStateHolder()
+    when {
+        !state.resolved ->
+            Column(
+                Modifier.fillMaxWidth().padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                ShareSkeletonBlock(Modifier.fillMaxWidth().height(240.dp))
+                repeat(3) { ShareSkeletonBlock(Modifier.fillMaxWidth().height(32.dp)) }
             }
-        }
-    val item = remember(payload) { payload?.let { WireJson.decodeFromString<CatalogueItem>(it) } }
-    Surface(
-        Modifier.fillMaxSize(),
-        color = WebPalette.Background,
-    ) {
-        if (!resolved)
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+        state.item == null ->
+            Column(
+                Modifier.fillMaxWidth().padding(28.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Text("Запись недоступна", style = ShareTypography.header)
+                Text(
+                    state.error
+                        ?: "Она могла быть удалена, скрыта или ещё не загружена. Готовые записи доступны без сети.",
+                    color = WebPalette.TextMuted,
+                )
+                ShareAction("Повторить", state.retry)
             }
-        else if (item == null)
-            EmptyContent("Запись недоступна", "Она могла быть удалена или ещё не загрузилась.")
-        else
-            key(id) {
-                val record = item
-                val type = metadata.types.firstOrNull { it.id == record.typeId }
-                Column(
-                    Modifier.fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(LocalChromePadding.current)
-                ) {
-                    ItemCover(record, type, metadata, images, back)
+        else ->
+            saved.SaveableStateProvider(state.item.id) {
+                val item = state.item
+                val type = metadata.types.firstOrNull { it.id == item.typeId }
+                Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
+                    ItemDetailCover(item, type, metadata, images, headerInset, pageBack)
                     Column(
                         Modifier.padding(20.dp),
-                        verticalArrangement = Arrangement.spacedBy(20.dp),
+                        verticalArrangement = Arrangement.spacedBy(18.dp),
                     ) {
-                        val fields =
-                            (type?.fields as? kotlinx.serialization.json.JsonArray).orEmpty()
-                        val narrative = fields.filter {
-                            (it as? kotlinx.serialization.json.JsonObject)?.text("type") in
-                                setOf("description", "text", "textarea", "blocks")
-                        }
-                        val technical = fields - narrative.toSet()
-                        SchemaFields(
-                            kotlinx.serialization.json.JsonArray(narrative),
-                            record.data,
-                            metadata,
-                            cache,
-                            sourceId,
-                            open,
-                        )
-                        if (technical.isNotEmpty())
-                            ShareDetailSection(
-                                "Характеристики",
-                                collapsible = true,
-                                defaultOpen = false,
-                            ) {
-                                SchemaFields(
-                                    kotlinx.serialization.json.JsonArray(technical),
-                                    record.data,
-                                    metadata,
-                                    cache,
-                                    sourceId,
-                                    open,
+                        val editions = LocalCatalogueEditions.current
+                        val rules =
+                            item.compatibility
+                                .mapNotNull { compatibility ->
+                                    editions
+                                        .firstOrNull { it.id == compatibility.sourceVersionId }
+                                        ?.let {
+                                            it.version +
+                                                when (compatibility.status) {
+                                                    "legacy" -> " (наследие)"
+                                                    "requires_adaptation" -> " (адаптация)"
+                                                    else -> ""
+                                                }
+                                        }
+                                }
+                                .distinct()
+                        if (rules.isNotEmpty())
+                            Text(
+                                "Правила: " + rules.joinToString(" · "),
+                                style = ShareTypography.context,
+                                color = WebPalette.TextMuted,
+                            )
+                        CompositionLocalProvider(
+                            LocalRichDescriptionStyle provides
+                                ShareTypography.itemDescription.copy(
+                                    color = WebPalette.TextSecondary
                                 )
-                            }
-                        if (record.contentSources.isNotEmpty())
-                            ShareSection("Источники") {
-                                FlowRow(
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                                ) {
-                                    record.contentSources.forEach {
-                                        ShareBadge(it.name, color = WebPalette.TextSecondary)
-                                    }
+                        ) {
+                            ItemRecordBody(item, type, metadata, cache, sourceId, open)
+                        }
+                        if (item.contentSources.isNotEmpty())
+                            ShareDetailSection("Источники") {
+                                item.contentSources.forEach {
+                                    Text(
+                                        it.name,
+                                        style = ShareTypography.context,
+                                        color = WebPalette.TextSecondary,
+                                    )
                                 }
                             }
-                        HorizontalDivider()
                         Text(
-                            "ID ${record.id}",
-                            style = MaterialTheme.typography.labelSmall,
+                            "ID: ${item.id}",
+                            style = ShareTypography.context,
                             color = WebPalette.TextMuted,
                         )
                     }
@@ -114,76 +168,44 @@ fun ItemDetail(
 }
 
 @Composable
-private fun ItemCover(
+private fun ItemRecordBody(
     item: CatalogueItem,
     type: ItemType?,
     metadata: HandbookMetadata,
-    images: ImageLoader,
-    back: () -> Unit,
+    cache: CacheDao?,
+    sourceId: Long,
+    open: (Long) -> Unit,
 ) {
-    val cover = item.coverImageUrl ?: item.iconImageUrl ?: type?.coverImageUrl
-    val stats = remember(item, metadata) { itemStats(type, item, metadata) }
-    Box(Modifier.fillMaxWidth().heightIn(min = if (cover != null) 300.dp else 210.dp)) {
-        if (cover != null)
-            AsyncImage(
-                cover,
-                null,
-                imageLoader = images,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.matchParentSize(),
-            )
-        Box(
-            Modifier.matchParentSize()
-                .background(
-                    Brush.verticalGradient(
-                        listOf(
-                            WebPalette.Background.copy(alpha = if (cover != null) .25f else 1f),
-                            WebPalette.Background.copy(alpha = .65f),
-                            WebPalette.Background,
-                        )
-                    )
-                )
-        )
-        Column(
-            Modifier.fillMaxWidth().padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(18.dp),
-        ) {
-            Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                ShareAction("Назад", back, icon = Glyph.Back)
-                item.contentSources.firstOrNull()?.let {
-                    ShareBadge(it.code.ifBlank { it.name }, color = WebPalette.TextSecondary)
-                }
-            }
-            Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                Text(item.name, style = ShareTypography.title)
-                item.nameEn
-                    ?.takeIf { it.isNotBlank() }
-                    ?.let {
-                        Text(
-                            it.replace('_', ' '),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = WebPalette.TextSecondary,
-                        )
-                    }
-                type?.let { ShareBadge(it.name, color = catalogueColor(it.color)) }
-            }
-            if (stats.isNotEmpty()) ShareStats(stats)
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                if (
-                    (item.data["concentration"] as? kotlinx.serialization.json.JsonPrimitive)
-                        ?.content == "true"
-                )
-                    ShareBadge("Концентрация", color = WebPalette.Success)
-                if (
-                    (item.data["ritual"] as? kotlinx.serialization.json.JsonPrimitive)?.content ==
-                        "true"
-                )
-                    ShareBadge("Ритуал", color = WebPalette.Warning)
-            }
+    val fields = (type?.fields as? JsonArray).orEmpty()
+    val summarized = catalogueSummary(item, type, metadata).keys
+    val completeFields =
+        fields.filterIsInstance<JsonObject>().filter { field ->
+            val value = item.data[field.text("key")]
+            field.text("key") in summarized &&
+                (value is JsonObject && value.isNotEmpty() ||
+                    value is JsonArray && value.isNotEmpty())
         }
+    val content =
+        fields
+            .filterIsInstance<JsonObject>()
+            .filter { it.text("key") !in summarized }
+            .map { field ->
+                if (item.typeId == 5L && field.text("key") in setOf("desc", "description"))
+                    JsonObject(field + mapOf("name" to JsonPrimitive("Описание заклинания")))
+                else field
+            }
+    if (content.isEmpty() || cache == null) {
+        val html =
+            item.data.text("desc").ifBlank {
+                item.data.text("description").ifBlank { item.data.text("notes") }
+            }
+        if (html.isNotBlank())
+            ShareDetailSection("Описание") { RichDescription(html, openItem = open) }
+        else if (content.isEmpty()) Text("Описание отсутствует", color = WebPalette.TextMuted)
     }
+    if (cache != null) SchemaFields(JsonArray(content), item.data, metadata, cache, sourceId, open)
+    if (cache != null && completeFields.isNotEmpty())
+        ShareDetailSection("Полные характеристики", collapsible = true, defaultOpen = false) {
+            SchemaFields(JsonArray(completeFields), item.data, metadata, cache, sourceId, open)
+        }
 }

@@ -25,6 +25,8 @@ import ru.dndshare.client.model.WireJson
 import ru.dndshare.client.ui.designsystem.*
 import ru.dndshare.client.ui.designsystem.richtext.RichTableModel
 
+val LocalRichDescriptionStyle = compositionLocalOf { ShareTypography.body }
+
 fun richDescription(html: String, linkColor: Color): AnnotatedString = buildAnnotatedString {
     val blocks =
         setOf(
@@ -290,9 +292,14 @@ fun RichDescription(html: String, modifier: Modifier = Modifier, openItem: (Long
                         ClickableText(
                             text,
                             style =
-                                ShareTypography.body.copy(
-                                    color = MaterialTheme.colorScheme.onSurface
-                                ),
+                                LocalRichDescriptionStyle.current.let { style ->
+                                    style.copy(
+                                        color =
+                                            if (style.color == Color.Unspecified)
+                                                MaterialTheme.colorScheme.onSurface
+                                            else style.color
+                                    )
+                                },
                         ) { offset ->
                             text.getStringAnnotations(offset, offset).firstOrNull()?.let(follow)
                         }

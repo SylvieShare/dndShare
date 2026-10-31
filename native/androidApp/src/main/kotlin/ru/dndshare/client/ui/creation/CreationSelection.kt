@@ -13,7 +13,8 @@ import coil3.compose.AsyncImage
 import ru.dndshare.client.character.*
 import ru.dndshare.client.character.creation.*
 import ru.dndshare.client.model.*
-import ru.dndshare.client.ui.RichDescription
+import ru.dndshare.client.ui.ItemRecordState
+import ru.dndshare.client.ui.ItemRecordView
 import ru.dndshare.client.ui.designsystem.*
 
 @Composable
@@ -28,10 +29,14 @@ internal fun CreationSelection(
     var query by rememberSaveable(title) { mutableStateOf("") }
     var browsing by rememberSaveable(title, selected?.id) { mutableStateOf(selected == null) }
     var shown by rememberSaveable(title) { mutableIntStateOf(24) }
-    var detail by remember { mutableStateOf<CatalogueItem?>(null) }
+    var detailIds by rememberSaveable(title) { mutableStateOf(listOf<Long>()) }
+    val detail =
+        detailIds.lastOrNull()?.let { id ->
+            related.firstOrNull { it.id == id } ?: selected?.takeIf { it.id == id }
+        }
     Text(title, style = ShareTypography.section)
     if (selected != null && !browsing) {
-        CreationChoiceCard(selected, true, images, {}, { detail = selected })
+        CreationChoiceCard(selected, true, images, {}, { detailIds = listOf(selected.id) })
         ShareTextButton(onClick = { browsing = true }) { Text("Выбрать другой вариант") }
     } else {
         ShareSearch(
@@ -56,7 +61,7 @@ internal fun CreationSelection(
                             choose(item.id)
                             browsing = false
                         },
-                        { detail = item },
+                        { detailIds = listOf(item.id) },
                     )
                 }
             }
@@ -69,19 +74,22 @@ internal fun CreationSelection(
         if (rows.size > shown) ShareTextButton(onClick = { shown += 24 }) { Text("Показать ещё") }
     }
     detail?.let { item ->
-        ShareFormDialog(item.name, { detail = null }) {
-            item.coverImageUrl?.let {
-                AsyncImage(
-                    it,
-                    null,
-                    imageLoader = images,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxWidth().height(240.dp),
-                )
-            }
-            RichDescription(
-                item.data.text("desc").ifBlank { item.data.text("description") },
-                openItem = { id -> related.firstOrNull { it.id == id }?.let { detail = it } },
+        SharePreviewWindow(
+            item.name,
+            { detailIds = detailIds.dropLast(1) },
+            back = if (detailIds.size > 1) ({ detailIds = detailIds.dropLast(1) }) else null,
+            navigationKey = item.id,
+        ) {
+            ItemRecordView(
+                ItemRecordState(item, true),
+                null,
+                0,
+                HandbookMetadata(),
+                images,
+                open = { id ->
+                    related.firstOrNull { it.id == id }?.let { detailIds = detailIds + it.id }
+                },
+                headerInset = 64,
             )
         }
     }

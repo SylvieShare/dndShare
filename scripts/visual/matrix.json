@@ -32,7 +32,8 @@
     "sheet-magic",
     "sheet-inventory",
     "sheet-personality",
-    "vtm-base"
+    "vtm-base",
+    "sheet-item-view"
   ],
   "platforms": [
     "web",

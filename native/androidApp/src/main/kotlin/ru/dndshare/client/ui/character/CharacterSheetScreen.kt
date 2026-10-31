@@ -9,7 +9,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import coil3.ImageLoader
 import ru.dndshare.client.character.*
 import ru.dndshare.client.data.CacheDao
@@ -311,13 +310,7 @@ internal fun CharacterSheetScreen(
                                                 )
                                         }
                                         if (navigation.itemStack.isNotEmpty())
-                                            ShareFullscreenDialog(
-                                                onDismissRequest = model::closeItem,
-                                                properties =
-                                                    DialogProperties(
-                                                        usePlatformDefaultWidth = false
-                                                    ),
-                                            ) {
+                                            run {
                                                 val destination = navigation.itemStack.last()
                                                 val source = destination.spellKey
                                                 val readout =
@@ -353,14 +346,17 @@ internal fun CharacterSheetScreen(
                                                     ru.dndshare.client.ui
                                                         .LocalRichInteractions provides interactions
                                                 ) {
-                                                    ItemDetail(
+                                                    ru.dndshare.client.ui.ItemPreviewDialog(
                                                         cache,
                                                         sheet.sourceId,
                                                         destination.id,
                                                         ui.content.metadata,
                                                         images,
-                                                        back = model::closeItem,
+                                                        close = model::closeItem,
                                                         open = model::openItem,
+                                                        canGoBack = navigation.itemStack.size > 1,
+                                                        initialItem =
+                                                            ui.content.items[destination.id],
                                                     )
                                                 }
                                             }

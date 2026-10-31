@@ -86,6 +86,16 @@ internal fun SchemaFields(
                             RichDescription(it.text("value"), openItem = open)
                         }
                     }
+                "dice" -> {
+                    val primitive = value as? JsonPrimitive
+                    val label =
+                        primitive?.longOrNull?.let { metadata.suggest(it, 1)?.value }
+                            ?: primitive?.contentOrNull.orEmpty()
+                    val sides = label.filter(Char::isDigit).toIntOrNull()
+                    if (sides in setOf(4, 6, 8, 10, 12, 20, 100))
+                        ShareDie(requireNotNull(sides), sides.toString())
+                    else Text(label.ifBlank { "—" })
+                }
                 "int_by_suggest" ->
                     (value as? JsonObject)?.let { amount ->
                         val unit =

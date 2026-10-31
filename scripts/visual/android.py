@@ -135,7 +135,7 @@ def snapshot(device, output, format_, state, fixture, stats):
     (output / f"{prefix}.xml").write_bytes(ET.tostring(tree, encoding="utf-8"))
     dump = device.shell("dumpsys", "window")
     (output / f"{prefix}-window.txt").write_text(dump)
-    metrics = window_metrics(dump, format_["width"], format_["height"], allow_popup=state == "character-menu")
+    metrics = window_metrics(dump, format_["width"], format_["height"], allow_popup=state in {'character-menu','sheet-item-view'})
     character = fixture["characters"][0] if state.startswith("sheet-") else fixture["characters"][1] if state == "vtm-base" else None
     return {"platform": "android", "format": format_["name"], "state": state,
             "characterUUID": character["uuid"] if character else None,
@@ -193,7 +193,7 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
     login_count = 0
     cover_verified = False
     wanted = set(matrix['states'])
-    full = wanted == {'collections', 'menu', 'list', 'record', 'character-list', 'character-menu', 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality', 'vtm-base'}
+    full = wanted == {'collections', 'menu', 'list', 'record', 'character-list', 'character-menu', 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality', 'sheet-item-view', 'vtm-base'}
 
     def take(format_, state):
         if state in wanted:
@@ -237,7 +237,7 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
                     take(format_, 'record')
                     device.shell('input', 'keyevent', '4')
                 device.shell('input', 'keyevent', '4')
-        if not (wanted & {'character-list', 'character-menu', 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality', 'vtm-base'}):
+        if not (wanted & {'character-list', 'character-menu', 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality', 'sheet-item-view', 'vtm-base'}):
             continue
         if index == 0 or handbook:
             if format_['name'] != 'wide':
@@ -250,7 +250,7 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
             take(format_,'character-menu')
             device.shell('input','keyevent','4')
             device.wait('Новый персонаж')
-        if wanted & { 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality'}:
+        if wanted & { 'sheet-base', 'sheet-death-saves', 'sheet-stats', 'sheet-stat-editor', 'sheet-weapons', 'sheet-magic', 'sheet-inventory', 'sheet-personality', 'sheet-item-view'}:
             device.click(text=fixture['characters'][0]['name'])
             if format_['name'] == 'phone':
                 device.click(description='База')
@@ -289,11 +289,19 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
                 else: device.click(text='Снаряжение' if format_['name']=='wide' else 'Предметы')
                 device.wait('фунт.')
                 take(format_,'sheet-inventory')
-            if 'sheet-magic' in wanted:
+            if wanted & {'sheet-magic','sheet-item-view'}:
                 if format_['name']=='phone': device.click(description='Магия')
                 else: device.click(text='Магия')
                 device.wait('ЯЧЕЙКИ ЗАКЛИНАНИЙ')
                 take(format_,'sheet-magic')
+                if 'sheet-item-view' in wanted:
+                    device.click(description='Действия с записью: '+fixture['recordName'])
+                    device.click(text='Справочник')
+                    device.wait(description='Закрыть просмотр')
+                    device.wait(fixture['recordName'])
+                    take(format_,'sheet-item-view')
+                    device.click(description='Закрыть просмотр')
+                    device.wait('ЯЧЕЙКИ ЗАКЛИНАНИЙ')
             if 'sheet-personality' in wanted:
                 device.click(description='Личность') if format_['name']=='phone' else device.click(text='Личность')
                 device.wait('Странница')

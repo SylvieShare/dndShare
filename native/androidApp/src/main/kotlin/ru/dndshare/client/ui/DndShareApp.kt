@@ -163,6 +163,7 @@ private fun AuthenticatedApp(
         ShareMorphRoot {
             CompositionLocalProvider(
                 LocalHeaderConnection provides state.headerConnection(),
+                LocalCatalogueEditions provides state.sources.flatMap { it.versions },
                 LocalHeaderRetry provides { controller.refresh(force = true) },
             ) {
                 pages.SaveableStateProvider("application-shell") {
