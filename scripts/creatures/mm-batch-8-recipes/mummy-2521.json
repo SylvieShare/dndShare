@@ -1,0 +1,91 @@
+{
+  "slug": "mummy-2521",
+  "itemId": 2521,
+  "itemIds": [
+    2521
+  ],
+  "modelId": "88015cf6-1cb6-5054-9cf2-e7ddc6b11121",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2521",
+  "sourceName": "mummy-2521-miniature",
+  "name": "Мумия",
+  "nameEn": "Mummy",
+  "code": "CRE-mummy",
+  "groupName": "Мумия",
+  "groupNameEn": "Mummy",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 18000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2521,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5297395937583026,
+    "sourceOrigin": [
+      0.06350240856409073,
+      0.1469458807259798,
+      -0.5007976293563843
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.17,
+        -0.23,
+        -0.03,
+        0.02
+      ],
+      [
+        0.14,
+        -0.35,
+        0.3,
+        -0.1
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.10262458771467209,
+        -0.08511928096413612
+      ],
+      [
+        0.22962940484285355,
+        -0.2087724804878235
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Retain authored appendages/cloth; cheaper candidates failed the unchanged 17-view policy."
+  }
+}

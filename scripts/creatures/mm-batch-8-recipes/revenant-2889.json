@@ -1,0 +1,91 @@
+{
+  "slug": "revenant-2889",
+  "itemId": 2889,
+  "itemIds": [
+    2889
+  ],
+  "modelId": "d571441d-2600-5263-92c8-cec6b29e5c44",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2889",
+  "sourceName": "revenant-2889-miniature",
+  "name": "Ревенант",
+  "nameEn": "Revenant",
+  "code": "CRE-revenant",
+  "groupName": "Ревенант",
+  "groupNameEn": "Revenant",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 18000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2889,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5295272890259238,
+    "sourceOrigin": [
+      -0.027770346438046545,
+      -0.026248261332511902,
+      -0.5008216500282288
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.08,
+        -0.32,
+        0.08,
+        -0.1
+      ],
+      [
+        -0.12,
+        0.15,
+        0,
+        0.38
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        0.0031503207283094525,
+        -0.2051086723804474
+      ],
+      [
+        -0.05869101360440254,
+        0.2576051950454712
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Retain authored appendages/cloth; cheaper candidates failed the unchanged 17-view policy."
+  }
+}

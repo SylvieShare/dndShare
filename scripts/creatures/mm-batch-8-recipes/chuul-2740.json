@@ -1,0 +1,107 @@
+{
+  "slug": "chuul-2740",
+  "itemId": 2740,
+  "itemIds": [
+    2740
+  ],
+  "modelId": "6b963940-0c85-5e1c-9a81-5de92691b79c",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2740",
+  "sourceName": "chuul-2740-miniature",
+  "name": "Чууль",
+  "nameEn": "Chuul",
+  "code": "CRE-chuul",
+  "groupName": "Чууль",
+  "groupNameEn": "Chuul",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2740,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 1.0873277788189237,
+    "sourceOrigin": [
+      -0.0002833716571331024,
+      0.17491872608661652,
+      -0.31655895709991455
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.47,
+        -0.41,
+        -0.41,
+        -0.35
+      ],
+      [
+        0.4,
+        -0.41,
+        0.46,
+        -0.35
+      ],
+      [
+        -0.5,
+        -0.01,
+        -0.45,
+        0.045
+      ],
+      [
+        0.44,
+        -0.01,
+        0.5,
+        0.045
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.43317264318466187,
+        -0.38258934020996094
+      ],
+      [
+        0.43479424715042114,
+        -0.38198329508304596
+      ],
+      [
+        -0.48063206672668457,
+        0.03339929133653641
+      ],
+      [
+        0.4778769761323929,
+        0.031498439610004425
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

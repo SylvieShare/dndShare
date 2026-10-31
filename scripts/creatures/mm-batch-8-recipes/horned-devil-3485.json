@@ -1,0 +1,87 @@
+{
+  "slug": "horned-devil-3485",
+  "itemId": 3485,
+  "itemIds": [
+    3485
+  ],
+  "modelId": "5b54c602-49fc-5714-b6e2-3dd5c81fe791",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3485",
+  "sourceName": "horned-devil-3485-miniature",
+  "name": "Рогатый дьявол",
+  "nameEn": "Horned Devil",
+  "code": "CRE-horned-devil",
+  "groupName": "Рогатый дьявол",
+  "groupNameEn": "Horned Devil",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 3485,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.4509148667840397,
+    "sourceOrigin": [
+      0.007903806865215302,
+      -0.10650881752371788,
+      -0.4262923002243042
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.26,
+        -0.03,
+        -0.09,
+        0.19
+      ],
+      [
+        0.09,
+        -0.03,
+        0.28,
+        0.21
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.1712479591369629,
+        0.09594104439020157
+      ],
+      [
+        0.1870555728673935,
+        0.11707659065723419
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

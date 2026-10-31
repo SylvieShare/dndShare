@@ -1,0 +1,60 @@
+{
+  "slug": "giant-octopus-2007",
+  "itemId": 2007,
+  "itemIds": [
+    2007
+  ],
+  "modelId": "2c8ec766-cfdd-52c3-9bdc-74c799081839",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2007",
+  "sourceName": "giant-octopus-2007-miniature",
+  "name": "Гигантский осьминог",
+  "nameEn": "Giant Octopus",
+  "code": "CRE-giant-octopus",
+  "groupName": "Гигантский осьминог",
+  "groupNameEn": "Giant Octopus",
+  "maxHeight": 1.0,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "amorphous",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.0,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2007,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.4597764909267426,
+    "sourceOrigin": [
+      0.07227798178792,
+      0.07010380923748016,
+      -0.25545361638069153
+    ],
+    "rotation": 45
+  },
+  "standingSupport": {
+    "method": "authored-octopus-central-body",
+    "datum": "Lowest arm surface; central body reviewed in native views, arms may overhang virtual standing circle.",
+    "physicalStand": false
+  }
+}

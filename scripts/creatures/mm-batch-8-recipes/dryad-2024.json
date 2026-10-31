@@ -1,0 +1,87 @@
+{
+  "slug": "dryad-2024",
+  "itemId": 2024,
+  "itemIds": [
+    2024
+  ],
+  "modelId": "eae093a2-b3cb-56ec-bae4-bfdde89e180f",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2024",
+  "sourceName": "dryad-2024-miniature",
+  "name": "Дриада",
+  "nameEn": "Dryad",
+  "code": "CRE-dryad",
+  "groupName": "Дриада",
+  "groupNameEn": "Dryad",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2024,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5303258930935579,
+    "sourceOrigin": [
+      0.0029355473816394806,
+      -0.007686932687647641,
+      -0.5008435249328613
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.18,
+        -0.1,
+        -0.02,
+        0.09
+      ],
+      [
+        0.02,
+        -0.1,
+        0.19,
+        0.09
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.10307254642248154,
+        0.017456982284784317
+      ],
+      [
+        0.1089436411857605,
+        -0.0020831169094890356
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

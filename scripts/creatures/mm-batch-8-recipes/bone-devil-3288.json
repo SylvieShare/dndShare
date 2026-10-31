@@ -1,0 +1,87 @@
+{
+  "slug": "bone-devil-3288",
+  "itemId": 3288,
+  "itemIds": [
+    3288
+  ],
+  "modelId": "611af1ed-e40d-5c9b-bd59-e02617e88417",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3288",
+  "sourceName": "bone-devil-3288-miniature",
+  "name": "Костяной дьявол",
+  "nameEn": "Bone Devil",
+  "code": "CRE-bone-devil",
+  "groupName": "Костяной дьявол",
+  "groupNameEn": "Bone Devil",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 3288,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.4182243715314304,
+    "sourceOrigin": [
+      -0.0007737427949905396,
+      -0.05355111137032509,
+      -0.39439624547958374
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.32,
+        0.06,
+        -0.16,
+        0.32
+      ],
+      [
+        0.12,
+        -0.19,
+        0.31,
+        0.03
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.19243258237838745,
+        0.19424298405647278
+      ],
+      [
+        0.19088509678840637,
+        -0.0871407613158226
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0007153153419494629,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

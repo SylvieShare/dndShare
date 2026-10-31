@@ -1,0 +1,91 @@
+{
+  "slug": "hezrou-3243",
+  "itemId": 3243,
+  "itemIds": [
+    3243
+  ],
+  "modelId": "3759b747-f2aa-5de7-9c29-0686f09c6f4d",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3243",
+  "sourceName": "hezrou-3243-miniature",
+  "name": "Хезроу",
+  "nameEn": "Hezrou",
+  "code": "CRE-hezrou",
+  "groupName": "Хезроу",
+  "groupNameEn": "Hezrou",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 2,
+    "renderTriangles": 18000,
+    "lodTriangles": 16000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 3243,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.886340227449303,
+    "sourceOrigin": [
+      0.005897000432014465,
+      0.06154165416955948,
+      -0.4092171788215637
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-centres-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.5,
+        -0.36,
+        -0.18,
+        -0.09
+      ],
+      [
+        0.23,
+        -0.09,
+        0.5,
+        0.26
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.3797984719276428,
+        -0.23564492166042328
+      ],
+      [
+        0.39159247279167175,
+        0.11256161332130432
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre.",
+    "reason": "Wide claw tips may overhang; do not shrink the entire heavy body by the extreme toes."
+  },
+  "lodSelection": {
+    "reason": "12k LOD reached 8.062 px; try 16k under the unchanged policy."
+  }
+}

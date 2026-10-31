@@ -1,0 +1,60 @@
+{
+  "slug": "ghost-2710",
+  "itemId": 2710,
+  "itemIds": [
+    2710
+  ],
+  "modelId": "64246ee5-c4ff-5402-9568-cf0a52334fae",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2710",
+  "sourceName": "ghost-2710-miniature",
+  "name": "Привидение",
+  "nameEn": "Ghost",
+  "code": "CRE-ghost",
+  "groupName": "Привидение",
+  "groupNameEn": "Ghost",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "flight",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2710,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.529435305034413,
+    "sourceOrigin": [
+      0.1693444699048996,
+      0.007512515410780907,
+      -0.5002130270004272
+    ],
+    "rotation": -135
+  },
+  "standingSupport": {
+    "method": "authored-flight-body-centre",
+    "physicalStand": false,
+    "datum": "Lowest boot tip is the authored zero; floating robe and hair are intentionally above a separate base. Body centre reviewed in seven native views; not normalized to hair or robe extent."
+  }
+}

@@ -111,8 +111,10 @@ def models(env):
     run([miniature_python, "-m", "unittest", "discover", "-s", "scripts/creatures", "-p", "test_native_geometry.py"],
         env=dict(env, DNDSHARE_TEST_MODELS="1"))
     failures = []
-    for file in sorted((ROOT / "scripts/maps").glob("test*.py")):
-        if re.search(r"(^import (bpy|bmesh)|^from mathutils)", file.read_text(), re.M):
+    geometry_tests = sorted((ROOT / "scripts/maps").glob("test*.py"))
+    geometry_tests.append(ROOT / "scripts/creatures/test_source_pose_cleanup.py")
+    for file in geometry_tests:
+        if re.search(r"(^[ \t]*import (bpy|bmesh)|^[ \t]*from mathutils)", file.read_text(), re.M):
             expression = f"import sys,runpy; sys.path.insert(0,{str(file.parent)!r}); sys.argv=[{str(file)!r}]; runpy.run_path({str(file)!r},run_name='__main__')"
             command = [blender, "--background", "--factory-startup", "-t", "2", "--python-exit-code", "1", "--python-expr", expression]
         else:

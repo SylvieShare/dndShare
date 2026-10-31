@@ -1,0 +1,148 @@
+{
+  "slug": "giant-crab-1622",
+  "itemId": 1622,
+  "itemIds": [
+    1622
+  ],
+  "modelId": "3226eb22-2ca6-584f-9f3e-e6386a1e6ae2",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1622",
+  "sourceName": "giant-crab-1622-miniature",
+  "name": "Гигантский краб",
+  "nameEn": "Giant Crab",
+  "code": "CRE-giant-crab",
+  "groupName": "Гигантский краб",
+  "groupNameEn": "Giant Crab",
+  "maxHeight": 0.75,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 0.75,
+    "size": 1,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "nativeAttempt": 2,
+    "seed": 1001622,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 1.0345720246986936,
+    "sourceOrigin": [
+      -0.015326356515288353,
+      -0.0019870679825544357,
+      -0.3179299235343933
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.47,
+        -0.26,
+        -0.39,
+        -0.19
+      ],
+      [
+        -0.5,
+        -0.09,
+        -0.46,
+        -0.035
+      ],
+      [
+        -0.48,
+        0.04,
+        -0.43,
+        0.1
+      ],
+      [
+        -0.38,
+        0.16,
+        -0.34,
+        0.21
+      ],
+      [
+        0.33,
+        -0.27,
+        0.39,
+        -0.2
+      ],
+      [
+        0.43,
+        -0.085,
+        0.5,
+        -0.01
+      ],
+      [
+        0.39,
+        0.06,
+        0.45,
+        0.13
+      ],
+      [
+        0.3,
+        0.17,
+        0.35,
+        0.22
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.43384602665901184,
+        -0.21926211565732956
+      ],
+      [
+        -0.4916706085205078,
+        -0.06055747717618942
+      ],
+      [
+        -0.45443184673786163,
+        0.07135631144046783
+      ],
+      [
+        -0.35784050822257996,
+        0.18927359580993652
+      ],
+      [
+        0.3683697283267975,
+        -0.2422996461391449
+      ],
+      [
+        0.4829580783843994,
+        -0.028986074030399323
+      ],
+      [
+        0.43612033128738403,
+        0.10576631873846054
+      ],
+      [
+        0.3277300000190735,
+        0.2006056308746338
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

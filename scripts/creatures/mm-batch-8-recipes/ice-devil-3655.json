@@ -1,0 +1,87 @@
+{
+  "slug": "ice-devil-3655",
+  "itemId": 3655,
+  "itemIds": [
+    3655
+  ],
+  "modelId": "b704d016-14e8-52f8-9d7b-bb54673c1774",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3655",
+  "sourceName": "ice-devil-3655-miniature",
+  "name": "Ледяной дьявол",
+  "nameEn": "Ice Devil",
+  "code": "CRE-ice-devil",
+  "groupName": "Ледяной дьявол",
+  "groupNameEn": "Ice Devil",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 3655,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.4401472175822539,
+    "sourceOrigin": [
+      0.0001719743013381958,
+      -0.047367457300424576,
+      -0.41478991508483887
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.33,
+        -0.19,
+        -0.09,
+        0.01
+      ],
+      [
+        0.17,
+        0.03,
+        0.35,
+        0.29
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.2429787814617157,
+        -0.09129094332456589
+      ],
+      [
+        0.2433227300643921,
+        0.18602585792541504
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

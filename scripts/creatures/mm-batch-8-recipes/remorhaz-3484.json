@@ -1,0 +1,167 @@
+{
+  "slug": "remorhaz-3484",
+  "itemId": 3484,
+  "itemIds": [
+    3484
+  ],
+  "modelId": "0418428e-3d42-5f7e-8223-db642a81035d",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3484",
+  "sourceName": "remorhaz-3484-miniature",
+  "name": "Ремораз",
+  "nameEn": "Remorhaz",
+  "code": "CRE-remorhaz",
+  "groupName": "Ремораз",
+  "groupNameEn": "Remorhaz",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "c14c9163-3e8d-5e01-a615-b9490cf230d5",
+    "file": "models/creatures/separated-bases-20261024/c14c9163-3e8d-5e01-a615-b9490cf230d5.glb",
+    "referenceDiameter": 2.7,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 3,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 3484,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 1.0296113784229324,
+    "sourceOrigin": [
+      -0.11953888665884733,
+      0.027641936764121057,
+      -0.31227442622184753
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.26,
+        -0.44,
+        -0.21,
+        -0.39
+      ],
+      [
+        -0.06,
+        -0.5,
+        -0.01,
+        -0.46
+      ],
+      [
+        0.09,
+        -0.46,
+        0.14,
+        -0.41
+      ],
+      [
+        0.33,
+        -0.21,
+        0.39,
+        -0.15
+      ],
+      [
+        0.06,
+        0.35,
+        0.11,
+        0.4
+      ],
+      [
+        -0.12,
+        0.35,
+        -0.08,
+        0.41
+      ],
+      [
+        -0.25,
+        0.38,
+        -0.2,
+        0.43
+      ],
+      [
+        -0.38,
+        0.18,
+        -0.33,
+        0.24
+      ],
+      [
+        -0.44,
+        0.0,
+        -0.38,
+        0.05
+      ],
+      [
+        -0.44,
+        -0.2,
+        -0.38,
+        -0.14
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.2332947850227356,
+        -0.41314105689525604
+      ],
+      [
+        -0.03452788479626179,
+        -0.48108989000320435
+      ],
+      [
+        0.11340702325105667,
+        -0.4320731461048126
+      ],
+      [
+        0.3584756404161453,
+        -0.17848771810531616
+      ],
+      [
+        0.08254897594451904,
+        0.3763538897037506
+      ],
+      [
+        -0.10416113212704659,
+        0.38393110036849976
+      ],
+      [
+        -0.218934565782547,
+        0.40120089054107666
+      ],
+      [
+        -0.348026305437088,
+        0.20950375497341156
+      ],
+      [
+        -0.4099324941635132,
+        0.021756727248430252
+      ],
+      [
+        -0.4009433388710022,
+        -0.16437391936779022
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

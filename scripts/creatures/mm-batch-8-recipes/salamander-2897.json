@@ -1,0 +1,66 @@
+{
+  "slug": "salamander-2897",
+  "itemId": 2897,
+  "itemIds": [
+    2897
+  ],
+  "modelId": "7d5829fd-1006-5055-be7b-ef38975569ec",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2897",
+  "sourceName": "salamander-2897-miniature",
+  "name": "Саламандра",
+  "nameEn": "Salamander",
+  "code": "CRE-salamander",
+  "groupName": "Саламандра",
+  "groupNameEn": "Salamander",
+  "maxHeight": 1.5,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "amorphous",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.5,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2897,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.8919959301042633,
+    "sourceOrigin": [
+      0.023544009476900135,
+      -0.03514689624309572,
+      -0.5005000233650208
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-reviewed-lower-body-footprint",
+    "physicalStand": false,
+    "lowerHeightFraction": 0.1,
+    "trimmedExtentQuantiles": [
+      0.01,
+      0.99
+    ],
+    "radialQuantile": 0.96,
+    "datum": "Lowest surface of the reviewed organic lower body/coil. The broad lower mass is part of the creature, not an embedded separate base. Arms, upper curls and weapons do not set centre."
+  }
+}

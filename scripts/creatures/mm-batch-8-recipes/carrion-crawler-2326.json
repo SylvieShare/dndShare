@@ -1,0 +1,161 @@
+{
+  "slug": "carrion-crawler-2326",
+  "itemId": 2326,
+  "itemIds": [
+    2326
+  ],
+  "modelId": "1237007b-ffbd-5006-9364-ddfb4b28cc6d",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2326",
+  "sourceName": "carrion-crawler-2326-miniature",
+  "name": "Ползающий падальщик",
+  "nameEn": "Carrion Crawler",
+  "code": "CRE-carrion-crawler",
+  "groupName": "Ползающий падальщик",
+  "groupNameEn": "Carrion Crawler",
+  "maxHeight": 1.0,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.0,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "nativeAttempt": 2,
+    "seed": 1002326,
+    "rotation": -45
+  },
+  "sourceRepair": {
+    "kind": "pose-cleanup",
+    "reason": "Remove 54 detached low debris faces, level the authored walking-leg plane and lift only the lowest mouth tips to the foot contact datum; preserve the native UV/materials and all anatomy.",
+    "sourceUp": [
+      -0.01435315669130144,
+      -0.15686212643272057,
+      0.9875162075550965
+    ],
+    "debrisBelow": -0.17683385945511837,
+    "maxRemovedFaces": 128,
+    "feetMinimumY": -0.08,
+    "feetMinimumAbsX": 0.1,
+    "maxLiftDistance": 0.02,
+    "maxLiftVertices": 1000
+  },
+  "calibration": {
+    "sourceDiameter": 0.6393655765713051,
+    "sourceOrigin": [
+      -0.0037782422921719717,
+      0.17935149077835863,
+      -0.15269417917993464
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-ray-sampled-legs-after-bounded-pose-cleanup",
+    "source": "source-repair/repaired-source.glb",
+    "sampledOriginalBlenderFeet": [
+      [
+        0.17628397047519684,
+        0.04888350889086723,
+        -0.1256835162639618
+      ],
+      [
+        0.1692260205745697,
+        0.21703413128852844,
+        -0.09755062311887741
+      ],
+      [
+        0.15844860672950745,
+        0.30651864409446716,
+        -0.08003460615873337
+      ],
+      [
+        0.1238587349653244,
+        0.40079206228256226,
+        -0.07965462654829025
+      ],
+      [
+        -0.1220453530550003,
+        0.39844173192977905,
+        -0.07997961342334747
+      ],
+      [
+        -0.16746611893177032,
+        0.21626895666122437,
+        -0.09759470820426941
+      ],
+      [
+        -0.17786487936973572,
+        0.0509694442152977,
+        -0.12543340027332306
+      ],
+      [
+        -0.17672473192214966,
+        -0.051725804805755615,
+        -0.1602875292301178
+      ]
+    ],
+    "repairedFeet": [
+      [
+        0.17440636737022014,
+        0.028363645422657957,
+        -0.1343127119356863
+      ],
+      [
+        0.16756246314570716,
+        0.19885352047610216,
+        -0.13280618431893937
+      ],
+      [
+        0.1569362081231799,
+        0.2899900109509164,
+        -0.12939087473087754
+      ],
+      [
+        0.12224858230607492,
+        0.3831950990887974,
+        -0.14330709370072686
+      ],
+      [
+        -0.12363201900648946,
+        0.3811014492002094,
+        -0.1397298457837443
+      ],
+      [
+        -0.16909454299284174,
+        0.19847230980174482,
+        -0.1278970971010801
+      ],
+      [
+        -0.1797045466920999,
+        0.03086417160375283,
+        -0.12930976865788466
+      ],
+      [
+        -0.17894845059112677,
+        -0.07602828031731194,
+        -0.14763615548192108
+      ]
+    ],
+    "datum": "Lowest corrected walking-leg contact; mouth tips lifted to this datum, some walking legs remain raised in a crawling pose.",
+    "preservedNativeSHA256": "f1862b73b99e54d0bc94c74c7c8372fd72e1c874909e36c44e0bf13b7e1f6042"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "slug": "chain-devil-3173",
+  "itemId": 3173,
+  "itemIds": [
+    3173
+  ],
+  "modelId": "b93e4a70-f042-5898-86ea-16b55802c4af",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3173",
+  "sourceName": "chain-devil-3173-miniature",
+  "name": "Дьявол цепей",
+  "nameEn": "Chain Devil",
+  "code": "CRE-chain-devil",
+  "groupName": "Дьявол цепей",
+  "groupNameEn": "Chain Devil",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 26000,
+    "lodTriangles": 26000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 3173,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5300986942122965,
+    "sourceOrigin": [
+      -0.04885295778512955,
+      0.06386195495724678,
+      -0.5008265972137451
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.26,
+        0.04,
+        -0.15,
+        0.28
+      ],
+      [
+        0.04,
+        -0.33,
+        0.24,
+        -0.16
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.1985640525817871,
+        0.12960944324731827
+      ],
+      [
+        0.10085813701152802,
+        -0.25733335316181183
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Retain authored appendages/cloth; cheaper candidates failed the unchanged 17-view policy."
+  },
+  "lodBudget": {
+    "maxTriangles": 32000,
+    "reason": "18k/22k LOD lost chains/hooks; 25k still reached 9.434 px, above the 8 px maximum. Keep the accepted 26k render geometry, with lower-resolution LOD textures."
+  }
+}

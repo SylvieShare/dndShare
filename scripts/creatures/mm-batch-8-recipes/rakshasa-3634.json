@@ -1,0 +1,88 @@
+{
+  "slug": "rakshasa-3634",
+  "itemId": 3634,
+  "itemIds": [
+    3634
+  ],
+  "modelId": "a7925a38-cd44-5ef4-babc-de176e701bf3",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3634",
+  "sourceName": "rakshasa-3634-miniature",
+  "name": "Ракшас",
+  "nameEn": "Rakshasa",
+  "code": "CRE-rakshasa",
+  "groupName": "Ракшас",
+  "groupNameEn": "Rakshasa",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "nativeAttempt": 2,
+    "seed": 1003634,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.530238547745873,
+    "sourceOrigin": [
+      -0.045913971960544586,
+      -0.2755678594112396,
+      -0.5009121298789978
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.26,
+        0.16,
+        -0.12,
+        0.32
+      ],
+      [
+        0.055,
+        0.23,
+        0.17,
+        0.4
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.19758053123950958,
+        0.236225426197052
+      ],
+      [
+        0.10575258731842041,
+        0.31491029262542725
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

@@ -75,7 +75,7 @@ def refine_source(entry, folder, stage, execute, blender, scripts, script_hash):
                 "calibration"
             ),
             "scripts": script_hash(
-                "repair-native-source.py", "repair_source_art.py", "miniature_scene.py"
+                "repair-native-source.py", "repair_source_art.py", "repair_source_pose.py", "miniature_scene.py"
             ),
         },
         action,

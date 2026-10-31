@@ -14,7 +14,7 @@ from creature_archive_restore import restore_archive
 
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW = ['generate-trellis.py','trellis_checkpoint.py','trellis_transport.py','requirements.txt',
-            'production_sources.py','repair-native-source.py','repair_source_art.py','geometry_targets.mjs',
+            'production_sources.py','repair-native-source.py','repair_source_art.py','repair_source_pose.py','geometry_targets.mjs',
             'prepare-native-geometry.py','close-native-surface.py','bake-native-miniature.py','miniature_scene.py',
             'optimize-miniature.mjs','render-final-miniature.py','lod_silhouette.py',
             'compare-lod-silhouette.py','lod-silhouette-policy.json','verify-single-miniature.mjs',

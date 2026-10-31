@@ -1,0 +1,96 @@
+{
+  "slug": "rug-of-smothering-2268",
+  "itemId": 2268,
+  "itemIds": [
+    2268
+  ],
+  "modelId": "8677f24c-7df8-5420-98fe-449b88dd9598",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2268",
+  "sourceName": "rug-of-smothering-2268-miniature",
+  "name": "Ковёр удушения",
+  "nameEn": "Rug of Smothering",
+  "code": "CRE-rug-of-smothering",
+  "groupName": "Ковёр удушения",
+  "groupNameEn": "Rug of Smothering",
+  "maxHeight": 0.9,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "amorphous",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 0.9,
+    "size": 2,
+    "renderTriangles": 24000,
+    "lodTriangles": 20000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2268,
+    "surfaceClosure": {
+      "pitch": 0.004,
+      "radius": 3,
+      "region": [
+        -0.16794469010829927,
+        0.267047429561615,
+        -0.2795788700580597,
+        -0.05783732432126999,
+        0.49372885179519654,
+        0.17257586669921876
+      ]
+    },
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 1.1291916879788768,
+    "sourceOrigin": [
+      0.02447294175624848,
+      0.04542534738779064,
+      -0.5001333355903625
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-reviewed-lower-body-footprint",
+    "physicalStand": false,
+    "lowerHeightFraction": 0.1,
+    "trimmedExtentQuantiles": [
+      0.01,
+      0.99
+    ],
+    "radialQuantile": 0.96,
+    "datum": "Lowest surface of the reviewed organic lower body/coil. The broad lower mass is part of the creature, not an embedded separate base. Arms, upper curls and weapons do not set centre."
+  },
+  "geometrySelectionReason": "12k render reached a QEM floor of 17702 faces; retain the connected folded carpet and tassels.",
+  "geometryRepair": {
+    "method": "bounded voxel closure of the measured upper carpet panel",
+    "reason": "Raised embroidery became pits during optimization; retain the continuous cloth volume and preserve all tassels/lower folds outside the authored region.",
+    "surfaceClosure": {
+      "pitch": 0.004,
+      "radius": 3,
+      "region": [
+        -0.16794469010829927,
+        0.267047429561615,
+        -0.2795788700580597,
+        -0.05783732432126999,
+        0.49372885179519654,
+        0.17257586669921876
+      ]
+    },
+    "preservedOutsideRegion": true
+  }
+}

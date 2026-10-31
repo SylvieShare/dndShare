@@ -39,6 +39,15 @@ report = {
     "selectedFaces": 0,
     "bakeDevice": "CPU",
 }
+if kind == 'pose-cleanup':
+    from repair_source_pose import repair_pose
+    report.update(repair_pose(obj, settings))
+    scene.export_glb(args.output / 'repaired-source.glb')
+    bpy.ops.file.pack_all()
+    bpy.ops.wm.save_as_mainfile(filepath=str(args.output / 'repair.blend'))
+    (args.output / 'repair-report.json').write_text(json.dumps(report, indent=2) + '\n')
+    print('LOCAL_SOURCE_REPAIR_READY', kind, flush=True)
+    raise SystemExit(0)
 for mesh in meshes:
     for uv in mesh.data.uv_layers:
         uv.name = "NativeUV"

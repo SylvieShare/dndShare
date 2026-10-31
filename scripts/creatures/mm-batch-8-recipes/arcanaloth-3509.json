@@ -1,0 +1,91 @@
+{
+  "slug": "arcanaloth-3509",
+  "itemId": 3509,
+  "itemIds": [
+    3509
+  ],
+  "modelId": "5d1e6338-fb36-56d6-9f5e-1f12e62ee512",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3509",
+  "sourceName": "arcanaloth-3509-miniature",
+  "name": "Арканалот",
+  "nameEn": "Arcanaloth",
+  "code": "CRE-arcanaloth",
+  "groupName": "Арканалот",
+  "groupNameEn": "Arcanaloth",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 18000,
+    "lodTriangles": 16000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 3509,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5300338478649365,
+    "sourceOrigin": [
+      -0.14161578938364983,
+      -0.012567877769470215,
+      -0.5004312992095947
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.4,
+        -0.3,
+        -0.25,
+        -0.16
+      ],
+      [
+        0.02,
+        0.14,
+        0.13,
+        0.29
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.35668033361434937,
+        -0.21642199158668518
+      ],
+      [
+        0.07344875484704971,
+        0.2415577471256256
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Retain authored appendages/cloth; cheaper candidates failed the unchanged 17-view policy."
+  }
+}

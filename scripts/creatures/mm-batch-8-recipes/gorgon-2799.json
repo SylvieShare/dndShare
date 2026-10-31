@@ -1,0 +1,107 @@
+{
+  "slug": "gorgon-2799",
+  "itemId": 2799,
+  "itemIds": [
+    2799
+  ],
+  "modelId": "9449fbad-02f6-587d-8b22-fe4c7a530326",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2799",
+  "sourceName": "gorgon-2799-miniature",
+  "name": "Горгона",
+  "nameEn": "Gorgon",
+  "code": "CRE-gorgon",
+  "groupName": "Горгона",
+  "groupNameEn": "Gorgon",
+  "maxHeight": 1.1,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.1,
+    "size": 2,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2799,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.9022603914259529,
+    "sourceOrigin": [
+      0.023780878633260727,
+      0.001453150063753128,
+      -0.2854968309402466
+    ],
+    "rotation": 45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.4,
+        -0.27,
+        -0.23,
+        -0.12
+      ],
+      [
+        0.3,
+        -0.21,
+        0.46,
+        -0.09
+      ],
+      [
+        -0.4,
+        0.13,
+        -0.22,
+        0.27
+      ],
+      [
+        0.24,
+        0.1,
+        0.4,
+        0.22
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.3072658181190491,
+        -0.2030312418937683
+      ],
+      [
+        0.3926871567964554,
+        -0.14833498001098633
+      ],
+      [
+        -0.30600887537002563,
+        0.1954500377178192
+      ],
+      [
+        0.31571105122566223,
+        0.1501035839319229
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

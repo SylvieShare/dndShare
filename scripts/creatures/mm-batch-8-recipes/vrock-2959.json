@@ -1,0 +1,87 @@
+{
+  "slug": "vrock-2959",
+  "itemId": 2959,
+  "itemIds": [
+    2959
+  ],
+  "modelId": "3f6a360a-58a3-5268-8a7e-3d9e5a153f02",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2959",
+  "sourceName": "vrock-2959-miniature",
+  "name": "Врок",
+  "nameEn": "Vrock",
+  "code": "CRE-vrock",
+  "groupName": "Врок",
+  "groupNameEn": "Vrock",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 2959,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.3655649879399468,
+    "sourceOrigin": [
+      -0.019361261278390884,
+      0.02487831562757492,
+      -0.34472012519836426
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-preserve-height",
+    "rawGltfXZRegions": [
+      [
+        -0.31,
+        -0.17,
+        -0.13,
+        -0.01
+      ],
+      [
+        0.1,
+        -0.035,
+        0.29,
+        0.14
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.22825342416763306,
+        -0.08540581166744232
+      ],
+      [
+        0.1895309016108513,
+        0.03564918041229248
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

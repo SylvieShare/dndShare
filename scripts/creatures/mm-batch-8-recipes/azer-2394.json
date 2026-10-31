@@ -1,0 +1,117 @@
+{
+  "slug": "azer-2394",
+  "itemId": 2394,
+  "itemIds": [
+    2394
+  ],
+  "modelId": "e1adadee-df59-5e19-8fe3-d62eb35e8158",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2394",
+  "sourceName": "azer-2394-miniature",
+  "name": "Эйзер",
+  "nameEn": "Azer",
+  "code": "CRE-azer",
+  "groupName": "Эйзер",
+  "groupNameEn": "Azer",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 38000,
+    "lodTriangles": 32000,
+    "geometryBaseline": "inputs/preserved-armour.glb",
+    "lodAggression": 3,
+    "shadowTriangles": 8000,
+    "shadowAggression": 5,
+    "seed": 2394,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.7897009747887312,
+    "sourceOrigin": [
+      0.041799888014793396,
+      0.06839586235582829,
+      -0.5009681582450867
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.35,
+        -0.28,
+        -0.05,
+        -0.08
+      ],
+      [
+        0.11,
+        -0.07,
+        0.36,
+        0.21
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.16755464673042297,
+        -0.1858590841293335
+      ],
+      [
+        0.25115442276000977,
+        0.049067359417676926
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  },
+  "geometryRepair": {
+    "method": "author-preserved-native-region",
+    "normalizedRegion": [
+      [
+        -0.23,
+        0.2,
+        -0.26
+      ],
+      [
+        0.23,
+        0.65,
+        0.26
+      ]
+    ],
+    "overlap": 0.01,
+    "sourcePatchTriangles": 83230,
+    "patchTarget": 24000,
+    "patchTriangles": 24000,
+    "outsideAcceptedRenderTriangles": 13239,
+    "totalTriangles": 37239,
+    "patchNormalOffset": 0.0003,
+    "preservedSourceSHA256": "dd030879adbaafe968bc66ccccc4c673cd8bf0b5564dd03c39f9b4859eb5d181",
+    "outsideRenderSHA256": "01944a3dce30f9fdf8860a9ebbad7592e153821c163049d45a52bbfb9d63199a",
+    "reason": "Global QEM at 18k and 26k collapses the closed overlapping armour scales into cavities. Allocate detail to the apron/belt while retaining the accepted simplified outer body."
+  },
+  "lodBudget": {
+    "maxTriangles": 32000,
+    "reason": "18k and 26k global simplification crushed the closed apron scales. The preserved armour baseline retains their volume; 24k LOD reopened cavities, whereas the reviewed 32k grey views preserve the scales. Default decoded texture budgets remain unchanged."
+  }
+}
