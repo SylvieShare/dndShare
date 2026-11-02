@@ -1,0 +1,79 @@
+{
+  "slug": "chasme-3040",
+  "itemId": 3040,
+  "itemIds": [
+    3040
+  ],
+  "modelId": "716cc530-5e02-525d-838a-9e167fc1e34f",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3040",
+  "sourceName": "chasme-3040-miniature",
+  "name": "Чазм",
+  "nameEn": "Chasme",
+  "code": "CRE-chasme",
+  "groupName": "Чазм",
+  "groupNameEn": "Chasme",
+  "maxHeight": 1.1,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "flight",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Authored per body silhouette; accepted against the unchanged 17-view policy on final GLBs. No claim that a cheaper alternative was tested."
+  },
+  "build": {
+    "height": 1.1,
+    "size": 2,
+    "renderTriangles": 32000,
+    "lodTriangles": 24000,
+    "lodAggression": 3,
+    "shadowTriangles": 8000,
+    "shadowAggression": 5,
+    "seed": 3040,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.7,
+    "sourceOrigin": [
+      -0.0007720434665679926,
+      0.018751822412014008,
+      -0.36328157782554626
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-flight-body-envelope",
+    "rawGltfBodyRegion": [
+      -0.25,
+      -0.22,
+      -0.25,
+      0.25,
+      0.15,
+      0.2
+    ],
+    "rawGltfBodyXZCentre": [
+      -0.0007720434665679926,
+      -0.018751822412014008
+    ],
+    "sourceDiameterChoice": "Authored virtual circle around the central body, excluding wing tips, held gear and the geometry density of appendages.",
+    "lowestPoseDatum": -0.36328157782554626,
+    "calibratedNativeAltitude": 0,
+    "physicalStand": false,
+    "datum": "Virtual flight composition datum at the lowest appendage, Y=0. Separate base supplies its surface height; no physical stand or standing-feet claim."
+  }
+}

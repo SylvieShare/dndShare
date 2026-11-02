@@ -1,0 +1,91 @@
+{
+  "slug": "magma-mephit-1901",
+  "itemId": 1901,
+  "itemIds": [
+    1901
+  ],
+  "modelId": "35fac42b-a5a5-5aaa-8750-ffc4460e9bd1",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1901",
+  "sourceName": "magma-mephit-1901-miniature",
+  "name": "Магмовый мефит",
+  "nameEn": "Magma Mephit",
+  "code": "CRE-magma-mephit",
+  "groupName": "Магмовый мефит",
+  "groupNameEn": "Magma Mephit",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Authored per body silhouette; accepted against the unchanged 17-view policy on final GLBs. No claim that a cheaper alternative was tested."
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 1901,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.4980558993711467,
+    "sourceOrigin": [
+      0.01612125337123871,
+      -0.059277734719216824,
+      -0.3740712106227875
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.24,
+        -0.03,
+        -0.065,
+        0.19
+      ],
+      [
+        0.06,
+        -0.095,
+        0.27,
+        0.115
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.14397500455379486,
+        0.10311834514141083
+      ],
+      [
+        0.17621751129627228,
+        0.01543712429702282
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

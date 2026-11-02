@@ -1,0 +1,72 @@
+{
+  "slug": "demilich-3805",
+  "itemId": 3805,
+  "itemIds": [
+    3805
+  ],
+  "modelId": "753b1f0c-cbd8-539a-8408-301754f84ddb",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3805",
+  "sourceName": "demilich-3805-miniature",
+  "name": "Демилич",
+  "nameEn": "Demilich",
+  "code": "CRE-demilich",
+  "groupName": "Демилич",
+  "groupNameEn": "Demilich",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "flight",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Authored per body silhouette; accepted against the unchanged 17-view policy on final GLBs. No claim that a cheaper alternative was tested."
+  },
+  "build": {
+    "height": 1.7,
+    "size": 0.5,
+    "renderTriangles": 12000,
+    "lodTriangles": 8000,
+    "lodAggression": 3,
+    "shadowTriangles": 2500,
+    "shadowAggression": 5,
+    "seed": 3805,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.95,
+    "sourceOrigin": [
+      -2.9787421226501465e-05,
+      -0.000431060791015625,
+      -0.5003756284713745
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-flight-body-envelope",
+    "rawGltfBodyRegion": null,
+    "rawGltfBodyXZCentre": [
+      -2.9787421226501465e-05,
+      0.000431060791015625
+    ],
+    "sourceDiameterChoice": "Authored virtual circle around the central body, excluding wing tips, held gear and the geometry density of appendages.",
+    "lowestPoseDatum": -0.5003756284713745,
+    "calibratedNativeAltitude": 0,
+    "physicalStand": false,
+    "datum": "Virtual flight composition datum at the lowest appendage, Y=0. Separate base supplies its surface height; no physical stand or standing-feet claim."
+  }
+}

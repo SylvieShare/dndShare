@@ -1,0 +1,91 @@
+{
+  "slug": "goristro-3772",
+  "itemId": 3772,
+  "itemIds": [
+    3772
+  ],
+  "modelId": "aaeec45d-c98a-5c16-9ec9-82dda9712e7a",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3772",
+  "sourceName": "goristro-3772-miniature",
+  "name": "Гористро",
+  "nameEn": "Goristro",
+  "code": "CRE-goristro",
+  "groupName": "Гористро",
+  "groupNameEn": "Goristro",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "c14c9163-3e8d-5e01-a615-b9490cf230d5",
+    "file": "models/creatures/separated-bases-20261024/c14c9163-3e8d-5e01-a615-b9490cf230d5.glb",
+    "referenceDiameter": 2.7,
+    "surfaceHeight": 0.06
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Authored per body silhouette; accepted against the unchanged 17-view policy on final GLBs. No claim that a cheaper alternative was tested."
+  },
+  "build": {
+    "height": 1.7,
+    "size": 3,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 3772,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.6864517291721616,
+    "sourceOrigin": [
+      0.016012966632843018,
+      0.1315567698329687,
+      -0.4135092794895172
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.328,
+        -0.29200000000000004,
+        -0.095,
+        -0.11599999999999999
+      ],
+      [
+        0.137,
+        -0.184,
+        0.334,
+        0.061
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.20575666427612305,
+        -0.20890474319458008
+      ],
+      [
+        0.23778259754180908,
+        -0.054208796471357346
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

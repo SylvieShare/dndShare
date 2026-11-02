@@ -1,0 +1,91 @@
+{
+  "slug": "clay-golem-3275",
+  "itemId": 3275,
+  "itemIds": [
+    3275
+  ],
+  "modelId": "d20bbf25-6dff-5265-923c-94004f8818b6",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3275",
+  "sourceName": "clay-golem-3275-miniature",
+  "name": "Глиняный голем",
+  "nameEn": "Clay Golem",
+  "code": "CRE-clay-golem",
+  "groupName": "Глиняный голем",
+  "groupNameEn": "Clay Golem",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Authored per body silhouette; accepted against the unchanged 17-view policy on final GLBs. No claim that a cheaper alternative was tested."
+  },
+  "build": {
+    "height": 1.7,
+    "size": 2,
+    "renderTriangles": 12000,
+    "lodTriangles": 8000,
+    "lodAggression": 3,
+    "shadowTriangles": 2500,
+    "shadowAggression": 5,
+    "seed": 3275,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.6858747670319003,
+    "sourceOrigin": [
+      -0.030128344893455505,
+      0.03543519042432308,
+      -0.5009051561355591
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.35500000000000004,
+        -0.16,
+        -0.11599999999999999,
+        0.19
+      ],
+      [
+        0.023,
+        -0.271,
+        0.31,
+        0.057999999999999996
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.23594063520431519,
+        0.02384166792035103
+      ],
+      [
+        0.17568394541740417,
+        -0.09471204876899719
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}
