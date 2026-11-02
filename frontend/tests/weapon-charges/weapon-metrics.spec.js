@@ -19,6 +19,7 @@ for (const [viewport, width] of [[390, 282], [834, 340], [1440, 550]]) {
     expect(value.x + value.width / 2).toBeCloseTo(attack.x + attack.width / 2, 0)
     expect(value.y + value.height / 2).toBeCloseTo(attack.y + attack.height / 2, 0)
     expect(attack.width).toBeCloseTo(attack.height, 0)
+    expect(damage.height).toBeCloseTo(attack.height, 0)
     expect(properties.y).toBeGreaterThan(damage.y + damage.height)
     expect(await table.evaluate(e => e.scrollWidth <= e.clientWidth)).toBe(true)
     await table.getByText('Универсальное', { exact: true }).focus()

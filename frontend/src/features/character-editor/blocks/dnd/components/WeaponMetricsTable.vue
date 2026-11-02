@@ -6,7 +6,7 @@
     </div>
     <div class="weapon-metrics__cell weapon-metrics__damage">
       <span class="weapon-metrics__label">Урон</span>
-      <AttackDamage v-if="damageParts.length || modifier !== 0" :damage-parts="damageParts" :modifier="modifier" :two-handed-parts="twoHandedParts" wrap-damage />
+      <AttackDamage compact v-if="damageParts.length || modifier !== 0" :damage-parts="damageParts" :modifier="modifier" :two-handed-parts="twoHandedParts" wrap-damage />
       <span v-else>—</span>
     </div>
     <div v-if="visibleProperties.length" class="weapon-metrics__cell weapon-metrics__properties">
@@ -89,7 +89,7 @@ function showDescription(event, property) {
 }
 .weapon-metrics__attack .weapon-metrics__label { position: absolute; top: 8px; left: 8px; }
 .weapon-metrics__bonus { color: var(--accent-soft); font-size: var(--type-weapon-attack-size); line-height: var(--type-weapon-attack-line-height); margin-block: 0; }
-.weapon-metrics__damage { flex: 1.25 1 max-content; max-width: calc(100% - var(--layout-weapon-metrics-attack-width) - var(--layout-weapon-metrics-gap)); }
+.weapon-metrics__damage { min-height: var(--layout-weapon-metrics-attack-width); gap: 4px; flex: 1.25 1 max-content; max-width: calc(100% - var(--layout-weapon-metrics-attack-width) - var(--layout-weapon-metrics-gap)); }
 .weapon-metrics__properties { flex: 0 0 100%; max-width: 100%; }
 .weapon-metrics__property-list { display: flex; flex-wrap: wrap; gap: 2px 8px; font-size: var(--type-weapon-property-size); line-height: var(--type-weapon-property-line-height); overflow-wrap: break-word; }
 .weapon-metrics__property { appearance: none; font: inherit; color: inherit; text-align: left; min-width: 0; max-width: 100%; background: none; border: 0; padding: 3px 0; }

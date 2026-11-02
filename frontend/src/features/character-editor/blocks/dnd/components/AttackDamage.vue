@@ -1,5 +1,5 @@
 <template>
-  <div class="ad">
+  <div class="ad" :class="{ 'ad--compact': compact }">
     <component
       :is="rollable ? 'button' : 'span'"
       v-if="hasAttack"
@@ -94,6 +94,7 @@ const props = defineProps({
   rollable: { type: Boolean, default: false },
   damageMenu: { type: Boolean, default: false },
   wrapDamage: { type: Boolean, default: false },
+  compact: { type: Boolean, default: false },
 })
 const emit = defineEmits(['roll-attack', 'roll-damage', 'roll-critical', 'roll-heal'])
 
@@ -159,6 +160,7 @@ const hasDamage = computed(() => props.flatDamage !== null || props.damageParts.
 }
 
 .ad-dmg { padding: 2px 2px; }
+.ad--compact .ad-dmg { padding-block: 0; }
 .ad-flat { display: inline-flex; flex-direction: column; align-items: center; gap: 1px; color: var(--warning); }
 .ad-flat strong { font-size: 16px; font-weight: 800; }
 .ad-flat small { font-size: 11px; font-weight: 600; letter-spacing: .02em; opacity: .9; }

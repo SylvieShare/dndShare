@@ -31,6 +31,7 @@ async function fixture(page, templateName = 'DND5', owner = true, catalogue = fa
       return route.fulfill({ json: { fromVersion: version, version: ++version, mutationId: body.mutationId, patches: body.patches } })
     }
     let json = {}
+    if (path === "/api/user/checkAuth") json = { auth: true, user: { id: 1, login: "tester", roles: [], hasCharacters: true, gameContext: { sourceVersionId: 1 } } }
     if (path === '/api/char/test') json = { templateName, userId: owner ? 1 : 2, sourceVersionId: 1, version, data: document }
     if (path === '/api/account/tutorials') json = { tutorials: ['mobile', 'desktop'].map(device => ({ flowId: 'character', sourceKey: 'edition:1', device, status: 'completed', revision: TUTORIAL_REVISION })) }
     if (path === '/api/suggest/batch') json = { items: { 16: ['Сила', 'Ловкость', 'Телосложение', 'Интеллект', 'Мудрость', 'Харизма'].map((value, i) => ({ id: i + 1, typeId: 16, value })), 15: [] } }
@@ -259,4 +260,33 @@ test('resize keeps loaded catalogue and current section without refetch', async 
     expect(count()).toBe(before)
   }
   expect(api.writes).toEqual([])
+})
+
+
+for (const width of [390, 834, 1440]) test(`chrome actually blurs the sheet pixels at ${width}`, async ({ page }, testInfo) => {
+  await page.setViewportSize({ width, height: 700 })
+  await fixture(page)
+  await page.goto('/tests/tutorials/fixtures/tutorials.html?fullApp')
+  const header = page.locator('.character-workspace-header')
+  await expect(header).toBeVisible()
+  if (width < 1200) {
+    await page.getByRole('button', { name: 'Статы', exact: true }).click()
+    await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/dragging|settling/)
+  }
+  const scroller = width < 1200 ? page.locator('.mobile-swipe-pane:not([inert]) .mobile-pane-scroll') : page.locator('.sheet-scroll')
+  await scroller.evaluate(element => {
+    element.scrollTop = 200
+    element.style.backgroundImage = 'repeating-linear-gradient(90deg, #fff 0px 3px, #000 3px 6px)'
+  })
+  const bounds = await header.boundingBox()
+  const clip = { x: Math.ceil(bounds.x), y: Math.ceil(bounds.y), width: Math.floor(bounds.width), height: Math.min(50, Math.floor(bounds.height)) }
+  const take = () => page.screenshot({ clip, animations: 'disabled' })
+  const blurred = await take()
+  await page.addStyleTag({ content: '.character-workspace-header::before { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }' })
+  const sharp = await take()
+  const stable = await take()
+  await testInfo.attach('blurred', { body: blurred, contentType: 'image/png' })
+  await testInfo.attach('sharp', { body: sharp, contentType: 'image/png' })
+  expect(stable.equals(sharp), 'Control pixels must be stable').toBe(true)
+  expect(blurred.equals(sharp), 'Blur must change the rendered backdrop, not only computed CSS').toBe(false)
 })
