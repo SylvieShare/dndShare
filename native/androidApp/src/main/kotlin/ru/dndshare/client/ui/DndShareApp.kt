@@ -28,6 +28,7 @@ import ru.dndshare.client.ui.character.CharacterSheetRoute
 import ru.dndshare.client.ui.creation.CharacterCreationRoute
 import ru.dndshare.client.ui.designsystem.*
 import ru.dndshare.client.ui.designsystem.ShareMorphRoot
+import ru.dndshare.client.ui.maps.MapsRoute
 
 @Composable
 fun DndShareApp(controller: AppController, fold: FoldInfo? = null, onBackground: () -> Unit) {
@@ -114,6 +115,7 @@ private fun AuthenticatedApp(
     consumedCharacter: () -> Unit,
 ) {
     var page by rememberSaveable { mutableStateOf(AppPage.Handbook.name) }
+    var mapsFullscreen by remember { mutableStateOf(false) }
     val pages = rememberSaveableStateHolder()
     var characterHistory by
         key("character-history-v1") {
@@ -172,6 +174,7 @@ private fun AuthenticatedApp(
                         selectedPage,
                         state,
                         controller,
+                        fullscreen = selectedPage == AppPage.Maps && mapsFullscreen,
                         navigate = {
                             if (it == AppPage.CreateCharacter) create()
                             else {
@@ -235,6 +238,9 @@ private fun AuthenticatedApp(
                                                 handbookHeading,
                                                 header,
                                             )
+                                        } else if (displayedPage == AppPage.Maps) {
+                                            MapsRoute(controller.api, state.user!!.id, images, format,
+                                                header = header, fullscreen = { mapsFullscreen = it })
                                         } else
                                             ShareChromeLayout(
                                                 header = header,

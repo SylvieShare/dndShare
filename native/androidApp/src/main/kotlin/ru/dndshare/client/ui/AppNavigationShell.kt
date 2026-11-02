@@ -21,14 +21,15 @@ internal val LocalAppDrawerOpen = compositionLocalOf { false }
 @Composable
 internal fun AppNavigationShell(
     format: LayoutFormat, page: AppPage, state: AppState, controller: AppController,
+    fullscreen: Boolean = false,
     navigate: (AppPage) -> Unit, content: @Composable (openMenu: () -> Unit) -> Unit,
 ) {
     var wideExpanded by rememberSaveable { mutableStateOf(true) }
     val drawer = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val isWide = format == LayoutFormat.Wide
-    val overlayOpen = !isWide && (drawer.currentValue != DrawerValue.Closed || drawer.targetValue != DrawerValue.Closed)
-    LaunchedEffect(isWide) { if (isWide) drawer.close() }
+    val overlayOpen = !fullscreen && !isWide && (drawer.currentValue != DrawerValue.Closed || drawer.targetValue != DrawerValue.Closed)
+    LaunchedEffect(isWide, fullscreen) { if (isWide || fullscreen) drawer.close() }
     val panelWidth by animateDpAsState(when (format) {
         LayoutFormat.Phone -> 0.dp
         LayoutFormat.Tablet -> 0.dp
@@ -42,7 +43,7 @@ internal fun AppNavigationShell(
         scope.launch { drawer.close() }
     }
     ModalNavigationDrawer(
-        drawerState = drawer, gesturesEnabled = !isWide,
+        drawerState = drawer, gesturesEnabled = !isWide && !fullscreen,
         scrimColor = WebPalette.Scrim,
         drawerContent = {
             if (!isWide) ModalDrawerSheet(
@@ -57,7 +58,7 @@ internal fun AppNavigationShell(
         },
     ) {
         Row(Modifier.fillMaxSize()) {
-            if (isWide) Surface(
+            if (isWide && !fullscreen) Surface(
                 modifier = Modifier.width(panelWidth).fillMaxHeight(), shadowElevation = 6.dp,
                 border = BorderStroke(1.dp, WebPalette.BorderStrong), color = WebPalette.Surface,
             ) {
