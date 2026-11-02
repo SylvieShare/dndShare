@@ -1,5 +1,7 @@
 package ru.dndshare.client.maps.rendering
 
+import android.animation.ValueAnimator
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.view.Choreographer
@@ -7,15 +9,14 @@ import android.view.Surface
 import com.google.android.filament.*
 import com.google.android.filament.gltfio.*
 import com.google.android.filament.utils.Utils
-import java.nio.ByteBuffer
 import kotlinx.coroutines.*
-import kotlinx.coroutines.sync.Semaphore
-import kotlinx.coroutines.sync.withPermit
 import kotlinx.serialization.json.JsonObject
 import ru.dndshare.client.maps.*
+import ru.dndshare.client.maps.geometry.*
 
 /** The renderer looper owns every Filament object; IO never runs on this looper. */
 internal class FilamentSceneCore(
+    context: Context,
     private val cache: MapAssetCache,
     dispatcher: CoroutineDispatcher,
     private val status: (Int, String?) -> Unit,
@@ -24,33 +25,34 @@ internal class FilamentSceneCore(
     val engine: Engine
     private val view: com.google.android.filament.View
     private val scene: Scene
+    private val background: Skybox
     private val renderer: Renderer
     private val camera: Camera
-    private val materials: UbershaderProvider
-    private val loader: AssetLoader
-    private val resources: ResourceLoader
-    private val groundResources: ResourceLoader
     private var swap: SwapChain? = null
     private var closed = false
     private var active = true
     private var scheduled = false
+    private var delayed = false
     private var pendingPicks = 0
     private var pose = MapCamera()
+    private var options = MapSceneOptions()
     private var document: JsonObject? = null
     private val models = mutableMapOf<String, MapModel>()
     private var entries = emptyList<MapSceneEntry>()
-    private val pools = mutableMapOf<String, MapModelPool>()
-    private val pending = mutableSetOf<String>()
-    private val failed = mutableSetOf<String>()
-    private val slots = Semaphore(3)
-    private val downloaded = ArrayDeque<DownloadedModel>()
-    private var loading: MapModelPool? = null
-    private var ground: FilamentAsset? = null
-    private var groundKey = ""
-    private val entities = mutableMapOf<Int, String>()
+    private val assets: MapSceneAssets
+    private val effects: MapSceneEffects
+    private val captures = MapFrameCapture()
     private val lights: MapSceneLights
     private val choreographer = Choreographer.getInstance()
-    private val callback = Choreographer.FrameCallback { frame(it) }
+    private val callback = Choreographer.FrameCallback {
+        try {
+            frame(it)
+        } catch (error: Exception) {
+            scheduled = false
+            captures.fail(error)
+            status(assets.pendingCount, error.message)
+        }
+    }
     val width
         get() = view.viewport.width
 
@@ -65,8 +67,37 @@ internal class FilamentSceneCore(
     var hasMapFrame = false
         private set
 
+    @Volatile
+    var effectStatistics = MapEffectStatistics()
+        private set
+
     val readyModelUrls
-        get() = pools.filterValues { it.ready }.keys.toSet()
+        get() =
+            models.values
+                .filter { activeUrl(it) in assets.readyModelUrls }
+                .flatMap { listOf(it.renderUrl, it.lodUrl).filter(String::isNotBlank) }
+                .toSet()
+
+    private fun activeUrl(model: MapModel) =
+        if (options.forceLod) model.lodUrl.ifBlank { model.renderUrl } else model.renderUrl
+
+    fun options(value: MapSceneOptions) {
+        val reload = options.forceLod != value.forceLod
+        options = value
+        if (reload) document?.let { update(it, models.values.toList()) }
+        requestFrame()
+    }
+
+    fun snapshot(result: (Result<android.graphics.Bitmap>) -> Unit) {
+        if (!active || swap == null || width <= 0 || height <= 0) {
+            Handler(Looper.getMainLooper()).post {
+                result(Result.failure(IllegalStateException("Карта ещё не готова")))
+            }
+            return
+        }
+        captures.request(result)
+        requestFrame()
+    }
 
     init {
         Utils.init()
@@ -75,8 +106,10 @@ internal class FilamentSceneCore(
         engine.setAutomaticInstancingEnabled(true)
         renderer = engine.createRenderer()
         scene = engine.createScene()
+        background = Skybox.Builder().color(.0086f, .0086f, .0116f, 1f).build(engine)
+        scene.skybox = background
         camera = engine.createCamera(EntityManager.get().create())
-        camera.setExposure(16f, 1f / 125f, 100f)
+        camera.setExposure(1f)
         view =
             engine.createView().apply {
                 this.scene = this@FilamentSceneCore.scene
@@ -88,16 +121,17 @@ internal class FilamentSceneCore(
                 clear = true
                 clearColor = doubleArrayOf(.0086, .0086, .0116, 1.0)
             }
-        materials = UbershaderProvider(engine)
-        loader = AssetLoader(engine, materials, EntityManager.get())
-        resources = ResourceLoader(engine, true)
-        groundResources = ResourceLoader(engine, true)
+        assets = MapSceneAssets(engine, scene, cache, scope, ::requestFrame, status)
         lights = MapSceneLights(engine, scene)
+        effects =
+            MapSceneEffects(context, engine, scene, cache, scope, ::requestFrame) { error ->
+                status(assets.pendingCount, error)
+            }
     }
 
     fun surface(surface: Surface) {
         swap?.let(engine::destroySwapChain)
-        swap = engine.createSwapChain(surface)
+        swap = engine.createSwapChain(surface, SwapChainFlags.CONFIG_READABLE)
         requestFrame()
     }
 
@@ -153,135 +187,102 @@ internal class FilamentSceneCore(
         document = value
         models.clear()
         models.putAll(catalogue.associateBy { it.uuid })
-        entries = mapSceneEntries(value, models)
-        val wanted = entries.groupBy { it.model.renderUrl }
-        pools.keys.filter { it !in wanted }.forEach(::removePool)
-        for ((url, group) in wanted) {
-            val pool = pools[url]
-            if (pool != null && pool.capacity < group.size && loading !== pool) removePool(url)
-            if (url !in pools && url !in pending && url !in failed) download(url)
-        }
-        val w = value.number("width").toInt()
-        val h = value.number("height").toInt()
-        val grid = (value["grid"] as? JsonObject)?.flag("visible") ?: true
-        val key = "$w:$h:$grid"
-        if (groundKey != key) {
-            ground?.let {
-                scene.removeEntities(it.entities)
-                loader.destroyAsset(it)
+        entries =
+            mapSceneEntries(value, models).map {
+                it.copy(model = it.model.copy(renderUrl = activeUrl(it.model)))
             }
-            ground =
-                loader.createAsset(mapGroundGlb(w, h, grid))?.also {
-                    groundResources.loadResources(it)
-                    scene.addEntities(it.entities)
-                    it.releaseSourceData()
-                }
-            groundKey = key
-        }
-        lights.update(value, entries)
-        synchronize()
+        assets.update(value, entries)
+        val context = MapContext(value, catalogue)
+        lights.update(context)
+        effects.update(context, entries)
         requestFrame()
     }
 
-    private fun download(url: String) {
-        pending += url
-        status(pending.size, null)
-        scope.launch {
-            try {
-                slots.withPermit {
-                    val bytes = cache.bytes(url)
-                    val consumed = CompletableDeferred<Unit>()
-                    downloaded.addLast(DownloadedModel(url, bytes, consumed))
-                    requestFrame()
-                    consumed.await()
-                }
-            } catch (cancelled: CancellationException) {
-                throw cancelled
-            } catch (error: Exception) {
-                pending -= url
-                failed += url
-                status(pending.size, error.message)
-            }
-        }
-    }
-
-    private fun loadNext() {
-        if (loading != null || downloaded.isEmpty()) return
-        val source = downloaded.removeFirst()
-        val url = source.url
-        val count = entries.count { it.model.renderUrl == url }
-        if (count == 0) {
-            pending -= url
-            source.consumed.complete(Unit)
-            status(pending.size, null)
+    private fun pickTarget(x: Float, y: Float, result: (Pair<String, String>?) -> Unit) {
+        if (closed || width == 0 || height == 0) {
+            result(null)
             return
         }
-        try {
-            val instances =
-                arrayOfNulls<FilamentInstance>(maxOf(8, Integer.highestOneBit(count - 1) * 2))
-            val asset =
-                requireNotNull(
-                    loader.createInstancedAsset(ByteBuffer.wrap(source.bytes), instances)
-                ) {
-                    "Не удалось открыть GLB-модель"
-                }
-            val pool = MapModelPool(url, asset, instances.map { requireNotNull(it) })
-            pools[url] = pool
-            loading = pool
-            check(resources.asyncBeginLoad(asset)) { "Не удалось загрузить материалы модели" }
-            asset.releaseSourceData()
-        } catch (error: Exception) {
-            pools.remove(url)?.let { loader.destroyAsset(it.asset) }
-            loading = null
-            pending -= url
-            failed += url
-            status(pending.size, error.message)
-        } finally {
-            source.consumed.complete(Unit)
+        val mapping = assets.entities.mapValues { it.value to "model" } + effects.picks
+        pendingPicks++
+        view.pick(
+            x.toInt().coerceIn(0, width - 1),
+            (height - y.toInt() - 1).coerceIn(0, height - 1),
+            Handler(requireNotNull(Looper.myLooper())),
+        ) {
+            pendingPicks--
+            if (!closed) result(mapping[it.renderable])
         }
-    }
-
-    private fun synchronize() {
-        entities.clear()
-        for ((url, pool) in pools) {
-            if (!pool.ready) continue
-            val wanted = entries.filter { it.model.renderUrl == url }
-            val ids = wanted.map { it.id }.toSet()
-            pool.assigned.keys
-                .filter { it !in ids }
-                .forEach { id ->
-                    pool.assigned.remove(id)?.let { scene.removeEntities(it.entities) }
-                }
-            val used = pool.assigned.values.toSet()
-            val available = ArrayDeque(pool.instances.filter { it !in used })
-            for (entry in wanted) {
-                val instance =
-                    pool.assigned[entry.id]
-                        ?: available.removeFirstOrNull()?.also {
-                            pool.assigned[entry.id] = it
-                            scene.addEntities(it.entities)
-                        }
-                        ?: continue
-                val manager = engine.transformManager
-                manager.setTransform(manager.getInstance(instance.root), entry.matrix)
-                instance.entities.forEach { entities[it] = entry.id }
-            }
-        }
+        requestFrame()
     }
 
     fun pick(x: Float, y: Float, result: (String?) -> Unit) {
-        if (closed || width == 0 || height == 0) return
-        val mapping = entities.toMap()
-        pendingPicks++
-        view.pick(x.toInt(), height - y.toInt() - 1, Handler(requireNotNull(Looper.myLooper()))) {
-            pendingPicks--
-            if (!closed) Handler(Looper.getMainLooper()).post { result(mapping[it.renderable]) }
+        pickTarget(x, y) { hit ->
+            Handler(Looper.getMainLooper()).post { if (!closed) result(hit?.first) }
         }
-        requestFrame()
+    }
+
+    fun pickSurface(x: Float, y: Float, result: (MapSurfaceHit?) -> Unit) {
+        val snapshot = entries.associateBy { it.id }
+        val doc = document
+        val clip =
+            Mat4.multiply(
+                camera.getModelMatrix(null).map(Double::toFloat).toFloatArray(),
+                Mat4.inverse(camera.getProjectionMatrix(null).map(Double::toFloat).toFloatArray()),
+            )
+        val nx = (x.toInt() + .5f) / width.coerceAtLeast(1) * 2 - 1
+        val ny = 1 - (y.toInt() + .5f) / height.coerceAtLeast(1) * 2
+        val origin = Mat4.point(clip, Vec3(nx, ny, -1f))
+        val far = Mat4.point(clip, Vec3(nx, ny, 1f))
+        pickTarget(x, y) { target ->
+            val id = target?.first
+            val ownerId =
+                if (target?.second == "decal")
+                    (doc?.rows("decals")?.find { it.string("id") == id }?.get("anchor")
+                            as? JsonObject)
+                        ?.string("id")
+                else id
+            val entry = snapshot[ownerId]
+            if (entry == null) Handler(Looper.getMainLooper()).post { if (!closed) result(null) }
+            else
+                scope.launch {
+                    try {
+                        val (_, geometry) = cache.geometry(entry.model.renderUrl)
+                        val hit =
+                            withContext(Dispatchers.Default) {
+                                val inverse = Mat4.inverse(entry.matrix)
+                                val localOrigin = Mat4.point(inverse, origin)
+                                mapSurfaceIntersection(
+                                    geometry,
+                                    localOrigin,
+                                    (Mat4.point(inverse, far) - localOrigin).normalized(),
+                                )
+                            }
+                        val found = hit?.let {
+                            MapSurfaceHit(
+                                requireNotNull(id),
+                                if (target?.second == "decal") "decal"
+                                else if (entry.model.isObject) "object" else "tile",
+                                entry.model.uuid,
+                                Mat4.point(entry.matrix, it.position),
+                                it.position,
+                                it.normal,
+                            )
+                        }
+                        Handler(Looper.getMainLooper()).post { if (!closed) result(found) }
+                    } catch (cancelled: CancellationException) {
+                        throw cancelled
+                    } catch (error: Exception) {
+                        status(assets.pendingCount, error.message)
+                        Handler(Looper.getMainLooper()).post { if (!closed) result(null) }
+                    }
+                }
+        }
     }
 
     fun retry() {
-        failed.clear()
+        assets.retry()
+        effects.retry()
         document?.let { update(it, models.values.toList()) }
     }
 
@@ -295,6 +296,11 @@ internal class FilamentSceneCore(
     }
 
     fun requestFrame() {
+        if (scheduled && delayed && active && !closed) {
+            choreographer.removeFrameCallback(callback)
+            scheduled = false
+            delayed = false
+        }
         if (!closed && active && !scheduled) {
             scheduled = true
             choreographer.postFrameCallback(callback)
@@ -303,82 +309,66 @@ internal class FilamentSceneCore(
 
     private fun frame(time: Long) {
         scheduled = false
+        delayed = false
         if (closed || !active) return
-        loadNext()
-        loading?.let { pool ->
-            resources.asyncUpdateLoad()
-            if (resources.asyncGetLoadProgress() >= 1f) {
-                pool.ready = true
-                loading = null
-                pending -= pool.url
-                status(pending.size, null)
-                synchronize()
-            }
-        }
+        assets.advance()
+        val seconds = time / 1_000_000_000.0
+        val motion = options.animate && ValueAnimator.areAnimatorsEnabled()
+        val effectMotion = effects.advance(seconds, motion)
+        val lightMotion = lights.advance(seconds, motion)
+        val postProcess = effects.prepare(view, camera, seconds, motion)
+        effectStatistics = effects.statistics
         val chain = swap
-        if (width > 0 && height > 0 && chain != null && renderer.beginFrame(chain, time)) {
-            renderer.render(view)
-            renderer.endFrame()
+        if (width > 0 && height > 0 && chain != null) {
+            if (!renderer.beginFrame(chain, time)) {
+                requestFrame()
+                return
+            }
+            try {
+                if (postProcess) effects.render(renderer, view) else renderer.render(view)
+                captures.render(renderer, width, height)
+            } finally {
+                renderer.endFrame()
+            }
             renderedFrames++
-            if (!hasMapFrame && document != null && ground != null) {
+            if (!hasMapFrame && document != null && assets.hasGround) {
                 engine.flushAndWait()
                 hasMapFrame = true
-                status(pending.size, null)
+                status(assets.pendingCount, null)
             }
         }
-        if (loading != null || downloaded.isNotEmpty() || pendingPicks > 0) requestFrame()
-    }
-
-    private fun removePool(url: String) {
-        pending -= url
-        pools.remove(url)?.let { pool ->
-            if (loading === pool) {
-                resources.asyncCancelLoad()
-                loading = null
-            }
-            pool.instances.forEach { scene.removeEntities(it.entities) }
-            loader.destroyAsset(pool.asset)
+        if (assets.working || pendingPicks > 0 || captures.working) requestFrame()
+        else if ((effectMotion || lightMotion) && !scheduled) {
+            scheduled = true
+            delayed = true
+            choreographer.postFrameCallbackDelayed(
+                callback,
+                maxOf(
+                    1L,
+                    ((kotlin.math.floor(seconds * 12) + 1) / 12 * 1000 - seconds * 1000 - 8)
+                        .toLong(),
+                ),
+            )
         }
     }
 
     override fun close() {
         if (closed) return
         closed = true
+        captures.close()
         scope.cancel()
         choreographer.removeFrameCallback(callback)
         detach()
-        resources.asyncCancelLoad()
-        pools.keys.toList().forEach(::removePool)
-        ground?.let { loader.destroyAsset(it) }
+        effects.close()
+        assets.close()
         lights.close()
-        resources.destroy()
-        groundResources.destroy()
-        loader.destroy()
-        materials.destroyMaterials()
-        materials.destroy()
         engine.destroyCameraComponent(camera.entity)
         EntityManager.get().destroy(camera.entity)
         engine.destroyView(view)
+        scene.skybox = null
+        engine.destroySkybox(background)
         engine.destroyScene(scene)
         engine.destroyRenderer(renderer)
         engine.destroy()
     }
 }
-
-private class MapModelPool(
-    val url: String,
-    val asset: FilamentAsset,
-    val instances: List<FilamentInstance>,
-) {
-    val capacity
-        get() = instances.size
-
-    val assigned = mutableMapOf<String, FilamentInstance>()
-    var ready = false
-}
-
-private class DownloadedModel(
-    val url: String,
-    val bytes: ByteArray,
-    val consumed: CompletableDeferred<Unit>,
-)

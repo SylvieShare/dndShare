@@ -8,3 +8,8 @@ frontend/src/app/fonts.css text eol=lf
 frontend/public/static/fonts/*.json text eol=lf
 frontend/public/static/fonts/*.txt text eol=lf
 frontend/public/static/fonts/*.woff2 binary
+
+# Preserve upstream codec bytes and checksums; style checks apply to our code.
+native/androidApp/src/main/cpp/basis/* linguist-vendored whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
+native/androidApp/src/main/cpp/meshoptimizer/* linguist-vendored whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
+native/androidApp/src/main/cpp/zstd/* linguist-vendored whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab

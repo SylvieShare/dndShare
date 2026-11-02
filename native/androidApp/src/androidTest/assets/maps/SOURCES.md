@@ -19,3 +19,13 @@ The committed fixtures make normal Android checks independent of Node/model tool
 
 SHA-256 of `box-meshopt.glb`:
 `582fb8aabc88acdfae6e99323ccf66240a793b393b5682d57c900bc647f8ee68`.
+
+`checker-basis-lz.ktx2` and `checker-uastc.ktx2` are generated two-colour
+32×32 test textures, encoded with Khronos toktx 4.4.0, mipmaps and sRGB.
+The UASTC fixture uses Zstandard level 18. They contain no third-party image.
+`box-water.glb` adds UV coordinates, that UASTC texture and a low-roughness PBR material to
+the attributed, meshopt-compressed Box above. All three are test assets only.
+
+- `checker-basis-lz.ktx2`: `27769556c5167a51d75a7dca6c7ba6adde27d9a7bc9ff70ef1fd8f9e7d6004ed`.
+- `checker-uastc.ktx2`: `b233a6cfa34725197c0cfdd95feabb5fddd348d637e9eb1f3023bdcd93bd09f5`.
+- `box-water.glb`: `88750f035c515c7cd8347d737e2c2c7964d83d8a7211eaca86ea3da6c477d93a`.

@@ -18,6 +18,9 @@ data class BattleMap(
     val subscribed: Boolean = false,
     val author: String = "",
     val previewUrl: String? = null,
+    val previewSignature: String = "",
+    val previewModelsSignature: String = "",
+    val previewStale: Boolean = false,
     val width: Double = 0.0,
     val height: Double = 0.0,
     val tileCount: Int = 0,
@@ -48,6 +51,11 @@ data class MapModel(
     val id: String,
     val uuid: String,
     val name: String,
+    val nameEn: String = "",
+    val groupName: String = "",
+    val groupNameEn: String = "",
+    val code: String = "",
+    val variantCode: String = "",
     val collection: String = "",
     val collectionName: String = "",
     val category: String = "",
@@ -56,6 +64,10 @@ data class MapModel(
     val width: Int = 1,
     val height: Int = 1,
     val mountDepth: Double = 0.0,
+    val surfaceHeight: Double = .44,
+    val maxHeight: Double = 1.0,
+    val hasDecor: Boolean = false,
+    val textureDetail: String = "basic",
     val mountProfile: String = "",
     val placementOffset: List<Double> = emptyList(),
     val renderUrl: String = "",
@@ -65,6 +77,7 @@ data class MapModel(
     val behaviour: JsonObject = JsonObject(emptyMap()),
     val supportSlots: JsonArray = JsonArray(emptyList()),
     val placementPoints: JsonArray = JsonArray(emptyList()),
+    val raw: JsonObject = JsonObject(emptyMap()),
 ) {
     val isObject
         get() = tileType == "object"
@@ -103,6 +116,7 @@ data class MapWork(
     val redo: List<MapHistoryStep> = emptyList(),
     val localVersion: Long = 0,
     val localFormat: Int = 1,
+    val editBase: JsonObject? = null,
 ) {
     init {
         require(localFormat == 1) { "Неизвестный формат локального черновика карты" }
@@ -157,5 +171,7 @@ fun mapAcknowledge(work: MapWork, reply: MapChange): MapWork {
         current = confirmed.withContent(mapApply(accepted, editsDuringRequest)),
         sending = null,
         sent = null,
+        editBase =
+            work.editBase?.let { mapApply(it, mapDiff(requireNotNull(work.sent), accepted)) },
     )
 }

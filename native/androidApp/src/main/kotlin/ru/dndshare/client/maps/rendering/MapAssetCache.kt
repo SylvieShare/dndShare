@@ -3,14 +3,81 @@ package ru.dndshare.client.maps.rendering
 import java.io.File
 import java.security.MessageDigest
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import ru.dndshare.client.maps.MapsApi
+import ru.dndshare.client.maps.geometry.*
 
 /** Content-addressed disk cache; only models actually used on the map are requested. */
 class MapAssetCache(private val directory: File, private val api: MapsApi) {
     private val downloads = Semaphore(3)
+    private val geometryLock = Mutex()
+    private val geometry = LinkedHashMap<String, Pair<GlbDocument, List<GlbPart>>>(16, .75f, true)
+
+    suspend fun geometry(url: String): Pair<GlbDocument, List<GlbPart>> =
+        withContext(Dispatchers.IO) {
+            geometryLock.withLock {
+                geometry[url]?.let {
+                    return@withLock it
+                }
+                val parsed = GlbDocument(bytes(url))
+                val value = parsed to parsed.parts()
+                geometry[url] = value
+                var used =
+                    geometry.values.sumOf { (_, parts) ->
+                        parts.sumOf { p ->
+                            (p.geometry.positions.size +
+                                    p.geometry.normals.size +
+                                    p.geometry.uv.size +
+                                    p.geometry.colors.size +
+                                    p.geometry.water.size +
+                                    p.geometry.indices.size)
+                                .toLong() * 4
+                        }
+                    }
+                val iterator = geometry.entries.iterator()
+                while (used > 96L * 1024 * 1024 && geometry.size > 1 && iterator.hasNext()) {
+                    val old = iterator.next()
+                    used -=
+                        old.value.second.sumOf { p ->
+                            (p.geometry.positions.size +
+                                    p.geometry.normals.size +
+                                    p.geometry.uv.size +
+                                    p.geometry.colors.size +
+                                    p.geometry.water.size +
+                                    p.geometry.indices.size)
+                                .toLong() * 4
+                        }
+                    iterator.remove()
+                }
+                value
+            }
+        }
+
+    suspend fun media(url: String) =
+        withContext(Dispatchers.IO) {
+            directory.mkdirs()
+            val hash =
+                MessageDigest.getInstance("SHA-256").digest(url.toByteArray()).joinToString("") {
+                    "%02x".format(it)
+                }
+            val file = File(directory, "$hash.image")
+            if (file.isFile) file.readBytes()
+            else
+                api.mediaBytes(url).also { bytes ->
+                    File.createTempFile("map-image-", ".part", directory).let { tmp ->
+                        try {
+                            tmp.writeBytes(bytes)
+                            check(tmp.renameTo(file))
+                        } finally {
+                            tmp.delete()
+                        }
+                    }
+                }
+        }
 
     suspend fun bytes(url: String): ByteArray =
         withContext(Dispatchers.IO) {

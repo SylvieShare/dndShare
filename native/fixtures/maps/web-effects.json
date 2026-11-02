@@ -1,0 +1,1022 @@
+{
+  "fog": [
+    {
+      "input": [
+        {
+          "areaId": "A",
+          "min": [
+            2,
+            -0.14,
+            3
+          ],
+          "max": [
+            4,
+            1.5,
+            4
+          ]
+        }
+      ],
+      "min": [
+        1.13,
+        -0.6900000000000001,
+        2.13
+      ],
+      "size": [
+        3.74,
+        2.7399999999999998,
+        2.74
+      ],
+      "dimensions": [
+        15,
+        14,
+        11
+      ],
+      "full": "c29507ab84e833cdf54bad452572ff4f8cbef157120bea1c65e35a64b367f24e",
+      "weighted": "46ea6bc988a5762e4ecdd878df843609c90e3dcfb70b385e039c95c7416950d9"
+    },
+    {
+      "input": [
+        {
+          "areaId": "A",
+          "min": [
+            0,
+            -0.14,
+            0
+          ],
+          "max": [
+            2,
+            2.4,
+            1
+          ]
+        },
+        {
+          "areaId": "A",
+          "min": [
+            1,
+            -0.14,
+            0
+          ],
+          "max": [
+            3,
+            2.4,
+            1
+          ]
+        },
+        {
+          "areaId": "B",
+          "min": [
+            2,
+            0.3,
+            1
+          ],
+          "max": [
+            3,
+            3.2,
+            3
+          ]
+        }
+      ],
+      "min": [
+        -0.8700000000000001,
+        -0.6900000000000001,
+        -0.8700000000000001
+      ],
+      "size": [
+        4.74,
+        4.44,
+        4.74
+      ],
+      "dimensions": [
+        19,
+        23,
+        19
+      ],
+      "full": "3bb65328a3b836d1541e4d61fd3675dfe36f7edbede985c5097a655b30ec9e56",
+      "weighted": "476b915a54cff86ac147175e009ad1ddaee0f796f563fc7706df6e8b32e72dfa"
+    },
+    {
+      "input": [
+        {
+          "areaId": "A",
+          "min": [
+            1.4,
+            -0.4,
+            2.7
+          ],
+          "max": [
+            2.4,
+            4,
+            3.7
+          ]
+        },
+        {
+          "areaId": "B",
+          "min": [
+            1.4,
+            2.1,
+            2.7
+          ],
+          "max": [
+            2.4,
+            6,
+            3.7
+          ]
+        }
+      ],
+      "min": [
+        0.5299999999999998,
+        -0.9500000000000001,
+        1.83
+      ],
+      "size": [
+        2.74,
+        7.5,
+        2.74
+      ],
+      "dimensions": [
+        11,
+        38,
+        11
+      ],
+      "full": "46a606602ece995f0aef4f206c9fd15b53d9804429344143448e7b2c6e7788bf",
+      "weighted": "a42eda1287cb482c70aa34169b7f049c8592819c660a53d55b1b636947726ce0"
+    },
+    {
+      "input": [
+        {
+          "areaId": "A",
+          "min": [
+            0,
+            -0.14,
+            0
+          ],
+          "max": [
+            160,
+            32,
+            100
+          ]
+        }
+      ],
+      "min": [
+        -0.8700000000000001,
+        -0.6900000000000001,
+        -0.8700000000000001
+      ],
+      "size": [
+        161.74,
+        33.239999999999995,
+        101.74000000000001
+      ],
+      "dimensions": [
+        192,
+        96,
+        192
+      ],
+      "full": "1650ba48f20b024ca323672535688a05961cfe52f34c25879fc1be1a1db6e492",
+      "weighted": "1492d6bfef5716c9a94cc96075e174594f80a59623d0dde3c8c337ecba0aee2b"
+    }
+  ],
+  "fire": [
+    {
+      "source": {
+        "id": "torch-1",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 0,
+      "expected": {
+        "offset": [
+          0,
+          0,
+          0
+        ],
+        "gain": 1,
+        "moving": false
+      }
+    },
+    {
+      "source": {
+        "id": "torch-1",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0.7,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 0,
+      "expected": {
+        "offset": [
+          -0.0072089294961340126,
+          0.013160337246285698,
+          -0.0065810512484802
+        ],
+        "gain": 0.9918544205315545,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "torch-1",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 2,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 0,
+      "expected": {
+        "offset": [
+          -0.020596941417525747,
+          0.03760096356081628,
+          -0.018803003567086286
+        ],
+        "gain": 0.9767269158044415,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "torch-1",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 50,
+      "expected": {
+        "offset": [
+          0,
+          0,
+          0
+        ],
+        "gain": 1,
+        "moving": false
+      }
+    },
+    {
+      "source": {
+        "id": "torch-1",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0.7,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 50,
+      "expected": {
+        "offset": [
+          -0.0072089294961340126,
+          0.013160337246285698,
+          -0.0065810512484802
+        ],
+        "gain": 0.9918544205315545,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "torch-1",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 2,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 50,
+      "expected": {
+        "offset": [
+          -0.020596941417525747,
+          0.03760096356081628,
+          -0.018803003567086286
+        ],
+        "gain": 0.9767269158044415,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "torch-1",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 84,
+      "expected": {
+        "offset": [
+          0,
+          0,
+          0
+        ],
+        "gain": 1,
+        "moving": false
+      }
+    },
+    {
+      "source": {
+        "id": "torch-1",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0.7,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 84,
+      "expected": {
+        "offset": [
+          -0.006259802787866235,
+          0.016441424823916178,
+          -0.0011905899083927657
+        ],
+        "gain": 0.9924301440141341,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "torch-1",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 2,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 84,
+      "expected": {
+        "offset": [
+          -0.01788515082247496,
+          0.04697549949690336,
+          -0.0034016854525507592
+        ],
+        "gain": 0.978371840040383,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "torch-1",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 1234,
+      "expected": {
+        "offset": [
+          0,
+          0,
+          0
+        ],
+        "gain": 1,
+        "moving": false
+      }
+    },
+    {
+      "source": {
+        "id": "torch-1",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0.7,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 1234,
+      "expected": {
+        "offset": [
+          0.0035061342582824455,
+          -0.014172444908204778,
+          0.0011886847177407119
+        ],
+        "gain": 1.0019541552911777,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "torch-1",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 2,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 1234,
+      "expected": {
+        "offset": [
+          0.010017526452235559,
+          -0.04049269973772794,
+          0.003396242050687748
+        ],
+        "gain": 1.0055833008319361,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "torch-1",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 89000,
+      "expected": {
+        "offset": [
+          0,
+          0,
+          0
+        ],
+        "gain": 1,
+        "moving": false
+      }
+    },
+    {
+      "source": {
+        "id": "torch-1",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0.7,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 89000,
+      "expected": {
+        "offset": [
+          0.004621638827982331,
+          0.004719464026011454,
+          0.0049292449025734346
+        ],
+        "gain": 1.001977937811585,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "torch-1",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 2,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 89000,
+      "expected": {
+        "offset": [
+          0.013204682365663802,
+          0.0134841829314613,
+          0.014083556864495528
+        ],
+        "gain": 1.0056512508902429,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "f78dd1a3-6adc-4e13-84dd-8e06b814c39b",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 0,
+      "expected": {
+        "offset": [
+          0,
+          0,
+          0
+        ],
+        "gain": 1,
+        "moving": false
+      }
+    },
+    {
+      "source": {
+        "id": "f78dd1a3-6adc-4e13-84dd-8e06b814c39b",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0.7,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 0,
+      "expected": {
+        "offset": [
+          -0.0030434162198580074,
+          0.015586999370709993,
+          0.0011083559719163249
+        ],
+        "gain": 0.9999341374141465,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "f78dd1a3-6adc-4e13-84dd-8e06b814c39b",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 2,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 0,
+      "expected": {
+        "offset": [
+          -0.008695474913880022,
+          0.04453428391631427,
+          0.0031667313483323563
+        ],
+        "gain": 0.9998118211832756,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "f78dd1a3-6adc-4e13-84dd-8e06b814c39b",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 50,
+      "expected": {
+        "offset": [
+          0,
+          0,
+          0
+        ],
+        "gain": 1,
+        "moving": false
+      }
+    },
+    {
+      "source": {
+        "id": "f78dd1a3-6adc-4e13-84dd-8e06b814c39b",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0.7,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 50,
+      "expected": {
+        "offset": [
+          -0.0030434162198580074,
+          0.015586999370709993,
+          0.0011083559719163249
+        ],
+        "gain": 0.9999341374141465,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "f78dd1a3-6adc-4e13-84dd-8e06b814c39b",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 2,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 50,
+      "expected": {
+        "offset": [
+          -0.008695474913880022,
+          0.04453428391631427,
+          0.0031667313483323563
+        ],
+        "gain": 0.9998118211832756,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "f78dd1a3-6adc-4e13-84dd-8e06b814c39b",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 84,
+      "expected": {
+        "offset": [
+          0,
+          0,
+          0
+        ],
+        "gain": 1,
+        "moving": false
+      }
+    },
+    {
+      "source": {
+        "id": "f78dd1a3-6adc-4e13-84dd-8e06b814c39b",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0.7,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 84,
+      "expected": {
+        "offset": [
+          -0.0007752561360829576,
+          0.007515745203012955,
+          0.006526800012091394
+        ],
+        "gain": 0.9971483342914315,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "f78dd1a3-6adc-4e13-84dd-8e06b814c39b",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 2,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 84,
+      "expected": {
+        "offset": [
+          -0.0022150175316655936,
+          0.02147355772289416,
+          0.01864800003454684
+        ],
+        "gain": 0.9918523836898043,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "f78dd1a3-6adc-4e13-84dd-8e06b814c39b",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 1234,
+      "expected": {
+        "offset": [
+          0,
+          0,
+          0
+        ],
+        "gain": 1,
+        "moving": false
+      }
+    },
+    {
+      "source": {
+        "id": "f78dd1a3-6adc-4e13-84dd-8e06b814c39b",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0.7,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 1234,
+      "expected": {
+        "offset": [
+          0.007006230950983263,
+          -0.000631879573096978,
+          -0.006528064496438892
+        ],
+        "gain": 1.0073256393711933,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "f78dd1a3-6adc-4e13-84dd-8e06b814c39b",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 2,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 1234,
+      "expected": {
+        "offset": [
+          0.02001780271709504,
+          -0.0018053702088485087,
+          -0.01865161284696826
+        ],
+        "gain": 1.0209303982034097,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "f78dd1a3-6adc-4e13-84dd-8e06b814c39b",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 89000,
+      "expected": {
+        "offset": [
+          0,
+          0,
+          0
+        ],
+        "gain": 1,
+        "moving": false
+      }
+    },
+    {
+      "source": {
+        "id": "f78dd1a3-6adc-4e13-84dd-8e06b814c39b",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 0.7,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 89000,
+      "expected": {
+        "offset": [
+          0.008253143565524786,
+          0.015845940049627534,
+          0.00865963688656817
+        ],
+        "gain": 1.0135441104551077,
+        "moving": true
+      }
+    },
+    {
+      "source": {
+        "id": "f78dd1a3-6adc-4e13-84dd-8e06b814c39b",
+        "effect": {
+          "kind": "fire",
+          "size": [
+            0.22,
+            0.35
+          ],
+          "strength": 2,
+          "offset": [
+            0,
+            0,
+            -0.175
+          ]
+        }
+      },
+      "milliseconds": 89000,
+      "expected": {
+        "offset": [
+          0.023580410187213675,
+          0.045274114427507235,
+          0.02474181967590906
+        ],
+        "gain": 1.0386974584431647,
+        "moving": true
+      }
+    }
+  ],
+  "noise": "3bc2d268d4c8831655778a4149595538e3321dbd38078f6252141e311172e7bc"
+}

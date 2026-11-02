@@ -12,6 +12,14 @@
 Android Studio открывает папку `native`. Нужны JBR из Android Studio,
 Android SDK 37 и platform-tools. Kotlin, AGP, Compose BOM, Room, Ktor, Coil и Filament
 закреплены в Gradle scripts, Gradle wrapper — версией и checksum.
+Для нативной геометрии/текстур редактора также нужны закреплённые в
+`androidApp/build.gradle.kts` NDK и CMake; Android Studio устанавливает их
+через SDK Manager. Все эти инструменты на текущей машине находятся на диске C.
+Meshoptimizer и Basis Universal включены исходниками с лицензиями в assets.
+Шейдеры Filament поставляются скомпилированными: обычная сборка APK не требует
+`matc`, но проверяет SHA-256 исходников и пакетов. После изменения `.mat`
+выполняется `python3 scripts/native/compile-map-materials.py` с компилятором
+версии из этого скрипта.
 
 На текущем Windows-компьютере инструменты находятся на диске C:
 

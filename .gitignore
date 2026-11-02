@@ -24,6 +24,7 @@ dndshare.log
 /native/.kotlin/
 /native/local.properties
 /native/**/build/
+/native/**/.cxx/
 /native/**/local.properties
 /native/.idea/
 

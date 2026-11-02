@@ -1,0 +1,23 @@
+material { name: MapComposite, shadingModel:unlit, vertexDomain:device,culling:none,
+    depthWrite:false,depthCulling:false,requires:[uv0],flipUV:false,
+    parameters:[{type:sampler2d,name:sceneColour},{type:sampler2d,name:sceneDepth,precision:high},{type:sampler2d,name:fogColour},
+        {type:float2,name:fogSize},{type:float,name:depthRange},{type:float,name:skyLight}] }
+fragment {
+precision highp float;
+precision highp sampler2D;
+void material(inout MaterialInputs m) {
+    prepareMaterial(m);vec2 uv=getNormalizedViewportCoord().xy;vec2 pixel=uv*materialParams.fogSize-0.5,base=floor(pixel),fraction=fract(pixel);
+    float depth=texture(materialParams_sceneDepth,uv).r;
+    vec2 mist=vec2(0.0);float total=0.0;
+    for(int y=0;y<2;y++)for(int x=0;x<2;x++) {
+        vec2 offset=vec2(float(x),float(y)),sampleUV=(base+offset+0.5)/materialParams.fogSize;
+        vec2 spatial=mix(1.0-fraction,fraction,offset);
+        float delta=abs(texture(materialParams_sceneDepth,sampleUV).r-depth)*materialParams.depthRange;
+        float weight=spatial.x*spatial.y*exp(-delta*18.0);
+        mist+=texture(materialParams_fogColour,sampleUV).rg*weight;total+=weight;
+    }
+    mist=total>0.0001?mist/total:vec2(0.0);
+    vec3 colour=texture(materialParams_sceneColour,uv).rgb;
+    m.baseColor=vec4(colour*(1.0-mist.r)+(vec3(0.075,0.095,0.13)*mist.r+vec3(0.385,0.425,0.47)*mist.g)*materialParams.skyLight,1.0);
+}
+}

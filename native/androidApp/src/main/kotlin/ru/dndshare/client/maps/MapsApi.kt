@@ -2,6 +2,7 @@ package ru.dndshare.client.maps
 
 import io.ktor.client.call.body
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -31,6 +32,18 @@ interface MapsApi {
     suspend fun models(): List<MapModel>
 
     suspend fun modelBytes(url: String): ByteArray
+
+    suspend fun mediaBytes(url: String): ByteArray
+
+    suspend fun decals(): List<MapDecalImage>
+
+    suspend fun uploadDecal(bytes: ByteArray, name: String, category: String): MapDecalImage
+
+    suspend fun previewContext(id: String): JsonObject
+
+    suspend fun uploadPreview(id: String, signature: String, bytes: ByteArray): JsonObject
+
+    suspend fun updateModel(model: MapModel, data: JsonObject): MapModel
 }
 
 class HttpMapsApi(private val api: ApiClient) : MapsApi {
@@ -109,7 +122,7 @@ class HttpMapsApi(private val api: ApiClient) : MapsApi {
                     fields[key] == JsonNull
                 )
                     fields[key] = JsonArray(emptyList())
-                WireJson.decodeFromJsonElement<MapModel>(JsonObject(fields))
+                WireJson.decodeFromJsonElement<MapModel>(JsonObject(fields)).copy(raw = raw)
             }
         }
 
@@ -126,4 +139,77 @@ class HttpMapsApi(private val api: ApiClient) : MapsApi {
         )
         return with(api) { client.get(resolved).checked().body() }
     }
+
+    override suspend fun mediaBytes(url: String): ByteArray =
+        withContext(Dispatchers.IO) {
+            require(
+                url.startsWith("/images/maps/decals/") || url.startsWith("/api/map-decal-images/")
+            )
+            with(api) { client.get(baseUrl + url).checked().body() }
+        }
+
+    override suspend fun decals() = request<List<MapDecalImage>>("/decals")
+
+    override suspend fun uploadDecal(
+        bytes: ByteArray,
+        name: String,
+        category: String,
+    ): MapDecalImage =
+        withContext(Dispatchers.IO) {
+            require(bytes.size in 1..8 * 1024 * 1024)
+            val response =
+                api.client.submitFormWithBinaryData(
+                    url("/decals"),
+                    formData {
+                        append("name", name)
+                        append("category", category)
+                        append(
+                            "file",
+                            bytes,
+                            Headers.build {
+                                append(HttpHeaders.ContentType, "image/png")
+                                append(HttpHeaders.ContentDisposition, "filename=\"decal.png\"")
+                            },
+                        )
+                    },
+                )
+            with(api) { response.checked().body() }
+        }
+
+    override suspend fun previewContext(id: String) =
+        request<JsonObject>("/${id.encodeURLPathPart()}/preview-context")
+
+    override suspend fun uploadPreview(
+        id: String,
+        signature: String,
+        bytes: ByteArray,
+    ): JsonObject =
+        withContext(Dispatchers.IO) {
+            with(api) {
+                client
+                    .post(
+                        url(
+                            "/${id.encodeURLPathPart()}/preview?signature=${signature.encodeURLParameter()}"
+                        )
+                    ) {
+                        contentType(ContentType("image", "webp"))
+                        setBody(bytes)
+                    }
+                    .checked()
+                    .body()
+            }
+        }
+
+    override suspend fun updateModel(model: MapModel, data: JsonObject): MapModel =
+        withContext(Dispatchers.Default) {
+            val result =
+                request<JsonObject>(
+                    "/models/${model.id.encodeURLPathPart()}",
+                    HttpMethod.Put,
+                    data
+                        .with("id", JsonPrimitive(model.id))
+                        .with("uuid", JsonPrimitive(model.uuid)),
+                )
+            WireJson.decodeFromJsonElement<MapModel>(result).copy(raw = result)
+        }
 }

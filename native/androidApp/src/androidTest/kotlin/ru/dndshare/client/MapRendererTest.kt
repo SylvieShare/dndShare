@@ -127,6 +127,20 @@ class MapRendererTest {
             }
             await { picked.get() != null }
             assertEquals("placed-2", picked.get())
+            val surfaceHit = AtomicReference<MapSurfaceHit>()
+            activity.onActivity {
+                val renderer = scene.get()
+                val point =
+                    renderer
+                        .camera()
+                        .project(MapPose(1.5, 1.5, .5), renderer.width, renderer.height)
+                renderer.pickSurface(point.first, point.second) { surfaceHit.set(it) }
+            }
+            await { surfaceHit.get() != null || errors.get() != null }
+            assertNull(errors.get())
+            assertEquals("placed-1", surfaceHit.get().id)
+            assertEquals(.5f, surfaceHit.get().world.y, .001f)
+            assertTrue(surfaceHit.get().normal.y > .99f)
             var first = 0L
             activity.onActivity { first = scene.get().renderedFrames }
             Thread.sleep(400)
@@ -199,6 +213,26 @@ class MapRendererTest {
 }
 
 internal open class UnusedMapsApi : MapsApi {
+    override suspend fun mediaBytes(url: String): ByteArray = error("unused")
+
+    override suspend fun decals(): List<MapDecalImage> = emptyList()
+
+    override suspend fun uploadDecal(
+        bytes: ByteArray,
+        name: String,
+        category: String,
+    ): MapDecalImage = error("unused")
+
+    override suspend fun previewContext(id: String): JsonObject = error("unused")
+
+    override suspend fun uploadPreview(
+        id: String,
+        signature: String,
+        bytes: ByteArray,
+    ): JsonObject = error("unused")
+
+    override suspend fun updateModel(model: MapModel, data: JsonObject): MapModel = error("unused")
+
     override suspend fun list(scope: String): List<BattleMap> = error("unused")
 
     override suspend fun get(id: String): BattleMap = error("unused")

@@ -1,0 +1,19 @@
+material { name: MapFire, shadingModel:unlit, blending:transparent, culling:none,
+    depthWrite:false, requires:[custom0], variables:[fire],
+    parameters:[{type:float,name:clock,precision:high},{type:float,name:strength},{type:float,name:seed,precision:high},{type:float4,name:colour}] }
+vertex {
+precision highp float; void materialVertex(inout MaterialVertexInputs m) {
+    vec3 local=getPosition().xyz; float h=local.y, phase=materialParams.seed+local.x*3.7+local.z*2.3;
+    float weight=h*h*materialParams.strength;
+    vec3 offset=vec3(weight*(0.13*sin(materialParams.clock*7.3+h*5.0+phase)+0.05*sin(materialParams.clock*13.1-h*8.0+phase)),
+        weight*0.12*sin(materialParams.clock*9.1+phase),weight*0.10*sin(materialParams.clock*8.7+h*6.0+phase));
+    m.worldPosition.xyz+=(getWorldFromModelMatrix()*vec4(offset,0.0)).xyz;
+    m.fire=vec4(h,0.0,0.0,0.0);
+} }
+fragment {
+precision highp float; void material(inout MaterialInputs m) {
+    prepareMaterial(m); float h=variable_fire.x;
+    float heat=1.0-0.14*materialParams.strength+0.14*materialParams.strength*sin(h*19.0-materialParams.clock*11.0+materialParams.seed);
+    vec3 colour=mix(mix(materialParams.colour.rgb,vec3(1.0),0.45),materialParams.colour.rgb,smoothstep(0.0,0.65,h))*heat;
+    m.baseColor=vec4(colour,materialParams.colour.a);
+} }

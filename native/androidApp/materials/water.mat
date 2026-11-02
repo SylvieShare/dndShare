@@ -1,0 +1,42 @@
+material { name: MapWater, shadingModel:lit, blending:opaque, culling:none, depthWrite:false,
+    requires:[uv0,color,custom0], variables:[water,waterMask], flipUV:false,
+    parameters:[{type:sampler2d,name:albedo},{type:sampler2d,name:normalMap},{type:sampler2d,name:orm},{type:sampler2d,name:emissiveMap},
+        {type:float4,name:baseFactor},{type:float4,name:factors},{type:float3,name:emissiveFactor},
+        {type:float,name:clock,precision:high},{type:float,name:strength},{type:float,name:pattern},{type:float2,name:center},{type:float,name:roughnessMax},
+        {type:float3x3,name:albedoTransform},{type:float3x3,name:normalMapTransform},{type:float3x3,name:ormTransform},{type:float3x3,name:emissiveMapTransform}] }
+vertex {
+precision highp float; void materialVertex(inout MaterialVertexInputs m) { m.water=vec4(getPosition().xyz,1.0); m.waterMask=getCustom0(); } }
+fragment {
+precision highp float;
+float wave(vec3 p,float falling) {
+    vec2 local=p.xz-materialParams.center;float radius=length(local);
+    float ripple=sin(radius*37.0-materialParams.clock*3.2)+0.35*sin(local.x*24.0+local.y*19.0-materialParams.clock*2.1);
+    if(materialParams.pattern>0.5&&materialParams.pattern<1.5)ripple=sin(dot(p.xz,vec2(24.0,17.0))-materialParams.clock*3.2)+0.35*sin(dot(p.xz,vec2(-17.0,28.0))-materialParams.clock*2.1);
+    if(materialParams.pattern>1.5)return sin(atan(local.y,local.x+0.00001)*4.0+radius*37.0+materialParams.clock*4.2);
+    float flow=sin(p.y*58.0+materialParams.clock*11.0+1.7*sin(p.x*31.0+p.z*29.0));return mix(ripple*0.74,flow,falling);
+}
+void material(inout MaterialInputs m) {
+    vec3 uv=vec3(getUV0(),1.0);
+    vec4 orm=texture(materialParams_orm,(materialParams.ormTransform*uv).xy);float roughness=orm.g*materialParams.factors.y,metallic=orm.b*materialParams.factors.x;
+    vec2 mask=variable_waterMask.xy;
+    float coverage=mask.x*(1.0-smoothstep(max(0.0,materialParams.roughnessMax-0.03),materialParams.roughnessMax,roughness))*(1.0-smoothstep(0.05,0.15,metallic));
+    if(coverage<0.001)discard;
+    vec3 p=materialParams.pattern>0.5&&materialParams.pattern<1.5?getUserWorldPosition():variable_water.xyz;
+    vec3 surface=cross(dFdx(p),dFdy(p));float up=abs(surface.y)/max(length(surface),1e-10);
+    float falling=mask.y<0.0?1.0-smoothstep(0.12,0.45,up):mask.y;
+    float signal=wave(p,falling),amount=coverage*materialParams.strength;
+    vec3 normal=texture(materialParams_normalMap,(materialParams.normalMapTransform*uv).xy).xyz*2.0-1.0;normal.xy*=materialParams.factors.z;
+    vec3 worldN=getWorldGeometricNormalVector();
+    vec3 q0=dFdx(getUserWorldPosition()),q1=dFdy(getUserWorldPosition());
+    vec3 r1=cross(q1,worldN),r2=cross(worldN,q0);float det=dot(q0,r1);
+    float height=signal*amount*0.003;
+    vec3 gradient=coverage*(dFdx(height)*r1+dFdy(height)*r2);
+    vec3 worldGradient=sign(det)*gradient/max(abs(det),1e-10);
+    vec3 tangentGradient=transpose(getWorldTangentFrame())*worldGradient;
+    m.normal=normalize(normal-tangentGradient);prepareMaterial(m);
+    vec4 colour=texture(materialParams_albedo,(materialParams.albedoTransform*uv).xy)*materialParams.baseFactor*getColor();
+    colour.rgb*=1.0+amount*signal*0.13;colour.rgb+=(colour.rgb+vec3(0.08))*0.10*amount*smoothstep(0.72,1.0,signal);
+    m.baseColor=colour;m.metallic=metallic;m.roughness=roughness;m.ambientOcclusion=orm.r;
+    m.emissive=vec4(texture(materialParams_emissiveMap,(materialParams.emissiveMapTransform*uv).xy).rgb*materialParams.emissiveFactor,1.0);
+}
+}

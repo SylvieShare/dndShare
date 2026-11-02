@@ -1,3 +1,5 @@
+import java.security.MessageDigest
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.plugin.compose")
@@ -8,6 +10,8 @@ plugins {
 android {
     namespace = "ru.dndshare.client"
     compileSdk = 37
+    ndkVersion = "29.0.14206865"
+    externalNativeBuild { cmake { path = file("src/main/cpp/CMakeLists.txt"); version = "3.31.6" } }
     defaultConfig {
         applicationId = "ru.dndshare.client"
         minSdk = 26
@@ -40,6 +44,7 @@ android {
     sourceSets {
         getByName("test").kotlin.directories += "src/testSupport/kotlin"
         getByName("test").resources.srcDir("../fixtures")
+        getByName("test").resources.srcDir("src/androidTest/assets")
         getByName("androidTest").kotlin.directories += "src/testSupport/kotlin"
         getByName("androidTest").assets.srcDir("schemas")
     }
@@ -100,3 +105,21 @@ val checkDesignSystemBoundary by tasks.registering {
     }
 }
 tasks.named("preBuild") { dependsOn(checkDesignSystemBoundary) }
+
+// Checked-in packages must be rebuilt whenever a shader source changes.
+val checkMapMaterials by tasks.registering {
+    val sources = fileTree("materials") { include("*.mat") }
+    val packages = fileTree("src/main/assets/maps/materials")
+    inputs.files(sources, packages)
+    doLast {
+        val manifest = groovy.json.JsonSlurper().parse(file("src/main/assets/maps/materials/manifest.json")) as Map<*, *>
+        fun sha256(file: File) = MessageDigest.getInstance("SHA-256").digest(file.readBytes()).joinToString("") { "%02x".format(it) }
+        val sourceHashes = manifest["sources"] as Map<*, *>
+        require(sources.files.map { it.name }.toSet() == sourceHashes.keys) { "Run scripts/native/compile-map-materials.py" }
+        sources.forEach { require(sha256(it) == sourceHashes[it.name]) { "Recompile map material: ${it.name}" } }
+        (manifest["outputs"] as Map<*, *>).forEach { (name, hash) ->
+            require(sha256(file("src/main/assets/maps/materials/$name")) == hash) { "Invalid map material: $name" }
+        }
+    }
+}
+tasks.named("preBuild") { dependsOn(checkMapMaterials) }

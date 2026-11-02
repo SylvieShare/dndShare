@@ -45,6 +45,9 @@ class FilamentMapScene(
     val hasMapFrame
         get() = core?.hasMapFrame == true
 
+    val effectStatistics
+        get() = core?.effectStatistics ?: MapEffectStatistics()
+
     init {
         val graphics =
             surfaceView.context
@@ -55,7 +58,9 @@ class FilamentMapScene(
             try {
                 check(graphics) { "Для 3D-карт нужна поддержка OpenGL ES 3.0 на устройстве." }
                 core =
-                    FilamentSceneCore(cache, dispatcher) { count, error ->
+                    FilamentSceneCore(surfaceView.context.applicationContext, cache, dispatcher) {
+                        count,
+                        error ->
                         ready = core?.readyModelUrls.orEmpty()
                         main.post { if (!closed) status(count, error) }
                     }
@@ -115,7 +120,28 @@ class FilamentMapScene(
 
     fun camera() = pose
 
+    fun options(value: MapSceneOptions) = post { options(value) }
+
+    fun snapshot(result: (Result<android.graphics.Bitmap>) -> Unit) {
+        if (closed) {
+            main.post { result(Result.failure(IllegalStateException("Редактор закрыт"))) }
+            return
+        }
+        val accepted = handler.post {
+            val value = core
+            if (closed || value == null)
+                main.post { result(Result.failure(IllegalStateException("Редактор закрыт"))) }
+            else value.snapshot(result)
+        }
+        if (!accepted)
+            main.post { result(Result.failure(IllegalStateException("Редактор закрыт"))) }
+    }
+
     fun pick(x: Float, y: Float, result: (String?) -> Unit) = post { pick(x, y, result) }
+
+    fun pickSurface(x: Float, y: Float, result: (MapSurfaceHit?) -> Unit) = post {
+        pickSurface(x, y, result)
+    }
 
     fun foreground(value: Boolean) = post { foreground(value) }
 

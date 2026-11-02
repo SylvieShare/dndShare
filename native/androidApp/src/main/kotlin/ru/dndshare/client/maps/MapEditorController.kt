@@ -93,7 +93,7 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
         mutable.update { it.copy(work = next, error = null) }
         persist(next)
         debounce?.cancel()
-        if (!state.value.conflict)
+        if (!state.value.conflict && next.editBase == null)
             debounce = scope.launch {
                 delay(1200)
                 flush()
@@ -104,7 +104,9 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
         val work = state.value.work ?: return
         if (!work.current.editable || state.value.conflict) return
         try {
-            val map = update(work.current)
+            val updated = update(work.current)
+            val map =
+                updated.copy(document = normalizeMapDocument(updated.document, state.value.models))
             if (map.content == work.current.content) return
             require(map.name.isNotBlank() && map.name.length <= 160) {
                 "Укажите название карты до 160 символов"
@@ -113,7 +115,12 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
             install(
                 work.copy(
                     current = map,
-                    undo = (work.undo + mapHistory(work.current.content, map.content)).takeLast(50),
+                    undo =
+                        if (work.editBase != null) work.undo
+                        else
+                            (work.undo + mapHistory(work.current.content, map.content)).takeLast(
+                                50
+                            ),
                     redo = emptyList(),
                 )
             )
@@ -127,6 +134,7 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
     }
 
     fun undo() {
+        finishEdit()
         val work = state.value.work ?: return
         val previous = work.undo.lastOrNull() ?: return
         try {
@@ -144,6 +152,7 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
     }
 
     fun redo() {
+        finishEdit()
         val work = state.value.work ?: return
         val next = work.redo.lastOrNull() ?: return
         try {
@@ -161,6 +170,7 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
     }
 
     suspend fun flush(): Boolean {
+        if (state.value.work?.editBase != null) finishEdit()
         saving?.join()
         if (state.value.conflict) return false
         val work = state.value.work ?: return true
@@ -275,6 +285,7 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
     }
 
     override fun close() {
+        finishEdit()
         val final = state.value.work
         debounce?.cancel()
         opening?.cancel()
@@ -288,5 +299,28 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
                 scope.cancel()
             }
         }
+    }
+
+    fun beginEdit() {
+        val work = state.value.work ?: return
+        if (work.editBase != null || !work.current.editable || state.value.conflict) return
+        debounce?.cancel()
+        val next = work.copy(editBase = work.current.content, localVersion = work.localVersion + 1)
+        mutable.update { it.copy(work = next) }
+        persist(next)
+    }
+
+    fun finishEdit() {
+        val work = state.value.work ?: return
+        val base = work.editBase ?: return
+        install(
+            work.copy(
+                editBase = null,
+                undo =
+                    if (base == work.current.content) work.undo
+                    else (work.undo + mapHistory(base, work.current.content)).takeLast(50),
+                redo = emptyList(),
+            )
+        )
     }
 }

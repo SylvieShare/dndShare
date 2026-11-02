@@ -28,6 +28,10 @@ fun mapSceneEntries(document: JsonObject, models: Map<String, MapModel>): List<M
             .filter { it.flag("hidden") }
             .flatMap { (it["objectIds"] as? JsonArray).orEmpty().map { it.jsonPrimitive.content } }
             .toSet()
+    val foggedTiles =
+        document.rows("areas").filter { it.flag("fog") }.flatMap { it.ids("tileIds") }.toSet()
+    val foggedObjects =
+        document.rows("areas").filter { it.flag("fog") }.flatMap { it.ids("objectIds") }.toSet()
     return document
         .rows("tiles")
         .filter { it.string("id") !in hiddenTiles }
@@ -51,14 +55,15 @@ fun mapSceneEntries(document: JsonObject, models: Map<String, MapModel>): List<M
         } +
         document
             .rows("objects")
-            .filter { it.string("id") !in hiddenObjects }
+            .filter { it.string("id") !in hiddenObjects && it.string("id") !in foggedObjects }
             .mapNotNull { obj ->
                 models[obj.string("modelId")]?.let { model ->
                     val anchor = obj["placement"] as? JsonObject
                     val tile =
                         document.rows("tiles").find { it.string("id") == anchor?.string("tileId") }
                     val support = tile?.let { models[it.string("modelId")] }
-                    if (tile?.string("id") in hiddenTiles) return@mapNotNull null
+                    if (tile?.string("id") in hiddenTiles || tile?.string("id") in foggedTiles)
+                        return@mapNotNull null
                     val point =
                         support?.placementPoints?.getOrNull(anchor?.number("point")?.toInt() ?: -1)
                             as? JsonObject
