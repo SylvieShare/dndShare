@@ -17,6 +17,7 @@
 - [Аудит поддержки всех магических предметов](catalogue/magic-item-automation-audit.md)
 - [Автоматизация заклинаний](catalogue/spell-automation-audit.md)
 - [Проверка заклинаний и способностей — 12 сентября 2026](catalogue/spell-rules-audit.md)
+- [Публикация наборов MM 7 и 8: 61 модель — 2 ноября 2026](creature-miniatures-mm-batches-7-8-publication-2026-11-02.md)
 - [Миниатюры MM: восьмой набор, 30 видов — 31 октября 2026](creature-miniatures-mm-batch-8-quota-2026-10-31.md)
 - [Посадка одежды миниатюр — 24 октября 2026](creature-clothing-fit-2026-10-24.md)
 - [Миниатюры MM: второй набор, 20 видов — 25 октября 2026](creature-miniatures-mm-batch-20-2026-10-25.md)
