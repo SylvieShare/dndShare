@@ -1,0 +1,31 @@
+import { test, expect } from '@playwright/test'
+import { installCharacterChromeFixture } from './characterChromeFixture.js'
+
+for (const width of [390, 834, 1440]) test(`minified production header really blurs at ${width}`, async ({ page }, testInfo) => {
+  await page.setViewportSize({ width, height: 700 })
+  await installCharacterChromeFixture(page)
+  await page.goto('/chars')
+  await expect(page.locator('.char-card')).toHaveCount(30)
+  const header = page.locator('.app-header')
+  const backdrop = header.locator('.workspace-header-backdrop')
+  await expect(backdrop).toHaveCSS('backdrop-filter', 'blur(16px)')
+  await page.evaluate(() => scrollTo(0, 350))
+  await page.addStyleTag({ content: '.app-header .workspace-header-inner { visibility: hidden; }' })
+  const box = await header.boundingBox()
+  const clip = { x: Math.ceil(box.x) + 8, y: Math.ceil(box.y), width: Math.floor(box.width) - 24, height: 50 }
+  const take = () => page.screenshot({ clip, animations: 'disabled' })
+  const blurred = await take()
+  const off = await page.addStyleTag({ content: '.workspace-header-backdrop { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }' })
+  const sharp = await take()
+  await off.evaluate(element => element.remove())
+  const restored = await take()
+  await testInfo.attach('production-blurred', { body: blurred, contentType: 'image/png' })
+  await testInfo.attach('production-sharp', { body: sharp, contentType: 'image/png' })
+  expect(restored.equals(blurred), 'The scene must be stable through the blur cycle').toBe(true)
+  expect(blurred.equals(sharp), 'Minification must not turn blur into tint only').toBe(false)
+  await page.locator('.char-card').first().getByText('Персонаж 0', { exact: true }).click()
+  await expect(page.locator('.character-workspace-header .workspace-header-backdrop')).toHaveCSS('backdrop-filter', 'blur(16px)')
+  await page.getByRole('button', { name: 'К списку персонажей' }).click()
+  await page.getByRole('button', { name: 'Новый персонаж', exact: true }).click()
+  await expect(page.locator('.cc-head-backdrop')).toHaveCSS('backdrop-filter', 'blur(16px)')
+})
