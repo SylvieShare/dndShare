@@ -38,7 +38,7 @@ for (const width of [320, 834, 1440]) test(`character actions stay in sharp subh
   expect(colors.bg).toBe('rgb(53, 49, 63)')
   await expect(page.locator('.workspace-subheader-inner')).toHaveCSS('filter', 'none')
   const effect = await page.locator('.app-header').evaluate(element => {
-    const css = getComputedStyle(element, '::before')
+    const css = getComputedStyle(element.querySelector('.workspace-header-backdrop'))
     return { blur: css.backdropFilter, mask: css.maskImage, pointer: css.pointerEvents }
   })
   expect(effect.blur).toBe('blur(16px)')

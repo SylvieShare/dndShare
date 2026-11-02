@@ -35,6 +35,7 @@ async function fixture(page, templateName = 'DND5', owner = true, catalogue = fa
     if (path === '/api/char/test') json = { templateName, userId: owner ? 1 : 2, sourceVersionId: 1, version, data: document }
     if (path === '/api/account/tutorials') json = { tutorials: ['mobile', 'desktop'].map(device => ({ flowId: 'character', sourceKey: 'edition:1', device, status: 'completed', revision: TUTORIAL_REVISION })) }
     if (path === '/api/suggest/batch') json = { items: { 16: ['Сила', 'Ловкость', 'Телосложение', 'Интеллект', 'Мудрость', 'Харизма'].map((value, i) => ({ id: i + 1, typeId: 16, value })), 15: [] } }
+    if (path === '/api/items/by-ids') json = { items: [] }
     if (path === '/api/items/by-ids' && catalogue) json = { items: target.searchParams.get('ids').split(',').map(Number).map(id => ({ id, typeId: id === 201 ? 1 : id === 203 ? 3 : id === 206 ? 6 : 5, name: {201:'Кешированный посох',202:'Кешированное зелье',203:'Воин',205:'Кешированная способность',206:'Кешированное заклинание'}[id] || 'Предмет ' + id, data: id === 206 ? { lvl: 1 } : {} })) }
     if (path === '/api/sources') json = { sources: [{ id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }] }] }
     if (path === '/api/char/test/changes') json = { fromVersion: version, version, patches: [] }
@@ -274,19 +275,25 @@ for (const width of [390, 834, 1440]) test(`chrome actually blurs the sheet pixe
     await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/dragging|settling/)
   }
   const scroller = width < 1200 ? page.locator('.mobile-swipe-pane:not([inert]) .mobile-pane-scroll') : page.locator('.sheet-scroll')
-  await scroller.evaluate(element => {
-    element.scrollTop = 200
-    element.style.backgroundImage = 'repeating-linear-gradient(90deg, #fff 0px 3px, #000 3px 6px)'
-  })
+  await expect.poll(() => scroller.evaluate(element => element.scrollHeight - element.clientHeight)).toBeGreaterThan(20)
+  await scroller.evaluate(element => { element.scrollTop = 200 })
+  await expect.poll(() => scroller.evaluate(element => element.scrollTop)).toBeGreaterThan(20)
+  await page.addStyleTag({ content: '.character-workspace-header .workspace-header-inner { visibility: hidden; }' })
   const bounds = await header.boundingBox()
-  const clip = { x: Math.ceil(bounds.x), y: Math.ceil(bounds.y), width: Math.floor(bounds.width), height: Math.min(50, Math.floor(bounds.height)) }
+  const clip = { x: Math.ceil(bounds.x) + 8, y: Math.ceil(bounds.y), width: Math.floor(bounds.width) - 24, height: Math.min(50, Math.floor(bounds.height)) }
   const take = () => page.screenshot({ clip, animations: 'disabled' })
+  await expect(header.locator('.workspace-header-backdrop')).toHaveAttribute('aria-hidden', 'true')
   const blurred = await take()
-  await page.addStyleTag({ content: '.character-workspace-header::before { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }' })
+  const stableBlurred = await take()
+  const disabledBlur = await page.addStyleTag({ content: '.character-workspace-header .workspace-header-backdrop { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }' })
   const sharp = await take()
   const stable = await take()
+  await disabledBlur.evaluate(element => element.remove())
+  const restored = await take()
   await testInfo.attach('blurred', { body: blurred, contentType: 'image/png' })
   await testInfo.attach('sharp', { body: sharp, contentType: 'image/png' })
+  expect(stableBlurred.equals(blurred), 'Blurred scene must be stable').toBe(true)
+  expect(restored.equals(blurred), 'Restoring blur must restore the same scene').toBe(true)
   expect(stable.equals(sharp), 'Control pixels must be stable').toBe(true)
   expect(blurred.equals(sharp), 'Blur must change the rendered backdrop, not only computed CSS').toBe(false)
 })

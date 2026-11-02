@@ -1,5 +1,6 @@
 <template>
   <header ref="element" class="workspace-header" :class="{ 'workspace-header--plain': !$slots.navigation || splitNavigation }">
+    <div class="workspace-header-backdrop" aria-hidden="true"></div>
     <div class="workspace-header-inner" :class="{ 'workspace-header-inner--page': page }" :style="{ maxWidth: contentWidth || (page ? 'var(--layout-content-max)' : undefined) }">
     <div class="workspace-header-identity"><slot name="identity" /></div>
     <div v-if="$slots.navigation && !splitNavigation" class="workspace-header-navigation"><slot name="navigation" /></div>
@@ -36,11 +37,10 @@ onBeforeUnmount(() => observer?.disconnect());
   isolation: isolate;
   background: transparent;
 }
-.workspace-header::before {
-  content: '';
+.workspace-header-backdrop {
   position: absolute;
   inset: 0 0 calc(-1 * (var(--chrome-fade-tail) + var(--workspace-extra-fade, 0px)));
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
   background: color-mix(in srgb, var(--bg) calc(var(--chrome-tint) * 100%), transparent);
   backdrop-filter: blur(var(--chrome-blur));
@@ -50,6 +50,8 @@ onBeforeUnmount(() => observer?.disconnect());
   -webkit-mask-image: linear-gradient(to bottom, var(--text-on-accent) var(--workspace-main-height), transparent 100%);
 }
 .workspace-header-inner {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: minmax(150px, 1fr) auto minmax(142px, 1fr);
   align-items: center;
@@ -62,7 +64,7 @@ onBeforeUnmount(() => observer?.disconnect());
   transition: max-width var(--motion-navigation);
 }
 .workspace-header-inner--page { padding-inline: var(--spacing-page); }
-.workspace-subheader { padding: 4px 8px; }
+.workspace-subheader { position: relative; z-index: 1; padding: 4px 8px; }
 .workspace-subheader-inner { --surface: var(--subheader); display: flex; justify-content: center; box-sizing: border-box; width: 100%; min-width: 0; margin-inline: auto; padding: var(--spacing-xs); border-radius: var(--radius-compact-navigation); background: var(--subheader); overflow-x: auto; }
 .workspace-header-identity {
   min-width: 0;
