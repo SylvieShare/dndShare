@@ -73,6 +73,7 @@ internal class FilamentSceneCore(
     private val picker: MapScenePicker
     private val lights: MapSceneLights
     private val shadows: MapSceneShadows
+    private val loading: MapSceneLoading
     private val frames =
         MapFrameScheduler(::frame) { error ->
             captures.fail(error)
@@ -243,13 +244,14 @@ internal class FilamentSceneCore(
                 message ->
                 report("shadows", message)
             }
+        loading = MapSceneLoading(engine, scene, pipeline.materials)
         picker =
             MapScenePicker(
                 pipeline.pickingView,
                 camera,
                 cache,
                 scope,
-                { assets.entities + effects.picks },
+                { assets.entities + effects.picks + loading.picks },
                 { assets.drawnEntries },
                 { document },
                 ::requestFrame,
@@ -428,6 +430,16 @@ internal class FilamentSceneCore(
             motionUpdated(positions)
         }
         val effectMotion = effects.advance(seconds, motion)
+        assets.renderContext?.let {
+            loading.update(
+                it,
+                assets.requestedEntries,
+                assets.readySnapshot.readyRefs,
+                selectedRefs(),
+                if (options.previewValid) emptySet() else options.preview.refs,
+            )
+        }
+        val loadingMotion = loading.advance(seconds, motion)
         val lightMotion =
             lights.advance(seconds, motion, pose, width, height, options.selectedLight, anchors)
         val postProcess = effects.prepare(view, camera, seconds, motion)
@@ -442,7 +454,7 @@ internal class FilamentSceneCore(
             density,
             effects,
             assets.surfaceGroups,
-            assets.renderMaterials + effects.renderMaterials,
+            assets.renderMaterials + effects.renderMaterials + loading.renderMaterials,
             if (options.previewValid) "#c1adf1" else "#ef6b73",
         )
         effectStatistics = effects.statistics
@@ -495,7 +507,7 @@ internal class FilamentSceneCore(
             }
         }
         if (poseMotion || assets.working || picker.working || captures.working) requestFrame()
-        else if (effectMotion || lightMotion) frames.motion(seconds)
+        else if (effectMotion || lightMotion || loadingMotion) frames.motion(seconds)
         else lightFrames.nextDelay?.let(frames::after)
     }
 
@@ -508,6 +520,7 @@ internal class FilamentSceneCore(
         scope.cancel()
         frames.close()
         detach()
+        loading.close()
         shadows.close()
         effects.close()
         assets.close()

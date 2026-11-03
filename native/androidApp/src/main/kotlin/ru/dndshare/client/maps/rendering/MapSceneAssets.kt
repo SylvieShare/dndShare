@@ -175,6 +175,9 @@ internal class MapSceneAssets(
     private val downloaded = ArrayDeque<DownloadedModel>()
     private var loading: MapModelPool? = null
     private var entries = emptyList<MapSceneEntry>()
+    val requestedEntries
+        get() = entries
+
     val entities = mutableMapOf<Int, MapEntityRef>()
     val readyModelUrls
         get() = pools.filterValues { it.ready }.keys.toSet()
