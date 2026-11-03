@@ -6,79 +6,65 @@ import ru.dndshare.client.maps.*
 internal class MapDragCommands(private val workspace: MapEditorWorkspace) {
     private var source: MapEntityRef? = null
     private var origin: MapPointer? = null
-    private var layout: MapMoveLayout? = null
+    private val models = MapModelDrag(workspace)
     private var originalLight: JsonObject? = null
-    private var last: MapPointer? = null
     private var token = 0L
     private var pending: Pair<MapPointer, Boolean>? = null
     private var picking = false
     val active
-        get() = source != null
+        get() = source != null || models.active
 
     fun cancel() {
         token++
         source = null
         origin = null
-        layout = null
+        models.cancel()
         originalLight = null
-        last = null
         pending = null
         workspace.preview = null
         workspace.hint = null
     }
 
-    fun transform(mirror: Boolean): Boolean {
-        val current = layout ?: return false
-        layout = transformMapMove(current, workspace.current.models, mirror)
-        last?.let { move(it, false) }
-        return true
+    fun transform(mirror: Boolean): Boolean = models.transform(mirror)
+
+    fun close() {
+        cancel()
+        models.close()
     }
 
     fun move(pointer: MapPointer, end: Boolean) {
         if (!workspace.editable) return
+        if (models.active || pointer.hit?.kind in setOf(MapEntityKind.Tile, MapEntityKind.Object)) {
+            models.move(pointer, end)
+            return
+        }
         val ref = source ?: pointer.hit ?: return
         val doc = workspace.current.map?.document ?: return
         if (source == null) {
             val row = ref.row(doc) ?: return
             source = ref
             origin = pointer
-            if (ref.kind == MapEntityKind.Tile || ref.kind == MapEntityKind.Object) {
-                layout =
-                    captureMapMove(
-                        doc,
-                        workspace.current.models,
-                        workspace.currentUi.focus.selected.toSet(),
-                        ref,
-                    )
-                workspace.focus(MapFocus(requireNotNull(layout).selected.toList()))
-            } else {
-                workspace.focus(ref)
-                if (ref.kind == MapEntityKind.Light && row.string("builtinKey").isNotBlank()) {
-                    cancel()
-                    return
-                }
-                originalLight = if (ref.kind == MapEntityKind.Light) row else null
+            workspace.focus(ref)
+            if (ref.kind == MapEntityKind.Light && row.string("builtinKey").isNotBlank()) {
+                cancel()
+                return
             }
+            originalLight = if (ref.kind == MapEntityKind.Light) row else null
         }
-        last = pointer
         if (ref.kind == MapEntityKind.Decal) {
             pending = pointer to end
             pickDecal()
             return
         }
-        val start = origin ?: return
         fun apply(current: JsonObject): JsonObject {
-            val group = layout
-            if (group != null)
-                return moveMapLayout(
-                    current,
-                    workspace.current.models,
-                    group,
-                    pointer.world.x - start.world.x,
-                    pointer.world.y - start.world.y,
-                )
             if (originalLight == null) return current
             val light = ref.row(current) ?: return current
+            require(
+                pointer.world.x in 0.0..current.number("width") &&
+                    pointer.world.y in 0.0..current.number("height")
+            ) {
+                "Источник должен находиться внутри карты"
+            }
             return mapReplace(
                 current,
                 "lights",

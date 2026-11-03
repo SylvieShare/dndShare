@@ -126,7 +126,7 @@
           @gesture="handleGesture"
           @camera-move="cameraMoved"
         />
-        <MapEditingTools v-if="!playerPreview && !e.conflict" :editor="e" @paste="pasteFromToolbar" @cancel="cancelFromToolbar" />
+        <MapEditingTools v-if="!playerPreview && !e.conflict" :editor="e" @paste="pasteFromToolbar" @cancel="cancelFromToolbar" @fill="e.fillRoom = !e.fillRoom; placement.cameraMoved()" />
         <slot name="canvas-overlay" :editor="e" :canvas="canvas" />
         <MapSelectionPanel
           ref="selectionPanel"
@@ -225,6 +225,7 @@ const cameras = editorCameras(
 );
 onBeforeUnmount(cameras.disposeCameras);
 const e = reactive({
+  fillRoom: false,
   ...cameras,
   ...core,
   handle: handleGesture,

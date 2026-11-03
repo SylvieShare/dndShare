@@ -23,6 +23,7 @@ internal class MapTouchController(
 ) {
     var orbit = false
     var rectangle = false
+    var placing = false
     private var selecting = false
     private var mouse = false
     private var right = false
@@ -41,7 +42,7 @@ internal class MapTouchController(
     private var tapPoint: Pair<Float, Float>? = null
     private val threshold = 5 * host.resources.displayMetrics.density
     private val hold = Runnable {
-        if (!moved && pair == null && hit != null && !orbit) {
+        if (!moved && pair == null && hit != null && !orbit && !placing) {
             holding = true
             host.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             drag(pointerAt(startX, startY, hit), false)
@@ -69,12 +70,13 @@ internal class MapTouchController(
                 initial = scene.camera()
                 val serial = sequence
                 scene.pick(event.x, event.y) { if (serial == sequence && pointer >= 0) hit = it }
-                if (!selecting && !right) handler.postDelayed(hold, 500)
+                if (!selecting && !right && !placing) handler.postDelayed(hold, 500)
+                if (placing && !selecting) drag(pointerAt(startX, startY, null), false)
                 host.parent?.requestDisallowInterceptTouchEvent(true)
             }
             MotionEvent.ACTION_POINTER_DOWN -> {
                 handler.removeCallbacks(hold)
-                if (holding || selecting) cancelEdit()
+                if (holding || selecting || placing) cancelEdit()
                 selecting = false
                 holding = false
                 moved = true
@@ -114,6 +116,10 @@ internal class MapTouchController(
                 }
                 if (selecting) {
                     selection(Offset(startX, startY), Offset(x, y), false)
+                    return true
+                }
+                if (placing) {
+                    if (moved) drag(pointerAt(x, y, hit), false)
                     return true
                 }
                 if (mouse && !right && moved && hit != null && !holding) {
@@ -158,7 +164,9 @@ internal class MapTouchController(
                 if (selecting) {
                     selection(Offset(startX, startY), Offset(event.x, event.y), true)
                     selecting = false
-                } else if (holding) hit?.let { drag(MapPointer(it, world, event.x, event.y), true) }
+                } else if (placing && moved && pair == null)
+                    drag(MapPointer(hit, world, event.x, event.y), true)
+                else if (holding) hit?.let { drag(MapPointer(it, world, event.x, event.y), true) }
                 else if (!moved && pair == null && !right) {
                     tapPoint = event.x to event.y
                     host.performClick()
@@ -171,6 +179,22 @@ internal class MapTouchController(
             MotionEvent.ACTION_CANCEL -> cancel()
         }
         return true
+    }
+
+    fun hover(event: MotionEvent): Boolean {
+        if (!placing) return false
+        if (
+            event.actionMasked == MotionEvent.ACTION_HOVER_MOVE ||
+                event.actionMasked == MotionEvent.ACTION_HOVER_ENTER
+        ) {
+            drag(pointerAt(event.x, event.y, null), false)
+            return true
+        }
+        if (event.actionMasked == MotionEvent.ACTION_HOVER_EXIT) {
+            cancelEdit()
+            return true
+        }
+        return false
     }
 
     fun generic(event: MotionEvent): Boolean {
@@ -193,7 +217,7 @@ internal class MapTouchController(
     fun cancel() {
         sequence++
         handler.removeCallbacks(hold)
-        if (holding || selecting) cancelEdit()
+        if (holding || selecting || placing) cancelEdit()
         selecting = false
         holding = false
         pointer = -1

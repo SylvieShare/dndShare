@@ -40,6 +40,7 @@ fun moveMapLayout(
     layout: MapMoveLayout,
     deltaX: Double,
     deltaY: Double,
+    deltaLevel: Int = 0,
 ): JsonObject {
     val models = catalogue.associateBy { it.uuid }
     val dx = if (layout.tiles.isNotEmpty()) deltaX.roundToInt().toDouble() else deltaX
@@ -56,6 +57,10 @@ fun moveMapLayout(
                             .with("x", JsonPrimitive((moved.number("x") + dx).roundToInt()))
                             .with("y", JsonPrimitive((moved.number("y") + dy).roundToInt()))
                             .with("rotation", moved["rotation"] ?: JsonPrimitive(0))
+                            .with(
+                                "level",
+                                JsonPrimitive(moved.number("level").toInt() + deltaLevel),
+                            )
                     row =
                         if (moved.flag("mirrored")) row.with("mirrored", JsonPrimitive(true))
                         else row.without("mirrored")

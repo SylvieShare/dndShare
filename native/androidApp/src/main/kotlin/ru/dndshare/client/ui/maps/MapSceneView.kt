@@ -36,6 +36,7 @@ internal fun MapSceneView(
     status: (Int, String?) -> Unit,
     initialCamera: MapCamera? = null,
     active: Boolean = true,
+    placing: Boolean = false,
     options: MapSceneOptions = MapSceneOptions(),
     rectangle: Boolean = false,
     selection: (Offset, Offset, Boolean) -> Unit = { _, _, _ -> },
@@ -102,6 +103,7 @@ internal fun MapSceneView(
                     activate = pointer::click
                     setOnTouchListener { _, event -> pointer.event(event) }
                     setOnGenericMotionListener { _, event -> pointer.generic(event) }
+                    setOnHoverListener { _, event -> pointer.hover(event) }
                     setOnKeyListener { _, _, event -> onKey(event) }
                     addOnLayoutChangeListener {
                         _,
@@ -140,6 +142,7 @@ internal fun MapSceneView(
                 view.activate = null
                 view.setOnTouchListener(null)
                 view.setOnGenericMotionListener(null)
+                view.setOnHoverListener(null)
                 view.setOnKeyListener(null)
                 touch?.cancel()
                 touch = null
@@ -217,6 +220,7 @@ internal fun MapSceneView(
     SideEffect {
         touch?.orbit = orbit
         touch?.rectangle = rectangle
+        touch?.placing = placing
     }
     DisposableEffect(lifecycle, scene, active) {
         val observer = LifecycleEventObserver { _, event ->

@@ -164,7 +164,7 @@ internal class MapEditorWorkspace(
         cameraDrag.cancel()
         paletteDrag.cancel()
         rectangle.cancel()
-        drag.cancel()
+        drag.close()
         placement.close()
         observation.cancel()
         scope.cancel()

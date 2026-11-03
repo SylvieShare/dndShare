@@ -27,7 +27,10 @@ internal fun MapCanvasToolbar(workspace: MapEditorWorkspace, modifier: Modifier 
                         else "Выделить рамкой",
                         Glyph.Rectangle,
                     ) {
-                        workspace.controller.ui { it.copy(rectangle = !it.rectangle) }
+                        workspace.placement.cancelPreview()
+                        workspace.controller.ui {
+                            it.copy(rectangle = !it.rectangle, tool = MapTool.None)
+                        }
                     }
                     if (workspace.ui.focus.selected.isNotEmpty()) {
                         MapToolButton("Повернуть выбор", Glyph.Rotate) {
@@ -54,33 +57,44 @@ internal fun MapCanvasToolbar(workspace: MapEditorWorkspace, modifier: Modifier 
         if (workspace.currentUi.tool != MapTool.None)
             Surface(color = WebPalette.Popover, shape = MaterialTheme.shapes.medium) {
                 Column {
-                    Row {
-                        MapToolButton("Повернуть", Glyph.Rotate) { workspace.selection.rotate() }
-                        MapToolButton("Отразить", Glyph.Flip) {
-                            workspace.selection.rotate(mirror = true)
+                    val activeTool = workspace.ui.tool
+                    val activeModel =
+                        (activeTool as? MapTool.Model)?.let { tool ->
+                            workspace.models.find { it.uuid == tool.modelId }
                         }
+                    val rotate =
+                        activeTool is MapTool.Model ||
+                            activeTool is MapTool.Paste ||
+                            activeTool is MapTool.Decal
+                    val mirror =
+                        activeTool is MapTool.Paste ||
+                            activeTool is MapTool.Model && activeModel?.isObject == false
+                    Row {
+                        if (rotate)
+                            MapToolButton("Повернуть", Glyph.Rotate) {
+                                workspace.selection.rotate()
+                            }
+                        if (mirror)
+                            MapToolButton("Отразить", Glyph.Flip) {
+                                workspace.selection.rotate(mirror = true)
+                            }
                         MapToolButton("Отменить размещение", Glyph.Close) {
                             workspace.placement.cancel()
                         }
                     }
-                    Row {
-                        MapToolButton("Уровень ниже", Glyph.Down, workspace.ui.level > 0) {
-                            workspace.controller.ui {
-                                it.copy(level = (it.level - 1).coerceAtLeast(0))
-                            }
+                    val model =
+                        (workspace.ui.tool as? MapTool.Model)?.let { tool ->
+                            workspace.models.find { it.uuid == tool.modelId }
+                        }
+                    if (model != null && !model.isObject && model.width == 1 && model.height == 1)
+                        ShareToggle("Заливка замкнутой области", workspace.ui.fillRoom) { value ->
+                            workspace.controller.ui { it.copy(fillRoom = value) }
                             workspace.placement.refreshPreview()
                         }
-                        Text("Уровень ${workspace.ui.level}", style = ShareTypography.context)
-                        MapToolButton("Уровень выше", Glyph.Up, workspace.ui.level < 15) {
-                            workspace.controller.ui {
-                                it.copy(level = (it.level + 1).coerceAtMost(15))
-                            }
-                            workspace.placement.refreshPreview()
+                    if (activeTool !is MapTool.BindLight && activeTool !is MapTool.MoveDecal)
+                        ShareToggle("Повторять размещение", workspace.ui.repeatPlacement) { v ->
+                            workspace.controller.ui { it.copy(repeatPlacement = v) }
                         }
-                    }
-                    ShareToggle("Повторять размещение", workspace.ui.repeatPlacement) { v ->
-                        workspace.controller.ui { it.copy(repeatPlacement = v) }
-                    }
                 }
             }
         workspace.map?.let { MapViewerTools(workspace.scene, it.document) }

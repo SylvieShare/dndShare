@@ -153,6 +153,7 @@ internal fun MapEditorLayout(
                             renderer = workspace::attachScene,
                             initialCamera = workspace.ui.camera,
                             active = !workspace.referenceOpen,
+                            placing = workspace.ui.tool != MapTool.None,
                             options =
                                 MapSceneOptions(
                                     forceLod = workspace.ui.forceLod,

@@ -65,5 +65,28 @@ try {
     groups.push({tiles,objects,models:groupModels,pivot,rotated:rotateMapGroup(tiles,objects,groupModels,pivot),mirrored:mirrorTileGroup(tiles,groupModels)})
   }
   await fs.writeFile(path.join(out,'web-groups.json'),JSON.stringify(groups,null,2)+'\n')
+  const {nearestTilePlacement}=await server.ssrLoadModule(base+'tilePlacement.js')
+  const {enclosedEmptyCells}=await server.ssrLoadModule(base+'enclosedTiles.js')
+  const floor={...model,id:'floor',definitionId:'F-floor',width:1,height:1,mountDepth:0,placementOffset:[0,0],behaviour:{defaultLights:[],transitions:[]},supportSlots:[{x:0,y:0,width:1,height:1,elevation:.5,insertionRise:.25}]}
+  const bridge={...floor,id:'bridge',definitionId:'F-bridge',width:2,height:1,mountDepth:.1,supportSlots:[]}
+  const placementModels=[floor,bridge]
+  const board=newMap().document;board.width=6;board.height=6;board.tiles=[{id:'base',modelId:'floor',x:2,y:2,rotation:0,level:0}]
+  const nearest=[]
+  for(const modelId of ['floor','bridge'])for(const rotation of [0,90])for(const level of [0,1]) {
+    const tile={id:'new',modelId,x:2.1,y:2.1,rotation,level}
+    nearest.push({document:structuredClone(board),models:placementModels,tile,expected:nearestTilePlacement(board,tile,placementModels)})
+  }
+  for(const [x,y] of [[-.2,-.2],[5.7,5.7],[1.3,2],[20,20]]) {
+    const tile={id:'new',modelId:'bridge',x,y,rotation:0,level:1}
+    nearest.push({document:structuredClone(board),models:placementModels,tile,expected:nearestTilePlacement(board,tile,placementModels)})
+  }
+  const room=newMap().document;room.width=7;room.height=7;room.tiles=[]
+  for(let y=1;y<=5;y++)for(let x=1;x<=5;x++)if(x===1||x===5||y===1||y===5)room.tiles.push({id:`wall-${x}-${y}`,modelId:'floor',x,y,rotation:0,level:0})
+  const fills=[]
+  for(const document of [room,{...room,tiles:room.tiles.filter(t=>t.id!=='wall-1-3')},{...room,tiles:[...room.tiles,{id:'obstacle',modelId:'bridge',x:2,y:2,rotation:0,level:0}]}]) {
+    const point={x:3.4,y:3.4}
+    fills.push({document,models:placementModels,point,expected:enclosedEmptyCells(document,point,placementModels)})
+  }
+  await fs.writeFile(path.join(out,'web-placement.json'),JSON.stringify({nearest,fills},null,2)+'\n')
   console.log(`Web map fixtures: ${results.length}; fog ${fog.length}; fire ${fire.length}`)
 } finally { await server.close() }

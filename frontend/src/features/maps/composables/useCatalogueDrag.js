@@ -84,7 +84,7 @@ export function useCatalogueDrag(editor, canvas, driver = editor.tileDrag) {
     }
     pointerEvent = event;
     fillKey = event.metaKey || event.ctrlKey;
-    driver.move(canvas.value?.pointAt(event), { fill: fillKey });
+    driver.move(canvas.value?.pointAt(event), { fill: fillKey || !!editor.fillRoom });
   }
   function drop(event) {
     if (event.pointerId !== pointer?.id) return;
@@ -95,7 +95,7 @@ export function useCatalogueDrag(editor, canvas, driver = editor.tileDrag) {
       return;
     }
     driver.drop(canvas.value?.pointAt(event), {
-      fill: event.metaKey || event.ctrlKey,
+      fill: event.metaKey || event.ctrlKey || !!editor.fillRoom,
     });
     cleanup();
   }
@@ -131,7 +131,7 @@ export function useCatalogueDrag(editor, canvas, driver = editor.tileDrag) {
       fillKey = event.metaKey || event.ctrlKey;
       if (pointerEvent)
         driver.move(canvas.value?.pointAt(pointerEvent), {
-          fill: fillKey,
+          fill: fillKey || !!editor.fillRoom,
         });
     }
     if (event.type === "keyup") return;
@@ -149,20 +149,20 @@ export function useCatalogueDrag(editor, canvas, driver = editor.tileDrag) {
   function cameraMoved() {
     if (pointerEvent)
       driver.move(canvas.value?.pointAt(pointerEvent), {
-        fill: fillKey,
+        fill: fillKey || !!editor.fillRoom,
       });
     if (keyboardPoint) {
       const center = canvas.value.centerPoint();
       keyboardPoint = keyboardAnchor(center);
-      driver.move(keyboardPoint, { fill: fillKey });
+      driver.move(keyboardPoint, { fill: fillKey || !!editor.fillRoom });
     }
   }
   function freeMove(event) {
-    if (!freePlacement) return;
+    if (!freePlacement || event.target?.closest?.('button,input,textarea,select,[role="toolbar"],[role="menu"],[role="dialog"]')) return;
     keyboardPoint = null;
     pointerEvent = event;
     fillKey = event.metaKey || event.ctrlKey;
-    driver.move(canvas.value?.pointAt(event), { fill: fillKey });
+    driver.move(canvas.value?.pointAt(event), { fill: fillKey || !!editor.fillRoom });
   }
   function freeDrop(event) {
     if (event.button === 2 && onTabRail(event)) return;
@@ -172,7 +172,7 @@ export function useCatalogueDrag(editor, canvas, driver = editor.tileDrag) {
       cancel();
       return;
     }
-    if (!freePlacement || event.button !== 0) return;
+    if (!freePlacement || event.button !== 0 || event.target?.closest?.('button,input,textarea,select,[role="toolbar"],[role="menu"],[role="dialog"]')) return;
     const point = canvas.value?.pointAt(event);
     if (!point) return;
     event.preventDefault();
@@ -183,7 +183,7 @@ export function useCatalogueDrag(editor, canvas, driver = editor.tileDrag) {
   function commit(point, event) {
     const repeat = repeatOnCommand && (event.metaKey || event.ctrlKey);
     driver.drop(point, {
-      fill: !repeatOnCommand && !!(event.metaKey || event.ctrlKey),
+      fill: !repeatOnCommand && !!(event.metaKey || event.ctrlKey || editor.fillRoom),
     });
     if (repeat) {
       driver.begin(source);
