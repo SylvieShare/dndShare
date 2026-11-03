@@ -229,27 +229,38 @@ internal class MapSceneDecals(
         job.start()
     }
 
+    fun appearance(changed: List<MapSceneEntry>) {
+        val opacities = changed.associate { it.ref to it.opacity }
+        for (decal in document.rows("decals")) {
+            val ref = mapAnchorRef(decal["anchor"] as? JsonObject)
+            val opacity = opacities[ref] ?: continue
+            tint(decal, opacity)
+        }
+    }
+
+    private fun tint(decal: JsonObject, ownerOpacity: Float) {
+        val opacity = ownerOpacity * decal.number("opacity", 1.0).toFloat()
+        val colour = mapLinearColour(decal.string("color", "#ffffff"))
+        for (entity in records[decal.string("id")]?.entities.orEmpty()) {
+            entity.visible(opacity > .001f)
+            entity.material.setParameter(
+                "tint",
+                colour[0] * opacity,
+                colour[1] * opacity,
+                colour[2] * opacity,
+                opacity,
+            )
+        }
+    }
+
     private fun synchronize() {
         for (decal in document.rows("decals")) {
-            val anchor = decal["anchor"] as? JsonObject ?: continue
-            val owner = entries[mapAnchorRef(anchor)]
-            val opacity =
-                if (owner == null) 0f
-                else
-                    (appearance?.opacity(anchor.string("kind"), anchor.string("id")) ?: 1f) *
-                        decal.number("opacity", 1.0).toFloat()
-            val colour = mapLinearColour(decal.string("color", "#ffffff"))
-            for (entity in records[decal.string("id")]?.entities.orEmpty()) {
-                entity.visible(opacity > .001f)
-                if (owner != null) entity.transform(owner.matrix)
-                entity.material.setParameter(
-                    "tint",
-                    colour[0] * opacity,
-                    colour[1] * opacity,
-                    colour[2] * opacity,
-                    opacity,
-                )
-            }
+            val owner = entries[mapAnchorRef(decal["anchor"] as? JsonObject)]
+            tint(decal, owner?.opacity ?: 0f)
+            if (owner != null)
+                records[decal.string("id")]?.entities.orEmpty().forEach {
+                    it.transform(owner.matrix)
+                }
         }
     }
 

@@ -7,6 +7,15 @@ import ru.dndshare.client.maps.geometry.*
 
 /** Visual poses never alter the canonical document or attachment coordinates. */
 internal class MapSceneMotion {
+    private val surface = MapSurfaceMotion()
+    val transformed = mutableSetOf<MapEntityRef>()
+    val appearanceChanged
+        get() = surface.changed.isNotEmpty()
+
+    fun style(ref: MapEntityRef) = surface.style(ref)
+
+    fun finishAppearance() = surface.finish()
+
     private val rotations = MapRotationMotion<MapEntityRef>()
     private var targets = emptyMap<MapEntityRef, MapSceneEntry>()
     private var anchors = emptyMap<MapEntityRef, MapEntityRef>()
@@ -16,11 +25,12 @@ internal class MapSceneMotion {
     private var lastTime: Double? = null
     val changed = mutableSetOf<MapEntityRef>()
     val moving
-        get() = rotations.moving
+        get() = rotations.moving || surface.moving
 
     fun sync(entries: Map<MapEntityRef, MapSceneEntry>, context: MapContext) {
         val wasMoving = moving
         targets = entries.toMap()
+        surface.sync(context, entries)
         anchors =
             entries.keys
                 .filter { it.kind == MapEntityKind.Object }
@@ -71,11 +81,16 @@ internal class MapSceneMotion {
     fun advance(seconds: Double, animate: Boolean): Boolean {
         val delta = lastTime?.let { max(0.0, seconds - it) * 1000 } ?: 0.0
         lastTime = seconds
-        val moving = rotations.advance(delta, immediate = !animate)
+        val moving =
+            rotations.advance(delta, immediate = !animate) or surface.advance(delta, animate)
+        transformed.clear()
+        transformed.addAll(rotations.changed)
+        rotations.changed.forEach { transformed.addAll(children[it].orEmpty()) }
         changed.clear()
+        changed.addAll(surface.changed)
         changed.addAll(rotations.changed)
         rotations.changed.forEach { changed.addAll(children[it].orEmpty()) }
-        changed.forEach(matrices::remove)
+        transformed.forEach(matrices::remove)
         return moving
     }
 
@@ -135,13 +150,15 @@ internal class MapSceneMotion {
                     ref to Mat4.multiply(visual, Mat4.inverse(original))
                 }
                 .toMap()
-        return MapVisualAnchors(deltas)
+        return MapVisualAnchors(deltas, surface.lightOpacities(), surface.fogMotion())
     }
 
     fun target(ref: MapEntityRef) = targets[ref]
 
     fun clear() {
         rotations.clear()
+        surface.clear()
+        transformed.clear()
         targets = emptyMap()
         matrices.clear()
         anchors = emptyMap()
@@ -152,17 +169,23 @@ internal class MapSceneMotion {
     }
 }
 
-internal class MapVisualAnchors(val deltas: Map<MapEntityRef, FloatArray> = emptyMap()) {
+internal class MapVisualAnchors(
+    val deltas: Map<MapEntityRef, FloatArray> = emptyMap(),
+    val lightOpacities: Map<String, Float> = emptyMap(),
+    val fog: MapFogMotion = MapFogMotion(),
+) {
     fun light(pose: MapLightPose): MapLightPose {
         val ref = mapAnchorRef(pose.source["anchor"] as? JsonObject)
-        val delta = deltas[ref] ?: return pose
+        val opacity = lightOpacities[pose.source.string("id")] ?: pose.opacity
+        val delta = deltas[ref] ?: return pose.copy(opacity = opacity)
         val point =
             Mat4.point(
                 delta,
                 Vec3(pose.point.x.toFloat(), pose.worldHeight.toFloat(), pose.point.y.toFloat()),
             )
         return pose.copy(
-            point = MapPose(point.x.toDouble(), point.z.toDouble(), point.y - pose.height)
+            point = MapPose(point.x.toDouble(), point.z.toDouble(), point.y - pose.height),
+            opacity = opacity,
         )
     }
 }

@@ -18,13 +18,14 @@ internal class MapSceneLayers(
             setDynamicLightingOptions(.01f, 2000f)
         }
 
-    private val ghostView = worldView(2)
+    private val ghostView = worldView(2 or 8).apply { isStencilBufferEnabled = true }
     private val selectionView = worldView(4).apply { isShadowingEnabled = false }
     val pickingView =
         worldView(3).apply {
             isShadowingEnabled = false
             isTransparentPickingEnabled = true
         }
+    private val opacity = MapSurfaceOpacity(engine, sourceScene, gpu)
     private val composite = MapPostProcess(engine, gpu, "surfaces")
     private var world: MapFrameTarget? = null
     private var ghost: MapFrameTarget? = null
@@ -40,7 +41,9 @@ internal class MapSceneLayers(
         selected: Boolean,
         pick: Boolean,
         density: Double,
+        groups: Map<Int, MapSurfaceStyle>,
     ) {
+        opacity.update(groups)
         this.ghosts = ghosts
         this.selected = selected
         if (width <= 0 || height <= 0) return
@@ -48,7 +51,15 @@ internal class MapSceneLayers(
         if ((ghosts || selected) && (world?.width != width || world?.height != height)) {
             releaseSurfaces()
             world = MapFrameTarget(engine, width, height, true, Texture.InternalFormat.RGBA16F)
-            ghost = MapFrameTarget(engine, width, height, true, Texture.InternalFormat.RGBA16F)
+            ghost =
+                MapFrameTarget(
+                    engine,
+                    width,
+                    height,
+                    true,
+                    Texture.InternalFormat.RGBA16F,
+                    Texture.InternalFormat.DEPTH24_STENCIL8,
+                )
             selection = MapFrameTarget(engine, width, height, true, Texture.InternalFormat.R8)
         } else if (!ghosts && !selected) releaseSurfaces()
         if (pick && (picking?.width != width || picking?.height != height)) {
@@ -129,6 +140,7 @@ internal class MapSceneLayers(
     }
 
     override fun close() {
+        opacity.close()
         releaseSurfaces()
         pickingView.renderTarget = null
         picking?.close()

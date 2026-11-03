@@ -40,7 +40,7 @@ internal fun MapEditorAnnotations(workspace: MapEditorWorkspace) {
             buildList {
                 for (light in doc.rows("lights")) {
                     val posed = mapLightPose(light, context)
-                    if (posed.opacity > .001f)
+                    if (posed.opacity > .001f && posed.source.flag("showMarker"))
                         add(
                             Annotation(
                                 MapEntityRef(MapEntityKind.Light, light.string("id")),

@@ -21,6 +21,7 @@ internal class MapSceneEffects(
     changed: () -> Unit,
     error: (String?) -> Unit,
 ) : AutoCloseable {
+    private var fogContext: MapContext? = null
     private val gpu = MapGpuMaterials(engine, context.assets)
     private val water = MapSceneWater(engine, scene, gpu, cache, scope, changed, error)
     private val fire = MapSceneFire(engine, scene, gpu)
@@ -45,8 +46,17 @@ internal class MapSceneEffects(
         water.update(entries, selected)
         fire.update(context)
         decals.update(context, entries)
-        fog.update(context)
+        fogContext = context
     }
+
+    fun appearance(entries: List<MapSceneEntry>, anchors: MapVisualAnchors) {
+        water.appearance(entries)
+        decals.appearance(entries)
+        fire.appearance(anchors)
+        fogContext?.let { fog.update(it, anchors.fog) }
+    }
+
+    fun surfaceGroups(groups: Map<MapEntityRef, Int>) = water.groups(groups)
 
     fun transforms(entries: List<MapSceneEntry>, anchors: MapVisualAnchors) {
         if (entries.isEmpty()) return
@@ -58,7 +68,8 @@ internal class MapSceneEffects(
     fun advance(seconds: Double, motion: Boolean): Boolean {
         val a = water.advance(seconds, motion)
         val b = fire.advance(seconds, motion)
-        return a || b || fog.ready && motion
+        val c = fog.advance(seconds, motion)
+        return a || b || c || fog.ready && motion
     }
 
     fun prepare(view: View, camera: Camera, seconds: Double, motion: Boolean) =
@@ -70,6 +81,7 @@ internal class MapSceneEffects(
     fun retry() {
         water.retry()
         decals.retry()
+        fog.retry()
     }
 
     override fun close() {

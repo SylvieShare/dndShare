@@ -131,13 +131,26 @@ internal class MapGpuEntity(
     private val engine: Engine,
     private val scene: Scene,
     mesh: MapGpuMesh,
-    val material: MaterialInstance,
+    material: MaterialInstance,
     shadows: Boolean = false,
     priority: Int = 4,
     private val ownsMaterial: Boolean = true,
     private val releaseMaterial: (MaterialInstance) -> Unit = engine::destroyMaterialInstance,
     culling: Boolean = true,
 ) : AutoCloseable {
+    var material = material
+        private set
+
+    fun bindMaterial(value: MaterialInstance) {
+        if (material.nativeObject == value.nativeObject) return
+        engine.renderableManager.setMaterialInstanceAt(
+            engine.renderableManager.getInstance(entity),
+            0,
+            value,
+        )
+        material = value
+    }
+
     val entity = EntityManager.get().create()
 
     init {

@@ -49,6 +49,7 @@ internal class MapFrameTarget(
     val height: Int,
     depth: Boolean,
     format: Texture.InternalFormat,
+    depthFormat: Texture.InternalFormat = Texture.InternalFormat.DEPTH24,
 ) : AutoCloseable {
     val colour =
         Texture.Builder()
@@ -66,8 +67,14 @@ internal class MapFrameTarget(
                 .height(height)
                 .levels(1)
                 .sampler(Texture.Sampler.SAMPLER_2D)
-                .format(Texture.InternalFormat.DEPTH24)
-                .usage(Texture.Usage.DEPTH_ATTACHMENT or Texture.Usage.SAMPLEABLE)
+                .format(depthFormat)
+                .usage(
+                    Texture.Usage.DEPTH_ATTACHMENT or
+                        Texture.Usage.SAMPLEABLE or
+                        (if (depthFormat == Texture.InternalFormat.DEPTH24_STENCIL8)
+                            Texture.Usage.STENCIL_ATTACHMENT
+                        else 0)
+                )
                 .build(engine)
         else null
     val target =

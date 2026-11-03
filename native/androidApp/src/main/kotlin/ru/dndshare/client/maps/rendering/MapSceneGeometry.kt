@@ -10,6 +10,7 @@ data class MapSceneEntry(
     val model: MapModel,
     val matrix: FloatArray,
     val opacity: Float = 1f,
+    val brightness: Float = 1f,
 )
 
 fun mapSceneEntries(document: JsonObject, models: Map<String, MapModel>): List<MapSceneEntry> {

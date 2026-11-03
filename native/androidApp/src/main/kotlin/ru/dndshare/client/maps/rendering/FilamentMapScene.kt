@@ -28,6 +28,10 @@ class FilamentMapScene(
     private val helper = UiHelper(UiHelper.ContextErrorPolicy.DONT_CHECK)
     @Volatile private var core: FilamentSceneCore? = null
     @Volatile private var closed = false
+    private val disposal = kotlinx.coroutines.CompletableDeferred<Unit>()
+    val termination: kotlinx.coroutines.Deferred<Unit>
+        get() = disposal
+
     @Volatile private var pose = MapCamera()
     private val cameraFlow = MutableStateFlow(pose)
     val cameraState = cameraFlow.asStateFlow()
@@ -201,6 +205,10 @@ class FilamentMapScene(
             try {
                 core?.close()
                 core = null
+                disposal.complete(Unit)
+            } catch (failure: Throwable) {
+                disposal.completeExceptionally(failure)
+                throw failure
             } finally {
                 thread.quitSafely()
             }

@@ -1,0 +1,5 @@
+material { name: MapSurfaceFlashAdd, shadingModel:unlit, vertexDomain:device,culling:none,
+    depthWrite:false,depthCulling:false,blending:custom,
+    blendFunction:{srcRGB:one,dstRGB:one,srcA:zero,dstA:one},
+    parameters:[{type:float,name:brightness}] }
+fragment { void material(inout MaterialInputs m) {prepareMaterial(m);m.baseColor=vec4(vec3((materialParams.brightness-1.0)*0.35),1.0);} }

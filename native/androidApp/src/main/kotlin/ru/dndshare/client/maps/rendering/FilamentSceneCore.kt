@@ -350,6 +350,8 @@ internal class FilamentSceneCore(
             requestFrame()
         }
         val anchors = assets.visualAnchors
+        effects.surfaceGroups(assets.surfaceIds)
+        effects.appearance(assets.appearanceEntries, anchors)
         effects.transforms(assets.motionEntries, anchors)
         if (anchors.deltas.isNotEmpty()) {
             val positions =
@@ -379,6 +381,7 @@ internal class FilamentSceneCore(
             picker.working,
             density,
             effects,
+            assets.surfaceGroups,
         )
         effectStatistics = effects.statistics
         val chain = swap

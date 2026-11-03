@@ -112,7 +112,8 @@ internal fun MapLightingPanel(workspace: MapEditorWorkspace, images: ImageLoader
 @Composable
 internal fun MapLightFields(workspace: MapEditorWorkspace, id: String, images: ImageLoader) {
     val doc = workspace.map?.document ?: return
-    val light = MapEntityRef(MapEntityKind.Light, id).row(doc) ?: return
+    val source = MapEntityRef(MapEntityKind.Light, id).row(doc) ?: return
+    val light = effectiveMapLight(source)
     val effect = light["effect"] as? JsonObject
     val builtin = light.string("builtinKey").isNotBlank()
     fun update(key: String, value: JsonElement, group: Boolean = false) =
@@ -224,6 +225,25 @@ internal fun MapLightFields(workspace: MapEditorWorkspace, id: String, images: I
     )
     MapInspectorSection("Привязка") {
         val anchor = mapAnchorRef(light["anchor"] as? JsonObject)
+        if (anchor == null && !builtin)
+            ShareSelect(
+                "Область",
+                light.string("areaId"),
+                listOf("" to "Без области") +
+                    doc.rows("areas").map { it.string("id") to it.string("name") },
+            ) { area ->
+                workspace.controller.document { current ->
+                    val row =
+                        MapEntityRef(MapEntityKind.Light, id).row(current)
+                            ?: return@document current
+                    mapReplace(
+                        current,
+                        "lights",
+                        if (area.isBlank()) row.without("areaId")
+                        else row.with("areaId", JsonPrimitive(area)),
+                    )
+                }
+            }
         if (anchor != null)
             MapEntityRow(workspace, anchor, images) {
                 if (!builtin)

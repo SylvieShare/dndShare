@@ -14,6 +14,11 @@ data class MapLightPose(
         get() = point.elevation + height
 }
 
+fun effectiveMapLight(light: JsonObject): JsonObject {
+    val overrides = light["overrides"] as? JsonObject ?: return light
+    return JsonObject(light + overrides)
+}
+
 fun mapLightPose(light: JsonObject, context: MapContext): MapLightPose {
     val anchor = light["anchor"] as? JsonObject
     val kind = anchor?.string("kind").orEmpty()
@@ -26,7 +31,7 @@ fun mapLightPose(light: JsonObject, context: MapContext): MapLightPose {
                 light.string("builtinKey").isNotBlank()
         }
     val overrides = light["overrides"] as? JsonObject
-    val effective = if (overrides != null) JsonObject(light + overrides) else light
+    val effective = effectiveMapLight(light)
     var point = MapPose(light.number("x"), light.number("y"), light.number("elevation"))
     var height = effective.number("height")
     if (owner != null) {

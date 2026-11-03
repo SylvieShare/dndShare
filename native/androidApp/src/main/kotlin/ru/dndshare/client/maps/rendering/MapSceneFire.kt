@@ -14,8 +14,9 @@ internal class MapSceneFire(
     private val flames = mutableMapOf<String, MapGpuEntity>()
     private var context: MapContext? = null
     private var sources = emptyList<MapLightPose>()
+    private val visible = mutableSetOf<String>()
     val count
-        get() = flames.size
+        get() = visible.size
 
     val picks
         get() =
@@ -28,12 +29,15 @@ internal class MapSceneFire(
         sources =
             value.document
                 .rows("lights")
+                .map(::effectiveMapLight)
                 .filter {
                     it.flag("enabled", true) &&
                         (it["effect"] as? JsonObject)?.string("kind") == "fire"
                 }
                 .map { mapFirePose(mapLightPose(it, value), value) }
-                .filter { it.opacity > .001f }
+
+        visible.clear()
+        visible.addAll(sources.filter { it.opacity > .001f }.map { it.source.string("id") })
         val ids = sources.map { it.source.string("id") }.toSet()
         flames.keys.filter { it !in ids }.forEach { flames.remove(it)?.close() }
         for (pose in sources) {
@@ -53,12 +57,25 @@ internal class MapSceneFire(
             matrix[5] = height
             matrix[10] = width
             flame.transform(matrix)
+            flame.visible(id in visible)
             val colour = mapLinearColour(source.string("color", "#ffc36a"))
             flame.material.setParameter("colour", colour[0], colour[1], colour[2], pose.opacity)
             flame.material.setParameter("seed", (id.hashCode() % 1000).toFloat())
             flame.material.setParameter("strength", effect.number("strength", .7).toFloat())
         }
         advance(0.0, false)
+    }
+
+    fun appearance(anchors: MapVisualAnchors) {
+        for (pose in sources) {
+            val opacity = anchors.light(pose).opacity
+            val flame = flames[pose.source.string("id")] ?: continue
+            val colour = mapLinearColour(pose.source.string("color", "#ffc36a"))
+            flame.material.setParameter("colour", colour[0], colour[1], colour[2], opacity)
+            val id = pose.source.string("id")
+            if (opacity > .001f) visible += id else visible -= id
+            flame.visible(opacity > .001f)
+        }
     }
 
     fun transforms(anchors: MapVisualAnchors) {
@@ -81,7 +98,8 @@ internal class MapSceneFire(
         for (pose in sources) {
             val source = pose.source
             val effect = source["effect"]!!.jsonObject
-            val moving = motion && effect.number("strength", .7) > 0
+            val moving =
+                motion && effect.number("strength", .7) > 0 && source.string("id") in visible
             flames[source.string("id")]
                 ?.material
                 ?.setParameter("clock", if (moving) mapEffectPhase(seconds).toFloat() else 0f)

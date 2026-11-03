@@ -25,6 +25,15 @@ internal class MapSceneWater(
         val blend: Boolean,
     )
 
+    private val stencil = MapStencilMaterials(engine, gpu)
+    private var groups = emptyMap<MapEntityRef, Int>()
+
+    fun groups(value: Map<MapEntityRef, Int>) {
+        if (value == groups) return
+        groups = value
+        synchronize()
+    }
+
     private val models = mutableMapOf<String, List<Part>>()
     private val entities = mutableMapOf<MapEntityRef, List<MapGpuEntity>>()
     private val entityModels = mutableMapOf<MapEntityRef, String>()
@@ -64,10 +73,13 @@ internal class MapSceneWater(
         models.keys
             .filter { it !in urls }
             .forEach { url ->
-                models.remove(url)?.forEach {
-                    it.mesh.close()
-                    gpu.release(it.material)
-                }
+                models
+                    .remove(url)
+                    ?.also { parts -> stencil.forget(parts.map { it.material }) }
+                    ?.forEach {
+                        it.mesh.close()
+                        gpu.release(it.material)
+                    }
             }
         loading.keys.filter { it !in urls }.forEach { loading.remove(it)?.cancel() }
         for (url in urls) if (url !in models && url !in loading && url !in failed) load(url)
@@ -158,6 +170,10 @@ internal class MapSceneWater(
                     }
                 }
             renderables.forEachIndexed { index, renderable ->
+                if (!parts[index].blend)
+                    renderable.bindMaterial(
+                        stencil.material(parts[index].material, groups[entry.ref] ?: 0)
+                    )
                 renderable.transform(entry.matrix)
                 val blend = parts[index].blend
                 renderable.layer(
@@ -190,6 +206,16 @@ internal class MapSceneWater(
                     settings.array("center").double(0).toFloat(),
                     settings.array("center").double(1).toFloat(),
                 )
+            }
+        }
+    }
+
+    fun appearance(changed: List<MapSceneEntry>) {
+        for (entry in changed) {
+            val parts = models[entry.model.renderUrl] ?: continue
+            entities[entry.ref].orEmpty().forEachIndexed { index, entity ->
+                if (parts[index].blend)
+                    entity.material.setParameter("visibilityOpacity", entry.opacity)
             }
         }
     }
@@ -234,6 +260,7 @@ internal class MapSceneWater(
         loading.clear()
         entities.values.flatten().forEach(MapGpuEntity::close)
         entities.clear()
+        stencil.close()
         models.values.flatten().forEach {
             it.mesh.close()
             gpu.release(it.material)

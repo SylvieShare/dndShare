@@ -25,8 +25,9 @@ internal class MapScenePipeline(context: Context, engine: Engine, scene: Scene, 
         pick: Boolean,
         density: Double,
         effects: MapSceneEffects,
+        groups: Map<Int, MapSurfaceStyle>,
     ) {
-        layers.prepare(width, height, entries.any { it.opacity < 1f }, selected, pick, density)
+        layers.prepare(width, height, groups.isNotEmpty(), selected, pick, density, groups)
         colour.prepare(width, height, effects.fogFrame)
     }
 

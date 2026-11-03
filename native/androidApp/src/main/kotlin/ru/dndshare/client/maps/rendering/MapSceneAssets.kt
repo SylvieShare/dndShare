@@ -35,6 +35,13 @@ internal class MapSceneAssets(
     private val retiring = mutableMapOf<String, MapModelPool>()
     private val poses = MapSceneMotion()
     private var context: MapContext? = null
+    private val surfaces = MapSceneSurfaces(poses, ::bindSurface)
+    val surfaceGroups
+        get() = surfaces.surfaceGroups
+
+    val surfaceIds
+        get() = surfaces.surfaceIds
+
     var visualAnchors = MapVisualAnchors()
         private set
 
@@ -42,11 +49,15 @@ internal class MapSceneAssets(
         get() = poses.moving
 
     val motionEntries
+        get() = poses.transformed.mapNotNull { drawn[it] }
+
+    val appearanceEntries
         get() = poses.changed.mapNotNull { drawn[it] }
 
     fun animate(seconds: Double, enabled: Boolean): Boolean {
         val moving = poses.advance(seconds, enabled)
-        applyPoses(poses.changed)
+        applyPoses(poses.transformed)
+        if (poses.appearanceChanged) surfaces.refresh(drawn)
         visualAnchors = poses.anchors()
         return moving
     }
@@ -276,7 +287,12 @@ internal class MapSceneAssets(
                             scene.addEntities(it.entities)
                         }
                         ?: continue
-                primitives.apply(pool.asset, instance, replaced[url].orEmpty())
+                primitives.apply(
+                    pool.asset,
+                    instance,
+                    replaced[url].orEmpty(),
+                    surfaceIds[entry.ref] ?: 0,
+                )
                 instance.entities.forEach {
                     entities[it] = entry.ref
                     val renderable = engine.renderableManager.getInstance(it)
@@ -311,6 +327,21 @@ internal class MapSceneAssets(
         drawn = actual
         context?.let { poses.sync(actual, it) }
         applyPoses(actual.keys)
+        surfaces.refresh(drawn, force = true)
+    }
+
+    private fun bindSurface(entry: MapSceneEntry, id: Int) {
+        val ref = entry.ref
+        val pool = availablePool(entry.model.renderUrl) ?: return
+        val instance = pool.assigned[ref] ?: return
+        primitives.apply(pool.asset, instance, replaced[pool.url].orEmpty(), id)
+        val layer =
+            (if (entry.opacity <= .001f) 0 else if (id == 0) 1 else 2) or
+                (if (ref in selection) 4 else 0)
+        for (entity in instance.entities) {
+            val renderable = engine.renderableManager.getInstance(entity)
+            if (renderable != 0) engine.renderableManager.setLayerMask(renderable, 255, layer)
+        }
     }
 
     private fun destroyPool(pool: MapModelPool) {

@@ -18,7 +18,7 @@ fragment {
             float front=texture(materialParams_ghostDepth,uv).r;
             float back=texture(materialParams_worldDepth,uv).r;
             if(front>0.0000001 && front>back+0.0000001)
-                colour=mix(colour,texture(materialParams_ghostColour,uv).rgb,0.12);
+                colour=mix(colour,texture(materialParams_ghostColour,uv).rgb,texture(materialParams_ghostColour,uv).a);
         }
         if(materialParams.outlineEnabled>0.5) {
             float inside=step(0.0000001,texture(materialParams_selectedDepth,uv).r);

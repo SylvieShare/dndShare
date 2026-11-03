@@ -23,6 +23,14 @@ internal class MapSceneFog(
     private var noise: Texture? = null
     private var field: VolumeFogField? = null
     private var building: Job? = null
+    private var lastContext: MapContext? = null
+    private var lastActive = emptySet<String>()
+    private var requestedWeights = emptyMap<String, Double>()
+    private val weights = MapFogWeights(scope, { field }, ::uploadDensity, changed)
+    private val skyMotion = MapScalarMotion<String>()
+    private var skyInitialized = false
+    private var skyTarget = 1.0
+    private var skyTime: Double? = null
     private var signature = ""
     private var closed = false
     private var clock = 0.0
@@ -45,17 +53,28 @@ internal class MapSceneFog(
     private var sky = 1f
     private var sun = Vec3(-.4f, .8f, -.5f).normalized()
     val working
-        get() = building?.isActive == true
+        get() = building?.isActive == true || weights.working
 
     val ready
         get() = field != null
 
-    fun update(context: MapContext) {
+    fun update(context: MapContext, motion: MapFogMotion) {
+        requestedWeights = motion.weights
+        field?.let { weights.update(it, requestedWeights) }
+        if (context === lastContext && motion.active == lastActive) return
+        lastContext = context
+        lastActive = motion.active
         val document = context.document
         val sunlight = document["sun"] as? kotlinx.serialization.json.JsonObject
-        sky =
-            if (!document.flag("lightingEnabled") || sunlight?.flag("enabled", true) == true) 1f
-            else .28f
+        val targetSky =
+            if (!document.flag("lightingEnabled") || sunlight?.flag("enabled", true) == true) 1.0
+            else .28
+        if (!skyInitialized || skyTarget != targetSky) {
+            skyMotion.set("sky", targetSky, immediate = !skyInitialized, duration = 380.0)
+            skyInitialized = true
+            skyTarget = targetSky
+            skyTime = null
+        }
         if (document.flag("lightingEnabled") && sunlight?.flag("enabled", true) == true) {
             val angle = Math.toRadians(sunlight.number("angle", 225.0))
             val elevation = Math.toRadians(sunlight.number("elevation", 45.0))
@@ -66,7 +85,7 @@ internal class MapSceneFog(
                     (cos(angle) * cos(elevation)).toFloat(),
                 )
         } else sun = Vec3(-.4f, .8f, -.5f).normalized()
-        val columns = mapFogColumns(context)
+        val columns = mapFogColumns(context) { it in motion.active }
         val key = columns.joinToString { "${it.areaId}:${it.min.toList()}:${it.max.toList()}" }
         if (key == signature) return
         signature = key
@@ -78,13 +97,19 @@ internal class MapSceneFog(
         }
         building = scope.launch {
             try {
-                val prepared = withContext(Dispatchers.Default) { buildMapFogField(columns) }
+                val initialWeights = requestedWeights
+                val prepared =
+                    withContext(Dispatchers.Default) {
+                        buildMapFogField(columns)?.apply { weights { initialWeights[it] ?: 0.0 } }
+                    }
                 if (closed || key != signature) return@launch
                 releaseField()
                 field = prepared
                 if (prepared != null) {
                     density = volume(prepared.data, prepared.dimensions)
                     noise = volume(mapFogNoise(), intArrayOf(32, 32, 32))
+                    weights.seed(prepared, initialWeights)
+                    weights.update(prepared, requestedWeights)
                 }
                 changed()
             } catch (cancelled: CancellationException) {
@@ -94,6 +119,42 @@ internal class MapSceneFog(
                 error(failure.message)
             }
         }
+    }
+
+    fun advance(seconds: Double, animate: Boolean): Boolean {
+        val delta = skyTime?.let { max(0.0, seconds - it) * 1000 } ?: 0.0
+        skyTime = seconds
+        val moving = skyMotion.advance(delta, immediate = !animate)
+        sky = skyMotion.value("sky").toFloat()
+        return moving && field != null
+    }
+
+    fun retry() {
+        lastContext = null
+        signature = ""
+        weights.clear()
+        changed()
+    }
+
+    private fun uploadDensity(bytes: ByteArray) {
+        val texture = density ?: return
+        val size = field?.dimensions ?: return
+        val buffer =
+            ByteBuffer.allocateDirect(bytes.size).apply {
+                put(bytes)
+                flip()
+            }
+        texture.setImage(
+            engine,
+            0,
+            0,
+            0,
+            0,
+            size[0],
+            size[1],
+            size[2],
+            Texture.PixelBufferDescriptor(buffer, Texture.Format.R, Texture.Type.UBYTE, 1),
+        )
     }
 
     private fun volume(bytes: ByteArray, size: IntArray): Texture {
@@ -256,6 +317,7 @@ internal class MapSceneFog(
     }
 
     private fun releaseField() {
+        weights.clear()
         field = null
         density?.let(engine::destroyTexture)
         density = null
@@ -267,6 +329,7 @@ internal class MapSceneFog(
     override fun close() {
         closed = true
         building?.cancel()
+        weights.close()
         releaseField()
         fog?.close()
         composite?.close()
