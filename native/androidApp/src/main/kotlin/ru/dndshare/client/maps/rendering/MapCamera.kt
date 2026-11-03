@@ -86,27 +86,40 @@ data class MapCamera(
         return copy(x = x + a.x - b.x, y = y + a.y - b.y)
     }
 
-    fun zoom(factor: Double, px: Double, py: Double, width: Int, height: Int): MapCamera {
-        if (saved != null) return copy(saved = null).zoom(factor, px, py, width, height)
+    fun zoom(
+        factor: Double,
+        px: Double,
+        py: Double,
+        width: Int,
+        height: Int,
+        density: Double = 1.0,
+    ): MapCamera {
+        if (saved != null) return copy(saved = null).zoom(factor, px, py, width, height, density)
         val a = world(px, py, width, height)
-        val next = copy(pixels = (pixels * factor).coerceIn(.5, 400.0))
+        val next = copy(pixels = (pixels * factor).coerceIn(.5 * density, 400.0 * density))
         val b = next.world(px, py, width, height)
         return next.copy(x = next.x + a.x - b.x, y = next.y + a.y - b.y)
     }
 
-    fun fit(mapWidth: Double, mapHeight: Double, width: Int, height: Int): MapCamera {
+    fun fit(
+        mapWidth: Double,
+        mapHeight: Double,
+        width: Int,
+        height: Int,
+        density: Double = 1.0,
+    ): MapCamera {
         val c = abs(cos(yaw))
         val s = abs(sin(yaw))
         val pixels =
             min(
-                (width - 60).coerceAtLeast(1) / (c * mapWidth + s * mapHeight),
-                (height - 60).coerceAtLeast(1) /
+                (width - 60 * density).coerceAtLeast(1.0) / (c * mapWidth + s * mapHeight),
+                (height - 60 * density).coerceAtLeast(1.0) /
                     ((s * mapWidth + c * mapHeight) * sin(pitch) + 2 * cos(pitch)),
             )
         return copy(
             x = mapWidth / 2,
             y = mapHeight / 2,
-            pixels = pixels.coerceIn(.5, 400.0),
+            pixels = pixels.coerceIn(.5 * density, 400.0 * density),
             saved = null,
         )
     }

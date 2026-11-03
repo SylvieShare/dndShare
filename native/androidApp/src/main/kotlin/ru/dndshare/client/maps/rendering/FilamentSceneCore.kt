@@ -48,7 +48,7 @@ internal class FilamentSceneCore(
     private var closed = false
     private var pose = MapCamera()
     private var options = MapSceneOptions()
-    private val density = context.resources.displayMetrics.density.toDouble()
+    private var density = context.resources.displayMetrics.density.toDouble()
     private var tier: MapModelTier? = null
     private val viewportAssets = MapViewportAssets()
     private val quality = MapSceneQuality()
@@ -163,6 +163,7 @@ internal class FilamentSceneCore(
                 width,
                 height,
                 margin,
+                density,
             )
         Handler(Looper.getMainLooper()).post { result(fitted) }
     }
@@ -252,7 +253,8 @@ internal class FilamentSceneCore(
         swap = null
     }
 
-    fun resize(width: Int, height: Int) {
+    fun resize(width: Int, height: Int, density: Double = this.density) {
+        this.density = density
         revision++
         view.viewport = Viewport(0, 0, width, height)
         updateCamera()

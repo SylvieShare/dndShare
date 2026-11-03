@@ -39,10 +39,19 @@ internal fun MapViewerTools(
 }
 
 internal fun FilamentMapScene.zoomViewport(amount: Double) =
-    camera(camera().zoom(amount, width / 2.0, height / 2.0, width, height))
+    camera(camera().zoom(amount, width / 2.0, height / 2.0, width, height, density.toDouble()))
 
 internal fun FilamentMapScene.fitViewport(document: kotlinx.serialization.json.JsonObject) =
-    camera(camera().fit(document.number("width"), document.number("height"), width, height))
+    camera(
+        camera()
+            .fit(
+                document.number("width"),
+                document.number("height"),
+                width,
+                height,
+                density.toDouble(),
+            )
+    )
 
 internal fun FilamentMapScene.toggleTopView(document: kotlinx.serialization.json.JsonObject) {
     val top = camera().tilt == 90.0
@@ -53,6 +62,12 @@ internal fun FilamentMapScene.toggleTopView(document: kotlinx.serialization.json
                 azimuth = if (top) 45.0 else 0.0,
                 saved = null,
             )
-            .fit(document.number("width"), document.number("height"), width, height)
+            .fit(
+                document.number("width"),
+                document.number("height"),
+                width,
+                height,
+                density.toDouble(),
+            )
     )
 }

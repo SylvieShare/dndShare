@@ -30,7 +30,7 @@ internal fun MapLibraryPreview(
         try {
             models = store.models().orEmpty()
             if (models.isNotEmpty()) loading = false
-            models = c.api.models()
+            models = cache.catalogue(force = retry > 0)
             store.models(models)
         } catch (cancelled: CancellationException) {
             throw cancelled

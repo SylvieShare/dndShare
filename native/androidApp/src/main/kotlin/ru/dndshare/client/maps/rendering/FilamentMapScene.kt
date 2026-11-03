@@ -28,6 +28,7 @@ class FilamentMapScene(
     private val handler = Handler(thread.looper)
     private val main = Handler(Looper.getMainLooper())
     private val helper = UiHelper(UiHelper.ContextErrorPolicy.DONT_CHECK)
+    private val resolution = MapSurfaceResolution(surfaceView, helper)
     @Volatile private var core: FilamentSceneCore? = null
     @Volatile private var closed = false
     private val disposal = kotlinx.coroutines.CompletableDeferred<Unit>()
@@ -45,18 +46,22 @@ class FilamentMapScene(
     val readyRefs
         get() = loads.value.readyRefs
 
-    @Volatile private var viewportWidth = 0
-    @Volatile private var viewportHeight = 0
     private val dispatcher = handler.asCoroutineDispatcher("Map renderer")
     private val settings = MapRenderSettings.get(surfaceView.context)
     private val settingsScope = CoroutineScope(SupervisorJob() + dispatcher)
     @Volatile private var requestedOptions = MapSceneOptions()
     val density = surfaceView.resources.displayMetrics.density
     val width
-        get() = viewportWidth
+        get() = resolution.width
 
     val height
-        get() = viewportHeight
+        get() = resolution.height
+
+    val renderWidth
+        get() = resolution.bufferWidth
+
+    val renderHeight
+        get() = resolution.bufferHeight
 
     val readyModelUrls
         get() = loads.value.readyUrls
@@ -126,9 +131,13 @@ class FilamentMapScene(
                 }
 
                 override fun onResized(width: Int, height: Int) {
-                    viewportWidth = width
-                    viewportHeight = height
-                    post { resize(width, height) }
+                    resolution.buffer(width, height)
+                    val scale = resolution.scaleX
+                    val effectiveDensity = this@FilamentMapScene.density.toDouble() * scale
+                    post {
+                        resize(width, height, effectiveDensity)
+                        camera(resolution.render(this@FilamentMapScene.pose))
+                    }
                 }
             }
         helper.attachTo(surfaceView)
@@ -164,11 +173,17 @@ class FilamentMapScene(
     fun camera(value: MapCamera) {
         pose = value
         cameraFlow.value = value
-        post { camera(value) }
+        post { camera(resolution.render(value)) }
     }
 
-    fun fitContents(selected: Set<MapEntityRef>? = null, margin: Double = .85) = post {
-        fitContents(selected, margin) { this@FilamentMapScene.camera(it) }
+    fun fitContents(selected: Set<MapEntityRef>? = null, margin: Double = .85): Unit = post {
+        val scale = resolution.scaleX
+        val revision = resolution.revision
+        fitContents(selected, margin) {
+            if (revision == resolution.revision)
+                this@FilamentMapScene.camera(it.copy(pixels = it.pixels / scale))
+            else this@FilamentMapScene.fitContents(selected, margin)
+        }
     }
 
     internal fun guides(value: ru.dndshare.client.maps.MapModelGuides?) = post { guides(value) }
@@ -206,12 +221,19 @@ class FilamentMapScene(
         return AutoCloseable { post { removeLightObserver(token) } }
     }
 
-    fun pick(x: Float, y: Float, result: (MapEntityRef?) -> Unit) = post { pick(x, y, result) }
+    fun pick(x: Float, y: Float, result: (MapEntityRef?) -> Unit) = post {
+        pick((x * resolution.scaleX).toFloat(), (y * resolution.scaleY).toFloat(), result)
+    }
 
-    fun hover(x: Float?, y: Float?) = post { hover(x, y) }
+    fun hover(x: Float?, y: Float?) = post {
+        hover(
+            x?.let { (it * resolution.scaleX).toFloat() },
+            y?.let { (it * resolution.scaleY).toFloat() },
+        )
+    }
 
     fun pickSurface(x: Float, y: Float, result: (MapSurfaceHit?) -> Unit) = post {
-        pickSurface(x, y, result)
+        pickSurface((x * resolution.scaleX).toFloat(), (y * resolution.scaleY).toFloat(), result)
     }
 
     fun foreground(value: Boolean) = post { foreground(value) }
@@ -237,6 +259,7 @@ class FilamentMapScene(
 
     override fun close() {
         if (closed) return
+        resolution.close()
         settingsScope.cancel()
         helper.detach()
         closed = true

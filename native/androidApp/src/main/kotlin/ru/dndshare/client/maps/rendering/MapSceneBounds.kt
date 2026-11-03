@@ -11,6 +11,7 @@ internal fun mapFitScene(
     width: Int,
     height: Int,
     margin: Double = .85,
+    density: Double = 1.0,
 ): MapCamera {
     if (entries.isEmpty() || width <= 0 || height <= 0) return camera
     val points = entries.flatMap { entry ->
@@ -51,6 +52,8 @@ internal fun mapFitScene(
     val spanX = (projection.maxOf { it.first } - projection.minOf { it.first }).coerceAtLeast(.1f)
     val spanY = (projection.maxOf { it.second } - projection.minOf { it.second }).coerceAtLeast(.1f)
     return centered.copy(
-        pixels = minOf(width * margin / spanX, height * margin / spanY).coerceIn(1.0, 400.0)
+        pixels =
+            minOf(width * margin / spanX, height * margin / spanY)
+                .coerceIn(density, 400.0 * density)
     )
 }

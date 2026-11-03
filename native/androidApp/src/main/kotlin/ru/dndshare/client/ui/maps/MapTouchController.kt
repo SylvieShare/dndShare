@@ -98,6 +98,7 @@ internal class MapTouchController(
                             now.y.toDouble(),
                             scene.width,
                             scene.height,
+                            scene.density.toDouble(),
                         )
                     val delta = ((now.angle - before.angle + 540) % 360) - 180
                     scene.camera(camera.copy(azimuth = (camera.azimuth + delta) % 360))
@@ -216,6 +217,7 @@ internal class MapTouchController(
                     event.y.toDouble(),
                     scene.width,
                     scene.height,
+                    scene.density.toDouble(),
                 )
         )
         changed()

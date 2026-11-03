@@ -109,6 +109,7 @@ internal fun MapSceneView(
                                             document.number("height"),
                                             right - left,
                                             bottom - top,
+                                            created.density.toDouble(),
                                         )
                             )
                         }
