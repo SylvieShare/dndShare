@@ -19,7 +19,6 @@ internal class MapSceneLayers(
         }
 
     private val ghostView = worldView(2 or 8 or 128).apply { isStencilBufferEnabled = true }
-    private val selectionView = worldView(4).apply { isShadowingEnabled = false }
     val pickingView =
         worldView(1 or 2 or 16).apply {
             isShadowingEnabled = false
@@ -33,26 +32,20 @@ internal class MapSceneLayers(
         }
     private var world: MapFrameTarget? = null
     private var ghost: MapFrameTarget? = null
-    private var selection: MapFrameTarget? = null
     private var picking: MapFrameTarget? = null
     private var ghosts = false
-    private var selected = false
     private var materials = MapRenderMaterials()
-    val selectionDepth
-        get() = if (selected) selection?.depth else null
 
     fun prepare(
         width: Int,
         height: Int,
         ghosts: Boolean,
-        selected: Boolean,
         pick: Boolean,
         groups: Map<Int, MapSurfaceStyle>,
         materials: MapRenderMaterials,
     ) {
         opacity.update(groups)
         this.ghosts = ghosts
-        this.selected = selected
         this.materials = materials
         if (width <= 0 || height <= 0) return
         pickingView.viewport = Viewport(0, 0, width, height)
@@ -69,14 +62,6 @@ internal class MapSceneLayers(
                     Texture.InternalFormat.DEPTH24_STENCIL8,
                 )
         } else if (!ghosts) releaseWorld()
-        if (selected && (selection?.width != width || selection?.height != height)) {
-            releaseSelection()
-            selection = MapFrameTarget(engine, width, height, true, Texture.InternalFormat.R8)
-        } else if (!selected) releaseSelection()
-        selection?.let {
-            selectionView.viewport = Viewport(0, 0, width, height)
-            selectionView.renderTarget = it.target
-        }
         if (pick && (picking?.width != width || picking?.height != height)) {
             pickingView.renderTarget = null
             picking?.close()
@@ -110,7 +95,6 @@ internal class MapSceneLayers(
     }
 
     fun render(renderer: Renderer, view: View) {
-        if (selected) materials.selectionDepth { renderer.render(selectionView) }
         val target = world
         if (target == null) {
             view.setVisibleLayers(255, 1 or 16 or 64 or 128)
@@ -152,21 +136,13 @@ internal class MapSceneLayers(
         ghost = null
     }
 
-    private fun releaseSelection() {
-        selectionView.renderTarget = null
-        selection?.close()
-        selection = null
-    }
-
     override fun close() {
         opacity.close()
         releaseWorld()
-        releaseSelection()
         pickingView.renderTarget = null
         picking?.close()
         picking = null
         engine.destroyView(ghostView)
-        engine.destroyView(selectionView)
         engine.destroyView(pickingView)
         composite.close()
     }

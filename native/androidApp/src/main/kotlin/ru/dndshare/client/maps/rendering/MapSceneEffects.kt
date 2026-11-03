@@ -46,6 +46,11 @@ internal class MapSceneEffects(
 
     fun shadowMask(value: Set<MapEntityRef>) = water.shadowMask(value)
 
+    fun highlight(refs: Set<MapEntityRef>) {
+        water.highlight(refs)
+        fire.highlight(refs)
+    }
+
     val renderMaterials
         get() = water.renderMaterials
 

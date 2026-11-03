@@ -55,6 +55,8 @@ internal class MapScenePicker(
         }
     }
 
+    fun hover(x: Float, y: Float, result: (MapEntityRef?) -> Unit) = pickTarget(x, y, result)
+
     fun pickSurface(x: Float, y: Float, result: (MapSurfaceHit?) -> Unit) {
         val snapshot = entries().associateBy { it.ref }
         val doc = document()

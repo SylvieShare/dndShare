@@ -59,6 +59,9 @@ class FilamentMapScene(
     val renderedFrames
         get() = core?.renderedFrames ?: 0L
 
+    val outlineBuilds
+        get() = core?.outlineBuilds ?: 0L
+
     val hasMapFrame
         get() = core?.hasMapFrame == true
 
@@ -188,6 +191,8 @@ class FilamentMapScene(
     }
 
     fun pick(x: Float, y: Float, result: (MapEntityRef?) -> Unit) = post { pick(x, y, result) }
+
+    fun hover(x: Float?, y: Float?) = post { hover(x, y) }
 
     fun pickSurface(x: Float, y: Float, result: (MapSurfaceHit?) -> Unit) = post {
         pickSurface(x, y, result)

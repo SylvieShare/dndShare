@@ -6,7 +6,8 @@ material {
         {type:sampler2d,name:sourceDepth,precision:high},{type:sampler2d,name:fogData},
         {type:float,name:hasFog},{type:float2,name:fogSize},{type:float,name:depthRange},
         {type:float3,name:backgroundColour},{type:sampler2d,name:selectedDepth,precision:high},
-        {type:float,name:hasSelection},{type:float2,name:pixelSize},{type:float,name:outlineWidth},{type:float3,name:outlineColour}]
+        {type:float,name:hasSelection},{type:sampler2d,name:hoveredDepth,precision:high},{type:float,name:hasHover},
+        {type:float2,name:pixelSize},{type:float,name:outlineWidth},{type:float3,name:outlineColour}]
 }
 fragment {
     precision highp float;
@@ -39,11 +40,22 @@ fragment {
         vec3 outputColour=aces(colour);
         if(distance(original,materialParams.backgroundColour)<0.001)
             outputColour+=(materialParams.backgroundColour-aces(materialParams.backgroundColour))*(1.0-alpha);
+        float worldDepth=texture(materialParams_sourceDepth,uv).r;
+        if(materialParams.hasHover>0.5) {
+            float inside=step(0.0000001,texture(materialParams_hoveredDepth,uv).r),edge=0.0;
+            for(int y=-1;y<=1;y++)for(int x=-1;x<=1;x++) {
+                vec2 offset=vec2(float(x),float(y))*materialParams.pixelSize*materialParams.outlineWidth*0.5;
+                float depth=texture(materialParams_hoveredDepth,uv+offset).r;
+                edge=max(edge,step(0.0000001,depth)*step(worldDepth-0.00001,depth));
+            }
+            outputColour=mix(outputColour,materialParams.outlineColour,edge*(1.0-inside)*0.55);
+        }
         if(materialParams.hasSelection>0.5) {
             float inside=step(0.0000001,texture(materialParams_selectedDepth,uv).r),edge=0.0;
             for(int y=-1;y<=1;y++)for(int x=-1;x<=1;x++) {
                 vec2 offset=vec2(float(x),float(y))*materialParams.pixelSize*materialParams.outlineWidth;
-                edge=max(edge,step(0.0000001,texture(materialParams_selectedDepth,uv+offset).r));
+                float depth=texture(materialParams_selectedDepth,uv+offset).r;
+                edge=max(edge,step(0.0000001,depth)*step(worldDepth-0.00001,depth));
             }
             outputColour=mix(outputColour,materialParams.outlineColour,edge*(1.0-inside));
         }

@@ -182,7 +182,15 @@ internal class MapTouchController(
     }
 
     fun hover(event: MotionEvent): Boolean {
-        if (!placing) return false
+        if (!placing) {
+            if (event.actionMasked == MotionEvent.ACTION_HOVER_EXIT) scene.hover(null, null)
+            else if (
+                event.actionMasked == MotionEvent.ACTION_HOVER_MOVE ||
+                    event.actionMasked == MotionEvent.ACTION_HOVER_ENTER
+            )
+                scene.hover(event.x, event.y)
+            return true
+        }
         if (
             event.actionMasked == MotionEvent.ACTION_HOVER_MOVE ||
                 event.actionMasked == MotionEvent.ACTION_HOVER_ENTER
@@ -215,6 +223,7 @@ internal class MapTouchController(
     }
 
     fun cancel() {
+        scene.hover(null, null)
         sequence++
         handler.removeCallbacks(hold)
         if (holding || selecting || placing) cancelEdit()

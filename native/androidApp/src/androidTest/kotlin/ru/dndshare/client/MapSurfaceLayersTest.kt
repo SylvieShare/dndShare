@@ -155,6 +155,32 @@ class MapSurfaceLayersTest {
                             blue > green + 12 && red > green + 5 && distance(o[i], c[i]) > 40
                         }
                     assertTrue(purple > 30, "Selection must outline the model silhouette: $purple")
+                    val cachedBuilds = renderer.outlineBuilds
+                    repeat(3) { capture(renderer).recycle() }
+                    assertEquals(
+                        cachedBuilds,
+                        renderer.outlineBuilds,
+                        "A static selection mask must survive additional frames",
+                    )
+                    renderer.options(MapSceneOptions(animate = false, automaticLod = false))
+                    capture(renderer).recycle()
+                    renderer.hover(point.first, point.second)
+                    await { renderer.outlineBuilds > cachedBuilds }
+                    val hovered = capture(renderer)
+                    exportMapTestImage("surface-hovered.png", hovered)
+                    val hp = pixels(hovered)
+                    assertTrue(
+                        hp.indices.count { distance(hp[it], c[it]) > 12 } > 10,
+                        "Hover must create its own softer outline",
+                    )
+                    renderer.hover(null, null)
+                    renderer.options(
+                        MapSceneOptions(
+                            animate = false,
+                            automaticLod = false,
+                            selected = setOf(ref),
+                        )
+                    )
                     val blend =
                         model.copy(
                             uuid = "blend",
@@ -194,6 +220,37 @@ class MapSurfaceLayersTest {
                             blue > green + 12 && red > green + 5
                         } > 30,
                         "Alpha parts must write the selection mask and retain a visible final outline",
+                    )
+                    renderer.update(
+                        document.with(
+                            "objects",
+                            JsonArray(
+                                listOf(
+                                    buildJsonObject {
+                                        put("id", "occluder")
+                                        put("modelId", "box")
+                                        put("x", 2.5)
+                                        put("y", 2.5)
+                                        put("elevation", 2)
+                                        put("scale", 4)
+                                        put("rotation", 0)
+                                    }
+                                )
+                            ),
+                        ),
+                        listOf(model),
+                    )
+                    await { MapEntityRef(MapEntityKind.Object, "occluder") in renderer.readyRefs }
+                    val occluded = capture(renderer)
+                    exportMapTestImage("surface-outline-occluded.png", occluded)
+                    assertTrue(
+                        pixels(occluded).count { value ->
+                            val red = (value shr 16) and 255
+                            val green = (value shr 8) and 255
+                            val blue = value and 255
+                            blue > green + 12 && red > green + 5
+                        } < 20,
+                        "A fully covered selection must not outline through foreground geometry",
                     )
                 }
             } finally {

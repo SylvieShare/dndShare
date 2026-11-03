@@ -123,6 +123,10 @@ internal class MapSceneFire(
         return active
     }
 
+    fun highlight(refs: Set<MapEntityRef>) {
+        for ((id, flame) in flames) flame.highlight(MapEntityRef(MapEntityKind.Light, id) in refs)
+    }
+
     override fun close() {
         flames.values.forEach(MapGpuEntity::close)
         flames.clear()

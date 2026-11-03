@@ -100,6 +100,10 @@ internal class MapSceneLoading(
         return animate && instances.isNotEmpty()
     }
 
+    fun highlight(refs: Set<MapEntityRef>) {
+        for ((ref, instance) in instances) instance.entity.highlight(ref in refs)
+    }
+
     override fun close() {
         instances.values.forEach { it.entity.close() }
         instances.clear()

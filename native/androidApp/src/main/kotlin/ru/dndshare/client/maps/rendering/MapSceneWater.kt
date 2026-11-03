@@ -67,6 +67,10 @@ internal class MapSceneWater(
         for ((ref, parts) in entities) parts.forEach { it.shadowEnabled(ref !in value) }
     }
 
+    fun highlight(refs: Set<MapEntityRef>) {
+        for ((ref, parts) in entities) parts.forEach { it.highlight(ref in refs) }
+    }
+
     val working
         get() = loading.isNotEmpty()
 

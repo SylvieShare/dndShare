@@ -16,6 +16,12 @@ internal class MapScenePipeline(context: Context, engine: Engine, scene: Scene, 
     private val grid = MapSceneGrid(engine, scene, materials)
     private val layers = MapSceneLayers(engine, scene, camera, materials)
     private val colour = MapColourOutput(engine, materials)
+    private val outlines = MapOutlineMasks(engine, scene, camera)
+    private var renderMaterials = MapRenderMaterials()
+    private var highlight: (Set<MapEntityRef>) -> Unit = {}
+    val outlineBuilds
+        get() = outlines.builds
+
     val pickingView
         get() = layers.pickingView
 
@@ -25,19 +31,22 @@ internal class MapScenePipeline(context: Context, engine: Engine, scene: Scene, 
         width: Int,
         height: Int,
         entries: List<MapSceneEntry>,
-        selected: Boolean,
+        outline: MapOutlineFrame,
         pick: Boolean,
         density: Double,
         effects: MapSceneEffects,
         groups: Map<Int, MapSurfaceStyle>,
         materials: MapRenderMaterials,
         outlineColour: String = "#c1adf1",
+        highlight: (Set<MapEntityRef>) -> Unit,
     ) {
+        this.renderMaterials = materials
+        this.highlight = highlight
+        outlines.prepare(width, height, outline)
         layers.prepare(
             width,
             height,
             groups.isNotEmpty(),
-            selected,
             pick,
             groups,
             materials,
@@ -46,9 +55,10 @@ internal class MapScenePipeline(context: Context, engine: Engine, scene: Scene, 
             width,
             height,
             effects.fogFrame,
-            layers.selectionDepth,
+            outlines.selectedDepth,
             density,
             outlineColour,
+            outlines.hoveredDepth,
         )
     }
 
@@ -59,6 +69,7 @@ internal class MapScenePipeline(context: Context, engine: Engine, scene: Scene, 
         fog: Boolean,
         effects: MapSceneEffects,
     ) {
+        outlines.render(renderer, renderMaterials, highlight)
         if (pick) layers.renderPicking(renderer)
         colour.render(renderer, view) { r, v ->
             if (fog) effects.render(r, v, layers::render) else layers.render(r, v)
@@ -68,6 +79,7 @@ internal class MapScenePipeline(context: Context, engine: Engine, scene: Scene, 
     override fun close() {
         guides.close()
         grid.close()
+        outlines.close()
         layers.close()
         colour.close()
         materials.close()

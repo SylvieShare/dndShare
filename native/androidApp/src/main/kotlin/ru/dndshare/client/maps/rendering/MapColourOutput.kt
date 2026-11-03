@@ -30,6 +30,7 @@ internal class MapColourOutput(private val engine: Engine, gpu: MapGpuMaterials)
         selectedDepth: Texture?,
         density: Double,
         outlineColour: String = "#c1adf1",
+        hoveredDepth: Texture? = null,
     ) {
         if (width <= 0 || height <= 0) return
         if (world?.width != width || world?.height != height) {
@@ -60,6 +61,8 @@ internal class MapColourOutput(private val engine: Engine, gpu: MapGpuMaterials)
             setParameter("backgroundColour", colour[0], colour[1], colour[2])
             setParameter("selectedDepth", selectedDepth ?: frame.depth, sample)
             setParameter("hasSelection", if (selectedDepth == null) 0f else 1f)
+            setParameter("hoveredDepth", hoveredDepth ?: frame.depth, sample)
+            setParameter("hasHover", if (hoveredDepth == null) 0f else 1f)
             setParameter("pixelSize", 1f / width, 1f / height)
             setParameter("outlineWidth", (density * 1.5).toFloat())
             val outline = mapLinearColour(outlineColour)

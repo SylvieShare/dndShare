@@ -74,6 +74,10 @@ internal class FilamentSceneCore(
     private val lights: MapSceneLights
     private val shadows: MapSceneShadows
     private val loading: MapSceneLoading
+    private val hover: MapSceneHover
+    val outlineBuilds
+        get() = pipeline.outlineBuilds
+
     private val frames =
         MapFrameScheduler(::frame) { error ->
             captures.fail(error)
@@ -258,6 +262,15 @@ internal class FilamentSceneCore(
             ) { message ->
                 report("picking", message)
             }
+        hover =
+            MapSceneHover(
+                picker::hover,
+                {
+                    revision++
+                    requestFrame()
+                },
+                ::requestFrame,
+            )
     }
 
     fun headless(width: Int, height: Int) {
@@ -376,6 +389,8 @@ internal class FilamentSceneCore(
 
     fun pick(x: Float, y: Float, result: (MapEntityRef?) -> Unit) = picker.pick(x, y, result)
 
+    fun hover(x: Float?, y: Float?) = hover.pointer(x, y)
+
     fun pickSurface(x: Float, y: Float, result: (MapSurfaceHit?) -> Unit) =
         picker.pickSurface(x, y, result)
 
@@ -443,19 +458,34 @@ internal class FilamentSceneCore(
         val lightMotion =
             lights.advance(seconds, motion, pose, width, height, options.selectedLight, anchors)
         val postProcess = effects.prepare(view, camera, seconds, motion)
+        hover.advance()
+        val selected = selectedRefs()
         pipeline.prepare(
             width,
             height,
             assets.drawnEntries,
-            options.selected.isNotEmpty() ||
-                options.preview.refs.isNotEmpty() ||
-                assets.previewSelection.isNotEmpty(),
+            MapOutlineFrame(
+                selected,
+                setOfNotNull(hover.target).minus(selected),
+                revision,
+                wasMoving ||
+                    poseMotion ||
+                    motion &&
+                        lightMotion &&
+                        (selected.any { it.kind == MapEntityKind.Light } ||
+                            hover.target?.kind == MapEntityKind.Light),
+            ),
             picker.working,
             density,
             effects,
             assets.surfaceGroups,
             assets.renderMaterials + effects.renderMaterials + loading.renderMaterials,
             if (options.previewValid) "#c1adf1" else "#ef6b73",
+            { refs ->
+                assets.highlight(refs)
+                effects.highlight(refs)
+                loading.highlight(refs)
+            },
         )
         effectStatistics = effects.statistics
         val chain = swap
@@ -516,6 +546,7 @@ internal class FilamentSceneCore(
         closed = true
         lightFrames.close()
         captures.close()
+        hover.close()
         picker.close()
         scope.cancel()
         frames.close()

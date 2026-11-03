@@ -200,6 +200,8 @@ internal class MapGpuEntity(
         )
     }
 
+    fun highlight(value: Boolean) = layer((layerMask and 4.inv()) or if (value) 4 else 0)
+
     override fun close() {
         scene.remove(entity)
         engine.destroyEntity(entity)

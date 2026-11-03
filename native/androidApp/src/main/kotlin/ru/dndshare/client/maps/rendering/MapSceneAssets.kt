@@ -235,6 +235,14 @@ internal class MapSceneAssets(
         synchronize()
     }
 
+    fun highlight(refs: Set<MapEntityRef>) {
+        val manager = engine.renderableManager
+        for ((entity, ref) in entities) {
+            val instance = manager.getInstance(entity)
+            if (instance != 0) manager.setLayerMask(instance, 4, if (ref in refs) 4 else 0)
+        }
+    }
+
     private fun publishStatus() {
         status(pending.size, retries.message)
         requestFrame()
