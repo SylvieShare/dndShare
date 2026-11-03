@@ -36,7 +36,8 @@ onMounted(() => account.ensureAuth());
 .maps-page h1 {
   margin: 10px 0;
   font-family: var(--font-display);
-  font-size: 40px;
+  font-size: var(--type-title-size);
+  line-height: var(--type-title-line-height);
   color: var(--text-1);
 }
 .maps-page p {

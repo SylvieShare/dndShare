@@ -9,6 +9,7 @@ import { mapCatalogueFixture } from "./mapCatalogue";
 import { previewFixture } from "./previews";
 import { attachmentExample } from "./attachments";
 import { groupExamples } from "./groups";
+import nativeReview from "../../../../native/androidApp/src/androidTest/assets/maps/editor-review.json";
 import { BoxGeometry, Mesh, MeshStandardMaterial, Scene } from "three";
 import { GLTFExporter } from "three/addons/exporters/GLTFExporter.js";
 import { createApp, h } from "vue";
@@ -16,6 +17,7 @@ import { createPinia } from "pinia";
 import { createRouter, createMemoryHistory, RouterView } from "vue-router";
 import { useAccountStore } from "../../../src/stores/account";
 import MapLibrary from "../../../src/features/maps/components/MapLibrary.vue";
+import ViewMaps from "../../../src/features/maps/pages/ViewMaps.vue";
 import MapEditorHeader from "../../../src/features/maps/components/MapEditorHeader.vue";
 import ViewMapEditor from "../../../src/features/maps/pages/ViewMapEditor.vue";
 import SessionMapWorkspace from "../../../src/features/maps/components/SessionMapWorkspace.vue";
@@ -27,6 +29,7 @@ import {
 } from "../../../src/features/maps/lib/mapModel";
 import "@sylvieshare/share-ui/styles.css";
 import "../../../src/app/theme.css";
+import "../../../src/app/fonts.css";
 import {
   WALL,
   FLOOR,
@@ -363,6 +366,10 @@ if (params.has("transitions")) {
 }
 if (params.has("downloadExample"))
   downloadMapExample(source.document, catalogue);
+if (params.has("nativeReview")) {
+  Object.assign(source, structuredClone(nativeReview.map));
+  catalogue.splice(0, catalogue.length, ...nativeReview.models.map(({uuid,id,...model}) => ({...model,id:uuid,definitionId:id})));
+}
 let templateRevision = 1;
 if (params.has("emptyScene")) {
   source.document.tiles = [];
@@ -722,7 +729,7 @@ const router = createRouter({
   history: createMemoryHistory(),
   routes: [
     { path: "/map-screen/:code", component: ViewMapScreen },
-    { path: "/maps", name: "Maps", component: MapLibrary },
+    { path: "/maps", name: "Maps", component: params.has("nativeReview") ? ViewMaps : MapLibrary },
     { path: "/maps/editor", name: "MapEditor", component: ViewMapEditor },
   ],
 });

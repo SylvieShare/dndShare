@@ -13,5 +13,5 @@ defineProps({ zoomOutLabel: { type: String, default: 'Уменьшить' }, fit
 const emit = defineEmits(['zoom', 'fit'])
 </script>
 <style scoped>
-.workspace-canvas-controls { display: flex; gap: 4px; padding: 4px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border-strong); }
+.workspace-canvas-controls { display: flex; gap: 4px; padding: 4px; border-radius: 10px; background: var(--surface); }
 </style>

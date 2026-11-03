@@ -16,11 +16,15 @@ fun ShareTokenInput(
     allowCreate: Boolean = false,
     limit: Int = 32,
     maxTokenLength: Int = 64,
+    showLabel: Boolean = true,
+    placeholder: String? = null,
+    leadingIcon: (@Composable () -> Unit)? = { AppGlyph(Glyph.Tags) },
 ) {
     var open by remember { mutableStateOf(false) }
     var query by remember { mutableStateOf("") }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(label, style = ShareTypography.context, color = WebPalette.TextSecondary)
+        if (showLabel)
+            Text(label, style = ShareTypography.context, color = WebPalette.TextSecondary)
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp),
@@ -35,9 +39,11 @@ fun ShareTokenInput(
             }
         }
         Box {
-            ShareOutlinedButton({ open = !open }, modifier = Modifier.fillMaxWidth()) {
-                AppGlyph(Glyph.Tags)
-                Text(if (allowCreate) "Выбрать или добавить тег…" else "Выбрать теги…")
+            ShareTonalButton({ open = !open }, modifier = Modifier.fillMaxWidth()) {
+                leadingIcon?.invoke()
+                Text(
+                    placeholder ?: if (allowCreate) "Выбрать или добавить тег…" else "Выбрать теги…"
+                )
             }
             ShareDropdownMenu(open, { open = false }, Modifier.widthIn(min = 240.dp)) {
                 ShareTextInput(query, { query = it }, "Поиск тегов")

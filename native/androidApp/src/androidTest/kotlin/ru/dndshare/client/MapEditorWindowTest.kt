@@ -23,6 +23,7 @@ import kotlinx.serialization.json.*
 import org.junit.Test
 import ru.dndshare.client.maps.*
 import ru.dndshare.client.maps.rendering.MapAssetCache
+import ru.dndshare.client.model.WireJson
 import ru.dndshare.client.ui.DndTheme
 import ru.dndshare.client.ui.designsystem.WebPalette
 import ru.dndshare.client.ui.layoutFormat
@@ -149,33 +150,33 @@ class MapEditorWindowTest {
         val beforeDensity = shell("wm density")
         val context = instrumentation.targetContext
         val folder = File(context.cacheDir, "map-windows-${System.nanoTime()}")
-        val bytes = instrumentation.context.assets.open("maps/box.glb").use { it.readBytes() }
+        val bytes =
+            instrumentation.context.assets.open("maps/review-tile.glb").use { it.readBytes() }
         val images = ImageLoader.Builder(context).components { add(SvgDecoder.Factory()) }.build()
+        val fixture =
+            WireJson.parseToJsonElement(
+                    instrumentation.context.assets
+                        .open("maps/editor-review.json")
+                        .bufferedReader()
+                        .use { it.readText() }
+                )
+                .jsonObject
+        val reviewMap =
+            WireJson.decodeFromJsonElement(BattleMap.serializer(), fixture.getValue("map"))
+        val reviewModels = fixture.rows("models").map(::decodeMapModel)
         val pictures = File(context.getExternalFilesDir(null), "map-review").apply { mkdirs() }
         try {
             shell("wm density 160")
             shell("mkdir -p /data/local/tmp/dndshare-map-review")
             for ((width, height) in windows) {
                 shell("wm size ${width}x$height")
-                val record =
-                    AtomicReference(BattleMap(id = "map", name = "Пробная карта", revision = 1))
+                val record = AtomicReference(reviewMap)
                 val closed = AtomicBoolean(false)
                 val api =
                     object : UnusedMapsApi() {
                         override suspend fun get(id: String) = record.get()
 
-                        override suspend fun models() =
-                            listOf(
-                                MapModel(
-                                    "box",
-                                    "box",
-                                    "Плитка",
-                                    collection = "Тестовый набор",
-                                    category = "floor",
-                                    tileType = "floor",
-                                    renderUrl = "/api/maps/models/box/render",
-                                )
-                            )
+                        override suspend fun models() = reviewModels
 
                         override suspend fun modelBytes(url: String) = bytes
 
@@ -204,17 +205,22 @@ class MapEditorWindowTest {
                                         images,
                                         layoutFormat(width.toFloat()),
                                         close = { closed.set(true) },
+                                        admin = true,
                                     )
                                 }
                             }
                         }
                     }
-                    await { find { it.text?.toString() == "Пробная карта" } != null }
+                    await { find { it.text?.toString() == reviewMap.name } != null }
                     await {
                         find {
                             it.contentDescription?.toString()?.startsWith("Поле карты. Готово") ==
                                 true
                         } != null
+                    }
+                    await {
+                        find { it.text?.toString()?.startsWith("Загружаем модели:") == true } ==
+                            null
                     }
                     automation.waitForIdle(100, 5000)
                     val committed = CountDownLatch(2)
@@ -242,10 +248,21 @@ class MapEditorWindowTest {
                     shell(
                         "cp ${destination.absolutePath} /data/local/tmp/dndshare-map-review/android-map-$width.png"
                     )
+                    exportMapTestImage("android-editor-$width.png", image)
                     image.recycle()
+                    click("Области")
+                    await { find { it.text?.toString() == "Зал" } != null }
+                    automation.takeScreenshot()?.let {
+                        exportMapTestImage("android-areas-$width.png", it)
+                        it.recycle()
+                    }
                     click("Настройки")
                     val editable = awaitNode {
-                        it.isEditable && it.text?.toString()?.contains("Пробная карта") == true
+                        it.isEditable && it.text?.toString()?.contains(reviewMap.name) == true
+                    }
+                    automation.takeScreenshot()?.let {
+                        exportMapTestImage("android-settings-$width.png", it)
+                        it.recycle()
                     }
                     assertTrue(
                         editable.performAction(

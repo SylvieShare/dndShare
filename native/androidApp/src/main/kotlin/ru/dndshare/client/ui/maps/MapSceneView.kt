@@ -36,6 +36,7 @@ internal fun MapSceneView(
     status: (Int, String?) -> Unit,
     initialCamera: MapCamera? = null,
     active: Boolean = true,
+    catalogueLoading: Boolean = false,
     placing: Boolean = false,
     options: MapSceneOptions = MapSceneOptions(),
     rectangle: Boolean = false,
@@ -211,7 +212,8 @@ internal fun MapSceneView(
         }
     }
     LaunchedEffect(scene, options, selected) { scene?.options(options.copy(selected = selected)) }
-    LaunchedEffect(scene, document, models) {
+    LaunchedEffect(scene, document, models, catalogueLoading) {
+        if (catalogueLoading) return@LaunchedEffect
         scene?.let {
             runCatching { it.update(document, models) }.onFailure { onStatus(0, it.message) }
         }

@@ -10,8 +10,7 @@
         Карты
       </ActionButton>
       <div class="map-editor-heading">
-        <h1>Редактор карты</h1>
-        <span>{{ editor.draft.name }}</span>
+        <h1>{{ editor.draft.name }}</h1>
       </div>
     </template>
     <template #actions>

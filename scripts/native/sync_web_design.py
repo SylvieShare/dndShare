@@ -19,7 +19,7 @@ ICONS = {
     "Admin": "shield", "Account": "user-round", "Menu": "menu", "Close": "x",
     "Collapse": "panel-left-close", "Expand": "panel-left-open", "Refresh": "refresh-cw",
     "Filter": "list-filter", "Back": "arrow-left", "Exit": "log-out", "Search": "search", "Chevron": "chevron-right",
-    "Rest": "moon", "Settings": "settings", "Edit": "pencil", "CircleCheck": "circle-check", "Swords": "swords", "Target": "crosshair", "Maximize": "maximize", "ShieldCheck": "shield-check",
+    "Rest": "moon", "Settings": "settings", "Edit": "pencil", "CircleCheck": "circle-check", "Swords": "swords", "Target": "crosshair", "Maximize": "maximize", "Globe": "globe", "BookmarkPlus": "bookmark-plus", "BookmarkCheck": "bookmark-check", "Scan": "scan", "ShieldCheck": "shield-check",
     "Bell": "bell", "Copy": "copy", "InfoCircle": "info", "Dice": "dices", "Plus": "plus", "Minus": "minus",
     "Transfer": "arrow-right-left", "Move": "folder-input", "Up": "arrow-up", "Down": "arrow-down",
     "Wand": "wand-sparkles", "Link": "link", "Code": "code", "Quote": "quote", "List": "list", "ListOrdered": "list-ordered",

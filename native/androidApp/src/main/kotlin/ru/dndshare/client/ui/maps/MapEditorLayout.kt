@@ -53,20 +53,6 @@ internal fun MapEditorLayout(
                             style = ShareTypography.context,
                             color = WebPalette.AccentSoft,
                         )
-                    if (map?.editable == true) {
-                        MapToolButton(
-                            "Отменить",
-                            Glyph.Undo,
-                            state.work?.undo?.isNotEmpty() == true && !state.conflict,
-                            workspace.controller::undo,
-                        )
-                        MapToolButton(
-                            "Повторить",
-                            Glyph.Redo,
-                            state.work?.redo?.isNotEmpty() == true && !state.conflict,
-                            workspace.controller::redo,
-                        )
-                    }
                 },
             ) {
                 MapToolButton("К картам", Glyph.Back, !leaving, exit)
@@ -153,6 +139,7 @@ internal fun MapEditorLayout(
                             renderer = workspace::attachScene,
                             initialCamera = workspace.ui.camera,
                             active = !workspace.referenceOpen,
+                            catalogueLoading = state.modelLoading,
                             placing = workspace.ui.tool != MapTool.None,
                             options =
                                 MapSceneOptions(
@@ -169,7 +156,7 @@ internal fun MapEditorLayout(
                             key = workspace::key,
                             status = { pending, message ->
                                 workspace.modelPending = pending
-                                if (message != null) workspace.rendererError = message
+                                workspace.rendererError = message
                             },
                         )
                         MapEditorAnnotations(workspace)
@@ -197,8 +184,17 @@ internal fun MapEditorLayout(
                                     start = overlayLeft + 12.dp,
                                     top = 12.dp,
                                     end = 12.dp,
-                                    bottom = 12.dp,
+                                    bottom = 76.dp,
                                 )
+                                .windowInsetsPadding(
+                                    WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
+                                ),
+                        )
+                        MapViewerTools(
+                            workspace.scene,
+                            map.document,
+                            Modifier.align(Alignment.BottomEnd)
+                                .padding(12.dp)
                                 .windowInsetsPadding(
                                     WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
                                 ),

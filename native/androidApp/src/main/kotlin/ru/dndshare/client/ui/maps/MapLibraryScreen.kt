@@ -6,7 +6,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.ImageLoader
 import ru.dndshare.client.maps.*
 import ru.dndshare.client.maps.rendering.MapAssetCache
@@ -31,14 +33,15 @@ internal fun MapLibraryScreen(
     val c = controller
     BoxWithConstraints(Modifier.fillMaxSize()) {
         val wide = maxWidth >= 760.dp
+        val compact = maxWidth < 760.dp
         LazyVerticalGrid(
             if (c.layout == "list") GridCells.Fixed(1) else GridCells.Adaptive(280.dp),
-            Modifier.fillMaxSize(),
+            Modifier.widthIn(max = 1500.dp).fillMaxSize().align(Alignment.TopCenter),
             contentPadding =
                 PaddingValues(
-                    start = 20.dp,
-                    end = 20.dp,
-                    top = padding.calculateTopPadding() + 20.dp,
+                    start = if (compact) 16.dp else 28.dp,
+                    end = if (compact) 16.dp else 28.dp,
+                    top = padding.calculateTopPadding() + if (compact) 24.dp else 36.dp,
                     bottom = padding.calculateBottomPadding() + 20.dp,
                 ),
             horizontalArrangement = Arrangement.spacedBy(18.dp),
@@ -46,18 +49,48 @@ internal fun MapLibraryScreen(
         ) {
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
+                    Column(
+                        Modifier.padding(bottom = 12.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        Text(
+                            "МАСТЕРСКАЯ",
+                            color = WebPalette.AccentSoft,
+                            style =
+                                ShareTypography.context.copy(
+                                    fontSize = 10.sp,
+                                    letterSpacing = 1.8.sp,
+                                    fontWeight = FontWeight.Bold,
+                                ),
+                        )
+                        Text("Карты", style = ShareTypography.title)
+                        Text(
+                            "Собирайте свои карты и делитесь ими в бесплатном каталоге.",
+                            color = WebPalette.TextMuted,
+                            style =
+                                ShareTypography.context.copy(
+                                    fontSize = 14.sp,
+                                    lineHeight = 18.sp,
+                                    fontWeight = FontWeight.Normal,
+                                ),
+                        )
+                    }
                     FlowRow(
                         Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                         itemVerticalAlignment = Alignment.CenterVertically,
                     ) {
-                        for ((key, title) in
+                        ShareSlidingTabs(
                             listOf(
-                                "own" to "Мои",
-                                "subscriptions" to "Подписки",
-                                "catalogue" to "Каталог",
-                            )) ShareChoiceChip(c.section == key, { c.select(key) }, { Text(title) })
+                                ShareNavigationItem("own", "Мои"),
+                                ShareNavigationItem("subscriptions", "Подписки"),
+                                ShareNavigationItem("catalogue", "Каталог"),
+                            ),
+                            c.section,
+                            c::select,
+                            "Разделы карт",
+                        )
                         ShareButton(c::create, enabled = "new" !in c.busy) {
                             AppGlyph(Glyph.Plus)
                             Text("Создать карту")
@@ -68,10 +101,19 @@ internal fun MapLibraryScreen(
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Box(Modifier.weight(1f)) { LibrarySearch(c) }
-                            Box(Modifier.widthIn(max = 300.dp)) {
-                                ShareTokenInput(c.tags, { c.tags = it }, "Теги карт", c.tagOptions)
+                            Box(Modifier.width(300.dp)) { LibrarySearch(c) }
+                            Box(Modifier.width(240.dp)) {
+                                ShareTokenInput(
+                                    c.tags,
+                                    { c.tags = it },
+                                    "Теги карт",
+                                    c.tagOptions,
+                                    showLabel = false,
+                                    placeholder = "Найти тег…",
+                                    leadingIcon = null,
+                                )
                             }
+                            Spacer(Modifier.weight(1f))
                             LibraryLayoutButtons(c)
                         }
                     else {
@@ -81,7 +123,15 @@ internal fun MapLibraryScreen(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Box(Modifier.weight(1f)) {
-                                ShareTokenInput(c.tags, { c.tags = it }, "Теги карт", c.tagOptions)
+                                ShareTokenInput(
+                                    c.tags,
+                                    { c.tags = it },
+                                    "Теги карт",
+                                    c.tagOptions,
+                                    showLabel = false,
+                                    placeholder = "Найти тег…",
+                                    leadingIcon = null,
+                                )
                             }
                             LibraryLayoutButtons(c)
                         }
@@ -188,7 +238,6 @@ private fun LibrarySearch(c: MapLibraryController) {
         "Поиск карт",
         showLabel = false,
         placeholder = "Название или тег…",
-        leading = { AppGlyph(Glyph.Search) },
     )
 }
 

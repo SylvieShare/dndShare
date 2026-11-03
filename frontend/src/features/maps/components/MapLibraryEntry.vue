@@ -2,7 +2,7 @@
   <BaseTile
     class="map-library-entry"
     :class="{ 'map-library-entry--list': layout === 'list' }"
-    padding="12px"
+    :outlined="false"
   >
     <button
       type="button"
@@ -127,6 +127,7 @@ const emit = defineEmits([
 </script>
 <style scoped>
 .map-library-entry {
+  padding: 12px;
   display: grid;
   grid-template-rows: auto 1fr auto;
   gap: 14px;

@@ -1,5 +1,6 @@
 package ru.dndshare.client.ui.maps
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,6 +13,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
@@ -84,6 +86,7 @@ private fun MapLibraryThumbnail(
         Modifier.fillMaxWidth()
             .height(height.dp)
             .clip(RoundedCornerShape(9.dp))
+            .background(WebPalette.Background)
             .clickable { c.open(map) }
             .semantics { contentDescription = "Открыть карту ${map.name}" },
         contentAlignment = Alignment.Center,
@@ -112,7 +115,11 @@ private fun MapLibraryEntryContent(map: BattleMap, c: MapLibraryController) {
             verticalArrangement = Arrangement.spacedBy(4.dp),
             itemVerticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(map.name, Modifier.clickable { c.open(map) }, style = ShareTypography.group)
+            Text(
+                map.name,
+                Modifier.clickable { c.open(map) },
+                style = ShareTypography.card.copy(fontSize = 20.sp, lineHeight = 24.sp),
+            )
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -154,16 +161,19 @@ internal fun MapLibraryEntryActions(map: BattleMap, c: MapLibraryController) {
         itemVerticalAlignment = Alignment.CenterVertically,
     ) {
         if (!map.owned && map.publishedAt != null)
-            ShareOutlinedButton({ c.subscription(map) }, enabled = !busy) {
-                AppGlyph(Glyph.Book)
+            ShareTonalButton({ c.subscription(map) }, enabled = !busy) {
+                AppGlyph(
+                    if (map.subscribed) Glyph.BookmarkCheck else Glyph.BookmarkPlus,
+                    Modifier.size(16.dp),
+                )
                 Text(if (map.subscribed) "Отписаться" else "Подписаться")
             }
         if (map.editable)
-            ShareOutlinedButton(
+            ShareTonalButton(
                 { c.pending = "publish" to map },
                 enabled = !busy && map.id !in c.drafts,
             ) {
-                AppGlyph(Glyph.Link)
+                AppGlyph(Glyph.Globe, Modifier.size(16.dp))
                 Text("Опубликовать")
             }
         if (map.owned || map.subscribed)

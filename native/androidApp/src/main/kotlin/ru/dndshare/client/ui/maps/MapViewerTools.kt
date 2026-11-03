@@ -22,11 +22,11 @@ internal fun MapViewerTools(
         shape = MaterialTheme.shapes.medium,
     ) {
         Row {
-            MapToolButton("Приблизить", Glyph.Plus, scene != null) { scene?.zoomViewport(1.2) }
-            MapToolButton("Отдалить", Glyph.Minus, scene != null) { scene?.zoomViewport(1 / 1.2) }
-            MapToolButton("Вписать карту", Glyph.Target, scene != null) {
+            MapToolButton("Отдалить", Glyph.Minus, scene != null) { scene?.zoomViewport(.8) }
+            MapToolButton("Вписать карту", Glyph.Scan, scene != null) {
                 scene?.fitViewport(document)
             }
+            MapToolButton("Приблизить", Glyph.Plus, scene != null) { scene?.zoomViewport(1.25) }
             MapToolButton(
                 if (camera?.tilt == 90.0) "Изометрический вид" else "Вид сверху",
                 Glyph.Box,

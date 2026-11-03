@@ -17,6 +17,20 @@ internal fun MapCanvasToolbar(workspace: MapEditorWorkspace, modifier: Modifier 
             Surface(color = WebPalette.Popover, shape = MaterialTheme.shapes.medium) {
                 Row(Modifier.horizontalScroll(rememberScrollState())) {
                     MapToolButton(
+                        "Отменить",
+                        Glyph.Undo,
+                        workspace.state.work?.undo?.isNotEmpty() == true &&
+                            !workspace.state.conflict,
+                        workspace.controller::undo,
+                    )
+                    MapToolButton(
+                        "Повторить",
+                        Glyph.Redo,
+                        workspace.state.work?.redo?.isNotEmpty() == true &&
+                            !workspace.state.conflict,
+                        workspace.controller::redo,
+                    )
+                    MapToolButton(
                         if (workspace.ui.multiple) "Одиночный выбор" else "Множественный выбор",
                         Glyph.Group,
                     ) {
@@ -97,13 +111,11 @@ internal fun MapCanvasToolbar(workspace: MapEditorWorkspace, modifier: Modifier 
                         }
                 }
             }
-        workspace.map?.let { MapViewerTools(workspace.scene, it.document) }
-        ShareTextButton({ workspace.controller.ui { it.copy(orbit = !it.orbit) } }) {
-            AppGlyph(Glyph.Transfer)
-            Text(
-                if (workspace.ui.orbit) "Перемещать камеру" else "Вращать камеру",
-                style = ShareTypography.context,
-            )
+        MapToolButton(
+            if (workspace.ui.orbit) "Перемещать камеру" else "Вращать камеру",
+            Glyph.Transfer,
+        ) {
+            workspace.controller.ui { it.copy(orbit = !it.orbit) }
         }
         if (workspace.modelPending > 0) ShareBadge("Загружаем модели: ${workspace.modelPending}")
         workspace.hint?.let { ShareBadge(it) }

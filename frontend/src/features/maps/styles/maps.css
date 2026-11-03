@@ -11,8 +11,10 @@
 }
 .map-editor-heading h1 {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: 24px;
+  font-family: var(--type-header-family);
+  font-size: var(--type-header-size);
+  line-height: var(--type-header-line-height);
+  font-weight: var(--type-header-weight);
 }
 .map-editor-heading span {
   font-size: 11px;
@@ -142,9 +144,6 @@
   font-size: 20px;
 }
 @media (max-width: 760px) {
-  .map-editor-heading h1 {
-    font-size: 18px;
-  }
   .map-editor {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto minmax(0, 1fr);
