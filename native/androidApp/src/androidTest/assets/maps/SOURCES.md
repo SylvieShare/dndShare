@@ -38,3 +38,11 @@ SHA-256: `2734c080e514239cf208a4c5f39e35246e05e5192d3a4bf9cf1c98c5dfb89de2`.
 `box-lod-green.glb` — тот же CC-BY Box, baseColorFactor заменён на [0,0.8,0,1]
 для различения LOD и render в проверке фоновой смены качества.
 SHA-256: `6b2f7d8b99aa336ba7d8f678b2d7d0a7c3d82cc151faa10bb91a7dd720239268`.
+
+`box-pbr-basis-lz.glb` and `box-pbr-uastc.glb` keep that attributed meshopt
+Box geometry and generated checker textures. They use ordinary gltfio PBR,
+without native water behaviour. Rebuild with
+`python3 scripts/native/generate-map-texture-fixtures.py`.
+
+- `box-pbr-basis-lz.glb`: `b8527ade48677b2f3226df2d5200663ed2c0f54784881bf9ac83c3fe9efe2ea2`.
+- `box-pbr-uastc.glb`: `d741488842b4cd7e372d45a964a6fca989496ff646d528ca77c48eb97711410f`.

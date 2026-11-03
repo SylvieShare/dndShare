@@ -1,36 +1,50 @@
 package ru.dndshare.client.ui.maps
 
-import android.os.SystemClock
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.delay
 import ru.dndshare.client.maps.rendering.*
 import ru.dndshare.client.ui.designsystem.*
 
 @Composable
 internal fun MapPerformancePanel(workspace: MapEditorWorkspace) {
-    val snapshot by
-        produceState(MapRenderTelemetry() to 0L, workspace.scene) {
-            while (true) {
-                value =
-                    (workspace.scene?.telemetry ?: MapRenderTelemetry()) to
-                        SystemClock.uptimeMillis()
-                delay(250)
+    val context = LocalContext.current.applicationContext
+    val settings = remember(context) { MapRenderSettings.get(context) }
+    val forceLod by settings.forceLod.collectAsState()
+    var enabled by remember { mutableStateOf(true) }
+    var metric by remember { mutableStateOf("gpu") }
+    val stage by LocalLifecycleOwner.current.lifecycle.currentStateFlow.collectAsState()
+    val foreground =
+        stage.isAtLeast(Lifecycle.State.STARTED) &&
+            !workspace.referenceOpen &&
+            workspace.sidebarOpen
+    val scene = workspace.scene
+    DisposableEffect(scene, enabled, foreground) {
+        scene?.measurePerformance(enabled && foreground)
+        onDispose { scene?.measurePerformance(false) }
+    }
+    val data by
+        produceState(MapRenderTelemetry(), scene, foreground, enabled) {
+            while (foreground) {
+                val renderer = scene
+                if (renderer != null) {
+                    val next = CompletableDeferred<MapRenderTelemetry>()
+                    renderer.performance { next.complete(it) }
+                    value = next.await()
+                }
+                delay(500)
             }
         }
-    val data = snapshot.first
     MapInspectorSection("Отрисовка") {
-        ShareToggle("Всегда использовать LOD-модели", workspace.ui.forceLod) { force ->
-            workspace.controller.ui { it.copy(forceLod = force) }
-            workspace.scene?.options(MapSceneOptions(forceLod = force))
-        }
+        ShareToggle("Всегда использовать LOD-модели", forceLod, change = settings::setForceLod)
     }
     MapInspectorSection("Ресурсы моделей") {
         Text("На сцене: ${data.instances}", style = ShareTypography.context)
@@ -46,53 +60,82 @@ internal fun MapPerformancePanel(workspace: MapEditorWorkspace) {
             color = WebPalette.TextMuted,
         )
     }
-    MapInspectorSection("Производительность") {
-        val last = data.history.lastOrNull()
-        Text(
-            if (snapshot.second - data.time > 700) "В покое · кадры не рисуются"
-            else "Кадров: ${data.frames}",
-            style = ShareTypography.context,
-        )
-        Text(
-            "Подготовка CPU: ${last?.let {"%.2f мс".format(it.cpuMs)} ?: "—"}",
-            style = ShareTypography.context,
-        )
-        Text(
-            "Отрисовка GPU: ${last?.gpuMs?.let {"%.2f мс".format(it)} ?: "—"}",
-            style = ShareTypography.context,
-        )
-        Canvas(Modifier.fillMaxWidth().height(120.dp)) {
-            val samples = data.history
-            if (samples.size < 2) return@Canvas
-            val maximum = maxOf(16.67f, samples.maxOf { maxOf(it.cpuMs, it.gpuMs ?: 0f) })
-            drawLine(
-                WebPalette.BorderStrong,
-                Offset(0f, size.height * (1 - 16.67f / maximum)),
-                Offset(size.width, size.height * (1 - 16.67f / maximum)),
+    MapInspectorSection(
+        "Нагрузка",
+        actions = {
+            ShareSwitch(
+                enabled,
+                { enabled = it },
+                Modifier.semantics { contentDescription = "Измерять нагрузку" },
             )
-            fun series(
-                colour: androidx.compose.ui.graphics.Color,
-                value: (MapFrameTiming) -> Float?,
-            ) {
-                val path = Path()
-                var connected = false
-                samples.forEachIndexed { index, sample ->
-                    val ms = value(sample)
-                    if (ms == null) connected = false
-                    else {
-                        val x = index * size.width / (samples.size - 1)
-                        val y = size.height * (1 - ms / maximum)
-                        if (connected) path.lineTo(x, y)
-                        else {
-                            path.moveTo(x, y)
-                            connected = true
-                        }
-                    }
+        },
+    ) {
+        ShareTile(
+            framed = false,
+            containerColor = WebPalette.Raised,
+            contentPadding = PaddingValues(12.dp),
+        ) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Column(Modifier.weight(1f)) {
+                    Text("Кадр CPU", style = ShareTypography.context, color = WebPalette.TextMuted)
+                    Text(
+                        mapPerformanceMs(data.cpu.values.takeIf { it.isNotEmpty() }?.sum()),
+                        style = ShareTypography.header,
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    Text(
+                        "Обновлений / с",
+                        style = ShareTypography.context,
+                        color = WebPalette.TextMuted,
+                    )
+                    Text(
+                        if (enabled && !data.idle) "%.0f".format(data.fps) else "0",
+                        style = ShareTypography.header,
+                    )
                 }
-                drawPath(path, colour, style = Stroke(2.dp.toPx()))
+                Column(Modifier.weight(1f)) {
+                    Text("Кадр GPU", style = ShareTypography.context, color = WebPalette.TextMuted)
+                    Text(mapPerformanceMs(data.gpuMs), style = ShareTypography.header)
+                    Spacer(Modifier.height(12.dp))
+                    Text("Режим", style = ShareTypography.context, color = WebPalette.TextMuted)
+                    Text(
+                        if (!enabled) "Пауза" else if (data.idle) "Покой" else "Обновляется",
+                        style = ShareTypography.context,
+                    )
+                }
             }
-            series(WebPalette.AccentSoft) { it.cpuMs }
-            series(WebPalette.Success) { it.gpuMs }
         }
+        ShareSelect(
+            "Показатель графика нагрузки",
+            metric,
+            listOf("cpu" to "CPU · подготовка кадра", "gpu" to "GPU · кадр целиком"),
+        ) {
+            metric = it
+        }
+        MapPerformanceChart(data, metric)
+        if (metric == "cpu")
+            for (part in mapCpuPerformanceParts) {
+                val ms = data.cpu[part.id] ?: continue
+                if (ms > 0)
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text(part.label, style = ShareTypography.context, color = part.colour)
+                        Text(mapPerformanceMs(ms), style = ShareTypography.context)
+                    }
+            }
+        else
+            Text(
+                "GPU: кадр целиком, включая тени, туман и контуры.",
+                style = ShareTypography.context,
+                color = WebPalette.TextMuted,
+            )
+        if (metric == "gpu" && data.gpuMs == null)
+            Text(
+                "GPU-замер пока недоступен. CPU измеряется независимо.",
+                style = ShareTypography.context,
+                color = WebPalette.TextMuted,
+            )
+        Text("Изменение сцены: ${mapPerformanceMs(data.updateMs)}", style = ShareTypography.context)
     }
 }
+
+internal fun mapPerformanceMs(value: Float?) = value?.let { "%.2f мс".format(it) } ?: "—"

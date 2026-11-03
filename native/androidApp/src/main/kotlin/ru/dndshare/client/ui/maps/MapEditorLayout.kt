@@ -155,7 +155,6 @@ internal fun MapEditorLayout(
                             placing = workspace.ui.tool != MapTool.None,
                             options =
                                 MapSceneOptions(
-                                    forceLod = workspace.ui.forceLod,
                                     preview = workspace.previewSpec,
                                     previewValid = workspace.previewValid,
                                     selectedLight =

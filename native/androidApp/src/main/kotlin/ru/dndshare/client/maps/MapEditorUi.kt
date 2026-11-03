@@ -82,7 +82,6 @@ data class MapEditorUi(
     val lightFilter: String = "all",
     val showAnchors: Boolean = false,
     val showCameras: Boolean = true,
-    val forceLod: Boolean = false,
     val clipboard: MapClipboard? = null,
     val reference: MapReferenceDraft? = null,
     val referenceKind: String = "tile",

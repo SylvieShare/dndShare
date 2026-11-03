@@ -50,7 +50,8 @@ internal fun MapToolRail(tab: String, select: (String) -> Unit, modifier: Modifi
                 Surface(
                     { select(key) },
                     Modifier.size(64.dp).semantics {
-                        contentDescription = title
+                        contentDescription =
+                            if (key == "performance") "Производительность" else title
                         role = Role.Tab
                         selected = tab == key
                     },

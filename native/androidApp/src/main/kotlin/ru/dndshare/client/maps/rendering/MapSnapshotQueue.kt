@@ -31,6 +31,9 @@ class MapSnapshotQueue(private val context: Context, private val assets: MapAsse
         key: String? = null,
     ): Bitmap = coroutineScope {
         require(width in 64..1024 && height in 64..1024)
+        val settings = MapRenderSettings.get(context)
+        settings.ready()
+        val forceLod = lod || settings.forceLod.value
         val signature =
             withContext(Dispatchers.Default) {
                 val used =
@@ -45,7 +48,7 @@ class MapSnapshotQueue(private val context: Context, private val assets: MapAsse
                             focus?.sortedBy { it.key },
                             width,
                             height,
-                            lod,
+                            forceLod,
                         )
                         .toString()
                         .toByteArray()
@@ -65,7 +68,7 @@ class MapSnapshotQueue(private val context: Context, private val assets: MapAsse
                 check(!closed) { "Очередь превью закрыта" }
                 val bitmap =
                     try {
-                        worker.render(document, models, width, height, camera, focus, lod)
+                        worker.render(document, models, width, height, camera, focus, forceLod)
                     } catch (failure: Exception) {
                         worker.close()
                         renderer = null

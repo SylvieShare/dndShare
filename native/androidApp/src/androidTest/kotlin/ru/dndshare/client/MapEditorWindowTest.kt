@@ -275,6 +275,20 @@ class MapEditorWindowTest {
                         )
                     )
                     await { record.get().name == "Карта $width" }
+                    click("Производительность")
+                    await {
+                        find { it.contentDescription?.toString() == "Измерять нагрузку" } != null
+                    }
+                    await {
+                        find { it.text?.toString()?.matches(Regex("[0-9.,]+ мс")) == true } != null
+                    }
+                    automation.waitForIdle(100, 5000)
+                    automation.takeScreenshot()?.let {
+                        exportMapTestImage("android-performance-$width.png", it)
+                        it.recycle()
+                    }
+                    click("Измерять нагрузку")
+                    await { find { it.text?.toString() == "Пауза" } != null }
                     val back = awaitNode { it.contentDescription?.toString() == "К картам" }
                     assertTrue(back.performAction(AccessibilityNodeInfo.ACTION_CLICK))
                     await { closed.get() }
@@ -301,8 +315,7 @@ class MapEditorWindowTest {
 
     private fun click(text: String) {
         var node: AccessibilityNodeInfo? = awaitNode {
-            (it.contentDescription?.toString() == text && it.isClickable) ||
-                it.text?.toString() == text
+            it.contentDescription?.toString() == text || it.text?.toString() == text
         }
         while (node != null && !node.isClickable) node = node.parent
         assertTrue(requireNotNull(node).performAction(AccessibilityNodeInfo.ACTION_CLICK))

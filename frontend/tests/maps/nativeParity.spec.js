@@ -21,6 +21,13 @@ for(const width of [390,834,1920]) {
   await expect(page.getByLabel('Название карты', {exact:true})).toBeVisible()
   await settled(page)
   await page.screenshot({path:testInfo.outputPath(`web-settings-${width}.png`)})
+  await page.getByRole('button',{name:'Производительность',exact:true}).click()
+  await expect(page.getByRole('switch',{name:'Измерять нагрузку',exact:true})).toBeVisible()
+  await expect.poll(()=>page.locator('.map-performance-summary strong').first().textContent()).toMatch(/мс/)
+  await settled(page)
+  await page.screenshot({path:testInfo.outputPath(`web-performance-${width}.png`)})
+  await page.getByRole('switch',{name:'Измерять нагрузку',exact:true}).click()
+  await expect(page.getByText('Пауза',{exact:true})).toBeVisible()
   expect(errors).toEqual([])
  })
  test(`native parity library at ${width}px`,async({page},testInfo)=>{

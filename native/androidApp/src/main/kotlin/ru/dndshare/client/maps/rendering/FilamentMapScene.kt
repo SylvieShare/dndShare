@@ -9,9 +9,11 @@ import android.view.SurfaceView
 import com.google.android.filament.android.UiHelper
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.*
 import kotlinx.coroutines.android.asCoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.serialization.json.JsonObject
 import ru.dndshare.client.maps.MapEntityRef
 import ru.dndshare.client.maps.MapModel
@@ -46,6 +48,9 @@ class FilamentMapScene(
     @Volatile private var viewportWidth = 0
     @Volatile private var viewportHeight = 0
     private val dispatcher = handler.asCoroutineDispatcher("Map renderer")
+    private val settings = MapRenderSettings.get(surfaceView.context)
+    private val settingsScope = CoroutineScope(SupervisorJob() + dispatcher)
+    @Volatile private var requestedOptions = MapSceneOptions()
     val density = surfaceView.resources.displayMetrics.density
     val width
         get() = viewportWidth
@@ -127,6 +132,14 @@ class FilamentMapScene(
                 }
             }
         helper.attachTo(surfaceView)
+        settingsScope.launch {
+            settings.ready()
+            settings.forceLod.collect { enabled ->
+                post {
+                    options(requestedOptions.copy(forceLod = requestedOptions.forceLod || enabled))
+                }
+            }
+        }
     }
 
     private fun post(action: FilamentSceneCore.() -> Unit) {
@@ -162,7 +175,10 @@ class FilamentMapScene(
 
     fun camera() = pose
 
-    fun options(value: MapSceneOptions) = post { options(value) }
+    fun options(value: MapSceneOptions) {
+        requestedOptions = value
+        post { options(value.copy(forceLod = value.forceLod || settings.forceLod.value)) }
+    }
 
     fun snapshot(result: (Result<android.graphics.Bitmap>) -> Unit) {
         if (closed) {
@@ -204,6 +220,13 @@ class FilamentMapScene(
 
     fun retry() = post { retry() }
 
+    fun measurePerformance(value: Boolean) = post { measurePerformance(value) }
+
+    fun performance(result: (MapRenderTelemetry) -> Unit) = post {
+        val value = pollPerformance()
+        main.post { if (!closed) result(value) }
+    }
+
     /** Explicit GPU completion is only needed by screenshot/instrumentation callers. */
     fun afterGpuIdle(complete: () -> Unit) = post {
         engine.flushAndWait()
@@ -214,6 +237,7 @@ class FilamentMapScene(
 
     override fun close() {
         if (closed) return
+        settingsScope.cancel()
         helper.detach()
         closed = true
         handler.post {

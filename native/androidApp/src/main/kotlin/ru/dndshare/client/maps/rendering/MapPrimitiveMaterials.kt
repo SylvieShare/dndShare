@@ -11,7 +11,7 @@ internal data class MapPrimitiveRef(val node: Int, val primitive: Int)
 internal class MapPrimitiveMaterials(private val engine: Engine, private val gpu: MapGpuMaterials) :
     AutoCloseable {
     private data class Binding(
-        val renderable: Int,
+        val entity: Int,
         val slot: Int,
         val ref: MapPrimitiveRef,
         val original: MaterialInstance,
@@ -48,7 +48,7 @@ internal class MapPrimitiveMaterials(private val engine: Engine, private val gpu
                     else
                         (0 until manager.getPrimitiveCount(renderable)).map { slot ->
                             Binding(
-                                renderable,
+                                entity,
                                 slot,
                                 MapPrimitiveRef(named.node, named.primitive ?: slot),
                                 manager.getMaterialInstanceAt(renderable, slot),
@@ -67,6 +67,9 @@ internal class MapPrimitiveMaterials(private val engine: Engine, private val gpu
         val solid = mutableListOf<MaterialInstance>()
         val alpha = mutableListOf<MaterialInstance>()
         for (row in rows) {
+            // Component slots compact after ANY renderable deletion, including another pool.
+            val renderable = manager.getInstance(row.entity)
+            if (renderable == 0) continue
             val data = descriptors[row.ref]
             val blend = data?.string("alphaMode") == "BLEND"
             val replacement =
@@ -103,19 +106,21 @@ internal class MapPrimitiveMaterials(private val engine: Engine, private val gpu
                 }
             }
             if (blend) alpha += replacement else solid += replacement
-            if (rebind) manager.setMaterialInstanceAt(row.renderable, row.slot, replacement)
+            if (rebind) manager.setMaterialInstanceAt(renderable, row.slot, replacement)
             val layer =
                 (if (style.opacity <= .001f) 0 else if (blend) 16 else if (group == 0) 1 else 2) or
                     (if (selected) 4 else 0)
-            manager.setLayerMask(row.renderable, 255, layer)
+            manager.setLayerMask(renderable, 255, layer)
         }
         bound[instance] = MapRenderMaterials(solid, alpha)
     }
 
     fun restore(instances: Collection<FilamentInstance>) {
         val manager = engine.renderableManager
-        for (instance in instances) for (row in bindings[instance].orEmpty()) manager
-            .setMaterialInstanceAt(row.renderable, row.slot, row.original)
+        for (instance in instances) for (row in bindings[instance].orEmpty()) {
+            val renderable = manager.getInstance(row.entity)
+            if (renderable != 0) manager.setMaterialInstanceAt(renderable, row.slot, row.original)
+        }
     }
 
     fun forget(instances: Collection<FilamentInstance>) {

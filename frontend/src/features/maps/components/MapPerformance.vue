@@ -7,7 +7,7 @@
         title="Измерять нагрузку"
       />
     </template>
-    <BaseTile class="map-performance-summary" framed>
+    <BaseTile class="map-performance-summary" :outlined="false">
       <div>
         <span>Кадр CPU</span><strong>{{ ms(totalMs(stats?.cpu)) }}</strong>
       </div>

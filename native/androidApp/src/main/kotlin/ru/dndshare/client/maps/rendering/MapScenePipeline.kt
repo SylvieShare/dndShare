@@ -68,12 +68,22 @@ internal class MapScenePipeline(context: Context, engine: Engine, scene: Scene, 
         pick: Boolean,
         fog: Boolean,
         effects: MapSceneEffects,
+        profiler: MapFrameProfiler? = null,
     ) {
         outlines.render(renderer, renderMaterials, highlight)
+        profiler?.mark("outlines")
         if (pick) layers.renderPicking(renderer)
+        profiler?.mark("picking")
         colour.render(renderer, view) { r, v ->
-            if (fog) effects.render(r, v, layers::render) else layers.render(r, v)
+            if (fog)
+                effects.render(r, v) { rr, vv ->
+                    layers.render(rr, vv)
+                    profiler?.mark("draw")
+                }
+            else layers.render(r, v)
+            profiler?.mark(if (fog) "fog" else "draw")
         }
+        profiler?.mark("presentation")
     }
 
     override fun close() {

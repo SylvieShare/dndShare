@@ -6,8 +6,6 @@ import android.os.Handler
 import android.os.Looper
 import android.view.Surface
 import com.google.android.filament.*
-import com.google.android.filament.gltfio.*
-import com.google.android.filament.utils.Utils
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.JsonObject
 import ru.dndshare.client.maps.*
@@ -40,12 +38,12 @@ internal class FilamentSceneCore(
     }
 
     private val scope = CoroutineScope(SupervisorJob() + dispatcher)
-    val engine: Engine
-    private val view: com.google.android.filament.View
-    private val scene: Scene
-    private val background: Skybox
-    private val renderer: Renderer
-    private val camera: Camera
+    private val world = MapFilamentWorld(context)
+    val engine = world.engine
+    private val view = world.view
+    private val scene = world.scene
+    private val renderer = world.renderer
+    private val camera = world.camera
     private var swap: SwapChain? = null
     private var closed = false
     private var pose = MapCamera()
@@ -66,6 +64,7 @@ internal class FilamentSceneCore(
     private val lightFrames = MapLightFrames(captures, ::requestFrame)
     private var revision = 0L
     private val telemetryCollector = MapTelemetryCollector()
+    private val profiler = MapFrameProfiler()
     @Volatile
     var telemetry = MapRenderTelemetry()
         private set
@@ -185,47 +184,6 @@ internal class FilamentSceneCore(
     }
 
     init {
-        Utils.init()
-        Gltfio.init()
-        engine =
-            Engine.Builder()
-                .backend(Engine.Backend.OPENGL)
-                .config(Engine.Config().apply { enableMultipleDirectionalLights = true })
-                .build()
-        engine.setAutomaticInstancingEnabled(true)
-        renderer = engine.createRenderer()
-        scene = engine.createScene()
-        val backgroundColour = mapLinearColour("#161b23")
-        background =
-            Skybox.Builder()
-                .color(backgroundColour[0], backgroundColour[1], backgroundColour[2], 1f)
-                .build(engine)
-        background.setLayerMask(255, 1)
-        scene.skybox = background
-        camera = engine.createCamera(EntityManager.get().create())
-        camera.setExposure(1f)
-        view =
-            engine.createView().apply {
-                this.scene = this@FilamentSceneCore.scene
-                this.camera = this@FilamentSceneCore.camera
-                antiAliasing = com.google.android.filament.View.AntiAliasing.FXAA
-                setVisibleLayers(0xff, 1 or 16 or 64)
-                setDynamicLightingOptions(
-                    .01f,
-                    2000f,
-                ) // Orthographic editor eye is 500 units from the map.
-            }
-        renderer.clearOptions =
-            Renderer.ClearOptions().apply {
-                clear = true
-                clearColor =
-                    doubleArrayOf(
-                        backgroundColour[0].toDouble(),
-                        backgroundColour[1].toDouble(),
-                        backgroundColour[2].toDouble(),
-                        1.0,
-                    )
-            }
         pipeline = MapScenePipeline(context, engine, scene, camera)
         assets =
             MapSceneAssets(
@@ -320,6 +278,7 @@ internal class FilamentSceneCore(
 
     fun update(value: JsonObject, catalogue: List<MapModel>) {
         if (closed) return
+        val started = if (telemetryCollector.enabled) System.nanoTime() else 0L
         revision++
         motionUpdated(emptyMap())
         document = value
@@ -339,6 +298,8 @@ internal class FilamentSceneCore(
         syncEffects()
         publishStatus()
         requestFrame()
+        if (started != 0L)
+            telemetryCollector.sceneUpdated((System.nanoTime() - started) / 1_000_000f)
     }
 
     private fun reconcileViewport() {
@@ -406,12 +367,32 @@ internal class FilamentSceneCore(
 
     fun requestFrame() = frames.request()
 
+    fun measurePerformance(value: Boolean) {
+        telemetryCollector.measure(value && frames.active)
+        if (value) requestFrame()
+    }
+
+    fun pollPerformance(): MapRenderTelemetry {
+        if (!frames.active) return telemetry.copy(enabled = false, fps = 0f, idle = true)
+        telemetry =
+            telemetryCollector.snapshot(
+                renderer,
+                renderedFrames,
+                entries.size,
+                assets.modelCount,
+                assets.fileBytes,
+                lights.count,
+            )
+        return telemetry
+    }
+
     private fun frame(time: Long) {
-        val cpuStart = System.nanoTime()
         if (closed || !frames.active) return
+        profiler.begin(telemetryCollector.enabled)
         reconcileViewport()
         assets.advance()
         assets.waterParts(effects.waterParts)
+        profiler.mark("models")
         val seconds = time / 1_000_000_000.0
         val motion = options.animate && ValueAnimator.areAnimatorsEnabled()
         val wasMoving = assets.motionMoving
@@ -444,7 +425,9 @@ internal class FilamentSceneCore(
                     .toMap()
             motionUpdated(positions)
         }
+        profiler.mark("areas")
         val effectMotion = effects.advance(seconds, motion, MapEffectViewport(pose, width, height))
+        profiler.mark("effects")
         assets.renderContext?.let {
             loading.update(
                 it,
@@ -455,9 +438,12 @@ internal class FilamentSceneCore(
             )
         }
         val loadingMotion = loading.advance(seconds, motion)
+        profiler.mark("previews")
         val lightMotion =
             lights.advance(seconds, motion, pose, width, height, options.selectedLight, anchors)
+        profiler.mark("lighting")
         val postProcess = effects.prepare(view, camera, seconds, motion)
+        profiler.mark("fog")
         hover.advance()
         val selected = selectedRefs()
         pipeline.prepare(
@@ -488,6 +474,7 @@ internal class FilamentSceneCore(
             },
         )
         effectStatistics = effects.statistics
+        profiler.mark("overlays")
         val chain = swap
         if (width > 0 && height > 0 && chain != null) {
             if (!renderer.beginFrame(chain, time)) {
@@ -495,7 +482,7 @@ internal class FilamentSceneCore(
                 return
             }
             try {
-                pipeline.render(renderer, view, picker.working, postProcess, effects)
+                pipeline.render(renderer, view, picker.working, postProcess, effects, profiler)
                 lightFrames.prepare(
                     sceneContext,
                     pose,
@@ -512,16 +499,7 @@ internal class FilamentSceneCore(
                 renderer.endFrame()
             }
             renderedFrames++
-            telemetry =
-                telemetryCollector.sample(
-                    renderer,
-                    System.nanoTime() - cpuStart,
-                    renderedFrames,
-                    entries.size,
-                    assets.modelCount,
-                    assets.fileBytes,
-                    lights.count,
-                )
+            profiler.mark("previews")
             if (presented !== assets.readySnapshot) {
                 presented = assets.readySnapshot
                 statusDirty = true
@@ -535,6 +513,7 @@ internal class FilamentSceneCore(
                 statusDirty = false
                 status(assets.pendingCount, failures.message)
             }
+            telemetryCollector.frame(profiler.finish())
         }
         if (poseMotion || assets.working || picker.working || captures.working) requestFrame()
         else if (effectMotion || lightMotion || loadingMotion) frames.motion(seconds)
@@ -557,13 +536,6 @@ internal class FilamentSceneCore(
         assets.close()
         pipeline.close()
         lights.close()
-        engine.destroyCameraComponent(camera.entity)
-        EntityManager.get().destroy(camera.entity)
-        engine.destroyView(view)
-        scene.skybox = null
-        engine.destroySkybox(background)
-        engine.destroyScene(scene)
-        engine.destroyRenderer(renderer)
-        engine.destroy()
+        world.close()
     }
 }
