@@ -23,7 +23,12 @@ import ru.dndshare.client.maps.rendering.*
 
 class MapLodRendererTest {
     @Test
-    fun upgradingQualityKeepsThePreviousGeometryVisibleWhileTheRenderAssetLoads() {
+    fun upgradingQualityKeepsThePreviousGeometryVisibleWhileTheRenderAssetLoads() =
+        qualityFlow(false)
+
+    @Test fun aColdCloseViewShowsLodBeforeItsRenderFileIsReady() = qualityFlow(true)
+
+    private fun qualityFlow(startHigh: Boolean) {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = instrumentation.targetContext
         val high = instrumentation.context.assets.open("maps/box.glb").use { it.readBytes() }
@@ -91,7 +96,7 @@ class MapLodRendererTest {
                                         }
                                     scene.set(renderer)
                                     renderer.options(
-                                        MapSceneOptions(forceLod = true, automaticLod = false)
+                                        MapSceneOptions(forceLod = !startHigh, automaticLod = false)
                                     )
                                     renderer.update(doc, listOf(model))
                                 }
@@ -103,15 +108,22 @@ class MapLodRendererTest {
                 await { scene.get()?.width?.let { it > 0 } == true }
                 val renderer = scene.get()
                 renderer.camera(MapCamera().fit(4.0, 4.0, renderer.width, renderer.height))
-                await { pending.get() == 0 && ref in renderer.readyRefs }
-                assertGreen(capture(renderer))
-                renderer.options(MapSceneOptions(forceLod = false, automaticLod = false))
-                assertTrue(entered.await(5, TimeUnit.SECONDS))
-                assertGreen(capture(renderer))
-                assertTrue(
-                    ref in renderer.readyRefs,
-                    "Fallback geometry must stay available to the UI",
-                )
+                if (startHigh) {
+                    await { ref in renderer.readyRefs && model.lodUrl in renderer.readyModelUrls }
+                    assertTrue(entered.await(5, TimeUnit.SECONDS))
+                    assertTrue(model.renderUrl !in renderer.readyModelUrls)
+                    assertGreen(capture(renderer))
+                } else {
+                    await { pending.get() == 0 && ref in renderer.readyRefs }
+                    assertGreen(capture(renderer))
+                    renderer.options(MapSceneOptions(forceLod = false, automaticLod = false))
+                    assertTrue(entered.await(5, TimeUnit.SECONDS))
+                    assertGreen(capture(renderer))
+                    assertTrue(
+                        ref in renderer.readyRefs,
+                        "Fallback geometry must stay available to the UI",
+                    )
+                }
                 release.complete(Unit)
                 await { pending.get() == 0 }
                 val final = capture(renderer)

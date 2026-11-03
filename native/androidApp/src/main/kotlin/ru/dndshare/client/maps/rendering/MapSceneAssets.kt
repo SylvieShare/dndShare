@@ -4,7 +4,6 @@ import com.google.android.filament.*
 import com.google.android.filament.gltfio.*
 import java.nio.ByteBuffer
 import kotlinx.coroutines.*
-import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.serialization.json.JsonObject
 import ru.dndshare.client.maps.*
@@ -43,6 +42,20 @@ internal class MapSceneAssets(
     private var previewSpec = MapPreviewSpec()
     val previewSelection
         get() = placement.retainedRefs
+
+    private var qualityInput: List<MapSceneEntry>? = null
+    private var qualityContext: MapContext? = null
+    private var qualitySpec: MapPreviewSpec? = null
+
+    fun qualityDetails(value: List<MapSceneEntry>, context: MapContext): Set<MapEntityRef> {
+        if (qualityInput !== value || qualityContext !== context || qualitySpec != previewSpec) {
+            qualityInput = value
+            qualityContext = context
+            qualitySpec = previewSpec
+            placement.merge(value, context, previewSpec, drawn)
+        }
+        return placement.detailRefs
+    }
 
     fun preview(value: MapPreviewSpec) {
         if (value == previewSpec) return
@@ -114,7 +127,7 @@ internal class MapSceneAssets(
     private val retries =
         MapAssetRetries(
             scope,
-            { url -> entries.any { it.model.renderUrl == url } },
+            { url -> url in requestPlan() },
             { url, stage ->
                 if (stage == "download") cache.downloads.invalidate(url) else cache.invalidate(url)
             },
@@ -128,7 +141,37 @@ internal class MapSceneAssets(
     var readySnapshot = MapSceneLoadState()
         private set
 
-    private val slots = Semaphore(3)
+    private val priorityOwner = Any()
+    private val slots = MapPriorityGate(3, cache.downloads::priority)
+
+    private fun requestPlan() = mapAssetRequests(entries) { availablePool(it) != null }
+
+    private fun prioritize() {
+        cache.downloads.priorities(
+            priorityOwner,
+            requestPlan().mapValues { (url, rows) ->
+                (if (rows.any { it.ref in selection }) 100 else 0) +
+                    if (rows.any { url != it.model.renderUrl }) 10 else 0
+            },
+        )
+    }
+
+    private fun pruneRequests(wanted: Set<String>) {
+        retries.retain(wanted)
+        jobs.keys
+            .filter { it !in wanted }
+            .forEach { url ->
+                jobs.remove(url)?.cancel()
+                pending -= url
+                downloaded
+                    .filter { it.url == url }
+                    .forEach {
+                        downloaded.remove(it)
+                        it.consumed.complete(Unit)
+                    }
+            }
+    }
+
     private val downloaded = ArrayDeque<DownloadedModel>()
     private var loading: MapModelPool? = null
     private var entries = emptyList<MapSceneEntry>()
@@ -162,6 +205,7 @@ internal class MapSceneAssets(
     fun selection(value: Set<MapEntityRef>) {
         if (value == selection) return
         selection = value
+        prioritize()
         synchronize()
     }
 
@@ -174,27 +218,17 @@ internal class MapSceneAssets(
         this.context = context
         wantedEntries = value
         entries = placement.merge(value, context, previewSpec, drawn)
-        val wanted = entries.map { it.model.renderUrl }.toSet()
-        retries.retain(wanted)
-        jobs.keys
-            .filter { it !in wanted }
-            .forEach { url ->
-                jobs.remove(url)?.cancel()
-                pending -= url
-                downloaded
-                    .filter { it.url == url }
-                    .forEach {
-                        downloaded.remove(it)
-                        it.consumed.complete(Unit)
-                    }
-            }
+        prioritize()
+        pruneRequests(requestPlan().keys)
         ensureWantedPools()
         synchronize()
         publishStatus()
     }
 
     private fun ensureWantedPools() {
-        val wanted = entries.groupBy { it.model.renderUrl }
+        val wanted = requestPlan()
+        pruneRequests(wanted.keys)
+        prioritize()
         for ((url, group) in wanted) {
             val pool = pools[url]
             if (pool != null && pool.capacity < group.size && loading !== pool) {
@@ -249,7 +283,7 @@ internal class MapSceneAssets(
             scope.launch(start = CoroutineStart.LAZY) {
                 var stage = "download"
                 try {
-                    slots.withPermit {
+                    slots.withPermit(url) {
                         val original = cache.bytes(url, oneAttempt = true)
                         stage = "decode"
                         val model = withContext(Dispatchers.Default) { prepareMapModel(original) }
@@ -275,7 +309,7 @@ internal class MapSceneAssets(
         if (loading != null || downloaded.isEmpty()) return
         val source = downloaded.removeFirst()
         val url = source.url
-        val count = entries.count { it.model.renderUrl == url }
+        val count = requestPlan()[url]?.size ?: 0
         if (count == 0) {
             pending -= url
             source.consumed.complete(Unit)
@@ -319,6 +353,8 @@ internal class MapSceneAssets(
     private fun synchronize() {
         val resolved = entries.map { entry ->
             if (availablePool(entry.model.renderUrl) != null) entry
+            else if (entry.model.lodUrl.isNotBlank() && availablePool(entry.model.lodUrl) != null)
+                entry.copy(model = entry.model.copy(renderUrl = entry.model.lodUrl))
             else
                 drawn[entry.ref]
                     ?.takeIf {
@@ -330,7 +366,7 @@ internal class MapSceneAssets(
                         else poses.target(entry.ref) ?: old
                     } ?: entry
         }
-        val needed = (entries + resolved).map { it.model.renderUrl }.toSet()
+        val needed = requestPlan().keys + resolved.map { it.model.renderUrl }
         pools.keys.filter { it !in needed }.forEach(::removePool)
         retiring.keys.filter { it !in needed }.forEach { retiring.remove(it)?.let(::destroyPool) }
         entities.clear()
@@ -432,6 +468,7 @@ internal class MapSceneAssets(
     }
 
     override fun close() {
+        cache.downloads.priorities(priorityOwner, emptyMap())
         retries.close()
         jobs.values.forEach(Job::cancel)
         jobs.clear()

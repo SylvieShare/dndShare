@@ -127,8 +127,15 @@ class MapLoadingFlowTest {
                         }
                         await { find { it.text?.toString() == "Проблемы загрузки карты" } != null }
                         assertNull(find { it.text?.toString()?.contains("do-not-display") == true })
+                        if (width >= 1200) {
+                            await {
+                                find { it.text?.toString() == "Ресурс: Основная модель" } != null &&
+                                    find { it.text?.toString() == "Ресурс: LOD" } != null
+                            }
+                        }
                         click("Закрыть")
                         withTimeout(12_000) { loading.await() }
+                        await { attempts.isNotEmpty() && attempts.values.all { it.get() >= 3 } }
                         delay(200)
                         assertNull(find { it.text?.toString() == "Проблемы загрузки карты" })
                         click("Настройки")

@@ -53,6 +53,8 @@ internal class FilamentSceneCore(
     private val density = context.resources.displayMetrics.density.toDouble()
     private var tier: MapModelTier? = null
     private val viewportAssets = MapViewportAssets()
+    private val quality = MapSceneQuality()
+    private var qualityEntries: List<MapSceneEntry>? = null
     private var sceneContext: MapContext? = null
     private var document: JsonObject? = null
     private val models = mutableMapOf<String, MapModel>()
@@ -100,9 +102,6 @@ internal class FilamentSceneCore(
                 failures = effects.failureRecords + assets.failureRecords,
                 problem = failures.entries.filterKeys { it != "models" }.values.firstOrNull(),
             )
-
-    private fun activeUrl(model: MapModel) =
-        if (tier == MapModelTier.Lod) model.lodUrl.ifBlank { model.renderUrl } else model.renderUrl
 
     private fun desiredTier() =
         if (options.automaticLod) mapModelTier(pose.pixels / density, tier, options.forceLod)
@@ -305,11 +304,9 @@ internal class FilamentSceneCore(
         models.putAll(catalogue.associateBy { it.uuid })
         tier = desiredTier()
         entries =
-            mapSceneEntries(value, models)
-                .filter { options.focus == null || it.ref in options.focus!! }
-                .map {
-                    it.copy(model = it.model.copy(renderUrl = activeUrl(it.model)))
-                }
+            mapSceneEntries(value, models).filter {
+                options.focus == null || it.ref in options.focus!!
+            }
         pipeline.updateGrid(value, options.ground)
         val visibleDocument = mapSceneScope(value, options.focus)
         val context = MapContext(visibleDocument, catalogue)
@@ -323,10 +320,23 @@ internal class FilamentSceneCore(
 
     private fun reconcileViewport() {
         val context = sceneContext ?: return
+        val details = assets.qualityDetails(entries, context) + options.preview.refs
+        val preferred =
+            quality.entries(
+                context.document,
+                entries,
+                tier ?: MapModelTier.Render,
+                options.forceLod,
+                details,
+            )
+        if (preferred !== qualityEntries) {
+            qualityEntries = preferred
+            viewportAssets.invalidate()
+        }
         val value =
             viewportAssets.update(
                 context,
-                entries,
+                preferred,
                 assets.bounds,
                 pose,
                 width,

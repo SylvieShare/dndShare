@@ -58,6 +58,7 @@ internal class MapSceneMotion(private val placement: MapPlacementMotion = MapPla
                         )
                 }
                 .toMap()
+        placement.consumeRemapped().forEach { (from, to) -> rotations.remap(from, to) }
         rotations.retain(entries.keys)
         entries.forEach { (ref, entry) -> rotations.set(ref, placement.pose(ref, decode(entry))) }
         val previewStarted = placement.consumeStart()

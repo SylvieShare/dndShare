@@ -6,7 +6,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.sync.withPermit
 import ru.dndshare.client.network.ApiException
@@ -76,7 +75,16 @@ class MapDownloads(
     }
 
     private val lock = Mutex()
-    private val slots = Semaphore(3)
+    private val priorities = ConcurrentHashMap<Any, Map<String, Int>>()
+
+    fun priorities(owner: Any, urls: Map<String, Int>) {
+        if (urls.isEmpty()) priorities.remove(owner) else priorities[owner] = urls.toMap()
+    }
+
+    internal fun priority(url: String) =
+        if (url == "/api/maps/models") 1000 else priorities.values.maxOfOrNull { it[url] ?: 0 } ?: 0
+
+    private val slots = MapPriorityGate(3, ::priority)
     private val jobs = mutableMapOf<Any, Request<*>>()
     private val presentations = ConcurrentHashMap<String, Request<*>>()
     private val cooldowns = ConcurrentHashMap<String, MapAttemptFailure>()
@@ -214,7 +222,7 @@ class MapDownloads(
         if (initialWait > 0) withTimeoutOrNull(initialWait) { request.retry.receive() }
         while (true) {
             try {
-                return slots.withPermit {
+                return slots.withPermit(url) {
                     attempt++
                     publish(request) {
                         it.copy(

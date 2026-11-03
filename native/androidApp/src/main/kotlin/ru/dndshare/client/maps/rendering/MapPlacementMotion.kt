@@ -145,20 +145,33 @@ internal class MapPlacementMotion {
         for (group in groups.toList()) {
             if (group === active || group.retiring) continue
             val mapped = linkedMapOf<MapEntityRef, MapSceneEntry>()
+            val moved = mutableMapOf<MapEntityRef, MapEntityRef>()
             var newAnchor: MapEntityRef? = null
             for ((old, entry) in group.entries) {
                 val found =
                     byRef[old] ?: wanted.firstOrNull { it.ref !in consumed && samePose(it, entry) }
                 if (found == null) break
                 mapped[found.ref] = found
+                if (old != found.ref) moved[old] = found.ref
                 consumed += found.ref
                 if (old == group.anchor) newAnchor = found.ref
             }
             if (mapped.size == group.entries.size) {
+                remapped.putAll(moved)
                 group.entries = mapped
                 group.anchor = newAnchor ?: mapped.keys.first()
                 group.target = anchorPoint(mapped.getValue(group.anchor), context)
                 group.active = false
+                val parents =
+                    mapped.keys.filter { it.kind == MapEntityKind.Tile }.map { it.id }.toSet()
+                group.dependents =
+                    wanted
+                        .filter {
+                            it.ref.kind == MapEntityKind.Object &&
+                                (context.objects[it.ref.id]?.get("placement") as? JsonObject)
+                                    ?.string("tileId") in parents
+                        }
+                        .associateBy { it.ref }
             } else if (group.tile && group.entries.keys.any { it in ready }) {
                 group.entries =
                     LinkedHashMap(
@@ -278,7 +291,15 @@ internal class MapPlacementMotion {
 
     fun refs() = groups.flatMap { it.entries.keys }.toSet()
 
+    val detailRefs
+        get() = groups.flatMap { it.entries.keys + it.dependents.keys }.toSet()
+
+    private val remapped = mutableMapOf<MapEntityRef, MapEntityRef>()
+
+    fun consumeRemapped() = remapped.toMap().also { remapped.clear() }
+
     fun clear() {
+        remapped.clear()
         groups.clear()
         active = null
         changed.clear()

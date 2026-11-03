@@ -146,6 +146,13 @@ internal class MapRotationMotion<K : Any> {
         changed.retainAll(keys)
     }
 
+    fun remap(from: K, to: K) {
+        if (from == to) return
+        states.remove(from)?.let { states[to] = it }
+        if (active.remove(from)) active += to
+        if (changed.remove(from)) changed += to
+    }
+
     fun clear() {
         states.clear()
         active.clear()
