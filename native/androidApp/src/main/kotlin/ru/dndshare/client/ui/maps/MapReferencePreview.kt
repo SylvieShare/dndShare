@@ -91,6 +91,7 @@ internal fun MapReferencePreview(workspace: MapEditorWorkspace, cache: MapAssetC
             cache,
             emptySet(),
             orbit = true,
+            options = MapSceneOptions(automaticLod=false),
             tap = {},
             drag = { _, _ -> },
             cancel = {},

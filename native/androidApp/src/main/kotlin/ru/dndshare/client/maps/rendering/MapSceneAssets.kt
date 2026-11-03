@@ -17,12 +17,18 @@ internal class MapSceneAssets(
     private val scope: CoroutineScope,
     private val requestFrame: () -> Unit,
     private val status: (Int, String?) -> Unit,
+    private val changed: () -> Unit,
 ) : AutoCloseable {
     private val materials = UbershaderProvider(engine)
     private val loader = AssetLoader(engine, materials, EntityManager.get())
     private val resources = ResourceLoader(engine, true)
     private val groundResources = ResourceLoader(engine, true)
     private val pools = mutableMapOf<String, MapModelPool>()
+    private val retiring = mutableMapOf<String, MapModelPool>()
+    private var drawn = emptyMap<MapEntityRef, MapSceneEntry>()
+    val drawnEntries
+        get() = drawn.values.toList()
+
     private val pending = mutableSetOf<String>()
     private val failed = mutableSetOf<String>()
     private val slots = Semaphore(3)
@@ -36,13 +42,16 @@ internal class MapSceneAssets(
         get() = pools.filterValues { it.ready }.keys.toSet()
 
     val bounds
-        get() = pools.filterValues { it.ready }.mapValues { it.value.asset.boundingBox }
+        get() =
+            (pools.values + retiring.values)
+                .filter { it.ready }
+                .associate { it.url to it.asset.boundingBox }
 
     val modelCount
-        get() = pools.size
+        get() = (pools.keys + retiring.keys).toSet().size
 
     val fileBytes
-        get() = pools.values.sumOf { it.fileBytes }
+        get() = (pools.values + retiring.values).sumOf { it.fileBytes }
 
     val pendingCount
         get() = pending.size
@@ -55,13 +64,7 @@ internal class MapSceneAssets(
 
     fun update(document: JsonObject, value: List<MapSceneEntry>, groundVisible: Boolean = true) {
         entries = value
-        val wanted = entries.groupBy { it.model.renderUrl }
-        pools.keys.filter { it !in wanted }.forEach(::removePool)
-        for ((url, group) in wanted) {
-            val pool = pools[url]
-            if (pool != null && pool.capacity < group.size && loading !== pool) removePool(url)
-            if (url !in pools && url !in pending && url !in failed) download(url)
-        }
+        ensureWantedPools()
         val w = document.number("width").toInt()
         val h = document.number("height").toInt()
         val grid = (document["grid"] as? JsonObject)?.flag("visible") ?: true
@@ -84,6 +87,21 @@ internal class MapSceneAssets(
         synchronize()
     }
 
+    private fun ensureWantedPools() {
+        val wanted = entries.groupBy { it.model.renderUrl }
+        for ((url, group) in wanted) {
+            val pool = pools[url]
+            if (pool != null && pool.capacity < group.size && loading !== pool) {
+                if (pool.ready) {
+                    retiring.remove(url)?.let(::destroyPool)
+                    retiring[url] = pool
+                    pools.remove(url)
+                } else removePool(url)
+            }
+            if (url !in pools && url !in pending && url !in failed) download(url)
+        }
+    }
+
     fun advance() {
         loadNext()
         loading?.let { pool ->
@@ -92,8 +110,11 @@ internal class MapSceneAssets(
                 pool.ready = true
                 loading = null
                 pending -= pool.url
-                status(pending.size, null)
+                retiring.remove(pool.url)?.let(::destroyPool)
                 synchronize()
+                ensureWantedPools()
+                changed()
+                status(pending.size, null)
             }
         }
     }
@@ -166,11 +187,30 @@ internal class MapSceneAssets(
         }
     }
 
+    private fun availablePool(url: String) =
+        pools[url]?.takeIf { it.ready } ?: retiring[url]?.takeIf { it.ready }
+
     private fun synchronize() {
+        val resolved = entries.map { entry ->
+            if (availablePool(entry.model.renderUrl) != null) entry
+            else
+                drawn[entry.ref]
+                    ?.takeIf {
+                        it.model.uuid == entry.model.uuid &&
+                            availablePool(it.model.renderUrl) != null
+                    }
+                    ?.let { old ->
+                        entry.copy(model = entry.model.copy(renderUrl = old.model.renderUrl))
+                    } ?: entry
+        }
+        val needed = (entries + resolved).map { it.model.renderUrl }.toSet()
+        pools.keys.filter { it !in needed }.forEach(::removePool)
+        retiring.keys.filter { it !in needed }.forEach { retiring.remove(it)?.let(::destroyPool) }
         entities.clear()
-        for ((url, pool) in pools) {
-            if (!pool.ready) continue
-            val wanted = entries.filter { it.model.renderUrl == url }
+        val actual = mutableMapOf<MapEntityRef, MapSceneEntry>()
+        for (url in resolved.map { it.model.renderUrl }.distinct()) {
+            val pool = availablePool(url) ?: continue
+            val wanted = resolved.filter { it.model.renderUrl == url }
             val ids = wanted.map { it.ref }.toSet()
             pool.assigned.keys
                 .filter { it !in ids }
@@ -178,11 +218,11 @@ internal class MapSceneAssets(
                     pool.assigned.remove(id)?.let { scene.removeEntities(it.entities) }
                 }
             val used = pool.assigned.values.toSet()
-            val available = ArrayDeque(pool.instances.filter { it !in used })
+            val spare = ArrayDeque(pool.instances.filter { it !in used })
             for (entry in wanted) {
                 val instance =
                     pool.assigned[entry.ref]
-                        ?: available.removeFirstOrNull()?.also {
+                        ?: spare.removeFirstOrNull()?.also {
                             pool.assigned[entry.ref] = it
                             scene.addEntities(it.entities)
                         }
@@ -190,8 +230,32 @@ internal class MapSceneAssets(
                 val manager = engine.transformManager
                 manager.setTransform(manager.getInstance(instance.root), entry.matrix)
                 instance.entities.forEach { entities[it] = entry.ref }
+                actual[entry.ref] = entry
             }
         }
+        // A pool that stays for an in-flight upgrade must not keep deleted or replaced instances.
+        val assignedByUrl =
+            actual.values
+                .groupBy { it.model.renderUrl }
+                .mapValues { (_, rows) -> rows.map { it.ref }.toSet() }
+        for (pool in pools.values + retiring.values) {
+            val active = assignedByUrl[pool.url].orEmpty()
+            if (pool !== availablePool(pool.url)) {
+                pool.assigned.values.forEach { scene.removeEntities(it.entities) }
+                pool.assigned.clear()
+            } else
+                pool.assigned.keys
+                    .filter { it !in active }
+                    .forEach { id ->
+                        pool.assigned.remove(id)?.let { scene.removeEntities(it.entities) }
+                    }
+        }
+        drawn = actual
+    }
+
+    private fun destroyPool(pool: MapModelPool) {
+        pool.instances.forEach { scene.removeEntities(it.entities) }
+        loader.destroyAsset(pool.asset)
     }
 
     private fun removePool(url: String) {
@@ -201,14 +265,15 @@ internal class MapSceneAssets(
                 resources.asyncCancelLoad()
                 loading = null
             }
-            pool.instances.forEach { scene.removeEntities(it.entities) }
-            loader.destroyAsset(pool.asset)
+            destroyPool(pool)
         }
     }
 
     override fun close() {
         resources.asyncCancelLoad()
         pools.keys.toList().forEach(::removePool)
+        retiring.values.forEach(::destroyPool)
+        retiring.clear()
         ground?.let { loader.destroyAsset(it) }
         resources.destroy()
         groundResources.destroy()

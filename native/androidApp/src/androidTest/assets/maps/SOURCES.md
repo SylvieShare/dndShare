@@ -34,3 +34,7 @@ the attributed, meshopt-compressed Box above. All three are test assets only.
 узел scale=[8,0.02,8] для освещаемой поверхности в проверке точечных теней.
 Геометрия, материалы и исходная атрибуция сохранены.
 SHA-256: `2734c080e514239cf208a4c5f39e35246e05e5192d3a4bf9cf1c98c5dfb89de2`.
+
+`box-lod-green.glb` — тот же CC-BY Box, baseColorFactor заменён на [0,0.8,0,1]
+для различения LOD и render в проверке фоновой смены качества.
+SHA-256: `6b2f7d8b99aa336ba7d8f678b2d7d0a7c3d82cc151faa10bb91a7dd720239268`.

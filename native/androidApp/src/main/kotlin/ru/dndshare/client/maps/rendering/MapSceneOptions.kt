@@ -5,6 +5,7 @@ import ru.dndshare.client.maps.MapEntityRef
 data class MapSceneOptions(
     val animate: Boolean = true,
     val forceLod: Boolean = false,
+    val automaticLod: Boolean = true,
     val focus: Set<MapEntityRef>? = null,
     val ground: Boolean = true,
     val selectedLight: String? = null,

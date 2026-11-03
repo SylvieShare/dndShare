@@ -64,6 +64,7 @@ internal class MapSnapshotRenderer(context: Context, cache: MapAssetCache) : Aut
                 MapSceneOptions(
                     animate = false,
                     forceLod = lod,
+                    automaticLod = false,
                     focus = focus,
                     ground = focus == null,
                 )

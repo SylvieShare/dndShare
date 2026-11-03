@@ -14,6 +14,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonObject
 import ru.dndshare.client.maps.*
 import ru.dndshare.client.maps.rendering.*
@@ -42,7 +44,7 @@ internal fun MapSceneView(
     var scene by remember { mutableStateOf<FilamentMapScene?>(null) }
     var touch by remember { mutableStateOf<MapTouchController?>(null) }
     var cameraRevision by remember { mutableIntStateOf(0) }
-    var ready by remember { mutableStateOf<Set<String>>(emptySet()) }
+    var ready by remember { mutableStateOf<Set<MapEntityRef>>(emptySet()) }
     var drawn by remember { mutableStateOf(false) }
     var firstFrameError by remember { mutableStateOf<String?>(null) }
     val onSelection by rememberUpdatedState(selection)
@@ -54,9 +56,20 @@ internal fun MapSceneView(
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val cameraPose = scene?.cameraState?.collectAsState()?.value
     val catalogue = remember(models) { models.associateBy { it.uuid } }
-    val heights =
-        remember(document, catalogue) {
-            runCatching { mapPlacements(document, catalogue) }.getOrDefault(emptyMap())
+    val heights by
+        produceState<Map<String, MapSupport>>(emptyMap(), document, catalogue) {
+            value =
+                withContext(Dispatchers.Default) {
+                    runCatching { mapPlacements(document, catalogue) }.getOrDefault(emptyMap())
+                }
+        }
+    val hidden =
+        remember(document) {
+            document
+                .rows("areas")
+                .filter { it.flag("hidden") }
+                .flatMap { it.ids("tileIds") }
+                .toSet()
         }
     Box(Modifier.fillMaxSize()) {
         AndroidView(
@@ -68,7 +81,7 @@ internal fun MapSceneView(
                     isFocusableInTouchMode = true
                     val created =
                         FilamentMapScene(this, cache) { count, error ->
-                            ready = scene?.readyModelUrls.orEmpty()
+                            ready = scene?.readyRefs.orEmpty()
                             drawn = scene?.hasMapFrame == true
                             firstFrameError = error
                             onStatus(count, error)
@@ -150,7 +163,8 @@ internal fun MapSceneView(
                 .rows("tiles")
                 .filter {
                     MapEntityRef(MapEntityKind.Tile, it.string("id")) in selected ||
-                        catalogue[it.string("modelId")]?.renderUrl !in ready
+                        (it.string("id") !in hidden &&
+                            MapEntityRef(MapEntityKind.Tile, it.string("id")) !in ready)
                 }
                 .forEach { tile ->
                     val model = catalogue[tile.string("modelId")] ?: return@forEach
@@ -175,7 +189,7 @@ internal fun MapSceneView(
                             }
                             close()
                         }
-                    val pending = model.renderUrl !in ready
+                    val pending = MapEntityRef(MapEntityKind.Tile, tile.string("id")) !in ready
                     drawPath(path, WebPalette.Accent.copy(alpha = if (pending) .3f else .18f))
                     drawPath(path, WebPalette.AccentSoft, style = Stroke(2f * density))
                     if (pending) {

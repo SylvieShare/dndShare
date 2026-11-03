@@ -35,6 +35,9 @@ internal class FilamentSceneCore(
     private var delayed = false
     private var pose = MapCamera()
     private var options = MapSceneOptions()
+    private val density = context.resources.displayMetrics.density.toDouble()
+    private var tier: MapModelTier? = null
+    private var sceneContext: MapContext? = null
     private var document: JsonObject? = null
     private val models = mutableMapOf<String, MapModel>()
     private var entries = emptyList<MapSceneEntry>()
@@ -76,15 +79,28 @@ internal class FilamentSceneCore(
     var effectStatistics = MapEffectStatistics()
         private set
 
+    val readyRefs
+        get() = assets.drawnEntries.map { it.ref }.toSet()
+
     val readyModelUrls
-        get() =
-            models.values
-                .filter { activeUrl(it) in assets.readyModelUrls }
+        get(): Set<String> {
+            val ids = assets.drawnEntries.map { it.model.uuid }.toSet()
+            return models.values
+                .filter { it.uuid in ids }
                 .flatMap { listOf(it.renderUrl, it.lodUrl).filter(String::isNotBlank) }
-                .toSet()
+                .toSet() + assets.drawnEntries.map { it.model.renderUrl }
+        }
 
     private fun activeUrl(model: MapModel) =
-        if (options.forceLod) model.lodUrl.ifBlank { model.renderUrl } else model.renderUrl
+        if (tier == MapModelTier.Lod) model.lodUrl.ifBlank { model.renderUrl } else model.renderUrl
+
+    private fun desiredTier() =
+        if (options.automaticLod) mapModelTier(pose.pixels / density, tier, options.forceLod)
+        else if (options.forceLod) MapModelTier.Lod else MapModelTier.Render
+
+    private fun updateTier() {
+        if (desiredTier() != tier) document?.let { update(it, models.values.toList()) }
+    }
 
     val settled
         get() =
@@ -97,6 +113,7 @@ internal class FilamentSceneCore(
     fun options(value: MapSceneOptions) {
         val reload =
             options.forceLod != value.forceLod ||
+                options.automaticLod != value.automaticLod ||
                 options.focus != value.focus ||
                 options.ground != value.ground
         options = value
@@ -108,7 +125,7 @@ internal class FilamentSceneCore(
         val fitted =
             mapFitScene(
                 pose,
-                entries.filter { selected == null || it.ref in selected },
+                assets.drawnEntries.filter { selected == null || it.ref in selected },
                 assets.bounds,
                 width,
                 height,
@@ -157,7 +174,8 @@ internal class FilamentSceneCore(
                 clear = true
                 clearColor = doubleArrayOf(.0086, .0086, .0116, 1.0)
             }
-        assets = MapSceneAssets(engine, scene, cache, scope, ::requestFrame, status)
+        assets =
+            MapSceneAssets(engine, scene, cache, scope, ::requestFrame, status, ::assetsChanged)
         lights = MapSceneLights(engine, scene)
         effects =
             MapSceneEffects(context, engine, scene, cache, scope, ::requestFrame) { error ->
@@ -170,7 +188,7 @@ internal class FilamentSceneCore(
                 cache,
                 scope,
                 { assets.entities + effects.picks },
-                { entries },
+                { assets.drawnEntries },
                 { document },
                 ::requestFrame,
             ) { message ->
@@ -208,36 +226,15 @@ internal class FilamentSceneCore(
     fun camera(value: MapCamera) {
         pose = value
         updateCamera()
+        updateTier()
         requestFrame()
     }
 
-    private fun updateCamera() {
-        if (width == 0 || height == 0) return
-        val halfWidth = pose.saved?.number("width")?.div(2) ?: (width / 2.0 / pose.pixels)
-        val halfHeight =
-            pose.saved?.let { it.number("width") / it.number("aspect", 1.0) / 2 }
-                ?: (height / 2.0 / pose.pixels)
-        camera.setProjection(
-            Camera.Projection.ORTHO,
-            -halfWidth,
-            halfWidth,
-            -halfHeight,
-            halfHeight,
-            .01,
-            2000.0,
-        )
-        val eye = pose.eye
-        camera.lookAt(
-            eye[0],
-            eye[1],
-            eye[2],
-            pose.x,
-            pose.elevation,
-            pose.y,
-            pose.up[0],
-            pose.up[1],
-            pose.up[2],
-        )
+    private fun updateCamera() = applyMapCamera(camera, pose, width, height)
+
+    private fun assetsChanged() {
+        sceneContext?.let { effects.update(it, assets.drawnEntries) }
+        requestFrame()
     }
 
     fun update(value: JsonObject, catalogue: List<MapModel>) {
@@ -245,6 +242,7 @@ internal class FilamentSceneCore(
         document = value
         models.clear()
         models.putAll(catalogue.associateBy { it.uuid })
+        tier = desiredTier()
         entries =
             mapSceneEntries(value, models)
                 .filter { options.focus == null || it.ref in options.focus!! }
@@ -252,35 +250,12 @@ internal class FilamentSceneCore(
                     it.copy(model = it.model.copy(renderUrl = activeUrl(it.model)))
                 }
         assets.update(value, entries, options.ground)
-        val visibleDocument =
-            options.focus?.let { refs ->
-                value
-                    .with(
-                        "lights",
-                        kotlinx.serialization.json.JsonArray(
-                            value.rows("lights").filter {
-                                MapEntityRef(MapEntityKind.Light, it.string("id")) in refs ||
-                                    mapAnchorRef(
-                                        it["anchor"] as? kotlinx.serialization.json.JsonObject
-                                    ) in refs
-                            }
-                        ),
-                    )
-                    .with(
-                        "decals",
-                        kotlinx.serialization.json.JsonArray(
-                            value.rows("decals").filter {
-                                MapEntityRef(MapEntityKind.Decal, it.string("id")) in refs ||
-                                    mapAnchorRef(
-                                        it["anchor"] as? kotlinx.serialization.json.JsonObject
-                                    ) in refs
-                            }
-                        ),
-                    )
-            } ?: value
+        val visibleDocument = mapSceneScope(value, options.focus)
         val context = MapContext(visibleDocument, catalogue)
+        sceneContext = context
         lights.update(context)
-        effects.update(context, entries)
+        effects.update(context, assets.drawnEntries)
+        status(assets.pendingCount, null)
         requestFrame()
     }
 

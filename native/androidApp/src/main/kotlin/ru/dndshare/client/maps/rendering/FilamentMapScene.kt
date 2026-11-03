@@ -32,6 +32,10 @@ class FilamentMapScene(
     private val cameraFlow = MutableStateFlow(pose)
     val cameraState = cameraFlow.asStateFlow()
     @Volatile private var ready = emptySet<String>()
+    @Volatile private var readyInstances = emptySet<MapEntityRef>()
+    val readyRefs
+        get() = readyInstances
+
     @Volatile private var viewportWidth = 0
     @Volatile private var viewportHeight = 0
     private val dispatcher = handler.asCoroutineDispatcher("Map renderer")
@@ -71,6 +75,7 @@ class FilamentMapScene(
                         count,
                         error ->
                         ready = core?.readyModelUrls.orEmpty()
+                        readyInstances = core?.readyRefs.orEmpty()
                         main.post { if (!closed) status(count, error) }
                     }
             } catch (error: Exception) {
