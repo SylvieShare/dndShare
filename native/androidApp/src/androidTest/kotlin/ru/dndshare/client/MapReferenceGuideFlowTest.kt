@@ -23,6 +23,7 @@ import ru.dndshare.client.ui.LayoutFormat
 import ru.dndshare.client.ui.designsystem.WebPalette
 import ru.dndshare.client.ui.maps.MapEditorScreen
 
+@androidx.test.filters.SdkSuppress(minSdkVersion = 28)
 class MapReferenceGuideFlowTest {
     private val test = InstrumentationRegistry.getInstrumentation()
     private val automation = test.uiAutomation
@@ -187,16 +188,35 @@ class MapReferenceGuideFlowTest {
                 AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD,
                 AccessibilityNodeInfo.ACTION_SCROLL_FORWARD,
             )) {
-            repeat(14) {
-                find(predicate)
-                    ?.takeIf { node -> node.isVisibleToUser }
-                    ?.let {
-                        return it
+            for (attempt in 0 until 14) {
+                val target = find(predicate)
+                if (target?.isVisibleToUser == true) return target
+                if (
+                    target?.performAction(
+                        AccessibilityNodeInfo.AccessibilityAction.ACTION_SHOW_ON_SCREEN.id
+                    ) != true
+                ) {
+                    val pane =
+                        find { it.paneTitle?.toString() == "Параметры модели" }
+                            ?: error("Reference form pane is missing")
+                    fun nested(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
+                        if (node.isScrollable) return node
+                        for (i in 0 until node.childCount) node.getChild(i)?.let {
+                            nested(it)?.let { found ->
+                                return found
+                            }
+                        }
+                        return null
                     }
-                val scroll =
-                    find { it.isScrollable } ?: error("Reference form has no scrolling container")
-                scroll.performAction(action)
+                    val scroll =
+                        nested(pane)
+                            ?: generateSequence(pane.parent) { it.parent }
+                                .firstOrNull { it.isScrollable }
+                            ?: error("Reference form has no scrolling container")
+                    if (!scroll.performAction(action)) break
+                }
                 automation.waitForIdle(50, 1500)
+                Thread.sleep(200)
             }
         }
         automation.takeScreenshot()?.let {

@@ -251,18 +251,18 @@ class MapEditorWindowTest {
                     image.recycle()
                     click("Области")
                     await { find { it.text?.toString() == "Зал" } != null }
-                    automation.takeScreenshot()?.let {
-                        exportMapTestImage("android-areas-$width.png", it)
-                        it.recycle()
-                    }
+                    capturePanel("android-areas-$width.png")
                     click("Настройки")
                     val editable = awaitNode {
                         it.isEditable && it.text?.toString()?.contains(reviewMap.name) == true
                     }
-                    automation.takeScreenshot()?.let {
-                        exportMapTestImage("android-settings-$width.png", it)
-                        it.recycle()
-                    }
+                    val inputBounds = android.graphics.Rect()
+                    editable.getBoundsInScreen(inputBounds)
+                    assertTrue(
+                        inputBounds.right <= minOf(350, width - 100),
+                        "The tool panel must leave the same 100px field peek as web: $inputBounds",
+                    )
+                    capturePanel("android-settings-$width.png")
                     assertTrue(
                         editable.performAction(
                             AccessibilityNodeInfo.ACTION_SET_TEXT,
@@ -283,10 +283,7 @@ class MapEditorWindowTest {
                         find { it.text?.toString()?.matches(Regex("[0-9.,]+ мс")) == true } != null
                     }
                     automation.waitForIdle(100, 5000)
-                    automation.takeScreenshot()?.let {
-                        exportMapTestImage("android-performance-$width.png", it)
-                        it.recycle()
-                    }
+                    capturePanel("android-performance-$width.png")
                     click("Измерять нагрузку")
                     await { find { it.text?.toString() == "Пауза" } != null }
                     val back = awaitNode { it.contentDescription?.toString() == "К картам" }
@@ -300,6 +297,13 @@ class MapEditorWindowTest {
             images.shutdown()
             folder.deleteRecursively()
         }
+    }
+
+    private fun capturePanel(name: String) {
+        Thread.sleep(320) // Rail/panel transitions move in layout, without accessibility events.
+        val image = requireNotNull(automation.takeScreenshot())
+        exportMapTestImage(name, image)
+        image.recycle()
     }
 
     private fun restore(kind: String, value: String, prefix: String) {

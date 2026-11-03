@@ -17,7 +17,7 @@
       :items="tabs"
       :model-value="tab"
       orientation="vertical"
-      :size="64"
+      :size="layoutTokens['map-navigation-item']"
       :label="tabsLabel"
       :active="!collapsed"
       :animate="!opening"
@@ -111,7 +111,7 @@ function measurePanel() {
   panelWidth.value = Math.max(
     0,
     probe.getBoundingClientRect().width -
-      (navigation.value?.element?.getBoundingClientRect().width || 77),
+      (navigation.value?.element?.getBoundingClientRect().width || layoutTokens['map-rail']),
   );
   probe.remove();
 }
@@ -185,7 +185,7 @@ defineExpose({
 </script>
 <style scoped>
 .map-sidebar {
-  --map-sidebar-width: 350px;
+  --map-sidebar-width: min(var(--layout-map-sidebar), calc(100vw - var(--layout-map-compact-peek)));
   width: var(--map-sidebar-width);
   flex: none;
   min-height: 0;
@@ -231,7 +231,7 @@ defineExpose({
 .map-sidebar-panel {
   background: var(--surface);
   flex: none;
-  width: var(--map-sidebar-panel-width, calc(var(--map-sidebar-width) - 77px));
+  width: var(--map-sidebar-panel-width, calc(var(--map-sidebar-width) - var(--layout-map-rail)));
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -241,7 +241,7 @@ defineExpose({
     transform 260ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .map-sidebar--collapsed {
-  width: 77px;
+  width: var(--layout-map-rail);
 }
 .map-sidebar--collapsed .map-sidebar-panel {
   opacity: 0;
@@ -320,10 +320,5 @@ defineExpose({
   width: 100%;
   border: 0;
   border-top: 1px solid var(--border-strong);
-}
-@media (max-width: 760px) {
-  .map-sidebar {
-    --map-sidebar-width: min(350px, calc(100vw - 100px));
-  }
 }
 </style>

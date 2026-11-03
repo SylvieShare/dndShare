@@ -43,8 +43,6 @@ internal fun MapEditorLayout(
                 }
             } == true
         }
-    val overlayLeft by
-        animateDpAsState(if (workspace.sidebarOpen) 273.dp else 0.dp, label = "Map tools inset")
     Column(Modifier.fillMaxSize().background(WebPalette.Background).imePadding()) {
         Box(Modifier.windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))) {
             ShareWorkspaceHeader(
@@ -116,12 +114,22 @@ internal fun MapEditorLayout(
                 }
         } else
             BoxWithConstraints(Modifier.fillMaxWidth().weight(1f)) {
+                val rail = DesignTokens.Layout.MapRail
+                val panel =
+                    (DesignTokens.Layout.MapSidebar - rail)
+                        .coerceAtMost(maxWidth - DesignTokens.Layout.MapCompactPeek - rail)
+                        .coerceAtLeast(0.dp)
+                val overlayLeft by
+                    animateDpAsState(
+                        if (workspace.sidebarOpen) panel else 0.dp,
+                        label = "Map tools inset",
+                    )
                 Row(Modifier.fillMaxSize()) {
                     if (map.editable)
                         MapToolRail(
                             if (workspace.sidebarOpen) workspace.ui.panel else "",
                             workspace::panel,
-                            Modifier.width(77.dp),
+                            Modifier.width(rail),
                         )
                     Box(
                         Modifier.weight(1f).fillMaxHeight().onGloballyPositioned {
@@ -203,7 +211,7 @@ internal fun MapEditorLayout(
                                 ),
                         )
                         val narrowCanvas =
-                            this@BoxWithConstraints.maxWidth - (if (map.editable) 77.dp else 0.dp) <
+                            this@BoxWithConstraints.maxWidth - (if (map.editable) rail else 0.dp) <
                                 600.dp
                         Box(
                             Modifier.align(
@@ -265,9 +273,7 @@ internal fun MapEditorLayout(
                     exit = fadeOut() + slideOutHorizontally { -it / 3 },
                 ) {
                     Surface(
-                        Modifier.padding(start = 77.dp)
-                            .width(273.dp.coerceAtMost(this@BoxWithConstraints.maxWidth - 77.dp))
-                            .fillMaxHeight(),
+                        Modifier.padding(start = rail).width(panel).fillMaxHeight(),
                         color = WebPalette.Surface,
                     ) {
                         MapEditorPanel(workspace, images)

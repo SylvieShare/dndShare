@@ -6,6 +6,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.*
+import androidx.compose.ui.semantics.paneTitle
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import java.util.UUID
 import kotlinx.serialization.json.*
@@ -19,7 +21,10 @@ internal fun MapReferenceForm(workspace: MapEditorWorkspace, cache: MapAssetCach
     val draft = reference.draft ?: return
     val model = reference.model ?: return
     val behaviour = draft.current["behaviour"] as? JsonObject ?: buildJsonObject {}
-    LazyColumn(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(18.dp)) {
+    LazyColumn(
+        Modifier.fillMaxSize().semantics { paneTitle = "Параметры модели" },
+        verticalArrangement = Arrangement.spacedBy(18.dp),
+    ) {
         item {
             Text("${model.raw.string("sourceCode")} · ${model.name}", style = ShareTypography.group)
         }

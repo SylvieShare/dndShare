@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.ImageLoader
@@ -38,8 +39,10 @@ internal fun MapEditorPanel(workspace: MapEditorWorkspace, images: ImageLoader) 
                     )[tab]
                     .orEmpty(),
                 Modifier.weight(1f),
-                fontSize = 14.sp,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
             MapToolButton("Свернуть панель", Glyph.Collapse) {
                 workspace.controller.ui { it.copy(sidebarOpen = false) }

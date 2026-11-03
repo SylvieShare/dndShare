@@ -126,6 +126,7 @@ internal class FilamentSceneCore(
                 hasMapFrame
 
     fun options(value: MapSceneOptions) {
+        require(value.timeSeconds?.isFinite() != false)
         revision++
         val reload =
             options.forceLod != value.forceLod ||
@@ -395,11 +396,13 @@ internal class FilamentSceneCore(
         assets.advance()
         assets.waterParts(effects.waterParts)
         profiler.mark("models")
-        val seconds = time / 1_000_000_000.0
+        val seconds = options.timeSeconds ?: time / 1_000_000_000.0
         val motion = options.animate && ValueAnimator.areAnimatorsEnabled()
         val wasMoving = assets.motionMoving
         val poseMotion = assets.animate(seconds, motion)
-        if (wasMoving && !poseMotion || viewportAssets.retainedVisual) {
+        if (
+            wasMoving && !poseMotion || options.timeSeconds == null && viewportAssets.retainedVisual
+        ) {
             viewportAssets.invalidate()
             requestFrame()
         }
@@ -517,7 +520,9 @@ internal class FilamentSceneCore(
             }
             telemetryCollector.frame(profiler.finish())
         }
-        if (poseMotion || assets.working || picker.working || captures.working) requestFrame()
+        if (assets.working || picker.working || captures.working) requestFrame()
+        else if (options.timeSeconds != null) return
+        else if (poseMotion) requestFrame()
         else if (effectMotion || lightMotion || loadingMotion) frames.motion(seconds)
         else lightFrames.nextDelay?.let(frames::after)
     }

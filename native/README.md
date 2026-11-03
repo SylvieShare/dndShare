@@ -2,7 +2,7 @@
 
 Модуль `androidApp` на Kotlin и Jetpack Compose: вход, боковое меню всех
 веб-разделов, локальный справочник, список персонажей и адаптивный лист D&D/VTM.
-Начат [нативный прототип редактора карт на Filament](../md/features/native-map-editor.md).
+Перенесены [библиотека, редактор карт и справочник моделей на Filament](../md/features/native-map-editor.md).
 Общий UI-пакет
 находится в [`ui.designsystem`](androidApp/DESIGN_SYSTEM.md). Сервером остаётся основной Go API.
 Поведение описывает [контракт клиента](../md/features/native-client.md).

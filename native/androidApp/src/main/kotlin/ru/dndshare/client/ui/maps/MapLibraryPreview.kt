@@ -24,6 +24,8 @@ internal fun MapLibraryPreview(
     var failure by remember { mutableStateOf<String?>(null) }
     var retry by remember { mutableIntStateOf(0) }
     var scene by remember { mutableStateOf<FilamentMapScene?>(null) }
+    val keyboard = remember { MapKeyboardCamera { scene } }
+    DisposableEffect(keyboard) { onDispose { keyboard.stop() } }
     LaunchedEffect(retry) {
         loading = true
         failure = null
@@ -78,6 +80,8 @@ internal fun MapLibraryPreview(
                         drag = { _, _ -> },
                         cancel = {},
                         renderer = { scene = it },
+                        key = keyboard::key,
+                        blur = keyboard::stop,
                         status = { _, message -> if (message != null) failure = message },
                     )
                 MapViewerTools(

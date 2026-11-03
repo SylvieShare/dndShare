@@ -13,4 +13,6 @@ data class MapSceneOptions(
     val streamAssets: Boolean = true,
     val preview: MapPreviewSpec = MapPreviewSpec(),
     val previewValid: Boolean = true,
+    /** A monotonic fixed timeline for offscreen previews; null follows the display frame clock. */
+    val timeSeconds: Double? = null,
 )

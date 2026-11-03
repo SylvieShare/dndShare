@@ -48,8 +48,9 @@ internal class MapSurfaceResolution(private val view: SurfaceView, private val h
         this.width = width
         this.height = height
         val size = mapRenderSize(width, height, view.resources.displayMetrics.density.toDouble())
-        if (helper.desiredWidth != size.width || helper.desiredHeight != size.height)
-            helper.setDesiredSize(size.width, size.height)
+        val buffer = if (size.width == width && size.height == height) MapRenderSize(0, 0) else size
+        if (helper.desiredWidth != buffer.width || helper.desiredHeight != buffer.height)
+            helper.setDesiredSize(buffer.width, buffer.height)
     }
 
     fun buffer(width: Int, height: Int) {

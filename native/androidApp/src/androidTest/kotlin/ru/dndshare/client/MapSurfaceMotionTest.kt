@@ -87,7 +87,11 @@ class MapSurfaceMotionTest {
                                             }
                                         scene.set(renderer)
                                         renderer.options(
-                                            MapSceneOptions(animate = true, automaticLod = false)
+                                            MapSceneOptions(
+                                                animate = true,
+                                                automaticLod = false,
+                                                timeSeconds = 0.0,
+                                            )
                                         )
                                         renderer.camera(MapCamera(x = 2.5, y = 2.5, pixels = 90.0))
                                         renderer.update(doc, listOf(model, next))
@@ -102,7 +106,27 @@ class MapSurfaceMotionTest {
                             true
                     }
                     val renderer = scene.get()
-                    val full = capture(renderer)
+                    suspend fun at(seconds: Double): Bitmap {
+                        renderer.options(
+                            MapSceneOptions(
+                                animate = true,
+                                automaticLod = false,
+                                timeSeconds = seconds,
+                            )
+                        )
+                        capture(renderer)
+                            .recycle() // Apply the timeline and schedule resource preparation.
+                        withTimeout(10000) {
+                            while (true) {
+                                val ready = CompletableDeferred<Boolean>()
+                                renderer.resourcesReady { ready.complete(it) }
+                                if (ready.await()) break
+                                delay(10)
+                            }
+                        }
+                        return capture(renderer)
+                    }
+                    val full = at(0.0)
                     val original = pixels(full)
                     val background = full.getPixel(0, 0)
                     fun difference(a: Int, b: Int) =
@@ -124,9 +148,8 @@ class MapSurfaceMotionTest {
                         listOf(model, next),
                     )
                     val hiding = mutableListOf<Bitmap>()
-                    repeat(8) { hiding += capture(renderer) }
-                    delay(600)
-                    val faint = capture(renderer)
+                    for (delta in listOf(0.0, .08, .16, .24, .32, .4, .48, .6)) hiding += at(delta)
+                    val faint = at(.7)
                     val faintEnergy = energy(faint)
                     assertTrue(
                         faintEnergy < baseline * .7,
@@ -137,7 +160,7 @@ class MapSurfaceMotionTest {
                             val value = energy(it)
                             value > faintEnergy * 1.15 && value < baseline * .95
                         },
-                        "Visibility must pass through intermediate frames",
+                        "Visibility must pass through intermediate frames: ${hiding.map { energy(it).toDouble()/baseline }}",
                     )
                     val hidePeak = hiding.maxBy(::energy)
                     assertTrue(
@@ -146,9 +169,11 @@ class MapSurfaceMotionTest {
                     )
                     exportMapTestImage("surface-hide-pulse.png", hidePeak)
                     exportMapTestImage("surface-hide-final.png", faint)
+                    hiding.forEach(Bitmap::recycle)
+                    hiding.clear()
                     renderer.update(doc, listOf(model, next))
-                    delay(650)
-                    capture(renderer).recycle()
+                    at(.7).recycle()
+                    at(1.4).recycle()
                     renderer.update(
                         doc.with(
                             "tiles",
@@ -157,15 +182,17 @@ class MapSurfaceMotionTest {
                         listOf(model, next),
                     )
                     val changing = mutableListOf<Bitmap>()
-                    repeat(8) { changing += capture(renderer) }
+                    for (delta in listOf(0.0, .08, .16, .24, .32, .4, .48, .6)) changing +=
+                        at(1.4 + delta)
                     val peak = changing.maxBy(::energy)
                     assertTrue(
                         energy(peak) > baseline * 1.05,
                         "Ready replacement must pulse without changing the instance's opacity",
                     )
                     exportMapTestImage("surface-replacement-pulse.png", peak)
-                    delay(600)
-                    val final = capture(renderer)
+                    changing.forEach(Bitmap::recycle)
+                    changing.clear()
+                    val final = at(2.1)
                     assertTrue(
                         abs(energy(final) - baseline) < baseline * .02,
                         "Replacement must settle to the same material: ${energy(final)}/$baseline",
@@ -184,13 +211,8 @@ class MapSurfaceMotionTest {
                         listOf(model, next),
                     )
                     val fogFrames = mutableListOf<Bitmap>()
-                    val fogStart = android.os.SystemClock.elapsedRealtime()
-                    while (android.os.SystemClock.elapsedRealtime() - fogStart < 800) {
-                        fogFrames += capture(renderer)
-                        delay(25)
-                    }
-                    delay(850)
-                    val dense = capture(renderer)
+                    for (step in 0..8) fogFrames += at(2.1 + step * .1)
+                    val dense = at(3.0)
                     fun delta(image: Bitmap): Long {
                         val values = pixels(image)
                         return values.indices.sumOf { difference(values[it], noFog[it]).toLong() }
@@ -205,13 +227,8 @@ class MapSurfaceMotionTest {
                     )
                     renderer.update(replacementDoc, listOf(model, next))
                     val clearing = mutableListOf<Bitmap>()
-                    val clearStart = android.os.SystemClock.elapsedRealtime()
-                    while (android.os.SystemClock.elapsedRealtime() - clearStart < 800) {
-                        clearing += capture(renderer)
-                        delay(25)
-                    }
-                    delay(850)
-                    val clear = capture(renderer)
+                    for (step in 0..8) clearing += at(3.0 + step * .1)
+                    val clear = at(3.9)
                     assertFalse(
                         renderer.effectStatistics.fog,
                         "The field must be freed after its last area fades out",

@@ -72,7 +72,7 @@ internal fun MapPerformancePanel(workspace: MapEditorWorkspace) {
     ) {
         ShareTile(
             framed = false,
-            containerColor = WebPalette.Raised,
+            containerColor = WebPalette.Surface,
             contentPadding = PaddingValues(12.dp),
         ) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {

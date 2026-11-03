@@ -242,6 +242,11 @@ class FilamentMapScene(
 
     fun retry() = post { retry() }
 
+    fun resourcesReady(result: (Boolean) -> Unit) = post {
+        val ready = settled
+        main.post { if (!closed) result(ready) }
+    }
+
     fun measurePerformance(value: Boolean) = post { measurePerformance(value) }
 
     fun performance(result: (MapRenderTelemetry) -> Unit) = post {
