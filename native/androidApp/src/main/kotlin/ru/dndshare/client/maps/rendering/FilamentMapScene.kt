@@ -10,7 +10,10 @@ import com.google.android.filament.android.UiHelper
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.android.asCoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.json.JsonObject
+import ru.dndshare.client.maps.MapEntityRef
 import ru.dndshare.client.maps.MapModel
 
 /** UI facade. Parsing, scene synchronization, uploads and Filament commands stay off Compose. */
@@ -26,10 +29,13 @@ class FilamentMapScene(
     @Volatile private var core: FilamentSceneCore? = null
     @Volatile private var closed = false
     @Volatile private var pose = MapCamera()
+    private val cameraFlow = MutableStateFlow(pose)
+    val cameraState = cameraFlow.asStateFlow()
     @Volatile private var ready = emptySet<String>()
     @Volatile private var viewportWidth = 0
     @Volatile private var viewportHeight = 0
     private val dispatcher = handler.asCoroutineDispatcher("Map renderer")
+    val density = surfaceView.resources.displayMetrics.density
     val width
         get() = viewportWidth
 
@@ -44,6 +50,9 @@ class FilamentMapScene(
 
     val hasMapFrame
         get() = core?.hasMapFrame == true
+
+    val telemetry
+        get() = core?.telemetry ?: MapRenderTelemetry()
 
     val effectStatistics
         get() = core?.effectStatistics ?: MapEffectStatistics()
@@ -115,7 +124,12 @@ class FilamentMapScene(
 
     fun camera(value: MapCamera) {
         pose = value
+        cameraFlow.value = value
         post { camera(value) }
+    }
+
+    fun fitContents(selected: Set<MapEntityRef>? = null) = post {
+        fitContents(selected) { this@FilamentMapScene.camera(it) }
     }
 
     fun camera() = pose
@@ -137,7 +151,7 @@ class FilamentMapScene(
             main.post { result(Result.failure(IllegalStateException("Редактор закрыт"))) }
     }
 
-    fun pick(x: Float, y: Float, result: (String?) -> Unit) = post { pick(x, y, result) }
+    fun pick(x: Float, y: Float, result: (MapEntityRef?) -> Unit) = post { pick(x, y, result) }
 
     fun pickSurface(x: Float, y: Float, result: (MapSurfaceHit?) -> Unit) = post {
         pickSurface(x, y, result)

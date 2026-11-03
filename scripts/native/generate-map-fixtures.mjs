@@ -26,7 +26,7 @@ try {
     doc.tiles=[{id:'tile',modelId:'floor',x:4,y:5,rotation,level:0,...mirrored?{mirrored:true}:{}}]
     doc.objects=[{id:'object',kind:'chest',modelId:'prop',x:0,y:0,rotation:90,scale:1.5,open:false,placement:{tileId:'tile',point:0}}]
     const input=structuredClone(doc)
-    syncSurfaceObjects(doc,models);syncLights(doc,models)
+    syncSurfaceObjects(doc,models);syncLights(doc,models);cleanIds(doc)
     results.push({kind:'normalize',input,models,expected:cleanIds(structuredClone(doc))})
     for(const light of doc.lights) results.push({kind:'lightPose',input:doc,models,light:structuredClone(light),expected:lightPose(light,doc,models)})
     results.push({kind:'surface',input:doc,models,tile:doc.tiles[0],point:model.placementPoints[1],elevation:1.25,expected:surfacePosition(doc.tiles[0],model,model.placementPoints[1],1.25)})
@@ -54,5 +54,16 @@ try {
   const noise=new Uint8Array(32**3);let seed=0x1234abcd
   for(let i=0;i<noise.length;i++){seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;noise[i]=(seed>>>0)%256}
   await fs.writeFile(path.join(out,'web-effects.json'),JSON.stringify({fog,fire,noise:digest(noise)},null,2)+'\n')
+  const {groupRotationPivot,rotateMapGroup}=await server.ssrLoadModule(base+'mapGroupRotation.js')
+  const {mirrorTileGroup}=await server.ssrLoadModule(base+'mapGroupMirror.js')
+  const groupModels=[{...model,id:'A',definitionId:'D-A',width:1,height:2},{...model,id:'B',definitionId:'D-B',width:2,height:1},{...model,id:'C',definitionId:'D-C',width:2,height:2}]
+  const groups=[]
+  for(const angle of [0,90,180,270])for(const offset of [0,3]) {
+    const tiles=[{id:'one',modelId:'A',x:4+offset,y:3,rotation:angle,level:0},{id:'two',modelId:'B',x:6+offset,y:4,rotation:(angle+90)%360,level:1},{id:'three',modelId:'C',x:3+offset,y:6,rotation:0,level:0}]
+    const objects=[{id:'same',x:4.3+offset,y:5.7,rotation:15,scale:1}]
+    const pivot=groupRotationPivot(tiles,objects,groupModels)
+    groups.push({tiles,objects,models:groupModels,pivot,rotated:rotateMapGroup(tiles,objects,groupModels,pivot),mirrored:mirrorTileGroup(tiles,groupModels)})
+  }
+  await fs.writeFile(path.join(out,'web-groups.json'),JSON.stringify(groups,null,2)+'\n')
   console.log(`Web map fixtures: ${results.length}; fog ${fog.length}; fire ${fire.length}`)
 } finally { await server.close() }

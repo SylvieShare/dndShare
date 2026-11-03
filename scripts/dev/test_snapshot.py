@@ -50,6 +50,7 @@ class SnapshotTest(unittest.TestCase):
         self.put("README.md", b"hello\n")
         self.put("frontend/target/stale.js", b"stale")
         self.put("native/androidApp/build/output.bin", b"stale")
+        self.put("native/androidApp/.cxx/Debug/arm64-v8a/build.ninja", b"native cache")
         self.put("scripts/x/__pycache__/cache.pyc", b"cache")
         self.put("resources/.env.local", b"secret")
         self.put("models/private.glb", b"private")

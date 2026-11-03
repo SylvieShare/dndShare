@@ -45,7 +45,7 @@ internal class MapSceneDecals(
     private val failed = mutableSetOf<String>()
     private val slots = Semaphore(2)
     private var document = JsonObject(emptyMap())
-    private var entries = emptyMap<String, MapSceneEntry>()
+    private var entries = emptyMap<MapEntityRef, MapSceneEntry>()
     private var appearance: MapContext? = null
     private var closed = false
     val count
@@ -54,18 +54,20 @@ internal class MapSceneDecals(
     val picks
         get() =
             records
-                .flatMap { (id, record) -> record.entities.map { it.entity to (id to "decal") } }
+                .flatMap { (id, record) ->
+                    record.entities.map { it.entity to MapEntityRef(MapEntityKind.Decal, id) }
+                }
                 .toMap()
 
     fun update(value: MapContext, models: List<MapSceneEntry>) {
         document = value.document
         appearance = value
-        entries = models.associateBy { it.id }
+        entries = models.associateBy { it.ref }
         val decals = document.rows("decals").associateBy { it.string("id") }
         records.keys.filter { it !in decals }.forEach { records.remove(it)?.close() }
         loading.keys.filter { it !in decals }.forEach { loading.remove(it)?.second?.cancel() }
         for ((id, decal) in decals) {
-            val owner = entries[(decal["anchor"] as? JsonObject)?.string("id")] ?: continue
+            val owner = entries[mapAnchorRef(decal["anchor"] as? JsonObject)] ?: continue
             val shape = shape(decal, owner)
             if (records[id]?.shape != shape) {
                 records.remove(id)?.close()
@@ -209,7 +211,7 @@ internal class MapSceneDecals(
     private fun synchronize() {
         for (decal in document.rows("decals")) {
             val anchor = decal["anchor"] as? JsonObject ?: continue
-            val owner = entries[anchor.string("id")]
+            val owner = entries[mapAnchorRef(anchor)]
             val opacity =
                 if (owner == null) 0f
                 else

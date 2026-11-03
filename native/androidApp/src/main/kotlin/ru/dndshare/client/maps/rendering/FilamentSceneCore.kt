@@ -33,7 +33,6 @@ internal class FilamentSceneCore(
     private var active = true
     private var scheduled = false
     private var delayed = false
-    private var pendingPicks = 0
     private var pose = MapCamera()
     private var options = MapSceneOptions()
     private var document: JsonObject? = null
@@ -42,6 +41,12 @@ internal class FilamentSceneCore(
     private val assets: MapSceneAssets
     private val effects: MapSceneEffects
     private val captures = MapFrameCapture()
+    private val telemetryCollector = MapTelemetryCollector()
+    @Volatile
+    var telemetry = MapRenderTelemetry()
+        private set
+
+    private val picker: MapScenePicker
     private val lights: MapSceneLights
     private val choreographer = Choreographer.getInstance()
     private val callback = Choreographer.FrameCallback {
@@ -88,6 +93,18 @@ internal class FilamentSceneCore(
         requestFrame()
     }
 
+    fun fitContents(selected: Set<MapEntityRef>?, result: (MapCamera) -> Unit) {
+        val fitted =
+            mapFitScene(
+                pose,
+                entries.filter { selected == null || it.ref in selected },
+                assets.bounds,
+                width,
+                height,
+            )
+        Handler(Looper.getMainLooper()).post { result(fitted) }
+    }
+
     fun snapshot(result: (Result<android.graphics.Bitmap>) -> Unit) {
         if (!active || swap == null || width <= 0 || height <= 0) {
             Handler(Looper.getMainLooper()).post {
@@ -127,6 +144,19 @@ internal class FilamentSceneCore(
             MapSceneEffects(context, engine, scene, cache, scope, ::requestFrame) { error ->
                 status(assets.pendingCount, error)
             }
+        picker =
+            MapScenePicker(
+                view,
+                camera,
+                cache,
+                scope,
+                { assets.entities + effects.picks },
+                { entries },
+                { document },
+                ::requestFrame,
+            ) { message ->
+                status(assets.pendingCount, message)
+            }
     }
 
     fun surface(surface: Surface) {
@@ -157,8 +187,10 @@ internal class FilamentSceneCore(
 
     private fun updateCamera() {
         if (width == 0 || height == 0) return
-        val halfWidth = width / 2.0 / pose.pixels
-        val halfHeight = height / 2.0 / pose.pixels
+        val halfWidth = pose.saved?.number("width")?.div(2) ?: (width / 2.0 / pose.pixels)
+        val halfHeight =
+            pose.saved?.let { it.number("width") / it.number("aspect", 1.0) / 2 }
+                ?: (height / 2.0 / pose.pixels)
         camera.setProjection(
             Camera.Projection.ORTHO,
             -halfWidth,
@@ -176,9 +208,9 @@ internal class FilamentSceneCore(
             pose.x,
             pose.elevation,
             pose.y,
-            -kotlin.math.sin(Math.toRadians(pose.azimuth)),
-            0.0,
-            -kotlin.math.cos(Math.toRadians(pose.azimuth)),
+            pose.up[0],
+            pose.up[1],
+            pose.up[2],
         )
     }
 
@@ -198,87 +230,10 @@ internal class FilamentSceneCore(
         requestFrame()
     }
 
-    private fun pickTarget(x: Float, y: Float, result: (Pair<String, String>?) -> Unit) {
-        if (closed || width == 0 || height == 0) {
-            result(null)
-            return
-        }
-        val mapping = assets.entities.mapValues { it.value to "model" } + effects.picks
-        pendingPicks++
-        view.pick(
-            x.toInt().coerceIn(0, width - 1),
-            (height - y.toInt() - 1).coerceIn(0, height - 1),
-            Handler(requireNotNull(Looper.myLooper())),
-        ) {
-            pendingPicks--
-            if (!closed) result(mapping[it.renderable])
-        }
-        requestFrame()
-    }
+    fun pick(x: Float, y: Float, result: (MapEntityRef?) -> Unit) = picker.pick(x, y, result)
 
-    fun pick(x: Float, y: Float, result: (String?) -> Unit) {
-        pickTarget(x, y) { hit ->
-            Handler(Looper.getMainLooper()).post { if (!closed) result(hit?.first) }
-        }
-    }
-
-    fun pickSurface(x: Float, y: Float, result: (MapSurfaceHit?) -> Unit) {
-        val snapshot = entries.associateBy { it.id }
-        val doc = document
-        val clip =
-            Mat4.multiply(
-                camera.getModelMatrix(null).map(Double::toFloat).toFloatArray(),
-                Mat4.inverse(camera.getProjectionMatrix(null).map(Double::toFloat).toFloatArray()),
-            )
-        val nx = (x.toInt() + .5f) / width.coerceAtLeast(1) * 2 - 1
-        val ny = 1 - (y.toInt() + .5f) / height.coerceAtLeast(1) * 2
-        val origin = Mat4.point(clip, Vec3(nx, ny, -1f))
-        val far = Mat4.point(clip, Vec3(nx, ny, 1f))
-        pickTarget(x, y) { target ->
-            val id = target?.first
-            val ownerId =
-                if (target?.second == "decal")
-                    (doc?.rows("decals")?.find { it.string("id") == id }?.get("anchor")
-                            as? JsonObject)
-                        ?.string("id")
-                else id
-            val entry = snapshot[ownerId]
-            if (entry == null) Handler(Looper.getMainLooper()).post { if (!closed) result(null) }
-            else
-                scope.launch {
-                    try {
-                        val (_, geometry) = cache.geometry(entry.model.renderUrl)
-                        val hit =
-                            withContext(Dispatchers.Default) {
-                                val inverse = Mat4.inverse(entry.matrix)
-                                val localOrigin = Mat4.point(inverse, origin)
-                                mapSurfaceIntersection(
-                                    geometry,
-                                    localOrigin,
-                                    (Mat4.point(inverse, far) - localOrigin).normalized(),
-                                )
-                            }
-                        val found = hit?.let {
-                            MapSurfaceHit(
-                                requireNotNull(id),
-                                if (target?.second == "decal") "decal"
-                                else if (entry.model.isObject) "object" else "tile",
-                                entry.model.uuid,
-                                Mat4.point(entry.matrix, it.position),
-                                it.position,
-                                it.normal,
-                            )
-                        }
-                        Handler(Looper.getMainLooper()).post { if (!closed) result(found) }
-                    } catch (cancelled: CancellationException) {
-                        throw cancelled
-                    } catch (error: Exception) {
-                        status(assets.pendingCount, error.message)
-                        Handler(Looper.getMainLooper()).post { if (!closed) result(null) }
-                    }
-                }
-        }
-    }
+    fun pickSurface(x: Float, y: Float, result: (MapSurfaceHit?) -> Unit) =
+        picker.pickSurface(x, y, result)
 
     fun retry() {
         assets.retry()
@@ -308,6 +263,7 @@ internal class FilamentSceneCore(
     }
 
     private fun frame(time: Long) {
+        val cpuStart = System.nanoTime()
         scheduled = false
         delayed = false
         if (closed || !active) return
@@ -331,13 +287,22 @@ internal class FilamentSceneCore(
                 renderer.endFrame()
             }
             renderedFrames++
+            telemetry =
+                telemetryCollector.sample(
+                    renderer,
+                    System.nanoTime() - cpuStart,
+                    renderedFrames,
+                    entries.size,
+                    assets.modelCount,
+                    assets.fileBytes,
+                )
             if (!hasMapFrame && document != null && assets.hasGround) {
                 engine.flushAndWait()
                 hasMapFrame = true
                 status(assets.pendingCount, null)
             }
         }
-        if (assets.working || pendingPicks > 0 || captures.working) requestFrame()
+        if (assets.working || picker.working || captures.working) requestFrame()
         else if ((effectMotion || lightMotion) && !scheduled) {
             scheduled = true
             delayed = true
@@ -356,6 +321,7 @@ internal class FilamentSceneCore(
         if (closed) return
         closed = true
         captures.close()
+        picker.close()
         scope.cancel()
         choreographer.removeFrameCallback(callback)
         detach()

@@ -20,6 +20,7 @@ internal fun MapsRoute(
     format: LayoutFormat,
     header: @Composable () -> Unit,
     fullscreen: (Boolean) -> Unit,
+    admin: Boolean = false,
 ) {
     var editor by rememberSaveable(owner) { mutableStateOf<String?>(null) }
     val context = LocalContext.current.applicationContext
@@ -46,9 +47,10 @@ internal fun MapsRoute(
             format,
             close = { editor = null },
             replace = { editor = it },
+            admin = admin,
         )
     else
         ShareChromeLayout(header = header) { padding ->
-            MapLibraryScreen(api, store, images, padding, open = { editor = it })
+            MapLibraryScreen(api, store, images, padding, open = { editor = it }, cache = assets)
         }
 }

@@ -12,7 +12,7 @@ import kotlin.math.sin
 import kotlinx.serialization.json.*
 import ru.dndshare.client.maps.*
 
-data class MapSceneEntry(val id: String, val model: MapModel, val matrix: FloatArray)
+data class MapSceneEntry(val ref: MapEntityRef, val model: MapModel, val matrix: FloatArray)
 
 fun mapSceneEntries(document: JsonObject, models: Map<String, MapModel>): List<MapSceneEntry> {
     val placements = mapPlacements(document, models)
@@ -50,7 +50,7 @@ fun mapSceneEntries(document: JsonObject, models: Map<String, MapModel>): List<M
                 val oy = model.placementOffset.getOrElse(1) { 0.0 }
                 transform[12] += (transform[0] * ox + transform[8] * oy).toFloat()
                 transform[14] += (transform[2] * ox + transform[10] * oy).toFloat()
-                MapSceneEntry(tile.string("id"), model, transform)
+                MapSceneEntry(MapEntityRef(MapEntityKind.Tile, tile.string("id")), model, transform)
             }
         } +
         document
@@ -77,7 +77,7 @@ fun mapSceneEntries(document: JsonObject, models: Map<String, MapModel>): List<M
                             )
                         else MapPose(obj.number("x"), obj.number("y"), obj.number("elevation", .44))
                     MapSceneEntry(
-                        obj.string("id"),
+                        MapEntityRef(MapEntityKind.Object, obj.string("id")),
                         model,
                         mapTransform(
                             pose.x,

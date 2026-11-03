@@ -63,6 +63,40 @@ class MapsHttpTest {
     }
 
     @Test
+    fun adminMetadataPutUsesTechnicalUuidAndPreservesLogicalId() = runTest {
+        val model = MapModel("UD-007", "f6ebd194-b684-48bb-9073-3a7a1ac79ba7", "Пол")
+        val api =
+            ApiClient(
+                "https://dndshare.ru",
+                MemoryDeviceServices(),
+                MockEngine { request ->
+                    assertEquals("/api/maps/models/${model.uuid}", request.url.encodedPath)
+                    assertEquals(HttpMethod.Put, request.method)
+                    val body =
+                        WireJson.parseToJsonElement(
+                                (request.body as OutgoingContent.ByteArrayContent)
+                                    .bytes()
+                                    .decodeToString()
+                            )
+                            .jsonObject
+                    assertEquals(model.id, body.string("id"))
+                    assertEquals(model.uuid, body.string("uuid"))
+                    respond(
+                        body.toString(),
+                        headers = headersOf(HttpHeaders.ContentType, "application/json"),
+                    )
+                },
+            )
+        try {
+            val result = HttpMapsApi(api).updateModel(model, editableMapModel(model))
+            assertEquals(model.id, result.id)
+            assertEquals(model.uuid, result.uuid)
+        } finally {
+            api.close()
+        }
+    }
+
+    @Test
     fun catalogueAcceptsNullableArraysAndKeepsTechnicalAndLogicalIdsSeparate() = runTest {
         val api =
             ApiClient(

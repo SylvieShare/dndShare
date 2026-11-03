@@ -23,7 +23,7 @@ fun resizeMap(
             .map { it.string("id") }
             .toSet()
     var next =
-        mapRemove(document, models, removed)
+        mapRemove(document, models, removed.map { MapEntityRef(MapEntityKind.Tile, it) }.toSet())
             .with("width", JsonPrimitive(width))
             .with("height", JsonPrimitive(height))
     next =

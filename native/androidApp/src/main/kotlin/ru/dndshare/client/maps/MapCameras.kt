@@ -6,6 +6,9 @@ import kotlinx.serialization.json.*
 import ru.dndshare.client.maps.rendering.MapCamera
 
 fun captureMapCamera(camera: MapCamera, width: Int, height: Int): JsonObject {
+    camera.saved?.let {
+        return it
+    }
     val delta =
         camera.eye.let {
             doubleArrayOf(it[0] - camera.x, it[2] - camera.y, it[1] - camera.elevation)
@@ -32,7 +35,7 @@ fun captureMapCamera(camera: MapCamera, width: Int, height: Int): JsonObject {
             ),
         )
         put("width", frameWidth)
-        put("aspect", width.toDouble() / height.coerceAtLeast(1))
+        put("aspect", (width.toDouble() / height.coerceAtLeast(1)).coerceIn(.25, 4.0))
     }
 }
 
@@ -62,8 +65,12 @@ fun mapCameraView(view: JsonObject, viewportWidth: Int): MapCamera {
         target.double(1),
         viewportWidth / view.number("width", 1.0),
         Math.toDegrees(atan2(dz, hypot(dx, dy))),
-        Math.toDegrees(atan2(dx, dy)),
+        Math.toDegrees(
+            if (hypot(dx, dy) > 1e-8) atan2(dx, dy)
+            else atan2(-view.array("up").double(0), -view.array("up").double(1))
+        ),
         target.double(2),
+        saved = view,
     )
 }
 

@@ -34,7 +34,10 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
             launch { loadModels() }
             try {
                 val cached = store.readWork(id)
-                if (cached != null) mutable.update { it.copy(work = cached, loading = false) }
+                if (cached != null) {
+                    mutable.update { it.copy(work = cached, loading = false) }
+                    finishEdit()
+                }
                 val fresh = api.get(id)
                 val work = store.open(fresh)
                 mutable.update {
@@ -50,6 +53,7 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
                     debounce?.cancel()
                     debounce = scope.launch {
                         delay(1200)
+                        debounce = null
                         flush()
                     }
                 }
@@ -77,6 +81,31 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
         }
     }
 
+    fun adoptModel(saved: MapModel) {
+        val catalogue =
+            state.value.models.map { model ->
+                if (model.uuid == saved.uuid) saved
+                else if (model.collection == saved.collection && model.code == saved.code)
+                    model.copy(
+                        groupName = saved.groupName,
+                        groupNameEn = saved.groupNameEn,
+                        raw =
+                            model.raw
+                                .with("groupName", JsonPrimitive(saved.groupName))
+                                .with("groupNameEn", JsonPrimitive(saved.groupNameEn)),
+                    )
+                else model
+            }
+        mutable.update { it.copy(models = catalogue) }
+        scope.launch {
+            try {
+                store.models(catalogue)
+            } catch (error: Exception) {
+                fail(error)
+            }
+        }
+    }
+
     private fun persist(work: MapWork) {
         scope.launch {
             try {
@@ -85,6 +114,19 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
                 fail(error)
             }
         }
+    }
+
+    fun ui(update: (MapEditorUi) -> MapEditorUi) {
+        val work = state.value.work ?: return
+        val value = update(work.ui ?: MapEditorUi())
+        if (value == work.ui) return
+        val next = work.copy(ui = value, localVersion = work.localVersion + 1)
+        mutable.update { it.copy(work = next) }
+        persist(next)
+    }
+
+    fun notice(message: String?) {
+        mutable.update { it.copy(error = message) }
     }
 
     private fun install(work: MapWork) {
@@ -96,22 +138,29 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
         if (!state.value.conflict && next.editBase == null)
             debounce = scope.launch {
                 delay(1200)
+                debounce = null
                 flush()
             }
     }
 
-    fun change(update: (BattleMap) -> BattleMap) {
-        val work = state.value.work ?: return
-        if (!work.current.editable || state.value.conflict) return
+    fun change(update: (BattleMap) -> BattleMap): Boolean {
+        val work = state.value.work ?: return false
+        if (!work.current.editable || state.value.conflict) return false
         try {
             val updated = update(work.current)
+            val documentChanged = updated.document != work.current.document
             val map =
-                updated.copy(document = normalizeMapDocument(updated.document, state.value.models))
-            if (map.content == work.current.content) return
+                if (documentChanged)
+                    updated.copy(
+                        document = normalizeMapDocument(updated.document, state.value.models)
+                    )
+                else updated
+            if (map.content == work.current.content) return true
             require(map.name.isNotBlank() && map.name.length <= 160) {
                 "Укажите название карты до 160 символов"
             }
-            mapPlacements(map.document, state.value.models.associateBy { it.uuid })
+            if (documentChanged)
+                mapPlacements(map.document, state.value.models.associateBy { it.uuid })
             install(
                 work.copy(
                     current = map,
@@ -124,8 +173,10 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
                     redo = emptyList(),
                 )
             )
+            return true
         } catch (error: Exception) {
             fail(error)
+            return false
         }
     }
 
@@ -319,7 +370,7 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
                 undo =
                     if (base == work.current.content) work.undo
                     else (work.undo + mapHistory(base, work.current.content)).takeLast(50),
-                redo = emptyList(),
+                redo = if (base == work.current.content) work.redo else emptyList(),
             )
         )
     }

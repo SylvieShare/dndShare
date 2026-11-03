@@ -86,6 +86,7 @@ class MapWorkspaceStore(private val directory: File) {
                             key = map.id,
                             confirmed = map,
                             localVersion = (stored?.localVersion ?: 0) + 1,
+                            ui = stored?.ui,
                         )
                         .also { write("draft-${map.id}", it) }
             }
@@ -110,6 +111,7 @@ class MapWorkspaceStore(private val directory: File) {
                         key = map.id,
                         confirmed = map,
                         localVersion = maxOf(minimumVersion, previous?.localVersion ?: 0) + 1,
+                        ui = previous?.ui,
                     )
                     .also { write("draft-${map.id}", it) }
             }
@@ -130,7 +132,12 @@ class MapWorkspaceStore(private val directory: File) {
                 val current = read<MapWork>("draft-${work.key}")
                 if (current == null || current.localVersion <= staged.localVersion) {
                     write("draft-${work.key}", staged)
-                    if (!staged.dirty) rememberOwn(staged.current)
+                    if (
+                        !staged.dirty &&
+                            (current?.current?.revision != staged.current.revision ||
+                                current?.current?.content != staged.current.content)
+                    )
+                        rememberOwn(staged.current)
                 }
                 shared.pending.remove(work.key, staged)
             }

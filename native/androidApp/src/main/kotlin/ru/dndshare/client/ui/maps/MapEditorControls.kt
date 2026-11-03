@@ -8,7 +8,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import ru.dndshare.client.ui.designsystem.*
@@ -34,17 +37,23 @@ internal fun MapToolRail(tab: String, select: (String) -> Unit, modifier: Modifi
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         listOf(
-                Triple("tiles", "Плитки", Glyph.Shapes),
-                Triple("objects", "Объекты", Glyph.Backpack),
-                Triple("lights", "Освещение", Glyph.Zap),
-                Triple("areas", "Области", Glyph.Tags),
-                Triple("cameras", "Камеры", Glyph.Image),
+                Triple("tiles", "Плитки", Glyph.Layers),
+                Triple("objects", "Объекты", Glyph.Box),
+                Triple("decals", "Декали", Glyph.Sticker),
+                Triple("lights", "Освещение", Glyph.Lightbulb),
+                Triple("areas", "Области", Glyph.Group),
+                Triple("cameras", "Камеры", Glyph.Camera),
                 Triple("settings", "Настройки", Glyph.Settings),
+                Triple("performance", "Нагрузка", Glyph.Gauge),
             )
             .forEach { (key, title, icon) ->
                 Surface(
                     { select(key) },
-                    Modifier.size(64.dp),
+                    Modifier.size(64.dp).semantics {
+                        contentDescription = title
+                        role = Role.Tab
+                        selected = tab == key
+                    },
                     color = if (tab == key) WebPalette.Subheader else WebPalette.Surface,
                     shape = MaterialTheme.shapes.medium,
                 ) {

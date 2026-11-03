@@ -239,8 +239,15 @@ private fun AuthenticatedApp(
                                                 header,
                                             )
                                         } else if (displayedPage == AppPage.Maps) {
-                                            MapsRoute(controller.api, state.user!!.id, images, format,
-                                                header = header, fullscreen = { mapsFullscreen = it })
+                                            MapsRoute(
+                                                controller.api,
+                                                state.user!!.id,
+                                                images,
+                                                format,
+                                                header = header,
+                                                fullscreen = { mapsFullscreen = it },
+                                                admin = "ADMIN" in state.user!!.roles,
+                                            )
                                         } else
                                             ShareChromeLayout(
                                                 header = header,

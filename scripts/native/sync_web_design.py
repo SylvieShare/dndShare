@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 FRONTEND = ROOT / "frontend"
 NATIVE = ROOT / "native/androidApp/src/main"
 ICONS = {
+    "Layers": "layers", "Box": "box", "Group": "group", "Lightbulb": "lightbulb", "Camera": "camera", "Gauge": "gauge", "Sticker": "sticker", "LayoutGrid": "layout-grid", "Rotate": "rotate-cw", "Flip": "arrow-left-right", "Eye": "eye", "EyeOff": "eye-off", "Save": "save", "Upload": "upload", "Download": "download", "Clipboard": "clipboard-paste", "Lock": "lock-keyhole", "Rectangle": "square-dashed-mouse-pointer",
     "Hand": "hand", "Sunrise": "sunrise", "Tags": "tags", "Clock": "clock-3", "Hourglass": "hourglass", "Shapes": "shapes", "Coins": "coins", "Gem": "gem", "Zap": "zap", "Heart": "heart", "Badge": "badge", "Shield": "shield",
     "Wallet": "wallet", "Weight": "weight", "Backpack": "backpack", "Shirt": "shirt", "Trash": "trash",
     "Book": "book-open", "Rules": "book-open-check", "Characters": "users",
@@ -26,6 +27,7 @@ ICONS = {
     "Bold": "bold", "Italic": "italic", "Underline": "underline", "Undo": "undo-2", "Redo": "redo-2", "More": "ellipsis",
 }
 COLORS = {
+    "MapPreview": "map-model-preview-bg",
     "Background": "bg", "Surface": "surface", "Subheader": "subheader", "Raised": "surface-raised",
     "Active": "surface-active", "Popover": "popover-bg", "Text": "text-1",
     "TextSecondary": "text-2", "TextMuted": "text-muted", "OnAccent": "text-on-accent",
@@ -105,6 +107,8 @@ def outputs():
     yield NATIVE / "assets/licenses/lucide.txt", (package / "LICENSE").read_text()
     for filename in ("tab-stats.svg", "tab-weapons.svg", "tab-magic.svg", "tab-skills.svg", "tab-personality.svg", "container-box.svg", "edit-note.svg", "hp-pulse.svg", "shield.svg", "initiative.svg", "speed.svg", "prof-bonus.svg"):
         yield NATIVE / "assets/character-sheet" / filename, (FRONTEND / "public/static" / filename).read_text()
+    for path in sorted((FRONTEND / "src/assets/maps/tile-types").glob("*.webp")):
+        yield NATIVE / "assets/maps/tile-types" / path.name, path.read_bytes()
 
 
 def dice_shapes():
@@ -132,11 +136,14 @@ def main():
     generated = list(outputs()) + [(NATIVE / "kotlin/ru/dndshare/client/ui/designsystem/DieShapes.kt", dice_shapes()), (NATIVE / "kotlin/ru/dndshare/client/ui/designsystem/WebEffectSpec.kt", render_effect_specs(ROOT))]
     for path, content in generated:
         if args.check:
-            if not path.exists() or path.read_text() != content:
+            if not path.exists() or (path.read_bytes() if isinstance(content, bytes) else path.read_text()) != content:
                 stale.append(str(path.relative_to(ROOT)))
         else:
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(content)
+            if isinstance(content, bytes):
+                path.write_bytes(content)
+            else:
+                path.write_text(content)
     if stale:
         raise SystemExit("Regenerate Android web design resources:\n" + "\n".join(stale))
     print("Android palette and Lucide resources match the web" if args.check else "Android web design resources generated")

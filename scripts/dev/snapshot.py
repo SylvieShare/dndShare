@@ -12,7 +12,7 @@ from .dependencies import digest, link_modules
 SOURCE_ROOTS = {"README.md", "AGENTS.md", "CLAUDE.md", ".gitattributes", ".gitignore",
                 "go.mod", "go.sum", "main.go", "cmd", "deploy", "frontend", "internal",
                 "md", "native", "plans", "reports", "resources", "scripts", "skills", "design"}
-RUNTIME_PARTS = {".git", "node_modules", "build", "target", "dist", "test-results",
+RUNTIME_PARTS = {".git", ".cxx", "node_modules", "build", "target", "dist", "test-results",
                  "playwright-report", "__pycache__", ".gradle", ".kotlin", ".idea",
                  ".vite", ".vite-temp", ".cache", "coverage", ".pytest_cache", "models"}
 MANIFEST = ".ui-workspace.json"

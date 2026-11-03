@@ -40,6 +40,8 @@ class MapRendererTest {
             }
         val folder = File(context.cacheDir, "map-renderer-test-${System.nanoTime()}")
         val model = MapModel("box", "box", "Куб", renderUrl = "/api/maps/models/box/render")
+        val prop =
+            model.copy(id = "prop-definition", uuid = "prop", name = "Предмет", tileType = "object")
         val document =
             newMapDocument()
                 .with("width", JsonPrimitive(4))
@@ -60,6 +62,23 @@ class MapRendererTest {
                         }
                     ),
                 )
+        val content =
+            document.with(
+                "objects",
+                JsonArray(
+                    listOf(
+                        buildJsonObject {
+                            put("id", "placed-1")
+                            put("modelId", "prop")
+                            put("kind", "chest")
+                            put("x", 3.5)
+                            put("y", 1.5)
+                            put("scale", 1)
+                            put("rotation", 0)
+                        }
+                    )
+                ),
+            )
         val scene = AtomicReference<FilamentMapScene>()
         val texture = AtomicReference<SurfaceView>()
         val errors = AtomicReference<String>()
@@ -91,7 +110,7 @@ class MapRendererTest {
                                         MapCamera().fit(4.0, 4.0, right - left, bottom - top)
                                     )
                                 }
-                                renderer.update(document, listOf(model))
+                                renderer.update(content, listOf(model, prop))
                             }
                         },
                         onRelease = { scene.get().close() },
@@ -105,17 +124,19 @@ class MapRendererTest {
             }
             assertNull(errors.get())
             await { scene.get().renderedFrames > 0 }
-            val picked = AtomicReference<String>()
+            val picked = AtomicReference<MapEntityRef>()
             activity.onActivity {
                 val renderer = scene.get()
                 val point =
                     renderer
                         .camera()
                         .project(MapPose(1.5, 1.5, .5), renderer.width, renderer.height)
-                renderer.pick(point.first, point.second) { picked.set(it ?: "empty") }
+                renderer.pick(point.first, point.second) {
+                    picked.set(it ?: MapEntityRef(MapEntityKind.Tile, "empty"))
+                }
             }
             await { picked.get() != null }
-            assertEquals("placed-1", picked.get())
+            assertEquals(MapEntityRef(MapEntityKind.Tile, "placed-1"), picked.get())
             picked.set(null)
             activity.onActivity {
                 val renderer = scene.get()
@@ -123,10 +144,25 @@ class MapRendererTest {
                     renderer
                         .camera()
                         .project(MapPose(2.5, 1.5, .5), renderer.width, renderer.height)
-                renderer.pick(point.first, point.second) { picked.set(it ?: "empty") }
+                renderer.pick(point.first, point.second) {
+                    picked.set(it ?: MapEntityRef(MapEntityKind.Tile, "empty"))
+                }
             }
             await { picked.get() != null }
-            assertEquals("placed-2", picked.get())
+            assertEquals(MapEntityRef(MapEntityKind.Tile, "placed-2"), picked.get())
+            picked.set(null)
+            activity.onActivity {
+                val renderer = scene.get()
+                val point =
+                    renderer
+                        .camera()
+                        .project(MapPose(3.5, 1.5, .94), renderer.width, renderer.height)
+                renderer.pick(point.first, point.second) {
+                    picked.set(it ?: MapEntityRef(MapEntityKind.Tile, "empty"))
+                }
+            }
+            await { picked.get() != null }
+            assertEquals(MapEntityRef(MapEntityKind.Object, "placed-1"), picked.get())
             val surfaceHit = AtomicReference<MapSurfaceHit>()
             activity.onActivity {
                 val renderer = scene.get()
@@ -138,7 +174,7 @@ class MapRendererTest {
             }
             await { surfaceHit.get() != null || errors.get() != null }
             assertNull(errors.get())
-            assertEquals("placed-1", surfaceHit.get().id)
+            assertEquals("placed-1", surfaceHit.get().ref.id)
             assertEquals(.5f, surfaceHit.get().world.y, .001f)
             assertTrue(surfaceHit.get().normal.y > .99f)
             var first = 0L

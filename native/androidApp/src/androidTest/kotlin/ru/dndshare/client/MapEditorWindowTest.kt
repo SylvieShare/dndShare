@@ -141,7 +141,10 @@ class MapEditorWindowTest {
     }
 
     @Test
-    fun editorFitsThreeWindowsAndFormEditsReachTheMapApi() {
+    fun editorFitsThreeWindowsAndFormEditsReachTheMapApi() =
+        editorWindows(listOf(390 to 844, 834 to 1112, 1920 to 1080))
+
+    private fun editorWindows(windows: List<Pair<Int, Int>>) {
         val beforeSize = shell("wm size")
         val beforeDensity = shell("wm density")
         val context = instrumentation.targetContext
@@ -152,7 +155,7 @@ class MapEditorWindowTest {
         try {
             shell("wm density 160")
             shell("mkdir -p /data/local/tmp/dndshare-map-review")
-            for ((width, height) in listOf(390 to 844, 834 to 1112, 1920 to 1080)) {
+            for ((width, height) in windows) {
                 shell("wm size ${width}x$height")
                 val record =
                     AtomicReference(BattleMap(id = "map", name = "Пробная карта", revision = 1))
@@ -281,12 +284,16 @@ class MapEditorWindowTest {
             .use { it.readText() }
 
     private fun click(text: String) {
-        var node: AccessibilityNodeInfo? = awaitNode { it.text?.toString() == text }
+        var node: AccessibilityNodeInfo? = awaitNode {
+            (it.contentDescription?.toString() == text && it.isClickable) ||
+                it.text?.toString() == text
+        }
         while (node != null && !node.isClickable) node = node.parent
         assertTrue(requireNotNull(node).performAction(AccessibilityNodeInfo.ACTION_CLICK))
     }
 
     private fun find(test: (AccessibilityNodeInfo) -> Boolean): AccessibilityNodeInfo? {
+        if (android.os.Build.VERSION.SDK_INT >= 34) automation.clearCache()
         fun search(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
             if (test(node)) return node
             for (i in 0 until node.childCount) node.getChild(i)?.let {

@@ -213,7 +213,6 @@ defineExpose({
 }
 .map-reference-catalogue {
   padding: 18px;
-  border-right: 1px solid var(--border-strong);
   overflow: auto;
 }
 .map-reference-form {
@@ -286,7 +285,6 @@ defineExpose({
   .map-reference-catalogue {
     max-height: 250px;
     border-right: 0;
-    border-bottom: 1px solid var(--border-strong);
   }
   .map-reference-form {
     padding: 16px;

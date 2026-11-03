@@ -4,6 +4,7 @@ package ru.dndshare.client.ui.designsystem
 import androidx.compose.ui.graphics.Color
 
 object WebPalette {
+    val MapPreview = Color(0xFF424952)
     val Background = Color(0xFF17171B)
     val Surface = Color(0xFF27272E)
     val Subheader = Color(0xFF35313F)

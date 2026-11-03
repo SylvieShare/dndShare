@@ -126,6 +126,7 @@
           @gesture="handleGesture"
           @camera-move="cameraMoved"
         />
+        <MapEditingTools v-if="!playerPreview && !e.conflict" :editor="e" @paste="pasteFromToolbar" @cancel="cancelFromToolbar" />
         <slot name="canvas-overlay" :editor="e" :canvas="canvas" />
         <MapSelectionPanel
           ref="selectionPanel"
@@ -165,6 +166,7 @@ import {
   ConfirmDialog,
 } from "@sylvieshare/share-ui";
 import { X } from "@lucide/vue";
+import MapEditingTools from "./MapEditingTools.vue";
 import MapEditorHeader from "./MapEditorHeader.vue";
 import MapSelectionPanel from "./MapSelectionPanel.vue";
 import MapSaveErrorDialog from "./MapSaveErrorDialog.vue";
@@ -272,6 +274,12 @@ watch(
     if (ids.some(Boolean)) emit("selection");
   },
 );
+function pasteFromToolbar() {
+  if (e.copiedDecal) placement.placeDecal(e.copiedDecal);
+  else if (e.copiedLight) placement.placeLight(e.copiedLight, placement.cursor.pointerEvent(), { repeatOnCommand: true });
+  else if (e.beginPaste()) nextTick(() => { e.previewPaste(placement.cursor.point()); canvas.value?.focus(); });
+}
+function cancelFromToolbar() { placement.cancel(); e.handle({ phase: "cancel" }); }
 function handleGesture(event) {
   if (props.tokenGesture?.(event, e, canvas.value)) return;
   if (event.phase === "start") emit("selection");

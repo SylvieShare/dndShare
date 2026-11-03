@@ -64,11 +64,12 @@
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { ActionButton, IconNavigation } from "@sylvieshare/share-ui";
 import { PanelLeftClose } from "@lucide/vue";
+import { layoutTokens } from "@/app/design-tokens";
 const props = defineProps({
   tabs: { type: Array, required: true },
   tab: { type: String, required: true },
   tabsLabel: { type: String, default: "Вкладки карты" },
-  collapseAt: { type: Number, default: 760 },
+  collapseAt: { type: Number, default: layoutTokens.desktop - 1 },
 });
 const emit = defineEmits(["update:tab", "select", "resize"]);
 const element = ref(null);
@@ -80,6 +81,10 @@ const opening = ref(false);
 const panelWidth = ref(null);
 let observer,
   revealTimer = 0;
+let compactQuery;
+function compactChanged(event) {
+  if (event.matches) collapse();
+}
 let measuredParent = -1,
   measuredViewport = -1;
 let direction = 1;
@@ -106,8 +111,7 @@ function measurePanel() {
   panelWidth.value = Math.max(
     0,
     probe.getBoundingClientRect().width -
-      (navigation.value?.element?.getBoundingClientRect().width || 77) -
-      1,
+      (navigation.value?.element?.getBoundingClientRect().width || 77),
   );
   probe.remove();
 }
@@ -153,6 +157,8 @@ function collapse() {
   clearTimeout(revealTimer);
 }
 onMounted(() => {
+  compactQuery = window.matchMedia(`(max-width: ${props.collapseAt}px)`);
+  compactQuery.addEventListener("change", compactChanged);
   measurePanel();
   observer = new ResizeObserver(() => {
     measurePanel();
@@ -167,6 +173,7 @@ onMounted(() => {
   observer.observe(element.value.parentElement);
 });
 onBeforeUnmount(() => {
+  compactQuery?.removeEventListener("change", compactChanged);
   observer?.disconnect();
   clearTimeout(revealTimer);
 });
@@ -183,7 +190,6 @@ defineExpose({
   flex: none;
   min-height: 0;
   display: flex;
-  border-right: 1px solid var(--border-strong);
   background: var(--surface);
   overflow: clip;
   transition: width 260ms cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -191,7 +197,6 @@ defineExpose({
 .map-sidebar-tabs {
   z-index: 1;
   height: 100%;
-  border-right: 1px solid var(--border-strong);
   background: var(--surface);
 }
 .map-sidebar--overlay {
@@ -226,7 +231,7 @@ defineExpose({
 .map-sidebar-panel {
   background: var(--surface);
   flex: none;
-  width: var(--map-sidebar-panel-width, calc(var(--map-sidebar-width) - 78px));
+  width: var(--map-sidebar-panel-width, calc(var(--map-sidebar-width) - 77px));
   min-width: 0;
   display: flex;
   flex-direction: column;

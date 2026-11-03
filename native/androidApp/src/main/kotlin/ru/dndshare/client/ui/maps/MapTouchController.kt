@@ -5,8 +5,9 @@ import android.os.Looper
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
+import androidx.compose.ui.geometry.Offset
 import kotlin.math.*
-import ru.dndshare.client.maps.MapPose
+import ru.dndshare.client.maps.MapEntityRef
 import ru.dndshare.client.maps.rendering.FilamentMapScene
 import ru.dndshare.client.maps.rendering.MapCamera
 
@@ -14,12 +15,17 @@ import ru.dndshare.client.maps.rendering.MapCamera
 internal class MapTouchController(
     private val host: View,
     private val scene: FilamentMapScene,
-    private val tap: (String?, MapPose) -> Unit,
-    private val drag: (String, MapPose, Boolean) -> Unit,
+    private val tap: (MapPointer) -> Unit,
+    private val drag: (MapPointer, Boolean) -> Unit,
     private val cancelEdit: () -> Unit,
     private val changed: () -> Unit,
+    private val selection: (Offset, Offset, Boolean) -> Unit = { _, _, _ -> },
 ) {
     var orbit = false
+    var rectangle = false
+    private var selecting = false
+    private var mouse = false
+    private var right = false
     private val handler = Handler(Looper.getMainLooper())
     private var pointer = -1
     private var startX = 0f
@@ -28,7 +34,7 @@ internal class MapTouchController(
     private var lastY = 0f
     private var moved = false
     private var holding = false
-    private var hit: String? = null
+    private var hit: MapEntityRef? = null
     private var sequence = 0L
     private var initial = MapCamera()
     private var pair: PairFrame? = null
@@ -38,19 +44,18 @@ internal class MapTouchController(
         if (!moved && pair == null && hit != null && !orbit) {
             holding = true
             host.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-            drag(
-                requireNotNull(hit),
-                scene
-                    .camera()
-                    .world(startX.toDouble(), startY.toDouble(), scene.width, scene.height),
-                false,
-            )
+            drag(pointerAt(startX, startY, hit), false)
         }
     }
 
     fun event(event: MotionEvent): Boolean {
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
+                host.requestFocus()
+                selecting =
+                    rectangle || (event.metaState and android.view.KeyEvent.META_SHIFT_ON != 0)
+                mouse = event.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE
+                right = mouse && event.buttonState and MotionEvent.BUTTON_SECONDARY != 0
                 sequence++
                 pointer = event.getPointerId(0)
                 startX = event.x
@@ -64,12 +69,13 @@ internal class MapTouchController(
                 initial = scene.camera()
                 val serial = sequence
                 scene.pick(event.x, event.y) { if (serial == sequence && pointer >= 0) hit = it }
-                handler.postDelayed(hold, 500)
+                if (!selecting && !right) handler.postDelayed(hold, 500)
                 host.parent?.requestDisallowInterceptTouchEvent(true)
             }
             MotionEvent.ACTION_POINTER_DOWN -> {
                 handler.removeCallbacks(hold)
-                if (holding) cancelEdit()
+                if (holding || selecting) cancelEdit()
+                selecting = false
                 holding = false
                 moved = true
                 sequence++
@@ -106,18 +112,17 @@ internal class MapTouchController(
                     moved = true
                     handler.removeCallbacks(hold)
                 }
-                if (holding)
-                    hit?.let {
-                        drag(
-                            it,
-                            scene
-                                .camera()
-                                .world(x.toDouble(), y.toDouble(), scene.width, scene.height),
-                            false,
-                        )
-                    }
+                if (selecting) {
+                    selection(Offset(startX, startY), Offset(x, y), false)
+                    return true
+                }
+                if (mouse && !right && moved && hit != null && !holding) {
+                    holding = true
+                    drag(pointerAt(startX, startY, hit), false)
+                }
+                if (holding) hit?.let { drag(pointerAt(x, y, it), false) }
                 else if (moved) {
-                    if (orbit)
+                    if (orbit || right)
                         scene.camera(
                             initial.copy(
                                 azimuth =
@@ -150,8 +155,11 @@ internal class MapTouchController(
                     scene
                         .camera()
                         .world(event.x.toDouble(), event.y.toDouble(), scene.width, scene.height)
-                if (holding) hit?.let { drag(it, world, true) }
-                else if (!moved && pair == null) {
+                if (selecting) {
+                    selection(Offset(startX, startY), Offset(event.x, event.y), true)
+                    selecting = false
+                } else if (holding) hit?.let { drag(MapPointer(it, world, event.x, event.y), true) }
+                else if (!moved && pair == null && !right) {
                     tapPoint = event.x to event.y
                     host.performClick()
                 }
@@ -165,10 +173,28 @@ internal class MapTouchController(
         return true
     }
 
+    fun generic(event: MotionEvent): Boolean {
+        if (event.actionMasked != MotionEvent.ACTION_SCROLL) return false
+        scene.camera(
+            scene
+                .camera()
+                .zoom(
+                    exp(event.getAxisValue(MotionEvent.AXIS_VSCROLL) * .15),
+                    event.x.toDouble(),
+                    event.y.toDouble(),
+                    scene.width,
+                    scene.height,
+                )
+        )
+        changed()
+        return true
+    }
+
     fun cancel() {
         sequence++
         handler.removeCallbacks(hold)
-        if (holding) cancelEdit()
+        if (holding || selecting) cancelEdit()
+        selecting = false
         holding = false
         pointer = -1
         pair = null
@@ -183,8 +209,18 @@ internal class MapTouchController(
             scene
                 .camera()
                 .world(point.first.toDouble(), point.second.toDouble(), scene.width, scene.height)
-        scene.pick(point.first, point.second) { if (serial == sequence) tap(it, world) }
+        scene.pick(point.first, point.second) {
+            if (serial == sequence) tap(MapPointer(it, world, point.first, point.second))
+        }
     }
+
+    private fun pointerAt(x: Float, y: Float, ref: MapEntityRef?) =
+        MapPointer(
+            ref,
+            scene.camera().world(x.toDouble(), y.toDouble(), scene.width, scene.height),
+            x,
+            y,
+        )
 
     private fun frame(event: MotionEvent): PairFrame {
         val dx = event.getX(1) - event.getX(0)

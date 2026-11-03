@@ -1,0 +1,2554 @@
+[
+  {
+    "tiles": [
+      {
+        "id": "one",
+        "modelId": "A",
+        "x": 4,
+        "y": 3,
+        "rotation": 0,
+        "level": 0
+      },
+      {
+        "id": "two",
+        "modelId": "B",
+        "x": 6,
+        "y": 4,
+        "rotation": 90,
+        "level": 1
+      },
+      {
+        "id": "three",
+        "modelId": "C",
+        "x": 3,
+        "y": 6,
+        "rotation": 0,
+        "level": 0
+      }
+    ],
+    "objects": [
+      {
+        "id": "same",
+        "x": 4.3,
+        "y": 5.7,
+        "rotation": 15,
+        "scale": 1
+      }
+    ],
+    "models": [
+      {
+        "id": "A",
+        "definitionId": "D-A",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 1,
+        "height": 2,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B",
+        "definitionId": "D-B",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 2,
+        "height": 1,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      },
+      {
+        "id": "C",
+        "definitionId": "D-C",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 2,
+        "height": 2,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      }
+    ],
+    "pivot": {
+      "x": 5,
+      "y": 6
+    },
+    "rotated": {
+      "tiles": [
+        {
+          "id": "one",
+          "modelId": "A",
+          "x": 6,
+          "y": 5,
+          "rotation": 90,
+          "level": 0
+        },
+        {
+          "id": "two",
+          "modelId": "B",
+          "x": 5,
+          "y": 7,
+          "rotation": 180,
+          "level": 1
+        },
+        {
+          "id": "three",
+          "modelId": "C",
+          "x": 3,
+          "y": 4,
+          "rotation": 90,
+          "level": 0
+        }
+      ],
+      "objects": [
+        {
+          "id": "same",
+          "x": 5.3,
+          "y": 5.3,
+          "rotation": 105,
+          "scale": 1
+        }
+      ]
+    },
+    "mirrored": [
+      {
+        "id": "one",
+        "modelId": "A",
+        "x": 5,
+        "y": 3,
+        "rotation": 0,
+        "level": 0,
+        "mirrored": true
+      },
+      {
+        "id": "two",
+        "modelId": "B",
+        "x": 3,
+        "y": 4,
+        "rotation": 270,
+        "level": 1,
+        "mirrored": true
+      },
+      {
+        "id": "three",
+        "modelId": "C",
+        "x": 5,
+        "y": 6,
+        "rotation": 0,
+        "level": 0,
+        "mirrored": true
+      }
+    ]
+  },
+  {
+    "tiles": [
+      {
+        "id": "one",
+        "modelId": "A",
+        "x": 7,
+        "y": 3,
+        "rotation": 0,
+        "level": 0
+      },
+      {
+        "id": "two",
+        "modelId": "B",
+        "x": 9,
+        "y": 4,
+        "rotation": 90,
+        "level": 1
+      },
+      {
+        "id": "three",
+        "modelId": "C",
+        "x": 6,
+        "y": 6,
+        "rotation": 0,
+        "level": 0
+      }
+    ],
+    "objects": [
+      {
+        "id": "same",
+        "x": 7.3,
+        "y": 5.7,
+        "rotation": 15,
+        "scale": 1
+      }
+    ],
+    "models": [
+      {
+        "id": "A",
+        "definitionId": "D-A",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 1,
+        "height": 2,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B",
+        "definitionId": "D-B",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 2,
+        "height": 1,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      },
+      {
+        "id": "C",
+        "definitionId": "D-C",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 2,
+        "height": 2,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      }
+    ],
+    "pivot": {
+      "x": 8,
+      "y": 6
+    },
+    "rotated": {
+      "tiles": [
+        {
+          "id": "one",
+          "modelId": "A",
+          "x": 9,
+          "y": 5,
+          "rotation": 90,
+          "level": 0
+        },
+        {
+          "id": "two",
+          "modelId": "B",
+          "x": 8,
+          "y": 7,
+          "rotation": 180,
+          "level": 1
+        },
+        {
+          "id": "three",
+          "modelId": "C",
+          "x": 6,
+          "y": 4,
+          "rotation": 90,
+          "level": 0
+        }
+      ],
+      "objects": [
+        {
+          "id": "same",
+          "x": 8.3,
+          "y": 5.3,
+          "rotation": 105,
+          "scale": 1
+        }
+      ]
+    },
+    "mirrored": [
+      {
+        "id": "one",
+        "modelId": "A",
+        "x": 8,
+        "y": 3,
+        "rotation": 0,
+        "level": 0,
+        "mirrored": true
+      },
+      {
+        "id": "two",
+        "modelId": "B",
+        "x": 6,
+        "y": 4,
+        "rotation": 270,
+        "level": 1,
+        "mirrored": true
+      },
+      {
+        "id": "three",
+        "modelId": "C",
+        "x": 8,
+        "y": 6,
+        "rotation": 0,
+        "level": 0,
+        "mirrored": true
+      }
+    ]
+  },
+  {
+    "tiles": [
+      {
+        "id": "one",
+        "modelId": "A",
+        "x": 4,
+        "y": 3,
+        "rotation": 90,
+        "level": 0
+      },
+      {
+        "id": "two",
+        "modelId": "B",
+        "x": 6,
+        "y": 4,
+        "rotation": 180,
+        "level": 1
+      },
+      {
+        "id": "three",
+        "modelId": "C",
+        "x": 3,
+        "y": 6,
+        "rotation": 0,
+        "level": 0
+      }
+    ],
+    "objects": [
+      {
+        "id": "same",
+        "x": 4.3,
+        "y": 5.7,
+        "rotation": 15,
+        "scale": 1
+      }
+    ],
+    "models": [
+      {
+        "id": "A",
+        "definitionId": "D-A",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 1,
+        "height": 2,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B",
+        "definitionId": "D-B",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 2,
+        "height": 1,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      },
+      {
+        "id": "C",
+        "definitionId": "D-C",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 2,
+        "height": 2,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      }
+    ],
+    "pivot": {
+      "x": 5.5,
+      "y": 5.5
+    },
+    "rotated": {
+      "tiles": [
+        {
+          "id": "one",
+          "modelId": "A",
+          "x": 7,
+          "y": 4,
+          "rotation": 180,
+          "level": 0
+        },
+        {
+          "id": "two",
+          "modelId": "B",
+          "x": 6,
+          "y": 6,
+          "rotation": 270,
+          "level": 1
+        },
+        {
+          "id": "three",
+          "modelId": "C",
+          "x": 3,
+          "y": 3,
+          "rotation": 90,
+          "level": 0
+        }
+      ],
+      "objects": [
+        {
+          "id": "same",
+          "x": 5.3,
+          "y": 4.3,
+          "rotation": 105,
+          "scale": 1
+        }
+      ]
+    },
+    "mirrored": [
+      {
+        "id": "one",
+        "modelId": "A",
+        "x": 5,
+        "y": 3,
+        "rotation": 270,
+        "level": 0,
+        "mirrored": true
+      },
+      {
+        "id": "two",
+        "modelId": "B",
+        "x": 3,
+        "y": 4,
+        "rotation": 180,
+        "level": 1,
+        "mirrored": true
+      },
+      {
+        "id": "three",
+        "modelId": "C",
+        "x": 6,
+        "y": 6,
+        "rotation": 0,
+        "level": 0,
+        "mirrored": true
+      }
+    ]
+  },
+  {
+    "tiles": [
+      {
+        "id": "one",
+        "modelId": "A",
+        "x": 7,
+        "y": 3,
+        "rotation": 90,
+        "level": 0
+      },
+      {
+        "id": "two",
+        "modelId": "B",
+        "x": 9,
+        "y": 4,
+        "rotation": 180,
+        "level": 1
+      },
+      {
+        "id": "three",
+        "modelId": "C",
+        "x": 6,
+        "y": 6,
+        "rotation": 0,
+        "level": 0
+      }
+    ],
+    "objects": [
+      {
+        "id": "same",
+        "x": 7.3,
+        "y": 5.7,
+        "rotation": 15,
+        "scale": 1
+      }
+    ],
+    "models": [
+      {
+        "id": "A",
+        "definitionId": "D-A",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 1,
+        "height": 2,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B",
+        "definitionId": "D-B",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 2,
+        "height": 1,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      },
+      {
+        "id": "C",
+        "definitionId": "D-C",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 2,
+        "height": 2,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      }
+    ],
+    "pivot": {
+      "x": 8.5,
+      "y": 5.5
+    },
+    "rotated": {
+      "tiles": [
+        {
+          "id": "one",
+          "modelId": "A",
+          "x": 10,
+          "y": 4,
+          "rotation": 180,
+          "level": 0
+        },
+        {
+          "id": "two",
+          "modelId": "B",
+          "x": 9,
+          "y": 6,
+          "rotation": 270,
+          "level": 1
+        },
+        {
+          "id": "three",
+          "modelId": "C",
+          "x": 6,
+          "y": 3,
+          "rotation": 90,
+          "level": 0
+        }
+      ],
+      "objects": [
+        {
+          "id": "same",
+          "x": 8.3,
+          "y": 4.3,
+          "rotation": 105,
+          "scale": 1
+        }
+      ]
+    },
+    "mirrored": [
+      {
+        "id": "one",
+        "modelId": "A",
+        "x": 8,
+        "y": 3,
+        "rotation": 270,
+        "level": 0,
+        "mirrored": true
+      },
+      {
+        "id": "two",
+        "modelId": "B",
+        "x": 6,
+        "y": 4,
+        "rotation": 180,
+        "level": 1,
+        "mirrored": true
+      },
+      {
+        "id": "three",
+        "modelId": "C",
+        "x": 9,
+        "y": 6,
+        "rotation": 0,
+        "level": 0,
+        "mirrored": true
+      }
+    ]
+  },
+  {
+    "tiles": [
+      {
+        "id": "one",
+        "modelId": "A",
+        "x": 4,
+        "y": 3,
+        "rotation": 180,
+        "level": 0
+      },
+      {
+        "id": "two",
+        "modelId": "B",
+        "x": 6,
+        "y": 4,
+        "rotation": 270,
+        "level": 1
+      },
+      {
+        "id": "three",
+        "modelId": "C",
+        "x": 3,
+        "y": 6,
+        "rotation": 0,
+        "level": 0
+      }
+    ],
+    "objects": [
+      {
+        "id": "same",
+        "x": 4.3,
+        "y": 5.7,
+        "rotation": 15,
+        "scale": 1
+      }
+    ],
+    "models": [
+      {
+        "id": "A",
+        "definitionId": "D-A",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 1,
+        "height": 2,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B",
+        "definitionId": "D-B",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 2,
+        "height": 1,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      },
+      {
+        "id": "C",
+        "definitionId": "D-C",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 2,
+        "height": 2,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      }
+    ],
+    "pivot": {
+      "x": 5,
+      "y": 6
+    },
+    "rotated": {
+      "tiles": [
+        {
+          "id": "one",
+          "modelId": "A",
+          "x": 6,
+          "y": 5,
+          "rotation": 270,
+          "level": 0
+        },
+        {
+          "id": "two",
+          "modelId": "B",
+          "x": 5,
+          "y": 7,
+          "rotation": 0,
+          "level": 1
+        },
+        {
+          "id": "three",
+          "modelId": "C",
+          "x": 3,
+          "y": 4,
+          "rotation": 90,
+          "level": 0
+        }
+      ],
+      "objects": [
+        {
+          "id": "same",
+          "x": 5.3,
+          "y": 5.3,
+          "rotation": 105,
+          "scale": 1
+        }
+      ]
+    },
+    "mirrored": [
+      {
+        "id": "one",
+        "modelId": "A",
+        "x": 5,
+        "y": 3,
+        "rotation": 180,
+        "level": 0,
+        "mirrored": true
+      },
+      {
+        "id": "two",
+        "modelId": "B",
+        "x": 3,
+        "y": 4,
+        "rotation": 90,
+        "level": 1,
+        "mirrored": true
+      },
+      {
+        "id": "three",
+        "modelId": "C",
+        "x": 5,
+        "y": 6,
+        "rotation": 0,
+        "level": 0,
+        "mirrored": true
+      }
+    ]
+  },
+  {
+    "tiles": [
+      {
+        "id": "one",
+        "modelId": "A",
+        "x": 7,
+        "y": 3,
+        "rotation": 180,
+        "level": 0
+      },
+      {
+        "id": "two",
+        "modelId": "B",
+        "x": 9,
+        "y": 4,
+        "rotation": 270,
+        "level": 1
+      },
+      {
+        "id": "three",
+        "modelId": "C",
+        "x": 6,
+        "y": 6,
+        "rotation": 0,
+        "level": 0
+      }
+    ],
+    "objects": [
+      {
+        "id": "same",
+        "x": 7.3,
+        "y": 5.7,
+        "rotation": 15,
+        "scale": 1
+      }
+    ],
+    "models": [
+      {
+        "id": "A",
+        "definitionId": "D-A",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 1,
+        "height": 2,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B",
+        "definitionId": "D-B",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 2,
+        "height": 1,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      },
+      {
+        "id": "C",
+        "definitionId": "D-C",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 2,
+        "height": 2,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      }
+    ],
+    "pivot": {
+      "x": 8,
+      "y": 6
+    },
+    "rotated": {
+      "tiles": [
+        {
+          "id": "one",
+          "modelId": "A",
+          "x": 9,
+          "y": 5,
+          "rotation": 270,
+          "level": 0
+        },
+        {
+          "id": "two",
+          "modelId": "B",
+          "x": 8,
+          "y": 7,
+          "rotation": 0,
+          "level": 1
+        },
+        {
+          "id": "three",
+          "modelId": "C",
+          "x": 6,
+          "y": 4,
+          "rotation": 90,
+          "level": 0
+        }
+      ],
+      "objects": [
+        {
+          "id": "same",
+          "x": 8.3,
+          "y": 5.3,
+          "rotation": 105,
+          "scale": 1
+        }
+      ]
+    },
+    "mirrored": [
+      {
+        "id": "one",
+        "modelId": "A",
+        "x": 8,
+        "y": 3,
+        "rotation": 180,
+        "level": 0,
+        "mirrored": true
+      },
+      {
+        "id": "two",
+        "modelId": "B",
+        "x": 6,
+        "y": 4,
+        "rotation": 90,
+        "level": 1,
+        "mirrored": true
+      },
+      {
+        "id": "three",
+        "modelId": "C",
+        "x": 8,
+        "y": 6,
+        "rotation": 0,
+        "level": 0,
+        "mirrored": true
+      }
+    ]
+  },
+  {
+    "tiles": [
+      {
+        "id": "one",
+        "modelId": "A",
+        "x": 4,
+        "y": 3,
+        "rotation": 270,
+        "level": 0
+      },
+      {
+        "id": "two",
+        "modelId": "B",
+        "x": 6,
+        "y": 4,
+        "rotation": 0,
+        "level": 1
+      },
+      {
+        "id": "three",
+        "modelId": "C",
+        "x": 3,
+        "y": 6,
+        "rotation": 0,
+        "level": 0
+      }
+    ],
+    "objects": [
+      {
+        "id": "same",
+        "x": 4.3,
+        "y": 5.7,
+        "rotation": 15,
+        "scale": 1
+      }
+    ],
+    "models": [
+      {
+        "id": "A",
+        "definitionId": "D-A",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 1,
+        "height": 2,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B",
+        "definitionId": "D-B",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 2,
+        "height": 1,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      },
+      {
+        "id": "C",
+        "definitionId": "D-C",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 2,
+        "height": 2,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      }
+    ],
+    "pivot": {
+      "x": 5.5,
+      "y": 5.5
+    },
+    "rotated": {
+      "tiles": [
+        {
+          "id": "one",
+          "modelId": "A",
+          "x": 7,
+          "y": 4,
+          "rotation": 0,
+          "level": 0
+        },
+        {
+          "id": "two",
+          "modelId": "B",
+          "x": 6,
+          "y": 6,
+          "rotation": 90,
+          "level": 1
+        },
+        {
+          "id": "three",
+          "modelId": "C",
+          "x": 3,
+          "y": 3,
+          "rotation": 90,
+          "level": 0
+        }
+      ],
+      "objects": [
+        {
+          "id": "same",
+          "x": 5.3,
+          "y": 4.3,
+          "rotation": 105,
+          "scale": 1
+        }
+      ]
+    },
+    "mirrored": [
+      {
+        "id": "one",
+        "modelId": "A",
+        "x": 5,
+        "y": 3,
+        "rotation": 90,
+        "level": 0,
+        "mirrored": true
+      },
+      {
+        "id": "two",
+        "modelId": "B",
+        "x": 3,
+        "y": 4,
+        "rotation": 0,
+        "level": 1,
+        "mirrored": true
+      },
+      {
+        "id": "three",
+        "modelId": "C",
+        "x": 6,
+        "y": 6,
+        "rotation": 0,
+        "level": 0,
+        "mirrored": true
+      }
+    ]
+  },
+  {
+    "tiles": [
+      {
+        "id": "one",
+        "modelId": "A",
+        "x": 7,
+        "y": 3,
+        "rotation": 270,
+        "level": 0
+      },
+      {
+        "id": "two",
+        "modelId": "B",
+        "x": 9,
+        "y": 4,
+        "rotation": 0,
+        "level": 1
+      },
+      {
+        "id": "three",
+        "modelId": "C",
+        "x": 6,
+        "y": 6,
+        "rotation": 0,
+        "level": 0
+      }
+    ],
+    "objects": [
+      {
+        "id": "same",
+        "x": 7.3,
+        "y": 5.7,
+        "rotation": 15,
+        "scale": 1
+      }
+    ],
+    "models": [
+      {
+        "id": "A",
+        "definitionId": "D-A",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 1,
+        "height": 2,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B",
+        "definitionId": "D-B",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 2,
+        "height": 1,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      },
+      {
+        "id": "C",
+        "definitionId": "D-C",
+        "name": "Пол",
+        "collection": "test",
+        "tileType": "floor",
+        "category": "floor",
+        "width": 2,
+        "height": 2,
+        "canStand": true,
+        "mountDepth": 0.1,
+        "placementOffset": [
+          0.05,
+          -0.02
+        ],
+        "surfaceHeight": 0.5,
+        "maxHeight": 0.6,
+        "supportSlots": [],
+        "placementPoints": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "elevation": 0.5
+          },
+          {
+            "x": 1.5,
+            "y": 0.5,
+            "elevation": 0.5
+          }
+        ],
+        "behaviour": {
+          "defaultLights": [
+            {
+              "key": "torch",
+              "name": "Факел",
+              "kind": "torch",
+              "position": [
+                0.2,
+                0.5,
+                1.8
+              ],
+              "color": "#ffc36a",
+              "intensity": 8,
+              "radius": 4.5,
+              "enabled": true,
+              "flicker": true,
+              "effect": {
+                "kind": "fire",
+                "size": [
+                  0.2,
+                  0.4
+                ],
+                "strength": 0.7,
+                "offset": [
+                  0.1,
+                  0,
+                  -0.2
+                ]
+              }
+            }
+          ],
+          "transitions": [
+            {
+              "id": "open",
+              "action": "open",
+              "toDefinitionId": "F-changed"
+            }
+          ]
+        }
+      }
+    ],
+    "pivot": {
+      "x": 8.5,
+      "y": 5.5
+    },
+    "rotated": {
+      "tiles": [
+        {
+          "id": "one",
+          "modelId": "A",
+          "x": 10,
+          "y": 4,
+          "rotation": 0,
+          "level": 0
+        },
+        {
+          "id": "two",
+          "modelId": "B",
+          "x": 9,
+          "y": 6,
+          "rotation": 90,
+          "level": 1
+        },
+        {
+          "id": "three",
+          "modelId": "C",
+          "x": 6,
+          "y": 3,
+          "rotation": 90,
+          "level": 0
+        }
+      ],
+      "objects": [
+        {
+          "id": "same",
+          "x": 8.3,
+          "y": 4.3,
+          "rotation": 105,
+          "scale": 1
+        }
+      ]
+    },
+    "mirrored": [
+      {
+        "id": "one",
+        "modelId": "A",
+        "x": 8,
+        "y": 3,
+        "rotation": 90,
+        "level": 0,
+        "mirrored": true
+      },
+      {
+        "id": "two",
+        "modelId": "B",
+        "x": 6,
+        "y": 4,
+        "rotation": 0,
+        "level": 1,
+        "mirrored": true
+      },
+      {
+        "id": "three",
+        "modelId": "C",
+        "x": 9,
+        "y": 6,
+        "rotation": 0,
+        "level": 0,
+        "mirrored": true
+      }
+    ]
+  }
+]

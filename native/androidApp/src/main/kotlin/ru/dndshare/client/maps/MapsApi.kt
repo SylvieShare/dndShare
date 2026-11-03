@@ -116,14 +116,7 @@ class HttpMapsApi(private val api: ApiClient) : MapsApi {
 
     override suspend fun models() =
         withContext(Dispatchers.Default) {
-            request<List<JsonObject>>("/models").map { raw ->
-                val fields = raw.toMutableMap()
-                for (key in listOf("supportSlots", "placementPoints", "placementOffset")) if (
-                    fields[key] == JsonNull
-                )
-                    fields[key] = JsonArray(emptyList())
-                WireJson.decodeFromJsonElement<MapModel>(JsonObject(fields)).copy(raw = raw)
-            }
+            request<List<JsonObject>>("/models").map(::decodeMapModel)
         }
 
     override suspend fun modelBytes(url: String): ByteArray {
@@ -204,12 +197,12 @@ class HttpMapsApi(private val api: ApiClient) : MapsApi {
         withContext(Dispatchers.Default) {
             val result =
                 request<JsonObject>(
-                    "/models/${model.id.encodeURLPathPart()}",
+                    "/models/${model.uuid.encodeURLPathPart()}",
                     HttpMethod.Put,
                     data
                         .with("id", JsonPrimitive(model.id))
                         .with("uuid", JsonPrimitive(model.uuid)),
                 )
-            WireJson.decodeFromJsonElement<MapModel>(result).copy(raw = result)
+            decodeMapModel(result)
         }
 }

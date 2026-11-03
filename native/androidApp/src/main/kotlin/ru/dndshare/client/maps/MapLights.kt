@@ -145,7 +145,7 @@ fun newMapLight(kind: String, point: MapPose): JsonObject {
         put("height", preset.third[2])
         put("enabled", true)
         put("showMarker", true)
-        put("shadows", false)
+        put("shadows", true)
         put("flicker", kind != "magic")
         put("offset", numbers(0.0, 0.0))
     }

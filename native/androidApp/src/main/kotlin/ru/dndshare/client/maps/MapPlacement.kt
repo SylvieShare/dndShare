@@ -4,6 +4,7 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlinx.serialization.json.*
 
+@kotlinx.serialization.Serializable
 data class MapPose(val x: Double, val y: Double, val elevation: Double = 0.0)
 
 data class MapSupport(val elevation: Double, val parents: Set<String>)

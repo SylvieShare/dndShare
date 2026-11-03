@@ -122,40 +122,54 @@ fun moveMapObject(
     )
 }
 
-fun mapAssignArea(document: JsonObject, areaId: String?, selected: Set<String>): JsonObject {
+fun mapAssignArea(document: JsonObject, areaId: String?, selected: Set<MapEntityRef>): JsonObject {
     require(areaId == null || document.rows("areas").any { it.string("id") == areaId })
-    val tileIds =
-        document
-            .rows("tiles")
-            .filter { it.string("id") in selected }
-            .map { JsonPrimitive(it.string("id")) }
-    val objectIds =
-        document
-            .rows("objects")
-            .filter { it.string("id") in selected }
-            .map { JsonPrimitive(it.string("id")) }
-    return document.with(
-        "areas",
-        JsonArray(
-            document.rows("areas").map { area ->
-                val target = area.string("id") == areaId
-                area
-                    .with(
-                        "tileIds",
-                        JsonArray(
-                            area.array("tileIds").filter { it.jsonPrimitive.content !in selected } +
-                                if (target) tileIds else emptyList()
-                        ),
-                    )
-                    .with(
-                        "objectIds",
-                        JsonArray(
-                            area.array("objectIds").filter {
-                                it.jsonPrimitive.content !in selected
-                            } + if (target) objectIds else emptyList()
-                        ),
-                    )
-            }
-        ),
-    )
+    val tiles = selected.ids(MapEntityKind.Tile)
+    val objects = selected.ids(MapEntityKind.Object)
+    val lights = selected.ids(MapEntityKind.Light)
+    return document
+        .with(
+            "areas",
+            JsonArray(
+                document.rows("areas").map { area ->
+                    val target = area.string("id") == areaId
+                    area
+                        .with(
+                            "tileIds",
+                            JsonArray(
+                                (area
+                                        .array("tileIds")
+                                        .map { it.jsonPrimitive.content }
+                                        .filter { it !in tiles } +
+                                        if (target) tiles else emptySet())
+                                    .distinct()
+                                    .map(::JsonPrimitive)
+                            ),
+                        )
+                        .with(
+                            "objectIds",
+                            JsonArray(
+                                (area
+                                        .array("objectIds")
+                                        .map { it.jsonPrimitive.content }
+                                        .filter { it !in objects } +
+                                        if (target) objects else emptySet())
+                                    .distinct()
+                                    .map(::JsonPrimitive)
+                            ),
+                        )
+                }
+            ),
+        )
+        .with(
+            "lights",
+            JsonArray(
+                document.rows("lights").map { row ->
+                    if (row.string("id") in lights && row["anchor"] !is JsonObject) {
+                        if (areaId == null) row.without("areaId")
+                        else row.with("areaId", JsonPrimitive(areaId))
+                    } else row
+                }
+            ),
+        )
 }

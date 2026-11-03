@@ -117,6 +117,7 @@ data class MapWork(
     val localVersion: Long = 0,
     val localFormat: Int = 1,
     val editBase: JsonObject? = null,
+    val ui: MapEditorUi? = null,
 ) {
     init {
         require(localFormat == 1) { "Неизвестный формат локального черновика карты" }

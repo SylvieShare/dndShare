@@ -31,9 +31,18 @@ internal class MapSceneAssets(
     private var ground: FilamentAsset? = null
     private var groundKey = ""
     private var entries = emptyList<MapSceneEntry>()
-    val entities = mutableMapOf<Int, String>()
+    val entities = mutableMapOf<Int, MapEntityRef>()
     val readyModelUrls
         get() = pools.filterValues { it.ready }.keys.toSet()
+
+    val bounds
+        get() = pools.filterValues { it.ready }.mapValues { it.value.asset.boundingBox }
+
+    val modelCount
+        get() = pools.size
+
+    val fileBytes
+        get() = pools.values.sumOf { it.fileBytes }
 
     val pendingCount
         get() = pending.size
@@ -133,7 +142,13 @@ internal class MapSceneAssets(
                 ) {
                     "Не удалось открыть GLB-модель"
                 }
-            val pool = MapModelPool(url, asset, instances.map { requireNotNull(it) })
+            val pool =
+                MapModelPool(
+                    url,
+                    asset,
+                    instances.map { requireNotNull(it) },
+                    source.bytes.size.toLong(),
+                )
             pools[url] = pool
             loading = pool
             check(resources.asyncBeginLoad(asset)) { "Не удалось загрузить материалы модели" }
@@ -154,7 +169,7 @@ internal class MapSceneAssets(
         for ((url, pool) in pools) {
             if (!pool.ready) continue
             val wanted = entries.filter { it.model.renderUrl == url }
-            val ids = wanted.map { it.id }.toSet()
+            val ids = wanted.map { it.ref }.toSet()
             pool.assigned.keys
                 .filter { it !in ids }
                 .forEach { id ->
@@ -164,15 +179,15 @@ internal class MapSceneAssets(
             val available = ArrayDeque(pool.instances.filter { it !in used })
             for (entry in wanted) {
                 val instance =
-                    pool.assigned[entry.id]
+                    pool.assigned[entry.ref]
                         ?: available.removeFirstOrNull()?.also {
-                            pool.assigned[entry.id] = it
+                            pool.assigned[entry.ref] = it
                             scene.addEntities(it.entities)
                         }
                         ?: continue
                 val manager = engine.transformManager
                 manager.setTransform(manager.getInstance(instance.root), entry.matrix)
-                instance.entities.forEach { entities[it] = entry.id }
+                instance.entities.forEach { entities[it] = entry.ref }
             }
         }
     }
@@ -205,11 +220,12 @@ private class MapModelPool(
     val url: String,
     val asset: FilamentAsset,
     val instances: List<FilamentInstance>,
+    val fileBytes: Long,
 ) {
     val capacity
         get() = instances.size
 
-    val assigned = mutableMapOf<String, FilamentInstance>()
+    val assigned = mutableMapOf<MapEntityRef, FilamentInstance>()
     var ready = false
 }
 

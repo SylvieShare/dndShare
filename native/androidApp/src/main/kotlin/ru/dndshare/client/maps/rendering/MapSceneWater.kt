@@ -21,8 +21,8 @@ internal class MapSceneWater(
     private data class Part(val mesh: MapGpuMesh, val material: MaterialInstance)
 
     private val models = mutableMapOf<String, List<Part>>()
-    private val entities = mutableMapOf<String, List<MapGpuEntity>>()
-    private val entityModels = mutableMapOf<String, String>()
+    private val entities = mutableMapOf<MapEntityRef, List<MapGpuEntity>>()
+    private val entityModels = mutableMapOf<MapEntityRef, String>()
     private val loading = mutableMapOf<String, Job>()
     private val failed = mutableSetOf<String>()
     private var entries = emptyList<MapSceneEntry>()
@@ -41,7 +41,9 @@ internal class MapSceneWater(
         }
         val urls = entries.map { it.model.renderUrl }.toSet()
         entities.keys
-            .filter { id -> entries.none { it.id == id && it.model.renderUrl == entityModels[id] } }
+            .filter { id ->
+                entries.none { it.ref == id && it.model.renderUrl == entityModels[id] }
+            }
             .forEach {
                 entities.remove(it)?.forEach(MapGpuEntity::close)
                 entityModels.remove(it)
@@ -128,8 +130,8 @@ internal class MapSceneWater(
         for (entry in entries) {
             val parts = models[entry.model.renderUrl] ?: continue
             val renderables =
-                entities.getOrPut(entry.id) {
-                    entityModels[entry.id] = entry.model.renderUrl
+                entities.getOrPut(entry.ref) {
+                    entityModels[entry.ref] = entry.model.renderUrl
                     parts.map {
                         MapGpuEntity(
                             engine,

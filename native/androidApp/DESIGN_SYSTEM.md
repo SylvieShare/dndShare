@@ -35,12 +35,14 @@ Compose-слотами. Пакет использует Android/Compose и corou
 | `ShareResourceOrb` | Индикатор ячейки/ресурса: жидкость, анимация расхода/восстановления, стекло, блики и пузырьки по веб-референсу, доступная подпись; анимация только в видимом активном окне |
 | `ShareDashedAction` | Тихое действие добавления/поиска с пунктирной обводкой и зоной 48 dp |
 | `ShareTextInput`, `ShareValueInput`, `ShareNumberInput` | FormTextInput/FormTextarea/FormNumberInput: внешняя подпись, фон Raised, радиус Input, акцент фокуса; нативный IME и буфер |
+| `ShareColorInput` | Выбор цвета: HSV, предустановки и hex в общем окне, с группировкой изменений |
+| `ShareTokenInput` | Поиск и выбор нескольких тегов, необязательное создание, лимиты и удаление |
 | `ShareSelect`, `ShareToggle`, `ShareSwitch`, `ShareCheckbox`, `ShareRadioButton`, `ShareChoiceChip`, `ShareSlider` | Выбор, переключатели и диапазон с видом веб-контролов и Android-семантикой |
 | `ShareWindow`, `ShareFormDialog`, `ShareAlertDialog` | Общая оболочка окна: заголовок, доступное закрытие, прокрутка и фиксированные действия |
 | `ShareSegmentedInput`, `ShareFormSection` | Набор режимов броска и группы полей с веб-композицией |
 | `ShareDropdownMenu`, `ShareDropdownMenuItem` | Собственная поверхность действий, привязка к якорю, границы окна, выход/фокус и отключение действий при закрытии |
 | `ShareAction`, `ShareSearch` | ActionButton, строка поиска/поле ввода |
-| `ShareTile` | BaseTile, оболочка коллекции или статьи; optional `accent` соответствует TileAccentStrip |
+| `ShareTile` | BaseTile, оболочка коллекции или статьи; optional `accent` соответствует TileAccentStrip; `containerColor`/`borderColor` задают роли поверхности и значимого выделения |
 | `ShareContentRow` | ContentRow: метрика, имя, второе имя, подстрока, маркеры |
 | `ShareBadge` | Малые цветные маркеры/счётчики |
 | `ShareSection`, `ShareDetailSection` | SectionLabel/DetailSection, в том числе раскрывающаяся секция |

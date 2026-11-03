@@ -25,13 +25,16 @@ internal fun MapSceneView(
     document: JsonObject,
     models: List<MapModel>,
     cache: MapAssetCache,
-    selected: Set<String>,
+    selected: Set<MapEntityRef>,
     orbit: Boolean,
-    tap: (String?, MapPose) -> Unit,
-    drag: (String, MapPose, Boolean) -> Unit,
+    tap: (MapPointer) -> Unit,
+    drag: (MapPointer, Boolean) -> Unit,
     cancel: () -> Unit,
     renderer: (FilamentMapScene?) -> Unit,
     status: (Int, String?) -> Unit,
+    rectangle: Boolean = false,
+    selection: (Offset, Offset, Boolean) -> Unit = { _, _, _ -> },
+    key: (android.view.KeyEvent) -> Boolean = { false },
 ) {
     var scene by remember { mutableStateOf<FilamentMapScene?>(null) }
     var touch by remember { mutableStateOf<MapTouchController?>(null) }
@@ -39,11 +42,14 @@ internal fun MapSceneView(
     var ready by remember { mutableStateOf<Set<String>>(emptySet()) }
     var drawn by remember { mutableStateOf(false) }
     var firstFrameError by remember { mutableStateOf<String?>(null) }
+    val onSelection by rememberUpdatedState(selection)
+    val onKey by rememberUpdatedState(key)
     val onTap by rememberUpdatedState(tap)
     val onDrag by rememberUpdatedState(drag)
     val onCancel by rememberUpdatedState(cancel)
     val onStatus by rememberUpdatedState(status)
     val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val cameraPose = scene?.cameraState?.collectAsState()?.value
     val catalogue = remember(models) { models.associateBy { it.uuid } }
     val heights =
         remember(document, catalogue) {
@@ -70,14 +76,17 @@ internal fun MapSceneView(
                         MapTouchController(
                             this,
                             created,
-                            { id, p -> onTap(id, p) },
-                            { id, p, end -> onDrag(id, p, end) },
+                            { p -> onTap(p) },
+                            { p, end -> onDrag(p, end) },
                             { onCancel() },
                             { cameraRevision++ },
+                            { a, b, end -> onSelection(a, b, end) },
                         )
                     touch = pointer
                     activate = pointer::click
                     setOnTouchListener { _, event -> pointer.event(event) }
+                    setOnGenericMotionListener { _, event -> pointer.generic(event) }
+                    setOnKeyListener { _, _, event -> onKey(event) }
                     addOnLayoutChangeListener {
                         _,
                         left,
@@ -113,6 +122,8 @@ internal fun MapSceneView(
             onRelease = { view ->
                 view.activate = null
                 view.setOnTouchListener(null)
+                view.setOnGenericMotionListener(null)
+                view.setOnKeyListener(null)
                 touch?.cancel()
                 touch = null
                 scene?.close()
@@ -134,7 +145,7 @@ internal fun MapSceneView(
             document
                 .rows("tiles")
                 .filter {
-                    it.string("id") in selected ||
+                    MapEntityRef(MapEntityKind.Tile, it.string("id")) in selected ||
                         catalogue[it.string("modelId")]?.renderUrl !in ready
                 }
                 .forEach { tile ->
@@ -143,17 +154,15 @@ internal fun MapSceneView(
                     val elevation = heights[tile.string("id")]?.elevation ?: 0.0
                     val points =
                         listOf(0 to 0, width to 0, width to height, 0 to height).map { (dx, dy) ->
-                            current
-                                .camera()
-                                .project(
-                                    MapPose(
-                                        tile.number("x") + dx,
-                                        tile.number("y") + dy,
-                                        elevation + .02,
-                                    ),
-                                    size.width.toInt(),
-                                    size.height.toInt(),
-                                )
+                            (cameraPose ?: current.camera()).project(
+                                MapPose(
+                                    tile.number("x") + dx,
+                                    tile.number("y") + dy,
+                                    elevation + .02,
+                                ),
+                                size.width.toInt(),
+                                size.height.toInt(),
+                            )
                         }
                     val path =
                         Path().apply {
@@ -186,7 +195,10 @@ internal fun MapSceneView(
             runCatching { it.update(document, models) }.onFailure { onStatus(0, it.message) }
         }
     }
-    SideEffect { touch?.orbit = orbit }
+    SideEffect {
+        touch?.orbit = orbit
+        touch?.rectangle = rectangle
+    }
     DisposableEffect(lifecycle, scene) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_STOP) {

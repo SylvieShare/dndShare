@@ -18,7 +18,10 @@ internal class MapSceneFire(
         get() = flames.size
 
     val picks
-        get() = flames.map { (id, flame) -> flame.entity to (id to "light") }.toMap()
+        get() =
+            flames
+                .map { (id, flame) -> flame.entity to MapEntityRef(MapEntityKind.Light, id) }
+                .toMap()
 
     fun update(value: MapContext) {
         context = value

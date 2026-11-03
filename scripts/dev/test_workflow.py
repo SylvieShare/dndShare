@@ -85,11 +85,14 @@ class WorkflowTest(unittest.TestCase):
             config={'node_modules':str(modules)}
             _,first=snapshot.pin(work,config)
             artifact=work/'native/androidApp/build/keep.apk';artifact.parent.mkdir(parents=True);artifact.write_bytes(b'cache')
+            cmake=work/'native/androidApp/.cxx/Debug/cache/arm64-v8a/CMakeCache.txt';cmake.parent.mkdir(parents=True);cmake.write_bytes(b'native cache')
             (work/'README.md').write_text('new source')
             _,second=snapshot.pin(work,config)
             self.assertNotEqual(first['sourceHash'],second['sourceHash'])
             self.assertEqual(first['hotCache'],second['hotCache'])
             self.assertEqual(artifact.read_bytes(),b'cache')
+            self.assertEqual(cmake.read_bytes(),b'native cache')
+            self.assertFalse(any('.cxx' in name for name in second['files']))
             snapshot.validate(work,work,config)
             import shutil;shutil.rmtree(second['hotCache'])
 

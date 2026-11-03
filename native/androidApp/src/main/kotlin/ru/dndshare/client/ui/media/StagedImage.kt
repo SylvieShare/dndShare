@@ -13,9 +13,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /** App-private files survive process death; only their small paths enter form state. */
-internal suspend fun stageImage(context: Context, uri: Uri): File =
+internal suspend fun stageImage(
+    context: Context,
+    uri: Uri,
+    folderName: String = "character-media",
+): File =
     withContext(Dispatchers.IO) {
-        val folder = File(context.filesDir, "character-media").apply { mkdirs() }
+        val folder = File(context.filesDir, folderName).apply { mkdirs() }
         val source = File(folder, "${UUID.randomUUID()}.source")
         val owned = mutableListOf<Bitmap>()
         try {
