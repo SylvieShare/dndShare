@@ -157,6 +157,8 @@ internal fun MapEditorLayout(
                             options =
                                 MapSceneOptions(
                                     forceLod = workspace.ui.forceLod,
+                                    preview = workspace.previewSpec,
+                                    previewValid = workspace.previewValid,
                                     selectedLight =
                                         workspace.ui.focus.selected
                                             .firstOrNull { it.kind == MapEntityKind.Light }

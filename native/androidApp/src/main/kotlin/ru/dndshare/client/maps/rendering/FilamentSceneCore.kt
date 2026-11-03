@@ -21,6 +21,15 @@ internal class FilamentSceneCore(
     private val motionUpdated: (Map<String, MapPose>) -> Unit = {},
     private val status: (Int, String?) -> Unit,
 ) : AutoCloseable {
+    private val failures = MapLoadFailures()
+
+    private fun publishStatus() = status(assets.pendingCount, failures.message)
+
+    private fun report(key: String, message: String?) {
+        failures.set(key, message)
+        publishStatus()
+    }
+
     private val scope = CoroutineScope(SupervisorJob() + dispatcher)
     val engine: Engine
     private val view: com.google.android.filament.View
@@ -55,7 +64,7 @@ internal class FilamentSceneCore(
     private val frames =
         MapFrameScheduler(::frame) { error ->
             captures.fail(error)
-            status(assets.pendingCount, error.message)
+            report("renderer", error.message ?: "Ошибка 3D-поля")
         }
     val width
         get() = view.viewport.width
@@ -114,11 +123,21 @@ internal class FilamentSceneCore(
                 options.focus != value.focus ||
                 options.ground != value.ground
         options = value
-        assets.selection(value.selected)
-        sceneContext?.let { effects.update(it, assets.drawnEntries, value.selected) }
+        assets.preview(value.preview)
+        assets.selection(value.selected + value.preview.refs)
+        syncEffects()
         if (reload) document?.let { update(it, models.values.toList()) }
         requestFrame()
     }
+
+    private fun syncEffects() {
+        assets.renderContext?.let {
+            lights.update(it)
+            effects.update(it, assets.drawnEntries, selectedRefs())
+        }
+    }
+
+    private fun selectedRefs() = options.selected + options.preview.refs + assets.previewSelection
 
     fun fitContents(
         selected: Set<MapEntityRef>?,
@@ -204,13 +223,13 @@ internal class FilamentSceneCore(
                 cache,
                 scope,
                 ::requestFrame,
-                status,
+                { _, message -> report("models", message) },
                 ::assetsChanged,
             )
         lights = MapSceneLights(engine, scene)
         effects =
             MapSceneEffects(context, engine, scene, cache, scope, ::requestFrame) { error ->
-                status(assets.pendingCount, error)
+                report("effects", error)
             }
         picker =
             MapScenePicker(
@@ -223,7 +242,7 @@ internal class FilamentSceneCore(
                 { document },
                 ::requestFrame,
             ) { message ->
-                status(assets.pendingCount, message)
+                report("picking", message)
             }
     }
 
@@ -268,7 +287,7 @@ internal class FilamentSceneCore(
     private fun assetsChanged() {
         viewportAssets.invalidate()
         revision++
-        sceneContext?.let { effects.update(it, assets.drawnEntries, options.selected) }
+        syncEffects()
         requestFrame()
     }
 
@@ -292,9 +311,8 @@ internal class FilamentSceneCore(
         sceneContext = context
         viewportAssets.invalidate()
         reconcileViewport()
-        lights.update(context)
-        effects.update(context, assets.drawnEntries, options.selected)
-        status(assets.pendingCount, null)
+        syncEffects()
+        publishStatus()
         requestFrame()
     }
 
@@ -314,8 +332,8 @@ internal class FilamentSceneCore(
                 previousVisual = { assets.drawnEntries },
             ) ?: return
         assets.update(value, context)
-        effects.update(context, assets.drawnEntries, options.selected)
-        status(assets.pendingCount, null)
+        syncEffects()
+        publishStatus()
     }
 
     fun observeLight(
@@ -337,6 +355,7 @@ internal class FilamentSceneCore(
         picker.pickSurface(x, y, result)
 
     fun retry() {
+        failures.clear()
         assets.retry()
         effects.retry()
         document?.let { update(it, models.values.toList()) }
@@ -388,12 +407,15 @@ internal class FilamentSceneCore(
             width,
             height,
             assets.drawnEntries,
-            options.selected.isNotEmpty(),
+            options.selected.isNotEmpty() ||
+                options.preview.refs.isNotEmpty() ||
+                assets.previewSelection.isNotEmpty(),
             picker.working,
             density,
             effects,
             assets.surfaceGroups,
             assets.renderMaterials + effects.renderMaterials,
+            if (options.previewValid) "#c1adf1" else "#ef6b73",
         )
         effectStatistics = effects.statistics
         val chain = swap
@@ -433,7 +455,7 @@ internal class FilamentSceneCore(
             if (!hasMapFrame && document != null) {
                 engine.flushAndWait()
                 hasMapFrame = true
-                status(assets.pendingCount, null)
+                publishStatus()
             }
         }
         if (poseMotion || assets.working || picker.working || captures.working) requestFrame()

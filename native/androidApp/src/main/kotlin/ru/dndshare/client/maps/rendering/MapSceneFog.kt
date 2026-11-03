@@ -91,6 +91,7 @@ internal class MapSceneFog(
         signature = key
         building?.cancel()
         if (columns.isEmpty()) {
+            error(null)
             releaseField()
             changed()
             return
@@ -111,6 +112,7 @@ internal class MapSceneFog(
                     weights.seed(prepared, initialWeights)
                     weights.update(prepared, requestedWeights)
                 }
+                error(null)
                 changed()
             } catch (cancelled: CancellationException) {
                 throw cancelled
@@ -130,6 +132,7 @@ internal class MapSceneFog(
     }
 
     fun retry() {
+        error(null)
         lastContext = null
         signature = ""
         weights.clear()

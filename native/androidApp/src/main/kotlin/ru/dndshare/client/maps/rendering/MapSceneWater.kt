@@ -38,7 +38,7 @@ internal class MapSceneWater(
     private val entities = mutableMapOf<MapEntityRef, List<MapGpuEntity>>()
     private val entityModels = mutableMapOf<MapEntityRef, String>()
     private val loading = mutableMapOf<String, Job>()
-    private val failed = mutableSetOf<String>()
+    private val failed = MapLoadFailures()
     private var entries = emptyList<MapSceneEntry>()
     val working
         get() = loading.isNotEmpty()
@@ -75,6 +75,8 @@ internal class MapSceneWater(
             (it.model.behaviour["waterAnimation"] as? JsonObject)?.flag("enabled") == true
         }
         val urls = entries.map { it.model.renderUrl }.toSet()
+        failed.retain(urls)
+        error(failed.message)
         entities.keys
             .filter { id ->
                 entries.none { it.ref == id && it.model.renderUrl == entityModels[id] }
@@ -147,8 +149,8 @@ internal class MapSceneWater(
                 } catch (cancelled: CancellationException) {
                     throw cancelled
                 } catch (failure: Exception) {
-                    failed += url
-                    error(failure.message)
+                    failed.fail(url, failure.message)
+                    error(failed.message)
                 } finally {
                     prepared
                         .orEmpty()

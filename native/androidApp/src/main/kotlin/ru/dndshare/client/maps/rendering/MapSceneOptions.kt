@@ -11,4 +11,6 @@ data class MapSceneOptions(
     val selectedLight: String? = null,
     val selected: Set<MapEntityRef> = emptySet(),
     val streamAssets: Boolean = true,
+    val preview: MapPreviewSpec = MapPreviewSpec(),
+    val previewValid: Boolean = true,
 )

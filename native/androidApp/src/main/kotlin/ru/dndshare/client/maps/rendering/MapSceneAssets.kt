@@ -37,8 +37,23 @@ internal class MapSceneAssets(
     private val resources = ResourceLoader(engine, true)
     private val pools = mutableMapOf<String, MapModelPool>()
     private val retiring = mutableMapOf<String, MapModelPool>()
-    private val poses = MapSceneMotion()
+    private val placement = MapPlacementMotion()
+    private val poses = MapSceneMotion(placement)
+    private var wantedEntries = emptyList<MapSceneEntry>()
+    private var previewSpec = MapPreviewSpec()
+    val previewSelection
+        get() = placement.retainedRefs
+
+    fun preview(value: MapPreviewSpec) {
+        if (value == previewSpec) return
+        previewSpec = value
+        context?.let { update(wantedEntries, it) }
+    }
+
     private var context: MapContext? = null
+    val renderContext
+        get() = context?.let(placement::context)
+
     private val surfaces =
         MapSceneSurfaces(poses, ::bindSurface) { entry ->
             availablePool(entry.model.renderUrl)?.hasTransparency == true
@@ -66,6 +81,10 @@ internal class MapSceneAssets(
         applyPoses(poses.transformed)
         if (poses.appearanceChanged) surfaces.refresh(drawn)
         visualAnchors = poses.anchors()
+        if (placement.released.isNotEmpty()) {
+            context?.let { update(wantedEntries, it) }
+            changed()
+        }
         return moving
     }
 
@@ -92,7 +111,7 @@ internal class MapSceneAssets(
 
     private val pending = mutableSetOf<String>()
     private val jobs = mutableMapOf<String, Job>()
-    private val failed = mutableSetOf<String>()
+    private val failed = MapLoadFailures()
     private val slots = Semaphore(3)
     private val downloaded = ArrayDeque<DownloadedModel>()
     private var loading: MapModelPool? = null
@@ -127,10 +146,14 @@ internal class MapSceneAssets(
         synchronize()
     }
 
+    private fun publishStatus() = status(pending.size, failed.message)
+
     fun update(value: List<MapSceneEntry>, context: MapContext) {
         this.context = context
-        entries = value
+        wantedEntries = value
+        entries = placement.merge(value, context, previewSpec, drawn)
         val wanted = entries.map { it.model.renderUrl }.toSet()
+        failed.retain(wanted)
         jobs.keys
             .filter { it !in wanted }
             .forEach { url ->
@@ -145,6 +168,7 @@ internal class MapSceneAssets(
             }
         ensureWantedPools()
         synchronize()
+        publishStatus()
     }
 
     private fun ensureWantedPools() {
@@ -174,7 +198,7 @@ internal class MapSceneAssets(
                 synchronize()
                 ensureWantedPools()
                 changed()
-                status(pending.size, null)
+                publishStatus()
             }
         }
     }
@@ -185,7 +209,7 @@ internal class MapSceneAssets(
 
     private fun download(url: String) {
         pending += url
-        status(pending.size, null)
+        publishStatus()
         val job =
             scope.launch(start = CoroutineStart.LAZY) {
                 try {
@@ -201,8 +225,8 @@ internal class MapSceneAssets(
                     throw cancelled
                 } catch (error: Exception) {
                     pending -= url
-                    failed += url
-                    status(pending.size, error.message)
+                    failed.fail(url, error.message)
+                    publishStatus()
                 } finally {
                     if (jobs[url] === coroutineContext[Job]) jobs.remove(url)
                 }
@@ -219,7 +243,7 @@ internal class MapSceneAssets(
         if (count == 0) {
             pending -= url
             source.consumed.complete(Unit)
-            status(pending.size, null)
+            publishStatus()
             return
         }
         try {
@@ -247,8 +271,8 @@ internal class MapSceneAssets(
             pools.remove(url)?.let { loader.destroyAsset(it.asset) }
             loading = null
             pending -= url
-            failed += url
-            status(pending.size, error.message)
+            failed.fail(url, error.message)
+            publishStatus()
         } finally {
             source.consumed.complete(Unit)
         }
@@ -302,7 +326,7 @@ internal class MapSceneAssets(
                     surfaceIds[entry.ref] ?: 0,
                     pool.descriptors,
                     MapSurfaceStyle(entry.opacity, entry.brightness),
-                    entry.ref in selection,
+                    entry.ref in selection || entry.ref in placement.retainedRefs,
                 )
                 instance.entities.forEach { entities[it] = entry.ref }
                 actual[entry.ref] = entry
@@ -326,7 +350,8 @@ internal class MapSceneAssets(
                     }
         }
         drawn = actual
-        context?.let { poses.sync(actual, it) }
+        placement.ready(actual.keys)
+        renderContext?.let { poses.sync(actual, it) }
         applyPoses(actual.keys)
         surfaces.refresh(drawn, force = true)
     }
@@ -342,7 +367,7 @@ internal class MapSceneAssets(
             id,
             pool.descriptors,
             MapSurfaceStyle(entry.opacity, entry.brightness),
-            ref in selection,
+            ref in selection || ref in placement.retainedRefs,
         )
     }
 
@@ -376,6 +401,7 @@ internal class MapSceneAssets(
         retiring.clear()
         resources.destroy()
         poses.clear()
+        placement.clear()
         primitives.close()
         loader.destroy()
         materials.destroyMaterials()

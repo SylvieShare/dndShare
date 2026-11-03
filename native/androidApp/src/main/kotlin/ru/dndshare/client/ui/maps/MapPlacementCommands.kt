@@ -39,7 +39,7 @@ internal class MapPlacementCommands(private val workspace: MapEditorWorkspace) {
                 if (request.serial != sequence || workspace.currentUi.tool != request.tool) continue
                 result
                     .onSuccess {
-                        workspace.preview = it.document
+                        workspace.showPreview(it.document, it.selected, moving = false)
                         workspace.previewValid = true
                         workspace.hint = null
                     }

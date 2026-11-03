@@ -19,14 +19,22 @@ internal class MapSceneEffects(
     cache: MapAssetCache,
     scope: CoroutineScope,
     changed: () -> Unit,
-    error: (String?) -> Unit,
+    private val error: (String?) -> Unit,
 ) : AutoCloseable {
+    private val failures = MapLoadFailures()
+
+    private fun report(key: String): (String?) -> Unit = { message ->
+        failures.set(key, message)
+        error(failures.message)
+    }
+
     private var fogContext: MapContext? = null
     private val gpu = MapGpuMaterials(engine, context.assets)
-    private val water = MapSceneWater(engine, scene, gpu, cache, scope, changed, error)
+    private val water = MapSceneWater(engine, scene, gpu, cache, scope, changed, report("water"))
     private val fire = MapSceneFire(engine, scene, gpu)
-    private val decals = MapSceneDecals(context, engine, scene, gpu, cache, scope, changed, error)
-    private val fog = MapSceneFog(engine, gpu, scope, changed, error)
+    private val decals =
+        MapSceneDecals(context, engine, scene, gpu, cache, scope, changed, report("decals"))
+    private val fog = MapSceneFog(engine, gpu, scope, changed, report("fog"))
     val working
         get() = water.working || decals.working || fog.working
 

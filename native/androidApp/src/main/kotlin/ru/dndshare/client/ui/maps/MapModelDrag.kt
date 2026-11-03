@@ -3,6 +3,7 @@ package ru.dndshare.client.ui.maps
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import ru.dndshare.client.maps.*
+import ru.dndshare.client.maps.string
 
 /** Geometry picking starts once; subsequent pointer requests share one background calculation. */
 internal class MapModelDrag(private val workspace: MapEditorWorkspace) {
@@ -72,7 +73,18 @@ internal class MapModelDrag(private val workspace: MapEditorWorkspace) {
             }
             calculated
                 .onSuccess { next ->
-                    workspace.preview = next
+                    val tileIds = request.layout.tiles.map { it.string("id") }.toSet()
+                    val refs =
+                        request.layout.tiles.map {
+                            MapEntityRef(MapEntityKind.Tile, it.string("id"))
+                        } +
+                            request.layout.objects
+                                .filter {
+                                    (it["placement"] as? kotlinx.serialization.json.JsonObject)
+                                        ?.string("tileId") !in tileIds
+                                }
+                                .map { MapEntityRef(MapEntityKind.Object, it.string("id")) }
+                    workspace.showPreview(next, refs.toSet(), request.hit, moving = true)
                     workspace.previewValid = true
                     workspace.hint = null
                     if (request.end) {

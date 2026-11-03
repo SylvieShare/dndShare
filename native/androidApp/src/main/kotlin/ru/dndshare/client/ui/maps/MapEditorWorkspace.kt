@@ -26,7 +26,36 @@ internal class MapEditorWorkspace(
 
     var format by mutableStateOf(initialFormat)
     var scene by mutableStateOf<FilamentMapScene?>(null)
-    var preview by mutableStateOf<kotlinx.serialization.json.JsonObject?>(null)
+    var previewSpec by mutableStateOf(MapPreviewSpec())
+        private set
+
+    private var previewDocument by mutableStateOf<kotlinx.serialization.json.JsonObject?>(null)
+    var preview: kotlinx.serialization.json.JsonObject?
+        get() = previewDocument
+        set(value) {
+            previewDocument = value
+            if (value == null) previewSpec = MapPreviewSpec()
+        }
+
+    fun showPreview(
+        document: kotlinx.serialization.json.JsonObject,
+        refs: Set<MapEntityRef>,
+        anchor: MapEntityRef? = null,
+        moving: Boolean = false,
+    ) {
+        androidx.compose.runtime.snapshots.Snapshot.withMutableSnapshot {
+            previewDocument = document
+            previewSpec =
+                MapPreviewSpec(
+                    refs
+                        .filter { it.kind in setOf(MapEntityKind.Tile, MapEntityKind.Object) }
+                        .toSet(),
+                    anchor,
+                    moving,
+                )
+        }
+    }
+
     var hint by mutableStateOf<String?>(null)
     var previewValid by mutableStateOf(true)
     var decalImages by mutableStateOf<List<MapDecalImage>?>(null)

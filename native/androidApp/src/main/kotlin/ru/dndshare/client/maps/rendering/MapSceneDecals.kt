@@ -42,7 +42,7 @@ internal class MapSceneDecals(
         ImageLoader.Builder(context).components { add(SvgDecoder.Factory()) }.build()
     private val records = mutableMapOf<String, Record>()
     private val loading = mutableMapOf<String, Pair<String, Job>>()
-    private val failed = mutableSetOf<String>()
+    private val failed = MapLoadFailures()
     private val slots = Semaphore(2)
     private var document = JsonObject(emptyMap())
     private var entries = emptyMap<MapEntityRef, MapSceneEntry>()
@@ -69,9 +69,11 @@ internal class MapSceneDecals(
         val decals = document.rows("decals").associateBy { it.string("id") }
         records.keys.filter { it !in decals }.forEach { records.remove(it)?.close() }
         loading.keys.filter { it !in decals }.forEach { loading.remove(it)?.second?.cancel() }
+        val wanted = mutableSetOf<String>()
         for ((id, decal) in decals) {
             val owner = entries[mapAnchorRef(decal["anchor"] as? JsonObject)] ?: continue
             val shape = shape(decal, owner)
+            wanted += "$id:$shape"
             if (records[id]?.shape != shape) {
                 records.remove(id)?.close()
             }
@@ -79,6 +81,8 @@ internal class MapSceneDecals(
             if (id !in records && id !in loading && "$id:$shape" !in failed)
                 load(id, decal, owner, shape)
         }
+        failed.retain(wanted)
+        error(failed.message)
         synchronize()
     }
 
@@ -219,8 +223,8 @@ internal class MapSceneDecals(
                 } catch (cancelled: CancellationException) {
                     throw cancelled
                 } catch (failure: Exception) {
-                    failed += "$id:$shape"
-                    error(failure.message)
+                    failed.fail("$id:$shape", failure.message)
+                    error(failed.message)
                 } finally {
                     bitmap?.recycle()
                     if (loading[id]?.second === coroutineContext[Job]) loading.remove(id)

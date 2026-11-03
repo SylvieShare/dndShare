@@ -29,6 +29,7 @@ internal class MapColourOutput(private val engine: Engine, gpu: MapGpuMaterials)
         fog: MapFogFrame?,
         selectedDepth: Texture?,
         density: Double,
+        outlineColour: String = "#c1adf1",
     ) {
         if (width <= 0 || height <= 0) return
         if (world?.width != width || world?.height != height) {
@@ -61,7 +62,7 @@ internal class MapColourOutput(private val engine: Engine, gpu: MapGpuMaterials)
             setParameter("hasSelection", if (selectedDepth == null) 0f else 1f)
             setParameter("pixelSize", 1f / width, 1f / height)
             setParameter("outlineWidth", (density * 1.5).toFloat())
-            val outline = mapLinearColour("#c1adf1")
+            val outline = mapLinearColour(outlineColour)
             setParameter("outlineColour", outline[0], outline[1], outline[2])
         }
     }

@@ -31,6 +31,7 @@ internal class MapScenePipeline(context: Context, engine: Engine, scene: Scene, 
         effects: MapSceneEffects,
         groups: Map<Int, MapSurfaceStyle>,
         materials: MapRenderMaterials,
+        outlineColour: String = "#c1adf1",
     ) {
         layers.prepare(
             width,
@@ -41,7 +42,14 @@ internal class MapScenePipeline(context: Context, engine: Engine, scene: Scene, 
             groups,
             materials,
         )
-        colour.prepare(width, height, effects.fogFrame, layers.selectionDepth, density)
+        colour.prepare(
+            width,
+            height,
+            effects.fogFrame,
+            layers.selectionDepth,
+            density,
+            outlineColour,
+        )
     }
 
     fun render(

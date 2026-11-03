@@ -6,13 +6,14 @@ import ru.dndshare.client.maps.*
 import ru.dndshare.client.maps.geometry.*
 
 /** Visual poses never alter the canonical document or attachment coordinates. */
-internal class MapSceneMotion {
+internal class MapSceneMotion(private val placement: MapPlacementMotion = MapPlacementMotion()) {
     private val surface = MapSurfaceMotion()
     val transformed = mutableSetOf<MapEntityRef>()
     val appearanceChanged
-        get() = surface.changed.isNotEmpty()
+        get() = surface.changed.isNotEmpty() || placement.changed.isNotEmpty()
 
-    fun style(ref: MapEntityRef) = surface.style(ref)
+    fun style(ref: MapEntityRef) =
+        surface.style(ref).let { it.copy(opacity = it.opacity * placement.opacity(ref)) }
 
     fun finishAppearance() = surface.finish()
 
@@ -23,11 +24,13 @@ internal class MapSceneMotion {
     private var localPoints = emptyMap<MapEntityRef, Vec3>()
     private val matrices = mutableMapOf<MapEntityRef, FloatArray>()
     private var lastTime: Double? = null
+    private var context: MapContext? = null
     val changed = mutableSetOf<MapEntityRef>()
     val moving
-        get() = rotations.moving || surface.moving
+        get() = rotations.moving || surface.moving || placement.moving
 
     fun sync(entries: Map<MapEntityRef, MapSceneEntry>, context: MapContext) {
+        this.context = context
         val wasMoving = moving
         targets = entries.toMap()
         surface.sync(context, entries)
@@ -56,8 +59,9 @@ internal class MapSceneMotion {
                 }
                 .toMap()
         rotations.retain(entries.keys)
-        entries.forEach { (ref, entry) -> rotations.set(ref, decode(entry)) }
-        if (!wasMoving && moving) lastTime = null
+        entries.forEach { (ref, entry) -> rotations.set(ref, placement.pose(ref, decode(entry))) }
+        val previewStarted = placement.consumeStart()
+        if (!wasMoving && moving || previewStarted) lastTime = null
         matrices.clear()
         changed.clear()
         changed.addAll(entries.keys)
@@ -81,13 +85,22 @@ internal class MapSceneMotion {
     fun advance(seconds: Double, animate: Boolean): Boolean {
         val delta = lastTime?.let { max(0.0, seconds - it) * 1000 } ?: 0.0
         lastTime = seconds
+        placement.advance(delta, animate)
+        for (ref in placement.refs() + placement.changed) targets[ref]?.let {
+            rotations.set(ref, placement.pose(ref, decode(it)))
+        }
         val moving =
-            rotations.advance(delta, immediate = !animate) or surface.advance(delta, animate)
+            (rotations.advance(delta, immediate = !animate) or surface.advance(delta, animate)) ||
+                placement.moving
         transformed.clear()
         transformed.addAll(rotations.changed)
-        rotations.changed.forEach { transformed.addAll(children[it].orEmpty()) }
+        transformed.addAll(placement.changed)
+        (rotations.changed + placement.changed).forEach {
+            transformed.addAll(children[it].orEmpty())
+        }
         changed.clear()
         changed.addAll(surface.changed)
+        changed.addAll(placement.changed)
         changed.addAll(rotations.changed)
         rotations.changed.forEach { changed.addAll(children[it].orEmpty()) }
         transformed.forEach(matrices::remove)
@@ -150,7 +163,14 @@ internal class MapSceneMotion {
                     ref to Mat4.multiply(visual, Mat4.inverse(original))
                 }
                 .toMap()
-        return MapVisualAnchors(deltas, surface.lightOpacities(), surface.fogMotion())
+        val opacities = surface.lightOpacities().toMutableMap()
+        if (placement.changed.isNotEmpty())
+            context?.document?.rows("lights")?.forEach { row ->
+                val ref = mapAnchorRef(row["anchor"] as? JsonObject)
+                if (ref != null)
+                    opacities[row.string("id")] = surface.lightOpacity(row) * placement.opacity(ref)
+            }
+        return MapVisualAnchors(deltas, opacities, surface.fogMotion())
     }
 
     fun target(ref: MapEntityRef) = targets[ref]
