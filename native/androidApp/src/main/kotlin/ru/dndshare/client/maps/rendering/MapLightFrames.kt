@@ -20,12 +20,15 @@ internal class MapLightFrames(
         @Volatile var closed = false
         @Volatile var pending = false
         var key: Pair<Long, Long>? = null
+        var capturedAt = Double.NEGATIVE_INFINITY
         @Volatile var state = ""
     }
 
     private val main = Handler(Looper.getMainLooper())
     private val render = Handler(requireNotNull(Looper.myLooper()))
     private val observers = mutableMapOf<Long, Observer>()
+    var nextDelay: Long? = null
+        private set
 
     fun observe(
         token: Long,
@@ -51,13 +54,14 @@ internal class MapLightFrames(
         revision: Long,
         seconds: Double,
         moving: Boolean,
+        anchors: MapVisualAnchors,
     ) {
+        nextDelay = null
         val key = revision to if (moving) floor(seconds * 12).toLong() else 0L
         for (observer in observers.values) {
             if (observer.pending || observer.key == key) continue
-            observer.key = key
             val light = context?.document?.rows("lights")?.find { it.string("id") == observer.id }
-            val pose = light?.let { mapLightPose(it, context) }
+            val pose = light?.let { anchors.light(mapLightPose(it, context)) }
             val region = pose?.let {
                 mapLightFrameRegion(
                     camera,
@@ -70,9 +74,18 @@ internal class MapLightFrames(
                 )
             }
             if (region == null) {
+                observer.key = key
                 state(observer, if (pose == null) "waiting" else "outside")
                 continue
             }
+            val remaining = 1.0 / 12 - (seconds - observer.capturedAt)
+            if (remaining > 0) {
+                val delay = kotlin.math.ceil(remaining * 1000).toLong().coerceAtLeast(1)
+                nextDelay = minOf(nextDelay ?: delay, delay)
+                continue
+            }
+            observer.key = key
+            observer.capturedAt = seconds
             observer.pending = true
             captures.request(region) { result ->
                 // Capture callbacks are delivered on main; render state stays on its owner thread.

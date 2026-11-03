@@ -27,8 +27,14 @@ internal class MapSceneLights(private val engine: Engine, private val scene: Sce
         ordinals = sources.mapIndexed { i, pose -> pose.source.string("id") to i }.toMap()
     }
 
-    private fun synchronize(camera: MapCamera, width: Int, height: Int, selected: String?) {
-        val wanted = mapVisibleLights(sources, camera, width, height, selected)
+    private fun synchronize(
+        camera: MapCamera,
+        width: Int,
+        height: Int,
+        selected: String?,
+        anchors: MapVisualAnchors,
+    ) {
+        val wanted = mapVisibleLights(sources.map(anchors::light), camera, width, height, selected)
         val ids = wanted.map { it.source.string("id") }.toSet()
         points.keys.filter { it !in ids }.forEach(::remove)
         val manager = engine.lightManager
@@ -48,13 +54,13 @@ internal class MapSceneLights(private val engine: Engine, private val scene: Sce
                         Point(entity, pose, ordinals[id] ?: 0).also { points[id] = it }
                     }
             val instance = manager.getInstance(point.entity)
-            if (point.pose != pose || manager.getIntensity(instance) == 0f) {
+            if (point.pose.source != pose.source || manager.getIntensity(instance) == 0f) {
                 val colour = mapLinearColour(source.string("color", "#ffcf8a"))
                 manager.setColor(instance, colour[0], colour[1], colour[2])
                 manager.setFalloff(instance, source.number("radius", 6.0).toFloat())
                 manager.setShadowCaster(instance, source.flag("shadows"))
-                point.pose = pose
             }
+            point.pose = pose
         }
     }
 
@@ -65,8 +71,9 @@ internal class MapSceneLights(private val engine: Engine, private val scene: Sce
         width: Int,
         height: Int,
         selected: String?,
+        anchors: MapVisualAnchors,
     ): Boolean {
-        synchronize(camera, width, height, selected)
+        synchronize(camera, width, height, selected, anchors)
         var active = false
         val manager = engine.lightManager
         for (point in points.values) {

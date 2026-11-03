@@ -31,6 +31,9 @@ class FilamentMapScene(
     @Volatile private var pose = MapCamera()
     private val cameraFlow = MutableStateFlow(pose)
     val cameraState = cameraFlow.asStateFlow()
+    private val lightFlow =
+        MutableStateFlow<Map<String, ru.dndshare.client.maps.MapPose>>(emptyMap())
+    val lightPositions = lightFlow.asStateFlow()
     @Volatile private var ready = emptySet<String>()
     @Volatile private var readyInstances = emptySet<MapEntityRef>()
     val readyRefs
@@ -71,9 +74,12 @@ class FilamentMapScene(
             try {
                 check(graphics) { "Для 3D-карт нужна поддержка OpenGL ES 3.0 на устройстве." }
                 core =
-                    FilamentSceneCore(surfaceView.context.applicationContext, cache, dispatcher) {
-                        count,
-                        error ->
+                    FilamentSceneCore(
+                        surfaceView.context.applicationContext,
+                        cache,
+                        dispatcher,
+                        motionUpdated = { if (!closed) lightFlow.value = it },
+                    ) { count, error ->
                         ready = core?.readyModelUrls.orEmpty()
                         readyInstances = core?.readyRefs.orEmpty()
                         main.post { if (!closed) status(count, error) }

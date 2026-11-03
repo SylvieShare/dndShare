@@ -194,6 +194,10 @@ internal class MapSceneWater(
         }
     }
 
+    fun transforms(changed: List<MapSceneEntry>) {
+        for (entry in changed) entities[entry.ref].orEmpty().forEach { it.transform(entry.matrix) }
+    }
+
     fun advance(seconds: Double, motion: Boolean): Boolean {
         var active = false
         for (entry in entries.distinctBy { it.model.renderUrl }) {

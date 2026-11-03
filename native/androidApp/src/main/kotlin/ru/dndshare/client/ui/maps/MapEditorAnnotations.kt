@@ -30,6 +30,7 @@ internal fun MapEditorAnnotations(workspace: MapEditorWorkspace) {
     val doc = workspace.preview ?: workspace.map?.document ?: return
     val scene = workspace.scene ?: return
     val camera by scene.cameraState.collectAsState()
+    val lightPositions by scene.lightPositions.collectAsState()
     val context =
         remember(doc, workspace.models) {
             runCatching { MapContext(doc, workspace.models) }.getOrNull()
@@ -167,7 +168,11 @@ internal fun MapEditorAnnotations(workspace: MapEditorWorkspace) {
         }
         annotations.forEach { marker ->
             key(marker.ref, marker.target) {
-                val position = camera.project(marker.pose, scene.width, scene.height)
+                val actual =
+                    if (marker.ref.kind == MapEntityKind.Light)
+                        lightPositions[marker.ref.id] ?: marker.pose
+                    else marker.pose
+                val position = camera.project(actual, scene.width, scene.height)
                 if (
                     position.first in -30f..(scene.width + 30f) &&
                         position.second in -30f..(scene.height + 30f)

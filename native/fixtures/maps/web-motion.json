@@ -1,0 +1,346 @@
+[
+  {
+    "name": "group-pivot",
+    "from": {
+      "x": 2.5,
+      "y": 3.5,
+      "elevation": 0,
+      "rotation": 0
+    },
+    "to": {
+      "x": 4.5,
+      "y": 3.5,
+      "elevation": 0,
+      "rotation": 90
+    },
+    "frames": [
+      {
+        "delta": 0,
+        "pose": {
+          "x": 2.5,
+          "y": 3.5,
+          "elevation": 0,
+          "rotation": 0,
+          "mirrored": false,
+          "mirrorScale": 1
+        }
+      },
+      {
+        "delta": 35,
+        "pose": {
+          "x": 3.126994555854432,
+          "y": 3.1358640322028863,
+          "elevation": 0,
+          "rotation": 29.70703125,
+          "mirrored": false,
+          "mirrorScale": 1
+        }
+      },
+      {
+        "delta": 35,
+        "pose": {
+          "x": 3.67311483704598,
+          "y": 3.0964219817927674,
+          "elevation": 0,
+          "rotation": 52.03125,
+          "mirrored": false,
+          "mirrorScale": 1
+        }
+      },
+      {
+        "delta": 70,
+        "pose": {
+          "x": 4.2856949583871025,
+          "y": 3.324124397580642,
+          "elevation": 0,
+          "rotation": 78.75,
+          "mirrored": false,
+          "mirrorScale": 1
+        }
+      },
+      {
+        "delta": 70,
+        "pose": {
+          "x": 4.475157590173293,
+          "y": 3.4757599527808845,
+          "elevation": 0,
+          "rotation": 88.59375,
+          "mirrored": false,
+          "mirrorScale": 1
+        }
+      },
+      {
+        "delta": 70,
+        "pose": {
+          "x": 4.5,
+          "y": 3.5,
+          "elevation": 0,
+          "rotation": 90,
+          "mirrored": false,
+          "mirrorScale": 1
+        }
+      }
+    ]
+  },
+  {
+    "name": "short-turn",
+    "from": {
+      "x": 2.5,
+      "y": 3.5,
+      "elevation": 0,
+      "rotation": 270
+    },
+    "to": {
+      "x": 2.5,
+      "y": 3.5,
+      "elevation": 0,
+      "rotation": 0
+    },
+    "frames": [
+      {
+        "delta": 0,
+        "pose": {
+          "x": 2.5,
+          "y": 3.5,
+          "elevation": 0,
+          "rotation": 270,
+          "mirrored": false,
+          "mirrorScale": 1
+        }
+      },
+      {
+        "delta": 35,
+        "pose": {
+          "x": 2.5,
+          "y": 3.5,
+          "elevation": 0,
+          "rotation": 299.70703125,
+          "mirrored": false,
+          "mirrorScale": 1
+        }
+      },
+      {
+        "delta": 35,
+        "pose": {
+          "x": 2.5000000000000004,
+          "y": 3.5,
+          "elevation": 0,
+          "rotation": 322.03125,
+          "mirrored": false,
+          "mirrorScale": 1
+        }
+      },
+      {
+        "delta": 70,
+        "pose": {
+          "x": 2.5000000000000004,
+          "y": 3.5000000000000004,
+          "elevation": 0,
+          "rotation": 348.75,
+          "mirrored": false,
+          "mirrorScale": 1
+        }
+      },
+      {
+        "delta": 70,
+        "pose": {
+          "x": 2.5000000000000004,
+          "y": 3.5000000000000004,
+          "elevation": 0,
+          "rotation": 358.59375,
+          "mirrored": false,
+          "mirrorScale": 1
+        }
+      },
+      {
+        "delta": 70,
+        "pose": {
+          "x": 2.5,
+          "y": 3.5,
+          "elevation": 0,
+          "rotation": 360,
+          "mirrored": false,
+          "mirrorScale": 1
+        }
+      }
+    ]
+  },
+  {
+    "name": "mirror",
+    "from": {
+      "x": 2.5,
+      "y": 3.5,
+      "elevation": 0,
+      "rotation": 90
+    },
+    "to": {
+      "x": 3.5,
+      "y": 3.5,
+      "elevation": 0,
+      "rotation": 90,
+      "mirrored": true
+    },
+    "frames": [
+      {
+        "delta": 0,
+        "pose": {
+          "x": 2.5,
+          "y": 3.5,
+          "elevation": 0,
+          "rotation": 90,
+          "mirrored": false,
+          "mirrorScale": 1,
+          "mirroring": true
+        }
+      },
+      {
+        "delta": 35,
+        "pose": {
+          "x": 2.5380602337443565,
+          "y": 3.5,
+          "elevation": 0,
+          "rotation": 90,
+          "mirrored": false,
+          "mirrorScale": 0.9238795325112867,
+          "mirroring": true
+        }
+      },
+      {
+        "delta": 35,
+        "pose": {
+          "x": 2.646446609406726,
+          "y": 3.5,
+          "elevation": 0,
+          "rotation": 90,
+          "mirrored": false,
+          "mirrorScale": 0.7071067811865476,
+          "mirroring": true
+        }
+      },
+      {
+        "delta": 70,
+        "pose": {
+          "x": 3,
+          "y": 3.5,
+          "elevation": 0,
+          "rotation": 90,
+          "mirrored": false,
+          "mirrorScale": 0.001,
+          "mirroring": true
+        }
+      },
+      {
+        "delta": 70,
+        "pose": {
+          "x": 3.353553390593274,
+          "y": 3.5,
+          "elevation": 0,
+          "rotation": 90,
+          "mirrored": true,
+          "mirrorScale": 0.7071067811865475,
+          "mirroring": true
+        }
+      },
+      {
+        "delta": 70,
+        "pose": {
+          "x": 3.5,
+          "y": 3.5,
+          "elevation": 0,
+          "rotation": 90,
+          "mirrored": true,
+          "mirrorScale": 1
+        }
+      }
+    ]
+  },
+  {
+    "name": "mirror-turn",
+    "from": {
+      "x": 2.5,
+      "y": 3.5,
+      "elevation": 0,
+      "rotation": 0
+    },
+    "to": {
+      "x": 3.5,
+      "y": 4.5,
+      "elevation": 0,
+      "rotation": 90,
+      "mirrored": true
+    },
+    "frames": [
+      {
+        "delta": 0,
+        "pose": {
+          "x": 2.5,
+          "y": 3.5,
+          "elevation": 0,
+          "rotation": 0,
+          "mirrored": false,
+          "mirrorScale": 1,
+          "mirroring": true
+        }
+      },
+      {
+        "delta": 35,
+        "pose": {
+          "x": 2.5380602337443565,
+          "y": 3.5380602337443565,
+          "elevation": 0,
+          "rotation": 0,
+          "mirrored": false,
+          "mirrorScale": 0.9238795325112867,
+          "mirroring": true
+        }
+      },
+      {
+        "delta": 35,
+        "pose": {
+          "x": 2.646446609406726,
+          "y": 3.646446609406726,
+          "elevation": 0,
+          "rotation": 0,
+          "mirrored": false,
+          "mirrorScale": 0.7071067811865476,
+          "mirroring": true
+        }
+      },
+      {
+        "delta": 70,
+        "pose": {
+          "x": 3,
+          "y": 4,
+          "elevation": 0,
+          "rotation": 0,
+          "mirrored": false,
+          "mirrorScale": 0.001,
+          "mirroring": true
+        }
+      },
+      {
+        "delta": 70,
+        "pose": {
+          "x": 3.353553390593274,
+          "y": 4.353553390593274,
+          "elevation": 0,
+          "rotation": 90,
+          "mirrored": true,
+          "mirrorScale": 0.7071067811865475,
+          "mirroring": true
+        }
+      },
+      {
+        "delta": 70,
+        "pose": {
+          "x": 3.5,
+          "y": 4.5,
+          "elevation": 0,
+          "rotation": 90,
+          "mirrored": true,
+          "mirrorScale": 1
+        }
+      }
+    ]
+  }
+]

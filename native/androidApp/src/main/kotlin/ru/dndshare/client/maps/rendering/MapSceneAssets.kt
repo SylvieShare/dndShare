@@ -33,7 +33,42 @@ internal class MapSceneAssets(
     private val resources = ResourceLoader(engine, true)
     private val pools = mutableMapOf<String, MapModelPool>()
     private val retiring = mutableMapOf<String, MapModelPool>()
-    private var drawn = emptyMap<MapEntityRef, MapSceneEntry>()
+    private val poses = MapSceneMotion()
+    private var context: MapContext? = null
+    var visualAnchors = MapVisualAnchors()
+        private set
+
+    val motionMoving
+        get() = poses.moving
+
+    val motionEntries
+        get() = poses.changed.mapNotNull { drawn[it] }
+
+    fun animate(seconds: Double, enabled: Boolean): Boolean {
+        val moving = poses.advance(seconds, enabled)
+        applyPoses(poses.changed)
+        visualAnchors = poses.anchors()
+        return moving
+    }
+
+    private fun applyPoses(refs: Collection<MapEntityRef>) {
+        if (refs.isEmpty()) return
+        val manager = engine.transformManager
+        manager.openLocalTransformTransaction()
+        try {
+            for (ref in refs) {
+                val entry = drawn[ref] ?: continue
+                val instance = availablePool(entry.model.renderUrl)?.assigned?.get(ref) ?: continue
+                val matrix = poses.matrix(ref) ?: continue
+                manager.setTransform(manager.getInstance(instance.root), matrix)
+                drawn[ref] = entry.copy(matrix = matrix)
+            }
+        } finally {
+            manager.commitLocalTransformTransaction()
+        }
+    }
+
+    private var drawn = mutableMapOf<MapEntityRef, MapSceneEntry>()
     val drawnEntries
         get() = drawn.values.toList()
 
@@ -74,7 +109,8 @@ internal class MapSceneAssets(
         synchronize()
     }
 
-    fun update(value: List<MapSceneEntry>) {
+    fun update(value: List<MapSceneEntry>, context: MapContext) {
+        this.context = context
         entries = value
         val wanted = entries.map { it.model.renderUrl }.toSet()
         jobs.keys
@@ -213,7 +249,7 @@ internal class MapSceneAssets(
                     ?.let { old ->
                         if (old.model.uuid == entry.model.uuid)
                             entry.copy(model = entry.model.copy(renderUrl = old.model.renderUrl))
-                        else old
+                        else poses.target(entry.ref) ?: old
                     } ?: entry
         }
         val needed = (entries + resolved).map { it.model.renderUrl }.toSet()
@@ -241,8 +277,6 @@ internal class MapSceneAssets(
                         }
                         ?: continue
                 primitives.apply(pool.asset, instance, replaced[url].orEmpty())
-                val manager = engine.transformManager
-                manager.setTransform(manager.getInstance(instance.root), entry.matrix)
                 instance.entities.forEach {
                     entities[it] = entry.ref
                     val renderable = engine.renderableManager.getInstance(it)
@@ -275,6 +309,8 @@ internal class MapSceneAssets(
                     }
         }
         drawn = actual
+        context?.let { poses.sync(actual, it) }
+        applyPoses(actual.keys)
     }
 
     private fun destroyPool(pool: MapModelPool) {
@@ -302,6 +338,7 @@ internal class MapSceneAssets(
         retiring.values.forEach(::destroyPool)
         retiring.clear()
         resources.destroy()
+        poses.clear()
         primitives.close()
         loader.destroy()
         materials.destroyMaterials()

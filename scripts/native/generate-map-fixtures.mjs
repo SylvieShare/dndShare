@@ -88,5 +88,14 @@ try {
     fills.push({document,models:placementModels,point,expected:enclosedEmptyCells(document,point,placementModels)})
   }
   await fs.writeFile(path.join(out,'web-placement.json'),JSON.stringify({nearest,fills},null,2)+'\n')
+  const {createRotationMotion}=await server.ssrLoadModule('/src/features/maps/rendering/rotationMotion.js')
+  const motionScenarios=[
+ {name:'group-pivot',from:{x:2.5,y:3.5,elevation:0,rotation:0},to:{x:4.5,y:3.5,elevation:0,rotation:90}},
+ {name:'short-turn',from:{x:2.5,y:3.5,elevation:0,rotation:270},to:{x:2.5,y:3.5,elevation:0,rotation:0}},
+ {name:'mirror',from:{x:2.5,y:3.5,elevation:0,rotation:90},to:{x:3.5,y:3.5,elevation:0,rotation:90,mirrored:true}},
+ {name:'mirror-turn',from:{x:2.5,y:3.5,elevation:0,rotation:0},to:{x:3.5,y:4.5,elevation:0,rotation:90,mirrored:true}},
+];
+const motionResult=motionScenarios.map(row=>{const motion=createRotationMotion();motion.set('tile',row.from);motion.set('tile',row.to);return {...row,frames:[0,35,35,70,70,70].map(delta=>{motion.advance(delta);return {delta,pose:{...motion.pose('tile')}}})}});
+  await fs.writeFile(path.join(out,'web-motion.json'),JSON.stringify(motionResult,null,2)+'\n')
   console.log(`Web map fixtures: ${results.length}; fog ${fog.length}; fire ${fire.length}`)
 } finally { await server.close() }

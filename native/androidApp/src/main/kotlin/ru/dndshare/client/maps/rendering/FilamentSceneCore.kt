@@ -18,6 +18,7 @@ internal class FilamentSceneCore(
     context: Context,
     private val cache: MapAssetCache,
     dispatcher: CoroutineDispatcher,
+    private val motionUpdated: (Map<String, MapPose>) -> Unit = {},
     private val status: (Int, String?) -> Unit,
 ) : AutoCloseable {
     private val scope = CoroutineScope(SupervisorJob() + dispatcher)
@@ -263,6 +264,7 @@ internal class FilamentSceneCore(
     fun update(value: JsonObject, catalogue: List<MapModel>) {
         if (closed) return
         revision++
+        motionUpdated(emptyMap())
         document = value
         models.clear()
         models.putAll(catalogue.associateBy { it.uuid })
@@ -298,8 +300,9 @@ internal class FilamentSceneCore(
                 density,
                 options.streamAssets,
                 options.selectedLight,
+                previousVisual = { assets.drawnEntries },
             ) ?: return
-        assets.update(value)
+        assets.update(value, context)
         effects.update(context, assets.drawnEntries, options.selected)
         status(assets.pendingCount, null)
     }
@@ -340,9 +343,33 @@ internal class FilamentSceneCore(
         assets.waterParts(effects.waterParts)
         val seconds = time / 1_000_000_000.0
         val motion = options.animate && ValueAnimator.areAnimatorsEnabled()
+        val wasMoving = assets.motionMoving
+        val poseMotion = assets.animate(seconds, motion)
+        if (wasMoving && !poseMotion || viewportAssets.retainedVisual) {
+            viewportAssets.invalidate()
+            requestFrame()
+        }
+        val anchors = assets.visualAnchors
+        effects.transforms(assets.motionEntries, anchors)
+        if (anchors.deltas.isNotEmpty()) {
+            val positions =
+                sceneContext
+                    ?.document
+                    ?.rows("lights")
+                    .orEmpty()
+                    .filter { row ->
+                        mapAnchorRef(row["anchor"] as? JsonObject) in anchors.deltas
+                    }
+                    .map { row ->
+                        val light = anchors.light(mapLightPose(row, requireNotNull(sceneContext)))
+                        row.string("id") to light.point.copy(elevation = light.worldHeight)
+                    }
+                    .toMap()
+            motionUpdated(positions)
+        }
         val effectMotion = effects.advance(seconds, motion)
         val lightMotion =
-            lights.advance(seconds, motion, pose, width, height, options.selectedLight)
+            lights.advance(seconds, motion, pose, width, height, options.selectedLight, anchors)
         val postProcess = effects.prepare(view, camera, seconds, motion)
         pipeline.prepare(
             width,
@@ -370,7 +397,8 @@ internal class FilamentSceneCore(
                     density,
                     revision,
                     seconds,
-                    effectMotion || lightMotion,
+                    effectMotion || lightMotion || poseMotion,
+                    anchors,
                 )
                 captures.render(renderer, width, height)
             } finally {
@@ -393,8 +421,9 @@ internal class FilamentSceneCore(
                 status(assets.pendingCount, null)
             }
         }
-        if (assets.working || picker.working || captures.working) requestFrame()
+        if (poseMotion || assets.working || picker.working || captures.working) requestFrame()
         else if (effectMotion || lightMotion) frames.motion(seconds)
+        else lightFrames.nextDelay?.let(frames::after)
     }
 
     override fun close() {

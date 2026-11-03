@@ -60,6 +60,13 @@ internal class MapFrameScheduler(
         )
     }
 
+    fun after(milliseconds: Long) {
+        if (closed || !active || scheduled) return
+        scheduled = true
+        delayed = true
+        choreographer.postFrameCallbackDelayed(callback, milliseconds.coerceAtLeast(1))
+    }
+
     override fun close() {
         closed = true
         choreographer.removeFrameCallback(callback)

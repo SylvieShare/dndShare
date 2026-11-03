@@ -72,6 +72,8 @@ internal fun mapViewportEntries(
     height: Int,
     density: Double,
     selectedLight: String? = null,
+    previous: Map<MapEntityRef, MapSceneEntry> = emptyMap(),
+    retained: () -> Unit = {},
 ): List<MapSceneEntry> {
     if (width <= 0 || height <= 0) return emptyList()
     val projection = MapScreenProjection(camera, width, height)
@@ -95,14 +97,22 @@ internal fun mapViewportEntries(
                 )
                 .filter { it.source.flag("shadows") }
     return entries.filter { entry ->
-        projection.intersects(
-            entry,
-            bounds[entry.model.renderUrl],
-            width,
-            height,
-            128 * density,
-            slope,
-        ) ||
+        val targetVisible =
+            projection.intersects(
+                entry,
+                bounds[entry.model.renderUrl],
+                width,
+                height,
+                128 * density,
+                slope,
+            )
+        val oldVisible =
+            previous[entry.ref]?.let {
+                projection.intersects(it, bounds[it.model.renderUrl], width, height, 128 * density)
+            } == true
+        if (!targetVisible && oldVisible) retained()
+        targetVisible ||
+            oldVisible ||
             shadowLights.any { light ->
                 val radius =
                     light.source.number("radius", 6.0) +
@@ -120,6 +130,8 @@ internal class MapViewportAssets {
     private var dirty = true
     private var previous: List<MapSceneEntry>? = null
     private var selectedLight: String? = null
+    var retainedVisual = false
+        private set
 
     fun invalidate() {
         dirty = true
@@ -135,6 +147,7 @@ internal class MapViewportAssets {
         density: Double,
         streaming: Boolean,
         selectedLight: String? = null,
+        previousVisual: () -> List<MapSceneEntry> = { emptyList() },
     ): List<MapSceneEntry>? {
         if (
             !dirty &&
@@ -149,6 +162,7 @@ internal class MapViewportAssets {
         size = width to height
         stream = streaming
         this.selectedLight = selectedLight
+        retainedVisual = false
         val next =
             if (streaming)
                 mapViewportEntries(
@@ -160,6 +174,8 @@ internal class MapViewportAssets {
                     height,
                     density,
                     selectedLight,
+                    previousVisual().associateBy { it.ref },
+                    retained = { retainedVisual = true },
                 )
             else entries
         if (next == previous) return null

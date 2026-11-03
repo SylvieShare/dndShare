@@ -173,6 +173,16 @@ class MapLightFrameTest {
                         )
                         renderer.camera(camera)
                         await { images.get() == 2 }
+                        val at = images.get()
+                        repeat(12) { step ->
+                            renderer.camera(camera.copy(x = camera.x + step * .01))
+                            delay(10)
+                        }
+                        delay(250)
+                        assertTrue(
+                            images.get() - at <= 4,
+                            "Camera motion must keep readback below 12 Hz: ${images.get()-at}",
+                        )
                     } finally {
                         subscription.close()
                     }

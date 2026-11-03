@@ -48,6 +48,13 @@ internal class MapSceneEffects(
         fog.update(context)
     }
 
+    fun transforms(entries: List<MapSceneEntry>, anchors: MapVisualAnchors) {
+        if (entries.isEmpty()) return
+        water.transforms(entries)
+        decals.transforms(entries)
+        fire.transforms(anchors)
+    }
+
     fun advance(seconds: Double, motion: Boolean): Boolean {
         val a = water.advance(seconds, motion)
         val b = fire.advance(seconds, motion)

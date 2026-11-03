@@ -82,6 +82,14 @@ internal class MapSceneDecals(
         synchronize()
     }
 
+    fun transforms(changed: List<MapSceneEntry>) {
+        val matrices = changed.associateBy { it.ref }
+        for (decal in document.rows("decals")) {
+            val owner = matrices[mapAnchorRef(decal["anchor"] as? JsonObject)] ?: continue
+            records[decal.string("id")]?.entities.orEmpty().forEach { it.transform(owner.matrix) }
+        }
+    }
+
     private fun shape(decal: JsonObject, owner: MapSceneEntry) =
         listOf(
                 owner.model.renderUrl,

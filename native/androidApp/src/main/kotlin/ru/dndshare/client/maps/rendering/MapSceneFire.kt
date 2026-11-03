@@ -61,6 +61,21 @@ internal class MapSceneFire(
         advance(0.0, false)
     }
 
+    fun transforms(anchors: MapVisualAnchors) {
+        for (pose in sources) {
+            val posed = anchors.light(pose)
+            val effect = pose.source["effect"]!!.jsonObject
+            val size = effect.array("size")
+            val width = size.double(0, .22).toFloat()
+            val height = size.double(1, .35).toFloat()
+            val matrix = mapTransform(posed.point.x, posed.point.y, posed.worldHeight, 0.0)
+            matrix[0] = width
+            matrix[5] = height
+            matrix[10] = width
+            flames[pose.source.string("id")]?.transform(matrix)
+        }
+    }
+
     fun advance(seconds: Double, motion: Boolean): Boolean {
         var active = false
         for (pose in sources) {

@@ -34,9 +34,16 @@ internal class MapDiskCache(
             files[(("$path/$hash.$extension").hashCode() and Int.MAX_VALUE) % files.size].withLock {
                 val cached = directoryLock.withLock {
                     directory.mkdirs()
-                directory.listFiles().orEmpty().filter { it.extension=="part" &&
-                    (it.name.startsWith("map-asset-")||it.name.startsWith("map-model-")||it.name.startsWith("map-image-"))
-                }.forEach {it.delete()}
+                    directory
+                        .listFiles()
+                        .orEmpty()
+                        .filter {
+                            it.extension == "part" &&
+                                (it.name.startsWith("map-asset-") ||
+                                    it.name.startsWith("map-model-") ||
+                                    it.name.startsWith("map-image-"))
+                        }
+                        .forEach { it.delete() }
                     if (!file.isFile) null
                     else {
                         val bytes = file.readBytes()
