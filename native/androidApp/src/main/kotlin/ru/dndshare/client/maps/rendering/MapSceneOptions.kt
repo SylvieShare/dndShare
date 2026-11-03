@@ -7,4 +7,5 @@ data class MapSceneOptions(
     val forceLod: Boolean = false,
     val focus: Set<MapEntityRef>? = null,
     val ground: Boolean = true,
+    val selectedLight: String? = null,
 )

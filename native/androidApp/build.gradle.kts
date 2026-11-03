@@ -123,3 +123,22 @@ val checkMapMaterials by tasks.registering {
     }
 }
 tasks.named("preBuild") { dependsOn(checkMapMaterials) }
+
+// Static exports must stay tied to the web sources from which they were produced.
+val checkMapStaticAssets by tasks.registering {
+    val definitions = listOf(file("src/main/assets/maps/packs"), file("src/main/resources/maps/builtin"))
+    val repository = rootProject.projectDir.parentFile
+    inputs.files(definitions.map { fileTree(it) })
+    inputs.files(File(repository,"frontend/src/features/maps/components/MapPackIcon.vue"), File(repository,"frontend/src/features/maps/rendering/sceneObjects.js"))
+    doLast {
+        fun hash(path: File) = MessageDigest.getInstance("SHA-256").digest(path.readBytes()).joinToString("") { "%02x".format(it) }
+        definitions.forEach { directory ->
+            val manifest = groovy.json.JsonSlurper().parse(File(directory,"manifest.json")) as Map<*, *>
+            require(hash(File(repository,manifest["source"] as String)) == manifest["sourceHash"]) { "Regenerate native map exports: ${directory.name}" }
+            val packages=manifest["packages"] as Map<*, *>
+            require(directory.listFiles().orEmpty().filter {it.extension in setOf("glb","svg")}.map {it.name}.toSet()==packages.keys) { "Unexpected native map export: ${directory.name}" }
+            packages.forEach {(name,expected)->require(hash(File(directory,name as String))==expected){"Invalid native map export: $name"}}
+        }
+    }
+}
+tasks.named("preBuild") { dependsOn(checkMapStaticAssets) }

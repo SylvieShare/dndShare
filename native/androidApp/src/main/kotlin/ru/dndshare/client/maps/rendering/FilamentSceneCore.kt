@@ -130,7 +130,11 @@ internal class FilamentSceneCore(
     init {
         Utils.init()
         Gltfio.init()
-        engine = Engine.create(Engine.Backend.OPENGL)
+        engine =
+            Engine.Builder()
+                .backend(Engine.Backend.OPENGL)
+                .config(Engine.Config().apply { enableMultipleDirectionalLights = true })
+                .build()
         engine.setAutomaticInstancingEnabled(true)
         renderer = engine.createRenderer()
         scene = engine.createScene()
@@ -143,6 +147,10 @@ internal class FilamentSceneCore(
                 this.scene = this@FilamentSceneCore.scene
                 this.camera = this@FilamentSceneCore.camera
                 antiAliasing = com.google.android.filament.View.AntiAliasing.FXAA
+                setDynamicLightingOptions(
+                    .01f,
+                    2000f,
+                ) // Orthographic editor eye is 500 units from the map.
             }
         renderer.clearOptions =
             Renderer.ClearOptions().apply {
@@ -317,7 +325,8 @@ internal class FilamentSceneCore(
         val seconds = time / 1_000_000_000.0
         val motion = options.animate && ValueAnimator.areAnimatorsEnabled()
         val effectMotion = effects.advance(seconds, motion)
-        val lightMotion = lights.advance(seconds, motion)
+        val lightMotion =
+            lights.advance(seconds, motion, pose, width, height, options.selectedLight)
         val postProcess = effects.prepare(view, camera, seconds, motion)
         effectStatistics = effects.statistics
         val chain = swap
@@ -341,6 +350,7 @@ internal class FilamentSceneCore(
                     entries.size,
                     assets.modelCount,
                     assets.fileBytes,
+                    lights.count,
                 )
             if (!hasMapFrame && document != null && (assets.hasGround || !options.ground)) {
                 engine.flushAndWait()

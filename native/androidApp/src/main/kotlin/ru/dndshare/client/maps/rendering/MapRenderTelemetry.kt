@@ -12,6 +12,7 @@ data class MapRenderTelemetry(
     val fileBytes: Long = 0,
     val time: Long = 0,
     val history: List<MapFrameTiming> = emptyList(),
+    val lights: Int = 0,
 )
 
 /** GPU durations come from Filament queries; unavailable samples stay unavailable. */
@@ -26,6 +27,7 @@ internal class MapTelemetryCollector {
         instances: Int,
         models: Int,
         fileBytes: Long,
+        lights: Int,
     ): MapRenderTelemetry {
         val frames =
             frameData
@@ -48,6 +50,7 @@ internal class MapTelemetryCollector {
             fileBytes,
             SystemClock.uptimeMillis(),
             history.toList(),
+            lights,
         )
     }
 }

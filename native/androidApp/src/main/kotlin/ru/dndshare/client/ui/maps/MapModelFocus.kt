@@ -16,6 +16,14 @@ import ru.dndshare.client.ui.designsystem.*
 internal fun MapModelFields(workspace: MapEditorWorkspace, ref: MapEntityRef, images: ImageLoader) {
     val doc = workspace.map?.document ?: return
     val row = ref.row(doc) ?: return
+    if (
+        ref.kind == MapEntityKind.Object &&
+            row.string("modelId").isBlank() &&
+            row.string("kind") in MapBuiltinProps.interactive
+    )
+        ShareToggle(if (row.string("kind") == "torch") "Погашен" else "Открыт", row.flag("open")) {
+            workspace.selection.update(MapEntityKind.Object, ref.id, "open", JsonPrimitive(it))
+        }
     if (ref.kind == MapEntityKind.Object)
         MapInspectorSection("Размер") {
             MapRange(

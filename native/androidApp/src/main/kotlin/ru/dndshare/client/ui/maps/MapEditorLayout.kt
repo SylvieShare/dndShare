@@ -153,7 +153,14 @@ internal fun MapEditorLayout(
                             renderer = workspace::attachScene,
                             initialCamera = workspace.ui.camera,
                             active = !workspace.referenceOpen,
-                            options = MapSceneOptions(forceLod = workspace.ui.forceLod),
+                            options =
+                                MapSceneOptions(
+                                    forceLod = workspace.ui.forceLod,
+                                    selectedLight =
+                                        workspace.ui.focus.selected
+                                            .firstOrNull { it.kind == MapEntityKind.Light }
+                                            ?.id,
+                                ),
                             rectangle = workspace.ui.rectangle,
                             selection = workspace.rectangle::move,
                             key = workspace::key,

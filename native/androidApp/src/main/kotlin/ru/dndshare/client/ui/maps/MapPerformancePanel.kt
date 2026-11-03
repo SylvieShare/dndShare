@@ -34,6 +34,7 @@ internal fun MapPerformancePanel(workspace: MapEditorWorkspace) {
     }
     MapInspectorSection("Ресурсы моделей") {
         Text("На сцене: ${data.instances}", style = ShareTypography.context)
+        Text("Локальный свет: ${data.lights}/8", style = ShareTypography.context)
         Text("Уникальных моделей: ${data.models}", style = ShareTypography.context)
         Text(
             "Файлы моделей: ${"%.1f".format(data.fileBytes/1048576.0)} МБ",

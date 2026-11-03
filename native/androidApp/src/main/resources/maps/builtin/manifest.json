@@ -1,0 +1,23 @@
+{
+  "source": "frontend/src/features/maps/rendering/sceneObjects.js",
+  "sourceHash": "b3bd67ef93b1f680b6d84d7991b5d4afe64d0e9966011dbccccad9f62b8ca1db",
+  "packages": {
+    "door-closed.glb": "b01ec17dc8a80149fa613992b09a953fe3df83fcc64e46efcab1ed6774689f9b",
+    "door-open.glb": "1486ca52b99dea0cbcb942222a19956f173b053f7ec300afec0a9e98581e5b4a",
+    "double-door-closed.glb": "b882b2e27ec7e549d27b649357d3bdeef474a04ca56b03c0b653ab5d17664d1c",
+    "double-door-open.glb": "8610394437fa731a2a2141c469a510d3f08769d63ca655145456a643fd0d3e99",
+    "portcullis-closed.glb": "26a6edef87e2645425fc8230817e559bf2420b84e61cc2d2c98429703b7f01b8",
+    "portcullis-open.glb": "c511a94e3f4eb88be17ca3d7190cde0f062a99321649ec72b94f031fdc2c0ace",
+    "barrel-closed.glb": "f2305e2b60b5c6afe4a01cfb1b30681ee4d776410f5c9c355b963d3b19cc929e",
+    "crate-closed.glb": "40e173e38ceb4b27f3ba740dda9d4b9440f8d1b1f71215e1ded37bdb5bbef1f4",
+    "table-closed.glb": "151b0a7391cb57467503d85de8f4ddc2a30683f6d57c2af4e053db2dc225e053",
+    "chest-closed.glb": "09580a2ef055628c78f583df90ba8a50af563a502c6b45aba4830e540f514142",
+    "chest-open.glb": "381d82bebf1224334b21cc5b4bb1e340ace77454bbc41526fcbbbf51184164c0",
+    "torch-closed.glb": "fea7ca4c7566af0ea8e13ff7a1f7c197ad79393d34644e3da251fd270ea6a79e",
+    "torch-open.glb": "72d4c937743db4be36bdedd8699e1af429471be1236167e72eae4f050cb67362",
+    "stairs-closed.glb": "99fdae9a0855e40dc1dc988d8c4f3b96cf7529c72741ff1cfa690593654e456a",
+    "column-closed.glb": "cc4adb4b86dbfabf875bf54b3d7aef5afcae7bdeec63678276ad5c03087bf2dd",
+    "rubble-closed.glb": "2fe54294a68b1cfbe25b8d1055b3fe7e04a1e014f185bb2beb7ce4a78676e824",
+    "bridge-closed.glb": "81306f43ec986d32a6aa85c16c4ad2c4c4bdc5c3e461906bde2e2a4a10cdb33c"
+  }
+}

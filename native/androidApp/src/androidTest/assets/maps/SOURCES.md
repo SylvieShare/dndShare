@@ -29,3 +29,8 @@ the attributed, meshopt-compressed Box above. All three are test assets only.
 - `checker-basis-lz.ktx2`: `27769556c5167a51d75a7dca6c7ba6adde27d9a7bc9ff70ef1fd8f9e7d6004ed`.
 - `checker-uastc.ktx2`: `b233a6cfa34725197c0cfdd95feabb5fddd348d637e9eb1f3023bdcd93bd09f5`.
 - `box-water.glb`: `88750f035c515c7cd8347d737e2c2c7964d83d8a7211eaca86ea3da6c477d93a`.
+
+`box-shadow-floor.glb` — производное того же CC-BY Box: добавлен родительский
+узел scale=[8,0.02,8] для освещаемой поверхности в проверке точечных теней.
+Геометрия, материалы и исходная атрибуция сохранены.
+SHA-256: `2734c080e514239cf208a4c5f39e35246e05e5192d3a4bf9cf1c98c5dfb89de2`.

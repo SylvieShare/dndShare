@@ -57,37 +57,48 @@ fun mapSceneEntries(document: JsonObject, models: Map<String, MapModel>): List<M
             .rows("objects")
             .filter { it.string("id") !in hiddenObjects && it.string("id") !in foggedObjects }
             .mapNotNull { obj ->
-                models[obj.string("modelId")]?.let { model ->
-                    val anchor = obj["placement"] as? JsonObject
-                    val tile =
-                        document.rows("tiles").find { it.string("id") == anchor?.string("tileId") }
-                    val support = tile?.let { models[it.string("modelId")] }
-                    if (tile?.string("id") in hiddenTiles || tile?.string("id") in foggedTiles)
-                        return@mapNotNull null
-                    val point =
-                        support?.placementPoints?.getOrNull(anchor?.number("point")?.toInt() ?: -1)
-                            as? JsonObject
-                    val pose =
-                        if (tile != null && support != null && point != null)
-                            mapSurface(
-                                tile,
-                                support,
-                                point,
-                                placements[tile.string("id")]?.elevation ?: 0.0,
-                            )
-                        else MapPose(obj.number("x"), obj.number("y"), obj.number("elevation", .44))
-                    MapSceneEntry(
-                        MapEntityRef(MapEntityKind.Object, obj.string("id")),
-                        model,
-                        mapTransform(
-                            pose.x,
-                            pose.y,
-                            pose.elevation,
-                            obj.number("rotation"),
-                            obj.number("scale", 1.0),
-                        ),
-                    )
-                }
+                (models[obj.string("modelId")]
+                        ?: if (obj.string("modelId").isBlank()) MapBuiltinProps.model(obj)
+                        else null)
+                    ?.let { model ->
+                        val anchor = obj["placement"] as? JsonObject
+                        val tile =
+                            document.rows("tiles").find {
+                                it.string("id") == anchor?.string("tileId")
+                            }
+                        val support = tile?.let { models[it.string("modelId")] }
+                        if (tile?.string("id") in hiddenTiles || tile?.string("id") in foggedTiles)
+                            return@mapNotNull null
+                        val point =
+                            support
+                                ?.placementPoints
+                                ?.getOrNull(anchor?.number("point")?.toInt() ?: -1) as? JsonObject
+                        val pose =
+                            if (tile != null && support != null && point != null)
+                                mapSurface(
+                                    tile,
+                                    support,
+                                    point,
+                                    placements[tile.string("id")]?.elevation ?: 0.0,
+                                )
+                            else
+                                MapPose(
+                                    obj.number("x"),
+                                    obj.number("y"),
+                                    obj.number("elevation", .44),
+                                )
+                        MapSceneEntry(
+                            MapEntityRef(MapEntityKind.Object, obj.string("id")),
+                            model,
+                            mapTransform(
+                                pose.x,
+                                pose.y,
+                                pose.elevation,
+                                obj.number("rotation"),
+                                obj.number("scale", 1.0),
+                            ),
+                        )
+                    }
             }
 }
 

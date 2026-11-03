@@ -11,6 +11,7 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
+import ru.dndshare.client.maps.MapBuiltinProps
 import ru.dndshare.client.maps.MapsApi
 import ru.dndshare.client.maps.geometry.*
 
@@ -105,7 +106,7 @@ class MapAssetCache(private val directory: File, private val api: MapsApi) {
                             }
                             file.delete()
                         }
-                        val bytes = api.modelBytes(url)
+                        val bytes = MapBuiltinProps.bytes(url) ?: api.modelBytes(url)
                         require(validGlb(bytes)) { "Сервер вернул некорректную GLB-модель" }
                         val temporary = File.createTempFile("map-model-", ".part", directory)
                         try {

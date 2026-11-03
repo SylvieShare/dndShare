@@ -29,7 +29,7 @@ fun mapLightPose(light: JsonObject, context: MapContext): MapLightPose {
     val effective = if (overrides != null) JsonObject(light + overrides) else light
     var point = MapPose(light.number("x"), light.number("y"), light.number("elevation"))
     var height = effective.number("height")
-    if (owner != null && model != null) {
+    if (owner != null) {
         if (template != null) {
             val position = template.array("position")
             height =
@@ -69,7 +69,7 @@ fun mapLightPose(light: JsonObject, context: MapContext): MapLightPose {
             }
         } else {
             val angle = Math.toRadians(owner.number("rotation"))
-            if (kind == "tile") {
+            if (kind == "tile" && model != null) {
                 val size = mapFootprint(owner, model)
                 point =
                     MapPose(
@@ -82,7 +82,8 @@ fun mapLightPose(light: JsonObject, context: MapContext): MapLightPose {
                 val base = context.objectPose(owner)
                 point =
                     base.copy(
-                        elevation = base.elevation + model.maxHeight * owner.number("scale", 1.0)
+                        elevation =
+                            base.elevation + (model?.maxHeight ?: 0.0) * owner.number("scale", 1.0)
                     )
             }
             val offset = light.array("offset")

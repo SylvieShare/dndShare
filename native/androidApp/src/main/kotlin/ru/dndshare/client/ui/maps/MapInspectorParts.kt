@@ -70,7 +70,8 @@ internal fun mapEntityName(
 ): String {
     val row = ref.row(document) ?: return "Элемент удалён"
     return if (ref.kind in setOf(MapEntityKind.Tile, MapEntityKind.Object))
-        models.find { it.uuid == row.string("modelId") }?.name ?: row.string("name", "Объект")
+        models.find { it.uuid == row.string("modelId") }?.name
+            ?: row.string("name", MapBuiltinProps.labels[row.string("kind")] ?: "Объект")
     else row.string("name", if (ref.kind == MapEntityKind.Camera) "Камера" else "Элемент карты")
 }
 
