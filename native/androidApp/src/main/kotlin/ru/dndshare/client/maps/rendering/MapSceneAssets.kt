@@ -38,6 +38,7 @@ internal class MapSceneAssets(
         get() = drawn.values.toList()
 
     private val pending = mutableSetOf<String>()
+    private val jobs = mutableMapOf<String, Job>()
     private val failed = mutableSetOf<String>()
     private val slots = Semaphore(3)
     private val downloaded = ArrayDeque<DownloadedModel>()
@@ -75,6 +76,19 @@ internal class MapSceneAssets(
 
     fun update(value: List<MapSceneEntry>) {
         entries = value
+        val wanted = entries.map { it.model.renderUrl }.toSet()
+        jobs.keys
+            .filter { it !in wanted }
+            .forEach { url ->
+                jobs.remove(url)?.cancel()
+                pending -= url
+                downloaded
+                    .filter { it.url == url }
+                    .forEach {
+                        downloaded.remove(it)
+                        it.consumed.complete(Unit)
+                    }
+            }
         ensureWantedPools()
         synchronize()
     }
@@ -118,24 +132,29 @@ internal class MapSceneAssets(
     private fun download(url: String) {
         pending += url
         status(pending.size, null)
-        scope.launch {
-            try {
-                slots.withPermit {
-                    val original = cache.bytes(url)
-                    val bytes = withContext(Dispatchers.Default) { mapNamedGlb(original) }
-                    val consumed = CompletableDeferred<Unit>()
-                    downloaded.addLast(DownloadedModel(url, bytes, consumed))
-                    requestFrame()
-                    consumed.await()
+        val job =
+            scope.launch(start = CoroutineStart.LAZY) {
+                try {
+                    slots.withPermit {
+                        val original = cache.bytes(url)
+                        val bytes = withContext(Dispatchers.Default) { mapNamedGlb(original) }
+                        val consumed = CompletableDeferred<Unit>()
+                        downloaded.addLast(DownloadedModel(url, bytes, consumed))
+                        requestFrame()
+                        consumed.await()
+                    }
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (error: Exception) {
+                    pending -= url
+                    failed += url
+                    status(pending.size, error.message)
+                } finally {
+                    if (jobs[url] === coroutineContext[Job]) jobs.remove(url)
                 }
-            } catch (cancelled: CancellationException) {
-                throw cancelled
-            } catch (error: Exception) {
-                pending -= url
-                failed += url
-                status(pending.size, error.message)
             }
-        }
+        jobs[url] = job
+        job.start()
     }
 
     private fun loadNext() {
@@ -189,11 +208,12 @@ internal class MapSceneAssets(
             else
                 drawn[entry.ref]
                     ?.takeIf {
-                        it.model.uuid == entry.model.uuid &&
-                            availablePool(it.model.renderUrl) != null
+                        availablePool(it.model.renderUrl) != null
                     }
                     ?.let { old ->
-                        entry.copy(model = entry.model.copy(renderUrl = old.model.renderUrl))
+                        if (old.model.uuid == entry.model.uuid)
+                            entry.copy(model = entry.model.copy(renderUrl = old.model.renderUrl))
+                        else old
                     } ?: entry
         }
         val needed = (entries + resolved).map { it.model.renderUrl }.toSet()
@@ -275,6 +295,8 @@ internal class MapSceneAssets(
     }
 
     override fun close() {
+        jobs.values.forEach(Job::cancel)
+        jobs.clear()
         resources.asyncCancelLoad()
         pools.keys.toList().forEach(::removePool)
         retiring.values.forEach(::destroyPool)

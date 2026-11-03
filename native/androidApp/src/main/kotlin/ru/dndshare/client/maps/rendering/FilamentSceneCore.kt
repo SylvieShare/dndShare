@@ -4,7 +4,6 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.view.Choreographer
 import android.view.Surface
 import com.google.android.filament.*
 import com.google.android.filament.gltfio.*
@@ -30,13 +29,11 @@ internal class FilamentSceneCore(
     private val camera: Camera
     private var swap: SwapChain? = null
     private var closed = false
-    private var active = true
-    private var scheduled = false
-    private var delayed = false
     private var pose = MapCamera()
     private var options = MapSceneOptions()
     private val density = context.resources.displayMetrics.density.toDouble()
     private var tier: MapModelTier? = null
+    private val viewportAssets = MapViewportAssets()
     private var sceneContext: MapContext? = null
     private var document: JsonObject? = null
     private val models = mutableMapOf<String, MapModel>()
@@ -54,16 +51,11 @@ internal class FilamentSceneCore(
 
     private val picker: MapScenePicker
     private val lights: MapSceneLights
-    private val choreographer = Choreographer.getInstance()
-    private val callback = Choreographer.FrameCallback {
-        try {
-            frame(it)
-        } catch (error: Exception) {
-            scheduled = false
+    private val frames =
+        MapFrameScheduler(::frame) { error ->
             captures.fail(error)
             status(assets.pendingCount, error.message)
         }
-    }
     val width
         get() = view.viewport.width
 
@@ -131,7 +123,7 @@ internal class FilamentSceneCore(
         val fitted =
             mapFitScene(
                 pose,
-                assets.drawnEntries.filter { selected == null || it.ref in selected },
+                entries.filter { selected == null || it.ref in selected },
                 assets.bounds,
                 width,
                 height,
@@ -140,7 +132,7 @@ internal class FilamentSceneCore(
     }
 
     fun snapshot(result: (Result<android.graphics.Bitmap>) -> Unit) {
-        if (!active || swap == null || width <= 0 || height <= 0) {
+        if (!frames.active || swap == null || width <= 0 || height <= 0) {
             Handler(Looper.getMainLooper()).post {
                 result(Result.failure(IllegalStateException("Карта ещё не готова")))
             }
@@ -262,6 +254,7 @@ internal class FilamentSceneCore(
     private fun updateCamera() = applyMapCamera(camera, pose, width, height)
 
     private fun assetsChanged() {
+        viewportAssets.invalidate()
         revision++
         sceneContext?.let { effects.update(it, assets.drawnEntries, options.selected) }
         requestFrame()
@@ -280,15 +273,35 @@ internal class FilamentSceneCore(
                 .map {
                     it.copy(model = it.model.copy(renderUrl = activeUrl(it.model)))
                 }
-        assets.update(entries)
         pipeline.updateGrid(value, options.ground)
         val visibleDocument = mapSceneScope(value, options.focus)
         val context = MapContext(visibleDocument, catalogue)
         sceneContext = context
+        viewportAssets.invalidate()
+        reconcileViewport()
         lights.update(context)
         effects.update(context, assets.drawnEntries, options.selected)
         status(assets.pendingCount, null)
         requestFrame()
+    }
+
+    private fun reconcileViewport() {
+        val context = sceneContext ?: return
+        val value =
+            viewportAssets.update(
+                context,
+                entries,
+                assets.bounds,
+                pose,
+                width,
+                height,
+                density,
+                options.streamAssets,
+                options.selectedLight,
+            ) ?: return
+        assets.update(value)
+        effects.update(context, assets.drawnEntries, options.selected)
+        status(assets.pendingCount, null)
     }
 
     fun observeLight(
@@ -315,32 +328,14 @@ internal class FilamentSceneCore(
         document?.let { update(it, models.values.toList()) }
     }
 
-    fun foreground(value: Boolean) {
-        active = value
-        if (value) requestFrame()
-        else {
-            choreographer.removeFrameCallback(callback)
-            scheduled = false
-        }
-    }
+    fun foreground(value: Boolean) = frames.foreground(value)
 
-    fun requestFrame() {
-        if (scheduled && delayed && active && !closed) {
-            choreographer.removeFrameCallback(callback)
-            scheduled = false
-            delayed = false
-        }
-        if (!closed && active && !scheduled) {
-            scheduled = true
-            choreographer.postFrameCallback(callback)
-        }
-    }
+    fun requestFrame() = frames.request()
 
     private fun frame(time: Long) {
         val cpuStart = System.nanoTime()
-        scheduled = false
-        delayed = false
-        if (closed || !active) return
+        if (closed || !frames.active) return
+        reconcileViewport()
         assets.advance()
         assets.waterParts(effects.waterParts)
         val seconds = time / 1_000_000_000.0
@@ -399,18 +394,7 @@ internal class FilamentSceneCore(
             }
         }
         if (assets.working || picker.working || captures.working) requestFrame()
-        else if ((effectMotion || lightMotion) && !scheduled) {
-            scheduled = true
-            delayed = true
-            choreographer.postFrameCallbackDelayed(
-                callback,
-                maxOf(
-                    1L,
-                    ((kotlin.math.floor(seconds * 12) + 1) / 12 * 1000 - seconds * 1000 - 8)
-                        .toLong(),
-                ),
-            )
-        }
+        else if (effectMotion || lightMotion) frames.motion(seconds)
     }
 
     override fun close() {
@@ -420,7 +404,7 @@ internal class FilamentSceneCore(
         captures.close()
         picker.close()
         scope.cancel()
-        choreographer.removeFrameCallback(callback)
+        frames.close()
         detach()
         effects.close()
         assets.close()

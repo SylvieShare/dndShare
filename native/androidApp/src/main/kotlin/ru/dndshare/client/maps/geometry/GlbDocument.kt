@@ -12,6 +12,8 @@ class GlbDocument(bytes: ByteArray) {
     val json: JsonObject
     private val binary: ByteArray
     private val views = mutableMapOf<Int, ByteArray>()
+    val retainedBytes
+        get() = binary.size.toLong() + views.values.sumOf { it.size.toLong() }
 
     init {
         require(bytes.size >= 20)

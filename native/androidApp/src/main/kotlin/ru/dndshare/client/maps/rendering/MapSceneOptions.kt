@@ -10,4 +10,5 @@ data class MapSceneOptions(
     val ground: Boolean = true,
     val selectedLight: String? = null,
     val selected: Set<MapEntityRef> = emptySet(),
+    val streamAssets: Boolean = true,
 )
