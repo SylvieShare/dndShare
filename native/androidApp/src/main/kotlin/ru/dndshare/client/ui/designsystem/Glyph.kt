@@ -70,6 +70,7 @@ enum class Glyph(@param:DrawableRes val resource: Int) {
     CircleCheck(R.drawable.lucide_circle_check),
     Swords(R.drawable.lucide_swords),
     Target(R.drawable.lucide_crosshair),
+    Maximize(R.drawable.lucide_maximize),
     ShieldCheck(R.drawable.lucide_shield_check),
     Bold(R.drawable.lucide_bold),
     Italic(R.drawable.lucide_italic),

@@ -120,7 +120,11 @@ internal class FilamentSceneCore(
         requestFrame()
     }
 
-    fun fitContents(selected: Set<MapEntityRef>?, result: (MapCamera) -> Unit) {
+    fun fitContents(
+        selected: Set<MapEntityRef>?,
+        margin: Double = .85,
+        result: (MapCamera) -> Unit,
+    ) {
         val fitted =
             mapFitScene(
                 pose,
@@ -128,8 +132,14 @@ internal class FilamentSceneCore(
                 assets.bounds,
                 width,
                 height,
+                margin,
             )
         Handler(Looper.getMainLooper()).post { result(fitted) }
+    }
+
+    fun guides(value: MapModelGuides?) {
+        pipeline.guides(value)
+        requestFrame()
     }
 
     fun snapshot(result: (Result<android.graphics.Bitmap>) -> Unit) {
@@ -168,7 +178,7 @@ internal class FilamentSceneCore(
                 this.scene = this@FilamentSceneCore.scene
                 this.camera = this@FilamentSceneCore.camera
                 antiAliasing = com.google.android.filament.View.AntiAliasing.FXAA
-                setVisibleLayers(0xff, 1 or 16)
+                setVisibleLayers(0xff, 1 or 16 or 64)
                 setDynamicLightingOptions(
                     .01f,
                     2000f,

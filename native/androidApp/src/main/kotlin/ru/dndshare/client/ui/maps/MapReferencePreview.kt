@@ -1,14 +1,10 @@
 package ru.dndshare.client.ui.maps
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.json.*
 import ru.dndshare.client.maps.*
@@ -75,7 +71,7 @@ internal fun MapReferencePreview(workspace: MapEditorWorkspace, cache: MapAssetC
                                     put("kind", "chest")
                                     put("x", 1 + model.width / 2.0)
                                     put("y", 1 + model.height / 2.0)
-                                    put("elevation", 0)
+                                    put("elevation", -model.mountDepth)
                                     put("scale", 1)
                                     put("rotation", 0)
                                 }
@@ -84,103 +80,96 @@ internal fun MapReferencePreview(workspace: MapEditorWorkspace, cache: MapAssetC
                     )
             runCatching { normalizeMapDocument(content, listOf(model)) }.getOrDefault(content)
         }
-    Box(Modifier.fillMaxWidth().height(300.dp)) {
+    var fitted by remember(original.uuid) { mutableStateOf(false) }
+    val guides =
+        remember(model, reference.activeField, reference.selectedSlot) {
+            mapModelGuides(model, reference.activeField, reference.selectedSlot)
+        }
+    val guideValue by rememberUpdatedState(guides)
+    Box(Modifier.fillMaxWidth().height(340.dp)) {
         MapSceneView(
             document,
             listOf(model),
             cache,
             emptySet(),
             orbit = true,
-            options = MapSceneOptions(automaticLod=false),
-            tap = {},
+            options = MapSceneOptions(automaticLod = false, streamAssets = false),
+            tap = { pointer ->
+                scene?.let { pickReferenceGuide(reference, guideValue, it, pointer) }
+            },
             drag = { _, _ -> },
             cancel = {},
             renderer = { scene = it },
             status = { count, message ->
                 error = message
-                if (count == 0) scene?.fitContents()
+                val current = scene
+                if (
+                    count == 0 &&
+                        !fitted &&
+                        current != null &&
+                        current.width > 0 &&
+                        current.hasMapFrame &&
+                        current.readyRefs.isNotEmpty()
+                ) {
+                    fitted = true
+                    current.fitContents(margin = .65)
+                }
             },
         )
-        val camera = scene?.cameraState?.collectAsState()?.value
-        if (camera != null && scene != null && !model.isObject)
-            Box(Modifier.fillMaxSize()) {
-                val projection = scene!!
-                Canvas(Modifier.fillMaxSize()) {
-                    for ((index, slot) in model.supportSlots.withIndex()) {
-                        val data = slot.jsonObject
-                        val corners =
-                            listOf(
-                                    0.0 to 0.0,
-                                    data.number("width") to 0.0,
-                                    data.number("width") to data.number("height"),
-                                    0.0 to data.number("height"),
-                                )
-                                .map { (x, y) ->
-                                    val point =
-                                        mapSurface(
-                                            tile,
-                                            model,
-                                            buildJsonObject {
-                                                put("x", data.number("x") + x)
-                                                put("y", data.number("y") + y)
-                                                put("elevation", data.number("elevation"))
-                                            },
-                                            0.0,
-                                        )
-                                    camera.project(point, projection.width, projection.height)
-                                }
-                        val path =
-                            Path().apply {
-                                corners.forEachIndexed { i, p ->
-                                    if (i == 0) moveTo(p.first, p.second)
-                                    else lineTo(p.first, p.second)
-                                }
-                                close()
-                            }
-                        drawPath(
-                            path,
-                            if (index == reference.selectedSlot) WebPalette.AccentSoft
-                            else WebPalette.Accent.copy(alpha = .5f),
-                            style =
-                                Stroke(
-                                    if (index == reference.selectedSlot) 3.dp.toPx()
-                                    else 1.dp.toPx()
-                                ),
-                        )
-                    }
-                }
-                model.placementPoints.forEachIndexed { index, value ->
-                    val point = mapSurface(tile, model, value.jsonObject, 0.0)
-                    val pos = camera.project(point, projection.width, projection.height)
-                    Box(
-                        Modifier.offset {
-                                IntOffset(
-                                    pos.first.toInt() - 12.dp.roundToPx(),
-                                    pos.second.toInt() - 12.dp.roundToPx(),
-                                )
-                            }
-                            .size(24.dp)
-                            .clickable {
-                                reference.selectedPoint = index
-                                reference.selectedSlot = -1
-                            }
-                    ) {
-                        Canvas(Modifier.fillMaxSize()) {
-                            drawCircle(
-                                if (reference.selectedPoint == index) WebPalette.AccentSoft
-                                else WebPalette.Success,
-                                5.dp.toPx(),
-                            )
-                            drawCircle(
-                                WebPalette.Background,
-                                5.dp.toPx(),
-                                style = Stroke(1.dp.toPx()),
-                            )
-                        }
-                    }
-                }
+        if (fitted) scene?.let { MapReferenceGuideOverlay(reference, guides, it) }
+        Row(Modifier.align(androidx.compose.ui.Alignment.TopEnd)) {
+            MapToolButton("Вписать превью", Glyph.Maximize) { scene?.fitContents(margin = .65) }
+        }
+        error?.let { message ->
+            Column(Modifier.align(androidx.compose.ui.Alignment.BottomStart)) {
+                Text(message, color = WebPalette.Danger, style = ShareTypography.context)
+                ShareTextButton({ scene?.retry() }) { Text("Повторить") }
             }
-        error?.let { Text(it, color = WebPalette.Danger, style = ShareTypography.context) }
+        }
     }
-    LaunchedEffect(scene, model) { scene?.fitContents() }
+    androidx.compose.foundation.layout.FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+    ) {
+        val portNames =
+            listOf(
+                "Север",
+                "Северо-восток",
+                "Восток",
+                "Юго-восток",
+                "Юг",
+                "Юго-запад",
+                "Запад",
+                "Северо-запад",
+            )
+        for (marker in guides.markers.filter { it.kind == "port" }) ShareChoiceChip(
+            marker.active,
+            {
+                reference.set(
+                    "wallMask",
+                    JsonPrimitive(
+                        reference.currentDraft!!.current.number("wallMask").toInt() xor
+                            (1 shl marker.index)
+                    ),
+                )
+            },
+            { Text(portNames[marker.index]) },
+            modifier =
+                Modifier.semantics { contentDescription = "Стык: ${portNames[marker.index]}" },
+            enabled = !reference.saving,
+        )
+        model.supportSlots.indices.forEach { index ->
+            ShareChoiceChip(
+                reference.selectedSlot == index,
+                {
+                    reference.selectedSlot = index
+                    reference.selectedPoint = -1
+                },
+                { Text("Паз ${index+1}") },
+                modifier =
+                    Modifier.semantics { contentDescription = "Выбрать паз ${index+1} в превью" },
+            )
+        }
+    }
+    LaunchedEffect(scene, guides) { scene?.guides(guides) }
 }

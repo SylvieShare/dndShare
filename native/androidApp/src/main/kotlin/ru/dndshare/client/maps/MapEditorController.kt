@@ -65,14 +65,19 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
         try {
             val cached = store.models()
             if (cached != null) mutable.update { it.copy(models = cached, modelLoading = false) }
-            val models = api.models()
-            store.models(models)
-            mutable.update { it.copy(models = models, modelLoading = false) }
+            refreshModels()
         } catch (cancelled: CancellationException) {
             throw cancelled
         } catch (error: Exception) {
             mutable.update { it.copy(modelLoading = false, error = error.message) }
         }
+    }
+
+    suspend fun refreshModels(): List<MapModel> {
+        val models = api.models()
+        store.models(models)
+        mutable.update { it.copy(models = models, modelLoading = false, error = null) }
+        return models
     }
 
     fun adoptModel(saved: MapModel) {

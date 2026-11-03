@@ -143,9 +143,11 @@ class FilamentMapScene(
         post { camera(value) }
     }
 
-    fun fitContents(selected: Set<MapEntityRef>? = null) = post {
-        fitContents(selected) { this@FilamentMapScene.camera(it) }
+    fun fitContents(selected: Set<MapEntityRef>? = null, margin: Double = .85) = post {
+        fitContents(selected, margin) { this@FilamentMapScene.camera(it) }
     }
+
+    internal fun guides(value: ru.dndshare.client.maps.MapModelGuides?) = post { guides(value) }
 
     fun camera() = pose
 

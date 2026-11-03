@@ -21,15 +21,32 @@ import ru.dndshare.client.ui.designsystem.*
 internal fun MapReferenceCoreFields(reference: MapReferenceController) {
     val current = reference.draft?.current ?: return
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        for ((key, label) in
-            listOf(
-                "code" to "Код группы",
-                "variantCode" to "Код вариантов",
-                "name" to "Название (русский)",
-                "nameEn" to "Название (английский)",
-                "groupName" to "Группа (русский)",
-                "groupNameEn" to "Группа (английский)",
-            )) ShareTextInput(current.string(key), { reference.set(key, JsonPrimitive(it)) }, label)
+        BoxWithConstraints {
+            val columns = if (maxWidth >= 600.dp) 2 else 1
+            val fieldWidth = (maxWidth - 12.dp * (columns - 1)) / columns
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                maxItemsInEachRow = columns,
+            ) {
+                for ((field, label) in
+                    listOf(
+                        "code" to "Код группы",
+                        "variantCode" to "Код вариантов",
+                        "name" to "Название (русский)",
+                        "nameEn" to "Название (английский)",
+                        "groupName" to "Группа (русский)",
+                        "groupNameEn" to "Группа (английский)",
+                    )) key(field) {
+                    ShareTextInput(
+                        current.string(field),
+                        { reference.set(field, JsonPrimitive(it)) },
+                        label,
+                        modifier = Modifier.width(fieldWidth),
+                    )
+                }
+            }
+        }
         ShareSelect(
             "Проработка текстур",
             current.string("textureDetail", "basic"),
@@ -115,7 +132,11 @@ internal fun MapReferenceGeometry(reference: MapReferenceController) {
                 "mountDepth" to "Глубина монтажного основания",
                 "surfaceHeight" to "Высота поверхности",
                 "maxHeight" to "Полная высота модели",
-            )) ReferenceNumber(current.number(key), label) {
+            )) ReferenceNumber(
+            current.number(key),
+            label,
+            focus = { reference.activeField = key },
+        ) {
             reference.activeField = key
             reference.number(key, it)
         }
@@ -124,6 +145,7 @@ internal fun MapReferenceGeometry(reference: MapReferenceController) {
             listOf(0 to "Смещение модели X", 1 to "Смещение модели Z")) ReferenceNumber(
             offset.double(index),
             label,
+            focus = { reference.activeField = if (index == 0) "offsetX" else "offsetZ" },
         ) { value ->
             value
                 .replace(',', '.')

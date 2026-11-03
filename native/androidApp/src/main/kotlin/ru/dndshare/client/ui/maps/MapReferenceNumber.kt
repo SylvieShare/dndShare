@@ -1,9 +1,12 @@
 package ru.dndshare.client.ui.maps
 
+import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardType
 import ru.dndshare.client.ui.designsystem.*
 
@@ -17,6 +20,7 @@ internal fun ReferenceNumber(
     value: Double,
     label: String,
     integer: Boolean = false,
+    focus: () -> Unit = {},
     change: (String) -> Unit,
 ) {
     val reference = LocalMapReference.current
@@ -31,6 +35,7 @@ internal fun ReferenceNumber(
                 if (reference?.validateNumber(inputKey, text, integer) != false) change(text)
             },
             label,
+            modifier = Modifier.onFocusChanged { if (it.hasFocus) focus() }.focusGroup(),
             keyboardOptions =
                 KeyboardOptions(
                     keyboardType = if (integer) KeyboardType.Number else KeyboardType.Decimal

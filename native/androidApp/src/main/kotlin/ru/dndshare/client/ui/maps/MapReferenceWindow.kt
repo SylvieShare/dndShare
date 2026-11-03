@@ -53,7 +53,10 @@ internal fun MapReferenceWindow(
             ) {
                 val wide = maxWidth >= 760.dp
                 Column(
-                    Modifier.fillMaxSize().padding(12.dp),
+                    Modifier.widthIn(max = 1400.dp)
+                        .fillMaxSize()
+                        .align(Alignment.Center)
+                        .padding(12.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -69,7 +72,7 @@ internal fun MapReferenceWindow(
                         if (wide || choose)
                             Column(
                                 Modifier.width(
-                                        if (wide) 280.dp
+                                        if (wide) 260.dp
                                         else this@BoxWithConstraints.maxWidth - 24.dp
                                     )
                                     .fillMaxHeight(),
@@ -122,6 +125,13 @@ internal fun MapReferenceWindow(
                     }
                     reference.error?.let {
                         Text(it, color = WebPalette.Danger, style = ShareTypography.context)
+                        ShareTextButton(
+                            reference::reload,
+                            enabled = !reference.reloading && !reference.saving,
+                        ) {
+                            AppGlyph(Glyph.Refresh)
+                            Text(if (reference.reloading) "Обновляем…" else "Обновить справочник")
+                        }
                     }
                     reference.status?.let {
                         Text(it, color = WebPalette.Success, style = ShareTypography.context)

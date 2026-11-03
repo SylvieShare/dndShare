@@ -9,6 +9,10 @@ import ru.dndshare.client.maps.*
 internal class MapScenePipeline(context: Context, engine: Engine, scene: Scene, camera: Camera) :
     AutoCloseable {
     val materials = MapGpuMaterials(engine, context.assets)
+    private val guides = MapSceneGuides(engine, scene, materials)
+
+    fun guides(value: MapModelGuides?) = guides.update(value)
+
     private val grid = MapSceneGrid(engine, scene, materials)
     private val layers = MapSceneLayers(engine, scene, camera, materials)
     private val colour = MapColourOutput(engine, materials)
@@ -54,6 +58,7 @@ internal class MapScenePipeline(context: Context, engine: Engine, scene: Scene, 
     }
 
     override fun close() {
+        guides.close()
         grid.close()
         layers.close()
         colour.close()

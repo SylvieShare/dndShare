@@ -19,6 +19,9 @@ internal class MapReferenceController(private val workspace: MapEditorWorkspace)
     var confirmDiscard by mutableStateOf(false)
         private set
 
+    var reloading by mutableStateOf(false)
+        private set
+
     var selectedPoint by mutableIntStateOf(-1)
     var selectedSlot by mutableIntStateOf(-1)
     var activeField by mutableStateOf<String?>(null)
@@ -134,7 +137,10 @@ internal class MapReferenceController(private val workspace: MapEditorWorkspace)
                 .replace(',', '.')
                 .toDoubleOrNull()
                 ?.takeIf { it.isFinite() }
-                ?.let { set(key, JsonPrimitive(it)) }
+                ?.let {
+                    set(key, JsonPrimitive(it))
+                    if (key == "mountDepth" && it == 0.0) set("mountProfile", JsonPrimitive(""))
+                }
     }
 
     fun collection(value: String) {
@@ -220,6 +226,32 @@ internal class MapReferenceController(private val workspace: MapEditorWorkspace)
         if (index !in rows.indices) return
         rows[index] = rows[index].with(key, value)
         behaviour(list, JsonArray(rows))
+    }
+
+    fun reload() {
+        if (reloading || saving) return
+        request {
+            reloading = true
+            error = null
+            workspace.scope.launch {
+                try {
+                    val id = currentDraft?.modelId
+                    val models = workspace.controller.refreshModels()
+                    val fresh = models.firstOrNull { it.uuid == id }
+                    if (fresh != null) load(fresh)
+                    else {
+                        workspace.controller.ui { it.copy(reference = null) }
+                        status = "Модель больше недоступна в справочнике"
+                    }
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (failure: Exception) {
+                    error = failure.message ?: "Не удалось обновить справочник"
+                } finally {
+                    reloading = false
+                }
+            }
+        }
     }
 
     fun save() {
