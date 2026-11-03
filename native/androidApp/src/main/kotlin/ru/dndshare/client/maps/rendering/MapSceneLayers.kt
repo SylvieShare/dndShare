@@ -18,7 +18,7 @@ internal class MapSceneLayers(
             setDynamicLightingOptions(.01f, 2000f)
         }
 
-    private val ghostView = worldView(2 or 8).apply { isStencilBufferEnabled = true }
+    private val ghostView = worldView(2 or 8 or 128).apply { isStencilBufferEnabled = true }
     private val selectionView = worldView(4).apply { isShadowingEnabled = false }
     val pickingView =
         worldView(1 or 2 or 16).apply {
@@ -113,7 +113,7 @@ internal class MapSceneLayers(
         if (selected) materials.selectionDepth { renderer.render(selectionView) }
         val target = world
         if (target == null) {
-            view.setVisibleLayers(255, 1 or 16 or 64)
+            view.setVisibleLayers(255, 1 or 16 or 64 or 128)
             renderer.render(view)
             return
         }
@@ -123,11 +123,14 @@ internal class MapSceneLayers(
         try {
             view.renderTarget = target.target
             view.isPostProcessingEnabled = false
-            view.setVisibleLayers(255, if (ghosts) 1 else 1 or 16 or 64)
+            view.setVisibleLayers(255, if (ghosts) 1 or 128 else 1 or 16 or 64 or 128)
             renderer.render(view)
             if (ghosts) renderer.render(ghostView)
             composite.view.renderTarget = old
-            composite.view.setVisibleLayers(255, if (ghosts) 1 or 2 or 16 or 32 or 64 else 32)
+            composite.view.setVisibleLayers(
+                255,
+                if (ghosts) 1 or 2 or 16 or 32 or 64 or 128 else 32,
+            )
             composite.view.isPostProcessingEnabled = post
             composite.view.antiAliasing =
                 if (post) View.AntiAliasing.FXAA else View.AntiAliasing.NONE

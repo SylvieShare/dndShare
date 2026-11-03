@@ -58,6 +58,14 @@ internal class MapSceneWater(
     }
 
     private var entries = emptyList<MapSceneEntry>()
+    private var shadowMask = emptySet<MapEntityRef>()
+
+    fun shadowMask(value: Set<MapEntityRef>) {
+        if (value == shadowMask) return
+        shadowMask = value
+        for ((ref, parts) in entities) parts.forEach { it.shadowEnabled(ref !in value) }
+    }
+
     val working
         get() = loading.isNotEmpty()
 
@@ -207,6 +215,7 @@ internal class MapSceneWater(
                     }
                 }
             renderables.forEachIndexed { index, renderable ->
+                renderable.shadowEnabled(entry.ref !in shadowMask)
                 if (!parts[index].blend)
                     renderable.bindMaterial(
                         stencil.material(parts[index].material, groups[entry.ref] ?: 0)

@@ -201,6 +201,29 @@ internal class MapSceneAssets(
         get() = loading != null || downloaded.isNotEmpty()
 
     private var selection = emptySet<MapEntityRef>()
+    private var shadowMask = emptySet<MapEntityRef>()
+    private val shadowDefaults = mutableMapOf<Int, Boolean>()
+
+    fun shadowMask(value: Set<MapEntityRef>) {
+        if (value != shadowMask) {
+            shadowMask = value
+            applyShadowMask()
+        }
+    }
+
+    private fun applyShadowMask() {
+        val manager = engine.renderableManager
+        for (pool in pools.values + retiring.values) for ((ref, instance) in
+            pool.assigned) for (entity in instance.entities) {
+            val renderable = manager.getInstance(entity)
+            if (renderable != 0)
+                manager.setCastShadows(
+                    renderable,
+                    shadowDefaults.getOrPut(entity) { manager.isShadowCaster(renderable) } &&
+                        ref !in shadowMask,
+                )
+        }
+    }
 
     fun selection(value: Set<MapEntityRef>) {
         if (value == selection) return
@@ -421,6 +444,7 @@ internal class MapSceneAssets(
                     }
         }
         drawn = actual
+        applyShadowMask()
         val refs = actual.keys.toSet()
         val urls = actual.values.map { it.model.renderUrl }.toSet()
         if (refs != readySnapshot.readyRefs || urls != readySnapshot.readyUrls)
@@ -450,7 +474,10 @@ internal class MapSceneAssets(
         primitives.restore(pool.instances)
         pool.instances.forEach { instance ->
             scene.removeEntities(instance.entities)
-            instance.entities.forEach(engine::destroyEntity)
+            instance.entities.forEach {
+                shadowDefaults.remove(it)
+                engine.destroyEntity(it)
+            }
         }
         primitives.forget(pool.instances)
         loader.destroyAsset(pool.asset)

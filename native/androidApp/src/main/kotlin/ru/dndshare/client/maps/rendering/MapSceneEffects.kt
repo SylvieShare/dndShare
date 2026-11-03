@@ -44,6 +44,8 @@ internal class MapSceneEffects(
     val failureRecords
         get() = water.failureRecords + decals.failureRecords
 
+    fun shadowMask(value: Set<MapEntityRef>) = water.shadowMask(value)
+
     val renderMaterials
         get() = water.renderMaterials
 

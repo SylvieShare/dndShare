@@ -72,6 +72,7 @@ internal class FilamentSceneCore(
 
     private val picker: MapScenePicker
     private val lights: MapSceneLights
+    private val shadows: MapSceneShadows
     private val frames =
         MapFrameScheduler(::frame) { error ->
             captures.fail(error)
@@ -98,8 +99,8 @@ internal class FilamentSceneCore(
     val loadState
         get() =
             presented.copy(
-                pendingUrls = assets.pendingUrls,
-                failures = effects.failureRecords + assets.failureRecords,
+                pendingUrls = assets.pendingUrls + shadows.pendingUrls,
+                failures = shadows.failures + effects.failureRecords + assets.failureRecords,
                 problem = failures.entries.filterKeys { it != "models" }.values.firstOrNull(),
             )
 
@@ -117,6 +118,7 @@ internal class FilamentSceneCore(
                 assets.pendingCount == 0 &&
                 !assets.working &&
                 !effects.working &&
+                !shadows.working &&
                 hasMapFrame
 
     fun options(value: MapSceneOptions) {
@@ -138,6 +140,7 @@ internal class FilamentSceneCore(
         assets.renderContext?.let {
             lights.update(it)
             effects.update(it, assets.drawnEntries, selectedRefs())
+            shadows.update(it, assets.drawnEntries)
         }
     }
 
@@ -234,6 +237,11 @@ internal class FilamentSceneCore(
         effects =
             MapSceneEffects(context, engine, scene, cache, scope, ::requestFrame) { error ->
                 report("effects", error)
+            }
+        shadows =
+            MapSceneShadows(engine, scene, pipeline.materials, cache, scope, ::requestFrame) {
+                message ->
+                report("shadows", message)
             }
         picker =
             MapScenePicker(
@@ -373,6 +381,7 @@ internal class FilamentSceneCore(
         failures.clear()
         assets.retry()
         effects.retry()
+        shadows.retry()
         document?.let { update(it, models.values.toList()) }
     }
 
@@ -398,6 +407,10 @@ internal class FilamentSceneCore(
         effects.surfaceGroups(assets.surfaceIds)
         effects.appearance(assets.appearanceEntries, anchors)
         effects.transforms(assets.motionEntries, anchors)
+        shadows.transforms(assets.motionEntries)
+        val shadowMask = shadows.mask
+        assets.shadowMask(shadowMask)
+        effects.shadowMask(shadowMask)
         if (anchors.deltas.isNotEmpty()) {
             val positions =
                 sceneContext
@@ -495,6 +508,7 @@ internal class FilamentSceneCore(
         scope.cancel()
         frames.close()
         detach()
+        shadows.close()
         effects.close()
         assets.close()
         pipeline.close()

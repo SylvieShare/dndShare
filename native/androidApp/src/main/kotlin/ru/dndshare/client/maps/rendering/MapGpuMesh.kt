@@ -143,6 +143,14 @@ internal class MapGpuEntity(
 
     private var layerMask = 1
     private var shown = true
+    private val castsShadows = shadows
+
+    fun shadowEnabled(value: Boolean) {
+        engine.renderableManager.setCastShadows(
+            engine.renderableManager.getInstance(entity),
+            value && castsShadows,
+        )
+    }
 
     fun bindMaterial(value: MaterialInstance) {
         if (material.nativeObject == value.nativeObject) return
