@@ -13,6 +13,42 @@ import ru.dndshare.client.network.ApiClient
 
 class MapsHttpTest {
     @Test
+    fun modelDownloadReportsReceivedBytesAndRejectsATruncatedSuccessfulResponse() = runTest {
+        val bytes = byteArrayOf(1, 2, 3, 4, 5)
+        var truncated = false
+        val api =
+            ApiClient(
+                "https://dndshare.ru",
+                MemoryDeviceServices(),
+                MockEngine {
+                    respond(
+                        bytes,
+                        headers =
+                            headersOf(
+                                HttpHeaders.ContentLength,
+                                (if (truncated) 9 else bytes.size).toString(),
+                            ),
+                    )
+                },
+            )
+        try {
+            var received = 0L
+            val result =
+                HttpMapsApi(api).modelBytes("/api/maps/models/test/render") { loaded, _ ->
+                    received = loaded
+                }
+            assertContentEquals(bytes, result)
+            assertEquals(bytes.size.toLong(), received)
+            truncated = true
+            assertFailsWith<Exception> {
+                HttpMapsApi(api).modelBytes("/api/maps/models/test/render")
+            }
+        } finally {
+            api.close()
+        }
+    }
+
+    @Test
     fun nativeCookieAndExactPatchPacketUseTheExistingApi() = runTest {
         var body: JsonObject? = null
         val api =

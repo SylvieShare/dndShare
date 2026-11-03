@@ -38,10 +38,10 @@ class FilamentMapScene(
     private val lightFlow =
         MutableStateFlow<Map<String, ru.dndshare.client.maps.MapPose>>(emptyMap())
     val lightPositions = lightFlow.asStateFlow()
-    @Volatile private var ready = emptySet<String>()
-    @Volatile private var readyInstances = emptySet<MapEntityRef>()
+    private val loads = MutableStateFlow(MapSceneLoadState())
+    val loadState = loads.asStateFlow()
     val readyRefs
-        get() = readyInstances
+        get() = loads.value.readyRefs
 
     @Volatile private var viewportWidth = 0
     @Volatile private var viewportHeight = 0
@@ -54,7 +54,7 @@ class FilamentMapScene(
         get() = viewportHeight
 
     val readyModelUrls
-        get() = ready
+        get() = loads.value.readyUrls
 
     val renderedFrames
         get() = core?.renderedFrames ?: 0L
@@ -84,11 +84,14 @@ class FilamentMapScene(
                         dispatcher,
                         motionUpdated = { if (!closed) lightFlow.value = it },
                     ) { count, error ->
-                        ready = core?.readyModelUrls.orEmpty()
-                        readyInstances = core?.readyRefs.orEmpty()
+                        loads.value = core?.loadState ?: MapSceneLoadState()
                         main.post { if (!closed) status(count, error) }
                     }
             } catch (error: Exception) {
+                loads.value =
+                    loads.value.copy(
+                        problem = mapLoadMessage(error.message ?: "Не удалось запустить 3D")
+                    )
                 main.post { if (!closed) status(0, error.message ?: "Не удалось запустить 3D") }
             }
         }
@@ -130,6 +133,11 @@ class FilamentMapScene(
                     try {
                         core?.action()
                     } catch (error: Exception) {
+                        loads.value =
+                            loads.value.copy(
+                                problem =
+                                    mapLoadMessage(error.message ?: "Не удалось подготовить сцену")
+                            )
                         main.post { if (!closed) status(0, error.message) }
                     }
             }

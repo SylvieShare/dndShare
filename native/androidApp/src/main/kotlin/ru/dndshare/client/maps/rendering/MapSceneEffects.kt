@@ -41,6 +41,9 @@ internal class MapSceneEffects(
     val statistics
         get() = MapEffectStatistics(water.modelCount, decals.count, fire.count, fog.ready)
 
+    val failureRecords
+        get() = water.failureRecords + decals.failureRecords
+
     val renderMaterials
         get() = water.renderMaterials
 

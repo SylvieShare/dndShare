@@ -576,7 +576,7 @@ window.fetch = async (url, options = {}) => {
     /^\/api\/(maps\/models|public\/sessions\/ABC-123\/map-models)\/[^/]+\/(render|lod|shadow)$/.test(
       url,
     ) &&
-    params.has("modelRetry")
+    params.has("modelRetry") && (!params.get("retryModel") || url.includes(params.get("retryModel")))
   ) {
     window.assetAttempts ||= {};
     window.assetAttempts[url] = (window.assetAttempts[url] || 0) + 1;

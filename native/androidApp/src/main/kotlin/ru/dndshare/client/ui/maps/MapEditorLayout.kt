@@ -34,6 +34,15 @@ internal fun MapEditorLayout(
     if (workspace.referenceOpen && admin) MapReferenceWindow(workspace, cache, images)
     val state = workspace.state
     val map = state.map
+    val missingModels =
+        remember(map?.document, workspace.models) {
+            val known = workspace.models.map { it.uuid }.toSet()
+            map?.document?.let { doc ->
+                (doc.rows("tiles") + doc.rows("objects")).any { row ->
+                    row.string("modelId").let { it.isNotBlank() && it !in known }
+                }
+            } == true
+        }
     val overlayLeft by
         animateDpAsState(if (workspace.sidebarOpen) 273.dp else 0.dp, label = "Map tools inset")
     Column(Modifier.fillMaxSize().background(WebPalette.Background).imePadding()) {
@@ -70,7 +79,8 @@ internal fun MapEditorLayout(
                 }
             }
         }
-        val error = state.error ?: workspace.rendererError
+        val error =
+            state.error ?: if (map == null) state.modelError ?: workspace.rendererError else null
         if (error != null)
             Row(
                 Modifier.fillMaxWidth().background(WebPalette.Subheader).padding(8.dp),
@@ -139,7 +149,9 @@ internal fun MapEditorLayout(
                             renderer = workspace::attachScene,
                             initialCamera = workspace.ui.camera,
                             active = !workspace.referenceOpen,
-                            catalogueLoading = state.modelLoading,
+                            catalogueLoading =
+                                state.modelLoading || !state.modelsFresh && missingModels,
+                            catalogueError = state.modelError,
                             placing = workspace.ui.tool != MapTool.None,
                             options =
                                 MapSceneOptions(
@@ -190,6 +202,25 @@ internal fun MapEditorLayout(
                                     WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
                                 ),
                         )
+                        val narrowCanvas =
+                            this@BoxWithConstraints.maxWidth - (if (map.editable) 77.dp else 0.dp) <
+                                600.dp
+                        Box(
+                            Modifier.align(
+                                    if (narrowCanvas) Alignment.TopEnd else Alignment.BottomEnd
+                                )
+                                .padding(12.dp)
+                                .padding(bottom = if (narrowCanvas) 0.dp else 58.dp)
+                                .then(
+                                    if (narrowCanvas) Modifier
+                                    else
+                                        Modifier.windowInsetsPadding(
+                                            WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
+                                        )
+                                )
+                        ) {
+                            MapDownloadManager(workspace, cache)
+                        }
                         MapViewerTools(
                             workspace.scene,
                             map.document,

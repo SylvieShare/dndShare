@@ -10,6 +10,9 @@ data class MapEditorState(
     val models: List<MapModel> = emptyList(),
     val loading: Boolean = true,
     val modelLoading: Boolean = true,
+    val modelRefreshing: Boolean = true,
+    val modelsFresh: Boolean = false,
+    val modelError: String? = null,
     val saving: Boolean = false,
     val error: String? = null,
     val conflict: Boolean = false,
@@ -18,16 +21,21 @@ data class MapEditorState(
         get() = work?.current
 }
 
-class MapEditorController(private val api: MapsApi, private val store: MapWorkspaceStore) :
-    AutoCloseable {
+class MapEditorController(
+    private val api: MapsApi,
+    private val store: MapWorkspaceStore,
+    private val catalogue: suspend (Boolean) -> List<MapModel> = { api.models() },
+) : AutoCloseable {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val mutable = MutableStateFlow(MapEditorState())
     val state: StateFlow<MapEditorState> = mutable.asStateFlow()
     private var debounce: Job? = null
     private var saving: Job? = null
     private var opening: Job? = null
+    private val modelCatalogue = MapModelCatalogue(mutable, store, catalogue, scope)
 
     fun open(id: String) {
+        modelCatalogue.invalidate()
         opening?.cancel()
         opening = scope.launch {
             mutable.value = MapEditorState()
@@ -61,49 +69,11 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
         }
     }
 
-    private suspend fun loadModels() {
-        try {
-            val cached = store.models()
-            if (cached != null) mutable.update { it.copy(models = cached, modelLoading = false) }
-            refreshModels()
-        } catch (cancelled: CancellationException) {
-            throw cancelled
-        } catch (error: Exception) {
-            mutable.update { it.copy(modelLoading = false, error = error.message) }
-        }
-    }
+    private suspend fun loadModels(force: Boolean = false) = modelCatalogue.load(force)
 
-    suspend fun refreshModels(): List<MapModel> {
-        val models = api.models()
-        store.models(models)
-        mutable.update { it.copy(models = models, modelLoading = false, error = null) }
-        return models
-    }
+    suspend fun refreshModels(force: Boolean = true): List<MapModel> = modelCatalogue.refresh(force)
 
-    fun adoptModel(saved: MapModel) {
-        val catalogue =
-            state.value.models.map { model ->
-                if (model.uuid == saved.uuid) saved
-                else if (model.collection == saved.collection && model.code == saved.code)
-                    model.copy(
-                        groupName = saved.groupName,
-                        groupNameEn = saved.groupNameEn,
-                        raw =
-                            model.raw
-                                .with("groupName", JsonPrimitive(saved.groupName))
-                                .with("groupNameEn", JsonPrimitive(saved.groupNameEn)),
-                    )
-                else model
-            }
-        mutable.update { it.copy(models = catalogue) }
-        scope.launch {
-            try {
-                store.models(catalogue)
-            } catch (error: Exception) {
-                fail(error)
-            }
-        }
-    }
+    fun adoptModel(saved: MapModel) = modelCatalogue.adopt(saved)
 
     private fun persist(work: MapWork) {
         scope.launch {
@@ -298,7 +268,7 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
 
     fun retry() {
         scope.launch {
-            loadModels()
+            loadModels(true)
             flush()
         }
     }
@@ -362,6 +332,7 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
     }
 
     override fun close() {
+        modelCatalogue.invalidate()
         finishEdit()
         val final = state.value.work
         debounce?.cancel()

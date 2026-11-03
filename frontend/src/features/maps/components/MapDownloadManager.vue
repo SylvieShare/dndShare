@@ -1,5 +1,6 @@
 <template>
   <BaseTile
+    :outlined="false"
     v-if="progress?.remaining"
     class="map-download-manager"
     role="region"
@@ -138,7 +139,6 @@ function bytes(progress) {
   justify-content: space-between;
   margin-top: 8px;
   padding-top: 7px;
-  border-top: 1px solid var(--border);
 }
 .map-download-status {
   display: block;

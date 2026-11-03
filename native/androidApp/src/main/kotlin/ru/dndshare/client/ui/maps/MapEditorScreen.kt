@@ -30,7 +30,7 @@ internal fun MapEditorScreen(
     val queue = snapshots ?: remember(cache) { MapSnapshotQueue(context, cache) }
     val publisher = previews ?: remember(api, queue) { MapStoredPreviews(api, queue) }
     DisposableEffect(queue) { onDispose { if (snapshots == null) queue.close() } }
-    val controller = remember(id) { MapEditorController(api, store) }
+    val controller = remember(id) { MapEditorController(api, store, cache::catalogue) }
     val scope = rememberCoroutineScope()
     val workspace =
         remember(controller) { MapEditorWorkspace(controller, scope, format, id, api, queue) }

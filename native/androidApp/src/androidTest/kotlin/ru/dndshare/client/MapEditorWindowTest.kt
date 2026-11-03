@@ -219,8 +219,7 @@ class MapEditorWindowTest {
                         } != null
                     }
                     await {
-                        find { it.text?.toString()?.startsWith("Загружаем модели:") == true } ==
-                            null
+                        find { it.contentDescription?.toString() == "Загрузка моделей" } == null
                     }
                     automation.waitForIdle(100, 5000)
                     val committed = CountDownLatch(2)

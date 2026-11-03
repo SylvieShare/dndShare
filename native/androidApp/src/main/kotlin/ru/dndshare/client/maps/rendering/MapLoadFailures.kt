@@ -6,11 +6,14 @@ internal class MapLoadFailures {
     val message
         get() = messages.values.firstOrNull()
 
+    val entries
+        get() = messages.toMap()
+
     operator fun contains(key: String) = key in messages
 
     fun set(key: String, message: String?) {
         if (message == null) messages.remove(key)
-        else messages[key] = message.ifBlank { "Не удалось загрузить ресурс карты" }
+        else messages[key] = mapLoadMessage(message.ifBlank { "Не удалось загрузить ресурс карты" })
     }
 
     fun fail(key: String, message: String?) =

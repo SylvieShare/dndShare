@@ -45,6 +45,14 @@ internal fun prepareMapModel(bytes: ByteArray): MapPreparedModel {
             .jsonObject
     val originalNodes = json.rows("nodes")
     val originalMeshes = json.rows("meshes")
+    if (
+        originalMeshes.none { mesh ->
+            mesh.rows("primitives").any {
+                (it["attributes"] as? JsonObject)?.containsKey("POSITION") == true
+            }
+        }
+    )
+        throw MapPermanentLoadException("В файле модели нет геометрии")
     val materials = json.rows("materials")
     val meshes = originalMeshes.toMutableList()
     val nodes =

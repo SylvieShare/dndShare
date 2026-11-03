@@ -352,6 +352,7 @@ defineExpose({
 </script>
 <style scoped>
 .map-canvas {
+  container: map-field / inline-size;
   position: relative;
   width: 100%;
   height: 100%;
@@ -404,5 +405,10 @@ defineExpose({
 }
 .map-canvas-corner > * {
   pointer-events: auto;
+}
+@container map-field (max-width: 599px) {
+  .map-canvas-corner { position: static; max-width: none; }
+  .map-canvas-corner :deep(.map-download-manager) { position: absolute; top: 12px; right: 16px; }
+  .map-canvas-corner :deep(.map-canvas-controls) { position: absolute; right: 16px; bottom: 16px; }
 }
 </style>

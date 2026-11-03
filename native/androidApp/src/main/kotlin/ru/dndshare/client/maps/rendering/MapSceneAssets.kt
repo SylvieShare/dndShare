@@ -111,7 +111,23 @@ internal class MapSceneAssets(
 
     private val pending = mutableSetOf<String>()
     private val jobs = mutableMapOf<String, Job>()
-    private val failed = MapLoadFailures()
+    private val retries =
+        MapAssetRetries(
+            scope,
+            { url -> entries.any { it.model.renderUrl == url } },
+            { url, stage ->
+                if (stage == "download") cache.downloads.invalidate(url) else cache.invalidate(url)
+            },
+            ::download,
+            ::publishStatus,
+            { cache.downloads.state.value[it] },
+        )
+    val failureRecords
+        get() = retries.issues
+
+    var readySnapshot = MapSceneLoadState()
+        private set
+
     private val slots = Semaphore(3)
     private val downloaded = ArrayDeque<DownloadedModel>()
     private var loading: MapModelPool? = null
@@ -135,6 +151,9 @@ internal class MapSceneAssets(
     val pendingCount
         get() = pending.size
 
+    val pendingUrls
+        get() = pending.toSet()
+
     val working
         get() = loading != null || downloaded.isNotEmpty()
 
@@ -146,14 +165,17 @@ internal class MapSceneAssets(
         synchronize()
     }
 
-    private fun publishStatus() = status(pending.size, failed.message)
+    private fun publishStatus() {
+        status(pending.size, retries.message)
+        requestFrame()
+    }
 
     fun update(value: List<MapSceneEntry>, context: MapContext) {
         this.context = context
         wantedEntries = value
         entries = placement.merge(value, context, previewSpec, drawn)
         val wanted = entries.map { it.model.renderUrl }.toSet()
-        failed.retain(wanted)
+        retries.retain(wanted)
         jobs.keys
             .filter { it !in wanted }
             .forEach { url ->
@@ -182,7 +204,7 @@ internal class MapSceneAssets(
                     pools.remove(url)
                 } else removePool(url)
             }
-            if (url !in pools && url !in pending && url !in failed) download(url)
+            if (url !in pools && url !in pending && url !in retries) download(url)
         }
     }
 
@@ -191,6 +213,19 @@ internal class MapSceneAssets(
         loading?.let { pool ->
             resources.asyncUpdateLoad()
             if (resources.asyncGetLoadProgress() >= 1f) {
+                if (
+                    pool.instances.none { instance ->
+                        instance.entities.any { engine.renderableManager.hasComponent(it) }
+                    }
+                ) {
+                    removePool(pool.url)
+                    retries.fail(
+                        pool.url,
+                        MapPermanentLoadException("В файле модели нет геометрии"),
+                        "scene",
+                    )
+                    return
+                }
                 pool.ready = true
                 loading = null
                 pending -= pool.url
@@ -198,23 +233,25 @@ internal class MapSceneAssets(
                 synchronize()
                 ensureWantedPools()
                 changed()
-                publishStatus()
+                retries.ready(pool.url)
             }
         }
     }
 
-    fun retry() {
-        failed.clear()
-    }
+    fun retry() = retries.retry()
 
     private fun download(url: String) {
+        if (url in pending) return
+        retries.starting(url)
         pending += url
         publishStatus()
         val job =
             scope.launch(start = CoroutineStart.LAZY) {
+                var stage = "download"
                 try {
                     slots.withPermit {
-                        val original = cache.bytes(url)
+                        val original = cache.bytes(url, oneAttempt = true)
+                        stage = "decode"
                         val model = withContext(Dispatchers.Default) { prepareMapModel(original) }
                         val consumed = CompletableDeferred<Unit>()
                         downloaded.addLast(DownloadedModel(url, model, consumed))
@@ -225,8 +262,7 @@ internal class MapSceneAssets(
                     throw cancelled
                 } catch (error: Exception) {
                     pending -= url
-                    failed.fail(url, error.message)
-                    publishStatus()
+                    retries.fail(url, error, stage)
                 } finally {
                     if (jobs[url] === coroutineContext[Job]) jobs.remove(url)
                 }
@@ -271,8 +307,7 @@ internal class MapSceneAssets(
             pools.remove(url)?.let { loader.destroyAsset(it.asset) }
             loading = null
             pending -= url
-            failed.fail(url, error.message)
-            publishStatus()
+            retries.fail(url, error, "scene")
         } finally {
             source.consumed.complete(Unit)
         }
@@ -350,6 +385,10 @@ internal class MapSceneAssets(
                     }
         }
         drawn = actual
+        val refs = actual.keys.toSet()
+        val urls = actual.values.map { it.model.renderUrl }.toSet()
+        if (refs != readySnapshot.readyRefs || urls != readySnapshot.readyUrls)
+            readySnapshot = MapSceneLoadState(refs, urls)
         placement.ready(actual.keys)
         renderContext?.let { poses.sync(actual, it) }
         applyPoses(actual.keys)
@@ -393,6 +432,7 @@ internal class MapSceneAssets(
     }
 
     override fun close() {
+        retries.close()
         jobs.values.forEach(Job::cancel)
         jobs.clear()
         resources.asyncCancelLoad()

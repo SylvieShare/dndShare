@@ -38,7 +38,25 @@ internal class MapSceneWater(
     private val entities = mutableMapOf<MapEntityRef, List<MapGpuEntity>>()
     private val entityModels = mutableMapOf<MapEntityRef, String>()
     private val loading = mutableMapOf<String, Job>()
-    private val failed = MapLoadFailures()
+    private val retries =
+        MapAssetRetries(
+            scope,
+            { url -> entries.any { it.model.renderUrl == url } },
+            { url, stage ->
+                if (stage == "download") cache.downloads.invalidate(url) else cache.invalidate(url)
+            },
+            ::load,
+            ::reportFailure,
+            { cache.downloads.state.value[it] },
+        )
+    val failureRecords
+        get() = retries.issues
+
+    private fun reportFailure() {
+        error(retries.message)
+        changed()
+    }
+
     private var entries = emptyList<MapSceneEntry>()
     val working
         get() = loading.isNotEmpty()
@@ -75,8 +93,8 @@ internal class MapSceneWater(
             (it.model.behaviour["waterAnimation"] as? JsonObject)?.flag("enabled") == true
         }
         val urls = entries.map { it.model.renderUrl }.toSet()
-        failed.retain(urls)
-        error(failed.message)
+        retries.retain(urls)
+        error(retries.message)
         entities.keys
             .filter { id ->
                 entries.none { it.ref == id && it.model.renderUrl == entityModels[id] }
@@ -97,21 +115,26 @@ internal class MapSceneWater(
                     }
             }
         loading.keys.filter { it !in urls }.forEach { loading.remove(it)?.cancel() }
-        for (url in urls) if (url !in models && url !in loading && url !in failed) load(url)
+        for (url in urls) if (url !in models && url !in loading && url !in retries) load(url)
         synchronize()
     }
 
     private fun load(url: String) {
+        if (url in loading) return
+        retries.starting(url)
         val job =
             scope.launch(start = CoroutineStart.LAZY) {
                 var prepared: List<MapWaterPart>? = null
+                var stage = "geometry"
                 try {
                     slots.withPermit {
                         val (source, parts) = cache.geometry(url)
+                        stage = "decode"
                         withContext(Dispatchers.Default) {
                             prepared = prepareWaterTextures(source, parts, url)
                         }
                         if (closed || entries.none { it.model.renderUrl == url }) return@withPermit
+                        stage = "scene"
                         val created = mutableListOf<Part>()
                         try {
                             for (part in prepared.orEmpty()) {
@@ -137,7 +160,7 @@ internal class MapSceneWater(
                             }
                             models[url] = created
                             synchronize()
-                            changed()
+                            retries.ready(url)
                         } catch (failure: Throwable) {
                             created.forEach {
                                 it.mesh.close()
@@ -149,8 +172,7 @@ internal class MapSceneWater(
                 } catch (cancelled: CancellationException) {
                     throw cancelled
                 } catch (failure: Exception) {
-                    failed.fail(url, failure.message)
-                    error(failed.message)
+                    retries.fail(url, failure, stage)
                 } finally {
                     prepared
                         .orEmpty()
@@ -265,12 +287,12 @@ internal class MapSceneWater(
     }
 
     fun retry() {
-        failed.clear()
-        update(entries, selected)
+        retries.retry()
     }
 
     override fun close() {
         closed = true
+        retries.close()
         loading.values.forEach(Job::cancel)
         loading.clear()
         entities.values.flatten().forEach(MapGpuEntity::close)

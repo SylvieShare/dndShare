@@ -117,7 +117,6 @@ internal fun MapCanvasToolbar(workspace: MapEditorWorkspace, modifier: Modifier 
         ) {
             workspace.controller.ui { it.copy(orbit = !it.orbit) }
         }
-        if (workspace.modelPending > 0) ShareBadge("Загружаем модели: ${workspace.modelPending}")
         workspace.hint?.let { ShareBadge(it) }
     }
 }

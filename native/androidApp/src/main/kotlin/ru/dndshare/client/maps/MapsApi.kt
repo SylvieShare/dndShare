@@ -1,9 +1,12 @@
 package ru.dndshare.client.maps
 
 import io.ktor.client.call.body
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.*
@@ -33,7 +36,13 @@ interface MapsApi {
 
     suspend fun modelBytes(url: String): ByteArray
 
+    suspend fun modelBytes(url: String, progress: (Long, Long?) -> Unit): ByteArray =
+        modelBytes(url).also { progress(it.size.toLong(), it.size.toLong()) }
+
     suspend fun mediaBytes(url: String): ByteArray
+
+    suspend fun mediaBytes(url: String, progress: (Long, Long?) -> Unit): ByteArray =
+        mediaBytes(url).also { progress(it.size.toLong(), it.size.toLong()) }
 
     suspend fun decals(): List<MapDecalImage>
 
@@ -119,7 +128,9 @@ class HttpMapsApi(private val api: ApiClient) : MapsApi {
             request<List<JsonObject>>("/models").map(::decodeMapModel)
         }
 
-    override suspend fun modelBytes(url: String): ByteArray {
+    override suspend fun modelBytes(url: String): ByteArray = modelBytes(url) { _, _ -> }
+
+    override suspend fun modelBytes(url: String, progress: (Long, Long?) -> Unit): ByteArray {
         val target = Url(url)
         val base = Url(api.baseUrl)
         val resolved = if (url.startsWith("/api/maps/models/")) "${api.baseUrl}$url" else url
@@ -130,16 +141,44 @@ class HttpMapsApi(private val api: ApiClient) : MapsApi {
                     target.port == base.port &&
                     target.encodedPath.startsWith("/api/maps/models/"))
         )
-        return with(api) { client.get(resolved).checked().body() }
+        return fileBytes(resolved, progress)
     }
 
-    override suspend fun mediaBytes(url: String): ByteArray =
+    private suspend fun fileBytes(resolved: String, progress: (Long, Long?) -> Unit): ByteArray =
         withContext(Dispatchers.IO) {
-            require(
-                url.startsWith("/images/maps/decals/") || url.startsWith("/api/map-decal-images/")
-            )
-            with(api) { client.get(baseUrl + url).checked().body() }
+            val successful = AtomicBoolean(false)
+            api.client
+                .prepareGet(resolved) {
+                    timeout {
+                        requestTimeoutMillis = HttpTimeoutConfig.INFINITE_TIMEOUT_MS
+                        socketTimeoutMillis = 30_000
+                    }
+                    onDownload { received, total ->
+                        if (successful.get()) progress(received, total)
+                    }
+                }
+                .execute { response ->
+                    successful.set(response.status.isSuccess())
+                    with(api) { response.checked() }
+                    val bytes = response.body<ByteArray>()
+                    val expected = response.contentLength()
+                    if (
+                        response.headers[HttpHeaders.ContentEncoding].isNullOrBlank() &&
+                            expected != null
+                    )
+                        check(bytes.size.toLong() == expected) {
+                            "Файл модели получен не полностью"
+                        }
+                    bytes
+                }
         }
+
+    override suspend fun mediaBytes(url: String): ByteArray = mediaBytes(url) { _, _ -> }
+
+    override suspend fun mediaBytes(url: String, progress: (Long, Long?) -> Unit): ByteArray {
+        require(url.startsWith("/images/maps/decals/") || url.startsWith("/api/map-decal-images/"))
+        return fileBytes(api.baseUrl + url, progress)
+    }
 
     override suspend fun decals() = request<List<MapDecalImage>>("/decals")
 

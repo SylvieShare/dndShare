@@ -10,6 +10,7 @@ const server=await createServer({root:path.join(root,'frontend'),configFile:path
 try {
  const {catalogue,glb,WALL,FLOOR}=await server.ssrLoadModule('/tests/maps/fixtures/catalogue.js')
  const {newMap}=await server.ssrLoadModule('/src/features/maps/lib/mapModel.js')
+ const {canonicalMapData}=await server.ssrLoadModule('/src/shared/api/mapDocumentData.js')
  const map=newMap();map.id='test-map';map.name='Крепость на переправе';map.revision=1
  const doc=map.document;doc.width=12;doc.height=10;doc.tags=['подземелье','камень'];doc.tiles=[]
  for(let y=2;y<8;y++)for(let x=2;x<10;x++)doc.tiles.push({id:`tile-${x}-${y}`,modelId:x===2||x===9||y===2||y===7?WALL:FLOOR,x,y,level:0,rotation:0})
@@ -18,7 +19,7 @@ try {
  doc.cameras=[];doc.lights=[]
  const models=catalogue.map(({id,definitionId,...model})=>({...model,id:definitionId,uuid:id}))
  const output=path.join(root,'native/androidApp/src/androidTest/assets/maps')
- await fs.writeFile(path.join(output,'editor-review.json'),JSON.stringify({map,models},null,2)+'\n')
+ await fs.writeFile(path.join(output,'editor-review.json'),JSON.stringify({map:canonicalMapData(map),models},null,2)+'\n')
  await fs.writeFile(path.join(output,'review-tile.glb'),Buffer.from(glb))
  console.log(`Paired map: ${doc.tiles.length} tiles, ${doc.objects.length} props, ${models.length} model definitions`)
 }finally{await server.close()}

@@ -77,6 +77,23 @@ internal class MapDiskCache(
             }
         }
 
+    suspend fun evict(url: String, extension: String) =
+        withContext(Dispatchers.IO) {
+            require(extension in setOf("glb", "image"))
+            val hash =
+                MessageDigest.getInstance("SHA-256").digest(url.toByteArray()).joinToString("") {
+                    "%02x".format(it)
+                }
+            files[(("$path/$hash.$extension").hashCode() and Int.MAX_VALUE) % files.size].withLock {
+                directoryLock.withLock {
+                    val file = File(directory, "$hash.$extension")
+                    check(!file.exists() || file.delete()) {
+                        "Не удалось очистить повреждённый ресурс карты"
+                    }
+                }
+            }
+        }
+
     private fun trim(keep: File?) {
         val records =
             directory.listFiles().orEmpty().filter { it.extension in setOf("glb", "image") }

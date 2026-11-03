@@ -37,6 +37,7 @@ internal fun MapSceneView(
     initialCamera: MapCamera? = null,
     active: Boolean = true,
     catalogueLoading: Boolean = false,
+    catalogueError: String? = null,
     placing: Boolean = false,
     options: MapSceneOptions = MapSceneOptions(),
     rectangle: Boolean = false,
@@ -153,10 +154,14 @@ internal fun MapSceneView(
             },
         )
         if (!drawn) {
-            if (firstFrameError == null) ShareSkeletonBlock(Modifier.fillMaxSize())
+            if (firstFrameError == null && catalogueError == null)
+                ShareSkeletonBlock(Modifier.fillMaxSize())
             else
                 Box(Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
-                    Text(firstFrameError.orEmpty(), color = WebPalette.TextMuted)
+                    Text(
+                        (catalogueError ?: firstFrameError).orEmpty(),
+                        color = WebPalette.TextMuted,
+                    )
                 }
         }
         val current = scene

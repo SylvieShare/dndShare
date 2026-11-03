@@ -43,7 +43,7 @@ export function modelDownloadsFixture(params, bodyFor) {
           "Content-Type": "model/gltf-binary",
           "Content-Length": String(body.byteLength),
         };
-      if (!params.has("downloadExample") || automatic)
+      if (!params.has("downloadExample") || automatic || (params.get("holdModel") && !url.includes(params.get("holdModel"))))
         return new Response(body, { headers });
       const bytes = new Uint8Array(body);
       window.modelTransfers.push(url);

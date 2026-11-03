@@ -484,8 +484,7 @@
         "angle": 225,
         "elevation": 45
       },
-      "lights": [],
-      "cameras": []
+      "lights": []
     },
     "revision": 1,
     "id": "test-map"

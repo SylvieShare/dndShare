@@ -2,6 +2,7 @@ package ru.dndshare.client.maps.geometry
 
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.max
 import kotlinx.serialization.json.*
 import ru.dndshare.client.maps.*
@@ -11,7 +12,7 @@ import ru.dndshare.client.model.WireJson
 class GlbDocument(bytes: ByteArray) {
     val json: JsonObject
     private val binary: ByteArray
-    private val views = mutableMapOf<Int, ByteArray>()
+    private val views = ConcurrentHashMap<Int, ByteArray>()
     val retainedBytes
         get() = binary.size.toLong() + views.values.sumOf { it.size.toLong() }
 
@@ -42,7 +43,7 @@ class GlbDocument(bytes: ByteArray) {
     }
 
     fun bufferView(index: Int): ByteArray =
-        views.getOrPut(index) {
+        views.computeIfAbsent(index) {
             val view = json.array("bufferViews")[index].jsonObject
             val encoded =
                 (view["extensions"] as? JsonObject)?.get("EXT_meshopt_compression") as? JsonObject
@@ -163,7 +164,14 @@ class GlbDocument(bytes: ByteArray) {
     fun image(index: Int): ByteArray {
         val image = json.array("images")[index].jsonObject
         val view = image["bufferView"]?.jsonPrimitive?.intOrNull
-        if (view != null) return bufferView(view)
+        if (view != null) {
+            val source = json.array("bufferViews")[view].jsonObject
+            if ((source["extensions"] as? JsonObject)?.get("EXT_meshopt_compression") != null)
+                return bufferView(view)
+            require(source.number("buffer").toInt() == 0)
+            // Encoded images are temporary decoder input, rather than a second cached binary copy.
+            return slice(source.number("byteOffset").toInt(), source.number("byteLength").toInt())
+        }
         val uri = image.string("uri")
         require(uri.startsWith("data:") && uri.contains(";base64,")) {
             "Изображение модели должно быть встроено в GLB"

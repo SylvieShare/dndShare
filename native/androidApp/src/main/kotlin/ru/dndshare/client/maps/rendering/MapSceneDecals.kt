@@ -42,7 +42,34 @@ internal class MapSceneDecals(
         ImageLoader.Builder(context).components { add(SvgDecoder.Factory()) }.build()
     private val records = mutableMapOf<String, Record>()
     private val loading = mutableMapOf<String, Pair<String, Job>>()
-    private val failed = MapLoadFailures()
+    private val tasks = mutableMapOf<String, String>()
+    private val retries =
+        MapAssetRetries(scope, { it in tasks }, ::invalidateTask, ::retryTask, ::reportFailure)
+    val failureRecords
+        get() =
+            retries.issues.values.filter { it.url != null }.associateBy { requireNotNull(it.url) }
+
+    private fun reportFailure() {
+        error(retries.message)
+        changed()
+    }
+
+    private suspend fun invalidateTask(key: String, stage: String) {
+        val url = retries.issues[key]?.url ?: return
+        if (stage == "download") cache.downloads.invalidate(url)
+        else if (document.rows("decals").any { it.string("imageUrl") == url })
+            cache.invalidateMedia(url)
+        else cache.invalidate(url)
+    }
+
+    private fun retryTask(key: String) {
+        val id = tasks[key] ?: return
+        val decal = document.rows("decals").find { it.string("id") == id } ?: return
+        val owner = entries[mapAnchorRef(decal["anchor"] as? JsonObject)] ?: return
+        val shape = shape(decal, owner)
+        if (key == "$id:$shape" && id !in loading) load(id, decal, owner, shape)
+    }
+
     private val slots = Semaphore(2)
     private var document = JsonObject(emptyMap())
     private var entries = emptyMap<MapEntityRef, MapSceneEntry>()
@@ -74,15 +101,17 @@ internal class MapSceneDecals(
             val owner = entries[mapAnchorRef(decal["anchor"] as? JsonObject)] ?: continue
             val shape = shape(decal, owner)
             wanted += "$id:$shape"
+            tasks["$id:$shape"] = id
             if (records[id]?.shape != shape) {
                 records.remove(id)?.close()
             }
             if (loading[id]?.first != shape) loading.remove(id)?.second?.cancel()
-            if (id !in records && id !in loading && "$id:$shape" !in failed)
+            if (id !in records && id !in loading && "$id:$shape" !in retries)
                 load(id, decal, owner, shape)
         }
-        failed.retain(wanted)
-        error(failed.message)
+        tasks.keys.retainAll(wanted)
+        retries.retain(wanted)
+        error(retries.message)
         synchronize()
     }
 
@@ -108,13 +137,19 @@ internal class MapSceneDecals(
             .toString()
 
     private fun load(id: String, decal: JsonObject, owner: MapSceneEntry, shape: String) {
+        retries.starting("$id:$shape")
         val job =
             scope.launch(start = CoroutineStart.LAZY) {
                 var bitmap: Bitmap? = null
+                var stage = "geometry"
+                var sourceUrl = owner.model.renderUrl
                 try {
                     slots.withPermit {
                         val (_, parts) = cache.geometry(owner.model.renderUrl)
-                        val bytes = cache.media(decal.string("imageUrl"))
+                        stage = "download"
+                        sourceUrl = decal.string("imageUrl")
+                        val bytes = cache.media(sourceUrl, oneAttempt = true)
+                        stage = "decode"
                         var meshes = emptyList<MeshGeometry>()
                         withContext(Dispatchers.Default) {
                             val result =
@@ -174,6 +209,7 @@ internal class MapSceneDecals(
                                     .filter { it.indices.isNotEmpty() }
                         }
                         if (closed || loading[id]?.first != shape) return@withPermit
+                        stage = "scene"
                         val uploaded = mutableListOf<MapGpuMesh>()
                         val entities = mutableListOf<MapGpuEntity>()
                         try {
@@ -213,7 +249,7 @@ internal class MapSceneDecals(
                             }
                             records[id] = Record(shape, uploaded, entities)
                             synchronize()
-                            changed()
+                            retries.ready("$id:$shape")
                         } catch (failure: Throwable) {
                             entities.forEach(MapGpuEntity::close)
                             uploaded.forEach(MapGpuMesh::close)
@@ -223,8 +259,7 @@ internal class MapSceneDecals(
                 } catch (cancelled: CancellationException) {
                     throw cancelled
                 } catch (failure: Exception) {
-                    failed.fail("$id:$shape", failure.message)
-                    error(failed.message)
+                    retries.fail("$id:$shape", failure, stage, sourceUrl)
                 } finally {
                     bitmap?.recycle()
                     if (loading[id]?.second === coroutineContext[Job]) loading.remove(id)
@@ -270,12 +305,12 @@ internal class MapSceneDecals(
     }
 
     fun retry() {
-        failed.clear()
-        appearance?.let { update(it, entries.values.toList()) }
+        retries.retry()
     }
 
     override fun close() {
         closed = true
+        retries.close()
         loading.values.forEach { it.second.cancel() }
         loading.clear()
         records.values.forEach(Record::close)

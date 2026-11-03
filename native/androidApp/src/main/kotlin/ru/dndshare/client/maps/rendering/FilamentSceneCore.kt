@@ -22,12 +22,21 @@ internal class FilamentSceneCore(
     private val status: (Int, String?) -> Unit,
 ) : AutoCloseable {
     private val failures = MapLoadFailures()
+    private var statusDirty = true
+    private var presented = MapSceneLoadState()
 
-    private fun publishStatus() = status(assets.pendingCount, failures.message)
+    private fun publishStatus() {
+        statusDirty = true
+        requestFrame()
+    }
 
     private fun report(key: String, message: String?) {
         failures.set(key, message)
-        publishStatus()
+        if (message == null) publishStatus()
+        else {
+            statusDirty = true
+            status(assets.pendingCount, failures.message)
+        }
     }
 
     private val scope = CoroutineScope(SupervisorJob() + dispatcher)
@@ -84,17 +93,13 @@ internal class FilamentSceneCore(
     var effectStatistics = MapEffectStatistics()
         private set
 
-    val readyRefs
-        get() = assets.drawnEntries.map { it.ref }.toSet()
-
-    val readyModelUrls
-        get(): Set<String> {
-            val ids = assets.drawnEntries.map { it.model.uuid }.toSet()
-            return models.values
-                .filter { it.uuid in ids }
-                .flatMap { listOf(it.renderUrl, it.lodUrl).filter(String::isNotBlank) }
-                .toSet() + assets.drawnEntries.map { it.model.renderUrl }
-        }
+    val loadState
+        get() =
+            presented.copy(
+                pendingUrls = assets.pendingUrls,
+                failures = effects.failureRecords + assets.failureRecords,
+                problem = failures.entries.filterKeys { it != "models" }.values.firstOrNull(),
+            )
 
     private fun activeUrl(model: MapModel) =
         if (tier == MapModelTier.Lod) model.lodUrl.ifBlank { model.renderUrl } else model.renderUrl
@@ -452,10 +457,18 @@ internal class FilamentSceneCore(
                     assets.fileBytes,
                     lights.count,
                 )
+            if (presented !== assets.readySnapshot) {
+                presented = assets.readySnapshot
+                statusDirty = true
+            }
             if (!hasMapFrame && document != null) {
                 engine.flushAndWait()
                 hasMapFrame = true
                 publishStatus()
+            }
+            if (statusDirty) {
+                statusDirty = false
+                status(assets.pendingCount, failures.message)
             }
         }
         if (poseMotion || assets.working || picker.working || captures.working) requestFrame()
