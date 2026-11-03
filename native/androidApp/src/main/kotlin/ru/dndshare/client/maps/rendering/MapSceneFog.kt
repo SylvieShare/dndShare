@@ -26,6 +26,21 @@ internal class MapSceneFog(
     private var signature = ""
     private var closed = false
     private var clock = 0.0
+    private var depthRange = 1f
+    val frame
+        get() = world?.let { source ->
+            target?.let { mist ->
+                MapFogFrame(
+                    source.colour,
+                    requireNotNull(source.depth),
+                    mist.colour,
+                    mist.width,
+                    mist.height,
+                    depthRange,
+                )
+            }
+        }
+
     private var previousTime: Double? = null
     private var sky = 1f
     private var sun = Vec3(-.4f, .8f, -.5f).normalized()
@@ -203,7 +218,8 @@ internal class MapSceneFog(
         output.material.setParameter("sceneDepth", frame.depth, sample)
         output.material.setParameter("fogColour", half.colour, sample)
         output.material.setParameter("fogSize", half.width.toFloat(), half.height.toFloat())
-        output.material.setParameter("depthRange", sqrt((end - origin).dot(end - origin)))
+        depthRange = sqrt((end - origin).dot(end - origin))
+        output.material.setParameter("depthRange", depthRange)
         mist.view.viewport = Viewport(0, 0, half.width, half.height)
         mist.view.renderTarget = half.target
         output.view.viewport = Viewport(0, 0, width, height)
@@ -222,6 +238,7 @@ internal class MapSceneFog(
             view.isPostProcessingEnabled = false
             worldRender(renderer, view)
             renderer.render(mist.view)
+            output.view.isPostProcessingEnabled = post
             renderer.render(output.view)
         } finally {
             view.renderTarget = oldTarget

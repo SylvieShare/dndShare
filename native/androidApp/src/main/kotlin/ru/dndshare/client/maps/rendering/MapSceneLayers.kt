@@ -20,7 +20,11 @@ internal class MapSceneLayers(
 
     private val ghostView = worldView(2)
     private val selectionView = worldView(4).apply { isShadowingEnabled = false }
-    val pickingView = worldView(3).apply { isShadowingEnabled = false }
+    val pickingView =
+        worldView(3).apply {
+            isShadowingEnabled = false
+            isTransparentPickingEnabled = true
+        }
     private val composite = MapPostProcess(engine, gpu, "surfaces")
     private var world: MapFrameTarget? = null
     private var ghost: MapFrameTarget? = null

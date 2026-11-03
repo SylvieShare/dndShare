@@ -32,11 +32,17 @@ internal class MapSceneEffects(
     val statistics
         get() = MapEffectStatistics(water.modelCount, decals.count, fire.count, fog.ready)
 
+    val fogFrame
+        get() = fog.frame
+
+    val waterParts
+        get() = water.readyParts
+
     val picks
         get() = water.picks + fire.picks + decals.picks
 
-    fun update(context: MapContext, entries: List<MapSceneEntry>) {
-        water.update(entries)
+    fun update(context: MapContext, entries: List<MapSceneEntry>, selected: Set<MapEntityRef>) {
+        water.update(entries, selected)
         fire.update(context)
         decals.update(context, entries)
         fog.update(context)

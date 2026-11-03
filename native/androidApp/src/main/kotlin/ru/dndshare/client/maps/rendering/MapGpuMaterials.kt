@@ -12,6 +12,12 @@ internal class MapGpuMaterials(private val engine: Engine, private val assets: A
     private val textures = mutableMapOf<String, Texture>()
     private val bindings = mutableMapOf<MaterialInstance, MutableSet<String>>()
 
+    fun duplicate(instance: MaterialInstance): MaterialInstance {
+        val copy = MaterialInstance.duplicate(instance)
+        bindings[copy] = bindings[instance].orEmpty().toMutableSet()
+        return copy
+    }
+
     fun release(instance: MaterialInstance) {
         engine.destroyMaterialInstance(instance)
         val keys = bindings.remove(instance).orEmpty()

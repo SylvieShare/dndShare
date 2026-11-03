@@ -43,9 +43,7 @@ internal class FilamentSceneCore(
     private var entries = emptyList<MapSceneEntry>()
     private val assets: MapSceneAssets
     private val effects: MapSceneEffects
-    private val overlayGpu: MapGpuMaterials
-    private val grid: MapSceneGrid
-    private val layers: MapSceneLayers
+    private val pipeline: MapScenePipeline
     private val captures = MapFrameCapture()
     private val lightFrames = MapLightFrames(captures, ::requestFrame)
     private var revision = 0L
@@ -124,6 +122,7 @@ internal class FilamentSceneCore(
                 options.ground != value.ground
         options = value
         assets.selection(value.selected)
+        sceneContext?.let { effects.update(it, assets.drawnEntries, value.selected) }
         if (reload) document?.let { update(it, models.values.toList()) }
         requestFrame()
     }
@@ -162,7 +161,11 @@ internal class FilamentSceneCore(
         engine.setAutomaticInstancingEnabled(true)
         renderer = engine.createRenderer()
         scene = engine.createScene()
-        background = Skybox.Builder().color(.0086f, .0086f, .0116f, 1f).build(engine)
+        val backgroundColour = mapLinearColour("#161b23")
+        background =
+            Skybox.Builder()
+                .color(backgroundColour[0], backgroundColour[1], backgroundColour[2], 1f)
+                .build(engine)
         scene.skybox = background
         camera = engine.createCamera(EntityManager.get().create())
         camera.setExposure(1f)
@@ -180,21 +183,34 @@ internal class FilamentSceneCore(
         renderer.clearOptions =
             Renderer.ClearOptions().apply {
                 clear = true
-                clearColor = doubleArrayOf(.0086, .0086, .0116, 1.0)
+                clearColor =
+                    doubleArrayOf(
+                        backgroundColour[0].toDouble(),
+                        backgroundColour[1].toDouble(),
+                        backgroundColour[2].toDouble(),
+                        1.0,
+                    )
             }
+        pipeline = MapScenePipeline(context, engine, scene, camera)
         assets =
-            MapSceneAssets(engine, scene, cache, scope, ::requestFrame, status, ::assetsChanged)
+            MapSceneAssets(
+                engine,
+                pipeline.materials,
+                scene,
+                cache,
+                scope,
+                ::requestFrame,
+                status,
+                ::assetsChanged,
+            )
         lights = MapSceneLights(engine, scene)
         effects =
             MapSceneEffects(context, engine, scene, cache, scope, ::requestFrame) { error ->
                 status(assets.pendingCount, error)
             }
-        overlayGpu = MapGpuMaterials(engine, context.assets)
-        grid = MapSceneGrid(engine, scene, overlayGpu)
-        layers = MapSceneLayers(engine, scene, camera, overlayGpu)
         picker =
             MapScenePicker(
-                layers.pickingView,
+                pipeline.pickingView,
                 camera,
                 cache,
                 scope,
@@ -247,7 +263,7 @@ internal class FilamentSceneCore(
 
     private fun assetsChanged() {
         revision++
-        sceneContext?.let { effects.update(it, assets.drawnEntries) }
+        sceneContext?.let { effects.update(it, assets.drawnEntries, options.selected) }
         requestFrame()
     }
 
@@ -265,12 +281,12 @@ internal class FilamentSceneCore(
                     it.copy(model = it.model.copy(renderUrl = activeUrl(it.model)))
                 }
         assets.update(entries)
-        grid.update(value, options.ground)
+        pipeline.updateGrid(value, options.ground)
         val visibleDocument = mapSceneScope(value, options.focus)
         val context = MapContext(visibleDocument, catalogue)
         sceneContext = context
         lights.update(context)
-        effects.update(context, assets.drawnEntries)
+        effects.update(context, assets.drawnEntries, options.selected)
         status(assets.pendingCount, null)
         requestFrame()
     }
@@ -326,19 +342,21 @@ internal class FilamentSceneCore(
         delayed = false
         if (closed || !active) return
         assets.advance()
+        assets.waterParts(effects.waterParts)
         val seconds = time / 1_000_000_000.0
         val motion = options.animate && ValueAnimator.areAnimatorsEnabled()
         val effectMotion = effects.advance(seconds, motion)
         val lightMotion =
             lights.advance(seconds, motion, pose, width, height, options.selectedLight)
         val postProcess = effects.prepare(view, camera, seconds, motion)
-        layers.prepare(
+        pipeline.prepare(
             width,
             height,
-            assets.drawnEntries.any { it.opacity < 1f },
+            assets.drawnEntries,
             options.selected.isNotEmpty(),
             picker.working,
             density,
+            effects,
         )
         effectStatistics = effects.statistics
         val chain = swap
@@ -348,9 +366,7 @@ internal class FilamentSceneCore(
                 return
             }
             try {
-                if (picker.working) layers.renderPicking(renderer)
-                if (postProcess) effects.render(renderer, view, layers::render)
-                else layers.render(renderer, view)
+                pipeline.render(renderer, view, picker.working, postProcess, effects)
                 lightFrames.prepare(
                     sceneContext,
                     pose,
@@ -407,10 +423,8 @@ internal class FilamentSceneCore(
         choreographer.removeFrameCallback(callback)
         detach()
         effects.close()
-        grid.close()
-        layers.close()
-        overlayGpu.close()
         assets.close()
+        pipeline.close()
         lights.close()
         engine.destroyCameraComponent(camera.entity)
         EntityManager.get().destroy(camera.entity)

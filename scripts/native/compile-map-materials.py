@@ -33,13 +33,16 @@ def main():
     sources = ROOT / "native/androidApp/materials"
     output = ROOT / "native/androidApp/src/main/assets/maps/materials"
     manifest = output / "manifest.json"
-    inputs = {path.name: digest(path) for path in sorted(sources.glob("*.mat"))}
+    inputs = {path.name: digest(path) for path in sorted(path for path in sources.iterdir() if path.suffix in (".mat", ".glsl"))}
     if not inputs:
         parser.error("No map material sources found")
     if args.check:
         data = json.loads(manifest.read_text())
         if data["version"] != VERSION or data["sources"] != inputs:
             parser.error("Recompile map materials")
+        expected_packages = {Path(name).stem + ".filamat" for name in inputs if name.endswith(".mat")}
+        if set(data["outputs"]) != expected_packages:
+            parser.error("Missing or unexpected material packages")
         for name, expected in data["outputs"].items():
             if digest(output / name) != expected:
                 parser.error(f"Map material package differs: {name}")
@@ -51,10 +54,16 @@ def main():
         parser.error(f"Expected material package version {PACKAGE_VERSION}, got {version}")
     output.mkdir(parents=True, exist_ok=True)
     for name in inputs:
+        if not name.endswith(".mat"):
+            continue
+        destination = output / (Path(name).stem + ".filamat")
+        destination.unlink(missing_ok=True)
         subprocess.run([
             compiler, "-p", "mobile", "-a", "opengl", "-o",
-            output / (Path(name).stem + ".filamat"), sources / name,
+            destination, sources / name,
         ], check=True)
+        if not destination.is_file():
+            raise RuntimeError(f"Compiler did not create {destination.name}")
     packages = {path.name: digest(path) for path in sorted(output.glob("*.filamat"))}
     manifest.write_text(json.dumps({
         "version": VERSION, "sources": inputs, "outputs": packages,

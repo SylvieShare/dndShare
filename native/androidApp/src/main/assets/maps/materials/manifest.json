@@ -1,23 +1,33 @@
 {
   "version": "1.77.3",
   "sources": {
+    "colour.mat": "07efc6abc32fcbeee3edc84f22a508ff34765600ab73e65aad0b7737bed21dbc",
     "composite.mat": "f640aa83c0a5c2bf4f35ccc2d4f5d608172f7bcec74f83ec1b3bb9ccb488dd38",
     "decal.mat": "9cc60a181a7c107f3e0a31d107169aee29a7fa84aa220142ada114fabff0cc0c",
+    "discard.mat": "1a20c1f8eb0214950aac1496f3cb88448393a3f673a97231ea5cd4f2d353125f",
     "entity.mat": "a0ac5758d59d66f90facb0bc5ae95b22de9888dd00be3e8d2467aed514466a5d",
     "fire.mat": "7d8f39ff29b7e2f445fd66dac673549bd7daa3732a63494314f17dc45dbf9ce5",
     "fog.mat": "cc0eaa6546633d8e5f3c769aa17e8af0d22125b287a65c9fff0c350c5fe9e4b2",
     "grid.mat": "89ded76513f7b76008f1c22b731c230b829c5e4b12648ff5ea9ea954396d2181",
     "surfaces.mat": "2dc815a1b425c53f2b0d29a3cc0380c3cfef81a8574097cd0e47be57a919bcd1",
-    "water.mat": "2a5a3706b0919ff373a62468d48cfcf41030e5fd09d464e14e6766486332956e"
+    "water-blend.mat": "87a26fd5a01b1006d4d46ff6a1a8b35152c98e2fc60c27c63aef6e55141566e2",
+    "water-fragment.glsl": "4405be13b5a8584725fdc1000283177b8f7154aff0a051d79a1026f93e08aca3",
+    "water-mask.mat": "4061db3589d863915f32d884bbbb4e3d3888cfacf67df180d30eba421ea249e8",
+    "water-vertex.glsl": "97fd9d5e05a434147368ebab54171c2bc0bd134cc4756f8f259d3c5c3212cc4d",
+    "water.mat": "2dcdc1277a35925950944615f6a116c4ae3f1cccb69ea2470540610330e72153"
   },
   "outputs": {
+    "colour.filamat": "b24b5603a193e43559bfd915b87af2867dca0b812e0e42a5d399b5d69fbe78c7",
     "composite.filamat": "120d2e088c31e7179d3bbaba97a66cdce3773436527316f1bb85f90b5e7a1db8",
     "decal.filamat": "a19c4bd6d07d05dac106e5a1c796f39205686c93cfb6266a05af5b224c3000e7",
+    "discard.filamat": "97019a932402e77058c8929b86ec5be20deda520a375cb7e1e78802cf748bc3f",
     "entity.filamat": "b13951a0035f49b70a921ee2dbcd20f477e9c4e82bda80d970493531da60a151",
     "fire.filamat": "2f5140ed02232eb0510cdb831452fe3601f9ab9ef53b5bbd20af56ad3ae1bb9f",
     "fog.filamat": "edd47fc9ef8d7ad40de9298b98787c421aead77f2f9784fb3766da51563d93a2",
     "grid.filamat": "21be46284db35b88445ace08107af8da6cf7d087982cbcd2d1fa56dc0452f9c0",
     "surfaces.filamat": "b0d7bc6d2ba3fc47b781797a3628d5f591d00b59d27d45821867573c210e1c15",
-    "water.filamat": "e1ae187e5a26c7388849923e70333012c853cfd0942e293b7a3288ffc169a825"
+    "water-blend.filamat": "56e7138fc7a02d80add797fed54e50c85477ed62374ce1f39a5cdef0d07c73c0",
+    "water-mask.filamat": "1e1cddbabf84165ed27d0c65e04bcba8f118789f6a4bb677ab673f2006f96d8e",
+    "water.filamat": "0bc37b581a047b1b5e98fee0299257b6a871441007bb085c3507f70e47cc1d78"
   }
 }

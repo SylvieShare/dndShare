@@ -1,0 +1,3 @@
+material { name: MapReplacedPrimitive, shadingModel:unlit, blending:masked,
+    maskThreshold:0.5, depthWrite:false, culling:none }
+fragment { void material(inout MaterialInputs m) { prepareMaterial(m);m.baseColor=vec4(0.0); } }

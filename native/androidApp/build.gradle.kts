@@ -108,7 +108,7 @@ tasks.named("preBuild") { dependsOn(checkDesignSystemBoundary) }
 
 // Checked-in packages must be rebuilt whenever a shader source changes.
 val checkMapMaterials by tasks.registering {
-    val sources = fileTree("materials") { include("*.mat") }
+    val sources = fileTree("materials") { include("*.mat", "*.glsl") }
     val packages = fileTree("src/main/assets/maps/materials")
     inputs.files(sources, packages)
     doLast {
@@ -117,7 +117,11 @@ val checkMapMaterials by tasks.registering {
         val sourceHashes = manifest["sources"] as Map<*, *>
         require(sources.files.map { it.name }.toSet() == sourceHashes.keys) { "Run scripts/native/compile-map-materials.py" }
         sources.forEach { require(sha256(it) == sourceHashes[it.name]) { "Recompile map material: ${it.name}" } }
-        (manifest["outputs"] as Map<*, *>).forEach { (name, hash) ->
+        val outputHashes = manifest["outputs"] as Map<*, *>
+        require(outputHashes.keys == sources.files.filter { it.extension == "mat" }.map { it.nameWithoutExtension + ".filamat" }.toSet()) {
+            "Missing or unexpected map material packages"
+        }
+        outputHashes.forEach { (name, hash) ->
             require(sha256(file("src/main/assets/maps/materials/$name")) == hash) { "Invalid map material: $name" }
         }
     }

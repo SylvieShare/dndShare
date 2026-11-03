@@ -11,6 +11,7 @@ import ru.dndshare.client.maps.*
 /** Asset lifetimes, bounded uploads and pooled instances have one renderer-thread owner. */
 internal class MapSceneAssets(
     private val engine: Engine,
+    gpu: MapGpuMaterials,
     private val scene: Scene,
     private val cache: MapAssetCache,
     private val scope: CoroutineScope,
@@ -18,6 +19,15 @@ internal class MapSceneAssets(
     private val status: (Int, String?) -> Unit,
     private val changed: () -> Unit,
 ) : AutoCloseable {
+    private val primitives = MapPrimitiveMaterials(engine, gpu)
+    private var replaced = emptyMap<String, Set<MapPrimitiveRef>>()
+
+    fun waterParts(value: Map<String, Set<MapPrimitiveRef>>) {
+        if (value == replaced) return
+        replaced = value
+        synchronize()
+    }
+
     private val materials = UbershaderProvider(engine)
     private val loader = AssetLoader(engine, materials, EntityManager.get())
     private val resources = ResourceLoader(engine, true)
@@ -111,7 +121,8 @@ internal class MapSceneAssets(
         scope.launch {
             try {
                 slots.withPermit {
-                    val bytes = cache.bytes(url)
+                    val original = cache.bytes(url)
+                    val bytes = withContext(Dispatchers.Default) { mapNamedGlb(original) }
                     val consumed = CompletableDeferred<Unit>()
                     downloaded.addLast(DownloadedModel(url, bytes, consumed))
                     requestFrame()
@@ -209,6 +220,7 @@ internal class MapSceneAssets(
                             scene.addEntities(it.entities)
                         }
                         ?: continue
+                primitives.apply(pool.asset, instance, replaced[url].orEmpty())
                 val manager = engine.transformManager
                 manager.setTransform(manager.getInstance(instance.root), entry.matrix)
                 instance.entities.forEach {
@@ -246,6 +258,7 @@ internal class MapSceneAssets(
     }
 
     private fun destroyPool(pool: MapModelPool) {
+        primitives.forget(pool.instances)
         pool.instances.forEach { scene.removeEntities(it.entities) }
         loader.destroyAsset(pool.asset)
     }
@@ -267,6 +280,7 @@ internal class MapSceneAssets(
         retiring.values.forEach(::destroyPool)
         retiring.clear()
         resources.destroy()
+        primitives.close()
         loader.destroy()
         materials.destroyMaterials()
         materials.destroy()

@@ -82,7 +82,13 @@ internal fun configureWaterMaterial(
     gpu: MapGpuMaterials,
     prepared: MapWaterPart,
 ): MaterialInstance =
-    gpu.configure("water") { instance ->
+    gpu.configure(
+        when (prepared.part.material.string("alphaMode", "OPAQUE")) {
+            "BLEND" -> "water-blend"
+            "MASK" -> "water-mask"
+            else -> "water"
+        }
+    ) { instance ->
         val sampler =
             TextureSampler(
                 TextureSampler.MinFilter.LINEAR_MIPMAP_LINEAR,
@@ -118,6 +124,20 @@ internal fun configureWaterMaterial(
             )
         }
         val material = prepared.part.material
+        val alphaMode =
+            when (material.string("alphaMode", "OPAQUE")) {
+                "BLEND" -> 2f
+                "MASK" -> 1f
+                else -> 0f
+            }
+        instance.setParameter("visibilityOpacity", 1f)
+        instance.setParameter("alphaMode", alphaMode)
+        instance.setParameter("alphaCutoff", material.number("alphaCutoff", .5).toFloat())
+        instance.isDoubleSided = material.flag("doubleSided")
+        instance.setCullingMode(
+            if (material.flag("doubleSided")) Material.CullingMode.NONE
+            else Material.CullingMode.BACK
+        )
         val pbr = material["pbrMetallicRoughness"] as? JsonObject ?: JsonObject(emptyMap())
         val base = pbr.array("baseColorFactor")
         instance.setParameter(
@@ -145,5 +165,4 @@ internal fun configureWaterMaterial(
             (emissive.double(1) * power).toFloat(),
             (emissive.double(2) * power).toFloat(),
         )
-        instance.setPolygonOffset(-1f, -1f) // Filament handles reversed Z in this API.
     }

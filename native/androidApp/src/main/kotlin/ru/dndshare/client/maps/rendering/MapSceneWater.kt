@@ -18,7 +18,12 @@ internal class MapSceneWater(
     private val changed: () -> Unit,
     private val error: (String?) -> Unit,
 ) : AutoCloseable {
-    private data class Part(val mesh: MapGpuMesh, val material: MaterialInstance)
+    private data class Part(
+        val ref: MapPrimitiveRef,
+        val mesh: MapGpuMesh,
+        val material: MaterialInstance,
+        val blend: Boolean,
+    )
 
     private val models = mutableMapOf<String, List<Part>>()
     private val entities = mutableMapOf<MapEntityRef, List<MapGpuEntity>>()
@@ -36,9 +41,14 @@ internal class MapSceneWater(
     val modelCount
         get() = models.values.count { it.isNotEmpty() }
 
+    val readyParts
+        get() = models.mapValues { (_, parts) -> parts.map { it.ref }.toSet() }
+
+    private var selected = emptySet<MapEntityRef>()
     private val slots = Semaphore(2)
 
-    fun update(value: List<MapSceneEntry>) {
+    fun update(value: List<MapSceneEntry>, selection: Set<MapEntityRef>) {
+        selected = selection
         entries = value.filter {
             (it.model.behaviour["waterAnimation"] as? JsonObject)?.flag("enabled") == true
         }
@@ -78,22 +88,21 @@ internal class MapSceneWater(
                         val created = mutableListOf<Part>()
                         try {
                             for (part in prepared.orEmpty()) {
-                                val settings =
-                                    entries
-                                        .first { it.model.renderUrl == url }
-                                        .model
-                                        .behaviour["waterAnimation"]!!
-                                        .jsonObject
                                 val pbr = part.part.material["pbrMetallicRoughness"] as? JsonObject
                                 if (
                                     part.textures["orm"] == null &&
-                                        (pbr?.number("roughnessFactor", 1.0) ?: 1.0) >=
-                                            settings.number("roughnessMax", .5)
+                                        (pbr?.number("roughnessFactor", 1.0) ?: 1.0) >= 1.0
                                 )
                                     continue
                                 val mesh = MapGpuMesh(engine, part.part.geometry)
                                 try {
-                                    created += Part(mesh, configureWaterMaterial(gpu, part))
+                                    created +=
+                                        Part(
+                                            MapPrimitiveRef(part.part.node, part.part.primitive),
+                                            mesh,
+                                            configureWaterMaterial(gpu, part),
+                                            part.part.material.string("alphaMode") == "BLEND",
+                                        )
                                 } catch (error: Throwable) {
                                     mesh.close()
                                     throw error
@@ -140,24 +149,35 @@ internal class MapSceneWater(
                             engine,
                             scene,
                             it.mesh,
-                            it.material,
+                            if (it.blend) gpu.duplicate(it.material) else it.material,
+                            shadows = !it.blend,
                             priority = 5,
-                            ownsMaterial = false,
+                            ownsMaterial = it.blend,
+                            releaseMaterial = gpu::release,
                         )
                     }
                 }
-            renderables.forEach {
-                it.transform(entry.matrix)
-                it.layer(if (entry.opacity < 1f) 2 else 1)
+            renderables.forEachIndexed { index, renderable ->
+                renderable.transform(entry.matrix)
+                val blend = parts[index].blend
+                renderable.layer(
+                    (if (entry.opacity < 1f && !blend) 2 else 1) or
+                        (if (entry.ref in selected) 4 else 0)
+                )
+                renderable.material.setParameter(
+                    "visibilityOpacity",
+                    if (blend) entry.opacity else 1f,
+                )
             }
             val settings = entry.model.behaviour["waterAnimation"]!!.jsonObject
-            for (part in parts) {
-                part.material.setParameter("strength", settings.number("strength", .5).toFloat())
-                part.material.setParameter(
+            for (material in
+                (parts.map { it.material } + renderables.map { it.material }).distinct()) {
+                material.setParameter("strength", settings.number("strength", .5).toFloat())
+                material.setParameter(
                     "roughnessMax",
                     settings.number("roughnessMax", .5).toFloat(),
                 )
-                part.material.setParameter(
+                material.setParameter(
                     "pattern",
                     when (settings.string("pattern", "pool")) {
                         "surface" -> 1f
@@ -165,7 +185,7 @@ internal class MapSceneWater(
                         else -> 0f
                     },
                 )
-                part.material.setParameter(
+                material.setParameter(
                     "center",
                     settings.array("center").double(0).toFloat(),
                     settings.array("center").double(1).toFloat(),
@@ -180,8 +200,15 @@ internal class MapSceneWater(
             val settings = entry.model.behaviour["waterAnimation"]!!.jsonObject
             val moving =
                 motion && settings.number("speed", 1.0) > 0 && settings.number("strength", .5) > 0
-            models[entry.model.renderUrl]?.forEach {
-                it.material.setParameter(
+            val materials =
+                models[entry.model.renderUrl].orEmpty().map { it.material } +
+                    entities
+                        .filterKeys { entityModels[it] == entry.model.renderUrl }
+                        .values
+                        .flatten()
+                        .map { it.material }
+            materials.distinct().forEach {
+                it.setParameter(
                     "clock",
                     if (moving) mapEffectPhase(seconds, settings.number("speed", 1.0)).toFloat()
                     else 0f,
@@ -194,7 +221,7 @@ internal class MapSceneWater(
 
     fun retry() {
         failed.clear()
-        update(entries)
+        update(entries, selected)
     }
 
     override fun close() {
