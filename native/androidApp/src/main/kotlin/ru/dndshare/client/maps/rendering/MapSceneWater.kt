@@ -26,6 +26,9 @@ internal class MapSceneWater(
     private val loading = mutableMapOf<String, Job>()
     private val failed = mutableSetOf<String>()
     private var entries = emptyList<MapSceneEntry>()
+    val working
+        get() = loading.isNotEmpty()
+
     val picks
         get() = entities.flatMap { (id, items) -> items.map { it.entity to id } }.toMap()
 

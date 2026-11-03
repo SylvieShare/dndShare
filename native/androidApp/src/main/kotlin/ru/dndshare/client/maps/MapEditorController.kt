@@ -40,15 +40,9 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
                 }
                 val fresh = api.get(id)
                 val work = store.open(fresh)
-                mutable.update {
-                    it.copy(
-                        work =
-                            it.work?.takeIf { current ->
-                                current.dirty && current.localVersion >= work.localVersion
-                            } ?: work,
-                        loading = false,
-                    )
-                }
+                val merged = mergeOpenedMapWork(work, state.value.work)
+                mutable.update { it.copy(work = merged, loading = false) }
+                if (merged != work) persist(merged)
                 if (state.value.work?.dirty == true) {
                     debounce?.cancel()
                     debounce = scope.launch {
@@ -121,6 +115,33 @@ class MapEditorController(private val api: MapsApi, private val store: MapWorksp
         val value = update(work.ui ?: MapEditorUi())
         if (value == work.ui) return
         val next = work.copy(ui = value, localVersion = work.localVersion + 1)
+        mutable.update { it.copy(work = next) }
+        persist(next)
+    }
+
+    fun attachPreview(preview: MapStoredPreview, expected: BattleMap) {
+        val work = state.value.work ?: return
+        if (
+            work.dirty ||
+                work.current.revision != expected.revision ||
+                work.current.content != expected.content ||
+                (work.current.previewSignature.isNotBlank() &&
+                    work.current.previewSignature != preview.signature)
+        )
+            return
+        fun metadata(map: BattleMap) =
+            map.copy(
+                previewUrl = preview.url,
+                previewSignature = preview.signature,
+                previewModelsSignature = preview.modelsSignature,
+                previewStale = false,
+            )
+        val next =
+            work.copy(
+                current = metadata(work.current),
+                confirmed = metadata(work.confirmed),
+                localVersion = work.localVersion + 1,
+            )
         mutable.update { it.copy(work = next) }
         persist(next)
     }

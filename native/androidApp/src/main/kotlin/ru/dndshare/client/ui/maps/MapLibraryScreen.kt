@@ -20,6 +20,7 @@ internal fun MapLibraryScreen(
     padding: PaddingValues,
     open: (String) -> Unit,
     cache: MapAssetCache,
+    previews: MapStoredPreviews,
 ) {
     val scope = rememberCoroutineScope()
     val navigation by rememberUpdatedState(open)
@@ -143,6 +144,7 @@ internal fun MapLibraryScreen(
                         images,
                         c.layout == "list",
                         wide,
+                        previews,
                         Modifier.animateItem(),
                     )
                 }

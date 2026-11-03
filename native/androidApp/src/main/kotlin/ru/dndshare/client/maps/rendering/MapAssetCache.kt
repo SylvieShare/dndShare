@@ -1,7 +1,10 @@
 package ru.dndshare.client.maps.rendering
 
 import java.io.File
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import java.security.MessageDigest
+import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.Semaphore
@@ -14,6 +17,7 @@ import ru.dndshare.client.maps.geometry.*
 /** Content-addressed disk cache; only models actually used on the map are requested. */
 class MapAssetCache(private val directory: File, private val api: MapsApi) {
     private val downloads = Semaphore(3)
+    private val files = ConcurrentHashMap<String, Mutex>()
     private val geometryLock = Mutex()
     private val geometry = LinkedHashMap<String, Pair<GlbDocument, List<GlbPart>>>(16, .75f, true)
 
@@ -81,56 +85,64 @@ class MapAssetCache(private val directory: File, private val api: MapsApi) {
 
     suspend fun bytes(url: String): ByteArray =
         withContext(Dispatchers.IO) {
-            downloads.withPermit {
-                directory.mkdirs()
-                val key =
-                    MessageDigest.getInstance("SHA-256").digest(url.toByteArray()).joinToString(
-                        ""
-                    ) {
-                        "%02x".format(it)
+            files
+                .computeIfAbsent(url) { Mutex() }
+                .withLock {
+                    downloads.withPermit {
+                        directory.mkdirs()
+                        val key =
+                            MessageDigest.getInstance("SHA-256")
+                                .digest(url.toByteArray())
+                                .joinToString("") {
+                                    "%02x".format(it)
+                                }
+                        val file = File(directory, "$key.glb")
+                        if (file.isFile) {
+                            val bytes = file.readBytes()
+                            if (validGlb(bytes)) {
+                                file.setLastModified(System.currentTimeMillis())
+                                return@withPermit bytes
+                            }
+                            file.delete()
+                        }
+                        val bytes = api.modelBytes(url)
+                        require(validGlb(bytes)) { "Сервер вернул некорректную GLB-модель" }
+                        val temporary = File.createTempFile("map-model-", ".part", directory)
+                        try {
+                            temporary.writeBytes(bytes)
+                            check(temporary.renameTo(file)) {
+                                "Не удалось сохранить модель на устройстве"
+                            }
+                        } finally {
+                            temporary.delete()
+                        }
+                        var total =
+                            directory
+                                .listFiles()
+                                .orEmpty()
+                                .filter { it.extension == "glb" }
+                                .sumOf { it.length() }
+                        for (old in
+                            directory
+                                .listFiles()
+                                .orEmpty()
+                                .filter { it.extension == "glb" && it != file }
+                                .sortedBy { it.lastModified() }) {
+                            if (total <= 384L * 1024 * 1024) break
+                            val size = old.length()
+                            if (old.delete()) total -= size
+                        }
+                        bytes
                     }
-                val file = File(directory, "$key.glb")
-                if (file.isFile) {
-                    val bytes = file.readBytes()
-                    if (validGlb(bytes)) {
-                        file.setLastModified(System.currentTimeMillis())
-                        return@withPermit bytes
-                    }
-                    file.delete()
                 }
-                val bytes = api.modelBytes(url)
-                require(validGlb(bytes)) { "Сервер вернул некорректную GLB-модель" }
-                val temporary = File.createTempFile("map-model-", ".part", directory)
-                try {
-                    temporary.writeBytes(bytes)
-                    check(temporary.renameTo(file)) { "Не удалось сохранить модель на устройстве" }
-                } finally {
-                    temporary.delete()
-                }
-                var total =
-                    directory
-                        .listFiles()
-                        .orEmpty()
-                        .filter { it.extension == "glb" }
-                        .sumOf { it.length() }
-                for (old in
-                    directory
-                        .listFiles()
-                        .orEmpty()
-                        .filter { it.extension == "glb" && it != file }
-                        .sortedBy { it.lastModified() }) {
-                    if (total <= 384L * 1024 * 1024) break
-                    val size = old.length()
-                    if (old.delete()) total -= size
-                }
-                bytes
-            }
         }
 
-    private fun validGlb(bytes: ByteArray) =
-        bytes.size >= 20 &&
-            bytes[0] == 0x67.toByte() &&
-            bytes[1] == 0x6c.toByte() &&
-            bytes[2] == 0x54.toByte() &&
-            bytes[3] == 0x46.toByte()
+    private fun validGlb(bytes: ByteArray): Boolean {
+        if (bytes.size < 20 || bytes.copyOfRange(0, 4).decodeToString() != "glTF") return false
+        val header = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN)
+        return header.getInt(4) == 2 &&
+            header.getInt(8) == bytes.size &&
+            header.getInt(16) == 0x4e4f534a &&
+            header.getInt(12) in 1..(bytes.size - 20)
+    }
 }

@@ -62,6 +62,8 @@ sealed interface MapTool {
 @Serializable
 data class MapEditorUi(
     val panel: String = "tiles",
+    val camera: ru.dndshare.client.maps.rendering.MapCamera? = null,
+    val referenceOpen: Boolean = false,
     val sidebarOpen: Boolean? = null,
     val focusOpen: Boolean = true,
     val focus: MapFocus = MapFocus(),

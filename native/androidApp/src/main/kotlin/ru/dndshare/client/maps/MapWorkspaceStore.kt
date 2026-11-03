@@ -87,6 +87,16 @@ class MapWorkspaceStore(private val directory: File) {
                             confirmed = map,
                             localVersion = (stored?.localVersion ?: 0) + 1,
                             ui = stored?.ui,
+                            undo =
+                                stored
+                                    ?.takeIf { it.current.content == map.content }
+                                    ?.undo
+                                    .orEmpty(),
+                            redo =
+                                stored
+                                    ?.takeIf { it.current.content == map.content }
+                                    ?.redo
+                                    .orEmpty(),
                         )
                         .also { write("draft-${map.id}", it) }
             }
@@ -135,7 +145,8 @@ class MapWorkspaceStore(private val directory: File) {
                     if (
                         !staged.dirty &&
                             (current?.current?.revision != staged.current.revision ||
-                                current?.current?.content != staged.current.content)
+                                current?.current?.content != staged.current.content ||
+                                current?.current?.previewUrl != staged.current.previewUrl)
                     )
                         rememberOwn(staged.current)
                 }

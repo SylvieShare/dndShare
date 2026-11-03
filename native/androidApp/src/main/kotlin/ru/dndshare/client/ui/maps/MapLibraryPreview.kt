@@ -80,6 +80,11 @@ internal fun MapLibraryPreview(
                         renderer = { scene = it },
                         status = { _, message -> if (message != null) failure = message },
                     )
+                MapViewerTools(
+                    scene,
+                    map.document,
+                    Modifier.align(Alignment.BottomStart).padding(12.dp),
+                )
             }
         }
     }

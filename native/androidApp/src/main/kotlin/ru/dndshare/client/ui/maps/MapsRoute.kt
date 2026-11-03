@@ -8,6 +8,7 @@ import java.io.File
 import java.util.UUID
 import ru.dndshare.client.maps.*
 import ru.dndshare.client.maps.rendering.MapAssetCache
+import ru.dndshare.client.maps.rendering.MapSnapshotQueue
 import ru.dndshare.client.network.ApiClient
 import ru.dndshare.client.ui.LayoutFormat
 import ru.dndshare.client.ui.designsystem.ShareChromeLayout
@@ -34,6 +35,9 @@ internal fun MapsRoute(
         }
     val store = remember(root) { MapWorkspaceStore(File(root, "workspace")) }
     val assets = remember(root, api) { MapAssetCache(File(root, "models"), api) }
+    val snapshots = remember(assets) { MapSnapshotQueue(context, assets) }
+    val previews = remember(api, snapshots) { MapStoredPreviews(api, snapshots) }
+    DisposableEffect(snapshots) { onDispose { snapshots.close() } }
     val notify by rememberUpdatedState(fullscreen)
     LaunchedEffect(editor) { notify(editor != null) }
     DisposableEffect(Unit) { onDispose { notify(false) } }
@@ -48,9 +52,19 @@ internal fun MapsRoute(
             close = { editor = null },
             replace = { editor = it },
             admin = admin,
+            snapshots = snapshots,
+            previews = previews,
         )
     else
         ShareChromeLayout(header = header) { padding ->
-            MapLibraryScreen(api, store, images, padding, open = { editor = it }, cache = assets)
+            MapLibraryScreen(
+                api,
+                store,
+                images,
+                padding,
+                open = { editor = it },
+                cache = assets,
+                previews = previews,
+            )
         }
 }

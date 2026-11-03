@@ -150,7 +150,10 @@ internal fun MapEditorLayout(
                                 workspace.drag.cancel()
                                 workspace.placement.cancelPreview()
                             },
-                            renderer = { workspace.scene = it },
+                            renderer = workspace::attachScene,
+                            initialCamera = workspace.ui.camera,
+                            active = !workspace.referenceOpen,
+                            options = MapSceneOptions(forceLod = workspace.ui.forceLod),
                             rectangle = workspace.ui.rectangle,
                             selection = workspace.rectangle::move,
                             key = workspace::key,

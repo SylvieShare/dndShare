@@ -15,6 +15,7 @@ internal class MapEditorWorkspace(
     initialFormat: LayoutFormat,
     val id: String,
     val api: MapsApi,
+    val snapshots: MapSnapshotQueue,
 ) {
     val scope =
         CoroutineScope(
@@ -55,10 +56,22 @@ internal class MapEditorWorkspace(
         get() = ui.sidebarOpen ?: (format == LayoutFormat.Wide)
 
     var canvasBounds by mutableStateOf(androidx.compose.ui.geometry.Rect.Zero)
+    private val viewport = MapViewportSession(controller, scope)
+
+    fun attachScene(value: FilamentMapScene?) {
+        scene = value
+        viewport.attach(value)
+    }
+
     val cameraDrag = MapCameraDrag(this)
     val rectangle = MapRectangleSelection(this)
     val paletteDrag = MapPaletteDrag(this)
-    var referenceOpen by mutableStateOf(false)
+    var referenceOpen: Boolean
+        get() = ui.referenceOpen
+        set(value) {
+            controller.ui { it.copy(referenceOpen = value) }
+        }
+
     val reference = MapReferenceController(this)
     val selection = MapSelectionCommands(this)
     val placement = MapPlacementCommands(this)
@@ -147,6 +160,7 @@ internal class MapEditorWorkspace(
     }
 
     fun close() {
+        viewport.close()
         cameraDrag.cancel()
         paletteDrag.cancel()
         rectangle.cancel()

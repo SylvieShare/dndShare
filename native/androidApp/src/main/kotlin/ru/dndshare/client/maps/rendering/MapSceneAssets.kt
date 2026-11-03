@@ -53,7 +53,7 @@ internal class MapSceneAssets(
     val working
         get() = loading != null || downloaded.isNotEmpty()
 
-    fun update(document: JsonObject, value: List<MapSceneEntry>) {
+    fun update(document: JsonObject, value: List<MapSceneEntry>, groundVisible: Boolean = true) {
         entries = value
         val wanted = entries.groupBy { it.model.renderUrl }
         pools.keys.filter { it !in wanted }.forEach(::removePool)
@@ -65,18 +65,20 @@ internal class MapSceneAssets(
         val w = document.number("width").toInt()
         val h = document.number("height").toInt()
         val grid = (document["grid"] as? JsonObject)?.flag("visible") ?: true
-        val key = "$w:$h:$grid"
+        val key = "$w:$h:$grid:$groundVisible"
         if (groundKey != key) {
             ground?.let {
                 scene.removeEntities(it.entities)
                 loader.destroyAsset(it)
             }
             ground =
-                loader.createAsset(mapGroundGlb(w, h, grid))?.also {
-                    groundResources.loadResources(it)
-                    scene.addEntities(it.entities)
-                    it.releaseSourceData()
-                }
+                if (!groundVisible) null
+                else
+                    loader.createAsset(mapGroundGlb(w, h, grid))?.also {
+                        groundResources.loadResources(it)
+                        scene.addEntities(it.entities)
+                        it.releaseSourceData()
+                    }
             groundKey = key
         }
         synchronize()

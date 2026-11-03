@@ -2,11 +2,13 @@ package ru.dndshare.client.ui.maps
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import coil3.ImageLoader
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import ru.dndshare.client.maps.*
 import ru.dndshare.client.maps.rendering.MapAssetCache
+import ru.dndshare.client.maps.rendering.MapSnapshotQueue
 import ru.dndshare.client.ui.LayoutFormat
 import ru.dndshare.client.ui.designsystem.*
 
@@ -21,10 +23,17 @@ internal fun MapEditorScreen(
     close: () -> Unit,
     replace: (String) -> Unit = { close() },
     admin: Boolean = false,
+    snapshots: MapSnapshotQueue? = null,
+    previews: MapStoredPreviews? = null,
 ) {
+    val context = LocalContext.current.applicationContext
+    val queue = snapshots ?: remember(cache) { MapSnapshotQueue(context, cache) }
+    val publisher = previews ?: remember(api, queue) { MapStoredPreviews(api, queue) }
+    DisposableEffect(queue) { onDispose { if (snapshots == null) queue.close() } }
     val controller = remember(id) { MapEditorController(api, store) }
     val scope = rememberCoroutineScope()
-    val workspace = remember(controller) { MapEditorWorkspace(controller, scope, format, id, api) }
+    val workspace =
+        remember(controller) { MapEditorWorkspace(controller, scope, format, id, api, queue) }
     val inputs = remember(id) { ShareFormInputs() }
     var leaving by remember { mutableStateOf(false) }
     var recovery by remember { mutableStateOf(false) }
@@ -54,6 +63,7 @@ internal fun MapEditorScreen(
         }
     }
     CompositionLocalProvider(LocalShareFormInputs provides inputs) {
+        MapEditorStoredPreview(workspace, publisher)
         key(id) { MapEditorLayout(workspace, cache, images, admin, leaving, ::exit) }
         if (recovery)
             MapPersistenceDialog(

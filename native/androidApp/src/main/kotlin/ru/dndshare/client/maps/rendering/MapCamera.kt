@@ -1,11 +1,13 @@
 package ru.dndshare.client.maps.rendering
 
 import kotlin.math.*
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 import ru.dndshare.client.maps.*
 import ru.dndshare.client.maps.MapPose
 
 /** World coordinates are x / elevation / y, just like the shared GLB assets. */
+@Serializable
 data class MapCamera(
     val x: Double = 15.0,
     val y: Double = 11.0,
@@ -24,7 +26,9 @@ data class MapCamera(
     val up: DoubleArray
         get() =
             saved?.array("up")?.let { doubleArrayOf(it.double(0), it.double(2), it.double(1)) }
-                ?: doubleArrayOf(-sin(yaw), 0.0, -cos(yaw))
+                ?: doubleArrayOf(-sin(yaw), 0.0, -cos(yaw)).let { up ->
+                    if (tilt < 0 && abs(cos(pitch)) > 1e-8) up.map { -it }.toDoubleArray() else up
+                }
 
     val eye: DoubleArray
         get() {

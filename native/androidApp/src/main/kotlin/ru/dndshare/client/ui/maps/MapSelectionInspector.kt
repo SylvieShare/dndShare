@@ -7,12 +7,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.ImageLoader
-import coil3.compose.AsyncImage
 import ru.dndshare.client.maps.*
 import ru.dndshare.client.ui.designsystem.*
 
@@ -59,20 +57,7 @@ internal fun MapSelectionInspector(workspace: MapEditorWorkspace, images: ImageL
                         containerColor = WebPalette.MapPreview,
                         contentPadding = PaddingValues(6.dp),
                     ) {
-                        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            val url =
-                                if (ref.kind == MapEntityKind.Decal) row.string("imageUrl")
-                                else model?.previewUrl.orEmpty()
-                            if (url.isNotBlank())
-                                AsyncImage(
-                                    mapImageUrl(url),
-                                    null,
-                                    imageLoader = images,
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentScale = ContentScale.Fit,
-                                )
-                            else AppGlyph(mapEntityGlyph(ref.kind), Modifier.size(48.dp))
-                        }
+                        MapFocusPreview(workspace, ref, images)
                     }
                     Column {
                         if (ref.kind !in setOf(MapEntityKind.Area, MapEntityKind.Camera))

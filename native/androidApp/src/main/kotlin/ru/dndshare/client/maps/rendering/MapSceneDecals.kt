@@ -48,6 +48,9 @@ internal class MapSceneDecals(
     private var entries = emptyMap<MapEntityRef, MapSceneEntry>()
     private var appearance: MapContext? = null
     private var closed = false
+    val working
+        get() = loading.isNotEmpty()
+
     val count
         get() = records.size
 

@@ -102,7 +102,7 @@ internal fun MapReferencePreview(workspace: MapEditorWorkspace, cache: MapAssetC
         )
         val camera = scene?.cameraState?.collectAsState()?.value
         if (camera != null && scene != null && !model.isObject)
-            BoxWithConstraints(Modifier.fillMaxSize()) {
+            Box(Modifier.fillMaxSize()) {
                 val projection = scene!!
                 Canvas(Modifier.fillMaxSize()) {
                     for ((index, slot) in model.supportSlots.withIndex()) {

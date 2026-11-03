@@ -26,6 +26,9 @@ internal class MapSceneEffects(
     private val fire = MapSceneFire(engine, scene, gpu)
     private val decals = MapSceneDecals(context, engine, scene, gpu, cache, scope, changed, error)
     private val fog = MapSceneFog(engine, gpu, scope, changed, error)
+    val working
+        get() = water.working || decals.working || fog.working
+
     val statistics
         get() = MapEffectStatistics(water.modelCount, decals.count, fire.count, fog.ready)
 

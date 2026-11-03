@@ -86,8 +86,19 @@ internal class FilamentSceneCore(
     private fun activeUrl(model: MapModel) =
         if (options.forceLod) model.lodUrl.ifBlank { model.renderUrl } else model.renderUrl
 
+    val settled
+        get() =
+            document != null &&
+                assets.pendingCount == 0 &&
+                !assets.working &&
+                !effects.working &&
+                hasMapFrame
+
     fun options(value: MapSceneOptions) {
-        val reload = options.forceLod != value.forceLod
+        val reload =
+            options.forceLod != value.forceLod ||
+                options.focus != value.focus ||
+                options.ground != value.ground
         options = value
         if (reload) document?.let { update(it, models.values.toList()) }
         requestFrame()
@@ -159,6 +170,13 @@ internal class FilamentSceneCore(
             }
     }
 
+    fun headless(width: Int, height: Int) {
+        if (swap != null && this.width == width && this.height == height) return
+        detach()
+        swap = engine.createSwapChain(width, height, SwapChainFlags.CONFIG_READABLE)
+        resize(width, height)
+    }
+
     fun surface(surface: Surface) {
         swap?.let(engine::destroySwapChain)
         swap = engine.createSwapChain(surface, SwapChainFlags.CONFIG_READABLE)
@@ -220,11 +238,39 @@ internal class FilamentSceneCore(
         models.clear()
         models.putAll(catalogue.associateBy { it.uuid })
         entries =
-            mapSceneEntries(value, models).map {
-                it.copy(model = it.model.copy(renderUrl = activeUrl(it.model)))
-            }
-        assets.update(value, entries)
-        val context = MapContext(value, catalogue)
+            mapSceneEntries(value, models)
+                .filter { options.focus == null || it.ref in options.focus!! }
+                .map {
+                    it.copy(model = it.model.copy(renderUrl = activeUrl(it.model)))
+                }
+        assets.update(value, entries, options.ground)
+        val visibleDocument =
+            options.focus?.let { refs ->
+                value
+                    .with(
+                        "lights",
+                        kotlinx.serialization.json.JsonArray(
+                            value.rows("lights").filter {
+                                MapEntityRef(MapEntityKind.Light, it.string("id")) in refs ||
+                                    mapAnchorRef(
+                                        it["anchor"] as? kotlinx.serialization.json.JsonObject
+                                    ) in refs
+                            }
+                        ),
+                    )
+                    .with(
+                        "decals",
+                        kotlinx.serialization.json.JsonArray(
+                            value.rows("decals").filter {
+                                MapEntityRef(MapEntityKind.Decal, it.string("id")) in refs ||
+                                    mapAnchorRef(
+                                        it["anchor"] as? kotlinx.serialization.json.JsonObject
+                                    ) in refs
+                            }
+                        ),
+                    )
+            } ?: value
+        val context = MapContext(visibleDocument, catalogue)
         lights.update(context)
         effects.update(context, entries)
         requestFrame()
@@ -296,7 +342,7 @@ internal class FilamentSceneCore(
                     assets.modelCount,
                     assets.fileBytes,
                 )
-            if (!hasMapFrame && document != null && assets.hasGround) {
+            if (!hasMapFrame && document != null && (assets.hasGround || !options.ground)) {
                 engine.flushAndWait()
                 hasMapFrame = true
                 status(assets.pendingCount, null)

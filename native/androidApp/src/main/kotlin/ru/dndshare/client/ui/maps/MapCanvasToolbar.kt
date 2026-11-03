@@ -83,48 +83,15 @@ internal fun MapCanvasToolbar(workspace: MapEditorWorkspace, modifier: Modifier 
                     }
                 }
             }
-        Surface(
-            color = WebPalette.Surface.copy(alpha = .94f),
-            shape = MaterialTheme.shapes.medium,
-        ) {
-            Row {
-                MapToolButton("Приблизить", Glyph.Plus) { zoom(workspace, 1.2) }
-                MapToolButton("Отдалить", Glyph.Minus) { zoom(workspace, 1 / 1.2) }
-                MapToolButton("Вписать карту", Glyph.Target) {
-                    workspace.scene?.let { scene ->
-                        workspace.current.map?.let { map ->
-                            scene.camera(
-                                scene
-                                    .camera()
-                                    .fit(
-                                        map.document.number("width"),
-                                        map.document.number("height"),
-                                        scene.width,
-                                        scene.height,
-                                    )
-                            )
-                        }
-                    }
-                }
-                MapToolButton(
-                    if (workspace.ui.orbit) "Перемещать камеру" else "Вращать камеру",
-                    Glyph.Transfer,
-                ) {
-                    workspace.controller.ui { it.copy(orbit = !it.orbit) }
-                }
-            }
+        workspace.map?.let { MapViewerTools(workspace.scene, it.document) }
+        ShareTextButton({ workspace.controller.ui { it.copy(orbit = !it.orbit) } }) {
+            AppGlyph(Glyph.Transfer)
+            Text(
+                if (workspace.ui.orbit) "Перемещать камеру" else "Вращать камеру",
+                style = ShareTypography.context,
+            )
         }
         if (workspace.modelPending > 0) ShareBadge("Загружаем модели: ${workspace.modelPending}")
         workspace.hint?.let { ShareBadge(it) }
-    }
-}
-
-private fun zoom(workspace: MapEditorWorkspace, amount: Double) {
-    workspace.scene?.let { scene ->
-        scene.camera(
-            scene
-                .camera()
-                .zoom(amount, scene.width / 2.0, scene.height / 2.0, scene.width, scene.height)
-        )
     }
 }

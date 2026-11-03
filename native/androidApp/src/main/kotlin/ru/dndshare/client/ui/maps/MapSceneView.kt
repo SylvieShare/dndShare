@@ -32,6 +32,9 @@ internal fun MapSceneView(
     cancel: () -> Unit,
     renderer: (FilamentMapScene?) -> Unit,
     status: (Int, String?) -> Unit,
+    initialCamera: MapCamera? = null,
+    active: Boolean = true,
+    options: MapSceneOptions = MapSceneOptions(),
     rectangle: Boolean = false,
     selection: (Offset, Offset, Boolean) -> Unit = { _, _, _ -> },
     key: (android.view.KeyEvent) -> Boolean = { false },
@@ -99,14 +102,15 @@ internal fun MapSceneView(
                         oldBottom ->
                         if (oldRight - oldLeft == 0 || oldBottom - oldTop == 0) {
                             created.camera(
-                                created
-                                    .camera()
-                                    .fit(
-                                        document.number("width"),
-                                        document.number("height"),
-                                        right - left,
-                                        bottom - top,
-                                    )
+                                initialCamera
+                                    ?: created
+                                        .camera()
+                                        .fit(
+                                            document.number("width"),
+                                            document.number("height"),
+                                            right - left,
+                                            bottom - top,
+                                        )
                             )
                         }
                         cameraRevision++
@@ -190,6 +194,7 @@ internal fun MapSceneView(
                 }
         }
     }
+    LaunchedEffect(scene, options) { scene?.options(options) }
     LaunchedEffect(scene, document, models) {
         scene?.let {
             runCatching { it.update(document, models) }.onFailure { onStatus(0, it.message) }
@@ -199,16 +204,17 @@ internal fun MapSceneView(
         touch?.orbit = orbit
         touch?.rectangle = rectangle
     }
-    DisposableEffect(lifecycle, scene) {
+    DisposableEffect(lifecycle, scene, active) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_STOP) {
                 touch?.cancel()
                 scene?.foreground(false)
             }
-            if (event == Lifecycle.Event.ON_START) scene?.foreground(true)
+            if (event == Lifecycle.Event.ON_START) scene?.foreground(active)
         }
         lifecycle.addObserver(observer)
-        scene?.foreground(lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED))
+        if (!active) touch?.cancel()
+        scene?.foreground(active && lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED))
         onDispose { lifecycle.removeObserver(observer) }
     }
 }

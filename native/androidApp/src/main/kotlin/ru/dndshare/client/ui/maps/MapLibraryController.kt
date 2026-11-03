@@ -149,6 +149,20 @@ internal class MapLibraryController(
         }
     }
 
+    fun attachPreview(map: BattleMap, preview: MapStoredPreview) {
+        fun apply(row: BattleMap) =
+            if (row.id == map.id && row.previewSignature == map.previewSignature)
+                row.copy(
+                    previewUrl = preview.url,
+                    previewSignature = preview.signature,
+                    previewModelsSignature = preview.modelsSignature,
+                    previewStale = false,
+                )
+            else row
+        cards = cards.map(::apply)
+        this.preview = this.preview?.let(::apply)
+    }
+
     fun close() {
         loadJob?.cancel()
         request++

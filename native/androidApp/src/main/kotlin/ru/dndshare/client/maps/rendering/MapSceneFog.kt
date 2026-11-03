@@ -29,6 +29,9 @@ internal class MapSceneFog(
     private var previousTime: Double? = null
     private var sky = 1f
     private var sun = Vec3(-.4f, .8f, -.5f).normalized()
+    val working
+        get() = building?.isActive == true
+
     val ready
         get() = field != null
 

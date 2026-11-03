@@ -12,8 +12,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
+import kotlinx.coroutines.*
 import ru.dndshare.client.maps.*
 import ru.dndshare.client.ui.designsystem.*
 
@@ -24,6 +28,7 @@ internal fun MapLibraryEntry(
     images: ImageLoader,
     list: Boolean,
     wide: Boolean,
+    previews: MapStoredPreviews,
     modifier: Modifier = Modifier,
 ) {
     ShareTile(modifier = modifier, framed = false, contentPadding = PaddingValues(12.dp)) {
@@ -33,14 +38,14 @@ internal fun MapLibraryEntry(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(Modifier.width(if (wide) 180.dp else 100.dp)) {
-                    MapLibraryThumbnail(map, c, images, 112)
+                    MapLibraryThumbnail(map, c, images, 112, previews)
                 }
                 Box(Modifier.weight(1f)) { MapLibraryEntryContent(map, c) }
                 if (wide) Box(Modifier.widthIn(max = 280.dp)) { MapLibraryEntryActions(map, c) }
             }
             if (!wide) MapLibraryEntryActions(map, c)
         } else {
-            MapLibraryThumbnail(map, c, images, 190)
+            MapLibraryThumbnail(map, c, images, 190, previews)
             MapLibraryEntryContent(map, c)
             MapLibraryEntryActions(map, c)
         }
@@ -53,7 +58,27 @@ private fun MapLibraryThumbnail(
     c: MapLibraryController,
     images: ImageLoader,
     height: Int,
+    previews: MapStoredPreviews,
 ) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    var generating by remember(map.id) { mutableStateOf(false) }
+    LaunchedEffect(map.id, map.previewSignature, map.previewUrl, map.previewStale, lifecycle) {
+        if (!map.owned || !map.previewUrl.isNullOrBlank() && !map.previewStale)
+            return@LaunchedEffect
+        lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            generating = true
+            try {
+                c.attachPreview(map, previews.ensure(map))
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                /* The card remains usable. */
+            } finally {
+                generating = false
+            }
+            awaitCancellation()
+        }
+    }
     var pending by remember(map.previewUrl) { mutableStateOf(!map.previewUrl.isNullOrBlank()) }
     Box(
         Modifier.fillMaxWidth()
@@ -63,7 +88,8 @@ private fun MapLibraryThumbnail(
             .semantics { contentDescription = "Открыть карту ${map.name}" },
         contentAlignment = Alignment.Center,
     ) {
-        if (pending) ShareSkeletonBlock(Modifier.fillMaxSize())
+        if (pending || generating && map.previewUrl.isNullOrBlank())
+            ShareSkeletonBlock(Modifier.fillMaxSize())
         if (map.previewUrl.isNullOrBlank()) AppGlyph(Glyph.Maps, Modifier.size(40.dp))
         else
             AsyncImage(
@@ -71,7 +97,7 @@ private fun MapLibraryThumbnail(
                 null,
                 imageLoader = images,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
                 onSuccess = { pending = false },
                 onError = { pending = false },
             )
