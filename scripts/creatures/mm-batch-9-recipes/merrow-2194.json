@@ -1,0 +1,70 @@
+{
+  "slug": "merrow-2194",
+  "itemId": 2194,
+  "itemIds": [
+    2194
+  ],
+  "modelId": "9fa365ef-dcd3-52b0-b51e-f21bcdfbac37",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2194",
+  "sourceName": "merrow-2194-miniature",
+  "name": "Водянник",
+  "nameEn": "Merrow",
+  "code": "CRE-merrow",
+  "groupName": "Водянник",
+  "groupNameEn": "Merrow",
+  "maxHeight": 1.55,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "amorphous",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Authored per body silhouette; accepted against the unchanged 17-view policy on final GLBs. No claim that a cheaper alternative was tested."
+  },
+  "build": {
+    "height": 1.55,
+    "size": 2,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2194,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.6378824343550564,
+    "sourceOrigin": [
+      0.07933129161596299,
+      -0.1398921811254695,
+      -0.49593037366867065
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-reviewed-lower-body-footprint",
+    "physicalStand": false,
+    "lowerHeightFraction": 0.1,
+    "trimmedExtentQuantiles": [
+      0.01,
+      0.99
+    ],
+    "radialQuantile": 0.96,
+    "datum": "Lowest surface of the reviewed organic lower body/coil. The broad lower mass is part of the creature, not an embedded separate base. Arms, upper curls and weapons do not set centre."
+  }
+}

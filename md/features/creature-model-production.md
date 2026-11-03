@@ -51,11 +51,19 @@ models/creatures/.generation-runtime/bin/python scripts/creatures/production-que
 [промпты](../../scripts/creatures/mm-batch-7-prompts/). В отчёте отделены
 три отклонённых native-попытки, локальная коррекция материалов и итоговые проверки.
 
-Восьмой набор — [30 локально подготовленных видов](../reports/creature-miniatures-mm-batch-8-quota-2026-10-31.md):
+Восьмой набор — [30 видов](../reports/creature-miniatures-mm-batch-8-quota-2026-10-31.md):
 [манифест](../../scripts/creatures/mm-batch-8-production.json),
 [рецепты](../../scripts/creatures/mm-batch-8-recipes/) и
 [промпты](../../scripts/creatures/mm-batch-8-prompts/). Отчёт отделяет
-локальную готовность и восстановление от ожидающей S3-публикации.
+локальную подготовку и восстановление от последующей публикации.
+Оба набора опубликованы; [подтверждение 61 модели и исходных архивов](../reports/creature-miniatures-mm-batches-7-8-publication-2026-11-02.md).
+
+Девятый набор — [33 вида](../reports/creature-miniatures-mm-batch-9-quota-2026-11-02.md):
+[манифест](../../scripts/creatures/mm-batch-9-production.json),
+[рецепты](../../scripts/creatures/mm-batch-9-recipes/) и
+[промпты](../../scripts/creatures/mm-batch-9-prompts/). Отчёт отделяет полученные
+GLB от потерянного экспорта и отклонённой анатомии; фиксирует расход квоты,
+локальные исправления, игровую проверку и результат публикации.
 
 Перед новым набором сверить не только опубликованные привязки, но и готовые
 локальные наборы из отчётов и их манифестов. Ожидающая публикации проверенная

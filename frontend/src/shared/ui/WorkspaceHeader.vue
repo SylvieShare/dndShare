@@ -1,6 +1,6 @@
 <template>
   <header ref="element" class="workspace-header" :class="{ 'workspace-header--plain': !$slots.navigation || splitNavigation }">
-    <div class="workspace-header-backdrop" aria-hidden="true"></div>
+    <BlurBackdrop class="workspace-header-backdrop" radius="var(--chrome-blur)" />
     <div class="workspace-header-inner" :class="{ 'workspace-header-inner--page': page }" :style="{ maxWidth: contentWidth || (page ? 'var(--layout-content-max)' : undefined) }">
     <div class="workspace-header-identity"><slot name="identity" /></div>
     <div v-if="$slots.navigation && !splitNavigation" class="workspace-header-navigation"><slot name="navigation" /></div>
@@ -12,6 +12,7 @@
   </header>
 </template>
 <script setup>
+import { BlurBackdrop } from '@sylvieshare/share-ui'
 import { onBeforeUnmount, onMounted, ref } from "vue";
 defineProps({ page: Boolean, contentWidth: String, splitNavigation: Boolean });
 const element = ref(null),
@@ -38,17 +39,12 @@ onBeforeUnmount(() => observer?.disconnect());
   background: transparent;
 }
 .workspace-header-backdrop {
-  position: absolute;
-  inset: 0 0 calc(-1 * (var(--chrome-fade-tail) + var(--workspace-extra-fade, 0px)));
+  --blur-backdrop-inset: 0 0 calc(-1 * (var(--chrome-fade-tail) + var(--workspace-extra-fade, 0px)));
+  --blur-backdrop-background: color-mix(in srgb, var(--bg) calc(var(--chrome-tint) * 100%), transparent);
+  --blur-backdrop-mask: linear-gradient(to bottom, var(--text-on-accent) var(--workspace-main-height), transparent 100%);
   z-index: 0;
-  pointer-events: none;
-  background: color-mix(in srgb, var(--bg) calc(var(--chrome-tint) * 100%), transparent);
-  backdrop-filter: blur(var(--chrome-blur));
-  -webkit-backdrop-filter: blur(var(--chrome-blur));
-  mask-mode: alpha;
-  mask-image: linear-gradient(to bottom, var(--text-on-accent) var(--workspace-main-height), transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, var(--text-on-accent) var(--workspace-main-height), transparent 100%);
 }
+
 .workspace-header-inner {
   position: relative;
   z-index: 1;

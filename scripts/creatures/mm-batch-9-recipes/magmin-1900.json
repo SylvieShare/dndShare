@@ -1,0 +1,116 @@
+{
+  "slug": "magmin-1900",
+  "itemId": 1900,
+  "itemIds": [
+    1900
+  ],
+  "modelId": "70da7397-11b4-5b47-8317-6d51c26b6cef",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1900",
+  "sourceName": "magmin-1900-miniature",
+  "name": "Магмин",
+  "nameEn": "Magmin",
+  "code": "CRE-magmin",
+  "groupName": "Магмин",
+  "groupNameEn": "Magmin",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Authored per body silhouette; accepted against the unchanged 17-view policy on final GLBs. No claim that a cheaper alternative was tested."
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 14000,
+    "lodTriangles": 10000,
+    "geometryBaseline": "inputs/without-floating-speck.glb",
+    "lodAggression": 3,
+    "shadowTriangles": 2500,
+    "shadowAggression": 5,
+    "seed": 1900,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.7335090901359822,
+    "sourceOrigin": [
+      0.0034064501523971558,
+      0.006485581398010254,
+      -0.45122838020324707
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.37,
+        -0.16,
+        -0.11599999999999999,
+        0.13
+      ],
+      [
+        0.122,
+        -0.217,
+        0.376,
+        0.07600000000000001
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.25429362058639526,
+        0.017108630388975143
+      ],
+      [
+        0.2611065208911896,
+        -0.03007979318499565
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  },
+  "localGeometryEdits": {
+    "method": "remove only two complete components inside an authored head-speck box",
+    "sourceSpace": "flattened glTF XYZ",
+    "nativeSHA256": "a80f4f8a87e3d7610ddb722028ed840769c835c81c21a89a5ab5256896b0cbb5",
+    "region": [
+      [
+        -0.03,
+        0.36,
+        -0.09
+      ],
+      [
+        0.03,
+        0.425,
+        -0.025
+      ]
+    ],
+    "removedComponentFaces": [
+      182,
+      140
+    ],
+    "removedFaces": 322,
+    "preservedTeethClawsAndAllOutsideComponents": true,
+    "geometryBaselineSHA256": "425506764f2841e6d2ae11f262799d52931007ac6573c59a4581ea6b43fef8b9"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "slug": "kenku-1748",
+  "itemId": 1748,
+  "itemIds": [
+    1748
+  ],
+  "modelId": "a56ee271-c3e4-51a7-b23d-de355bd4018d",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1748",
+  "sourceName": "kenku-1748-miniature",
+  "name": "Кенку",
+  "nameEn": "Kenku",
+  "code": "CRE-kenku",
+  "groupName": "Кенку",
+  "groupNameEn": "Kenku",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Authored per body silhouette; accepted against the unchanged 17-view policy on final GLBs. No claim that a cheaper alternative was tested."
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 1748,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.8410042682151208,
+    "sourceOrigin": [
+      -0.007789153605699539,
+      0.04492856748402119,
+      -0.5008479356765747
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.379,
+        -0.085,
+        -0.104,
+        0.232
+      ],
+      [
+        0.029,
+        -0.331,
+        0.35500000000000004,
+        -0.059
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.2271423265337944,
+        0.10093450173735619
+      ],
+      [
+        0.21156401932239532,
+        -0.19079163670539856
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

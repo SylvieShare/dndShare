@@ -1,0 +1,79 @@
+{
+  "slug": "aarakocra-1681",
+  "itemId": 1681,
+  "itemIds": [
+    1681
+  ],
+  "modelId": "a7f1c26b-263e-53ef-a7c5-fcc7ac75b35d",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1681",
+  "sourceName": "aarakocra-1681-miniature",
+  "name": "Ааракокра",
+  "nameEn": "Aarakocra",
+  "code": "CRE-aarakocra",
+  "groupName": "Ааракокра",
+  "groupNameEn": "Aarakocra",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "flight",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Authored per body silhouette; accepted against the unchanged 17-view policy on final GLBs. No claim that a cheaper alternative was tested."
+  },
+  "build": {
+    "height": 1.7,
+    "size": 1,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 1681,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.5,
+    "sourceOrigin": [
+      0.0026834048330783428,
+      0.02712942644953731,
+      -0.45457854866981506
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-flight-body-envelope",
+    "rawGltfBodyRegion": [
+      -0.2,
+      -0.2,
+      -0.15,
+      0.2,
+      0.15,
+      0.15
+    ],
+    "rawGltfBodyXZCentre": [
+      0.0026834048330783428,
+      -0.02712942644953731
+    ],
+    "sourceDiameterChoice": "Authored virtual circle around the central body, excluding wing tips, held gear and the geometry density of appendages.",
+    "lowestPoseDatum": -0.45457854866981506,
+    "calibratedNativeAltitude": 0,
+    "physicalStand": false,
+    "datum": "Virtual flight composition datum at the lowest appendage, Y=0. Separate base supplies its surface height; no physical stand or standing-feet claim."
+  }
+}

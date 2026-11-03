@@ -1,0 +1,111 @@
+{
+  "slug": "androsphinx-3761",
+  "itemId": 3761,
+  "itemIds": [
+    3761
+  ],
+  "modelId": "6f5143bb-6c99-551e-8d6f-dbf3944cfce2",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3761",
+  "sourceName": "androsphinx-3761-miniature",
+  "name": "Андросфинкс",
+  "nameEn": "Androsphinx",
+  "code": "CRE-androsphinx",
+  "groupName": "Андросфинкс",
+  "groupNameEn": "Androsphinx",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Authored per body silhouette; accepted against the unchanged 17-view policy on final GLBs. No claim that a cheaper alternative was tested."
+  },
+  "build": {
+    "height": 1.7,
+    "size": 2,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 3761,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.574345058194005,
+    "sourceOrigin": [
+      0.009965565986931324,
+      -0.10636162012815475,
+      -0.296718955039978
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.16,
+        0.205,
+        -0.04,
+        0.35
+      ],
+      [
+        0.035,
+        0.21,
+        0.15,
+        0.35
+      ],
+      [
+        -0.15,
+        -0.18,
+        -0.02,
+        -0.05
+      ],
+      [
+        0.07,
+        -0.17,
+        0.2,
+        -0.04
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.10719993710517883,
+        0.3004198968410492
+      ],
+      [
+        0.09489433094859123,
+        0.309586837887764
+      ],
+      [
+        -0.10001946240663528,
+        -0.10470649600028992
+      ],
+      [
+        0.15218733251094818,
+        -0.07985375821590424
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

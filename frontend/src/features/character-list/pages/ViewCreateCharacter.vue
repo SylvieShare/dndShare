@@ -1,6 +1,7 @@
 <template>
   <div class="cc" :class="{ 'cc--embedded': embedded }">
     <header class="cc-head">
+      <BlurBackdrop class="cc-head-backdrop" radius="var(--chrome-blur)" />
       <div class="cc-head-main">
         <button class="cc-x" title="Закрыть" @click="exit">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
@@ -82,7 +83,7 @@
 </template>
 
 <script setup>
-import { LoadingIndicator } from '@sylvieshare/share-ui'
+import { BlurBackdrop, LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, onMounted, provide, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import CreateStepRail from '@/features/character-list/components/wizard/CreateStepRail.vue'
@@ -409,8 +410,15 @@ onMounted(() => initialize())
   padding-inline: 24px;
 }
 .cc-head { position: relative; z-index: 20; isolation: isolate; }
-.cc-head::before { content: ''; position: absolute; inset: 0 0 calc(-1 * var(--chrome-fade-tail)); z-index: -1; pointer-events: none; background: color-mix(in srgb, var(--bg) calc(var(--chrome-tint) * 100%), transparent); backdrop-filter: blur(var(--chrome-blur)); -webkit-backdrop-filter: blur(var(--chrome-blur)); mask-image: linear-gradient(to bottom, var(--text-on-accent) 64px, transparent); -webkit-mask-image: linear-gradient(to bottom, var(--text-on-accent) 64px, transparent); }
+.cc-head-backdrop {
+  --blur-backdrop-inset: 0 0 calc(-1 * var(--chrome-fade-tail));
+  --blur-backdrop-background: color-mix(in srgb, var(--bg) calc(var(--chrome-tint) * 100%), transparent);
+  --blur-backdrop-mask: linear-gradient(to bottom, var(--text-on-accent) 64px, transparent);
+  z-index: 0;
+}
 .cc-head-main {
+  position: relative;
+  z-index: 1;
   grid-column: 2;
   display: flex;
   align-items: center;

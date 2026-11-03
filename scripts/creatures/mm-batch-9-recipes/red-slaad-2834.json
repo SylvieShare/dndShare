@@ -1,0 +1,91 @@
+{
+  "slug": "red-slaad-2834",
+  "itemId": 2834,
+  "itemIds": [
+    2834
+  ],
+  "modelId": "ba78a4c8-0a73-58ea-894b-c631909dee0c",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-2834",
+  "sourceName": "red-slaad-2834-miniature",
+  "name": "Красный слаад",
+  "nameEn": "Red Slaad",
+  "code": "CRE-red-slaad",
+  "groupName": "Красный слаад",
+  "groupNameEn": "Red Slaad",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Authored per body silhouette; accepted against the unchanged 17-view policy on final GLBs. No claim that a cheaper alternative was tested."
+  },
+  "build": {
+    "height": 1.7,
+    "size": 2,
+    "renderTriangles": 18000,
+    "lodTriangles": 12000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 2834,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.9249371574054904,
+    "sourceOrigin": [
+      -0.007549464702606201,
+      0.03191003203392029,
+      -0.4575158953666687
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.442,
+        -0.139,
+        -0.17,
+        0.223
+      ],
+      [
+        0.10099999999999999,
+        -0.304,
+        0.424,
+        -0.038000000000000006
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.30158695578575134,
+        0.09678693860769272
+      ],
+      [
+        0.28648802638053894,
+        -0.1606070026755333
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}

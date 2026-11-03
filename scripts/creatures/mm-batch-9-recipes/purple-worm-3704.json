@@ -1,0 +1,127 @@
+{
+  "slug": "purple-worm-3704",
+  "itemId": 3704,
+  "itemIds": [
+    3704
+  ],
+  "modelId": "206c856b-9325-501d-927e-68e1d3f740d4",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3704",
+  "sourceName": "purple-worm-3704-miniature",
+  "name": "Лиловый червь",
+  "nameEn": "Purple Worm",
+  "code": "CRE-purple-worm",
+  "groupName": "Лиловый червь",
+  "groupNameEn": "Purple Worm",
+  "maxHeight": 1.4,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "amorphous",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "078cf63b-090b-5f98-a0e2-85c83cd04b6f",
+    "file": "models/creatures/separated-bases-20261024/078cf63b-090b-5f98-a0e2-85c83cd04b6f.glb",
+    "referenceDiameter": 3.6,
+    "surfaceHeight": 0.06
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Authored per body silhouette; accepted against the unchanged 17-view policy on final GLBs. No claim that a cheaper alternative was tested."
+  },
+  "build": {
+    "height": 1.4,
+    "size": 4,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 3704,
+    "surfaceClosure": {
+      "method": "cap",
+      "rim": [
+        [
+          0.3913142681121826,
+          -0.27653786540031433,
+          0.0805451050400734
+        ],
+        [
+          0.44329169392585754,
+          -0.3082849979400635,
+          0.04404500871896744
+        ],
+        [
+          0.43790367245674133,
+          -0.3455594480037689,
+          0.006481833755970001
+        ],
+        [
+          0.38431066274642944,
+          -0.36660274863243103,
+          -0.004016004502773285
+        ],
+        [
+          0.367911159992218,
+          -0.3902019262313843,
+          -0.0015809759497642517
+        ],
+        [
+          0.3725259602069855,
+          -0.40833720564842224,
+          0.03747463971376419
+        ],
+        [
+          0.33002927899360657,
+          -0.3794260025024414,
+          0.07730890065431595
+        ],
+        [
+          0.34309864044189453,
+          -0.349047988653183,
+          0.11528847366571426
+        ],
+        [
+          0.37245845794677734,
+          -0.31130707263946533,
+          0.11427436023950577
+        ]
+      ],
+      "normal": [
+        0.6504822956089287,
+        -0.5618475896546001,
+        0.5110773611682032
+      ],
+      "offset": 0.0005,
+      "thickness": 0.006
+    },
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.9189910431711183,
+    "sourceOrigin": [
+      -0.013586037606000828,
+      0.0487077534198761,
+      -0.4683271050453186
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-reviewed-lower-body-footprint",
+    "physicalStand": false,
+    "lowerHeightFraction": 0.1,
+    "trimmedExtentQuantiles": [
+      0.01,
+      0.99
+    ],
+    "radialQuantile": 0.96,
+    "datum": "Lowest surface of the reviewed organic lower body/coil. The broad lower mass is part of the creature, not an embedded separate base. Arms, upper curls and weapons do not set centre."
+  }
+}

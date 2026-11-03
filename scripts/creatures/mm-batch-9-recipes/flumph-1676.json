@@ -1,0 +1,79 @@
+{
+  "slug": "flumph-1676",
+  "itemId": 1676,
+  "itemIds": [
+    1676
+  ],
+  "modelId": "ad40150d-d112-5905-b186-a9678a0fea2a",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-1676",
+  "sourceName": "flumph-1676-miniature",
+  "name": "Фламф",
+  "nameEn": "Flumph",
+  "code": "CRE-flumph",
+  "groupName": "Фламф",
+  "groupNameEn": "Flumph",
+  "maxHeight": 1.0,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "flight",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "3c506a01-f906-5627-a53e-e1198a33968a",
+    "file": "models/creatures/separated-bases-20261024/3c506a01-f906-5627-a53e-e1198a33968a.glb",
+    "referenceDiameter": 0.9,
+    "surfaceHeight": 0.06
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Authored per body silhouette; accepted against the unchanged 17-view policy on final GLBs. No claim that a cheaper alternative was tested."
+  },
+  "build": {
+    "height": 1.0,
+    "size": 1,
+    "renderTriangles": 26000,
+    "lodTriangles": 18000,
+    "lodAggression": 3,
+    "shadowTriangles": 6000,
+    "shadowAggression": 5,
+    "seed": 1676,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.85,
+    "sourceOrigin": [
+      0.0003293827176094333,
+      -0.0030317947268486134,
+      -0.4539896547794342
+    ],
+    "rotation": 135
+  },
+  "standingSupport": {
+    "method": "authored-flight-body-envelope",
+    "rawGltfBodyRegion": [
+      -0.4,
+      -0.15,
+      -0.25,
+      0.4,
+      0.1,
+      0.25
+    ],
+    "rawGltfBodyXZCentre": [
+      0.0003293827176094333,
+      0.0030317947268486134
+    ],
+    "sourceDiameterChoice": "Authored virtual circle around the central body, excluding wing tips, held gear and the geometry density of appendages.",
+    "lowestPoseDatum": -0.4539896547794342,
+    "calibratedNativeAltitude": 0,
+    "physicalStand": false,
+    "datum": "Virtual flight composition datum at the lowest appendage, Y=0. Separate base supplies its surface height; no physical stand or standing-feet claim."
+  }
+}

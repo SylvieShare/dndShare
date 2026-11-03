@@ -1,0 +1,70 @@
+{
+  "slug": "marilith-3743",
+  "itemId": 3743,
+  "itemIds": [
+    3743
+  ],
+  "modelId": "6b35e585-e58a-5cd5-b383-332ca9bac79b",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3743",
+  "sourceName": "marilith-3743-miniature",
+  "name": "Марилит",
+  "nameEn": "Marilith",
+  "code": "CRE-marilith",
+  "groupName": "Марилит",
+  "groupNameEn": "Marilith",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "amorphous",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "Authored per body silhouette; accepted against the unchanged 17-view policy on final GLBs. No claim that a cheaper alternative was tested."
+  },
+  "build": {
+    "height": 1.7,
+    "size": 2,
+    "renderTriangles": 32000,
+    "lodTriangles": 24000,
+    "lodAggression": 3,
+    "shadowTriangles": 8000,
+    "shadowAggression": 5,
+    "seed": 3743,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.7076218012752692,
+    "sourceOrigin": [
+      0.050716229081153974,
+      -0.0014549128711224824,
+      -0.5009713172912598
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-reviewed-lower-body-footprint",
+    "physicalStand": false,
+    "lowerHeightFraction": 0.1,
+    "trimmedExtentQuantiles": [
+      0.01,
+      0.99
+    ],
+    "radialQuantile": 0.96,
+    "datum": "Lowest surface of the reviewed organic lower body/coil. The broad lower mass is part of the creature, not an embedded separate base. Arms, upper curls and weapons do not set centre."
+  }
+}

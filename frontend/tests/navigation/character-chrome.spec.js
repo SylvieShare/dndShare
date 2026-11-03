@@ -1,28 +1,11 @@
 import { expect, test } from '@playwright/test'
 
-const source = { id: 1, name: 'dnd5e', versions: [{ id: 1, version: '2014' }] }
-async function fixture(page) {
-  await page.route(url => url.pathname.startsWith('/api/'), route => {
-    const path = new URL(route.request().url()).pathname
-    return route.fulfill({ json: {
-      '/api/user/checkAuth': { auth: true, user: { id: 1, login: 'tester', roles: [], hasCharacters: true, gameContext: { sourceVersionId: 1 } } },
-      '/api/sources': { sources: [source] },
-      '/api/templates': { templates: [{ id: 1, name: 'DND5', sourceId: 1 }] },
-      '/api/chars': { chars: Array.from({ length: 30 }, (_, index) => ({
-        id: index + 1, uuid: 'chrome-' + index, userId: 1, templateId: 1,
-        sourceId: 1, sourceName: 'D&D 5e', sourceVersion: '2014', changedAt: '2026-10-29T08:00:00Z',
-        data: { values: { name: 'Персонаж ' + index, lvl: { level: 1 }, classes: [] }, var: {} },
-      })) },
-      '/api/suggest/types': { items: [] }, '/api/sessions/active': { sessions: [] },
-      '/api/item-types': { types: [] },
-    }[path] || {} })
-  })
-}
+import { installCharacterChromeFixture } from './characterChromeFixture.js'
 
 for (const width of [320, 834, 1440]) test(`character actions stay in sharp subheader above a fading backdrop at ${width}`, async ({ page }) => {
   const errors = []; page.on('pageerror', error => errors.push(error.message))
   await page.setViewportSize({ width, height: 900 })
-  await fixture(page)
+  await installCharacterChromeFixture(page)
   await page.goto('/chars')
   await expect(page.locator('.char-card')).toHaveCount(30, { timeout: 20000 })
   await expect.poll(() => page.evaluate(() => document.getAnimations().filter(animation =>

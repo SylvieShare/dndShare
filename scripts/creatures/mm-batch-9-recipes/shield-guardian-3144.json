@@ -1,0 +1,91 @@
+{
+  "slug": "shield-guardian-3144",
+  "itemId": 3144,
+  "itemIds": [
+    3144
+  ],
+  "modelId": "77ad806e-78de-53a4-9dd1-94e8e178767c",
+  "collection": "CRE",
+  "collectionName": "Миниатюры существ",
+  "sourceCode": "CRE-3144",
+  "sourceName": "shield-guardian-3144-miniature",
+  "name": "Щитостраж",
+  "nameEn": "Shield Guardian",
+  "code": "CRE-shield-guardian",
+  "groupName": "Щитостраж",
+  "groupNameEn": "Shield Guardian",
+  "maxHeight": 1.7,
+  "referenceDiameter": 0.9,
+  "materialProfile": "dielectric",
+  "artProfile": "painted",
+  "supportKind": "grounded",
+  "assetFiles": {
+    "render": "model.glb",
+    "lod": "model-lod.glb",
+    "shadow": "model-shadow.glb",
+    "source": "model-source.glb",
+    "preview": "preview.png"
+  },
+  "reviewBase": {
+    "modelId": "ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7",
+    "file": "models/creatures/separated-bases-20261024/ece4f0e5-ae3a-5d3b-a050-5e8a504c33f7.glb",
+    "referenceDiameter": 1.8,
+    "surfaceHeight": 0.06
+  },
+  "lodSelection": {
+    "method": "strict-silhouette-probes",
+    "reason": "12k LOD failed the strict maximum boundary distance (9.22 px); 16k passed the unchanged 17-view policy."
+  },
+  "build": {
+    "height": 1.7,
+    "size": 2,
+    "renderTriangles": 18000,
+    "lodTriangles": 16000,
+    "lodAggression": 3,
+    "shadowTriangles": 3500,
+    "shadowAggression": 5,
+    "seed": 3144,
+    "rotation": -45
+  },
+  "calibration": {
+    "sourceDiameter": 0.7890465383168525,
+    "sourceOrigin": [
+      0.013962838798761368,
+      0.042124778032302856,
+      -0.49635636806488037
+    ],
+    "rotation": -45
+  },
+  "standingSupport": {
+    "method": "authored-foot-regions-fit-circle",
+    "rawGltfXZRegions": [
+      [
+        -0.319,
+        -0.376,
+        0.016,
+        -0.104
+      ],
+      [
+        0.11,
+        -0.07300000000000001,
+        0.34600000000000003,
+        0.28300000000000003
+      ]
+    ],
+    "rawGltfXZCenters": [
+      [
+        -0.17989423125982285,
+        -0.22571328282356262
+      ],
+      [
+        0.20781990885734558,
+        0.1414637267589569
+      ]
+    ],
+    "lowerSourceHeightFraction": 0.24,
+    "withinFootHeightQuantile": 0.3,
+    "radialQuantile": 0.98,
+    "sourceFloorDelta": 0.0,
+    "excluded": "Tail, wings, weapons and the density of lowest vertices do not set the stance centre."
+  }
+}
