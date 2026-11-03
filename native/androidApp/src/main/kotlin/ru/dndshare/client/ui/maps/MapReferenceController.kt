@@ -75,6 +75,7 @@ internal class MapReferenceController(private val workspace: MapEditorWorkspace)
                     reference =
                         draft.copy(
                             current = draft.base,
+                            invalidNumbers = emptyMap(),
                             blockers =
                                 (draft.base["blockers"] ?: JsonArray(emptyList())).toString(),
                         )
@@ -93,7 +94,10 @@ internal class MapReferenceController(private val workspace: MapEditorWorkspace)
         if (saving) return
         workspace.controller.ui { ui ->
             ui.copy(
-                reference = ui.reference?.let { it.copy(current = it.current.with(key, value)) }
+                reference =
+                    ui.reference?.let {
+                        it.copy(current = it.current.with(key, value))
+                    }
             )
         }
         status = null
@@ -102,6 +106,24 @@ internal class MapReferenceController(private val workspace: MapEditorWorkspace)
     fun objectField(group: String, key: String, value: JsonElement) {
         val row = currentDraft?.current?.get(group) as? JsonObject ?: buildJsonObject {}
         set(group, row.with(key, value))
+    }
+
+    fun validateNumber(label: String, text: String, integer: Boolean): Boolean {
+        val parsed = text.replace(',', '.').toDoubleOrNull()
+        val valid = parsed?.isFinite() == true && (!integer || text.toIntOrNull() != null)
+        workspace.controller.ui { ui ->
+            ui.copy(
+                reference =
+                    ui.reference?.let { draft ->
+                        draft.copy(
+                            invalidNumbers =
+                                if (valid) draft.invalidNumbers - label
+                                else draft.invalidNumbers + (label to text)
+                        )
+                    }
+            )
+        }
+        return valid
     }
 
     fun number(key: String, value: String) {
@@ -146,8 +168,46 @@ internal class MapReferenceController(private val workspace: MapEditorWorkspace)
                 currentDraft?.current?.rows(list).orEmpty().filterIndexed { i, _ -> i != index }
             ),
         )
+        removeNumberRow(list, index)
         selectedPoint = -1
         selectedSlot = -1
+    }
+
+    private fun removeNumberRow(list: String, index: Int) {
+        workspace.controller.ui { ui ->
+            ui.copy(
+                reference =
+                    ui.reference?.let { draft ->
+                        val prefix = "$list/"
+                        draft.copy(
+                            invalidNumbers =
+                                draft.invalidNumbers
+                                    .mapNotNull { (key, value) ->
+                                        if (!key.startsWith(prefix)) key to value
+                                        else {
+                                            val rest = key.removePrefix(prefix)
+                                            val row = rest.substringBefore('/').toIntOrNull()
+                                            when {
+                                                row == null -> key to value
+                                                row == index -> null
+                                                row > index ->
+                                                    "$prefix${row-1}/${rest.substringAfter('/')}" to
+                                                        value
+                                                else -> key to value
+                                            }
+                                        }
+                                    }
+                                    .toMap()
+                        )
+                    }
+            )
+        }
+    }
+
+    fun removeBehaviourRow(list: String, index: Int) {
+        val rows = (currentDraft?.current?.get("behaviour") as? JsonObject)?.rows(list).orEmpty()
+        behaviour(list, JsonArray(rows.filterIndexed { i, _ -> i != index }))
+        removeNumberRow(list, index)
     }
 
     fun behaviour(key: String, value: JsonElement) {

@@ -27,7 +27,7 @@ internal class MapPostProcess(private val engine: Engine, gpu: MapGpuMaterials, 
                 intArrayOf(0, 1, 2, 0, 2, 3),
             ),
         )
-    private val entity = MapGpuEntity(engine, scene, mesh, material)
+    private val entity = MapGpuEntity(engine, scene, mesh, material, culling = false)
 
     init {
         camera.setExposure(1f)

@@ -135,6 +135,8 @@ internal class MapGpuEntity(
     shadows: Boolean = false,
     priority: Int = 4,
     private val ownsMaterial: Boolean = true,
+    private val releaseMaterial: (MaterialInstance) -> Unit = engine::destroyMaterialInstance,
+    culling: Boolean = true,
 ) : AutoCloseable {
     val entity = EntityManager.get().create()
 
@@ -145,14 +147,23 @@ internal class MapGpuEntity(
             .material(0, material)
             .castShadows(shadows)
             .receiveShadows(true)
-            .culling(false)
+            .culling(culling)
             .priority(priority)
+            .layerMask(0xff, 1)
             .build(engine, entity)
         scene.addEntity(entity)
     }
 
     fun transform(matrix: FloatArray) {
         engine.transformManager.setTransform(engine.transformManager.getInstance(entity), matrix)
+    }
+
+    fun layer(value: Int) {
+        engine.renderableManager.setLayerMask(
+            engine.renderableManager.getInstance(entity),
+            0xff,
+            value,
+        )
     }
 
     fun visible(value: Boolean) {
@@ -167,6 +178,6 @@ internal class MapGpuEntity(
         scene.remove(entity)
         engine.destroyEntity(entity)
         EntityManager.get().destroy(entity)
-        if (ownsMaterial) engine.destroyMaterialInstance(material)
+        if (ownsMaterial) releaseMaterial(material)
     }
 }

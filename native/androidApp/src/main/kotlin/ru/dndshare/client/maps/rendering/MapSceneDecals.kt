@@ -162,31 +162,41 @@ internal class MapSceneDecals(
                                     .filter { it.indices.isNotEmpty() }
                         }
                         if (closed || loading[id]?.first != shape) return@withPermit
-                        val texture =
-                            gpu.texture(
-                                "decal:${decal.string("imageUrl")}",
-                                requireNotNull(bitmap),
-                                true,
-                            )
                         val uploaded = mutableListOf<MapGpuMesh>()
                         val entities = mutableListOf<MapGpuEntity>()
                         try {
                             for (mesh in meshes) {
                                 val geometry = MapGpuMesh(engine, mesh)
                                 uploaded += geometry
-                                val material = gpu.instance("decal")
-                                material.setParameter(
-                                    "albedo",
-                                    texture,
-                                    TextureSampler(
-                                        TextureSampler.MinFilter.LINEAR_MIPMAP_LINEAR,
-                                        TextureSampler.MagFilter.LINEAR,
-                                        TextureSampler.WrapMode.CLAMP_TO_EDGE,
-                                    ),
-                                )
-                                material.setPolygonOffset(-2f, -2f)
+                                val material =
+                                    gpu.configure("decal") { instance ->
+                                        val texture =
+                                            gpu.texture(
+                                                instance,
+                                                "decal:${decal.string("imageUrl")}",
+                                                requireNotNull(bitmap),
+                                                true,
+                                            )
+                                        instance.setParameter(
+                                            "albedo",
+                                            texture,
+                                            TextureSampler(
+                                                TextureSampler.MinFilter.LINEAR_MIPMAP_LINEAR,
+                                                TextureSampler.MagFilter.LINEAR,
+                                                TextureSampler.WrapMode.CLAMP_TO_EDGE,
+                                            ),
+                                        )
+                                        instance.setPolygonOffset(-2f, -2f)
+                                    }
                                 entities +=
-                                    MapGpuEntity(engine, scene, geometry, material, priority = 6)
+                                    MapGpuEntity(
+                                        engine,
+                                        scene,
+                                        geometry,
+                                        material,
+                                        priority = 6,
+                                        releaseMaterial = gpu::release,
+                                    )
                             }
                             records[id] = Record(shape, uploaded, entities)
                             synchronize()

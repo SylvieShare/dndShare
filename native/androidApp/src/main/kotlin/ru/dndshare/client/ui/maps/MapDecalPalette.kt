@@ -8,12 +8,17 @@ import android.provider.OpenableColumns
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -93,7 +98,31 @@ internal fun MapDecalPalette(workspace: MapEditorWorkspace, images: ImageLoader)
                     Text(title, Modifier.padding(top = 12.dp), fontSize = 14.sp)
                 }
                 items(entries, key = { it.id }) { image ->
+                    var coordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
+                    var position by remember { mutableStateOf(Offset.Zero) }
                     ShareTile(
+                        modifier =
+                            Modifier.onGloballyPositioned { coordinates = it }
+                                .pointerInput(image.id) {
+                                    detectDragGesturesAfterLongPress(
+                                        onDragStart = { point ->
+                                            position = point
+                                            workspace.paletteDrag.start(MapTool.Decal(image))
+                                            coordinates
+                                                ?.localToRoot(point)
+                                                ?.let(workspace.paletteDrag::move)
+                                        },
+                                        onDragEnd = workspace.paletteDrag::end,
+                                        onDragCancel = workspace.paletteDrag::cancel,
+                                    ) { change, delta ->
+                                        change.consume()
+                                        position += delta
+                                        coordinates
+                                            ?.takeIf { it.isAttached }
+                                            ?.localToRoot(position)
+                                            ?.let(workspace.paletteDrag::move)
+                                    }
+                                },
                         onClick = { workspace.placement.tool(MapTool.Decal(image)) },
                         framed = false,
                         containerColor = WebPalette.MapPreview,

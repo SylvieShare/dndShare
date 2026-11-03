@@ -156,6 +156,17 @@ class FilamentMapScene(
             main.post { result(Result.failure(IllegalStateException("Редактор закрыт"))) }
     }
 
+    fun observeLight(
+        id: String,
+        logicalWidth: Int,
+        logicalHeight: Int,
+        changed: (MapLightFrame) -> Unit,
+    ): AutoCloseable {
+        val token = observerIds.incrementAndGet()
+        post { observeLight(token, id, logicalWidth, logicalHeight, changed) }
+        return AutoCloseable { post { removeLightObserver(token) } }
+    }
+
     fun pick(x: Float, y: Float, result: (MapEntityRef?) -> Unit) = post { pick(x, y, result) }
 
     fun pickSurface(x: Float, y: Float, result: (MapSurfaceHit?) -> Unit) = post {
@@ -173,6 +184,8 @@ class FilamentMapScene(
         engine.flushAndWait()
         main.post { if (!closed) complete() }
     }
+
+    private val observerIds = java.util.concurrent.atomic.AtomicLong()
 
     override fun close() {
         if (closed) return

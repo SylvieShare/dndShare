@@ -211,7 +211,7 @@ internal class MapSceneFog(
         return true
     }
 
-    fun render(renderer: Renderer, view: View): Boolean {
+    fun render(renderer: Renderer, view: View, worldRender: (Renderer, View) -> Unit): Boolean {
         val frame = world ?: return false
         val mist = fog ?: return false
         val output = composite ?: return false
@@ -220,7 +220,7 @@ internal class MapSceneFog(
         try {
             view.renderTarget = frame.target
             view.isPostProcessingEnabled = false
-            renderer.render(view)
+            worldRender(renderer, view)
             renderer.render(mist.view)
             renderer.render(output.view)
         } finally {

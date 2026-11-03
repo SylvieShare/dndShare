@@ -15,50 +15,53 @@ internal fun MapReferencePoint(reference: MapReferenceController, index: Int) {
     val point = current.rows("placementPoints").getOrNull(index) ?: return
     val inputs = LocalShareFormInputs.current
     val focus = LocalFocusManager.current
-    ShareTile(
-        framed = reference.selectedPoint == index,
-        tint = if (reference.selectedPoint == index) WebPalette.Accent else null,
-        contentPadding = PaddingValues(12.dp),
-        onClick = {
-            reference.selectedPoint = index
-            reference.selectedSlot = -1
-        },
-    ) {
-        Text("Место ${index+1}", style = ShareTypography.context)
-        for ((key, label) in
-            listOf("x" to "X", "y" to "Y", "elevation" to "Высота")) ReferenceNumber(
-            point.number(key),
-            "Место ${index+1}: $label",
-        ) { value ->
-            value
-                .replace(',', '.')
-                .toDoubleOrNull()
-                ?.takeIf { it.isFinite() }
-                ?.let { reference.listField("placementPoints", index, key, JsonPrimitive(it)) }
-        }
-        for (axis in listOf("x", "y")) ShareNumberInput(
-            "Место ${index+1}: ячейка $axis",
-            (point["cell"] as? JsonObject)?.number(axis)?.toInt()?.toString() ?: "0",
-        ) { value ->
-            value.toIntOrNull()?.let {
-                reference.listField(
-                    "placementPoints",
-                    index,
-                    "cell",
-                    (point["cell"] as? JsonObject ?: buildJsonObject {}).with(
-                        axis,
-                        JsonPrimitive(it),
-                    ),
-                )
+    CompositionLocalProvider(LocalReferenceNumberScope provides "placementPoints/$index/") {
+        ShareTile(
+            framed = reference.selectedPoint == index,
+            tint = if (reference.selectedPoint == index) WebPalette.Accent else null,
+            contentPadding = PaddingValues(12.dp),
+            onClick = {
+                reference.selectedPoint = index
+                reference.selectedSlot = -1
+            },
+        ) {
+            Text("Место ${index+1}", style = ShareTypography.context)
+            for ((key, label) in
+                listOf("x" to "X", "y" to "Y", "elevation" to "Высота")) ReferenceNumber(
+                point.number(key),
+                "Место ${index+1}: $label",
+            ) { value ->
+                value
+                    .replace(',', '.')
+                    .toDoubleOrNull()
+                    ?.takeIf { it.isFinite() }
+                    ?.let { reference.listField("placementPoints", index, key, JsonPrimitive(it)) }
             }
-        }
-        ShareTextButton({
-            inputs?.flush()
-            focus.clearFocus()
-            reference.remove("placementPoints", index)
-        }) {
-            AppGlyph(Glyph.Trash)
-            Text("Удалить место", color = WebPalette.Danger)
+            for (axis in listOf("x", "y")) ReferenceNumber(
+                (point["cell"] as? JsonObject)?.number(axis) ?: 0.0,
+                "Место ${index+1}: ячейка $axis",
+                integer = true,
+            ) { value ->
+                value.toIntOrNull()?.let {
+                    reference.listField(
+                        "placementPoints",
+                        index,
+                        "cell",
+                        (point["cell"] as? JsonObject ?: buildJsonObject {}).with(
+                            axis,
+                            JsonPrimitive(it),
+                        ),
+                    )
+                }
+            }
+            ShareTextButton({
+                inputs?.flush()
+                focus.clearFocus()
+                reference.remove("placementPoints", index)
+            }) {
+                AppGlyph(Glyph.Trash)
+                Text("Удалить место", color = WebPalette.Danger)
+            }
         }
     }
 }
@@ -70,55 +73,46 @@ internal fun MapReferenceSlot(reference: MapReferenceController, index: Int) {
     val inputs = LocalShareFormInputs.current
     val focus = LocalFocusManager.current
     var profile by remember(index) { mutableStateOf("") }
-    ShareTile(
-        framed = reference.selectedSlot == index,
-        tint = if (reference.selectedSlot == index) WebPalette.Accent else null,
-        contentPadding = PaddingValues(12.dp),
-        onClick = {
-            reference.selectedSlot = index
-            reference.selectedPoint = -1
-        },
-    ) {
-        Text("Паз ${index+1}", style = ShareTypography.context)
-        for ((key, label) in
-            listOf(
-                "x" to "X",
-                "y" to "Z",
-                "width" to "Ширина",
-                "height" to "Длина",
-                "elevation" to "Высота",
-            )) ReferenceNumber(slot.number(key), "Паз ${index+1}: $label") { value ->
-            if (key == "elevation")
-                value
-                    .replace(',', '.')
-                    .toDoubleOrNull()
-                    ?.takeIf { it.isFinite() }
-                    ?.let { reference.listField("supportSlots", index, key, JsonPrimitive(it)) }
-            else
-                value.toIntOrNull()?.let {
-                    reference.listField("supportSlots", index, key, JsonPrimitive(it))
-                }
-        }
-        if (current.string("tileType") == "frame") {
-            ReferenceNumber(slot.number("insertionRise"), "Паз ${index+1}: подъём при вставке") {
-                value ->
-                value
-                    .replace(',', '.')
-                    .toDoubleOrNull()
-                    ?.takeIf { it.isFinite() }
-                    ?.let {
-                        reference.listField(
-                            "supportSlots",
-                            index,
-                            "insertionRise",
-                            JsonPrimitive(it),
-                        )
+    CompositionLocalProvider(LocalReferenceNumberScope provides "supportSlots/$index/") {
+        ShareTile(
+            framed = reference.selectedSlot == index,
+            tint = if (reference.selectedSlot == index) WebPalette.Accent else null,
+            contentPadding = PaddingValues(12.dp),
+            onClick = {
+                reference.selectedSlot = index
+                reference.selectedPoint = -1
+            },
+        ) {
+            Text("Паз ${index+1}", style = ShareTypography.context)
+            for ((key, label) in
+                listOf(
+                    "x" to "X",
+                    "y" to "Z",
+                    "width" to "Ширина",
+                    "height" to "Длина",
+                    "elevation" to "Высота",
+                )) ReferenceNumber(
+                slot.number(key),
+                "Паз ${index+1}: $label",
+                integer = key != "elevation",
+            ) { value ->
+                if (key == "elevation")
+                    value
+                        .replace(',', '.')
+                        .toDoubleOrNull()
+                        ?.takeIf { it.isFinite() }
+                        ?.let { reference.listField("supportSlots", index, key, JsonPrimitive(it)) }
+                else
+                    value.toIntOrNull()?.let {
+                        reference.listField("supportSlots", index, key, JsonPrimitive(it))
                     }
             }
-            val rises = slot["insertionRises"] as? JsonObject ?: buildJsonObject {}
-            for ((name, value) in rises) {
-                ReferenceNumber(value.jsonPrimitive.double, "Подъём: $name") { text ->
-                    text
+            if (current.string("tileType") == "frame") {
+                ReferenceNumber(
+                    slot.number("insertionRise"),
+                    "Паз ${index+1}: подъём при вставке",
+                ) { value ->
+                    value
                         .replace(',', '.')
                         .toDoubleOrNull()
                         ?.takeIf { it.isFinite() }
@@ -126,47 +120,64 @@ internal fun MapReferenceSlot(reference: MapReferenceController, index: Int) {
                             reference.listField(
                                 "supportSlots",
                                 index,
-                                "insertionRises",
-                                rises.with(name, JsonPrimitive(it)),
+                                "insertionRise",
+                                JsonPrimitive(it),
                             )
                         }
                 }
-                ShareTextButton({
-                    reference.listField(
-                        "supportSlots",
-                        index,
-                        "insertionRises",
-                        rises.without(name),
-                    )
-                }) {
-                    AppGlyph(Glyph.Trash)
-                    Text("Удалить профиль $name")
+                val rises = slot["insertionRises"] as? JsonObject ?: buildJsonObject {}
+                for ((name, value) in rises) {
+                    ReferenceNumber(value.jsonPrimitive.double, "Подъём: $name") { text ->
+                        text
+                            .replace(',', '.')
+                            .toDoubleOrNull()
+                            ?.takeIf { it.isFinite() }
+                            ?.let {
+                                reference.listField(
+                                    "supportSlots",
+                                    index,
+                                    "insertionRises",
+                                    rises.with(name, JsonPrimitive(it)),
+                                )
+                            }
+                    }
+                    ShareTextButton({
+                        reference.listField(
+                            "supportSlots",
+                            index,
+                            "insertionRises",
+                            rises.without(name),
+                        )
+                    }) {
+                        AppGlyph(Glyph.Trash)
+                        Text("Удалить профиль $name")
+                    }
+                }
+                ShareTextInput(profile, { profile = it }, "Новый профиль выступа")
+                ShareOutlinedButton(
+                    {
+                        reference.listField(
+                            "supportSlots",
+                            index,
+                            "insertionRises",
+                            rises.with(profile, JsonPrimitive(slot.number("insertionRise"))),
+                        )
+                        profile = ""
+                    },
+                    enabled = profile.matches(Regex("[a-z][a-z0-9-]{0,63}")) && rises.size < 16,
+                ) {
+                    AppGlyph(Glyph.Plus)
+                    Text("Добавить профиль")
                 }
             }
-            ShareTextInput(profile, { profile = it }, "Новый профиль выступа")
-            ShareOutlinedButton(
-                {
-                    reference.listField(
-                        "supportSlots",
-                        index,
-                        "insertionRises",
-                        rises.with(profile, JsonPrimitive(slot.number("insertionRise"))),
-                    )
-                    profile = ""
-                },
-                enabled = profile.matches(Regex("[a-z][a-z0-9-]{0,63}")) && rises.size < 16,
-            ) {
-                AppGlyph(Glyph.Plus)
-                Text("Добавить профиль")
+            ShareTextButton({
+                inputs?.flush()
+                focus.clearFocus()
+                reference.remove("supportSlots", index)
+            }) {
+                AppGlyph(Glyph.Trash)
+                Text("Удалить паз", color = WebPalette.Danger)
             }
-        }
-        ShareTextButton({
-            inputs?.flush()
-            focus.clearFocus()
-            reference.remove("supportSlots", index)
-        }) {
-            AppGlyph(Glyph.Trash)
-            Text("Удалить паз", color = WebPalette.Danger)
         }
     }
 }

@@ -6,7 +6,6 @@ import java.nio.ByteBuffer
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
-import kotlinx.serialization.json.JsonObject
 import ru.dndshare.client.maps.*
 
 /** Asset lifetimes, bounded uploads and pooled instances have one renderer-thread owner. */
@@ -22,7 +21,6 @@ internal class MapSceneAssets(
     private val materials = UbershaderProvider(engine)
     private val loader = AssetLoader(engine, materials, EntityManager.get())
     private val resources = ResourceLoader(engine, true)
-    private val groundResources = ResourceLoader(engine, true)
     private val pools = mutableMapOf<String, MapModelPool>()
     private val retiring = mutableMapOf<String, MapModelPool>()
     private var drawn = emptyMap<MapEntityRef, MapSceneEntry>()
@@ -34,8 +32,6 @@ internal class MapSceneAssets(
     private val slots = Semaphore(3)
     private val downloaded = ArrayDeque<DownloadedModel>()
     private var loading: MapModelPool? = null
-    private var ground: FilamentAsset? = null
-    private var groundKey = ""
     private var entries = emptyList<MapSceneEntry>()
     val entities = mutableMapOf<Int, MapEntityRef>()
     val readyModelUrls
@@ -56,34 +52,20 @@ internal class MapSceneAssets(
     val pendingCount
         get() = pending.size
 
-    val hasGround
-        get() = ground != null
-
     val working
         get() = loading != null || downloaded.isNotEmpty()
 
-    fun update(document: JsonObject, value: List<MapSceneEntry>, groundVisible: Boolean = true) {
+    private var selection = emptySet<MapEntityRef>()
+
+    fun selection(value: Set<MapEntityRef>) {
+        if (value == selection) return
+        selection = value
+        synchronize()
+    }
+
+    fun update(value: List<MapSceneEntry>) {
         entries = value
         ensureWantedPools()
-        val w = document.number("width").toInt()
-        val h = document.number("height").toInt()
-        val grid = (document["grid"] as? JsonObject)?.flag("visible") ?: true
-        val key = "$w:$h:$grid:$groundVisible"
-        if (groundKey != key) {
-            ground?.let {
-                scene.removeEntities(it.entities)
-                loader.destroyAsset(it)
-            }
-            ground =
-                if (!groundVisible) null
-                else
-                    loader.createAsset(mapGroundGlb(w, h, grid))?.also {
-                        groundResources.loadResources(it)
-                        scene.addEntities(it.entities)
-                        it.releaseSourceData()
-                    }
-            groundKey = key
-        }
         synchronize()
     }
 
@@ -229,7 +211,17 @@ internal class MapSceneAssets(
                         ?: continue
                 val manager = engine.transformManager
                 manager.setTransform(manager.getInstance(instance.root), entry.matrix)
-                instance.entities.forEach { entities[it] = entry.ref }
+                instance.entities.forEach {
+                    entities[it] = entry.ref
+                    val renderable = engine.renderableManager.getInstance(it)
+                    if (renderable != 0)
+                        engine.renderableManager.setLayerMask(
+                            renderable,
+                            0xff,
+                            (if (entry.opacity < 1f) 2 else 1) or
+                                (if (entry.ref in selection) 4 else 0),
+                        )
+                }
                 actual[entry.ref] = entry
             }
         }
@@ -274,9 +266,7 @@ internal class MapSceneAssets(
         pools.keys.toList().forEach(::removePool)
         retiring.values.forEach(::destroyPool)
         retiring.clear()
-        ground?.let { loader.destroyAsset(it) }
         resources.destroy()
-        groundResources.destroy()
         loader.destroy()
         materials.destroyMaterials()
         materials.destroy()

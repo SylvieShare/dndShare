@@ -100,8 +100,14 @@ internal fun configureWaterMaterial(
         for ((name, colour) in neutral) {
             val ref = prepared.textures[name]
             val texture =
-                if (ref != null) gpu.texture(ref.key, ref.bitmap, ref.srgb)
-                else gpu.solid("neutral-$name", colour, name in setOf("albedo", "emissiveMap"))
+                if (ref != null) gpu.texture(instance, ref.key, ref.bitmap, ref.srgb)
+                else
+                    gpu.solid(
+                        instance,
+                        "neutral-$name",
+                        colour,
+                        name in setOf("albedo", "emissiveMap"),
+                    )
             instance.setParameter(name, texture, sampler)
             instance.setParameter(
                 "${name}Transform",

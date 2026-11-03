@@ -12,10 +12,12 @@ internal class MapPaletteDrag(private val workspace: MapEditorWorkspace) {
 
     private var point: MapPointer? = null
 
-    fun start(model: MapModel) {
+    fun start(model: MapModel) = start(MapTool.Model(model.uuid))
+
+    fun start(tool: MapTool) {
         if (!workspace.editable) return
         active = true
-        workspace.placement.tool(MapTool.Model(model.uuid), keepSidebar = true)
+        workspace.placement.tool(tool, keepSidebar = true)
     }
 
     fun move(root: Offset) {

@@ -56,7 +56,7 @@ internal class MapSceneWater(
             .forEach { url ->
                 models.remove(url)?.forEach {
                     it.mesh.close()
-                    engine.destroyMaterialInstance(it.material)
+                    gpu.release(it.material)
                 }
             }
         loading.keys.filter { it !in urls }.forEach { loading.remove(it)?.cancel() }
@@ -105,7 +105,7 @@ internal class MapSceneWater(
                         } catch (failure: Throwable) {
                             created.forEach {
                                 it.mesh.close()
-                                engine.destroyMaterialInstance(it.material)
+                                gpu.release(it.material)
                             }
                             throw failure
                         }
@@ -146,7 +146,10 @@ internal class MapSceneWater(
                         )
                     }
                 }
-            renderables.forEach { it.transform(entry.matrix) }
+            renderables.forEach {
+                it.transform(entry.matrix)
+                it.layer(if (entry.opacity < 1f) 2 else 1)
+            }
             val settings = entry.model.behaviour["waterAnimation"]!!.jsonObject
             for (part in parts) {
                 part.material.setParameter("strength", settings.number("strength", .5).toFloat())
@@ -202,7 +205,7 @@ internal class MapSceneWater(
         entities.clear()
         models.values.flatten().forEach {
             it.mesh.close()
-            engine.destroyMaterialInstance(it.material)
+            gpu.release(it.material)
         }
         models.clear()
     }

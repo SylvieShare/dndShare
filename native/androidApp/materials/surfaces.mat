@@ -1,0 +1,34 @@
+material {
+    name: MapSurfaces, shadingModel:unlit, vertexDomain:device, culling:none,
+    depthWrite:false, depthCulling:false, requires:[uv0], flipUV:false,
+    parameters:[{type:sampler2d,name:worldColour}, {type:sampler2d,name:worldDepth,precision:high},
+        {type:sampler2d,name:ghostColour}, {type:sampler2d,name:ghostDepth,precision:high},
+        {type:sampler2d,name:selectedDepth,precision:high}, {type:float2,name:pixelSize},
+        {type:float,name:ghostEnabled}, {type:float,name:outlineEnabled},
+        {type:float3,name:outlineColour}, {type:float,name:outlineWidth}]
+}
+fragment {
+    precision highp float;
+    precision highp sampler2D;
+    void material(inout MaterialInputs m) {
+        prepareMaterial(m);
+        vec2 uv=getNormalizedViewportCoord().xy;
+        vec3 colour=texture(materialParams_worldColour,uv).rgb;
+        if(materialParams.ghostEnabled>0.5) {
+            float front=texture(materialParams_ghostDepth,uv).r;
+            float back=texture(materialParams_worldDepth,uv).r;
+            if(front>0.0000001 && front>back+0.0000001)
+                colour=mix(colour,texture(materialParams_ghostColour,uv).rgb,0.12);
+        }
+        if(materialParams.outlineEnabled>0.5) {
+            float inside=step(0.0000001,texture(materialParams_selectedDepth,uv).r);
+            float edge=0.0;
+            for(int y=-1;y<=1;y++)for(int x=-1;x<=1;x++) {
+                vec2 offset=vec2(float(x),float(y))*materialParams.pixelSize*materialParams.outlineWidth;
+                edge=max(edge,step(0.0000001,texture(materialParams_selectedDepth,uv+offset).r));
+            }
+            colour=mix(colour,materialParams.outlineColour,edge*(1.0-inside));
+        }
+        m.baseColor=vec4(colour,1.0);
+    }
+}

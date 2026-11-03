@@ -51,7 +51,8 @@ internal class MapSceneEffects(
     fun prepare(view: View, camera: Camera, seconds: Double, motion: Boolean) =
         fog.prepare(view, camera, seconds, motion)
 
-    fun render(renderer: Renderer, view: View) = fog.render(renderer, view)
+    fun render(renderer: Renderer, view: View, worldRender: (Renderer, View) -> Unit) =
+        fog.render(renderer, view, worldRender)
 
     fun retry() {
         water.retry()

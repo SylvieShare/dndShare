@@ -12,7 +12,7 @@ import kotlinx.coroutines.*
 
 /** Read the exact submitted GPU frame. SurfaceView's last presented buffer can be older. */
 internal class MapFrameCapture : AutoCloseable {
-    private class Request(val result: (Result<Bitmap>) -> Unit) {
+    private class Request(val region: MapFrameRegion?, val result: (Result<Bitmap>) -> Unit) {
         val completed = AtomicBoolean(false)
     }
 
@@ -24,26 +24,51 @@ internal class MapFrameCapture : AutoCloseable {
     val working
         get() = reads.get() > 0 || pending.isNotEmpty()
 
-    fun request(result: (Result<Bitmap>) -> Unit) {
+    fun request(region: MapFrameRegion? = null, result: (Result<Bitmap>) -> Unit) {
         if (closed || active.size >= 3) {
             main.post { result(Result.failure(IllegalStateException("Снимок сейчас недоступен"))) }
             return
         }
-        val request = Request(result)
+        val request = Request(region, result)
         pending += request
         active += request
     }
 
     fun render(renderer: Renderer, width: Int, height: Int) {
         if (pending.isEmpty()) return
-        val requests = pending.toList()
+        val grouped = pending.toList().groupBy { it.region ?: MapFrameRegion(0, 0, width, height) }
         pending.clear()
+        for ((region, requests) in grouped) read(renderer, width, height, region, requests)
+    }
+
+    private fun read(
+        renderer: Renderer,
+        viewportWidth: Int,
+        viewportHeight: Int,
+        region: MapFrameRegion,
+        requests: List<Request>,
+    ) {
+        val width = region.width
+        val height = region.height
+        if (
+            region.left < 0 ||
+                region.top < 0 ||
+                width <= 0 ||
+                height <= 0 ||
+                region.left + width > viewportWidth ||
+                region.top + height > viewportHeight
+        ) {
+            requests.forEach {
+                complete(it, Result.failure(IllegalStateException("Область превью вне кадра")))
+            }
+            return
+        }
         val bytes = ByteBuffer.allocateDirect(width * height * 4)
         reads.incrementAndGet()
         try {
             renderer.readPixels(
-                0,
-                0,
+                region.left,
+                viewportHeight - region.top - height,
                 width,
                 height,
                 Texture.PixelBufferDescriptor(

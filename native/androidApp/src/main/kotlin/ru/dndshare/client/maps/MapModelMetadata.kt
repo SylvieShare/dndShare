@@ -75,12 +75,18 @@ data class MapReferenceDraft(
     val base: JsonObject,
     val current: JsonObject = base,
     val blockers: String = (base["blockers"] ?: JsonArray(emptyList())).toString(),
+    val invalidNumbers: Map<String, String> = emptyMap(),
 ) {
     val dirty
         get() =
-            current != base || blockers != (base["blockers"] ?: JsonArray(emptyList())).toString()
+            current != base ||
+                invalidNumbers.isNotEmpty() ||
+                blockers != (base["blockers"] ?: JsonArray(emptyList())).toString()
 
     fun payload(): JsonObject {
+        require(invalidNumbers.isEmpty()) {
+            "Проверьте числовые поля: ${invalidNumbers.keys.joinToString()}"
+        }
         val contours =
             WireJson.parseToJsonElement(blockers) as? JsonArray
                 ?: error("Контуры должны содержать полигоны из точек [x, y]")

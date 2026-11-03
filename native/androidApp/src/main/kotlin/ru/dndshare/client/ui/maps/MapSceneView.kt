@@ -165,9 +165,8 @@ internal fun MapSceneView(
             document
                 .rows("tiles")
                 .filter {
-                    MapEntityRef(MapEntityKind.Tile, it.string("id")) in selected ||
-                        (it.string("id") !in hidden &&
-                            MapEntityRef(MapEntityKind.Tile, it.string("id")) !in ready)
+                    it.string("id") !in hidden &&
+                        MapEntityRef(MapEntityKind.Tile, it.string("id")) !in ready
                 }
                 .forEach { tile ->
                     val model = catalogue[tile.string("modelId")] ?: return@forEach
@@ -211,7 +210,7 @@ internal fun MapSceneView(
                 }
         }
     }
-    LaunchedEffect(scene, options) { scene?.options(options) }
+    LaunchedEffect(scene, options, selected) { scene?.options(options.copy(selected = selected)) }
     LaunchedEffect(scene, document, models) {
         scene?.let {
             runCatching { it.update(document, models) }.onFailure { onStatus(0, it.message) }

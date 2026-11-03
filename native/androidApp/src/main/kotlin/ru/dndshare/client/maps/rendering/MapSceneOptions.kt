@@ -9,4 +9,5 @@ data class MapSceneOptions(
     val focus: Set<MapEntityRef>? = null,
     val ground: Boolean = true,
     val selectedLight: String? = null,
+    val selected: Set<MapEntityRef> = emptySet(),
 )

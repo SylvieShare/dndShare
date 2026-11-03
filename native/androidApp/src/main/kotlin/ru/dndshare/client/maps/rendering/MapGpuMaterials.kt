@@ -10,6 +10,14 @@ internal class MapGpuMaterials(private val engine: Engine, private val assets: A
     AutoCloseable {
     private val materials = mutableMapOf<String, Material>()
     private val textures = mutableMapOf<String, Texture>()
+    private val bindings = mutableMapOf<MaterialInstance, MutableSet<String>>()
+
+    fun release(instance: MaterialInstance) {
+        engine.destroyMaterialInstance(instance)
+        val keys = bindings.remove(instance).orEmpty()
+        val used = bindings.values.flatten().toSet()
+        for (key in keys) if (key !in used) textures.remove(key)?.let(engine::destroyTexture)
+    }
 
     fun instance(name: String): MaterialInstance =
         materials
@@ -25,13 +33,15 @@ internal class MapGpuMaterials(private val engine: Engine, private val assets: A
             block(value)
             return value
         } catch (error: Throwable) {
-            engine.destroyMaterialInstance(value)
+            release(value)
             throw error
         }
     }
 
-    fun texture(key: String, bitmap: Bitmap, srgb: Boolean): Texture =
-        textures.getOrPut("$key:$srgb") {
+    fun texture(instance: MaterialInstance, key: String, bitmap: Bitmap, srgb: Boolean): Texture {
+        val id = "$key:$srgb"
+        bindings.getOrPut(instance) { mutableSetOf() }.add(id)
+        return textures.getOrPut(id) {
             val pixels = ByteBuffer.allocateDirect(bitmap.byteCount)
             bitmap.copyPixelsToBuffer(pixels)
             pixels.flip()
@@ -63,9 +73,17 @@ internal class MapGpuMaterials(private val engine: Engine, private val assets: A
                 throw error
             }
         }
+    }
 
-    fun solid(key: String, rgba: IntArray, srgb: Boolean = false): Texture =
-        textures["$key:$srgb"]
+    fun solid(
+        instance: MaterialInstance,
+        key: String,
+        rgba: IntArray,
+        srgb: Boolean = false,
+    ): Texture {
+        val id = "$key:$srgb"
+        bindings.getOrPut(instance) { mutableSetOf() }.add(id)
+        return textures[id]
             ?: run {
                 val image = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
                 image.setPixel(
@@ -74,13 +92,15 @@ internal class MapGpuMaterials(private val engine: Engine, private val assets: A
                     android.graphics.Color.argb(rgba[3], rgba[0], rgba[1], rgba[2]),
                 )
                 try {
-                    texture(key, image, srgb)
+                    texture(instance, key, image, srgb)
                 } finally {
                     image.recycle()
                 }
             }
+    }
 
     override fun close() {
+        bindings.clear()
         materials.values.forEach(engine::destroyMaterial)
         materials.clear()
         textures.values.forEach(engine::destroyTexture)

@@ -113,106 +113,106 @@ internal fun MapReferenceLight(reference: MapReferenceController, index: Int) {
         p[axis] = JsonPrimitive(value)
         patch("position", JsonArray(p))
     }
-    ShareTile(framed = false, contentPadding = PaddingValues(12.dp)) {
-        ShareTextInput(
-            light.string("name"),
-            { patch("name", JsonPrimitive(it)) },
-            "Встроенный источник ${index+1}: название",
-        )
-        ShareSelect(
-            "Тип источника",
-            light.string("kind", "torch"),
-            listOf("torch" to "Факел", "candle" to "Свеча", "magic" to "Магический свет"),
-        ) {
-            patch("kind", JsonPrimitive(it))
-        }
-        for ((axis, label) in listOf(0 to "X", 1 to "Y", 2 to "Высота")) ReferenceNumber(
-            light.array("position").double(axis) +
-                (if (axis == 2) effect?.array("offset")?.double(2) ?: 0.0 else 0.0),
-            "Встроенный источник ${index+1}: $label",
-        ) { value ->
-            value
-                .replace(',', '.')
-                .toDoubleOrNull()
-                ?.takeIf { it.isFinite() }
-                ?.let {
-                    coordinate(
-                        axis,
-                        it - (if (axis == 2) effect?.array("offset")?.double(2) ?: 0.0 else 0.0),
-                    )
-                }
-        }
-        ReferenceNumber(light.number("intensity", 8.0), "Яркость") { value ->
-            value
-                .replace(',', '.')
-                .toDoubleOrNull()
-                ?.takeIf { it.isFinite() }
-                ?.let { patch("intensity", JsonPrimitive(it)) }
-        }
-        ReferenceNumber(light.number("radius", 4.5), "Радиус") { value ->
-            value
-                .replace(',', '.')
-                .toDoubleOrNull()
-                ?.takeIf { it.isFinite() }
-                ?.let { patch("radius", JsonPrimitive(it)) }
-        }
-        ShareColorInput(
-            light.string("color", "#ffc36a"),
-            { patch("color", JsonPrimitive(it)) },
-            "Цвет источника",
-        )
-        ShareToggle("Включён по умолчанию", light.flag("enabled", true)) {
-            patch("enabled", JsonPrimitive(it))
-        }
-        if (effect == null)
-            ShareToggle("Мерцание", light.flag("flicker", true)) {
-                patch("flicker", JsonPrimitive(it))
+    CompositionLocalProvider(LocalReferenceNumberScope provides "defaultLights/$index/") {
+        ShareTile(framed = false, contentPadding = PaddingValues(12.dp)) {
+            ShareTextInput(
+                light.string("name"),
+                { patch("name", JsonPrimitive(it)) },
+                "Встроенный источник ${index+1}: название",
+            )
+            ShareSelect(
+                "Тип источника",
+                light.string("kind", "torch"),
+                listOf("torch" to "Факел", "candle" to "Свеча", "magic" to "Магический свет"),
+            ) {
+                patch("kind", JsonPrimitive(it))
             }
-        if (effect != null)
-            ReferenceNumber(-effect.array("offset").double(2), "Смещение источника света") { value
-                ->
+            for ((axis, label) in listOf(0 to "X", 1 to "Y", 2 to "Высота")) ReferenceNumber(
+                light.array("position").double(axis) +
+                    (if (axis == 2) effect?.array("offset")?.double(2) ?: 0.0 else 0.0),
+                "Встроенный источник ${index+1}: $label",
+            ) { value ->
                 value
                     .replace(',', '.')
                     .toDoubleOrNull()
                     ?.takeIf { it.isFinite() }
-                    ?.let { offset ->
-                        val base =
-                            light.array("position").double(2) + effect.array("offset").double(2)
-                        val p = light.array("position").toMutableList()
-                        p[2] = JsonPrimitive(base + offset)
-                        val replacement =
-                            light
-                                .with("position", JsonArray(p))
-                                .with(
-                                    "effect",
-                                    effect.with(
-                                        "offset",
-                                        numbers(
-                                            effect.array("offset").double(0),
-                                            effect.array("offset").double(1),
-                                            -offset,
-                                        ),
-                                    ),
-                                )
-                        reference.behaviour(
-                            "defaultLights",
-                            JsonArray(
-                                behaviour.rows("defaultLights").mapIndexed { i, row ->
-                                    if (i == index) replacement else row
-                                }
-                            ),
+                    ?.let {
+                        coordinate(
+                            axis,
+                            it -
+                                (if (axis == 2) effect?.array("offset")?.double(2) ?: 0.0 else 0.0),
                         )
                     }
             }
-        MapFireEffectFields(effect, { patch("effect", it) })
-        ShareTextButton({
-            reference.behaviour(
-                "defaultLights",
-                JsonArray(behaviour.rows("defaultLights").filterIndexed { i, _ -> i != index }),
+            ReferenceNumber(light.number("intensity", 8.0), "Яркость") { value ->
+                value
+                    .replace(',', '.')
+                    .toDoubleOrNull()
+                    ?.takeIf { it.isFinite() }
+                    ?.let { patch("intensity", JsonPrimitive(it)) }
+            }
+            ReferenceNumber(light.number("radius", 4.5), "Радиус") { value ->
+                value
+                    .replace(',', '.')
+                    .toDoubleOrNull()
+                    ?.takeIf { it.isFinite() }
+                    ?.let { patch("radius", JsonPrimitive(it)) }
+            }
+            ShareColorInput(
+                light.string("color", "#ffc36a"),
+                { patch("color", JsonPrimitive(it)) },
+                "Цвет источника",
             )
-        }) {
-            AppGlyph(Glyph.Trash)
-            Text("Удалить встроенный источник", color = WebPalette.Danger)
+            ShareToggle("Включён по умолчанию", light.flag("enabled", true)) {
+                patch("enabled", JsonPrimitive(it))
+            }
+            if (effect == null)
+                ShareToggle("Мерцание", light.flag("flicker", true)) {
+                    patch("flicker", JsonPrimitive(it))
+                }
+            if (effect != null)
+                ReferenceNumber(-effect.array("offset").double(2), "Смещение источника света") {
+                    value ->
+                    value
+                        .replace(',', '.')
+                        .toDoubleOrNull()
+                        ?.takeIf { it.isFinite() }
+                        ?.let { offset ->
+                            val base =
+                                light.array("position").double(2) + effect.array("offset").double(2)
+                            val p = light.array("position").toMutableList()
+                            p[2] = JsonPrimitive(base + offset)
+                            val replacement =
+                                light
+                                    .with("position", JsonArray(p))
+                                    .with(
+                                        "effect",
+                                        effect.with(
+                                            "offset",
+                                            numbers(
+                                                effect.array("offset").double(0),
+                                                effect.array("offset").double(1),
+                                                -offset,
+                                            ),
+                                        ),
+                                    )
+                            reference.behaviour(
+                                "defaultLights",
+                                JsonArray(
+                                    behaviour.rows("defaultLights").mapIndexed { i, row ->
+                                        if (i == index) replacement else row
+                                    }
+                                ),
+                            )
+                        }
+                }
+            MapFireEffectFields(effect, { patch("effect", it) })
+            ShareTextButton({
+                reference.removeBehaviourRow("defaultLights", index)
+            }) {
+                AppGlyph(Glyph.Trash)
+                Text("Удалить встроенный источник", color = WebPalette.Danger)
+            }
         }
     }
 }

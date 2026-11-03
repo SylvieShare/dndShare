@@ -29,6 +29,10 @@ internal fun MapFocusPreview(
 ) {
     val doc = workspace.map?.document ?: return
     val row = ref.row(doc) ?: return
+    if (ref.kind == MapEntityKind.Light) {
+        MapLightPreview(workspace, ref)
+        return
+    }
     if (ref.kind == MapEntityKind.Decal) {
         AsyncImage(
             mapImageUrl(row.string("imageUrl")),
@@ -62,21 +66,6 @@ internal fun MapFocusPreview(
                                     width = w,
                                     height = (w / aspect).toInt().coerceIn(64, 1024),
                                 )
-                            }
-                            MapEntityKind.Light -> {
-                                val scene = workspace.scene
-                                val pose = mapLightPose(row, MapContext(doc, workspace.models))
-                                val camera =
-                                    (scene?.camera() ?: MapCamera()).copy(
-                                        x = pose.point.x,
-                                        y = pose.point.y,
-                                        elevation = pose.worldHeight,
-                                        pixels =
-                                            (scene?.camera()?.pixels?.div(scene.density) ?: 48.0) *
-                                                1.2,
-                                        saved = null,
-                                    )
-                                workspace.snapshots.snapshot(doc, workspace.models, camera = camera)
                             }
                             else -> {
                                 val (visible, refs) = mapPreviewSelection(doc, ref)

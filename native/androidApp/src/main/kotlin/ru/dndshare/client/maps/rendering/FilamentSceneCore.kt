@@ -43,7 +43,12 @@ internal class FilamentSceneCore(
     private var entries = emptyList<MapSceneEntry>()
     private val assets: MapSceneAssets
     private val effects: MapSceneEffects
+    private val overlayGpu: MapGpuMaterials
+    private val grid: MapSceneGrid
+    private val layers: MapSceneLayers
     private val captures = MapFrameCapture()
+    private val lightFrames = MapLightFrames(captures, ::requestFrame)
+    private var revision = 0L
     private val telemetryCollector = MapTelemetryCollector()
     @Volatile
     var telemetry = MapRenderTelemetry()
@@ -111,12 +116,14 @@ internal class FilamentSceneCore(
                 hasMapFrame
 
     fun options(value: MapSceneOptions) {
+        revision++
         val reload =
             options.forceLod != value.forceLod ||
                 options.automaticLod != value.automaticLod ||
                 options.focus != value.focus ||
                 options.ground != value.ground
         options = value
+        assets.selection(value.selected)
         if (reload) document?.let { update(it, models.values.toList()) }
         requestFrame()
     }
@@ -140,7 +147,7 @@ internal class FilamentSceneCore(
             }
             return
         }
-        captures.request(result)
+        captures.request(result = result)
         requestFrame()
     }
 
@@ -164,6 +171,7 @@ internal class FilamentSceneCore(
                 this.scene = this@FilamentSceneCore.scene
                 this.camera = this@FilamentSceneCore.camera
                 antiAliasing = com.google.android.filament.View.AntiAliasing.FXAA
+                setVisibleLayers(0xff, 1)
                 setDynamicLightingOptions(
                     .01f,
                     2000f,
@@ -181,9 +189,12 @@ internal class FilamentSceneCore(
             MapSceneEffects(context, engine, scene, cache, scope, ::requestFrame) { error ->
                 status(assets.pendingCount, error)
             }
+        overlayGpu = MapGpuMaterials(engine, context.assets)
+        grid = MapSceneGrid(engine, scene, overlayGpu)
+        layers = MapSceneLayers(engine, scene, camera, overlayGpu)
         picker =
             MapScenePicker(
-                view,
+                layers.pickingView,
                 camera,
                 cache,
                 scope,
@@ -218,12 +229,14 @@ internal class FilamentSceneCore(
     }
 
     fun resize(width: Int, height: Int) {
+        revision++
         view.viewport = Viewport(0, 0, width, height)
         updateCamera()
         requestFrame()
     }
 
     fun camera(value: MapCamera) {
+        revision++
         pose = value
         updateCamera()
         updateTier()
@@ -233,12 +246,14 @@ internal class FilamentSceneCore(
     private fun updateCamera() = applyMapCamera(camera, pose, width, height)
 
     private fun assetsChanged() {
+        revision++
         sceneContext?.let { effects.update(it, assets.drawnEntries) }
         requestFrame()
     }
 
     fun update(value: JsonObject, catalogue: List<MapModel>) {
         if (closed) return
+        revision++
         document = value
         models.clear()
         models.putAll(catalogue.associateBy { it.uuid })
@@ -249,7 +264,8 @@ internal class FilamentSceneCore(
                 .map {
                     it.copy(model = it.model.copy(renderUrl = activeUrl(it.model)))
                 }
-        assets.update(value, entries, options.ground)
+        assets.update(entries)
+        grid.update(value, options.ground)
         val visibleDocument = mapSceneScope(value, options.focus)
         val context = MapContext(visibleDocument, catalogue)
         sceneContext = context
@@ -258,6 +274,19 @@ internal class FilamentSceneCore(
         status(assets.pendingCount, null)
         requestFrame()
     }
+
+    fun observeLight(
+        token: Long,
+        id: String,
+        width: Int,
+        height: Int,
+        changed: (MapLightFrame) -> Unit,
+    ) {
+        lightFrames.observe(token, id, width, height, changed)
+        requestFrame()
+    }
+
+    fun removeLightObserver(token: Long) = lightFrames.remove(token)
 
     fun pick(x: Float, y: Float, result: (MapEntityRef?) -> Unit) = picker.pick(x, y, result)
 
@@ -303,6 +332,14 @@ internal class FilamentSceneCore(
         val lightMotion =
             lights.advance(seconds, motion, pose, width, height, options.selectedLight)
         val postProcess = effects.prepare(view, camera, seconds, motion)
+        layers.prepare(
+            width,
+            height,
+            assets.drawnEntries.any { it.opacity < 1f },
+            options.selected.isNotEmpty(),
+            picker.working,
+            density,
+        )
         effectStatistics = effects.statistics
         val chain = swap
         if (width > 0 && height > 0 && chain != null) {
@@ -311,7 +348,19 @@ internal class FilamentSceneCore(
                 return
             }
             try {
-                if (postProcess) effects.render(renderer, view) else renderer.render(view)
+                if (picker.working) layers.renderPicking(renderer)
+                if (postProcess) effects.render(renderer, view, layers::render)
+                else layers.render(renderer, view)
+                lightFrames.prepare(
+                    sceneContext,
+                    pose,
+                    width,
+                    height,
+                    density,
+                    revision,
+                    seconds,
+                    effectMotion || lightMotion,
+                )
                 captures.render(renderer, width, height)
             } finally {
                 renderer.endFrame()
@@ -327,7 +376,7 @@ internal class FilamentSceneCore(
                     assets.fileBytes,
                     lights.count,
                 )
-            if (!hasMapFrame && document != null && (assets.hasGround || !options.ground)) {
+            if (!hasMapFrame && document != null) {
                 engine.flushAndWait()
                 hasMapFrame = true
                 status(assets.pendingCount, null)
@@ -351,12 +400,16 @@ internal class FilamentSceneCore(
     override fun close() {
         if (closed) return
         closed = true
+        lightFrames.close()
         captures.close()
         picker.close()
         scope.cancel()
         choreographer.removeFrameCallback(callback)
         detach()
         effects.close()
+        grid.close()
+        layers.close()
+        overlayGpu.close()
         assets.close()
         lights.close()
         engine.destroyCameraComponent(camera.entity)

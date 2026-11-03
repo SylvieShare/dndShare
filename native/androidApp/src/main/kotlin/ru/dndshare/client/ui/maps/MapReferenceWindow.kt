@@ -29,7 +29,10 @@ internal fun MapReferenceWindow(
         reference.request { workspace.referenceOpen = false }
     }
     ShareFullscreenDialog(::leave) {
-        CompositionLocalProvider(LocalShareFormInputs provides inputs) {
+        CompositionLocalProvider(
+            LocalShareFormInputs provides inputs,
+            LocalMapReference provides reference,
+        ) {
             BackHandler(onBack = ::leave)
             BoxWithConstraints(
                 Modifier.fillMaxSize()

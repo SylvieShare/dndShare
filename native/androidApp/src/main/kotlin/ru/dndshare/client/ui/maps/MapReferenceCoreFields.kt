@@ -4,16 +4,14 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.json.*
 import ru.dndshare.client.maps.*
@@ -22,87 +20,89 @@ import ru.dndshare.client.ui.designsystem.*
 @Composable
 internal fun MapReferenceCoreFields(reference: MapReferenceController) {
     val current = reference.draft?.current ?: return
-    for ((key, label) in
-        listOf(
-            "code" to "Код группы",
-            "variantCode" to "Код вариантов",
-            "name" to "Название (русский)",
-            "nameEn" to "Название (английский)",
-            "groupName" to "Группа (русский)",
-            "groupNameEn" to "Группа (английский)",
-        )) ShareTextInput(current.string(key), { reference.set(key, JsonPrimitive(it)) }, label)
-    ShareSelect(
-        "Проработка текстур",
-        current.string("textureDetail", "basic"),
-        listOf("basic" to "Поверхностная", "detailed" to "Детальная"),
-    ) {
-        reference.set("textureDetail", JsonPrimitive(it))
-    }
-    ShareTokenInput(
-        current.array("tags").map { it.jsonPrimitive.content },
-        { reference.set("tags", JsonArray(it.map(::JsonPrimitive))) },
-        "Метки",
-        allowCreate = true,
-    )
-    if (current.string("tileType") != "object") {
-        ShareSelect("Категория", current.string("category"), mapTileCategories) {
-            reference.set("category", JsonPrimitive(it))
-        }
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        for ((key, label) in
+            listOf(
+                "code" to "Код группы",
+                "variantCode" to "Код вариантов",
+                "name" to "Название (русский)",
+                "nameEn" to "Название (английский)",
+                "groupName" to "Группа (русский)",
+                "groupNameEn" to "Группа (английский)",
+            )) ShareTextInput(current.string(key), { reference.set(key, JsonPrimitive(it)) }, label)
         ShareSelect(
-            "Форма тайла",
-            current.string("tileType"),
-            listOf("floor" to "Пол") +
-                mapWallTypes +
-                mapTileCategories.filter {
-                    it.first !in setOf("floor", "wall", "water", "railway")
-                },
+            "Проработка текстур",
+            current.string("textureDetail", "basic"),
+            listOf("basic" to "Поверхностная", "detailed" to "Детальная"),
         ) {
-            reference.set("tileType", JsonPrimitive(it))
+            reference.set("textureDetail", JsonPrimitive(it))
         }
-        ShareSelect(
-            "Расположение стен",
-            current.string("wallMode", "none"),
-            listOf("none" to "Нет стен", "edge" to "По граням", "corner" to "По углам"),
-        ) {
-            reference.set("wallMode", JsonPrimitive(it))
-        }
-        if (current.string("wallMode", "none") != "none") {
-            val directions =
-                listOf(
-                    "Север",
-                    "Северо-восток",
-                    "Восток",
-                    "Юго-восток",
-                    "Юг",
-                    "Юго-запад",
-                    "Запад",
-                    "Северо-запад",
-                )
-            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                repeat(8) { index ->
-                    if (current.string("wallMode") == "corner" || index % 2 == 0)
-                        ShareChoiceChip(
-                            (current.number("wallMask").toInt() and (1 shl index)) != 0,
-                            {
-                                reference.set(
-                                    "wallMask",
-                                    JsonPrimitive(
-                                        current.number("wallMask").toInt() xor (1 shl index)
-                                    ),
-                                )
-                            },
-                            { Text(directions[index].take(2)) },
-                            Modifier.weight(1f),
-                        )
+        ShareTokenInput(
+            current.array("tags").map { it.jsonPrimitive.content },
+            { reference.set("tags", JsonArray(it.map(::JsonPrimitive))) },
+            "Метки",
+            allowCreate = true,
+        )
+        if (current.string("tileType") != "object") {
+            ShareSelect("Категория", current.string("category"), mapTileCategories) {
+                reference.set("category", JsonPrimitive(it))
+            }
+            ShareSelect(
+                "Форма тайла",
+                current.string("tileType"),
+                listOf("floor" to "Пол") +
+                    mapWallTypes +
+                    mapTileCategories.filter {
+                        it.first !in setOf("floor", "wall", "water", "railway")
+                    },
+            ) {
+                reference.set("tileType", JsonPrimitive(it))
+            }
+            ShareSelect(
+                "Расположение стен",
+                current.string("wallMode", "none"),
+                listOf("none" to "Нет стен", "edge" to "По граням", "corner" to "По углам"),
+            ) {
+                reference.set("wallMode", JsonPrimitive(it))
+            }
+            if (current.string("wallMode", "none") != "none") {
+                val directions =
+                    listOf(
+                        "Север",
+                        "Северо-восток",
+                        "Восток",
+                        "Юго-восток",
+                        "Юг",
+                        "Юго-запад",
+                        "Запад",
+                        "Северо-запад",
+                    )
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    repeat(8) { index ->
+                        if (current.string("wallMode") == "corner" || index % 2 == 0)
+                            ShareChoiceChip(
+                                (current.number("wallMask").toInt() and (1 shl index)) != 0,
+                                {
+                                    reference.set(
+                                        "wallMask",
+                                        JsonPrimitive(
+                                            current.number("wallMask").toInt() xor (1 shl index)
+                                        ),
+                                    )
+                                },
+                                { Text(directions[index].take(2)) },
+                                Modifier.weight(1f),
+                            )
+                    }
                 }
             }
         }
-    }
-    ShareToggle("Есть предметы или декорации", current.flag("hasDecor")) {
-        reference.set("hasDecor", JsonPrimitive(it))
-    }
-    ShareToggle("Можно встать", current.flag("canStand")) {
-        reference.set("canStand", JsonPrimitive(it))
+        ShareToggle("Есть предметы или декорации", current.flag("hasDecor")) {
+            reference.set("hasDecor", JsonPrimitive(it))
+        }
+        ShareToggle("Можно встать", current.flag("canStand")) {
+            reference.set("canStand", JsonPrimitive(it))
+        }
     }
 }
 
@@ -198,10 +198,10 @@ internal fun MapReferenceGeometry(reference: MapReferenceController) {
                 CornerRadius(3.dp.toPx()),
             )
         }
-        ReferenceNumber(width.toDouble(), "Ширина тайла в клетках") {
+        ReferenceNumber(width.toDouble(), "Ширина тайла в клетках", integer = true) {
             reference.number("width", it)
         }
-        ReferenceNumber(height.toDouble(), "Длина тайла в клетках") {
+        ReferenceNumber(height.toDouble(), "Длина тайла в клетках", integer = true) {
             reference.number("height", it)
         }
         Text(
@@ -210,14 +210,4 @@ internal fun MapReferenceGeometry(reference: MapReferenceController) {
             color = WebPalette.TextMuted,
         )
     }
-}
-
-@Composable
-internal fun ReferenceNumber(value: Double, label: String, change: (String) -> Unit) {
-    ShareTextInput(
-        if (value == value.toLong().toDouble()) value.toLong().toString() else value.toString(),
-        change,
-        label,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-    )
 }
