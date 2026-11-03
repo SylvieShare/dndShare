@@ -27,7 +27,12 @@ class MapSurfaceLayersTest {
             val bytes = instrumentation.context.assets.open("maps/box.glb").use { it.readBytes() }
             val api =
                 object : UnusedMapsApi() {
-                    override suspend fun modelBytes(url: String) = bytes
+                    override suspend fun modelBytes(url: String) =
+                        if (url.contains("blend"))
+                            instrumentation.context.assets.open("maps/box-water-blend.glb").use {
+                                it.readBytes()
+                            }
+                        else bytes
                 }
             val folder = File(context.cacheDir, "map-surfaces-${System.nanoTime()}")
             val scene = AtomicReference<FilamentMapScene>()
@@ -150,6 +155,46 @@ class MapSurfaceLayersTest {
                             blue > green + 12 && red > green + 5 && distance(o[i], c[i]) > 40
                         }
                     assertTrue(purple > 30, "Selection must outline the model silhouette: $purple")
+                    val blend =
+                        model.copy(
+                            uuid = "blend",
+                            id = "blend",
+                            renderUrl = "/api/maps/models/blend/render",
+                        )
+                    renderer.update(
+                        document.with(
+                            "tiles",
+                            JsonArray(
+                                listOf(
+                                    document
+                                        .rows("tiles")
+                                        .single()
+                                        .with("modelId", JsonPrimitive("blend"))
+                                )
+                            ),
+                        ),
+                        listOf(model, blend),
+                    )
+                    await { blend.renderUrl in renderer.readyModelUrls }
+                    val alphaPick = CompletableDeferred<MapEntityRef?>()
+                    renderer.pick(point.first, point.second) { alphaPick.complete(it) }
+                    assertEquals(
+                        ref,
+                        withTimeout(5000) { alphaPick.await() },
+                        "Alpha geometry remains pickable",
+                    )
+                    val alphaOutline = capture(renderer)
+                    exportMapTestImage("surface-alpha-outlined.png", alphaOutline)
+                    val alphaPixels = pixels(alphaOutline)
+                    assertTrue(
+                        alphaPixels.count { value ->
+                            val red = (value shr 16) and 255
+                            val green = (value shr 8) and 255
+                            val blue = value and 255
+                            blue > green + 12 && red > green + 5
+                        } > 30,
+                        "Alpha parts must write the selection mask and retain a visible final outline",
+                    )
                 }
             } finally {
                 folder.deleteRecursively()

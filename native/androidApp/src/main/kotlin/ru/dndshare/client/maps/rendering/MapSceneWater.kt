@@ -50,6 +50,19 @@ internal class MapSceneWater(
     val modelCount
         get() = models.values.count { it.isNotEmpty() }
 
+    val renderMaterials
+        get(): MapRenderMaterials {
+            val solid = mutableListOf<MaterialInstance>()
+            val alpha = mutableListOf<MaterialInstance>()
+            for ((ref, items) in entities) {
+                val parts = models[entityModels[ref]] ?: continue
+                items.forEachIndexed { index, entity ->
+                    if (parts[index].blend) alpha += entity.material else solid += entity.material
+                }
+            }
+            return MapRenderMaterials(solid, alpha)
+        }
+
     val readyParts
         get() = models.mapValues { (_, parts) -> parts.map { it.ref }.toSet() }
 
@@ -177,7 +190,7 @@ internal class MapSceneWater(
                 renderable.transform(entry.matrix)
                 val blend = parts[index].blend
                 renderable.layer(
-                    (if (entry.opacity < 1f && !blend) 2 else 1) or
+                    (if (blend) 16 else if (entry.opacity < 1f) 2 else 1) or
                         (if (entry.ref in selected) 4 else 0)
                 )
                 renderable.material.setParameter(

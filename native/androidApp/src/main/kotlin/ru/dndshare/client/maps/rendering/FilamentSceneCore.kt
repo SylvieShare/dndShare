@@ -159,6 +159,7 @@ internal class FilamentSceneCore(
             Skybox.Builder()
                 .color(backgroundColour[0], backgroundColour[1], backgroundColour[2], 1f)
                 .build(engine)
+        background.setLayerMask(255, 1)
         scene.skybox = background
         camera = engine.createCamera(EntityManager.get().create())
         camera.setExposure(1f)
@@ -167,7 +168,7 @@ internal class FilamentSceneCore(
                 this.scene = this@FilamentSceneCore.scene
                 this.camera = this@FilamentSceneCore.camera
                 antiAliasing = com.google.android.filament.View.AntiAliasing.FXAA
-                setVisibleLayers(0xff, 1)
+                setVisibleLayers(0xff, 1 or 16)
                 setDynamicLightingOptions(
                     .01f,
                     2000f,
@@ -382,6 +383,7 @@ internal class FilamentSceneCore(
             density,
             effects,
             assets.surfaceGroups,
+            assets.renderMaterials + effects.renderMaterials,
         )
         effectStatistics = effects.statistics
         val chain = swap

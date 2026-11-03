@@ -23,7 +23,13 @@ internal class MapColourOutput(private val engine: Engine, gpu: MapGpuMaterials)
             .build(engine)
     private var world: MapFrameTarget? = null
 
-    fun prepare(width: Int, height: Int, fog: MapFogFrame?) {
+    fun prepare(
+        width: Int,
+        height: Int,
+        fog: MapFogFrame?,
+        selectedDepth: Texture?,
+        density: Double,
+    ) {
         if (width <= 0 || height <= 0) return
         if (world?.width != width || world?.height != height) {
             output.view.renderTarget = null
@@ -51,6 +57,12 @@ internal class MapColourOutput(private val engine: Engine, gpu: MapGpuMaterials)
             setParameter("depthRange", fog?.depthRange ?: 1f)
             val colour = mapLinearColour("#161b23")
             setParameter("backgroundColour", colour[0], colour[1], colour[2])
+            setParameter("selectedDepth", selectedDepth ?: frame.depth, sample)
+            setParameter("hasSelection", if (selectedDepth == null) 0f else 1f)
+            setParameter("pixelSize", 1f / width, 1f / height)
+            setParameter("outlineWidth", (density * 1.5).toFloat())
+            val outline = mapLinearColour("#c1adf1")
+            setParameter("outlineColour", outline[0], outline[1], outline[2])
         }
     }
 

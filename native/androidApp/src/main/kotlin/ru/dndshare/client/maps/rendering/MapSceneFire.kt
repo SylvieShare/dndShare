@@ -47,7 +47,9 @@ internal class MapSceneFire(
             val flame =
                 flames.getOrPut(id) {
                     val geometry = mesh ?: MapGpuMesh(engine, mapFireGeometry()).also { mesh = it }
-                    MapGpuEntity(engine, scene, geometry, gpu.instance("fire"), priority = 6)
+                    MapGpuEntity(engine, scene, geometry, gpu.instance("fire"), priority = 6).also {
+                        it.layer(16)
+                    }
                 }
             val size = effect.array("size")
             val width = size.double(0, .22).toFloat()

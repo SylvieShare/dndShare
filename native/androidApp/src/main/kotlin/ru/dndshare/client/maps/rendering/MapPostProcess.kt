@@ -3,10 +3,19 @@ package ru.dndshare.client.maps.rendering
 import com.google.android.filament.*
 import ru.dndshare.client.maps.geometry.MeshGeometry
 
-internal class MapPostProcess(private val engine: Engine, gpu: MapGpuMaterials, name: String) :
-    AutoCloseable {
-    val scene = engine.createScene()
-    private val camera = engine.createCamera(EntityManager.get().create())
+internal class MapPostProcess(
+    private val engine: Engine,
+    gpu: MapGpuMaterials,
+    name: String,
+    sharedScene: Scene? = null,
+    sharedCamera: Camera? = null,
+    layer: Int = 1,
+    priority: Int = 4,
+) : AutoCloseable {
+    private val ownsScene = sharedScene == null
+    private val ownsCamera = sharedCamera == null
+    val scene = sharedScene ?: engine.createScene()
+    private val camera = sharedCamera ?: engine.createCamera(EntityManager.get().create())
     val view =
         engine.createView().apply {
             this.scene = this@MapPostProcess.scene
@@ -27,19 +36,24 @@ internal class MapPostProcess(private val engine: Engine, gpu: MapGpuMaterials, 
                 intArrayOf(0, 1, 2, 0, 2, 3),
             ),
         )
-    private val entity = MapGpuEntity(engine, scene, mesh, material, culling = false)
+    private val entity =
+        MapGpuEntity(engine, scene, mesh, material, culling = false, priority = priority).also {
+            it.layer(layer)
+        }
 
     init {
-        camera.setExposure(1f)
+        if (ownsCamera) camera.setExposure(1f)
     }
 
     override fun close() {
         entity.close()
         mesh.close()
         engine.destroyView(view)
-        engine.destroyCameraComponent(camera.entity)
-        EntityManager.get().destroy(camera.entity)
-        engine.destroyScene(scene)
+        if (ownsCamera) {
+            engine.destroyCameraComponent(camera.entity)
+            EntityManager.get().destroy(camera.entity)
+        }
+        if (ownsScene) engine.destroyScene(scene)
     }
 }
 

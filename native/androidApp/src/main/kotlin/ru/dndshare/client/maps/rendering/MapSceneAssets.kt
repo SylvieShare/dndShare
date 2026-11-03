@@ -6,6 +6,7 @@ import java.nio.ByteBuffer
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
+import kotlinx.serialization.json.JsonObject
 import ru.dndshare.client.maps.*
 
 /** Asset lifetimes, bounded uploads and pooled instances have one renderer-thread owner. */
@@ -19,6 +20,9 @@ internal class MapSceneAssets(
     private val status: (Int, String?) -> Unit,
     private val changed: () -> Unit,
 ) : AutoCloseable {
+    val renderMaterials
+        get() = primitives.renderMaterials
+
     private val primitives = MapPrimitiveMaterials(engine, gpu)
     private var replaced = emptyMap<String, Set<MapPrimitiveRef>>()
 
@@ -35,7 +39,10 @@ internal class MapSceneAssets(
     private val retiring = mutableMapOf<String, MapModelPool>()
     private val poses = MapSceneMotion()
     private var context: MapContext? = null
-    private val surfaces = MapSceneSurfaces(poses, ::bindSurface)
+    private val surfaces =
+        MapSceneSurfaces(poses, ::bindSurface) { entry ->
+            availablePool(entry.model.renderUrl)?.hasTransparency == true
+        }
     val surfaceGroups
         get() = surfaces.surfaceGroups
 
@@ -184,9 +191,9 @@ internal class MapSceneAssets(
                 try {
                     slots.withPermit {
                         val original = cache.bytes(url)
-                        val bytes = withContext(Dispatchers.Default) { mapNamedGlb(original) }
+                        val model = withContext(Dispatchers.Default) { prepareMapModel(original) }
                         val consumed = CompletableDeferred<Unit>()
-                        downloaded.addLast(DownloadedModel(url, bytes, consumed))
+                        downloaded.addLast(DownloadedModel(url, model, consumed))
                         requestFrame()
                         consumed.await()
                     }
@@ -220,7 +227,7 @@ internal class MapSceneAssets(
                 arrayOfNulls<FilamentInstance>(maxOf(8, Integer.highestOneBit(count - 1) * 2))
             val asset =
                 requireNotNull(
-                    loader.createInstancedAsset(ByteBuffer.wrap(source.bytes), instances)
+                    loader.createInstancedAsset(ByteBuffer.wrap(source.model.bytes), instances)
                 ) {
                     "Не удалось открыть GLB-модель"
                 }
@@ -229,7 +236,8 @@ internal class MapSceneAssets(
                     url,
                     asset,
                     instances.map { requireNotNull(it) },
-                    source.bytes.size.toLong(),
+                    source.model.bytes.size.toLong(),
+                    source.model.materials,
                 )
             pools[url] = pool
             loading = pool
@@ -292,18 +300,11 @@ internal class MapSceneAssets(
                     instance,
                     replaced[url].orEmpty(),
                     surfaceIds[entry.ref] ?: 0,
+                    pool.descriptors,
+                    MapSurfaceStyle(entry.opacity, entry.brightness),
+                    entry.ref in selection,
                 )
-                instance.entities.forEach {
-                    entities[it] = entry.ref
-                    val renderable = engine.renderableManager.getInstance(it)
-                    if (renderable != 0)
-                        engine.renderableManager.setLayerMask(
-                            renderable,
-                            0xff,
-                            (if (entry.opacity < 1f) 2 else 1) or
-                                (if (entry.ref in selection) 4 else 0),
-                        )
-                }
+                instance.entities.forEach { entities[it] = entry.ref }
                 actual[entry.ref] = entry
             }
         }
@@ -334,19 +335,24 @@ internal class MapSceneAssets(
         val ref = entry.ref
         val pool = availablePool(entry.model.renderUrl) ?: return
         val instance = pool.assigned[ref] ?: return
-        primitives.apply(pool.asset, instance, replaced[pool.url].orEmpty(), id)
-        val layer =
-            (if (entry.opacity <= .001f) 0 else if (id == 0) 1 else 2) or
-                (if (ref in selection) 4 else 0)
-        for (entity in instance.entities) {
-            val renderable = engine.renderableManager.getInstance(entity)
-            if (renderable != 0) engine.renderableManager.setLayerMask(renderable, 255, layer)
-        }
+        primitives.apply(
+            pool.asset,
+            instance,
+            replaced[pool.url].orEmpty(),
+            id,
+            pool.descriptors,
+            MapSurfaceStyle(entry.opacity, entry.brightness),
+            ref in selection,
+        )
     }
 
     private fun destroyPool(pool: MapModelPool) {
+        primitives.restore(pool.instances)
+        pool.instances.forEach { instance ->
+            scene.removeEntities(instance.entities)
+            instance.entities.forEach(engine::destroyEntity)
+        }
         primitives.forget(pool.instances)
-        pool.instances.forEach { scene.removeEntities(it.entities) }
         loader.destroyAsset(pool.asset)
     }
 
@@ -382,7 +388,9 @@ private class MapModelPool(
     val asset: FilamentAsset,
     val instances: List<FilamentInstance>,
     val fileBytes: Long,
+    val descriptors: Map<MapPrimitiveRef, JsonObject>,
 ) {
+    val hasTransparency = descriptors.values.any { it.string("alphaMode") == "BLEND" }
     val capacity
         get() = instances.size
 
@@ -392,6 +400,6 @@ private class MapModelPool(
 
 private class DownloadedModel(
     val url: String,
-    val bytes: ByteArray,
+    val model: MapPreparedModel,
     val consumed: CompletableDeferred<Unit>,
 )

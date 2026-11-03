@@ -141,6 +141,9 @@ internal class MapGpuEntity(
     var material = material
         private set
 
+    private var layerMask = 1
+    private var shown = true
+
     fun bindMaterial(value: MaterialInstance) {
         if (material.nativeObject == value.nativeObject) return
         engine.renderableManager.setMaterialInstanceAt(
@@ -172,18 +175,20 @@ internal class MapGpuEntity(
     }
 
     fun layer(value: Int) {
+        layerMask = value
         engine.renderableManager.setLayerMask(
             engine.renderableManager.getInstance(entity),
             0xff,
-            value,
+            if (shown) value else 0,
         )
     }
 
     fun visible(value: Boolean) {
+        shown = value
         engine.renderableManager.setLayerMask(
             engine.renderableManager.getInstance(entity),
-            1,
-            if (value) 1 else 0,
+            0xff,
+            if (value) layerMask else 0,
         )
     }
 

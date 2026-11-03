@@ -198,13 +198,14 @@ internal class MapSceneDecals(
                                     }
                                 entities +=
                                     MapGpuEntity(
-                                        engine,
-                                        scene,
-                                        geometry,
-                                        material,
-                                        priority = 6,
-                                        releaseMaterial = gpu::release,
-                                    )
+                                            engine,
+                                            scene,
+                                            geometry,
+                                            material,
+                                            priority = 6,
+                                            releaseMaterial = gpu::release,
+                                        )
+                                        .also { it.layer(16) }
                             }
                             records[id] = Record(shape, uploaded, entities)
                             synchronize()

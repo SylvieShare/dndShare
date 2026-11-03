@@ -21,18 +21,25 @@ internal class MapSceneLayers(
     private val ghostView = worldView(2 or 8).apply { isStencilBufferEnabled = true }
     private val selectionView = worldView(4).apply { isShadowingEnabled = false }
     val pickingView =
-        worldView(3).apply {
+        worldView(1 or 2 or 16).apply {
             isShadowingEnabled = false
             isTransparentPickingEnabled = true
         }
     private val opacity = MapSurfaceOpacity(engine, sourceScene, gpu)
-    private val composite = MapPostProcess(engine, gpu, "surfaces")
+    private val composite =
+        MapPostProcess(engine, gpu, "surfaces", sourceScene, sourceCamera, 32, 0).apply {
+            view.isShadowingEnabled = true
+            view.setDynamicLightingOptions(.01f, 2000f)
+        }
     private var world: MapFrameTarget? = null
     private var ghost: MapFrameTarget? = null
     private var selection: MapFrameTarget? = null
     private var picking: MapFrameTarget? = null
     private var ghosts = false
     private var selected = false
+    private var materials = MapRenderMaterials()
+    val selectionDepth
+        get() = if (selected) selection?.depth else null
 
     fun prepare(
         width: Int,
@@ -40,16 +47,17 @@ internal class MapSceneLayers(
         ghosts: Boolean,
         selected: Boolean,
         pick: Boolean,
-        density: Double,
         groups: Map<Int, MapSurfaceStyle>,
+        materials: MapRenderMaterials,
     ) {
         opacity.update(groups)
         this.ghosts = ghosts
         this.selected = selected
+        this.materials = materials
         if (width <= 0 || height <= 0) return
         pickingView.viewport = Viewport(0, 0, width, height)
-        if ((ghosts || selected) && (world?.width != width || world?.height != height)) {
-            releaseSurfaces()
+        if (ghosts && (world?.width != width || world?.height != height)) {
+            releaseWorld()
             world = MapFrameTarget(engine, width, height, true, Texture.InternalFormat.RGBA16F)
             ghost =
                 MapFrameTarget(
@@ -60,8 +68,15 @@ internal class MapSceneLayers(
                     Texture.InternalFormat.RGBA16F,
                     Texture.InternalFormat.DEPTH24_STENCIL8,
                 )
+        } else if (!ghosts) releaseWorld()
+        if (selected && (selection?.width != width || selection?.height != height)) {
+            releaseSelection()
             selection = MapFrameTarget(engine, width, height, true, Texture.InternalFormat.R8)
-        } else if (!ghosts && !selected) releaseSurfaces()
+        } else if (!selected) releaseSelection()
+        selection?.let {
+            selectionView.viewport = Viewport(0, 0, width, height)
+            selectionView.renderTarget = it.target
+        }
         if (pick && (picking?.width != width || picking?.height != height)) {
             pickingView.renderTarget = null
             picking?.close()
@@ -74,8 +89,6 @@ internal class MapSceneLayers(
         if (world == null) return
         ghostView.viewport = Viewport(0, 0, width, height)
         ghostView.renderTarget = ghost!!.target
-        selectionView.viewport = Viewport(0, 0, width, height)
-        selectionView.renderTarget = selection!!.target
         composite.view.viewport = Viewport(0, 0, width, height)
         val sample =
             TextureSampler(
@@ -88,13 +101,7 @@ internal class MapSceneLayers(
             setParameter("worldDepth", world!!.depth, sample)
             setParameter("ghostColour", ghost!!.colour, sample)
             setParameter("ghostDepth", ghost!!.depth, sample)
-            setParameter("selectedDepth", selection!!.depth, sample)
-            setParameter("pixelSize", 1f / width, 1f / height)
             setParameter("ghostEnabled", if (ghosts) 1f else 0f)
-            setParameter("outlineEnabled", if (selected) 1f else 0f)
-            setParameter("outlineWidth", (density * 1.5).toFloat())
-            val colour = mapLinearColour("#c1adf1")
-            setParameter("outlineColour", colour[0], colour[1], colour[2])
         }
     }
 
@@ -103,45 +110,55 @@ internal class MapSceneLayers(
     }
 
     fun render(renderer: Renderer, view: View) {
+        if (selected) materials.selectionDepth { renderer.render(selectionView) }
         val target = world
         if (target == null) {
+            view.setVisibleLayers(255, 1 or 16)
             renderer.render(view)
             return
         }
         val old = view.renderTarget
         val post = view.isPostProcessingEnabled
+        val visible = view.visibleLayers
         try {
             view.renderTarget = target.target
             view.isPostProcessingEnabled = false
+            view.setVisibleLayers(255, if (ghosts) 1 else 1 or 16)
             renderer.render(view)
             if (ghosts) renderer.render(ghostView)
-            if (selected) renderer.render(selectionView)
             composite.view.renderTarget = old
+            composite.view.setVisibleLayers(255, if (ghosts) 1 or 2 or 16 or 32 else 32)
             composite.view.isPostProcessingEnabled = post
             composite.view.antiAliasing =
                 if (post) View.AntiAliasing.FXAA else View.AntiAliasing.NONE
-            renderer.render(composite.view)
+            if (ghosts) materials.alphaOnly { renderer.render(composite.view) }
+            else renderer.render(composite.view)
         } finally {
             view.renderTarget = old
             view.isPostProcessingEnabled = post
+            view.setVisibleLayers(255, visible)
         }
     }
 
-    private fun releaseSurfaces() {
+    private fun releaseWorld() {
         ghostView.renderTarget = null
-        selectionView.renderTarget = null
         composite.view.renderTarget = null
         world?.close()
         world = null
         ghost?.close()
         ghost = null
+    }
+
+    private fun releaseSelection() {
+        selectionView.renderTarget = null
         selection?.close()
         selection = null
     }
 
     override fun close() {
         opacity.close()
-        releaseSurfaces()
+        releaseWorld()
+        releaseSelection()
         pickingView.renderTarget = null
         picking?.close()
         picking = null

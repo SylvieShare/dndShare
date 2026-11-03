@@ -6,6 +6,7 @@ import ru.dndshare.client.maps.*
 internal class MapSceneSurfaces(
     private val poses: MapSceneMotion,
     private val apply: (MapSceneEntry, Int) -> Unit,
+    private val alwaysUpdate: (MapSceneEntry) -> Boolean = { false },
 ) {
     var surfaceGroups = emptyMap<Int, MapSurfaceStyle>()
         private set
@@ -37,7 +38,11 @@ internal class MapSceneSurfaces(
         val next = drawn.mapValues { (_, entry) ->
             ids[MapSurfaceStyle(entry.opacity, entry.brightness)] ?: 0
         }
-        if (next == surfaceIds && !force) return
+        if (next == surfaceIds && !force) {
+            for (entry in drawn.values) if (alwaysUpdate(entry))
+                apply(entry, surfaceIds[entry.ref] ?: 0)
+            return
+        }
         surfaceIds = next
         for ((ref, entry) in drawn) apply(entry, surfaceIds[ref] ?: 0)
     }
