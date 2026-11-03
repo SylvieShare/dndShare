@@ -21,6 +21,23 @@ internal class MapScreenProjection(camera: MapCamera, width: Int, height: Int) {
     private val yy = (y.second - origin.second).toDouble()
     private val yz = (z.second - origin.second).toDouble()
 
+    fun worldBox(
+        x: Double,
+        elevation: Double,
+        y: Double,
+        halfX: Double,
+        halfHeight: Double,
+        halfY: Double,
+        width: Int,
+        height: Int,
+    ): Boolean {
+        val sx = origin.first + xx * x + xy * elevation + xz * y
+        val sy = origin.second + yx * x + yy * elevation + yz * y
+        val rx = abs(xx) * halfX + abs(xy) * halfHeight + abs(xz) * halfY
+        val ry = abs(yx) * halfX + abs(yy) * halfHeight + abs(yz) * halfY
+        return sx + rx >= 0 && sx - rx <= width && sy + ry >= 0 && sy - ry <= height
+    }
+
     fun intersects(
         entry: MapSceneEntry,
         bounds: Box?,

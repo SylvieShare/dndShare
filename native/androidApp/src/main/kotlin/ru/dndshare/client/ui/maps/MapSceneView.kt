@@ -38,6 +38,7 @@ internal fun MapSceneView(
     rectangle: Boolean = false,
     selection: (Offset, Offset, Boolean) -> Unit = { _, _, _ -> },
     key: (android.view.KeyEvent) -> Boolean = { false },
+    blur: () -> Unit = {},
 ) {
     var scene by remember { mutableStateOf<FilamentMapScene?>(null) }
     var touch by remember { mutableStateOf<MapTouchController?>(null) }
@@ -45,6 +46,7 @@ internal fun MapSceneView(
     var firstFrameError by remember { mutableStateOf<String?>(null) }
     val onSelection by rememberUpdatedState(selection)
     val onKey by rememberUpdatedState(key)
+    val onBlur by rememberUpdatedState(blur)
     val onTap by rememberUpdatedState(tap)
     val onDrag by rememberUpdatedState(drag)
     val onCancel by rememberUpdatedState(cancel)
@@ -82,6 +84,11 @@ internal fun MapSceneView(
                     setOnGenericMotionListener { _, event -> pointer.generic(event) }
                     setOnHoverListener { _, event -> pointer.hover(event) }
                     setOnKeyListener { _, _, event -> onKey(event) }
+                    deactivate = { onBlur() }
+                    onFocusChangeListener =
+                        android.view.View.OnFocusChangeListener { _, focused ->
+                            if (!focused) onBlur()
+                        }
                     addOnLayoutChangeListener {
                         _,
                         left,
@@ -115,6 +122,9 @@ internal fun MapSceneView(
                     else "Поле карты. Открываем карту…"
             },
             onRelease = { view ->
+                onBlur()
+                view.deactivate = null
+                view.onFocusChangeListener = null
                 view.activate = null
                 view.setOnTouchListener(null)
                 view.setOnGenericMotionListener(null)
@@ -154,13 +164,17 @@ internal fun MapSceneView(
     DisposableEffect(lifecycle, scene, active) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_STOP) {
+                onBlur()
                 touch?.cancel()
                 scene?.foreground(false)
             }
             if (event == Lifecycle.Event.ON_START) scene?.foreground(active)
         }
         lifecycle.addObserver(observer)
-        if (!active) touch?.cancel()
+        if (!active) {
+            onBlur()
+            touch?.cancel()
+        }
         scene?.foreground(active && lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED))
         onDispose { lifecycle.removeObserver(observer) }
     }

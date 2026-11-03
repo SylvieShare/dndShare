@@ -58,6 +58,8 @@ internal class MapSceneFog(
     val ready
         get() = field != null
 
+    fun visible(viewport: MapEffectViewport) = field?.let(viewport::fog) == true
+
     fun update(context: MapContext, motion: MapFogMotion) {
         requestedWeights = motion.weights
         field?.let { weights.update(it, requestedWeights) }

@@ -58,6 +58,7 @@ internal class MapSceneWater(
     }
 
     private var entries = emptyList<MapSceneEntry>()
+    private var visual = mutableMapOf<MapEntityRef, MapSceneEntry>()
     private var shadowMask = emptySet<MapEntityRef>()
 
     fun shadowMask(value: Set<MapEntityRef>) {
@@ -100,6 +101,7 @@ internal class MapSceneWater(
         entries = value.filter {
             (it.model.behaviour["waterAnimation"] as? JsonObject)?.flag("enabled") == true
         }
+        visual = entries.associateBy { it.ref }.toMutableMap()
         val urls = entries.map { it.model.renderUrl }.toSet()
         retries.retain(urls)
         error(retries.message)
@@ -259,6 +261,7 @@ internal class MapSceneWater(
     fun appearance(changed: List<MapSceneEntry>) {
         for (entry in changed) {
             val parts = models[entry.model.renderUrl] ?: continue
+            visual[entry.ref] = entry
             entities[entry.ref].orEmpty().forEachIndexed { index, entity ->
                 if (parts[index].blend)
                     entity.material.setParameter("visibilityOpacity", entry.opacity)
@@ -267,10 +270,23 @@ internal class MapSceneWater(
     }
 
     fun transforms(changed: List<MapSceneEntry>) {
-        for (entry in changed) entities[entry.ref].orEmpty().forEach { it.transform(entry.matrix) }
+        for (entry in changed) {
+            if (entry.ref in visual) visual[entry.ref] = entry
+            entities[entry.ref].orEmpty().forEach { it.transform(entry.matrix) }
+        }
     }
 
-    fun advance(seconds: Double, motion: Boolean): Boolean {
+    fun advance(seconds: Double, motion: Boolean, viewport: MapEffectViewport? = null): Boolean {
+        val onScreen =
+            visual.values
+                .filter { entry ->
+                    entry.opacity > .001f &&
+                        models[entry.model.renderUrl].orEmpty().any {
+                            viewport?.model(entry, it.mesh.bounds) != false
+                        }
+                }
+                .map { it.model.renderUrl }
+                .toSet()
         var active = false
         for (entry in entries.distinctBy { it.model.renderUrl }) {
             val settings = entry.model.behaviour["waterAnimation"]!!.jsonObject
@@ -290,7 +306,7 @@ internal class MapSceneWater(
                     else 0f,
                 )
             }
-            active = active || moving && models[entry.model.renderUrl]?.isNotEmpty() == true
+            active = active || moving && entry.model.renderUrl in onScreen
         }
         return active
     }

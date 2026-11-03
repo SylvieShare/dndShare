@@ -166,6 +166,7 @@ internal fun MapEditorLayout(
                             rectangle = workspace.ui.rectangle,
                             selection = workspace.rectangle::move,
                             key = workspace::key,
+                            blur = workspace.keyboardCamera::stop,
                             status = { pending, message ->
                                 workspace.modelPending = pending
                                 workspace.rendererError = message

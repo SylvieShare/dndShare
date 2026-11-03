@@ -93,6 +93,7 @@ internal class MapEditorWorkspace(
     }
 
     val cameraDrag = MapCameraDrag(this)
+    val keyboardCamera = MapKeyboardCamera { scene }
     val rectangle = MapRectangleSelection(this)
     val paletteDrag = MapPaletteDrag(this)
     var referenceOpen: Boolean
@@ -189,6 +190,7 @@ internal class MapEditorWorkspace(
     }
 
     fun close() {
+        keyboardCamera.stop()
         viewport.close()
         cameraDrag.cancel()
         paletteDrag.cancel()

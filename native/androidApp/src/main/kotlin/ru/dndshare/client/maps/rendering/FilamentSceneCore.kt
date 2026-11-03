@@ -429,7 +429,7 @@ internal class FilamentSceneCore(
                     .toMap()
             motionUpdated(positions)
         }
-        val effectMotion = effects.advance(seconds, motion)
+        val effectMotion = effects.advance(seconds, motion, MapEffectViewport(pose, width, height))
         assets.renderContext?.let {
             loading.update(
                 it,

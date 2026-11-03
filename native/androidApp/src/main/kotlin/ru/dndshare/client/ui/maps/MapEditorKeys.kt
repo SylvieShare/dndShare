@@ -6,6 +6,7 @@ import ru.dndshare.client.maps.*
 
 /** Only the focused canvas receives shortcuts; editing a text field retains native editing keys. */
 internal fun MapEditorWorkspace.key(event: KeyEvent): Boolean {
+    if (keyboardCamera.key(event)) return true
     if (event.action != KeyEvent.ACTION_DOWN) return false
     val control = event.isCtrlPressed || event.isMetaPressed
     if (event.keyCode == KeyEvent.KEYCODE_ESCAPE) {
@@ -15,30 +16,6 @@ internal fun MapEditorWorkspace.key(event: KeyEvent): Boolean {
     if (!editable) return false
     when {
         control && event.keyCode == KeyEvent.KEYCODE_S -> scope.launch { controller.flush() }
-        event.keyCode in
-            setOf(
-                KeyEvent.KEYCODE_DPAD_LEFT,
-                KeyEvent.KEYCODE_DPAD_RIGHT,
-                KeyEvent.KEYCODE_DPAD_UP,
-                KeyEvent.KEYCODE_DPAD_DOWN,
-            ) -> {
-            scene?.let { renderer ->
-                val step = 24.0 * renderer.density
-                val x =
-                    when (event.keyCode) {
-                        KeyEvent.KEYCODE_DPAD_LEFT -> step
-                        KeyEvent.KEYCODE_DPAD_RIGHT -> -step
-                        else -> 0.0
-                    }
-                val y =
-                    when (event.keyCode) {
-                        KeyEvent.KEYCODE_DPAD_UP -> step
-                        KeyEvent.KEYCODE_DPAD_DOWN -> -step
-                        else -> 0.0
-                    }
-                renderer.camera(renderer.camera().pan(x, y))
-            }
-        }
         control && event.keyCode == KeyEvent.KEYCODE_Z -> {
             if (event.isShiftPressed) controller.redo() else controller.undo()
         }

@@ -14,6 +14,7 @@ internal class MapSceneFire(
     private val flames = mutableMapOf<String, MapGpuEntity>()
     private var context: MapContext? = null
     private var sources = emptyList<MapLightPose>()
+    private var anchors = MapVisualAnchors()
     private val visible = mutableSetOf<String>()
     val count
         get() = visible.size
@@ -26,6 +27,7 @@ internal class MapSceneFire(
 
     fun update(value: MapContext) {
         context = value
+        anchors = MapVisualAnchors()
         sources =
             value.document
                 .rows("lights")
@@ -69,6 +71,7 @@ internal class MapSceneFire(
     }
 
     fun appearance(anchors: MapVisualAnchors) {
+        this.anchors = anchors
         for (pose in sources) {
             val opacity = anchors.light(pose).opacity
             val flame = flames[pose.source.string("id")] ?: continue
@@ -95,17 +98,27 @@ internal class MapSceneFire(
         }
     }
 
-    fun advance(seconds: Double, motion: Boolean): Boolean {
+    fun advance(seconds: Double, motion: Boolean, viewport: MapEffectViewport? = null): Boolean {
         var active = false
         for (pose in sources) {
             val source = pose.source
             val effect = source["effect"]!!.jsonObject
             val moving =
                 motion && effect.number("strength", .7) > 0 && source.string("id") in visible
+            val current = anchors.light(pose)
+            val size = effect.array("size")
+            val onScreen =
+                viewport?.fire(
+                    current.point.x,
+                    current.point.y,
+                    current.worldHeight,
+                    size.double(0, .22),
+                    size.double(1, .35),
+                ) != false
             flames[source.string("id")]
                 ?.material
                 ?.setParameter("clock", if (moving) mapEffectPhase(seconds).toFloat() else 0f)
-            active = active || moving
+            active = active || moving && onScreen
         }
         return active
     }

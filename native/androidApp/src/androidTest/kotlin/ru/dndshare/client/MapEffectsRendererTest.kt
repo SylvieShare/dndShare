@@ -151,6 +151,7 @@ class MapEffectsRendererTest {
                                             if (error != null) failure.set(error)
                                         }
                                     scene.set(renderer)
+                                    renderer.options(MapSceneOptions(streamAssets = false))
                                     view.addOnLayoutChangeListener { _, l, t, r, b, _, _, _, _ ->
                                         renderer.camera(MapCamera().fit(4.0, 4.0, r - l, b - t))
                                     }
@@ -174,6 +175,7 @@ class MapEffectsRendererTest {
                 var frames = scene.get().renderedFrames
                 Thread.sleep(500)
                 assertTrue(scene.get().renderedFrames > frames, "Native water/fire must animate")
+                assertIdleOutsideViewport(scene.get())
                 frames = scene.get().renderedFrames
                 document =
                     document.with(
@@ -181,12 +183,14 @@ class MapEffectsRendererTest {
                         JsonArray(listOf(light.with("enabled", JsonPrimitive(false)))),
                     )
                 activity.onActivity {
-                    scene.get().options(MapSceneOptions(animate = false))
+                    scene.get().options(MapSceneOptions(animate = false, streamAssets = false))
                     scene.get().update(document, listOf(model, solid))
                 }
                 await(failure) { scene.get().renderedFrames > frames }
                 first.recycle()
-                activity.onActivity { scene.get().options(MapSceneOptions(animate = true)) }
+                activity.onActivity {
+                    scene.get().options(MapSceneOptions(animate = true, streamAssets = false))
+                }
                 val movingStart = screenshot(activity, scene.get())
                 Thread.sleep(400)
                 val movingEnd = screenshot(activity, scene.get())
@@ -220,7 +224,9 @@ class MapEffectsRendererTest {
                     waterChanges > 20,
                     "Water must change its pixels independently of fire: $waterChanges",
                 )
-                activity.onActivity { scene.get().options(MapSceneOptions(animate = false)) }
+                activity.onActivity {
+                    scene.get().options(MapSceneOptions(animate = false, streamAssets = false))
+                }
                 val stationary = screenshot(activity, scene.get())
                 document =
                     document.with(
@@ -321,6 +327,8 @@ class MapEffectsRendererTest {
                 )
                 stationary.recycle()
                 fogged.recycle()
+                scene.get().options(MapSceneOptions(animate = true, streamAssets = false))
+                assertIdleOutsideViewport(scene.get())
                 activity.onActivity { scene.get().foreground(false) }
                 Thread.sleep(200)
                 frames = scene.get().renderedFrames
@@ -331,6 +339,27 @@ class MapEffectsRendererTest {
         } finally {
             folder.deleteRecursively()
         }
+    }
+
+    private fun assertIdleOutsideViewport(scene: FilamentMapScene) {
+        val camera = scene.camera()
+        scene.camera(camera.copy(x = 10000.0, y = 10000.0))
+        Thread.sleep(400)
+        val idle = scene.renderedFrames
+        Thread.sleep(500)
+        assertEquals(
+            idle,
+            scene.renderedFrames,
+            "Offscreen water, fire and fog must not request frames even with streamAssets=false",
+        )
+        scene.camera(camera)
+        Thread.sleep(300)
+        val resumed = scene.renderedFrames
+        Thread.sleep(300)
+        assertTrue(
+            scene.renderedFrames > resumed,
+            "Returning the camera must resume visible effects",
+        )
     }
 
     private fun export(output: File, names: List<String>) {

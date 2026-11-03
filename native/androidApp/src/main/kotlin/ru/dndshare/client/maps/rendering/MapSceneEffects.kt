@@ -81,11 +81,11 @@ internal class MapSceneEffects(
         fire.transforms(anchors)
     }
 
-    fun advance(seconds: Double, motion: Boolean): Boolean {
-        val a = water.advance(seconds, motion)
-        val b = fire.advance(seconds, motion)
+    fun advance(seconds: Double, motion: Boolean, viewport: MapEffectViewport): Boolean {
+        val a = water.advance(seconds, motion, viewport)
+        val b = fire.advance(seconds, motion, viewport)
         val c = fog.advance(seconds, motion)
-        return a || b || c || fog.ready && motion
+        return a || b || c || fog.visible(viewport) && motion
     }
 
     fun prepare(view: View, camera: Camera, seconds: Double, motion: Boolean) =
