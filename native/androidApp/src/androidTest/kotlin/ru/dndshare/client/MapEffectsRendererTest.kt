@@ -36,7 +36,7 @@ class MapEffectsRendererTest {
     fun animatedSurfacesProjectedDecalsAndVolumeFogRenderAndRelease() {
         val test = InstrumentationRegistry.getInstrumentation()
         val context = test.targetContext
-        val glb = test.context.assets.open("maps/box-water.glb").use { it.readBytes() }
+        val glb = test.context.assets.open("maps/box-water-custom.glb").use { it.readBytes() }
         val solidBytes = test.context.assets.open("maps/box.glb").use { it.readBytes() }
         val solid =
             MapModel(

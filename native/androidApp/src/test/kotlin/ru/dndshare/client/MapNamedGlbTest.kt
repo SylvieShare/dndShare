@@ -10,6 +10,62 @@ import ru.dndshare.client.maps.rendering.*
 
 class MapNamedGlbTest {
     @Test
+    fun applicationWaterSemanticsStayInCpuGeometryButDoNotEnterGltfio() {
+        val bytes =
+            javaClass.getResourceAsStream("/maps/box-water-custom.glb")!!.use { it.readBytes() }
+        val original = GlbDocument(bytes)
+        val prepared = GlbDocument(prepareMapModel(bytes).bytes)
+        assertTrue(
+            original.json
+                .rows("meshes")
+                .flatMap { it.rows("primitives") }
+                .all {
+                    (it["attributes"] as JsonObject).containsKey("_WATER")
+                }
+        )
+        assertTrue(
+            prepared.json
+                .rows("meshes")
+                .flatMap { it.rows("primitives") }
+                .none {
+                    (it["attributes"] as JsonObject).keys.any { key -> key.startsWith("_") }
+                }
+        )
+        assertEquals(
+            original.json.without("nodes", "meshes"),
+            prepared.json.without("nodes", "meshes"),
+        )
+        val maskIndex =
+            original.json
+                .rows("meshes")
+                .first()
+                .rows("primitives")
+                .first()
+                .getValue("attributes")
+                .jsonObject
+                .getValue("_WATER")
+                .jsonPrimitive
+                .int
+        val mask = original.accessor(maskIndex)
+        assertEquals(2, mask.components)
+        assertEquals(1f, mask.values[0])
+        assertEquals(0f, mask.values[1])
+        assertTrue(
+            GlbDocument(bytes)
+                .json
+                .rows("meshes")
+                .first()
+                .rows("primitives")
+                .first()
+                .jsonObject
+                .getValue("attributes")
+                .jsonObject
+                .containsKey("_WATER"),
+            "Preparing a scene must not mutate the original cached GLB",
+        )
+    }
+
+    @Test
     fun namesKeepNodeIndicesTransformsAndEmbeddedBinaryGeometryUnchanged() {
         val bytes = javaClass.getResourceAsStream("/maps/box.glb")!!.use { it.readBytes() }
         val original = GlbDocument(bytes)

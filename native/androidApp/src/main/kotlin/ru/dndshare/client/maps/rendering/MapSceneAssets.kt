@@ -354,11 +354,8 @@ internal class MapSceneAssets(
             val instances =
                 arrayOfNulls<FilamentInstance>(maxOf(8, Integer.highestOneBit(count - 1) * 2))
             val asset =
-                requireNotNull(
-                    loader.createInstancedAsset(ByteBuffer.wrap(source.model.bytes), instances)
-                ) {
-                    "Не удалось открыть GLB-модель"
-                }
+                loader.createInstancedAsset(ByteBuffer.wrap(source.model.bytes), instances)
+                    ?: throw MapPermanentLoadException("Не удалось открыть GLB-модель в движке")
             val pool =
                 MapModelPool(
                     url,

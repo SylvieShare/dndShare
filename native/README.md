@@ -12,6 +12,8 @@
 Android Studio открывает папку `native`. Нужны JBR из Android Studio,
 Android SDK 37 и platform-tools. Kotlin, AGP, Compose BOM, Room, Ktor, Coil и Filament
 закреплены в Gradle scripts, Gradle wrapper — версией и checksum.
+Основной Filament AAR содержит [исправление ортографического света](vendor/filament/README.md);
+готовый пакет и проверяемая инструкция его пересборки находятся в репозитории.
 Для нативной геометрии/текстур редактора также нужны закреплённые в
 `androidApp/build.gradle.kts` NDK и CMake; Android Studio устанавливает их
 через SDK Manager. Все эти инструменты на текущей машине находятся на диске C.

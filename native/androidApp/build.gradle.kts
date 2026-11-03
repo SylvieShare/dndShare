@@ -59,7 +59,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.11.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.11.0")
     implementation("androidx.window:window:1.5.1")
-    implementation("com.google.android.filament:filament-android:1.77.3")
+    implementation(files("../vendor/filament/filament-android-1.77.3-ortho1.aar"))
     implementation("com.google.android.filament:gltfio-android:1.77.3")
     implementation("com.google.android.filament:filament-utils-android:1.77.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
@@ -146,3 +146,25 @@ val checkMapStaticAssets by tasks.registering {
     }
 }
 tasks.named("preBuild") { dependsOn(checkMapStaticAssets) }
+
+// All consumers use the same engine, including gltfio and filament-utils.
+configurations.configureEach {
+    exclude(group = "com.google.android.filament", module = "filament-android")
+}
+
+val checkMapFilament by tasks.registering {
+    val repository = rootProject.projectDir.parentFile
+    val vendor = File(repository, "native/vendor/filament")
+    inputs.files(fileTree(vendor), File(repository, "scripts/native/rebuild-map-filament.py"))
+    doLast {
+        val manifest = groovy.json.JsonSlurper().parse(File(vendor, "manifest.json")) as Map<*, *>
+        fun sha256(path: File) = MessageDigest.getInstance("SHA-256").digest(path.readBytes()).joinToString("") { "%02x".format(it) }
+        val sources = manifest["sources"] as Map<*, *>
+        require(sources.keys == setOf("scripts/native/rebuild-map-filament.py", "native/vendor/filament/CMakeLists.txt", "native/vendor/filament/orthographic-froxels.patch"))
+        sources.forEach { (name, expected) ->
+            require(sha256(File(repository, name as String)) == expected) { "Rebuild patched Filament: $name" }
+        }
+        require(sha256(File(vendor, "filament-android-1.77.3-ortho1.aar")) == manifest["aarHash"]) { "Invalid patched Filament package" }
+    }
+}
+tasks.named("preBuild") { dependsOn(checkMapFilament) }

@@ -44,7 +44,25 @@ internal fun prepareMapModel(bytes: ByteArray): MapPreparedModel {
             )
             .jsonObject
     val originalNodes = json.rows("nodes")
-    val originalMeshes = json.rows("meshes")
+    // gltfio rejects application semantics such as _WATER. Native effects read these from the
+    // original GLB in MapAssetCache; only the copy submitted to gltfio drops custom attributes.
+    val originalMeshes =
+        json.rows("meshes").map { mesh ->
+            mesh.with(
+                "primitives",
+                JsonArray(
+                    mesh.rows("primitives").map { part ->
+                        val attributes = part["attributes"] as? JsonObject
+                        if (attributes == null || attributes.keys.none { it.startsWith("_") }) part
+                        else
+                            part.with(
+                                "attributes",
+                                JsonObject(attributes.filterKeys { !it.startsWith("_") }),
+                            )
+                    }
+                ),
+            )
+        }
     if (
         originalMeshes.none { mesh ->
             mesh.rows("primitives").any {
