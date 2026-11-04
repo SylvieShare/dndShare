@@ -140,6 +140,17 @@ python3 scripts/native/sync_web_design.py --check
 .\scripts\native\install.ps1 -Serial SERIAL_FROM_ADB
 ```
 
+Если для нужного коммита уже есть проверенный APK, для команды «залей на телефон»
+используется его манифест. Установщик проверяет SHA-256, имя пакета и хеш файла
+на устройстве. Gradle в этом режиме не запускается.
+
+```powershell
+.\scripts\native\install.ps1 -ReleaseManifest build/releases/<SHA>/release.json -Serial SERIAL_FROM_ADB
+```
+
+Манифест содержит `commitSha`, `android.file` (имя APK рядом с манифестом) и
+`android.sha256`. Без манифеста команда собирает исходники текущей копии.
+
 Без `Serial` выбирается единственный подключённый авторизованный телефон;
 эмулятор автоматически не выбирается. При нескольких устройствах нужно
 указать цель. `-NoLaunch` устанавливает без запуска. Работает и с уже

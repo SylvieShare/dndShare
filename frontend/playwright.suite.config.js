@@ -4,6 +4,8 @@ const devPort = Number(process.env.DNDSHARE_BROWSER_DEV_PORT || 15440)
 const buildPort = Number(process.env.DNDSHARE_BROWSER_BUILD_PORT || 15441)
 const devURL = `http://127.0.0.1:${devPort}`
 const buildURL = `http://127.0.0.1:${buildPort}`
+const preparedFrontend = process.env.DNDSHARE_PREBUILT_FRONTEND === '1'
+const browserExecutable = process.env.DNDSHARE_BROWSER_EXECUTABLE
 const models = process.env.DNDSHARE_TEST_MODELS === '1'
 const hardware = models && process.env.DNDSHARE_TEST_HARDWARE === '1'
 const smokeURL = process.env.DNDSHARE_SMOKE_URL
@@ -21,7 +23,8 @@ export default defineConfig({
   retries: 0,
   outputDir: process.env.DNDSHARE_BROWSER_OUTPUT || (models ? 'target/test-results/models' : 'test-results'),
   reporter: [['line'], ['json', { outputFile: process.env.DNDSHARE_BROWSER_REPORT || (models ? 'target/test-reports/models.json' : 'test-results/results.json') }]],
-  use: { colorScheme: 'dark', locale: 'ru-RU', timezoneId: 'Europe/Moscow', headless: true },
+  use: { colorScheme: 'dark', locale: 'ru-RU', timezoneId: 'Europe/Moscow', headless: true,
+    ...(browserExecutable ? { launchOptions: { executablePath: browserExecutable } } : {}) },
   projects: smokeURL ? [
     { name: 'fullstack', testMatch: '**/fullstack/*.spec.js', workers: 1, use: { baseURL: smokeURL } },
   ] : models ? [
@@ -35,6 +38,9 @@ export default defineConfig({
   webServer: smokeURL ? [] : [
     ...(models || wants('ui') || wants('maps') ? [{ command: `npm run dev -- --host 127.0.0.1 --port ${devPort} --strictPort`, url: devURL, reuseExistingServer: false, timeout: 120000,
       env: { DNDSHARE_VITE_CACHE: process.env.DNDSHARE_VITE_CACHE || `target/vite-cache/${devPort}` } }] : []),
-    ...(!models && wants('production') ? [{ command: `npm run build && npm run preview -- --host 127.0.0.1 --port ${buildPort} --strictPort`, url: buildURL, reuseExistingServer: false, timeout: 120000 }] : []),
+    ...(!models && wants('production') ? [{
+      command: `${preparedFrontend ? '' : 'npm run build && '}npm run preview -- --host 127.0.0.1 --port ${buildPort} --strictPort`,
+      url: buildURL, reuseExistingServer: false, timeout: 120000,
+    }] : []),
   ],
 })

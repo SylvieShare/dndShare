@@ -1,157 +1,128 @@
 #!/usr/bin/env bash
-#
-# Сборка единого бинаря (Vue-фронт вшит в Go-бинарь через go:embed) + деплой на
-# виртуалку через systemd. Секреты тянутся из Lockbox НА VM при каждом старте
-# (dndshare-run.sh). Запуск из любого cwd: ./deploy/deploy.sh
-#
+# Prepare one immutable bundle, then publish it over a single SCP connection.
 set -euo pipefail
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 cd "$ROOT_DIR"
 
 VM_USER="${VM_USER:-sylvieshare}"
 VM_HOST="${VM_HOST:-72.56.16.183}"
 SSH_KEY="${SSH_KEY:-$HOME/.ssh/dndshare}"
-FRONTEND_DIR="${FRONTEND_DIR:-$ROOT_DIR/frontend}"
+target="$VM_USER@$VM_HOST"
+ssh_bin="${DNDSHARE_RELEASE_SSH:-ssh}"
+scp_bin="${DNDSHARE_RELEASE_SCP:-scp}"
+ssh_options=(-i "$SSH_KEY" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=15 -o ServerAliveInterval=15 -o ServerAliveCountMax=3)
+frontend="$ROOT_DIR/frontend"
+output="$ROOT_DIR/build/web-release"
 
-export PATH="$PATH:/usr/local/go/bin:$HOME/go/bin"
-GO="${GO:-go}"
-command -v "$GO" >/dev/null 2>&1 || GO=/usr/local/go/bin/go
-command -v "$GO" >/dev/null 2>&1 || { echo "ОШИБКА: Go не найден. Задай GO=/path/to/go" >&2; exit 1; }
+require_clean() {
+  local status
+  status="$(git status --porcelain --untracked-files=all)"
+  [[ -z "$status" ]] ||
+    { echo 'Release requires a clean checkout.' >&2; exit 1; }
+}
 
-echo "==> Сборка фронта ($FRONTEND_DIR)"
-(
-  cd "$FRONTEND_DIR"
-  # node_modules не коммитим — ставим зависимости, если их нет (иначе `vite: command not found`).
-  if [ ! -x node_modules/.bin/vite ]; then
-    if [ -f package-lock.json ]; then npm ci; else npm install; fi
-  fi
-  npm run build
+frontend_checksums() (
+  cd "$frontend/target/dist"
+  find . -type f -print0 | sort -z | xargs -0 sha256sum
 )
 
-echo "==> Вшиваем собранный фронт в бинарь (internal/assets/dist)"
-# vite build кладёт результат в frontend/target/dist (см. vite.config.js outDir).
-rm -rf internal/assets/dist
-mkdir -p internal/assets/dist
-cp -R "$FRONTEND_DIR/target/dist/." internal/assets/dist/
-# Сохраняем отслеживаемый плейсхолдер для чистого состояния Git после деплоя.
-printf '\n' > internal/assets/dist/.gitkeep
-
-echo "==> Кросс-компиляция статического бинаря (linux/amd64)"
-mkdir -p build
-BUILD_COMMIT="$(git rev-parse HEAD)"
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 "$GO" build -trimpath \
-  -ldflags="-s -w -X dndshare/internal/web.BuildCommit=$BUILD_COMMIT" \
-  -o build/dndshare .
-ls -lh build/dndshare | awk '{print "    бинарь:", $5}'
-
-# Hashed assets are append-only on the VM: already open tabs can load chunks
-# from their original release after the embedded frontend has been replaced.
-echo "==> Архив frontend assets для открытых вкладок"
-COPYFILE_DISABLE=1 tar -czf build/frontend-assets.tar.gz -C "$FRONTEND_DIR/target/dist" static
-
-echo "==> Проверка свободного места на VM"
-ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" 'bash -s' <<'DISK_CHECK'
-  set -euo pipefail
-  available_bytes=$(df -PB1 "$HOME" | awk 'NR==2 {print $4}')
-  if [ "$available_bytes" -lt 268435456 ]; then
-    echo "ОШИБКА: для deploy нужно хотя бы 256 МиБ свободного места; доступно $available_bytes байт" >&2
-    exit 1
-  fi
-DISK_CHECK
-
-DEPLOY_DIR="$(ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" 'mktemp -d "$HOME/dndshare-deploy.XXXXXX"')"
-case "$DEPLOY_DIR" in /*/dndshare-deploy.*) ;; *) echo "Некорректный staging deploy" >&2; exit 1 ;; esac
 cleanup_upload() {
-  ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" "rm -rf -- '$DEPLOY_DIR'" >/dev/null 2>&1 || true
+  "$ssh_bin" "${ssh_options[@]}" "$target" "rm -f -- '$DEPLOY_DIR/release.tar.gz'; rmdir -- '$DEPLOY_DIR'" >/dev/null 2>&1 || true
 }
-trap cleanup_upload EXIT
-BUILD_SHA256="$(shasum -a 256 build/dndshare | awk '{print $1}')"
-echo "==> Копирование основного бинаря + unit + run.sh на $VM_HOST"
-# .new + mv на VM — чтобы не ловить 'text file busy' при перезаписи работающего бинаря.
-scp -i "$SSH_KEY" build/frontend-assets.tar.gz "$VM_USER@$VM_HOST:$DEPLOY_DIR/dndshare-frontend-assets.new.tar.gz"
-scp -i "$SSH_KEY" build/dndshare            "$VM_USER@$VM_HOST:$DEPLOY_DIR/dndshare.new"
-scp -i "$SSH_KEY" deploy/dndshare.service   "$VM_USER@$VM_HOST:$DEPLOY_DIR/dndshare.service"
-scp -i "$SSH_KEY" deploy/nginx-dndshare.conf "$VM_USER@$VM_HOST:$DEPLOY_DIR/dndshare-nginx.conf"
-scp -i "$SSH_KEY" deploy/nginx-dndshare-http.conf "$VM_USER@$VM_HOST:$DEPLOY_DIR/dndshare-nginx-http.conf"
-scp -i "$SSH_KEY" deploy/dndshare-run.sh    "$VM_USER@$VM_HOST:$DEPLOY_DIR/dndshare-run.sh"
-scp -i "$SSH_KEY" deploy/fetch-secrets.sh deploy/fetch-secrets.py "$VM_USER@$VM_HOST:$DEPLOY_DIR/"
-scp -i "$SSH_KEY" deploy/journald-storage.conf "$VM_USER@$VM_HOST:$DEPLOY_DIR/dndshare-journald-storage.conf"
-scp -i "$SSH_KEY" deploy/certbot-reload-nginx.sh "$VM_USER@$VM_HOST:$DEPLOY_DIR/dndshare-certbot-reload-nginx.sh"
 
-echo "==> Обновление unit + перезапуск сервиса (секреты подтянутся в run.sh)"
-# The remote installer owns cleanup now; a lost SSH channel must not remove its inputs.
-trap - EXIT
-ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" "bash -s -- '$BUILD_COMMIT' '$DEPLOY_DIR' '$BUILD_SHA256'" <<'REMOTE'
-  set -euo pipefail
-  expected_commit="$1"
-  deploy_dir="$2"
-  expected_sha256="$3"
-  asset_staging=''
-  cleanup() { [ -z "$asset_staging" ] || rm -rf "$asset_staging"; rm -rf "$deploy_dir"; }
-  trap cleanup EXIT
-  # Uploads may overlap; installation and readiness are serialized on the VM.
-  exec 9>"$HOME/.dndshare-deploy.lock"
-  flock -w 300 9
-  cd "$deploy_dir"
-  printf '%s  %s\n' "$expected_sha256" dndshare.new | sha256sum -c -
-  chmod +x ./dndshare.new ./dndshare-run.sh ./fetch-secrets.sh
-  sudo install -d -m 755 /etc/letsencrypt/renewal-hooks/deploy
-  sudo install -m 750 ./dndshare-certbot-reload-nginx.sh /etc/letsencrypt/renewal-hooks/deploy/dndshare-nginx
-  sudo install -d -m 755 /etc/systemd/journald.conf.d
-  if ! sudo cmp -s ./dndshare-journald-storage.conf /etc/systemd/journald.conf.d/60-dndshare-storage.conf; then
-    sudo install -m 644 ./dndshare-journald-storage.conf /etc/systemd/journald.conf.d/60-dndshare-storage.conf
-    sudo systemctl restart systemd-journald
+prepare() {
+  require_clean
+  local commit started assets archive_hash
+  commit="$(git rev-parse HEAD)"
+  started="$SECONDS"
+  mkdir -p "$output"
+  rm -f -- "$output/manifest"
+  export PATH="$PATH:/usr/local/go/bin:$HOME/go/bin"
+  local go_bin="${GO:-go}"
+  command -v "$go_bin" >/dev/null 2>&1 || go_bin=/usr/local/go/bin/go
+
+  echo "==> Сборка веба и Go ($commit)"
+  (
+    cd "$frontend"
+    if [[ ! -f node_modules/.bin/vite ]]; then npm ci; fi
+    npm run build
+  )
+  frontend_checksums > "$output/frontend.sha256"
+
+  assets="$ROOT_DIR/internal/assets/dist"
+  if [[ -e "$assets" || -L "$assets" ]]; then
+    [[ -d "$assets" && "$(cd "$assets" && pwd -P)" == "$assets" ]] ||
+      { echo 'Invalid embed directory.' >&2; exit 1; }
+    rm -rf -- "$assets"
   fi
-  while IFS= read -r unit_line; do
-    case "$unit_line" in
-      Environment=*) export "${unit_line#Environment=}" ;;
-    esac
-  done < ./dndshare.service
-  ./fetch-secrets.sh ~/dndshare.env
-  asset_staging="$(mktemp -d "$HOME/dndshare-frontend-upload.XXXXXX")"
-  tar -xzf ./dndshare-frontend-assets.new.tar.gz -C "$asset_staging"
-  mkdir -p ~/dndshare-frontend-assets/static
-  # Hard links publish complete files atomically on the same filesystem.
-  # Existing hashes remain immutable; a failed upload is safe to retry.
-  cp -aln "$asset_staging/static/." ~/dndshare-frontend-assets/static/
-  rm -rf "$asset_staging"
-  rm ./dndshare-frontend-assets.new.tar.gz
-  sudo systemctl stop dndshare || true
-  mv ./dndshare.new ~/dndshare
-  mv ./dndshare-run.sh ./fetch-secrets.sh ./fetch-secrets.py "$HOME/"
-  sudo install -m 644 ./dndshare.service /etc/systemd/system/dndshare.service
-  if sudo test -s /etc/letsencrypt/live/dndshare.ru/fullchain.pem; then
-    sudo install -m 644 ./dndshare-nginx.conf /etc/nginx/sites-available/dndshare
-  else
-    sudo install -m 644 ./dndshare-nginx-http.conf /etc/nginx/sites-available/dndshare
+  mkdir -p "$assets"
+  printf '\n' > "$assets/.gitkeep"
+  cp -R "$frontend/target/dist/." "$assets/"
+  CGO_ENABLED=0 GOOS=linux GOARCH=amd64 "$go_bin" build -trimpath \
+    -ldflags="-s -w -X dndshare/internal/web.BuildCommit=$commit" \
+    -o "$output/dndshare.new" .
+
+  # Keep old hashed assets available to open tabs. The transfer also includes
+  # the service configuration, but it uses just one compressed archive.
+  COPYFILE_DISABLE=1 tar -czf "$output/release.tar.gz" \
+    -C "$output" dndshare.new \
+    -C "$frontend/target/dist" static \
+    -C "$ROOT_DIR/deploy" dndshare.service dndshare-run.sh fetch-secrets.sh fetch-secrets.py \
+    nginx-dndshare.conf nginx-dndshare-http.conf journald-storage.conf certbot-reload-nginx.sh
+  archive_hash="$(sha256sum "$output/release.tar.gz" | awk '{print $1}')"
+  require_clean
+  [[ "$(git rev-parse HEAD)" == "$commit" ]] || { echo 'HEAD changed during build.' >&2; exit 1; }
+  printf '%s %s\n' "$commit" "$archive_hash" > "$output/manifest"
+  echo "==> Архив готов за $((SECONDS - started)) с, $(wc -c < "$output/release.tar.gz") байт"
+}
+
+publish() {
+  require_clean
+  local commit archive_hash staging before started
+  read -r commit archive_hash < "$output/manifest" ||
+    { echo 'Run deploy.sh --prepare first.' >&2; exit 1; }
+  [[ "$commit" =~ ^[0-9a-f]{40}$ && "$commit" == "$(git rev-parse HEAD)" && "$archive_hash" =~ ^[0-9a-f]{64}$ ]] ||
+    { echo 'Prepared release does not match HEAD.' >&2; exit 1; }
+  if git show-ref --verify --quiet refs/remotes/origin/main; then
+    git merge-base --is-ancestor origin/main "$commit" ||
+      { echo 'Release is older than origin/main.' >&2; exit 1; }
   fi
-  sudo ln -sfn /etc/nginx/sites-available/dndshare /etc/nginx/sites-enabled/dndshare
-  sudo nginx -t
-  sudo systemctl reload nginx
-  mv ./dndshare.service ./dndshare-nginx.conf ./dndshare-nginx-http.conf ./dndshare-journald-storage.conf ./dndshare-certbot-reload-nginx.sh "$HOME/"
-  sudo systemctl daemon-reload
-  sudo systemctl restart dndshare
-  ready=false
-  health=''
-  for _ in $(seq 1 30); do
-    health="$(curl -fsS --max-time 2 http://127.0.0.1:8080/api/health 2>/dev/null || true)"
-    if printf '%s' "$health" | grep -Fq '"status":"ok"' \
-      && printf '%s' "$health" | grep -Fq "\"commitSha\":\"$expected_commit\""; then
-      ready=true
-      break
-    fi
-    sleep 1
-  done
-  if [ "$ready" != true ]; then
-    echo "ОШИБКА: readiness не подтвердил commit $expected_commit; последний ответ: ${health:-<пусто>}" >&2
-    sudo systemctl --no-pager --lines=30 status dndshare || true
-    tail -n 60 ~/dndshare-log.txt 2>/dev/null || true
-    exit 1
-  fi
-  echo "readiness OK: $health"
-  sudo systemctl --no-pager --lines=20 status dndshare || true
-  echo "----- последние строки ~/dndshare-log.txt (вывод Go-приложения) -----"
-  tail -n 40 ~/dndshare-log.txt 2>/dev/null || echo "(dndshare-log.txt пуст/нет)"
+  printf '%s  %s\n' "$archive_hash" "$output/release.tar.gz" | sha256sum -c -
+  frontend_checksums | cmp -s "$output/frontend.sha256" - ||
+    { echo 'Frontend output changed after preparation; rebuild and recheck.' >&2; exit 1; }
+
+  started="$SECONDS"
+  staging="$("$ssh_bin" "${ssh_options[@]}" "$target" 'bash -s' <<'REMOTE'
+set -euo pipefail
+available_bytes=$(df -PB1 "$HOME" | awk 'NR==2 {print $4}')
+[[ "$available_bytes" -ge 268435456 ]] || { echo 'Need at least 256 MiB free on the VM.' >&2; exit 1; }
+health="$(curl -fsS --max-time 2 http://127.0.0.1:8080/api/health 2>/dev/null || true)"
+before=''
+if [[ "$health" == *'"status":"ok"'* ]]; then
+  before="$(sed -n 's/.*"commitSha":"\([0-9a-f]\{40\}\)".*/\1/p' <<< "$health")"
+fi
+printf '%s %s\n' "$(mktemp -d "$HOME/dndshare-deploy.XXXXXX")" "${before:-none}"
 REMOTE
-echo "==> Done"
+)"
+  read -r DEPLOY_DIR before <<< "$staging"
+  [[ "$DEPLOY_DIR" =~ ^/[a-zA-Z0-9_./-]+/dndshare-deploy\.[a-zA-Z0-9]+$ && "$before" =~ ^(none|[0-9a-f]{40})$ ]] ||
+    { echo 'Invalid remote staging response.' >&2; exit 1; }
+
+  # Until activation begins, the uploader owns staging cleanup.
+  trap cleanup_upload EXIT
+  echo "==> Передача сжатого архива на $VM_HOST"
+  "$scp_bin" "${ssh_options[@]}" "$output/release.tar.gz" "$target:$DEPLOY_DIR/release.tar.gz"
+  echo "==> Передача завершена за $((SECONDS - started)) с"
+  trap - EXIT
+  "$ssh_bin" "${ssh_options[@]}" "$target" "bash -s -- install '$commit' '$DEPLOY_DIR' '$archive_hash' '$before'" \
+    < "$ROOT_DIR/deploy/activate-release.sh"
+}
+
+case "${1:-}" in
+  '') prepare; publish ;;
+  --prepare) prepare ;;
+  --publish) publish ;;
+  --rollback) "$ssh_bin" "${ssh_options[@]}" "$target" 'bash -s -- rollback' < "$ROOT_DIR/deploy/activate-release.sh" ;;
+  *) echo "Usage: $0 [--prepare | --publish | --rollback]" >&2; exit 2 ;;
+esac

@@ -1,8 +1,8 @@
 # Работа над общим UI
 
 Один небольшой вертикальный участок выполняется сразу в вебе и Android.
-До реализации записать ожидаемое поведение и границы: состояния, три композиции
-окна, доступные действия и критерии завершения. Общие величины принадлежат
+До реализации определить затронутое состояние и доступные действия. Три
+формата нужны при изменении адаптивной раскладки. Общие величины принадлежат
 [токенам](../../design/README.md), примитивы — своим библиотекам.
 
 **Полный набор запускается только по прямой команде пользователя.** Флаг `--full`
@@ -33,6 +33,22 @@ python3 scripts/ui.py doctor --emulator emulator-5554
 исторического сравнения; создавать его после каждой мелкой правки не требуется.
 
 ## Короткий цикл
+
+На Windows обычные проверки используют установленные инструменты напрямую.
+Для косметики достаточно сборки и просмотра одного состояния. Для поведения
+выбирают узкий сценарий по [матрице](../testing.md#матрица-проверок).
+
+```powershell
+# Из frontend, после npm ci
+node node_modules/vitest/vitest.mjs run src/features/handbook/pages/ViewHandbook.test.js
+node node_modules/playwright/cli.js test -c playwright.suite.config.js --project=ui tests/character-menu/menu.spec.js
+# Из корня
+.\scripts\native\build.ps1 -Target Android
+```
+
+Для Playwright можно указать установленный браузер через
+`DNDSHARE_BROWSER_EXECUTABLE`. WSL нужен для изолированного Go API и PostgreSQL
+и сценариев, которым нужны его диагностические инструменты.
 
 ```bash
 python3 scripts/ui.py focus webunit --workspace "$UI_WORKSPACE" --file src/features/handbook/pages/ViewHandbook.test.js
@@ -100,6 +116,10 @@ runner как interrupted; старый running не считается живо
 
 ## Парное сравнение
 
+Для мелкой правки достаточно просмотра затронутого состояния. Для общей
+композиции сверяют оба клиента на одинаковых данных. Следующая команда нужна,
+когда меняется адаптивная раскладка или нужен воспроизводимый отчёт с API.
+
 ```bash
 python3 scripts/ui.py review --pin --workspace "$UI_WORKSPACE" --state sheet-stats --state sheet-stat-editor --emulator emulator-5554
 ```
@@ -119,6 +139,11 @@ python3 scripts/ui.py review --pin --workspace "$UI_WORKSPACE" --state sheet-sta
 [Адаптивный дизайн](responsive-design.md) · [Проверки](../testing.md)
 
 ## Тёплый выпуск
+
+На Windows штатный выпуск один раз готовит архив, проверяет готовый frontend
+и отправляет тот же архив. Для ручного просмотра этапы можно разделить.
+Команды — в [runbook выпуска](../deploy.md#чистая-release-копия). Клиенты
+выпускаются независимо по готовности. Ниже описан путь через WSL.
 
 ```bash
 python3 scripts/release.py --commit COMMIT_SHA --web --phone ADB_SERIAL
