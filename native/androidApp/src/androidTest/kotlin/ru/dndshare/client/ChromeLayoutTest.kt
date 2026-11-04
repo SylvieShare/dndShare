@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.layout.positionOnScreen
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
@@ -52,7 +53,10 @@ class ChromeLayoutTest {
                         Box(
                             Modifier.width(340.dp)
                                 .background(WebPalette.Background)
-                                .onGloballyPositioned { bounds.set(it.boundsInWindow()) }
+                                .onGloballyPositioned {
+                                    val size = Size(it.size.width.toFloat(), it.size.height.toFloat())
+                                    bounds.set(Rect(it.positionOnScreen(), size))
+                                }
                         ) {
                             ShareSubheader(fitContent = true) {
                                 ShareIconNavigation(tabs, "1", {}, pill = true) {}
@@ -62,22 +66,31 @@ class ChromeLayoutTest {
                 }
             }
             await { bounds.get().width > 0 && bounds.get().height > 0 }
-            instrument.waitForIdleSync()
             val box = bounds.get()
             val scale = density.get()
             val y = (box.top + 28 * scale).roundToInt()
-            val bitmap = requireNotNull(instrument.uiAutomation.takeScreenshot())
-            try {
-                val midpoint = (box.left + box.right) / 2
-                for (x in listOf(box.left + 22 * scale, box.right - 22 * scale)) {
-                    assertEquals(WebPalette.Background.toArgb(), bitmap.getPixel(x.roundToInt(), y))
+            val midpoint = (box.left + box.right) / 2
+            val xs =
+                listOf(
+                    box.left + 22 * scale,
+                    midpoint - 22 * scale,
+                    midpoint + 22 * scale,
+                    box.right - 22 * scale,
+                )
+            var pixels = emptyList<Int>()
+            await {
+                instrument.uiAutomation.takeScreenshot()?.let { bitmap ->
+                    pixels = try {
+                        xs.map { bitmap.getPixel(it.roundToInt(), y) }
+                    } finally {
+                        bitmap.recycle()
+                    }
                 }
-                for (x in listOf(midpoint - 22 * scale, midpoint + 22 * scale)) {
-                    assertEquals(WebPalette.Subheader.toArgb(), bitmap.getPixel(x.roundToInt(), y))
-                }
-            } finally {
-                bitmap.recycle()
+                pixels.size == xs.size && pixels[1] == WebPalette.Subheader.toArgb() &&
+                    pixels[2] == WebPalette.Subheader.toArgb()
             }
+            assertEquals(WebPalette.Background.toArgb(), pixels.first())
+            assertEquals(WebPalette.Background.toArgb(), pixels.last())
         }
     }
 

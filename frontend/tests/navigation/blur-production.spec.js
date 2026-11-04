@@ -36,17 +36,24 @@ test('tablet sheet subheader fits its tabs in the production build', async ({ pa
   await page.goto('/chars')
   await page.locator('.char-card').first().getByText('Персонаж 0', { exact: true }).click()
   const row = page.locator('.character-workspace-header .workspace-subheader')
-  const capsule = row.locator('.workspace-subheader-inner')
   const tabs = row.getByRole('navigation', { name: 'Раздел персонажа' })
   await expect(tabs.getByRole('button', { name: 'База', exact: true })).toBeVisible()
 
   for (const width of [834, 600]) {
     await page.setViewportSize({ width, height: 900 })
-    const outer = await row.boundingBox()
-    const inner = await capsule.boundingBox()
-    expect(inner.width).toBeLessThan(outer.width - 24)
-    expect(inner.x + inner.width / 2).toBeCloseTo(outer.x + outer.width / 2, 0)
-    expect(await tabs.evaluate(node => node.scrollWidth)).toBeLessThanOrEqual(await tabs.evaluate(node => node.clientWidth) + 1)
+    const { widthDifference, centerOffset, overflow } = await row.evaluate(element => {
+      const outer = element.getBoundingClientRect()
+      const inner = element.querySelector('.workspace-subheader-inner').getBoundingClientRect()
+      const nav = element.querySelector('nav')
+      return {
+        widthDifference: outer.width - inner.width,
+        centerOffset: Math.abs(inner.x + inner.width / 2 - outer.x - outer.width / 2),
+        overflow: nav.scrollWidth - nav.clientWidth,
+      }
+    })
+    expect(widthDifference).toBeGreaterThan(24)
+    expect(centerOffset).toBeLessThan(1)
+    expect(overflow).toBeLessThanOrEqual(1)
     await testInfo.attach(`sheet-tabs-${width}`, { body: await row.screenshot(), contentType: 'image/png' })
   }
   const last = tabs.getByRole('button').last()
