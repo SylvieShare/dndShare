@@ -4,12 +4,32 @@ import kotlin.random.Random
 import kotlinx.serialization.json.*
 import ru.dndshare.client.model.*
 
+private val manualRollModes = setOf("normal", "advantage", "disadvantage")
+
 fun automaticRollMode(manual: String, effects: List<String>): String {
-    if (manual in setOf("normal", "advantage", "disadvantage")) return manual
+    if (manual in manualRollModes) return manual
     val advantage = "advantage" in effects
     val disadvantage = "disadvantage" in effects
     return if (advantage == disadvantage) "normal"
     else if (advantage) "advantage" else "disadvantage"
+}
+
+internal data class SheetRollMode(
+    val mode: String,
+    val cancelled: Boolean = false,
+    val sources: List<String> = emptyList(),
+)
+
+internal fun resolveSheetRollMode(derived: DndDerivedValues, request: SheetRollRequest): SheetRollMode {
+    if (request.manualMode in manualRollModes) {
+        return SheetRollMode(request.manualMode, sources = listOf("Переопределено вручную"))
+    }
+    val (effects, sources) = rollEffects(derived, request)
+    return SheetRollMode(
+        mode = automaticRollMode(request.manualMode, effects),
+        cancelled = "advantage" in effects && "disadvantage" in effects,
+        sources = sources,
+    )
 }
 
 fun rollEffects(

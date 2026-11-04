@@ -18,12 +18,7 @@ internal fun SheetRollActions(
     val context = LocalCharacterSheet.current
     var mode by remember { mutableStateOf("normal") }
     LaunchedEffect(open) {
-        if (open) {
-            val modes =
-                if (request.manualMode == "auto") rollEffects(context.mechanics, request).first
-                else emptyList()
-            mode = automaticRollMode(request.manualMode, modes)
-        }
+        if (open) mode = resolveSheetRollMode(context.mechanics, request).mode
     }
     ShareDropdownMenu(open, close, Modifier.width(DesignTokens.Layout.RollModeMenuWidth)) {
         SheetRollModePicker(mode, { mode = it }, enabled = open)

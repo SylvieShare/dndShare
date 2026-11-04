@@ -146,6 +146,7 @@ internal fun StatFormFields(
         val ids = (ability.skills.map(Long::toString) + skills.keys).distinct()
         ids.forEach { id ->
             val skill = form.nested(listOf("skills", id))
+            val skillContext = RuleContext(kind = "skill_check", ability = ability.suggestId, skill = id.toLongOrNull())
             val title =
                 skill.text("override_title").ifBlank {
                     metadata.suggests["15"]?.firstOrNull { it.id.toString() == id }?.value
@@ -165,6 +166,20 @@ internal fun StatFormFields(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Text(title, Modifier.weight(1f), style = ShareTypography.group)
+                    SheetRollModeBadge(
+                        mechanics,
+                        SheetRollRequest(
+                            title,
+                            kind = skillContext.kind,
+                            ability = skillContext.ability,
+                            skill = skillContext.skill,
+                            manualMode = skill.text("roll_mode").ifBlank { "auto" },
+                            proficiencyRank = maxOf(
+                                skill.data["up"].number(),
+                                mechanics.rank("skill_proficiency", skillContext),
+                            ),
+                        ),
+                    )
                     Text(
                         when (skill.data["up"].number()) {
                             2 -> "Компетентность"

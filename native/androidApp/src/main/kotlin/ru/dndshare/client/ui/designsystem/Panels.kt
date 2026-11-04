@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -21,19 +22,30 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
-fun ShareBadge(text: String, modifier: Modifier = Modifier, color: Color = WebPalette.AccentSoft) {
+fun ShareBadge(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = WebPalette.AccentSoft,
+    compact: Boolean = false,
+) {
+    val label = MaterialTheme.typography.labelSmall
     Surface(
         modifier,
-        color = color.copy(alpha = .13f),
+        color = color.copy(alpha = if (compact) .09f else .13f),
         contentColor = color,
-        shape = RoundedCornerShape(DesignTokens.Radius.Badge),
+        shape = if (compact) CircleShape else RoundedCornerShape(DesignTokens.Radius.Badge),
+        border = if (compact) BorderStroke(1.dp, color) else null,
     ) {
         Text(
             text,
-            Modifier.padding(horizontal = 7.dp, vertical = 3.dp),
-            style = MaterialTheme.typography.labelSmall,
+            Modifier.padding(horizontal = if (compact) 6.dp else 7.dp, vertical = if (compact) 2.dp else 3.dp),
+            style = if (compact) {
+                label.copy(fontSize = 8.sp, lineHeight = 10.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = .32.sp)
+            } else label,
+            softWrap = !compact,
         )
     }
 }

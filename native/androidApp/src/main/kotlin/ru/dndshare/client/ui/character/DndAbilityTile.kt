@@ -94,6 +94,23 @@ private fun DndAbilityFace(
             (if (proficient) sheet.proficiency() else 0) +
             data["save_bonuses"].bonusTotal() +
             context.mechanics.bonus("save_bonus", saveContext)
+    val saveRequest = SheetRollRequest(
+        "${ability.title} — спасбросок",
+        "saving_throw",
+        ability.suggestId,
+        bonus = save,
+        manualMode = data.text("save_roll_mode").ifBlank { "auto" },
+        proficiencyRank = if (proficient) 1 else 0,
+    )
+    val checkRequest = SheetRollRequest(
+        "${ability.title} — проверка",
+        ability = ability.suggestId,
+        bonus = modifier + context.mechanics.bonus(
+            "check_bonus",
+            RuleContext(kind = "ability_check", ability = ability.suggestId),
+        ),
+        manualMode = data.text("check_roll_mode").ifBlank { "auto" },
+    )
     val skills = (ability.skills.map(Long::toString) + data["skills"].objectValue().keys).distinct()
     val titleSuggest = context.metadata.suggests["16"]?.firstOrNull { it.id == ability.suggestId }
     val color =
@@ -187,18 +204,12 @@ private fun DndAbilityFace(
                             lineHeight = if (compact) 15.sp else 13.sp,
                             fontWeight = FontWeight.Bold,
                         )
+                        SheetRollModeBadge(context.mechanics, saveRequest)
                     }
                     SheetRollActions(
                         saveActions,
                         { saveActions = false },
-                        SheetRollRequest(
-                            "${ability.title} — спасбросок",
-                            "saving_throw",
-                            ability.suggestId,
-                            bonus = save,
-                            manualMode = data.text("save_roll_mode").ifBlank { "auto" },
-                            proficiencyRank = if (proficient) 1 else 0,
-                        ),
+                        saveRequest,
                         "skill:${ability.id}:save",
                     )
                 }
@@ -227,13 +238,7 @@ private fun DndAbilityFace(
                     )
                 }
                 Text(
-                    signed(
-                        modifier +
-                            context.mechanics.bonus(
-                                "check_bonus",
-                                RuleContext(kind = "ability_check", ability = ability.suggestId),
-                            )
-                    ),
+                    signed(checkRequest.bonus),
                     style =
                         if (compact) ShareTypography.sheetStatCompact
                         else ShareTypography.sheetStat,
@@ -244,23 +249,11 @@ private fun DndAbilityFace(
                     color = WebPalette.TextMuted,
                     fontSize = if (compact) 18.sp else 15.sp,
                 )
+                SheetRollModeBadge(context.mechanics, checkRequest)
                 SheetRollActions(
                     checkActions,
                     { checkActions = false },
-                    SheetRollRequest(
-                        "${ability.title} — проверка",
-                        ability = ability.suggestId,
-                        bonus =
-                            modifier +
-                                context.mechanics.bonus(
-                                    "check_bonus",
-                                    RuleContext(
-                                        kind = "ability_check",
-                                        ability = ability.suggestId,
-                                    ),
-                                ),
-                        manualMode = data.text("check_roll_mode").ifBlank { "auto" },
-                    ),
+                    checkRequest,
                     ability.id,
                 )
             }
@@ -285,6 +278,16 @@ private fun DndAbilityFace(
                         ?: skillNames[id.toIntOrNull()]
                         ?: "Навык $id"
                 }
+            val request = SheetRollRequest(
+                "$title — проверка",
+                kind = "skill_check",
+                ability = ability.suggestId,
+                skill = skillContext.skill,
+                bonus = modifier + rank * sheet.proficiency() + skill["bonuses"].bonusTotal() +
+                    context.mechanics.bonus("skill_bonus", skillContext.copy(proficient = rank > 0)),
+                manualMode = skill.text("roll_mode").ifBlank { "auto" },
+                proficiencyRank = rank,
+            )
             Row(
                 Modifier.fillMaxWidth()
                     .padding(horizontal = 12.dp, vertical = 2.dp)
@@ -306,6 +309,7 @@ private fun DndAbilityFace(
                     )
                     HorizontalDivider(Modifier.weight(1f))
                 }
+                SheetRollModeBadge(context.mechanics, request)
                 Surface(
                     onClick = { skillActions = true },
                     enabled = !presentation.expanded,
@@ -326,15 +330,7 @@ private fun DndAbilityFace(
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
-                            signed(
-                                modifier +
-                                    rank * sheet.proficiency() +
-                                    skill["bonuses"].bonusTotal() +
-                                    context.mechanics.bonus(
-                                        "skill_bonus",
-                                        skillContext.copy(proficient = rank > 0),
-                                    )
-                            ),
+                            signed(request.bonus),
                             fontSize = if (compact) 16.sp else 13.sp,
                             lineHeight = if (compact) 16.sp else 13.sp,
                             fontWeight = FontWeight.Bold,
@@ -344,21 +340,7 @@ private fun DndAbilityFace(
                     SheetRollActions(
                         skillActions,
                         { skillActions = false },
-                        SheetRollRequest(
-                            "$title — проверка",
-                            "skill_check",
-                            ability.suggestId,
-                            id.toLongOrNull(),
-                            modifier +
-                                rank * sheet.proficiency() +
-                                skill["bonuses"].bonusTotal() +
-                                context.mechanics.bonus(
-                                    "skill_bonus",
-                                    skillContext.copy(proficient = rank > 0),
-                                ),
-                            skill.text("roll_mode").ifBlank { "auto" },
-                            proficiencyRank = rank,
-                        ),
+                        request,
                         "skill:${ability.id}:$id",
                     )
                 }

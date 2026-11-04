@@ -45,7 +45,7 @@ Compose-слотами. Пакет использует Android/Compose и corou
 | `ShareAction`, `ShareSearch` | ActionButton, строка поиска/поле ввода |
 | `ShareTile` | BaseTile, оболочка коллекции или статьи; optional `accent` соответствует TileAccentStrip; `containerColor`/`borderColor` задают роли поверхности и значимого выделения |
 | `ShareContentRow` | ContentRow: метрика, имя, второе имя, подстрока, маркеры |
-| `ShareBadge` | Малые цветные маркеры/счётчики |
+| `ShareBadge` | Малые цветные маркеры/счётчики. Компактный вариант повторяет вид пометок режима броска |
 | `ShareSection`, `ShareDetailSection` | SectionLabel/DetailSection, в том числе раскрывающаяся секция |
 | `ShareIconNavigation` | IconNavigation: именованные разделы, скользящее фиолетовое выделение и доступные вкладки |
 | `ShareMorphState`, `ShareMorphSource`, `ShareMorphDialog` | MorphSheet/MorphEditorShell: перенос исходного Compose-поддерева в модальное окно, адаптивное превью/форма, затемнение и аппаратное размытие |
