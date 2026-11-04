@@ -3,7 +3,15 @@ for (const mobile of [false, true]) test(`shared morph heading and independent a
   page.on('pageerror', error => { throw error })
   await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1400, height: 1000 })
   await page.goto('/tests/tutorials/fixtures/stat-rolls.html')
-  await page.getByRole('button', { name: 'Ловкость — спасбросок', exact: true }).click()
+  const save = page.getByRole('button', { name: 'Ловкость — спасбросок', exact: true })
+  const skill = page.getByRole('button', { name: 'Скрытность — проверка', exact: true })
+  await expect(save).toHaveAccessibleDescription('Владение')
+  await expect(skill).toHaveAccessibleDescription('Мастерство')
+  await expect(save.locator('.proficiency-dot')).toHaveCount(1)
+  await expect(page.locator('.skill-label .proficiency-dot')).toHaveCount(2)
+  await expect(page.locator('.stat-view .skill-line, .stat-view .tile-accent-strip')).toHaveCount(0)
+  await expect(page.locator('.stat-body')).toHaveCSS('padding-top', '0px')
+  await save.click()
   await expect(page.getByRole('menu')).toBeVisible()
   await expect(page.locator('.mes-editor')).toHaveCount(0)
   await page.keyboard.press('Escape')
@@ -35,7 +43,6 @@ test('compact utility headings and values stay within the 64px grid rows', async
     }
     expect(await tile.locator('.morph-tile-header').evaluate(el => getComputedStyle(el).marginBottom)).toBe('0px')
   }
-  expect(await page.locator('.stat-body').evaluate(el => getComputedStyle(el).paddingTop)).toBe('8px')
 })
 
 test('shared faces keep their intended surface and previews avoid nested tiles', async ({ page }) => {

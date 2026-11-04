@@ -4,6 +4,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -12,10 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -135,15 +136,16 @@ private fun DndAbilityFace(
         Modifier.fillMaxWidth()
             .heightIn(max = sourceLimit)
             .clip(RoundedCornerShape(DesignTokens.Radius.Tile))
-            .background(WebPalette.Surface)
-            .shareAccentStrip(color)
-            .padding(start = 3.dp),
+            .background(WebPalette.Surface),
         userScrollEnabled = presentation.expanded,
-        contentPadding = PaddingValues(bottom = 12.dp),
+        contentPadding = PaddingValues(
+            top = DesignTokens.Spacing.Small,
+            bottom = DesignTokens.Spacing.Medium,
+        ),
     ) {
         item("heading") {
             Row(
-                Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 7.dp),
+                Modifier.fillMaxWidth().padding(horizontal = DesignTokens.Spacing.Medium),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
@@ -160,7 +162,7 @@ private fun DndAbilityFace(
                             onClick = { context.edit(ability.id) },
                             enabled = context.canEdit,
                             modifier =
-                                Modifier.size(32.dp)
+                                Modifier.size(24.dp)
                                     .graphicsLayer { alpha = 1f - presentation.progress() }
                                     .semantics {
                                         contentDescription = "Редактировать: ${ability.title}"
@@ -172,11 +174,13 @@ private fun DndAbilityFace(
                 Surface(
                     onClick = { saveActions = true },
                     modifier =
-                        Modifier.semantics { contentDescription = "${ability.title} — спасбросок" },
+                        Modifier.semantics {
+                            contentDescription = "${ability.title} — спасбросок"
+                            if (proficient) stateDescription = "Владение"
+                        },
                     enabled = !presentation.expanded,
-                    color =
-                        if (proficient) color.copy(alpha = .18f).compositeOver(WebPalette.Raised)
-                        else WebPalette.Raised,
+                    color = WebPalette.Raised,
+                    contentColor = WebPalette.Text,
                     shape = RoundedCornerShape(8.dp),
                 ) {
                     Row(
@@ -190,14 +194,15 @@ private fun DndAbilityFace(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
-                            "спас",
-                            style =
-                                ShareTypography.row.copy(
-                                    fontSize = if (compact) 13.sp else 11.sp,
-                                    lineHeight = if (compact) 13.sp else 11.sp,
-                                ),
-                            color = WebPalette.TextMuted,
+                            "Спасбросок",
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            fontSize = if (compact) 13.sp else 11.sp,
+                            lineHeight = if (compact) 13.sp else 11.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = WebPalette.TextSecondary,
                         )
+                        if (proficient) AbilityProficiencyMarker(rank = 1)
                         Text(
                             signed(save),
                             fontSize = if (compact) 15.sp else 13.sp,
@@ -219,7 +224,7 @@ private fun DndAbilityFace(
             Row(
                 Modifier.fillMaxWidth()
                     .clickable(enabled = !presentation.expanded) { checkActions = true }
-                    .padding(horizontal = 14.dp, vertical = 8.dp),
+                    .padding(horizontal = DesignTokens.Spacing.Medium),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
@@ -233,12 +238,13 @@ private fun DndAbilityFace(
                         model,
                         null,
                         imageLoader = context.images,
-                        colorFilter = ColorFilter.tint(color),
+                        colorFilter = ColorFilter.tint(WebPalette.TextSecondary),
                         modifier = Modifier.size(if (compact) 32.dp else 26.dp),
                     )
                 }
                 Text(
                     signed(checkRequest.bonus),
+                    Modifier.alignByBaseline(),
                     style =
                         if (compact) ShareTypography.sheetStatCompact
                         else ShareTypography.sheetStat,
@@ -246,6 +252,7 @@ private fun DndAbilityFace(
                 )
                 Text(
                     "($score)",
+                    Modifier.alignByBaseline(),
                     color = WebPalette.TextMuted,
                     fontSize = if (compact) 18.sp else 15.sp,
                 )
@@ -257,6 +264,9 @@ private fun DndAbilityFace(
                     ability.id,
                 )
             }
+        }
+        if (skills.isNotEmpty()) {
+            item("skill-gap") { Spacer(Modifier.height(DesignTokens.Spacing.Small)) }
         }
         items(skills, key = { "skill:$it" }) { id ->
             val skill = data["skills"].objectValue()[id].objectValue()
@@ -290,7 +300,7 @@ private fun DndAbilityFace(
             )
             Row(
                 Modifier.fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 2.dp)
+                    .padding(horizontal = DesignTokens.Spacing.Medium, vertical = 2.dp)
                     .heightIn(min = valueHeight),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -302,23 +312,23 @@ private fun DndAbilityFace(
                 ) {
                     Text(
                         title,
+                        Modifier.weight(1f, fill = false),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         fontSize = if (compact) 15.sp else 13.sp,
-                        color = if (rank > 0) WebPalette.Text else WebPalette.TextSecondary,
+                        color = WebPalette.Text,
                     )
-                    HorizontalDivider(Modifier.weight(1f))
+                    if (rank > 0) AbilityProficiencyMarker(rank)
                 }
                 SheetRollModeBadge(context.mechanics, request)
                 Surface(
                     onClick = { skillActions = true },
+                    modifier = Modifier.semantics {
+                        if (rank > 0) stateDescription = if (rank >= 2) "Мастерство" else "Владение"
+                    },
                     enabled = !presentation.expanded,
-                    color =
-                        if (rank > 0)
-                            color
-                                .copy(alpha = if (rank > 1) .28f else .18f)
-                                .compositeOver(WebPalette.Raised)
-                        else WebPalette.Raised,
+                    color = WebPalette.Raised,
+                    contentColor = WebPalette.Text,
                     shape = RoundedCornerShape(if (compact) 9.dp else 7.dp),
                 ) {
                     Box(
@@ -334,7 +344,6 @@ private fun DndAbilityFace(
                             fontSize = if (compact) 16.sp else 13.sp,
                             lineHeight = if (compact) 16.sp else 13.sp,
                             fontWeight = FontWeight.Bold,
-                            color = if (rank > 0) WebPalette.Text else WebPalette.TextSecondary,
                         )
                     }
                     SheetRollActions(
@@ -345,6 +354,18 @@ private fun DndAbilityFace(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun AbilityProficiencyMarker(rank: Int) {
+    Row(horizontalArrangement = Arrangement.spacedBy(DesignTokens.Spacing.Xs)) {
+        repeat(rank.coerceAtMost(2)) {
+            Box(
+                Modifier.size(DesignTokens.Spacing.Compact)
+                    .background(WebPalette.TextSecondary, CircleShape)
+            )
         }
     }
 }
