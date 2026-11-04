@@ -2,8 +2,8 @@
 
 Игровой слой, транзакционные серверные команды, общие проверочные примеры
 JavaScript/Kotlin и получение внешних изменений реализованы в текущем переносе.
-Текущее поведение описывают [контракт клиента](../md/features/native-client.md)
-и [игровые действия](../md/features/native-character-mechanics.md).
+Текущее поведение описывают [контракт клиента](../.contextshare/wiki/features/native-client.md)
+и [игровые действия](../.contextshare/wiki/features/native-character-mechanics.md).
 
 ## Дальнейшая оптимизация
 

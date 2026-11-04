@@ -10,7 +10,7 @@
     "status": "planned",
     "title": "Полное рабочее место сессии на Android",
     "version": 1,
-    "source_path": "md/features/native-client.md"
+    "source_path": ".contextshare/wiki/features/native-client.md"
   },
   "platforms": []
 }

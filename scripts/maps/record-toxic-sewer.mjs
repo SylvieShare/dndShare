@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { wikiPath, writeWikiDocument } from "./contextshare-wiki.mjs";
 const root = path.resolve(import.meta.dirname, "../..");
 const base = path.join(root, "models/collections/toxic-sewer");
 const registry = JSON.parse(
@@ -64,8 +65,9 @@ const rows = reports
       `| ${m.sourceCode} ${m.sourceName} | \`${m.id}\` | ${m.assets.render.sha256.slice(0, 12)} | ${m.assets.render.size.toLocaleString("ru-RU")} Б | ${m.assets.lod.size.toLocaleString("ru-RU")} Б | ${m.assets.shadow.size.toLocaleString("ru-RU")} Б | ${m.assets.preview.size.toLocaleString("ru-RU")} Б |`,
   )
   .join("\n");
-const file = path.join(root, "md/features/toxic-sewer.md");
-let text = await fs.readFile(file, "utf8");
+const page = "features/toxic-sewer.md";
+const previous = await fs.readFile(wikiPath(root, page), "utf8");
+let text = previous;
 const publicationDates = [
   ...new Set(
     reports.map(({ report }) =>
@@ -94,7 +96,7 @@ text =
   "| Модель | UUID модели | Render SHA-256 | Render | LOD | Shadow | Preview |\n| --- | --- | --- | --- | --- | --- | --- |\n" +
   rows +
   text.slice(end);
-await fs.writeFile(file, text);
+await writeWikiDocument(root, page, previous, text);
 const total = [...unique.values()].reduce((sum, n) => sum + n, 0);
 await fs.writeFile(
   path.join(base, "publication-summary.json"),

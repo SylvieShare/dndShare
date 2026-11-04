@@ -146,7 +146,7 @@ ShareSubheader образует капсулу Subheader; IconNavigation.pill з
 активного раздела. Анимация индикатора читается в placement, не пересоздаёт
 содержимое вкладок на каждом кадре. Desktop сохраняет прежнее оформление.
 
-[Android-клиент](../README.md) · [Контракт](../../md/features/native-client.md)
+[Android-клиент](../README.md) · [Контракт](../../.contextshare/wiki/features/native-client.md)
 
 ShareChromeLayout владеет верхним safeDrawing и фиксированным footer. IME уменьшает viewport через imePadding;
 его величина исключается из нижнего внутреннего safeDrawing-отступа,

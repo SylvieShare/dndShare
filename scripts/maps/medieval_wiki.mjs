@@ -2,9 +2,11 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import assert from 'node:assert/strict';
+import { wikiPath, writeWikiDocument } from './contextshare-wiki.mjs';
 
-const folder = root => path.join(root, 'md/features/medieval-town');
-const overview = root => path.join(root, 'md/features/medieval-town.md');
+const topic = 'features/medieval-town';
+const folder = root => wikiPath(root, topic);
+const overview = root => wikiPath(root, topic + '.md');
 const rowPattern = code => new RegExp('^\\| ' + code + ' [^\\n]+$', 'm');
 
 async function journals(root) {
@@ -28,7 +30,8 @@ export async function writeMedievalWikiRow(root, { code, row, count, frameCount,
   assert.match(code, /^MT1-\d{3}$/);
   assert.ok(rowPattern(code).test(row) && !/[\r\n]/.test(row), 'One complete table row required');
   const home = overview(root);
-  let index = await fs.readFile(home, 'utf8');
+  const previousIndex = await fs.readFile(home, 'utf8');
+  let index = previousIndex;
   assert.ok(index.includes('\n\n## Связанные страницы'), 'Overview footer missing');
   const summary = /^Опубликованы и подтверждены \d+ из \d+ моделей:[^\n]+$/m;
   assert.ok(summary.test(index), 'Publication summary missing from overview');
@@ -38,22 +41,24 @@ export async function writeMedievalWikiRow(root, { code, row, count, frameCount,
   let writtenName;
   if (existing) {
     writtenName = path.basename(existing.file);
-    await fs.writeFile(existing.file, existing.text.replace(rowPattern(code), row));
+    await writeWikiDocument(root, topic + '/' + writtenName, existing.text, existing.text.replace(rowPattern(code), row));
   } else {
     const updates = (await journals(root)).filter(name => name.startsWith('catalogue-updates-'));
-    let name = updates.at(-1), text = name ? await fs.readFile(path.join(folder(root), name), 'utf8') : '';
+    let name = updates.at(-1), previous = name ? await fs.readFile(path.join(folder(root), name), 'utf8') : undefined;
+    let text = previous || '';
     if (!name || text.length + row.length > 24000) {
       const number = updates.length + 1;
       name = `catalogue-updates-${String(number).padStart(2, '0')}.md`;
+      previous = undefined;
       text = `# Medieval Town: дополнительные публикации ${number}\n\nСтатус: журнал подтверждённых публикаций конкретных моделей.\n\n| Код | UUID | Материалы и QA | render / LOD / shadow / preview, Б |\n| --- | --- | --- | --- |\n\n## Связанные страницы\n\n[Medieval Town](../medieval-town.md)\n`;
     }
     assert.ok(text.includes('\n\n## Связанные страницы'), 'Journal footer missing');
     text = text.replace('\n\n## Связанные страницы', `\n${row}\n\n## Связанные страницы`);
-    await fs.writeFile(path.join(folder(root), name), text);
+    await writeWikiDocument(root, topic + '/' + name, previous, text);
     writtenName = name;
   }
   const link = `medieval-town/${writtenName}`;
   if (!index.includes(`](${link})`))
     index = index.replace('\n\n## Связанные страницы', `\n\n- [Журнал подтверждённых публикаций ${writtenName}](${link})\n\n## Связанные страницы`);
-  await fs.writeFile(home, index);
+  await writeWikiDocument(root, topic + '.md', previousIndex, index);
 }

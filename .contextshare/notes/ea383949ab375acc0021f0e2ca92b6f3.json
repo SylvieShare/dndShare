@@ -10,7 +10,7 @@
     "status": "current",
     "title": "Офлайн-сохранение листа",
     "version": 1,
-    "source_path": "md/features/native-client.md"
+    "source_path": ".contextshare/wiki/features/native-client.md"
   },
   "platforms": [
     {

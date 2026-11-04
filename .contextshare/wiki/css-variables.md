@@ -1,0 +1,147 @@
+# CSS variables
+
+The shared application palette lives in `@sylvieshare/share-ui/styles.css`.
+Product dimensions, responsive thresholds, typography roles and the exact purple
+accent shades come from [design/tokens.json](../../design/tokens.json), generated into
+`frontend/src/app/design-tokens.css`/JS and Android Compose tokens.
+The product `theme.css` imports generated CSS, including for isolated UI fixtures.
+`frontend/src/app/theme.css` contains domain colors, product font stacks and the
+player-handout paper palettes. Local `fonts.css` supplies variable WOFF2 from the
+same pinned TTF files as Android; see [design sources](../../design/README.md). Component styles must use these tokens;
+`npm run check:colors` rejects direct hex/RGB/HSL colors and removed legacy
+tokens.
+
+The package defines `--accent-hover` and `--accent-soft` from `--accent`, so a
+consumer can normally select one product accent. DnD Share overrides all three
+to preserve its established palette. TrenchShare can set a green `--accent`,
+and HavenShare may set it at runtime on `document.documentElement`.
+
+## Surface model
+
+`--map-screen-void` — тёмный фон выключенного экрана игрового стола,
+независимый от темы приложения. Задан в product theme. Цвета материалов,
+стен и тумана внутри WebGL renderer — палитра содержимого карты;
+панели редактора используют обычные share-ui tokens.
+
+The dark UI uses one application canvas plus a compact surface scale. Do not create component-specific grey colors.
+
+| Token | Value | Purpose |
+| --- | --- | --- |
+| `--bg` | `#17171b` | Background of every form, wizard and editor, plus global header chrome. |
+| `--app-canvas-bg` | `var(--bg)` | Shared routed-page and session-canvas background. |
+| `--app-canvas-dot-color` | 42% of `--border-strong` | Shared color for the global and session-canvas dot grid. |
+| `--app-canvas-dot-size` | `24px` | Shared static dot-grid step; session zoom scales the same base step. |
+| `--app-canvas-pattern` | 1px radial dot | Reusable global page backdrop pattern. |
+| `--surface` | `#27272e` | Cards, tiles and unified content panels on `--bg`. |
+| `--subheader` | `#35313f` | Navigation capsules, visually separate from base cards. |
+| `--surface-raised` | `#34343e` | Inputs, selects, toggles and quiet buttons. This is the default control background on `--bg`. |
+| `--surface-active` | `#42424f` | Hovered, pressed and selected neutral controls. |
+| `--popover-bg` | `#202024` | Dropdowns, tooltips and detached popovers. |
+| `--scrim` | black at 62% | Modal/overlay dimming. |
+
+Canvas rule: every routed screen inherits the shared `--app-canvas-bg` plus
+`--app-canvas-pattern` backdrop from `App.vue`; print mode explicitly removes
+the pattern. Full-page features stay transparent unless their working canvas
+must deliberately hide the global grid: the full character-creation wizard uses opaque `--bg`; the handbook overview
+stays transparent and handbook list rows use `--surface`. The
+pannable session chapter grid may reposition and scale the pattern, but must use
+the same background and dot-color tokens. The global header and regular forms,
+editors and modal bodies use `--bg`; toolbar chrome inside a `--bg` editor uses
+`--surface`. The session command bar and desktop sidebar use the same surface with a
+`--border-strong` divider and a short shadow. The sidebar opts into
+`AppSidebar.elevated` throughout the application. A standard modal header uses
+`--surface`, while its body and footer use `--bg`, matching the contrast model of
+character-sheet morph editors. Fields are `var(--surface-raised)`, field borders
+are `var(--border-strong)`, and focus is `var(--accent)`. `AppModal`/`AppModalFrame`
+already supply this modal canvas; do not wrap their content in an additional grey panel.
+
+## Lines and text
+
+| Token | Purpose |
+| --- | --- |
+| `--border` | Quiet dividers and card outlines. |
+| `--border-strong` | Field, modal and popover borders. |
+| `--text-1` | Primary text. |
+| `--text-2` | Secondary text. |
+| `--text-muted` | Labels, placeholders, disabled/decorative text. |
+| `--text-on-accent` | Text/icons on filled accent and semantic buttons. |
+
+Three text levels are enough. Do not reintroduce a separate faint text color; non-essential text uses `--text-muted`.
+
+## Product and semantic colors
+
+| Token | Purpose |
+| --- | --- |
+| `--accent` | Navigation, selection, links and the primary action. |
+| `--accent-hover` | Hover/pressed state of a filled accent control. |
+| `--accent-soft` | Accent text on a quiet tinted surface; also attack highlights. |
+| `--danger` | Errors, destructive actions and low HP. |
+| `--success` | Confirmation, healthy HP and positive state. |
+| `--warning` | Warning, pause and gold state. |
+| `--info` | Informational/planned/blue state. |
+
+Use `color-mix()` for translucent states instead of adding another color:
+
+```css
+.selected {
+  color: var(--accent-soft);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 38%, transparent);
+}
+```
+
+`--side-enemy`, `--side-neutral` and `--side-minion` are the only extra UI colors. They encode encounter sides, not generic states. Ally and player reuse `--success` and `--info`.
+
+Styled player notes use paired `--material-note-*-bg/text/border` content
+tokens for parchment, letter, dossier and arcane designs. They describe the
+transmitted artifact itself and must not be reused for application chrome.
+
+## Shape, effects and typography
+
+| Tokens | Purpose |
+| --- | --- |
+| `--shadow-lg` | Modal, menu and detached-surface shadow. |
+| `--r-xs`, `--r-sm`, `--r-md`, `--r-lg`, `--r-pill` | Shared radius scale. |
+| `--font-ui` | All controls, body text and numeric data. |
+| `--font-display` | Entity names and display headings at readable display sizes; DnD Share uses variable Cormorant Garamond 500–700. |
+| `--font-prose` | Long-form descriptions, rules, world notes and rich-text editor content; DnD Share uses variable Literata 400–700 with optical sizing and italic. |
+| `--font-mono` | Logs, identifiers, data keys, formulas and other technical text. |
+| `--font-print-ui`, `--font-print-display`, `--font-print-prose` | Print-only role stacks. They currently preserve the proven Arial/Georgia metrics and must not be changed without pagination QA. |
+
+Keep functional numbers in the UI font with `font-variant-numeric: tabular-nums`;
+display-serif digits are easy to misread. Compact summaries, hints, operational
+messages and card snippets also remain UI text even when their CSS class contains
+`description`. Use prose for text intended to be read as sentences or paragraphs,
+not merely scanned.
+
+## Allowed raw-color exceptions
+
+Raw values are allowed only where color is data rather than application chrome:
+
+- Presets owned by share-ui and stored user/entity colors;
+- rarity/album/dice palettes that must emit or persist concrete hex values;
+- the `PotionVial`, `SpellSlotSphere` and `SystemDie` CSS/SVG illustrations;
+- SVG masks and generated screenshot/canvas color parsing where a concrete value is technically required.
+
+Do not use those exceptions for page, card, form, modal, text, border, hover or status styling.
+
+## Global utility classes
+
+Declared in `App.vue`:
+
+| Class | Use |
+| --- | --- |
+| `.sheet-tag-chip` / `.sheet-tag-remove` | Shared sheet tag chip. |
+| `.sheet-tile-title` | Small uppercase title at the top of a tile. |
+
+### Колонка игроков сессии
+
+В `.campaign-workspace` ширина задаётся `--participant-rail-width: 264px`.
+`--participant-selection-width: 36px` и `--participant-card-gap: 9px` общие для
+карточки и колонки. Их сумма `--participant-selection-extra` прибавляется в бою
+к ширине колонки и безопасной области карты истории. Карточка использует ту же
+сумму для скрытия полосы галочки вне боя; ширина имени/HP сохраняется.
+
+## Связанные страницы
+
+[Оглавление wiki](README.md)

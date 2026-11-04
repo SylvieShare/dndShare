@@ -12,14 +12,14 @@
       "summary": "Данные, броски, интерфейс листа и сохранение правок.",
       "title": "Лист персонажа",
       "paths": [
-        "md/features/character-editor*",
-        "md/features/dice.md",
-        "md/features/journals.md",
-        "md/features/warlock-invocations.md",
-        "md/features/spell-concentration.md",
-        "md/features/spell-saving-throws.md",
-        "md/features/weapons.md",
-        "md/features/armor.md"
+        ".contextshare/wiki/features/character-editor*",
+        ".contextshare/wiki/features/dice.md",
+        ".contextshare/wiki/features/journals.md",
+        ".contextshare/wiki/features/warlock-invocations.md",
+        ".contextshare/wiki/features/spell-concentration.md",
+        ".contextshare/wiki/features/spell-saving-throws.md",
+        ".contextshare/wiki/features/weapons.md",
+        ".contextshare/wiki/features/armor.md"
       ]
     },
     {
@@ -27,7 +27,7 @@
       "summary": "Самостоятельный редактор, библиотека, рендер и черновики.",
       "title": "Редактор карт",
       "paths": [
-        "md/features/maps*"
+        ".contextshare/wiki/features/maps*"
       ]
     },
     {
@@ -35,10 +35,10 @@
       "summary": "Рабочее место мастера, хроника и действия игрока.",
       "title": "Сессии",
       "paths": [
-        "md/features/sessions*",
-        "md/features/session-damage.md",
-        "md/features/master-tools.md",
-        "md/features/music.md"
+        ".contextshare/wiki/features/sessions*",
+        ".contextshare/wiki/features/session-damage.md",
+        ".contextshare/wiki/features/master-tools.md",
+        ".contextshare/wiki/features/music.md"
       ]
     },
     {
@@ -46,12 +46,12 @@
       "summary": "Создание персонажа, обучение, игровые редакции и правила игроков.",
       "title": "Персонажи и правила",
       "paths": [
-        "md/features/character-list.md",
-        "md/features/player-game-context.md",
-        "md/features/player-rules.md",
-        "md/features/rules-editions.md",
-        "md/features/starting-shop.md",
-        "md/features/tutorials*"
+        ".contextshare/wiki/features/character-list.md",
+        ".contextshare/wiki/features/player-game-context.md",
+        ".contextshare/wiki/features/player-rules.md",
+        ".contextshare/wiki/features/rules-editions.md",
+        ".contextshare/wiki/features/starting-shop.md",
+        ".contextshare/wiki/features/tutorials*"
       ]
     },
     {
@@ -59,13 +59,13 @@
       "summary": "Схемы записей, каталог, управление контентом и игровые автоматизации.",
       "title": "Справочник",
       "paths": [
-        "md/features/catalogue-editor.md",
-        "md/features/handbook.md",
-        "md/features/item-automation.md",
-        "md/features/items.md",
-        "md/features/magic-items.md",
-        "md/features/potion-automation.md",
-        "md/features/ability-editor*"
+        ".contextshare/wiki/features/catalogue-editor.md",
+        ".contextshare/wiki/features/handbook.md",
+        ".contextshare/wiki/features/item-automation.md",
+        ".contextshare/wiki/features/items.md",
+        ".contextshare/wiki/features/magic-items.md",
+        ".contextshare/wiki/features/potion-automation.md",
+        ".contextshare/wiki/features/ability-editor*"
       ]
     },
     {
@@ -73,18 +73,18 @@
       "summary": "Пайплайн 3D-моделей, коллекции, конкретные рецепты, миниатюры и изображения.",
       "title": "Модели и медиа",
       "paths": [
-        "md/assets/*",
-        "md/handbook-media.md",
-        "md/handbook-art-style.md",
-        "md/mascot.md",
-        "md/features/creature-model-*",
-        "md/features/lost-cave*",
-        "md/features/majestic-highlands*",
-        "md/features/medieval-town*",
-        "md/features/maps-model*",
-        "md/features/maps-textures.md",
-        "md/features/toxic-sewer.md",
-        "md/features/item-models.md"
+        ".contextshare/wiki/assets/*",
+        ".contextshare/wiki/handbook-media.md",
+        ".contextshare/wiki/handbook-art-style.md",
+        ".contextshare/wiki/mascot.md",
+        ".contextshare/wiki/features/creature-model-*",
+        ".contextshare/wiki/features/lost-cave*",
+        ".contextshare/wiki/features/majestic-highlands*",
+        ".contextshare/wiki/features/medieval-town*",
+        ".contextshare/wiki/features/maps-model*",
+        ".contextshare/wiki/features/maps-textures.md",
+        ".contextshare/wiki/features/toxic-sewer.md",
+        ".contextshare/wiki/features/item-models.md"
       ]
     },
     {
@@ -92,10 +92,10 @@
       "summary": "Vue, навигация, адаптивность, общие компоненты, палитра и share-ui.",
       "title": "Веб и дизайн",
       "paths": [
-        "md/frontend*",
-        "md/composition-api.md",
-        "md/css-variables.md",
-        "md/loading-states.md"
+        ".contextshare/wiki/frontend*",
+        ".contextshare/wiki/composition-api.md",
+        ".contextshare/wiki/css-variables.md",
+        ".contextshare/wiki/loading-states.md"
       ]
     },
     {
@@ -103,7 +103,7 @@
       "summary": "Нативный клиент, офлайн-режим, синхронизация, механики и графика.",
       "title": "Android",
       "paths": [
-        "md/features/native-*"
+        ".contextshare/wiki/features/native-*"
       ]
     },
     {
@@ -111,12 +111,12 @@
       "summary": "HTTP и MCP, авторизация, администрирование и реализация на Go.",
       "title": "API и сервер",
       "paths": [
-        "md/api*",
-        "md/backend.md",
-        "md/features/auth.md",
-        "md/features/admin.md",
-        "md/features/mcp.md",
-        "md/features/console-errors.md"
+        ".contextshare/wiki/api*",
+        ".contextshare/wiki/backend.md",
+        ".contextshare/wiki/features/auth.md",
+        ".contextshare/wiki/features/admin.md",
+        ".contextshare/wiki/features/mcp.md",
+        ".contextshare/wiki/features/console-errors.md"
       ]
     },
     {
@@ -124,8 +124,8 @@
       "summary": "Схема PostgreSQL, миграции, документы, патчи и согласованность.",
       "title": "Данные и синхронизация",
       "paths": [
-        "md/database*",
-        "md/document-sync.md"
+        ".contextshare/wiki/database*",
+        ".contextshare/wiki/document-sync.md"
       ]
     },
     {
@@ -134,8 +134,8 @@
       "title": "Разработка и выпуск",
       "paths": [
         "README.md",
-        "md/README.md",
-        "md/reports/*"
+        ".contextshare/wiki/README.md",
+        ".contextshare/wiki/reports/*"
       ]
     },
     {
@@ -143,8 +143,8 @@
       "summary": "Карты мира, маршруты путешествий и транспорт.",
       "title": "Мир и путешествия",
       "paths": [
-        "md/features/global-maps.md",
-        "md/features/transport.md"
+        ".contextshare/wiki/features/global-maps.md",
+        ".contextshare/wiki/features/transport.md"
       ]
     },
     {
@@ -152,12 +152,13 @@
       "summary": "Датированные прогоны, приёмка и публикации 3D-моделей и медиа справочника.",
       "title": "Журналы производства",
       "paths": [
-        "md/reports/creature-*",
-        "md/reports/majestic-catalogue-*",
-        "md/reports/medieval-town-completion-*",
-        "md/reports/water-catalogue-*"
+        ".contextshare/wiki/reports/creature-*",
+        ".contextshare/wiki/reports/majestic-catalogue-*",
+        ".contextshare/wiki/reports/medieval-town-completion-*",
+        ".contextshare/wiki/reports/water-catalogue-*"
       ]
     }
   ],
-  "fallback_section": "55a6557a71af140ba3bba903c3504ab6"
+  "fallback_section": "55a6557a71af140ba3bba903c3504ab6",
+  "wiki_dir": ".contextshare/wiki"
 }

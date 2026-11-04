@@ -4,7 +4,7 @@
 
 ## Классы: срез 2–12 сентября 2026
 
-Источник: [class-automation-audit.md](../md/class-automation-audit.md).
+Источник: [class-automation-audit.md](../.contextshare/wiki/class-automation-audit.md).
 
 ## Механики, требующие отдельного проектирования
 
@@ -67,7 +67,7 @@
 
 ## Заклинания: рекомендации среза 19 сентября 2026
 
-Источник: [spell-automation-audit.md](../md/spell-automation-audit.md).
+Источник: [spell-automation-audit.md](../.contextshare/wiki/spell-automation-audit.md).
 
 ## Следующие решения
 
@@ -105,7 +105,7 @@
 
 ## Магические предметы: срез 12 сентября 2026
 
-Источник: [magic-item-automation-audit.md](../md/magic-item-automation-audit.md).
+Источник: [magic-item-automation-audit.md](../.contextshare/wiki/magic-item-automation-audit.md).
 
 ## Следующие направления
 
