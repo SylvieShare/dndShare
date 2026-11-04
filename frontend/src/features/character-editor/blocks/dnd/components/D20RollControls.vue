@@ -1,18 +1,14 @@
 <template>
     <div class="d20-roll-controls">
-      <div class="d20-roll-mode" role="group" aria-label="Режим броска">
-        <ToggleSwitch v-model="disadvantage" label="Помеха" />
-        <span class="d20-roll-divider" role="separator" aria-orientation="vertical" />
-        <ToggleSwitch v-model="advantage" label="Преимущество" />
-      </div>
+      <RollModePicker v-model="rollMode" :disabled="disabled" />
       <RollBonusOptions v-if="scope" :scope="scope" :character-context="characterContext" :roll-context="rollContext" v-model="excludedBonuses" />
       <RowActionItem :action="action" :disabled="disabled" @click="!disabled && emit('roll', rollMode, excludedBonuses)">{{ rollLabel }}</RowActionItem>
     </div>
 </template>
 <script setup>
 import RollBonusOptions from './RollBonusOptions.vue'
-import { computed, ref } from 'vue'
-import { ToggleSwitch } from '@sylvieshare/share-ui'
+import { ref } from 'vue'
+import RollModePicker from './RollModePicker.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 const props = defineProps({
   mode: { type: String, default: 'normal' },
@@ -27,13 +23,8 @@ const props = defineProps({
 const emit = defineEmits(['roll'])
 const excludedBonuses = ref([])
 // A fresh menu snapshots the resolved sheet settings for this roll only.
-const advantage = ref(props.cancelled || props.mode === 'advantage')
-const disadvantage = ref(props.cancelled || props.mode === 'disadvantage')
-const rollMode = computed(() => advantage.value === disadvantage.value
-  ? 'normal' : advantage.value ? 'advantage' : 'disadvantage')
+const rollMode = ref(props.cancelled ? 'normal' : props.mode)
 </script>
 <style scoped>
-.d20-roll-controls { display: flex; flex-direction: column; gap: 10px; padding: 8px; min-width: 0; }
-.d20-roll-mode { display: grid; grid-template-columns: auto 1px auto; align-items: center; justify-content: space-between; gap: 8px; }
-.d20-roll-divider { width: 1px; height: 22px; background: var(--border); }
+.d20-roll-controls { display: flex; flex-direction: column; gap: 10px; padding: 8px; width: var(--layout-roll-mode-menu-width); max-width: calc(100vw - 32px); box-sizing: border-box; }
 </style>

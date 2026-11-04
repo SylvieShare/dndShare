@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test'
 
-for (const mobile of [false, true]) {
-  test.describe(`stat roll menu ${mobile ? 'mobile' : 'desktop'}`, () => {
+for (const width of [390, 834, 1920]) {
+  test.describe(`stat roll menu at ${width}px`, () => {
     test.beforeEach(async ({ page }) => {
       page.on('pageerror', error => { throw error })
-      await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1400, height: 1000 })
+      await page.setViewportSize({ width, height: 900 })
       await page.goto('/tests/tutorials/fixtures/stat-rolls.html')
     })
 
@@ -12,22 +12,22 @@ for (const mobile of [false, true]) {
       const cases = [
         { label: 'Ловкость — проверка', title: 'Ловкость — проверка', bonus: 3, advantage: false, disadvantage: true, mode: 'disadvantage', scope: 'ability_check' },
         { label: 'Ловкость — спасбросок', title: 'Ловкость — спасбросок', bonus: 6, advantage: true, disadvantage: false, mode: 'advantage', scope: 'saving_throw' },
-        { label: 'Скрытность — проверка', title: 'Скрытность', bonus: 7, advantage: true, disadvantage: true, mode: 'normal', scope: 'ability_check' },
+        { label: 'Скрытность — проверка', title: 'Скрытность', bonus: 7, advantage: false, disadvantage: false, mode: 'normal', scope: 'ability_check' },
       ]
       for (const [index, entry] of cases.entries()) {
         await page.getByRole('button', { name: entry.label, exact: true }).click()
         const menu = page.getByRole('menu')
         await expect(menu).toBeVisible()
         expect(await page.evaluate(() => window.rolls.length)).toBe(index)
-        const advantage = menu.getByRole('switch', { name: 'Преимущество' })
-        const disadvantage = menu.getByRole('switch', { name: 'Помеха' })
-        await expect(advantage).toHaveAttribute('aria-checked', String(entry.advantage))
-        await expect(disadvantage).toHaveAttribute('aria-checked', String(entry.disadvantage))
+        const advantage = menu.getByRole('button', { name: 'Преимущество', exact: true })
+        const disadvantage = menu.getByRole('button', { name: 'Помеха', exact: true })
+        await expect(advantage).toHaveAttribute('aria-pressed', String(entry.advantage))
+        await expect(disadvantage).toHaveAttribute('aria-pressed', String(entry.disadvantage))
         const a = await advantage.boundingBox(), d = await disadvantage.boundingBox()
         expect(Math.abs(a.y - d.y)).toBeLessThan(2)
         const bounds = await menu.boundingBox()
         expect(bounds.x).toBeGreaterThanOrEqual(0)
-        expect(bounds.x + bounds.width).toBeLessThanOrEqual(mobile ? 390 : 1400)
+        expect(bounds.x + bounds.width).toBeLessThanOrEqual(width)
         await menu.getByRole('menuitem', { name: 'Бросить', exact: true }).click()
         await expect(menu).toHaveCount(0)
         const roll = await page.evaluate(() => window.rolls.at(-1))
@@ -58,25 +58,32 @@ for (const mobile of [false, true]) {
       const menu = page.getByRole('menu')
       await trigger.focus()
       await page.keyboard.press('Enter')
-      await menu.getByRole('switch', { name: 'Помеха' }).click()
+      const advantage = menu.getByRole('button', { name: 'Преимущество', exact: true })
+      const disadvantage = menu.getByRole('button', { name: 'Помеха', exact: true })
+      await disadvantage.click()
       await menu.getByRole('menuitem', { name: 'Бросить', exact: true }).click()
       expect(await page.evaluate(() => window.rolls.at(-1).mode)).toBe('normal')
       await trigger.click()
-      await expect(menu.getByRole('switch', { name: 'Помеха' })).toHaveAttribute('aria-checked', 'true')
-      await menu.getByRole('switch', { name: 'Преимущество' }).click()
+      await expect(disadvantage).toHaveAttribute('aria-pressed', 'true')
+      await advantage.press('Space')
+      await expect(advantage).toHaveAttribute('aria-pressed', 'true')
+      await expect(disadvantage).toHaveAttribute('aria-pressed', 'false')
+      await disadvantage.click()
+      await expect(disadvantage).toHaveAttribute('aria-pressed', 'true')
+      await expect(advantage).toHaveAttribute('aria-pressed', 'false')
       await page.keyboard.press('Escape')
       await expect(menu).toHaveCount(0)
       await page.evaluate(() => { window.statState.checkEffects = [{ mode: 'advantage' }] })
       await trigger.click()
-      await expect(menu.getByRole('switch', { name: 'Преимущество' })).toHaveAttribute('aria-checked', 'true')
-      await expect(menu.getByRole('switch', { name: 'Помеха' })).toHaveAttribute('aria-checked', 'false')
+      await expect(advantage).toHaveAttribute('aria-pressed', 'true')
+      await expect(disadvantage).toHaveAttribute('aria-pressed', 'false')
       await page.mouse.click(5, 5)
       await expect(menu).toHaveCount(0)
       await page.evaluate(() => { window.statState.value.check_roll_mode = 'normal' })
       await trigger.click()
-      await expect(menu.getByRole('switch', { name: 'Преимущество' })).toHaveAttribute('aria-checked', 'false')
-      await expect(menu.getByRole('switch', { name: 'Помеха' })).toHaveAttribute('aria-checked', 'false')
-      await menu.getByRole('switch', { name: 'Преимущество' }).click()
+      await expect(advantage).toHaveAttribute('aria-pressed', 'false')
+      await expect(disadvantage).toHaveAttribute('aria-pressed', 'false')
+      await advantage.click()
       await menu.getByRole('menuitem', { name: 'Бросить', exact: true }).click()
       expect(await page.evaluate(() => window.rolls.map(roll => roll.mode))).toEqual(['normal', 'advantage'])
       expect(await page.evaluate(() => window.writes)).toEqual([])

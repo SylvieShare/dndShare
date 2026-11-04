@@ -85,8 +85,6 @@ internal fun WeaponActionsDialog(
             listOf(
                     "auto" to "Авто",
                     "normal" to "Обычно",
-                    "advantage" to "Преимущество",
-                    "disadvantage" to "Помеха",
                 )
                 .forEach { (value, title) ->
                     ShareChoiceChip(
@@ -97,6 +95,7 @@ internal fun WeaponActionsDialog(
                     )
                 }
         }
+        SheetRollModePicker(mode, { mode = it }, neutralMode = "auto", enabled = !busy)
         ShareAction(
             "Атака ${signed(weapon.attack)}",
             { attack(options) },

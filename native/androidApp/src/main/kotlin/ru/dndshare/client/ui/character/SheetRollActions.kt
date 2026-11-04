@@ -16,41 +16,23 @@ internal fun SheetRollActions(
     editTarget: String?,
 ) {
     val context = LocalCharacterSheet.current
-    var advantage by remember { mutableStateOf(false) }
-    var disadvantage by remember { mutableStateOf(false) }
+    var mode by remember { mutableStateOf("normal") }
     LaunchedEffect(open) {
         if (open) {
             val modes =
                 if (request.manualMode == "auto") rollEffects(context.mechanics, request).first
-                else listOf(request.manualMode)
-            advantage = "advantage" in modes
-            disadvantage = "disadvantage" in modes
+                else emptyList()
+            mode = automaticRollMode(request.manualMode, modes)
         }
     }
-    ShareDropdownMenu(open, close) {
-        Row(
-            Modifier.padding(horizontal = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-        ) {
-            ShareChoiceChip(
-                disadvantage,
-                { disadvantage = !disadvantage },
-                label = { Text("Помеха") },
-            )
-            ShareChoiceChip(advantage, { advantage = !advantage }, label = { Text("Преимущество") })
-        }
+    ShareDropdownMenu(open, close, Modifier.width(DesignTokens.Layout.RollModeMenuWidth)) {
+        SheetRollModePicker(mode, { mode = it }, enabled = open)
         ShareDropdownMenuItem(
             text = { Text("Бросить кубик") },
             leadingIcon = { AppGlyph(Glyph.Dice, Modifier.size(18.dp)) },
             onClick = {
                 close()
-                context.roll(
-                    request.copy(
-                        manualMode =
-                            if (advantage == disadvantage) "normal"
-                            else if (advantage) "advantage" else "disadvantage"
-                    )
-                )
+                context.roll(request.copy(manualMode = mode))
             },
         )
         if (context.canEdit && editTarget != null)

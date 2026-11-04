@@ -1,34 +1,31 @@
 <template>
-  <div class="weapon-roll-controls" role="group" :aria-label="scope === 'attack' ? 'Атака' : 'Урон'">
-    <div v-if="scope === 'attack'" class="weapon-attack-roll-mode" role="group" aria-label="Режим броска атаки">
-      <ToggleSwitch label="Помеха" :model-value="attackRollMode === 'disadvantage'" :disabled="attackRollMode === 'advantage'" title="Два к20, берём меньший. Ручной выбор режима; выключите, чтобы учитывать эффекты персонажа автоматически." @update:model-value="value => setAttackMode('disadvantage', value)" />
-      <span class="weapon-attack-roll-divider" role="separator" aria-orientation="vertical" />
-      <ToggleSwitch label="Преимущество" :model-value="attackRollMode === 'advantage'" :disabled="attackRollMode === 'disadvantage'" title="Два к20, берём больший. Ручной выбор режима; выключите, чтобы учитывать эффекты персонажа автоматически." @update:model-value="value => setAttackMode('advantage', value)" />
-    </div>
+  <div class="weapon-roll-controls" :class="{ 'weapon-roll-controls--attack': scope === 'attack' }" role="group" :aria-label="scope === 'attack' ? 'Атака' : 'Урон'">
+    <RollModePicker v-if="scope === 'attack'" :model-value="attackRollMode" neutral-mode="auto" @update:model-value="emit('update:attackRollMode', $event)" />
     <template v-if="scope === 'damage'">
       <FormField label="Критическое попадание" title="Удваивает кости урона, но не постоянные прибавки.">
-        <ToggleSwitch :model-value="critical" aria-label="Критическое попадание" @update:model-value="$emit('update:critical', $event)" />
+        <ToggleSwitch :model-value="critical" aria-label="Критическое попадание" @update:model-value="emit('update:critical', $event)" />
       </FormField>
       <FormField v-if="bonusActionOption" label="Урон бонусным действием" :title="bonusActionOption.hint">
-        <ToggleSwitch :model-value="bonusAction" :disabled="twoHanded" aria-label="Урон бонусным действием" @update:model-value="!twoHanded && $emit('update:bonusAction', $event)" />
+        <ToggleSwitch :model-value="bonusAction" :disabled="twoHanded" aria-label="Урон бонусным действием" @update:model-value="!twoHanded && emit('update:bonusAction', $event)" />
       </FormField>
       <FormField v-if="versatile" label="Двумя руками" title="Использует кость урона для хвата двумя руками.">
-        <ToggleSwitch :model-value="twoHanded" :disabled="thrown || bonusAction" aria-label="Двумя руками" @update:model-value="!thrown && !bonusAction && $emit('update:twoHanded', $event)" />
+        <ToggleSwitch :model-value="twoHanded" :disabled="thrown || bonusAction" aria-label="Двумя руками" @update:model-value="!thrown && !bonusAction && emit('update:twoHanded', $event)" />
       </FormField>
     </template>
-    <WeaponRollOption v-for="option in (scope === 'attack' && useKey ? [] : modes)" :key="option.key" :option="option" @select="(key, value) => $emit('select', key, value)" @amount="(key, value) => $emit('amount', key, value)" />
+    <WeaponRollOption v-for="option in (scope === 'attack' && useKey ? [] : modes)" :key="option.key" :option="option" @select="(key, value) => emit('select', key, value)" @amount="(key, value) => emit('amount', key, value)" />
     <RowActionSeparator v-if="hasCustomOptions" />
     <WeaponBonusTransferSelector v-if="scope === 'attack' && transfer?.active" :transfer="transfer" :disabled="!charCtx.ownerMode" @change="setAmount" />
-    <WeaponRollOption v-for="use in scope === 'attack' ? uses : damageUses" :key="use.key" :option="useOption(use)" @select="(key, value) => $emit('update:useKey', value ? key : '')" />
-    <WeaponRollOption v-for="option in (scope === 'attack' && useKey ? [] : extras)" :key="option.key" :option="option" @select="(key, value) => $emit('select', key, value)" @amount="(key, value) => $emit('amount', key, value)" />
+    <WeaponRollOption v-for="use in scope === 'attack' ? uses : damageUses" :key="use.key" :option="useOption(use)" @select="(key, value) => emit('update:useKey', value ? key : '')" />
+    <WeaponRollOption v-for="option in (scope === 'attack' && useKey ? [] : extras)" :key="option.key" :option="option" @select="(key, value) => emit('select', key, value)" @amount="(key, value) => emit('amount', key, value)" />
     <RollBonusOptions v-if="scope === 'attack'" scope="attack" v-model="excludedBonuses" />
     <DamageFormulaPreview v-if="scope === 'damage'" :expression="preview" />
     <small v-if="blocked" role="alert">{{ blocked.resourceError }}</small>
-    <RowActionItem :disabled="!!blocked" :action="scope === 'attack' ? 'attack' : 'damage'" @click="!blocked && $emit('roll', excludedBonuses)">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</RowActionItem>
-    <WeaponUseDamageMenu v-if="scope === 'damage'" :weapon-uid="weaponUid" :uses="uses" @roll="$emit('roll-step', $event)" />
+    <RowActionItem :disabled="!!blocked" :action="scope === 'attack' ? 'attack' : 'damage'" @click="!blocked && emit('roll', excludedBonuses)">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</RowActionItem>
+    <WeaponUseDamageMenu v-if="scope === 'damage'" :weapon-uid="weaponUid" :uses="uses" @roll="emit('roll-step', $event)" />
   </div>
 </template>
 <script setup>
+import RollModePicker from './RollModePicker.vue'
 import RollBonusOptions from './RollBonusOptions.vue'
 import WeaponBonusTransferSelector from './WeaponBonusTransferSelector.vue'
 import { FormField, ToggleSwitch } from '@sylvieshare/share-ui'
@@ -65,13 +62,8 @@ const blocked = computed(() => props.useKey && (!chosenUse.value || chosenUse.va
   ? { resourceError: chosenUse.value?.error || 'Режим недоступен.' }
   : props.scope === 'damage' && props.options.find(option => option.checked && option.resourceError))
 const emit = defineEmits(['update:attackRollMode', 'update:useKey', 'update:critical', 'update:twoHanded', 'update:bonusAction', 'select', 'amount', 'roll', 'roll-step'])
-function setAttackMode(mode, checked) {
-  if (checked && props.attackRollMode !== 'auto' && props.attackRollMode !== mode) return
-  emit('update:attackRollMode', checked ? mode : 'auto')
-}
 </script>
 <style scoped>
-.weapon-attack-roll-mode { display: grid; grid-template-columns: auto 1px auto; align-items: center; justify-content: space-between; gap: 8px; }
-.weapon-attack-roll-divider { width: 1px; height: 22px; background: var(--border); }
 .weapon-roll-controls { display: flex; flex-direction: column; gap: 10px; padding: 8px; min-width: 240px; }
+.weapon-roll-controls--attack { width: var(--layout-roll-mode-menu-width); max-width: calc(100vw - 32px); min-width: 0; box-sizing: border-box; }
 </style>
