@@ -14,6 +14,7 @@
       :anchor="trigger?.$el"
       :min-width="240"
       :z-index="3400"
+      transition-preset="action-menu"
       role="menu"
       aria-label="Пресет источника света"
     >

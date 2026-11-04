@@ -18,6 +18,7 @@
     :anchor="anchorEl"
     placement="bottom-end"
     :min-width="274"
+    transition-preset="action-menu"
   >
     <form class="ecm-panel" @submit.prevent="rollForEveryone">
       <div class="ecm-heading">

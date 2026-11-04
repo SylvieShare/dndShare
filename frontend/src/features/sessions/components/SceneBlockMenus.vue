@@ -1,5 +1,5 @@
 <template>
-  <BasePopover v-model:open="open" :anchor="anchor" :min-width="210" placement="bottom-start">
+  <BasePopover v-model:open="open" :anchor="anchor" :min-width="210" placement="bottom-start" transition-preset="action-menu">
     <div v-if="block" class="scene-block-menu">
       <RowActionItem
         v-if="block.type === 'combat'"

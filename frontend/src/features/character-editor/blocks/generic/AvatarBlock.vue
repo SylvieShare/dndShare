@@ -58,7 +58,7 @@
     <span v-if="uploadError" class="avatar-error">{{ uploadError }}</span>
   </div>
 
-  <BasePopover v-model:open="actionsOpen" :anchor="avatarEl" placement="bottom-start" :min-width="180" :z-index="3200">
+  <BasePopover v-model:open="actionsOpen" :anchor="avatarEl" placement="bottom-start" :min-width="180" :z-index="3200" transition-preset="action-menu">
     <div class="avatar-actions" role="menu" aria-label="Действия с портретом">
       <button type="button" role="menuitem" @click="chooseFile">Загрузить изображение</button>
       <button type="button" role="menuitem" @click="chooseIconFile">Загрузить иконку</button>

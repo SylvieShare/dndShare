@@ -25,7 +25,7 @@
 
     <button ref="menuBtnEl" class="menu-btn" @click.stop="toggleMenu" title="Действия">⋯</button>
 
-    <BasePopover v-model:open="menuOpen" :anchor="menuBtnEl" placement="bottom-end" :min-width="148">
+    <BasePopover v-model:open="menuOpen" :anchor="menuBtnEl" placement="bottom-end" :min-width="148" transition-preset="action-menu">
       <div class="dropdown-item" @click="doClone">Клонировать</div>
       <div class="dropdown-sep" />
       <div class="dropdown-item danger" @click="startDelete">Удалить</div>

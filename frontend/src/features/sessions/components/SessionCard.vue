@@ -49,7 +49,7 @@
           >
             ⋯
           </button>
-          <BasePopover v-model:open="menuOpen" :anchor="menuBtnEl" placement="bottom-end" :min-width="160">
+          <BasePopover v-model:open="menuOpen" :anchor="menuBtnEl" placement="bottom-end" :min-width="160" transition-preset="action-menu">
             <div v-if="session.myRole === 'gm'" class="menu-item menu-danger" @click="menuAction('delete')">
               Удалить
             </div>

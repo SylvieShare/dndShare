@@ -1,5 +1,5 @@
 <template>
-  <BasePopover v-model:open="open" :anchor="anchor" :min-width="210">
+  <BasePopover v-model:open="open" :anchor="anchor" :min-width="210" transition-preset="action-menu">
     <div v-if="edge" class="nested-edge-menu">
       <RowActionItem action="edit" @click="run('edit')">Изменить подпись</RowActionItem>
       <RowActionItem :icon="ArrowLeftRight" @click="run('toggle-direction')">

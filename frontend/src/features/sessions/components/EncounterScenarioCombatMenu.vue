@@ -13,7 +13,7 @@
     <span v-if="loaded && combats.length" class="enc-scenario-combats-count">{{ combats.length }}</span>
   </button>
 
-  <BasePopover v-model:open="open" :anchor="anchorEl" placement="bottom-start" :min-width="320">
+  <BasePopover v-model:open="open" :anchor="anchorEl" placement="bottom-start" :min-width="320" transition-preset="action-menu">
     <div class="scenario-combats">
       <div class="scenario-combats-heading">
         <div>

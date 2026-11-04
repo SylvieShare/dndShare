@@ -13,7 +13,7 @@
     <span v-if="enc.selectedDamageCount" class="enc-icon-count">{{ enc.selectedDamageCount }}</span>
   </button>
 
-  <BasePopover v-model:open="open" :anchor="anchorEl" placement="bottom-end" :min-width="260">
+  <BasePopover v-model:open="open" :anchor="anchorEl" placement="bottom-end" :min-width="260" transition-preset="action-menu">
     <form class="bulk-damage" @submit.prevent="applyDamage">
       <div class="bulk-damage-heading">
         <strong>Урон выбранным</strong>

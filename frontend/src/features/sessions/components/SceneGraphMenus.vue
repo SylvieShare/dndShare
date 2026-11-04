@@ -1,5 +1,5 @@
 <template>
-  <BasePopover v-model:open="open" :anchor="anchor" :min-width="210" placement="bottom-start">
+  <BasePopover v-model:open="open" :anchor="anchor" :min-width="210" placement="bottom-start" transition-preset="action-menu">
     <div v-if="scene" class="scene-graph-menu">
       <RowActionItem v-if="context === 'ancestor'" :icon="ArrowLeft" tone="accent" @click="run('return-scenes', scene)">Вернуться к сценариям</RowActionItem>
       <template v-else>

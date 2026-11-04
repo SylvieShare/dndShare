@@ -23,6 +23,7 @@ for (const width of [390, 834, 1920]) {
         const disadvantage = menu.getByRole('button', { name: 'Помеха', exact: true })
         await expect(advantage).toHaveAttribute('aria-pressed', String(entry.advantage))
         await expect(disadvantage).toHaveAttribute('aria-pressed', String(entry.disadvantage))
+        await expect(menu).toHaveCSS('transform', 'none')
         const a = await advantage.boundingBox(), d = await disadvantage.boundingBox()
         expect(Math.abs(a.y - d.y)).toBeLessThan(2)
         const bounds = await menu.boundingBox()

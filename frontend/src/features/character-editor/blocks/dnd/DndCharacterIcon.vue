@@ -25,7 +25,7 @@
       @change="onFileChange"
     />
 
-    <BasePopover v-if="canEdit" v-model:open="menuOpen" :anchor="iconEl" placement="bottom-start" :min-width="150" :z-index="3200">
+    <BasePopover v-if="canEdit" v-model:open="menuOpen" :anchor="iconEl" placement="bottom-start" :min-width="150" :z-index="3200" transition-preset="action-menu">
       <div class="dci-icon-menu" role="menu" aria-label="Действия с иконкой">
         <button type="button" role="menuitem" @click="chooseFile">Загрузить</button>
         <button v-if="hasOwnIcon" type="button" role="menuitem" class="dci-icon-clear" @click="clearIcon">Очистить</button>

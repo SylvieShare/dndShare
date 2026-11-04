@@ -8,6 +8,7 @@ const models = process.env.DNDSHARE_TEST_MODELS === '1'
 const hardware = models && process.env.DNDSHARE_TEST_HARDWARE === '1'
 const smokeURL = process.env.DNDSHARE_SMOKE_URL
 const diagnostics = /@local-model|@gpu/
+const productionNavigation = ['**/navigation/blur-production.spec.js', '**/navigation/action-menu-production.spec.js']
 const selected = process.argv.flatMap((argument, index, args) =>
   argument === '--project' ? [args[index + 1]] : argument.startsWith('--project=') ? [argument.slice(10)] : [])
 const wants = name => !selected.length || selected.some(project => project === name || project.includes('*'))
@@ -27,9 +28,9 @@ export default defineConfig({
     { name: 'models', testMatch: '**/maps/*.spec.js', grep: diagnostics, workers: 1, use: { baseURL: devURL,
       ...(hardware ? { channel: 'chrome', launchOptions: { args: process.platform === 'darwin' ? ['--use-angle=metal', '--enable-gpu'] : ['--enable-gpu'] } } : {}) } },
   ] : [
-    { name: 'ui', testIgnore: ['**/maps/**', '**/global-maps/**', '**/image-uploads/**', '**/fullstack/**', '**/navigation/blur-production.spec.js'], use: { baseURL: devURL } },
+    { name: 'ui', testIgnore: ['**/maps/**', '**/global-maps/**', '**/image-uploads/**', '**/fullstack/**', ...productionNavigation], use: { baseURL: devURL } },
     { name: 'maps', testMatch: '**/maps/*.spec.js', grepInvert: diagnostics, workers: 1, use: { baseURL: devURL } },
-    { name: 'production', testMatch: ['**/global-maps/*.spec.js', '**/image-uploads/*.spec.js', '**/navigation/blur-production.spec.js'], workers: 1, use: { baseURL: buildURL } },
+    { name: 'production', testMatch: ['**/global-maps/*.spec.js', '**/image-uploads/*.spec.js', ...productionNavigation], workers: 1, use: { baseURL: buildURL } },
   ],
   webServer: smokeURL ? [] : [
     ...(models || wants('ui') || wants('maps') ? [{ command: `npm run dev -- --host 127.0.0.1 --port ${devPort} --strictPort`, url: devURL, reuseExistingServer: false, timeout: 120000,

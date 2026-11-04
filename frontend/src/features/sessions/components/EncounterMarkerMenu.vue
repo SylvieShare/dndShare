@@ -12,7 +12,7 @@
     @pointerdown.stop
   ><NpcMarker :letter="combatant.markerLetter" :color="markerColor" /></button>
 
-  <BasePopover v-model:open="open" :anchor="anchorEl" placement="bottom-start" :min-width="246">
+  <BasePopover v-model:open="open" :anchor="anchorEl" placement="bottom-start" :min-width="246" transition-preset="action-menu">
     <div class="emm-panel">
       <div class="emm-label">Буква существа</div>
       <div class="emm-grid">
