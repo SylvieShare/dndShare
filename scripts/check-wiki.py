@@ -89,7 +89,7 @@ def check(root, strict=False):
         failures.append(f"{page.relative_to(root)}:{number}: {message}")
 
     for page in documents:
-        relative = str(page.relative_to(root))
+        relative = page.relative_to(root).as_posix()
         warnings.extend(
             f"{relative}:{number}: warning [{code}]: {message}"
             for number, code, message in structural_warnings(relative, page.read_text(), lines[page.resolve()])

@@ -26,7 +26,7 @@ const decoderFiles = ['js', 'wasm'].map(extension => {
   }
   return asset.file
 })
-const allFiles = await fs.readdir(dir, {recursive: true})
+const allFiles = (await fs.readdir(dir, {recursive: true})).map(file => file.split(path.sep).join('/'))
 // The one BVH construction worker is CPU work, never a navigation/code-split chunk.
 const geometryWorkers = allFiles.filter(file => /^static\/modelPicking\.worker-[\w-]+\.js$/.test(file))
 if (geometryWorkers.length !== 1) throw new Error(`Expected one BVH worker, found ${geometryWorkers.length}`)
