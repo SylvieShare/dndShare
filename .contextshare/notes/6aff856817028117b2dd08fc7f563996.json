@@ -1,0 +1,15 @@
+{
+  "node": {
+    "body": "Телефонный, планшетный и широкий форматы зависят от размера окна. Общие размеры и роли оформления задаются токенами, состав экрана сверяется на одинаковых данных.",
+    "id": "6aff856817028117b2dd08fc7f563996",
+    "kind": "rule",
+    "section_id": "21c7b9ddd09b23d0b152a868e8f16f38",
+    "source_revision": "7cf9b4a96ae94bdda56939ee8bc2a4db67fa4b01",
+    "source_url": "https://github.com/SylvieShare/dndShare/blob/7cf9b4a96ae94bdda56939ee8bc2a4db67fa4b01/md/frontend/responsive-design.md",
+    "status": "current",
+    "title": "Адаптивная композиция",
+    "version": 1,
+    "source_path": "md/frontend/responsive-design.md"
+  },
+  "platforms": []
+}

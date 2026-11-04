@@ -1,0 +1,137 @@
+[
+  {
+    "from": "34c347f8e255eef806446091e64751b7",
+    "to": "md/features/sessions.md",
+    "kind": "related"
+  },
+  {
+    "from": "49fe66c2d35b232c1d4bbef565ceb6fb",
+    "to": "4daea09aead580031edf5ee9841fd44d",
+    "kind": "related"
+  },
+  {
+    "from": "49fe66c2d35b232c1d4bbef565ceb6fb",
+    "to": "md/features/character-editor/data.md",
+    "kind": "related"
+  },
+  {
+    "from": "4daea09aead580031edf5ee9841fd44d",
+    "to": "md/features/sessions/timeline.md",
+    "kind": "related"
+  },
+  {
+    "from": "52b63f4f0cc6c3c7d99b0e7eb16563c3",
+    "to": "md/handbook-media.md",
+    "kind": "related"
+  },
+  {
+    "from": "5e960764cf6bf3c4a43c04537e8fae45",
+    "to": "md/features/native-map-editor.md",
+    "kind": "related"
+  },
+  {
+    "from": "60e2e0da161926b3416d7ddbded69387",
+    "to": "md/handbook-media.md",
+    "kind": "related"
+  },
+  {
+    "from": "6aff856817028117b2dd08fc7f563996",
+    "to": "md/frontend/responsive-design.md",
+    "kind": "related"
+  },
+  {
+    "from": "7a08190c1c9e478977bca13c92bea665",
+    "to": "5e960764cf6bf3c4a43c04537e8fae45",
+    "kind": "depends_on"
+  },
+  {
+    "from": "7a08190c1c9e478977bca13c92bea665",
+    "to": "md/features/native-map-editor.md",
+    "kind": "related"
+  },
+  {
+    "from": "8002b4f82bbeb2bdb5aee15550e7a21e",
+    "to": "973f9a8278fcb775f6bcf4fbc7d89c8b",
+    "kind": "related"
+  },
+  {
+    "from": "8002b4f82bbeb2bdb5aee15550e7a21e",
+    "to": "md/features/maps/session.md",
+    "kind": "related"
+  },
+  {
+    "from": "9213081e6b7fad6ee250029d7eae640d",
+    "to": "md/features/maps/editor-gestures.md",
+    "kind": "related"
+  },
+  {
+    "from": "96d91acc384ff2526c53441e406491e3",
+    "to": "md/features/character-editor.md",
+    "kind": "related"
+  },
+  {
+    "from": "973f9a8278fcb775f6bcf4fbc7d89c8b",
+    "to": "eb3f169df3601400069754dfe58dc089",
+    "kind": "verified_by"
+  },
+  {
+    "from": "973f9a8278fcb775f6bcf4fbc7d89c8b",
+    "to": "md/features/maps.md",
+    "kind": "related"
+  },
+  {
+    "from": "bc61fbcaa581fcf9e8c06d7626e912a3",
+    "to": "md/features/native-map-editor.md",
+    "kind": "related"
+  },
+  {
+    "from": "c262ec864d0c21027ccbb90caf77680a",
+    "to": "md/handbook-art-style.md",
+    "kind": "related"
+  },
+  {
+    "from": "d5ac6a81b87ed8552b9351873c895c18",
+    "to": "8002b4f82bbeb2bdb5aee15550e7a21e",
+    "kind": "related"
+  },
+  {
+    "from": "d5ac6a81b87ed8552b9351873c895c18",
+    "to": "md/features/native-client.md",
+    "kind": "related"
+  },
+  {
+    "from": "e2017bd8ff7793a66a9b8698f084dfec",
+    "to": "md/features/native-client.md",
+    "kind": "related"
+  },
+  {
+    "from": "ea383949ab375acc0021f0e2ca92b6f3",
+    "to": "bc61fbcaa581fcf9e8c06d7626e912a3",
+    "kind": "related"
+  },
+  {
+    "from": "ea383949ab375acc0021f0e2ca92b6f3",
+    "to": "md/features/native-client.md",
+    "kind": "related"
+  },
+  {
+    "from": "fbb9e648a1e820cb606579c93e79a3a6",
+    "to": "md/features/creature-model-production.md",
+    "kind": "related"
+  },
+  {
+    "from": "fbb9e648a1e820cb606579c93e79a3a6",
+    "to": "md/features/maps-model-log.md",
+    "kind": "related"
+  },
+  {
+    "from": "fbb9e648a1e820cb606579c93e79a3a6",
+    "to": "md/handbook-art-style.md",
+    "kind": "related"
+  },
+  {
+    "from": "fbb9e648a1e820cb606579c93e79a3a6",
+    "to": "md/handbook-media.md",
+    "kind": "related"
+  }
+]

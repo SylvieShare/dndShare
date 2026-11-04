@@ -1,0 +1,16 @@
+{
+  "node": {
+    "body": "Для 3D-поля нужна поддержка OpenGL ES 3.0. Эта возможность проверяется при запуске движка. Минимальная версия всего приложения — API 26.",
+    "id": "5e960764cf6bf3c4a43c04537e8fae45",
+    "kind": "limitation",
+    "parent_id": "973f9a8278fcb775f6bcf4fbc7d89c8b",
+    "section_id": "cea37a8de83dbc5c071d535b326134c6",
+    "source_revision": "7cf9b4a96ae94bdda56939ee8bc2a4db67fa4b01",
+    "source_url": "https://github.com/SylvieShare/dndShare/blob/7cf9b4a96ae94bdda56939ee8bc2a4db67fa4b01/md/features/native-map-editor.md",
+    "status": "current",
+    "title": "Требования к 3D-полю Android",
+    "version": 1,
+    "source_path": "md/features/native-map-editor.md"
+  },
+  "platforms": []
+}

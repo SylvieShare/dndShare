@@ -1,0 +1,28 @@
+{
+  "node": {
+    "body": "Лист показывает данные персонажа и игровые действия. Формат определяется доступной шириной окна; D&D и VTM используют свои композиции.",
+    "id": "96d91acc384ff2526c53441e406491e3",
+    "kind": "feature",
+    "section_id": "21c7b9ddd09b23d0b152a868e8f16f38",
+    "source_revision": "7cf9b4a96ae94bdda56939ee8bc2a4db67fa4b01",
+    "source_url": "https://github.com/SylvieShare/dndShare/blob/7cf9b4a96ae94bdda56939ee8bc2a4db67fa4b01/md/features/character-editor.md",
+    "status": "current",
+    "title": "Состав листа персонажа",
+    "version": 1,
+    "source_path": "md/features/character-editor.md"
+  },
+  "platforms": [
+    {
+      "availability": "",
+      "implementation": "Compose; D&D и VTM",
+      "platform": "android",
+      "verification": ""
+    },
+    {
+      "availability": "",
+      "implementation": "Vue-компоненты",
+      "platform": "web",
+      "verification": ""
+    }
+  ]
+}

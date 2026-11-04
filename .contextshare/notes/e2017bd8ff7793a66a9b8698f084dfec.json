@@ -1,0 +1,16 @@
+{
+  "node": {
+    "body": "Вкладки листа Android готовятся порционно. Пока поддерево не готово, показывается скелетон; уже готовые части интерфейса остаются доступны.",
+    "id": "e2017bd8ff7793a66a9b8698f084dfec",
+    "kind": "feature",
+    "parent_id": "96d91acc384ff2526c53441e406491e3",
+    "section_id": "21c7b9ddd09b23d0b152a868e8f16f38",
+    "source_revision": "7cf9b4a96ae94bdda56939ee8bc2a4db67fa4b01",
+    "source_url": "https://github.com/SylvieShare/dndShare/blob/7cf9b4a96ae94bdda56939ee8bc2a4db67fa4b01/md/features/native-client.md",
+    "status": "current",
+    "title": "Подготовка вкладок",
+    "version": 1,
+    "source_path": "md/features/native-client.md"
+  },
+  "platforms": []
+}
