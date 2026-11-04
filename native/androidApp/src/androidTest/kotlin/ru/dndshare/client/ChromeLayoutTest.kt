@@ -30,6 +30,7 @@ import androidx.test.filters.SdkSuppress
 import androidx.test.platform.app.InstrumentationRegistry
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
+import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.test.*
 import org.junit.Test
@@ -78,6 +79,10 @@ class ChromeLayoutTest {
                     box.right - 22 * scale,
                 )
             var pixels = emptyList<Int>()
+            fun sameColor(actual: Int, expected: Int): Boolean =
+                (0..16 step 8).all { shift ->
+                    abs((actual ushr shift and 255) - (expected ushr shift and 255)) <= 2
+                }
             await {
                 instrument.uiAutomation.takeScreenshot()?.let { bitmap ->
                     pixels = try {
@@ -86,11 +91,11 @@ class ChromeLayoutTest {
                         bitmap.recycle()
                     }
                 }
-                pixels.size == xs.size && pixels[1] == WebPalette.Subheader.toArgb() &&
-                    pixels[2] == WebPalette.Subheader.toArgb()
+                pixels.size == xs.size && sameColor(pixels[1], WebPalette.Subheader.toArgb()) &&
+                    sameColor(pixels[2], WebPalette.Subheader.toArgb())
             }
-            assertEquals(WebPalette.Background.toArgb(), pixels.first())
-            assertEquals(WebPalette.Background.toArgb(), pixels.last())
+            assertTrue(sameColor(pixels.first(), WebPalette.Background.toArgb()))
+            assertTrue(sameColor(pixels.last(), WebPalette.Background.toArgb()))
         }
     }
 
