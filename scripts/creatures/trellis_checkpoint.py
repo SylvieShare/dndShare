@@ -1,5 +1,6 @@
 """Durable, private stage receipts; no credentials and no implicit GPU replay."""
 from contextlib import contextmanager
+import errno
 import hashlib
 import json
 import os
@@ -33,14 +34,25 @@ def write_json(path, value):
 
 @contextmanager
 def output_lock(folder):
-    import fcntl  # Only the POSIX queue takes locks; Windows Blender reads hashes.
-
     folder.mkdir(parents=True, exist_ok=True)
-    with (folder/'.trellis.lock').open('a') as lock:
-        try:
-            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
-            raise RuntimeError('Another process is using this output folder') from None
+    with (folder/'.trellis.lock').open('a+b') as lock:
+        if os.name == 'nt':
+            import msvcrt
+
+            lock.seek(0)
+            try:
+                msvcrt.locking(lock.fileno(), msvcrt.LK_NBLCK, 1)
+            except OSError as error:
+                if error.errno not in (errno.EACCES, errno.EAGAIN, errno.EDEADLK):
+                    raise
+                raise RuntimeError('Another process is using this output folder') from None
+        else:
+            import fcntl
+
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                raise RuntimeError('Another process is using this output folder') from None
         yield
 
 

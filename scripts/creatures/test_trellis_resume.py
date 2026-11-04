@@ -3,9 +3,11 @@ import copy
 import contextlib
 import io
 import json
+import os
 from pathlib import Path
 import runpy
 import struct
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -134,10 +136,22 @@ class Resume(unittest.TestCase):
         self.run_workflow()
         cp = Checkpoint(self.folder, self.identity)
         self.assertNotIn(cp.data['sessionHash'], json.dumps(cp.status()))
-        self.assertEqual(cp.path.stat().st_mode & 0o777, 0o600)
+        if os.name != 'nt':
+            self.assertEqual(cp.path.stat().st_mode & 0o777, 0o600)
+        script = (
+            'import sys\n'
+            'from pathlib import Path\n'
+            'from trellis_checkpoint import output_lock\n'
+            'with output_lock(Path(sys.argv[1])):\n'
+            '    pass\n'
+        )
+        command = [sys.executable, '-c', script, str(self.folder)]
+        cwd = Path(__file__).resolve().parent
         with output_lock(self.folder):
-            with self.assertRaisesRegex(RuntimeError, 'Another process'):
-                with output_lock(self.folder): pass
+            blocked = subprocess.run(command, cwd=cwd, capture_output=True, text=True, timeout=10)
+            self.assertNotEqual(blocked.returncode, 0)
+            self.assertIn('Another process is using this output folder', blocked.stderr)
+        subprocess.run(command, cwd=cwd, check=True, timeout=10)
 
     def test_result_receipt_recovers_a_crash_before_checkpoint_advance(self):
         save = Checkpoint.save

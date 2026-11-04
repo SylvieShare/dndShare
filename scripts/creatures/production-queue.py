@@ -66,10 +66,13 @@ def main():
     parser.add_argument('--only',help='Comma-separated slugs')
     parser.add_argument('--watch',action='store_true',help='Wait for reviewed references during this run')
     parser.add_argument('--idle-timeout',type=int,default=600)
-    parser.add_argument('--token-stdin',action='store_true')
-    parser.add_argument('--token-fd',type=int,help='Read the token once from an inherited pipe; never a command argument')
+    token_input = parser.add_mutually_exclusive_group()
+    token_input.add_argument('--token-stdin',action='store_true')
+    token_input.add_argument('--token-fd',type=int,help='Read the token once from an inherited pipe; never a command argument')
+    token_input.add_argument('--token-env',action='store_true',help='Read HF_TOKEN from the process environment')
     parser.add_argument('--server-token',action='store_true',help='Use the previously authorized project MCP token for publication')
     args = parser.parse_args()
+    env_token = os.environ.pop('HF_TOKEN', None) if args.token_env else None
     manifest = json.loads(args.manifest.read_text())
     if not args.run:
         path = args.workdir/'production-state.json'
@@ -86,6 +89,8 @@ def main():
                     with os.fdopen(args.token_fd,'r') as source: token = source.readline().strip()
                 elif args.token_stdin:
                     token = getpass.getpass('HF token (memory only): ')
+                elif args.token_env and env_token:
+                    token = env_token
                 else:
                     raise RuntimeError('An authorized personal HF token is required for new GPU work')
                 api = HfApi(token=token)

@@ -45,6 +45,8 @@ class SourceArchiveTests(unittest.TestCase):
             lambda m,f:f.update({'recipe.json':b'changed'}),
             lambda m,f:m['files'].append(m['files'][0]),
             lambda m,f:m['files'][0].update(path='../outside.txt'),
+            lambda m,f:m['files'][0].update(path='inputs/NUL.json'),
+            lambda m,f:m['files'][0].update(path='inputs./file.json'),
             lambda m,f:f.pop('native/generated-original.glb')]
         for mutate in cases:
             with self.subTest(mutate=mutate), self.assertRaises(ValueError):

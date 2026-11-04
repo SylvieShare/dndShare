@@ -20,7 +20,8 @@ models/creatures/.generation-runtime/bin/python scripts/creatures/generate-trell
 - `trellis-input.png`, `generation-preview.html`, `generated-original.glb` — результаты.
 - `generation.json` — итог с originalMeshExported, параметрами, размером и SHA GLB.
 
-Запись атомарна, checkpoint/ответы имеют режим 0600. Ключ HF остаётся в памяти
+Запись атомарна. В POSIX checkpoint и ответы имеют режим 0600, в Windows
+наследуют права рабочей папки. Ключ HF остаётся в памяти
 и не сохраняется. Сессионные ID и URL не выводятся в отчёт консоли. Блокировка
 `.trellis.lock` запрещает два параллельных генератора в одной папке и снимается
 при завершении процесса. Другие выходные папки независимы.

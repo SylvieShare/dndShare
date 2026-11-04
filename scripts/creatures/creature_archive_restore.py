@@ -4,7 +4,7 @@ import hashlib
 import io
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 import re
 import shutil
 import tarfile
@@ -26,10 +26,13 @@ class BoundedReader(io.RawIOBase):
 
 
 def source_path(name):
+    path = PurePosixPath(name)
     return (bool(re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_./-]{0,199}',name))
         and name != 'archive-manifest.json' and '..' not in name
-        and str(Path(name)) == name and not any(p.startswith('.') for p in Path(name).parts)
-        and Path(name).suffix in {'.glb','.blend','.png','.jpg','.webp','.json','.txt','.py','.mjs','.md'})
+        and path.as_posix() == name
+        and not any(part.startswith('.') or part.endswith('.') or PureWindowsPath(part).is_reserved()
+                    for part in path.parts)
+        and path.suffix in {'.glb','.blend','.png','.jpg','.webp','.json','.txt','.py','.mjs','.md'})
 
 
 def restore_archive(file, destination):

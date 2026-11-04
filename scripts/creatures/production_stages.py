@@ -158,7 +158,9 @@ def process(queue,entry,until,server_token):
         return None
 
     def ready():
-        execute(['node',SCRIPTS/'package-miniature.mjs',final,recipe],logs/'package.log')
+        package_env = dict(os.environ)
+        package_env.setdefault('MODEL_PYTHON', sys.executable)
+        execute(['node',SCRIPTS/'package-miniature.mjs',final,recipe],logs/'package.log',env=package_env)
         catalog=json.loads((final/'publish/catalogue.json').read_text())[0]
         shutil.copy2(final/'publish'/Path(catalog['assets']['preview']['key']).name,final/'preview.webp')
         shutil.copy2(final/'publish/catalogue.json',final/'catalogue.json')

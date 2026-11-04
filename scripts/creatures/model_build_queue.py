@@ -79,7 +79,7 @@ class BuildQueue:
             outputs = [Path(p).resolve() for p in action()]
             if not outputs or any(not p.is_file() or not p.is_relative_to(self.root) for p in outputs):
                 raise ValueError('Stage must produce files inside its workspace')
-            stage.update(status='complete',outputs={str(p.relative_to(self.root)):file_hash(p) for p in outputs})
+            stage.update(status='complete',outputs={p.relative_to(self.root).as_posix():file_hash(p) for p in outputs})
             job['status'] = name+'-complete'
         except Exception as error:
             stage.update(status='paused' if isinstance(error,QuotaStop) else 'failed',errorType=type(error).__name__)

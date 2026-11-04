@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 import tempfile
 from types import SimpleNamespace
@@ -35,7 +36,8 @@ class QueueTests(unittest.TestCase):
         saved = json.loads(self.queue.path.read_text())
         self.assertEqual(saved['jobs']['wolf']['status'],'paused')
         self.assertNotIn('private diagnostic',self.queue.path.read_text())
-        self.assertEqual(self.queue.path.stat().st_mode & 0o777,0o600)
+        if os.name != 'nt':
+            self.assertEqual(self.queue.path.stat().st_mode & 0o777,0o600)
         self.assertEqual(saved['jobs']['wolf']['stages']['native']['errorType'],'QuotaStop')
 
     def test_export_can_finish_below_the_new_model_reserve_without_new_generation(self):
