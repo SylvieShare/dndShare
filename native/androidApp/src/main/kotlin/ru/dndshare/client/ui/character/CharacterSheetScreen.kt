@@ -94,7 +94,7 @@ internal fun CharacterSheetScreen(
                         subheader = {
                             Column {
                                 if (sheet != null && pager != null && format != LayoutFormat.Wide)
-                                    ShareSubheader {
+                                    ShareSubheader(fitContent = format == LayoutFormat.Tablet) {
                                         PreparedSheetNavigation(
                                             sections,
                                             requireNotNull(pager),

@@ -7,14 +7,15 @@
     <div class="workspace-header-actions"><slot name="actions" /></div>
     </div>
     <div v-if="$slots.navigation && splitNavigation" class="workspace-subheader">
-      <div class="workspace-subheader-inner" :style="{ maxWidth: contentWidth || (page ? 'var(--layout-content-max)' : undefined) }"><slot name="navigation" /></div>
+      <div class="workspace-subheader-inner" :class="{ 'workspace-subheader-inner--fit': fitNavigation }"
+        :style="{ '--workspace-subheader-max-width': contentWidth || (page ? 'var(--layout-content-max)' : undefined) }"><slot name="navigation" /></div>
     </div>
   </header>
 </template>
 <script setup>
 import { BlurBackdrop } from '@sylvieshare/share-ui'
 import { onBeforeUnmount, onMounted, ref } from "vue";
-defineProps({ page: Boolean, contentWidth: String, splitNavigation: Boolean });
+defineProps({ page: Boolean, contentWidth: String, splitNavigation: Boolean, fitNavigation: Boolean });
 const element = ref(null),
   emit = defineEmits(["resize"]);
 let observer;
@@ -61,7 +62,8 @@ onBeforeUnmount(() => observer?.disconnect());
 }
 .workspace-header-inner--page { padding-inline: var(--spacing-page); }
 .workspace-subheader { position: relative; z-index: 1; padding: 4px 8px; }
-.workspace-subheader-inner { --surface: var(--subheader); display: flex; justify-content: center; box-sizing: border-box; width: 100%; min-width: 0; margin-inline: auto; padding: var(--spacing-xs); border-radius: var(--radius-compact-navigation); background: var(--subheader); overflow-x: auto; }
+.workspace-subheader-inner { --surface: var(--subheader); display: flex; justify-content: center; box-sizing: border-box; width: 100%; max-width: var(--workspace-subheader-max-width, 100%); min-width: 0; margin-inline: auto; padding: var(--spacing-xs); border-radius: var(--radius-compact-navigation); background: var(--subheader); overflow-x: auto; }
+.workspace-subheader-inner--fit { width: max-content; max-width: min(100%, var(--workspace-subheader-max-width, 100%)); }
 .workspace-header-identity {
   min-width: 0;
   min-height: calc(var(--layout-header) - 2 * var(--spacing-xs) - var(--layout-border));

@@ -71,7 +71,7 @@ internal fun CreationPreview(ui: CreationUiState, images: ImageLoader, close: ()
                             },
                             subheader = {
                                 if (format != LayoutFormat.Wide)
-                                    ShareSubheader {
+                                    ShareSubheader(fitContent = format == LayoutFormat.Tablet) {
                                         SheetNavigation(
                                             sections,
                                             section,

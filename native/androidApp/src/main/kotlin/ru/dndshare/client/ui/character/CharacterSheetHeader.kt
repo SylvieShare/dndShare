@@ -40,6 +40,7 @@ internal fun CharacterSheetHeader(
         contentInset = if (format == LayoutFormat.Phone) 8.dp else 14.dp,
         maxContentWidth = DesignTokens.Layout.SheetMax,
         compact = format != LayoutFormat.Wide,
+        fitNavigation = true,
         actions = actions,
         navigation =
             if (navigationInHeader && format == LayoutFormat.Tablet)

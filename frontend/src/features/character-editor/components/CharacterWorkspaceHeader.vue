@@ -1,5 +1,5 @@
 <template>
-  <WorkspaceHeader class="character-workspace-header" :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" :split-navigation="stackedNavigation">
+  <WorkspaceHeader class="character-workspace-header" :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" :split-navigation="stackedNavigation" fit-navigation>
     <template #identity>
       <ActionButton variant="quiet" :icon-only="compact" aria-label="К списку персонажей" @click="router.push('/chars')">
         <template #icon><ArrowLeft :size="18" /></template>

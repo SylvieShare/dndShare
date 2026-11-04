@@ -20,6 +20,7 @@ fun ShareWorkspaceHeader(
     contentInset: Dp = DesignTokens.Spacing.Page,
     maxContentWidth: Dp = DesignTokens.Layout.ContentMax,
     navigation: (@Composable () -> Unit)? = null,
+    fitNavigation: Boolean = false,
     compact: Boolean = LocalConfiguration.current.screenWidthDp < DesignTokens.Layout.Desktop.value,
     actions: (@Composable () -> Unit)? = null,
     content: @Composable RowScope.() -> Unit,
@@ -69,6 +70,7 @@ fun ShareWorkspaceHeader(
                         compact = compact,
                         maxContentWidth = maxContentWidth,
                         contentInset = contentInset,
+                        fitContent = fitNavigation,
                         content = tabs,
                     )
                 }
@@ -83,6 +85,7 @@ fun ShareSubheader(
     compact: Boolean = true,
     maxContentWidth: Dp = DesignTokens.Layout.ContentMax,
     contentInset: Dp = DesignTokens.Layout.CompactHeaderInset,
+    fitContent: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val managed = LocalChromeManaged.current
@@ -108,7 +111,8 @@ fun ShareSubheader(
         contentAlignment = Alignment.Center,
     ) {
         Surface(
-            Modifier.widthIn(max = maxContentWidth).fillMaxWidth(),
+            Modifier.widthIn(max = maxContentWidth)
+                .then(if (fitContent) Modifier else Modifier.fillMaxWidth()),
             color = WebPalette.Subheader,
             shape =
                 RoundedCornerShape(if (compact) DesignTokens.Radius.CompactNavigation else 0.dp),

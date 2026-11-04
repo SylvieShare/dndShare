@@ -5,6 +5,7 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -16,6 +17,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
@@ -35,6 +37,50 @@ import ru.dndshare.client.ui.character.CharacterListSubheader
 import ru.dndshare.client.ui.designsystem.*
 
 class ChromeLayoutTest {
+    @Test
+    fun sheetSubheaderCapsuleFitsAndCentersItsNavigation() {
+        val bounds = AtomicReference(Rect.Zero)
+        val density = AtomicReference(1f)
+        val tabs = (1..4).map { ShareNavigationItem(it.toString(), "Вкладка $it") }
+        val instrument = InstrumentationRegistry.getInstrumentation()
+        ActivityScenario.launch(ComponentActivity::class.java).use { activity ->
+            activity.onActivity { host ->
+                host.setContent {
+                    DndTheme {
+                        val scale = LocalDensity.current.density
+                        SideEffect { density.set(scale) }
+                        Box(
+                            Modifier.width(340.dp)
+                                .background(WebPalette.Background)
+                                .onGloballyPositioned { bounds.set(it.boundsInWindow()) }
+                        ) {
+                            ShareSubheader(fitContent = true) {
+                                ShareIconNavigation(tabs, "1", {}, pill = true) {}
+                            }
+                        }
+                    }
+                }
+            }
+            await { bounds.get().width > 0 && bounds.get().height > 0 }
+            instrument.waitForIdleSync()
+            val box = bounds.get()
+            val scale = density.get()
+            val y = (box.top + 28 * scale).roundToInt()
+            val bitmap = requireNotNull(instrument.uiAutomation.takeScreenshot())
+            try {
+                val midpoint = (box.left + box.right) / 2
+                for (x in listOf(box.left + 22 * scale, box.right - 22 * scale)) {
+                    assertEquals(WebPalette.Background.toArgb(), bitmap.getPixel(x.roundToInt(), y))
+                }
+                for (x in listOf(midpoint - 22 * scale, midpoint + 22 * scale)) {
+                    assertEquals(WebPalette.Subheader.toArgb(), bitmap.getPixel(x.roundToInt(), y))
+                }
+            } finally {
+                bitmap.recycle()
+            }
+        }
+    }
+
     @Test
     @SdkSuppress(minSdkVersion = 31)
     fun backdropIsLiveBlurredAndOptOutKeepsForegroundAndLayout() {
