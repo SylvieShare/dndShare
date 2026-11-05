@@ -31,7 +31,7 @@
     v-if="editorOpen"
     :origin-rect="originRect"
     :origin-el="originEl"
-    :strip="false"
+    :color="statColor"
     :nav="nav"
     @close="closeEditor"
   >

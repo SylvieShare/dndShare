@@ -5,6 +5,7 @@
       :edit-fade="editFade"
       @edit="$emit('edit')"
      class="stat-view" :class="{ 'stat-view--mobile': mobileVariant }">
+    <template #decoration><TileAccentStrip v-if="mode !== 'panel'" :color="color" /></template>
 
     <!-- ── Head: name + edit pencil + save chip ── -->
 
@@ -125,7 +126,7 @@
 </template>
 
 <script setup>
-import { MorphTile, SkeletonBlock } from '@sylvieshare/share-ui'
+import { MorphTile, SkeletonBlock, TileAccentStrip } from '@sylvieshare/share-ui'
 import { onBeforeUnmount, ref, shallowRef } from 'vue'
 import { signedOrZero as signed } from '@/shared/lib/dnd'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'

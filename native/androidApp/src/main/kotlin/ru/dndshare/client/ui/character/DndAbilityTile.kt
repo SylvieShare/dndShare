@@ -136,7 +136,8 @@ private fun DndAbilityFace(
         Modifier.fillMaxWidth()
             .heightIn(max = sourceLimit)
             .clip(RoundedCornerShape(DesignTokens.Radius.Tile))
-            .background(WebPalette.Surface),
+            .background(WebPalette.Surface)
+            .shareAccentStrip(color),
         userScrollEnabled = presentation.expanded,
         contentPadding = PaddingValues(
             top = DesignTokens.Spacing.Small,
