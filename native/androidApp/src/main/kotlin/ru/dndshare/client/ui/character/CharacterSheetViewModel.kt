@@ -24,7 +24,15 @@ internal class CharacterSheetViewModel(
     private val services: SheetServices,
     private val saved: SavedStateHandle,
     private val commands: CharacterCommandQueue? = null,
+    initialSection: String? = null,
 ) : ViewModel() {
+    init {
+        if (!saved.contains(NAVIGATION) && SheetSection.entries.any { it.name == initialSection }) {
+            saved[NAVIGATION] = WireJson.encodeToString(
+                SheetNavigationState(sectionName = requireNotNull(initialSection))
+            )
+        }
+    }
     private val snapshot =
         sheets
             .observe(uuid)

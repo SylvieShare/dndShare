@@ -44,6 +44,7 @@ class SheetViewModelStateTest {
                             database.characterSheets(),
                             SheetServices({}, {}),
                             handle,
+                            initialSection = SheetSection.Inventory.name,
                         )
                     }
                 }
@@ -53,7 +54,10 @@ class SheetViewModelStateTest {
             database.cache().upsertState(SyncState(1, ready = true))
             val saved = SavedStateHandle()
             val first = model(saved)
-            withTimeout(10_000) { first.uiState.first { it.sheet != null } }
+            val initial = withTimeout(10_000) {
+                first.uiState.first { it.sheet != null && it.navigation.sectionName.isNotBlank() }
+            }
+            assertEquals(SheetSection.Inventory.name, initial.navigation.sectionName)
             withContext(Dispatchers.Main) {
                 first.selectSection(SheetSection.Spells)
                 first.openItem(11)

@@ -11,6 +11,8 @@ import kotlinx.serialization.encodeToString
 import org.junit.runner.RunWith
 import kotlin.test.*
 import ru.dndshare.client.app.AppController
+import ru.dndshare.client.app.AccountNavigationStore
+import ru.dndshare.client.app.save
 import ru.dndshare.client.data.*
 import ru.dndshare.client.device.DeviceServices
 import ru.dndshare.client.model.*
@@ -25,6 +27,7 @@ class StartupLogoutTest {
         }
         val user = User(7, "cached-user")
         device.secureStore.write("user", WireJson.encodeToString(user))
+        AccountNavigationStore(device.secureStore, user.id).save("application", "last-page")
         val started = CompletableDeferred<Unit>()
         val finished = CompletableDeferred<Unit>()
         val allowResponse = CompletableDeferred<Unit>()
@@ -48,6 +51,7 @@ class StartupLogoutTest {
             assertNull(controller.state.value.user)
             assertFalse(api.cookies.hasSession())
             assertNull(device.secureStore.read("user"))
+            assertTrue(device.secureStore.keys().none { it.startsWith("navigation:7:") })
         } finally { allowResponse.complete(Unit); controller.close() }
     }
 }

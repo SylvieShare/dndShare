@@ -10,6 +10,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import coil3.ImageLoader
 import kotlinx.serialization.json.*
 import ru.dndshare.client.app.AppState
+import ru.dndshare.client.app.load
+import ru.dndshare.client.app.save
 import ru.dndshare.client.data.*
 import ru.dndshare.client.model.*
 import ru.dndshare.client.ui.designsystem.*
@@ -25,11 +27,16 @@ internal fun HandbookScreen(
 ) {
     val cache = state.repository?.cache ?: return
     key(state.sourceId, state.editionId) {
+        val navigation = LocalAccountNavigation.current
+        val navigationKey = "handbook:${state.sourceId}:${state.editionId}"
+        val initialNavigation = remember(navigation, navigationKey) {
+            navigation?.load<HandbookNavigationState>(navigationKey) ?: HandbookNavigationState()
+        }
         var query by rememberSaveable { mutableStateOf("") }
-        var typeId by rememberSaveable { mutableLongStateOf(0L) }
-        var collection by rememberSaveable { mutableStateOf(false) }
-        var dictionaryId by rememberSaveable { mutableLongStateOf(0L) }
-        var history by rememberSaveable { mutableStateOf(listOf<Long>()) }
+        var typeId by rememberSaveable { mutableLongStateOf(initialNavigation.typeId) }
+        var collection by rememberSaveable { mutableStateOf(initialNavigation.collection) }
+        var dictionaryId by rememberSaveable { mutableLongStateOf(initialNavigation.dictionaryId) }
+        var history by rememberSaveable { mutableStateOf(initialNavigation.history) }
         var filtersJson by rememberSaveable { mutableStateOf("{}") }
         var bookIds by rememberSaveable { mutableStateOf(emptyList<Long>()) }
         var groupBy by rememberSaveable { mutableStateOf("") }
@@ -73,6 +80,12 @@ internal fun HandbookScreen(
         val pages = rememberSaveableStateHolder()
         val owner = remember { Any() }
         val active = LocalAppPageActive.current
+        SideEffect {
+            if (active) navigation?.save(
+                navigationKey,
+                HandbookNavigationState(typeId, collection, dictionaryId, history),
+            )
+        }
         SideEffect {
             if (active)
                 heading.publish(

@@ -114,14 +114,25 @@ private fun AuthenticatedApp(
     requestedCharacter: String?,
     consumedCharacter: () -> Unit,
 ) {
-    var page by rememberSaveable { mutableStateOf(AppPage.Handbook.name) }
+    val user = requireNotNull(state.user)
+    val navigation = remember(controller, user.id) {
+        AccountNavigationStore(controller.platform.secureStore, user.id)
+    }
+    val initialNavigation = remember(navigation) {
+        navigation.load<AppNavigationState>("application")
+            ?.normalized("ADMIN" in user.roles) ?: AppNavigationState()
+    }
+    var page by rememberSaveable { mutableStateOf(initialNavigation.page) }
     var mapsFullscreen by remember { mutableStateOf(false) }
     val pages = rememberSaveableStateHolder()
     var characterHistory by
         key("character-history-v1") {
-            rememberSaveable { mutableStateOf<List<String>>(emptyList()) }
+            rememberSaveable { mutableStateOf(initialNavigation.characters) }
         }
-    val characterUuid = characterHistory.lastOrNull()
+    val currentNavigation = AppNavigationState(page, characterHistory)
+        .normalized("ADMIN" in user.roles)
+    SideEffect { navigation.save("application", currentNavigation) }
+    val characterUuid = currentNavigation.characters.lastOrNull()
     LaunchedEffect(requestedCharacter) {
         requestedCharacter?.let {
             characterHistory = listOf(it)
@@ -134,7 +145,7 @@ private fun AuthenticatedApp(
     val keyboard = LocalSoftwareKeyboardController.current
     val context = LocalPlatformContext.current
     val images =
-        remember(state.user!!.id) {
+        remember(user.id) {
             ImageLoader.Builder(context)
                 .components {
                     add(SvgDecoder.Factory())
@@ -142,7 +153,7 @@ private fun AuthenticatedApp(
                 }
                 .diskCache {
                     DiskCache.Builder()
-                        .directory(controller.platform.mediaDirectory(state.user!!.id).toPath())
+                        .directory(controller.platform.mediaDirectory(user.id).toPath())
                         .maxSizeBytes(128L * 1024 * 1024)
                         .build()
                 }
@@ -161,12 +172,13 @@ private fun AuthenticatedApp(
             .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
     ) {
         val format = layoutFormat(maxWidth.value)
-        val selectedPage = runCatching { AppPage.valueOf(page) }.getOrDefault(AppPage.Handbook)
+        val selectedPage = AppPage.valueOf(currentNavigation.page)
         ShareMorphRoot {
             CompositionLocalProvider(
                 LocalHeaderConnection provides state.headerConnection(),
                 LocalCatalogueEditions provides state.sources.flatMap { it.versions },
                 LocalHeaderRetry provides { controller.refresh(force = true) },
+                LocalAccountNavigation provides navigation,
             ) {
                 pages.SaveableStateProvider("application-shell") {
                     AppNavigationShell(
@@ -241,12 +253,12 @@ private fun AuthenticatedApp(
                                         } else if (displayedPage == AppPage.Maps) {
                                             MapsRoute(
                                                 controller.api,
-                                                state.user!!.id,
+                                                user.id,
                                                 images,
                                                 format,
                                                 header = header,
                                                 fullscreen = { mapsFullscreen = it },
-                                                admin = "ADMIN" in state.user!!.roles,
+                                                admin = "ADMIN" in user.roles,
                                             )
                                         } else
                                             ShareChromeLayout(

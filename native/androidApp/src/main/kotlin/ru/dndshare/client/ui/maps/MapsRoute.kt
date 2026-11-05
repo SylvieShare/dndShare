@@ -11,6 +11,10 @@ import ru.dndshare.client.maps.rendering.MapAssetCache
 import ru.dndshare.client.maps.rendering.MapSnapshotQueue
 import ru.dndshare.client.network.ApiClient
 import ru.dndshare.client.ui.LayoutFormat
+import ru.dndshare.client.ui.LocalAccountNavigation
+import ru.dndshare.client.ui.LocalAppPageActive
+import ru.dndshare.client.app.load
+import ru.dndshare.client.app.save
 import ru.dndshare.client.ui.designsystem.ShareChromeLayout
 
 @Composable
@@ -23,7 +27,13 @@ internal fun MapsRoute(
     fullscreen: (Boolean) -> Unit,
     admin: Boolean = false,
 ) {
-    var editor by rememberSaveable(owner) { mutableStateOf<String?>(null) }
+    val navigation = LocalAccountNavigation.current
+    val initialEditor = remember(navigation) {
+        navigation?.load<String>("map-editor")?.takeIf(String::isNotBlank)
+    }
+    var editor by rememberSaveable(owner) { mutableStateOf(initialEditor) }
+    val active = LocalAppPageActive.current
+    SideEffect { if (active) navigation?.save("map-editor", editor) }
     val context = LocalContext.current.applicationContext
     val api = remember(client) { HttpMapsApi(client) }
     val root =

@@ -49,7 +49,10 @@ class AppController(val platform: DeviceServices, val api: ApiClient) {
                     retainCharacterDrafts(platform, previous, it)
                 }
             state.value.repository?.database?.close()
-            if (previous != null) platform.eraseAccount(previous)
+            if (previous != null) {
+                AccountNavigationStore.clear(platform.secureStore, previous)
+                platform.eraseAccount(previous)
+            }
             val db = withContext(Dispatchers.IO) { platform.database(user.id) }
             restoreCharacterDrafts(platform, user.id, db)
             try {
@@ -285,7 +288,10 @@ class AppController(val platform: DeviceServices, val api: ApiClient) {
                 else if (db != null) retainCharacterDrafts(platform, userId, db)
             }
             db?.close()
-            if (userId != null) platform.eraseAccount(userId)
+            if (userId != null) {
+                AccountNavigationStore.clear(platform.secureStore, userId)
+                platform.eraseAccount(userId)
+            }
         }
         mutable.value = AppState(booting = false)
     }

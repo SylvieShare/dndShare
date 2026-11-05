@@ -13,7 +13,10 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import coil3.ImageLoader
 import kotlinx.coroutines.*
 import ru.dndshare.client.app.AppState
+import ru.dndshare.client.app.load
+import ru.dndshare.client.app.save
 import ru.dndshare.client.ui.LayoutFormat
+import ru.dndshare.client.ui.LocalAccountNavigation
 
 @Composable
 fun CharacterSheetRoute(
@@ -30,10 +33,12 @@ fun CharacterSheetRoute(
 ) {
     val repository = state.repository ?: return
     val accountId = state.user?.id ?: return
+    val navigation = LocalAccountNavigation.current
+    val navigationKey = "sheet:$uuid"
     key(accountId, uuid) {
         val owner = rememberViewModelStoreOwner()
         val factory =
-            remember(repository, uuid) {
+            remember(repository, uuid, navigation) {
                 viewModelFactory {
                     initializer {
                         CharacterSheetViewModel(
@@ -52,6 +57,7 @@ fun CharacterSheetRoute(
                             ),
                             createSavedStateHandle(),
                             repository.commandQueue(uuid),
+                            initialSection = navigation?.load<String>(navigationKey),
                         )
                     }
                 }
@@ -59,6 +65,11 @@ fun CharacterSheetRoute(
         val model: CharacterSheetViewModel =
             viewModel(owner, key = "$accountId:$uuid", factory = factory)
         val ui by model.uiState.collectAsStateWithLifecycle()
+        SideEffect {
+            if (active && ui.navigation.sectionName.isNotBlank()) {
+                navigation?.save(navigationKey, ui.navigation.sectionName)
+            }
+        }
         val lifecycle = LocalLifecycleOwner.current.lifecycle
         LaunchedEffect(model, active, lifecycle) {
             if (active)
