@@ -42,4 +42,3 @@ export async function fixture(page, templateName = 'DND5', owner = true, catalog
   })
   return { writes, requests, document: () => document }
 }
-
