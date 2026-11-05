@@ -38,10 +38,11 @@ describe('character spell card icon', () => {
     expect(source).not.toContain('isAlwaysPrepared')
   })
 
-  it('uses a single row menu with passive attack and dice values', () => {
+  it('reuses the row roll menu for direct metric actions', () => {
     expect(source).toContain('<SpellRollMenu')
     expect(source).not.toContain(':rollable=')
-    expect(source).not.toContain('@roll-attack')
+    expect(source).toContain('@roll-attack')
+    expect(source).toContain('rollMenu.value?.openRoll(kind)')
     expect(source).not.toContain('damage-menu')
     expect(source).not.toContain('class="sp-step"')
     expect(source).not.toContain('classSourceSummary')

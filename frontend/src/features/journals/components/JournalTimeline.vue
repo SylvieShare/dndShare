@@ -5,7 +5,7 @@
       <div v-if="ownerMode" class="diary-section-actions">
       <button v-if="ownerMode && session.events.length > 1" class="diary-order-toggle" type="button" :disabled="blocked || filter !== 'all'" :aria-pressed="reordering" title="Изменить порядок событий" aria-label="Изменить порядок событий" @click="reordering = !reordering"><ArrowUpDown :size="18" /></button>
       <JournalEditButton v-if="ownerMode && editableSection" :disabled="blocked" label="Редактировать раздел" @click="$emit('edit-session')" />
-      <JournalEventTypePicker v-if="ownerMode" :disabled="blocked" :quiet="compact" :label="compact ? 'Добавить запись' : 'Добавить событие'" @create="$emit('create-event', $event)" />
+      <JournalEventTypePicker v-if="ownerMode" :disabled="blocked" label="Новая запись" @create="$emit('create-event', $event)" />
       </div>
     </div>
     <div v-if="visibleEvents.length" class="diary-timeline" :data-sortable-container="group">

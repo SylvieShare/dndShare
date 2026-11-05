@@ -5,7 +5,7 @@
       :show-edit-icon="false"
       :edit-fade="editFade"
       @edit="$emit('edit')"
-     class="stat-view" :class="{ 'stat-view--mobile': mobileVariant }">
+     class="stat-view" :class="{ 'stat-view--mobile': mobileVariant, 'action-menu-source--open': !!rollMenu }">
     <template #decoration><TileAccentStrip v-if="mode !== 'panel'" :color="color" /></template>
 
     <!-- ── Head: editable name + save chip ── -->
@@ -93,7 +93,8 @@
       :key="`${rollMenu.kind}:${rollMenu.id || ''}`"
       :anchor="rollMenu.anchor"
       :scope="rollMenu.kind === 'save' ? 'saving_throw' : 'ability_check'"
-      :title="rollMenu.title"
+      :title="rollMenu.title" :total="rollMenu.total" :details="rollMenu.details"
+      :editable="showEdit && mode !== 'panel'" @edit="editSelection"
       :mode="rollMenu.mode"
       :cancelled="rollMenu.cancelled"
       @close="rollMenu = null"
@@ -139,6 +140,8 @@ const props = defineProps({
   title: { type: String, default: '' },
   color: { type: String, default: 'var(--text-muted)' },
   suggestSvg: { type: String, default: '' },
+  checkTotal: Number,
+  proficiencyBonus: { type: Number, default: 0 },
   mod: { type: Number, default: 0 },
   raw: { type: Number, default: 0 },
   save: { type: Number, default: 0 },
@@ -171,11 +174,27 @@ function openRollMenu(event, kind, skill) {
   rollMenu.value = {
     anchor: event.currentTarget, kind, id: skill?.id,
     title: skill?.title || `${props.title} — ${kind === 'save' ? 'спасбросок' : 'проверка'}`,
+    total: skill?.bonus ?? (kind === 'save' ? props.save : props.checkTotal ?? props.mod),
+    details: skill?.bonusDetails || basicDetails(kind),
     mode: skill?.rollMode || (kind === 'save' ? props.saveMode : props.checkMode),
     cancelled: skill?.rollModeCancelled ?? (kind === 'save' ? props.saveModeCancelled : props.checkModeCancelled),
   }
 }
 
+function basicDetails(kind) {
+  const total = kind === 'save' ? props.save : props.checkTotal ?? props.mod
+  const proficiency = kind === 'save' && props.saveUp ? props.proficiencyBonus : 0
+  return [
+    { key: 'ability', label: `Модификатор: ${props.title}`, value: props.mod },
+    ...(proficiency ? [{ key: 'proficiency', label: 'Владение', value: proficiency }] : []),
+    ...(total !== props.mod + proficiency ? [{ key: 'extra', label: 'Дополнительные бонусы', value: total - props.mod - proficiency }] : []),
+  ]
+}
+function editSelection() {
+  const id = rollMenu.value?.id
+  rollMenu.value = null
+  emit('edit', id)
+}
 function confirmRoll(mode, excluded) {
   const selection = rollMenu.value
   rollMenu.value = null

@@ -127,7 +127,10 @@ test.describe('compact character gestures', () => {
     await expect(page.locator('.character-workspace-header')).toBeVisible()
     await expect(nav.getByRole('button', { name: 'База', exact: true })).toHaveAttribute('aria-current', 'page')
     await expect(page.locator('.dnd-tablet-base')).toBeVisible()
-    if (width < 600) await expect(page.locator('.dnd-tablet-base .hp-compact')).toBeVisible()
+    if (width < 600) {
+      await expect(page.locator('.dnd-tablet-base .hp-compact')).toHaveCount(0)
+      await expect(page.getByRole('button', { name: 'Данные персонажа', exact: true })).toHaveAttribute('aria-expanded', 'false')
+    }
     await swipe(page)
     await expect(nav.getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
     await expect(page.locator('.dnd-stats:visible')).toBeVisible()

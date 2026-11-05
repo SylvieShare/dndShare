@@ -100,12 +100,12 @@ private fun JournalWorkspace(journal: JsonObject, response: JsonObject) {
                 ShareChoiceChip(filter == key, { filter = key }, label = { Text(title) })
             }
             if (canEdit && section != null) {
-                ShareTextButton(
+                ShareButton(
                     onClick = {
                         context.edit("journal-entry:new:${section["id"].referenceId()}:event")
                     }
                 ) {
-                    Text("Добавить запись")
+                    Text("Новая запись")
                 }
                 if (personal)
                     ShareTextButton(

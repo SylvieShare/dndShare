@@ -185,7 +185,9 @@
   .mobile-sticky-header::after { display: none; }
   .mobile-tabbar { --surface: var(--surface-raised); background: var(--surface); border: 0; border-radius: var(--radius-tile); padding: 4px 8px; gap: 2px; min-height: 48px; box-shadow: 0 var(--spacing-xs) var(--radius-medium) color-mix(in srgb, var(--scrim) 30%, transparent); }
   .mobile-tab-indicator { top: 4px; bottom: 4px; height: auto; border-radius: var(--radius-input); background: color-mix(in srgb, var(--accent) 18%, var(--surface)); }
-  .mobile-tab-btn { border-radius: var(--radius-input); }
+  .mobile-tab-btn { border-radius: var(--radius-input); flex: 1 0 44px; padding: 0; flex-direction: column; }
+  .mobile-tab-btn.active { min-width: var(--layout-sheet-navigation-selected); }
+  .mobile-tab-caption { font-size: 10px; line-height: 14px; }
   .mobile-tab-btn.active { color: var(--accent-soft); }
 }
 

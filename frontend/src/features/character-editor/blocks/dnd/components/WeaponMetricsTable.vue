@@ -1,14 +1,15 @@
 <template>
   <div class="weapon-metrics" role="group" aria-label="Показатели оружия">
-    <div class="weapon-metrics__cell weapon-metrics__attack">
+    <component :is="interactive ? 'button' : 'div'" :type="interactive ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__attack" :aria-label="interactive ? 'Настроить бросок атаки' : undefined" @click.stop="interactive && emit('roll', 'attack', $event)">
       <span class="weapon-metrics__label">Атака</span>
       <strong class="weapon-metrics__bonus">{{ attack || '—' }}</strong>
-    </div>
-    <div class="weapon-metrics__cell weapon-metrics__damage">
+    </component>
+    <component :is="interactive ? 'button' : 'div'" :type="interactive ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__damage" :aria-label="interactive ? 'Настроить бросок урона' : undefined" @click.stop="interactive && emit('roll', 'damage', $event)">
       <span class="weapon-metrics__label">Урон</span>
       <AttackDamage compact v-if="damageParts.length || modifier !== 0" :damage-parts="damageParts" :modifier="modifier" :two-handed-parts="twoHandedParts" wrap-damage />
       <span v-else>—</span>
-    </div>
+      <small v-if="twoHandedParts.length" class="weapon-metrics__grip">Одной рукой / двумя руками</small>
+    </component>
     <div v-if="visibleProperties.length" class="weapon-metrics__cell weapon-metrics__properties">
       <span class="weapon-metrics__label">Свойства</span>
       <div class="weapon-metrics__property-list">
@@ -45,7 +46,7 @@ const props = defineProps({
   properties: { type: Array, default: () => [] },
   interactive: { type: Boolean, default: false },
 })
-const emit = defineEmits(['property-enter', 'property-leave'])
+const emit = defineEmits(['property-enter', 'property-leave', 'roll'])
 const openedKey = shallowRef(null), anchor = shallowRef(null)
 const keyOf = property => property.id ?? property.label
 const visibleProperties = computed(() => props.properties.filter(property => String(property.label || '').trim()))
@@ -67,6 +68,9 @@ function showDescription(event, property) {
   background: transparent;
 }
 .weapon-metrics__cell {
+  border: 0;
+  font: inherit;
+  text-align: left;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -77,6 +81,9 @@ function showDescription(event, property) {
   border-radius: var(--radius-row);
   color: var(--text-2);
 }
+button.weapon-metrics__cell { cursor: pointer; }
+button.weapon-metrics__cell:focus-visible { outline: 2px solid var(--accent-soft); outline-offset: 2px; }
+.weapon-metrics__grip { color: var(--text-muted); font-size: 10px; line-height: 14px; white-space: normal; }
 .weapon-metrics__label { color: var(--text-muted); font-size: 10px; line-height: 12px; }
 .weapon-metrics__attack {
   flex: 0 0 var(--layout-weapon-metrics-attack-width);

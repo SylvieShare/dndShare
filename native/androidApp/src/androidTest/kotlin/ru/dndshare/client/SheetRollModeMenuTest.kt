@@ -35,7 +35,7 @@ class SheetRollModeMenuTest {
     @Test
     fun eachClickReplacesTheOtherModeAndReopeningRestoresTheDefault() {
         val title = "Ловкость — спасбросок"
-        val request = SheetRollRequest(title, kind = "saving_throw", bonus = 6, manualMode = "advantage")
+        val request = SheetRollRequest(title, kind = "saving_throw", ability = 2, proficiencyRank = 1, bonus = 6, manualMode = "advantage")
         val results = LinkedBlockingQueue<SheetRollRequest>()
         val sheet = SheetStateServer().sheet
         val instrument = InstrumentationRegistry.getInstrumentation()
@@ -71,7 +71,11 @@ class SheetRollModeMenuTest {
                 }
                 fun verify(mode: String, vararg clicks: String) {
                     TouchRobot.click(title)
-                    clicks.forEach(TouchRobot::click)
+                    TouchRobot.await("Roll context") { TouchRobot.find("$title · +6") != null }
+                    clicks.forEach { label ->
+                        TouchRobot.click(label)
+                        instrument.waitForIdleSync()
+                    }
                     TouchRobot.click("Бросить кубик")
                     assertEquals(request.copy(manualMode = mode), results.poll(5, TimeUnit.SECONDS))
                     TouchRobot.await("Roll menu closed") { TouchRobot.find("Бросить кубик") == null }

@@ -8,7 +8,7 @@ export default {
     "type": "INPUT_TEXT",
     "title": "Возраст",
     "content": {
-      "placeholder": "Возраст"
+      "placeholder": "Указать"
     }
   },
   "person_eyes": {
@@ -16,7 +16,7 @@ export default {
     "type": "INPUT_TEXT",
     "title": "Глаза",
     "content": {
-      "placeholder": "Глаза"
+      "placeholder": "Указать"
     }
   },
   "person_hair": {
@@ -24,7 +24,7 @@ export default {
     "type": "INPUT_TEXT",
     "title": "Волосы",
     "content": {
-      "placeholder": "Волосы"
+      "placeholder": "Указать"
     }
   },
   "person_skin": {
@@ -32,7 +32,7 @@ export default {
     "type": "INPUT_TEXT",
     "title": "Кожа",
     "content": {
-      "placeholder": "Кожа"
+      "placeholder": "Указать"
     }
   },
   "person_bonds": {
@@ -40,7 +40,7 @@ export default {
     "type": "INPUT_DESCRIPTION",
     "title": "Привязанности",
     "content": {
-      "placeholder": "Привязанности..."
+      "placeholder": "Указать"
     }
   },
   "person_flaws": {
@@ -48,7 +48,7 @@ export default {
     "type": "INPUT_DESCRIPTION",
     "title": "Слабости",
     "content": {
-      "placeholder": "Слабости..."
+      "placeholder": "Указать"
     }
   },
   "person_allies": {
@@ -56,7 +56,7 @@ export default {
     "type": "INPUT_DESCRIPTION",
     "title": "Союзники и организации",
     "content": {
-      "placeholder": "Союзники, организации, контакты..."
+      "placeholder": "Указать"
     }
   },
   "person_height": {
@@ -64,7 +64,7 @@ export default {
     "type": "INPUT_TEXT",
     "title": "Рост",
     "content": {
-      "placeholder": "Рост"
+      "placeholder": "Указать"
     }
   },
   "person_ideals": {
@@ -72,7 +72,7 @@ export default {
     "type": "INPUT_DESCRIPTION",
     "title": "Идеалы",
     "content": {
-      "placeholder": "Идеалы..."
+      "placeholder": "Указать"
     }
   },
   "person_origin": {
@@ -80,7 +80,7 @@ export default {
     "type": "INPUT_TEXT",
     "title": "Происхождение",
     "content": {
-      "placeholder": "Происхождение"
+      "placeholder": "Указать"
     }
   },
   "person_traits": {
@@ -88,7 +88,7 @@ export default {
     "type": "INPUT_DESCRIPTION",
     "title": "Черты характера",
     "content": {
-      "placeholder": "Черты характера..."
+      "placeholder": "Указать"
     }
   },
   "person_weight": {
@@ -96,7 +96,7 @@ export default {
     "type": "INPUT_TEXT",
     "title": "Вес",
     "content": {
-      "placeholder": "Вес"
+      "placeholder": "Указать"
     }
   },
   "person_alignment": {
@@ -104,7 +104,7 @@ export default {
     "type": "DND_ALIGNMENT",
     "title": "Мировоззрение",
     "content": {
-      "placeholder": "Мировоззрение"
+      "placeholder": "Указать"
     }
   },
   "person_backstory": {
@@ -112,7 +112,7 @@ export default {
     "type": "INPUT_DESCRIPTION",
     "title": "Предыстория персонажа",
     "content": {
-      "placeholder": "Предыстория персонажа..."
+      "placeholder": "Указать"
     }
   },
   "person_appearance": {
@@ -120,7 +120,7 @@ export default {
     "type": "INPUT_DESCRIPTION",
     "title": "Внешность",
     "content": {
-      "placeholder": "Описание внешности..."
+      "placeholder": "Указать"
     }
   }
 }

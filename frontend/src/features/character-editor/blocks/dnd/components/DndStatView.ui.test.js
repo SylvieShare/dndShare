@@ -6,7 +6,7 @@ const source = readFileSync(fileURLToPath(new URL('./DndStatView.vue', import.me
 
 describe('DndStatView presentation', () => {
   it('labels the saving throw without the shield icon', () => {
-    expect(source).toContain('<span class="save-label">спас</span>')
+    expect(source).toContain('<span class="save-label">Спас</span>')
     expect(source).not.toContain('save-shield-icon')
   })
 

@@ -1,7 +1,7 @@
 <template>
   <MorphTile :outlined="false" :embedded="panel" padding="0" edit-label="Редактировать"
-      title="Защиты"
-      :show-edit="manage"
+      :title="displayRows.length || panel || !manage ? 'Защиты' : ''"
+      :show-edit="manage && (displayRows.length > 0 || panel)"
       :edit-fade="editFade"
       @edit="$emit('manage')"
      class="ddv" :class="{ 'ddv--panel': panel }">
@@ -12,13 +12,14 @@
         <strong>{{ damageTypeLabel(row.damage_type) }}</strong>
       </div>
     </div>
-    <span v-else class="ddv-empty">нет</span>
+    <ActionButton v-else-if="manage && !panel" variant="quiet" @click.stop="$emit('manage')">+ Добавить защиту</ActionButton>
+    <span v-else class="ddv-empty">Не указано</span>
   </MorphTile>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import { MorphTile } from '@sylvieshare/share-ui'
+import { MorphTile, ActionButton } from '@sylvieshare/share-ui'
 import { DEFENSE_KINDS } from '@/features/character-editor/lib/characterDefenses'
 
 const props = defineProps({

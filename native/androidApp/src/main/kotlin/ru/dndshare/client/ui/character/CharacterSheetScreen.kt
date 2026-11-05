@@ -271,11 +271,12 @@ internal fun CharacterSheetScreen(
                                             }
                                         navigation.overlay?.let { target ->
                                             if (target.startsWith("weapon-roll:")) {
-                                                val uid = target.substringAfter(':')
+                                                val uid = target.substringAfter(':').substringBefore('|')
                                                 WeaponActionsDialog(
                                                     uid,
                                                     ui.roll.busy,
                                                     model::dismissOverlay,
+                                                    scope = target.substringAfter('|', "all"),
                                                     attack = { options ->
                                                         model.dismissOverlay()
                                                         model.rolls.attack(uid, options)
@@ -286,12 +287,13 @@ internal fun CharacterSheetScreen(
                                                     },
                                                 )
                                             } else if (target.startsWith("spell-roll:")) {
-                                                val key = target.substringAfter(':')
+                                                val key = target.substringAfter(':').substringBefore('|')
                                                 SpellActionsDialog(
                                                     key,
                                                     ui.roll.busy,
                                                     model::dismissOverlay,
                                                     model.rolls.spellOptions(key),
+                                                    preferred = target.substringAfter('|', ""),
                                                 ) { options ->
                                                     model.dismissOverlay()
                                                     model.rolls.spell(key, options)
@@ -395,6 +397,9 @@ internal fun CharacterSheetScreen(
                     model::formInput,
                     ui.content.items,
                     ui.content.metadata,
+                    syncPending = ui.snapshot?.draft?.let { it.edits.isNotEmpty() || it.sending != null } == true,
+                    syncError = ui.snapshot?.draft?.blocked ?: ui.saveMessage,
+                    retry = model::retrySave,
                 )
             }
             if (active)

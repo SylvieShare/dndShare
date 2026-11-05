@@ -177,6 +177,7 @@ private fun DndAbilityFace(
                         },
                     enabled = !presentation.expanded,
                     color = WebPalette.Raised.copy(alpha = .6f).compositeOver(WebPalette.Surface),
+                    border = if (saveActions) BorderStroke(1.dp, WebPalette.AccentSoft.copy(alpha = .35f)) else null,
                     contentColor = WebPalette.Text,
                     shape = RoundedCornerShape(8.dp),
                 ) {
@@ -220,6 +221,7 @@ private fun DndAbilityFace(
         item("score") {
             Row(
                 Modifier.fillMaxWidth()
+                    .background(if (checkActions) WebPalette.Accent.copy(alpha = .09f) else Color.Transparent)
                     .clickable(enabled = !presentation.expanded) { checkActions = true }
                     .padding(horizontal = DesignTokens.Spacing.Medium),
                 verticalAlignment = Alignment.CenterVertically,
@@ -325,6 +327,7 @@ private fun DndAbilityFace(
                     },
                     enabled = !presentation.expanded,
                     color = WebPalette.Raised,
+                    border = if (skillActions) BorderStroke(1.dp, WebPalette.AccentSoft.copy(alpha = .35f)) else null,
                     contentColor = WebPalette.Text,
                     shape = RoundedCornerShape(if (compact) 9.dp else 7.dp),
                 ) {

@@ -172,7 +172,7 @@ private fun SpellCardMetrics(readout: SpellReadout) {
     ) {
         if (readout.item.data["damage"].objectValue()["range_attack"] == JsonPrimitive(true))
             ShareTonalButton(
-                onClick = { context.edit("spell-roll:$key") },
+                onClick = { context.edit("spell-roll:$key|attack") },
                 enabled = context.canEdit,
                 modifier =
                     Modifier.heightIn(min = 48.dp).semantics {
@@ -201,7 +201,7 @@ private fun SpellCardMetrics(readout: SpellReadout) {
                 .getOrDefault(emptyList())
             if (terms.isNotEmpty())
                 ShareTonalButton(
-                    onClick = { context.edit("spell-roll:$key") },
+                    onClick = { context.edit("spell-roll:$key|${option.key}") },
                     enabled = context.canEdit,
                     modifier =
                         Modifier.heightIn(min = 48.dp).semantics {

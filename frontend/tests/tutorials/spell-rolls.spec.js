@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 async function clickRow(locator) {
+  if (await locator.evaluate(element => element.matches('.spell-row'))) locator = locator.locator('.sp-name')
   await locator.scrollIntoViewIfNeeded()
   await locator.page().evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
   await locator.click()
@@ -15,22 +16,27 @@ for (const mobile of [false, true]) {
       await expect(page.locator('.spell-row')).toHaveCount(7)
     })
 
-    test('all metrics open one menu; attack overrides and critical damage preserve formulas', async ({ page }) => {
+    test('metrics open the matching settings; attack overrides and critical damage preserve formulas', async ({ page }) => {
       const row = page.locator('.spell-row').filter({ hasText: 'Леденящее прикосновение' })
-      await expect(row.locator('button')).toHaveCount(0)
+      await expect(row.locator('.ad-clickable')).toHaveCount(2)
       await expect(row.getByRole('img', { name: /^d8:/ })).toHaveCount(1)
       await clickRow(row.locator('.ad-atk'))
       expect(await page.evaluate(() => window.rolls)).toEqual([])
-      await page.getByRole('menuitem', { name: 'Бросить на атаку', exact: true }).click()
+      await expect(row).toHaveClass(/action-menu-source--open/)
       const disadvantage = page.getByRole('button', { name: 'Помеха', exact: true })
       await expect(disadvantage).toHaveAttribute('aria-pressed', 'true')
+      const controls = page.locator('.d20-roll-controls:visible')
+      const bounds = await controls.boundingBox()
+      expect(bounds.x).toBeGreaterThanOrEqual(8)
+      expect(bounds.x + bounds.width).toBeLessThanOrEqual(mobile ? 382 : 1392)
+      expect(await controls.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+
       await page.getByRole('button', { name: 'Преимущество', exact: true }).click()
       await expect(disadvantage).toHaveAttribute('aria-pressed', 'false')
       await page.getByRole('menuitem', { name: 'Бросить на атаку', exact: true }).last().click()
       expect(await page.evaluate(() => window.rolls)).toEqual([{ title: 'Атака: Леденящее прикосновение', bonus: 7, mode: 'advantage' }])
       expect(await page.evaluate(() => window.attackContext)).toMatchObject({ kind: 'attack', abilitySuggestId: 4, weaponAttack: false })
       await clickRow(row.locator('.ad-dmg'))
-      await page.getByRole('menuitem', { name: 'Бросить на урон', exact: true }).click()
       await page.getByRole('switch', { name: 'Критическое попадание' }).click()
       await page.getByRole('menuitem', { name: 'Бросить на урон', exact: true }).last().click()
       expect(await page.evaluate(() => window.rolls.at(-1))).toEqual({ title: 'Критический урон: Леденящее прикосновение', expression: '4d8{Некротический}+3{Некротический}' })
@@ -73,7 +79,7 @@ for (const mobile of [false, true]) {
       await clickRow(heal.locator('.ad-heal'))
       await expect(page.getByRole('menuitem', { name: /Бросить на (атаку|урон)/ })).toHaveCount(0)
       await expect(page.getByRole('menuitem', { name: 'Бросить на лечение', exact: true })).toHaveCount(0)
-      await page.getByRole('menuitem', { name: 'Использовать на…', exact: true }).click()
+      await expect(page.locator('.damage-preview')).toHaveCount(1)
       await expect(page.locator('.damage-preview')).toContainText('Лечение')
       await page.keyboard.press('Escape'); await page.keyboard.press('Escape')
       await clickRow(page.locator('.spell-row').filter({ hasText: 'Свет' }))

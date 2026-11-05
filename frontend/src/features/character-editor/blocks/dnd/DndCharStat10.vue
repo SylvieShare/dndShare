@@ -3,7 +3,7 @@
     :title="displayTitle"
     :color="statColor"
     :suggest-svg="titleSuggest?.svg || ''"
-    :mod="mod"
+    :mod="mod" :check-total="checkTotal" :proficiency-bonus="profBonus"
     :raw="statDisplayValue"
     :save="save"
     :save-up="saveUp"
@@ -44,7 +44,7 @@
         :title="displayTitle"
         :color="statColor"
         :suggest-svg="titleSuggest?.svg || ''"
-        :mod="mod"
+        :mod="mod" :check-total="checkTotal" :proficiency-bonus="profBonus"
         :raw="statDisplayValue"
         :save="save"
         :save-up="saveUp"
@@ -109,7 +109,7 @@
 
 <script setup>
 defineOptions({ inheritAttrs: false })
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 import { abilityModifier, sumBonuses, resolveNumValue } from '@/shared/lib/dnd'
 import { armorAbilityRollEffects, resolveRollMode } from '@/features/character-editor/blocks/dnd/lib/rollMode'
 import DndStatEditor from '@/features/character-editor/blocks/dnd/components/DndStatEditor'
@@ -417,10 +417,14 @@ function onOpenSkill(id) {
 }
 
 // ─── Editor window open/close ──────────────────────────────────────────────────
-function openEditor() {
+async function openEditor(skillId) {
   if (!canEdit.value) return
   editSkillId.value = null
   openFrom(tileRef.value?.$el)
+  if (typeof skillId === 'string' || typeof skillId === 'number') {
+    await nextTick()
+    onOpenSkill(skillId)
+  }
 }
 
 function closeEditor() {

@@ -265,7 +265,8 @@ internal fun InventoryGrid(
                                             label,
                                             actions,
                                             ownerKey = entry?.text("uid") ?: address,
-                                            trigger = { modifier, open, _ ->
+                                            heading = entry?.let { inventoryEntryName(it, context.items) + " · ×" + it["count"].number(1) } ?: "Добавить предмет",
+                                            trigger = { modifier, open, menuOpen ->
                                                 ShareCellSurface(
                                                     modifier
                                                         .testTag(
@@ -277,6 +278,7 @@ internal fun InventoryGrid(
                                                                 if (selected) "Экипировано" else ""
                                                         },
                                                     selected = selected,
+                                                    active = menuOpen,
                                                     dropTarget = held != null && target == address,
                                                     onClick = open,
                                                     content = face,

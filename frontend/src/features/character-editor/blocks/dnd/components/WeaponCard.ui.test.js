@@ -23,8 +23,9 @@ describe('weapon card actions', () => {
     expect(source).toContain("'action-menu-source--open': menuOpen")
   })
 
-  it('keeps weapon values display-only outside the action menu', () => {
-    expect(source).not.toContain('@roll-attack')
+  it('opens existing roll controls from metric buttons', () => {
+    expect(source).toContain('@roll="openDirectRoll"')
+    expect(source).toContain('damageOptions.value?.openScope(scope)')
     expect(source).not.toContain('@roll-damage')
     expect(source).not.toContain('@roll-critical')
   })

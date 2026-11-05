@@ -58,6 +58,22 @@ if (slotScenario === 'pact-spent') value.slot_pools = { long_rest: [{ level: 1, 
 if (slotScenario === 'rest') value.slot_pools = { long_rest: [{ level: 1, total: 2, used: 2 }, { level: 3, total: 1, used: 1 }], short_rest: [{ level: 3, total: 1, used: 1 }] }
 const sheet = reactive({ spells: value, prof_bonus: { v: 3 }, lvl: { level: 5 }, hp: { current: 20, max: 20 } })
 window.sheetValues = sheet
+// The fixture models the command boundary; production casting is server-authoritative.
+window.casts = []
+ctx.itemTransfers = { busy: false, state: { loading: false, error: null }, recipients: [], async castSpell(entry, options) {
+  window.casts.push({ key: entry.ref.key, ...options })
+  if (options.spendSlot) {
+    const next = JSON.parse(JSON.stringify(sheet.spells))
+    const slot = next.slot_pools[options.pool]?.find(slot => slot.level === options.castLevel)
+    if (!slot || slot.used >= slot.total) return false
+    slot.used++
+    sheet.spells = next
+    window.writes.push(next)
+  }
+  window.events.push({ type: 'spell_used' })
+  return true
+} }
+
 createApp({ render: () => h('main', { style: 'max-width:900px;margin:16px' }, [
   ...(slotScenario === 'rest' ? [h(DndRest, { block: { id: 'rest', content: {} }, values: sheet,
     'onUpdate:value': (id, next) => { sheet[id] = next },

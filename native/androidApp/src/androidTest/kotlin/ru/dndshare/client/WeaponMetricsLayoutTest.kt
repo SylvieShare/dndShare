@@ -14,6 +14,7 @@ import androidx.test.core.app.ActivityScenario
 import kotlin.test.*
 import kotlinx.serialization.json.JsonObject
 import org.junit.Test
+import java.util.concurrent.atomic.AtomicReference
 import ru.dndshare.client.character.*
 import ru.dndshare.client.model.CatalogueItem
 import ru.dndshare.client.ui.character.WeaponMetricsTable
@@ -56,6 +57,7 @@ class WeaponMetricsLayoutTest {
                 Case(282, 1f, simple.copy(properties = emptyList()), false),
                 Case(282, 1f, simple.copy(parts = List(6) { simple.parts.first() }), false),
             )
+        val selectedRoll = AtomicReference<String>()
         ActivityScenario.launch(ComponentActivity::class.java).use { scenario ->
             cases.forEachIndexed { index, case ->
                 val title = "Таблица оружия $index"
@@ -76,6 +78,8 @@ class WeaponMetricsLayoutTest {
                                             contentDescription = title
                                             testTagsAsResourceId = true
                                         },
+                                        attack = { selectedRoll.set("attack") },
+                                        damage = { selectedRoll.set("damage") },
                                         propertyDescriptions =
                                             mapOf(
                                                 "Универсальное" to
@@ -136,6 +140,10 @@ class WeaponMetricsLayoutTest {
                                 null
                     }
                 }
+                TouchRobot.click("Атака: Посох")
+                assertEquals("attack", selectedRoll.get())
+                TouchRobot.click("Урон: Посох")
+                assertEquals("damage", selectedRoll.get())
                 val die = TouchRobot.bounds("к6: 6")
                 assertTrue(table.contains(die) && die.height() > 0, "Damage must fit, case $index")
             }

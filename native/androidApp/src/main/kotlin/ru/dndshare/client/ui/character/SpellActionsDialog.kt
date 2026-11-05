@@ -17,6 +17,7 @@ internal fun SpellActionsDialog(
     busy: Boolean,
     close: () -> Unit,
     initial: SpellRollOptions? = null,
+    preferred: String = "",
     roll: (SpellRollOptions) -> Unit,
 ) {
     val context = LocalCharacterSheet.current
@@ -43,7 +44,8 @@ internal fun SpellActionsDialog(
     var selected by
         rememberSaveable(key) {
             mutableStateOf(
-                initial?.optionKey?.takeIf { chosen -> rules.any { it.key == chosen } }
+                preferred.takeIf { chosen -> rules.any { it.key == chosen } }
+                    ?: initial?.optionKey?.takeIf { chosen -> rules.any { it.key == chosen } }
                     ?: rules.firstOrNull()?.key.orEmpty()
             )
         }
@@ -126,13 +128,14 @@ internal fun SpellActionsDialog(
             dismissEnabled = !busy && !saving,
             actions = {
                 ShareTextButton(close, enabled = !busy && !saving) { Text("Закрыть") }
-                if (rules.isNotEmpty())
+                if (rules.isNotEmpty() || preferred == "attack")
                     ShareButton(
-                        onClick = { roll(options) },
-                        enabled = context.canEdit && !busy && !saving && plan.isSuccess,
+                        onClick = { roll(if (preferred == "attack") options.copy(kind = "attack", damageType = attackType) else options) },
+                        enabled = context.canEdit && !busy && !saving && !blocked &&
+                            (if (preferred == "attack") attackAllowed.isEmpty() || attackType != null else plan.isSuccess),
                     ) {
                         Text(
-                            "Бросить ${if(rule?.kind=="heal")"лечение" else if(rule?.kind=="damage")"урон" else "эффект"}"
+                            "Бросить ${if(preferred=="attack")"атаку" else if(rule?.kind=="heal")"лечение" else if(rule?.kind=="damage")"урон" else "эффект"}"
                         )
                     }
             },
@@ -161,7 +164,7 @@ internal fun SpellActionsDialog(
                     color = WebPalette.Warning,
                     style = ShareTypography.context,
                 )
-            if (readout.item.data["damage"].objectValue()["range_attack"] == JsonPrimitive(true)) {
+            if (preferred in listOf("", "attack") && readout.item.data["damage"].objectValue()["range_attack"] == JsonPrimitive(true)) {
                 ShareSelect("Режим атаки", mode, rollModeOptions, !busy && !saving) { mode = it }
                 if (attackAllowed.isNotEmpty())
                     ShareSelect(
@@ -188,7 +191,7 @@ internal fun SpellActionsDialog(
                             excluded = if (checked) excluded - id else excluded + id
                         }
                     }
-                ShareAction(
+                if (preferred != "attack") ShareAction(
                     "Атака ${signed(readout.attack)}",
                     { roll(options.copy(kind = "attack", damageType = attackType)) },
                     enabled =
@@ -199,7 +202,7 @@ internal fun SpellActionsDialog(
                             (attackAllowed.isEmpty() || attackType != null),
                 )
             }
-            if (rules.isNotEmpty())
+            if (preferred != "attack" && rules.isNotEmpty())
                 ShareSelect(
                     "Вариант броска",
                     selected,
@@ -225,9 +228,9 @@ internal fun SpellActionsDialog(
                 ) {
                     selectType(allowed, it)
                 }
-            if (rule?.kind == "damage")
+            if (preferred != "attack" && rule?.kind == "damage")
                 ShareToggle("Критический урон", critical, !busy && !saving) { critical = it }
-            plan.getOrNull()?.formula?.let { Text(it, style = ShareTypography.group) }
+            if (preferred != "attack") plan.getOrNull()?.formula?.let { Text(it, style = ShareTypography.group) }
             run {
                 val damage = rule?.rule ?: readout.item.data["damage"].objectValue()
                 val instances =
@@ -286,7 +289,7 @@ internal fun SpellActionsDialog(
                     SheetDescription(it)
                 }
             }
-            if (rules.isNotEmpty())
+            if (preferred != "attack" && rules.isNotEmpty())
                 plan.exceptionOrNull()?.message?.let {
                     Text(it, color = WebPalette.Warning, style = ShareTypography.context)
                 }

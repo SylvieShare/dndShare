@@ -26,6 +26,8 @@ internal fun WeaponMetricsTable(
     modifier: Modifier = Modifier,
     propertyDescriptions: Map<String, String> = emptyMap(),
     openItem: (Long) -> Unit = {},
+    attack: (() -> Unit)? = null,
+    damage: (() -> Unit)? = null,
 ) {
     val scale = LocalDensity.current.fontScale.coerceAtLeast(1f)
     val properties = weapon.properties.filter(String::isNotBlank)
@@ -38,7 +40,8 @@ internal fun WeaponMetricsTable(
             Box(
                 Modifier.size(attackSize)
                     .background(WebPalette.Raised, RoundedCornerShape(DesignTokens.Radius.Row))
-                    .testTag("weapon-attack-cell"),
+                    .testTag("weapon-attack-cell")
+                    .then(if (attack != null) Modifier.clickable(role = Role.Button, onClickLabel = "Настроить бросок атаки", onClick = attack) else Modifier),
                 contentAlignment = Alignment.Center,
             ) {
                 CellLabel("Атака", Modifier.align(Alignment.TopStart).padding(8.dp))
@@ -52,7 +55,7 @@ internal fun WeaponMetricsTable(
                     style = ShareTypography.weaponAttack,
                 )
             }
-            MetricCell("Урон", Modifier.weight(1f).heightIn(min = attackSize)) {
+            MetricCell("Урон", Modifier.weight(1f).heightIn(min = attackSize).then(if (damage != null) Modifier.clickable(role = Role.Button, onClickLabel = "Настроить бросок урона", onClick = damage) else Modifier)) {
                 WeaponDamageFace(
                     title,
                     weapon.parts,
@@ -61,6 +64,8 @@ internal fun WeaponMetricsTable(
                     false,
                     null,
                 )
+                if (weapon.twoHanded.isNotEmpty())
+                    Text("Одной рукой / двумя руками", style = ShareTypography.context, color = WebPalette.TextMuted)
             }
         }
         if (properties.isNotEmpty())
@@ -79,7 +84,7 @@ private fun MetricCell(label: String, modifier: Modifier, content: @Composable (
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         CellLabel(label)
-        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) { content() }
+        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) { content() }
     }
 }
 

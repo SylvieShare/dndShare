@@ -177,7 +177,7 @@ class InventoryInteractionTest {
                     }
                 }
                 tap("Действия с предметом: Книга")
-                tap("Добавить 1")
+                tap("Увеличить на 1")
                 await {
                     inventoryEntry(latest.get().values["items"].objectValue(), "book")
                         ?.get("count")

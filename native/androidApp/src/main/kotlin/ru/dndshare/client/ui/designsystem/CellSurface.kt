@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.unit.dp
 
 /** Square content surface; outlines communicate selection/drop state rather than grouping. */
@@ -19,6 +20,7 @@ fun ShareCellSurface(
     selected: Boolean = false,
     dropTarget: Boolean = false,
     onClick: (() -> Unit)? = null,
+    active: Boolean = false,
     content: @Composable BoxScope.() -> Unit,
 ) {
     val edge by
@@ -28,13 +30,16 @@ fun ShareCellSurface(
             tween(DesignTokens.Motion.Feedback),
             label = "Cell state",
         )
-    val border = if (edge.alpha > 0) BorderStroke(2.dp, edge) else null
+    val border = if (active) BorderStroke(1.dp, WebPalette.AccentSoft.copy(alpha = .35f))
+        else if (edge.alpha > 0) BorderStroke(2.dp, edge) else null
+    val surface = if (active) WebPalette.Accent.copy(alpha = .09f).compositeOver(WebPalette.Surface)
+        else WebPalette.Surface
     val shape = RoundedCornerShape(DesignTokens.Radius.Tile)
     if (onClick == null)
         Surface(
             modifier.aspectRatio(1f),
             shape = shape,
-            color = WebPalette.Surface,
+            color = surface,
             border = border,
         ) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center, content = content)
@@ -44,7 +49,7 @@ fun ShareCellSurface(
             onClick,
             modifier.aspectRatio(1f),
             shape = shape,
-            color = WebPalette.Surface,
+            color = surface,
             border = border,
         ) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center, content = content)

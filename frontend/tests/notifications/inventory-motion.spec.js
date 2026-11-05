@@ -34,14 +34,14 @@ const motions = page => page.evaluate(() => window.inventoryMotionCalls)
 for (const mobile of [false, true]) test(`inventory add and remove animations on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
   await openInventory(page, { mobile })
   expect(await motions(page)).toEqual([])
-  await action(page, 'Верёвка', 'Добавить +1')
+  await action(page, 'Верёвка', 'Увеличить на 1')
   await expect.poll(() => motions(page)).toContain('inventory-add-one')
   await expect(page.getByRole('button', { name: 'Верёвка', exact: true })).toHaveAttribute('aria-description', 'Упрощённый предмет. Количество: 3')
-  await action(page, 'Верёвка', 'Удалить одну')
+  await action(page, 'Верёвка', 'Уменьшить на 1')
   await expect.poll(() => motions(page)).toContain('inventory-remove-one')
-  await action(page, 'Верёвка', 'Удалить одну')
+  await action(page, 'Верёвка', 'Уменьшить на 1')
   await expect(page.getByRole('button', { name: 'Верёвка', exact: true }).locator('.inventory-bag-item__count')).toHaveCount(0)
-  await action(page, 'Верёвка', 'Удалить')
+  await action(page, 'Верёвка', 'Удалить предмет')
   await expect.poll(() => motions(page)).toContain('inventory-remove-item')
   await expect(page.getByRole('button', { name: 'Верёвка', exact: true })).toHaveCount(0)
   await expect(page.locator('.inventory-bag-effects > *')).toHaveCount(0)
@@ -59,7 +59,7 @@ test('last item disappears without leaving a draggable ghost or retained row', a
   await openInventory(page, { sparse: true, mobile: true })
   const bag = page.locator('[data-sortable-container="sec_bag"]')
   await expect(bag.locator('.inventory-bag-cell')).toHaveCount(16)
-  await action(page, 'Мел', 'Удалить')
+  await action(page, 'Мел', 'Удалить предмет')
   await expect.poll(() => motions(page)).toContain('inventory-remove-item')
   await expect(bag.locator('.inventory-bag-effects [data-sortable-key]')).toHaveCount(0)
   await expect(page.getByRole('button', { name: 'Мел', exact: true })).toHaveCount(0)
@@ -70,9 +70,9 @@ test('last item disappears without leaving a draggable ghost or retained row', a
 
 test('reduced motion applies changes immediately without animation', async ({ page }) => {
   await openInventory(page, { reduced: true })
-  await action(page, 'Верёвка', 'Добавить +1')
-  await action(page, 'Верёвка', 'Удалить одну')
-  await action(page, 'Верёвка', 'Удалить')
+  await action(page, 'Верёвка', 'Увеличить на 1')
+  await action(page, 'Верёвка', 'Уменьшить на 1')
+  await action(page, 'Верёвка', 'Удалить предмет')
   expect((await page.evaluate(() => window.readInventory())).sections[0].items.map(item => item.uid)).not.toContain('a')
   expect(await motions(page)).toEqual([])
   await expect(page.locator('.inventory-bag-effects > *')).toHaveCount(0)
@@ -81,8 +81,8 @@ test('reduced motion applies changes immediately without animation', async ({ pa
 test('rapid additions and removals settle on the real quantity', async ({ page }) => {
   await openInventory(page)
   for (let index = 0; index < 3; index++) {
-    await action(page, 'Верёвка', 'Добавить +1')
-    await action(page, 'Верёвка', 'Удалить одну')
+    await action(page, 'Верёвка', 'Увеличить на 1')
+    await action(page, 'Верёвка', 'Уменьшить на 1')
   }
   await expect(page.locator('.inventory-bag-item__feedback')).toHaveCount(0)
   const entry = (await page.evaluate(() => window.readInventory())).sections[0].items.find(item => item.uid === 'a')
@@ -92,7 +92,7 @@ test('rapid additions and removals settle on the real quantity', async ({ page }
 
 test('changing reduced-motion preference cancels an active removal', async ({ page }) => {
   await openInventory(page, { sparse: true })
-  await action(page, 'Мел', 'Удалить')
+  await action(page, 'Мел', 'Удалить предмет')
   await expect.poll(() => motions(page)).toContain('inventory-remove-item')
   await page.evaluate(() => document.getAnimations().filter(animation => animation.id === 'inventory-remove-item').forEach(animation => animation.pause()))
   await page.emulateMedia({ reducedMotion: 'reduce' })
@@ -103,7 +103,7 @@ test('changing reduced-motion preference cancels an active removal', async ({ pa
 test('a fading last row stays usable until an active drag ends', async ({ page }) => {
   await openInventory(page, { sparse: true, dragDuringRemoval: true, mobile: true })
   const bag = page.locator('[data-sortable-container="sec_bag"]')
-  await action(page, 'Мел', 'Удалить')
+  await action(page, 'Мел', 'Удалить предмет')
   await expect.poll(() => motions(page)).toContain('inventory-remove-item')
   await page.evaluate(() => document.getAnimations().filter(animation => animation.id === 'inventory-remove-item').forEach(animation => animation.pause()))
   const source = await bag.getByRole('button', { name: 'Верёвка', exact: true }).boundingBox()

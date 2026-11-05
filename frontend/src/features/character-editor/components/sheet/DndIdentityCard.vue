@@ -3,7 +3,9 @@
     <CharacterBlock block-id="read_only_notice" />
     <div class="sheet-stack" style="flex-grow: 1; gap: 11px">
       <BaseTile :outlined="false" class="sheet-stack" style="padding: 0; overflow: hidden; align-items: stretch; gap: 0">
-        <div class="sheet-row" style="align-items: stretch; gap: 0">
+        <div v-if="compactHealth" class="sheet-stack" style="padding: 15px; gap: 10px"><CharacterBlock block-id="hp" /><CharacterBlock block-id="desktop_status_trigger" /></div>
+        <DetailSection v-if="compactHealth" label="Данные персонажа" collapsible :default-open="false" style="padding: 0 15px 12px"><div class="sheet-row"><CharacterBlock block-id="character_icon" /><CharacterBlock block-id="char_identity" /></div></DetailSection>
+        <div v-else class="sheet-row" style="align-items: stretch; gap: 0">
           <div class="sheet-stack" style="flex: 0 0 110px; gap: 0">
             <CharacterBlock block-id="character_icon" />
             <CharacterBlock block-id="desktop_status_trigger" />
@@ -19,7 +21,7 @@
   </div>
 </template>
 <script setup>
-import { BaseTile } from '@sylvieshare/share-ui'
+import { BaseTile, DetailSection } from '@sylvieshare/share-ui'
 import CharacterBlock from '../CharacterBlock.vue'
 defineProps({ compact: Boolean, compactHealth: Boolean })
 </script>

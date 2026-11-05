@@ -91,6 +91,7 @@ internal fun WeaponSheetCard(
         "Действия с записью: $title",
         actions,
         ownerKey = uid,
+        heading = title,
         trigger = { semantics, open, expanded ->
             Column(
                 modifier
@@ -196,6 +197,8 @@ internal fun WeaponSheetCard(
                                     weapon,
                                     propertyDescriptions = descriptions,
                                     openItem = context.openItem,
+                                    attack = if (context.canEdit && !expired) ({ context.edit("weapon-roll:$uid|attack") }) else null,
+                                    damage = if (context.canEdit && !expired) ({ context.edit("weapon-roll:$uid|damage") }) else null,
                                 )
                         }
                     else
@@ -212,6 +215,8 @@ internal fun WeaponSheetCard(
                                     Modifier.weight(2.5f),
                                     descriptions,
                                     context.openItem,
+                                    attack = if (context.canEdit && !expired) ({ context.edit("weapon-roll:$uid|attack") }) else null,
+                                    damage = if (context.canEdit && !expired) ({ context.edit("weapon-roll:$uid|damage") }) else null,
                                 )
                         }
                 }

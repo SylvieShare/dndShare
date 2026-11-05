@@ -34,6 +34,8 @@ fun ShareIconNavigation(
     onSelect: (String) -> Unit,
     modifier: Modifier = Modifier,
     compact: Boolean = false,
+    showSelectedLabel: Boolean = false,
+    selectedItemSize: Dp = 84.dp,
     pill: Boolean = false,
     itemSize: Dp = 56.dp,
     containerColor: Color = WebPalette.Subheader,
@@ -51,6 +53,7 @@ fun ShareIconNavigation(
                 ((maxWidth - horizontalPadding * 2 - gap * (items.size - 1)) / items.size)
                     .coerceAtLeast(44.dp)
             else itemSize
+        val selectedSize = if (compact && showSelectedLabel) maxOf(size, selectedItemSize) else size
         val height = if (compact) 40.dp else itemHeight
         val index = items.indexOfFirst { it.key == selected }.coerceAtLeast(0)
         val x = animateDpAsState((size + gap) * index, label = "Navigation indicator")
@@ -61,7 +64,7 @@ fun ShareIconNavigation(
                 val start = with(density) { ((size + gap) * index).roundToPx() }
                 val end =
                     with(density) {
-                        ((size + gap) * index + size + horizontalPadding * 2).roundToPx()
+                        ((size + gap) * index + selectedSize + horizontalPadding * 2).roundToPx()
                     }
                 val viewport = with(density) { maxWidth.roundToPx() }
                 val target =
@@ -81,14 +84,14 @@ fun ShareIconNavigation(
             if (compact && !pill)
                 Box(
                     Modifier.offset { IntOffset(x.value.roundToPx(), (height - 3.dp).roundToPx()) }
-                        .width(size)
+                        .width(selectedSize)
                         .height(3.dp)
                         .background(WebPalette.Accent, RoundedCornerShape(5.dp))
                 )
             else
                 Box(
                     Modifier.offset { IntOffset(x.value.roundToPx(), 0) }
-                        .width(size)
+                        .width(selectedSize)
                         .height(height)
                         .background(
                             if (pill)
@@ -102,7 +105,7 @@ fun ShareIconNavigation(
                 items.forEach { item ->
                     val interactions = remember(item.key) { MutableInteractionSource() }
                     Box(
-                        Modifier.width(size)
+                        Modifier.width(if (item.key == selected) selectedSize else size)
                             .height(height)
                             .selectable(
                                 item.key == selected,
@@ -119,7 +122,7 @@ fun ShareIconNavigation(
                             verticalArrangement = Arrangement.Center,
                         ) {
                             icon(item.key)
-                            if (!compact)
+                            if (!compact || showSelectedLabel && item.key == selected)
                                 Text(
                                     item.label,
                                     maxLines = 1,

@@ -41,15 +41,15 @@ const description = computed(() => [
 .inventory-bag-item--draggable { cursor: grab; touch-action: none; }
 .inventory-bag-item--draggable:active { cursor: grabbing; }
 .inventory-bag-item--source { opacity: .25; }
-.inventory-bag-item__art { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; pointer-events: none; }
+.inventory-bag-item__art { display: flex; align-items: center; justify-content: center; width: 100%; height: calc(100% - 26px); align-self: flex-start; pointer-events: none; }
 .inventory-bag-item__feedback { position: absolute; right: 8px; bottom: 24px; color: var(--danger); font: 800 14px/1 var(--font-ui); text-shadow: 0 1px 3px var(--scrim); pointer-events: none; z-index: 2; }
 .inventory-bag-item__feedback--add { color: var(--success); }
-.inventory-bag-item__footer { position: absolute; inset: auto 0 0; display: flex; align-items: flex-end; justify-content: flex-end; gap: 4px; pointer-events: none; }
+.inventory-bag-item__footer { position: absolute; inset: 0 0 auto; display: flex; align-items: flex-start; justify-content: flex-end; gap: 4px; pointer-events: none; }
 .inventory-bag-item__count, .inventory-bag-item__tags { min-height: 22px; box-sizing: border-box; background: var(--surface-raised); box-shadow: inset 0 0 0 1px var(--border); }
 .inventory-bag-item__count { min-width: 22px; padding: 4px 5px 3px; border-radius: var(--r-md) 0 var(--r-lg) 0; color: var(--text-1); font: 800 12px/15px var(--font-ui); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: auto; }
 .inventory-bag-item__tags { display: inline-flex; align-items: center; gap: 3px; flex-shrink: 0; margin-right: auto; padding: 4px 5px; border-radius: 0 var(--r-md) 0 var(--r-lg); color: var(--text-muted); }
 .inventory-bag-item__tags > span { display: flex; pointer-events: auto; }
 .inventory-bag-item__tag--equipped { color: var(--accent); }
-.inventory-bag-item__status { position: absolute; left: 5px; top: 3px; color: var(--accent); font-size: 12px; }
-.inventory-bag-item__name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.inventory-bag-item__status { position: absolute; left: calc(50% - 4px); top: 3px; color: var(--accent); font-size: 12px; }
+.inventory-bag-item__name { position: absolute; bottom: 5px; left: 5px; right: 5px; color: var(--text-1); font: 500 11px/13px var(--font-ui); text-align: center; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 </style>

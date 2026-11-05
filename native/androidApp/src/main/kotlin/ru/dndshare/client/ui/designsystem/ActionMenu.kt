@@ -2,6 +2,7 @@ package ru.dndshare.client.ui.designsystem
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -23,8 +24,12 @@ fun ShareActionMenu(
     actions: List<ShareMenuAction>,
     trigger: (@Composable (Modifier, () -> Unit, Boolean) -> Unit)? = null,
     ownerKey: Any? = label,
+    heading: String? = null,
+    onExpandedChange: (Boolean) -> Unit = {},
 ) {
     var open by remember(ownerKey) { mutableStateOf(false) }
+    SideEffect { onExpandedChange(open) }
+    DisposableEffect(ownerKey) { onDispose { onExpandedChange(false) } }
     Box {
         if (trigger != null)
             trigger(Modifier.semantics { contentDescription = label }, { open = true }, open)
@@ -36,6 +41,7 @@ fun ShareActionMenu(
                 AppGlyph(Glyph.More)
             }
         ShareDropdownMenu(open, { open = false }) {
+            heading?.let { ShareMenuHeading(it) }
             actions.forEach { action ->
                 ShareDropdownMenuItem(
                     text = {
@@ -64,4 +70,10 @@ fun ShareActionMenu(
             }
         }
     }
+}
+
+@Composable
+fun ShareMenuHeading(text: String) {
+    Text(text, Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+        style = ShareTypography.header, color = WebPalette.Text)
 }

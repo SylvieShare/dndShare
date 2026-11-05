@@ -1,5 +1,5 @@
 <template>
-  <MorphTile :outlined="false" :embedded="panel" padding="0" edit-label="Редактировать" :title="label" :show-edit="editable" @edit="$emit('edit', $event)" class="btv" :class="{ 'btv--panel': panel }">
+  <MorphTile :outlined="false" :embedded="panel" padding="0" edit-label="Редактировать" :title="visibleSections.length || panel || !editable ? label : ''" :show-edit="editable && (visibleSections.length > 0 || panel)" @edit="$emit('edit', $event)" class="btv" :class="{ 'btv--panel': panel }">
 
     <div v-if="visibleSections.length" class="btv-sections">
       <div v-for="sec in visibleSections" :key="sec.title" class="btv-sec">
@@ -7,12 +7,13 @@
         <span class="btv-sec-tags">{{ sec.tags.join(', ') }}</span>
       </div>
     </div>
-    <span v-else class="btv-empty">нет</span>
+    <ActionButton v-else-if="editable && !panel" variant="quiet" @click.stop="$emit('edit')">+ Указать владения</ActionButton>
+    <span v-else class="btv-empty">Не указано</span>
   </MorphTile>
 </template>
 
 <script setup>
-import { MorphTile } from '@sylvieshare/share-ui'
+import { MorphTile, ActionButton } from '@sylvieshare/share-ui'
 import { computed } from 'vue'
 
 const props = defineProps({

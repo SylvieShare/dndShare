@@ -1,6 +1,6 @@
 <template>
   <div v-show="!blockHidden" class="spells-block">
-    <BaseTile :outlined="false" class="sp-rule-note" role="note">{{ rules.spellcastingRule }}</BaseTile>
+    <DetailSection label="Правила сотворения" collapsible :default-open="false"><p class="sp-rule-note" role="note">{{ rules.spellcastingRule }}</p></DetailSection>
     <SpellConcentrationBlock />
 
     <div v-if="spellcastingBlocked" class="sp-casting-warning" role="status">
@@ -61,8 +61,8 @@
 
     <div v-if="!tabs.length" class="spells-empty">Создай вкладку магии, чтобы добавлять заклинания.</div>
 
+    <DetailSection v-if="activeTabSource && hasStatConfig" label="Параметры книги магии" collapsible :default-open="false">
     <SpellSlotsBar
-      v-if="activeTabSource && hasStatConfig"
       :has-stat-config="hasStatConfig"
       :can-interact="canInteract"
       :stat-path="statPath"
@@ -83,6 +83,7 @@
       external-editor
       @edit="tabEditorOpen = true"
     />
+    </DetailSection>
 
     <!-- Заклинания по уровням (мультиколонки) -->
     <div v-if="activeTabSource" class="spells-groups">
@@ -194,6 +195,7 @@
 </template>
 
 <script setup>
+import { DetailSection } from '@sylvieshare/share-ui'
 import { dndRules } from '@/shared/lib/dndRules'
 import SpellConcentrationBlock from './components/SpellConcentrationBlock.vue'
 import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'

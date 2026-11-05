@@ -124,7 +124,7 @@ private fun PersonalityField(key: String) {
             ) {
                 Text(label, style = caption, color = WebPalette.TextMuted)
                 Text(
-                    value.ifBlank { label },
+                    value.ifBlank { if (context.canEdit) "Указать" else "Не указано" },
                     Modifier.weight(1f),
                     style =
                         ShareTypography.header.copy(
@@ -163,7 +163,8 @@ private fun PersonalityField(key: String) {
             if (value.isNotBlank()) SheetDescription(value)
             else
                 Text(
-                    if (key == "person_appearance") "Описание внешности…" else "$label…",
+                    if (context.canEdit) "Указать" else "Не указано",
+                    modifier = Modifier.clickable(enabled = context.canEdit) { context.edit("personality:$key") }.padding(vertical = 8.dp),
                     style = ShareTypography.context,
                     color = WebPalette.TextMuted,
                 )

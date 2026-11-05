@@ -1,5 +1,7 @@
 package ru.dndshare.client.ui.designsystem
 
+import androidx.compose.animation.core.tween
+
 import androidx.compose.animation.*
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.layout.*
@@ -61,8 +63,8 @@ fun ShareDropdownMenu(
         ) {
             AnimatedVisibility(
                 transition,
-                enter = fadeIn() + scaleIn(initialScale = .96f),
-                exit = fadeOut() + scaleOut(targetScale = .98f),
+                enter = fadeIn(tween(DesignTokens.Motion.Enter)) + scaleIn(tween(DesignTokens.Motion.Enter), initialScale = .98f),
+                exit = fadeOut(tween(DesignTokens.Motion.Exit)) + scaleOut(tween(DesignTokens.Motion.Exit), targetScale = .99f),
             ) {
                 Surface(
                     modifier

@@ -1,6 +1,6 @@
 <template>
   <template v-if="canAttack">
-    <RowActionSubmenu v-for="scope in ['attack', 'damage']" :key="scope" :min-width="280">
+    <RowActionSubmenu v-for="scope in ['attack', 'damage']" :key="scope" :ref="el => { submenus[scope] = el }" :min-width="280">
       <template #trigger="{ open }">
         <RowActionItem :action="scope" submenu :submenu-open="open">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</RowActionItem>
       </template>
@@ -22,6 +22,8 @@ const props = defineProps({ weaponUid: String, actions: { type: Array, default: 
 const charCtx = inject('charCtx', {})
 const selectedKeys = computed(() => [...selected.value, ...props.actions.filter(action => action.target_choice?.selected).map(action => action.key)])
 const emit = defineEmits(['roll', 'attack', 'roll-step'])
+const submenus = {}
+defineExpose({ openScope: scope => submenus[scope]?.open() })
 const critical = ref(false), twoHanded = ref(false), bonusAction = ref(false), selected = ref([]), amounts = ref({}), useKey = ref(''), attackRollMode = ref('auto')
 const thrown = computed(() => props.uses.find(use => use.key === useKey.value)?.attack_mode === 'thrown' || damageAttackMode(props.actions, selectedKeys.value) === 'thrown')
 const menuOptions = scope => weaponDamageMenuOptions(props.actions, selectedKeys.value, critical.value, scope, twoHanded.value, amounts.value)

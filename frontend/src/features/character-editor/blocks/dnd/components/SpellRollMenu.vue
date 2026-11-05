@@ -5,7 +5,7 @@
       <RowActionItem action="spell" :disabled="cast.disabled" @click="requestSave(close, cast)">Объявить спасбросок</RowActionItem>
     </SpellCastControls></template>
   </RowActionSubmenu>
-  <RowActionSubmenu v-if="hasAttack" :min-width="280">
+  <RowActionSubmenu ref="attackMenu" v-if="hasAttack" :min-width="280">
     <template #trigger="{ open }">
       <RowActionItem action="attack" submenu :submenu-open="open">Бросить на атаку</RowActionItem>
     </template>
@@ -21,7 +21,7 @@
       </SpellCastControls>
     </template>
   </RowActionSubmenu>
-  <RowActionSubmenu v-for="option in options" :key="option.key" :min-width="280">
+  <RowActionSubmenu v-for="option in options" :key="option.key" :ref="el => { optionMenus[option.key] = el }" :min-width="280">
     <template #trigger="{ open }">
       <RowActionItem :action="option.kind === 'damage' ? 'damage' : option.kind === 'heal' ? 'revive' : 'feature-damage'" submenu :submenu-open="open">
         {{ rollLabel(option) }}
@@ -64,6 +64,12 @@ const props = defineProps({ entry: { type: Object, required: true }, castLevel: 
 const emit = defineEmits(['close'])
 const ctx = inject('spellsBlockCtx')
 const critical = ref(false)
+const attackMenu = ref(null), optionMenus = {}
+defineExpose({ openRoll(kind) {
+  if (kind === 'attack') { attackMenu.value?.open(); return }
+  const option = options.value.find(option => option.kind === kind && option.primary) || options.value.find(option => option.kind === kind)
+  if (option) optionMenus[option.key]?.open()
+} })
 const events = useSessionEventsStore()
 const hasSequence = computed(() => !!events.sessionUuid && !!(props.entry.item?.data?.damage?.roll_table || props.entry.item?.data?.damage?.attack_chain))
 const typeReady = entry => ctx.spellDamageTypes?.ready(entry) !== false

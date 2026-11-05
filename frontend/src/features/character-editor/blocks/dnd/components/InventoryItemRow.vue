@@ -15,6 +15,7 @@
 
   <template #default="{ close }">
     <InventoryItemMenuHeader :name="entry.display.name" />
+    <span class="di-item-meta">Количество: {{ entry.count }}</span>
     <div v-if="isToolEntry(entry) || entryHasProficiency(entry) || armorMeta(entry)" class="di-item-meta">
       <span v-if="isToolEntry(entry)">{{ toolCategoryLabel(entry) }}</span>
       <span v-if="toolProficiencyRank(entry) >= 2" class="di-item-proficient">Компетентность</span>
@@ -73,12 +74,12 @@
       action="replenish"
       tone="success"
       @click="addEntry(sectionId, entry, close)"
-    >Добавить +1</RowActionItem>
+    >Увеличить на 1</RowActionItem>
     <RowActionItem
       v-if="canManage && entry.count > 1"
       action="delete"
       @click="deleteOneEntry(sectionId, entry, close)"
-    >Удалить одну</RowActionItem>
+    >Уменьшить на 1</RowActionItem>
     <RowActionItem
       v-if="canManage && entry.item_id == null"
       action="edit"
@@ -89,7 +90,7 @@
       action="delete"
       tone="danger"
       @click="deleteEntry(sectionId, entry, close)"
-    >Удалить</RowActionItem>
+    >Удалить предмет</RowActionItem>
   </template>
 </RowActionMenu>
 </template>

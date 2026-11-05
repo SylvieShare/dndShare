@@ -1,7 +1,7 @@
 <template>
   <MorphTile :outlined="false" :embedded="panel" padding="0" edit-label="Редактировать"
-      title="Действия"
-      :show-edit="manage"
+      :title="groups.length || panel || !manage ? 'Действия' : ''"
+      :show-edit="manage && (groups.length > 0 || panel)"
       :edit-fade="editFade"
       @edit="$emit('manage')"
      class="dav" :class="{ 'dav--panel': panel }">
@@ -19,7 +19,7 @@
         :key="action.key"
         :ref="menu => setActionMenu(action.key, menu)"
         block
-        :title="`Действия: ${action.title}`"
+        :title="`Действия: ${action.title}`" :heading="action.title"
         :disabled="!canOpenActionMenu(action)"
       >
         <template #trigger="{ open }">
@@ -135,6 +135,7 @@
 
     </SectionList>
 
+    <ActionButton v-if="!groups.length && manage && !panel" variant="quiet" @click="$emit('manage')">+ Добавить действие</ActionButton>
     <ItemTooltip
       v-if="tooltip.visible"
       :title="tooltip.title"
@@ -160,7 +161,7 @@ import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import ResourceRestIcons from '@/features/character-editor/blocks/generic/components/ResourceRestIcons.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
-import { MorphTile, TileAccentStrip } from '@sylvieshare/share-ui'
+import { MorphTile, TileAccentStrip, ActionButton } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   groups: { type: Array, default: () => [] },

@@ -37,13 +37,13 @@ describe('character action block', () => {
     expect(viewSource).toContain('<ItemIcon v-if="action.item"')
     expect(viewSource).toContain('showActionTooltip($event, linked)')
     expect(viewSource).toContain('<ItemTooltip')
-    expect(viewSource).toContain(':show-edit="manage"')
+    expect(viewSource).toContain(':show-edit="manage && (groups.length > 0 || panel)"')
     expect(viewSource).toContain('@edit="$emit(\'manage\')"')
   })
 
   it('manages all custom actions from the block morph without row reordering controls', () => {
     expect(viewSource).not.toContain('class="dav-add"')
-    expect(viewSource).toContain('<MorphTile :embedded="panel"')
+    expect(viewSource).toMatch(/<MorphTile[^>]*:embedded="panel"/)
     expect(blockSource).toContain('openFrom(root.value?.$el)')
     expect(blockSource).toContain(':readonly-actions="readonlyActions"')
     expect(viewSource).not.toContain('Переместить выше')

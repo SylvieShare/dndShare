@@ -1,18 +1,20 @@
 <template>
   <MorphTile :outlined="false" embedded padding="0" class="w-card" :class="{ 'sortable-placeholder': ctx.sortable.isSource(entry) }" :data-sortable-key="entry._key">
     <RowActionMenu
+      ref="actionMenu"
+      :heading="ctx.itemTitle(entry)"
       block
       :title="`Действия: ${ctx.itemTitle(entry)}`"
       :disabled="draggedThisGesture || (!ctx.charCtx.ownerMode && !ctx.item(entry))"
     >
       <template #trigger="{ open: menuOpen }">
         <WeaponCardView ref="cardEl" class="action-menu-source" :class="{ 'action-menu-source--open': menuOpen }"
-          :entry="entry" interactive @pointerdown="draggedThisGesture = false" @name-down="onNameDown" />
+          :entry="entry" :interactive="!entry.params?.creation?.expired" @roll="openDirectRoll" @pointerdown="draggedThisGesture = false" @name-down="onNameDown" />
       </template>
 
       <template #default="{ close: closeMenu }">
         <UsableItemAction source="weapon" :item="ctx.item(entry)" :entry="entry" :name="ctx.itemTitle(entry)" @close="closeMenu" />
-        <DamageRollOptions :weapon-uid="entry.uid" v-if="!entry.params?.creation?.expired && (hasDamage || ctx.item(entry))" :can-attack="!!ctx.item(entry)" :actions="weaponDamageActions" :uses="ctx.weaponUses(entry)" :preview="options => ctx.damagePreview(entry, options)" :bonus-action-option="options => ctx.bonusActionDamageOption(entry, options)" :versatile="hasTwoHandedDamage" @attack="options => rollAttack(closeMenu, options)" @roll="options => rollDamage(closeMenu, options)" @roll-step="options => { closeMenu(); ctx.rollWeaponUseStep(entry, options.weaponUseKey, options.stepKey) }" />
+        <DamageRollOptions ref="damageOptions" :weapon-uid="entry.uid" v-if="!entry.params?.creation?.expired && (hasDamage || ctx.item(entry))" :can-attack="!!ctx.item(entry)" :actions="weaponDamageActions" :uses="ctx.weaponUses(entry)" :preview="options => ctx.damagePreview(entry, options)" :bonus-action-option="options => ctx.bonusActionDamageOption(entry, options)" :versatile="hasTwoHandedDamage" @attack="options => rollAttack(closeMenu, options)" @roll="options => rollDamage(closeMenu, options)" @roll-step="options => { closeMenu(); ctx.rollWeaponUseStep(entry, options.weaponUseKey, options.stepKey) }" />
 
         <RowActionSeparator v-if="ctx.item(entry)" />
         <RowActionItem
@@ -76,7 +78,7 @@ import UsableItemAction from '@/features/character-editor/components/UsableItemA
 import ItemTransferAction from '@/features/character-editor/components/ItemTransferAction.vue'
 import MagicItemMenuActions from './MagicItemMenuActions.vue'
 import { ArrowRightLeft } from '@lucide/vue'
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, nextTick, ref, watch } from 'vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
@@ -95,6 +97,12 @@ const props = defineProps({
 
 const ctx = inject('weaponsBlockCtx')
 const cardEl = ref(null)
+const actionMenu = ref(null), damageOptions = ref(null)
+async function openDirectRoll(scope, event) {
+  actionMenu.value?.open(event)
+  await nextTick()
+  damageOptions.value?.openScope(scope)
+}
 const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 const hasDamage = computed(() => ctx.hasWeaponDamage(props.entry))
 const hasTwoHandedDamage = computed(() => ctx.twoHandedParts(props.entry).length > 0)

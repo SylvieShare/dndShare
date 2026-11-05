@@ -1,5 +1,5 @@
 <template>
-  <RowActionSubmenu v-if="ctx.charCtx.ownerMode && applicable" :min-width="320" :disabled="ctx.spellcastingBlocked || controller?.busy">
+  <RowActionSubmenu ref="submenu" v-if="ctx.charCtx.ownerMode && applicable" :min-width="320" :disabled="ctx.spellcastingBlocked || controller?.busy">
     <template #trigger="{ open }">
       <RowActionItem :icon="WandSparkles" submenu :submenu-open="open" :disabled="ctx.spellcastingBlocked || controller?.busy" @click="!open && ctx.charCtx.topSession && controller?.loadPlayers()">Использовать на…</RowActionItem>
     </template>
@@ -54,6 +54,11 @@ import SpellCastControls from './SpellCastControls.vue'
 import DamageFormulaPreview from './DamageFormulaPreview.vue'
 const props = defineProps({ entry: Object, castLevel: Number })
 const emit = defineEmits(['close'])
+const submenu = ref(null)
+defineExpose({ open() {
+  submenu.value?.open()
+  if (ctx.charCtx.topSession) controller.value?.loadPlayers()
+} })
 const ctx = inject('spellsBlockCtx')
 const controller = computed(() => ctx.charCtx.itemTransfers)
 const links = computed(() => statusEffectLinks(props.entry.item).filter(link => effectAppliesIn(link, 'cast')).map(link => ({ ...link, name: ctx.charCtx.characterResources?.itemsById?.get?.(String(link.effect_id))?.name || link.key })))

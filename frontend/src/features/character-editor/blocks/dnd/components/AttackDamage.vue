@@ -101,7 +101,7 @@ const emit = defineEmits(['roll-attack', 'roll-damage', 'roll-critical', 'roll-h
 function onRoll(event, name) {
   if (!props.rollable) return
   event.stopPropagation()
-  emit(name)
+  emit(name, event)
 }
 
 function rollDamage(close, critical) {
@@ -142,7 +142,8 @@ const hasDamage = computed(() => props.flatDamage !== null || props.damageParts.
 
 .ad-clickable { cursor: pointer; transition: filter 0.12s, transform 0.08s; }
 @media (hover: hover) { .ad-clickable:hover { filter: brightness(1.22); } }
-.ad-clickable:active { transform: scale(0.96); }
+.ad-clickable:active { filter: brightness(1.15); }
+.ad-clickable { min-height: 44px; }
 .ad-atk {
   padding: 5px 11px;
   border-radius: 8px;

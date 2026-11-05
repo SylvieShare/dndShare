@@ -65,19 +65,9 @@ internal fun DndFeatureSummary() {
         remember(context.sheet, context.items) { featureActions(context.sheet, context.items) }
     if (actions.isEmpty())
         ShareTile(Modifier.fillMaxWidth(), framed = false, contentPadding = PaddingValues(10.dp)) {
-            SheetSummaryHeading(
-                "Действия",
-                if (context.canEdit)
-                    listOf(
-                        ShareMenuAction(
-                            "Добавить действие",
-                            Glyph.Plus,
-                            { context.edit("action:new") },
-                        )
-                    )
-                else emptyList(),
-            )
-            Text("нет", style = ShareTypography.group, color = WebPalette.TextMuted)
+
+            if (context.canEdit) ShareTextButton({ context.edit("action:new") }) { Text("+ Добавить действие") }
+            else Text("Не указано", style = ShareTypography.context, color = WebPalette.TextMuted)
         }
     else FeatureActionCards()
     val values = context.sheet.values
@@ -108,7 +98,7 @@ internal fun DndFeatureSummary() {
         remember(context.sheet.data, context.items) { sheetDefenses(context.sheet, context.items) }
     if (resources.isNotEmpty() || context.canEdit)
         ShareTile(Modifier.fillMaxWidth(), framed = false, contentPadding = PaddingValues(10.dp)) {
-            SheetSummaryHeading(
+            if (resources.isNotEmpty()) SheetSummaryHeading(
                 "Ресурсы",
                 if (context.canEdit)
                     buildList {
@@ -132,7 +122,8 @@ internal fun DndFeatureSummary() {
                 else emptyList(),
             )
             if (resources.isEmpty())
-                Text("нет", style = ShareTypography.group, color = WebPalette.TextMuted)
+                if (context.canEdit) ShareTextButton({ context.edit("resource:new") }) { Text("+ Добавить ресурс") }
+            else Text("Не указано", style = ShareTypography.context, color = WebPalette.TextMuted)
             resources.forEach { row ->
                 key(row.key) {
                     var error by remember { mutableStateOf<String?>(null) }
@@ -182,7 +173,7 @@ internal fun DndFeatureSummary() {
         }
     if (defenses.isNotEmpty() || context.canEdit)
         ShareTile(Modifier.fillMaxWidth(), framed = false, contentPadding = PaddingValues(10.dp)) {
-            SheetSummaryHeading(
+            if (defenses.isNotEmpty()) SheetSummaryHeading(
                 "Защиты",
                 if (context.canEdit)
                     buildList {
@@ -206,7 +197,8 @@ internal fun DndFeatureSummary() {
                 else emptyList(),
             )
             if (defenses.isEmpty())
-                Text("нет", style = ShareTypography.group, color = WebPalette.TextMuted)
+                if (context.canEdit) ShareTextButton({ context.edit("defense:new") }) { Text("+ Добавить защиту") }
+            else Text("Не указано", style = ShareTypography.context, color = WebPalette.TextMuted)
             defenses.forEach { row ->
                 val kind =
                     when (row.text("kind")) {
@@ -223,9 +215,9 @@ internal fun DndFeatureSummary() {
             }
         }
     val groups = values["proficiencies"].objectValue().filterValues { it.arrayValue().isNotEmpty() }
-    if (groups.isNotEmpty())
+    if (groups.isNotEmpty() || context.canEdit)
         ShareTile(Modifier.fillMaxWidth(), framed = false, contentPadding = PaddingValues(10.dp)) {
-            SheetSummaryHeading(
+            if (groups.isNotEmpty()) SheetSummaryHeading(
                 "Владения",
                 if (context.canEdit)
                     listOf(
@@ -237,6 +229,7 @@ internal fun DndFeatureSummary() {
                     )
                 else emptyList(),
             )
+            if (groups.isEmpty()) ShareTextButton({ context.edit("proficiencies") }) { Text("+ Указать владения") }
             groups.forEach { (label, entries) ->
                 Text(
                     "$label: " +

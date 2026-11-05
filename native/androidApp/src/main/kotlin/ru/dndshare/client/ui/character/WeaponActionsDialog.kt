@@ -15,6 +15,7 @@ internal fun WeaponActionsDialog(
     uid: String,
     busy: Boolean,
     close: () -> Unit,
+    scope: String = "all",
     attack: (WeaponRollOptions) -> Unit,
     damage: (WeaponRollOptions) -> Unit,
 ) {
@@ -74,13 +75,14 @@ internal fun WeaponActionsDialog(
         actions = {
             ShareTextButton(close, enabled = !busy) { Text("Закрыть") }
             ShareButton(
-                onClick = { damage(options) },
-                enabled = !busy && context.canEdit && plan.isSuccess,
+                onClick = { if (scope == "attack") attack(options) else damage(options) },
+                enabled = !busy && context.canEdit && (scope == "attack" || plan.isSuccess),
             ) {
-                Text("Бросить урон")
+                Text(if (scope == "attack") "Бросить атаку" else "Бросить урон")
             }
         },
     ) {
+        if (scope != "damage") {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             listOf(
                     "auto" to "Авто",
@@ -96,12 +98,13 @@ internal fun WeaponActionsDialog(
                 }
         }
         SheetRollModePicker(mode, { mode = it }, neutralMode = "auto", enabled = !busy)
-        ShareAction(
+        if (scope == "all") ShareAction(
             "Атака ${signed(weapon.attack)}",
             { attack(options) },
             enabled = !busy && context.canEdit,
         )
-        WeaponOptionSwitch("Критический урон", critical, !busy) { critical = it }
+        }
+        if (scope != "attack") WeaponOptionSwitch("Критический урон", critical, !busy) { critical = it }
         if (weapon.twoHanded.isNotEmpty())
             WeaponOptionSwitch("Хват двумя руками", twoHanded, !busy && !thrown && !bonusAction) {
                 twoHanded = it
@@ -177,7 +180,7 @@ internal fun WeaponActionsDialog(
                     if (thrown || weapon.item.data["is_long_range"] == JsonPrimitive(true)) "ranged"
                     else "melee",
             )
-        context.mechanics.rules("roll_bonus", rollContext).forEach { source ->
+        if (scope != "damage") context.mechanics.rules("roll_bonus", rollContext).forEach { source ->
             val key = source.rule.text("key")
             WeaponOptionSwitch(
                 "${source.sourceLabel}: ${source.rule.text("formula")}",

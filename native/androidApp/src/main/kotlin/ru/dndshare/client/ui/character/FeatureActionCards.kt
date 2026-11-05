@@ -1,6 +1,9 @@
 package ru.dndshare.client.ui.character
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -50,12 +53,15 @@ internal fun FeatureActionCards() {
                     )
             }
             group.forEach { action ->
-                Row {
+                var menuOpen by remember(action.key) { mutableStateOf(false) }
+                Row(Modifier.fillMaxWidth().background(if (menuOpen) WebPalette.Accent.copy(alpha = .09f) else Color.Transparent).padding(vertical = 4.dp)) {
                     Text(action.title, Modifier.weight(1f), style = ShareTypography.group)
                     if (context.canEdit)
                         ShareActionMenu(
                             "Действия: ${action.title}",
-                            buildList {
+                            heading = action.title,
+                            onExpandedChange = { menuOpen = it },
+                            actions = buildList {
                                 action.manualIndex?.let {
                                     add(
                                         ShareMenuAction(

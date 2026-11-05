@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
@@ -113,10 +114,14 @@ fun ShareTile(
     framed: Boolean = true,
     containerColor: Color = WebPalette.Surface,
     borderColor: Color = WebPalette.Border,
+    active: Boolean = false,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val shape = RoundedCornerShape(DesignTokens.Radius.Tile)
-    val border = if (framed) BorderStroke(1.dp, borderColor) else null
+    val border = if (active) BorderStroke(1.dp, WebPalette.AccentSoft.copy(alpha = .35f))
+        else if (framed) BorderStroke(1.dp, borderColor) else null
+    val surface = if (active) WebPalette.Accent.copy(alpha = .09f).compositeOver(containerColor)
+        else containerColor
     val glow =
         if (tint == null) Modifier
         else
@@ -131,7 +136,7 @@ fun ShareTile(
             }
     val edge = if (accent == null) Modifier else Modifier.shareAccentStrip(accent)
     if (onClick == null)
-        Surface(modifier, shape = shape, border = border, color = containerColor) {
+        Surface(modifier, shape = shape, border = border, color = surface) {
             Column(
                 glow.then(edge).padding(contentPadding),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -139,7 +144,7 @@ fun ShareTile(
             )
         }
     else
-        Surface(onClick, modifier, shape = shape, border = border, color = containerColor) {
+        Surface(onClick, modifier, shape = shape, border = border, color = surface) {
             Column(
                 glow.then(edge).padding(contentPadding),
                 verticalArrangement = Arrangement.spacedBy(10.dp),

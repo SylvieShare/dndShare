@@ -45,6 +45,7 @@ internal fun SheetCatalogueEntry(
         return
     }
     val display = displayItem ?: item
+    var menuOpen by remember(id, entry.text("uid"), entry.text("key")) { mutableStateOf(false) }
     val title =
         entry["override"]
             .objectValue()
@@ -65,6 +66,7 @@ internal fun SheetCatalogueEntry(
             ),
         onClick = id?.let { { open() } },
         framed = false,
+        active = menuOpen,
         contentPadding = contentPadding,
     ) {
         Row(
@@ -153,6 +155,8 @@ internal fun SheetCatalogueEntry(
                     ShareActionMenu(
                         "Действия с записью: $title",
                         actions,
+                        heading = title,
+                        onExpandedChange = { menuOpen = it },
                         ownerKey =
                             entry.text("uid").ifBlank {
                                 entry.text("key").ifBlank { id?.toString().orEmpty() }

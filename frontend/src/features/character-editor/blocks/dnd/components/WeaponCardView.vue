@@ -1,6 +1,6 @@
 <template>
   <!-- Shared weapon row, rendered both in the list tile and inside the morph #view, so the geometry
-       can never drift between the two. Weapon values are display-only; rolls live in the card menu. -->
+       can never drift between the two. Values open their corresponding roll settings. -->
   <div class="w-card-main">
     <ItemIcon
       v-if="weaponItem?.iconImageUrl || weaponItem?.svg"
@@ -28,6 +28,7 @@
         :attack="ctx.formatBonus(ctx.attackBonus(entry))" :damage-parts="ctx.damagePartsRaw(entry)"
         :modifier="ctx.damageBonus(entry)" :two-handed-parts="ctx.twoHandedParts(entry)"
         :properties="ctx.propertyItems(entry)" :interactive="interactive"
+        @roll="(scope, event) => emit('roll', scope, event)"
         @property-enter="(event, property) => ctx.showPropertyTooltip(event, property)"
         @property-leave="ctx.hidePropertyTooltip()"
       />
@@ -46,7 +47,7 @@ const props = defineProps({
   // tile = full interactivity; morph clone = static
   interactive: { type: Boolean, default: false },
 })
-const emit = defineEmits(['name-down'])
+const emit = defineEmits(['name-down', 'roll'])
 
 const ctx = inject('weaponsBlockCtx')
 

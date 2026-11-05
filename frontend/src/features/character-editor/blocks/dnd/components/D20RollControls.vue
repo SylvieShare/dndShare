@@ -26,5 +26,5 @@ const excludedBonuses = ref([])
 const rollMode = ref(props.cancelled ? 'normal' : props.mode)
 </script>
 <style scoped>
-.d20-roll-controls { display: flex; flex-direction: column; gap: 10px; padding: 8px; width: var(--layout-roll-mode-menu-width); max-width: calc(100vw - 32px); box-sizing: border-box; }
+.d20-roll-controls { display: flex; flex-direction: column; gap: 10px; padding: 8px; width: var(--layout-roll-mode-menu-width); max-width: min(100%, calc(100vw - 32px)); box-sizing: border-box; }
 </style>

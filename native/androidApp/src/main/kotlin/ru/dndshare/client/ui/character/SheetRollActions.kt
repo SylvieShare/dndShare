@@ -21,6 +21,18 @@ internal fun SheetRollActions(
         if (open) mode = resolveSheetRollMode(context.mechanics, request).mode
     }
     ShareDropdownMenu(open, close, Modifier.width(DesignTokens.Layout.RollModeMenuWidth)) {
+        ShareMenuHeading("${request.title} · ${signed(request.bonus)}")
+        val ability = dndAbilities.firstOrNull { it.suggestId == request.ability }
+        if (ability != null) {
+            val modifier = abilityModifier(context.mechanics.score(ability.id))
+            val proficiency = request.proficiencyRank * context.sheet.proficiency()
+            Column(Modifier.padding(horizontal = 10.dp, vertical = 4.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("${ability.title}: ${signed(modifier)}", style = ShareTypography.context, color = WebPalette.TextSecondary)
+                if (proficiency != 0) Text("${if (request.proficiencyRank >= 2) "Мастерство" else "Владение"}: ${signed(proficiency)}", style = ShareTypography.context, color = WebPalette.TextSecondary)
+                val extra = request.bonus - modifier - proficiency
+                if (extra != 0) Text("Дополнительные бонусы: ${signed(extra)}", style = ShareTypography.context, color = WebPalette.TextSecondary)
+            }
+        }
         SheetRollModePicker(mode, { mode = it }, enabled = open)
         ShareDropdownMenuItem(
             text = { Text("Бросить кубик") },

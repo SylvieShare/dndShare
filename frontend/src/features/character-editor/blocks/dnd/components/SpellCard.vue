@@ -1,6 +1,6 @@
 <template>
   <CharacterItemSkeleton v-if="!entry.item && ctx.itemLoading?.(entry.ref.id)" />
-  <RowActionMenu v-else block :disabled="draggedThisGesture">
+  <RowActionMenu v-else ref="actionMenu" :heading="entry.item?.name" block :disabled="draggedThisGesture">
     <template #trigger="{ open: menuOpen }">
       <div
         class="spell-row action-menu-source"
@@ -55,7 +55,8 @@
         {{ saveTag }}
       </span>
       <span v-if="instances > 1" class="sp-mul">×{{ instances }}</span>
-      <AttackDamage
+      <AttackDamage rollable
+        @roll-attack="openDirectRoll('attack', $event)" @roll-damage="openDirectRoll('damage', $event)" @roll-heal="openDirectRoll('heal', $event)"
         :attack="entry.item?.data?.damage?.range_attack ? ctx.formatBonus(ctx.spellAttackBonus(entry)) : null"
         :damage-parts="damageParts"
         :modifier="damageModifier"
@@ -79,8 +80,8 @@
 
     <template #default="{ close }">
       <SpellCreationMenu :entry="entry" :cast-level="castLevel" @close="close" />
-      <SpellApplicationMenu :entry="entry" :cast-level="castLevel" @close="close" />
-      <SpellRollMenu :entry="entry" :cast-level="castLevel" @close="close" />
+      <SpellApplicationMenu ref="applicationMenu" :entry="entry" :cast-level="castLevel" @close="close" />
+      <SpellRollMenu ref="rollMenu" :entry="entry" :cast-level="castLevel" @close="close" />
       <RowActionSeparator v-if="hasMetrics" />
       <RowActionItem action="view" @click="openDetails(close)">Открыть описание</RowActionItem>
       <RowActionItem
@@ -163,7 +164,7 @@ import { Focus, Sparkles, Sprout } from '@lucide/vue'
 import SpellEffectFormulas from './SpellEffectFormulas.vue'
 import SpellScalingFormula from './SpellScalingFormula.vue'
 import { hasInlineSpellScaling, spellScalingHint, spellInstances } from '../lib/spellScaling'
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, nextTick, ref, watch } from 'vue'
 
 import SpellRollMenu from './SpellRollMenu.vue'
 import CharacterItemSkeleton from '@/features/character-editor/components/sheet/CharacterItemSkeleton.vue'
@@ -184,6 +185,13 @@ const props = defineProps({
 })
 
 const ctx = inject('spellsBlockCtx')
+const actionMenu = ref(null), rollMenu = ref(null), applicationMenu = ref(null)
+async function openDirectRoll(kind, event) {
+  actionMenu.value?.open(event)
+  await nextTick()
+  if (kind === 'heal' && props.entry.item?.data?.heal?.apply !== false) applicationMenu.value?.open()
+  else rollMenu.value?.openRoll(kind)
+}
 
 const data = computed(() => props.entry.item?.data || {})
 const nameEn = computed(() => String(props.entry.item?.nameEn || '').trim())

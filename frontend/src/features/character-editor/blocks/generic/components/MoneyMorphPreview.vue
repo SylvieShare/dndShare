@@ -75,6 +75,6 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .money-morph-preview { position: relative; width: var(--wallet-preview-width); height: var(--wallet-preview-height); }
-.money-morph-copy { width: var(--wallet-origin-width); transform: translate(var(--wallet-start-x), var(--wallet-start-y)); transition: transform 300ms cubic-bezier(.2, 0, 0, 1); }
-.money-morph-preview--revealed .money-morph-copy { transform: translate(var(--wallet-end-x), var(--wallet-end-y)); transition-duration: 420ms; }
+.money-morph-copy { width: var(--wallet-origin-width); transform: translate(var(--wallet-start-x), var(--wallet-start-y)); transition: transform var(--motion-morph-close) cubic-bezier(.2, 0, 0, 1); }
+.money-morph-preview--revealed .money-morph-copy { transform: translate(var(--wallet-end-x), var(--wallet-end-y)); transition-duration: var(--motion-morph-open); }
 </style>

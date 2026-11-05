@@ -65,29 +65,30 @@ internal fun InventoryCellFace(
                 null,
                 imageLoader = context.images,
                 contentScale = ContentScale.Fit,
-                modifier = Modifier.fillMaxSize().padding(6.dp),
+                modifier = Modifier.fillMaxWidth().fillMaxHeight(.62f).align(Alignment.TopCenter).padding(6.dp),
                 onLoading = { loaded = false },
                 onSuccess = { loaded = true },
                 onError = { loaded = false },
             )
-        if (!loaded)
-            Text(
+        if (!loaded) Box(Modifier.fillMaxWidth().fillMaxHeight(.62f).align(Alignment.TopCenter), contentAlignment = Alignment.Center) { AppGlyph(Glyph.Box, Modifier.size(32.dp), WebPalette.TextMuted) }
+        Text(
                 name,
-                Modifier.align(Alignment.Center).padding(6.dp),
-                style = ShareTypography.context,
-                maxLines = 3,
+                Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(5.dp),
+                style = ShareTypography.context.copy(fontSize = 11.sp, lineHeight = 13.sp),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
         if (equipped)
             AppGlyph(
                 Glyph.Shirt,
-                Modifier.align(Alignment.BottomStart).padding(4.dp).size(12.dp),
+                Modifier.align(Alignment.TopStart).padding(4.dp).size(12.dp),
                 WebPalette.Accent,
             )
         if (entry["count"].number(1) > 1)
             Text(
                 entry["count"].number(1).toString(),
-                Modifier.align(Alignment.BottomEnd)
+                Modifier.align(Alignment.TopEnd)
                     .padding(4.dp)
                     .background(WebPalette.Background.copy(alpha = .9f), RoundedCornerShape(5.dp))
                     .padding(horizontal = 5.dp, vertical = 1.dp),

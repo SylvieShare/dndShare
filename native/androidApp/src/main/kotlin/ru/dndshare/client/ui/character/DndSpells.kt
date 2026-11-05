@@ -20,10 +20,7 @@ internal fun DndSpells() {
     val tabs = book["tabs"].arrayValue().map { it.objectValue() }
     var selected by rememberSaveable(context.uuid) { mutableStateOf("") }
     val tab = tabs.firstOrNull { it.text("key") == selected } ?: tabs.firstOrNull()
-    ShareTile(
-        framed = false,
-        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 10.dp),
-    ) {
+    ShareDetailSection("Правила сотворения", collapsible = true, defaultOpen = false) {
         Text(
             if (context.sheet.sourceVersion == "2024")
                 "В каждый ход можно потратить на сотворение заклинаний только одну ячейку. Сотворения без ячейки не расходуют этот лимит."
@@ -66,7 +63,7 @@ internal fun DndSpells() {
             val source = tabs.firstOrNull { it.text("key") == key }
             if (source != null)
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    SpellBookStats(source)
+                    ShareDetailSection("Параметры книги магии", collapsible = true, defaultOpen = false) { SpellBookStats(source) }
                     if (context.canEdit && source["spells"].arrayValue().size > 1)
                         ShareTextButton(
                             onClick = { context.edit("reorder:spells|${source.text("key")}") }

@@ -216,6 +216,8 @@ internal fun SheetNavigation(
         section.name,
         onSelect = { key -> select(sections.first { it.name == key }) },
         compact = compact,
+        showSelectedLabel = compact,
+        selectedItemSize = DesignTokens.Layout.SheetNavigationSelected,
         pill = pill,
         itemSize = DesignTokens.Layout.SheetNavigationItem,
         itemHeight = DesignTokens.Layout.SheetNavigationHeight,

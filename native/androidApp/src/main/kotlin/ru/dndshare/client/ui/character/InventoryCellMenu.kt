@@ -53,7 +53,7 @@ internal fun inventoryCellActions(
                 )
             add(
                 ShareMenuAction(
-                    "Добавить 1",
+                    "Увеличить на 1",
                     Glyph.Plus,
                     { perform(uid, "inventory-count", buildJsonObject { put("delta", 1) }) },
                     !busy,
@@ -61,7 +61,7 @@ internal fun inventoryCellActions(
             )
             add(
                 ShareMenuAction(
-                    "Убрать 1",
+                    "Уменьшить на 1",
                     Glyph.Minus,
                     {
                         if (entry["count"].number(1) == 1) remove(uid)
@@ -109,7 +109,7 @@ internal fun inventoryCellActions(
                         !busy,
                     )
                 )
-            add(ShareMenuAction("Удалить", Glyph.Trash, { remove(uid) }, !busy, danger = true))
+            add(ShareMenuAction("Удалить предмет", Glyph.Trash, { remove(uid) }, !busy, danger = true))
         }
         val id = (entry["magic_item_id"] ?: entry["item_id"]).referenceId()
         if (id != null) add(ShareMenuAction("Справочник", Glyph.Book, { context.openItem(id) }))

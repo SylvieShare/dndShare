@@ -2,8 +2,8 @@
   <!-- Shared resources face, rendered in the tile and in the morph #view so they never drift.
        Padding is owned by this component; pips stay tickable in play. -->
   <MorphTile :outlined="false" :embedded="panel" padding="0" edit-label="Редактировать"
-      :title="title"
-      :show-edit="manage"
+      :title="resources.length || panel || !manage ? title : ''"
+      :show-edit="manage && (resources.length > 0 || panel)"
       :edit-fade="editFade"
       @edit="$emit('manage')"
      class="brv" :class="{ 'brv--panel': panel }">
@@ -29,12 +29,13 @@
       </div>
     </div>
 
-    <span v-else class="brv-empty">нет</span>
+    <ActionButton v-else-if="manage && !panel" variant="quiet" @click.stop="$emit('manage')">+ Добавить ресурс</ActionButton>
+    <span v-else class="brv-empty">Не указано</span>
   </MorphTile>
 </template>
 
 <script setup>
-import { MorphTile } from '@sylvieshare/share-ui'
+import { MorphTile, ActionButton } from '@sylvieshare/share-ui'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import ResourceRestIcons from '@/features/character-editor/blocks/generic/components/ResourceRestIcons.vue'
 

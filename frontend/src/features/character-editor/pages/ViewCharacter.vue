@@ -34,7 +34,7 @@
           :class="{ active: highlightedMobileTab === i }"
           :aria-current="activeTab === i ? 'page' : undefined"
           type="button"
-          :title="tab.title || 'Раздел'"
+          :title="tab.title || 'Раздел'" :aria-label="tab.title || 'Раздел'"
           @click="onSetActiveTab(i)"
         >
           <span
@@ -44,7 +44,7 @@
             role="img"
             :aria-label="tab.title || 'Раздел'"
           ></span>
-          <span v-else>{{ tab.title || 'Раздел' }}</span>
+          <span v-if="!tab.svg || activeTab === i" class="mobile-tab-caption">{{ tab.title || 'Раздел' }}</span>
         </button>
       </nav>
     </div>
@@ -186,7 +186,7 @@ Object.assign(charCtx, {
   publicVisible,
   setPublic: onPublicToggle,
   canTogglePublic: isOwner,
-  saveStatus,
+  saveStatus, saveError, retrySave,
   pendingSecondsLeft,
   sourceVersionId,
   contentSources,

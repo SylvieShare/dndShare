@@ -1,6 +1,9 @@
 @import './design-tokens.css';
 
 :root {
+  --action-menu-trigger-press-scale: 1;
+  --action-menu-item-press-scale: 1;
+  --action-menu-icon-press-scale: 0.96;
   /* Frameless groups need distinguishable surfaces in both web and Compose. */
   --surface-raised: #34343e;
   --surface-active: #42424f;
@@ -99,6 +102,6 @@ body .rc.dnd-rich-content tbody tr:nth-child(even) td {
 .action-menu-source--open {
   border-color: color-mix(in srgb, var(--accent-soft) 58%, var(--border)) !important;
   background-color: color-mix(in srgb, var(--accent) 9%, var(--surface)) !important;
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 16%, transparent), 0 8px 24px color-mix(in srgb, var(--bg) 45%, transparent);
-  transform: translateY(-1px);
+  outline: 1px solid color-mix(in srgb, var(--accent-soft) 35%, transparent);
+  outline-offset: -1px;
 }

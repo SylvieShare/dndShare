@@ -22,6 +22,9 @@ internal fun SheetStatMorph(
     readInput: () -> JsonObject,
     items: Map<Long, ru.dndshare.client.model.CatalogueItem>,
     metadata: ru.dndshare.client.model.HandbookMetadata,
+    syncPending: Boolean = false,
+    syncError: String? = null,
+    retry: () -> Unit = {},
 ) {
     val current = editor?.takeIf { it.isDndStat() }
     var retained by remember { mutableStateOf(current) }
@@ -58,6 +61,15 @@ internal fun SheetStatMorph(
                             number,
                             mechanics,
                             metadata,
+                        )
+                        val initial = initialForm(shown.fields.target, shown.baseline, items)
+                        val changed = shown.fields.copy(id = "", error = null, diskInputs = false) != initial.copy(id = "", error = null, diskInputs = false)
+                        if (syncError != null) {
+                            Text(syncError, color = WebPalette.Danger, style = ShareTypography.context)
+                            ShareTextButton(retry) { Text("Повторить сохранение") }
+                        } else Text(
+                            if (syncPending || changed) "Сохраняем изменения…" else "Сохранено",
+                            color = WebPalette.TextMuted, style = ShareTypography.context,
                         )
                         shown.fields.error?.let {
                             Text(it, color = WebPalette.Danger, style = ShareTypography.context)

@@ -46,7 +46,7 @@ for (const mobile of [false, true]) test(`inventory removal and HP calculator sa
     await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2)
   }
   await openItem()
-  await page.getByRole('menuitem', { name: 'Удалить одну', exact: true }).click()
+  await page.getByRole('menuitem', { name: 'Уменьшить на 1', exact: true }).click()
   await expect.poll(() => saves.length).toBe(1)
   expect(saves[0].data.values.items.sections[0].items[0].count).toBe(2)
   expect(saves[0].events).toEqual([expect.objectContaining({ sessionUuid: session.uuid,
@@ -54,7 +54,7 @@ for (const mobile of [false, true]) test(`inventory removal and HP calculator sa
     data: { source: { itemId: 42, name: 'Факел', instanceUid: 'torch' }, itemId: 42, count: 1, remaining: 2 },
   })])
   await openItem()
-  await page.getByRole('menuitem', { name: 'Удалить', exact: true }).click()
+  await page.getByRole('menuitem', { name: 'Удалить предмет', exact: true }).click()
   await expect(row).toHaveCount(0)
   await expect.poll(() => saves.length).toBe(2)
   expect(saves[1].data.values.items.sections[0].items).toEqual([])
@@ -62,6 +62,7 @@ for (const mobile of [false, true]) test(`inventory removal and HP calculator sa
     data: expect.objectContaining({ count: 2, remaining: 0 }),
   })])
 
+  if (mobile) await page.getByRole('button', { name: 'База', exact: true }).click()
   await page.locator('[data-tutorial="character-hp"]:visible').click()
   const editor = page.locator('[data-tutorial="character-hp-editor"]')
   await editor.getByRole('button', { name: '8', exact: true }).click()

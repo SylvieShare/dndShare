@@ -55,11 +55,7 @@ internal fun DndStats(adaptive: Boolean = true) {
 internal fun DndIdentityCard(compactHealth: Boolean = false) {
     val context = LocalCharacterSheet.current
     val sheet = context.sheet
-    ShareTile(
-        framed = false,
-        contentPadding = PaddingValues(0.dp),
-        modifier = Modifier.fillMaxWidth(),
-    ) {
+    val identity: @Composable () -> Unit = {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
             Column(Modifier.width(110.dp)) {
                 val icon = sheet.iconImageUrl
@@ -88,7 +84,7 @@ internal fun DndIdentityCard(compactHealth: Boolean = false) {
                             )
                     }
                 }
-                Box(Modifier.fillMaxWidth().padding(start = 15.dp, end = 6.dp, bottom = 15.dp)) {
+                if (!compactHealth) Box(Modifier.fillMaxWidth().padding(start = 15.dp, end = 6.dp, bottom = 15.dp)) {
                     ShareDashedAction(
                         "+ Состояние",
                         { context.edit("statuses") },
@@ -142,9 +138,22 @@ internal fun DndIdentityCard(compactHealth: Boolean = false) {
                         color = WebPalette.TextSecondary,
                     )
                 }
-                DndHealth(compact = compactHealth)
+                if (!compactHealth) DndHealth()
             }
         }
+    }
+    ShareTile(
+        framed = false,
+        contentPadding = PaddingValues(0.dp),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        if (compactHealth) {
+            Column(Modifier.fillMaxWidth().padding(15.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                DndHealth()
+                ShareTextButton({ context.edit("statuses") }, enabled = context.canEdit) { Text("+ Состояние") }
+                ShareDetailSection("Данные персонажа", collapsible = true, defaultOpen = false) { identity() }
+            }
+        } else identity()
         DndStatuses()
     }
 }

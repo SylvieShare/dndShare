@@ -3,7 +3,7 @@ package ru.dndshare.client.ui.character
 import ru.dndshare.client.ui.LayoutFormat
 
 enum class SheetSection(val title: String, val asset: String) {
-    Base("База", "tab-personality.svg"),
+    Base("База", "hp-pulse.svg"),
     Stats("Статы", "tab-stats.svg"),
     Weapons("Оружие", "tab-weapons.svg"),
     Spells("Магия", "tab-magic.svg"),

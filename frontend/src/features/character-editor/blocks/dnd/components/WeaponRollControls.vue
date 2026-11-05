@@ -65,5 +65,5 @@ const emit = defineEmits(['update:attackRollMode', 'update:useKey', 'update:crit
 </script>
 <style scoped>
 .weapon-roll-controls { display: flex; flex-direction: column; gap: 10px; padding: 8px; min-width: 240px; }
-.weapon-roll-controls--attack { width: var(--layout-roll-mode-menu-width); max-width: calc(100vw - 32px); min-width: 0; box-sizing: border-box; }
+.weapon-roll-controls--attack { width: var(--layout-roll-mode-menu-width); max-width: min(100%, calc(100vw - 32px)); min-width: 0; box-sizing: border-box; }
 </style>

@@ -4,9 +4,12 @@
 //   left = `view` slot (a stand-in for the tapped tile) with a colored strip,
 //   right = `editor` slot (the form), behind a divider, which fades in/out over the morph.
 // Optional `nav` (useSheetSubpages) enables a `sub` slot (e.g. per-skill editing).
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
+import SheetSaveFeedback from './SheetSaveFeedback.vue'
 import { MorphSheet, TileAccentStrip } from '@sylvieshare/share-ui'
-import { layoutTokens } from '@/app/design-tokens'
+import { layoutTokens, motionTokens } from '@/app/design-tokens'
+
+const context = inject('charCtx', {})
 
 const props = defineProps({
   originRect: { type: Object, default: null },
@@ -41,10 +44,11 @@ const showBack = computed(() => !!props.nav && props.nav.view.value !== 'detail'
 
 <template>
   <MorphSheet
+    :open-duration="motionTokens['morph-open']" :close-duration="motionTokens['morph-close']"
     :origin-rect="originRect"
     :origin-el="originEl"
     :origin-radius="originRadius"
-    :width="panelWidth"
+    :width="panelWidth" :show-foot="!!context.saveStatus"
     :nav="nav"
     :show-back="showBack"
     :frame-color="frame"
@@ -65,6 +69,7 @@ const showBack = computed(() => !!props.nav && props.nav.view.value !== 'detail'
       </div>
     </template>
 
+    <template #foot><SheetSaveFeedback /></template>
     <template v-if="nav" #sub><slot name="sub" /></template>
   </MorphSheet>
 </template>
@@ -82,7 +87,7 @@ const showBack = computed(() => !!props.nav && props.nav.view.value !== 'detail'
   align-items: stretch;
   background: var(--bg);
   opacity: 0;
-  transition: opacity 0.42s ease;
+  transition: opacity var(--motion-morph-open) ease;
 }
 .mes-rest.mes-revealed { opacity: 1; }
 .mes-editor { flex: 1; min-width: 0; }
