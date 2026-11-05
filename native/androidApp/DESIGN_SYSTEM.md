@@ -66,11 +66,13 @@ Compose-анимации учитывают системное отключен�
 из [design/tokens.json](../../design/tokens.json) командой
 `python3 scripts/design/tokens.py`; `--check` проверяет производные CSS/JS/Kotlin.
 `ShareTypography` применяет роли с поддержкой системного масштаба.
-Шапка персонажа использует роль SheetHeader и иконку SheetHeaderIcon.
+Шапка персонажа использует роль SheetHeader и иконку SheetHeaderIcon без подложки.
 Параметры `navigationColor`, `navigationRadius`, `navigationInset` и
 `navigationPadding` у `ShareWorkspaceHeader` задают отдельное оформление
 навигации. `ShareSubheader` предоставляет соответствующие параметры
 `surfaceColor`, `cornerRadius`, `horizontalInset` и `contentPadding`.
+`navigationElevation` и `shadowElevation` задают тень нижней полосы.
+`ShareIconNavigation.cornerRadius` управляет формой выделения и зоны эффекта нажатия.
 Компактные `ShareBadge` используют роль `BadgeCompact` с текстом 11 sp.
 `ShareTile.contentPadding` задаёт предметный отступ, по умолчанию общий Large;
 плитка коллекции явно использует Collection.Padding.

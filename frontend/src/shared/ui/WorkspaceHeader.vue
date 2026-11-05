@@ -62,7 +62,7 @@ onBeforeUnmount(() => observer?.disconnect());
 }
 .workspace-header-inner--page { padding-inline: var(--spacing-page); }
 .workspace-subheader { position: relative; z-index: 1; padding: var(--spacing-xs) var(--workspace-subheader-inset, 8px); }
-.workspace-subheader-inner { --surface: var(--workspace-subheader-background, var(--subheader)); display: flex; justify-content: center; box-sizing: border-box; width: 100%; max-width: var(--workspace-subheader-max-width, 100%); min-width: 0; margin-inline: auto; padding: var(--workspace-subheader-padding, var(--spacing-xs)); border-radius: var(--workspace-subheader-radius, var(--radius-compact-navigation)); background: var(--surface); overflow-x: auto; }
+.workspace-subheader-inner { --surface: var(--workspace-subheader-background, var(--subheader)); display: flex; justify-content: center; box-sizing: border-box; width: 100%; max-width: var(--workspace-subheader-max-width, 100%); min-width: 0; margin-inline: auto; padding: var(--workspace-subheader-padding, var(--spacing-xs)); border-radius: var(--workspace-subheader-radius, var(--radius-compact-navigation)); background: var(--surface); box-shadow: var(--workspace-subheader-shadow, none); overflow-x: auto; }
 .workspace-subheader-inner--fit { width: max-content; max-width: min(100%, var(--workspace-subheader-max-width, 100%)); }
 .workspace-header-identity {
   min-width: 0;

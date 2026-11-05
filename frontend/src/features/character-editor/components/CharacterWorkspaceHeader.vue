@@ -45,10 +45,11 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
 <style scoped>
 .character-workspace-header {
   --workspace-header-identity-gap: var(--spacing-small);
-  --workspace-subheader-background: var(--surface);
+  --workspace-subheader-background: var(--surface-raised);
   --workspace-subheader-radius: var(--radius-tile);
   --workspace-subheader-inset: var(--spacing-page);
   --workspace-subheader-padding: 0px;
+  --workspace-subheader-shadow: 0 var(--spacing-xs) var(--radius-medium) color-mix(in srgb, var(--scrim) 30%, transparent);
 }
 .character-identity {
   display: flex;
@@ -66,7 +67,6 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
   height: var(--layout-sheet-header-icon);
   overflow: hidden;
   border-radius: var(--radius-input);
-  background: var(--surface-raised);
   color: var(--accent-soft);
   font-size: var(--type-sheet-header-size);
   font-weight: var(--type-sheet-header-weight);

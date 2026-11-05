@@ -1,7 +1,6 @@
 package ru.dndshare.client.ui.character
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
@@ -43,10 +42,11 @@ internal fun CharacterSheetHeader(
         contentInset = if (format == LayoutFormat.Phone) 8.dp else 14.dp,
         maxContentWidth = DesignTokens.Layout.SheetMax,
         compact = format != LayoutFormat.Wide,
-        navigationColor = WebPalette.Surface,
+        navigationColor = WebPalette.Raised,
         navigationRadius = DesignTokens.Radius.Tile,
         navigationInset = DesignTokens.Spacing.Page,
         navigationPadding = PaddingValues(0.dp),
+        navigationElevation = DesignTokens.Spacing.Xs,
         actions = actions,
         navigation =
             if (navigationInHeader && format == LayoutFormat.Tablet)
@@ -117,7 +117,6 @@ private fun SheetIdentity(
         Box(
             Modifier.size(DesignTokens.Layout.SheetHeaderIcon)
                 .clip(RoundedCornerShape(DesignTokens.Radius.Input))
-                .background(WebPalette.Raised)
                 .clearAndSetSemantics { contentDescription = "Иконка персонажа" },
             contentAlignment = Alignment.Center,
         ) {
@@ -220,7 +219,8 @@ internal fun SheetNavigation(
         pill = pill,
         itemSize = DesignTokens.Layout.SheetNavigationItem,
         itemHeight = DesignTokens.Layout.SheetNavigationHeight,
-        containerColor = WebPalette.Surface,
+        containerColor = WebPalette.Raised,
+        cornerRadius = DesignTokens.Radius.Input,
     ) { key ->
         val entry = sections.first { it.name == key }
         AsyncImage(

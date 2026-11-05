@@ -27,6 +27,7 @@ fun ShareWorkspaceHeader(
     navigationRadius: Dp = if (compact) DesignTokens.Radius.CompactNavigation else 0.dp,
     navigationInset: Dp = if (compact) DesignTokens.Layout.CompactHeaderInset else 0.dp,
     navigationPadding: PaddingValues? = null,
+    navigationElevation: Dp = 0.dp,
     content: @Composable RowScope.() -> Unit,
 ) {
     val managed = LocalChromeManaged.current
@@ -79,6 +80,7 @@ fun ShareWorkspaceHeader(
                         cornerRadius = navigationRadius,
                         horizontalInset = navigationInset,
                         contentPadding = navigationPadding,
+                        shadowElevation = navigationElevation,
                         content = tabs,
                     )
                 }
@@ -98,6 +100,7 @@ fun ShareSubheader(
     cornerRadius: Dp = if (compact) DesignTokens.Radius.CompactNavigation else 0.dp,
     horizontalInset: Dp = if (compact) DesignTokens.Layout.CompactHeaderInset else 0.dp,
     contentPadding: PaddingValues? = null,
+    shadowElevation: Dp = 0.dp,
     content: @Composable () -> Unit,
 ) {
     val managed = LocalChromeManaged.current
@@ -127,6 +130,7 @@ fun ShareSubheader(
                 .then(if (fitContent) Modifier else Modifier.fillMaxWidth()),
             color = surfaceColor,
             shape = RoundedCornerShape(cornerRadius),
+            shadowElevation = shadowElevation,
         ) {
             Box(
                 Modifier.padding(

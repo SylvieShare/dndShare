@@ -38,8 +38,11 @@ fun ShareIconNavigation(
     itemSize: Dp = 56.dp,
     containerColor: Color = WebPalette.Subheader,
     itemHeight: Dp = itemSize,
+    cornerRadius: Dp? = null,
     icon: @Composable (String) -> Unit,
 ) {
+    val itemShape = cornerRadius?.let { RoundedCornerShape(it) }
+        ?: if (pill) RoundedCornerShape(percent = 50) else RoundedCornerShape(10.dp)
     BoxWithConstraints(if (compact) modifier.fillMaxWidth() else modifier) {
         val gap = 2.dp
         val horizontalPadding = if (compact) 8.dp else 4.dp
@@ -92,8 +95,7 @@ fun ShareIconNavigation(
                                 WebPalette.Accent.copy(alpha = .18f)
                                     .compositeOver(containerColor)
                             else WebPalette.Accent,
-                            if (pill) RoundedCornerShape(percent = 50)
-                            else RoundedCornerShape(10.dp),
+                            itemShape,
                         )
                 )
             Row(horizontalArrangement = Arrangement.spacedBy(gap)) {
@@ -134,9 +136,7 @@ fun ShareIconNavigation(
                         }
                         Box(
                             Modifier.matchParentSize()
-                                .clip(
-                                    if (pill) RoundedCornerShape(50) else RoundedCornerShape(10.dp)
-                                )
+                                .clip(itemShape)
                                 .indication(interactions, LocalIndication.current)
                         )
                     }

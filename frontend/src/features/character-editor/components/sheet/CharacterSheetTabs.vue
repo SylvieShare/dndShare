@@ -1,5 +1,5 @@
 <template>
-  <IconNavigation :items="items" :model-value="activeTab" :pill="pill" :size="layoutTokens['sheet-navigation-item']" :height="layoutTokens['sheet-navigation-height']" label="Раздел персонажа"
+  <IconNavigation :items="items" :model-value="activeTab" :pill="pill" :size="layoutTokens['sheet-navigation-item']" :height="layoutTokens['sheet-navigation-height']" radius="var(--radius-input)" label="Раздел персонажа"
     data-tutorial="character-tabs" @select="emit('select', $event)">
     <template #icon="{ item }">
       <span class="character-tab-icon" :style="{ maskImage: `url(${item.svg})`, WebkitMaskImage: `url(${item.svg})` }" aria-hidden="true" />
