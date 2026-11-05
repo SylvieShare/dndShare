@@ -66,6 +66,7 @@ Compose-анимации учитывают системное отключен�
 из [design/tokens.json](../../design/tokens.json) командой
 `python3 scripts/design/tokens.py`; `--check` проверяет производные CSS/JS/Kotlin.
 `ShareTypography` применяет роли с поддержкой системного масштаба.
+Компактные `ShareBadge` используют роль `BadgeCompact` с текстом 11 sp.
 `ShareTile.contentPadding` задаёт предметный отступ, по умолчанию общий Large;
 плитка коллекции явно использует Collection.Padding.
 `ShareTile.framed` управляет обводкой поверхности. Безрамочные характеристики

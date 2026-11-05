@@ -23,7 +23,7 @@
           @keydown.enter.prevent="openRollMenu($event, 'save')"
           @keydown.space.prevent="openRollMenu($event, 'save')"
         >
-          <span class="save-label">Спасбросок</span>
+          <span class="save-label">Спас</span>
           <span v-if="saveUp" class="proficiency-dot" aria-hidden="true"></span>
           <span class="save-chip-val">{{ signed(save) }}</span>
           <RollModeBadge :mode="saveMode" :source="saveModeSource" :cancelled="saveModeCancelled" />
@@ -341,7 +341,7 @@ onBeforeUnmount(hideTooltip)
 .stat-view--mobile .skill-item { min-height: 32px; border-radius: 10px; gap: 8px; }
 .stat-view--mobile .skill-name { font-size: 15px; }
 .stat-view--mobile .skill-chip { padding: 4px 10px 5px; font-size: 16px; border-radius: 9px; }
-.stat-view--mobile .save-chip { padding: 5px 12px 5px 9px; gap: 7px; border-radius: 10px; }
+.stat-view--mobile .save-chip { padding: 5px 8px 5px 6px; border-radius: 10px; }
 .stat-view--mobile .save-chip-val { font-size: 15px; }
 .stat-view--mobile .stat-mod { font-size: var(--type-sheet-stat-compact-size); letter-spacing: var(--type-sheet-stat-compact-tracking); }
 .stat-view--mobile .stat-raw { font-size: 18px; }

@@ -183,7 +183,7 @@ private fun DndAbilityFace(
                     Row(
                         Modifier.sizeIn(minWidth = valueWidth + 12.dp, minHeight = valueHeight)
                             .padding(
-                                horizontal = if (compact) 9.dp else 6.dp,
+                                horizontal = 6.dp,
                                 vertical = if (compact) 5.dp else 3.dp,
                             ),
                         horizontalArrangement =
@@ -191,7 +191,7 @@ private fun DndAbilityFace(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
-                            "Спасбросок",
+                            "Спас",
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             fontSize = 11.sp,

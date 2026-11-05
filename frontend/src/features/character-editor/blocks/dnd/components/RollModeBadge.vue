@@ -16,7 +16,19 @@ const title = computed(() => [props.cancelled ? 'Обычный бросок' : 
 </script>
 
 <style scoped>
-.roll-badge { display: inline-flex; align-items: center; flex-shrink: 0; border: 1px solid currentColor; border-radius: 999px; padding: 1px 5px; font-size: 8px; font-weight: 800; letter-spacing: .04em; line-height: 1.25; }
+.roll-badge {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 1px 5px;
+  font-family: var(--type-badge-compact-family);
+  font-size: var(--type-badge-compact-size);
+  font-weight: var(--type-badge-compact-weight);
+  letter-spacing: var(--type-badge-compact-tracking);
+  line-height: var(--type-badge-compact-line-height);
+}
 .roll-badge--advantage { color: var(--success); background: color-mix(in srgb, currentColor 9%, transparent); }
 .roll-badge--disadvantage { color: var(--danger); background: color-mix(in srgb, currentColor 9%, transparent); }
 .roll-badge--cancelled { color: var(--text-muted); background: var(--surface-raised); }

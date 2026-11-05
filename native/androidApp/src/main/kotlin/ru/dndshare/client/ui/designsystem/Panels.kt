@@ -22,7 +22,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 @Composable
 fun ShareBadge(
@@ -42,9 +41,7 @@ fun ShareBadge(
         Text(
             text,
             Modifier.padding(horizontal = if (compact) 6.dp else 7.dp, vertical = if (compact) 2.dp else 3.dp),
-            style = if (compact) {
-                label.copy(fontSize = 8.sp, lineHeight = 10.sp, fontWeight = FontWeight.ExtraBold, letterSpacing = .32.sp)
-            } else label,
+            style = if (compact) ShareTypography.badgeCompact else label,
             softWrap = !compact,
         )
     }
