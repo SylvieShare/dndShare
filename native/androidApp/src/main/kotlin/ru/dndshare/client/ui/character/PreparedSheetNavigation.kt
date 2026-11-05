@@ -2,6 +2,7 @@ package ru.dndshare.client.ui.character
 
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import coil3.ImageLoader
 import ru.dndshare.client.character.CharacterSheet
 import ru.dndshare.client.ui.LayoutFormat
@@ -47,13 +48,15 @@ internal fun PreparedSheetNavigation(
     template: String = "DND5",
     pill: Boolean = false,
 ) {
+    val position = remember(pager) { { pager.currentPage + pager.currentPageOffsetFraction } }
     SheetNavigation(
         sections,
-        sections[pager.currentPage],
+        sections[pager.settledPage],
         images,
         select,
         compact = compact,
         template = template,
         pill = pill,
+        visualPosition = position,
     )
 }

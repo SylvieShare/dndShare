@@ -177,6 +177,7 @@ internal fun SheetNavigation(
     template: String = "DND5",
     textOnly: Boolean = false,
     pill: Boolean = false,
+    visualPosition: (() -> Float)? = null,
 ) {
     fun title(entry: SheetSection) =
         when {
@@ -223,6 +224,7 @@ internal fun SheetNavigation(
         itemHeight = DesignTokens.Layout.SheetNavigationHeight,
         containerColor = WebPalette.Raised,
         cornerRadius = DesignTokens.Radius.Input,
+        visualPosition = visualPosition,
     ) { key ->
         val entry = sections.first { it.name == key }
         AsyncImage(
@@ -231,8 +233,7 @@ internal fun SheetNavigation(
             imageLoader = images,
             colorFilter =
                 ColorFilter.tint(
-                    if (entry == section) if (pill) WebPalette.AccentSoft else WebPalette.Text
-                    else WebPalette.TextMuted
+                    LocalContentColor.current
                 ),
             modifier = Modifier.size(DesignTokens.Layout.SheetNavigationIcon),
         )
