@@ -132,10 +132,6 @@
     transition: color 0.15s;
   }
 
-  .mobile-tab-btn.active {
-    color: var(--text-1);
-  }
-
   .mobile-tab-indicator {
     position: absolute;
     left: 0;
@@ -183,12 +179,32 @@
 @media (--ui-phone) {
   .mobile-sticky-header { background: transparent; border: 0; padding: var(--spacing-xs) var(--spacing-page); box-sizing: border-box; }
   .mobile-sticky-header::after { display: none; }
-  .mobile-tabbar { --surface: var(--surface-raised); background: var(--surface); border: 0; border-radius: var(--radius-tile); padding: 4px 8px; gap: 2px; min-height: 48px; box-shadow: 0 var(--spacing-xs) var(--radius-medium) color-mix(in srgb, var(--scrim) 30%, transparent); }
-  .mobile-tab-indicator { top: 4px; bottom: 4px; height: auto; border-radius: var(--radius-input); background: color-mix(in srgb, var(--accent) 18%, var(--surface)); }
-  .mobile-tab-btn { border-radius: var(--radius-input); flex: 1 0 44px; padding: 0; flex-direction: column; }
-  .mobile-tab-btn.active { min-width: var(--layout-sheet-navigation-selected); }
-  .mobile-tab-caption { font-size: 10px; line-height: 14px; }
-  .mobile-tab-btn.active { color: var(--accent-soft); }
+  .mobile-tabbar { --surface: var(--surface-raised); --mobile-tab-min-width: 44px; --mobile-tab-max-width: 148px; background: var(--surface); border: 0; border-radius: var(--radius-tile); padding: 4px 8px; gap: 2px; min-height: 48px; box-shadow: 0 var(--spacing-xs) var(--radius-medium) color-mix(in srgb, var(--scrim) 30%, transparent); }
+  .mobile-tab-indicator { top: 4px; bottom: 4px; height: auto; border-radius: var(--radius-input); background: color-mix(in srgb, var(--accent) 18%, var(--surface)); transition: none; }
+  .mobile-tab-btn {
+    --tab-width: var(--mobile-tab-width, calc(var(--mobile-tab-min-width) + (var(--layout-sheet-navigation-selected) - var(--mobile-tab-min-width)) * var(--tab-selection, 0)));
+    border-radius: var(--radius-input); flex: 1 0 var(--tab-width); min-width: var(--tab-width); padding: 0;
+    color: color-mix(in srgb, var(--accent-soft) calc(var(--tab-selection, 0) * 100%), var(--text-muted));
+    transition: none;
+  }
+  .mobile-tab-icon { transform: translateY(calc(-7px * var(--tab-selection, 0))); transition: none; }
+  .mobile-tab-caption {
+    position: absolute; top: calc(50% + 4px); left: 0; right: 0;
+    font-size: 10px; line-height: 14px; opacity: var(--tab-selection, 0);
+    transition: none; pointer-events: none;
+  }
+  .mobile-tab-caption--only { position: static; opacity: 1; }
+  .mobile-tabbar.dragging :is(.mobile-tab-btn, .mobile-tab-icon, .mobile-tab-caption) { transition: none; }
+  .mobile-tabbar.settling :is(.mobile-tab-btn, .mobile-tab-icon, .mobile-tab-caption) {
+    transition-property: flex-basis, min-width, color, transform, opacity;
+    transition-duration: .26s;
+    transition-timing-function: cubic-bezier(.25,.1,.25,1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-tabbar :is(.mobile-tab-btn, .mobile-tab-icon, .mobile-tab-caption, .mobile-tab-indicator),
+  .mobile-tabbar.settling :is(.mobile-tab-btn, .mobile-tab-icon, .mobile-tab-caption, .mobile-tab-indicator) { transition: none; }
 }
 
 /* The scroller paints beneath both chrome rows; padding belongs to its content. */

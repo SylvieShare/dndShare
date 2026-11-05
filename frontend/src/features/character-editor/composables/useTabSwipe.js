@@ -1,33 +1,12 @@
 import { ref, computed, watch, onBeforeUnmount, nextTick } from 'vue'
 
-export function measureMobileTabRects(tabbarEl, tabButtonEls) {
-  if (!tabbarEl) return []
-  const tabbarRect = tabbarEl.getBoundingClientRect()
-  return tabButtonEls.map(el => {
-    if (!el) return null
-    const rect = el.getBoundingClientRect()
-    return {
-      x: rect.left - tabbarRect.left + tabbarEl.scrollLeft,
-      width: rect.width,
-    }
-  })
-}
-
-export function mobileTabRectsEqual(current, next) {
-  if (current.length !== next.length) return false
-  return current.every((rect, index) => {
-    const nextRect = next[index]
-    if (rect == null || nextRect == null) return rect === nextRect
-    return rect.x === nextRect.x && rect.width === nextRect.width
-  })
-}
+import { tabSelectionWeights, useMobileTabBar } from './useMobileTabBar'
 
 export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
   const activeTab = ref(0)
   const visitedTabs = ref([])
   const requestedTab = ref(null)
   let swipeGeneration = 0
-  const highlightedMobileTab = ref(0)
 
   const tabDragActive = ref(false)
   const tabDragSettling = ref(false)
@@ -38,12 +17,7 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
   const tabSwipeWrapMode = ref(null)
   const gestureBaseTab = ref(0)
 
-  const mobileTabButtonRefs = ref([])
-  const mobileTabRects = ref([])
-
   let swipeSettleTimer = null
-  let highlightSettleTimer = null
-  let lastMobileTabbarEl = null
   let touchStartX = null
   let touchStartY = null
 
@@ -86,13 +60,13 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
       : `translate3d(${-mobileActiveSlot.value * 100}%, 0, 0)`,
   }))
 
-  const mobileTabIndicatorStyle = computed(() => {
-    const rect = interpolatedTabRect()
-    return {
-      width: `${rect.width}px`,
-      transform: `translate3d(${rect.x}px, 0, 0)`,
-    }
-  })
+  const mobileTabSelection = computed(() => tabSelectionWeights(
+    activeTabs.value.length, mobileTrackIndexes.value,
+    (tabDragActive.value || tabDragSettling.value)
+      ? -currentMobileTrackOffsetValue.value / tabDragWidth.value : mobileActiveSlot.value,
+  ))
+  const tabbar = useMobileTabBar(activeTab, mobileTabSelection, mobileTabbarRef)
+  const { updateMobileTabRects, scrollActiveMobileTabIntoView } = tabbar
 
   // ── Watchers ──────────────────────────────────────────────────────────
 
@@ -103,7 +77,6 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
 
   watch(activeTab, index => {
     markTabVisited(index)
-    highlightedMobileTab.value = index
     nextTick(() => {
       updateMobileTabRects()
       scrollActiveMobileTabIntoView()
@@ -113,7 +86,6 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
   onBeforeUnmount(() => {
     swipeGeneration++
     clearTimeout(swipeSettleTimer)
-    clearTimeout(highlightSettleTimer)
   })
 
   // ── Tab visits ────────────────────────────────────────────────────────
@@ -125,82 +97,18 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
     }
   }
 
-  // ── Tab refs / rects ──────────────────────────────────────────────────
-
-  function setMobileTabButtonRef(el, index) {
-    // Function refs run again after every indicator style update. Measuring
-    // from here would turn that update into a render -> ref -> measure loop.
-    // Mount, tab and resize paths schedule geometry reads after DOM updates.
-    mobileTabButtonRefs.value[index] = el || null
-  }
-
-  function updateMobileTabRects(tabbarEl) {
-    lastMobileTabbarEl = tabbarEl || mobileTabbarRef?.value || lastMobileTabbarEl
-    if (!lastMobileTabbarEl) return
-    const nextRects = measureMobileTabRects(lastMobileTabbarEl, mobileTabButtonRefs.value)
-    if (!mobileTabRectsEqual(mobileTabRects.value, nextRects)) {
-      mobileTabRects.value = nextRects
-    }
-  }
-
-  function scrollActiveMobileTabIntoView() {
-    mobileTabButtonRefs.value[activeTab.value]?.scrollIntoView?.({
-      behavior: 'smooth',
-      inline: 'center',
-      block: 'nearest',
-    })
-  }
-
-  function interpolatedTabRect() {
-    const fallback =
-      mobileTabRects.value[highlightedMobileTab.value] ||
-      mobileTabRects.value[activeTab.value] ||
-      { x: 10, width: 44 }
-    if (!swipeEnabled.value || !tabDragWidth.value || !mobileTabRects.value.length) return fallback
-    if (!tabDragActive.value && !tabDragSettling.value) return fallback
-
-    const offset = currentMobileTrackOffsetValue.value
-    const slotFloat = Math.max(
-      0,
-      Math.min(mobileTrackIndexes.value.length - 1, -offset / tabDragWidth.value)
-    )
-    const fromSlot = Math.floor(slotFloat)
-    const toSlot = Math.min(mobileTrackIndexes.value.length - 1, fromSlot + 1)
-    const progress = slotFloat - fromSlot
-    const fromRect = mobileTabRects.value[mobileTrackIndexes.value[fromSlot]] || fallback
-    const toRect = mobileTabRects.value[mobileTrackIndexes.value[toSlot]] || fromRect
-    return {
-      x: fromRect.x + (toRect.x - fromRect.x) * progress,
-      width: fromRect.width + (toRect.width - fromRect.width) * progress,
-    }
-  }
-
-  // ── Swipe state ───────────────────────────────────────────────────────
-
-  function syncHighlightedTabFromOffset(offset = currentMobileTrackOffsetValue.value) {
-    if (!swipeEnabled.value || !tabDragWidth.value || !mobileTrackIndexes.value.length) return
-    const slot = Math.max(
-      0,
-      Math.min(mobileTrackIndexes.value.length - 1, Math.round(-offset / tabDragWidth.value))
-    )
-    const index = mobileTrackIndexes.value[slot]
-    if (index != null) highlightedMobileTab.value = index
-  }
-
   function resetSwipe() {
     swipeGeneration++
     requestedTab.value = null
     touchStartX = null
     touchStartY = null
     clearTimeout(swipeSettleTimer)
-    clearTimeout(highlightSettleTimer)
     tabDragActive.value = false
     tabDragSettling.value = false
     tabDragX.value = 0
     tabDragDirection.value = 0
     tabSwipeBaseOffset.value = -mobileActiveSlot.value * tabDragWidth.value
     tabSwipeWrapMode.value = null
-    highlightedMobileTab.value = activeTab.value
   }
 
   function wrapModeForDirection(direction) {
@@ -212,16 +120,6 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
   function tabIndexFrom(index, delta) {
     const count = activeTabs.value.length
     return count ? (index + delta + count) % count : index
-  }
-
-  function scheduleSettleHighlight(fromOffset, targetOffset, targetIndex) {
-    clearTimeout(highlightSettleTimer)
-    const distance = Math.abs(targetOffset - fromOffset)
-    const remaining = Math.max(0, distance - tabDragWidth.value / 2)
-    const delay = Math.min(130, Math.max(0, Math.round((remaining / Math.max(distance, 1)) * 260)))
-    highlightSettleTimer = setTimeout(() => {
-      highlightedMobileTab.value = targetIndex
-    }, delay)
   }
 
   function settleSwipeTo(targetIndex) {
@@ -246,7 +144,6 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
       requestAnimationFrame(() => {
         if (generation !== swipeGeneration) return
         tabDragX.value = targetOffset - tabSwipeBaseOffset.value
-        scheduleSettleHighlight(fromOffset, targetOffset, targetIndex)
         clearTimeout(swipeSettleTimer)
         swipeSettleTimer = setTimeout(() => {
           if (generation !== swipeGeneration) return
@@ -284,7 +181,7 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
     tabDragActive.value = false
     touchStartX = touch.clientX
     touchStartY = touch.clientY
-    gestureBaseTab.value = highlightedMobileTab.value
+    gestureBaseTab.value = activeTab.value
   }
 
   function onTouchMove(event) {
@@ -308,7 +205,6 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
     event.preventDefault()
     const limit = tabDragWidth.value * 0.92
     tabDragX.value = Math.max(-limit, Math.min(limit, dx))
-    syncHighlightedTabFromOffset()
   }
 
   function onTouchEnd(event) {
@@ -336,7 +232,8 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
   function cancelTouch() {
     touchStartX = null
     touchStartY = null
-    resetSwipe()
+    if (tabDragActive.value && !tabDragSettling.value) settleSwipeTo(activeTab.value)
+    else resetSwipe()
   }
 
   // ── Public setActiveTab (also used by tabbar click) ──────────────────
@@ -346,7 +243,6 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
     if (swipeEnabled.value) {
       if (tabDragActive.value || tabDragSettling.value) {
         clearTimeout(swipeSettleTimer)
-        clearTimeout(highlightSettleTimer)
         const visibleOffset = mobileTrackEl?.parentElement
           ? mobileTrackEl.getBoundingClientRect().left - mobileTrackEl.parentElement.getBoundingClientRect().left
           : currentMobileTrackOffsetValue.value
@@ -389,15 +285,13 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
     visitedTabs,
     requestedTab,
     visitedTabIndexes,
-    highlightedMobileTab,
     tabDragActive,
     tabDragSettling,
     mobileTrackIndexes,
     mobileSwipeTrackStyle,
-    mobileTabIndicatorStyle,
-    mobileTabButtonRefs,
+    ...tabbar,
+    mobileTabSelection,
     markTabVisited,
-    setMobileTabButtonRef,
     updateMobileTabRects,
     scrollActiveMobileTabIntoView,
     resetSwipe,

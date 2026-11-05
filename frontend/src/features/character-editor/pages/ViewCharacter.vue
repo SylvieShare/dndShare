@@ -31,7 +31,8 @@
           :key="tabKey(tab, i)"
           :ref="el => setMobileTabButtonRef(el, i)"
           class="mobile-tab-btn"
-          :class="{ active: highlightedMobileTab === i }"
+          :class="{ active: activeTab === i }"
+          :style="mobileTabButtonStyles[i]"
           :aria-current="activeTab === i ? 'page' : undefined"
           type="button"
           :title="tab.title || 'Раздел'" :aria-label="tab.title || 'Раздел'"
@@ -44,7 +45,7 @@
             role="img"
             :aria-label="tab.title || 'Раздел'"
           ></span>
-          <span v-if="!tab.svg || activeTab === i" class="mobile-tab-caption">{{ tab.title || 'Раздел' }}</span>
+          <span class="mobile-tab-caption" :class="{ 'mobile-tab-caption--only': !tab.svg }" aria-hidden="true">{{ tab.title || 'Раздел' }}</span>
         </button>
       </nav>
     </div>
@@ -217,9 +218,9 @@ useSheetChrome(tutorialRoot)
 
 const swipe = useTabSwipe(activeTabs, compactLayout, mobileTabbarEl)
 const {
-  activeTab, highlightedMobileTab,
+  activeTab,
   tabDragActive, tabDragSettling,
-  mobileTabIndicatorStyle,
+  mobileTabIndicatorStyle, mobileTabButtonStyles,
   markTabVisited, setMobileTabButtonRef, updateMobileTabRects,
   scrollActiveMobileTabIntoView, setActiveTab,
   resetSwipe,

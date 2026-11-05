@@ -1,6 +1,7 @@
 import { createRenderer, defineComponent, h, nextTick, onMounted, ref } from 'vue'
 import { describe, expect, it } from 'vitest'
-import { measureMobileTabRects, mobileTabRectsEqual, useTabSwipe } from './useTabSwipe'
+import { useTabSwipe } from './useTabSwipe'
+import { measureMobileTabRects, mobileTabRectsEqual } from './useMobileTabBar'
 
 function hostNode(type, text = '') {
   return {
