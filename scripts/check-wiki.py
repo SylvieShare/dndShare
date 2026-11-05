@@ -13,7 +13,7 @@ LINK = re.compile(r"!?\[[^\]\n]*\]\(([^)\n]+)\)")
 HTML_LINK = re.compile(r"""(?:src|href)=["']([^"']+)["']""")
 CODE = re.compile(chr(96) + r"([^" + chr(96) + r"\n]+)" + chr(96))
 SOURCE_FILE = re.compile(
-    r"(?:frontend/|internal/|scripts/|deploy/|\.contextshare/wiki/|features/|shared/|src/|stores/|app/)"
+    r"(?:frontend/|internal/|scripts/|deploy/|md/|features/|shared/|src/|stores/|app/)"
     r"[A-Za-z0-9_./-]+\.(?:vue|js|mjs|css|go|md|sh|py|sql|json|png|webp|jpg|svg)"
 )
 
@@ -68,13 +68,13 @@ def local_target(raw):
 
 def check(root, strict=False):
     root = root.resolve()
-    wiki = root / ".contextshare" / "wiki"
+    wiki = root / "md"
     pages = sorted(wiki.rglob("*.md"))
     documents = pages + [
-        root / name for name in ("README.md", "AGENTS.md", "CLAUDE.md", ".contextshare/README.md")
+        root / name for name in ("README.md", "AGENTS.md", "CLAUDE.md")
         if (root / name).exists()
     ]
-    # Include instruction/proposal/readme links outside the wiki without traversing
+    # Include instruction/proposal/readme links outside md/ without traversing
     # generated model folders or node_modules. Only wiki pages require reachability.
     for directory in ("skills", "plans", "reports", "scripts", "internal/systemmusic", "frontend/public"):
         documents.extend(sorted((root / directory).rglob("*.md")))
@@ -131,7 +131,7 @@ def check(root, strict=False):
 
     entry = (wiki / "README.md").resolve()
     if entry not in graph:
-        failures.append(f"{entry.relative_to(root)}: missing wiki entry point")
+        failures.append("md/README.md: missing wiki entry point")
     else:
         visited = set()
         pending = deque([entry])
@@ -142,7 +142,7 @@ def check(root, strict=False):
             visited.add(page)
             pending.extend(graph[page] - visited)
         for page in sorted(set(graph) - visited):
-            failures.append(f"{page.relative_to(root)}: unreachable from {entry.relative_to(root)}")
+            failures.append(f"{page.relative_to(root)}: unreachable from md/README.md")
 
     for warning in warnings:
         print(warning)

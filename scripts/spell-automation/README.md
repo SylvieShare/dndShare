@@ -15,9 +15,8 @@
    Требуются `MCP_AUTH_TOKEN`, включённая запись и, при необходимости, `MCP_URL`
    (по умолчанию localhost:8080/mcp). Токен никогда не выводить и не сохранять
    в артефактах. Каждый результат записи перечитывается.
-5. `python3 report.py /tmp/spell-plan /tmp/spell-report` — таблицы
-   статусов и ID эффектов из фактического `applied.json`. Для фиксации в вики
-   добавь таблицы в `data/spell-automation/` через `write_wiki_attachment`.
+5. `python3 report.py /tmp/spell-plan ../../md/data/spell-automation` — таблицы
+   статусов и ID эффектов из фактического `applied.json`.
 
 При конфликте изменения не перетирать: обновить снимок и проверить разницу.
 План можно повторно применить после частичного выполнения: эффекты ищутся по
@@ -25,7 +24,7 @@
 создаваемые этим планом эффекты не редактировать параллельно.
 
 Проверка границ: `python3 -m unittest discover -s scripts/spell-automation` из
-корня репозитория. Отчёт об ограничениях: `.contextshare/wiki/spell-automation-audit.md`.
+корня репозитория. Отчёт об ограничениях: `md/spell-automation-audit.md`.
 
 `catalogue_design.py SNAPSHOT_DIRECTORY OUTPUT_DIRECTORY` принимает полные
 `after-5.json` и `after-15.json`, создаёт поэлементный CSV/JSON для всех редакций

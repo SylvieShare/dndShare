@@ -18,7 +18,7 @@ def structural_warnings(relative, raw, lines):
             warnings.append((index + 1, "content-after-related", "раздел «Связанные страницы» должен завершать документ; дополнение поместите в тематический раздел или отчёт"))
 
     intro = raw[:1000]
-    is_report = relative.startswith(".contextshare/wiki/reports/") and relative != ".contextshare/wiki/reports/README.md"
+    is_report = relative.startswith("md/reports/") and relative != "md/reports/README.md"
     labeled_history = bool(re.search(r"Статус:.*(?:историч|журнал|указатель.*отч[её]т)", intro, re.I))
     if is_report:
         if not re.search(r"Статус:.*(?:отч[её]т|историч|журнал)", intro, re.I):

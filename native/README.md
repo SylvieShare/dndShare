@@ -2,10 +2,10 @@
 
 Модуль `androidApp` на Kotlin и Jetpack Compose: вход, боковое меню всех
 веб-разделов, локальный справочник, список персонажей и адаптивный лист D&D/VTM.
-Перенесены [библиотека, редактор карт и справочник моделей на Filament](../.contextshare/wiki/features/native-map-editor.md).
+Перенесены [библиотека, редактор карт и справочник моделей на Filament](../md/features/native-map-editor.md).
 Общий UI-пакет
 находится в [`ui.designsystem`](androidApp/DESIGN_SYSTEM.md). Сервером остаётся основной Go API.
-Поведение описывает [контракт клиента](../.contextshare/wiki/features/native-client.md).
+Поведение описывает [контракт клиента](../md/features/native-client.md).
 
 ## Окружение
 
@@ -105,7 +105,7 @@ R8-вариант `ru.dndshare.client.benchmark` и запускает AndroidX 
 Источник общих размеров, типографики, порогов и акцентов —
 [design/tokens.json](../design/tokens.json), с генерацией CSS/JS/Compose через
 `python3 scripts/design/tokens.py`. Парный отчёт, окружение и порядок проверок —
-[UI-процесс](../.contextshare/wiki/frontend/ui-workflow.md). Три основные поверхности берутся из colors тех же токенов. Источник остальных цветов —
+[UI-процесс](../md/frontend/ui-workflow.md). Три основные поверхности берутся из colors тех же токенов. Источник остальных цветов —
 `frontend/src/app/theme.css` и tokens установленного
 `@sylvieshare/share-ui`; иконок — `@lucide/vue`, как в `DesktopSidebar.vue`.
 После обновления веб-палитры или пакетов выполнить из корня репозитория:
@@ -188,4 +188,4 @@ Go API и изолированный PostgreSQL. `scripts/native/smoke.py` со�
 Неизменённая сборка с проверенным SHA-256 переиспользуется из
 `build/native-apk-cache`, но проверки выполняются заново.
 
-[README проекта](../README.md) · [Проверки](../.contextshare/wiki/testing.md)
+[README проекта](../README.md) · [Проверки](../md/testing.md)

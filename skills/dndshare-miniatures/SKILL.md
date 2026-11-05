@@ -9,9 +9,9 @@ Work in the dndShare repository. Read its README first. This skill's maintained
 source lives in `skills/dndshare-miniatures`; a personal installation may be a
 symlink. Resolve that symlink before resolving repository-relative paths.
 
-Read [the miniature pipeline](../../.contextshare/wiki/features/creature-model-pipeline.md)
+Read [the miniature pipeline](../../md/features/creature-model-pipeline.md)
 for commands and acceptance criteria. For binding/storage/rendering changes read
-[item models](../../.contextshare/wiki/features/item-models.md). Read the relevant recipe in
+[item models](../../md/features/item-models.md). Read the relevant recipe in
 `scripts/creatures/` before changing an accepted model.
 
 ## Choose the work
@@ -67,7 +67,7 @@ for commands and acceptance criteria. For binding/storage/rendering changes read
 
 ## Execution and delivery
 
-For a batch, read [production and source archives](../../.contextshare/wiki/features/creature-model-production.md).
+For a batch, read [production and source archives](../../md/features/creature-model-production.md).
 Use the persistent production queue with a bounded generation/GPU-call budget;
 do not invent automatic retries or increase attempts to bypass a failed guard.
 An intentional new nativeAttempt uses its own folder and the same batch budget.
@@ -78,7 +78,7 @@ and hash-bound reference/model reviews with the recipe. Technical passed is not
 visual approval. Archive native immediately and the reviewed ready package in
 the separate S3 source namespace when publication is authorized; verify at least
 one download/restore before considering a new production workflow established.
-Read [quality, support and texture budgets](../../.contextshare/wiki/features/creature-model-quality.md)
+Read [quality, support and texture budgets](../../md/features/creature-model-quality.md)
 before a new batch. Grounded feet use Y=0; flight and amorphous bodies need an
 explicit supportKind/datum. Compare in one scene/scale, not only auto-fit covers.
 Prefer a bounded local repair for an isolated defect; reconsider the approach
@@ -117,7 +117,7 @@ Review neutral light, grey material, front/back/both sides/top, render versus
 LOD, and actual placement against walls. Record visible weaknesses. Run the
 silhouette comparison after optimization, then the verifier on the exact final
 files, then package and dry-run publication. Failed/stale silhouette reports
-block publication. Read [recovery and LOD checks](../../.contextshare/wiki/features/creature-model-checks.md)
+block publication. Read [recovery and LOD checks](../../md/features/creature-model-checks.md)
 when resuming generation or investigating a failed comparison.
 Publication is complete only after reading back manifests, calibration and
 bindings. On interrupted updates, retry the reviewed bundle; refuse changed
