@@ -16,8 +16,10 @@ AGENTS.md и CLAUDE.md только направляют сюда. Темати�
    откатывать и не включать чужую работу в коммит. Для новой задачи с кодом использовать отдельную ветку/worktree на диске C;
    один чат владеет одной рабочей копией. Не делить незакоммиченные изменения
    и staging area между параллельными задачами.
-3. В локальном MCP ContextShare вызвать `list_projects`, `get_project_overview`,
-   затем найти [маршрут задачи](.contextshare/wiki/README.md#с-чего-начать) и контракт фичи.
+3. В локальном MCP ContextShare вызвать `select_worktree` с абсолютным путём
+   рабочей копии задачи. Передавать возвращённый `project_id` во все следующие
+   вызовы. Проверить `workspace` в ответе, затем вызвать `get_project_overview`
+   и найти [маршрут задачи](.contextshare/wiki/README.md#с-чего-начать) и контракт фичи.
 4. Выполнить работу, обновить описания через ContextShare и пройти соответствующую
    строку [матрицы проверок](.contextshare/wiki/testing.md#матрица-проверок).
 
@@ -36,14 +38,16 @@ go build -o C:/Tools/contextshare.exe .
 codex mcp add contextshare-local -- C:/Tools/contextshare.exe local --project C:/Projects/dndshare
 ```
 
-В команде `--project` указывай фактический worktree задачи. Исходники инструмента
+`--project` задаёт начальную копию репозитория. В MCP выбирай фактический worktree
+через `select_worktree`. `list_worktrees` показывает доступные копии. В ответах
+`workspace` указывает путь, ветку, commit и локальные изменения. Исходники инструмента
 и форматы CLI описаны в [репозитории ContextShare](https://github.com/SylvieShare/contextshare).
 Скрипты записи журналов используют `contextshare` из PATH или явный
 `CONTEXTSHARE_BIN` с путём к исполняемому файлу.
 
 | Действие | Команды MCP |
 | --- | --- |
-| Начать работу | `get_usage_guide`, `list_projects`, `get_project_overview` |
+| Начать работу | `get_usage_guide`, `list_worktrees`, `select_worktree`, `get_project_overview` |
 | Найти знания | `search`, `list_sections`, `get_section`, `list_nodes`, `get_node`, `get_related_nodes` |
 | Прочитать страницу или вложение | `get_wiki_document`, `get_wiki_attachment` |
 | Добавить или обновить страницу | `write_wiki_document`. Для существующей страницы передай SHA-256 из чтения. |
@@ -51,6 +55,10 @@ codex mcp add contextshare-local -- C:/Tools/contextshare.exe local --project C:
 | Добавить или заменить вложение | `write_wiki_attachment` |
 | Проверить вики | `validate_wiki` |
 | Вести очередь | `list_requests`, `get_request`, `add_requests`, `prepare_request`, `claim_request` |
+
+Поиск по умолчанию показывает действующие материалы в выбранной рабочей копии.
+Для отчётов передавай `status=historical` или `status=all`. `current` описывает
+материал внутри указанной ревизии и не подтверждает актуальность другой ветки.
 
 - [Оглавление и маршруты задач](.contextshare/wiki/README.md) — выбор области и проверок.
 - [Сопровождение wiki](.contextshare/wiki/documentation.md) — владельцы тем, переносы и ссылки.

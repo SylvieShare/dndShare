@@ -112,6 +112,10 @@ features/character-editor.md и features/sessions.md сохраняются ка
 
 ## Редактирование через ContextShare
 
+Сначала вызови select_worktree с абсолютным путём рабочей копии задачи и
+передавай возвращённый project_id в последующие команды. Проверяй workspace:
+путь, ветку, commit и наличие локальных правок. Поиск показывает current
+по умолчанию, отчёты доступны с status=historical или status=all.
 Находи основной документ через search и get_node. Для записи вызывай
 get_wiki_document и передавай SHA-256 в write_wiki_document. При конфликте
 перечитай страницу и сохрани параллельные изменения. Типизированные связи

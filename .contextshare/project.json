@@ -160,5 +160,11 @@
     }
   ],
   "fallback_section": "55a6557a71af140ba3bba903c3504ab6",
-  "wiki_dir": ".contextshare/wiki"
+  "wiki_dir": ".contextshare/wiki",
+  "search_aliases": [
+    [
+      "характеристики",
+      "статы"
+    ]
+  ]
 }
