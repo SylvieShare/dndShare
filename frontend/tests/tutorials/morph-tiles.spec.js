@@ -11,6 +11,7 @@ for (const mobile of [false, true]) test(`shared morph heading and independent a
   await expect(page.locator('.skill-label .proficiency-dot')).toHaveCount(2)
   await expect(page.locator('.stat-view .skill-line')).toHaveCount(0)
   await expect(page.locator('.stat-view > .tile-accent-strip')).toBeVisible()
+  await expect(page.locator('.stat-view .morph-tile-pencil')).toHaveCount(0)
   await expect(page.locator('.stat-body')).toHaveCSS('padding-top', '0px')
   await save.click()
   await expect(page.getByRole('menu')).toBeVisible()

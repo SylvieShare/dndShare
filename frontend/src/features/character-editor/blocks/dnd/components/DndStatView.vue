@@ -2,12 +2,13 @@
   <MorphTile :embedded="mode === 'panel'" :outlined="false" padding="0" edit-label="Редактировать"
       :title="title"
       :show-edit="showEdit"
+      :show-edit-icon="false"
       :edit-fade="editFade"
       @edit="$emit('edit')"
      class="stat-view" :class="{ 'stat-view--mobile': mobileVariant }">
     <template #decoration><TileAccentStrip v-if="mode !== 'panel'" :color="color" /></template>
 
-    <!-- ── Head: name + edit pencil + save chip ── -->
+    <!-- ── Head: editable name + save chip ── -->
 
       <template #aside>
         <div
@@ -229,7 +230,7 @@ onBeforeUnmount(hideTooltip)
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: var(--surface-raised);
+  background: color-mix(in srgb, var(--surface-raised) 60%, var(--surface));
   border: 0;
   border-radius: 8px;
   padding: 3px 8px 3px 6px;
@@ -245,9 +246,9 @@ onBeforeUnmount(hideTooltip)
 @media (hover: hover) { .save-chip:hover { background: var(--surface-active); } }
 
 .save-label {
-  color: var(--text-2);
+  color: var(--text-muted);
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1;
   flex-shrink: 0;
 }
@@ -274,7 +275,7 @@ onBeforeUnmount(hideTooltip)
 .stat-raw { color: var(--text-2); font-size: 15px; font-weight: 500; }
 
 /* ── Skills ── */
-.skills { display: flex; flex-direction: column; gap: 1px; margin-top: var(--spacing-small); }
+.skills { display: flex; flex-direction: column; gap: 1px; margin-top: var(--spacing-xs); }
 
 .skill-item {
   display: flex;
@@ -342,7 +343,6 @@ onBeforeUnmount(hideTooltip)
 .stat-view--mobile .skill-chip { padding: 4px 10px 5px; font-size: 16px; border-radius: 9px; }
 .stat-view--mobile .save-chip { padding: 5px 12px 5px 9px; gap: 7px; border-radius: 10px; }
 .stat-view--mobile .save-chip-val { font-size: 15px; }
-.stat-view--mobile .save-label { font-size: 13px; }
 .stat-view--mobile .stat-mod { font-size: var(--type-sheet-stat-compact-size); letter-spacing: var(--type-sheet-stat-compact-tracking); }
 .stat-view--mobile .stat-raw { font-size: 18px; }
 .stat-view--mobile .stat-icon { width: 32px; height: 32px; }

@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
@@ -148,30 +148,26 @@ private fun DndAbilityFace(
             Row(
                 Modifier.fillMaxWidth().padding(horizontal = DesignTokens.Spacing.Medium),
                 verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(DesignTokens.Spacing.Small),
             ) {
-                Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        ability.title.uppercase(),
-                        Modifier.clickable(enabled = context.canEdit) { context.edit(ability.id) },
-                        fontSize = 13.sp,
-                        lineHeight = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = WebPalette.TextMuted,
-                    )
-                    if (context.canEdit || presentation.expanded)
-                        IconButton(
-                            onClick = { context.edit(ability.id) },
-                            enabled = context.canEdit,
-                            modifier =
-                                Modifier.size(24.dp)
-                                    .graphicsLayer { alpha = 1f - presentation.progress() }
-                                    .semantics {
-                                        contentDescription = "Редактировать: ${ability.title}"
-                                    },
-                        ) {
-                            AppGlyph(Glyph.Edit, Modifier.size(13.dp))
-                        }
-                }
+                Text(
+                    ability.title.uppercase(),
+                    Modifier.weight(1f)
+                        .heightIn(min = 24.dp)
+                        .wrapContentHeight(Alignment.CenterVertically)
+                        .clickable(enabled = context.canEdit) { context.edit(ability.id) }
+                        .semantics {
+                            if (context.canEdit || presentation.expanded) {
+                                contentDescription = "Редактировать: ${ability.title}"
+                            }
+                        },
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontSize = 12.sp,
+                    lineHeight = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = WebPalette.TextMuted,
+                )
                 Surface(
                     onClick = { saveActions = true },
                     modifier =
@@ -180,7 +176,7 @@ private fun DndAbilityFace(
                             if (proficient) stateDescription = "Владение"
                         },
                     enabled = !presentation.expanded,
-                    color = WebPalette.Raised,
+                    color = WebPalette.Raised.copy(alpha = .6f).compositeOver(WebPalette.Surface),
                     contentColor = WebPalette.Text,
                     shape = RoundedCornerShape(8.dp),
                 ) {
@@ -198,10 +194,10 @@ private fun DndAbilityFace(
                             "Спасбросок",
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            fontSize = if (compact) 13.sp else 11.sp,
-                            lineHeight = if (compact) 13.sp else 11.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = WebPalette.TextSecondary,
+                            fontSize = 11.sp,
+                            lineHeight = 11.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = WebPalette.TextMuted,
                         )
                         if (proficient) AbilityProficiencyMarker(rank = 1)
                         Text(
@@ -267,7 +263,7 @@ private fun DndAbilityFace(
             }
         }
         if (skills.isNotEmpty()) {
-            item("skill-gap") { Spacer(Modifier.height(DesignTokens.Spacing.Small)) }
+            item("skill-gap") { Spacer(Modifier.height(DesignTokens.Spacing.Xs)) }
         }
         items(skills, key = { "skill:$it" }) { id ->
             val skill = data["skills"].objectValue()[id].objectValue()
