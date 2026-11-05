@@ -16,6 +16,7 @@ REQUIRED = {
     'chrome': {'blur', 'tint', 'fade-tail'},
     'layout': {'tablet', 'desktop', 'sidebar-collapsed', 'sidebar-expanded', 'drawer', 'content-max', 'header', 'border', 'touch-min', 'map-sidebar', 'map-rail', 'map-compact-peek', 'map-navigation-item',
                'sheet-value-height', 'sheet-value-width', 'sheet-value-compact-height', 'sheet-value-compact-width',
+               'sheet-header-icon', 'sheet-navigation-item', 'sheet-navigation-height', 'sheet-navigation-icon',
                'sheet-max', 'sheet-stat-min', 'sheet-base-min', 'sheet-stats-column', 'sheet-utilities-column',
                'sheet-stats-column-min', 'sheet-utilities-column-min',
                'input-height', 'number-input-height', 'number-input-width', 'input-stepper-width',

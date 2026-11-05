@@ -196,12 +196,39 @@ test('prepared inventory keeps real sections visible and replaces only a pending
   expect(api.writes).toEqual([])
 })
 
+test('sheet header uses the character icon before the portrait and handles missing images', async ({ page }) => {
+  const api = await fixture(page)
+  let iconImageUrl = '/static/tab-stats.svg'
+  api.document().values.ava = { url: '/static/tab-personality.svg' }
+  await page.route('**/api/char/test', route => route.fulfill({ json: {
+    templateName: 'DND5', userId: 1, sourceVersionId: 1, version: 1,
+    data: api.document(), iconImageUrl,
+  } }))
+  await page.goto('/tests/tutorials/fixtures/tutorials.html')
+  const icon = page.locator('.character-heading-icon')
+  await expect(icon.locator('img')).toHaveAttribute('src', '/static/tab-stats.svg')
+  iconImageUrl = null
+  await page.reload()
+  await expect(icon.locator('img')).toHaveAttribute('src', '/static/tab-personality.svg')
+  api.document().values.ava.url = '/missing-character-image.png'
+  await page.reload()
+  await expect(icon.locator('img')).toHaveCount(0)
+  await expect(icon).toHaveText('Л')
+  expect(api.writes).toEqual([])
+})
+
 for (const width of [390, 834, 1440]) test(`sheet content scrolls behind sharp chrome at ${width}`, async ({ page }) => {
   await page.setViewportSize({ width, height: 700 })
   await fixture(page)
   await page.goto('/tests/tutorials/fixtures/tutorials.html')
   const header = page.locator('.character-workspace-header')
   await expect(header).toBeVisible()
+  await expect(header.getByRole('img', { name: 'Иконка персонажа' })).toHaveText('Л')
+  const identity = await header.locator('.character-identity').boundingBox()
+  const icon = await header.locator('.character-heading-icon').boundingBox()
+  const name = await header.locator('h1').boundingBox()
+  expect(icon.x + icon.width).toBeLessThan(name.x)
+  expect(name.x + name.width).toBeLessThanOrEqual(identity.x + identity.width + 1)
   await expect.poll(() => page.locator('.view').evaluate(element =>
     parseFloat(getComputedStyle(element).getPropertyValue('--sheet-chrome-height')))).toBeGreaterThan(60)
   const viewport = page.locator('.sheet-scroll')

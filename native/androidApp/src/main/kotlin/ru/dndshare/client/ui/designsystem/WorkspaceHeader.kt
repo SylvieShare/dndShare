@@ -13,7 +13,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-/** Flat compact chrome and a separate rounded navigation surface. */
+/** Header with an independently styled navigation surface. */
 @Composable
 fun ShareWorkspaceHeader(
     modifier: Modifier = Modifier,
@@ -23,6 +23,10 @@ fun ShareWorkspaceHeader(
     fitNavigation: Boolean = false,
     compact: Boolean = LocalConfiguration.current.screenWidthDp < DesignTokens.Layout.Desktop.value,
     actions: (@Composable () -> Unit)? = null,
+    navigationColor: Color = WebPalette.Subheader,
+    navigationRadius: Dp = if (compact) DesignTokens.Radius.CompactNavigation else 0.dp,
+    navigationInset: Dp = if (compact) DesignTokens.Layout.CompactHeaderInset else 0.dp,
+    navigationPadding: PaddingValues? = null,
     content: @Composable RowScope.() -> Unit,
 ) {
     val managed = LocalChromeManaged.current
@@ -71,6 +75,10 @@ fun ShareWorkspaceHeader(
                         maxContentWidth = maxContentWidth,
                         contentInset = contentInset,
                         fitContent = fitNavigation,
+                        surfaceColor = navigationColor,
+                        cornerRadius = navigationRadius,
+                        horizontalInset = navigationInset,
+                        contentPadding = navigationPadding,
                         content = tabs,
                     )
                 }
@@ -86,6 +94,10 @@ fun ShareSubheader(
     maxContentWidth: Dp = DesignTokens.Layout.ContentMax,
     contentInset: Dp = DesignTokens.Layout.CompactHeaderInset,
     fitContent: Boolean = false,
+    surfaceColor: Color = WebPalette.Subheader,
+    cornerRadius: Dp = if (compact) DesignTokens.Radius.CompactNavigation else 0.dp,
+    horizontalInset: Dp = if (compact) DesignTokens.Layout.CompactHeaderInset else 0.dp,
+    contentPadding: PaddingValues? = null,
     content: @Composable () -> Unit,
 ) {
     val managed = LocalChromeManaged.current
@@ -105,7 +117,7 @@ fun ShareSubheader(
                 drawContent()
             }
             .padding(
-                horizontal = if (compact) DesignTokens.Layout.CompactHeaderInset else 0.dp,
+                horizontal = horizontalInset,
                 vertical = if (compact) DesignTokens.Spacing.Xs else 0.dp,
             ),
         contentAlignment = Alignment.Center,
@@ -113,14 +125,15 @@ fun ShareSubheader(
         Surface(
             Modifier.widthIn(max = maxContentWidth)
                 .then(if (fitContent) Modifier else Modifier.fillMaxWidth()),
-            color = WebPalette.Subheader,
-            shape =
-                RoundedCornerShape(if (compact) DesignTokens.Radius.CompactNavigation else 0.dp),
+            color = surfaceColor,
+            shape = RoundedCornerShape(cornerRadius),
         ) {
             Box(
                 Modifier.padding(
-                    horizontal = if (compact) DesignTokens.Spacing.Xs else contentInset,
-                    vertical = DesignTokens.Spacing.Xs,
+                    contentPadding ?: PaddingValues(
+                        horizontal = if (compact) DesignTokens.Spacing.Xs else contentInset,
+                        vertical = DesignTokens.Spacing.Xs,
+                    )
                 ),
                 contentAlignment = Alignment.Center,
             ) {

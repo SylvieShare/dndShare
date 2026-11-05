@@ -94,7 +94,13 @@ internal fun CharacterSheetScreen(
                         subheader = {
                             Column {
                                 if (sheet != null && pager != null && format != LayoutFormat.Wide)
-                                    ShareSubheader(fitContent = format == LayoutFormat.Tablet) {
+                                    ShareSubheader(
+                                        maxContentWidth = DesignTokens.Layout.SheetMax,
+                                        surfaceColor = WebPalette.Surface,
+                                        cornerRadius = DesignTokens.Radius.Tile,
+                                        horizontalInset = DesignTokens.Spacing.Page,
+                                        contentPadding = PaddingValues(0.dp),
+                                    ) {
                                         PreparedSheetNavigation(
                                             sections,
                                             requireNotNull(pager),

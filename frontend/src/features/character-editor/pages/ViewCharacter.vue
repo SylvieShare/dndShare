@@ -3,7 +3,7 @@
     <CharacterEditionDialog :controller="edition" />
     <CharacterTransferDialogs :controller="transfers" :character-uuid="uuid" />
     <PageTutorial :tutorial="characterTutorial" :mobile="isMobile" />
-    <CharacterWorkspaceHeader data-sheet-chrome :stacked-navigation="format === 'tablet'" ref="workspaceHeaderEl" :show-menu="template?.system === 'vtm-v20'" :compact="isMobile" :name="charName" :subtitle="charSub" :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="format === 'tablet' || format === 'desktop' && template?.system === 'vtm-v20' ? activeTabs : []" :active-tab="activeTab" @select-tab="onSetActiveTab" />
+    <CharacterWorkspaceHeader data-sheet-chrome :stacked-navigation="format === 'tablet'" ref="workspaceHeaderEl" :show-menu="template?.system === 'vtm-v20'" :compact="isMobile" :name="charName" :subtitle="charSub" :icon-url="headerIconUrl" :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="format === 'tablet' || format === 'desktop' && template?.system === 'vtm-v20' ? activeTabs : []" :active-tab="activeTab" @select-tab="onSetActiveTab" />
 
 
     <div
@@ -143,10 +143,12 @@ const {
   version, serverDocument, sourceVersionId, contentSources, sessions, topSession, hasSessionContext,
   loadSessions, applyCharacter, applyMetadata,
   activeTabs, mobileTabs,
-  headerTitle, charName, charSub, commonMobileScrollHide,
+  headerTitle, charName, charSub, iconImageUrl, commonMobileScrollHide,
   load, loadSync, containerWidthForTab, getInitialTabs,
   updateValue, updateValues, updateVar, updateContentSources, onPublicToggle,
 } = useCharacterData(uuid, format)
+
+const headerIconUrl = computed(() => iconImageUrl.value || data.value.values?.ava?.url || '')
 
 const activeSession = computed(() => {
   const requested = String(route.query.session || '')

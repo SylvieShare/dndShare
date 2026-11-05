@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 
 data class ShareNavigationItem(val key: String, val label: String)
@@ -33,6 +35,9 @@ fun ShareIconNavigation(
     modifier: Modifier = Modifier,
     compact: Boolean = false,
     pill: Boolean = false,
+    itemSize: Dp = 56.dp,
+    containerColor: Color = WebPalette.Subheader,
+    itemHeight: Dp = itemSize,
     icon: @Composable (String) -> Unit,
 ) {
     BoxWithConstraints(if (compact) modifier.fillMaxWidth() else modifier) {
@@ -42,8 +47,8 @@ fun ShareIconNavigation(
             if (compact && items.isNotEmpty())
                 ((maxWidth - horizontalPadding * 2 - gap * (items.size - 1)) / items.size)
                     .coerceAtLeast(44.dp)
-            else 56.dp
-        val height = if (compact) 40.dp else 56.dp
+            else itemSize
+        val height = if (compact) 40.dp else itemHeight
         val index = items.indexOfFirst { it.key == selected }.coerceAtLeast(0)
         val x = animateDpAsState((size + gap) * index, label = "Navigation indicator")
         val scroll = rememberScrollState()
@@ -85,7 +90,7 @@ fun ShareIconNavigation(
                         .background(
                             if (pill)
                                 WebPalette.Accent.copy(alpha = .18f)
-                                    .compositeOver(WebPalette.Subheader)
+                                    .compositeOver(containerColor)
                             else WebPalette.Accent,
                             if (pill) RoundedCornerShape(percent = 50)
                             else RoundedCornerShape(10.dp),

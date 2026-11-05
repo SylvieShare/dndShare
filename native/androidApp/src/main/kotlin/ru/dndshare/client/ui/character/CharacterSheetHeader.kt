@@ -1,15 +1,18 @@
 package ru.dndshare.client.ui.character
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
@@ -40,7 +43,10 @@ internal fun CharacterSheetHeader(
         contentInset = if (format == LayoutFormat.Phone) 8.dp else 14.dp,
         maxContentWidth = DesignTokens.Layout.SheetMax,
         compact = format != LayoutFormat.Wide,
-        fitNavigation = true,
+        navigationColor = WebPalette.Surface,
+        navigationRadius = DesignTokens.Radius.Tile,
+        navigationInset = DesignTokens.Spacing.Page,
+        navigationPadding = PaddingValues(0.dp),
         actions = actions,
         navigation =
             if (navigationInHeader && format == LayoutFormat.Tablet)
@@ -58,13 +64,13 @@ internal fun CharacterSheetHeader(
     ) {
         if (format == LayoutFormat.Wide && sheet?.templateName == "VTM20") {
             Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
-                Box(Modifier.weight(1f)) { SheetIdentity(sheet, format, close, backTitle, menu) }
+                Box(Modifier.weight(1f)) { SheetIdentity(sheet, format, images, close, backTitle, menu) }
                 SheetNavigation(sections, section, images, select, template = "VTM20")
                 Spacer(Modifier.weight(1f))
             }
         } else {
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                SheetIdentity(sheet, format, close, backTitle, menu)
+                SheetIdentity(sheet, format, images, close, backTitle, menu)
             }
         }
     }
@@ -74,10 +80,16 @@ internal fun CharacterSheetHeader(
 private fun SheetIdentity(
     sheet: CharacterSheet?,
     format: LayoutFormat,
+    images: ImageLoader,
     close: () -> Unit,
     backTitle: String,
     menu: (() -> Unit)?,
 ) {
+    val iconUrl = sheet?.iconImageUrl?.takeIf(String::isNotBlank) ?: sheet?.portrait
+    var iconFailed by remember(iconUrl) { mutableStateOf(false) }
+    val monogram = sheet?.name?.trim()?.let {
+        String(Character.toChars(it.codePointAt(0))).uppercase()
+    } ?: "?"
     Row(
         Modifier.fillMaxWidth().heightIn(min = if (format == LayoutFormat.Tablet) 56.dp else 48.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -102,10 +114,34 @@ private fun SheetIdentity(
             }
         }
         if (format == LayoutFormat.Wide) VerticalDivider(Modifier.height(32.dp))
-        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+        Box(
+            Modifier.size(DesignTokens.Layout.SheetHeaderIcon)
+                .clip(RoundedCornerShape(DesignTokens.Radius.Input))
+                .background(WebPalette.Raised)
+                .clearAndSetSemantics { contentDescription = "Иконка персонажа" },
+            contentAlignment = Alignment.Center,
+        ) {
+            if (iconUrl != null && !iconFailed)
+                AsyncImage(
+                    iconUrl,
+                    null,
+                    imageLoader = images,
+                    contentScale = ContentScale.Crop,
+                    onError = { iconFailed = true },
+                    modifier = Modifier.fillMaxSize(),
+                )
+            else
+                Text(
+                    monogram,
+                    style = ShareTypography.sheetHeader,
+                    color = WebPalette.AccentSoft,
+                )
+        }
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(
                 sheet?.name ?: "Лист персонажа",
-                style = ShareTypography.header,
+                style = ShareTypography.sheetHeader,
+                color = WebPalette.Text,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -182,6 +218,9 @@ internal fun SheetNavigation(
         onSelect = { key -> select(sections.first { it.name == key }) },
         compact = compact,
         pill = pill,
+        itemSize = DesignTokens.Layout.SheetNavigationItem,
+        itemHeight = DesignTokens.Layout.SheetNavigationHeight,
+        containerColor = WebPalette.Surface,
     ) { key ->
         val entry = sections.first { it.name == key }
         AsyncImage(
@@ -193,7 +232,7 @@ internal fun SheetNavigation(
                     if (entry == section) if (pill) WebPalette.AccentSoft else WebPalette.Text
                     else WebPalette.TextMuted
                 ),
-            modifier = Modifier.size(if (compact) 22.dp else 24.dp),
+            modifier = Modifier.size(DesignTokens.Layout.SheetNavigationIcon),
         )
     }
 }

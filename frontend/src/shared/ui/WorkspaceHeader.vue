@@ -61,8 +61,8 @@ onBeforeUnmount(() => observer?.disconnect());
   transition: max-width var(--motion-navigation);
 }
 .workspace-header-inner--page { padding-inline: var(--spacing-page); }
-.workspace-subheader { position: relative; z-index: 1; padding: 4px 8px; }
-.workspace-subheader-inner { --surface: var(--subheader); display: flex; justify-content: center; box-sizing: border-box; width: 100%; max-width: var(--workspace-subheader-max-width, 100%); min-width: 0; margin-inline: auto; padding: var(--spacing-xs); border-radius: var(--radius-compact-navigation); background: var(--subheader); overflow-x: auto; }
+.workspace-subheader { position: relative; z-index: 1; padding: var(--spacing-xs) var(--workspace-subheader-inset, 8px); }
+.workspace-subheader-inner { --surface: var(--workspace-subheader-background, var(--subheader)); display: flex; justify-content: center; box-sizing: border-box; width: 100%; max-width: var(--workspace-subheader-max-width, 100%); min-width: 0; margin-inline: auto; padding: var(--workspace-subheader-padding, var(--spacing-xs)); border-radius: var(--workspace-subheader-radius, var(--radius-compact-navigation)); background: var(--surface); overflow-x: auto; }
 .workspace-subheader-inner--fit { width: max-content; max-width: min(100%, var(--workspace-subheader-max-width, 100%)); }
 .workspace-header-identity {
   min-width: 0;
@@ -115,9 +115,9 @@ onBeforeUnmount(() => observer?.disconnect());
 @media (--ui-compact) {
   .workspace-header { background: transparent; border: 0; box-shadow: none; }
   .workspace-header-inner { min-height: var(--layout-header); }
-  .workspace-subheader { border: 0; background: transparent; padding: var(--spacing-xs) var(--layout-compact-header-inset); }
+  .workspace-subheader { border: 0; background: transparent; padding: var(--spacing-xs) var(--workspace-subheader-inset, var(--layout-compact-header-inset)); }
   .workspace-subheader-inner, .workspace-header-navigation {
-    background: var(--subheader); border: 0; border-radius: var(--radius-compact-navigation);
+    background: var(--workspace-subheader-background, var(--subheader)); border: 0; border-radius: var(--workspace-subheader-radius, var(--radius-compact-navigation));
   }
   .workspace-header-navigation { padding: var(--spacing-xs); }
 }
