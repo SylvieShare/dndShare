@@ -1,5 +1,7 @@
 package ru.dndshare.client.ui.designsystem
 
+import androidx.compose.foundation.BorderStroke
+
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
@@ -127,6 +129,7 @@ fun SharePreviewWindow(
                         else RoundedCornerShape(18.dp),
                     color = WebPalette.Background,
                     shadowElevation = 20.dp,
+                    border = BorderStroke(DesignTokens.Layout.Border, WebPalette.BorderStrong),
                 ) {
                     Box {
                         content()

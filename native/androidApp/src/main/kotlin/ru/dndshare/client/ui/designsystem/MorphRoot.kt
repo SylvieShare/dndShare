@@ -1,6 +1,10 @@
 package ru.dndshare.client.ui.designsystem
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -25,6 +29,8 @@ internal val LocalMorphLayers = staticCompositionLocalOf<MorphLayers?> { null }
 @Composable
 fun ShareMorphRoot(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     val layers = remember { MorphLayers() }
+    val windows = remember { WindowBackdrops() }
+    val windowRadius = animateDpAsState(windows.radius, tween(if (windows.radius > 0.dp) DesignTokens.Motion.Enter else DesignTokens.Motion.Exit), label = "Window backdrop blur")
     val entries = layers.entries.toMap()
     val active = entries.values.lastOrNull { it.state.isActive }?.state
     Box(
@@ -37,9 +43,10 @@ fun ShareMorphRoot(modifier: Modifier = Modifier, content: @Composable () -> Uni
     ) {
         Box(
             Modifier.fillMaxSize()
-                .then(active?.let { Modifier.shareMorphBackground(it) } ?: Modifier)
+                .then(if (active != null || windows.entries.isNotEmpty()) Modifier.clearAndSetSemantics {} else Modifier)
+                .shareBackgroundBlur { maxOf(8.dp * (active?.progress ?: 0f), windowRadius.value) }
         ) {
-            CompositionLocalProvider(LocalMorphLayers provides layers) { content() }
+            CompositionLocalProvider(LocalMorphLayers provides layers, LocalWindowBackdrops provides windows) { content() }
         }
         entries.forEach { (token, layer) ->
             key(token) {

@@ -1,5 +1,7 @@
 package ru.dndshare.client.ui.designsystem
 
+import androidx.compose.foundation.BorderStroke
+
 import androidx.compose.animation.core.tween
 
 import androidx.compose.animation.*
@@ -45,7 +47,7 @@ fun ShareDropdownMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = WebPalette.Subheader,
+    containerColor: Color = WebPalette.Popover,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val transition = remember { MutableTransitionState(false) }
@@ -73,6 +75,7 @@ fun ShareDropdownMenu(
                     shape = RoundedCornerShape(10.dp),
                     color = containerColor,
                     shadowElevation = 16.dp,
+                    border = BorderStroke(DesignTokens.Layout.Border, WebPalette.BorderStrong),
                 ) {
                     CompositionLocalProvider(
                         LocalMenuInteractive provides expanded,

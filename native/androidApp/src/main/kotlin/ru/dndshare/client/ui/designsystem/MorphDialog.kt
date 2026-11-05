@@ -23,6 +23,7 @@ import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Layout
@@ -152,7 +153,7 @@ fun ShareMorphDialog(
                                 .morphDragSurface(dismissDrag, dismissEnabled && compactDrag)
                                 .pointerInput(Unit) { detectTapGestures {} }
                         )
-                        Box(Modifier.background(WebPalette.Background))
+                        Box(Modifier.background(WebPalette.Surface))
                         Box(
                             if (entry?.scrollPreview != false)
                                 Modifier.verticalScroll(rememberScrollState())
@@ -162,6 +163,16 @@ fun ShareMorphDialog(
                         }
                         Box(Modifier.verticalScroll(rememberScrollState())) { editor() }
                         Box { if (compactDrag) MorphDismissHandle(dismissDrag, dismissEnabled) }
+                        // Draw after the preview and form so their surfaces cannot cover the frame.
+                        Box(Modifier.drawBehind {
+                            val stroke = DesignTokens.Layout.Border.toPx()
+                            val radius = lerp(entry?.cornerRadius?.toPx() ?: 0f, DesignTokens.Radius.Morph.toPx(), state.progress)
+                            drawRoundRect(WebPalette.BorderStrong,
+                                topLeft = Offset(stroke / 2, stroke / 2),
+                                size = Size((size.width - stroke).coerceAtLeast(0f), (size.height - stroke).coerceAtLeast(0f)),
+                                cornerRadius = CornerRadius((radius - stroke / 2).coerceAtLeast(0f)),
+                                style = Stroke(stroke))
+                        }.clearAndSetSemantics {})
                     },
                     modifier =
                         Modifier.fillMaxSize()
@@ -205,6 +216,8 @@ fun ShareMorphDialog(
                                 frame.height.roundToInt().coerceAtLeast(1),
                             )
                         )
+                    val outline = children[5].measure(Constraints.fixed(
+                        frame.width.roundToInt().coerceAtLeast(1), frame.height.roundToInt().coerceAtLeast(1)))
                     val editorX = if (plan.stacked) 0 else previewWidth
                     val editorY = if (plan.stacked) preview.height else 0
                     val formBackdropWidth = (frame.width.roundToInt() - editorX).coerceAtLeast(0)
@@ -275,6 +288,9 @@ fun ShareMorphDialog(
                                 )
                             clip = true
                             alpha = ((state.progress - .25f) / .75f).coerceIn(0f, 1f)
+                        }
+                        outline.placeWithLayer(frame.left.roundToInt(), frame.top.roundToInt()) {
+                            alpha = if (plan.stacked) 0f else p
                         }
                         if (compactDrag)
                             handle.placeWithLayer(

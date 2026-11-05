@@ -1,5 +1,7 @@
 package ru.dndshare.client.ui.designsystem
 
+import androidx.compose.foundation.BorderStroke
+
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -11,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.dialog
@@ -52,6 +53,7 @@ fun ShareWindow(
     scrollContent: Boolean = true,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+    RegisterWindowBackdrop(8.dp)
     val focus = remember { FocusRequester() }
     Dialog(
         onDismissRequest = { if (dismissEnabled) onDismissRequest() },
@@ -62,6 +64,7 @@ fun ShareWindow(
                 dismissOnClickOutside = dismissEnabled,
             ),
     ) {
+        ApplyWindowBackdrop(8.dp, WebPalette.Scrim.alpha)
         Surface(
             modifier
                 .widthIn(max = 760.dp)
@@ -72,9 +75,10 @@ fun ShareWindow(
                 .focusRequester(focus)
                 .focusable()
                 .semantics { dialog() },
-            color = WebPalette.Background,
+            color = WebPalette.Surface,
             shape = RoundedCornerShape(18.dp),
             shadowElevation = 20.dp,
+            border = BorderStroke(DesignTokens.Layout.Border, WebPalette.BorderStrong),
         ) {
             Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -141,6 +145,7 @@ fun ShareFullscreenDialog(
     blurBehind: Dp = 0.dp,
     content: @Composable () -> Unit,
 ) {
+    RegisterWindowBackdrop(blurBehind)
     Dialog(
         onDismissRequest,
         properties =
@@ -153,14 +158,9 @@ fun ShareFullscreenDialog(
             ),
     ) {
         val view = LocalView.current
-        val blurPixels = with(LocalDensity.current) { blurBehind.roundToPx() }
+        ApplyWindowBackdrop(blurBehind, dimAmount)
         SideEffect {
             (view.parent as? DialogWindowProvider)?.window?.let { window ->
-                dimAmount?.let(window::setDimAmount)
-                if (android.os.Build.VERSION.SDK_INT >= 31 && blurPixels > 0) {
-                    window.addFlags(android.view.WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
-                    window.attributes = window.attributes.apply { blurBehindRadius = blurPixels }
-                }
                 @Suppress("DEPRECATION")
                 run {
                     window.statusBarColor = android.graphics.Color.TRANSPARENT

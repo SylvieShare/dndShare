@@ -1,6 +1,7 @@
 package ru.dndshare.client.ui.designsystem
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.border
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -24,6 +25,7 @@ fun ShareBottomSheet(
     onDismissRequest: () -> Unit,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+    RegisterWindowBackdrop(8.dp)
     val state = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     val dismiss: () -> Unit = {
@@ -37,8 +39,9 @@ fun ShareBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = state,
+        modifier = Modifier.border(DesignTokens.Layout.Border, WebPalette.BorderStrong, RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
         sheetMaxWidth = 760.dp,
-        containerColor = WebPalette.Background,
+        containerColor = WebPalette.Surface,
         contentColor = WebPalette.Text,
         scrimColor = WebPalette.Scrim,
         shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
@@ -49,6 +52,7 @@ fun ShareBottomSheet(
             )
         },
     ) {
+        ApplyWindowBackdrop(8.dp, null)
         Column(
             Modifier.fillMaxWidth()
                 .heightIn(max = maximum)

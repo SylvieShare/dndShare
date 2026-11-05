@@ -85,7 +85,7 @@ const showBack = computed(() => !!props.nav && props.nav.view.value !== 'detail'
   min-width: 0;
   display: flex;
   align-items: stretch;
-  background: var(--bg);
+  background: var(--surface);
   opacity: 0;
   transition: opacity var(--motion-morph-open) ease;
 }

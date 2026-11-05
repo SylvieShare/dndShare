@@ -164,10 +164,11 @@ fun ShareMorphSource(
 }
 
 fun Modifier.shareMorphBackground(state: ShareMorphState): Modifier =
-    then(if (state.isActive) Modifier.clearAndSetSemantics {} else Modifier).graphicsLayer {
-        renderEffect =
-            if (Build.VERSION.SDK_INT >= 31 && state.progress > 0f) {
-                val radius = 8.dp.toPx() * state.progress
-                BlurEffect(radius, radius, TileMode.Clamp)
-            } else null
-    }
+    then(if (state.isActive) Modifier.clearAndSetSemantics {} else Modifier)
+        .shareBackgroundBlur { 8.dp * state.progress }
+
+internal fun Modifier.shareBackgroundBlur(radius: () -> Dp): Modifier = graphicsLayer {
+    val pixels = radius().toPx()
+    renderEffect = if (Build.VERSION.SDK_INT >= 31 && pixels > 0f)
+        BlurEffect(pixels, pixels, TileMode.Clamp) else null
+}

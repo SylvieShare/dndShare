@@ -21,6 +21,7 @@ for (const mobile of [false, true]) test(`shared morph heading and independent a
   await heading.focus()
   await page.keyboard.press('Enter')
   await expect(page.locator('.mes-editor')).toBeVisible()
+  await expect(page.locator('.ms-sheet')).toHaveCSS('border-top-width', mobile ? '0px' : '1px')
   await expect(page.locator('.mes-view .morph-tile-header')).toBeVisible()
   await expect(page.locator('.mes-view .morph-tile-heading')).toBeDisabled()
   await expect(page.locator('.mes-view-body > .tile-accent-strip')).toBeVisible()
@@ -73,4 +74,19 @@ test('shared faces keep their intended surface and previews avoid nested tiles',
     await expect(preview).not.toHaveClass(/base-tile/)
     await expect(preview.locator('.morph-tile')).toHaveCount(0)
   }
+})
+
+
+test('floating select list has a frame while its input stays frameless', async ({ page }) => {
+  await page.goto('/tests/tutorials/fixtures/tile-faces.html')
+  const select = page.getByTestId('floating-select')
+  await expect(select.locator('.vs-button')).toHaveCSS('border-top-width', '0px')
+  await select.locator('.vs-button').click()
+  await expect(select.locator('.vs-drop')).toHaveCSS('border-top-width', '1px')
+  await expect(select.locator('.vs-drop')).toHaveCSS('background-color', 'rgb(52, 52, 62)')
+  await select.locator('.vs-option').last().hover()
+  await expect(select.locator('.vs-option').last()).toHaveCSS('background-color', 'rgb(66, 66, 79)')
+  await select.locator('.vs-option').last().click()
+  await expect(select.locator('.vs-drop')).toHaveCount(0)
+  await expect(select.locator('.vs-button')).toContainText('Второй вариант')
 })

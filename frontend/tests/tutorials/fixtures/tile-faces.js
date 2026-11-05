@@ -1,4 +1,5 @@
-import { createApp, h } from 'vue'
+import { createApp, h, ref } from 'vue'
+import { ValueSelect } from '@sylvieshare/share-ui'
 import { createPinia } from 'pinia'
 import '@sylvieshare/share-ui/styles.css'
 import '../../../src/app/theme.css'
@@ -28,7 +29,8 @@ const faces = [
   { name: 'DndHpView', component: DndHpView, props: {"hp": {"max": {"base": 10}, "current": 10}} },
   { name: 'DndLvlView', component: DndLvlView, props: {"data": {"level": 1, "exp": 0}} }
 ]
-createApp({ render: () => h('main', { style: 'display:grid;gap:16px;max-width:320px;margin:16px' }, faces.flatMap(face => [false, true].map(panel => h(face.component, {
+const choice = ref('a')
+createApp({ render: () => h('main', { style: 'display:grid;gap:16px;max-width:320px;margin:16px' }, [h(ValueSelect, { 'data-testid': 'floating-select', modelValue: choice.value, 'onUpdate:modelValue': value => choice.value = value, options: [{ value: 'a', label: 'Первый вариант' }, { value: 'b', label: 'Второй вариант' }] }), ...faces.flatMap(face => [false, true].map(panel => h(face.component, {
   ...face.props, panel, ...(face.name === 'DndStatView' ? { mode: panel ? 'panel' : 'tile' } : {}),
   'data-testid': `${face.name}-${panel ? 'preview' : 'source'}`,
-})))) }).use(createPinia()).mount('#app')
+})))]) }).use(createPinia()).mount('#app')

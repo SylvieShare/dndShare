@@ -10,7 +10,7 @@ object WebPalette {
     val Subheader = Color(0xFF35313F)
     val Raised = Color(0xFF34343E)
     val Active = Color(0xFF42424F)
-    val Popover = Color(0xFF35313F)
+    val Popover = Color(0xFF34343E)
     val Text = Color(0xFFECECED)
     val TextSecondary = Color(0xFFA6A6AB)
     val TextMuted = Color(0xFFA0A0AD)

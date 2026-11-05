@@ -40,7 +40,7 @@ async function watchMenuEntrance(page) {
 }
 
 for (const width of [390, 834, 1920]) {
-  test(`production action menus animate after a tap at ${width}px`, async ({ page }) => {
+  test(`production action menus animate after a tap at ${width}px`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width, height: 900 })
     await installCharacterChromeFixture(page)
     await page.goto('/chars')
@@ -51,6 +51,8 @@ for (const width of [390, 834, 1920]) {
     const listMenu = page.locator('.base-popover').filter({ hasText: 'Клонировать' })
     await expect.poll(() => page.evaluate(() => window.menuEntered)).toBe(true)
     await expect(listTrigger).toHaveCSS('-webkit-tap-highlight-color', 'rgba(0, 0, 0, 0)')
+    await expect(listMenu).toHaveCSS('border-top-width', '1px')
+    await expect(listMenu).toHaveCSS('background-color', 'rgb(52, 52, 62)')
     await expect(listMenu.getByText('Клонировать', { exact: true })).toHaveCSS('-webkit-tap-highlight-color', 'rgba(0, 0, 0, 0)')
     await page.keyboard.press('Escape')
     await expect(listMenu).toHaveCount(0)
@@ -63,9 +65,23 @@ for (const width of [390, 834, 1920]) {
     await watchMenuEntrance(page)
     const save = page.getByRole('button', { name: / — спасбросок$/ }).filter({ visible: true }).first()
     await expect(save).toBeVisible()
+    await expect(page.locator('.stat-block:visible').first()).toHaveCSS('border-top-width', '0px')
     await save.tap()
     const rollMenu = page.getByRole('menu', { name: / — спасбросок$/ })
     await expect.poll(() => page.evaluate(() => window.menuEntered)).toBe(true)
+    await expect(rollMenu).toHaveCSS('border-top-width', '1px')
+    await expect(rollMenu).toHaveCSS('background-color', 'rgb(52, 52, 62)')
+    await testInfo.attach('framed-roll-menu', { body: await page.screenshot(), contentType: 'image/png' })
     await expect(rollMenu.getByRole('button', { name: 'Помеха', exact: true })).toHaveCSS('-webkit-tap-highlight-color', 'rgba(0, 0, 0, 0)')
+    await rollMenu.getByRole('menuitem', { name: 'Изменить', exact: true }).click()
+    const editor = page.locator('.ms-sheet')
+    await expect(page.locator('.mes-rest')).toHaveCSS('opacity', '1')
+    await expect(editor).toHaveCSS('border-top-width', width <= 768 ? '0px' : '1px')
+    await expect(page.locator('.mes-rest')).toHaveCSS('background-color', 'rgb(39, 39, 46)')
+    if (width > 768) await expect(page.locator('#app')).toHaveCSS('filter', 'blur(8px)')
+    await testInfo.attach('editor-surface', { body: await page.screenshot(), contentType: 'image/png' })
+    await page.keyboard.press('Escape')
+    await expect(editor).toHaveCount(0)
+
   })
 }
