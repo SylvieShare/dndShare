@@ -14,7 +14,6 @@ import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
 import ru.dndshare.client.model.HandbookMetadata
 import ru.dndshare.client.ui.DndTheme
-import ru.dndshare.client.ui.LayoutFormat
 import ru.dndshare.client.ui.character.*
 import ru.dndshare.client.ui.designsystem.*
 
@@ -27,20 +26,13 @@ class MorphBenchmarkActivity : ComponentActivity() {
         val extraSkills = intent.getIntExtra("skills", 0).coerceIn(0, 100)
         setContent {
             DndTheme {
-                val morph = rememberShareMorphState()
                 val sheet = remember { benchmarkSheet(extraSkills) }
                 val images = remember { ImageLoader.Builder(applicationContext).build() }
                 DisposableEffect(images) { onDispose { images.shutdown() } }
                 var editor by remember { mutableStateOf<SheetEditorState?>(null) }
-                BoxWithConstraints(
+                Box(
                     Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)
                 ) {
-                    val format =
-                        when {
-                            maxWidth.value < 600 -> LayoutFormat.Phone
-                            maxWidth.value < 1200 -> LayoutFormat.Tablet
-                            else -> LayoutFormat.Wide
-                        }
                     val metadata = remember { HandbookMetadata() }
                     val context =
                         SheetContext(
@@ -56,33 +48,19 @@ class MorphBenchmarkActivity : ComponentActivity() {
                             mechanics = remember { DndDerivedValues(sheet, emptyMap(), metadata) },
                             journal = SheetJournalState(),
                         )
-                    CompositionLocalProvider(
-                        LocalCharacterSheet provides context,
-                        LocalSheetEditorPreview provides editor,
-                        LocalShareMorphState provides morph,
-                    ) {
-                        ShareMorphHost(
-                            morph,
-                            background = {
-                                Column(
-                                    Modifier.fillMaxSize()
-                                        .verticalScroll(rememberScrollState())
-                                        .padding(DesignTokens.Spacing.Page)
-                                ) {
-                                    DndStats()
-                                }
-                            },
-                        ) {
-                            SheetStatMorph(
-                                morph,
-                                editor,
+                    CompositionLocalProvider(LocalCharacterSheet provides context) {
+                        Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(DesignTokens.Spacing.Page)) {
+                            DndStats()
+                        }
+                        editor?.takeIf { it.isDndStat() }?.let { current ->
+                            SheetStatDialog(
+                                current,
                                 close = { editor = null },
                                 number = { _, value ->
                                     editor = editor?.let {
                                         it.copy(fields = it.fields.copy(number = value))
                                     }
                                 },
-                                submit = { editor = null },
                                 input = { key, value ->
                                     editor = editor?.let {
                                         it.copy(
@@ -95,8 +73,9 @@ class MorphBenchmarkActivity : ComponentActivity() {
                                     }
                                 },
                                 readInput = { editor?.fields?.input ?: JsonObject(emptyMap()) },
-                                items = emptyMap(),
-                                metadata = metadata,
+                                syncPending = false,
+                                syncError = null,
+                                retry = {},
                             )
                         }
                     }
