@@ -2,6 +2,15 @@ function plainObject(value) {
   return value && typeof value === 'object' && !Array.isArray(value) ? value : {}
 }
 
+export function isPotion(item) {
+  return Number(item?.typeId) === 10
+}
+
+export function itemConsumable(item, entry) {
+  if (isPotion(item)) return true
+  return entry?.override?.consumable ?? (item?.data?.consumable === true)
+}
+
 export function applicableInstanceFields(type, item) {
   return (type?.instanceFields || []).filter((field) => {
     const condition = field?.applies_when

@@ -6,6 +6,8 @@ import ru.dndshare.client.model.*
 
 data class InventoryEconomy(val cost: JsonElement?, val weight: Double?)
 
+fun CatalogueItem?.isPotion(): Boolean = this?.typeId == 10L
+
 fun resolveInventoryItem(entry: JsonObject, items: Map<Long, CatalogueItem>): CatalogueItem? {
     if (entry["magic_item_id"].referenceId() != null) return resolveWeapon(entry, items)
     val item = items[entry["item_id"].referenceId()] ?: return null

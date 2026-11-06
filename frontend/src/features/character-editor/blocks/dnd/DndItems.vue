@@ -124,7 +124,7 @@ import MagicEquipmentInstanceModal from '@/features/items/components/MagicEquipm
 import { useInventoryEquipmentActions } from './composables/useInventoryEquipmentActions'
 import { initialChargeStocks } from '@/shared/lib/itemInitialCharges'
 import { magicBaseParams, magicEquipmentKinds, magicBaseId } from '@/features/items/lib/magicEquipmentBases'
-import { applicableInstanceFields, defaultInstanceParams, mergeEditedInstanceParams } from '@/features/items/lib/itemInstance'
+import { applicableInstanceFields, defaultInstanceParams, mergeEditedInstanceParams, itemConsumable } from '@/features/items/lib/itemInstance'
 import { hasItemProficiency } from '@/features/character-editor/lib/itemProficiency'
 import { abilityModifier, formatBonus as signed, proficiencyBonus, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
 import { STAT_FULL, STAT_KEYS } from '@/shared/lib/dndStats'
@@ -391,11 +391,11 @@ function onInlineFormSave(fields) {
     if (item) {
       const baseData = form.baseItem?.data || {}
       const baseName = form.baseItem?.name
-      const ov = {}
+      const ov = item.item_id != null && !form.baseItem ? { ...item.override } : {}
       if (fields.name !== baseName) ov.name = fields.name
       if (fields.desc !== (baseData.desc || '')) ov.desc = fields.desc
       if (fields.weight !== (baseData.weight ?? null)) ov.weight = fields.weight
-      if (fields.consumable !== !!baseData.consumable) ov.consumable = fields.consumable
+      if (fields.consumable != null && fields.consumable !== itemConsumable(form.baseItem)) ov.consumable = fields.consumable
       item.override = Object.keys(ov).length ? ov : null
       if (item.item_id == null) item.icon_preset_id = fields.iconPresetId
       item.params = mergeEditedInstanceParams(item.params, fields.params, form.instanceFields)

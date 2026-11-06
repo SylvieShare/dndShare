@@ -23,6 +23,7 @@
     />
 
     <button
+      v-if="showConsumable"
       class="iim-toggle"
       :class="{ 'iim-toggle-on': consumable }"
       type="button"
@@ -53,7 +54,7 @@ import { FormField } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import { FormTextarea } from '@sylvieshare/share-ui'
 import ItemInstanceParamsFields from '@/features/items/components/ItemInstanceParamsFields.vue'
-import { normalizeInstanceParams } from '@/features/items/lib/itemInstance'
+import { normalizeInstanceParams, isPotion, itemConsumable } from '@/features/items/lib/itemInstance'
 import InventoryIconPresetPicker from '@/features/inventory/components/InventoryIconPresetPicker.vue'
 import { presetId } from '@/features/inventory/lib/iconPresets'
 
@@ -73,7 +74,8 @@ const desc = ref(ov.desc ?? fallback.desc ?? '')
 const weight = ref(ov.weight ?? fallback.weight ?? '')
 const parsedWeight = computed(() => weight.value === '' ? null : Number(weight.value))
 const weightValid = computed(() => parsedWeight.value == null || Number.isFinite(parsedWeight.value) && parsedWeight.value >= 0)
-const consumable = ref(!!(ov.consumable ?? fallback.consumable ?? false))
+const consumable = ref(itemConsumable(props.baseItem, props.entry))
+const showConsumable = computed(() => !isPotion(props.baseItem) && (props.baseItem != null || props.entry?.item_id == null))
 const iconPresetId = ref(presetId(props.entry?.icon_preset_id))
 const params = ref(normalizeInstanceParams(props.entry?.params, props.instanceFields, { defaults: true }))
 
@@ -84,7 +86,7 @@ function submit() {
     name: trimmed,
     desc: desc.value,
     weight: parsedWeight.value,
-    consumable: consumable.value,
+    ...(showConsumable.value ? { consumable: consumable.value } : {}),
     params: params.value,
     iconPresetId: iconPresetId.value,
   })

@@ -171,9 +171,8 @@ internal fun inventoryFormPatches(
                                 overrides["weight"] = JsonPrimitive(weight)
                             }
                         }
-                        if ((input["consumable"] as? JsonPrimitive)?.booleanOrNull != null)
-                            overrides["consumable"] =
-                                JsonPrimitive(input["consumable"] == JsonPrimitive(true))
+                        if (item.isPotion()) overrides.remove("consumable")
+                        else (input["consumable"] as? JsonPrimitive)?.booleanOrNull?.let { overrides["consumable"] = JsonPrimitive(it) }
                         put(
                             "icon_preset_id",
                             if (itemId == null)

@@ -5,6 +5,7 @@
 </template>
 
 <script setup>
+import { isPotion } from '@/features/items/lib/itemInstance'
 import { magicItemRarity, magicAttunementLabel } from '@/features/items/lib/magicItemPresentation'
 import { computed } from 'vue'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
@@ -39,7 +40,7 @@ const subtitle = computed(() => {
     data.value.weapon?.magic_bonus ? `Оружейный бонус +${data.value.weapon.magic_bonus}` : null,
     weightLabel,
     data.value.is_container ? 'Контейнер' : null,
-    data.value.consumable ? 'Расходуемый' : null,
+    !isPotion(props.item) && data.value.consumable ? 'Расходуемый' : null,
   ].filter(Boolean)
   return parts.join(' · ')
 })

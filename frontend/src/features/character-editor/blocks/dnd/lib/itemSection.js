@@ -2,7 +2,7 @@ import { normalizeInventorySpaces } from './inventorySpaces'
 import { ownedWeaponFields } from './ownedWeaponFields'
 import { resolveWeaponItem } from '@/features/character-editor/lib/magicWeapons'
 import { makeUid } from './itemEntry'
-import { instanceDisplayName } from '@/features/items/lib/itemInstance'
+import { instanceDisplayName, itemConsumable } from '@/features/items/lib/itemInstance'
 import { inventoryItemEconomy } from '@/features/items/lib/itemPackaging'
 import { customInventoryIcon, presetId } from '@/features/inventory/lib/iconPresets'
 
@@ -91,7 +91,7 @@ export function entryDisplayData(entry, catalog, typeById = {}, rootTypeId = 2, 
   const namedBase = base ? { ...base, name: ov.name ?? base.name } : { name: ov.name ?? '—', data: {} }
   const name = instanceDisplayName(namedBase, entry.params, typeById[base?.typeId])
   const desc = ov.desc ?? base?.data?.desc ?? ''
-  const consumable = ov.consumable ?? base?.data?.consumable ?? false
+  const consumable = itemConsumable(base, entry)
   const { cost, weight } = inventoryItemEconomy(base, entry)
   const isCustom = entry.item_id == null
   const svg = base?.svg ?? ''

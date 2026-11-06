@@ -39,7 +39,7 @@
         <span v-if="!economyInHeader && costLabel" class="idc-badge idc-cost">{{ costLabel }}</span>
         <span v-if="!economyInHeader && packagingNote(item)" class="idc-badge">{{ packagingNote(item) }}</span>
         <span v-if="data.is_container" class="idc-badge idc-container">Контейнер</span>
-        <span v-if="data.consumable" class="idc-badge idc-consumable">Расходуемое</span>
+        <span v-if="consumable" class="idc-badge idc-consumable">Расходуемое</span>
       </div>
     </DetailSection>
 
@@ -54,6 +54,7 @@
 </template>
 
 <script setup>
+import { isPotion } from '@/features/items/lib/itemInstance'
 import { computed, ref, watch } from 'vue'
 import { BookOpen, Package, PackageOpen, ShieldCheck } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
@@ -74,9 +75,10 @@ const props = defineProps({
 const data = computed(() => props.item.data || {})
 const { format: formatCost } = useCostFormatter()
 const costLabel = computed(() => formatCost(data.value.cost))
+const consumable = computed(() => !isPotion(props.item) && data.value.consumable)
 const hasMeta = computed(() => (!props.economyInHeader && (data.value.weight != null || !!costLabel.value))
   || data.value.is_container
-  || data.value.consumable)
+  || consumable.value)
 const contentItems = ref([])
 const viewItem = ref(null)
 let contentRequest = 0

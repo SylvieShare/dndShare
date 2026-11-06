@@ -92,13 +92,10 @@ internal fun InventoryFeatureFields(form: FeatureFormScope, cache: CacheDao) {
             InventoryIconFields(form)
             form.TextField("weight", "Вес одного предмета, фунт.")
         }
-        form.Toggle(
-            "consumable",
-            "Расходуемое",
-            LocalCharacterSheet.current.items[form.data["item_id"].referenceId()]
-                ?.data
-                ?.get("consumable") == JsonPrimitive(true),
-        )
+        val selectedId = form.data["item_id"].referenceId()
+        val selectedItem = LocalCharacterSheet.current.items[selectedId]
+        if (selectedId == null || selectedItem != null && !selectedItem.isPotion())
+            form.Toggle("consumable", "Расходуемое", selectedItem?.data?.get("consumable") == JsonPrimitive(true))
         form.TextField("desc", "Описание", multiline = true)
         if (kind == "inventory") {
             form.NumberField("count", "Количество")

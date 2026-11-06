@@ -458,13 +458,13 @@ function spellCombatLine(item, row) {
   return parts.join(' · ')
 }
 const spellCards = computed(() => rawSpells.value.map((row, index) => {
-  const entry = row.entry; const item = itemById(entry.id); const data = item?.data || {}; const grantLine = spellGrantLine(row); const length = plainLength(data.description) + plainLength(data.upper) + grantLine.length
+  const entry = row.entry; const item = itemById(entry.id); const data = item?.data || {}; const grantLine = spellGrantLine(row); const length = plainLength(data.description) + grantLine.length
   const span = length > 1150 ? 3 : length > 380 ? 2 : 1
   return { ...entry, id: entry.key || `${entry.id}-${index}`, itemId: entry.id, name: item?.name || `Заклинание #${entry.id}`, level: Number(data.lvl ?? -1), data, school: suggest.items(7).find(s => String(s.id) === String(data.schoolId))?.value || '', source: (item?.contentSources || []).map(source => source.name || source.code).filter(Boolean).join(', '), grantLine, combatLine: spellCombatLine(item, row), span, textLength: length }
 }))
 function estimatedCardHeight(card, columns) {
   const widthFactor = Math.max(1, Math.min(columns, card.span || 1)); const charsPerLine = columns === 3 ? 34 * widthFactor : 58 * widthFactor
-  return 31 + Math.ceil(card.textLength / charsPerLine) * 3.15 + (card.combatLine ? 7 : 0) + (card.data?.upper ? 8 : 0)
+  return 31 + Math.ceil(card.textLength / charsPerLine) * 3.15 + (card.combatLine ? 7 : 0)
 }
 function paginateGrid(cards, columns, firstCapacity, nextCapacity) {
   if (!cards.length) return [{ cards: [] }]

@@ -5,9 +5,9 @@ import { entryDisplayData, inventoryEntriesWeight } from '../blocks/dnd/lib/item
 import { useInventoryTooltip } from '@/features/inventory/composables/useInventoryTooltip'
 
 const cleanups = []
-function mount(entry = null) {
+function mount(entry = null, baseItem = null) {
   const save = vi.fn()
-  const vnode = h({ ...ItemInlineFormModal, render: () => null }, { entry, onSave: save })
+  const vnode = h({ ...ItemInlineFormModal, render: () => null }, { entry, baseItem, onSave: save })
   const renderer = createRenderer({
     createComment: () => ({}), insert() {}, remove() {}, parentNode() {}, nextSibling() {},
   })
@@ -18,6 +18,26 @@ function mount(entry = null) {
   return { state: vnode.component.setupState, save }
 }
 afterEach(() => cleanups.splice(0).forEach(cleanup => cleanup()))
+
+describe('inventory consumption', () => {
+  it.each([
+    [10, {}, {}, true],
+    [10, {}, { consumable: false }, true],
+    [2, {}, {}, false],
+    [19, { consumable: true }, {}, true],
+    [2, {}, { consumable: true }, true],
+  ])('uses the same default or instance override in the row and editor', (typeId, data, override, expected) => {
+    const item = { id: 42, name: 'Предмет', typeId, data }
+    const entry = { item_id: 42, override }
+    const { state, save } = mount(entry, item)
+    expect(entryDisplayData(entry, { 42: item }).consumable).toBe(expected)
+    expect(state.consumable).toBe(expected)
+    expect(state.showConsumable).toBe(typeId !== 10)
+    state.submit()
+    if (typeId === 10) expect(save.mock.calls[0][0]).not.toHaveProperty('consumable')
+    else expect(save.mock.calls[0][0].consumable).toBe(expected)
+  })
+})
 
 describe('custom inventory item weight', () => {
   it('saves fractional weight per piece and uses the whole stack in the space total and tooltip', () => {

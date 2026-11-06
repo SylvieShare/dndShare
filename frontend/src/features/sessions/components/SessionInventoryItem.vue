@@ -24,6 +24,7 @@
   <InventoryItemTooltip :tooltip="tooltip" />
 </template>
 <script setup>
+import { itemConsumable } from '@/features/items/lib/itemInstance'
 import { computed, watch } from 'vue'
 import { Send, UserRound } from '@lucide/vue'
 import { RowActionMenu, RowActionSubmenu } from '@sylvieshare/share-ui'
@@ -44,7 +45,7 @@ const display = computed(() => {
   return { name: props.row.name, base: props.item,
     desc: override.desc ?? props.row.entry?.desc ?? data.desc ?? '',
     ...inventoryItemEconomy(props.item, props.row.entry),
-    consumable: override.consumable ?? data.consumable,
+    consumable: itemConsumable(props.item, props.row.entry),
   }
 })
 watch(display, value => { if (tooltip.visible) showTooltip({ currentTarget: tooltip.anchor }, value) })

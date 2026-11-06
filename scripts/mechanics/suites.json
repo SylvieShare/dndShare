@@ -222,11 +222,14 @@
       "src/features/character-editor/lib/characterMagicItems.test.js",
       "src/features/character-editor/lib/itemLastCharge.test.js",
       "src/features/character-editor/lib/confirmedItemUses.test.js",
-      "src/features/character-editor/lib/luckBlade.test.js"
+      "src/features/character-editor/lib/luckBlade.test.js",
+      "src/features/character-editor/components/ItemInlineFormModal.test.js",
+      "src/features/character-editor/pages/ViewCharacterPrint.ui.test.js"
     ],
     "android": [
       "ConfirmedItemUseParityTest",
-      "RollTriggersTest"
+      "RollTriggersTest",
+      "InventoryCustomFieldsTest"
     ]
   },
   {

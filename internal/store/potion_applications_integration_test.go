@@ -17,7 +17,7 @@ func testPotionApplications(t *testing.T, s *Store, exec func(string), current f
  (100,'Эффект',15,'{"stacking":"single","concentration":true,"application_sources":[{"item":101},{"item":102}],"duration":{"kind":"minutes","value":1}}'),
  (101,'Заклинание',5,'{"status_effects":[{"key":"buff","effect":{"id":100}}]}'),
  (102,'Зелье эффекта',10,'{"usable":{"spell":{"id":101},"duration":{"kind":"hours","formula":"1d4"},"concentration":false}}');
- UPDATE dndshare."char" SET data='{"values":{"name":"Тест","hp":{"current":0,"max":{"base":10,"bonuses":[]},"ds_failure":2},"items":{"equipped":[],"sections":[{"id":"bag","name":"Рюкзак","items":[{"uid":"heal","item_id":84,"count":3},{"uid":"effect","item_id":102,"count":2}]}]}}}' WHERE id=1;
+ UPDATE dndshare."char" SET data='{"values":{"name":"Тест","hp":{"current":0,"max":{"base":10,"bonuses":[]},"ds_failure":2},"items":{"equipped":[],"sections":[{"id":"bag","name":"Рюкзак","items":[{"uid":"heal","item_id":84,"count":3,"override":{"consumable":false}},{"uid":"effect","item_id":102,"count":2}]}]}}}' WHERE id=1;
  UPDATE dndshare."char" SET data='{"values":{"hp":{"current":1,"max":{"base":2,"bonuses":[]}},"states":[{"uid":"existing-concentration","effect_id":999,"concentration":true}]}}' WHERE id=2;`)
 	version := current(1).Version
 	id := "00000000-0000-4000-8000-000000009000"
@@ -42,6 +42,11 @@ func testPotionApplications(t *testing.T, s *Store, exec func(string), current f
 	}
 	if current(1).Version != version+1 {
 		t.Fatal("self use duplicated")
+	}
+	var remaining int
+	if err := s.pool.QueryRow(ctx, `SELECT (jsonb_path_query_first(data, '$.values.items.sections[*].items[*] ? (@.uid == "heal")')->>'count')::int
+		FROM dndshare."char" WHERE id=1`).Scan(&remaining); err != nil || remaining != 2 {
+		t.Fatalf("a potion with a stale false override must spend exactly one dose; remaining=%d err=%v", remaining, err)
 	}
 	if _, err := s.UseItemSelf(ctx, 2, 1, version, "heal", id, "", "items"); !errors.Is(err, ErrNotFound) {
 		t.Fatal(err)

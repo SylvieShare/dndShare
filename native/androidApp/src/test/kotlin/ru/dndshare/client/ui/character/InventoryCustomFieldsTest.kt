@@ -19,10 +19,25 @@ class InventoryCustomFieldsTest {
             1,
         )
 
-    private fun saved(base: CharacterSheet, input: JsonObject): JsonObject {
+    private fun saved(base: CharacterSheet, input: JsonObject, items: Map<Long, CatalogueItem> = emptyMap()): JsonObject {
         val form = initialForm("inventory:own:1", base).copy(input = input)
-        val data = applySheetPatches(base.data, formPatches(form, base, emptyMap()))
+        val data = applySheetPatches(base.data, formPatches(form, base, items))
         return inventoryEntry(data["values"].objectValue()["items"].objectValue(), "own:1")!!
+    }
+
+    @Test
+    fun editingAPotionDropsItsOldFlagAndPreservesTheRestOfTheInstance() {
+        val potion = CatalogueItem(42, 10, "Зелье")
+        assertTrue(potion.isPotion())
+        assertFalse(CatalogueItem(43, 2, "Верёвка").isPotion())
+        for (old in listOf("false", "true")) {
+            val base = sheet("""{"uid":"own:1","item_id":42,"count":2,"override":{"name":"Моё зелье","consumable":$old}}""")
+            val initial = initialForm("inventory:own:1", base).input
+            val after = saved(base, initial, mapOf(potion.id to potion))
+            assertEquals("Моё зелье", after["override"].objectValue().text("name"))
+            assertEquals(2, after["count"].number())
+            assertTrue("consumable" !in after["override"].objectValue())
+        }
     }
 
     @Test
