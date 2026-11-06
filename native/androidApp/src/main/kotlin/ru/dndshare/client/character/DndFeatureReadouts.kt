@@ -180,18 +180,20 @@ fun sheetActions(sheet: CharacterSheet, items: Map<Long, CatalogueItem>): List<S
 fun sheetDefenses(sheet: CharacterSheet, items: Map<Long, CatalogueItem>): List<JsonObject> =
     buildList {
         addAll(sheet.values["defenses"].arrayValue().map { it.objectValue() })
-        for (feature in ownedFeatures(sheet, items)) {
-            if (
-                feature.item.typeId == 19L &&
-                    !magicActive(feature.item, feature.instance, feature.equipped, sheet)
-            )
-                continue
-            addAll(
-                feature.item.data["defenses"]
-                    .arrayValue()
-                    .map { it.objectValue() }
-                    .filter { ownerLevel(feature.item.data, sheet) >= it["level"].number(1) }
-            )
+        addAll(ownedFeatureRules(sheet, items, "defenses").map { it.rule }.filter { it["damage_type"].referenceId() != null })
+        val owners = ownedFeatures(sheet, items).filter { it.active(sheet) }
+        for (owner in owners) {
+            for (raw in owner.item.data["choice_defenses"].arrayValue()) {
+                val rule = raw.objectValue()
+                val sourceId = rule["source_item_id"].referenceId()
+                val source = if (sourceId == owner.item.id) owner else owners.firstOrNull { it.item.id == sourceId }
+                val selected = source?.entry?.get("choices").objectValue()[rule.text("choice_key")].arrayValue()
+                for (choice in selected) {
+                    addAll(rule["options"].arrayValue().map { it.objectValue() }.filter {
+                        it.text("value") == choice.jsonPrimitive.content && it["damage_type"].referenceId() != null
+                    })
+                }
+            }
         }
         sheet.values["states"].arrayValue().forEach { raw ->
             val state = raw.objectValue()

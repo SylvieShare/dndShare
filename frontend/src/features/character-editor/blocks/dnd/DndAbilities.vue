@@ -229,6 +229,7 @@ const { requirementsMet, sync: syncFeatRequirements } = useFeatSheetRequirements
   entries: () => stored.value,
   catalog: () => catalog.value,
   armorDictionary: () => suggestStore.items(3) || [],
+  sheetGrants: () => charCtx.characterDerivedEffects?.grantedProficiencies?.('armor_proficiency'),
   onActivate: applyFeatStatBonuses,
   onDeactivate: removeFeatStatBonuses,
   onChange: emitChange,

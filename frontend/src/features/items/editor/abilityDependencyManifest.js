@@ -4,11 +4,11 @@ export const rollScopes = [['ability_check', 'Проверки характер�
 const rank = select('Владение', [[1, 'Владение'], [2, 'Компетентность — двойной бонус']], 'Какой бонус мастерства применять.')
 rank.default = 1
 const scopeField = { type: 'enum_array', name: 'Какие броски', options: rollScopes.map(([value, label]) => ({ value, label })), hint: 'Пустой список означает все броски.' }
-const armorKinds = ['armor_formula', 'armor_bonus', 'armor_minimum', 'speed_bonus', 'weapon_attack_bonus', 'weapon_damage_bonus', 'roll_mode']
+const armorKinds = ['armor_bonus', 'armor_minimum', 'speed_bonus', 'weapon_attack_bonus', 'weapon_damage_bonus', 'roll_mode']
 export const derivedKinds = {
   armor_formula: ['base', 'ability_ids', 'allow_shield'], armor_bonus: ['value'], armor_minimum: ['value'], speed_bonus: ['value'],
-  skill_proficiency: ['rank'], save_proficiency: ['rank'], tool_proficiency: ['rank'],
-  weapon_proficiency: ['rank'], armor_proficiency: ['rank'], language_proficiency: ['rank'],
+  skill_proficiency: ['rank'], save_proficiency: [], tool_proficiency: ['rank'],
+  weapon_proficiency: [], armor_proficiency: [], language_proficiency: [],
   check_bonus: ['value'], skill_bonus: ['value'], save_bonus: ['value'], weapon_attack_bonus: ['value', 'weapon_kind'],
   weapon_damage_bonus: ['value', 'weapon_kind'], critical_threshold: ['value', 'weapon_kind'],
   two_weapon_damage_modifier: [], two_weapon_non_light: [],
@@ -29,18 +29,22 @@ export const dependencyManifest = {
       target_from_choice: { name: 'Применять к выбранным игроком вариантам' },
       choice_values: { name: 'Только выбранные варианты', hint: 'Без ограничения подходят любые ответы игрока.' },
       group: { name: 'Группа заменяющих бонусов', hint: 'В одной группе применяется наибольший бонус скорости, а не сумма. Одинаковое имя объединяет правила.' },
-      value_parameter: { name: 'Название параметра величины', hint: 'Источник эффекта сможет передать своё значение под этим именем. Без параметра действует указанная величина.' },
+      value_parameter: { name: 'Название параметра величины', hint: 'Источник эффекта передаёт число под этим именем. Если значение ещё не передано, прибавка равна нулю.' },
       target_parameter: { name: 'Название параметра цели', hint: 'Источник эффекта передаёт выбранную цель, например оружие, под этим именем.' },
     },
     gates: [
       { title: 'Добавить характеристику или мастерство', keys: ['ability_modifier', 'proficiency_multiplier', 'minimum'], when: d => bonusKinds.includes(d.kind) },
       { title: 'Зависит от выбора игрока', keys: ['choice_key', 'target_from_choice', 'choice_values', 'choice_value_prefix'] },
-      { title: 'Ограничить характеристики', keys: ['ability_ids'], when: d => ['save_proficiency', 'save_bonus', 'roll_mode', 'check_bonus'].includes(d.kind) && d.kind !== 'armor_formula' },
+      { title: 'Ограничить виды бросков', keys: ['scopes'], when: d => d.kind === 'check_bonus' },
+      { title: 'Ограничить характеристики', keys: ['ability_ids'], when: d => ['save_proficiency', 'roll_mode', 'roll_bonus', ...bonusKinds].includes(d.kind) },
+      { title: 'Ограничить навыки', keys: ['skill_ids'], when: d => ['roll_mode', 'roll_bonus', 'check_bonus'].includes(d.kind) },
+      { title: 'Только атаки оружием', keys: ['weapon_attacks_only'], when: d => ['roll_mode', 'roll_bonus'].includes(d.kind) },
+      { title: 'Исключить импровизированное оружие', keys: ['forbid_improvised'], when: d => ['roll_mode', 'roll_bonus'].includes(d.kind) },
       { title: 'Только без владения', keys: ['only_without_proficiency'], when: d => bonusKinds.includes(d.kind) },
       { title: 'Условия по снаряжению', keys: ['requires_armor', 'requires_no_armor', 'forbid_heavy_armor', 'allow_shield'], when: d => armorKinds.includes(d.kind) },
       { title: 'Своя подпись правила', keys: ['label'] },
-      { title: 'Величину задаёт источник эффекта', keys: ['value_parameter'], when: d => (derivedKinds[d.kind] || []).includes('value') },
-      { title: 'Цель задаёт источник эффекта', keys: ['target_parameter'], when: d => ['weapon_attack_bonus', 'weapon_damage_bonus'].includes(d.kind) },
+      { title: 'Величину задаёт источник эффекта', keys: ['value_parameter'], effectOnly: true, when: d => (derivedKinds[d.kind] || []).includes('value') },
+      { title: 'Цель задаёт источник эффекта', keys: ['target_parameter'], effectOnly: true, when: d => ['weapon_attack_bonus', 'weapon_damage_bonus'].includes(d.kind) },
       { title: 'Заменяет меньший бонус скорости', keys: ['group'], when: d => d.kind === 'speed_bonus' },
     ],
   },

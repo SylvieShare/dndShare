@@ -106,6 +106,7 @@ internal fun itemStats(
     type: ItemType?,
     item: CatalogueItem,
     metadata: HandbookMetadata,
+    spellRange: String = "",
 ): List<ShareStat> {
     val fields = type?.fields as? JsonArray ?: return emptyList()
     if (item.typeId == 5L) {
@@ -147,7 +148,7 @@ internal fun itemStats(
                 ?.let { metadata.suggest(it, 7)?.value }
                 ?.let { add(ShareStat("Школа", it)) }
             if (timeText.isNotBlank()) add(ShareStat("Время", timeText))
-            if (rangeText.isNotBlank()) add(ShareStat("Дистанция", rangeText))
+            spellRange.ifBlank { rangeText }.takeIf(String::isNotBlank)?.let { add(ShareStat("Дистанция", it)) }
             (item.data["duration"] as? JsonPrimitive)
                 ?.contentOrNull
                 ?.takeIf { it.isNotBlank() }

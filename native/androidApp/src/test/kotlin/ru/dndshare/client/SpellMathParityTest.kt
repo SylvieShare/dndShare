@@ -39,7 +39,7 @@ class SpellMathParityTest {
             val readout = spellReadout(sheet, "spell", items, metadata)
             val options = WireJson.decodeFromJsonElement<SpellRollOptions>(case.getValue("options"))
             val rule = spellRuleOptions(readout.item).first { it.key == options.optionKey }
-            val terms = spellRollTerms(sheet, readout, rule, options, items, metadata)
+            val terms = spellRollTerms(readout, rule, options, metadata)
             val actual = buildJsonObject {
                 put("ability", readout.ability)
                 put("modifier", readout.modifier)

@@ -86,9 +86,7 @@ fun characterPrintContent(
             pairs("Навыки", printSkillRows(sheet, items, metadata))
             pairs(
                 "Владения и языки",
-                values["proficiencies"].objectValue().map { (key, rows) ->
-                    key to rows.arrayValue().joinToString(", ") { it.jsonPrimitive.content }
-                },
+                mechanics.proficiencyGroups().map { (key, rows) -> key to rows.joinToString(", ") },
             )
             pairs(
                 "Состояния",

@@ -262,7 +262,13 @@
         "name": "Формула прибавки",
         "type": "text",
         "hint": "Например 1d4. Для костей к броскам атаки и спасброскам."
-      }
+      },
+      {"key": "skill_ids", "name": "Навыки", "type": "suggest_array", "suggest_id": 15},
+      {"key": "base", "name": "Базовый КД", "type": "int"},
+      {"key": "allow_shield", "name": "Допускает щит", "type": "bool", "default": true},
+      {"key": "rank", "hint": "1 — владение, 2 — компетентность.", "name": "Уровень владения", "type": "int", "default": 1},
+      {"key": "weapon_attacks_only", "name": "Только атаки оружием", "type": "bool"},
+      {"key": "forbid_improvised", "name": "Кроме импровизированного оружия", "type": "bool"}
     ]
   },
   {

@@ -116,46 +116,29 @@ fun collectDerivedRules(
 ): List<OwnedDerivedRule> = buildList {
     addAll(selectedWeaponTargetRolls(sheet, items))
     addAll(transferArmorRules(sheet, items))
-    for (feature in ownedFeatures(sheet, items)) {
-        for ((index, raw) in feature.item.data["derived_effects"].arrayValue().withIndex()) {
-            val rule =
-                JsonObject(
-                    raw.objectValue() +
-                        ("key" to
-                            JsonPrimitive(
-                                "${feature.key}:${feature.entry.text("uid").ifBlank {feature.entry.text("id")}}:derived:$index"
-                            ))
-                )
-            if (
-                feature.item.typeId == 19L &&
-                    !magicActive(
-                        feature.item,
-                        feature.instance,
-                        feature.equipped,
-                        sheet,
-                        rule.text("activation"),
-                    )
+    for ((feature, raw, index) in ownedFeatureRules(sheet, items, "derived_effects")) {
+        val rule =
+            JsonObject(
+                raw +
+                    ("key" to
+                        JsonPrimitive(
+                            "${feature.key}:${feature.entry.text("uid").ifBlank {feature.entry.text("id")}}:derived:$index"
+                        ))
             )
-                continue
+        if (rule.text("kind").isBlank()) continue
+        val scoped =
             if (
-                rule.text("kind").isBlank() ||
-                    ownerLevel(feature.item.data, sheet) < rule["level"].number(1).coerceAtLeast(1)
+                feature.item.data["weapon"] is JsonObject &&
+                    rule.text("kind") in
+                        setOf(
+                            "weapon_attack_bonus",
+                            "weapon_damage_bonus",
+                            "critical_threshold",
+                        )
             )
-                continue
-            val scoped =
-                if (
-                    feature.item.data["weapon"] is JsonObject &&
-                        rule.text("kind") in
-                            setOf(
-                                "weapon_attack_bonus",
-                                "weapon_damage_bonus",
-                                "critical_threshold",
-                            )
-                )
-                    JsonObject(rule + ("weapon_uid" to (feature.entry["uid"] ?: JsonPrimitive(""))))
-                else rule
-            add(OwnedDerivedRule(scoped, feature.entry, sourceLabel = feature.item.name))
-        }
+                JsonObject(rule + ("weapon_uid" to (feature.entry["uid"] ?: JsonPrimitive(""))))
+            else rule
+        add(OwnedDerivedRule(scoped, feature.entry, sourceLabel = feature.item.name))
     }
     for (raw in sheet.values["states"].arrayValue()) {
         val state = raw.objectValue()
@@ -172,7 +155,7 @@ fun collectDerivedRules(
             rule["key"] = JsonPrimitive("status:${state.text("uid")}:derived:$index")
             val parameter = rule["value_parameter"]?.jsonPrimitive?.content.orEmpty()
             val target = rule["target_parameter"]?.jsonPrimitive?.content.orEmpty()
-            if (target.isNotBlank() && params[target] == null) continue
+            if (target.isNotBlank() && (params[target] as? JsonPrimitive)?.contentOrNull.isNullOrBlank()) continue
             if (parameter.isNotBlank()) rule["value"] = params[parameter] ?: JsonPrimitive(0)
             if (target.isNotBlank()) rule["target_ids"] = JsonArray(listOfNotNull(params[target]))
             add(
@@ -188,16 +171,6 @@ fun collectDerivedRules(
 }
 
 fun featureHpBonus(sheet: CharacterSheet, items: Map<Long, CatalogueItem>): Int =
-    ownedFeatures(sheet, items).sumOf { feature ->
-        if (
-            feature.item.typeId == 19L &&
-                !magicActive(feature.item, feature.instance, feature.equipped, sheet)
-        )
-            return@sumOf 0
-        val level = ownerLevel(feature.item.data, sheet)
-        feature.item.data["hp_bonuses"].arrayValue().sumOf { raw ->
-            val rule = raw.objectValue()
-            if (level < rule["level"].number(1).coerceAtLeast(1)) 0
-            else rule["base"].number() + level * rule["per_level"].number()
-        }
+    ownedFeatureRules(sheet, items, "hp_bonuses").sumOf { (_, rule, _, level) ->
+        rule["base"].number() + level * rule["per_level"].number()
     }

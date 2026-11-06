@@ -224,10 +224,10 @@ fun weaponReadout(
     fun parts(raw: JsonElement?) =
         raw.arrayValue().mapNotNull { value ->
             val row = value.objectValue()
-            val id = row["dice_id"]?.jsonPrimitive?.content.orEmpty()
+            val id = (row["dice_id"] as? JsonPrimitive)?.contentOrNull.orEmpty()
             val dice = metadata.suggests["1"].orEmpty().firstOrNull { it.id.toString() == id }
-            val sides =
-                (dice?.value ?: id).filter(Char::isDigit).toIntOrNull() ?: return@mapNotNull null
+            val sides = (dice?.value ?: id).filter(Char::isDigit).toIntOrNull()
+            if (id.isNotEmpty() && sides == null) return@mapNotNull null
             val typeId = (row["type"] ?: row["type_suggest_id"]).referenceId()
             WeaponDamagePart(
                 row["count"].number(1).coerceAtLeast(1),
@@ -246,10 +246,7 @@ fun weaponReadout(
             )
         else parts(item.data["attacks"])
     val versatile = if (improvised) emptyList() else parts(item.data["universe_attacks"])
-    val threshold =
-        mechanics.rules("critical_threshold", context).minOfOrNull {
-            it.rule["value"].number(20).coerceIn(2, 20)
-        } ?: 20
+    val threshold = mechanics.criticalThreshold(context)
     val criticalRules =
         if (improvised) emptyList()
         else criticalWeaponDiceRules(sheet, items, entry.text("uid"), context.weaponKind == "melee")
@@ -297,24 +294,6 @@ private fun weaponProficient(item: CatalogueItem, derived: DndDerivedValues): Bo
             .map { it.id }
             .toSet()
     if (required.any { it in allowed }) return true
-    val grants =
-        derived.effects
-            .filter { it.rule.text("kind") == "weapon_proficiency" }
-            .flatMap { rule ->
-                if (rule.rule["target_from_choice"] == JsonPrimitive(true)) {
-                    val prefix =
-                        rule.rule
-                            .text("choice_value_prefix")
-                            .takeIf(String::isNotBlank)
-                            ?.plus(":")
-                            .orEmpty()
-                    rule.entry["choices"]
-                        .objectValue()[rule.rule.text("choice_key")]
-                        .arrayValue()
-                        .map { it.jsonPrimitive.content }
-                        .filter { prefix.isBlank() || it.startsWith(prefix) }
-                        .mapNotNull { it.removePrefix(prefix).toLongOrNull() }
-                } else rule.rule["target_ids"].arrayValue().mapNotNull { it.referenceId() }
-            }
+    val grants = derived.grantedTargets("weapon_proficiency").mapNotNull { it.toLongOrNull() }
     return required.any { it in grants }
 }

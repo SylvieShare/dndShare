@@ -21,7 +21,7 @@ internal fun SpellCatalogueCard(reference: JsonElement, tab: JsonObject? = null)
     val entry = reference.objectValue()
     val item = context.items[entry.referenceId()]
     val readout =
-        remember(context.sheet, context.items, entry) {
+        remember(context.sheet, context.items, context.metadata, entry) {
             runCatching {
                 spellReadout(context.sheet, entry.text("key"), context.items, context.metadata)
             }
@@ -119,7 +119,7 @@ internal fun SpellCatalogueCard(reference: JsonElement, tab: JsonObject? = null)
                 titleDetails = {
                     val metadata =
                         item
-                            ?.let { itemStats(ItemType(5, "Заклинания"), it, context.metadata) }
+                            ?.let { itemStats(ItemType(5, "Заклинания"), it, context.metadata, readout?.spellModifiers?.range.orEmpty()) }
                             .orEmpty()
                             .filter { it.label in setOf("Время", "Дистанция", "Компоненты") }
                             .map { it.value }
@@ -185,7 +185,6 @@ private fun SpellCardMetrics(readout: SpellReadout) {
             val display = option.copy(rule = JsonObject(option.rule - "type_choices"))
             val terms = runCatching {
                 spellRollTerms(
-                    context.sheet,
                     readout,
                     display,
                     SpellRollOptions(
@@ -194,7 +193,6 @@ private fun SpellCardMetrics(readout: SpellReadout) {
                                 readout.item.data["lvl"].number()
                             )
                     ),
-                    context.items,
                     context.metadata,
                 )
             }

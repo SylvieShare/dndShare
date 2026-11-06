@@ -579,7 +579,9 @@
         { "value": "advantage", "label": "Преимущество" },
         { "value": "disadvantage", "label": "Помеха" }
       ] },
-      { "name": "Пояснение", "key": "label", "type": "text" }
+      { "name": "Пояснение", "key": "label", "type": "text" },
+      {"key": "skill_ids", "name": "Навыки", "type": "suggest_array", "suggest_id": 15},
+      {"key": "minimum", "name": "Минимальная прибавка", "type": "int"}
     ]
   },
 
@@ -607,5 +609,6 @@
   },
   {"name": "Уровень для расчётов", "key": "level_source", "type": "select", "default": "bound", "options": [{"value": "bound", "label": "По привязке способности"}, {"value": "class", "label": "Определённый класс"}, {"value": "character", "label": "Общий уровень персонажа"}]},
   {"name": "Класс для расчётов", "key": "level_class_id", "type": "item", "item_type": 9, "show_on": {"key": "level_source", "value": "class"}},
-  {"key": "dawn_recovery", "name": "Восстановление на рассвете", "type": "object", "fields": [{"key": "mode", "name": "Способ восстановления", "type": "select", "options": [{"value": "full", "label": "Полностью"}, {"value": "roll", "label": "По формуле"}]}, {"key": "formula", "name": "Сколько восстановить", "type": "text", "hint": "Например, 1к3 или 1к6+1. Итог не превышает максимум ресурса."}]}
+  {"key": "dawn_recovery", "name": "Восстановление на рассвете", "type": "object", "fields": [{"key": "mode", "name": "Способ восстановления", "type": "select", "options": [{"value": "full", "label": "Полностью"}, {"value": "roll", "label": "По формуле"}]}, {"key": "formula", "name": "Сколько восстановить", "type": "text", "hint": "Например, 1к3 или 1к6+1. Итог не превышает максимум ресурса."}]},
+  {"key": "scaling", "name": "Прогрессия по уровням", "type": "object_array", "fields": [{"key": "level", "name": "Уровень", "type": "int"}, {"key": "value", "name": "Значение", "type": "text"}, {"key": "uses", "name": "Использований", "type": "int"}, {"key": "note", "name": "Примечание", "type": "text"}]}
 ]

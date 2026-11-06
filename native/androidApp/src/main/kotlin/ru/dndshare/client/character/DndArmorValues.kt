@@ -110,27 +110,7 @@ internal fun armorProficient(item: CatalogueItem, derived: DndDerivedValues): Bo
     val required =
         item.data["required_armor_proficiency"]?.takeUnless { it == JsonNull } ?: return true
     val requiredId = required.jsonPrimitive.content
-    val granted =
-        derived.effects
-            .filter { it.rule.text("kind") == "armor_proficiency" }
-            .flatMap { source ->
-                val rule = source.rule
-                if (rule["target_from_choice"] == JsonPrimitive(true)) {
-                    val prefix =
-                        rule
-                            .text("choice_value_prefix")
-                            .takeIf(String::isNotBlank)
-                            ?.plus(":")
-                            .orEmpty()
-                    source.entry["choices"]
-                        .objectValue()[rule.text("choice_key")]
-                        .arrayValue()
-                        .map { it.jsonPrimitive.content }
-                        .filter { prefix.isBlank() || it.startsWith(prefix) }
-                        .map { it.removePrefix(prefix) }
-                } else rule["target_ids"].arrayValue().map { it.jsonPrimitive.content }
-            }
-    if (requiredId in granted) return true
+    if (requiredId in derived.grantedTargets("armor_proficiency")) return true
     val owned =
         derived.sheet.values["proficiencies"].objectValue()["Доспехи"].arrayValue().map {
             (if (it is JsonObject) it.label() else it.jsonPrimitive.content).trim().lowercase()

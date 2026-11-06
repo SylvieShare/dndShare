@@ -20,11 +20,9 @@ fun spellSequenceSnapshot(
     fun expression(critical: Boolean): String {
         val damage = spellRuleOptions(readout.item).first { it.key == "damage" }
         return spellRollTerms(
-                sheet,
                 readout,
                 damage,
                 options.copy(kind = "damage", optionKey = "damage", critical = critical),
-                items,
                 metadata,
             )
             .joinToString("+") { term ->

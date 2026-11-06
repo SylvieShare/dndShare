@@ -22,6 +22,12 @@ internal fun AbilityStatusPanel(bucket: String, entry: JsonObject, item: Catalog
     val scope = rememberCoroutineScope()
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
+    feature.activeRules(context.sheet, "passive_effects").forEach { (_, rule) ->
+        if (rule.text("title").isNotBlank()) {
+            Text(rule.text("title"), style = ShareTypography.group)
+            if (rule.text("description").isNotBlank()) Text(rule.text("description"), style = ShareTypography.context)
+        }
+    }
     FlowRow {
         links.forEach { link ->
             val active = linkedStatusActive(context.sheet, feature, link)

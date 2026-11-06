@@ -22,7 +22,7 @@
 
 <script setup>
 import { computed, inject } from 'vue'
-import { sumBonuses } from '@/shared/lib/dnd'
+import { speedRuleContext, totalSpeed } from '@/features/character-editor/lib/characterDerivedEffects'
 import NumBonusEditor from '@/features/character-editor/blocks/dnd/components/NumBonusEditor'
 import StatTile from '@/features/character-editor/blocks/dnd/components/StatTile'
 
@@ -38,18 +38,10 @@ const numData = computed(() => {
     ? props.value
     : { base: 0, bonuses: [] }
 })
-const displayValue = computed(() => {
-  const d = numData.value
-  return Math.max(0, (d.base || 0) + sumBonuses(d.bonuses) + derivedSpeed.value.total - speedPenalty.value) * (derivedSpeed.value.multiplier || 1)
-})
+const displayValue = computed(() => totalSpeed(numData.value, derivedSpeed.value, speedPenalty.value))
 const armorState = computed(() => charCtx.characterArmor?.state || {})
 const speedPenalty = computed(() => Number(armorState.value.speedPenalty) || 0)
-const derivedSpeed = computed(() => charCtx.characterDerivedEffects?.speed?.({
-  kind: 'speed',
-  bodyArmor: !!armorState.value.body,
-  heavyArmor: armorState.value.body?.item?.data?.category === 'heavy',
-  shield: !!armorState.value.shield,
-}) || { total: 0, sources: [] })
+const derivedSpeed = computed(() => charCtx.characterDerivedEffects?.speed?.(speedRuleContext(armorState.value)) || { total: 0, sources: [] })
 
 function onChange(data) { emit('update:value', props.block.id, data) }
 </script>

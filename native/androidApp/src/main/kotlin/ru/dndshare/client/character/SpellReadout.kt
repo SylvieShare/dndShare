@@ -25,6 +25,7 @@ data class SpellReadout(
     val attack: Int,
     val save: Int,
     val characterLevel: Int,
+    val spellModifiers: SpellModifiers,
 )
 
 fun spellReadout(
@@ -62,6 +63,7 @@ fun spellReadout(
         sheet.proficiency() + modifier + (tab?.get("attack_bonus")).number(),
         fixed ?: calculated,
         sheet.values["lvl"].objectValue()["level"].number(1),
+        derived.spellModifiers(item.id),
     )
 }
 
@@ -124,11 +126,9 @@ fun spellRuleOptions(item: CatalogueItem): List<SpellRuleOption> = buildList {
 }
 
 fun spellRollTerms(
-    sheet: CharacterSheet,
     readout: SpellReadout,
     option: SpellRuleOption,
     options: SpellRollOptions,
-    items: Map<Long, CatalogueItem>,
     metadata: HandbookMetadata,
 ): List<SheetDamageTerm> {
     val rule = option.rule
@@ -183,31 +183,8 @@ fun spellRollTerms(
                     )
                 )
         }
-    var modifier = if (rule["add_mod"] == JsonPrimitive(true)) readout.modifier else 0
-    if (option.kind != "heal")
-        for (feature in ownedFeatures(sheet, items)) {
-            if (
-                feature.item.typeId == 19L &&
-                    !magicActive(feature.item, feature.instance, feature.equipped, sheet) ||
-                    ownerLevel(feature.item.data, sheet) < feature.item.data["level"].number(1)
-            )
-                continue
-            for (raw in feature.item.data["spell_modifiers"].arrayValue()) {
-                val bonus = raw.objectValue()
-                if (bonus["spell_id"].referenceId() != readout.item.id) continue
-                bonus["damage_ability"]
-                    .referenceId()
-                    ?.takeIf { it in 1..6 }
-                    ?.let {
-                        modifier +=
-                            abilityModifier(
-                                sheet.statScore(
-                                    listOf("STR", "DEX", "CON", "INT", "WIS", "CHA")[it.toInt() - 1]
-                                )
-                            )
-                    }
-            }
-        }
+    val modifier = (if (rule["add_mod"] == JsonPrimitive(true)) readout.modifier else 0) +
+        (if (option.kind == "heal") 0 else readout.spellModifiers.damageBonus)
     return rows.flatMapIndexed { index, row ->
         val rawDie = row.text("dice_id")
         val die =

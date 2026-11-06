@@ -1,0 +1,270 @@
+[
+  {
+    "rules": [
+      "derived_effects"
+    ],
+    "web": [
+      "src/features/character-editor/lib/characterDerivedEffects.test.js",
+      "src/features/character-editor/blocks/dnd/lib/armorMinimum.test.js",
+      "src/features/character-editor/settings/dnd/creation/armorRules.test.js",
+      "src/features/character-editor/blocks/dnd/lib/equippedArmor.test.js",
+      "src/features/character-editor/lib/itemProficiency.test.js",
+      "src/features/character-editor/blocks/dnd/lib/twoWeaponFighting.test.js",
+      "src/features/character-editor/lib/statusValueProjection.test.js",
+      "src/features/character-editor/blocks/dnd/composables/useWeaponCalc.test.js"
+    ],
+    "android": [
+      "CharacterRuleParityTest",
+      "CustomWeaponAttackTest",
+      "ToolChecksParityTest"
+    ]
+  },
+  {
+    "rules": [
+      "feature_actions",
+      "sheet_widgets",
+      "usage",
+      "passive_effects"
+    ],
+    "web": [
+      "src/features/character-editor/lib/characterFeatureActions.test.js",
+      "src/features/character-editor/lib/characterFeatureWidgets.test.js",
+      "src/features/character-editor/lib/characterPassiveEffects.test.js",
+      "src/features/character-editor/blocks/dnd/DndFeatureWidgets.test.js",
+      "src/features/character-editor/lib/storyAbilities.test.js"
+    ],
+    "android": [
+      "CharacterFeatureParityTest",
+      "CharacterFeatureChangesTest"
+    ]
+  },
+  {
+    "rules": [
+      "defenses",
+      "choice_defenses",
+      "hp_bonuses"
+    ],
+    "web": [
+      "src/features/character-editor/lib/characterDefenses.test.js",
+      "src/features/character-editor/lib/characterHitPoints.test.js",
+      "src/features/character-editor/blocks/dnd/lib/hp.test.js"
+    ],
+    "android": [
+      "CharacterFeatureParityTest"
+    ]
+  },
+  {
+    "rules": [
+      "choices",
+      "grants",
+      "asi",
+      "asi_choice",
+      "feat_choice",
+      "prerequisites",
+      "prereq",
+      "ability_selection",
+      "selection_parent_id",
+      "selection_requirements",
+      "unique_choice_key",
+      "choice_only"
+    ],
+    "web": [
+      "src/features/items/lib/featRules.test.js",
+      "src/features/character-editor/lib/selectedAbilities.test.js",
+      "src/features/character-editor/blocks/dnd/components/useLevelUpAbilitySelections.test.js",
+      "src/features/character-editor/blocks/dnd/components/useLevelUpFeatureChoices.test.js",
+      "src/features/character-editor/blocks/dnd/components/buildLevelUpAbilitySelections.test.js",
+      "src/features/items/lib/itemChoices.test.js"
+    ],
+    "android": [
+      "CharacterChoiceParityTest",
+      "CharacterChoiceRulesTest",
+      "CharacterFeatureParityTest",
+      "AdvancementPreviewTest",
+      "FeatRequirementSyncTest",
+      "CreationFeatureParityTest"
+    ]
+  },
+  {
+    "rules": [
+      "resources",
+      "class_resources",
+      "use_resources",
+      "scaling",
+      "display_scaling",
+      "level_source",
+      "level_class_id",
+      "progression"
+    ],
+    "web": [
+      "src/features/character-editor/lib/characterResources.test.js",
+      "src/features/character-editor/lib/dawnResources.test.js",
+      "src/features/character-editor/blocks/dnd/lib/rest.test.js",
+      "src/features/character-editor/lib/resourceVisibility.test.js",
+      "src/features/items/lib/classProgression.test.js"
+    ],
+    "android": [
+      "CharacterRuleParityTest",
+      "CreationFeatureParityTest",
+      "ConfirmedItemUseParityTest"
+    ]
+  },
+  {
+    "rules": [
+      "granted_spells",
+      "spell_modifiers",
+      "spellcasting",
+      "rolls",
+      "application_targets",
+      "spell_slots"
+    ],
+    "web": [
+      "src/features/character-editor/blocks/dnd/lib/abilitySpellGrants.test.js",
+      "src/features/character-editor/lib/characterSpellModifiers.test.js",
+      "src/features/character-editor/blocks/dnd/lib/spellScaling.test.js",
+      "src/features/character-editor/blocks/dnd/lib/spellSequence.test.js",
+      "src/features/character-editor/blocks/dnd/lib/spellUse.test.js",
+      "src/features/character-editor/blocks/dnd/lib/spellcastingRules.test.js",
+      "src/features/character-editor/blocks/dnd/lib/multiclassSpellcasting.test.js",
+      "src/features/character-editor/blocks/dnd/lib/spellSlotChanges.test.js"
+    ],
+    "android": [
+      "SpellBookRulesTest",
+      "SpellMathParityTest",
+      "SpellSequenceParityTest",
+      "CreationFeatureParityTest"
+    ]
+  },
+  {
+    "rules": [
+      "roll_triggers",
+      "roll_adjustments",
+      "critical_damage",
+      "weapon_damage"
+    ],
+    "web": [
+      "src/features/character-editor/lib/characterCombatEffects.test.js",
+      "src/features/character-editor/composables/useCharacterRollEffects.test.js",
+      "src/features/character-editor/blocks/dnd/lib/weaponDamageAction.test.js",
+      "src/features/character-editor/lib/weaponDamageResources.test.js",
+      "src/features/character-editor/blocks/dnd/composables/useWeaponDamageRolls.test.js"
+    ],
+    "android": [
+      "RollTriggersTest",
+      "PreparedD20RollTest",
+      "CharacterRuleParityTest",
+      "WeaponUseAndFormulaTest"
+    ]
+  },
+  {
+    "rules": [
+      "status_effects",
+      "effect_source",
+      "stacking",
+      "end_on",
+      "ongoing_damage",
+      "repeat_save",
+      "on_end_effect",
+      "weapon_target",
+      "duration",
+      "concentration",
+      "application_sources"
+    ],
+    "web": [
+      "src/features/character-editor/lib/characterStatuses.test.js",
+      "src/features/character-editor/lib/statusMechanics.test.js",
+      "src/features/character-editor/lib/statusRepeatSave.test.js",
+      "src/features/character-editor/lib/statusValueProjection.test.js",
+      "src/features/character-editor/blocks/dnd/lib/exhaustion.test.js",
+      "src/features/character-editor/lib/infernalLegacyReaction.test.js"
+    ],
+    "android": [
+      "StatusFormChangesTest",
+      "CharacterFeatureChangesTest",
+      "SpellSequenceParityTest"
+    ]
+  },
+  {
+    "rules": [
+      "weapon",
+      "weapon_uses",
+      "weapon_notes",
+      "selected_target",
+      "weapon_bonus_transfer"
+    ],
+    "web": [
+      "src/features/character-editor/lib/magicWeapons.test.js",
+      "src/features/character-editor/lib/magicWeaponRefresh.test.js",
+      "src/features/character-editor/lib/selectedTarget.test.js",
+      "src/features/character-editor/lib/weaponNotes.test.js",
+      "src/features/character-editor/lib/weaponBonusTransfer.test.js",
+      "src/features/character-editor/lib/weaponUseDamage.test.js",
+      "src/features/character-editor/lib/weaponUses.test.js",
+      "src/features/character-editor/blocks/dnd/lib/weaponThrow.test.js"
+    ],
+    "android": [
+      "WeaponTargetSelectionsTest",
+      "WeaponUseAndFormulaTest",
+      "WeaponVisualModelTest",
+      "CharacterRuleParityTest"
+    ]
+  },
+  {
+    "rules": [
+      "last_charge",
+      "confirmed_uses",
+      "attunement",
+      "activation",
+      "usable",
+      "dawn_recovery"
+    ],
+    "web": [
+      "src/features/character-editor/lib/characterMagicItems.test.js",
+      "src/features/character-editor/lib/itemLastCharge.test.js",
+      "src/features/character-editor/lib/confirmedItemUses.test.js",
+      "src/features/character-editor/lib/luckBlade.test.js"
+    ],
+    "android": [
+      "ConfirmedItemUseParityTest",
+      "RollTriggersTest"
+    ]
+  },
+  {
+    "rules": [
+      "item_creation",
+      "creation_sources",
+      "starting_kit",
+      "contents",
+      "equipment_items",
+      "item_choices",
+      "armor_base",
+      "armor"
+    ],
+    "web": [
+      "src/features/character-editor/lib/createdItemExpiry.test.js",
+      "src/features/character-editor/blocks/dnd/lib/inventorySpaces.test.js",
+      "src/features/character-editor/blocks/dnd/lib/itemPlacement.test.js",
+      "src/features/character-editor/lib/magicArmor.test.js",
+      "src/features/character-editor/settings/dnd/creation/startingEquipment.test.js",
+      "src/features/character-editor/settings/dnd/creation/backgroundEquipment.test.js"
+    ],
+    "android": [
+      "CreatedItemExpiryParityTest",
+      "InventoryParityTest",
+      "InventoryWeaponPlacementTest",
+      "CreationFeatureParityTest"
+    ]
+  },
+  {
+    "rules": [
+      "authoring"
+    ],
+    "web": [
+      "src/features/items/editor/AbilityDependencyEditor.test.js",
+      "src/features/items/editor/catalogue/CatalogueEditor.test.js"
+    ],
+    "android": [
+      "FeatureFormsTest"
+    ]
+  }
+]

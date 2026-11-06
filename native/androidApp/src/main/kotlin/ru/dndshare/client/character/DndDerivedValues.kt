@@ -35,14 +35,13 @@ private fun matches(source: OwnedDerivedRule, context: RuleContext): Boolean {
         return false
     val choiceKey = rule.text("choice_key")
     val selected = source.entry["choices"].objectValue()[choiceKey].arrayValue()
-    val allowed = rule["choice_values"].arrayValue()
+    val allowed = rule["choice_values"].arrayValue().map { it.jsonPrimitive.content }
     if (
         choiceKey.isNotBlank() &&
-            (selected.isEmpty() || allowed.isNotEmpty() && selected.none { it in allowed })
+            (selected.isEmpty() || allowed.isNotEmpty() && selected.none { it.jsonPrimitive.content in allowed })
     )
         return false
     val targets = rule["target_ids"].arrayValue()
-    if (targets.isNotEmpty() && (context.target == null || context.target !in targets)) return false
     if (rule["target_from_choice"] == JsonPrimitive(true)) {
         val target =
             context.skill?.toString()
@@ -52,11 +51,11 @@ private fun matches(source: OwnedDerivedRule, context: RuleContext): Boolean {
             rule.text("choice_value_prefix").takeIf(String::isNotBlank)?.plus(":").orEmpty()
         if (target == null || selected.none { it.jsonPrimitive.content == prefix + target })
             return false
-    }
+    } else if (targets.isNotEmpty() && targets.none { it.jsonPrimitive.content == target }) return false
     val scopes = rule["scopes"].arrayValue().map { it.jsonPrimitive.content }
     if (scopes.isNotEmpty() && context.kind !in scopes) return false
     val abilities = rule["ability_ids"].arrayValue().mapNotNull { it.referenceId() }
-    if (abilities.isNotEmpty() && context.ability != null && context.ability !in abilities)
+    if (abilities.isNotEmpty() && rule.text("kind") !in setOf("armor_formula", "ability_minimum") && context.ability !in abilities)
         return false
     val skills = rule["skill_ids"].arrayValue().mapNotNull { it.referenceId() }
     if (skills.isNotEmpty() && context.skill !in skills) return false
@@ -77,8 +76,15 @@ class DndDerivedValues(
 ) {
     val effects = collectDerivedRules(sheet, items)
 
-    fun rules(kind: String, context: RuleContext = RuleContext()) = effects.filter {
-        it.rule.text("kind") == kind && matches(it, context)
+    fun rules(kind: String, context: RuleContext = RuleContext()) = effects.filter { source ->
+        val rule = source.rule
+        if (rule.text("kind") != kind) return@filter false
+        val needsEquipment = kind in setOf("weapon_attack_bonus", "weapon_damage_bonus", "roll_mode") &&
+            (rule["requires_armor"] == JsonPrimitive(true) || rule["requires_no_armor"] == JsonPrimitive(true) ||
+                rule["forbid_heavy_armor"] == JsonPrimitive(true) || rule["allow_shield"] == JsonPrimitive(false))
+        val actual = if (needsEquipment) context.copy(armor = armor.body != null, shield = armor.shield != null,
+            heavyArmor = armor.body?.data?.text("category") == "heavy") else context
+        matches(source, actual)
     }
 
     fun score(id: String, baseScore: Int = sheet.statScore(id)): Int {
@@ -92,8 +98,22 @@ class DndDerivedValues(
             .fold(baseScore) { best, rule -> maxOf(best, rule.rule["value"].number()) }
     }
 
+    fun criticalThreshold(context: RuleContext): Int =
+        rules("critical_threshold", context).minOfOrNull { it.rule["value"].number(20).coerceIn(2, 20) } ?: 20
+
     fun rank(kind: String, context: RuleContext): Int =
         rules(kind, context).maxOfOrNull { it.rule["rank"].number(1) } ?: 0
+
+    fun grantedTargets(kind: String): Set<String> = effects.filter { it.rule.text("kind") == kind }
+        .flatMapTo(mutableSetOf()) { source ->
+            val rule = source.rule
+            val targets = if (rule["target_from_choice"] == JsonPrimitive(true)) {
+                val prefix = rule.text("choice_value_prefix").takeIf(String::isNotBlank)?.plus(":").orEmpty()
+                source.entry["choices"].objectValue()[rule.text("choice_key")].arrayValue()
+                    .map { it.jsonPrimitive.content }.filter { it.startsWith(prefix) }.map { it.removePrefix(prefix) }
+            } else rule["target_ids"].arrayValue().map { it.jsonPrimitive.content }
+            targets.filter { matches(source, RuleContext(target = JsonPrimitive(it))) }
+        }
 
     fun bonus(kind: String, context: RuleContext): Int =
         rules(kind, context).sumOf { numericValue(it.rule) }

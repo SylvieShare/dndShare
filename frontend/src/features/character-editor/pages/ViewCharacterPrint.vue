@@ -208,7 +208,7 @@ import {
   derivedArmorRules,
   derivedNumericBonus,
   derivedProficiency,
-  derivedSpeedBonuses,
+  derivedSpeedBonuses, speedRuleContext, totalSpeed,
 } from '@/features/character-editor/lib/characterDerivedEffects'
 
 const PrintField = defineComponent({
@@ -275,8 +275,8 @@ const initiative = computed(() => {
   return (Number(data.base) || 0) + sumBonuses(data.bonuses) + (data.use_dex === false ? 0 : abilityModifier(abilityScore('DEX'))) + sourceBonus
 })
 const speedLabel = computed(() => {
-  const source = derivedSpeedBonuses(printDerivedEffects.value, { kind: 'speed', bodyArmor: !!printArmor.value.body, heavyArmor: printArmor.value.body?.item?.data?.category === 'heavy', shield: !!printArmor.value.shield }).total
-  return `${(Number(values.value.speed?.base) || 0) + sumBonuses(values.value.speed?.bonuses) + source - printArmor.value.speedPenalty} фт.`
+  const bonus = derivedSpeedBonuses(printDerivedEffects.value, speedRuleContext(printArmor.value))
+  return `${totalSpeed(values.value.speed, bonus, printArmor.value.speedPenalty)} фт.`
 })
 const hitDice = computed(() => formatHitDice(normalizeHitDice(hp.value)))
 

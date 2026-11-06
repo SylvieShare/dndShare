@@ -1,14 +1,11 @@
-import { itemRuleActive } from './itemRuleActivation'
+import { ownedFeatureRules } from './ownedFeatureRules'
+import { deriveEquippedArmor } from '@/features/character-editor/blocks/dnd/lib/equippedArmor'
 import { selectedTargetRollRules } from './selectedTarget'
 import { transferArmorEffects } from './weaponBonusTransfer'
-import { FEATURE_VALUE_IDS, featureEntries } from './characterMagicItems'
 import { abilityModifier, proficiencyBonus, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
-import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
-import { featureEntryActive } from '@/features/character-editor/lib/featureEntryState'
 import { collectStatusDerivedEffects } from '@/features/character-editor/lib/characterStatuses'
 
-const VALUE_IDS = FEATURE_VALUE_IDS
 
 function asArray(value) { return Array.isArray(value) ? value : [] }
 function number(value, fallback = 0) {
@@ -36,7 +33,7 @@ function targetMatches(rule, entry, context) {
   if (rule.weapon_uid && rule.weapon_uid !== context.targetId) return false
   if (rule.excluded_weapon_uid && rule.excluded_weapon_uid === context.targetId) return false
   const targetIds = asArray(rule?.target_ids)
-  if (targetIds.length) {
+  if (!rule?.target_from_choice && targetIds.length) {
     return context.targetId != null && targetIds.some(value => String(value) === String(context.targetId))
   }
   if (!rule?.target_from_choice) return true
@@ -52,41 +49,43 @@ function contextMatches(rule, entry, context = {}) {
   const scopes = asArray(rule.scopes)
   if (scopes.length && !scopes.includes(context.kind)) return false
   const abilities = asArray(rule.ability_ids)
-  if (abilities.length && context.abilitySuggestId != null && !abilities.some(value => String(value) === String(context.abilitySuggestId))) return false
+  if (abilities.length && !['armor_formula', 'ability_minimum'].includes(rule.kind) && !abilities.some(value => String(value) === String(context.abilitySuggestId))) return false
   const skills = asArray(rule.skill_ids)
   if (skills.length && !skills.some(value => String(value) === String(context.skillId))) return false
   if (rule.weapon_kind === 'ranged' && context.weaponKind !== 'ranged') return false
   if (rule.weapon_kind === 'melee' && context.weaponKind !== 'melee') return false
   if (!context.deferEquipment) {
-    if (rule.requires_armor && !context.bodyArmor) return false
-    if (rule.requires_no_armor && context.bodyArmor) return false
-    if (rule.forbid_heavy_armor && context.heavyArmor) return false
-    if (rule.allow_shield === false && context.shield) return false
+    const gear = rule.equippedArmor || context
+    if (rule.requires_armor && !gear.bodyArmor) return false
+    if (rule.requires_no_armor && gear.bodyArmor) return false
+    if (rule.forbid_heavy_armor && gear.heavyArmor) return false
+    if (rule.allow_shield === false && gear.shield) return false
   }
   if (rule.only_without_proficiency && context.proficient) return false
   return true
 }
 
 export function collectCharacterDerivedEffects(values = {}, itemsById = new Map()) {
-  const ownedEffects = VALUE_IDS.flatMap((valueId) => featureEntries(values, valueId, itemsById, true).flatMap((entry) => {
-    if (!featureEntryActive(valueId, entry)) return []
-    const item = itemsById.get(String(entry.id))
-    if (!item) return []
-    const ownerLevel = abilityOwnerLevel(item.data || {}, values)
-    return asArray(item.data?.derived_effects).flatMap((rule, index) => {
-      if (!itemRuleActive(values, item, entry, rule)) return []
-      if (!rule?.kind || ownerLevel < Math.max(1, number(rule.level, 1))) return []
-      return [{
-        ...rule,
-        key: `${valueId}:${entry.uid || entry.id}:derived:${index}`,
-        ownerLevel,
-        source_label: item.name || 'Способность',
-        source_entry: entry,
-        weapon_uid: item.data?.weapon && ['weapon_attack_bonus', 'weapon_damage_bonus', 'critical_threshold'].includes(rule.kind) ? entry.uid : null,
-      }]
+  const ownedEffects = []
+  for (const { rule, valueId, entry, item, index, ownerLevel } of ownedFeatureRules(values, itemsById, 'derived_effects')) {
+    if (!rule.kind) continue
+    ownedEffects.push({
+      ...rule,
+      key: `${valueId}:${entry.uid || entry.id}:derived:${index}`,
+      ownerLevel,
+      source_label: item.name || 'Способность',
+      source_entry: entry,
+      weapon_uid: item.data?.weapon && ['weapon_attack_bonus', 'weapon_damage_bonus', 'critical_threshold'].includes(rule.kind) ? entry.uid : null,
     })
-  }))
-  return [...ownedEffects, ...transferArmorEffects(values, itemsById), ...selectedTargetRollRules(values, itemsById), ...collectStatusDerivedEffects(values, itemsById)]
+  }
+  const effects = [...ownedEffects, ...transferArmorEffects(values, itemsById), ...selectedTargetRollRules(values, itemsById), ...collectStatusDerivedEffects(values, itemsById)]
+  let equipment
+  return effects.map(rule => {
+    if (!['weapon_attack_bonus', 'weapon_damage_bonus', 'roll_mode'].includes(rule.kind) ||
+        !(rule.requires_armor || rule.requires_no_armor || rule.forbid_heavy_armor || rule.allow_shield === false)) return rule
+    equipment ??= speedRuleContext(deriveEquippedArmor(values, itemsById))
+    return { ...rule, equippedArmor: equipment }
+  })
 }
 
 export function matchingDerivedEffects(effects, kind, context = {}) {
@@ -119,6 +118,14 @@ export function derivedSpeedBonuses(effects, context = {}) {
   }
 }
 
+export function speedRuleContext(armor = {}) {
+  return { kind: 'speed', bodyArmor: !!armor.body, heavyArmor: armor.body?.item?.data?.category === 'heavy', shield: !!armor.shield }
+}
+
+export function totalSpeed(speed, bonuses, armorPenalty = 0) {
+  return Math.max(0, number(speed?.base) + sumBonuses(speed?.bonuses) + bonuses.total - armorPenalty) * (bonuses.multiplier || 1)
+}
+
 export function derivedProficiency(effects, kind, context = {}) {
   const active = matchingDerivedEffects(effects, kind, context)
   return {
@@ -135,7 +142,8 @@ export function derivedGrantedProficiencies(effects, kind) {
         .filter((value) => !prefix || String(value).startsWith(prefix))
         .map((value) => String(value).slice(prefix.length))
       : asArray(rule.target_ids)
-    return targets.map((targetId) => ({ targetId, source: rule.source_label }))
+    return targets.filter(targetId => contextMatches(rule, rule.source_entry, { targetId }))
+      .map(targetId => ({ targetId, source: rule.source_label }))
   })
 }
 

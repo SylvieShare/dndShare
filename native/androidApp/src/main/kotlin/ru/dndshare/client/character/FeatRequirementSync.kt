@@ -22,15 +22,7 @@ fun sheetFeatRequirements(
             .filter { it.value.lowercase() in labels }
             .map { it.id }
             .toMutableSet()
-    for (raw in sheet.values["abilities_feats"].arrayValue()) {
-        val entry = raw.objectValue()
-        if (entry["requirements_met"] == JsonPrimitive(false)) continue
-        for (effect in items[entry.referenceId()]?.data?.get("derived_effects").arrayValue()) {
-            val rule = effect.objectValue()
-            if (rule.text("kind") == "armor_proficiency")
-                rule["target_ids"].arrayValue().mapNotNullTo(armor) { it.referenceId() }
-        }
-    }
+    DndDerivedValues(sheet, items, metadata).grantedTargets("armor_proficiency").mapNotNullTo(armor, String::toLongOrNull)
     return featRequirements(
         item,
         creationStats.associateWith(sheet::statScore),

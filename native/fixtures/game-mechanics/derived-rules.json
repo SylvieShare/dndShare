@@ -1,0 +1,1240 @@
+[
+  {
+    "name": "КД, скорость, владения и бонусы одной классовой способности",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "abilities_class": [
+        {
+          "id": 31,
+          "choices": {
+            "style": [
+              "guard"
+            ],
+            "training": [
+              "tool:7",
+              "skill:4"
+            ],
+            "lang": [
+              6
+            ],
+            "school": [
+              3
+            ]
+          }
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 31,
+        "typeId": 4,
+        "name": "Практика",
+        "data": {
+          "derived_effects": [
+            {"kind":"armor_formula","base":12,"ability_ids":[1,2],"allow_shield":false},
+            {"kind":"armor_bonus","value":1,"requires_no_armor":true},
+            {"kind":"armor_bonus","value":4,"requires_armor":true},
+            {"kind":"armor_minimum","value":17},
+            {"kind":"speed_bonus","value":5,"group":"training"},
+            {"kind":"speed_bonus","value":10,"group":"training","forbid_heavy_armor":true},
+            {"kind":"speed_bonus","value":5,"level":6},
+            {"kind":"speed_multiplier","value":2},
+            {"kind":"skill_proficiency","choice_key":"training","target_from_choice":true,"choice_value_prefix":"skill","rank":2},
+            {"kind":"save_proficiency","ability_ids":[2],"rank":1},
+            {"kind":"tool_proficiency","choice_key":"training","target_from_choice":true,"choice_value_prefix":"tool","rank":2},
+            {"kind":"weapon_proficiency","choice_key":"school","choice_values":["3"],"target_ids":["4"]},
+            {"kind":"armor_proficiency","choice_key":"style","choice_values":["berserker"],"target_ids":["9"]},
+            {"kind":"language_proficiency","choice_key":"lang","target_from_choice":true},
+            {"kind":"check_bonus","scopes":["initiative"],"only_without_proficiency":true,"proficiency_multiplier":0.5,"value":1},
+            {"kind":"skill_bonus","skill_ids":[4],"value":2},
+            {"kind":"save_bonus","ability_ids":[3],"ability_modifier":1,"minimum":3},
+            {"kind":"weapon_attack_bonus","weapon_kind":"ranged","value":2},
+            {"kind":"weapon_damage_bonus","ability_ids":[1],"value":3},
+            {"kind":"critical_threshold","weapon_kind":"melee","value":18},
+            {"kind":"two_weapon_non_light"},
+            {"kind":"two_weapon_damage_modifier","choice_key":"style","choice_values":["guard"]}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"armor","expect":18},
+      {"op":"speed","expect":80},
+      {"op":"rank","kind":"skill_proficiency","at":{"kind":"skill_check","skillId":4},"expect":2},
+      {"op":"rank","kind":"skill_proficiency","at":{"kind":"skill_check","skillId":7},"expect":0},
+      {"op":"rank","kind":"save_proficiency","at":{"kind":"saving_throw","abilitySuggestId":2},"expect":1},
+      {"op":"rank","kind":"save_proficiency","at":{"kind":"saving_throw","abilitySuggestId":1},"expect":0},
+      {"op":"rank","kind":"tool_proficiency","at":{"kind":"tool","targetId":7},"expect":2},
+      {"op":"grants","kind":"tool_proficiency","expect":["7"]},
+      {"op":"grants","kind":"weapon_proficiency","expect":["4"]},
+      {"op":"rank","kind":"weapon_proficiency","at":{"targetId":4},"expect":1},
+      {"op":"grants","kind":"armor_proficiency","expect":[]},
+      {"op":"grants","kind":"language_proficiency","expect":["6"]},
+      {"op":"bonus","kind":"check_bonus","at":{"kind":"initiative"},"expect":2},
+      {"op":"bonus","kind":"check_bonus","at":{"kind":"initiative","proficient":true},"expect":0},
+      {"op":"bonus","kind":"check_bonus","at":{"kind":"ability_check"},"expect":0},
+      {"op":"bonus","kind":"skill_bonus","at":{"kind":"skill_check","skillId":4},"expect":2},
+      {"op":"bonus","kind":"skill_bonus","at":{"kind":"skill_check","skillId":6},"expect":0},
+      {"op":"bonus","kind":"save_bonus","at":{"kind":"saving_throw","abilitySuggestId":3},"expect":3},
+      {"op":"bonus","kind":"save_bonus","at":{"kind":"saving_throw","abilitySuggestId":4},"expect":0},
+      {"op":"bonus","kind":"weapon_attack_bonus","at":{"weaponKind":"ranged"},"expect":2},
+      {"op":"bonus","kind":"weapon_attack_bonus","at":{"weaponKind":"melee"},"expect":0},
+      {"op":"bonus","kind":"weapon_damage_bonus","at":{"abilitySuggestId":1},"expect":3},
+      {"op":"bonus","kind":"weapon_damage_bonus","at":{"abilitySuggestId":2},"expect":0},
+      {"op":"threshold","kind":"critical_threshold","at":{"weaponKind":"melee"},"expect":18},
+      {"op":"threshold","kind":"critical_threshold","at":{"weaponKind":"ranged"},"expect":20},
+      {"op":"active","kind":"two_weapon_non_light","expect":true},
+      {"op":"active","kind":"two_weapon_damage_modifier","expect":true}
+    ]
+  },
+  {
+    "name": "Параметры состояния, цель и область броска",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "states": [
+        {
+          "uid": "s-1",
+          "effect_id": 38,
+          "params": {
+            "bonus": 3,
+            "weapon": "spear"
+          }
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 38,
+        "typeId": 15,
+        "name": "Эффект",
+        "data": {
+          "derived_effects": [
+            {"kind":"roll_bonus","formula":"1d4","scopes":["saving_throw"],"ability_ids":[2]},
+            {"kind":"roll_mode","mode":"advantage","scopes":["attack"],"weapon_attacks_only":true,"forbid_improvised":true},
+            {"kind":"roll_mode","mode":"disadvantage","scopes":["skill_check"],"skill_ids":[4]},
+            {"kind":"activity_block","scopes":["concentration"]},
+            {"kind":"ability_minimum","ability_ids":[1],"value":19},
+            {"kind":"weapon_attack_bonus","target_parameter":"weapon","value_parameter":"bonus"},
+            {"kind":"armor_minimum","value":17}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"formulas","kind":"roll_bonus","at":{"kind":"saving_throw","abilitySuggestId":2},"expect":["1d4"]},
+      {"op":"formulas","kind":"roll_bonus","at":{"kind":"saving_throw","abilitySuggestId":1},"expect":[]},
+      {"op":"modes","kind":"roll_mode","at":{"kind":"attack","weaponAttack":true},"expect":["advantage"]},
+      {"op":"modes","kind":"roll_mode","at":{"kind":"attack","weaponAttack":false},"expect":[]},
+      {"op":"modes","kind":"roll_mode","at":{"kind":"attack","weaponAttack":true,"improvisedWeapon":true},"expect":[]},
+      {"op":"modes","kind":"roll_mode","at":{"kind":"skill_check","skillId":4},"expect":["disadvantage"]},
+      {"op":"modes","kind":"roll_mode","at":{"kind":"skill_check","skillId":5},"expect":[]},
+      {"op":"active","kind":"activity_block","at":{"kind":"concentration"},"expect":true},
+      {"op":"active","kind":"activity_block","at":{"kind":"spellcasting"},"expect":false},
+      {"op":"score","kind":"STR","expect":19},
+      {"op":"armor","expect":17},
+      {"op":"bonus","kind":"weapon_attack_bonus","at":{"targetId":"spear"},"expect":3},
+      {"op":"bonus","kind":"weapon_attack_bonus","at":{"targetId":"bow"},"expect":0}
+    ]
+  },
+  {
+    "name": "Внешняя цель",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "states": [
+        {
+          "uid": "s-1",
+          "effect_id": 38,
+          "params": {
+            "bonus": 3,
+            "weapon": "spear"
+          },
+          "external_only": true
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 38,
+        "typeId": 15,
+        "name": "Эффект",
+        "data": {
+          "derived_effects": [
+            {"kind":"weapon_attack_bonus","target_parameter":"weapon","value_parameter":"bonus"}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"bonus","kind":"weapon_attack_bonus","at":{"targetId":"spear"},"expect":0}
+    ]
+  },
+  {
+    "name": "До фазы урона",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "states": [
+        {
+          "uid": "s-1",
+          "effect_id": 38,
+          "params": {
+            "bonus": 3,
+            "weapon": "spear"
+          }
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 38,
+        "typeId": 15,
+        "name": "Эффект",
+        "data": {
+          "ongoing_damage": {
+            "dice": "d6"
+          },
+          "derived_effects": [
+            {"kind":"weapon_attack_bonus","target_parameter":"weapon","value_parameter":"bonus"}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"bonus","kind":"weapon_attack_bonus","at":{"targetId":"spear"},"expect":0}
+    ]
+  },
+  {
+    "name": "Во время фазы урона",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "states": [
+        {
+          "uid": "s-1",
+          "effect_id": 38,
+          "params": {
+            "bonus": 3,
+            "weapon": "spear",
+            "damage_phase": "turn_save"
+          }
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 38,
+        "typeId": 15,
+        "name": "Эффект",
+        "data": {
+          "ongoing_damage": {
+            "dice": "d6"
+          },
+          "derived_effects": [
+            {"kind":"weapon_attack_bonus","target_parameter":"weapon","value_parameter":"bonus"}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"bonus","kind":"weapon_attack_bonus","at":{"targetId":"spear"},"expect":3}
+    ]
+  },
+  {
+    "name": "Цель пока не выбрана",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "states": [
+        {
+          "uid": "s-1",
+          "effect_id": 38,
+          "params": {
+            "bonus": 3
+          }
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 38,
+        "typeId": 15,
+        "name": "Эффект",
+        "data": {
+          "derived_effects": [
+            {"kind":"weapon_attack_bonus","target_parameter":"weapon","value_parameter":"bonus"}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"bonus","kind":"weapon_attack_bonus","at":{"targetId":"spear"},"expect":0}
+    ]
+  },
+  {
+    "name": "Надет",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "items": {
+        "equipped": [
+          {
+            "item_id": 39,
+            "uid": "amulet",
+            "count": 1,
+            "params": {
+              "magic": {
+                "attuned": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    "items": [
+      {
+        "id": 39,
+        "typeId": 19,
+        "name": "Амулет",
+        "data": {
+          "activation": "equipped",
+          "attunement": "required",
+          "derived_effects": [
+            {"kind":"armor_bonus","value":2},
+            {"kind":"speed_bonus","value":5,"activation":"carried"}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"armor","expect":15},
+      {"op":"speed","expect":35}
+    ]
+  },
+  {
+    "name": "В рюкзаке",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "items": {
+        "sections": [
+          {
+            "items": [
+              {
+                "item_id": 39,
+                "uid": "amulet",
+                "count": 1,
+                "params": {
+                  "magic": {
+                    "attuned": true
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "items": [
+      {
+        "id": 39,
+        "typeId": 19,
+        "name": "Амулет",
+        "data": {
+          "activation": "equipped",
+          "attunement": "required",
+          "derived_effects": [
+            {"kind":"armor_bonus","value":2},
+            {"kind":"speed_bonus","value":5,"activation":"carried"}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"armor","expect":13},
+      {"op":"speed","expect":35}
+    ]
+  },
+  {
+    "name": "Без настройки",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "items": {
+        "equipped": [
+          {
+            "item_id": 39,
+            "uid": "amulet",
+            "count": 1,
+            "params": {
+              "magic": {
+                "attuned": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "items": [
+      {
+        "id": 39,
+        "typeId": 19,
+        "name": "Амулет",
+        "data": {
+          "activation": "equipped",
+          "attunement": "required",
+          "derived_effects": [
+            {"kind":"armor_bonus","value":2},
+            {"kind":"speed_bonus","value":5,"activation":"carried"}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"armor","expect":13},
+      {"op":"speed","expect":30}
+    ]
+  },
+  {
+    "name": "Последний заряд уничтожил вещь",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "items": {
+        "equipped": [
+          {
+            "item_id": 39,
+            "uid": "amulet",
+            "count": 1,
+            "params": {
+              "magic": {
+                "attuned": true,
+                "lost": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    "items": [
+      {
+        "id": 39,
+        "typeId": 19,
+        "name": "Амулет",
+        "data": {
+          "activation": "equipped",
+          "attunement": "required",
+          "derived_effects": [
+            {"kind":"armor_bonus","value":2},
+            {"kind":"speed_bonus","value":5,"activation":"carried"}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"armor","expect":13},
+      {"op":"speed","expect":30}
+    ]
+  },
+  {
+    "name": "Истёк срок созданного предмета",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "items": {
+        "equipped": [
+          {
+            "item_id": 39,
+            "uid": "amulet",
+            "count": 1,
+            "params": {
+              "creation": {
+                "expired": true
+              },
+              "magic": {
+                "attuned": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    "items": [
+      {
+        "id": 39,
+        "typeId": 19,
+        "name": "Амулет",
+        "data": {
+          "activation": "equipped",
+          "attunement": "required",
+          "derived_effects": [
+            {"kind":"armor_bonus","value":2},
+            {"kind":"speed_bonus","value":5,"activation":"carried"}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"armor","expect":13},
+      {"op":"speed","expect":30}
+    ]
+  },
+  {
+    "name": "Нулевое количество",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "items": {
+        "equipped": [
+          {
+            "item_id": 39,
+            "uid": "amulet",
+            "count": 0,
+            "params": {
+              "magic": {
+                "attuned": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    "items": [
+      {
+        "id": 39,
+        "typeId": 19,
+        "name": "Амулет",
+        "data": {
+          "activation": "equipped",
+          "attunement": "required",
+          "derived_effects": [
+            {"kind":"armor_bonus","value":2},
+            {"kind":"speed_bonus","value":5,"activation":"carried"}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"armor","expect":13},
+      {"op":"speed","expect":30}
+    ]
+  },
+  {
+    "name": "abilities_race · активно",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "abilities_race": [
+        {
+          "id": 41
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 41,
+        "typeId": 3,
+        "name": "Проверка источника",
+        "data": {
+          "derived_effects": [
+            {"kind":"speed_bonus","value":5}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"speed","expect":35}
+    ]
+  },
+  {
+    "name": "abilities_story · активно",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "abilities_story": [
+        {
+          "id": 42
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 42,
+        "typeId": 18,
+        "name": "Проверка источника",
+        "data": {
+          "derived_effects": [
+            {"kind":"speed_bonus","value":5}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"speed","expect":35}
+    ]
+  },
+  {
+    "name": "abilities_feats · условия черты не выполнены",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "abilities_feats": [
+        {
+          "id": 43,
+          "requirements_met": false
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 43,
+        "typeId": 7,
+        "name": "Проверка источника",
+        "data": {
+          "derived_effects": [
+            {"kind":"speed_bonus","value":5}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"speed","expect":30}
+    ]
+  },
+  {
+    "name": "abilities_feats · активно",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "abilities_feats": [
+        {
+          "id": 44
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 44,
+        "typeId": 7,
+        "name": "Проверка источника",
+        "data": {
+          "derived_effects": [
+            {"kind":"speed_bonus","value":5}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"speed","expect":35}
+    ]
+  },
+  {
+    "name": "Свойство оружия относится к экземпляру",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "weapon": [
+        {
+          "uid": "blade",
+          "item_id": 1,
+          "magic_item_id": 39,
+          "count": 1,
+          "params": {
+            "magic": {}
+          }
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 39,
+        "typeId": 19,
+        "name": "Амулет",
+        "data": {
+          "weapon": {
+            "base_item_id": {
+              "id": 1
+            }
+          },
+          "attunement": "none",
+          "derived_effects": [
+            {"kind":"weapon_attack_bonus","value":2}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"bonus","kind":"weapon_attack_bonus","at":{"targetId":"blade"},"expect":2},
+      {"op":"bonus","kind":"weapon_attack_bonus","at":{"targetId":"other"},"expect":0}
+    ]
+  },
+  {
+    "name": "Тяжёлый доспех и щит отключают условия снаряжения",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "abilities_class": [
+        {
+          "id": 31,
+          "choices": {
+            "style": [
+              "guard"
+            ],
+            "training": [
+              "tool:7",
+              "skill:4"
+            ],
+            "lang": [
+              6
+            ],
+            "school": [
+              3
+            ]
+          }
+        }
+      ],
+      "items": {
+        "equipped": [
+          {
+            "uid": "mail",
+            "item_id": 87
+          },
+          {
+            "uid": "shield",
+            "item_id": 88
+          }
+        ]
+      }
+    },
+    "items": [
+      {
+        "id": 31,
+        "typeId": 4,
+        "name": "Практика",
+        "data": {
+          "derived_effects": [
+            {"kind": "armor_formula", "base": 18, "ability_ids": [1], "allow_shield": false},
+            {"kind": "armor_bonus", "value": 1, "requires_armor": true},
+            {"kind": "armor_bonus", "value": 9, "requires_no_armor": true, "allow_shield": false},
+            {"kind": "speed_bonus", "value": 5, "forbid_heavy_armor": true},
+            {"kind": "weapon_attack_bonus", "requires_armor": true, "value": 2},
+            {"kind": "weapon_attack_bonus", "allow_shield": false, "value": 7},
+            {"kind": "roll_mode", "scopes": ["attack"], "mode": "advantage", "forbid_heavy_armor": true}
+          ]
+        }
+      },
+      {
+        "id": 87,
+        "typeId": 12,
+        "name": "Латы",
+        "data": {
+          "category": "heavy",
+          "armor": {
+            "ac": 16,
+            "use_dex": false
+          }
+        }
+      },
+      {
+        "id": 88,
+        "typeId": 12,
+        "name": "Щит",
+        "data": {
+          "category": "shield",
+          "armor": {
+            "shield": true,
+            "shield_bonus": 2
+          }
+        }
+      }
+    ],
+    "checks": [
+      {"op": "armor", "expect": 19},
+      {"op": "speed", "expect": 30},
+      {"op": "bonus", "kind": "weapon_attack_bonus", "at": {"kind": "attack"}, "expect": 2},
+      {"op": "modes", "kind": "roll_mode", "at": {"kind": "attack"}, "expect": []}
+    ]
+  },
+  {
+    "name": "Уровни класса при мультиклассе",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "classes": [
+        {
+          "id": 7,
+          "level": 2
+        },
+        {
+          "id": 9,
+          "level": 3
+        }
+      ],
+      "abilities_class": [
+        {
+          "id": 31,
+          "choices": {
+            "style": [
+              "guard"
+            ],
+            "training": [
+              "tool:7",
+              "skill:4"
+            ],
+            "lang": [
+              6
+            ],
+            "school": [
+              3
+            ]
+          }
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 31,
+        "typeId": 4,
+        "name": "Практика",
+        "data": {
+          "level_source": "class",
+          "level_class_id": {
+            "id": 7
+          },
+          "derived_effects": [
+            {"kind":"speed_bonus","level":3,"value":5}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"speed","expect":30}
+    ]
+  },
+  {
+    "name": "Открытие на третьем уровне класса",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "classes": [
+        {
+          "id": 7,
+          "level": 3
+        },
+        {
+          "id": 9,
+          "level": 2
+        }
+      ],
+      "abilities_class": [
+        {
+          "id": 31,
+          "choices": {
+            "style": [
+              "guard"
+            ],
+            "training": [
+              "tool:7",
+              "skill:4"
+            ],
+            "lang": [
+              6
+            ],
+            "school": [
+              3
+            ]
+          }
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 31,
+        "typeId": 4,
+        "name": "Практика",
+        "data": {
+          "level_source": "class",
+          "level_class_id": {
+            "id": 7
+          },
+          "derived_effects": [
+            {"kind":"speed_bonus","level":3,"value":5}
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {"op":"speed","expect":35}
+    ]
+  },
+  {
+    "name": "Снятие доспеха и щита пересчитывает условия атаки",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "DEX": {
+        "value": {
+          "base": 16
+        }
+      },
+      "speed": {
+        "base": 30
+      },
+      "abilities_class": [
+        {
+          "id": 31,
+          "choices": {
+            "style": [
+              "guard"
+            ],
+            "training": [
+              "tool:7",
+              "skill:4"
+            ],
+            "lang": [
+              6
+            ],
+            "school": [
+              3
+            ]
+          }
+        }
+      ],
+      "items": {}
+    },
+    "items": [
+      {
+        "id": 31,
+        "typeId": 4,
+        "name": "Практика",
+        "data": {
+          "derived_effects": [
+            {"kind": "armor_formula", "base": 18, "ability_ids": [1], "allow_shield": false},
+            {"kind": "armor_bonus", "value": 1, "requires_armor": true},
+            {"kind": "armor_bonus", "value": 9, "requires_no_armor": true, "allow_shield": false},
+            {"kind": "speed_bonus", "value": 5, "forbid_heavy_armor": true},
+            {"kind": "weapon_attack_bonus", "requires_armor": true, "value": 2},
+            {"kind": "weapon_attack_bonus", "allow_shield": false, "value": 7},
+            {"kind": "roll_mode", "scopes": ["attack"], "mode": "advantage", "forbid_heavy_armor": true}
+          ]
+        }
+      },
+      {
+        "id": 87,
+        "typeId": 12,
+        "name": "Латы",
+        "data": {
+          "category": "heavy",
+          "armor": {
+            "ac": 16,
+            "use_dex": false
+          }
+        }
+      },
+      {
+        "id": 88,
+        "typeId": 12,
+        "name": "Щит",
+        "data": {
+          "category": "shield",
+          "armor": {
+            "shield": true,
+            "shield_bonus": 2
+          }
+        }
+      }
+    ],
+    "checks": [
+      {"op": "bonus", "kind": "weapon_attack_bonus", "at": {"kind": "attack"}, "expect": 7},
+      {"op": "modes", "kind": "roll_mode", "at": {"kind": "attack"}, "expect": ["advantage"]}
+    ]
+  }
+]

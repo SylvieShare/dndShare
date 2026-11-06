@@ -214,7 +214,7 @@ internal fun DndFeatureSummary() {
                 Text("$kind · $name", style = ShareTypography.group)
             }
         }
-    val groups = values["proficiencies"].objectValue().filterValues { it.arrayValue().isNotEmpty() }
+    val groups = context.mechanics.proficiencyGroups()
     if (groups.isNotEmpty() || context.canEdit)
         ShareTile(Modifier.fillMaxWidth(), framed = false, contentPadding = PaddingValues(10.dp)) {
             if (groups.isNotEmpty()) SheetSummaryHeading(
@@ -232,12 +232,7 @@ internal fun DndFeatureSummary() {
             if (groups.isEmpty()) ShareTextButton({ context.edit("proficiencies") }) { Text("+ Указать владения") }
             groups.forEach { (label, entries) ->
                 Text(
-                    "$label: " +
-                        entries.arrayValue().joinToString(", ") {
-                            it.objectValue().label().ifBlank {
-                                (it as? JsonPrimitive)?.content.orEmpty()
-                            }
-                        },
+                    "$label: " + entries.joinToString(", "),
                     style = ShareTypography.context,
                 )
             }

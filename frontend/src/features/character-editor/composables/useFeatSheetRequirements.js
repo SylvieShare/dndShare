@@ -1,4 +1,5 @@
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
+import { collectCharacterDerivedEffects, derivedGrantedProficiencies } from '../lib/characterDerivedEffects'
 
 import { abilityScoresFromValues, evaluateFeatEligibility } from '@/features/items/lib/featRules'
 
@@ -8,26 +9,24 @@ export function useFeatSheetRequirements({
   entries,
   catalog,
   armorDictionary,
+  sheetGrants,
   onActivate,
   onDeactivate,
   onChange,
 }) {
+  const grantedArmor = computed(() => {
+    const grants = sheetGrants?.()
+    if (grants) return grants.map(row => row.targetId)
+    const items = new Map(catalog().map(item => [String(item.id), item]))
+    return derivedGrantedProficiencies(collectCharacterDerivedEffects(values(), items), 'armor_proficiency').map(row => row.targetId)
+  })
   function eligibility(item) {
     const currentValues = values()
     const armorLabels = currentValues?.proficiencies?.['Доспехи'] || []
     const armorProfIds = armorDictionary()
       .filter((row) => armorLabels.some((label) => String(label).toLowerCase() === String(row.value).toLowerCase()))
       .map((row) => row.id)
-    for (const owned of entries()) {
-      if (owned.requirements_met === false) continue
-      const feat = catalog().find((candidate) => String(candidate.id) === String(owned.id))
-      for (const effect of (feat?.data?.derived_effects || [])) {
-        if (effect.kind !== 'armor_proficiency') continue
-        for (const id of (effect.target_ids || [])) {
-          if (!armorProfIds.some((current) => String(current) === String(id))) armorProfIds.push(id)
-        }
-      }
-    }
+    armorProfIds.push(...grantedArmor.value)
     return evaluateFeatEligibility(item, {
       stats: abilityScoresFromValues(currentValues),
       level: currentValues?.lvl?.level,
@@ -65,6 +64,7 @@ export function useFeatSheetRequirements({
   watch(() => JSON.stringify({
     stats: ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'].map((key) => values()?.[key]?.value),
     armor: values()?.proficiencies?.['Доспехи'],
+    grants: grantedArmor.value,
     spells: !!values()?.spells,
     entries: entries().map((entry) => [entry.id, entry.requirements_met, entry.choices]),
     catalogSize: catalog().length,

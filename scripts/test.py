@@ -130,7 +130,7 @@ def models(env):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("profile", nargs="?", default="fast", choices=["fast", "db", "browser", "models", "all"])
+    parser.add_argument("profile", nargs="?", default="fast", choices=["fast", "db", "browser", "models", "mechanics", "all"])
     parser.add_argument('--full', action='store_true', help='broad profile, only after a direct user request')
     args = parser.parse_args()
     if args.profile in {'fast', 'browser', 'all'} and not args.full:
@@ -144,8 +144,9 @@ def main():
         "wiki": lambda: run([sys.executable, "scripts/check-wiki.py", "--strict"], env=env),
         "browser": lambda: browser(env),
         "models": lambda: models(env),
+        "mechanics": lambda: run([sys.executable, "scripts/mechanics/run.py"], env=env),
     }
-    selected = {"fast": ["backend", "frontend", "scripts", "wiki"], "db": ["backend"], "browser": ["browser"], "models": ["models"], "all": list(stages)}[args.profile]
+    selected = {"fast": ["backend", "frontend", "scripts", "wiki"], "db": ["backend"], "browser": ["browser"], "models": ["models"], "mechanics": ["mechanics"], "all": list(stages)}[args.profile]
     results = []
     for name in selected:
         start = time.monotonic()

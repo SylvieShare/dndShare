@@ -1,6 +1,5 @@
-import { MAGIC_VALUE_ID, featureEntries } from './characterMagicItems'
-import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
-import { featureEntryActive } from './featureEntryState'
+import { MAGIC_VALUE_ID } from './characterMagicItems'
+import { ownedFeatureRules } from './ownedFeatureRules'
 
 function entryKey(entry) {
   return String(entry?.uid || entry?.id || '')
@@ -10,27 +9,18 @@ export function createAbilityHpBonusSource(valueId, category) {
   return {
     id: `abilities:${valueId}`,
     collect(values, itemsById) {
-      const entries = featureEntries(values, valueId, itemsById)
-      return entries.flatMap((entry) => {
-        if (!featureEntryActive(valueId, entry)) return []
-        const item = itemsById.get(String(entry.id))
-        if (!item) return []
-        const level = abilityOwnerLevel(item.data || {}, values)
-        return (Array.isArray(item.data?.hp_bonuses) ? item.data.hp_bonuses : []).flatMap((rule, index) => {
-          const unlockLevel = Math.max(1, Number(rule?.level) || 1)
-          if (level < unlockLevel) return []
-          const value = (Number(rule?.base) || 0) + level * (Number(rule?.per_level) || 0)
-          if (!value) return []
-          return [{
-            key: `${this.id}:${entryKey(entry)}:${index}`,
-            name: rule.title || item.name || 'Способность',
-            title: rule.title || item.name || 'Способность',
-            value,
-            readonly: true,
-            source_label: `${valueId === MAGIC_VALUE_ID ? 'предмет' : 'способность'} «${item.name || 'Без названия'}»`,
-            source: { sourceId: this.id, category, itemId: item.id, entryKey: entryKey(entry) },
-          }]
-        })
+      return [...ownedFeatureRules(values, itemsById, 'hp_bonuses', [valueId])].flatMap(({ rule, entry, item, index, ownerLevel }) => {
+        const value = (Number(rule.base) || 0) + ownerLevel * (Number(rule.per_level) || 0)
+        if (!value) return []
+        return [{
+          key: `${this.id}:${entryKey(entry)}:${index}`,
+          name: rule.title || item.name || 'Способность',
+          title: rule.title || item.name || 'Способность',
+          value,
+          readonly: true,
+          source_label: `${valueId === MAGIC_VALUE_ID ? 'предмет' : 'способность'} «${item.name || 'Без названия'}»`,
+          source: { sourceId: this.id, category, itemId: item.id, entryKey: entryKey(entry) },
+        }]
       })
     },
   }

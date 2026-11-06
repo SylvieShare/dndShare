@@ -90,7 +90,7 @@ fun spellRollRequest(
     val option =
         spellRuleOptions(readout.item).firstOrNull { it.key == options.optionKey }
             ?: error("Вариант броска больше недоступен.")
-    val terms = spellRollTerms(sheet, readout, option, options, items, metadata)
+    val terms = spellRollTerms(readout, option, options, metadata)
     require(terms.isNotEmpty()) { "У этого эффекта не задана формула броска." }
     val title =
         when (option.kind) {

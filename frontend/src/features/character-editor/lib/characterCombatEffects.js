@@ -1,33 +1,18 @@
+import { ownedFeatureRules } from './ownedFeatureRules'
 import { collectCharacterStatuses } from './characterStatuses'
-import { itemRuleActive } from './itemRuleActivation'
 import { selectedTargetDamageRules } from './selectedTarget'
 import { weaponDamageDiceCount } from '@/shared/lib/abilityProgression'
-import { FEATURE_VALUE_IDS, featureEntries } from './characterMagicItems'
-import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
-import { featureEntryActive } from './featureEntryState'
-
-const VALUE_IDS = FEATURE_VALUE_IDS
 
 function abilityRows(values, itemsById, field) {
-  return VALUE_IDS.flatMap((valueId) => featureEntries(values, valueId, itemsById, true).flatMap((entry) => {
-    if (!featureEntryActive(valueId, entry)) return []
-    const item = itemsById.get(String(entry.id))
-    if (!item) return []
-    const ownerLevel = abilityOwnerLevel(item.data || {}, values)
-    return (Array.isArray(item.data?.[field]) ? item.data[field] : []).flatMap((rule, index) => {
-      if (!itemRuleActive(values, item, entry, rule)) return []
-      if (ownerLevel < Math.max(1, Number(rule?.level) || 1)) return []
-      return [{
-        ...rule,
-        key: `${valueId}:${entry.uid || entry.id}:${field}:${field === 'weapon_damage' ? rule.key : index}`,
-        requires_damage_key: field === 'weapon_damage' && rule.requires_damage_key
-          ? `${valueId}:${entry.uid || entry.id}:${field}:${rule.requires_damage_key}` : null,
-        owner_level: ownerLevel,
-        resource_owner: { valueId, entryKey: String(entry.uid || entry.id) },
-        weapon_uid: item.data?.weapon && ['weapon_damage', 'critical_damage'].includes(field) ? entry.uid : null,
-        source_label: item.name || 'Способность',
-      }]
-    })
+  return Array.from(ownedFeatureRules(values, itemsById, field), ({ rule, entry, item, index, ownerLevel, valueId }) => ({
+    ...rule,
+    key: `${valueId}:${entry.uid || entry.id}:${field}:${field === 'weapon_damage' ? rule.key : index}`,
+    requires_damage_key: field === 'weapon_damage' && rule.requires_damage_key
+      ? `${valueId}:${entry.uid || entry.id}:${field}:${rule.requires_damage_key}` : null,
+    owner_level: ownerLevel,
+    resource_owner: { valueId, entryKey: String(entry.uid || entry.id) },
+    weapon_uid: item.data?.weapon && ['weapon_damage', 'critical_damage'].includes(field) ? entry.uid : null,
+    source_label: item.name || 'Способность',
   }))
 }
 

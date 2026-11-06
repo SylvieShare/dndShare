@@ -9,60 +9,44 @@ fun combatRules(
     items: Map<Long, CatalogueItem>,
     field: String,
 ): List<JsonObject> = buildList {
-    for (feature in ownedFeatures(sheet, items)) {
-        val level = ownerLevel(feature.item.data, sheet)
-        for ((index, raw) in feature.item.data[field].arrayValue().withIndex()) {
-            val rule = raw.objectValue()
-            if (
-                feature.item.typeId == 19L &&
-                    !magicActive(
-                        feature.item,
-                        feature.instance,
-                        feature.equipped,
-                        sheet,
-                        rule.text("activation"),
-                    )
-            )
-                continue
-            if (level < rule["level"].number(1).coerceAtLeast(1)) continue
-            val owner = feature.entry.text("uid").ifBlank { feature.entry.text("id") }
-            val prefix = "${feature.key}:$owner:$field:"
-            add(
-                JsonObject(
-                    rule +
-                        buildJsonObject {
+    for ((feature, rule, index, level) in ownedFeatureRules(sheet, items, field)) {
+        val owner = feature.entry.text("uid").ifBlank { feature.entry.text("id") }
+        val prefix = "${feature.key}:$owner:$field:"
+        add(
+            JsonObject(
+                rule +
+                    buildJsonObject {
+                        put(
+                            "key",
+                            prefix +
+                                if (field == "weapon_damage") rule.text("key")
+                                else index.toString(),
+                        )
+                        if (
+                            field == "weapon_damage" &&
+                                rule.text("requires_damage_key").isNotBlank()
+                        )
                             put(
-                                "key",
-                                prefix +
-                                    if (field == "weapon_damage") rule.text("key")
-                                    else index.toString(),
+                                "requires_damage_key",
+                                prefix + rule.text("requires_damage_key"),
                             )
-                            if (
-                                field == "weapon_damage" &&
-                                    rule.text("requires_damage_key").isNotBlank()
-                            )
-                                put(
-                                    "requires_damage_key",
-                                    prefix + rule.text("requires_damage_key"),
-                                )
-                            put("owner_level", level)
-                            put("source_label", feature.item.name)
-                            put(
-                                "resource_owner",
-                                buildJsonObject {
-                                    put("valueId", feature.key)
-                                    put("entryKey", owner)
-                                },
-                            )
-                            if (
-                                feature.item.data["weapon"] is JsonObject &&
-                                    field in setOf("weapon_damage", "critical_damage")
-                            )
-                                put("weapon_uid", feature.entry.text("uid"))
-                        }
-                )
+                        put("owner_level", level)
+                        put("source_label", feature.item.name)
+                        put(
+                            "resource_owner",
+                            buildJsonObject {
+                                put("valueId", feature.key)
+                                put("entryKey", owner)
+                            },
+                        )
+                        if (
+                            feature.item.data["weapon"] is JsonObject &&
+                                field in setOf("weapon_damage", "critical_damage")
+                        )
+                            put("weapon_uid", feature.entry.text("uid"))
+                    }
             )
-        }
+        )
     }
     if (field == "weapon_damage") {
         addAll(selectedWeaponTargetDamage(sheet, items))

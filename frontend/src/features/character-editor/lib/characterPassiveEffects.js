@@ -1,6 +1,5 @@
-import { MAGIC_VALUE_ID, featureEntries } from './characterMagicItems'
-import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
-import { featureEntryActive } from './featureEntryState'
+import { MAGIC_VALUE_ID } from './characterMagicItems'
+import { ownedFeatureRules } from './ownedFeatureRules'
 
 function entryKey(entry) {
   return String(entry?.uid || entry?.id || '')
@@ -10,23 +9,16 @@ export function createAbilityPassiveEffectSource(valueId) {
   return {
     id: `abilities:${valueId}`,
     collect(values, itemsById) {
-      const entries = featureEntries(values, valueId, itemsById)
-      return entries.flatMap((entry) => {
-        if (!featureEntryActive(valueId, entry)) return []
-        const item = itemsById.get(String(entry.id))
-        if (!item) return []
-        const level = abilityOwnerLevel(item.data || {}, values)
-        return (Array.isArray(item.data?.passive_effects) ? item.data.passive_effects : []).flatMap((rule, index) => {
-          if (level < Math.max(1, Number(rule?.level) || 1) || !rule?.title) return []
-          return [{
-            key: `${this.id}:${entryKey(entry)}:${index}`,
-            title: rule.title,
-            description: rule.description || '',
-            tone: rule.tone || 'info',
-            source_label: item.name || 'Способность',
-            source: { sourceId: this.id, valueId, itemId: item.id, entryKey: entryKey(entry) },
-          }]
-        })
+      return [...ownedFeatureRules(values, itemsById, 'passive_effects', [valueId])].flatMap(({ rule, entry, item, index }) => {
+        if (!rule.title) return []
+        return [{
+          key: `${this.id}:${entryKey(entry)}:${index}`,
+          title: rule.title,
+          description: rule.description || '',
+          tone: rule.tone || 'info',
+          source_label: item.name || 'Способность',
+          source: { sourceId: this.id, valueId, itemId: item.id, entryKey: entryKey(entry) },
+        }]
       })
     },
   }

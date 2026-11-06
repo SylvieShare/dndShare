@@ -1,0 +1,558 @@
+[
+  {
+    "name": "Выбор цели, ранги, криты, защита и хиты от активного экземпляра",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "abilities_race": [
+        {
+          "id": 622
+        }
+      ],
+      "items": {
+        "sections": [
+          {
+            "items": [
+              {
+                "uid": "blue",
+                "item_id": 621,
+                "params": {
+                  "magic": {
+                    "attuned": true,
+                    "choices": {
+                      "element": [
+                        "cold"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "uid": "red",
+                "item_id": 621,
+                "params": {
+                  "magic": {
+                    "attuned": false,
+                    "choices": {
+                      "element": [
+                        "fire"
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "hp": {
+        "max": {
+          "base": 10
+        }
+      },
+      "defenses": [
+        {
+          "kind": "vulnerability",
+          "damage_type": 8
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 621,
+        "typeId": 19,
+        "name": "Печать",
+        "data": {
+          "activation": "carried",
+          "attunement": "required",
+          "choices": [
+            {
+              "key": "element",
+              "source": "options",
+              "options": [
+                {
+                  "value": "cold",
+                  "label": "Лёд"
+                },
+                {
+                  "value": "fire",
+                  "label": "Огонь"
+                }
+              ]
+            }
+          ],
+          "choice_defenses": [
+            {
+              "source_item_id": 621,
+              "choice_key": "element",
+              "options": [
+                {
+                  "value": "cold",
+                  "kind": "resistance",
+                  "damage_type": 3
+                },
+                {
+                  "value": "fire",
+                  "kind": "immunity",
+                  "damage_type": 5
+                }
+              ]
+            }
+          ],
+          "hp_bonuses": [
+            {
+              "base": 1,
+              "per_level": 2
+            }
+          ],
+          "passive_effects": [
+            {
+              "title": "Защита печати"
+            },
+            {
+              "title": "Позднее",
+              "level": 9
+            }
+          ],
+          "critical_damage": [
+            {
+              "extra_weapon_dice": 2,
+              "weapon_kind": "melee"
+            }
+          ],
+          "weapon_damage": [
+            {
+              "key": "flame",
+              "dice": "d6",
+              "dice_count": 1,
+              "weapon_kind": "finesse_or_ranged",
+              "level": 3
+            }
+          ],
+          "roll_adjustments": [
+            {
+              "scope": "ability_check",
+              "minimum_proficiency_rank": 2,
+              "value": 10,
+              "kind": "minimum_natural"
+            }
+          ]
+        }
+      },
+      {
+        "id": 622,
+        "typeId": 3,
+        "name": "Обучение",
+        "data": {
+          "choice_defenses": [
+            {
+              "source_item_id": 621,
+              "choice_key": "element",
+              "options": [
+                {
+                  "value": "cold",
+                  "kind": "resistance",
+                  "damage_type": 9
+                }
+              ]
+            }
+          ],
+          "defenses": [
+            {
+              "kind": "immunity",
+              "damage_type": 1,
+              "level": 7
+            }
+          ],
+          "hp_bonuses": [
+            {
+              "base": 20,
+              "level": 6
+            }
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {
+        "op": "defenses",
+        "expect": [
+          "resistance:3",
+          "resistance:9",
+          "vulnerability:8"
+        ]
+      },
+      {
+        "op": "hp",
+        "expect": 21
+      },
+      {
+        "op": "notes",
+        "expect": [
+          "Защита печати"
+        ]
+      },
+      {
+        "op": "criticalDice",
+        "expect": 2,
+        "at": {
+          "melee": true
+        }
+      },
+      {
+        "op": "criticalDice",
+        "expect": 0,
+        "at": {
+          "melee": false
+        }
+      },
+      {
+        "op": "weaponDice",
+        "expect": [
+          1
+        ],
+        "at": {
+          "finesse": true
+        }
+      },
+      {
+        "op": "weaponDice",
+        "expect": [],
+        "at": {
+          "melee": true
+        }
+      },
+      {
+        "op": "adjust",
+        "expect": [
+          10
+        ],
+        "at": {
+          "kind": "skill_check",
+          "rank": 2
+        }
+      },
+      {
+        "op": "adjust",
+        "expect": [],
+        "at": {
+          "kind": "skill_check",
+          "rank": 1
+        }
+      },
+      {
+        "op": "adjust",
+        "expect": [],
+        "at": {
+          "kind": "initiative",
+          "rank": 2
+        }
+      }
+    ]
+  },
+  {
+    "name": "После снятия настройки остаётся только ручная защита",
+    "values": {
+      "lvl": {
+        "level": 5
+      },
+      "abilities_race": [
+        {
+          "id": 622
+        }
+      ],
+      "items": {
+        "equipped": [
+          {
+            "uid": "red",
+            "item_id": 621,
+            "params": {
+              "magic": {
+                "attuned": false,
+                "choices": {
+                  "element": [
+                    "fire"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "hp": {
+        "max": {
+          "base": 10
+        }
+      },
+      "defenses": [
+        {
+          "kind": "vulnerability",
+          "damage_type": 8
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 621,
+        "typeId": 19,
+        "name": "Печать",
+        "data": {
+          "activation": "carried",
+          "attunement": "required",
+          "choices": [
+            {
+              "key": "element",
+              "source": "options",
+              "options": [
+                {
+                  "value": "cold",
+                  "label": "Лёд"
+                },
+                {
+                  "value": "fire",
+                  "label": "Огонь"
+                }
+              ]
+            }
+          ],
+          "choice_defenses": [
+            {
+              "source_item_id": 621,
+              "choice_key": "element",
+              "options": [
+                {
+                  "value": "cold",
+                  "kind": "resistance",
+                  "damage_type": 3
+                },
+                {
+                  "value": "fire",
+                  "kind": "immunity",
+                  "damage_type": 5
+                }
+              ]
+            }
+          ],
+          "hp_bonuses": [
+            {
+              "base": 1,
+              "per_level": 2
+            }
+          ],
+          "passive_effects": [
+            {
+              "title": "Защита печати"
+            },
+            {
+              "title": "Позднее",
+              "level": 9
+            }
+          ],
+          "critical_damage": [
+            {
+              "extra_weapon_dice": 2,
+              "weapon_kind": "melee"
+            }
+          ],
+          "weapon_damage": [
+            {
+              "key": "flame",
+              "dice": "d6",
+              "dice_count": 1,
+              "weapon_kind": "finesse_or_ranged",
+              "level": 3
+            }
+          ],
+          "roll_adjustments": [
+            {
+              "scope": "ability_check",
+              "minimum_proficiency_rank": 2,
+              "value": 10,
+              "kind": "minimum_natural"
+            }
+          ]
+        }
+      },
+      {
+        "id": 622,
+        "typeId": 3,
+        "name": "Обучение",
+        "data": {
+          "choice_defenses": [
+            {
+              "source_item_id": 621,
+              "choice_key": "element",
+              "options": [
+                {
+                  "value": "cold",
+                  "kind": "resistance",
+                  "damage_type": 9
+                }
+              ]
+            }
+          ],
+          "defenses": [
+            {
+              "kind": "immunity",
+              "damage_type": 1,
+              "level": 7
+            }
+          ],
+          "hp_bonuses": [
+            {
+              "base": 20,
+              "level": 6
+            }
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {
+        "op": "defenses",
+        "expect": [
+          "vulnerability:8"
+        ]
+      },
+      {
+        "op": "hp",
+        "expect": 10
+      },
+      {
+        "op": "notes",
+        "expect": []
+      },
+      {
+        "op": "criticalDice",
+        "expect": 0,
+        "at": {
+          "melee": true
+        }
+      },
+      {
+        "op": "weaponDice",
+        "expect": [],
+        "at": {
+          "finesse": true
+        }
+      },
+      {
+        "op": "adjust",
+        "expect": [],
+        "at": {
+          "kind": "skill_check",
+          "rank": 2
+        }
+      }
+    ]
+  },
+  {
+    "name": "Модификатор заклинания действует только на указанное заклинание",
+    "values": {
+      "lvl": {
+        "level": 6
+      },
+      "CHA": {
+        "value": {
+          "base": 18
+        }
+      },
+      "abilities_class": [
+        {
+          "id": 51
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 51,
+        "typeId": 4,
+        "name": "Дальность и урон",
+        "data": {
+          "level": 5,
+          "spell_modifiers": [
+            {
+              "spell_id": {
+                "id": 52
+              },
+              "range": "300 футов",
+              "damage_ability": 6
+            }
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {
+        "op": "spell",
+        "at": {
+          "spellId": 52
+        },
+        "expect": {
+          "range": "300 футов",
+          "damageBonus": 4
+        }
+      },
+      {
+        "op": "spell",
+        "at": {
+          "spellId": 53
+        },
+        "expect": {
+          "range": "",
+          "damageBonus": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "Постоянный урон без кости при обычном и критическом попадании",
+    "values": {
+      "lvl": {
+        "level": 1
+      },
+      "STR": {
+        "value": {
+          "base": 14
+        }
+      },
+      "weapon": [
+        {
+          "uid": "flat",
+          "item_id": 54
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 54,
+        "name": "Учебное оружие",
+        "typeId": 1,
+        "data": {
+          "attacks": [
+            {
+              "count": 1
+            }
+          ]
+        }
+      }
+    ],
+    "checks": [
+      {
+        "op": "weaponExpression",
+        "at": {
+          "critical": false
+        },
+        "expect": "1+2"
+      },
+      {
+        "op": "weaponExpression",
+        "at": {
+          "critical": true
+        },
+        "expect": "1+2"
+      }
+    ]
+  }
+]

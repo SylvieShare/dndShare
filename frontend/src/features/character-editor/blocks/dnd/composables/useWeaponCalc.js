@@ -82,7 +82,7 @@ export function useWeaponCalc({
     const allAttacks = [...attacks, ...customAttacks]
     for (const a of allAttacks) {
       const ad = attackDisplay(a)
-      if (!ad.diceLabel) continue
+      if (a.dice_id && !ad.diceLabel) continue
       if (!firstType) { firstType = ad.type; firstColor = ad.typeColor }
       segments.push(`+${ad.count}${ad.diceLabel}${formatLabel(ad.type, ad.typeColor)}`)
     }
@@ -107,7 +107,7 @@ export function useWeaponCalc({
   }
 
   function buildCriticalDamageExpr(attacks, entry, extraWeaponDice = 0) {
-    const doubled = (attacks || []).map((attack, index) => ({
+    const doubled = (attacks || []).map((attack, index) => !attack.dice_id ? attack : ({
       ...attack,
       count: (Number(attack.count) || 1) * 2 + (index === 0 ? Math.max(0, Number(extraWeaponDice) || 0) : 0),
     }))
