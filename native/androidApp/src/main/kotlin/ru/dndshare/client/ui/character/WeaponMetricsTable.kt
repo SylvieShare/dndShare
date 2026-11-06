@@ -75,12 +75,10 @@ internal fun WeaponMetricsTable(
                 menu("damage")
             }
         }
-        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(DesignTokens.Layout.WeaponMetricsGap)) {
-            if (properties.isNotEmpty()) MetricCell("Свойства", Modifier.fillMaxWidth()) {
-                PropertyText(properties, propertyDescriptions, openItem)
-            }
-            mechanics()
+        if (properties.isNotEmpty()) MetricCell("Свойства", Modifier.fillMaxWidth()) {
+            PropertyText(properties, propertyDescriptions, openItem)
         }
+        mechanics()
     }
 }
 

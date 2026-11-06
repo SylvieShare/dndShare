@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
+import kotlin.math.roundToInt
 import androidx.compose.ui.unit.dp
 import androidx.test.core.app.ActivityScenario
 import androidx.test.platform.app.InstrumentationRegistry
@@ -100,6 +102,8 @@ class WeaponPropertyContinuationTest {
         val context = SheetContext(sheet, metadata, items, images, true, {}, {},
             DndDerivedValues(sheet, items, metadata), SheetJournalState())
         val menu = mutableStateOf<String?>(null)
+        val density = InstrumentationRegistry.getInstrumentation().targetContext.resources.displayMetrics.density
+        val expectedGap = (DesignTokens.Layout.WeaponMetricsGap.value * density).roundToInt()
         val rolls = java.util.concurrent.atomic.AtomicInteger()
         try {
             ActivityScenario.launch(ComponentActivity::class.java).use { scenario ->
@@ -134,10 +138,28 @@ class WeaponPropertyContinuationTest {
                 TouchRobot.await { rolls.get() == 2 && TouchRobot.find("Бросить на урон") == null }
                 val use = "Особое применение: Метнуть молнией"
                 TouchRobot.await { TouchRobot.find(use) != null }
-                val heading = TouchRobot.bounds("Свойства")
                 val panel = TouchRobot.bounds(use)
-                assertTrue(panel.top > heading.bottom)
-                assertTrue(heading.centerX() in panel.left..panel.right)
+                val properties = TouchRobot.bounds("Свойства")
+                assertTrue(properties.centerX() in panel.left..panel.right)
+                val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+                automation.waitForIdle(250, 5_000)
+                val screenshot = requireNotNull(automation.takeScreenshot())
+                try {
+                    // Sample the painted surfaces, away from text, icons and rounded corners.
+                    val x = panel.left + panel.width() * 3 / 4
+                    val surface = WebPalette.Surface.toArgb()
+                    fun gapAbove(contentY: Int): Int {
+                        var y = contentY
+                        while (y > 0 && screenshot.getPixel(x, y) != surface) y--
+                        val lastBackgroundPixel = y
+                        while (y > 0 && screenshot.getPixel(x, y) == surface) y--
+                        return lastBackgroundPixel - y
+                    }
+                    assertEquals(expectedGap, gapAbove(properties.centerY()), "Урон → Свойства")
+                    assertEquals(expectedGap, gapAbove(panel.centerY()), "Свойства → Особое применение")
+                } finally {
+                    screenshot.recycle()
+                }
                 TouchRobot.click(use)
                 TouchRobot.await { TouchRobot.find("Потянуть, чтобы закрыть") != null }
                 assertNull(TouchRobot.find("Изменить"))

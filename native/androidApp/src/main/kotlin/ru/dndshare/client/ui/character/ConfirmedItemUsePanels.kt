@@ -22,7 +22,7 @@ internal fun ConfirmedItemUsePanels(uid: String, compact: Boolean = false) {
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    val panels: @Composable () -> Unit = {
         uses.forEach { use ->
             key(uid, use.key) {
                 val body: @Composable () -> Unit = {
@@ -109,6 +109,9 @@ internal fun ConfirmedItemUsePanels(uid: String, compact: Boolean = false) {
         }
         error?.let { Text(it, style = ShareTypography.context, color = WebPalette.Danger) }
     }
+    if (compact) panels()
+    else if (uses.isNotEmpty() || error != null)
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) { panels() }
 }
 
 @Composable
