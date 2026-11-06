@@ -12,7 +12,7 @@ FRONTEND = ROOT / "frontend"
 NATIVE = ROOT / "native/androidApp/src/main"
 ICONS = {
     "Layers": "layers", "Box": "box", "Group": "group", "Lightbulb": "lightbulb", "Camera": "camera", "Gauge": "gauge", "Sticker": "sticker", "LayoutGrid": "layout-grid", "Rotate": "rotate-cw", "Flip": "arrow-left-right", "Eye": "eye", "EyeOff": "eye-off", "Save": "save", "Upload": "upload", "Download": "download", "Clipboard": "clipboard-paste", "Lock": "lock-keyhole", "Rectangle": "square-dashed-mouse-pointer",
-    "Hand": "hand", "Sunrise": "sunrise", "Tags": "tags", "Clock": "clock-3", "Hourglass": "hourglass", "Shapes": "shapes", "Coins": "coins", "Gem": "gem", "Zap": "zap", "Heart": "heart", "Badge": "badge", "Shield": "shield",
+    "Hand": "hand", "Sunrise": "sunrise", "Tags": "tags", "Clock": "clock-3", "Hourglass": "hourglass", "Shapes": "shapes", "Coins": "coins", "Gem": "gem", "Sparkles": "sparkles", "Zap": "zap", "Heart": "heart", "Badge": "badge", "Shield": "shield",
     "Wallet": "wallet", "Weight": "weight", "Backpack": "backpack", "Shirt": "shirt", "Trash": "trash",
     "Book": "book-open", "Rules": "book-open-check", "Characters": "users",
     "CreateCharacter": "user-round-plus", "Sessions": "scroll-text", "Maps": "map",

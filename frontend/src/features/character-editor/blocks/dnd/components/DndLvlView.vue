@@ -39,7 +39,7 @@
 import { MorphTile } from '@sylvieshare/share-ui'
 import { computed } from 'vue'
 import { StatBar } from '@sylvieshare/share-ui'
-import { EXPERIENCE } from '../lib/experience'
+import { levelExperience, levelProgressPercent } from '../lib/experience'
 
 const props = defineProps({
   panel: Boolean,
@@ -50,15 +50,8 @@ const props = defineProps({
 defineEmits(['open'])
 
 const level = computed(() => Math.max(1, Math.min(20, parseInt(props.data.level) || 1)))
-const currentLevelExp = computed(() => EXPERIENCE[level.value - 1])
-const nextLevelExp = computed(() => (level.value < 20 ? EXPERIENCE[level.value] : null))
-const barPct = computed(() => {
-  const exp = parseInt(props.data.exp) || 0
-  const from = currentLevelExp.value
-  const to = nextLevelExp.value
-  if (to === null) return 100
-  return Math.min(100, Math.max(0, ((exp - from) / (to - from)) * 100))
-})
+const nextLevelExp = computed(() => levelExperience(props.data).nextLevelExp)
+const barPct = computed(() => levelProgressPercent(props.data))
 const canLevelUp = computed(() => {
   if (level.value >= 20 || nextLevelExp.value === null) return false
   return (parseInt(props.data.exp) || 0) >= nextLevelExp.value

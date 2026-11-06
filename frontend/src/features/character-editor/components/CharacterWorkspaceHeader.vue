@@ -18,28 +18,31 @@
       </div>
     </template>
     <template v-if="dnd && format !== 'desktop'" #between>
-      <div class="character-summary-strip" :class="{ 'is-collapsed': scrolled }" :inert="scrolled" :aria-hidden="scrolled || undefined">
-        <div class="summary-clip"><DndSheetStrip :format="format" @open="panel = $event" /></div>
+      <div ref="stripViewport" class="character-summary-strip">
+        <DndSheetStrip :format="format" @open="panel = $event" />
       </div>
     </template>
     <template v-if="tabs.length" #navigation>
       <CharacterSheetTabs :pill="compact || stackedNavigation" :tabs="tabs" :active-tab="activeTab" @select="emit('select-tab', $event)" />
     </template>
     <template #actions>
-      <ActionButton v-if="dnd && format !== 'desktop' && scrolled" variant="quiet" icon-only aria-label="Сводка персонажа" @click="panel = 'summary'"><template #icon><Ellipsis :size="18" /></template></ActionButton>
+      <div v-if="dnd" class="heading-tools" :class="{ 'heading-tools--stacked': compact && session && !modal }">
+        <CharacterBlock block-id="rest" :options="{ embedded: true, header: true }" />
+        <CharacterBlock block-id="settings" :options="{ header: true }" />
+      </div>
       <SettingsMenuTile v-if="showMenu" :block="{ props: { embedded: true } }" />
-  <DndOverviewDialog v-if="dnd && panel" :panel="panel" @open="panel = $event" @close="panel = ''" />
+      <DndOverviewDialog v-if="dnd && panel" :panel="panel" @open="panel = $event" @close="panel = ''" />
       <CharacterSessionControl v-if="!modal" compact :session="session" :controller="transfers" />
     </template>
   </WorkspaceHeader>
 </template>
 <script setup>
 defineOptions({ inheritAttrs: false })
-import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
+import CharacterBlock from './CharacterBlock.vue'
 import { useRouter } from 'vue-router'
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { ActionButton } from '@sylvieshare/share-ui'
-import { ArrowLeft, Ellipsis } from '@lucide/vue'
+import { ArrowLeft } from '@lucide/vue'
 import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
 import CharacterSessionControl from './CharacterSessionControl.vue'
 import SettingsMenuTile from '../blocks/generic/SettingsMenuTile.vue'
@@ -47,26 +50,48 @@ import CharacterSheetTabs from './sheet/CharacterSheetTabs.vue'
 import DndSheetHeading from './sheet/DndSheetHeading.vue'
 import DndSheetStrip from './sheet/DndSheetStrip.vue'
 import DndOverviewDialog from './sheet/DndOverviewDialog.vue'
-const props = defineProps({ dnd: Boolean, format: String, scrolled: Boolean, modal: Boolean, contentWidth: String, name: String, subtitle: String, iconUrl: String, session: Object, transfers: Object, stackedNavigation: Boolean, compact: Boolean, showMenu: Boolean,
+const props = defineProps({ dnd: Boolean, format: String, modal: Boolean, contentWidth: String, name: String, subtitle: String, iconUrl: String, session: Object, transfers: Object, stackedNavigation: Boolean, compact: Boolean, showMenu: Boolean,
   tabs: { type: Array, default: () => [] }, activeTab: Number })
 const emit = defineEmits(['select-tab', 'close'])
 const panel = ref('')
-useTutorialAction('character-overview', async ({ onCleanup }) => {
-  const previous = panel.value
-  panel.value = 'summary'
-  onCleanup(() => { panel.value = previous })
-  await nextTick()
-})
+const stripViewport = ref(null)
+let stripObserver, stripHeight = 0, requestedScroll = 0
+function setSummaryScroll(value) {
+  requestedScroll = Math.max(0, value)
+  const viewport = stripViewport.value
+  if (!viewport || !stripHeight) return
+  const offset = Math.min(requestedScroll, stripHeight)
+  viewport.style.setProperty('--strip-offset', offset + 'px')
+  viewport.inert = offset === stripHeight
+  if (viewport.inert) viewport.setAttribute('aria-hidden', 'true')
+  else viewport.removeAttribute('aria-hidden')
+}
+watch(stripViewport, viewport => {
+  stripObserver?.disconnect()
+  if (!viewport) return
+  const row = viewport.firstElementChild
+  const measure = () => {
+    stripHeight = row.getBoundingClientRect().height
+    viewport.style.setProperty('--strip-full-height', stripHeight + 'px')
+    setSummaryScroll(requestedScroll)
+  }
+  measure()
+  stripObserver = new ResizeObserver(measure)
+  stripObserver.observe(row)
+}, { flush: 'post' })
+onBeforeUnmount(() => stripObserver?.disconnect())
+defineExpose({ setSummaryScroll })
 const router = useRouter()
 const iconFailed = ref(false)
 const monogram = computed(() => Array.from(String(props.name || '').trim())[0]?.toUpperCase() || '?')
 watch(() => props.iconUrl, () => { iconFailed.value = false })
 </script>
 <style scoped>
-.character-summary-strip { position:relative; z-index:1; display:grid; grid-template-rows:1fr; transition:grid-template-rows var(--motion-navigation) }
-.character-summary-strip.is-collapsed { grid-template-rows:0fr }
-.summary-clip { min-height:0; overflow:hidden }
-@media (prefers-reduced-motion: reduce) { .character-summary-strip { transition:none } }
+.heading-tools {display:flex;align-items:center;gap:2px;flex:none}
+.heading-tools--stacked {flex-direction:column;gap:0}
+.heading-tools :deep(.share-action-button) {width:36px;height:36px;min-height:36px;padding:0;justify-content:center}
+.character-summary-strip {position:relative;z-index:1;height:calc(var(--strip-full-height, 40px) - var(--strip-offset, 0px));overflow:clip}
+.character-summary-strip > :first-child {transform:translateY(calc(-1 * var(--strip-offset, 0px)))}
 .character-workspace-header {
   --workspace-header-identity-gap: var(--spacing-small);
   --workspace-subheader-background: var(--surface-raised);

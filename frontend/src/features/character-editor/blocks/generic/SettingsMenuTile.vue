@@ -1,6 +1,7 @@
 <template>
   <div ref="menuAnchor" class="sm-wrap">
-    <UtilityCell v-if="block?.props?.embedded" inline label="Меню персонажа" :active="open" aria-haspopup="menu" :aria-expanded="open" @click="open = !open">
+    <ActionButton v-if="block?.props?.header" variant="quiet" icon-only aria-label="Меню персонажа" title="Настройки персонажа" aria-haspopup="menu" :aria-expanded="open" @click="open = !open"><template #icon><Settings :size="18" /></template></ActionButton>
+    <UtilityCell v-else-if="block?.props?.embedded" inline label="Меню персонажа" :active="open" aria-haspopup="menu" :aria-expanded="open" @click="open = !open">
       <template #icon><img v-if="iconSrc" class="sm-ic" :src="iconSrc" :style="iconStyle" alt="" aria-hidden="true" /></template>
       <span class="sm-sub">Меню</span>
     </UtilityCell>
@@ -66,7 +67,8 @@ import TutorialRestart from '@/features/tutorials/components/TutorialRestart.vue
 import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
 import { computed, inject, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { TileAccentStrip, MorphTile } from '@sylvieshare/share-ui'
+import { Settings } from '@lucide/vue'
+import { ActionButton, TileAccentStrip, MorphTile } from '@sylvieshare/share-ui'
 import { ToggleSwitch } from '@sylvieshare/share-ui'
 import ContentSourcesModal from '@/features/character-editor/components/ContentSourcesModal.vue'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'

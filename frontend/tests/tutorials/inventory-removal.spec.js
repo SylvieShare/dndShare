@@ -62,7 +62,6 @@ for (const mobile of [false, true]) test(`inventory removal and HP calculator sa
     data: expect.objectContaining({ count: 2, remaining: 0 }),
   })])
 
-  if (mobile) await page.getByRole('button', { name: 'Сводка персонажа', exact: true }).click()
   await page.locator('[data-tutorial="character-hp"]:visible').click()
   const editor = page.locator('[data-tutorial="character-hp-editor"]')
   await editor.getByRole('button', { name: '8', exact: true }).click()

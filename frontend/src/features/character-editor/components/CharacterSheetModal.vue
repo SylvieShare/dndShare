@@ -2,8 +2,8 @@
   <AppModal fullscreen :z-index="zIndex" @close="emit('close')">
     <CharacterEditionDialog :controller="edition" />
     <div ref="chromeRoot" :inert="edition.busy" class="csm share-app-canvas" :class="{ 'csm--preview': previewMode }">
-      <CharacterWorkspaceHeader v-if="template?.system === 'dnd5e' && !loading" dnd modal data-sheet-chrome
-        :format="windowFormat" :scrolled="summaryScrolled" :compact="windowFormat === 'phone'" :name="charName" :subtitle="charSub" :icon-url="iconImageUrl || data.values?.ava?.url"
+      <CharacterWorkspaceHeader ref="sheetHeader" v-if="template?.system === 'dnd5e' && !loading" dnd modal data-sheet-chrome
+        :format="windowFormat" :compact="windowFormat === 'phone'" :name="charName" :subtitle="charSub" :icon-url="iconImageUrl || data.values?.ava?.url"
         @close="emit('close')" />
       <CharEditorToolbar v-else data-sheet-chrome
         modal
@@ -35,7 +35,7 @@
         </div>
 
         <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="initializeCharacter">Повторить</button></div>
-        <CharacterSwipePager @scroll-position="summaryScrolled = $event > 48" v-else-if="template && compactLayout" ref="swipePagerEl" :controller="swipe" :tabs="activeTabs">
+        <CharacterSwipePager @scroll-position="sheetHeader?.setSummaryScroll($event)" v-else-if="template && compactLayout" ref="swipePagerEl" :controller="swipe" :tabs="activeTabs">
           <template #default="{ index }">
             <div class="container" :style="containerWidthForTab(index)">
               <CharacterTabPane :definition="template" :format="format" :section="activeTabs[index]?.id"
@@ -112,7 +112,7 @@ const {
   updateValue, updateValues, updateVar, onPublicToggle: updatePublicVisible,
 } = useCharacterData(props.uuid, format)
 provideSheetFields(template, data, onUpdateValue, onUpdateVar)
-const summaryScrolled = ref(false)
+const sheetHeader = ref(null)
 
 
 const pendingSessionEvents = []

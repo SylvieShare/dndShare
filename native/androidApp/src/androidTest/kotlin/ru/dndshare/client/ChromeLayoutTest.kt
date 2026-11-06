@@ -19,6 +19,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.layout.positionOnScreen
@@ -39,6 +40,55 @@ import ru.dndshare.client.ui.character.CharacterListSubheader
 import ru.dndshare.client.ui.designsystem.*
 
 class ChromeLayoutTest {
+    @Test fun sheetRowFollowsEachPixelWithoutResizingTheContent() {
+        val scroll = mutableIntStateOf(0)
+        val tabs = AtomicReference<androidx.compose.ui.layout.LayoutCoordinates>()
+        val header = AtomicReference<androidx.compose.ui.layout.LayoutCoordinates>()
+        val inset = AtomicInteger(-1)
+        val measures = AtomicInteger()
+        ActivityScenario.launch(ComponentActivity::class.java).use { scenario ->
+            scenario.onActivity { activity -> activity.setContent {
+                CompositionLocalProvider(LocalDensity provides Density(1f)) {
+                    ShareChromeLayout(
+                        blurEnabled = false,
+                        header = { Spacer(Modifier.fillMaxWidth().height(60.dp).onGloballyPositioned { header.set(it) }) },
+                        collapsibleRow = { Spacer(Modifier.height(40.dp)) },
+                        rowScrollOffset = { height -> scroll.intValue.coerceAtMost(height) },
+                        subheader = { Spacer(Modifier.fillMaxWidth().height(44.dp).onGloballyPositioned { tabs.set(it) }) },
+                    ) { padding ->
+                        Box(Modifier.fillMaxSize().layout { measurable, constraints ->
+                            measures.incrementAndGet()
+                            inset.set(padding.calculateTopPadding().roundToPx())
+                            val child = measurable.measure(constraints)
+                            layout(child.width, child.height) { child.place(0, 0) }
+                        })
+                    }
+                }
+            } }
+            TouchRobot.await("Измерение шапки") { tabs.get() != null && header.get() != null && inset.get() > 0 }
+            val instrument = InstrumentationRegistry.getInstrumentation()
+            instrument.waitForIdleSync()
+            fun visibleRowHeight(): Int {
+                var height = 0
+                instrument.runOnMainSync {
+                    height = (tabs.get().positionInWindow().y - header.get().positionInWindow().y).roundToInt() - header.get().size.height
+                }
+                return height
+            }
+            val top = visibleRowHeight()
+            assertEquals(40, top)
+            val full = inset.get()
+            val initialMeasures = measures.get()
+            for (offset in listOf(1, 17, 40, 28, 1, 0)) {
+                scenario.onActivity { scroll.intValue = offset }
+                instrument.waitForIdleSync()
+                TouchRobot.await("Смещение строки на $offset (высота ${visibleRowHeight()})") { visibleRowHeight() == top - offset }
+                assertEquals(full, inset.get())
+            }
+            assertEquals(initialMeasures, measures.get(), "Движение шапки не перемеряет лист")
+        }
+    }
+
     @Test
     fun sheetSubheaderCapsuleFitsAndCentersItsNavigation() {
         val bounds = AtomicReference(Rect.Zero)

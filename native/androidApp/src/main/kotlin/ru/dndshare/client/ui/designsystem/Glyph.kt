@@ -38,6 +38,7 @@ enum class Glyph(@param:DrawableRes val resource: Int) {
     Shapes(R.drawable.lucide_shapes),
     Coins(R.drawable.lucide_coins),
     Gem(R.drawable.lucide_gem),
+    Sparkles(R.drawable.lucide_sparkles),
     Zap(R.drawable.lucide_zap),
     Heart(R.drawable.lucide_heart),
     Badge(R.drawable.lucide_badge),

@@ -1,6 +1,7 @@
 package ru.dndshare.client.ui.character
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,6 +21,7 @@ internal fun SheetHeaderWidgets(
     ui: CharacterSheetUiState,
     model: CharacterSheetViewModel,
     format: LayoutFormat,
+    dnd: SheetContext?,
 ) {
     val session = ui.remote.sessions.firstOrNull { it.uuid == ui.remote.sessionUuid }
     val app = LocalHeaderConnection.current
@@ -40,55 +42,14 @@ internal fun SheetHeaderWidgets(
         Modifier.widthIn(max = if (format == LayoutFormat.Phone) 202.dp else 440.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        if (dnd != null) DndHeaderTools(
+            stacked = session != null && format == LayoutFormat.Phone,
+            canRest = dnd.canEdit, rest = { dnd.edit("rest") }, settings = { dnd.edit("menu") },
+        )
         if (session != null) {
-            Row(
-                Modifier.weight(1f, fill = false)
-                    .heightIn(min = 48.dp)
-                    .clickable { model.edit("campaign") }
-                    .padding(horizontal = 4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-            ) {
-                val connection = if (ui.campaign.sessionUuid == session.uuid) ui.campaign.connection else SessionConnection.Connecting
-                Box {
-                    AppGlyph(Glyph.Sessions, Modifier.size(20.dp), WebPalette.TextMuted)
-                    val color = when (connection) {
-                        SessionConnection.Connected -> WebPalette.Success
-                        SessionConnection.Connecting -> WebPalette.Info
-                        SessionConnection.Offline -> WebPalette.Danger
-                    }
-                    Spacer(Modifier.align(Alignment.BottomEnd).size(7.dp).background(color, CircleShape)
-                        .semantics { contentDescription = connection.label })
-                }
-                Column(Modifier.weight(1f, fill = false)) {
-                    Text(
-                        session.name,
-                        style = ShareTypography.context,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    if (format != LayoutFormat.Phone)
-                        Text(
-                            listOfNotNull(session.chapterNumber, session.chapterName)
-                                .joinToString(" · ")
-                                .ifBlank { "Игровая сессия" },
-                            style = ShareTypography.context,
-                            color = WebPalette.TextMuted,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                }
-            }
-            SessionHeaderAction(Glyph.Characters, "Игроки", ui.campaign.players.size) {
-                model.edit("campaign:players")
-            }
-            SessionHeaderAction(
-                Glyph.Bell,
-                "События",
-                ui.campaign.transfers.size + ui.campaign.pending.size,
-            ) {
-                model.edit("campaign:events")
-            }
+            val connection = if (ui.campaign.sessionUuid == session.uuid) ui.campaign.connection else SessionConnection.Connecting
+            SheetSessionBadge(session.name, connection, ui.campaign.players.size, ui.campaign.transfers.size + ui.campaign.pending.size,
+                session = { model.edit("campaign") }, players = { model.edit("campaign:players") }, events = { model.edit("campaign:events") })
         }
         HeaderConnectionWidget(
             HeaderConnectionState(
@@ -109,13 +70,49 @@ internal fun SheetHeaderWidgets(
 }
 
 @Composable
+internal fun DndHeaderTools(stacked: Boolean, canRest: Boolean, rest: () -> Unit, settings: () -> Unit) {
+    val buttons: @Composable () -> Unit = {
+        IconButton(rest, Modifier.size(36.dp).semantics { contentDescription = "Отдых и рассвет" }, enabled = canRest) {
+            AppGlyph(Glyph.Rest, Modifier.size(18.dp), WebPalette.TextSecondary)
+        }
+        IconButton(settings, Modifier.size(36.dp).semantics { contentDescription = "Меню персонажа" }) {
+            AppGlyph(Glyph.Settings, Modifier.size(18.dp), WebPalette.TextSecondary)
+        }
+    }
+    if (stacked) Column { buttons() } else Row { buttons() }
+}
+
+@Composable
+internal fun SheetSessionBadge(name: String, connection: SessionConnection, playerCount: Int, eventCount: Int,
+    session: () -> Unit, players: () -> Unit, events: () -> Unit) {
+    Column(Modifier.width(100.dp).background(WebPalette.Surface, RoundedCornerShape(DesignTokens.Radius.Tile))
+        .padding(horizontal = 6.dp, vertical = 2.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            SessionHeaderAction(Glyph.Characters, "Игроки", playerCount, players)
+            SessionHeaderAction(Glyph.Bell, "События", eventCount, events)
+        }
+        Row(Modifier.heightIn(min = 22.dp).clickable(onClick = session), verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            val tint = when (connection) {
+                SessionConnection.Connected -> WebPalette.Success
+                SessionConnection.Connecting -> WebPalette.Info
+                SessionConnection.Offline -> WebPalette.Danger
+            }
+            Spacer(Modifier.size(6.dp).background(tint, CircleShape).semantics { contentDescription = connection.label })
+            Text(name, style = ShareTypography.context, color = WebPalette.TextSecondary,
+                maxLines = 1, overflow = TextOverflow.Ellipsis)
+        }
+    }
+}
+
+@Composable
 private fun SessionHeaderAction(icon: Glyph, label: String, count: Int, click: () -> Unit) {
-    Box(Modifier.size(40.dp), contentAlignment = Alignment.Center) {
+    Box(Modifier.size(36.dp, 34.dp), contentAlignment = Alignment.Center) {
         IconButton(
             click,
-            Modifier.size(40.dp).semantics { contentDescription = "$label: $count" },
+            Modifier.size(36.dp, 34.dp).semantics { contentDescription = "$label: $count" },
         ) {
-            AppGlyph(icon, Modifier.size(20.dp))
+            AppGlyph(icon, Modifier.size(18.dp))
         }
         Text(
             count.toString(),

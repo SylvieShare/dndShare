@@ -36,71 +36,56 @@ internal fun DndUtilities() {
         listOf(
             Triple("КД", context.mechanics.armor.total.toString(), "shield.svg"),
             Triple("ИНИЦИАТИВА", signed(bonus), "initiative.svg"),
-            Triple("Меню", "", "menu"),
             Triple("СКОРОСТЬ", "${context.mechanics.speed()}фт", "speed.svg"),
             Triple("МАСТЕРСТВО", signed(sheet.proficiency()), "prof-bonus.svg"),
-            Triple("Отдых", "", "rest"),
         )
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(15.dp)) {
         ShareTile(framed = false, contentPadding = PaddingValues(0.dp)) {
             Column {
-                metrics.chunked(3).forEachIndexed { row, entries ->
+                metrics.chunked(2).forEachIndexed { row, entries ->
                     if (row > 0) HorizontalDivider()
                     Row {
                         entries.forEachIndexed { index, (label, value, icon) ->
                             if (index > 0) VerticalDivider(Modifier.height(70.dp))
-                            val action = icon.takeIf { it == "menu" || it == "rest" }
-                            val editTarget =
-                                action
-                                    ?: "utility:" +
-                                        when (icon) {
-                                            "shield.svg" -> "armor"
-                                            "initiative.svg" -> "initiative"
-                                            "speed.svg" -> "speed"
-                                            else -> "prof_bonus"
-                                        }
+                            val editTarget = when (icon) {
+                                "shield.svg" -> "utility:armor"
+                                "initiative.svg" -> "utility:initiative"
+                                "speed.svg" -> "utility:speed"
+                                else -> "utility:prof_bonus"
+                            }
                             Column(
                                 Modifier.weight(1f)
                                     .height(70.dp)
-                                    .clickable(enabled = action == "menu" || context.canEdit) {
+                                    .clickable(enabled = context.canEdit) {
                                         if (icon == "initiative.svg") initiativeMenu = true
                                         else context.edit(editTarget)
                                     }
                                     .padding(horizontal = 10.dp, vertical = 6.dp),
                                 verticalArrangement = Arrangement.Center,
                             ) {
-                                if (action == null)
-                                    Text(
-                                        label,
-                                        fontSize = 10.sp,
-                                        lineHeight = 13.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = WebPalette.TextMuted,
-                                    )
+                                Text(
+                                    label,
+                                    fontSize = 10.sp,
+                                    lineHeight = 13.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = WebPalette.TextMuted,
+                                )
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                                 ) {
-                                    if (action != null)
-                                        AppGlyph(
-                                            if (action == "menu") Glyph.Settings else Glyph.Rest,
-                                            Modifier.size(20.dp),
-                                        )
-                                    else
-                                        AsyncImage(
-                                            "file:///android_asset/character-sheet/$icon",
-                                            null,
-                                            imageLoader = context.images,
-                                            colorFilter = ColorFilter.tint(WebPalette.TextMuted),
-                                            modifier = Modifier.size(20.dp),
-                                        )
+                                    AsyncImage(
+                                        "file:///android_asset/character-sheet/$icon",
+                                        null,
+                                        imageLoader = context.images,
+                                        colorFilter = ColorFilter.tint(WebPalette.TextMuted),
+                                        modifier = Modifier.size(20.dp),
+                                    )
                                     Text(
-                                        if (action != null) label else value,
-                                        fontSize = if (action != null) 13.sp else 22.sp,
+                                        value,
+                                        fontSize = 22.sp,
                                         lineHeight = 24.sp,
-                                        fontWeight =
-                                            if (action != null) FontWeight.Bold
-                                            else FontWeight.Normal,
+                                        fontWeight = FontWeight.Normal,
                                     )
                                 }
                                 if (icon == "initiative.svg")
@@ -123,38 +108,27 @@ internal fun DndUtilities() {
     }
 }
 
-@Composable
-internal fun DndLevel(level: Int, experience: Int) {
-    val context = LocalCharacterSheet.current
-    val thresholds =
-        listOf(
-            0,
-            300,
-            900,
-            2700,
-            6500,
-            14000,
-            23000,
-            34000,
-            48000,
-            64000,
-            85000,
-            100000,
-            120000,
-            140000,
-            165000,
-            195000,
-            225000,
-            265000,
-            305000,
-            355000,
-        )
+private val thresholds = listOf(
+    0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000,
+    85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000,
+)
+
+internal data class DndLevelProgress(val next: Int?, val percent: Float)
+
+internal fun dndLevelProgress(level: Int, experience: Int): DndLevelProgress {
     val previous = thresholds[(level - 1).coerceIn(thresholds.indices)]
     val next = thresholds.getOrNull(level)
     val percent =
         if (next != null && next > previous)
             ((experience - previous).toFloat() / (next - previous)).coerceIn(0f, 1f)
         else 1f
+    return DndLevelProgress(next, percent)
+}
+
+@Composable
+internal fun DndLevel(level: Int, experience: Int) {
+    val context = LocalCharacterSheet.current
+    val (next, percent) = dndLevelProgress(level, experience)
     ShareTile(
         Modifier.fillMaxWidth().heightIn(min = 64.dp),
         onClick = if (context.canEdit) ({ context.edit("level") }) else null,

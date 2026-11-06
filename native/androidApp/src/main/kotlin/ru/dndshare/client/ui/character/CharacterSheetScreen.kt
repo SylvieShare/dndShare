@@ -1,12 +1,12 @@
 package ru.dndshare.client.ui.character
 
+import kotlin.math.roundToInt
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -93,11 +93,8 @@ private fun CharacterSheetBody(
         }
     }
     val mechanics = ui.mechanics
-    val densityForSheet = androidx.compose.ui.platform.LocalDensity.current
-    var stripHeight by remember(format) { mutableStateOf(0.dp) }
-    var visibleStripHeight by remember(format) { mutableStateOf(0.dp) }
     var overview by androidx.compose.runtime.saveable.rememberSaveable(model.uuid) { mutableStateOf<String?>(null) }
-    var scrolled by remember(section, format) { mutableStateOf(false) }
+    val pageScrollStates = remember(model.uuid, format) { mutableStateMapOf<SheetSection, androidx.compose.foundation.ScrollState>() }
     val sheetContext = if (sheet != null && mechanics != null)
         model.sheetContext(ui, sheet, mechanics, images, canEdit) else null
     val dndContext = sheetContext?.takeIf { it.sheet.templateName == "DND5" }
@@ -128,27 +125,29 @@ private fun CharacterSheetBody(
                     close,
                     backTitle,
                     navigationInHeader = false,
-                    heading = dndContext?.let { ctx -> { DndHeading(ctx, format, scrolled) { overview = it } } },
-                    actions = { SheetHeaderWidgets(ui, model, format) },
+                    heading = dndContext?.let { ctx -> { DndHeading(ctx, format) { overview = it } } },
+                    actions = { SheetHeaderWidgets(ui, model, format, dndContext) },
                     menu =
                         if (sheet?.templateName == "VTM20") ({ model.edit("menu") })
                         else null,
                 )
             },
+            collapsibleRow = if (dndContext != null && format != LayoutFormat.Wide) ({
+                CompositionLocalProvider(LocalCharacterSheet provides dndContext) {
+                    DndSummaryStrip(format) { overview = it }
+                }
+            }) else null,
+            rowScrollOffset = { height ->
+                if (pager == null || dndContext == null || height == 0) 0 else {
+                    val position = (pager.currentPage + pager.currentPageOffsetFraction).coerceIn(0f, sections.lastIndex.toFloat())
+                    val first = position.toInt()
+                    fun offset(index: Int) = (pageScrollStates[sections[index]]?.value ?: 0).coerceAtMost(height)
+                    val from = offset(first)
+                    (from + (offset((first + 1).coerceAtMost(sections.lastIndex)) - from) * (position - first)).roundToInt()
+                }
+            },
             subheader = {
                 Column {
-                    if (dndContext != null && format != LayoutFormat.Wide) androidx.compose.animation.AnimatedVisibility(
-                        visible = !scrolled,
-                        modifier = Modifier.onSizeChanged { visibleStripHeight = with(densityForSheet) { it.height.toDp() } },
-                        enter = androidx.compose.animation.expandVertically(expandFrom = Alignment.Top),
-                        exit = androidx.compose.animation.shrinkVertically(shrinkTowards = Alignment.Top),
-                    ) {
-                        CompositionLocalProvider(LocalCharacterSheet provides dndContext) {
-                            Box(Modifier.onSizeChanged { stripHeight = with(densityForSheet) { it.height.toDp() } }) {
-                                DndSummaryStrip(format) { overview = it }
-                            }
-                        }
-                    }
                     if (sheet != null && pager != null && format != LayoutFormat.Wide)
                         ShareSubheader(
                             maxContentWidth = DesignTokens.Layout.SheetMax,
@@ -217,9 +216,10 @@ private fun CharacterSheetBody(
                                             contentAlignment = Alignment.TopCenter,
                                         ) {
                                             val pageScroll = rememberScrollState()
-                                            val hideSummary by remember(pageScroll) { derivedStateOf { pageScroll.value > with(densityForSheet) { 48.dp.roundToPx() } } }
-                                            if (page == section && sheet.templateName == "DND5")
-                                                LaunchedEffect(hideSummary, section) { scrolled = hideSummary }
+                                            DisposableEffect(pageScrollStates, page, pageScroll) {
+                                                pageScrollStates[page] = pageScroll
+                                                onDispose { pageScrollStates.remove(page) }
+                                            }
                                             Column(
                                                 Modifier.widthIn(
                                                         max =
@@ -233,7 +233,7 @@ private fun CharacterSheetBody(
                                                         end = DesignTokens.Spacing.Page,
                                                         top =
                                                             chromePadding
-                                                                .calculateTopPadding() + (if (dndContext != null) (stripHeight - visibleStripHeight).coerceAtLeast(0.dp) else 0.dp) +
+                                                                .calculateTopPadding() +
                                                                 DesignTokens.Spacing
                                                                     .Page,
                                                         bottom =

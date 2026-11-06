@@ -1,7 +1,7 @@
 <template>
   <div class="rest-block">
-    <component :is="block?.props?.embedded ? 'div' : BaseTile" class="rest-tile" :color="block?.props?.embedded ? undefined : SHORT_COLOR">
-      <DndRestView :embedded="block?.props?.embedded" :interactive="ownerMode" @short="onShort" @long="onLong" @dawn="ownerMode && (dawnOpen = true)" />
+    <component :is="block?.props?.embedded ? 'div' : BaseTile" class="rest-tile" :class="{ 'rest-tile--header': block?.props?.header }" :color="block?.props?.embedded ? undefined : SHORT_COLOR">
+      <DndRestView :header="block?.props?.header" :embedded="block?.props?.embedded" :interactive="ownerMode" @short="onShort" @long="onLong" @dawn="ownerMode && (dawnOpen = true)" />
     </component>
 
     <AppModalFrame v-if="dawnOpen" title="Рассвет" @close="dawnOpen = false"><DndDawnEditor :values="values" @apply="applyDawn" @close="dawnOpen = false" /></AppModalFrame>
@@ -193,4 +193,5 @@ function emitPatch(patch) {
   min-height: 64px;
   overflow: hidden;
 }
+.rest-tile--header { min-height:0;height:auto;overflow:visible }
 </style>

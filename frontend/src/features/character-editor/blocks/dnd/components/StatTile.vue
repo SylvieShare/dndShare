@@ -147,5 +147,5 @@ function runAction() { if (props.rollable || canEdit.value) emit('action') }
 </style>
 
 <style scoped>
-.stat-strip { display:inline-flex; align-items:center; gap:4px; min-height:36px; padding:2px 3px; border:0; background:transparent; color:var(--text-1); font:inherit; font-weight:600; cursor:pointer } .stat-strip-label {display:none} .stat-strip img { width:16px; height:16px; object-fit:contain; opacity:.8 }
+.stat-strip { display:inline-flex; align-items:center; gap:4px; min-height:40px; padding:2px 0; border:0; background:transparent; color:var(--text-1); font:inherit; font-weight:600; cursor:pointer } .stat-strip-label {display:none} .stat-strip img { width:16px; height:16px; object-fit:contain; opacity:.8 }
 </style>

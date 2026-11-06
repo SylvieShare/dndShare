@@ -1,14 +1,8 @@
 <template>
   <component :is="compact ? 'div' : BaseTile" v-if="session && controller" class="campaign-block" :class="{ 'campaign-block--compact': compact }" data-tutorial="character-session">
-    <RouterLink v-if="compact" :to="`/sessions/${session.uuid}`" class="campaign-heading campaign-link" :title="[session.name, chapterLabel].filter(Boolean).join(' · ')">
-      <span class="campaign-label campaign-symbol-wrap">
-        <ScrollText :size="20" aria-hidden="true" />
-        <span v-if="linkState" class="campaign-dot" :class="'campaign-dot--' + linkState" role="img" :aria-label="linkLabel" :title="linkLabel" />
-      </span>
-      <span class="campaign-copy">
-        <span class="campaign-name">{{ session.name }}</span>
-        <span class="campaign-chapter">{{ chapterLabel || 'Игровая сессия' }}</span>
-      </span>
+    <RouterLink v-if="compact" :to="`/sessions/${session.uuid}`" class="campaign-heading campaign-link" :title="[session.name, chapterLabel || 'Игровая сессия'].filter(Boolean).join(' · ')">
+      <span v-if="linkState" class="campaign-dot" :class="'campaign-dot--' + linkState" role="img" :aria-label="linkLabel" :title="linkLabel" />
+      <span class="campaign-name">{{ session.name }}</span>
     </RouterLink>
     <div v-else class="campaign-heading">
       <span class="campaign-label campaign-symbol-wrap">
@@ -80,19 +74,16 @@ onBeforeUnmount(() => anchors.forEach((element, view) => props.controller.unregi
 .campaign-count { position: absolute; right: -5px; bottom: -5px; min-width: 21px; box-sizing: border-box; border: 2px solid var(--surface); border-radius: var(--r-pill); background: var(--surface-raised); color: var(--text-2); padding: 1px 5px; font-size: 10px; line-height: 15px; font-weight: 700; font-variant-numeric: tabular-nums; text-align: center; pointer-events: none; }
 .campaign-count--pending { background: var(--accent); color: var(--text-on-accent); }
 .campaign-icon--notify .campaign-symbol { color: var(--warning); animation: campaign-notification-pulse 1.5s ease-in-out infinite; transform-origin: 50% 15%; }
-.campaign-block--compact { flex-direction: row; align-items: center; gap: 12px; padding: 0; min-width: 0; max-width: min(420px, 48vw); }
-.campaign-block--compact .campaign-heading { padding: 6px; border-radius: var(--r-sm); }
-.campaign-link { color: var(--text-1); text-decoration: none; transition: color 160ms ease, background 160ms ease; }
-.campaign-link:hover { color: var(--accent); background: var(--surface-raised); }
-.campaign-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.campaign-copy { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.campaign-block--compact .campaign-name, .campaign-chapter { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.campaign-block--compact .campaign-name { color: inherit; font-size: 14px; }
-.campaign-chapter { color: var(--text-muted); font-size: 11px; line-height: 1.3; }
-.campaign-block--compact .campaign-actions { flex: none; align-items: center; gap: 10px; padding: 0 6px 4px 12px; border-left: 1px solid var(--border); }
-.campaign-block--compact .campaign-action { flex: none; }
-.campaign-block--compact .campaign-symbol { flex-basis: 20px; width: 20px; height: 20px; }
-.campaign-block--compact .campaign-label { flex-shrink: 0; }
+.campaign-block--compact {flex:none;display:flex;flex-direction:column-reverse;align-items:center;gap:0;width:100px;max-width:100%;box-sizing:border-box;padding:2px 6px 3px;background:var(--surface);border-radius:var(--radius-tile)}
+.campaign-block--compact .campaign-actions {align-items:center;justify-content:space-around;width:100%;padding:0;gap:4px}
+.campaign-block--compact .campaign-action {flex:none}
+.campaign-block--compact .campaign-icon {width:36px;height:34px;min-height:34px}
+.campaign-block--compact .campaign-symbol {width:18px;height:18px;flex-basis:18px}
+.campaign-block--compact .campaign-count {right:-2px;bottom:0;min-width:12px;border:0;padding:0 1px;font-size:10px;line-height:12px;background:var(--surface);color:var(--accent-soft)}
+.campaign-block--compact .campaign-link {min-width:0;max-width:100%;min-height:22px;gap:4px;padding:1px 2px;color:var(--text-2);text-decoration:none}
+.campaign-block--compact .campaign-dot {position:static;flex:none;width:6px;height:6px}
+.campaign-block--compact .campaign-name {overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:var(--type-context-size);line-height:1.2;color:inherit}
+.campaign-link:focus-visible {outline:2px solid var(--accent);outline-offset:2px}
 @keyframes campaign-notification-pulse {
   0%, 100% { transform: scale(1) rotate(0); filter: drop-shadow(0 0 2px color-mix(in srgb, var(--warning) 30%, transparent)); }
   35% { transform: scale(1.22) rotate(-12deg); filter: drop-shadow(0 0 8px var(--warning)); }

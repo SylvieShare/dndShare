@@ -13,6 +13,13 @@ export function levelExperience(data) {
   return { level, nextLevelExp, missingExp, canLevelUp: nextLevelExp !== null && missingExp === 0 }
 }
 
+export function levelProgressPercent(data) {
+  const { level, nextLevelExp } = levelExperience(data)
+  if (nextLevelExp === null) return 100
+  const from = EXPERIENCE[level - 1]
+  return Math.max(0, Math.min(100, ((Number(data?.exp) || 0) - from) * 100 / (nextLevelExp - from)))
+}
+
 export function levelUpDraftValues(values, levelData, expFloor) {
   return {
     ...values,

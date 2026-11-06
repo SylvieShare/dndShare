@@ -9,7 +9,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.semantics.ProgressBarRangeInfo
+import androidx.compose.ui.semantics.progressBarRangeInfo
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
@@ -22,7 +26,7 @@ import ru.dndshare.client.ui.LayoutFormat
 import ru.dndshare.client.ui.designsystem.*
 
 @Composable
-internal fun DndHeading(ctx: SheetContext, format: LayoutFormat, scrolled: Boolean, open: (String) -> Unit) {
+internal fun DndHeading(ctx: SheetContext, format: LayoutFormat, open: (String) -> Unit) {
     val sheet = ctx.sheet
     val subtitle = listOf(sheet.subtitle(), sheet.values["lvl"].objectValue()["level"]?.let { "${it.number()} ур." }.orEmpty()).filter(String::isNotBlank).joinToString(" · ")
     val hp = sheet.values["hp"].objectValue()
@@ -34,11 +38,23 @@ internal fun DndHeading(ctx: SheetContext, format: LayoutFormat, scrolled: Boole
     val image = sheet.iconImageUrl?.takeIf(String::isNotBlank) ?: sheet.portrait
     var failed by remember(image) { mutableStateOf(false) }
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        Box(Modifier.size(DesignTokens.Layout.SheetHeaderIcon).clip(RoundedCornerShape(DesignTokens.Radius.Input))
-            .clickable { open("profile") }.semantics { contentDescription = "Профиль персонажа" }, contentAlignment = Alignment.Center) {
-            if (image != null && !failed) AsyncImage(image, null, imageLoader = ctx.images, onError = { failed = true },
-                contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
-            else Text(sheet.name.take(1), style = ShareTypography.sheetHeader, color = WebPalette.AccentSoft)
+        val level = sheet.values["lvl"].objectValue()
+        val xp = level["exp"].number()
+        val progress = dndLevelProgress(level["level"].number(1), xp)
+        Column(Modifier.width(DesignTokens.Layout.SheetHeaderIcon).clickable { open("profile") }
+            .semantics { contentDescription = "Профиль персонажа" }, horizontalAlignment = Alignment.CenterHorizontally) {
+            Box(Modifier.fillMaxWidth().height(DesignTokens.Layout.SheetHeaderIcon - 5.dp)
+                .clip(RoundedCornerShape(DesignTokens.Radius.Input)), contentAlignment = Alignment.Center) {
+                if (image != null && !failed) AsyncImage(image, null, imageLoader = ctx.images, onError = { failed = true },
+                    contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+                else Text(sheet.name.take(1), style = ShareTypography.sheetHeader, color = WebPalette.AccentSoft)
+            }
+            Spacer(Modifier.height(2.dp))
+            Box(Modifier.fillMaxWidth().height(3.dp).clip(RoundedCornerShape(2.dp)).background(WebPalette.Raised)
+                .semantics { contentDescription = progress.next?.let { "Прогресс уровня: $xp / $it опыта" } ?: "Максимальный уровень"
+                    progressBarRangeInfo = ProgressBarRangeInfo(progress.percent, 0f..1f) }) {
+                Spacer(Modifier.fillMaxWidth(progress.percent).fillMaxHeight().background(WebPalette.AccentSoft))
+            }
         }
         Column(Modifier.weight(1f, fill = false)) {
             Row(Modifier.clickable { open("profile") }, verticalAlignment = Alignment.CenterVertically) {
@@ -50,7 +66,7 @@ internal fun DndHeading(ctx: SheetContext, format: LayoutFormat, scrolled: Boole
                 if (!ctx.canEdit || current <= 0) open("health") else ctx.edit("hp")
             }.semantics { contentDescription = "Здоровье: $current из $max" },
                 verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-                AppGlyph(Glyph.Heart, Modifier.size(14.dp), color)
+                SheetAssetIcon("hp-pulse.svg", ctx, Modifier.size(14.dp), color)
                 Text("$current / $max", style = ShareTypography.context, maxLines = 1)
                 if (temp > 0) Text("+$temp", style = ShareTypography.context, color = WebPalette.Info)
                 if (current <= 0) Text("Спасброски", style = ShareTypography.context, color = color)
@@ -60,8 +76,16 @@ internal fun DndHeading(ctx: SheetContext, format: LayoutFormat, scrolled: Boole
             }
         }
         if (format == LayoutFormat.Wide) StatusChip(ctx, Modifier.widthIn(max = 170.dp)) { open("statuses") }
-        else if (scrolled) MoreSummary { open("summary") }
     }
+}
+
+@Composable
+private fun SheetAssetIcon(asset: String, ctx: SheetContext, modifier: Modifier, tint: Color? = null) {
+    AsyncImage(
+        "file:///android_asset/character-sheet/$asset", null, ctx.images,
+        modifier = modifier, colorFilter = tint?.let { ColorFilter.tint(it) },
+        alpha = if (tint == null) .8f else 1f,
+    )
 }
 
 @Composable
@@ -75,17 +99,10 @@ private fun StatusChip(ctx: SheetContext, modifier: Modifier, click: () -> Unit)
     if ((values["inspiration"] as? JsonPrimitive)?.booleanOrNull == true) states.add("Вдохновение")
     Row(modifier.heightIn(min = 32.dp).clickable(onClick = click).semantics { contentDescription = "Состояния" },
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-        AppGlyph(Glyph.Zap, Modifier.size(14.dp), WebPalette.AccentSoft)
+        AppGlyph(Glyph.Sparkles, Modifier.size(14.dp), WebPalette.AccentSoft)
         Text(states.firstOrNull() ?: "Состояния", Modifier.weight(1f, fill = false), maxLines = 1, overflow = TextOverflow.Ellipsis,
             style = ShareTypography.context, color = WebPalette.AccentSoft)
         if (states.size > 1) Text("+${states.size - 1}", style = ShareTypography.context)
-    }
-}
-
-@Composable
-private fun MoreSummary(click: () -> Unit) {
-    Box(Modifier.size(36.dp).clickable(onClick = click).semantics { contentDescription = "Сводка персонажа" }, contentAlignment = Alignment.Center) {
-        AppGlyph(Glyph.More, Modifier.size(18.dp))
     }
 }
 
@@ -94,24 +111,23 @@ internal fun DndSummaryStrip(format: LayoutFormat, open: (String) -> Unit) {
     val ctx = LocalCharacterSheet.current
     var initiativeMenu by remember { mutableStateOf(false) }
     val bonus = initiativeSummaryBonus(ctx)
-    Row(Modifier.fillMaxWidth().padding(horizontal = DesignTokens.Spacing.Small),
+    Row(Modifier.fillMaxWidth().padding(horizontal = DesignTokens.Spacing.Page),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(if (format == LayoutFormat.Tablet) 14.dp else 8.dp)) {
-        @Composable fun metric(label: String, glyph: Glyph, value: String, click: () -> Unit) {
+        @Composable fun metric(label: String, asset: String, value: String, click: () -> Unit) {
             Row(Modifier.sizeIn(minWidth = 40.dp, minHeight = 40.dp).clickable(enabled = ctx.canEdit, onClick = click).semantics { contentDescription = "$label $value" },
                 verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-                AppGlyph(glyph, Modifier.size(16.dp), WebPalette.TextMuted)
+                SheetAssetIcon(asset, ctx, Modifier.size(16.dp))
                 if (format == LayoutFormat.Tablet) Text(label, style = ShareTypography.context, color = WebPalette.TextMuted)
                 Text(value, style = ShareTypography.group)
             }
         }
-        metric("КД", Glyph.Shield, ctx.mechanics.armor.total.toString()) { ctx.edit("utility:armor") }
+        metric("КД", "shield.svg", ctx.mechanics.armor.total.toString()) { ctx.edit("utility:armor") }
         Box {
-            metric("Инициатива", Glyph.Zap, signed(bonus)) { initiativeMenu = true }
+            metric("Инициатива", "initiative.svg", signed(bonus)) { initiativeMenu = true }
             SheetRollActions(initiativeMenu, { initiativeMenu = false }, SheetRollRequest("Инициатива", "initiative", bonus = bonus), "utility:initiative")
         }
-        metric("Скорость", Glyph.Gauge, "${ctx.mechanics.speed()} фт.") { ctx.edit("utility:speed") }
+        metric("Скорость", "speed.svg", "${ctx.mechanics.speed()} фт.") { ctx.edit("utility:speed") }
         StatusChip(ctx, Modifier.weight(1f)) { open("statuses") }
-        MoreSummary { open("summary") }
     }
 }
 

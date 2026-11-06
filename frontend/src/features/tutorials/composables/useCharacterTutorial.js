@@ -17,9 +17,6 @@ export function useCharacterTutorial({ root, mobile, ready, template, sourceVers
       activeTab.value = index
       await nextTick()
     } else {
-      if (format.value !== 'desktop' && name === 'character-menu') {
-        await actions.run('character-overview', context)
-      }
       await actions.run(name, context)
     }
   }
