@@ -30,55 +30,13 @@ import ru.dndshare.client.ui.designsystem.*
 
 @Composable
 internal fun DndAbilityTile(ability: DndAbility, compact: Boolean) {
-    val context = LocalCharacterSheet.current
-    val current = LocalSheetEditorPreview.current?.takeIf { it.fields.target == ability.id }
-    var retained by remember { mutableStateOf(current) }
-    SideEffect { if (current != null) retained = current }
-    ShareMorphSource(ability.id, Modifier.fillMaxWidth(), scrollPreview = false) { presentation ->
-        val fields = (current ?: retained)?.fields.takeIf { presentation.expanded }
-        val value = fields?.number?.toIntOrNull()?.takeIf { it >= 0 }
-        val projected =
-            remember(context.sheet, fields) {
-                if (value == null) context.sheet
-                else
-                    context.sheet.copy(
-                        data =
-                            applySheetPatches(
-                                context.sheet.data,
-                                runCatching { statFormPatches(fields!!, context.sheet) }
-                                    .getOrElse {
-                                        listOf(context.sheet.manualStatPatch(ability.id, value))
-                                    },
-                            )
-                    )
-            }
-        val mechanics =
-            remember(projected, context.items, context.metadata) {
-                DndDerivedValues(projected, context.items, context.metadata)
-            }
-        CompositionLocalProvider(
-            LocalCharacterSheet provides
-                context.copy(
-                    sheet = projected,
-                    canEdit = context.canEdit && !presentation.expanded,
-                    mechanics = mechanics,
-                )
-        ) {
-            // Material's layout reservation must not inflate the web's compact rows. Clickable
-            // still expands pointer targets to the platform minimum independently of this size.
-            CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
-                DndAbilityFace(ability, compact, presentation)
-            }
-        }
+    CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
+        DndAbilityFace(ability, compact)
     }
 }
 
 @Composable
-private fun DndAbilityFace(
-    ability: DndAbility,
-    compact: Boolean,
-    presentation: ShareMorphPresentation,
-) {
+private fun DndAbilityFace(ability: DndAbility, compact: Boolean) {
     val context = LocalCharacterSheet.current
     val sheet = context.sheet
     val data = sheet.values[ability.id].objectValue()
@@ -100,7 +58,6 @@ private fun DndAbilityFace(
         "saving_throw",
         ability.suggestId,
         bonus = save,
-        manualMode = data.text("save_roll_mode").ifBlank { "auto" },
         proficiencyRank = if (proficient) 1 else 0,
     )
     val checkRequest = SheetRollRequest(
@@ -110,7 +67,6 @@ private fun DndAbilityFace(
             "check_bonus",
             RuleContext(kind = "ability_check", ability = ability.suggestId),
         ),
-        manualMode = data.text("check_roll_mode").ifBlank { "auto" },
     )
     val skills = (ability.skills.map(Long::toString) + data["skills"].objectValue().keys).distinct()
     val titleSuggest = context.metadata.suggests["16"]?.firstOrNull { it.id == ability.suggestId }
@@ -119,7 +75,6 @@ private fun DndAbilityFace(
             runCatching { Color(android.graphics.Color.parseColor(it)) }.getOrNull()
         } ?: WebPalette.TextMuted
     // A finite upper bound permits natural full height inside the sheet's scroll container.
-    // In the modal the viewport is bounded, so only visible rows are remeasured during reflow.
     val sourceLimit =
         with(androidx.compose.ui.platform.LocalDensity.current) {
             androidx.compose.ui.platform.LocalWindowInfo.current.containerSize.height
@@ -138,7 +93,7 @@ private fun DndAbilityFace(
             .clip(RoundedCornerShape(DesignTokens.Radius.Tile))
             .background(WebPalette.Surface)
             .shareAccentStrip(color),
-        userScrollEnabled = presentation.expanded,
+        userScrollEnabled = false,
         contentPadding = PaddingValues(
             top = DesignTokens.Spacing.Small,
             bottom = DesignTokens.Spacing.Medium,
@@ -157,7 +112,7 @@ private fun DndAbilityFace(
                         .wrapContentHeight(Alignment.CenterVertically)
                         .clickable(enabled = context.canEdit) { context.edit(ability.id) }
                         .semantics {
-                            if (context.canEdit || presentation.expanded) {
+                            if (context.canEdit) {
                                 contentDescription = "Редактировать: ${ability.title}"
                             }
                         },
@@ -175,7 +130,6 @@ private fun DndAbilityFace(
                             contentDescription = "${ability.title} — спасбросок"
                             if (proficient) stateDescription = "Владение"
                         },
-                    enabled = !presentation.expanded,
                     color = WebPalette.Raised.copy(alpha = .6f).compositeOver(WebPalette.Surface),
                     border = if (saveActions) BorderStroke(1.dp, WebPalette.AccentSoft.copy(alpha = .35f)) else null,
                     contentColor = WebPalette.Text,
@@ -223,7 +177,7 @@ private fun DndAbilityFace(
             Row(
                 Modifier.fillMaxWidth()
                     .background(if (checkActions) WebPalette.Accent.copy(alpha = .09f) else Color.Transparent)
-                    .clickable(enabled = !presentation.expanded) { checkActions = true }
+                    .clickable { checkActions = true }
                     .padding(horizontal = DesignTokens.Spacing.Medium),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -296,7 +250,6 @@ private fun DndAbilityFace(
                 skill = skillContext.skill,
                 bonus = modifier + rank * sheet.proficiency() + skill["bonuses"].bonusTotal() +
                     context.mechanics.bonus("skill_bonus", skillContext.copy(proficient = rank > 0)),
-                manualMode = skill.text("roll_mode").ifBlank { "auto" },
                 proficiencyRank = rank,
             )
             Row(
@@ -327,7 +280,6 @@ private fun DndAbilityFace(
                     modifier = Modifier.semantics {
                         if (rank > 0) stateDescription = if (rank >= 2) "Мастерство" else "Владение"
                     },
-                    enabled = !presentation.expanded,
                     color = WebPalette.Raised,
                     border = if (skillActions) BorderStroke(1.dp, WebPalette.AccentSoft.copy(alpha = .35f)) else null,
                     contentColor = WebPalette.Text,

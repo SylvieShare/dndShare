@@ -34,7 +34,7 @@ createApp({ render: () => h('main', { style: 'max-width:320px;margin:20px' }, [h
   block: { id: 'DEX', content: { title: { suggest_type_id: 16, suggest_id: 2 }, suggest_type_id: 17, suggest_ids: [4] },
     props: { variant: window.innerWidth < 640 ? 'mobile' : 'desktop' } },
   value: state.value, values: {}, vars: { stats: { 2: 3 } },
-  'onUpdate:value': (...args) => window.writes.push(args),
+  'onUpdate:value': (key, value) => { window.writes.push([key, value]); state.value = value },
 }), h('section', { 'data-testid': 'utility-grid', style: 'display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:64px;gap:8px;width:320px;margin-top:20px' }, [
   ['КД', 13, '', '', 'shield', false],
   ['Инициатива', 1, '+', '', 'initiative', true],

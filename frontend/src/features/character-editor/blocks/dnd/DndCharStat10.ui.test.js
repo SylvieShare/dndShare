@@ -7,7 +7,10 @@ const source = readFileSync(fileURLToPath(new URL('./DndCharStat10.vue', import.
 describe('DndCharStat10 rolls', () => {
   it('passes the characteristic color to checks, saves, and skill rolls', () => {
     expect(source).toContain('diceStore.rollD20(title, bonus, mode, {')
-    expect(source.match(/rollD20Plus\(/g)).toHaveLength(7)
+    expect(source).toContain('color: statColor.value')
+    for (const kind of ['stat', 'save', 'skill']) {
+      expect(source).toMatch(new RegExp(`@roll-${kind}="[^"]*rollD20Plus\\(`))
+    }
   })
 
   it('builds the skill tooltip bonus breakdown from every bonus source', () => {

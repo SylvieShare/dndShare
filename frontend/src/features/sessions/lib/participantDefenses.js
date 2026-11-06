@@ -23,7 +23,7 @@ export function participantDefenses(values, items = new Map(), suggestItems = ()
     let score = resolveNumValue(values[skill.stat]?.value ?? 10)
     for (const rule of matchingDerivedEffects(effects, 'ability_minimum', context)) score = Math.max(score, Number(rule.value) || 0)
     const bonus = abilityModifier(score) + rank * proficiency + sumBonuses(saved.bonuses) + derivedNumericBonus(effects, 'skill_bonus', values, context).total
-    const mode = resolveRollMode(saved.roll_mode, derivedRollEffects(effects, context))
+    const mode = resolveRollMode('auto', derivedRollEffects(effects, context))
     const adjustment = mode.mode === 'advantage' ? 5 : mode.mode === 'disadvantage' ? -5 : 0
     return { ...skill, bonus, mode: mode.mode, value: 10 + bonus + adjustment,
       description: `10 ${bonus >= 0 ? '+' : '−'} ${Math.abs(bonus)}${adjustment ? ` ${adjustment > 0 ? '+ 5 (преимущество)' : '− 5 (помеха)'}` : ''}` }

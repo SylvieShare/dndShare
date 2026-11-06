@@ -45,7 +45,6 @@ data class SheetContext(
 val LocalCharacterSheet =
     compositionLocalOf<SheetContext> { error("Character sheet context is required") }
 
-val LocalSheetEditorPreview = compositionLocalOf<SheetEditorState?> { null }
 
 fun referencedItems(value: JsonElement): List<Long> = buildSet {
     fun collect(node: JsonElement) {

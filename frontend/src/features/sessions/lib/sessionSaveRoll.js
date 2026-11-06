@@ -36,6 +36,6 @@ export function sessionSaveProfile(target, ability, items, manualMode = 'auto', 
   }
   bonus += derivedNumericBonus(rules, 'save_bonus', values, context).total
   const armorModes = npc ? [] : armorAbilityRollEffects(deriveEquippedArmor(values, items, suggestItems, {}, derivedGrantedProficiencies(rules, 'armor_proficiency'), snapshot.rulesVersion || '2014'), ability)
-  const mode = resolveRollMode(manualMode === 'auto' ? stat.save_roll_mode || 'auto' : manualMode, [...derivedRollEffects(rules, context), ...armorModes])
+  const mode = resolveRollMode(manualMode, [...derivedRollEffects(rules, context), ...armorModes])
   return { bonus, ...mode, formula: matchingDerivedEffects(rules, 'roll_bonus', context).map(rule => rule.formula).filter(Boolean).join(' + ') }
 }

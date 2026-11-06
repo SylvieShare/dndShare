@@ -192,9 +192,9 @@ function basicDetails(kind) {
   ]
 }
 function editSelection() {
-  const id = rollMenu.value?.id
+  const { kind, id } = rollMenu.value
   rollMenu.value = null
-  emit('edit', id)
+  emit('edit', kind, id)
 }
 function confirmRoll(mode, excluded) {
   const selection = rollMenu.value

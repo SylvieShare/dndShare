@@ -83,7 +83,6 @@ internal fun initialFeatureInput(
                 buildJsonObject {
                     put("up", stat["save_up"] ?: JsonPrimitive(false))
                     put("bonuses", stat["save_bonuses"] ?: JsonArray(emptyList()))
-                    put("roll_mode", stat["save_roll_mode"] ?: JsonPrimitive("auto"))
                 }
             else
                 stat["skills"].objectValue()[parts.getOrNull(2)].objectValue().let { row ->
@@ -91,7 +90,6 @@ internal fun initialFeatureInput(
                         row +
                             mapOf(
                                 "up" to (row["up"] ?: JsonPrimitive(0)),
-                                "roll_mode" to (row["roll_mode"] ?: JsonPrimitive("auto")),
                             )
                     )
                 }
@@ -247,13 +245,13 @@ internal fun featureFormPatches(
                             mapOf(
                                 "save_up" to JsonPrimitive(input["up"] == JsonPrimitive(true)),
                                 "save_bonuses" to validatedBonuses(input["bonuses"]),
-                                "save_roll_mode" to
-                                    JsonPrimitive(input.text("roll_mode").ifBlank { "auto" }),
                             )
                     ),
                 )
             else {
                 val skills = current["skills"].objectValue()
+                if (input["remove"] == JsonPrimitive(true) && id.toLongOrNull() == null)
+                    return patch(stat, JsonObject(current + ("skills" to JsonObject(skills - id))))
                 val original = skills[id].objectValue()
                 val updated =
                     JsonObject(
@@ -261,8 +259,6 @@ internal fun featureFormPatches(
                             mapOf(
                                 "up" to JsonPrimitive(inputInteger(input, "up", max = 2)),
                                 "override_title" to JsonPrimitive(input.text("override_title")),
-                                "roll_mode" to
-                                    JsonPrimitive(input.text("roll_mode").ifBlank { "auto" }),
                                 "bonuses" to validatedBonuses(input["bonuses"]),
                             )
                     )

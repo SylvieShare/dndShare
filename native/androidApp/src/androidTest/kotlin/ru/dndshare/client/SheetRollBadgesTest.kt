@@ -32,7 +32,7 @@ import ru.dndshare.client.ui.designsystem.shareCanvas
 
 class SheetRollBadgesTest {
     @Test
-    fun abilityTileShowsManualAutomaticAndCancelledRollModes() {
+    fun abilityTileUsesEffectsEvenWithLegacyManualMode() {
         val instrument = InstrumentationRegistry.getInstrumentation()
         val sheet = SheetStateServer().sheet.copy(
             sourceVersion = "2014",
@@ -74,9 +74,6 @@ class SheetRollBadgesTest {
                         }
                     }
                 }
-                TouchRobot.await("Manual save advantage") {
-                    TouchRobot.find("Преимущество · Переопределено вручную") != null
-                }
                 TouchRobot.await("Disadvantage from exhaustion") {
                     TouchRobot.find("Помеха · Истощение") != null
                 }
@@ -87,6 +84,7 @@ class SheetRollBadgesTest {
                             "Тихий шаг" in description && "Истощение" in description
                     } != null
                 }
+                kotlin.test.assertNull(TouchRobot.find("Преимущество · Переопределено вручную"))
                 if (InstrumentationRegistry.getArguments().getString("captureRollBadges") == "true") {
                     instrument.uiAutomation.waitForIdle(350, 5_000)
                     val screenshot = requireNotNull(instrument.uiAutomation.takeScreenshot())

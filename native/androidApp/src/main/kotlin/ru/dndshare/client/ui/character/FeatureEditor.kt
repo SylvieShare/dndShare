@@ -3,6 +3,7 @@ package ru.dndshare.client.ui.character
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
@@ -38,6 +39,11 @@ internal fun FeatureEditor(
 ) {
     val form = FeatureFormScope(editor, input, readInput)
     val kind = editor.fields.target.substringBefore(':')
+    val skillId = editor.fields.target.substringAfterLast(':')
+    val skillOriginal = if (kind == "skill" && skillId != "save")
+        LocalCharacterSheet.current.metadata.suggests["15"]?.firstOrNull { it.id.toString() == skillId }?.value
+            ?: skillNames[skillId.toIntOrNull()]
+    else null
     val title =
         when (kind) {
             "journal-entry" -> "Запись дневника"
@@ -59,7 +65,10 @@ internal fun FeatureEditor(
             "identity" -> "Имя персонажа"
             "personality" -> personalityFields[editor.fields.target.substringAfter(':')].orEmpty()
             "money" -> "Кошелёк"
-            "skill" -> "Навык и спасбросок"
+            "skill" -> if (skillId == "save") {
+                val ability = dndAbilities.firstOrNull { it.id == editor.fields.target.split(':')[1] }
+                "${ability?.title.orEmpty()} — спасбросок"
+            } else editor.fields.input.text("override_title").ifBlank { skillOriginal ?: "Навык" }
             "utility" -> "Показатель"
             "proficiencies" -> "Владения"
             "inventory" -> "Предмет"
@@ -83,9 +92,17 @@ internal fun FeatureEditor(
         LocalShareFormInputs provides inputs,
         LocalRichCatalogue provides cache,
     ) {
-        ShareFormDialog(
-            title,
-            close,
+        ShareWindow(
+            onDismissRequest = close,
+            title = {
+                Text(androidx.compose.ui.text.buildAnnotatedString {
+                    append(title)
+                    if (!skillOriginal.isNullOrBlank() && skillOriginal != title)
+                        withStyle(androidx.compose.ui.text.SpanStyle(color = WebPalette.TextMuted)) {
+                            append(" ($skillOriginal)")
+                        }
+                }, style = ShareTypography.header)
+            },
             dismissEnabled = !editor.saving,
             actions = {
                 ShareTextButton(onClick = close, enabled = !editor.saving) {
@@ -278,30 +295,6 @@ internal fun FeatureFormScope.Choice(
 }
 
 @Composable
-private fun SkillFeatureFields(form: FeatureFormScope) {
-    if (form.editor.fields.target.endsWith(":save")) form.Toggle("up", "Владение спасброском")
-    else {
-        form.TextField("override_title", "Своё название")
-        form.Choice(
-            "up",
-            "Владение",
-            listOf("0" to "Без владения", "1" to "Владение", "2" to "Компетентность"),
-        )
-    }
-    form.Choice(
-        "roll_mode",
-        "Режим броска",
-        listOf(
-            "auto" to "Автоматически",
-            "normal" to "Обычно",
-            "advantage" to "Преимущество",
-            "disadvantage" to "Помеха",
-        ),
-    )
-    BonusFields(form)
-}
-
-@Composable
 private fun UtilityFeatureFields(form: FeatureFormScope) {
     val key = form.editor.fields.target.substringAfter(':')
     if (key != "armor")
@@ -314,61 +307,4 @@ private fun UtilityFeatureFields(form: FeatureFormScope) {
     if (key == "prof_bonus") form.Toggle("auto", "Рассчитывать по уровню")
     if (key == "initiative") form.Toggle("use_dex", "Учитывать ловкость")
     BonusFields(form)
-}
-
-@Composable
-internal fun BonusFields(form: FeatureFormScope) {
-    val bonuses = form.data["bonuses"].arrayValue()
-    if (bonuses.isNotEmpty()) Text("Бонусы", style = ShareTypography.context)
-    key(bonuses.size) {
-        bonuses.forEachIndexed { index, raw ->
-            val row = raw.objectValue()
-            if (row["readonly"] == JsonPrimitive(true))
-                Text(
-                    "${row.label()} ${signed(row["value"].number())}",
-                    style = ShareTypography.context,
-                )
-            else {
-                fun change(key: String, value: String) =
-                    form.row(listOf("bonuses"), index, key, JsonPrimitive(value))
-                ShareTextInput(
-                    row.text("title").ifBlank { row.text("name") },
-                    { change("title", it) },
-                    "Название бонуса",
-                )
-                SheetNumberInput("Значение", row.text("value")) { change("value", it) }
-                ShareTextButton(
-                    onClick = {
-                        form.input(
-                            "bonuses",
-                            JsonArray(
-                                form.data["bonuses"].arrayValue().filterIndexed { i, _ ->
-                                    i != index
-                                }
-                            ),
-                        )
-                    }
-                ) {
-                    Text("Убрать бонус", color = WebPalette.Danger)
-                }
-            }
-        }
-    }
-    ShareDashedAction(
-        "Добавить бонус",
-        onClick = {
-            form.input(
-                "bonuses",
-                JsonArray(
-                    form.data["bonuses"].arrayValue() +
-                        buildJsonObject {
-                            put("title", "Бонус")
-                            put("value", 0)
-                        }
-                ),
-            )
-        },
-        enabled = form.enabled,
-        compact = true,
-    )
 }

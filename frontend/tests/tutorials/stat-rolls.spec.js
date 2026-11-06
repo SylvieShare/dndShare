@@ -94,12 +94,31 @@ for (const width of [390, 834, 1920]) {
       await expect(menu).toHaveCount(0)
       await page.evaluate(() => { window.statState.value.check_roll_mode = 'normal' })
       await trigger.click()
-      await expect(advantage).toHaveAttribute('aria-pressed', 'false')
+      await expect(advantage).toHaveAttribute('aria-pressed', 'true')
       await expect(disadvantage).toHaveAttribute('aria-pressed', 'false')
       await advantage.click()
       await menu.getByRole('menuitem', { name: 'Бросить', exact: true }).click()
-      expect(await page.evaluate(() => window.rolls.map(roll => roll.mode))).toEqual(['normal', 'advantage'])
+      expect(await page.evaluate(() => window.rolls.map(roll => roll.mode))).toEqual(['normal', 'normal'])
       expect(await page.evaluate(() => window.writes)).toEqual([])
     })
   })
 }
+
+test('editing a skill keeps its original name and changes only that skill', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/tests/tutorials/fixtures/stat-rolls.html')
+  await page.getByRole('button', { name: 'Скрытность — проверка', exact: true }).click()
+  await page.getByRole('menuitem', { name: 'Изменить' }).click()
+  const dialog = page.getByRole('dialog')
+  await expect(dialog.getByRole('heading', { name: 'Скрытность', exact: true })).toBeVisible()
+  await dialog.getByPlaceholder('Скрытность').fill('Тихий шаг')
+  await expect(dialog.getByRole('heading', { name: 'Тихий шаг (Скрытность)' })).toBeVisible()
+  await dialog.getByRole('button', { name: 'Без владения', exact: true }).click()
+  await dialog.getByRole('button', { name: 'Добавить бонус' }).click()
+  await expect(dialog.getByText('Режим броска')).toHaveCount(0)
+  await expect.poll(() => page.evaluate(() => window.statState.value.skills[4])).toMatchObject({
+    up: 0, override_title: 'Тихий шаг', bonuses: [{ value: 0 }],
+  })
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('button', { name: 'Тихий шаг — проверка' })).toBeVisible()
+})

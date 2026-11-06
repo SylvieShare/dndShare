@@ -1,5 +1,5 @@
 <template>
-  <DndStatView v-bind="$attrs" ref="tileRef" class="stat-block" :data-tutorial="block.id === 'STR' ? 'character-stat' : undefined"
+  <DndStatView v-bind="$attrs" class="stat-block" :data-tutorial="block.id === 'STR' ? 'character-stat' : undefined"
     :title="displayTitle"
     :color="statColor"
     :suggest-svg="titleSuggest?.svg || ''"
@@ -26,99 +26,28 @@
     @roll-skill="(id, mode, excluded) => rollD20Plus(skillTitle(id), skillBonus(id), mode, 'ability_check', { proficiencyRank: skillProficiencyRank(id) }, excluded)"
   />
 
-  <MorphEditorShell
-    origin-radius="0px"
-    v-if="editorOpen"
-    :origin-rect="originRect"
-    :origin-el="originEl"
-    :color="statColor"
-    :nav="nav"
-    @close="closeEditor"
-  >
-    <template #view="{ revealed }">
-      <DndStatView
-        mode="panel"
-        :show-edit="true"
-        :edit-fade="revealed"
-        :mobile-variant="isMobileVariant"
-        :title="displayTitle"
-        :color="statColor"
-        :suggest-svg="titleSuggest?.svg || ''"
-        :mod="mod" :check-total="checkTotal" :proficiency-bonus="profBonus"
-        :raw="statDisplayValue"
-        :save="save"
-        :save-up="saveUp"
-        :skills="skillsView"
-        :check-mode="checkRollMode"
-        :check-mode-source="checkModeSource"
-        :check-mode-cancelled="checkResolved.cancelled"
-        :save-mode="saveRollMode"
-        :save-mode-source="saveModeSource"
-        :save-mode-cancelled="saveResolved.cancelled"
-        :skills-loading="skillsLoading"
-        :skill-skeleton-count="skillSkeletonCount"
-        :tooltip-max-desc="skillTooltipMaxDesc"
-        :tooltip-width="skillTooltipWidth"
-        @roll-stat="(mode, excluded) => rollD20Plus(`${displayTitle} — проверка`, checkTotal, mode, 'ability_check', {}, excluded)"
-        @roll-save="(mode, excluded) => rollD20Plus(`${displayTitle} — спасбросок`, save, mode, 'saving_throw', {}, excluded)"
-        @roll-skill="(id, mode, excluded) => rollD20Plus(skillTitle(id), skillBonus(id), mode, 'ability_check', { proficiencyRank: skillProficiencyRank(id) }, excluded)"
-      />
+  <AppModalFrame v-if="editor && canEdit" :title="editorTitle" :padded="false" :z-index="4200" width="460px" @close="editor = null">
+    <template v-if="originalTitle" #title>
+      <h2 class="stat-editor-title">{{ editorTitle }} <small>({{ originalTitle }})</small></h2>
     </template>
-
-    <template #editor>
-      <DndStatEditor
-        :title="displayTitle"
-        :base-data="numData"
-        :save-up="saveUp"
-        :save-source="derivedSaveSource"
-        :save-bonuses="statData.save_bonuses || []"
-        :skills="skillsView"
-        :allow-add-skills="!!block.content.allow_add_skills"
-        :check-roll-mode="statData.check_roll_mode || 'auto'"
-        :check-auto-mode="checkAutoMode"
-        :check-auto-source="checkAutoSource"
-        :save-roll-mode="statData.save_roll_mode || 'auto'"
-        :save-auto-mode="saveAutoMode"
-        :save-auto-source="saveAutoSource"
-        @update-base="onBaseChange"
-        @toggle-save="pickSave"
-        @update-save-bonuses="onSaveBonusesChange"
-        @update-check-roll-mode="value => setRollMode('check_roll_mode', value)"
-        @update-save-roll-mode="value => setRollMode('save_roll_mode', value)"
-        @open-skill="onOpenSkill"
-        @delete-skill="deleteSkill"
-        @add-skill="addSkill"
-      />
-    </template>
-
-    <template #sub>
-      <DndStatSkillEditor
-        v-if="editSkill"
-        :key="editSkillId"
-        :skill="editSkill"
-        :mod="mod"
-        :prof-bonus="profBonus"
-        :auto-mode="skillAutoMode(editSkillId)"
-        :auto-source="skillAutoSource(editSkillId)"
-        @change="onSkillChange"
-        @back="nav.backToDetail"
-      />
-    </template>
-  </MorphEditorShell>
+    <DndStatSkillEditor v-if="editor === 'skill' && editSkill" :skill="editSkill" :total="skillBonus(editSkillId)"
+      @change="onSkillChange" @remove="removeCustomSkill" />
+    <DndStatEditor v-else :saving-throw="editor === 'save'" :base-data="numData" :save-up="saveUp"
+      :save-source="derivedSaveSource" :save-bonuses="statData.save_bonuses || []"
+      @update-base="onBaseChange" @toggle-save="pickSave" @update-save-bonuses="onSaveBonusesChange" />
+  </AppModalFrame>
 </template>
 
 <script setup>
 defineOptions({ inheritAttrs: false })
-import { computed, inject, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import { abilityModifier, sumBonuses, resolveNumValue } from '@/shared/lib/dnd'
 import { armorAbilityRollEffects, resolveRollMode } from '@/features/character-editor/blocks/dnd/lib/rollMode'
 import DndStatEditor from '@/features/character-editor/blocks/dnd/components/DndStatEditor'
 import DndStatSkillEditor from '@/features/character-editor/blocks/dnd/components/DndStatSkillEditor'
 import DndStatView from '@/features/character-editor/blocks/dnd/components/DndStatView'
-import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import { useDiceStore } from '@/stores/dice'
-import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
-import { useSheetSubpages } from '@sylvieshare/share-ui'
 import { useSuggestStore } from '@/stores/suggest'
 
 const props = defineProps(['block', 'value', 'values', 'vars'])
@@ -127,10 +56,12 @@ const charCtx = inject('charCtx', { ownerMode: true })
 const canEdit = computed(() => !!charCtx.ownerMode)
 
 // ─── Editor window state ───────────────────────────────────────────────────────
-const tileRef = ref(null)
+const editor = ref(null)
 const editSkillId = ref(null)
-const nav = useSheetSubpages()
-const { editorOpen, originRect, originEl, openFrom, close: closeMorph } = useMorphOrigin()
+const editorTitle = computed(() => editor.value === 'skill' ? editSkill.value?.title || 'Навык'
+  : editor.value === 'save' ? `${displayTitle.value} — спасбросок` : displayTitle.value)
+const originalTitle = computed(() => editor.value === 'skill' && editSkill.value?.originalTitle !== editorTitle.value
+  ? editSkill.value?.originalTitle : '')
 
 // ─── Computeds ───────────────────────────────────────────────────────────────
 const statData = computed(() => props.value || {})
@@ -216,16 +147,8 @@ const suggestById = computed(() =>
 const baseSkillIds = computed(() => (props.block.content.suggest_ids || []).map(String))
 
 const skillsMap = computed(() => {
-  if (!statData.value.skills || typeof statData.value.skills !== 'object' || Array.isArray(statData.value.skills)) return {}
-  return Object.fromEntries(Object.entries(statData.value.skills).map(([id, data]) => [
-    String(id),
-    {
-      up: Number(data?.up) || 0,
-      override_title: data?.override_title || '',
-      bonuses: Array.isArray(data?.bonuses) ? data.bonuses : [],
-      roll_mode: data?.roll_mode || 'auto',
-    },
-  ]))
+  const skills = statData.value.skills
+  return skills && typeof skills === 'object' && !Array.isArray(skills) ? skills : {}
 })
 
 const skillsList = computed(() => {
@@ -237,13 +160,13 @@ const skillsList = computed(() => {
       return {
         id,
         up: Math.max(saved.up || 0, derivedSkillProficiency(id).rank),
-        manual_up: saved.up || 0,
+        manual_up: Number(saved.up) || 0,
+        originalTitle: suggest?.value || '',
         proficiency_source: derivedSkillProficiency(id).sources.map(rule => rule.source_label).join(' · '),
         override_title: saved.override_title || '',
-        title: saved.override_title || suggest?.value || id,
+        title: saved.override_title || suggest?.value || (baseSkillIds.value.includes(id) ? id : 'Навык'),
         desc: suggest?.desc || '',
         custom: !baseSkillIds.value.includes(id),
-        roll_mode: saved.roll_mode || 'auto',
       }
     })
     .filter(skill => suggestById.value[skill.id] || skillsMap.value[skill.id])
@@ -269,14 +192,8 @@ const checkRollEffects = computed(() => charCtx.characterRolls?.effects
 const saveRollEffects = computed(() => charCtx.characterRolls?.effects
   ? charCtx.characterRolls.effects({ kind: 'saving_throw', abilitySuggestId: titleSuggestId.value })
   : armorAbilityRollEffects(armorState.value, titleSuggestId.value))
-const checkAutomatic = computed(() => resolveRollMode('auto', checkRollEffects.value))
-const saveAutomatic = computed(() => resolveRollMode('auto', saveRollEffects.value))
-const checkResolved = computed(() => resolveRollMode(statData.value.check_roll_mode, checkRollEffects.value))
-const saveResolved = computed(() => resolveRollMode(statData.value.save_roll_mode, saveRollEffects.value))
-const checkAutoMode = computed(() => checkAutomatic.value.mode)
-const saveAutoMode = computed(() => saveAutomatic.value.mode)
-const checkAutoSource = computed(() => checkAutomatic.value.source)
-const saveAutoSource = computed(() => saveAutomatic.value.source)
+const checkResolved = computed(() => resolveRollMode('auto', checkRollEffects.value))
+const saveResolved = computed(() => resolveRollMode('auto', saveRollEffects.value))
 const checkRollMode = computed(() => checkResolved.value.mode)
 const saveRollMode = computed(() => saveResolved.value.mode)
 const checkModeSource = computed(() => checkResolved.value.source)
@@ -349,14 +266,6 @@ function skillRollEffects(id) {
   return effects
 }
 
-function skillAutoMode(id) {
-  return resolveRollMode('auto', skillRollEffects(id)).mode
-}
-
-function skillAutoSource(id) {
-  return resolveRollMode('auto', skillRollEffects(id)).source
-}
-
 function skillRollMode(id) {
   return skillResolved(id).mode
 }
@@ -366,7 +275,7 @@ function skillModeSource(id) {
 }
 
 function skillResolved(id) {
-  return resolveRollMode(skillsMap.value[String(id)]?.roll_mode, skillRollEffects(id))
+  return resolveRollMode('auto', skillRollEffects(id))
 }
 
 function emitValue(patch) {
@@ -384,52 +293,24 @@ function emitSkills(skills) { emitValue({ skills }) }
 function pickSave() { emitValue({ save_up: !statData.value.save_up }) }
 function onBaseChange(data) { emitValue({ value: data }) }
 function onSaveBonusesChange(b) { emitValue({ save_bonuses: b }) }
-function setRollMode(field, value) { emitValue({ [field]: value }) }
-
-function deleteSkill(id) {
-  const newMap = { ...skillsMap.value }
-  delete newMap[String(id)]
-  emitSkills(newMap)
+function openEditor(kind = 'check', id = null) {
+  if (!canEdit.value) return
+  editSkillId.value = id
+  editor.value = kind
 }
 
-function addSkill(name) {
-  const title = (name || '').trim()
-  if (!title) return
-  // Custom skill: no suggest entry, so we mint a unique non-suggest id and store the typed name as
-  // the override title (skillsList resolves a custom skill's title from override_title).
-  const id = 'c' + Date.now().toString(36) + Math.floor(Math.random() * 46656).toString(36)
-  emitSkills({ ...skillsMap.value, [id]: { up: 0, override_title: title, bonuses: [] } })
+function removeCustomSkill() {
+  if (!editSkill.value?.custom) return
+  const skills = { ...skillsMap.value }
+  delete skills[editSkillId.value]
+  editor.value = null
+  emitSkills(skills)
 }
 
-function onSkillChange(data) {
+function onSkillChange(patch) {
   const id = editSkillId.value
   if (id == null) return
-  const existing = skillsMap.value[id] || { up: 0 }
-  const updated = { ...existing, up: data.up, bonuses: data.bonuses, roll_mode: data.roll_mode || 'auto' }
-  if (data.override_title) updated.override_title = data.override_title
-  else delete updated.override_title
-  emitSkills({ ...skillsMap.value, [id]: updated })
-}
-
-function onOpenSkill(id) {
-  editSkillId.value = String(id)
-  nav.goSub('skill')
-}
-
-// ─── Editor window open/close ──────────────────────────────────────────────────
-async function openEditor(skillId) {
-  if (!canEdit.value) return
-  editSkillId.value = null
-  openFrom(tileRef.value?.$el)
-  if (typeof skillId === 'string' || typeof skillId === 'number') {
-    await nextTick()
-    onOpenSkill(skillId)
-  }
-}
-
-function closeEditor() {
-  closeMorph()
-  editSkillId.value = null
+  emitSkills({ ...skillsMap.value, [id]: { ...skillsMap.value[id], ...patch } })
 }
 
 // ─── Dice ──────────────────────────────────────────────────────────────────────
@@ -458,3 +339,8 @@ onMounted(() => {
   syncStatVar()
 })
 </script>
+
+<style scoped>
+.stat-editor-title { margin: 0; color: var(--text-1); font-family: var(--font-display); font-size: 20px; overflow-wrap: anywhere; }
+.stat-editor-title small { color: var(--text-muted); font-size: .85em; font-weight: 400; }
+</style>

@@ -10,11 +10,11 @@ describe('participant defenses and passive checks', () => {
     expect(result.passives.map(row => row.value)).toEqual([16, 19])
     expect(result.armorClass).toBe(12)
   })
-  it('adds or subtracts five for the skill mode without rolling dice', () => {
+  it('ignores legacy skill mode overrides for passive checks', () => {
     const v = values()
     v.WIS.skills[10].roll_mode = 'advantage'
     v.INT.skills[9].roll_mode = 'disadvantage'
-    expect(participantDefenses(v).passives.map(row => row.value)).toEqual([21, 14])
+    expect(participantDefenses(v).passives.map(row => row.value)).toEqual([16, 19])
   })
   it('uses the manual proficiency bonus and supports negative modifiers', () => {
     const v = values()
@@ -42,6 +42,8 @@ describe('participant defenses and passive checks', () => {
     ] } }]])
     expect(participantDefenses(v, items).passives[0]).toMatchObject({ value: 21, mode: 'normal' })
     v.WIS.skills[10].roll_mode = 'advantage'
+    expect(participantDefenses(v, items).passives[0].value).toBe(21)
+    items.get('1').data.derived_effects.pop()
     expect(participantDefenses(v, items).passives[0].value).toBe(26)
   })
 })

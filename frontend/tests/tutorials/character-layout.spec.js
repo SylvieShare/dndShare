@@ -40,7 +40,7 @@ test('fold resizing retains semantic sections and editable character data', asyn
   }
   await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Статы', exact: true }).click()
   await page.getByRole('button', { name: 'Редактировать: Сила', exact: true }).click()
-  await expect(page.locator('.mes-editor:visible')).toBeVisible()
+  await expect(page.getByRole('dialog', { name: 'Сила', exact: true })).toBeVisible()
   expect(api.document().values.hp.current).toBe(18)
   expect(api.writes).toEqual([])
 })
@@ -208,7 +208,7 @@ for (const width of [390, 834, 1440]) test(`sheet content scrolls behind sharp c
   await expect(header).toHaveCSS('filter', 'none')
 })
 
-for (const width of [390, 834, 1440]) test(`stat morph saves input immediately and uses filled controls at ${width}`, async ({ page }) => {
+for (const width of [390, 834, 1440]) test(`focused stat editor saves input immediately at ${width}`, async ({ page }) => {
   await page.setViewportSize({ width, height: 1000 })
   const api = await fixture(page)
   await page.goto('/tests/tutorials/fixtures/tutorials.html')
@@ -217,15 +217,18 @@ for (const width of [390, 834, 1440]) test(`stat morph saves input immediately a
   await expect(page.locator('.save-chip').first()).toHaveCSS('border-top-width', '0px')
   await expect(page.locator('.skill-chip').first()).toHaveCSS('border-top-width', '0px')
   await page.getByRole('button', { name: 'Редактировать: Сила', exact: true }).click()
-  const form = page.locator('.mes-editor:visible')
+  const form = page.getByRole('dialog', { name: 'Сила', exact: true })
   await expect(form).toBeVisible()
   await expect(form.getByRole('button', { name: 'Сохранить', exact: true })).toHaveCount(0)
   await expect(form.getByRole('button', { name: 'Отмена', exact: true })).toHaveCount(0)
   await expect(form.locator('.fn-wrap').first()).toHaveCSS('box-shadow', /0px 0px 0px 0px/)
-  for (const button of await form.locator('.rm-options button').all()) await expect(button).toHaveCSS('border-top-width','0px')
   await form.locator('.fn-input').first().fill('14')
   await expect.poll(() => api.document().values.STR.value.base).toBe(14)
-  await form.locator('.se-prof-toggle').click()
+  await expect(form.getByText('Владение спасброском')).toHaveCount(0)
+  await page.keyboard.press('Escape')
+  await page.getByRole('button', { name: 'Сила — спасбросок', exact: true }).click()
+  await page.getByRole('menuitem', { name: 'Изменить' }).click()
+  await page.getByRole('switch', { name: 'Владение спасброском' }).click()
   await expect.poll(() => api.document().values.STR.save_up).toBe(true)
 })
 
