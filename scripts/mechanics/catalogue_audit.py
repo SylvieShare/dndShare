@@ -179,6 +179,9 @@ def audit(snapshot):
         if item["typeId"] == 6:  # Bestiary entries are reference targets, with their own runtime.
             continue
         totals["sheet_catalogue_items"] += 1
+        if item["typeId"] not in schemas:
+            check(item, "typeId", "missing_item_type", item["typeId"])
+            continue
         walk(item, schemas[item["typeId"]], item["data"])
     return {"counts": dict(totals), "indexed_items": len(catalogue), "issues": issues}
 
@@ -190,6 +193,7 @@ def main():
     group.add_argument("--live", action="store_true", help="download the public catalogue")
     parser.add_argument("--base-url", default="https://dndshare.ru")
     parser.add_argument("--report", type=Path, help="write all findings as JSON")
+    parser.add_argument("--save-snapshot", type=Path, help="save the exact public inputs for an offline audit")
     args = parser.parse_args()
     snapshot = download(args.base_url) if args.live else json.loads(args.snapshot.read_text(encoding="utf8"))
     report = audit(snapshot)
@@ -198,6 +202,9 @@ def main():
         if missing:
             snapshot["referenced_items"] = referenced_items(args.base_url, missing)
             report = audit(snapshot)
+    if args.save_snapshot:
+        args.save_snapshot.parent.mkdir(parents=True, exist_ok=True)
+        args.save_snapshot.write_text(json.dumps(snapshot, ensure_ascii=False), encoding="utf8")
     if args.report:
         args.report.parent.mkdir(parents=True, exist_ok=True)
         args.report.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf8")

@@ -3,11 +3,18 @@ import suites from '../../../scripts/mechanics/suites.json'
 import { abilityEditorProfile } from '@/features/items/editor/abilityEditorProfile'
 import { dependencyManifest, dependencyFields, changeDerivedKind } from '@/features/items/editor/abilityDependencyManifest'
 import effects from '../../../resources/items/item_15_shema.json'
+import scenarios from '../../../native/fixtures/game-mechanics/derived-rules.json'
 import { normalizeDataForSave } from '@/features/handbook/objects/lib/schemaFields'
 
 const schemas = import.meta.glob('../../../resources/items/item_*_shema.json', { eager: true, import: 'default' })
 const core = [3, 4, 7, 18, 19]
 describe('authoring a sheet dependency', () => {
+  it('requires a shared fixture for every condition exposed by the derived-rule editor', () => {
+    const fields = new Set(scenarios.flatMap(s => s.items.flatMap(item =>
+      (item.data.derived_effects || []).flatMap(rule => Object.keys(rule)))))
+    const gates = dependencyManifest.derived_effects.gates.flatMap(g => g.keys).filter(key => key !== 'label')
+    for (const condition of new Set(gates)) expect(fields.has(condition), condition).toBe(true)
+  })
   it('requires both client suites for every ability, feat and magic-item editor block', () => {
     const covered = new Set(suites.filter(s => s.web.length && s.android.length).flatMap(s => s.rules))
     const missing = new Set()
