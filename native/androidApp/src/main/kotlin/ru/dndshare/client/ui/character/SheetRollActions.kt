@@ -3,6 +3,7 @@ package ru.dndshare.client.ui.character
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
@@ -58,31 +59,44 @@ internal fun SheetRollActions(
 @Composable
 private fun RollBonusSummary(request: SheetRollRequest) {
     val context = LocalCharacterSheet.current
-    Column(
+    Row(
         Modifier.fillMaxWidth().padding(start = 10.dp, end = 10.dp, top = 8.dp, bottom = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(DesignTokens.Spacing.Label),
     ) {
-        Row(
-            Modifier.fillMaxWidth().clearAndSetSemantics {
-                heading()
-                contentDescription = "${request.title} · ${signed(request.bonus)}"
-            },
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ShareDie(
+            sides = 20,
+            value = "d20",
+            color = WebPalette.TextMuted,
+            modifier = Modifier.clearAndSetSemantics {},
+            animated = false,
+        )
+        Column(
+            Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Text(request.title, Modifier.weight(1f), style = ShareTypography.header, color = WebPalette.Text)
-            Text(signed(request.bonus), style = ShareTypography.header, color = WebPalette.Text)
-        }
-        val ability = dndAbilities.firstOrNull { it.suggestId == request.ability }
-        if (ability != null) {
-            val modifier = abilityModifier(context.mechanics.score(ability.id))
-            val proficiency = request.proficiencyRank * context.sheet.proficiency()
-            val extra = request.bonus - modifier - proficiency
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                BonusLine(ability.title, modifier)
-                if (proficiency != 0) {
-                    BonusLine(if (request.proficiencyRank >= 2) "Мастерство" else "Владение", proficiency)
+            Row(
+                Modifier.fillMaxWidth().clearAndSetSemantics {
+                    heading()
+                    contentDescription = "${request.title} · ${signed(request.bonus)}"
+                },
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Text(request.title, Modifier.weight(1f), style = ShareTypography.header, color = WebPalette.Text)
+                Text(signed(request.bonus), style = ShareTypography.header, color = WebPalette.Text)
+            }
+            val ability = dndAbilities.firstOrNull { it.suggestId == request.ability }
+            if (ability != null) {
+                val modifier = abilityModifier(context.mechanics.score(ability.id))
+                val proficiency = request.proficiencyRank * context.sheet.proficiency()
+                val extra = request.bonus - modifier - proficiency
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    BonusLine(ability.title, modifier)
+                    if (proficiency != 0) {
+                        BonusLine(if (request.proficiencyRank >= 2) "Мастерство" else "Владение", proficiency)
+                    }
+                    if (extra != 0) BonusLine("Дополнительные бонусы", extra)
                 }
-                if (extra != 0) BonusLine("Дополнительные бонусы", extra)
             }
         }
     }

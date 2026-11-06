@@ -30,6 +30,7 @@ fun ShareDie(
     color: Color = WebPalette.Accent,
     modifier: Modifier = Modifier,
     size: Dp = 42.dp,
+    animated: Boolean = true,
 ) {
     val shapeId =
         if (sides == 100) 10 else if (sides in shareDieShapes) sides else if (sides <= 6) 6 else 20
@@ -47,7 +48,7 @@ fun ShareDie(
         }
     val path = remember(shape.path) { PathParser().parsePathString(shape.path).toPath() }
     var visible by remember { mutableStateOf(false) }
-    val phase = rememberVisualPhase(visible && raster != null, 3.4f)
+    val phase = rememberVisualPhase(animated && visible && raster != null, 3.4f)
     Canvas(
         modifier
             .size(scaled)
