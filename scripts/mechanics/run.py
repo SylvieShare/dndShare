@@ -20,6 +20,7 @@ def main():
     args = parser.parse_args()
     suites = json.loads((HERE / "suites.json").read_text(encoding="utf8"))
     run([sys.executable, "-m", "unittest", "discover", "-s", HERE])
+    run(["go", "test", "./scripts/mechanics/editor-schema", "./internal/store", "-run", "StatusSave|PreparedCharacterRoll|ApplicationHealing|ApplicationConcentration|ApplicationFormula|FeatCanRecreate|StatusDurationKeeps"])
     if args.client in ("both", "web"):
         web = ROOT / "frontend"
         files = sorted({path for suite in suites for path in suite["web"]})
@@ -29,7 +30,10 @@ def main():
         shared = sorted((web / "tests/game-mechanics").glob("*.test.js"))
         run(["node", "node_modules/vitest/vitest.mjs", "run", *(p.relative_to(web) for p in shared), *files], web)
         run(["node", "scripts/character-rules-fixtures.mjs", "--check"], web)
-        run(["node", "node_modules/@playwright/test/cli.js", "test", "--project=ui", "tests/game-mechanics/authoring.spec.js"], web)
+        run(["node", "node_modules/@playwright/test/cli.js", "test", "--project=ui", "--timeout=90000", "tests/game-mechanics/authoring.spec.js",
+             "tests/tutorials/status-mechanics.spec.js", "tests/tutorials/potion-use.spec.js", "tests/tutorials/spell-applications.spec.js",
+             "tests/tutorials/application-targets.spec.js", "tests/weapon-charges/weapon-use.spec.js",
+             "tests/weapon-charges/luck-blade.spec.js"], web)
     if args.client in ("both", "android"):
         native = ROOT / "native"
         gradle = native / ("gradlew.bat" if os.name == "nt" else "gradlew")

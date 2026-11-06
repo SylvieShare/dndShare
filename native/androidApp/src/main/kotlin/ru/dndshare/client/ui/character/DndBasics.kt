@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
+import ru.dndshare.client.model.text
 import ru.dndshare.client.ui.designsystem.*
 
 @Composable
@@ -251,16 +252,17 @@ internal fun DndStatuses(showEmpty: Boolean = false) {
         val states = values["states"].arrayValue()
         if (states.isEmpty() && !showEmpty)
             Text("Нет состояний", style = ShareTypography.context, color = WebPalette.TextMuted)
-        else
-            Text(
-                states.joinToString(" · ") { entry ->
-                    val data = entry.objectValue()
-                    context.items[data["effect_id"].referenceId()]?.name
-                        ?: data.label().ifBlank { "Состояние" }
-                },
-                style = ShareTypography.context,
-                color = WebPalette.AccentSoft,
-            )
+        else Column {
+            states.forEachIndexed { i, raw ->
+                val data = raw.objectValue()
+                val uid = data.text("uid").ifBlank { "status-${data["effect_id"].referenceId()}-$i" }
+                val mechanic = statusMechanic(context.sheet, context.items, uid)
+                if (context.canEdit && mechanic != null && (mechanic.ongoing != null || mechanic.repeat != null || mechanic.effect.data["weapon_target"] is JsonObject))
+                    StatusMechanicActions(mechanic)
+                else Text(context.items[data["effect_id"].referenceId()]?.name ?: data.label().ifBlank { "Состояние" },
+                    style = ShareTypography.context, color = WebPalette.AccentSoft)
+            }
+        }
         if (values["inspiration"]?.jsonPrimitive?.booleanOrNull == true)
             Text("Вдохновение", style = ShareTypography.context, color = WebPalette.AccentSoft)
         if (values["exhaustion"].objectValue()["level"].number() > 0)

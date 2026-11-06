@@ -30,6 +30,7 @@ data class SheetRollRequest(
     val spellKey: String = "",
     val spellOptions: JsonObject? = null,
     val eventData: JsonObject = JsonObject(emptyMap()),
+    val statusAction: StatusRollBinding? = null,
     val repeatable: Boolean = true,
 )
 

@@ -58,12 +58,12 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
     }
     await route.fulfill({ json })
   })
-  async function openSheet(uuid) {
-    await page.goto(`/tests/tutorials/fixtures/tutorials.html?page=/char/${uuid}`)
+  async function openSheet(uuid, guest = false) {
+    await page.goto(`/tests/tutorials/fixtures/tutorials.html?page=/char/${uuid}${guest ? '&guest' : ''}`, { waitUntil: 'domcontentloaded' })
     await expect(page.locator('.view')).toBeVisible()
     if (mobile) await page.getByRole('button', { name: 'Предметы', exact: true }).click()
     else await page.getByRole('tab', { name: 'Снаряжение', exact: true }).click()
-    if (connected) await expect(page.locator('.campaign-block:visible')).toBeVisible()
+    if (connected && !guest) await expect(page.locator('.campaign-block:visible')).toBeVisible()
     if (mobile) await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/settling/)
     await page.evaluate(async () => {
       const stages = document.querySelectorAll('.inner-tabs-content, .inner-tab-pane, .mobile-swipe-track')
@@ -141,9 +141,7 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
   await page.getByRole('menuitem', { name: 'Использовать на…', exact: true }).click()
   await expect(page.getByRole('menuitem', { name: 'На себя', exact: true })).toBeVisible()
   connected = true
-  await page.goto('/tests/tutorials/fixtures/tutorials.html?page=/char/sender&guest')
-  if (mobile) await page.getByRole('button', { name: 'Предметы', exact: true }).click()
-  else await page.getByRole('tab', { name: 'Снаряжение', exact: true }).click()
+  await openSheet('sender', true)
   await openPotionMenu()
   await expect(page.getByRole('menuitem', { name: 'Использовать на себя', exact: true })).toHaveCount(0)
   await expect(page.getByRole('menuitem', { name: 'Использовать на…', exact: true })).toHaveCount(0)

@@ -1,5 +1,5 @@
 <template>
-  <template v-if="ctx.ownerMode && instance">
+  <template v-if="ctx.ownerMode && instance && !instance.external_only">
     <StatusRepeatSaveMenu v-if="effect.data?.repeat_save && !instance.external_only" :context="ctx" :instance="instance" :effect="effect" />
     <RowActionItem v-if="ongoing" :icon="Dices" :disabled="busy" @click="runOngoing">
       {{ damagePhase ? (phase === 'initial_damage' ? 'При употреблении' : 'Начало хода') + ': ' + count + ongoing.dice : (phase === 'initial_save' ? 'После употребления' : 'Конец хода') + ': спасбросок, Сл ' + ongoing.save_dc }}

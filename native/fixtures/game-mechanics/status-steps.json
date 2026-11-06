@@ -1,0 +1,137 @@
+[
+  {
+    "step": "damage",
+    "phase": "initial_damage",
+    "total": 9,
+    "defenses": [
+      "resistance"
+    ],
+    "expect": {
+      "phase": "initial_save",
+      "dice": 3,
+      "hp": 13,
+      "temp": 0
+    }
+  },
+  {
+    "step": "damage",
+    "phase": "turn_damage",
+    "total": 7,
+    "defenses": [
+      "immunity",
+      "vulnerability"
+    ],
+    "expect": {
+      "phase": "turn_save",
+      "dice": 3,
+      "hp": 15,
+      "temp": 2
+    }
+  },
+  {
+    "step": "damage",
+    "phase": "turn_damage",
+    "total": 8,
+    "defenses": [
+      "vulnerability"
+    ],
+    "expect": {
+      "phase": "turn_save",
+      "dice": 3,
+      "hp": 1,
+      "temp": 0
+    }
+  },
+  {
+    "step": "save",
+    "phase": "initial_save",
+    "total": 12,
+    "expect": {
+      "ended": true
+    }
+  },
+  {
+    "step": "save",
+    "phase": "initial_save",
+    "total": 11,
+    "expect": {
+      "phase": "turn_damage",
+      "dice": 3
+    }
+  },
+  {
+    "step": "save",
+    "phase": "turn_save",
+    "total": 18,
+    "expect": {
+      "phase": "turn_damage",
+      "dice": 2
+    }
+  },
+  {
+    "step": "save",
+    "phase": "turn_save",
+    "total": 8,
+    "expect": {
+      "phase": "turn_damage",
+      "dice": 3
+    }
+  },
+  {
+    "step": "save",
+    "phase": "turn_save",
+    "dice": 1,
+    "total": 14,
+    "expect": {
+      "ended": true
+    }
+  },
+  {
+    "step": "repeat",
+    "dc": 14,
+    "total": 13,
+    "expect": {
+      "ended": false
+    }
+  },
+  {
+    "step": "repeat",
+    "dc": 14,
+    "total": 14,
+    "expect": {
+      "ended": true
+    }
+  },
+  {
+    "step": "repeat",
+    "storedDC": 16,
+    "total": 15,
+    "expect": {
+      "ended": false
+    }
+  },
+  {
+    "step": "repeat",
+    "dc": 14,
+    "storedDC": 16,
+    "total": 15,
+    "expect": {
+      "ended": true
+    }
+  },
+  {
+    "step": "repeat",
+    "total": 18,
+    "expect": {
+      "available": false
+    }
+  },
+  {
+    "step": "repeat",
+    "storedDC": 999,
+    "total": 18,
+    "expect": {
+      "available": false
+    }
+  }
+]

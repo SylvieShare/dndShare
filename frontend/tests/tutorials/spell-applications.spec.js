@@ -3,7 +3,7 @@ async function openSpell(page, name) {
   const row = page.locator('.spell-row').filter({ hasText: name })
   await row.scrollIntoViewIfNeeded()
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
-  const box = await row.boundingBox(); await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2)
+  await row.getByText(name, { exact: true }).click()
   await expect(page.getByRole('menuitem').first()).toHaveText('Использовать на…')
   await page.getByRole('menuitem', { name: 'Использовать на…', exact: true }).click()
 }

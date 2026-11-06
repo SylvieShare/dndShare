@@ -82,13 +82,15 @@ internal class SheetRollExecutor(
             }
         }
         val derived = DndDerivedValues(sheet, data.items, data.metadata)
+        val status = current.statusAction
+        val statusSave = status?.takeUnless { it.action == "damage" }?.let { statusSaveOutcomes(sheet, data.items, it) }
         val prepared =
             if (current.formula != null) null
             else if (rerollOf != null)
                 rerollPreparedD20(requireNotNull(rerollOf.prepared)).copy(request = current)
             else prepareD20Roll(current, derived, mode)
         val triggers =
-            if (prepared == null || rerollOf != null) emptyList()
+            if (prepared == null || rerollOf != null || status != null) emptyList()
             else rollTriggerCandidates(sheet, data.items, current, owner)
         val projected = sheet.copy(data = applySheetPatches(sheet.data, costs))
         val endings =
@@ -104,6 +106,7 @@ internal class SheetRollExecutor(
             }
             val intent = buildJsonObject {
                 put("sessionUuid", session)
+                statusSave?.let { put("statusSave", WireJson.encodeToJsonElement(it)) }
                 current.eventData.text("weaponUseId").takeIf(String::isNotBlank)?.let { use ->
                     put(
                         "weaponUse",
@@ -182,6 +185,11 @@ internal class SheetRollExecutor(
         val checkpoint =
             CachedSheetSection(uuid, SheetRollRecord.SECTION, WireJson.encodeToString(record))
         if (owner) {
+            val statusPatches = when {
+                statusSave != null -> listOf(SheetPatch(path = sheetPath("values", "states"), value = statusSave.resolve(result.total)))
+                status != null -> statusDamagePatches(sheet, data.items, status, result.total)
+                else -> emptyList()
+            }
             val event =
                 spellConcentrationData(current, diceEventData(current, result), concentration())
             val metadata =
@@ -189,7 +197,7 @@ internal class SheetRollExecutor(
                 else sessionMetadata(session, "dice_roll", current.title, event)
             sheets.enqueue(
                 uuid,
-                patches + weaponUpdate,
+                patches + weaponUpdate + statusPatches,
                 sheet.data,
                 metadata = metadata,
                 checkpoint = checkpoint,

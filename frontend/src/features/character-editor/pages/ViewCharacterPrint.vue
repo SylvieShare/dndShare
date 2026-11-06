@@ -176,6 +176,7 @@
 </template>
 
 <script setup>
+import { grantedTags, proficiencyDictionaries } from '@/features/character-editor/lib/proficiencyTags'
 import { LoadingState } from '@sylvieshare/share-ui'
 import { featureItemIds } from '@/features/character-editor/lib/characterMagicItems'
 
@@ -330,7 +331,15 @@ const attacks = computed(() => (Array.isArray(values.value.weapon) ? values.valu
   return { key: `${entry.item_id}-${index}`, name: item?.name || `Оружие #${entry.item_id || '—'}`, bonus: statMod + (Number(entry.params?.magic_bonus) || 0) + intrinsicWeaponBonus(entry, item, values.value) + (entry.proficient || hasItemProficiency(item, values.value, id => suggest.items(id), derivedGrantedProficiencies(printDerivedEffects.value, 'weapon_proficiency')) ? profBonus.value : 0) + sourceBonus, damage: attackParts(entry, item), properties: weaponProperties(item), description: entry.desc || '' }
 }))
 const attackBlankRows = computed(() => Math.max(0, 5 - attacks.value.length))
-const proficiencyGroups = computed(() => Object.entries(values.value.proficiencies || {}).map(([name, value]) => ({ name, value: Array.isArray(value) ? value.map(text).filter(Boolean).join(', ') : text(value) })).filter(group => group.value))
+const proficiencyGroups = computed(() => {
+  const stored = values.value.proficiencies || {}
+  return [...new Set([...Object.keys(stored), ...Object.keys(proficiencyDictionaries)])].map(name => {
+    const id = proficiencyDictionaries[name]
+    const tags = id ? grantedTags(id, suggest.items(id), kind => derivedGrantedProficiencies(printDerivedEffects.value, kind)) : []
+    const manual = Array.isArray(stored[name]) ? stored[name] : [stored[name]]
+    return { name, value: [...new Set([...manual.map(text), ...tags].filter(Boolean))].join(', ') }
+  }).filter(group => group.value)
+})
 const mainCanFitProficiencies = computed(() => {
   const contentLength = proficiencyGroups.value.reduce((sum, group) => sum + group.name.length + group.value.length, 0)
   return characterName.value.length <= 28 && classAndLevel.value.length <= 38 && contentLength <= 360
@@ -512,12 +521,11 @@ async function load() {
   try {
     const res = await fetchGet('/char/' + route.params.uuid); if (!res?.data || res?.type) throw new Error(res?.desc || 'Персонаж не найден или недоступен.')
     response.value = res; const itemIds = collectItemIds(res.data?.values || {})
-    const tasks = [3, 7, 12, 14, 15, 17].map(id => suggest.ensure(id).catch(() => null))
+    const tasks = [3, 4, 5, 6, 7, 12, 14, 15, 17].map(id => suggest.ensure(id).catch(() => null))
     if (itemIds.length) tasks.push(itemsApi.byIds(itemIds).then(result => { catalog.value = Object.fromEntries((result?.items || []).map(item => [String(item.id), item])) }).catch(() => null))
     await Promise.all(tasks);
     const bases = [...new Set([...(values.value.items?.equipped || []), ...(values.value.weapon || [])].flatMap(entry => [weaponBaseId(catalog.value[entry.magic_item_id ?? entry.item_id], entry), armorBaseId(catalog.value[entry.magic_item_id ?? entry.item_id], entry)]).filter(Boolean))]
     if (bases.length) for (const item of (await itemsApi.byIds(bases)).items || []) catalog.value[item.id] = item
-    await suggest.ensure(4)
     document.title = `${characterName.value} — лист для печати`
   } catch (e) { error.value = e?.message || 'Произошла ошибка при загрузке.' } finally { loading.value = false }
 }

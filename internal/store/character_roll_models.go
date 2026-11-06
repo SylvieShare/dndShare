@@ -51,6 +51,7 @@ type CharacterRollWeaponUse struct {
 }
 
 type CharacterRollRequest struct {
+	StatusSave     *CharacterStatusSave        `json:"statusSave,omitempty"`
 	WeaponUse      *CharacterRollWeaponUse     `json:"weaponUse,omitempty"`
 	Version        int64                       `json:"version"`
 	ClientActionID string                      `json:"clientActionId"`

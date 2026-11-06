@@ -121,6 +121,10 @@ func (s *Store) RollCharacter(ctx context.Context, userID, charID int64, r Chara
 	if err != nil {
 		return CharacterRollResult{}, err
 	}
+	next, err = r.StatusSave.resolve(next, number(result.Roll["total"]))
+	if err != nil {
+		return CharacterRollResult{}, err
+	}
 	event := characterRollEvent(r.Prepared, result.Roll)
 	err = tx.QueryRow(ctx, `INSERT INTO dndshare.session_event(session_id,author_user_id,actor_char_id,actor_name,event_type,action,data,visibility,client_action_id)
  VALUES($1,$2,$3,$4,'dice_roll',$5,CAST($6 AS jsonb),'public',$7::uuid) RETURNING id`, sessionID, userID, charID, characterName(next), r.Prepared.Request.Title, rawCharacterJSON(event), r.ClientActionID).Scan(&result.EventID)

@@ -81,6 +81,7 @@ def make_plan(args, config, workspace, serial, api_port):
         return [Stage("review", [sys.executable, str(script), "--output", str(args.report_dir / "review"),
                                   "--serial", serial, *scope, *args.visual_args], workspace, device=True)]
     stages = [node("webunit", "test", "--", "--run", "--no-cache"),
+              node("mechanics-contracts", "run", "test:mechanics:contracts"),
               node("webbuild", "run", "build"),
               node("browser", "run", "test:browser", "--"),
               native("nativeAll", "All"), native("nativeDeviceTest", "DeviceTest"),

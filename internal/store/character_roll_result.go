@@ -8,6 +8,9 @@ import (
 )
 
 func ValidCharacterRoll(r CharacterRollRequest) bool {
+	if r.StatusSave != nil && (r.Prepared.Request.Kind != "saving_throw" || !r.StatusSave.valid()) {
+		return false
+	}
 	p := r.Prepared
 	q := p.Request
 	if r.Version < 0 || r.SessionUUID == "" || q.Formula != nil || q.Title == "" || len([]rune(q.Title)) > 255 || len(q.SourceName) > 1000 || len(q.TargetUID) > 200 {

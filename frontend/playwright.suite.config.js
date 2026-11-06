@@ -31,7 +31,7 @@ export default defineConfig({
     { name: 'models', testMatch: '**/maps/*.spec.js', grep: diagnostics, workers: 1, use: { baseURL: devURL,
       ...(hardware ? { channel: 'chrome', launchOptions: { args: process.platform === 'darwin' ? ['--use-angle=metal', '--enable-gpu'] : ['--enable-gpu'] } } : {}) } },
   ] : [
-    { name: 'ui', testIgnore: ['**/maps/**', '**/global-maps/**', '**/image-uploads/**', '**/fullstack/**', ...productionNavigation], use: { baseURL: devURL } },
+    { name: 'ui', testIgnore: ['**/game-mechanics/*.test.js', '**/maps/**', '**/global-maps/**', '**/image-uploads/**', '**/fullstack/**', ...productionNavigation], use: { baseURL: devURL } },
     { name: 'maps', testMatch: '**/maps/*.spec.js', grepInvert: diagnostics, workers: 1, use: { baseURL: devURL } },
     { name: 'production', testMatch: ['**/global-maps/*.spec.js', '**/image-uploads/*.spec.js', ...productionNavigation], workers: 1, use: { baseURL: buildURL } },
   ],
