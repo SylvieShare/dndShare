@@ -81,7 +81,7 @@ class SheetBaseLayoutTest {
                                         measured["$current:$scale"] = it.size.height
                                     }
                                 ) {
-                                    DndIdentityCard(compactHealth = current < 600)
+                                    DndHeading(context, if (current < 600) ru.dndshare.client.ui.LayoutFormat.Phone else ru.dndshare.client.ui.LayoutFormat.Tablet, false) {}
                                 }
                             }
                         }

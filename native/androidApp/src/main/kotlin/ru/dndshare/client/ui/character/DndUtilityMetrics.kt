@@ -14,20 +14,24 @@ import coil3.compose.AsyncImage
 import ru.dndshare.client.character.*
 import ru.dndshare.client.ui.designsystem.*
 
-@Composable
-internal fun DndUtilities() {
-    val context = LocalCharacterSheet.current
-    val sheet = context.sheet
-    var initiativeMenu by remember { mutableStateOf(false) }
-    val values = sheet.values
+internal fun initiativeSummaryBonus(context: SheetContext): Int {
+    val values = context.sheet.values
     val initiative = values["initiative"].objectValue()
-    val bonus =
-        initiative["base"].number() +
+    return initiative["base"].number() +
             initiative["bonuses"].bonusTotal() +
             (if (initiative["use_dex"]?.toString() == "true")
                 abilityModifier(context.mechanics.score("DEX"))
             else 0) +
             context.mechanics.bonus("initiative_bonus", RuleContext(kind = "initiative"))
+}
+
+@Composable
+internal fun DndUtilities() {
+    val context = LocalCharacterSheet.current
+    val sheet = context.sheet
+    val values = sheet.values
+    var initiativeMenu by remember { mutableStateOf(false) }
+    val bonus = initiativeSummaryBonus(context)
     val metrics =
         listOf(
             Triple("КД", context.mechanics.armor.total.toString(), "shield.svg"),
@@ -120,7 +124,7 @@ internal fun DndUtilities() {
 }
 
 @Composable
-private fun DndLevel(level: Int, experience: Int) {
+internal fun DndLevel(level: Int, experience: Int) {
     val context = LocalCharacterSheet.current
     val thresholds =
         listOf(

@@ -37,7 +37,7 @@ test('tablet sheet subheader fits its tabs in the production build', async ({ pa
   await page.locator('.char-card').first().getByText('Персонаж 0', { exact: true }).click()
   const row = page.locator('.character-workspace-header .workspace-subheader')
   const tabs = row.getByRole('navigation', { name: 'Раздел персонажа' })
-  await expect(tabs.getByRole('button', { name: 'База', exact: true })).toBeVisible()
+  await expect(tabs.getByRole('button', { name: 'Статы', exact: true })).toBeVisible()
 
   for (const width of [834, 600]) {
     await page.setViewportSize({ width, height: 900 })

@@ -46,6 +46,58 @@ data class SheetContext(
     val reorderWeapons: suspend (List<String>) -> String? = { "Изменение порядка недоступно." },
 )
 
+internal fun CharacterSheetViewModel.sheetContext(
+    ui: CharacterSheetUiState, sheet: CharacterSheet, mechanics: DndDerivedValues, images: ImageLoader, canEdit: Boolean,
+): SheetContext =
+    SheetContext(
+        sheet,
+        ui.content.metadata,
+        ui.content.items,
+        images,
+        canEdit,
+        edit = {
+            if (canEdit || it in listOf("menu", "rest"))
+                this.edit(it)
+        },
+        openItem = this::openItem,
+        openEquipment = this::openEquipment,
+        mechanics = mechanics,
+        journal = ui.journal,
+        adjustResource = this::adjustResource,
+        uuid = this.uuid,
+        icons = ui.content.icons,
+        canUndo =
+            ui.snapshot?.draft?.undo?.isNotEmpty() == true,
+        canRedo =
+            ui.snapshot?.draft?.redo?.isNotEmpty() == true,
+        history = this::history,
+        deathSave = this.health::deathSave,
+        reloadIcons = this::reloadInventoryIcons,
+        sessionUuid = ui.remote.sessionUuid,
+        sessionName =
+            ui.remote.sessions
+                .firstOrNull {
+                    it.uuid == ui.remote.sessionUuid
+                }
+                ?.name
+                .orEmpty(),
+        concentration = ui.campaign.concentration,
+        roll = this.rolls::open,
+        weaponMenuTarget = ui.navigation.overlay,
+        dismissWeaponMenu = this::dismissOverlay,
+        rollWeapon = this::confirmWeaponRoll,
+        weaponAction = this::performWeaponAction,
+        itemMechanic = this.itemMechanics::perform,
+        openSpell = this::openSpell,
+        rollBusy = ui.roll.busy,
+        rerollForUse = this.rolls::rerollForUse,
+        reroll = this.rolls::reroll,
+        resolvedItemIds = ui.content.resolvedIds,
+        fetchingContent = ui.content.fetching,
+        refreshContent = this::refreshContent,
+        reorderWeapons = this::reorderWeapons,
+    )
+
 val LocalCharacterSheet =
     compositionLocalOf<SheetContext> { error("Character sheet context is required") }
 

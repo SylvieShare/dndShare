@@ -8,7 +8,7 @@ test('production phone tabbar crossfades captions while the finger is held', asy
   await installCharacterChromeFixture(page)
   await page.goto('/char/chrome-0', { waitUntil: 'networkidle' })
   const tabs = page.getByRole('navigation', { name: 'Вкладки персонажа' })
-  await expect(tabs.getByRole('button', { name: 'База', exact: true })).toHaveAttribute('aria-current', 'page')
+  await expect(tabs.getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
   const client = await page.context().newCDPSession(page)
   await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 330, y: 820 }] })
   await client.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 232, y: 820 }] })
@@ -25,7 +25,7 @@ test('production phone tabbar crossfades captions while the finger is held', asy
   await testInfo.attach('held-swipe', { body: await page.screenshot(), contentType: 'image/png' })
   await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
   await client.detach()
-  await expect(tabs.getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
+  await expect(tabs.getByRole('button', { name: 'Оружие', exact: true })).toHaveAttribute('aria-current', 'page')
 })
 
 async function watchMenuEntrance(page) {

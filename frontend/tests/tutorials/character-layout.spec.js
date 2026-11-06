@@ -1,14 +1,14 @@
 import { test, expect } from '@playwright/test'
 import { fixture } from './fixtures/character-layout'
 
-for (const width of [600, 834, 1100]) test(`tablet sheet uses its own base and balanced stats at ${width}`, async ({ page }) => {
+for (const width of [600, 834, 1100]) test(`tablet sheet uses a shared header and balanced stats at ${width}`, async ({ page }) => {
   const errors = []; page.on('pageerror', error => errors.push(error.message))
   await page.setViewportSize({ width, height: 1100 })
   const api = await fixture(page)
   await page.goto('/tests/tutorials/fixtures/tutorials.html')
   const nav = page.getByRole('navigation', { name: 'Раздел персонажа' })
-  await expect(nav.getByRole('button', { name: 'База', exact: true })).toHaveAttribute('aria-current', 'page')
-  await expect(page.locator('.dnd-tablet-base')).toBeVisible()
+  await expect(nav.getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
+  await expect(page.getByRole('button', {name: 'Сводка персонажа'})).toBeVisible()
   await expect(page.locator('[data-tutorial="character-hp"]')).toBeVisible()
   await nav.getByRole('button', { name: 'Статы', exact: true }).click()
   await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/dragging|settling/)
@@ -56,6 +56,48 @@ for (const width of [390, 834, 1440]) test(`VTM uses native composition at ${wid
   expect(errors).toEqual([])
 })
 
+for (const width of [390, 834, 1440]) test(`health and sheet actions remain reachable at ${width}`, async ({ page }) => {
+  await page.setViewportSize({ width, height: 640 })
+  const api = await fixture(page)
+  await page.goto('/tests/tutorials/fixtures/tutorials.html')
+  const heading = page.locator('.dnd-heading')
+  await expect(heading.getByRole('button', {name: 'Здоровье: 18 из 23'})).toBeVisible()
+  if (width < 1200) {
+    const scroller = page.locator('.mobile-swipe-pane:not([inert]) .mobile-pane-scroll')
+    await scroller.evaluate(el => { el.scrollTop = 180 })
+    await expect(page.locator('.character-summary-strip')).toHaveAttribute('inert', '')
+    await page.getByRole('button', {name: 'Сводка персонажа', exact: true}).click()
+    const panel = page.getByRole('dialog', {name: 'Сводка персонажа', exact: true})
+    await expect(panel.getByText('Отдых', {exact:true})).toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(panel).toHaveCount(0)
+    await expect(heading).toBeInViewport()
+  } else {
+    await expect(page.locator('.dnd-desktop-main [data-sheet-field="hp"]')).toHaveCount(0)
+    await expect(page.locator('.dnd-desktop-utilities [data-sheet-field="rest"]')).toBeVisible()
+  }
+  await heading.getByRole('button', {name: 'Здоровье: 18 из 23'}).click()
+  await expect(page.locator('[data-tutorial="character-hp-editor"]')).toBeVisible()
+  expect(api.writes).toEqual([])
+})
+
+for (const owner of [false, true]) test(`zero HP opens death saves with the sheet permissions (owner=${owner})`, async ({page}) => {
+  await page.setViewportSize({width:390,height:844})
+  const api = await fixture(page, 'DND5', owner)
+  Object.assign(api.document().values.hp, {current:0,ds_success:1,ds_failure:2})
+  await page.goto('/tests/tutorials/fixtures/tutorials.html')
+  await page.getByRole('button', {name:'Здоровье: 0 из 23'}).click()
+  const panel = page.getByRole('dialog', {name:'Здоровье',exact:true})
+  if (owner) {
+    await expect(panel.getByRole('button',{name:'Провалы: 2'})).toHaveAttribute('aria-pressed','true')
+    await expect(panel.getByRole('button',{name:'Изменить здоровье'})).toBeVisible()
+  } else {
+    await expect(panel.getByText('2 / 3')).toBeVisible()
+    await expect(panel.getByRole('button',{name:'Изменить здоровье'})).toHaveCount(0)
+  }
+  expect(api.writes).toEqual([])
+})
+
 test.describe('compact character gestures', () => {
   test.use({ hasTouch: true })
 
@@ -82,21 +124,15 @@ test.describe('compact character gestures', () => {
     await page.goto('/tests/tutorials/fixtures/tutorials.html')
     const nav = page.getByRole('navigation', { name: width < 600 ? 'Вкладки персонажа' : 'Раздел персонажа' })
     await expect(page.locator('.character-workspace-header')).toBeVisible()
-    await expect(nav.getByRole('button', { name: 'База', exact: true })).toHaveAttribute('aria-current', 'page')
-    await expect(page.locator('.dnd-tablet-base')).toBeVisible()
-    if (width < 600) {
-      await expect(page.locator('.dnd-tablet-base .hp-compact')).toHaveCount(0)
-      await expect(page.getByRole('button', { name: 'Данные персонажа', exact: true })).toHaveAttribute('aria-expanded', 'false')
-    }
-    await swipe(page)
     await expect(nav.getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
-    await expect(page.locator('.dnd-stats:visible')).toBeVisible()
-    await expect(page.locator('[data-tutorial="character-hp"]:visible')).toHaveCount(0)
+    await expect(page.getByRole('button', {name: 'Сводка персонажа'})).toBeVisible()
     await swipe(page, { vertical: true })
-    await expect(nav.getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
     if (width < 600) await expect.poll(() => page.locator('.mobile-swipe-pane:not([inert]) .mobile-pane-scroll').evaluate(node => node.scrollTop)).toBeGreaterThan(0)
+    await expect(page.locator('[data-tutorial="character-hp"]:visible')).toHaveCount(1)
+    await swipe(page)
+    await expect(nav.getByRole('button', { name: 'Оружие', exact: true })).toHaveAttribute('aria-current', 'page')
     await swipe(page, { reverse: true })
-    await expect(nav.getByRole('button', { name: 'База', exact: true })).toHaveAttribute('aria-current', 'page')
+    await expect(nav.getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
     await nav.getByRole('button', { name: 'Статы', exact: true }).click()
     await nav.getByRole('button', { name: 'Магия', exact: true }).click()
     await expect(nav.getByRole('button', { name: 'Магия', exact: true })).toHaveAttribute('aria-current', 'page')
@@ -106,14 +142,14 @@ test.describe('compact character gestures', () => {
   test('modal tablet sheet uses the same swipe pager', async ({ page }) => {
     await page.setViewportSize({ width: 834, height: 1100 })
     await page.goto('/tests/tutorials/fixtures/character-sheet-save.html')
-    await expect(page.locator('.dci-name')).toHaveText('Торин')
+    await expect(page.locator('.dnd-heading .name strong')).toHaveText('Торин')
     const modal = await page.locator('.csm').boundingBox()
     const tabs = await page.locator('.csm-tabs').boundingBox()
     expect(tabs.width).toBeLessThan(modal.width - 24)
     expect(tabs.x + tabs.width / 2).toBeCloseTo(modal.x + modal.width / 2, 0)
     await swipe(page)
-    await expect(page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
-    await expect(page.locator('.dnd-stats:visible')).toBeVisible()
+    await expect(page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Оружие', exact: true })).toHaveAttribute('aria-current', 'page')
+    await expect(page.locator('[data-sheet-section="weapons"]:visible')).toBeVisible()
   })
 })
 
@@ -123,13 +159,13 @@ for (const width of [390, 834, 1440]) test(`all sheet tabs are retained before d
   const api = await fixture(page)
   await page.goto('/tests/tutorials/fixtures/tutorials.html')
   const panes = page.locator(width < 1200 ? '.mobile-swipe-pane .character-sheet' : '.inner-tab-pane')
-  await expect(panes).toHaveCount(width < 1200 ? 8 : 6, { timeout: 20000 })
+  await expect(panes).toHaveCount(width < 1200 ? 7 : 6, { timeout: 20000 })
   if (width >= 1200) await expect(page.locator('.inner-tab-pane .sheet-skeleton')).toHaveCount(0)
   await panes.evaluateAll(nodes => nodes.forEach((node, index) => { node.dataset.retainedIdentity = 'pane-' + index }))
   if (width < 600) await page.getByRole('button', { name: 'Дневник', exact: true }).click()
   else if (width < 1200) await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Дневник', exact: true }).click()
   else await page.locator('.dnd-desktop-main').getByRole('tab', { name: 'Дневник', exact: true }).click()
-  await expect.poll(() => panes.evaluateAll(nodes => nodes.map(node => node.dataset.retainedIdentity))).toEqual(Array.from({ length: width < 1200 ? 8 : 6 }, (_, index) => 'pane-' + index))
+  await expect.poll(() => panes.evaluateAll(nodes => nodes.map(node => node.dataset.retainedIdentity))).toEqual(Array.from({ length: width < 1200 ? 7 : 6 }, (_, index) => 'pane-' + index))
   expect(api.writes).toEqual([])
   expect(errors).toEqual([])
 })
@@ -165,7 +201,7 @@ test('sheet header uses the character icon before the portrait and handles missi
     data: api.document(), iconImageUrl,
   } }))
   await page.goto('/tests/tutorials/fixtures/tutorials.html')
-  const icon = page.locator('.character-heading-icon')
+  const icon = page.locator('.dnd-heading .portrait')
   await expect(icon.locator('img')).toHaveAttribute('src', '/static/tab-stats.svg')
   iconImageUrl = null
   await page.reload()
@@ -183,9 +219,9 @@ for (const width of [390, 834, 1440]) test(`sheet content scrolls behind sharp c
   await page.goto('/tests/tutorials/fixtures/tutorials.html')
   const header = page.locator('.character-workspace-header')
   await expect(header).toBeVisible()
-  await expect(header.getByRole('img', { name: 'Иконка персонажа' })).toHaveText('Л')
-  const identity = await header.locator('.character-identity').boundingBox()
-  const icon = await header.locator('.character-heading-icon').boundingBox()
+  await expect(header.getByRole('button', { name: 'Профиль персонажа' })).toHaveText('Л')
+  const identity = await header.locator('.dnd-heading').boundingBox()
+  const icon = await header.locator('.dnd-heading .portrait').boundingBox()
   const name = await header.locator('h1').boundingBox()
   expect(icon.x + icon.width).toBeLessThan(name.x)
   expect(name.x + name.width).toBeLessThanOrEqual(identity.x + identity.width + 1)
@@ -226,6 +262,7 @@ for (const width of [390, 834, 1440]) test(`focused stat editor saves input imme
   await expect.poll(() => api.document().values.STR.value.base).toBe(14)
   await expect(form.getByText('Владение спасброском')).toHaveCount(0)
   await page.keyboard.press('Escape')
+  await expect(form).toHaveCount(0)
   await page.getByRole('button', { name: 'Сила — спасбросок', exact: true }).click()
   await page.getByRole('menuitem', { name: 'Изменить' }).click()
   await page.getByRole('switch', { name: 'Владение спасброском' }).click()

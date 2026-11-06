@@ -1,8 +1,11 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { createSSRApp, h } from 'vue'
 import { renderToString } from 'vue/server-renderer'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import CharacterWorkspaceHeader from './CharacterWorkspaceHeader.vue'
+
+// Block mechanics are covered by the real sheet integration tests.
+vi.mock('./CharacterBlock.vue', () => ({ default: { render: () => null } }))
 
 async function render(props) {
   const router = createRouter({ history: createMemoryHistory(), routes: [

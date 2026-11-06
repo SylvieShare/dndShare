@@ -52,109 +52,83 @@ internal fun DndStats(adaptive: Boolean = true) {
 }
 
 @Composable
-internal fun DndIdentityCard(compactHealth: Boolean = false) {
+internal fun DndProfileDetails() {
     val context = LocalCharacterSheet.current
     val sheet = context.sheet
-    val identity: @Composable () -> Unit = {
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
-            Column(Modifier.width(110.dp)) {
-                val icon = sheet.iconImageUrl
-                Box(Modifier.width(110.dp).height(113.dp).padding(start = 15.dp, top = 15.dp)) {
-                    Box(
-                        Modifier.size(88.dp).clip(RoundedCornerShape(18.dp)).clickable(
-                            enabled = context.canEdit
-                        ) {
-                            context.edit("icon")
-                        },
-                        contentAlignment = Alignment.Center,
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
+        Column(Modifier.width(110.dp)) {
+            val icon = sheet.iconImageUrl
+            Box(Modifier.width(110.dp).height(113.dp).padding(start = 15.dp, top = 15.dp)) {
+                Box(
+                    Modifier.size(88.dp).clip(RoundedCornerShape(18.dp)).clickable(
+                        enabled = context.canEdit
                     ) {
-                        if (icon != null)
-                            AsyncImage(
-                                icon,
-                                "Иконка персонажа",
-                                imageLoader = context.images,
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.fillMaxSize(),
-                            )
-                        else
-                            Text(
-                                sheet.name.take(1),
-                                style = ShareTypography.title,
-                                color = WebPalette.AccentSoft,
-                            )
-                    }
-                }
-                if (!compactHealth) Box(Modifier.fillMaxWidth().padding(start = 15.dp, end = 6.dp, bottom = 15.dp)) {
-                    ShareDashedAction(
-                        "+ Состояние",
-                        { context.edit("statuses") },
-                        compact = true,
-                        enabled = context.canEdit,
-                        textStyle =
-                            ShareTypography.context.copy(fontSize = 10.sp, lineHeight = 14.sp),
-                    )
+                        context.edit("icon")
+                    },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    if (icon != null)
+                        AsyncImage(
+                            icon,
+                            "Иконка персонажа",
+                            imageLoader = context.images,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    else
+                        Text(
+                            sheet.name.take(1),
+                            style = ShareTypography.title,
+                            color = WebPalette.AccentSoft,
+                        )
                 }
             }
-            Column(
-                Modifier.weight(1f).padding(15.dp),
-                verticalArrangement = Arrangement.spacedBy(14.dp),
-            ) {
-                Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                    ) {
-                        Text(
-                            sheet.name,
-                            Modifier.clickable(enabled = context.canEdit) {
-                                context.edit("identity")
-                            },
-                            fontSize = 26.sp,
-                            lineHeight = 28.sp,
-                            fontWeight = FontWeight.SemiBold,
-                        )
-                        Text(
-                            sheet.values["subrace"].objectValue().label().ifBlank {
-                                sheet.values["race"].objectValue().label()
-                            },
-                            fontSize = 14.sp,
-                            lineHeight = 18.sp,
-                            color = WebPalette.TextSecondary,
-                        )
-                    }
+
+        }
+        Column(
+            Modifier.weight(1f).padding(15.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
                     Text(
-                        sheet.values["classes"].arrayValue().joinToString(" · ") {
-                            val row = it.objectValue()
-                            "${row.label()} ${row["level"].number()}" +
-                                row["subclass"]
-                                    .objectValue()
-                                    .label()
-                                    .takeIf(String::isNotBlank)
-                                    ?.let { " ($it)" }
-                                    .orEmpty()
+                        sheet.name,
+                        Modifier.clickable(enabled = context.canEdit) {
+                            context.edit("identity")
+                        },
+                        fontSize = 26.sp,
+                        lineHeight = 28.sp,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                    Text(
+                        sheet.values["subrace"].objectValue().label().ifBlank {
+                            sheet.values["race"].objectValue().label()
                         },
                         fontSize = 14.sp,
                         lineHeight = 18.sp,
                         color = WebPalette.TextSecondary,
                     )
                 }
-                if (!compactHealth) DndHealth()
+                Text(
+                    sheet.values["classes"].arrayValue().joinToString(" · ") {
+                        val row = it.objectValue()
+                        "${row.label()} ${row["level"].number()}" +
+                            row["subclass"]
+                                .objectValue()
+                                .label()
+                                .takeIf(String::isNotBlank)
+                                ?.let { " ($it)" }
+                                .orEmpty()
+                    },
+                    fontSize = 14.sp,
+                    lineHeight = 18.sp,
+                    color = WebPalette.TextSecondary,
+                )
             }
         }
-    }
-    ShareTile(
-        framed = false,
-        contentPadding = PaddingValues(0.dp),
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        if (compactHealth) {
-            Column(Modifier.fillMaxWidth().padding(15.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                DndHealth()
-                ShareTextButton({ context.edit("statuses") }, enabled = context.canEdit) { Text("+ Состояние") }
-                ShareDetailSection("Данные персонажа", collapsible = true, defaultOpen = false) { identity() }
-            }
-        } else identity()
-        DndStatuses()
     }
 }
 

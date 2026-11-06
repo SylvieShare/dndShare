@@ -6,6 +6,7 @@
     <div v-if="$slots.navigation && !splitNavigation" class="workspace-header-navigation"><slot name="navigation" /></div>
     <div class="workspace-header-actions"><slot name="actions" /></div>
     </div>
+    <slot name="between" />
     <div v-if="$slots.navigation && splitNavigation" class="workspace-subheader">
       <div class="workspace-subheader-inner" :class="{ 'workspace-subheader-inner--fit': fitNavigation }"
         :style="{ '--workspace-subheader-max-width': contentWidth || (page ? 'var(--layout-content-max)' : undefined) }"><slot name="navigation" /></div>

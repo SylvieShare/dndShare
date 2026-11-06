@@ -241,6 +241,7 @@ internal class CharacterSheetViewModel(
         // A viewport fallback is presentation only. A transient wide window must not
         // replace Stats with its centre pane (Weapons) and save that as user intent.
         if (current.sectionName.isBlank()) selectSection(sections.first())
+        else if (current.sectionName == SheetSection.Base.name && SheetSection.Base !in sections) selectSection(SheetSection.Stats)
     }
 
     fun reloadInventoryIcons() {

@@ -6,7 +6,6 @@ import features from './fields/features'
 import equipment from './fields/equipment'
 import utilities from './fields/utilities'
 
-const baseTab = { id: 'base', title: 'База', svg: '/static/hp-pulse.svg' }
 const statsTab = { id: 'stats', title: 'Статы', svg: '/static/tab-stats.svg' }
 const sections = [
   { id: 'weapons', title: 'Оружие', svg: '/static/tab-weapons.svg' },
@@ -22,8 +21,8 @@ export default {
   system: 'dnd5e', width: layoutTokens['sheet-max'],
   blocks: { ...stats, ...identity, ...personality, ...features, ...equipment, ...utilities },
   tabs: {
-    phone: [baseTab, statsTab, ...sections],
-    tablet: [baseTab, statsTab, ...sections],
+    phone: [statsTab, ...sections],
+    tablet: [statsTab, ...sections],
     desktop: [sections[0], sections[1], sections[3], { ...sections[2], title: 'Снаряжение' }, sections[4], sections[5]],
   },
 }

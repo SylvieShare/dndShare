@@ -37,6 +37,7 @@ internal fun CharacterSheetHeader(
     menu: (() -> Unit)? = null,
     navigationInHeader: Boolean = true,
     actions: (@Composable () -> Unit)? = null,
+    heading: (@Composable () -> Unit)? = null,
 ) {
     ShareWorkspaceHeader(
         contentInset = if (format == LayoutFormat.Phone) 8.dp else 14.dp,
@@ -64,13 +65,13 @@ internal fun CharacterSheetHeader(
     ) {
         if (format == LayoutFormat.Wide && sheet?.templateName == "VTM20") {
             Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
-                Box(Modifier.weight(1f)) { SheetIdentity(sheet, format, images, close, backTitle, menu) }
+                Box(Modifier.weight(1f)) { SheetIdentity(sheet, format, images, close, backTitle, menu, heading) }
                 SheetNavigation(sections, section, images, select, template = "VTM20")
                 Spacer(Modifier.weight(1f))
             }
         } else {
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                SheetIdentity(sheet, format, images, close, backTitle, menu)
+                SheetIdentity(sheet, format, images, close, backTitle, menu, heading)
             }
         }
     }
@@ -84,6 +85,7 @@ private fun SheetIdentity(
     close: () -> Unit,
     backTitle: String,
     menu: (() -> Unit)?,
+    heading: (@Composable () -> Unit)?,
 ) {
     val iconUrl = sheet?.iconImageUrl?.takeIf(String::isNotBlank) ?: sheet?.portrait
     var iconFailed by remember(iconUrl) { mutableStateOf(false) }
@@ -114,6 +116,7 @@ private fun SheetIdentity(
             }
         }
         if (format == LayoutFormat.Wide) VerticalDivider(Modifier.height(32.dp))
+        if (heading != null) { heading(); return@Row }
         Box(
             Modifier.size(DesignTokens.Layout.SheetHeaderIcon)
                 .clip(RoundedCornerShape(DesignTokens.Radius.Input))

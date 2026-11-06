@@ -12,6 +12,10 @@ export function useSheetChrome(root) {
     const main = parts[0]?.getBoundingClientRect().height || 0
     element.style.setProperty('--sheet-chrome-height', `${height}px`)
     element.style.setProperty('--workspace-extra-fade', `${height - main}px`)
+    const strip = element.querySelector(':scope > [data-sheet-chrome] .character-summary-strip')
+    const visibleHeight = strip?.getBoundingClientRect().height || 0
+    const fullHeight = strip?.firstElementChild?.scrollHeight || 0
+    element.style.setProperty('--sheet-summary-reserve', Math.max(0, fullHeight - visibleHeight) + 'px')
     parts.forEach(part => observer?.observe(part))
   }
   onMounted(() => { observer = new ResizeObserver(update); update() })

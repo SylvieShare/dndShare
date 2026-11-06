@@ -8,7 +8,7 @@ async function openSheet(page, width = 390, reducedMotion = 'no-preference') {
   await page.emulateMedia({ reducedMotion })
   const api = await fixture(page)
   await page.goto('/tests/tutorials/fixtures/tutorials.html')
-  await expect(page.getByRole('button', { name: 'База', exact: true })).toHaveAttribute('aria-current', 'page')
+  await expect(page.getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
   await expect(page.locator('.mobile-tab-caption').first()).toHaveCSS('opacity', '1')
   return api
 }
@@ -63,10 +63,10 @@ for (const width of [390, 590]) test(`icons and captions follow a held swipe con
   expect(after.tabs[2].x).toBeCloseTo(initial.tabs[2].x, 1)
   expect(after.tabs[0].opacity).toBeCloseTo(.49, 2)
   expect(after.tabs[1].opacity).toBeCloseTo(.51, 2)
-  await expect(page.getByRole('button', { name: 'База', exact: true })).toHaveAttribute('aria-current', 'page')
+  await expect(page.getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
   await testInfo.attach('held-swipe', { body: await page.screenshot(), contentType: 'image/png' })
   await drag.end()
-  await expect(page.getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
+  await expect(page.getByRole('button', { name: 'Оружие', exact: true })).toHaveAttribute('aria-current', 'page')
   await expect(page.locator('.mobile-tab-caption').nth(1)).toHaveCSS('opacity', '1')
   const settled = await state(page)
   expect(settled.tabs[1].width).toBeCloseTo(initial.tabs[0].width, 1)
@@ -84,7 +84,7 @@ test('reverse movement and cancellation fade captions back without changing the 
   await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/dragging|settling/)
   await expect(page.locator('.mobile-tab-caption').first()).toHaveCSS('opacity', '1')
   await expect(page.locator('.mobile-tab-caption').nth(1)).toHaveCSS('opacity', '0')
-  await expect(page.getByRole('button', { name: 'База', exact: true })).toHaveAttribute('aria-current', 'page')
+  await expect(page.getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
 })
 
 test('wrapped swipe fades the first and last labels, and reduced motion settles immediately', async ({ page }) => {
@@ -93,7 +93,7 @@ test('wrapped swipe fades the first and last labels, and reduced motion settles 
   await drag.move(.3)
   const held = await state(page)
   expect(held.tabs[0].opacity).toBeCloseTo(.7, 2)
-  expect(held.tabs[7].opacity).toBeCloseTo(.3, 2)
+  expect(held.tabs.at(-1).opacity).toBeCloseTo(.3, 2)
   await drag.end()
   await expect(page.getByRole('button', { name: 'Дневник', exact: true })).toHaveAttribute('aria-current', 'page')
   await expect(page.locator('.mobile-tab-caption').last()).toHaveCSS('opacity', '1')
@@ -103,11 +103,11 @@ test('wrapped swipe fades the first and last labels, and reduced motion settles 
 
 test('a quick second selection replaces the in-flight movement', async ({ page }) => {
   await openSheet(page)
-  await page.getByRole('button', { name: 'Статы', exact: true }).dispatchEvent('click')
+  await page.getByRole('button', { name: 'Оружие', exact: true }).dispatchEvent('click')
   await expect(page.locator('.mobile-tabbar')).toHaveClass(/settling/)
   await page.getByRole('button', { name: 'Магия', exact: true }).dispatchEvent('click')
   await expect(page.getByRole('button', { name: 'Магия', exact: true })).toHaveAttribute('aria-current', 'page')
   await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/dragging|settling/)
   const final = await state(page)
-  expect(final.tabs.map(tab => tab.opacity)).toEqual([0, 0, 0, 1, 0, 0, 0, 0])
+  expect(final.tabs.map(tab => tab.opacity)).toEqual([0, 0, 1, 0, 0, 0, 0])
 })

@@ -4,6 +4,7 @@
       <div v-for="index in mobileTrackIndexes" :key="tabs[index]?.id ?? index" class="mobile-swipe-pane"
         :inert="index !== activeTab" :style="{ visibility: index === activeTab || tabDragActive || tabDragSettling ? 'visible' : 'hidden' }">
         <div :ref="element => panes[index] = element" class="mobile-pane-scroll"
+          @scroll.passive="index === activeTab && emit('scroll-position', $event.currentTarget.scrollTop)"
           @touchstart.passive="event => onTouchStart(event, track)" @touchmove="onTouchMove"
           @touchend.passive="onTouchEnd" @touchcancel.passive="cancelTouch">
           <slot v-if="isReady(index)" :index="index" />
@@ -14,7 +15,7 @@
   </div>
 </template>
 <script setup>
-import { computed, ref, toRef } from 'vue'
+import { computed, ref, toRef, watch, nextTick } from 'vue'
 import { usePreparedTabs } from '../../composables/usePreparedTabs'
 import CharacterSheetSkeleton from './CharacterSheetSkeleton.vue'
 const props = defineProps({ controller: { type: Object, required: true }, tabs: { type: Array, required: true } })
@@ -22,13 +23,15 @@ const { activeTab, tabDragActive, tabDragSettling, mobileTrackIndexes, mobileSwi
   onTouchStart, onTouchMove, onTouchEnd, cancelTouch } = props.controller
 const { isReady } = usePreparedTabs(toRef(props, 'tabs'), activeTab, computed(() => tabDragActive.value || tabDragSettling.value))
 const track = ref(null), panes = []
+const emit = defineEmits(['scroll-position'])
+watch(activeTab, async index => { await nextTick(); emit('scroll-position', panes[index]?.scrollTop || 0) })
 defineExpose({ trackElement: () => track.value, scrollElement: index => panes[index] })
 </script>
 <style scoped>
 .mobile-swipe-stage { width: 100%; height: 100%; overflow: hidden; }
 .mobile-swipe-track { display: flex; width: 100%; height: 100%; will-change: transform; }
 .mobile-swipe-pane { flex: 0 0 100%; height: 100%; min-width: 0; overflow: hidden; }
-.mobile-pane-scroll { box-sizing: border-box; padding-top: var(--sheet-chrome-height, 0px); scroll-padding-top: var(--sheet-chrome-height, 0px); height: 100%; overflow-x: hidden; overflow-y: auto; overflow-anchor: none; overscroll-behavior-y: none; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
+.mobile-pane-scroll { box-sizing: border-box; padding-top: calc(var(--sheet-chrome-height, 0px) + var(--sheet-summary-reserve, 0px)); scroll-padding-top: var(--sheet-chrome-height, 0px); height: 100%; overflow-x: hidden; overflow-y: auto; overflow-anchor: none; overscroll-behavior-y: none; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
 .mobile-pane-scroll :deep(> .container) { display: flex; flex-direction: column; min-height: 100%; }
 .mobile-pane-skeleton { box-sizing: border-box; padding: var(--spacing-large); }
 .settling .mobile-swipe-track { transition: transform .26s cubic-bezier(.25,.1,.25,1); }

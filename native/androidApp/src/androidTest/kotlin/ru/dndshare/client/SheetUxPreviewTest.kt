@@ -46,8 +46,10 @@ class SheetUxPreviewTest {
                     ShareTheme {
                         CompositionLocalProvider(LocalCharacterSheet provides context, LocalDensity provides Density(1f, 1f), LocalContentColor provides WebPalette.Text) {
                             Column(Modifier.fillMaxSize().semantics { contentDescription = "Обзор: ${selected.name}" }.shareCanvas().windowInsetsPadding(WindowInsets.safeDrawing)) {
-                                CharacterSheetHeader(sheet, format, sections, selected, images, { selected = it }, {})
-                                if (format == LayoutFormat.Phone) ShareSubheader(surfaceColor = WebPalette.Raised, cornerRadius = DesignTokens.Radius.Tile, horizontalInset = DesignTokens.Spacing.Page, contentPadding = PaddingValues(0.dp)) { SheetNavigation(sections, selected, images, { selected = it }, compact = true, pill = true) }
+                                CharacterSheetHeader(sheet, format, sections, selected, images, { selected = it }, {}, navigationInHeader = false,
+                                    heading = { DndHeading(context, format, false) {} })
+                                if (format != LayoutFormat.Wide) DndSummaryStrip(format) {}
+                                if (format != LayoutFormat.Wide) ShareSubheader(surfaceColor = WebPalette.Raised, cornerRadius = DesignTokens.Radius.Tile, horizontalInset = DesignTokens.Spacing.Page, contentPadding = PaddingValues(0.dp)) { SheetNavigation(sections, selected, images, { selected = it }, compact = format == LayoutFormat.Phone, pill = true) }
                                 key(selected) {
                                     if (format == LayoutFormat.Wide) Box(Modifier.weight(1f)) { DndWideSheet(selected, sections, { selected = it }) }
                                     else Column(Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()).padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {

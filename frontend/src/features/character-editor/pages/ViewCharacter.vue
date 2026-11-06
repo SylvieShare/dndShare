@@ -3,7 +3,7 @@
     <CharacterEditionDialog :controller="edition" />
     <CharacterTransferDialogs :controller="transfers" :character-uuid="uuid" />
     <PageTutorial :tutorial="characterTutorial" :mobile="isMobile" />
-    <CharacterWorkspaceHeader data-sheet-chrome :stacked-navigation="format === 'tablet'" ref="workspaceHeaderEl" :show-menu="template?.system === 'vtm-v20'" :compact="isMobile" :name="charName" :subtitle="charSub" :icon-url="headerIconUrl" :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="format === 'tablet' || format === 'desktop' && template?.system === 'vtm-v20' ? activeTabs : []" :active-tab="activeTab" @select-tab="onSetActiveTab" />
+    <CharacterWorkspaceHeader :dnd="template?.system === 'dnd5e' && !loading" :format="format" :scrolled="summaryScrolled" data-sheet-chrome :stacked-navigation="format === 'tablet'" ref="workspaceHeaderEl" :show-menu="template?.system === 'vtm-v20'" :compact="isMobile" :name="charName" :subtitle="charSub" :icon-url="headerIconUrl" :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="format === 'tablet' || format === 'desktop' && template?.system === 'vtm-v20' ? activeTabs : []" :active-tab="activeTab" @select-tab="onSetActiveTab" />
 
 
     <div
@@ -59,7 +59,7 @@
           <CharacterSheetSkeleton />
         </div>
       <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="initializeCharacter">Повторить</button></div>
-      <CharacterSwipePager v-else-if="compactLayout && template" ref="swipePagerEl" :controller="swipe" :tabs="activeTabs">
+      <CharacterSwipePager @scroll-position="summaryScrolled = $event > 48" v-else-if="compactLayout && template" ref="swipePagerEl" :controller="swipe" :tabs="activeTabs">
         <template #default="{ index }">
           <div class="container" :style="containerWidthForTab(index)">
             <component :is="tabRenderComponent(index, TabPane)" :definition="template" :format="format" :section="activeTabs[index]?.id"
@@ -87,6 +87,7 @@
 </template>
 
 <script setup>
+import { provideSheetFields } from '../lib/sheetContext'
 import { useSheetChrome } from '../composables/useSheetChrome'
 import CharacterWorkspaceHeader from '@/features/character-editor/components/CharacterWorkspaceHeader.vue'
 import CharacterTransferDialogs from '@/features/character-editor/components/CharacterTransferDialogs.vue'
@@ -148,6 +149,9 @@ const {
   load, loadSync, containerWidthForTab, getInitialTabs,
   updateValue, updateValues, updateVar, updateContentSources, onPublicToggle,
 } = useCharacterData(uuid, format)
+provideSheetFields(template, data, onUpdateValue, onUpdateVar)
+const summaryScrolled = ref(false)
+
 
 const headerIconUrl = computed(() => iconImageUrl.value || data.value.values?.ava?.url || '')
 

@@ -54,7 +54,7 @@ JSON документа персонажа хранит значения и иг
 и `blocks/vtm`. Создание и сессионное окно используют те же композиции.
 
 Есть три формата доступного окна: телефон до 600, планшет 600–1199 и большой
-от 1200 CSS px / dp. В телефонном и среднем D&D-формате первая вкладка — «База»; над содержимым находится навигация
+от 1200 CSS px / dp. В телефонном и среднем D&D-формате первая вкладка — «Статы»; над содержимым находится навигация
 `IconNavigation`, как в сессии. В среднем формате вкладки находятся в отдельной нижней полосе шапки.
 Подложка Raised с радиусом Tile выровнена по краям карточек с отступом Page.
 Лёгкая тень отделяет полосу от прокручиваемых карточек. Выбранная вкладка
@@ -62,22 +62,22 @@ JSON документа персонажа хранит значения и иг
 Вкладки шириной SheetNavigationItem (56) и высотой SheetNavigationHeight (48) центрируются внутри полосы,
 а при недостатке ширины прокручиваются. Телефонная полоса использует ту же
 поверхность и отступы с компактными кнопками. Активная телефонная вкладка имеет видимую подпись
-и минимальную ширину SheetNavigationSelected (84); «База» использует hp-pulse, «Личность» — tab-personality.
+и минимальную ширину SheetNavigationSelected (84); «Личность» использует tab-personality.
 В телефонном вебе и Android ширина кнопок, положение иконок, прозрачность обеих соседних подписей
 и индикатор непрерывно следуют прогрессу свайпа. В середине жеста нет дискретного
 переключения геометрии. Подписи остаются в дереве интерфейса; выбор страницы и доступное selected-состояние
 фиксируются только после завершения. Отпускание или отмена согласованно доводят
 элементы до итогового положения; reduced motion отключает завершающий переход.
-Первая вкладка **База** содержит карточку с иконкой,
-именем, HP и состояниями. На телефоне HP показаны крупно, повторная иконка и
-идентичность свёрнуты в «Данные персонажа» с сохранением доступа к редактированию.
-Далее идут служебная группа КД/инициативы/меню/скорости/мастерства/
-отдыха и отдельный уровень. Шесть характеристик остаются во **Статах**.
+Под именем закреплены текущие, временные и максимальные HP. Нажатие открывает управление здоровьем,
+включая спасброски от смерти при 0 HP. Портрет открывает профиль с данными персонажа и уровнем.
+На телефоне и планшете над вкладками расположены КД, инициатива, скорость и состояния. При прокрутке
+эта строка сворачивается; кнопка сводки остаётся в шапке. Сводка содержит отдых, меню, мастерство и опыт.
+На широком экране вкладки начинают центральную колонку; состояния находятся в шапке, показатели справа.
 Телефон и средний формат используют одинаковые разделы и общий свайп-пейджер страницы/модального листа. Соседние вкладки следуют за пальцем, вертикальная прокрутка сохраняется отдельно в каждой панели; свайпы и клики учитывают reduced motion. Шапка во всех форматах показывает иконку персонажа слева от имени и подзаголовка.
 Иконка отрисовывается без подложки. Изображение берётся из iconImageUrl, затем из ava.url, затем отображается монограмма.
 Ошибка загрузки изображения также показывает монограмму. Размер иконки задаёт
 SheetHeaderIcon (40), имя использует роль SheetHeader (20/25).
-На телефоне шапка содержит кнопку возврата. Сводка HP и служебные показатели находятся только в «Базе». Статы занимают всю ширину в одну,
+На телефоне шапка содержит кнопку возврата. Статы занимают всю ширину в одну,
 две или три колонки с минимальной шириной SheetStatMin; колонки балансируются
 по высоте с подбором групп характеристик; внутри каждой колонки порядок остаётся стабильным. Ширины и крупные числа заданы общими
 токенами. У VTM есть собственные прямые композиции трёх форматов.
@@ -153,9 +153,7 @@ sheet tab; controls, tutorial targets and session actions remain in place.
 The header stays above the sheet scroller, and long
 names truncate within it. Without a session the header keeps its identity and
 return action. The former session tile is removed from the desktop utility
-column. On phones the identity/return header and session control sit above the icon tabs; identity, HP and utility controls live in **База**. Its
-desktop identity summary uses the top-aligned frameless dedicated character icon to the left of the
-visible name, race, class list and HP. The full portrait lives in the inner **Личность** tab beside the
+column. On phones the header holds identity, HP and session actions; the collapsible summary sits above the tabs. The full portrait lives in the inner **Личность** tab beside the
 appearance fields. The class list stays below the name and race and wraps by
 whole class entries without increasing the sheet width; an individual entry
 that is wider than the available row is ellipsized. The active tab still registers its DOM scroller
@@ -290,7 +288,7 @@ Catalogue levels are copied into runtime status parameters, so changing one
 character never mutates the shared item. Exhaustion and inspiration are system
 effect items with their own icons and covers, while their live level/flag remain
 in the existing rules-owned character fields for rest compatibility.
-On phones, HP and status controls are placed in **База**, with the avatar, identity and utility cells. The global mobile summary strip is removed. The larger condition icons are frameless
+The D&D header opens health from any section and shows active conditions in the compact summary or wide header. The larger condition icons are frameless
 and show the condition description on hover. Empty and zero values render no placeholder.
 Heroic inspiration is stored as the boolean `values.inspiration`.
 

@@ -1,6 +1,14 @@
 <template>
+  <RowActionMenu v-if="variant === 'strip' && rollable" :title="label">
+    <template #trigger><button ref="tileRef" type="button" class="stat-strip" :aria-label="label + ' ' + pre + value"><img :src="icon" alt="" /><span class="stat-strip-label">{{ label }}</span><span>{{ pre }}{{ value }}{{ unit ? ' ' + unit : '' }}</span></button></template>
+    <template #default="{ close: closeMenu }">
+      <RowActionItem v-if="canEdit" action="edit" @click="closeMenu(); openTile()">Изменить</RowActionItem>
+      <RowActionItem :icon="Dices" @click="closeMenu(); runAction()">Бросить кубик</RowActionItem>
+    </template>
+  </RowActionMenu>
+  <button v-else-if="variant === 'strip'" class="stat-strip" type="button" :aria-label="label + ' ' + value + unit" :disabled="!canEdit" @click="open"><img :src="icon" alt="" /><span class="stat-strip-label">{{ label }}</span><span>{{ pre }}{{ value }}{{ unit ? ' ' + unit : '' }}</span></button>
   <!-- toolbar mini -->
-  <div v-bind="$attrs" v-if="variant === 'mini'" class="cmini" :class="{ 'cmini-toggled': toggled, 'cmini-editable': canEdit }" @click="open">
+  <div v-bind="$attrs" v-else-if="variant === 'mini'" class="cmini" :class="{ 'cmini-toggled': toggled, 'cmini-editable': canEdit }" @click="open">
     <span class="cmini-label">{{ miniLabel || label }}</span>
     <span class="cmini-value">
       <span v-if="pre" class="cmini-plus">{{ pre }}</span>{{ value }}<span v-if="unit" class="cmini-unit">{{ unit }}</span>
@@ -87,7 +95,7 @@ const canEdit = computed(() => !!charCtx.ownerMode)
 const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 
 function open(event) { if (canEdit.value) openFrom(event?.currentTarget?.closest('.morph-tile') || event?.currentTarget || null) }
-function openTile() { if (canEdit.value) openFrom(tileRef.value?.$el || null) }
+function openTile() { if (canEdit.value) openFrom(tileRef.value?.$el || tileRef.value || null) }
 function runAction() { if (props.rollable || canEdit.value) emit('action') }
 </script>
 
@@ -136,4 +144,8 @@ function runAction() { if (props.rollable || canEdit.value) emit('action') }
 .cmini-unit { font-size: 10px; font-weight: 500; color: var(--text-muted); }
 .cmini-toggled .cmini-value { color: var(--accent); }
 .cmini-toggled .cmini-label { color: color-mix(in srgb, var(--accent) 70%, var(--text-muted)); }
+</style>
+
+<style scoped>
+.stat-strip { display:inline-flex; align-items:center; gap:4px; min-height:36px; padding:2px 3px; border:0; background:transparent; color:var(--text-1); font:inherit; font-weight:600; cursor:pointer } .stat-strip-label {display:none} .stat-strip img { width:16px; height:16px; object-fit:contain; opacity:.8 }
 </style>

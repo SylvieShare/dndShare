@@ -2,7 +2,10 @@
   <AppModal fullscreen :z-index="zIndex" @close="emit('close')">
     <CharacterEditionDialog :controller="edition" />
     <div ref="chromeRoot" :inert="edition.busy" class="csm share-app-canvas" :class="{ 'csm--preview': previewMode }">
-      <CharEditorToolbar data-sheet-chrome
+      <CharacterWorkspaceHeader v-if="template?.system === 'dnd5e' && !loading" dnd modal data-sheet-chrome
+        :format="windowFormat" :scrolled="summaryScrolled" :compact="windowFormat === 'phone'" :name="charName" :subtitle="charSub" :icon-url="iconImageUrl || data.values?.ava?.url"
+        @close="emit('close')" />
+      <CharEditorToolbar v-else data-sheet-chrome
         modal
         :publicVisible="publicVisible"
         :canEdit="canEdit"
@@ -32,7 +35,7 @@
         </div>
 
         <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="initializeCharacter">Повторить</button></div>
-        <CharacterSwipePager v-else-if="template && compactLayout" ref="swipePagerEl" :controller="swipe" :tabs="activeTabs">
+        <CharacterSwipePager @scroll-position="summaryScrolled = $event > 48" v-else-if="template && compactLayout" ref="swipePagerEl" :controller="swipe" :tabs="activeTabs">
           <template #default="{ index }">
             <div class="container" :style="containerWidthForTab(index)">
               <CharacterTabPane :definition="template" :format="format" :section="activeTabs[index]?.id"
@@ -66,6 +69,7 @@
 </template>
 
 <script setup>
+import { provideSheetFields } from '../lib/sheetContext'
 import { useSheetChrome } from '../composables/useSheetChrome'
 import CharacterSheetSkeleton from './sheet/CharacterSheetSkeleton.vue'
 import { computed, onMounted, ref, watch } from 'vue'
@@ -75,6 +79,7 @@ import CharacterSaveErrorToast from '@/features/character-editor/components/Char
 import CharacterTabPane from './CharacterTabPane.vue'
 import { useAppLayout } from '@/shared/composables/useAppLayout'
 import { sheetTabIndex, sheetTabs } from '../lib/sheetPresentation'
+import CharacterWorkspaceHeader from './CharacterWorkspaceHeader.vue'
 import CharacterSheetTabs from './sheet/CharacterSheetTabs.vue'
 import CharacterSwipePager from './sheet/CharacterSwipePager.vue'
 import { useTabSwipe } from '../composables/useTabSwipe'
@@ -97,15 +102,18 @@ const emit = defineEmits(['close'])
 const sessionEventsStore = useSessionEventsStore()
 const previewMode = computed(() => Boolean(props.draft))
 const { format: windowFormat } = useAppLayout()
-// A modal opens on identity/HP even on a phone, then offers compact content tabs.
+// The modal uses the compact pager on both phone and tablet.
 const format = computed(() => windowFormat.value === 'phone' ? 'tablet' : windowFormat.value)
 
 const {
   loading, loadError, template, data, charCtx, isOwner, publicVisible, version, serverDocument, sourceVersionId, applyCharacter, applyMetadata,
-  activeTabs, toolbarTabs, charName, charSub,
+  activeTabs, toolbarTabs, charName, charSub, iconImageUrl,
   load, loadPreview, containerWidthForTab, getInitialTabs,
   updateValue, updateValues, updateVar, onPublicToggle: updatePublicVisible,
 } = useCharacterData(props.uuid, format)
+provideSheetFields(template, data, onUpdateValue, onUpdateVar)
+const summaryScrolled = ref(false)
+
 
 const pendingSessionEvents = []
 const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError, reloadSave, flushSave, historyState, sync: documentSync } = useSaveDebounce(props.uuid, data, {

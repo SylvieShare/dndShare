@@ -42,7 +42,7 @@ class SheetTabbarGestureTest {
         val instrument = InstrumentationRegistry.getInstrumentation()
         val images = ImageLoader.Builder(instrument.targetContext).components { add(SvgDecoder.Factory()) }.build()
         val width = mutableIntStateOf(size)
-        val selected = mutableStateOf(SheetSection.Base)
+        val selected = mutableStateOf(SheetSection.Stats)
         val state = AtomicReference<PagerState>()
         val sections = sheetSections("DND5", LayoutFormat.Phone)
         try {
@@ -99,7 +99,7 @@ class SheetTabbarGestureTest {
 
                 run {
                     awaitPage(0)
-                    TouchRobot.await { TouchRobot.find("Свайп содержимого") != null && TouchRobot.find("Статы") != null }
+                    TouchRobot.await { TouchRobot.find("Свайп содержимого") != null && TouchRobot.find("Оружие") != null }
                     TouchRobot.await("Resized viewport") { TouchRobot.bounds("Свайп содержимого").width() == size }
                     val area = TouchRobot.bounds("Свайп содержимого")
                     fun swipe(reverse: Boolean, distance: Float, expectedSelection: SheetSection) {
@@ -114,8 +114,8 @@ class SheetTabbarGestureTest {
                             assertEquals(expectedSelection, selected.value, "Dragging must not commit the page")
                             val chosen = tab(expectedSelection.title)
                             assertTrue(chosen.isSelected, "Selection ${pager.settledPage}: $chosen")
-                            val first = bounds("База")
-                            val second = bounds("Статы")
+                            val first = bounds("Статы")
+                            val second = bounds("Оружие")
                             if (size < 600) {
                                 assertTrue(abs(first.width() - (84f - 40f * position)) <= 2f, "Outgoing tab follows $position: $first")
                                 assertTrue(abs(second.width() - (44f + 40f * position)) <= 2f, "Incoming tab follows $position: $second")
@@ -125,20 +125,20 @@ class SheetTabbarGestureTest {
                             }
                             capture("$size-${if (reverse) "reverse" else distance.toString()}")
                             SystemClock.sleep(160)
-                            assertEquals(first, bounds("База"), "A paused finger must freeze the strip")
-                            assertEquals(second, bounds("Статы"))
+                            assertEquals(first, bounds("Статы"), "A paused finger must freeze the strip")
+                            assertEquals(second, bounds("Оружие"))
                         }
                     }
-                    swipe(false, .3f, SheetSection.Base)
+                    swipe(false, .3f, SheetSection.Stats)
                     awaitPage(0)
-                    swipe(false, .65f, SheetSection.Base)
+                    swipe(false, .65f, SheetSection.Stats)
                     awaitPage(1)
-                    swipe(true, .65f, SheetSection.Stats)
+                    swipe(true, .65f, SheetSection.Weapons)
                     awaitPage(0)
-                    assertTrue(tab("Статы").performAction(AccessibilityNodeInfo.ACTION_CLICK))
+                    assertTrue(tab("Оружие").performAction(AccessibilityNodeInfo.ACTION_CLICK))
                     assertTrue(tab("Магия").performAction(AccessibilityNodeInfo.ACTION_CLICK))
-                    awaitPage(3)
-                    assertTrue(tab("Магия").isSelected)
+                    awaitPage(sections.indexOf(SheetSection.Spells))
+                    TouchRobot.await("Выбрана вкладка Магия") { tab("Магия").isSelected }
                 }
             }
         } finally { images.shutdown() }

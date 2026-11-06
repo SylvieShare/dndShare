@@ -11,6 +11,7 @@ for (const live of [false, true])
       await page.goto(
         `/tests/tutorials/fixtures/character-sheet-save.html?${mode === 'dm' ? 'other&dm&' : ''}${live ? 'live' : ''}`,
       )
+      await page.getByRole('button', {name: 'Профиль персонажа', exact:true}).click()
       await expect(page.locator('.dci-name')).toHaveText('Торин')
       await rename(page, 'Новое имя')
       await expect(page.locator('.dci-name')).toHaveText('Новое имя')
@@ -33,6 +34,7 @@ for (const mobile of [false, true])
   test(`save failure remains retryable without losing edits (${mobile ? 'mobile' : 'desktop'})`, async ({ page }) => {
     await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 })
     await page.goto('/tests/tutorials/fixtures/character-sheet-save.html')
+    await page.getByRole('button', {name: 'Профиль персонажа', exact:true}).click()
     await expect(page.locator('.dci-name')).toHaveText('Торин')
     await page.evaluate(() => { window.failCharacterSaves = 400 })
     await rename(page, 'Несохранённое имя')
@@ -56,6 +58,7 @@ for (const mode of ['owner', 'dm'])
     await page.goto(
       `/tests/tutorials/fixtures/character-sheet-save.html?live&${mode === 'dm' ? 'other&dm' : ''}`,
     )
+    await page.getByRole('button', {name: 'Профиль персонажа', exact:true}).click()
     await expect(page.locator('.dci-name')).toHaveText('Торин')
     await page.evaluate(() => {
       window.holdCharacterResponse = true
@@ -63,7 +66,8 @@ for (const mode of ['owner', 'dm'])
     await rename(page, 'Первое имя')
     await page.waitForFunction(() => window.releaseCharacterResponse)
     await rename(page, 'Последнее имя')
-    await page.locator('.csm .tb-back').click()
+    await page.keyboard.press('Escape')
+    await page.getByRole('button', { name: 'Закрыть лист', exact: true }).click()
     await expect(page.locator('.csm')).toHaveCount(0)
     await page.evaluate(() => window.releaseCharacterResponse())
     await expect
@@ -72,7 +76,7 @@ for (const mode of ['owner', 'dm'])
     await page
       .getByRole('button', { name: 'Открыть лист', exact: true })
       .click()
-    await expect(page.locator('.dci-name')).toHaveText('Последнее имя')
+    await expect(page.locator('.dnd-heading .name strong')).toHaveText('Последнее имя')
   })
 
 for (const query of ['other&live', 'preview&live'])
@@ -80,6 +84,7 @@ for (const query of ['other&live', 'preview&live'])
     await page.goto(
       `/tests/tutorials/fixtures/character-sheet-save.html?${query}`,
     )
+    await page.getByRole('button', {name: 'Профиль персонажа', exact:true}).click()
     await expect(page.locator('.dci-name')).toHaveText('Торин')
     await expect(page.locator('.dci-edit')).toHaveCount(0)
     await page.waitForTimeout(500)

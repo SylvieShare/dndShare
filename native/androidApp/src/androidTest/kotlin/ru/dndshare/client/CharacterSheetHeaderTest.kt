@@ -77,7 +77,7 @@ class CharacterSheetHeaderTest {
                                     }) {
                                         CharacterSheetHeader(
                                             sheet, format, sheetSections("DND5", format),
-                                            SheetSection.Stats, images, {}, { closes.incrementAndGet() },
+                                            SheetSection.Weapons, images, {}, { closes.incrementAndGet() },
                                             actions = {
                                                 Text("Сессия", Modifier.width(90.dp), color = WebPalette.TextMuted)
                                             },
@@ -101,11 +101,11 @@ class CharacterSheetHeaderTest {
                     if (current == 834) {
                         TouchRobot.await { TouchRobot.find("Магия") != null }
                         assertTrue(header.height <= 130, "The tablet header contains compact navigation")
-                        val first = TouchRobot.bounds("База")
+                        val first = TouchRobot.bounds("Статы")
                         val last = TouchRobot.bounds("Дневник")
                         assertTrue(first.left >= header.left + 20)
                         assertTrue(last.right <= header.right - 20)
-                        var firstTab = requireNotNull(TouchRobot.find("База"))
+                        var firstTab = requireNotNull(TouchRobot.find("Статы"))
                         while (!firstTab.isClickable && firstTab.parent != null) firstTab = firstTab.parent
                         val area = android.graphics.Rect().also(firstTab::getBoundsInScreen)
                         TouchRobot.await("Navigation icon is rendered") {

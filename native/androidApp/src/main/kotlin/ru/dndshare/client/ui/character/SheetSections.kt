@@ -38,10 +38,10 @@ fun sheetSections(template: String, format: LayoutFormat): List<SheetSection> =
                 SheetSection.Journal,
             )
         when (format) {
-            LayoutFormat.Phone -> listOf(SheetSection.Base, SheetSection.Stats) + content
+            LayoutFormat.Phone -> listOf(SheetSection.Stats) + content
             LayoutFormat.Wide ->
                 listOf(content[0], content[1], content[3], content[2], content[4], content[5])
-            else -> listOf(SheetSection.Base, SheetSection.Stats) + content
+            else -> listOf(SheetSection.Stats) + content
         }
     }
 

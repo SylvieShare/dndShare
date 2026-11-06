@@ -14,24 +14,6 @@ import ru.dndshare.client.ui.designsystem.*
 @Composable
 internal fun DndSheetSection(section: SheetSection, format: LayoutFormat) {
     when (section) {
-        SheetSection.Base ->
-            BoxWithConstraints(Modifier.fillMaxWidth()) {
-                if (maxWidth >= DesignTokens.Layout.SheetBaseMin * 2 + DesignTokens.Spacing.Page) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-                        Column(
-                            Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(14.dp),
-                        ) {
-                            DndIdentityCard(compactHealth = format == LayoutFormat.Phone)
-                        }
-                        Box(Modifier.weight(1f)) { DndUtilities() }
-                    }
-                } else
-                    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                        DndIdentityCard(compactHealth = format == LayoutFormat.Phone)
-                        DndUtilities()
-                    }
-            }
         SheetSection.Stats -> DndStats()
         SheetSection.Weapons -> DndWeapons(format)
         SheetSection.Spells -> DndSpells()
@@ -69,7 +51,6 @@ internal fun DndWideSheet(
                 Modifier.weight(1f).padding(top = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
-                DndIdentityCard()
                 SheetNavigation(
                     sections,
                     sections[pager.currentPage],

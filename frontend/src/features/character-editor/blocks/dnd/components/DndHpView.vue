@@ -1,8 +1,12 @@
 <template>
+  <button v-if="heading" ref="rootElement" type="button" class="hp-heading" :aria-label="'Здоровье: ' + hpCurrent + ' из ' + hpMax" @click="$emit('open', $event)">
+    <img src="/static/hp-pulse.svg" alt="" :style="{ filter: svgColorFilter }" /><b>{{ hpCurrent }}</b><span>/ {{ hpMax }}</span><b v-if="hpTemp">+{{ hpTemp }}</b>
+    <small v-if="hpCurrent <= 0">Спасброски</small><i v-else aria-hidden="true"><i :style="{ width: barPct + '%', background: barColor }" /></i>
+  </button>
   <!-- Compact variant (toolbar / mobile strip) -->
   <div
     ref="rootElement"
-    v-if="compact"
+    v-else-if="compact"
     class="hp-compact"
     :style="{ '--hp-color': barColor }"
     @click="$emit('open', $event)"
@@ -52,6 +56,8 @@ import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 const props = defineProps({
   panel: Boolean,
   hp: { type: Object, required: true },
+  heading: Boolean,
+  interactive: Boolean,
   compact: { type: Boolean, default: false },
 })
 defineEmits(['open', 'change'])
@@ -91,6 +97,10 @@ const svgColorFilter = computed(() => {
 </script>
 
 <style scoped>
+.hp-heading { display:flex; align-items:center; flex-wrap:wrap; gap:4px; min-height:24px; padding:0; border:0; background:transparent; color:var(--text-1); font:inherit; font-size:var(--type-context-size); cursor:pointer; font-variant-numeric:tabular-nums }
+.hp-heading img { width:14px;height:14px } .hp-heading span{color:var(--text-2)}
+.hp-heading > i {width:34px;height:3px; background:var(--surface-raised); border-radius:3px;overflow:hidden} .hp-heading i i {display:block;height:100%}
+.hp-heading small {color:var(--danger)}
 /* ── Compact variant ── */
 .hp-compact { display: inline-flex; flex: 0 0 auto; flex-direction: column; gap: 4px; width: max-content; min-width: max-content; padding: 6px 8px; border-radius: 10px; transition: background 0.3s ease; cursor: pointer; }
 .hp-c-header { display: flex; align-items: center; }

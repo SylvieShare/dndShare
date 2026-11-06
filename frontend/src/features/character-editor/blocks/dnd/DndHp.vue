@@ -1,7 +1,15 @@
 <template>
-  <DndHpView v-bind="$attrs" ref="tutorialHp" data-tutorial="character-hp" :compact="isCompact"
+  <DndHpView v-bind="$attrs" ref="tutorialHp" data-tutorial="character-hp" :compact="isCompact" :heading="block.props?.variant === 'heading'"
     :hp="hp" :interactive="canEdit" @open="openEditor" @change="onHpChange" />
 
+  <AppModalFrame v-if="detailsOpen" title="Здоровье" @close="detailsOpen = false">
+    <template v-if="canEdit"><DndHpView panel :hp="hp" @change="onHpChange" />
+      <ActionButton @click="editFromDetails">Изменить здоровье</ActionButton></template>
+    <dl v-else class="hp-details"><dt>Текущие HP</dt><dd>{{ hp.current }} / {{ hpMaximum(hp) }}</dd>
+      <dt>Временные HP</dt><dd>{{ hp.temp || 0 }}</dd>
+      <template v-if="hp.current <= 0"><dt>Успехи</dt><dd>{{ hp.ds_success || 0 }} / 3</dd><dt>Провалы</dt><dd>{{ hp.ds_failure || 0 }} / 3</dd></template>
+    </dl>
+  </AppModalFrame>
   <MorphEditorShell
     v-if="editorOpen"
     :origin-rect="originRect"
@@ -22,6 +30,7 @@
 
 <script setup>
 defineOptions({ inheritAttrs: false })
+import { ActionButton, AppModalFrame } from '@sylvieshare/share-ui'
 import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
 import { computed, inject, ref } from 'vue'
 import DndHpEditor from '@/features/character-editor/blocks/dnd/components/DndHpEditor'
@@ -38,6 +47,7 @@ const charCtx = inject('charCtx', { ownerMode: true })
 const canEdit = computed(() => !!charCtx.ownerMode)
 const { editorOpen, originRect, originEl, open: openMorph, close } = useMorphOrigin()
 
+const detailsOpen = ref(false)
 const tutorialHp = ref(null)
 useTutorialAction('character-health', ({ onCleanup }) => {
   const wasOpen = editorOpen.value
@@ -74,7 +84,20 @@ function onHpChange(h, operation) {
   if (event) charCtx.logSessionEvent?.(event)
 }
 
+function editFromDetails() {
+  detailsOpen.value = false
+  openMorph({ currentTarget: tutorialHp.value?.rootElement?.() })
+}
+
 function openEditor(event) {
+  if (props.block?.props?.variant === 'heading' && (!canEdit.value || Number(hp.value.current) <= 0)) {
+    detailsOpen.value = true
+    return
+  }
   if (canEdit.value) openMorph({ currentTarget: tutorialHp.value?.rootElement?.() || event?.currentTarget })
 }
 </script>
+
+<style scoped>
+.hp-details {display:grid;grid-template-columns:1fr auto;gap:var(--spacing-label);margin:0}.hp-details dd{margin:0;font-variant-numeric:tabular-nums}
+</style>
