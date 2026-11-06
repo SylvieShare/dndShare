@@ -9,7 +9,7 @@
     @update:open="!$event && emit('close')"
   >
     <div class="stat-roll-summary">
-      <SystemDie :sides="20" value="d20" color="var(--text-muted)" :animated="false" aria-hidden="true" />
+      <SystemDie :sides="20" value="d20" color="var(--text-muted)" aria-hidden="true" />
       <div>
         <h3 class="stat-roll-heading"><span>{{ title }}</span><b>{{ signed(total) }}</b></h3>
         <dl v-if="details.length" class="stat-roll-details">

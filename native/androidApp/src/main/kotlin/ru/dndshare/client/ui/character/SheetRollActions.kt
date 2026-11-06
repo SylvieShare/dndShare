@@ -69,7 +69,6 @@ private fun RollBonusSummary(request: SheetRollRequest) {
             value = "d20",
             color = WebPalette.TextMuted,
             modifier = Modifier.clearAndSetSemantics {},
-            animated = false,
         )
         Column(
             Modifier.weight(1f),
