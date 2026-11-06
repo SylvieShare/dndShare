@@ -11,6 +11,7 @@ export function weaponUseDamageActions(values, uid) {
     double_on_critical: true,
     condition: [event.title, ...(step.requirements || [])].join(' · '),
     prepaid: { eventId: event.id, stepKey: step.key, attackMode: event.attack_mode,
+      source: event.title, sources: step.sources, criticalSources: step.critical_sources,
       expression: step.expression, criticalExpression: step.critical_expression },
   }))
 }

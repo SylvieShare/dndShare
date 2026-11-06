@@ -17,8 +17,8 @@ export function withWeaponThrowAction(actions, item, properties = []) {
     : 'Импровизированное метание: Ловкость, без обычного бонуса владения · 20/60 фт. Тип урона уточните у мастера.'
   const modes = actions.filter(action => action.attack_mode === 'thrown')
   if (modes.length) return actions.map(action => action.attack_mode === 'thrown'
-    ? { ...action, label: 'Метнуть', attack_condition: hint } : action)
-  return [{ key: THROW_ACTION_KEY, label: 'Метнуть', attack_mode: 'thrown', condition: hint, attack_condition: hint,
+    ? { ...action, label: 'Метнуть', throw_range: range, attack_condition: hint } : action)
+  return [{ key: THROW_ACTION_KEY, label: 'Метнуть', throw_range: range, attack_mode: 'thrown', condition: hint, attack_condition: hint,
     preview_replacement: natural ? null : { dice: 'd4', dice_count: 1 } }, ...actions]
 }
 

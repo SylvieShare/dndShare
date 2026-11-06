@@ -31,28 +31,28 @@ data class WeaponReadout(
     val extraCriticalDice: Int,
     val basePartCount: Int = parts.size,
     val twoHandedPartCount: Int = twoHanded.size,
+    val attackSources: List<FormulaSource> = emptyList(),
+    val damageSources: List<FormulaSource> = emptyList(),
+    val criticalDiceRules: List<JsonObject> = emptyList(),
 ) {
+    fun baseTerms(versatile: Boolean, critical: Boolean, extraDice: Int = extraCriticalDice): List<SheetDamageTerm> {
+        val useVersatile = versatile && twoHanded.isNotEmpty()
+        val baseCount = if (useVersatile) twoHandedPartCount else basePartCount
+        return (if (useVersatile) twoHanded else parts).mapIndexed { index, part ->
+            val count = if (critical && part.sides != null)
+                part.count * 2 + (if (index == 0 && baseCount > 0) extraDice else 0)
+            else part.count
+            SheetDamageTerm(part.sides?.let { "${count}d$it" } ?: count.toString(), part.type, part.color)
+        }
+    }
+
     fun expression(
         versatile: Boolean = false,
         critical: Boolean = false,
         offhand: Boolean = false,
         addOffhandAbility: Boolean = false,
     ): String {
-        val useVersatile = versatile && twoHanded.isNotEmpty()
-        val source = (if (useVersatile) twoHanded else parts)
-        val terms = source.mapIndexed { index, part ->
-            val count =
-                if (critical && part.sides != null)
-                    part.count * 2 +
-                        (if (
-                            index == 0 &&
-                                (if (useVersatile) twoHandedPartCount else basePartCount) > 0
-                        )
-                            extraCriticalDice
-                        else 0)
-                else part.count
-            if (part.sides == null) count.toString() else "${count}d${part.sides}"
-        }
+        val terms = baseTerms(versatile, critical).map { it.expression }
         val modifier =
             damageBonus - (if (offhand && !addOffhandAbility) statModifier.coerceAtLeast(0) else 0)
         return (terms +
@@ -206,12 +206,21 @@ fun weaponReadout(
                 else "melee",
             improvised = improvised,
         )
-    val attack =
-        modifier +
-            magic +
-            (if (proficient) sheet.proficiency() else 0) +
-            mechanics.bonus("weapon_attack_bonus", context)
-    val damageBonus = modifier + magic + mechanics.bonus("weapon_damage_bonus", context)
+    val abilityName = metadata.suggests["16"]?.firstOrNull { it.id == ability }?.value
+        ?: listOf("Сила", "Ловкость", "Телосложение", "Интеллект", "Мудрость", "Харизма").getOrNull((ability - 1).toInt()) ?: "Характеристика"
+    fun modifiers(kind: String) = buildList {
+        if (modifier != 0) add(FormulaSource(abilityName, modifier.toString()))
+        if (magic != 0) add(FormulaSource("Магия оружия", magic.toString()))
+        if (kind == "weapon_attack_bonus" && proficient) add(FormulaSource("Владение", sheet.proficiency().toString()))
+        for (source in mechanics.rules(kind, context)) {
+            val amount = mechanics.numericValue(source.rule)
+            if (amount != 0) add(FormulaSource(source.sourceLabel.ifBlank { "Эффект" }, amount.toString()))
+        }
+    }
+    val attackSources = modifiers("weapon_attack_bonus")
+    val damageSources = modifiers("weapon_damage_bonus")
+    val attack = attackSources.sumOf { it.expression.toInt() }
+    val damageBonus = damageSources.sumOf { it.expression.toInt() }
     fun parts(raw: JsonElement?) =
         raw.arrayValue().mapNotNull { value ->
             val row = value.objectValue()
@@ -241,9 +250,9 @@ fun weaponReadout(
         mechanics.rules("critical_threshold", context).minOfOrNull {
             it.rule["value"].number(20).coerceIn(2, 20)
         } ?: 20
-    val extra =
-        if (improvised) 0
-        else extraCriticalWeaponDice(sheet, items, entry.text("uid"), context.weaponKind == "melee")
+    val criticalRules =
+        if (improvised) emptyList()
+        else criticalWeaponDiceRules(sheet, items, entry.text("uid"), context.weaponKind == "melee")
     val range =
         if (thrown && !naturalThrown) "20/60"
         else
@@ -263,9 +272,12 @@ fun weaponReadout(
         labels,
         range,
         threshold,
-        extra,
+        criticalRules.sumOf { it["extra_weapon_dice"].number() },
         base.size,
         versatile.size,
+        attackSources,
+        damageSources,
+        criticalRules,
     )
 }
 

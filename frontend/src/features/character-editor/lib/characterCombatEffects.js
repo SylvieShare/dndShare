@@ -71,12 +71,14 @@ export function matchingRollAdjustments(effects, scope, context = {}) {
   })
 }
 
-export function extraCriticalWeaponDice(effects, { melee = false, weaponUid } = {}) {
-  return (effects?.criticalDamage || []).reduce((sum, rule) => {
-    if (rule.weapon_uid && rule.weapon_uid !== weaponUid) return sum
-    if (rule.weapon_kind === 'melee' && !melee) return sum
-    return sum + Math.max(0, Number(rule.extra_weapon_dice) || 0)
-  }, 0)
+export function criticalWeaponDiceRules(effects, { melee = false, weaponUid } = {}) {
+  return (effects?.criticalDamage || []).filter(rule =>
+    (!rule.weapon_uid || rule.weapon_uid === weaponUid) &&
+    (rule.weapon_kind !== 'melee' || melee) && Number(rule.extra_weapon_dice) > 0)
+}
+
+export function extraCriticalWeaponDice(effects, context) {
+  return criticalWeaponDiceRules(effects, context).reduce((sum, rule) => sum + Number(rule.extra_weapon_dice), 0)
 }
 
 function weaponKindMatches(rule, context) {

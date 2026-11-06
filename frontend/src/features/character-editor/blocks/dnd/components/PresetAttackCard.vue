@@ -28,7 +28,8 @@
   <BasePopover v-if="selection" :open="true" :anchor="selection.anchor" :key="selection.scope"
     :aria-label="selection.scope === 'attack' ? 'Атака' : 'Урон'" role="menu" :z-index="4100" transition-preset="action-menu"
     @update:open="!$event && (selection = null)">
-    <WeaponRollSettings :scope="selection.scope" @attack="options => run('attack', options)"
+    <WeaponRollSettings :scope="selection.scope" :weapon-title="title" :weapon="iconItem" :summary="summary"
+      @attack="options => run('attack', options)"
       @roll="options => run(options.critical ? 'critical' : 'damage', options)" />
   </BasePopover>
 </template>
@@ -42,6 +43,7 @@ import AttackDamage from '@/features/character-editor/blocks/dnd/components/Atta
 
 const props = defineProps({
   title: { type: String, required: true },
+  summary: Function,
   subtitle: { type: String, default: '' },
   attackBonus: { type: Number, required: true },
   damageParts: { type: Array, default: () => [] },

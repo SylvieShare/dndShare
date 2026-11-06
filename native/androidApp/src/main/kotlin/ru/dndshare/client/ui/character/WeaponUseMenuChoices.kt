@@ -43,7 +43,15 @@ internal fun WeaponStandaloneDamageSteps(
     val rows = if (active) listOf(event to true) else uses.map { it.rule to (it.error == null) }
     for ((use, available) in rows) for (raw in use["steps"].arrayValue()) {
         val step = raw.objectValue()
-        if (step.text("kind") == "damage") ShareDropdownMenuItem(
+        if (step.text("kind") != "damage") continue
+        val type = LocalCharacterSheet.current.metadata.suggests["12"]?.firstOrNull { it.id == step["damage_type"].referenceId() }
+        val tag = type?.let { "{${it.value}|${it.color.orEmpty()}}" }.orEmpty()
+        val expression = step.text("expression").ifBlank {
+            val sign = if (step.text("sign") == "-") "-" else ""
+            "$sign${step["dice_count"].number()}${step.text("dice")}$tag"
+        }
+        WeaponFormulaPreview(listOf(FormulaSource(use.text("title"), expression)))
+        ShareDropdownMenuItem(
             text = { Text(step.text("title")) },
             onClick = { roll(use.text("key"), step.text("key")) },
             enabled = enabled && available && (!active || step.text("status") == "pending"),

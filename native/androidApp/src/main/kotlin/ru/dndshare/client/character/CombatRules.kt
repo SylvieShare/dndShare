@@ -101,18 +101,18 @@ fun combatRules(
     }
 }
 
-fun extraCriticalWeaponDice(
+fun criticalWeaponDiceRules(
     sheet: CharacterSheet,
     items: Map<Long, CatalogueItem>,
     uid: String,
     melee: Boolean,
-): Int =
+): List<JsonObject> =
     combatRules(sheet, items, "critical_damage")
         .filter {
             it.text("weapon_uid").let { value -> value.isBlank() || value == uid } &&
                 (it.text("weapon_kind") != "melee" || melee)
         }
-        .sumOf { it["extra_weapon_dice"].number().coerceAtLeast(0) }
+        .filter { it["extra_weapon_dice"].number() > 0 }
 
 fun weaponDamageDiceCount(rule: JsonObject, level: Int): Int {
     val divisor = (rule["dice_count_level_divisor"] as? JsonPrimitive)?.doubleOrNull ?: 0.0

@@ -3,6 +3,7 @@ import { confirmedItemUses, confirmItemUse } from '@/features/character-editor/l
 import { computed, onScopeDispose } from 'vue'
 import {
   collectCharacterCombatEffects,
+  criticalWeaponDiceRules,
   extraCriticalWeaponDice,
   matchingRollAdjustments,
   matchingWeaponDamageActions,
@@ -32,6 +33,7 @@ export function useCharacterCombatEffects(values, itemsById, charCtx = {}) {
       })
     },
     rollAdjustments(scope, context) { return matchingRollAdjustments(effects.value, scope, context) },
+    criticalWeaponDiceRules(context) { return criticalWeaponDiceRules(effects.value, context) },
     extraCriticalWeaponDice(context) { return extraCriticalWeaponDice(effects.value, context) },
     weaponDamageActions(context) { return matchingWeaponDamageActions(effects.value, context) },
   }

@@ -87,7 +87,7 @@ class WeaponPropertyContinuationTest {
 
     @Test fun magicUseSitsUnderPropertiesAndOpensIndependently() {
         fun obj(json: String) = WireJson.parseToJsonElement(json).jsonObject
-        val base = CatalogueItem(1, 1, "Копьё", data = obj("""{"tags":[6],"attacks":[{"count":1,"dice_id":"d6","type":1}]}"""))
+        val base = CatalogueItem(1, 1, "Копьё", data = obj("""{"tags":[6],"range_min":30,"range_max":120,"attacks":[{"count":1,"dice_id":"d6","type":1}]}"""))
         val magic = CatalogueItem(2, 19, "Копьё молнии", data = obj("""
             {"weapon":{"base_item_id":1},"attunement":"none","weapon_uses":[
              {"key":"bolt","title":"Метнуть молнией","attack_mode":"thrown","range_ft":120,"resource_cost":0,
@@ -126,12 +126,18 @@ class WeaponPropertyContinuationTest {
                 TouchRobot.click("Атака: Копьё молнии")
                 TouchRobot.await { TouchRobot.find("Бросить на атаку") != null }
                 assertNull(TouchRobot.find("Изменить"))
+                assertNotNull(TouchRobot.find("Копьё молнии · Атака"))
+                assertNotNull(TouchRobot.find("Сила"))
+                assertNotNull(TouchRobot.find("30/120 фт."))
+                assertNotNull(TouchRobot.find("1d20"))
                 assertNull(TouchRobot.find("Критическое попадание"))
                 assertEquals(0, rolls.get())
                 TouchRobot.click("Бросить на атаку")
                 TouchRobot.await { rolls.get() == 1 && TouchRobot.find("Бросить на атаку") == null }
                 TouchRobot.click("Урон: Копьё молнии")
                 TouchRobot.await { TouchRobot.find("Бросить на урон") != null }
+                assertNotNull(TouchRobot.find("Копьё молнии · Урон"))
+                assertNotNull(TouchRobot.find("Оружие"))
                 assertNull(TouchRobot.find("Преимущество"))
                 assertNull(TouchRobot.find("Закрыть окно"))
                 TouchRobot.click("Бросить на урон")

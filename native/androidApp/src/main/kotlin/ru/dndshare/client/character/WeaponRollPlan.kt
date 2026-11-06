@@ -26,6 +26,7 @@ data class WeaponDamagePlan(
     val patches: List<SheetPatch>,
     val costs: List<WeaponResourceCost>,
     val hit: WeaponMenuHit? = null,
+    val preview: List<FormulaSource> = emptyList(),
 )
 
 fun selectedWeaponDamageRules(actions: List<JsonObject>, keys: List<String>): List<JsonObject> {
@@ -185,22 +186,9 @@ private fun selectedWeaponDamagePlan(
     val twoHanded =
         options.twoHanded && !thrown && !options.bonusAction && weapon.twoHanded.isNotEmpty()
     val sourceParts = if (twoHanded) weapon.twoHanded else weapon.parts
-    val terms =
-        sourceParts
-            .mapIndexed { index, part ->
-                val baseCount = if (twoHanded) weapon.twoHandedPartCount else weapon.basePartCount
-                val count =
-                    if (options.critical && part.sides != null)
-                        part.count * 2 +
-                            (if (index == 0 && baseCount > 0) weapon.extraCriticalDice else 0)
-                    else part.count
-                SheetDamageTerm(
-                    if (part.sides == null) count.toString() else "${count}d${part.sides}",
-                    part.type,
-                    part.color,
-                )
-            }
-            .toMutableList()
+    val terms = weapon.baseTerms(twoHanded, options.critical).toMutableList()
+    val preview = (hit?.formulaSources(options.critical)
+        ?: weapon.baseFormulaSources(twoHanded, options.critical, options.bonusAction && offhand == false)).toMutableList()
     val modifier =
         weapon.damageBonus -
             (if (options.bonusAction && offhand == false) weapon.statModifier.coerceAtLeast(0)
@@ -233,6 +221,9 @@ private fun selectedWeaponDamagePlan(
                     it.id == rule["damage_type"].referenceId()
                 }
             val sign = if (rule.text("sign") == "-") "-" else ""
+            val source = rule.text("source_label").ifBlank { rule.text("label").ifBlank { "Дополнительный урон" } }
+            val tag = type?.let { "{${it.value}|${it.color.orEmpty()}}" }.orEmpty()
+            preview.add(FormulaSource(source, "$sign$count$die$tag"))
             terms.add(
                 SheetDamageTerm(
                     "$sign$count$die",
@@ -315,5 +306,6 @@ private fun selectedWeaponDamagePlan(
         ),
         patches,
         costs,
+        preview = preview,
     )
 }

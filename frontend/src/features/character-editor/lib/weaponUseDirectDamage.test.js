@@ -19,7 +19,10 @@ function fixture(extras = []) {
     characterResources: { itemsById: new Map([['284', item]]) },
     updateValues(patch) { this.values = { ...this.values, ...patch } }, logSessionEvent: vi.fn(),
   })
-  const base = { expression: '1d6+3', critical_expression: '2d6+3' }, attack = vi.fn()
+  const base = { expression: '1d6+3', critical_expression: '2d6+3',
+    base_sources: [{ source: 'Оружие', expression: '1d6' }, { source: 'Сила', expression: '3' }],
+    critical_base_sources: [{ source: 'Оружие', expression: '2d6' }, { source: 'Сила', expression: '3' }] }
+  const attack = vi.fn()
   useSuggestStore().set(12, [{ id: 9, value: 'Молния', color: '#ff0' }])
   const use = useWeaponUses(ctx, { title: () => item.name, prepare: entry => ({ ...base, entry }), attack })
   const damage = useWeaponDamageRolls(ctx, { item: () => item, propertyItems: () => [], itemTitle: () => item.name,
@@ -34,6 +37,10 @@ it('previews without spending, then pays once for target damage and resolves the
   const { ctx, use, damage, attack, roll, entry } = fixture()
   const options = { weaponUseKey: rule.key, critical: true, bonusAction: true, twoHanded: true }
   expect(damage.damagePreview(entry(), options)).toBe('2d6+3+8d6{Молния|#ff0}')
+  expect(damage.previewSources(entry(), options)).toEqual([
+    { source: 'Оружие', expression: '2d6' }, { source: 'Сила', expression: '3' },
+    { source: rule.title, expression: '8d6{Молния|#ff0}' },
+  ])
   expect(entry().params.magic.remaining).toBe(1)
   expect(weaponUseState(ctx.values, 'a')).toBeUndefined()
   damage.rollDamage(entry(), options)

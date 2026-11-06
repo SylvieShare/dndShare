@@ -96,21 +96,22 @@ class DndDerivedValues(
         rules(kind, context).maxOfOrNull { it.rule["rank"].number(1) } ?: 0
 
     fun bonus(kind: String, context: RuleContext): Int =
-        rules(kind, context).sumOf { source ->
-            val rule = source.rule
-            var value = rule["value"].number()
-            val ability = rule["ability_modifier"].number()
-            if (ability in 1..6)
-                value +=
-                    abilityModifier(
-                        score(listOf("STR", "DEX", "CON", "INT", "WIS", "CHA")[ability - 1])
-                    )
-            (rule["proficiency_multiplier"] as? JsonPrimitive)?.doubleOrNull?.let {
-                value += floor(sheet.proficiency() * it).toInt()
-            }
-            if (rule["minimum"] != null) value = maxOf(value, rule["minimum"].number())
-            value
+        rules(kind, context).sumOf { numericValue(it.rule) }
+
+    fun numericValue(rule: JsonObject): Int {
+        var value = rule["value"].number()
+        val ability = rule["ability_modifier"].number()
+        if (ability in 1..6)
+            value +=
+                abilityModifier(
+                    score(listOf("STR", "DEX", "CON", "INT", "WIS", "CHA")[ability - 1])
+                )
+        (rule["proficiency_multiplier"] as? JsonPrimitive)?.doubleOrNull?.let {
+            value += floor(sheet.proficiency() * it).toInt()
         }
+        if (rule["minimum"] != null) value = maxOf(value, rule["minimum"].number())
+        return value
+    }
 
     fun hpMaximum(): Int = (sheet.hpMaximum() + featureHpBonus(sheet, items)).coerceAtLeast(0)
 

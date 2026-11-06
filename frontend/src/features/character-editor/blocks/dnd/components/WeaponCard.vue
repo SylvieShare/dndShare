@@ -48,7 +48,8 @@
     <BasePopover v-if="directRoll" :key="directRoll.scope" :open="true" :anchor="directRoll.anchor"
       role="menu" :aria-label="directRoll.scope === 'attack' ? 'Атака' : 'Урон'" :z-index="4100"
       transition-preset="action-menu" @update:open="!$event && closeRoll()">
-      <WeaponRollSettings :scope="directRoll.scope" :weapon-uid="entry.uid" :actions="weaponDamageActions"
+      <WeaponRollSettings :scope="directRoll.scope" :weapon="ctx.item(entry)" :weapon-title="ctx.itemTitle(entry)"
+        :summary="ctx.weaponMenuSummary && ((options, scope) => ctx.weaponMenuSummary(entry, options, scope))" :weapon-uid="entry.uid" :actions="weaponDamageActions"
         :uses="ctx.weaponUses(entry)" :preview="options => ctx.damagePreview(entry, options)"
         :bonus-action-option="options => ctx.bonusActionDamageOption(entry, options)" :versatile="hasTwoHandedDamage"
         @attack="options => rollAttack(closeRoll, options)" @roll="options => rollDamage(closeRoll, options)"

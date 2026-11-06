@@ -1,5 +1,6 @@
 <template>
   <WeaponRollControls
+    :summary="rollSummary" :weapon="weapon" :weapon-title="weaponTitle"
     :scope="scope" :weapon-uid="weaponUid" :uses="uses" :preview="previewFormula"
     :options="menuOptions(scope)" :bonus-action-option="availableBonusAction" :versatile="versatile" :thrown="thrown"
     v-model:attack-roll-mode="attackRollMode" v-model:use-key="useKey" v-model:critical="critical"
@@ -14,7 +15,7 @@ import { changeSelectedTarget } from '@/features/character-editor/lib/selectedTa
 import { computed, inject, ref, unref, watch } from 'vue'
 import WeaponRollControls from './WeaponRollControls.vue'
 import { damageAttackMode, selectedDamageActions, toggleDamageAction, weaponDamageMenuOptions } from '@/shared/lib/weaponDamageOptions'
-const props = defineProps({ weaponUid: String, actions: { type: Array, default: () => [] }, versatile: Boolean, scope: { type: String, required: true }, preview: Function, bonusActionOption: Function, uses: { type: Array, default: () => [] } })
+const props = defineProps({ summary: Function, weapon: Object, weaponTitle: String, weaponUid: String, actions: { type: Array, default: () => [] }, versatile: Boolean, scope: { type: String, required: true }, preview: Function, bonusActionOption: Function, uses: { type: Array, default: () => [] } })
 const charCtx = inject('charCtx', {})
 const selectedKeys = computed(() => [...selected.value, ...props.actions.filter(action => action.target_choice?.selected).map(action => action.key)])
 const emit = defineEmits(['roll', 'attack', 'roll-step'])
@@ -27,7 +28,8 @@ const options = computed(() => ({ critical: critical.value, twoHanded: props.ver
   bonusAction: bonusAction.value && !!availableBonusAction.value,
   attackRollMode: attackRollMode.value, weaponUseKey: useKey.value, actionAmounts: { ...amounts.value },
   actionKeys: selectedDamageActions(props.actions, selectedKeys.value).map(action => action.key) }))
-const previewFormula = computed(() => props.preview?.(options.value) || '')
+const rollSummary = computed(() => props.summary?.(options.value, props.scope))
+const previewFormula = computed(() => !props.summary ? props.preview?.(options.value) || '' : '')
 function setAmount(key, amount) {
   const option = menuOptions('damage').find(row => row.key === key)
   if (!option?.units || !Number.isInteger(amount) || amount < 0 || amount > option.units.max) return

@@ -106,10 +106,21 @@ fun startWeaponUse(
                 .joinToString("+")
                 .replace("+-", "-")
         }
+        fun sources(critical: Boolean): JsonArray {
+            val count = step["dice_count"].number() * if (critical && step["double_on_critical"] != JsonPrimitive(false)) 2 else 1
+            val sign = if (step.text("sign") == "-") "-" else ""
+            val tag = type?.let { "{${it.value}|${it.color.orEmpty()}}" }.orEmpty()
+            val rows = weapon.baseFormulaSources(false, critical) + FormulaSource(rule.text("title"), "$sign$count${step.text("dice")}$tag")
+            return WireJson.encodeToJsonElement(rows).jsonArray
+        }
         return JsonObject(
             step +
                 buildJsonObject {
                     put("status", "pending")
+                    if (step.text("kind") == "weapon_damage") {
+                        put("sources", sources(false))
+                        put("critical_sources", sources(true))
+                    }
                     put("expression", expression(false))
                     put("critical_expression", expression(step.text("kind") == "weapon_damage"))
                     if (step["area"] is JsonObject)

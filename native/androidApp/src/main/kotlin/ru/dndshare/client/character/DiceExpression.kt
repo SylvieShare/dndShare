@@ -17,27 +17,9 @@ fun rollDice(formula: String, random: Random = Random.Default): DiceResult =
 
 /** Bounded native parser; typed terms match the web chronicle wire format. */
 fun rollDice(formula: String, die: (Int) -> Int): DiceResult {
-    require(formula.length in 1..4000) { "Формула должна содержать от 1 до 4000 символов." }
-    fun normalize(fragment: String) =
-        fragment
-            .replace(Regex("[‐‑‒–—―−﹣－]"), "-")
-            .replace(Regex("[\\s\\p{Z}\\u200B\\uFEFF]"), "")
-            .replace(Regex("[кКдДD]"), "d")
-            .replace(Regex("[×xX]"), "*")
-    val normalized = buildString {
-        var offset = 0
-        for (label in Regex("\\{[^}]*\\}").findAll(formula)) {
-            append(normalize(formula.substring(offset, label.range.first)))
-            append(label.value)
-            offset = label.range.last + 1
-        }
-        append(normalize(formula.substring(offset)))
-    }
-    val source = if (normalized.firstOrNull() in listOf('+', '-')) normalized else "+$normalized"
-    val pattern = Regex("([+\\-*])([0-9]*d[0-9]+|[0-9]+)(?:\\{([^|}]*)(?:\\|([^}]*))?\\})?")
+    val tokens = diceFormulaTokens(formula)
     val dice = mutableListOf<Int>()
     val parts = mutableListOf<JsonObject>()
-    var cursor = 0
     var product = 0L
     var total = 0L
     fun bounded(value: Long): Long {
@@ -46,9 +28,7 @@ fun rollDice(formula: String, die: (Int) -> Int): DiceResult {
         }
         return value
     }
-    for (match in pattern.findAll(source)) {
-        require(match.range.first == cursor) { "Проверьте формулу броска." }
-        cursor = match.range.last + 1
+    for (match in tokens) {
         val operator = match.groupValues[1]
         val body = match.groupValues[2]
         val label = match.groupValues[3].trim().takeIf(String::isNotEmpty)
@@ -98,7 +78,6 @@ fun rollDice(formula: String, die: (Int) -> Int): DiceResult {
             product = if (operator == "-") -amount.toLong() else amount.toLong()
         }
     }
-    require(cursor == source.length && parts.isNotEmpty()) { "Проверьте формулу броска." }
     val result = bounded(total + product).toInt()
     val byType =
         if (parts.any { it.text("operator") == "*" })
@@ -127,4 +106,34 @@ fun rollDice(formula: String, die: (Int) -> Int): DiceResult {
             }
         }
     return DiceResult(formula, dice, result, parts, byType)
+}
+
+
+internal fun diceFormulaTokens(formula: String): List<MatchResult> {
+    require(formula.length in 1..4000) { "Формула должна содержать от 1 до 4000 символов." }
+    fun normalize(fragment: String) =
+        fragment
+            .replace(Regex("[‐‑‒–—―−﹣－]"), "-")
+            .replace(Regex("[\\s\\p{Z}\\u200B\\uFEFF]"), "")
+            .replace(Regex("[кКдДD]"), "d")
+            .replace(Regex("[×xX]"), "*")
+    val normalized = buildString {
+        var offset = 0
+        for (label in Regex("\\{[^}]*\\}").findAll(formula)) {
+            append(normalize(formula.substring(offset, label.range.first)))
+            append(label.value)
+            offset = label.range.last + 1
+        }
+        append(normalize(formula.substring(offset)))
+    }
+    val source = if (normalized.firstOrNull() in listOf('+', '-')) normalized else "+$normalized"
+    val pattern = Regex("([+\\-*])([0-9]*d[0-9]+|[0-9]+)(?:\\{([^|}]*)(?:\\|([^}]*))?\\})?")
+    val matches = pattern.findAll(source).toList()
+    var cursor = 0
+    for (match in matches) {
+        require(match.range.first == cursor) { "Проверьте формулу броска." }
+        cursor = match.range.last + 1
+    }
+    require(matches.isNotEmpty() && cursor == source.length) { "Проверьте формулу броска." }
+    return matches
 }

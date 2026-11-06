@@ -14,7 +14,7 @@ for (const width of [1280, 390]) test(`target shares selection between attacks a
  await menu(page, 'Бросить на атаку')
  const target = page.getByRole('switch', { name: 'По выбранной цели: Орк', exact: true })
  await expect(target).toBeChecked()
- const thrown = await page.getByRole('switch', { name: 'Метнуть', exact: true }).boundingBox()
+ const thrown = await page.getByRole('button', { name: /Метнуть/ }).boundingBox()
  const separator = await page.locator('[role="separator"][aria-orientation="horizontal"]').filter({ visible: true }).boundingBox()
  const box = await target.boundingBox()
  expect(separator.y).toBeGreaterThan(thrown.y + thrown.height)

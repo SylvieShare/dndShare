@@ -3,7 +3,7 @@ import { ref, unref } from 'vue'
 import { useDiceStore } from '@/stores/dice'
 import { damageAmountActions } from '@/shared/lib/weaponDamageAmounts'
 import { selectedDamageActions } from '@/shared/lib/weaponDamageOptions'
-import { selectedWeaponDamageExpression } from '../lib/weaponDamageAction'
+import { selectedWeaponDamageExpression, weaponDamageActionExpression } from '../lib/weaponDamageAction'
 import { prepareWeaponRollEntry } from '../lib/weaponThrow'
 import { weaponUseDamageActions, weaponUseDamageSelection } from '@/features/character-editor/lib/weaponUseDamage'
 import { completeWeaponUseStep } from '@/features/character-editor/lib/weaponUses'
@@ -35,9 +35,32 @@ export function useWeaponDamageRolls(charCtx, calc) {
     const primary = calc.damagePartsRaw(entry)[0] || {}
     const selectedActions = damageAmountActions(actions, actionAmounts)
     const expr = selectedWeaponDamageExpression({ baseExpression, actions: selectedActions.filter(action => !action.prepaid), actionKeys, critical, damageType: primary.type, damageTypeColor: primary.typeColor })
-    return { entry, actions, selectedActions, expr, twoHanded, bonusAction, actionKeys, usePlan, use: use.action?.prepaid }
+    return { entry, actions, selectedActions, primary, baseExpression, expr, twoHanded, bonusAction, actionKeys, usePlan, use: use.action?.prepaid }
   }
   function damagePreview(entry, options) { return prepare(entry, options).expr }
+  function previewSources(entry, options) {
+    const roll = prepare(entry, options)
+    if (!roll.expr) return []
+    const critical = !!options.critical
+    let base
+    if (roll.use) {
+      base = critical ? roll.use.criticalSources : roll.use.sources
+      if (!base) {
+        // Older paid hits store the combined formula. The final die is the use step.
+        const last = roll.baseExpression.match(/[+-]?\d+d\d+(?:\{[^}]*\})?$/i)
+        base = last ? [
+          { source: 'Оружие при применении', expression: roll.baseExpression.slice(0, last.index) },
+          { source: roll.use.source, expression: last[0] },
+        ] : [{ source: roll.use.source, expression: roll.baseExpression }]
+      }
+    } else base = calc.weaponBaseSources(roll.entry, roll.baseExpression, { critical, twoHanded: roll.twoHanded })
+    const extras = selectedDamageActions(roll.selectedActions.filter(action => !action.prepaid), roll.actionKeys)
+      .map(action => ({ source: action.source_label || action.label, expression: weaponDamageActionExpression({
+        baseExpression: '', action, critical, damageType: roll.primary.type, damageTypeColor: roll.primary.typeColor,
+      }) }))
+    const rows = [...base, ...extras].filter(row => row.expression && row.expression !== '0')
+    return rows.length ? rows : [{ source: 'Оружие', expression: '0' }]
+  }
   function rollDamage(entry, { critical = false, actionKeys = [], actionAmounts = {}, ...options } = {}) {
     if (!charCtx.ownerMode) return
     const roll = prepare(entry, { ...options, critical, actionKeys, actionAmounts })
@@ -57,5 +80,5 @@ export function useWeaponDamageRolls(charCtx, calc) {
     }
     return result
   }
-  return { damagePreview, rollDamage, error }
+  return { damagePreview, previewSources, rollDamage, error }
 }

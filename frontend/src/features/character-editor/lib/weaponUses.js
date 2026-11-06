@@ -37,13 +37,17 @@ export function availableWeaponUses(values, items, uid, owner = true) {
   })
 }
 
-function stepSnapshot(step, base, damageTypes, range) {
+function stepSnapshot(step, base, damageTypes, range, title) {
   const type = damageTypes.find(row => Number(row.id) === Number(step.damage_type))
   const action = { ...step, damage_type_label: type?.value || `Тип урона #${step.damage_type}`, damage_type_color: type?.color }
   const weapon = step.kind === 'weapon_damage'
   return { ...JSON.parse(JSON.stringify(step)), status: 'pending',
     expression: weaponDamageActionExpression({ baseExpression: weapon ? base.expression : '', action }),
     critical_expression: weaponDamageActionExpression({ baseExpression: weapon ? base.critical_expression : '', action, critical: weapon }),
+    ...(weapon && base.base_sources ? {
+      sources: [...base.base_sources, { source: title, expression: weaponDamageActionExpression({ baseExpression: '', action }) }],
+      critical_sources: [...base.critical_base_sources, { source: title, expression: weaponDamageActionExpression({ baseExpression: '', action, critical: true }) }],
+    } : {}),
     ...(step.area ? { area: { ...step.area, length_ft: range } } : {}),
   }
 }
@@ -56,7 +60,7 @@ export function startWeaponUse(values, items, uid, key, base, damageTypes = [], 
   const patch = Number(rule.resource_cost) > 0 ? setCharacterResourceAvailable(values, items, rule.resource.key, rule.resource.value - Number(rule.resource_cost), undefined, true) : {}
   const event = { id: crypto.randomUUID(), key: rule.key, title: rule.title, status: 'active', created_at: new Date().toISOString(),
     range_ft: rule.range_ft, attack_mode: rule.attack_mode, resource_cost: Number(rule.resource_cost), resource_title: rule.resource?.title,
-    steps: rule.steps.map(step => stepSnapshot(step, base, damageTypes, rule.range_ft)) }
+    steps: rule.steps.map(step => stepSnapshot(step, base, damageTypes, rule.range_ft, rule.title)) }
   return { error: '', event, patch: { ...patch, ...mapOwnedEntries({ ...values, ...patch }, row => row.uid === uid
     ? { ...row, params: { ...row.params, magic: { ...row.params?.magic, weapon_use: event } } } : row) } }
 }

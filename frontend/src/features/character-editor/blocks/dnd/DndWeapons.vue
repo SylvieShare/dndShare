@@ -66,6 +66,7 @@
         :flat-damage="unarmedDamageFormula"
         damage-type="Дробящий"
         :icon-item="unarmedPresetItem"
+        :summary="(options, scope) => presetMenuSummary('unarmed', options, scope)"
         proficient
         @attack="options => rollPresetAttack('unarmed', options)"
         @damage="rollPresetDamage('unarmed')"
@@ -78,6 +79,7 @@
         :damage-parts="improvisedDamageParts"
         :damage-modifier="strengthModifier + presetDamageBonus"
         :icon-item="improvisedPresetItem"
+        :summary="(options, scope) => presetMenuSummary('improvised', options, scope)"
         @attack="options => rollPresetAttack('improvised', options)"
         @damage="rollPresetDamage('improvised')"
         @critical="rollPresetDamage('improvised', true)"
@@ -120,6 +122,8 @@
 </template>
 
 <script setup>
+import { STAT_FULL, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
+import { weaponUseDamageSelection } from '@/features/character-editor/lib/weaponUseDamage'
 import { itemEventData } from '@/features/character-editor/lib/sessionEventData'
 
 import { computed, inject, onMounted, provide, reactive, ref } from 'vue'
@@ -250,6 +254,7 @@ const { entries, emitChange, loadError, reload } = useWeaponEntries({
 const bonusActionDamageOption = useTwoWeaponFighting(charCtx, { item, propertyItems, actions: weaponDamageActions })
 const {
   magicBonus,
+  statMod,
   attackBonus: baseAttackBonus,
   damageBonus,
   formatBonus,
@@ -287,6 +292,47 @@ function weaponEffectContext(entry) {
   }
 }
 
+function weaponAbilityName(entry) {
+  const id = weaponEffectContext(entry).abilitySuggestId
+  return statSuggests.value.find(stat => String(stat.id) === String(id))?.value || STAT_FULL[SUGGEST16_TO_STAT[id]] || 'Характеристика'
+}
+
+function modifierSources(entry, damage) {
+  const rows = []
+  function add(source, value) { if (value) rows.push({ source, expression: String(value) }) }
+  const stat = statMod(entry)
+  add(weaponAbilityName(entry), damage && entry._bonusActionDamage && !bonusActionDamageOption(entry)?.addAbilityModifier ? Math.min(0, stat) : stat)
+  add('Магия оружия', magicBonus(entry))
+  if (!damage && !entry._improvisedThrow && isWeaponProficient(entry)) add('Владение', profBonus.value)
+  const bonus = charCtx.characterDerivedEffects?.bonus?.(damage ? 'weapon_damage_bonus' : 'weapon_attack_bonus', weaponEffectContext(entry))
+  for (const part of bonus?.contributions || []) add(part.source, part.value)
+  return rows
+}
+
+function weaponBaseSources(entry, expression, { critical = false, twoHanded = false } = {}) {
+  const rules = critical && !entry._improvisedThrow
+    ? charCtx.characterCombatEffects?.criticalWeaponDiceRules?.(criticalDiceContext(entry)) || [] : []
+  const base = rules.length
+    ? (twoHanded ? criticalDamageExpressionTwoHanded(entry, 0) : criticalDamageExpression(entry, 0)) : expression
+  const dice = base.replace(/(?:^|[+-])\d+(?:\{[^}]*\})?$/, '')
+  const rows = dice ? [{ source: 'Оружие', expression: dice }] : []
+  const die = expression !== base && dice.match(/^\d+(d\d+(?:\{[^}]*\})?)/i)
+  if (die) for (const rule of rules) rows.push({ source: rule.source_label, expression: rule.extra_weapon_dice + die[1] })
+  return [...rows, ...modifierSources(entry, true)]
+}
+
+function weaponMenuSummary(entry, options, scope) {
+  const use = weaponUses.choices(entry).find(rule => rule.key === options.weaponUseKey)
+  const prepaid = weaponUseDamageSelection(charCtx.values, entry.uid, options.actionKeys || []).action
+  const mode = use?.attack_mode || prepaid?.prepaid.attackMode
+  const prepared = mode ? { ...entry, _attackMode: mode, _improvisedThrow: false }
+    : prepareWeaponRollEntry(entry, item(entry), propertyItems(entry), weaponDamageActions(entry), options.actionKeys)
+  const context = weaponEffectContext(prepared)
+  return { title: itemTitle(entry), item: item(entry), ability: weaponAbilityName(prepared),
+    bonus: attackBonus(prepared), mode: attackMode(context, options.attackRollMode),
+    parts: scope === 'damage' ? damageRolls.previewSources(entry, options) : modifierSources(prepared, false) }
+}
+
 function attackBonus(entry) {
   return baseAttackBonus(entry) + (charCtx.characterDerivedEffects?.bonus?.('weapon_attack_bonus', weaponEffectContext(entry))?.total || 0)
 }
@@ -299,9 +345,10 @@ const armorAttackWarning = computed(() => !!armorState.value.strengthDexDisadvan
 const strengthModifier = computed(() => Number(statsVar.value['1']) || 0)
 const unarmedAttackBonus = computed(() => unarmedStrikeAttackBonus(strengthModifier.value, profBonus.value))
 const improvisedAttackBonus = computed(() => resolveImprovisedWeaponAttackBonus(strengthModifier.value))
-const presetDamageBonus = computed(() => charCtx.characterDerivedEffects?.bonus?.('weapon_damage_bonus', {
+const presetDamageEffects = computed(() => charCtx.characterDerivedEffects?.bonus?.('weapon_damage_bonus', {
   kind: 'attack', abilitySuggestId: 1, weaponKind: 'melee',
-})?.total || 0)
+}))
+const presetDamageBonus = computed(() => presetDamageEffects.value?.total || 0)
 const unarmedDamage = computed(() => unarmedStrikeDamage(strengthModifier.value, presetDamageBonus.value))
 const unarmedDamageFormula = computed(() => ({
   base: 1,
@@ -316,7 +363,14 @@ const dice = useDiceStore()
 
 const weaponUses = useWeaponUses(charCtx, { title: itemTitle, attack: rollPreparedAttack, prepare(entry, rule) {
   const prepared = { ...entry, _attackMode: rule.attack_mode, _improvisedThrow: false }
-  return { entry: prepared, expression: damageExpression(prepared), critical_expression: criticalDamageExpression(prepared, extraCriticalDice(prepared)), critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(weaponEffectContext(prepared)) || 20 }
+  const expression = damageExpression(prepared)
+  const criticalExpression = criticalDamageExpression(prepared, extraCriticalDice(prepared))
+  return {
+    entry: prepared, expression, critical_expression: criticalExpression,
+    base_sources: weaponBaseSources(prepared, expression),
+    critical_base_sources: weaponBaseSources(prepared, criticalExpression, { critical: true }),
+    critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(weaponEffectContext(prepared)) || 20,
+  }
 } })
 function rollAttack(entry, { actionKeys = [], weaponUseKey = '', attackRollMode = 'auto', excludedBonuses = [] } = {}) {
   if (weaponUseKey) return weaponUses.start(entry, weaponUseKey, attackRollMode, excludedBonuses)
@@ -352,6 +406,22 @@ function presetAttackDefinition(kind) {
   return { title: 'Импровизированное оружие', attackBonus: improvisedAttackBonus.value }
 }
 
+function presetMenuSummary(kind, options, scope) {
+  const unarmed = kind === 'unarmed'
+  const parts = []
+  if (scope === 'damage') {
+    parts.push({ source: unarmed ? 'Рукопашный удар' : 'Оружие', expression: unarmed ? '1' : (options.critical ? '2d4' : '1d4') })
+    for (const { source, value } of presetDamageEffects.value?.contributions || []) {
+      if (value) parts.push({ source, expression: String(value) })
+    }
+    const raw = 1 + strengthModifier.value + presetDamageBonus.value
+    if (unarmed && raw < 0) parts.push({ source: 'Минимум урона', expression: String(-raw) })
+  } else if (unarmed && profBonus.value) parts.push({ source: 'Владение', expression: String(profBonus.value) })
+  if (strengthModifier.value) parts.push({ source: 'Сила', expression: String(strengthModifier.value) })
+  return { parts, ability: 'Сила', bonus: presetAttackDefinition(kind).attackBonus,
+    mode: attackMode({ kind: 'attack', abilitySuggestId: 1, weaponKind: 'melee', weaponAttack: !unarmed }, options.attackRollMode) }
+}
+
 async function rollPresetAttack(kind, { attackRollMode = 'auto', excludedBonuses = [] } = {}) {
   const preset = presetAttackDefinition(kind)
   const context = { kind: 'attack', abilitySuggestId: 1, weaponKind: 'melee', weaponAttack: kind !== 'unarmed' }
@@ -380,7 +450,7 @@ function rollPresetDamage(kind, critical = false) {
 
 const damageRolls = useWeaponDamageRolls(charCtx, { item, propertyItems, weaponDamageActions, damagePartsRaw,
   damageExpression, damageExpressionTwoHanded, criticalDamageExpression, criticalDamageExpressionTwoHanded,
-  bonusActionDamageOption, extraCriticalDice, itemTitle, spend: weaponMechanics.spend, planWeaponUse: weaponUses.plan })
+  weaponBaseSources, bonusActionDamageOption, extraCriticalDice, itemTitle, spend: weaponMechanics.spend, planWeaponUse: weaponUses.plan })
 const { damagePreview, rollDamage } = damageRolls
 
 function hasWeaponDamage(entry) {
@@ -405,12 +475,12 @@ function weaponDamageActions(entry) {
   })
 }
 
+function criticalDiceContext(entry) {
+  return { weaponUid: entry.uid, melee: entry._attackMode !== 'thrown' && !item(entry)?.data?.is_long_range }
+}
+
 function extraCriticalDice(entry) {
-  if (entry._improvisedThrow) return 0
-  return charCtx.characterCombatEffects?.extraCriticalWeaponDice?.({
-    weaponUid: entry.uid,
-    melee: entry._attackMode !== 'thrown' && !item(entry)?.data?.is_long_range,
-  }) || 0
+  return entry._improvisedThrow ? 0 : charCtx.characterCombatEffects?.extraCriticalWeaponDice?.(criticalDiceContext(entry)) || 0
 }
 
 async function ensureTagSuggestType() {
@@ -563,6 +633,7 @@ provide('weaponsBlockCtx', reactive({
   rollDamage,
   rollWeaponUseStep: weaponUses.rollStep,
   damagePreview,
+  weaponMenuSummary,
   bonusActionDamageOption,
   showPropertyTooltip,
   hidePropertyTooltip,

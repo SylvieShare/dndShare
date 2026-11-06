@@ -141,19 +141,22 @@ export function derivedGrantedProficiencies(effects, kind) {
 
 export function derivedNumericBonus(effects, kind, values, context = {}) {
   const active = matchingDerivedEffects(effects, kind, context)
-  const total = active.reduce((sum, rule) => {
-    let value = number(rule.value)
-    const stat = SUGGEST16_TO_STAT[number(rule.ability_modifier)]
-    if (stat) value += abilityModifier(resolveNumValue(values?.[stat]?.value))
-    if (rule.proficiency_multiplier != null) {
-      const stored = values?.prof_bonus || {}
-      const mastery = stored?.auto === false ? number(stored.v) : proficiencyBonus(values?.lvl?.level)
-      value += Math.floor((mastery + sumBonuses(stored?.bonuses)) * number(rule.proficiency_multiplier))
-    }
-    if (rule.minimum != null) value = Math.max(number(rule.minimum), value)
-    return sum + value
-  }, 0)
-  return { total, sources: active }
+  const contributions = active.map(rule => ({ source: rule.source_label || rule.label || 'Эффект', value: numericEffectValue(rule, values) }))
+  const total = contributions.reduce((sum, part) => sum + part.value, 0)
+  return { total, sources: active, contributions }
+}
+
+function numericEffectValue(rule, values) {
+  let value = number(rule.value)
+  const stat = SUGGEST16_TO_STAT[number(rule.ability_modifier)]
+  if (stat) value += abilityModifier(resolveNumValue(values?.[stat]?.value))
+  if (rule.proficiency_multiplier != null) {
+    const stored = values?.prof_bonus || {}
+    const mastery = stored?.auto === false ? number(stored.v) : proficiencyBonus(values?.lvl?.level)
+    value += Math.floor((mastery + sumBonuses(stored?.bonuses)) * number(rule.proficiency_multiplier))
+  }
+  if (rule.minimum != null) value = Math.max(number(rule.minimum), value)
+  return value
 }
 
 export function derivedRollEffects(effects, context = {}) {

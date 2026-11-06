@@ -49,7 +49,7 @@ export function weaponDamageMenuOptions(actions, keys, critical = false, scope =
       : Number(action.resource.value) < (selected.has(action.key) ? costs.get(action.resource.key) : cost + (costs.get(action.resource.key) || 0))
         ? `Недостаточно ресурса «${action.resource.title}».` : '')
     return {
-      key: action.key, label, mode: action.attack_mode === 'thrown',
+      key: action.key, label, range: action.throw_range, mode: action.attack_mode === 'thrown',
       units: maxUnits ? { max: maxUnits, value: action.selected_units, color: action.resource?.color_point,
         available: action.resource_error || !action.resource ? 0 : Math.max(0, Math.floor((Number(action.resource.value) - otherCost) / unitCost)) } : null,
       formula: formula ? `${action.preview_replacement || formula.startsWith('-') ? '' : '+'}${formula.replace('d', 'к')}` : '',

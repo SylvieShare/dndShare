@@ -74,7 +74,15 @@ private fun WeaponRollSettings(uid: String, scope: String) {
         }
     val offhand =
         twoWeaponAbilityModifier(context.sheet, weapon, context.items, context.metadata, thrown)
+    val request = SheetRollRequest("Атака", "attack", weapon.ability, bonus = weapon.attack,
+        targetUid = uid, weaponAttack = true, manualMode = mode, proficiencyRank = if (weapon.proficient) 1 else 0,
+        weaponKind = if (thrown || weapon.item.data["is_long_range"] == JsonPrimitive(true)) "ranged" else "melee",
+        improvised = thrown && !naturalThrownWeapon(weapon.item, weapon.properties),
+    )
+    val ability = dndAbilities.firstOrNull { it.suggestId == weapon.ability }?.title ?: "Характеристика"
     Column(Modifier.fillMaxWidth().padding(8.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        val title = weapon.entry["override"].objectValue().text("name").ifBlank { weapon.item.name }
+        WeaponMenuHeading(title, weapon.item, ability, scope, weapon.attack)
         if (scope == "attack") SheetRollModePicker(mode, { mode = it }, neutralMode = "auto", enabled = !busy)
         if (scope != "attack") WeaponOptionSwitch("Критическое попадание", critical, !busy) { critical = it }
         if (scope == "damage" && weapon.twoHanded.isNotEmpty())
@@ -106,14 +114,7 @@ private fun WeaponRollSettings(uid: String, scope: String) {
                             it.text("key") == parent
                         }) &&
                     !(twoHanded && rule.text("attack_mode") == "thrown")
-            WeaponOptionSwitch(
-                rule
-                    .text("label")
-                    .ifBlank { rule.text("source_label") }
-                    .ifBlank { "Дополнительный урон" },
-                selected,
-                enabled,
-            ) { checked ->
+            val change: (Boolean) -> Unit = { checked ->
                 keys =
                     selectedWeaponDamageRules(
                             initialActions,
@@ -125,7 +126,18 @@ private fun WeaponRollSettings(uid: String, scope: String) {
                     bonusAction = false
                 }
             }
-            (if (scope == "attack") rule.text("attack_condition").ifBlank { rule.text("condition") } else rule.text("condition")).takeIf(String::isNotBlank)?.let { SheetDescription(it) }
+            if (rule.text("attack_mode") == "thrown") {
+                val range = if (naturalThrownWeapon(weapon.item, weapon.properties))
+                    "${weapon.item.data["range_min"].number(20)}/${weapon.item.data["range_max"].number(60)}" else "20/60"
+                ShareChoiceCard("Метнуть", "$range фт.", selected, { change(!selected) },
+                    modifier = Modifier.fillMaxWidth(), enabled = enabled, color = WebPalette.Accent) { tint ->
+                    AppGlyph(Glyph.Target, Modifier.size(18.dp), tint)
+                }
+            } else {
+                WeaponOptionSwitch(rule.text("label").ifBlank { rule.text("source_label") }.ifBlank { "Дополнительный урон" },
+                    selected, enabled, change)
+                rule.text("condition").takeIf(String::isNotBlank)?.let { SheetDescription(it) }
+            }
             val max = rule["resource_units_max"].number()
             if (scope == "damage" && selected && max in 2..20)
                 ShareSelect(
@@ -161,28 +173,9 @@ private fun WeaponRollSettings(uid: String, scope: String) {
                 if (it.isNotBlank()) { twoHanded = false; bonusAction = false }
             },
         )
-        val rollContext =
-            RuleContext(
-                kind = "attack",
-                ability = weapon.ability,
-                target = entry["uid"],
-                weaponAttack = true,
-                weaponKind =
-                    if (thrown || weapon.item.data["is_long_range"] == JsonPrimitive(true)) "ranged"
-                    else "melee",
-            )
-        if (scope != "damage") context.mechanics.rules("roll_bonus", rollContext).forEach { source ->
-            val key = source.rule.text("key")
-            WeaponOptionSwitch(
-                "${source.sourceLabel}: ${source.rule.text("formula")}",
-                key !in excluded,
-                !busy,
-            ) { checked ->
-                excluded = if (checked) excluded - key else excluded + key
-            }
-        }
+        if (scope == "attack") WeaponAttackPreview(request, weapon.attackSources, !busy, excluded) { excluded = it }
         if (scope == "damage") plan?.getOrNull()?.let { ready ->
-            Text("Урон: ${ready.request.formula}", style = ShareTypography.group)
+            WeaponFormulaPreview(ready.preview.ifEmpty { listOf(FormulaSource("Оружие", "0")) })
             ready.costs.forEach {
                 Text(
                     "${it.resource.title}: −${it.amount} · останется ${it.resource.value - it.amount}",

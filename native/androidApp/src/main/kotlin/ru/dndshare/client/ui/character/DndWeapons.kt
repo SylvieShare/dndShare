@@ -64,11 +64,11 @@ private fun PresetAttack(title: String, unarmed: Boolean) {
     val context = LocalCharacterSheet.current
     val strength = abilityModifier(context.mechanics.score("STR"))
     val bonus = strength + (if (unarmed) context.sheet.proficiency() else 0)
-    val extra =
-        context.mechanics.bonus(
-            "weapon_damage_bonus",
-            RuleContext(kind = "attack", ability = 1, weaponKind = "melee"),
-        )
+    val damageFeatures = context.mechanics.rules("weapon_damage_bonus", RuleContext(kind = "attack", ability = 1, weaponKind = "melee"))
+        .map { FormulaSource(it.sourceLabel, context.mechanics.numericValue(it.rule).toString()) }
+        .filter { it.expression != "0" }
+    val extra = damageFeatures.sumOf { it.expression.toInt() }
+    val art = context.items[if (unarmed) 64L else 35L]
     var attack by remember(title) { mutableStateOf(false) }
     var damage by remember(title) { mutableStateOf(false) }
     val label: @Composable () -> Unit = {
@@ -90,22 +90,26 @@ private fun PresetAttack(title: String, unarmed: Boolean) {
     val buttons: @Composable () -> Unit = {
         Box {
             WeaponAttackValue(title, bonus, context.canEdit) { attack = true }
-            SheetRollActions(
-                attack,
-                { attack = false },
-                SheetRollRequest(
-                    "Атака: $title",
-                    "attack",
-                    1,
-                    bonus = bonus,
-                    weaponKind = "melee",
-                    weaponAttack = !unarmed,
-                    improvised = !unarmed,
-                    proficiencyRank = if (unarmed) 1 else 0,
-                    sourceName = title,
-                ),
-                null,
-            )
+            ShareDropdownMenu(attack, { attack = false }, Modifier.width(DesignTokens.Layout.RollModeMenuWidth)) {
+                var mode by remember { mutableStateOf("auto") }
+                var excluded by remember { mutableStateOf(emptyList<String>()) }
+                val request = SheetRollRequest("Атака: $title", "attack", 1, bonus = bonus, weaponKind = "melee",
+                    weaponAttack = !unarmed, improvised = !unarmed, proficiencyRank = if (unarmed) 1 else 0,
+                    sourceName = title, manualMode = mode, excludedBonuses = excluded)
+                Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    WeaponMenuHeading(title, art, "Сила", "attack", bonus)
+                    SheetRollModePicker(mode, { mode = it }, neutralMode = "auto", enabled = true)
+                    val modifiers = buildList {
+                        if (strength != 0) add(FormulaSource("Сила", strength.toString()))
+                        if (unarmed) add(FormulaSource("Владение", context.sheet.proficiency().toString()))
+                    }
+                    WeaponAttackPreview(request, modifiers, true, excluded) { excluded = it }
+                    ShareDropdownMenuItem(text = { Text("Бросить на атаку") }, onClick = {
+                        attack = false
+                        context.roll(request)
+                    })
+                }
+            }
         }
         Box {
             WeaponDamageFace(
@@ -123,30 +127,27 @@ private fun PresetAttack(title: String, unarmed: Boolean) {
             ) {
                 damage = true
             }
-            ShareDropdownMenu(damage, { damage = false }) {
-                listOf(false to "Урон", true to "Критический урон").forEach { (critical, text) ->
-                    ShareDropdownMenuItem(
-                        text = { Text(text) },
-                        leadingIcon = { AppGlyph(Glyph.Dice, Modifier.size(18.dp)) },
-                        onClick = {
-                            damage = false
-                            val amount = strength + extra
-                            val formula =
-                                if (unarmed) (1 + amount).coerceAtLeast(0).toString()
-                                else
-                                    "${if(critical)2 else 1}d4" +
-                                        (if (amount >= 0) "+$amount" else amount.toString())
-                            context.roll(
-                                SheetRollRequest(
-                                    "$text: $title",
-                                    "damage",
-                                    formula = formula,
-                                    damageTerms = listOf(SheetDamageTerm(formula, "Дробящий")),
-                                    minimumTotal = 0,
-                                )
-                            )
-                        },
-                    )
+            ShareDropdownMenu(damage, { damage = false }, Modifier.width(DesignTokens.Layout.RollModeMenuWidth)) {
+                var critical by remember { mutableStateOf(false) }
+                val amount = strength + extra
+                val die = if (critical) "2d4" else "1d4"
+                val formula = if (unarmed) (1 + amount).coerceAtLeast(0).toString() else die + signed(amount)
+                Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    WeaponMenuHeading(title, art, "Сила", "damage", bonus)
+                    WeaponOptionSwitch("Критическое попадание", critical, true) { critical = it }
+                    val rows = buildList {
+                        add(if (unarmed) FormulaSource(title, "1") else FormulaSource("Оружие", die))
+                        if (strength != 0) add(FormulaSource("Сила", strength.toString()))
+                        addAll(damageFeatures)
+                        if (unarmed && 1 + amount < 0) add(FormulaSource("Минимум урона", (-1 - amount).toString()))
+                    }
+                    WeaponFormulaPreview(rows)
+                    ShareDropdownMenuItem(text = { Text("Бросить на урон") }, onClick = {
+                        damage = false
+                        val action = if (critical) "Критический урон" else "Урон"
+                        context.roll(SheetRollRequest("$action: $title", "damage", formula = formula,
+                            damageTerms = listOf(SheetDamageTerm(formula, "Дробящий")), minimumTotal = 0))
+                    })
                 }
             }
         }
