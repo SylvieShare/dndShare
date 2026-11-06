@@ -38,7 +38,7 @@ internal fun EquipmentAdditions(item: CatalogueItem, kind: String, metadata: Han
                     if (d["level"].number(1) > 1) "с уровня ${d["level"].number()}" else null,
                 )
                 .joinToString(" · "),
-            if (kind == "weapon") Glyph.Swords else Glyph.ShieldCheck,
+            if (kind == "weapon") Glyph.Swords else Glyph.Shield,
             true,
         )
     if (kind == "weapon") {
@@ -78,7 +78,7 @@ internal fun EquipmentAdditions(item: CatalogueItem, kind: String, metadata: Han
                     )
                     .filter(String::isNotBlank)
                     .joinToString(" "),
-                Glyph.ShieldCheck,
+                Glyph.Shield,
             )
         }
         d["weapon_damage"].arrayValue().forEach { raw ->

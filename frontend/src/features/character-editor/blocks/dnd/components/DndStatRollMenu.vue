@@ -32,7 +32,7 @@ import { BasePopover } from '@sylvieshare/share-ui'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import SystemDie from '@/shared/ui/SystemDie.vue'
-import { signedOrZero as signed } from '@/shared/lib/dnd'
+import { formatBonus as signed } from '@/shared/lib/dnd'
 import D20RollControls from './D20RollControls.vue'
 defineProps({
   anchor: { type: Object, required: true },

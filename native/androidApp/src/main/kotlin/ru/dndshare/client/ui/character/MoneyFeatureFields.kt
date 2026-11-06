@@ -30,6 +30,7 @@ internal fun MoneyFeatureFields(form: FeatureFormScope) {
     }
     if (currency != null) {
         form.Choice("_calcCurrency", "Валюта", ids.map { it to title(it) })
+        if (!vtm) SheetFormReadout(title(currency), form.text(currency).ifBlank { "0" })
         ShareCalcPad(
             form.text("_calcExpression"),
             {
@@ -62,5 +63,8 @@ internal fun MoneyFeatureFields(form: FeatureFormScope) {
         }
         error?.let { Text(it, style = ShareTypography.context, color = WebPalette.Danger) }
     }
-    ids.forEach { form.NumberField(it, title(it)) }
+    if (vtm) ids.forEach { form.NumberField(it, title(it)) }
+    else ShareDetailSection("Количество по номиналам", collapsible = true, defaultOpen = false) {
+        ids.forEach { form.NumberField(it, title(it)) }
+    }
 }

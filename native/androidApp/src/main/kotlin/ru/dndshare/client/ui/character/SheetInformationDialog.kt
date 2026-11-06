@@ -96,6 +96,7 @@ internal fun SheetInformationDialog(
                 style = ShareTypography.group,
             )
             if (context.canEdit) {
+                SheetSummaryHeading("Доступ и изменения", divider = true)
                 Row {
                     ShareTextButton(
                         onClick = { context.history(false) },
@@ -116,6 +117,7 @@ internal fun SheetInformationDialog(
                     enabled = !remote.busy,
                     change = commands::visibility,
                 )
+                SheetSummaryHeading("Персонаж", divider = true)
                 ShareTextButton(
                     onClick = {
                         close()
@@ -149,6 +151,7 @@ internal fun SheetInformationDialog(
                     Text("Состояния и вдохновение")
                 }
                 if (sheet.templateName == "DND5") {
+                    SheetSummaryHeading("Правила и источники", divider = true)
                     ShareTextButton(
                         onClick = {
                             close()
@@ -193,6 +196,7 @@ internal fun SheetInformationDialog(
                     Text("История изменений")
                 }
             }
+            SheetSummaryHeading("Экспорт", divider = true)
             CharacterExportActions()
             ShareTextButton(onClick = commands::clone, enabled = !remote.busy) {
                 Text("Клонировать персонажа")

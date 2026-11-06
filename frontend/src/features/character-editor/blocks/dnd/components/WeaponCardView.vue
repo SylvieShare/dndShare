@@ -24,7 +24,7 @@
         <WeaponAttunementStatus :entry="entry" :item="ctx.itemMap?.[entry.magic_item_id]" />
         <span v-if="ctx.isWeaponProficient(entry)" class="w-proficiency">Владение</span>
       </div>
-      <WeaponMetricsTable class="w-card-controls"
+      <WeaponMetricsTable v-if="weaponItem || (!entry.item_id && !entry.magic_item_id)" class="w-card-controls"
         :attack="ctx.formatBonus(ctx.attackBonus(entry))" :damage-parts="ctx.damagePartsRaw(entry)"
         :modifier="ctx.damageBonus(entry)" :two-handed-parts="ctx.twoHandedParts(entry)"
         :properties="ctx.propertyItems(entry)" :interactive="interactive" :roll-scope="rollScope"

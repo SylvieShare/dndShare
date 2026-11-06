@@ -1,8 +1,6 @@
 package ru.dndshare.client.ui.character
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -38,13 +36,11 @@ internal fun CharacterSheetEditor(
     CompositionLocalProvider(LocalShareFormInputs provides inputs) {
         ShareAlertDialog(
             onDismissRequest = { if (!editor.saving) close() },
+            modifier = if (editor.baseline.templateName != "DND5") Modifier else Modifier.widthIn(max = if (fields.target == "hp") 520.dp else 480.dp),
             title = { Text(title, style = ShareTypography.header) },
             text = {
                 Column(
-                    Modifier.fillMaxWidth()
-                        .heightIn(max = 560.dp)
-                        .imePadding()
-                        .verticalScroll(rememberScrollState()),
+                    Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(14.dp),
                 ) {
                     if (fields.target == "statuses") {
@@ -60,6 +56,15 @@ internal fun CharacterSheetEditor(
                         StatusInstanceFields(FeatureFormScope(editor, input, readInput), cache)
                     } else {
                         if (fields.target == "hp") {
+                            val ctx = LocalCharacterSheet.current
+                            val savedMax = editor.baseline.values["hp"].objectValue()["max"].objectValue()
+                            val hpMax = ((fields.maximum.toIntOrNull() ?: 0) +
+                                (fields.input["bonuses"] ?: savedMax["bonuses"]).bonusTotal() +
+                                featureHpBonus(editor.baseline, ctx.items)).coerceAtLeast(0)
+                            ShareTile(Modifier.fillMaxWidth(), framed = false, contentPadding = PaddingValues(12.dp)) {
+                                SheetFormReadout("Текущие хиты", "${fields.number} / $hpMax", Glyph.Heart)
+                                if ((fields.temp.toIntOrNull() ?: 0) > 0) SheetFormReadout("Временные хиты", "+${fields.temp}")
+                            }
                             ShareCalcPad(expression, { expression = it }, !editor.saving)
                             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                 for ((kind, label) in

@@ -48,7 +48,7 @@
 
           <div class="center-column">
             <section class="combat-grid">
-              <MetricBox label="Класс доспеха" :value="armorClass" /><MetricBox label="Инициатива" :value="signed(initiative)" />
+              <MetricBox armor label="Класс доспеха" :value="armorClass" /><MetricBox label="Инициатива" :value="signed(initiative)" />
               <MetricBox label="Скорость" :value="speedLabel" /><MetricBox label="Бонус мастерства" :value="signed(profBonus)" />
             </section>
             <section class="box hp-box">
@@ -176,6 +176,7 @@
 </template>
 
 <script setup>
+import { Shield } from '@lucide/vue'
 import { grantedTags, proficiencyDictionaries } from '@/features/character-editor/lib/proficiencyTags'
 import { LoadingState } from '@sylvieshare/share-ui'
 import { featureItemIds } from '@/features/character-editor/lib/characterMagicItems'
@@ -217,8 +218,13 @@ const PrintField = defineComponent({
   setup(props) { return () => h('div', { class: 'print-field' }, [h('strong', props.value || '—'), h('span', props.label)]) },
 })
 const MetricBox = defineComponent({
-  props: { label: String, value: [String, Number] },
-  setup(props) { return () => h('div', { class: 'metric-box' }, [h('strong', String(props.value ?? '—')), h('span', props.label)]) },
+  props: { label: String, value: [String, Number], armor: Boolean },
+  setup(props) {
+    return () => h('div', { class:'metric-box' }, [
+      h('strong', String(props.value ?? '—')),
+      h('span', {class:'metric-label'}, [props.armor ? h(Shield, {size:12, 'aria-hidden':'true'}) : null, props.label]),
+    ])
+  },
 })
 const BoxTitle = defineComponent({
   setup(_, { slots }) { return () => h('h2', { class: 'box-title' }, [h('span', '◆'), slots.default?.(), h('span', '◆')]) },
@@ -554,6 +560,7 @@ onBeforeUnmount(() => document.documentElement.classList.remove('character-print
 :deep(.box-title) { display: flex; align-items: center; justify-content: center; gap: 1.5mm; margin: 0 0 2.5mm; font: 800 6.5px/1.1 var(--font-print-ui); letter-spacing: .09em; text-align: center; text-transform: uppercase; }:deep(.box-title span) { color: #8a7a61; font-size: 4px; }
 .line-row { display: grid; grid-template-columns: 3.5mm 7mm minmax(0, 1fr); align-items: center; gap: 1.2mm; min-height: 5mm; border-bottom: .35px solid #d5ccbc; font-size: 7px; }.line-row:last-child { border-bottom: 0; }.line-row strong { font-size: 8px; text-align: center; }.line-row > span:last-child { min-width: 0; overflow-wrap: anywhere; }.line-row small { color: #81725b; font-size: 5.5px; }
 .prof-dot { width: 2.5mm; height: 2.5mm; border: .7px solid #4f4639; border-radius: 50%; }.prof-dot.filled { background: #4f4639; box-shadow: inset 0 0 0 .6mm #fffefa; }.prof-dot.expert { box-shadow: inset 0 0 0 .4mm #fffefa, inset 0 0 0 .85mm #4f4639; background: #fffefa; }
+:deep(.metric-label) {display:inline-flex;align-items:center;gap:1mm}
 .combat-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2mm; }:deep(.metric-box) { min-width: 0; min-height: 23mm; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5mm; padding: 2mm 1mm; border: 1px solid #695a44; border-radius: 4mm 4mm 1mm 1mm; text-align: center; box-shadow: inset 0 0 0 .6mm #fffefa, inset 0 0 0 .8mm #c8baa0; }:deep(.metric-box strong) { font: 700 18px/1 var(--font-print-display); }:deep(.metric-box span) { max-width: 100%; font-size: 5px; font-weight: 800; line-height: 1.15; letter-spacing: .045em; text-transform: uppercase; overflow-wrap: anywhere; }
 .hp-box { display: grid; grid-template-columns: 1fr 1fr; gap: 2mm; }.hp-box > div { display: flex; align-items: center; justify-content: center; gap: 2mm; text-align: center; }.hp-max { grid-column: 1 / -1; padding-bottom: 1.5mm; border-bottom: .5px solid #baaa8d; font-size: 7px; }.hp-max strong { font-size: 12px; }.hp-current, .hp-temp { min-height: 15mm; flex-direction: column; }.hp-current { border-right: .5px solid #baaa8d; }.hp-current strong, .hp-temp strong { font: 700 19px/1 var(--font-print-display); }.hp-current span, .hp-temp span { font-size: 5px; font-weight: 800; text-transform: uppercase; }
 .mini-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 2mm; }.compact-box { min-height: 18mm; text-align: center; }.large-value { font: 700 12px/1 var(--font-print-display); }.death-saves > div { display: flex; justify-content: flex-end; align-items: center; gap: 1mm; margin-top: 1.2mm; font-size: 5.5px; }.death-saves i { width: 2.7mm; height: 2.7mm; display: inline-block; border: .7px solid #4f4639; border-radius: 50%; }.death-saves i.marked { background: #4f4639; box-shadow: inset 0 0 0 .5mm #fffefa; }

@@ -32,47 +32,30 @@ private val characterFields =
 
 @Composable
 internal fun DndPersonality(format: LayoutFormat) {
-    val wide = format == LayoutFormat.Wide
-    if (wide)
-        Column(verticalArrangement = Arrangement.spacedBy(22.dp)) {
-            ShareTile(framed = false, contentPadding = PaddingValues(18.dp)) {
-                PersonalityFieldGrid(listOf("person_origin", "person_alignment"), 2)
+    val ctx = LocalCharacterSheet.current
+    val show: (String) -> Boolean = { ctx.canEdit || ctx.sheet.values.text(it).isNotBlank() }
+    val basics = listOf("person_origin", "person_alignment").filter(show)
+    val details = appearanceFields.filter(show)
+    val traits = characterFields.filter(show)
+    val history = listOf("person_backstory", "person_allies").filter(show)
+    val portrait = ctx.canEdit || ctx.sheet.portrait != null
+    val appearance = show("person_appearance")
+    if (!portrait && !appearance && listOf(basics, details, traits, history).all { it.isEmpty() }) {
+        SheetEmpty("Сведения о личности пока не заполнены.")
+        return
+    }
+    ShareBalancedColumns(minimumWidth = 300.dp, maxColumns = if (format == LayoutFormat.Tablet) 2 else 1, gap = 17.dp) {
+        if (basics.isNotEmpty()) PersonalityGroup("Основное") { PersonalityFieldGrid(basics, 2) }
+        if (portrait || appearance || details.isNotEmpty()) PersonalityGroup("Облик") {
+            if (portrait || appearance) Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+                if (portrait) PersonalityPortrait(if (format == LayoutFormat.Wide) Modifier.size(148.dp,174.dp) else Modifier.size(84.dp,96.dp))
+                if (appearance) Column(Modifier.weight(1f)) { PersonalityField("person_appearance") }
             }
-            ShareTile(framed = false, contentPadding = PaddingValues(18.dp)) {
-                Row(horizontalArrangement = Arrangement.spacedBy(25.dp)) {
-                    PersonalityPortrait(Modifier.width(200.dp).height(260.dp))
-                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(17.dp)) {
-                        PersonalityField("person_appearance")
-                        PersonalityFieldGrid(appearanceFields, 3)
-                    }
-                }
-            }
-            ShareTile(framed = false, contentPadding = PaddingValues(18.dp)) {
-                PersonalityFieldGrid(characterFields, 2)
-            }
-            ShareTile(framed = false, contentPadding = PaddingValues(18.dp)) {
-                PersonalityField("person_backstory")
-                PersonalityField("person_allies")
-            }
+            if (details.isNotEmpty()) PersonalityFieldGrid(details, 2)
         }
-    else
-        ShareBalancedColumns(
-            minimumWidth = 300.dp,
-            maxColumns = if (format == LayoutFormat.Phone) 1 else 2,
-            gap = 17.dp,
-        ) {
-            PersonalityGroup("Основное") {
-                PersonalityField("person_origin")
-                PersonalityField("person_alignment")
-                PersonalityField("person_appearance")
-            }
-            PersonalityGroup("Облик") { PersonalityFieldGrid(appearanceFields, 2) }
-            PersonalityGroup("Характер") { characterFields.forEach { PersonalityField(it) } }
-            PersonalityGroup("История") {
-                PersonalityField("person_backstory")
-                PersonalityField("person_allies")
-            }
-        }
+        if (traits.isNotEmpty()) PersonalityGroup("Характер") { traits.forEach { PersonalityField(it) } }
+        if (history.isNotEmpty()) PersonalityGroup("История") { history.forEach { PersonalityField(it) } }
+    }
 }
 
 @Composable
@@ -191,7 +174,7 @@ private fun PersonalityPortrait(modifier: Modifier) {
             )
         else
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(context.sheet.name.take(1), style = ShareTypography.title)
+                Text("Добавить портрет", style = ShareTypography.context, color = WebPalette.TextMuted)
             }
     }
 }

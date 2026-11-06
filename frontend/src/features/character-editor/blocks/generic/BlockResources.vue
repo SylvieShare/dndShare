@@ -1,5 +1,5 @@
 <template>
-  <BlockResourcesView ref="root" v-bind="$attrs" class="br-block"
+  <BlockResourcesView v-bind="$attrs" class="br-block"
     :resources="resources"
     :manage="ownerMode"
     :can-interact="ownerMode"
@@ -7,38 +7,20 @@
     @manage="onManage"
   />
 
-  <MorphEditorShell
-    v-if="editorOpen"
-    :origin-rect="originRect"
-    :origin-el="originEl"
-    :strip="false"
-    @close="close"
-  >
-    <template #view="{ revealed }">
-      <BlockResourcesView
-        :resources="resources"
-        :manage="ownerMode"
-        :can-interact="ownerMode"
-        :edit-fade="revealed"
-        panel
-        @toggle="toggle"
-      />
-    </template>
-    <template #editor>
-      <BlockResourcesEditor
-        :resources="manualResources"
-        :readonly-resources="readonlyResources"
-        @reorder="reorder"
-        @change-color="changeColor"
-        @rename="rename"
-        @set-total="setTotal"
-        @set-rest="setRest"
-        @set-visible="setVisible"
-        @remove="remove"
-        @add="add"
-      />
-    </template>
-  </MorphEditorShell>
+  <AppModalFrame v-if="editorOpen" title="Ресурсы" :width="540" :z-index="3100" @close="editorOpen = false">
+    <BlockResourcesEditor
+      :resources="manualResources"
+      :readonly-resources="readonlyResources"
+      @reorder="reorder"
+      @change-color="changeColor"
+      @rename="rename"
+      @set-total="setTotal"
+      @set-rest="setRest"
+      @set-visible="setVisible"
+      @remove="remove"
+      @add="add"
+    />
+  </AppModalFrame>
 </template>
 
 <script setup>
@@ -47,8 +29,7 @@ import { logResourceChange } from '@/features/character-editor/lib/sessionEventD
 import { computed, inject, ref } from 'vue'
 import BlockResourcesEditor from '@/features/character-editor/blocks/generic/components/BlockResourcesEditor'
 import BlockResourcesView from '@/features/character-editor/blocks/generic/components/BlockResourcesView'
-import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
-import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import { resourceVisibleHere, resourceVisibilityPatch } from '@/features/character-editor/lib/resourceVisibility'
 import { featureWidgetResourceKeys } from '@/features/character-editor/lib/characterFeatureWidgets'
 import { featureActionResourceKeys } from '@/features/character-editor/lib/characterFeatureActions'
@@ -57,8 +38,7 @@ defineOptions({ inheritAttrs: false })
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: true })
-const root = ref(null)
-const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
+const editorOpen = ref(false)
 
 const manualResources = computed(() => Array.isArray(props.value) ? props.value : [])
 const allResources = computed(() => {
@@ -95,7 +75,7 @@ function emitResources(next) {
 }
 
 function onManage() {
-  openFrom(root.value?.$el)
+  editorOpen.value = true
 }
 
 function toggle(ri, p) {

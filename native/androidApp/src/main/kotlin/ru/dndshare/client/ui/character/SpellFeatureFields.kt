@@ -108,7 +108,7 @@ internal fun SpellFeatureFields(form: FeatureFormScope, cache: CacheDao) {
         "spell-slots" ->
             for (pool in listOf("long_rest", "short_rest")) {
                 Text(
-                    if (pool == "long_rest") "Ячейки заклинаний" else "Магия договора",
+                    if (pool == "long_rest") "После долгого отдыха" else "После короткого отдыха · магия договора",
                     style = ShareTypography.group,
                 )
                 val rows = form.data[pool].arrayValue()
@@ -117,30 +117,32 @@ internal fun SpellFeatureFields(form: FeatureFormScope, cache: CacheDao) {
                         val row = raw.objectValue()
                         fun change(key: String, text: String) =
                             form.row(listOf(pool), index, key, JsonPrimitive(text))
-                        SheetNumberInput("Уровень", row.text("level")) { change("level", it) }
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Column(Modifier.weight(1f)) {
-                                SheetNumberInput("Всего", row.text("total")) { change("total", it) }
-                            }
-                            Column(Modifier.weight(1f)) {
-                                SheetNumberInput("Потрачено", row.text("used")) {
-                                    change("used", it)
+                        ShareTile(Modifier.fillMaxWidth(), framed = false, contentPadding = PaddingValues(12.dp)) {
+                            SheetNumberInput("Уровень", row.text("level")) { change("level", it) }
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Column(Modifier.weight(1f)) {
+                                    SheetNumberInput("Всего", row.text("total")) { change("total", it) }
+                                }
+                                Column(Modifier.weight(1f)) {
+                                    SheetNumberInput("Потрачено", row.text("used")) {
+                                        change("used", it)
+                                    }
                                 }
                             }
-                        }
-                        ShareTextButton(
-                            onClick = {
-                                form.input(
-                                    pool,
-                                    JsonArray(
-                                        form.data[pool].arrayValue().filterIndexed { i, _ ->
-                                            i != index
-                                        }
-                                    ),
-                                )
+                            ShareTextButton(
+                                onClick = {
+                                    form.input(
+                                        pool,
+                                        JsonArray(
+                                            form.data[pool].arrayValue().filterIndexed { i, _ ->
+                                                i != index
+                                            }
+                                        ),
+                                    )
+                                }
+                            ) {
+                                Text("Убрать уровень", color = WebPalette.Danger)
                             }
-                        ) {
-                            Text("Убрать уровень", color = WebPalette.Danger)
                         }
                     }
                 }

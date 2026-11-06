@@ -273,6 +273,7 @@ private fun DndAbilityFace(ability: DndAbility, compact: Boolean) {
                 Surface(
                     onClick = { skillActions = true },
                     modifier = Modifier.semantics {
+                        contentDescription = request.title
                         if (rank > 0) stateDescription = if (rank >= 2) "Мастерство" else "Владение"
                     },
                     color = WebPalette.Raised,

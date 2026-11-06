@@ -1,6 +1,6 @@
 <template>
   <DndActionsView
-    ref="root"
+
     v-bind="$attrs"
     class="da-block"
     :groups="groups"
@@ -15,38 +15,16 @@
     @toggle-resource="toggleActionResource"
   />
 
-  <MorphEditorShell
-    v-if="editorOpen"
-    :origin-rect="originRect"
-    :origin-el="originEl"
-    :strip="false"
-    :min-view-width="320"
-    @close="closeEditor"
-  >
-    <template #view="{ revealed }">
-      <DndActionsView
-        :groups="groups"
-        :manage="ownerMode"
-        :edit-fade="revealed"
-        :action-suggestions="actionSuggestions"
-        panel
-        @apply-effect="applyActionEffect"
-        @roll-dice="rollActionDice"
-        @activate-target="openTargetPicker"
-        @toggle-resource="toggleActionResource"
-      />
-    </template>
-    <template #editor>
-      <DndActionsEditor
-        :actions="manualActions"
-        :readonly-actions="readonlyActions"
-        :selected-uid="editingUid"
-        @add="addAction"
-        @change="changeAction"
-        @remove="removeAction"
-      />
-    </template>
-  </MorphEditorShell>
+  <AppModalFrame v-if="editorOpen" title="Действия" :width="540" :z-index="3100" @close="closeEditor">
+    <DndActionsEditor
+      :actions="manualActions"
+      :readonly-actions="readonlyActions"
+      :selected-uid="editingUid"
+      @add="addAction"
+      @change="changeAction"
+      @remove="removeAction"
+    />
+  </AppModalFrame>
 
   <CharacterEntryPickerModal
     v-if="targetAction"
@@ -66,8 +44,7 @@ import { computed, inject, onMounted, ref, watch } from 'vue'
 import DndActionsEditor from '@/features/character-editor/blocks/dnd/components/DndActionsEditor.vue'
 import DndActionsView from '@/features/character-editor/blocks/dnd/components/DndActionsView.vue'
 import CharacterEntryPickerModal from '@/features/character-editor/components/CharacterEntryPickerModal.vue'
-import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell.vue'
-import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import { collectCharacterFeatureActions, featureActionEffectPatch, groupCharacterFeatureActions } from '@/features/character-editor/lib/characterFeatureActions'
 import { resolveWeaponItem, intrinsicWeaponBonus } from '@/features/character-editor/lib/magicWeapons'
 import { makeUid } from '@/features/character-editor/blocks/dnd/lib/itemEntry'
@@ -81,11 +58,10 @@ const charCtx = inject('charCtx', { ownerMode: false })
 const setBlockHidden = inject('setBlockHidden', () => {})
 const suggestStore = useSuggestStore()
 const diceStore = useDiceStore()
-const root = ref(null)
 const editingUid = ref(null)
 const targetAction = ref(null)
 const targetLoading = ref(false)
-const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
+const editorOpen = ref(false)
 
 const ownerMode = computed(() => !!charCtx.ownerMode)
 const manualActions = computed(() => Array.isArray(props.value) ? props.value : [])
@@ -134,7 +110,7 @@ function emitOrder(next) {
 
 function openEditor() {
   editingUid.value = null
-  openFrom(root.value?.$el)
+  editorOpen.value = true
 }
 
 function addAction() {
@@ -152,7 +128,7 @@ function addAction() {
 function editAction(action) {
   if (action.readonly) return
   editingUid.value = action.uid
-  openFrom(root.value?.$el)
+  editorOpen.value = true
 }
 
 function changeAction(uid, patch) {
@@ -258,7 +234,7 @@ function toggleActionResource(action, pip) {
 }
 
 function closeEditor() {
-  close()
+  editorOpen.value = false
   editingUid.value = null
 }
 

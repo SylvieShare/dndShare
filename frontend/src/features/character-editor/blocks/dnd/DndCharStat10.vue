@@ -45,7 +45,7 @@
 defineOptions({ inheritAttrs: false })
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { layoutTokens } from '@/app/design-tokens'
-import { signedOrZero as signed, abilityModifier, sumBonuses, resolveNumValue } from '@/shared/lib/dnd'
+import { formatBonus as signed, abilityModifier, sumBonuses, resolveNumValue } from '@/shared/lib/dnd'
 import { armorAbilityRollEffects, resolveRollMode } from '@/features/character-editor/blocks/dnd/lib/rollMode'
 import DndStatEditor from '@/features/character-editor/blocks/dnd/components/DndStatEditor'
 import DndStatSkillEditor from '@/features/character-editor/blocks/dnd/components/DndStatSkillEditor'

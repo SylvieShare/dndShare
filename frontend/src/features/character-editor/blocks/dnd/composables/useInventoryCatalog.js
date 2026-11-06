@@ -15,9 +15,10 @@ export function useInventoryCatalog(model) {
     missing.forEach(id => pending.add(String(id)))
     try {
       if (missing.length) {
-        const items = (await shared.load(missing)).items || []
-        for (const item of items) catalog[item.id] = item
-        if (missing.some(id => !catalog[id])) throw new Error('Missing item reference')
+        const response = await shared.load(missing)
+        for (const item of response.items || []) catalog[item.id] = item
+        if (response.failed) throw new Error('Catalogue request failed')
+        // A successful batch can omit inaccessible or deleted records. Each affected cell owns its empty state.
       }
     } catch {
       if (token === request) error.value = 'Не удалось загрузить предметы и их основы.'

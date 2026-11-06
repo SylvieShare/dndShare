@@ -19,12 +19,19 @@ internal fun DndJournal() {
     val response = context.journal.payload
     val journal = response?.get("journal") as? JsonObject
     if (context.journal.loading && journal == null) SheetItemSkeleton()
-    context.journal.error?.let {
-        Text(it, color = WebPalette.Warning, style = ShareTypography.context)
+    if (context.journal.accessStatus != null) {
+        ShareTile(Modifier.fillMaxWidth(), framed = false) {
+            Text("Дневник", style = ShareTypography.card)
+            Text(if (context.journal.accessStatus == 401) "Войдите, чтобы проверить доступ к записям."
+                else "У вас нет доступа к записям этого дневника.", style = ShareTypography.context, color = WebPalette.TextSecondary)
+        }
+    } else {
+        context.journal.error?.let { Text(it, color = WebPalette.Warning, style = ShareTypography.context) }
+        if (journal != null) JournalWorkspace(journal, response)
+        else if (!context.journal.loading && context.journal.error != null)
+            ShareAction("Повторить загрузку дневника", { context.edit("journal-refresh") })
+        else if (!context.journal.loading) SheetEmpty("Нет доступного дневника.")
     }
-    if (journal != null) JournalWorkspace(journal, response)
-    else if (!context.journal.loading)
-        ShareAction("Повторить загрузку дневника", { context.edit("journal-refresh") })
     ShareTile(
         Modifier.fillMaxWidth(),
         framed = false,

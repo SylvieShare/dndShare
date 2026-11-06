@@ -68,6 +68,7 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
   const loading = ref(true)
   const busy = ref(false)
   const error = ref('')
+  const accessStatus = ref(0)
   let pollTimer = null
   let requestVersion = 0
   let disposed = false
@@ -98,10 +99,20 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
       if (version !== requestVersion || disposed) return null
       // Empty source lists are omitted by the API, but must clear stale options.
       sources.value = response?.sources || []
+      accessStatus.value = 0
       error.value = ''
       return apply(response)
     } catch (reason) {
-      if (!quiet && version === requestVersion) error.value = reason?.message || 'Не удалось загрузить дневник'
+      if (disposed || version !== requestVersion) return null
+      if ([401, 403].includes(reason?.status)) {
+        accessStatus.value = reason.status
+        sources.value = []
+        apply({ journal: null, canEdit: false, canManage: false, canSelectSource: false })
+        error.value = ''
+      } else if (!quiet) {
+        accessStatus.value = 0
+        error.value = reason?.message || 'Не удалось загрузить дневник'
+      }
       return null
     } finally {
       if (!quiet) loading.value = false
@@ -109,7 +120,7 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
   }
 
   async function refreshJournal() {
-    if (disposed || busy.value || loading.value || dragging.value || editing.value) return
+    if (disposed || accessStatus.value || busy.value || loading.value || dragging.value || editing.value) return
     await load({ quiet: true })
   }
 
@@ -181,7 +192,7 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
   })
 
   return {
-    journal, sources, canEdit, canManage, canSelectSource, loading, busy, error,
+    journal, sources, canEdit, canManage, canSelectSource, loading, busy, error, accessStatus,
     load, createRoot, selectSource, createSection, updateSection, removeSection,
     createEntry, updateEntry, removeEntry, reorderEntries,
     setPlayerEditing, setDragging, setInlineEditing,

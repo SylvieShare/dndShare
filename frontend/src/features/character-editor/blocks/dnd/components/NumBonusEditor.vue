@@ -5,7 +5,7 @@
     </FormField>
     <slot></slot>
     <BonusList :bonuses="data.bonuses || []" @update:bonuses="setBonuses" />
-    <EditorTotal>Итого: <strong>{{ pre }}{{ total }}{{ unit ? ' ' + unit : '' }}</strong></EditorTotal>
+    <EditorTotal v-if="!summaryInHeader">Итого: <strong>{{ pre }}{{ total }}{{ unit ? ' ' + unit : '' }}</strong></EditorTotal>
   </EditorPanel>
 </template>
 
@@ -22,6 +22,7 @@ import { FormNumberInput } from '@sylvieshare/share-ui'
 // data object (`{ base, bonuses, value }`) on every change.
 const props = defineProps({
   title: { type: String, default: '' },
+  summaryInHeader: Boolean,
   data: { type: Object, default: () => ({ base: 0, bonuses: [] }) },
   min: { default: undefined },
   max: { default: undefined },

@@ -41,10 +41,10 @@ describe('character action block', () => {
     expect(viewSource).toContain('@edit="$emit(\'manage\')"')
   })
 
-  it('manages all custom actions from the block morph without row reordering controls', () => {
+  it('manages all custom actions from the section dialog without row reordering controls', () => {
     expect(viewSource).not.toContain('class="dav-add"')
     expect(viewSource).toMatch(/<MorphTile[^>]*:embedded="panel"/)
-    expect(blockSource).toContain('openFrom(root.value?.$el)')
+    expect(blockSource).toContain('title="Действия" :width="540"')
     expect(blockSource).toContain(':readonly-actions="readonlyActions"')
     expect(viewSource).not.toContain('Переместить выше')
     expect(viewSource).not.toContain('Переместить ниже')

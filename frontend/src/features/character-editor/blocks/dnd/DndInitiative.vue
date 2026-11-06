@@ -11,7 +11,7 @@
     @action="rollInit"
   >
     <template #editor>
-      <NumBonusEditor title="Инициатива" :data="numData" :extra="dexExtra" :pre="displayValue > 0 ? '+' : ''" @change="onChange">
+      <NumBonusEditor summary-in-header :data="numData" :extra="dexExtra" :pre="displayValue > 0 ? '+' : ''" @change="onChange">
         <ToggleSwitch
           v-if="dexMod !== null"
           :modelValue="numData.use_dex || false"

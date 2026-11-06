@@ -56,7 +56,7 @@ internal fun CharacterSheetViewModel.sheetContext(
         images,
         canEdit,
         edit = {
-            if (canEdit || it in listOf("menu", "rest"))
+            if (canEdit || it in listOf("menu", "rest", "journal-refresh"))
                 this.edit(it)
         },
         openItem = this::openItem,

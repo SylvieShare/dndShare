@@ -9,7 +9,7 @@
     :icon="iconSrc"
   >
     <template #editor>
-      <NumBonusEditor title="Скорость" :data="numData" :extra="-speedPenalty" unit="фт" @change="onChange">
+      <NumBonusEditor summary-in-header :data="numData" :extra="-speedPenalty" unit="фт" @change="onChange">
         <div v-if="speedPenalty" class="speed-armor-rule">−{{ speedPenalty }} фт. · {{ armorState.body.name }} требует Силу {{ armorState.strengthRequired }}</div>
         <div v-if="derivedSpeed.multiplier > 1" class="speed-source">Множитель скорости от эффектов <strong>×{{ derivedSpeed.multiplier }}</strong></div>
         <div v-for="source in derivedSpeed.sources" :key="source.key" class="speed-source">

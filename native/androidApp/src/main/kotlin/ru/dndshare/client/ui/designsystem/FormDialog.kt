@@ -31,10 +31,12 @@ fun ShareFormDialog(
     actions: @Composable RowScope.() -> Unit = {
         ShareTextButton(onClick = close, enabled = dismissEnabled) { Text("Закрыть") }
     },
+    modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     ShareWindow(
         onDismissRequest = close,
+        modifier = modifier,
         dismissEnabled = dismissEnabled,
         title = { Text(title, style = ShareTypography.header) },
         actions = actions,

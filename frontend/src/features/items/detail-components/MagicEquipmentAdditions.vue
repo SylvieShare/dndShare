@@ -20,7 +20,7 @@
 <script setup>
 import { computed } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
-import { BadgeCheck, Dices, Dumbbell, Eye, Flame, MoveHorizontal, ShieldCheck, Sparkles, Swords, Tags } from '@lucide/vue'
+import { BadgeCheck, Dices, Dumbbell, Eye, Flame, MoveHorizontal, Shield, Sparkles, Swords, Tags } from '@lucide/vue'
 import { weaponDamageDiceCount, weaponDamageLabel } from '@/shared/lib/abilityProgression'
 import { weaponDamageActionParts } from '@/shared/lib/weaponDamageOptions'
 import DamageDice from '@/features/character-editor/blocks/dnd/components/DamageDice.vue'
@@ -38,12 +38,12 @@ const effects = computed(() => {
     const conditions = []
     if (data.attunement !== 'none') conditions.push(rule.bonus_without_attunement ? 'Действует и без настройки' : 'После настройки на предмет')
     if (Number(data.level) > 1) conditions.push(`с уровня ${data.level}`)
-    add('bonus', props.kind === 'weapon' ? Swords : ShieldCheck,
+    add('bonus', props.kind === 'weapon' ? Swords : Shield,
       props.kind === 'weapon' ? 'К броскам атаки и урона' : 'К классу доспеха',
       `${Number(rule.magic_bonus) > 0 ? '+' : ''}${rule.magic_bonus}`, conditions.join(' · '))
   }
   if (props.kind === 'weapon') {
-    if (data.weapon_bonus_transfer) add('bonus-transfer', ShieldCheck, data.weapon_bonus_transfer.title || 'Перенести в защиту', `0–${Number(rule.magic_bonus) || 0} к КД`, [data.weapon_bonus_transfer.condition, 'Столько же вычитается из бонуса атаки и урона. Сброс вручную под оружием.'].filter(Boolean).join(' '))
+    if (data.weapon_bonus_transfer) add('bonus-transfer', Shield, data.weapon_bonus_transfer.title || 'Перенести в защиту', `0–${Number(rule.magic_bonus) || 0} к КД`, [data.weapon_bonus_transfer.condition, 'Столько же вычитается из бонуса атаки и урона. Сброс вручную под оружием.'].filter(Boolean).join(' '))
     if (rule.damage_type != null) add('damage', Flame, 'Тип основного урона', names(12, [rule.damage_type]), 'Заменяет тип урона основы')
     if (rule.extra_tags?.length) add('tags', Tags, 'Дополнительные свойства', names(14, rule.extra_tags))
     if (rule.extra_proficiencies?.length) add('proficiencies', BadgeCheck, 'Также подходит владение', names(4, rule.extra_proficiencies))

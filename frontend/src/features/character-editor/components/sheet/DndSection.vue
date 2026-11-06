@@ -9,10 +9,7 @@
       <CharacterBlock block-id="items" />
     </template>
     <DndAbilities v-else-if="section === 'abilities'" :format="format" />
-    <template v-else-if="section === 'personality'">
-      <DndPersonalityDesktop v-if="format === 'desktop'" />
-      <DndPersonalityCompact v-else class="dnd-personality-compact" />
-    </template>
+    <DndPersonality v-else-if="section === 'personality'" :format="format" />
     <template v-else-if="section === 'journal'">
       <CharacterBlock block-id="diary" />
       <BaseTile :outlined="false" class="sheet-notes"><CharacterBlock block-id="notes" /></BaseTile>
@@ -23,9 +20,8 @@
 import { BaseTile } from '@sylvieshare/share-ui'
 import CharacterBlock from '../CharacterBlock.vue'
 import DndStats from './DndStats.vue'
+import DndPersonality from './DndPersonality.vue'
 import DndAbilities from './DndAbilities.vue'
-import DndPersonalityCompact from './DndPersonalityCompact.vue'
-import DndPersonalityDesktop from './DndPersonalityDesktop.vue'
 defineProps({ section: String, format: String })
 </script>
 <style scoped>

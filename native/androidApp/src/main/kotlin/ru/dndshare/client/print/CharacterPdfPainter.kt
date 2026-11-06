@@ -17,6 +17,9 @@ internal class CharacterPdfPainter(
     private val name: String,
     private val checkCancellation: () -> Unit,
 ) {
+    private val armorIcon = ResourcesCompat.getDrawable(context.resources, R.drawable.lucide_shield, context.theme)?.mutate()?.apply {
+        setTint(Color.DKGRAY); setBounds(0, 0, 11, 11)
+    }
     private val width = 595
     private val height = 842
     private val margin = 36f
@@ -177,7 +180,8 @@ internal class CharacterPdfPainter(
             TextPaint(textPaint).apply { typeface = Typeface.create(body, Typeface.BOLD) }
         for ((index, row) in values.chunked(columns).withIndex()) {
             val cells = row.map { (label, value) ->
-                layout(Html.escapeHtml(label), (cellWidth * .48f - 12).toInt(), labelPaint) to
+                val iconSpace = if (label == "Класс доспеха" && armorIcon != null) 14 else 0
+                layout(Html.escapeHtml(label), (cellWidth * .48f - 12).toInt() - iconSpace, labelPaint) to
                     layout(Html.escapeHtml(value), (cellWidth * .52f - 12).toInt(), valuePaint)
             }
             val rowHeight = cells.maxOf { maxOf(it.first.height, it.second.height) } + 12f
@@ -193,7 +197,13 @@ internal class CharacterPdfPainter(
                 cells.forEachIndexed { col, (label, value) ->
                     canvas.save()
                     canvas.translate(x + cellWidth * col + 6, top + 6)
+                    canvas.save()
+                    if (row[col].first == "Класс доспеха" && armorIcon != null) {
+                        armorIcon.draw(canvas)
+                        canvas.translate(14f, 0f)
+                    }
                     label.draw(canvas)
+                    canvas.restore()
                     canvas.translate(cellWidth * .48f, 0f)
                     value.draw(canvas)
                     canvas.restore()

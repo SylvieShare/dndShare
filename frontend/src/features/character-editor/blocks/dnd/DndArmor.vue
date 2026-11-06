@@ -2,7 +2,7 @@
   <StatTile
     :variant="variant"
     :embedded="block.props?.embedded"
-    label="КД"
+    label="КД" editor-title="Класс доспеха"
     :mini-label="`КД${armorState.shield ? ' +Щ' : ''}`"
     :value="armorState.total"
     :icon="iconSrc"
@@ -17,7 +17,7 @@
     </template>
 
     <template #editor>
-      <EditorPanel title="Класс доспеха (КД)">
+      <EditorPanel>
         <EditorSection title="Экипировка">
           <div class="armor-source">
             <span><b>{{ armorState.body?.name || armorState.abilityFormula?.source_label || 'Без доспеха' }}</b><small>{{ bodyFormula }}</small></span>
@@ -46,7 +46,6 @@
           <span><b>{{ armorState.minimum.source_label }}</b><small>Минимум итогового КД с учётом всех бонусов</small></span>
           <strong>Не ниже {{ armorState.minimum.value }}</strong>
         </div>
-        <EditorTotal>КД: <strong>{{ armorState.total }}</strong></EditorTotal>
       </EditorPanel>
     </template>
   </StatTile>
@@ -56,7 +55,7 @@
 import { MorphTile } from '@sylvieshare/share-ui'
 import { computed, inject } from 'vue'
 import BonusList from '@/shared/ui/BonusList'
-import { EditorPanel, EditorSection, EditorTotal } from '@sylvieshare/share-ui'
+import { EditorPanel, EditorSection } from '@sylvieshare/share-ui'
 import StatTile from '@/features/character-editor/blocks/dnd/components/StatTile'
 import { deriveEquippedArmor } from '@/features/character-editor/blocks/dnd/lib/equippedArmor'
 

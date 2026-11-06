@@ -8,6 +8,12 @@ data class ArmorReadout(
     val body: CatalogueItem?,
     val shield: CatalogueItem?,
     val speedPenalty: Int,
+    val baseName: String,
+    val baseValue: Int,
+    val shieldValue: Int,
+    val features: List<Pair<String, Int>>,
+    val minimum: Int,
+
 )
 
 private data class ArmorCandidate(val item: CatalogueItem, val value: Int, val shield: Boolean)
@@ -48,7 +54,7 @@ fun armorReadout(derived: DndDerivedValues): ArmorReadout {
                 if (body != null || shield != null && rule["allow_shield"] == JsonPrimitive(false))
                     null
                 else
-                    rule["base"].number(10) +
+                    source.sourceLabel to (rule["base"].number(10) +
                         rule["ability_ids"].arrayValue().sumOf { raw ->
                             val index = raw.number() - 1
                             if (index in 0..5)
@@ -58,35 +64,24 @@ fun armorReadout(derived: DndDerivedValues): ArmorReadout {
                                     )
                                 )
                             else 0
-                        }
+                        })
             }
-            .maxOrNull()
+            .maxByOrNull { it.second }
     val equipment =
         RuleContext(
             armor = body != null,
             shield = shield != null,
             heavyArmor = body?.item?.data?.text("category") == "heavy",
         )
-    val manual =
-        sheet.values["armor"]
-            .objectValue()["bonuses"]
-            .arrayValue()
-            .filterNot {
-                val row = it.objectValue()
-                row["readonly"] == JsonPrimitive(true) &&
-                    row.text("name")
-                        .ifBlank { row.text("title") }
-                        .lowercase()
-                        .startsWith("экипировано:")
-            }
-            .sumOf { it.objectValue()["value"].number() }
-    val bonus = derived.rules("armor_bonus", equipment).sumOf { it.rule["value"].number() }
+    val manual = armorManualBonus(sheet.values["armor"].objectValue()["bonuses"])
+    val features = derived.rules("armor_bonus", equipment).map { it.sourceLabel to it.rule["value"].number() }
+    val bonus = features.sumOf { it.second }
     val minimum =
         derived.rules("armor_minimum", equipment).maxOfOrNull { it.rule["value"].number() } ?: 0
     val total =
         maxOf(
             minimum,
-            (body?.value ?: formula ?: (10 + dexterity)) + (shield?.value ?: 0) + manual + bonus,
+            (body?.value ?: formula?.second ?: (10 + dexterity)) + (shield?.value ?: 0) + manual + bonus,
         )
     val ancestry =
         (sheet.values["race"].objectValue().label() +
@@ -103,7 +98,9 @@ fun armorReadout(derived: DndDerivedValues): ArmorReadout {
         )
             10
         else 0
-    return ArmorReadout(total, body?.item, shield?.item, penalty)
+    return ArmorReadout(total, body?.item, shield?.item, penalty,
+        body?.item?.name ?: formula?.first ?: "Без доспеха",
+        body?.value ?: formula?.second ?: (10 + dexterity), shield?.value ?: 0, features, minimum)
 }
 
 internal fun armorProficient(item: CatalogueItem, derived: DndDerivedValues): Boolean {
@@ -157,3 +154,15 @@ private fun resolveArmor(
         else base.data["required_armor_proficiency"] ?: JsonNull
     return item.copy(data = JsonObject(data))
 }
+
+internal fun armorManualBonus(bonuses: JsonElement?): Int =
+    bonuses.arrayValue()
+        .filterNot {
+            val row = it.objectValue()
+            row["readonly"] == JsonPrimitive(true) &&
+                row.text("name")
+                    .ifBlank { row.text("title") }
+                    .lowercase()
+                    .startsWith("экипировано:")
+        }
+        .sumOf { it.objectValue()["value"].number() }

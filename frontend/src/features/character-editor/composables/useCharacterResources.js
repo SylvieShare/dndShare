@@ -36,14 +36,15 @@ export function useCharacterResources(values, sources = DND_CHARACTER_RESOURCE_S
         rememberItems(response?.items || [])
         return response || { items: [] }
       })
-      .catch(() => ({ items: [] }))
+      .catch(() => ({ items: [], failed: true }))
     hydrationPromise = request
+    let response
     try {
-      await request
+      response = await request
     } finally {
       if (hydrationPromise === request) hydrationPromise = null
     }
-    return { items: requested.map((id) => itemsById.value.get(id)).filter(Boolean) }
+    return { items: requested.map((id) => itemsById.value.get(id)).filter(Boolean), ...(response?.failed && { failed:true }) }
   }
 
   watch(

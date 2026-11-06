@@ -1,8 +1,8 @@
 <template>
   <RowActionMenu v-if="variant === 'strip' && rollable" :title="label">
-    <template #trigger><button ref="tileRef" type="button" class="stat-strip" :aria-label="label + ' ' + pre + value"><img :src="icon" alt="" /><span class="stat-strip-label">{{ label }}</span><span>{{ pre }}{{ value }}{{ unit ? ' ' + unit : '' }}</span></button></template>
+    <template #trigger><button type="button" class="stat-strip" :aria-label="label + ' ' + pre + value"><img :src="icon" alt="" /><span class="stat-strip-label">{{ label }}</span><span>{{ pre }}{{ value }}{{ unit ? ' ' + unit : '' }}</span></button></template>
     <template #default="{ close: closeMenu }">
-      <RowActionItem v-if="canEdit" action="edit" @click="closeMenu(); openTile()">Изменить</RowActionItem>
+      <RowActionItem v-if="canEdit" action="edit" @click="closeMenu(); open()">Изменить</RowActionItem>
       <RowActionItem :icon="Dices" @click="closeMenu(); runAction()">Бросить кубик</RowActionItem>
     </template>
   </RowActionMenu>
@@ -19,60 +19,48 @@
   <RowActionMenu v-else-if="variant === 'tile' && embedded && rollable" block :title="label"
     :trigger-attrs="{ ...$attrs, style: [$attrs.style, { height: '100%', transform: 'none' }] }">
     <template #trigger="{ open: menuOpen }">
-      <StatTileFace ref="tileRef" class="util-tile" embedded :active="menuOpen" :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :color="color" aria-haspopup="menu" :aria-expanded="menuOpen">
+      <StatTileFace class="util-tile" embedded :active="menuOpen" :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :color="color" aria-haspopup="menu" :aria-expanded="menuOpen">
         <template #decoration><TileAccentStrip v-if="toggled" /></template>
       </StatTileFace>
     </template>
     <template #default="{ close: closeMenu }">
-      <RowActionItem v-if="canEdit" action="edit" @click="closeMenu(); openTile()">Изменить</RowActionItem>
+      <RowActionItem v-if="canEdit" action="edit" @click="closeMenu(); open()">Изменить</RowActionItem>
       <RowActionItem :icon="Dices" @click="closeMenu(); runAction()">Бросить кубик</RowActionItem>
     </template>
   </RowActionMenu>
-  <StatTileFace v-bind="$attrs" v-else-if="variant === 'tile'" ref="tileRef" class="util-tile" :embedded="embedded" :interactive="canEdit" :active="editorOpen" :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="openTile" @open="openTile" @roll="runAction">
+  <StatTileFace v-bind="$attrs" v-else-if="variant === 'tile'" class="util-tile" :embedded="embedded" :interactive="canEdit" :active="editorOpen" :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="open" @open="open" @roll="runAction">
     <template #decoration><TileAccentStrip v-if="toggled" /></template>
   </StatTileFace>
 
   <!-- any other variant (e.g. mobile default): block may override the look via the `tile` slot.
        `open` opens the morph editor; `action` fires the tile's primary action (roll / shield). -->
   <slot v-else :attrs="$attrs" name="tile" :can-edit="canEdit" :open="open" :action="runAction">
-    <StatTileFace v-bind="$attrs" ref="tileRef" class="util-tile" :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="openTile" @open="openTile" @roll="runAction">
+    <StatTileFace v-bind="$attrs" class="util-tile" :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="open" @open="open" @roll="runAction">
       <template #decoration><TileAccentStrip v-if="toggled" /></template>
     </StatTileFace>
   </slot>
 
-  <MorphEditorShell
-    v-if="editorOpen"
-    :origin-rect="originRect"
-    :origin-el="originEl"
-    :color="color"
-    :strip="false"
-    :editor-width="editorWidth"
-    :min-view-width="minViewWidth"
-    @close="close"
-  >
-    <template #view="{ revealed }">
-      <StatTileFace panel :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :color="color" :edit-fade="revealed" />
+  <AppModalFrame v-if="editorOpen" :title="editorTitle || label" :width="460" :z-index="3100" @close="editorOpen = false">
+    <template #header-actions>
+      <span class="utility-result"><img v-if="icon" :src="icon" alt="" /><b>{{ pre }}{{ value }}{{ unit ? ' ' + unit : '' }}</b></span>
     </template>
-    <template #editor><slot name="editor" /></template>
-  </MorphEditorShell>
+    <slot name="editor" />
+  </AppModalFrame>
 </template>
 
 <script setup>
 defineOptions({ inheritAttrs: false })
 // Shared shell for the small "label + value" sheet tiles (AC / initiative / speed / prof-bonus).
-// Owns the three variants (mini / tile / default) and the click-to-morph editor. A block supplies its
-// computed display (label/value/pre/unit/color) and an `editor` slot; the morph and chrome are here.
 // Owners can open the editor; `rollable` tiles keep their dice action on read-only sheets.
 // The colored strip appears only while `toggled` (AC with its shield up), so resting tiles have no strip.
 import { computed, inject, ref } from 'vue'
-import { RowActionMenu, TileAccentStrip } from '@sylvieshare/share-ui'
+import { AppModalFrame, RowActionMenu, TileAccentStrip } from '@sylvieshare/share-ui'
 import { Dices } from '@lucide/vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
-import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import StatTileFace from '@/features/character-editor/blocks/dnd/components/StatTileFace'
-import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 
 const props = defineProps({
+  editorTitle: String,
   variant: { type: String, default: '' },
   embedded: Boolean,
   label: { type: String, default: '' },
@@ -84,18 +72,13 @@ const props = defineProps({
   color: { type: String, default: 'var(--accent)' },
   toggled: { type: Boolean, default: false },   // strip + mini accent (e.g. AC with shield up)
   rollable: { type: Boolean, default: false },   // show the dice button on the tile face
-  editorWidth: { type: Number, default: 320 },
-  minViewWidth: { type: Number, default: 150 },
 })
 const emit = defineEmits(['action'])
 
-const tileRef = ref(null)
 const charCtx = inject('charCtx', { ownerMode: true })
 const canEdit = computed(() => !!charCtx.ownerMode)
-const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
-
-function open(event) { if (canEdit.value) openFrom(event?.currentTarget?.closest('.morph-tile') || event?.currentTarget || null) }
-function openTile() { if (canEdit.value) openFrom(tileRef.value?.$el || tileRef.value || null) }
+const editorOpen = ref(false)
+function open() { if (canEdit.value) editorOpen.value = true }
 function runAction() { if (props.rollable || canEdit.value) emit('action') }
 </script>
 
@@ -147,5 +130,6 @@ function runAction() { if (props.rollable || canEdit.value) emit('action') }
 </style>
 
 <style scoped>
+.utility-result{display:inline-flex;align-items:center;gap:6px;color:var(--text-1);font-variant-numeric:tabular-nums}.utility-result img{width:18px;height:18px}
 .stat-strip { display:inline-flex; align-items:center; gap:4px; min-height:40px; padding:2px 0; border:0; background:transparent; color:var(--text-1); font:inherit; font-weight:600; cursor:pointer } .stat-strip-label {display:none} .stat-strip img { width:16px; height:16px; object-fit:contain; opacity:.8 }
 </style>

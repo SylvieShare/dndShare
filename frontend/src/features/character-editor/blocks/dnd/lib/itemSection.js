@@ -88,7 +88,7 @@ export function inventoryEntriesWeight(entries, catalog) {
 export function entryDisplayData(entry, catalog, typeById = {}, rootTypeId = 2, presetsById = {}) {
   const base = resolveWeaponItem(entry, catalog)
   const ov = entry.override || {}
-  const namedBase = base ? { ...base, name: ov.name ?? base.name } : { name: ov.name ?? '—', data: {} }
+  const namedBase = base ? { ...base, name: ov.name ?? base.name } : { name: ov.name || (entry.item_id || entry.magic_item_id ? 'Предмет недоступен' : 'Своя вещь'), data: {} }
   const name = instanceDisplayName(namedBase, entry.params, typeById[base?.typeId])
   const desc = ov.desc ?? base?.data?.desc ?? ''
   const consumable = itemConsumable(base, entry)

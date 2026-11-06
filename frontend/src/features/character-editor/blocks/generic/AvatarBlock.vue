@@ -20,7 +20,7 @@
     :aria-label="canUpload ? 'Действия с портретом' : undefined"
   >
     <!-- Картинка -->
-    <img v-if="imageUrl && !uploading" :src="imageUrl" class="avatar-img" alt="avatar" />
+    <img v-if="imageUrl && !uploading" :src="imageUrl" class="avatar-img" alt="Портрет персонажа" />
 
     <!-- Загрузка -->
     <div v-else-if="uploading" class="avatar-overlay">

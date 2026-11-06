@@ -141,7 +141,7 @@ split into semantic `--surface` blocks instead of painting a whole tab: every
 weapon is a card; spell parameters, slots and each spell level are separate
 cards; inventory spaces share one tile while utility widgets are separate; the personality
 profile declares the `Основное`, `Облик`, `Характер` and `История` tile groups
-in `DndPersonalityCompact.vue`. The character route hides the global app header in compact
+in `DndPersonality.vue`. The character route hides the global app header in compact
 windows and gives the full viewport to its own toolbar; that toolbar menu has
 an explicit **К персонажам** action, including on read-only public sheets. Its
 desktop shell also occupies the full viewport because application navigation is
@@ -293,6 +293,12 @@ in the existing rules-owned character fields for rest compatibility.
 The D&D header opens health from any section and shows active conditions in the compact summary or wide header. The larger condition icons are frameless
 and show the condition description on hover. Empty and zero values render no placeholder.
 Heroic inspiration is stored as the boolean `values.inspiration`.
+
+КД использует единый контур Lucide Shield в вебе и Android. Окна служебных показателей
+называют конкретную характеристику боя и показывают её итог. Портрет находится в «Облике»
+во всех форматах. Формы действий, ресурсов и защит подстраивают высоту под содержимое. В режиме чтения пустые поля и группы личности скрыты.
+Ошибка доступа к дневнику отличается от сбоя загрузки; публичность листа не открывает
+закрытые записи кампании. Недоступный предмет в справочной выдаче помечается в своей ячейке.
 
 ## Общие UI-требования
 

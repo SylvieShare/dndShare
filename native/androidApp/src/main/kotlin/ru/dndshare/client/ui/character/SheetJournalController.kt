@@ -1,5 +1,6 @@
 package ru.dndshare.client.ui.character
 
+import ru.dndshare.client.network.ApiException
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.serialization.json.JsonObject
@@ -12,35 +13,34 @@ internal class SheetJournalController(
     private val services: SheetServices,
     scope: CoroutineScope,
 ) {
-    private val progress = MutableStateFlow(false to (null as String?))
+    private val progress = MutableStateFlow(SheetJournalState())
     private var lastAt = 0L
     val state =
         combine(cache.observeSection(uuid, "journal"), progress) { payload, loading ->
-                SheetJournalState(
-                    payload?.let { WireJson.parseToJsonElement(it) as JsonObject },
-                    loading.first,
-                    loading.second,
-                )
+                loading.copy(payload = if (loading.accessStatus == null)
+                    payload?.let { WireJson.parseToJsonElement(it) as JsonObject } else null)
             }
             .flowOn(Dispatchers.Default)
             .stateIn(scope, SharingStarted.WhileSubscribed(5_000), SheetJournalState())
 
     suspend fun refresh() {
-        if (progress.value.first) return
-        progress.value = true to null
+        if (progress.value.loading) return
+        progress.value = progress.value.copy(loading = true, error = null)
         try {
             services.refreshJournal()
+            progress.value = SheetJournalState()
             lastAt = System.currentTimeMillis()
         } catch (cancelled: CancellationException) {
             throw cancelled
         } catch (error: Exception) {
-            progress.value = false to error.message
+            val status = (error as? ApiException)?.status?.takeIf { it == 401 || it == 403 }
+            progress.value = SheetJournalState(error = error.message.takeIf { status == null }, accessStatus = status)
         } finally {
-            progress.value = false to progress.value.second
+            progress.value = progress.value.copy(loading = false)
         }
     }
 
     suspend fun poll(selected: Boolean, editing: Boolean) {
-        if (selected && !editing && System.currentTimeMillis() - lastAt > 15_000) refresh()
+        if (selected && !editing && progress.value.accessStatus == null && System.currentTimeMillis() - lastAt > 15_000) refresh()
     }
 }

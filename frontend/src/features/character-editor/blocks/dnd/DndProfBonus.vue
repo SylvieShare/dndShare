@@ -1,5 +1,5 @@
 <template>
-  <StatTile
+  <StatTile editor-title="Бонус владения"
     :variant="variant"
     :embedded="block.props?.embedded"
     label="Мастерство"
@@ -22,7 +22,7 @@
     </template>
 
     <template #editor>
-      <EditorPanel :title="block.title || 'Бонус мастерства'">
+      <EditorPanel>
         <EditorSection title="Значение">
           <ToggleSwitch
             :modelValue="stored.auto !== false"
@@ -36,7 +36,6 @@
         <EditorSection title="Бонусы">
           <BonusList :bonuses="stored.bonuses" @update:bonuses="setBonuses" />
         </EditorSection>
-        <EditorTotal>Итого: <strong>+{{ displayValue }}</strong></EditorTotal>
       </EditorPanel>
     </template>
   </StatTile>
@@ -49,7 +48,6 @@ import { d20Expr, proficiencyBonus, sumBonuses } from '@/shared/lib/dnd'
 import BonusList from '@/shared/ui/BonusList'
 import { EditorPanel } from '@sylvieshare/share-ui'
 import { EditorSection } from '@sylvieshare/share-ui'
-import { EditorTotal } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 import StatTile from '@/features/character-editor/blocks/dnd/components/StatTile'

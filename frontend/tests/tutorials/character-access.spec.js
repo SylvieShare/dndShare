@@ -21,8 +21,7 @@ for (const mobile of [false, true]) for (const guest of [false, true]) {
     await expect(notice).toContainText('Режим просмотра')
     await expect(notice).toContainText(guest ? 'Вы не авторизованы' : 'принадлежит другому игроку')
     await expect(page.locator('.morph-tile-heading--editable:visible')).toHaveCount(0)
-    if (mobile) await page.getByRole('button', { name: 'Меню', exact: true }).click()
-    else await page.getByRole('button', { name: 'Меню персонажа', exact: true }).click()
+    await page.getByRole('button', { name: 'Меню персонажа', exact: true }).click()
     if (guest) await page.evaluate(() => { window.addEventListener('dndshare:request-auth', e => { window.requestedAuth = e.detail.reason }) })
     await page.getByRole('button', { name: 'Клонировать себе', exact: true }).click()
     if (guest) {

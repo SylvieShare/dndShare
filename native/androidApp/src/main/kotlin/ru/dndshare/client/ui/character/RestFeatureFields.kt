@@ -3,6 +3,8 @@ package ru.dndshare.client.ui.character
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
 import ru.dndshare.client.model.text
@@ -20,10 +22,15 @@ internal fun RestFeatureFields(form: FeatureFormScope) {
     val pools = sheet.values["hp"].objectValue()["hitDice"].arrayValue()
     val spent = form.data["hitDiceSpent"].arrayValue()
     if (form.text("kind") == "short") {
-        Text(
-            "Потратьте кости хитов, затем завершите отдых. Броски сохраняются в форме.",
-            style = ShareTypography.context,
-        )
+        val current = sheet.values["hp"].objectValue()["current"].number()
+        val maximum = context.mechanics.hpMaximum()
+        val healing = spent.sumOf { it.objectValue()["healing"].number() }
+        ShareTile(Modifier.fillMaxWidth(), framed = false, contentPadding = PaddingValues(12.dp)) {
+            SheetFormReadout("Текущие хиты", "$current / $maximum", Glyph.Heart)
+            if (spent.isNotEmpty()) SheetFormReadout("После отдыха", "${(current + healing).coerceAtMost(maximum)} / $maximum")
+        }
+        Text("Кости хитов", style = ShareTypography.group)
+        if (pools.isEmpty()) Text("Нет костей хитов.", style = ShareTypography.context, color = WebPalette.TextMuted)
         pools.forEach { raw ->
             val row = raw.objectValue()
             val die = row.text("die")
@@ -58,15 +65,16 @@ internal fun RestFeatureFields(form: FeatureFormScope) {
                 style = ShareTypography.group,
             )
     } else if (form.text("kind") == "long") {
-        Text(
-            "Полные хиты, сброс временных хитов и спасбросков от смерти, восстановление ячеек и ресурсов. Истощение уменьшается на один.",
-            style = ShareTypography.context,
-        )
-        Text(
-            if (sheet.sourceVersion == "2024") "Восстанавливаются все кости хитов."
-            else "Восстанавливается половина общего числа костей хитов (минимум одна).",
-            style = ShareTypography.context,
-        )
+        val maximum = context.mechanics.hpMaximum()
+        val current = sheet.values["hp"].objectValue()["current"].number()
+        ShareTile(Modifier.fillMaxWidth(), framed = false, contentPadding = PaddingValues(12.dp)) {
+            SheetFormReadout("Хиты", "$current → $maximum", Glyph.Heart)
+            SheetFormReadout("Ячейки и ресурсы", "Восстановление")
+            SheetFormReadout("Кости хитов", if (sheet.sourceVersion == "2024") "Все" else "Половина, минимум 1")
+            val exhaustion = sheet.values["exhaustion"].objectValue()["level"].number()
+            if (exhaustion > 0) SheetFormReadout("Истощение", "$exhaustion → ${exhaustion - 1}")
+        }
+        Text("Временные хиты и спасброски от смерти сбрасываются.", style = ShareTypography.context, color = WebPalette.TextMuted)
     } else {
         val resources =
             resourceControls(sheet, context.items, includeInactive = true).filter {

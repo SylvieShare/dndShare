@@ -7,6 +7,7 @@ data class SheetJournalState(
     val payload: JsonObject? = null,
     val loading: Boolean = false,
     val error: String? = null,
+    val accessStatus: Int? = null,
 )
 
 data class CharacterSheetUiState(

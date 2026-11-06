@@ -1,6 +1,6 @@
 <template>
   <EditorPanel compact>
-    <EditorSection title="Ресурсы">
+    <EditorSection title="Свои ресурсы">
     <div v-if="resources.length" class="bre-list" data-sortable-container="resources">
       <div
         v-for="(row, idx) in displayRows"

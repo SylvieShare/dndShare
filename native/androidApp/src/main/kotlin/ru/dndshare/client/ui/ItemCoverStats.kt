@@ -31,7 +31,7 @@ internal fun ItemCoverStat(stat: CoverValue) {
                 "Зарядов" -> Glyph.Zap
                 "Хиты" -> Glyph.Heart
                 "КД",
-                "Класс доспеха" -> Glyph.ShieldCheck
+                "Класс доспеха" -> Glyph.Shield
                 else -> Glyph.Book
             }
     val tone =

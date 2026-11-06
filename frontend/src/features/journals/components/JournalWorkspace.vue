@@ -1,6 +1,11 @@
 <template>
   <section class="journal-workspace" :class="{ 'journal-workspace--session': sessionUuid }">
     <LoadingState v-if="loading" class="journal-state" label="Открываем летопись…" />
+    <BaseTile v-else-if="accessStatus" :outlined="false" class="journal-access">
+      <BookMarked :size="22" aria-hidden="true" />
+      <div><h2>Дневник</h2><p>{{ accessStatus === 401 ? 'Войдите, чтобы проверить доступ к записям.' : 'У вас нет доступа к записям этого дневника.' }}</p></div>
+      <button v-if="accessStatus === 401" class="journal-start" type="button" @click="requestLogin">Войти</button>
+    </BaseTile>
     <template v-else>
       <BaseTile class="journal-header">
         <header class="journal-cover">
@@ -56,6 +61,7 @@ import { BaseTile, ConfirmDialog, ToggleSwitch } from '@sylvieshare/share-ui'
 import JournalTimeline from './JournalTimeline.vue'
 import DndDiarySessionModal from '@/features/character-editor/blocks/dnd/components/DndDiarySessionModal.vue'
 import { defaultSession, normalizeSession, patchSession } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
+import { useAccountStore } from '@/stores/account'
 import { useJournalWorkspace } from '../composables/useJournalWorkspace'
 import { useJournalSectionSelection } from '../composables/useJournalSectionSelection'
 import JournalSourceSwitch from './JournalSourceSwitch.vue'
@@ -65,10 +71,13 @@ import { useJournalEntries } from '../composables/useJournalEntries'
 const props = defineProps({ characterUuid: { type: String, default: '' }, sessionUuid: { type: String, default: '' }, occurrenceId: { type: Number, default: null } })
 defineEmits(['schedule'])
 const workspace = useJournalWorkspace({ characterUuid: props.characterUuid, sessionUuid: props.sessionUuid })
-const { journal, sources, canEdit, canManage, canSelectSource, loading, busy, error,
+const { journal, sources, canEdit, canManage, canSelectSource, loading, busy, error, accessStatus,
   load, createRoot, selectSource, createSection, updateSection, removeSection: deleteSection,
   updateEntry, setPlayerEditing, reorderEntries,
 } = workspace
+const account = useAccountStore()
+watch(() => account.user?.id, () => load())
+function requestLogin() { window.dispatchEvent(new CustomEvent('dndshare:request-auth')) }
 const sections = computed(() => journal.value?.sections || [])
 const campaignUuid = computed(() => journal.value?.sessionUuid || props.sessionUuid)
 const showSourceSwitch = computed(() => canSelectSource.value && sources.value.some(source => source.kind === 'session'))
@@ -103,3 +112,9 @@ watch([() => props.occurrenceId, () => journal.value?.uuid], () => {
 watch(canEdit, allowed => { if (!allowed) { sectionDraft.value = null; removingSection.value = null } })
 </script>
 <style scoped src="./JournalWorkspace.css"></style>
+
+<style scoped>
+.journal-access {display:flex;align-items:flex-start;gap:var(--spacing-medium);padding:var(--spacing-page);flex-wrap:wrap}
+.journal-access svg {color:var(--accent-soft);flex:none}.journal-access div {flex:1;min-width:12em}
+.journal-access h2 {margin:0;font-size:var(--type-group-size,16px)}.journal-access p {color:var(--text-2);margin:4px 0 0}
+</style>

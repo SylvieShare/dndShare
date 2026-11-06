@@ -5,7 +5,7 @@ test('all grouped utility cells share hover, padding and full-cell activation', 
   await page.goto('/tests/tutorials/fixtures/utility-cells.html')
   const grid = page.locator('.dnd-utility-grid')
   const cells = grid.locator('.utility-cell')
-  await expect(cells).toHaveCount(6)
+  await expect(cells).toHaveCount(4)
   await expect(grid.locator('.base-tile, .morph-tile-pencil, .stf-roll')).toHaveCount(0)
   const hoverColor = await page.evaluate(() => {
     const probe = document.createElement('span')
@@ -20,12 +20,12 @@ test('all grouped utility cells share hover, padding and full-cell activation', 
     const box = await cell.boundingBox()
     expect(box.height).toBeGreaterThanOrEqual(69)
     expect(box.height).toBeLessThanOrEqual(70)
-    expect(box.y + box.height).toBeLessThanOrEqual(gridBox.y + (Math.floor(index / 3) + 1) * 70)
+    expect(box.y + box.height).toBeLessThanOrEqual(gridBox.y + (Math.floor(index / 2) + 1) * 70)
     expect(await cell.evaluate(el => getComputedStyle(el).paddingBottom)).toBe('12px')
     await cell.hover()
     await expect(cell).toHaveCSS('background-color', hoverColor)
   }
-  for (const [name, selector] of [['КД', '.mes-editor'], ['Скорость', '.mes-editor'], ['Меню персонажа', '.sm-menu'], ['Отдых и рассвет', '[role="menu"]']]) {
+  for (const [name, selector] of [['КД', '[role="dialog"][aria-label="Класс доспеха"]'], ['Скорость', '[role="dialog"][aria-label="Скорость"]']]) {
     const cell = grid.getByRole('button', { name, exact: true })
     const box = await cell.boundingBox()
     await cell.click({ position: { x: box.width / 2, y: box.height - 4 } })
@@ -51,10 +51,10 @@ for (const readonly of [false, true]) test(`initiative and proficiency menu pres
     expect(await page.evaluate(() => window.rolls.length)).toBe(index)
     if (!readonly) {
       await menu.getByRole('menuitem', { name: 'Изменить', exact: true }).click()
-      await expect(page.locator('.mes-editor')).toBeVisible()
+      await expect(page.getByRole('dialog')).toBeVisible()
       await expect(menu).not.toBeVisible()
       await page.keyboard.press('Escape')
-      await expect(page.locator('.mes-editor')).not.toBeVisible()
+      await expect(page.getByRole('dialog')).not.toBeVisible()
       await cell.click()
       await expect(menu).toBeVisible()
     }
@@ -62,6 +62,6 @@ for (const readonly of [false, true]) test(`initiative and proficiency menu pres
     await expect(menu).not.toBeVisible()
     expect(await page.evaluate(() => window.rolls.length)).toBe(index + 1)
   }
-  if (readonly) for (const name of ['КД', 'Скорость', 'Отдых и рассвет']) await expect(grid.getByRole('button', { name, exact: true })).toBeDisabled()
+  if (readonly) for (const name of ['КД', 'Скорость']) await expect(grid.getByRole('button', { name, exact: true })).toBeDisabled()
   expect(await page.evaluate(() => window.writes)).toEqual([])
 })

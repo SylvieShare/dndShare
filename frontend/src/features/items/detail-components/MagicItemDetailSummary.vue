@@ -3,7 +3,7 @@
     <template #left>
       <CoverStatCard :icon="typeIcon" label="Вид предмета" :value="data.type || 'Магический предмет'" size="compact" />
       <CoverStatCard :icon="Gem" label="Редкость" :value="magicItemRarity(data.rarity)" tone="accent" size="compact" />
-      <CoverStatCard v-if="bonus && !instance?.params?.magic?.lost" :icon="data.weapon ? Swords : ShieldCheck" label="Магический бонус" :value="`${bonus > 0 ? '+' : ''}${bonus}`" :note="data.weapon ? 'к атаке и урону' : 'к КД'" />
+      <CoverStatCard v-if="bonus && !instance?.params?.magic?.lost" :icon="data.weapon ? Swords : Shield" label="Магический бонус" :value="`${bonus > 0 ? '+' : ''}${bonus}`" :note="data.weapon ? 'к атаке и урону' : 'к КД'" />
     </template>
     <template #right>
       <CoverStatCard v-if="cost" :icon="Coins" label="Стоимость" :value="cost" size="compact" tone="warning" />
@@ -30,7 +30,7 @@ import ResourceRestIcons from '@/features/character-editor/blocks/generic/compon
 import MagicEquipmentBases from '@/features/items/components/MagicEquipmentBases.vue'
 import { selectedMagicBases } from '@/features/items/lib/magicItemInstanceView'
 import { computed } from 'vue'
-import { Backpack, Circle, Coins, FlaskConical, Gem, Hand, Link, Scroll, ShieldCheck, Sparkles, Swords, WandSparkles, Weight, Zap } from '@lucide/vue'
+import { Backpack, Circle, Coins, FlaskConical, Gem, Hand, Link, Scroll, Shield, ShieldCheck, Sparkles, Swords, WandSparkles, Weight, Zap } from '@lucide/vue'
 import CoverSummaryLayout from '@/features/items/components/cover/CoverSummaryLayout.vue'
 import CoverStatCard from '@/features/items/components/cover/CoverStatCard.vue'
 import CoverSummaryRail from '@/features/items/components/cover/CoverSummaryRail.vue'

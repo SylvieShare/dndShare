@@ -131,7 +131,7 @@
 <script setup>
 import { MorphTile, SkeletonBlock, TileAccentStrip } from '@sylvieshare/share-ui'
 import { onBeforeUnmount, ref, shallowRef } from 'vue'
-import { signedOrZero as signed } from '@/shared/lib/dnd'
+import { formatBonus as signed } from '@/shared/lib/dnd'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import SvgIcon from '@/shared/ui/SvgIcon'
 import DndStatRollMenu from './DndStatRollMenu.vue'

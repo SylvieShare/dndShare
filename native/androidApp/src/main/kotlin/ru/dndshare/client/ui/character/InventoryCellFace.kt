@@ -21,7 +21,9 @@ import ru.dndshare.client.ui.designsystem.*
 
 internal fun inventoryEntryName(entry: JsonObject, items: Map<Long, CatalogueItem>) =
     entry["override"].objectValue().text("name").ifBlank {
-        resolveInventoryItem(entry, items)?.name ?: "Своя вещь"
+        resolveInventoryItem(entry, items)?.name
+            ?: if (entry["item_id"].referenceId() != null || entry["magic_item_id"].referenceId() != null)
+                "Предмет недоступен" else "Своя вещь"
     }
 
 @Composable

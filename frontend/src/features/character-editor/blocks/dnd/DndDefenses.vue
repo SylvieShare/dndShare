@@ -1,47 +1,29 @@
 <template>
-  <DndDefensesView ref="root" v-bind="$attrs" class="dd-block"
+  <DndDefensesView v-bind="$attrs" class="dd-block"
     :defenses="defenses"
     :damage-types="damageTypes"
     :manage="ownerMode"
     @manage="onManage"
   />
 
-  <MorphEditorShell
-    v-if="editorOpen"
-    :origin-rect="originRect"
-    :origin-el="originEl"
-    :strip="false"
-    @close="close"
-  >
-    <template #view="{ revealed }">
-      <DndDefensesView
-        :defenses="defenses"
-        :damage-types="damageTypes"
-        :manage="ownerMode"
-        :edit-fade="revealed"
-        panel
-      />
-    </template>
-    <template #editor>
-      <DndDefensesEditor
-        :defenses="manualDefenses"
-        :readonly-defenses="readonlyDefenses"
-        :damage-types="damageTypes"
-        :damage-type-suggest-id="damageTypeSuggestId"
-        @change="change"
-        @remove="remove"
-        @add="add"
-      />
-    </template>
-  </MorphEditorShell>
+  <AppModalFrame v-if="editorOpen" title="Защиты" :width="540" :z-index="3100" @close="editorOpen = false">
+    <DndDefensesEditor
+      :defenses="manualDefenses"
+      :readonly-defenses="readonlyDefenses"
+      :damage-types="damageTypes"
+      :damage-type-suggest-id="damageTypeSuggestId"
+      @change="change"
+      @remove="remove"
+      @add="add"
+    />
+  </AppModalFrame>
 </template>
 
 <script setup>
 import { computed, inject, ref } from 'vue'
 import DndDefensesEditor from '@/features/character-editor/blocks/dnd/components/DndDefensesEditor.vue'
 import DndDefensesView from '@/features/character-editor/blocks/dnd/components/DndDefensesView.vue'
-import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell.vue'
-import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import { useSuggestStore } from '@/stores/suggest'
 
 defineOptions({ inheritAttrs: false })
@@ -49,8 +31,7 @@ const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: true })
 const suggestStore = useSuggestStore()
-const root = ref(null)
-const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
+const editorOpen = ref(false)
 
 const damageTypeSuggestId = computed(() => Number(props.block.content?.damage_type_suggest_id) || 12)
 suggestStore.ensure(damageTypeSuggestId.value)
@@ -71,7 +52,7 @@ function emitDefenses(next) {
 }
 
 function onManage() {
-  openFrom(root.value?.$el)
+  editorOpen.value = true
 }
 
 function change(index, patch) {

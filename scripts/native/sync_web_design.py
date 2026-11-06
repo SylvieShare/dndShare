@@ -91,21 +91,30 @@ def outputs():
         '</resources>\n'
     )
     package = FRONTEND / "node_modules/@lucide/vue"
-    for slug in ICONS.values():
+    for slug in dict.fromkeys(ICONS.values()):
         source = (package / f"dist/esm/icons/{slug}.mjs").read_text()
         data = re.search(r"const __iconData = (\{.*?\n\});", source, re.S).group(1)
         data = re.sub(r"(\b\w+):", r'"\1":', data)
-        paths = icon_paths(json.loads(data)["node"])
+        paths = list(icon_paths(json.loads(data)["node"]))
+        if slug == "shield":
+            # Numeric AC has one silhouette in the sheet, rich text and item previews.
+            svg = ['<!-- Generated from @lucide/vue (Lucide Shield). -->',
+                   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#b9b9c6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">']
+            svg.extend(f'  <path d={quoteattr(path)}/>' for path in paths)
+            icon = "\n".join([*svg, '</svg>', ''])
+            yield FRONTEND / "public/static/shield.svg", icon
+            yield NATIVE / "assets/character-sheet/shield.svg", icon
+        stroke = "2" if slug == "shield" else "1.8"
         xml = ['<!-- Generated from @lucide/vue; license: assets/licenses/lucide.txt -->',
                '<vector xmlns:android="http://schemas.android.com/apk/res/android"',
                '    android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">']
         for path in paths:
             xml += ['    <path android:fillColor="#00000000" android:strokeColor="#FFFFFFFF"',
-                    '        android:strokeWidth="1.8" android:strokeLineCap="round" android:strokeLineJoin="round"',
+                    f'        android:strokeWidth="{stroke}" android:strokeLineCap="round" android:strokeLineJoin="round"',
                     '        android:pathData=' + quoteattr(path) + ' />']
         yield NATIVE / f"res/drawable/lucide_{slug.replace('-', '_')}.xml", "\n".join([*xml, "</vector>", ""])
     yield NATIVE / "assets/licenses/lucide.txt", (package / "LICENSE").read_text()
-    for filename in ("tab-stats.svg", "tab-weapons.svg", "tab-magic.svg", "tab-skills.svg", "tab-personality.svg", "container-box.svg", "edit-note.svg", "hp-pulse.svg", "shield.svg", "initiative.svg", "speed.svg", "prof-bonus.svg"):
+    for filename in ("tab-stats.svg", "tab-weapons.svg", "tab-magic.svg", "tab-skills.svg", "tab-personality.svg", "container-box.svg", "edit-note.svg", "hp-pulse.svg", "initiative.svg", "speed.svg", "prof-bonus.svg"):
         yield NATIVE / "assets/character-sheet" / filename, (FRONTEND / "public/static" / filename).read_text()
     for path in sorted((FRONTEND / "src/assets/maps/tile-types").glob("*.webp")):
         yield NATIVE / "assets/maps/tile-types" / path.name, path.read_bytes()

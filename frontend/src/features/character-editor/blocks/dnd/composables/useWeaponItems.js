@@ -6,13 +6,17 @@ import { resolveWeaponItem } from '@/features/character-editor/lib/magicWeapons'
 export function useWeaponItems({ tagMap, tagDetailsMap }) {
   const catalog = useCharacterItemCatalog()
   const itemMap = ref(catalog.snapshot())
+  const unavailable = ref(new Set())
 
   function item(entry) {
     return resolveWeaponItem(entry, itemMap.value)
   }
 
   function itemTitle(entry) {
-    return item(entry)?.name || `#${entry.item_id || '—'}`
+    const name = item(entry)?.name || entry.override?.name
+    if (name) return name
+    if (!entry.item_id && !entry.magic_item_id) return 'Своё оружие'
+    return [entry.item_id, entry.magic_item_id].some(id => unavailable.value.has(id)) ? 'Оружие недоступно' : 'Загрузка оружия…'
   }
 
   function itemSubtitle(entry) {
@@ -66,7 +70,11 @@ export function useWeaponItems({ tagMap, tagDetailsMap }) {
     const next = { ...itemMap.value }
     for (const it of res.items || []) next[it.id] = it
     if (missing.length) itemMap.value = { ...itemMap.value, ...next }
-    if (ids.some(id => !next[id])) throw new Error('Weapon source unavailable')
+    if (res.failed) throw new Error('Weapon catalogue request failed')
+    for (const id of missing) {
+      if (next[id]) unavailable.value.delete(id)
+      else unavailable.value.add(id)
+    }
   }
 
   function addItem(it) {

@@ -3,6 +3,7 @@ package ru.dndshare.client.ui.character
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
@@ -56,10 +57,16 @@ internal fun FeatureEditor(
             "vtm-list" ->
                 if (editor.fields.target.endsWith("disciplines")) "Дисциплины" else "Предыстории"
             "sources" -> "Источники контента"
-            "identity" -> "Имя персонажа"
+            "identity" -> "Персонаж"
             "personality" -> personalityFields[editor.fields.target.substringAfter(':')].orEmpty()
             "money" -> "Кошелёк"
-            "utility" -> "Показатель"
+            "utility" -> when (editor.fields.target.substringAfter(':')) {
+                "armor" -> "Класс доспеха"
+                "initiative" -> "Инициатива"
+                "speed" -> "Скорость"
+                "prof_bonus" -> "Бонус владения"
+                else -> "Показатель"
+            }
             "proficiencies" -> "Владения"
             "inventory" -> "Предмет"
             "inventory-section" -> "Хранилище"
@@ -86,6 +93,11 @@ internal fun FeatureEditor(
             title,
             close,
             dismissEnabled = !editor.saving,
+            modifier = if (editor.baseline.templateName != "DND5") Modifier else Modifier.widthIn(max = when (kind) {
+                "level", "journal-entry", "spell", "weapon", "inventory" -> 640.dp
+                "notes", "personality", "ability", "proficiencies" -> 560.dp
+                else -> 480.dp
+            }),
             actions = {
                 ShareTextButton(onClick = close, enabled = !editor.saving) {
                     Text(if (editor.commandPending) "Закрыть" else "Отмена")
@@ -101,7 +113,10 @@ internal fun FeatureEditor(
                     Text(
                         if (editor.saving) "Отправляем…"
                         else if (editor.commandPending) "Повторить"
-                        else if (isCommandForm(editor.fields.target)) "Применить" else "Сохранить"
+                        else if (kind == "rest") when (form.text("kind")) {
+                            "dawn" -> "Применить рассвет"
+                            else -> "Завершить отдых"
+                        } else if (isCommandForm(editor.fields.target)) "Применить" else "Сохранить"
                     )
                 }
             },
@@ -280,13 +295,8 @@ internal fun FeatureFormScope.Choice(
 @Composable
 private fun UtilityFeatureFields(form: FeatureFormScope) {
     val key = form.editor.fields.target.substringAfter(':')
-    if (key != "armor")
-        form.NumberField(if (key == "prof_bonus") "v" else "base", "Основное значение")
-    else
-        Text(
-            "Базовый КД определяется доспехом, щитом, ловкостью и действующими способностями.",
-            style = ShareTypography.context,
-        )
+    if (key == "armor") ArmorSummary(form)
+    else form.NumberField(if (key == "prof_bonus") "v" else "base", "Основное значение")
     if (key == "prof_bonus") form.Toggle("auto", "Рассчитывать по уровню")
     if (key == "initiative") form.Toggle("use_dex", "Учитывать ловкость")
     BonusFields(form)
