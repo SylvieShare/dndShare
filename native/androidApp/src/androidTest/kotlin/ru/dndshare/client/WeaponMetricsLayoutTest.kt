@@ -105,7 +105,12 @@ class WeaponMetricsLayoutTest {
                             )
                             .getBoundsInScreen(it)
                     }
-                assertEquals(attack.width(), attack.height(), "Attack cell must be square")
+                val damage = android.graphics.Rect().also {
+                    requireNotNull(TouchRobot.findNode { node -> node.viewIdResourceName == "weapon-damage-cell" }).getBoundsInScreen(it)
+                }
+                assertEquals(attack.top, damage.top)
+                assertEquals(attack.bottom, damage.bottom)
+                assertTrue(attack.height() >= attack.width())
                 val value = TouchRobot.bounds("Атака: Посох")
                 assertTrue(
                     kotlin.math.abs(attack.exactCenterX() - value.exactCenterX()) <= 1f,

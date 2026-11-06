@@ -9,16 +9,12 @@
     >
       <template #trigger="{ open: menuOpen }">
         <WeaponCardView ref="cardEl" class="action-menu-source" :class="{ 'action-menu-source--open': menuOpen }"
-          :entry="entry" :interactive="!entry.params?.creation?.expired" @roll="openDirectRoll" @pointerdown="draggedThisGesture = false" @name-down="onNameDown">
+          :entry="entry" :roll-scope="directRoll?.scope" :interactive="!entry.params?.creation?.expired" @roll="openDirectRoll" @pointerdown="draggedThisGesture = false" @name-down="onNameDown">
           <WeaponItemMechanics v-if="!entry.params?.creation?.expired" :entry="entry" />
         </WeaponCardView>
       </template>
 
       <template #default="{ close: closeMenu }">
-        <UsableItemAction source="weapon" :item="ctx.item(entry)" :entry="entry" :name="ctx.itemTitle(entry)" @close="closeMenu" />
-        <DamageRollOptions ref="damageOptions" :weapon-uid="entry.uid" v-if="!entry.params?.creation?.expired && (hasDamage || ctx.item(entry))" :can-attack="!!ctx.item(entry)" :actions="weaponDamageActions" :uses="ctx.weaponUses(entry)" :preview="options => ctx.damagePreview(entry, options)" :bonus-action-option="options => ctx.bonusActionDamageOption(entry, options)" :versatile="hasTwoHandedDamage" @attack="options => rollAttack(closeMenu, options)" @roll="options => rollDamage(closeMenu, options)" @roll-step="options => { closeMenu(); ctx.rollWeaponUseStep(entry, options.weaponUseKey, options.stepKey) }" />
-
-        <RowActionSeparator v-if="ctx.item(entry)" />
         <RowActionItem
           v-if="ctx.item(entry)"
           action="view"
@@ -28,8 +24,9 @@
           v-if="ctx.charCtx.ownerMode"
           action="edit"
           @click="editWeapon(closeMenu)"
-        >Редактировать</RowActionItem>
+        >Изменить</RowActionItem>
         <CreatedItemActions :entry="entry" @close="closeMenu" />
+        <UsableItemAction source="weapon" :item="ctx.item(entry)" :entry="entry" :name="ctx.itemTitle(entry)" @close="closeMenu" />
         <ItemTransferAction source="weapon" :entry="entry" :name="ctx.itemTitle(entry)" @close="closeMenu" />
         <RowActionItem
           v-if="ctx.canMoveWeaponToItems(entry)"
@@ -47,6 +44,16 @@
         >Удалить</RowActionItem>
       </template>
     </RowActionMenu>
+
+    <BasePopover v-if="directRoll" :key="directRoll.scope" :open="true" :anchor="directRoll.anchor"
+      role="menu" :aria-label="directRoll.scope === 'attack' ? 'Атака' : 'Урон'" :z-index="4100"
+      transition-preset="action-menu" @update:open="!$event && closeRoll()">
+      <WeaponRollSettings :scope="directRoll.scope" :weapon-uid="entry.uid" :actions="weaponDamageActions"
+        :uses="ctx.weaponUses(entry)" :preview="options => ctx.damagePreview(entry, options)"
+        :bonus-action-option="options => ctx.bonusActionDamageOption(entry, options)" :versatile="hasTwoHandedDamage"
+        @attack="options => rollAttack(closeRoll, options)" @roll="options => rollDamage(closeRoll, options)"
+        @roll-step="options => { closeRoll(); ctx.rollWeaponUseStep(entry, options.weaponUseKey, options.stepKey) }" />
+    </BasePopover>
 
     <RichContent v-if="entry.desc" class="w-desc-text" :html="entry.desc" />
     <CreatedItemStatus :entry="entry" />
@@ -72,20 +79,20 @@
   </MorphTile>
 </template>
 <script setup>
-import { MorphTile } from '@sylvieshare/share-ui'
+import { BasePopover, MorphTile } from '@sylvieshare/share-ui'
 import CreatedItemStatus from '@/features/character-editor/components/CreatedItemStatus.vue'
 import CreatedItemActions from '@/features/character-editor/components/CreatedItemActions.vue'
 import UsableItemAction from '@/features/character-editor/components/UsableItemAction.vue'
 import ItemTransferAction from '@/features/character-editor/components/ItemTransferAction.vue'
 import MagicItemMenuActions from './MagicItemMenuActions.vue'
 import { ArrowRightLeft } from '@lucide/vue'
-import { computed, inject, nextTick, ref, watch } from 'vue'
+import { computed, inject, shallowRef, ref, watch } from 'vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
-import DamageRollOptions from './DamageRollOptions.vue'
+import WeaponRollSettings from './WeaponRollSettings.vue'
 import WeaponCardView from '@/features/character-editor/blocks/dnd/components/WeaponCardView.vue'
 import WeaponEditor from '@/features/character-editor/blocks/dnd/components/WeaponEditor.vue'
 import WeaponItemMechanics from './WeaponItemMechanics.vue'
@@ -98,12 +105,18 @@ const props = defineProps({
 
 const ctx = inject('weaponsBlockCtx')
 const cardEl = ref(null)
-const actionMenu = ref(null), damageOptions = ref(null)
-async function openDirectRoll(scope, event) {
-  actionMenu.value?.open(event)
-  await nextTick()
-  damageOptions.value?.openScope(scope)
+const actionMenu = ref(null)
+const directRoll = shallowRef(null)
+function closeRoll() { directRoll.value = null }
+function openDirectRoll(scope, event) {
+  if (!ctx.charCtx.ownerMode || props.entry.params?.creation?.expired || (!ctx.item(props.entry) && (scope === 'attack' || !hasDamage.value))) return
+  const anchor = event.currentTarget
+  actionMenu.value?.close()
+  directRoll.value = directRoll.value?.anchor === anchor ? null : { scope, anchor }
 }
+watch(() => [ctx.charCtx.ownerMode, props.entry.params?.creation?.expired], ([owner, expired]) => {
+  if (!owner || expired) closeRoll()
+})
 const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 const hasDamage = computed(() => ctx.hasWeaponDamage(props.entry))
 const hasTwoHandedDamage = computed(() => ctx.twoHandedParts(props.entry).length > 0)

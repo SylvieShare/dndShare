@@ -16,6 +16,7 @@ data class ShareMenuAction(
     val run: () -> Unit,
     val enabled: Boolean = true,
     val danger: Boolean = false,
+    val dividerBefore: Boolean = false,
 )
 
 @Composable
@@ -43,6 +44,7 @@ fun ShareActionMenu(
         ShareDropdownMenu(open, { open = false }) {
             heading?.let { ShareMenuHeading(it) }
             actions.forEach { action ->
+                if (action.dividerBefore) HorizontalDivider(Modifier.padding(horizontal = 7.dp, vertical = 4.dp), color = WebPalette.Border)
                 ShareDropdownMenuItem(
                     text = {
                         Text(

@@ -1,10 +1,10 @@
 <template>
   <div class="weapon-metrics" role="group" aria-label="Показатели оружия">
-    <component :is="interactive ? 'button' : 'div'" :type="interactive ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__attack" :aria-label="interactive ? 'Настроить бросок атаки' : undefined" @click.stop="interactive && emit('roll', 'attack', $event)">
+    <component :is="interactive && canAttack ? 'button' : 'div'" :type="interactive && canAttack ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__attack" :aria-label="interactive && canAttack ? 'Настроить бросок атаки' : undefined" :aria-haspopup="interactive && canAttack ? 'menu' : undefined" :aria-expanded="interactive && canAttack ? rollScope === 'attack' : undefined" @click.stop="interactive && canAttack && emit('roll', 'attack', $event)">
       <span class="weapon-metrics__label">Атака</span>
       <strong class="weapon-metrics__bonus">{{ attack || '—' }}</strong>
     </component>
-    <component :is="interactive ? 'button' : 'div'" :type="interactive ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__damage" :aria-label="interactive ? 'Настроить бросок урона' : undefined" @click.stop="interactive && emit('roll', 'damage', $event)">
+    <component :is="interactive && canDamage ? 'button' : 'div'" :type="interactive && canDamage ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__damage" :aria-label="interactive && canDamage ? 'Настроить бросок урона' : undefined" :aria-haspopup="interactive && canDamage ? 'menu' : undefined" :aria-expanded="interactive && canDamage ? rollScope === 'damage' : undefined" @click.stop="interactive && canDamage && emit('roll', 'damage', $event)">
       <span class="weapon-metrics__label">Урон</span>
       <AttackDamage compact v-if="damageParts.length || modifier !== 0" :damage-parts="damageParts" :modifier="modifier" :two-handed-parts="twoHandedParts" wrap-damage />
       <span v-else>—</span>
@@ -47,6 +47,9 @@ const props = defineProps({
   modifier: { type: Number, default: 0 },
   twoHandedParts: { type: Array, default: () => [] },
   properties: { type: Array, default: () => [] },
+  canAttack: { type: Boolean, default: true },
+  canDamage: { type: Boolean, default: true },
+  rollScope: String,
   interactive: { type: Boolean, default: false },
 })
 const emit = defineEmits(['property-enter', 'property-leave', 'roll'])
@@ -85,14 +88,14 @@ function showDescription(event, property) {
   color: var(--text-2);
 }
 button.weapon-metrics__cell { cursor: pointer; }
+button.weapon-metrics__cell[aria-expanded="true"] { background: color-mix(in srgb, var(--accent) 12%, var(--surface-raised)); }
 button.weapon-metrics__cell:focus-visible { outline: 2px solid var(--accent-soft); outline-offset: 2px; }
 .weapon-metrics__grip { color: var(--text-muted); font-size: 10px; line-height: 14px; white-space: normal; }
 .weapon-metrics__label { color: var(--text-muted); font-size: 10px; line-height: 12px; }
 .weapon-metrics__attack {
   flex: 0 0 var(--layout-weapon-metrics-attack-width);
   width: var(--layout-weapon-metrics-attack-width);
-  height: var(--layout-weapon-metrics-attack-width);
-  align-self: flex-start;
+  min-height: var(--layout-weapon-metrics-attack-width);
   position: relative;
   justify-content: center;
   align-items: center;
@@ -100,7 +103,7 @@ button.weapon-metrics__cell:focus-visible { outline: 2px solid var(--accent-soft
 .weapon-metrics__attack .weapon-metrics__label { position: absolute; top: 8px; left: 8px; }
 .weapon-metrics__bonus { color: var(--accent-soft); font-size: var(--type-weapon-attack-size); line-height: var(--type-weapon-attack-line-height); margin-block: 0; }
 .weapon-metrics__damage { min-height: var(--layout-weapon-metrics-attack-width); gap: 4px; flex: 1.25 1 max-content; max-width: calc(100% - var(--layout-weapon-metrics-attack-width) - var(--layout-weapon-metrics-gap)); }
-.weapon-properties-stack { flex: 0 0 100%; display: grid; gap: var(--spacing-label); min-width: 0; }
+.weapon-properties-stack { flex: 0 0 100%; display: grid; gap: var(--layout-weapon-metrics-gap); min-width: 0; }
 .weapon-properties-stack:empty { display: none; }
 .weapon-metrics__property-list { display: flex; flex-wrap: wrap; gap: 2px 8px; font-size: var(--type-weapon-property-size); line-height: var(--type-weapon-property-line-height); overflow-wrap: break-word; }
 .weapon-metrics__property { appearance: none; font: inherit; color: inherit; text-align: left; min-width: 0; max-width: 100%; background: none; border: 0; padding: 3px 0; }

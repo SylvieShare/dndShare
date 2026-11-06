@@ -390,7 +390,7 @@ internal class SheetRollController(
                     else sessionMetadata(session, "dice_roll", plan.request.title, event)
                 sheets.enqueue(
                     uuid,
-                    plan.patches,
+                    plan.resultPatches(sheet, uid, options.critical, result),
                     sheet.data,
                     metadata = metadata,
                     checkpoint =

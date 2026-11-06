@@ -53,17 +53,11 @@ internal fun WeaponSheetCard(
         }
     var deleting by remember(uid) { mutableStateOf(false) }
     val actions = buildList {
-        addAll(createdItemActions(entry))
+        if (id != null)
+            add(ShareMenuAction("Открыть описание", Glyph.Book, { context.openEquipment(id, uid) }))
         if (context.canEdit) {
-            add(
-                ShareMenuAction(
-                    "Бросок оружием",
-                    Glyph.Dice,
-                    { context.edit("weapon-roll:$uid") },
-                    !expired,
-                )
-            )
             add(ShareMenuAction("Изменить", Glyph.Edit, { context.edit("weapon:$uid") }))
+            addAll(createdItemActions(entry))
             if (item?.data?.get("usable") is JsonObject && !expired)
                 add(
                     ShareMenuAction(
@@ -80,11 +74,32 @@ internal fun WeaponSheetCard(
                         { context.edit("transfer:weapon|$uid") },
                     )
                 )
+            if (entry["item_id"].referenceId() != null)
+                add(ShareMenuAction("Переместить в вещи", Glyph.Move, {
+                    context.weaponAction(uid, "weapon-to-inventory", JsonObject(emptyMap()))
+                }))
+            val magicItem = context.items[entry["magic_item_id"].referenceId() ?: entry["item_id"].referenceId()]
+            if (magicItem?.typeId == 19L) {
+                val params = entry["params"].objectValue()
+                val state = params["magic"].objectValue()
+                if (magicItem.data.text("attunement") != "none" && state["lost"] != JsonPrimitive(true)) {
+                    val attuned = state["attuned"] == JsonPrimitive(true)
+                    add(ShareMenuAction(if (attuned) "Снять настройку" else "Настроить на персонажа", Glyph.Link, {
+                        context.weaponAction(uid, "weapon-attunement", buildJsonObject { put("attuned", !attuned) })
+                    }))
+                }
+                val missingBase = MagicEquipmentKind.entries.any { kind ->
+                    magicItem.data[kind.field] is JsonObject && !(kind == MagicEquipmentKind.Weapon && entry["magic_item_id"].referenceId() != null) &&
+                        magicEquipmentBase(magicItem, params, kind) == null
+                }
+                if (missingBase || initialChargeStocks(magicItem.data).isNotEmpty() || magicItem.data["manual_size"] == JsonPrimitive(true))
+                    add(ShareMenuAction(if (missingBase) "Выбрать основу" else "Параметры экземпляра", Glyph.Edit, {
+                        context.edit("weapon-instance:$uid")
+                    }))
+            }
         }
-        if (id != null)
-            add(ShareMenuAction("Справочник", Glyph.Book, { context.openEquipment(id, uid) }))
         if (context.canEdit)
-            add(ShareMenuAction("Удалить", Glyph.Trash, { deleting = true }, danger = true))
+            add(ShareMenuAction("Удалить", Glyph.Trash, { deleting = true }, danger = true, dividerBefore = true))
     }
     ShareActionMenu(
         "Действия с записью: $title",
@@ -190,6 +205,7 @@ internal fun WeaponSheetCard(
                                 title, weapon, cellModifier, descriptions, context.openItem,
                                 attack = if (context.canEdit && !expired) ({ context.edit("weapon-roll:$uid|attack") }) else null,
                                 damage = if (context.canEdit && !expired) ({ context.edit("weapon-roll:$uid|damage") }) else null,
+                                menu = { scope -> WeaponRollMenu(uid, scope) },
                             ) { ItemMechanicsPanels(entry, compact = true) }
                             else Column(cellModifier) { ItemMechanicsPanels(entry, compact = true) }
                         }

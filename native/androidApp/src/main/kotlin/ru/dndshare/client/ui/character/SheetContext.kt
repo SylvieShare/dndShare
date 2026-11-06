@@ -39,6 +39,10 @@ data class SheetContext(
     val fetchingContent: Boolean = false,
     val refreshContent: () -> Unit = {},
     val openEquipment: (Long, String) -> Unit = { id, _ -> openItem(id) },
+    val weaponMenuTarget: String? = null,
+    val dismissWeaponMenu: () -> Unit = {},
+    val rollWeapon: (String, String, WeaponRollOptions) -> Unit = { _, _, _ -> },
+    val weaponAction: (String, String, JsonObject) -> Unit = { _, _, _ -> },
     val reorderWeapons: suspend (List<String>) -> String? = { "Изменение порядка недоступно." },
 )
 

@@ -14,6 +14,9 @@ data class WeaponRollOptions(
     val bonusAction: Boolean = false,
     val mode: String = "auto",
     val excludedBonuses: List<String> = emptyList(),
+    val useKey: String = "",
+    val useEventId: String = "",
+    val hitStep: String = "",
 )
 
 data class WeaponResourceCost(val resource: ResourceControl, val amount: Int)
@@ -22,6 +25,7 @@ data class WeaponDamagePlan(
     val request: SheetRollRequest,
     val patches: List<SheetPatch>,
     val costs: List<WeaponResourceCost>,
+    val hit: WeaponMenuHit? = null,
 )
 
 fun selectedWeaponDamageRules(actions: List<JsonObject>, keys: List<String>): List<JsonObject> {
@@ -133,8 +137,16 @@ fun weaponDamagePlan(
 ): WeaponDamagePlan {
     val selections = weaponTargetSelectionPatches(sheet, uid, options, items, metadata)
     val projected = sheet.copy(data = applySheetPatches(sheet.data, selections))
-    val plan = selectedWeaponDamagePlan(projected, uid, options, items, metadata)
-    return plan.copy(patches = selections + plan.patches)
+    val hit = weaponMenuHit(projected, uid, options, items, metadata)
+    val usePatches = hit?.start?.patches.orEmpty()
+    val working = projected.copy(data = applySheetPatches(projected.data, usePatches))
+    val plan = selectedWeaponDamagePlan(working, uid, options, items, metadata, hit)
+    val use = hit?.start
+    val cost = use?.resource?.takeIf { use.cost > 0 }?.let { WeaponResourceCost(it, use.cost) }
+    val costs = (listOfNotNull(cost) + plan.costs).groupBy { it.resource.key }.values.map { group ->
+        WeaponResourceCost(group.first().resource, group.sumOf { it.amount })
+    }
+    return plan.copy(patches = selections + usePatches + plan.patches, costs = costs, hit = hit)
 }
 
 private fun selectedWeaponDamagePlan(
@@ -143,6 +155,7 @@ private fun selectedWeaponDamagePlan(
     options: WeaponRollOptions,
     items: Map<Long, CatalogueItem>,
     metadata: HandbookMetadata,
+    hit: WeaponMenuHit?,
 ): WeaponDamagePlan {
     val entry =
         inventoryInstances(sheet).firstOrNull { it.first.text("uid") == uid }?.first
@@ -153,14 +166,14 @@ private fun selectedWeaponDamagePlan(
         "Срок существования предмета закончился."
     }
     val originalActions = weaponDamageActions(sheet, entry, items, metadata)
-    val thrown =
+    val thrown = hit?.event?.text("attack_mode")?.let { it == "thrown" } ?:
         selectedWeaponDamageRules(originalActions, options.actionKeys).any {
             it.text("attack_mode") == "thrown"
         }
     val weapon =
         weaponReadout(sheet, entry, items, metadata, thrown)
             ?: error("Дождитесь загрузки оружия из справочника.")
-    val improvised = thrown && !naturalThrownWeapon(weapon.item, weapon.properties)
+    val improvised = hit == null && thrown && !naturalThrownWeapon(weapon.item, weapon.properties)
     val actions = weaponDamageActions(sheet, entry, items, metadata, improvised)
     val selected = selectedWeaponDamageRules(actions, options.actionKeys)
     val offhand =
@@ -200,6 +213,7 @@ private fun selectedWeaponDamagePlan(
                 sourceParts.firstOrNull()?.color.orEmpty(),
             )
         )
+    if (hit != null) terms.clear() // The paid step already contains the snapshotted base weapon damage.
     val resources = resourceControls(sheet, items)
     val grouped = linkedMapOf<String, WeaponResourceCost>()
     val labels = mutableListOf<String>()
@@ -266,7 +280,12 @@ private fun selectedWeaponDamagePlan(
                 current = current.copy(data = applySheetPatches(current.data, it))
             }
     }
-    val expression = terms.joinToString("+") { it.expression }.replace("+-", "-").ifBlank { "0" }
+    val hitFormula = hit?.step?.text(if (options.critical) "critical_expression" else "expression")
+    val formulaParts = terms.map { term ->
+        if (hit != null && term.label.isNotBlank()) "${term.expression}{${term.label}|${term.color}}" else term.expression
+    }
+    val expression = (listOfNotNull(hitFormula) + formulaParts).joinToString("+").replace("+-", "-").ifBlank { "0" }
+    hit?.let { labels.add(it.event.text("title")) }
     val title =
         (if (options.critical) "Критический урон" else "Урон") +
             (if (options.bonusAction) " (бонусное действие)" else if (twoHanded) " (2р)" else "") +
@@ -284,7 +303,12 @@ private fun selectedWeaponDamagePlan(
             targetUid = uid,
             sourceItemId = weapon.item.id.takeIf { it > 0 },
             sourceName = weapon.item.name,
-            damageTerms = terms,
+            damageTerms = if (hit == null) terms else emptyList(),
+            repeatable = hit == null,
+            eventData = if (hit == null) JsonObject(emptyMap()) else buildJsonObject {
+                put("weaponUseId", hit.event.text("id"))
+                put("stepKey", hit.step.text("key"))
+            },
             weaponOptions =
                 WireJson.parseToJsonElement(WireJson.encodeToString(options)).jsonObject,
             minimumTotal = 0,

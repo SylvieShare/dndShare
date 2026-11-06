@@ -64,6 +64,16 @@ const blocked = computed(() => props.useKey && (!chosenUse.value || chosenUse.va
 const emit = defineEmits(['update:attackRollMode', 'update:useKey', 'update:critical', 'update:twoHanded', 'update:bonusAction', 'select', 'amount', 'roll', 'roll-step'])
 </script>
 <style scoped>
-.weapon-roll-controls { display: flex; flex-direction: column; gap: 10px; padding: 8px; min-width: 240px; }
-.weapon-roll-controls--attack { width: var(--layout-roll-mode-menu-width); max-width: min(100%, calc(100vw - 32px)); min-width: 0; box-sizing: border-box; }
+.weapon-roll-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-label);
+  padding: var(--spacing-small);
+  width: var(--layout-roll-mode-menu-width);
+  max-width: min(100%, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  min-width: 0;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
 </style>

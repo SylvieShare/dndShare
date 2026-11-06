@@ -24,19 +24,20 @@ internal suspend fun performWeaponUse(
         return
     }
     val items = content.items
-    val old = weaponUseState(sheet, uid)
-    if (operation != "weapon-use-start")
-        require(input.text("id") == old.text("id") && old.text("status") == "active") {
-            "Применение изменилось. Откройте его заново."
-        }
-    val working = sheet
-    val patches = mutableListOf<SheetPatch>()
+    val start = if (operation == "weapon-use-direct-step") startWeaponUse(sheet, uid, input.text("key"), items, content.metadata) else null
+    val old = start?.event ?: weaponUseState(sheet, uid)
+    require((start != null || input.text("id") == old.text("id")) && old.text("status") == "active") {
+        "Применение изменилось. Откройте его заново."
+    }
+    val patches = start?.patches.orEmpty().toMutableList()
+    val working = sheet.copy(data = applySheetPatches(sheet.data, patches))
     var record: SheetRollRecord? = null
     var eventData: JsonObject? = null
     var eventType = "feature_state"
     var action: String
     val event: JsonObject =
         when (operation) {
+            "weapon-use-direct-step",
             "weapon-use-step",
             "weapon-use-miss" -> {
                 val step =
@@ -46,6 +47,7 @@ internal suspend fun performWeaponUse(
                         .firstOrNull { it.text("key") == input.text("step") }
                         ?: error("Шаг не найден.")
                 require(step.text("status") == "pending") { "Шаг уже выполнен." }
+                require(start == null || step.text("kind") == "damage") { "Нужен отдельный шаг урона." }
                 val critical =
                     step.text("kind") == "weapon_damage" && input["critical"] == JsonPrimitive(true)
                 val request =
@@ -90,6 +92,15 @@ internal suspend fun performWeaponUse(
                                 buildJsonObject {
                                     put("weaponUseId", old.text("id"))
                                     put("stepKey", step.text("key"))
+                                    start?.resource?.takeIf { start.cost > 0 }?.let { resource ->
+                                        put("resourceChanges", buildJsonArray { add(buildJsonObject {
+                                            put("key", resource.key)
+                                            put("name", resource.title)
+                                            put("delta", -start.cost)
+                                            put("remaining", resource.value - start.cost)
+                                            put("total", resource.total)
+                                        }) })
+                                    }
                                     if (step["save"] is JsonObject)
                                         put(
                                             "savingThrow",

@@ -237,7 +237,7 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
 </script>
 
 <style scoped>
-.w-table-properties { display: grid; gap: var(--spacing-label); }
+.w-table-properties { display: grid; gap: var(--layout-weapon-metrics-gap); }
 .w-properties-label { display: grid; gap: 4px; padding: 8px; background: var(--surface-raised); border-radius: var(--radius-row); }
 .w-properties-label small { color: var(--text-muted); }
 .w-row {

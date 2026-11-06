@@ -287,7 +287,7 @@ def capture_android(device, root, url, output, matrix, fixture, stats):
                 if wanted & {'sheet-weapon-item','sheet-weapon-details'}:
                     device.click(text='Посох молнии')
                     device.wait('Удалить')
-                    device.click(text='Справочник')
+                    device.click(text='Открыть описание')
                     device.wait(description='Закрыть просмотр')
                     device.wait('Основа оружия')
                     take(format_, 'sheet-weapon-item')

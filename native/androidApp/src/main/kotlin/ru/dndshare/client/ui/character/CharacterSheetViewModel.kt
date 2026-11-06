@@ -289,8 +289,12 @@ internal class CharacterSheetViewModel(
             navigate { it.copy(overlay = target) }
         else if (sheet.userId == accountId) {
             navigate { it.copy(overlay = null) }
+            val instanceOnly = target.startsWith("weapon-instance:")
+            val formTarget = if (instanceOnly) "weapon:" + target.substringAfter(':') else target
             val seed =
-                if (target.startsWith("journal-"))
+                if (instanceOnly) JsonObject(inventoryFormInput(formTarget, sheet.values) +
+                    ("instanceOnly" to JsonPrimitive(true)))
+                else if (target.startsWith("journal-"))
                     runCatching {
                         JsonObject(
                             initialJournalInput(
@@ -305,7 +309,7 @@ internal class CharacterSheetViewModel(
                         }
                 else null
             editor.open(
-                target,
+                formTarget,
                 sheet,
                 content.state.value.items,
                 remote.state.value.sessionUuid,
@@ -423,6 +427,26 @@ internal class CharacterSheetViewModel(
         } else if (editor.state.value?.fields?.target?.let(::isCommandForm) == true) {
             commands?.let { editor.submitCommand(it, items, data.metadata) }
         } else editor.submit(items, remote.state.value.sessionUuid, data.metadata)
+    }
+
+    fun confirmWeaponRoll(uid: String, scope: String, options: WeaponRollOptions) {
+        if (scope == "attack" && options.useKey.isNotEmpty()) {
+            performWeaponAction(uid, "weapon-use-start", buildJsonObject {
+                put("key", options.useKey)
+                put("mode", options.mode)
+                put("excludedBonuses", JsonArray(options.excludedBonuses.map(::JsonPrimitive)))
+            })
+            return
+        }
+        dismissOverlay()
+        if (scope == "attack") rolls.attack(uid, options) else rolls.damage(uid, options)
+    }
+
+    fun performWeaponAction(uid: String, operation: String, input: JsonObject) {
+        if (operation.startsWith("weapon-use-")) dismissOverlay()
+        viewModelScope.launch {
+            itemMechanics.perform(uid, operation, input)?.let { loadError.value = it }
+        }
     }
 
     fun dismissOverlay() = navigate { it.copy(overlay = null) }

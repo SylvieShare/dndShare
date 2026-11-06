@@ -63,6 +63,15 @@ private fun CharacterSheetBody(
 ) {
     val sheet = rememberPresentedSheet(ui.snapshot)
     val navigation = ui.navigation
+    val weaponOverlay = navigation.overlay?.takeIf { it.startsWith("weapon-roll:") }
+    LaunchedEffect(weaponOverlay, sheet) {
+        if (weaponOverlay != null && sheet != null) {
+            val uid = weaponOverlay.substringAfter(':').substringBefore('|')
+            val entry = sheet.values["weapon"].arrayValue().map { it.objectValue() }.firstOrNull { it.text("uid") == uid }
+            if (sheet.userId != accountId || entry == null ||
+                entry["params"].objectValue()["creation"].objectValue().text("expired") == "true") model.dismissOverlay()
+        }
+    }
     val sections = sheetSections(sheet?.templateName ?: "DND5", format)
     val section = sections.firstOrNull { it.name == navigation.sectionName } ?: sections.first()
     val wideDnd = format == LayoutFormat.Wide && sheet?.templateName == "DND5"
@@ -189,6 +198,10 @@ private fun CharacterSheetBody(
                                             .orEmpty(),
                                     concentration = ui.campaign.concentration,
                                     roll = model.rolls::open,
+                                    weaponMenuTarget = navigation.overlay,
+                                    dismissWeaponMenu = model::dismissOverlay,
+                                    rollWeapon = model::confirmWeaponRoll,
+                                    weaponAction = model::performWeaponAction,
                                     itemMechanic = model.itemMechanics::perform,
                                     openSpell = model::openSpell,
                                     rollBusy = ui.roll.busy,
@@ -292,24 +305,8 @@ private fun CharacterSheetBody(
                                             model::formInput,
                                         )
                                 }
-                            navigation.overlay?.let { target ->
-                                if (target.startsWith("weapon-roll:")) {
-                                    val uid = target.substringAfter(':').substringBefore('|')
-                                    WeaponActionsDialog(
-                                        uid,
-                                        ui.roll.busy,
-                                        model::dismissOverlay,
-                                        scope = target.substringAfter('|', "all"),
-                                        attack = { options ->
-                                            model.dismissOverlay()
-                                            model.rolls.attack(uid, options)
-                                        },
-                                        damage = { options ->
-                                            model.dismissOverlay()
-                                            model.rolls.damage(uid, options)
-                                        },
-                                    )
-                                } else if (target.startsWith("spell-roll:")) {
+                            navigation.overlay?.takeUnless { it.startsWith("weapon-roll:") }?.let { target ->
+                                if (target.startsWith("spell-roll:")) {
                                     val key = target.substringAfter(':').substringBefore('|')
                                     SpellActionsDialog(
                                         key,

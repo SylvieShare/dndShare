@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.*
@@ -18,7 +19,7 @@ import ru.dndshare.client.character.signed
 import ru.dndshare.client.ui.RichDescription
 import ru.dndshare.client.ui.designsystem.*
 
-/** A square attack cell, flexible damage, and a separate full-width properties row. */
+/** Damage determines the shared row height, including wrapped dice and the grip caption. */
 @Composable
 internal fun WeaponMetricsTable(
     title: String,
@@ -28,6 +29,7 @@ internal fun WeaponMetricsTable(
     openItem: (Long) -> Unit = {},
     attack: (() -> Unit)? = null,
     damage: (() -> Unit)? = null,
+    menu: @Composable (String) -> Unit = {},
     mechanics: @Composable ColumnScope.() -> Unit = {},
 ) {
     val scale = LocalDensity.current.fontScale.coerceAtLeast(1f)
@@ -37,9 +39,9 @@ internal fun WeaponMetricsTable(
         modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(DesignTokens.Layout.WeaponMetricsGap),
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(DesignTokens.Layout.WeaponMetricsGap)) {
+        WeaponMetricRow(attackSize) {
             Box(
-                Modifier.size(attackSize)
+                Modifier.fillMaxSize()
                     .background(WebPalette.Raised, RoundedCornerShape(DesignTokens.Radius.Row))
                     .testTag("weapon-attack-cell")
                     .then(if (attack != null) Modifier.clickable(role = Role.Button, onClickLabel = "Настроить бросок атаки", onClick = attack) else Modifier),
@@ -55,25 +57,44 @@ internal fun WeaponMetricsTable(
                     color = WebPalette.AccentSoft,
                     style = ShareTypography.weaponAttack,
                 )
+                menu("attack")
             }
-            MetricCell("Урон", Modifier.weight(1f).heightIn(min = attackSize).then(if (damage != null) Modifier.clickable(role = Role.Button, onClickLabel = "Настроить бросок урона", onClick = damage) else Modifier)) {
-                WeaponDamageFace(
-                    title,
-                    weapon.parts,
-                    weapon.twoHanded,
-                    weapon.damageBonus,
-                    false,
-                    null,
-                )
-                if (weapon.twoHanded.isNotEmpty())
-                    Text("Одной рукой / двумя руками", style = ShareTypography.context, color = WebPalette.TextMuted)
+            Box {
+                MetricCell("Урон", Modifier.testTag("weapon-damage-cell").fillMaxWidth().heightIn(min = attackSize).then(if (damage != null) Modifier.clickable(role = Role.Button, onClickLabel = "Настроить бросок урона", onClick = damage) else Modifier)) {
+                    WeaponDamageFace(
+                        title,
+                        weapon.parts,
+                        weapon.twoHanded,
+                        weapon.damageBonus,
+                        false,
+                        null,
+                    )
+                    if (weapon.twoHanded.isNotEmpty())
+                        Text("Одной рукой / двумя руками", style = ShareTypography.context, color = WebPalette.TextMuted)
+                }
+                menu("damage")
             }
         }
-        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(DesignTokens.Spacing.Label)) {
+        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(DesignTokens.Layout.WeaponMetricsGap)) {
             if (properties.isNotEmpty()) MetricCell("Свойства", Modifier.fillMaxWidth()) {
                 PropertyText(properties, propertyDescriptions, openItem)
             }
             mechanics()
+        }
+    }
+}
+
+@Composable
+private fun WeaponMetricRow(attackWidth: Dp, content: @Composable () -> Unit) {
+    Layout(content = content, modifier = Modifier.fillMaxWidth()) { cells, constraints ->
+        val gap = DesignTokens.Layout.WeaponMetricsGap.roundToPx().coerceAtMost(constraints.maxWidth)
+        val width = attackWidth.roundToPx().coerceAtMost(constraints.maxWidth - gap)
+        val damageWidth = constraints.maxWidth - width - gap
+        val damage = cells[1].measure(constraints.copy(minWidth = damageWidth, maxWidth = damageWidth))
+        val attack = cells[0].measure(Constraints.fixed(width, damage.height))
+        layout(constraints.maxWidth, damage.height) {
+            attack.placeRelative(0, 0)
+            damage.placeRelative(width + gap, 0)
         }
     }
 }

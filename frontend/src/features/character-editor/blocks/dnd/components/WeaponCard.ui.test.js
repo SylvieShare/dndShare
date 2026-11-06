@@ -5,17 +5,17 @@ import { describe, expect, it } from 'vitest'
 const source = readFileSync(fileURLToPath(new URL('./WeaponCard.vue', import.meta.url)), 'utf8')
 
 describe('weapon card actions', () => {
-  it('opens all weapon operations through the row action menu', () => {
+  it('keeps item actions and direct roll controls separate', () => {
     expect(source).toContain('<RowActionMenu')
-    expect(source).toContain('<DamageRollOptions')
+    expect(source).toContain('<WeaponRollSettings')
     expect(source).toContain(':actions="weaponDamageActions"')
     expect(source).toContain(':versatile="hasTwoHandedDamage"')
     expect(source).toContain('<RowActionSeparator')
     expect(source).toContain('>Открыть описание</RowActionItem>')
-    expect(source).toContain('>Редактировать</RowActionItem>')
+    expect(source).toContain('>Изменить</RowActionItem>')
     expect(source).toContain('>Переместить в вещи</RowActionItem>')
     expect(source).toContain('>Удалить</RowActionItem>')
-    expect(source).toContain(':can-attack="!!ctx.item(entry)"')
+    expect(source).not.toContain('<DamageRollOptions')
     expect(source).not.toContain('action="damage"')
     expect(source).not.toContain('action="critical"')
     expect(source).not.toContain('action="feature-damage"')
@@ -25,7 +25,7 @@ describe('weapon card actions', () => {
 
   it('opens existing roll controls from metric buttons', () => {
     expect(source).toContain('@roll="openDirectRoll"')
-    expect(source).toContain('damageOptions.value?.openScope(scope)')
+    expect(source).toContain(':anchor="directRoll.anchor"')
     expect(source).not.toContain('@roll-damage')
     expect(source).not.toContain('@roll-critical')
   })

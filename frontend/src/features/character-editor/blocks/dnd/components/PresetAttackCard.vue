@@ -1,48 +1,43 @@
 <template>
-  <RowActionMenu block :title="`Действия: ${title}`">
-    <template #trigger="{ open }">
-      <article
-        class="pac-card action-menu-source"
-        :class="{ 'action-menu-source--open': open }"
-      >
-        <div class="pac-main">
-          <ItemIcon
-            class="pac-icon"
-            :item="iconItem"
-            :size="64"
-            :fallback-to-type="false"
-            :placeholder="!iconItem"
-          />
-          <div class="pac-view">
-            <div class="pac-title">
-              <strong>{{ title }}</strong>
-              <small>{{ subtitle }}</small>
-              <span v-if="proficient" class="pac-proficiency">Владение</span>
-            </div>
-            <AttackDamage
-              :attack="formatBonus(attackBonus)"
-              :damage-parts="damageParts"
-              :modifier="damageModifier"
-              :flat-damage="damageParts.length ? null : flatDamage.total"
-              :flat-damage-type="damageType"
-              :flat-damage-title="flatDamageTitle"
-            />
-          </div>
+  <article class="pac-card">
+    <div class="pac-main">
+      <ItemIcon
+        class="pac-icon"
+        :item="iconItem"
+        :size="64"
+        :fallback-to-type="false"
+        :placeholder="!iconItem"
+      />
+      <div class="pac-view">
+        <div class="pac-title">
+          <strong>{{ title }}</strong>
+          <small>{{ subtitle }}</small>
+          <span v-if="proficient" class="pac-proficiency">Владение</span>
         </div>
-      </article>
-    </template>
-
-    <template #default="{ close }">
-      <DamageRollOptions can-attack @attack="options => run(close, 'attack', options)" @roll="options => run(close, options.critical ? 'critical' : 'damage')" />
-    </template>
-  </RowActionMenu>
+        <AttackDamage rollable @roll-attack="openMenu('attack', $event)" @roll-damage="openMenu('damage', $event)"
+          :attack="formatBonus(attackBonus)"
+          :damage-parts="damageParts"
+          :modifier="damageModifier"
+          :flat-damage="damageParts.length ? null : flatDamage.total"
+          :flat-damage-type="damageType"
+          :flat-damage-title="flatDamageTitle"
+        />
+      </div>
+    </div>
+  </article>
+  <BasePopover v-if="selection" :open="true" :anchor="selection.anchor" :key="selection.scope"
+    :aria-label="selection.scope === 'attack' ? 'Атака' : 'Урон'" role="menu" :z-index="4100" transition-preset="action-menu"
+    @update:open="!$event && (selection = null)">
+    <WeaponRollSettings :scope="selection.scope" @attack="options => run('attack', options)"
+      @roll="options => run(options.critical ? 'critical' : 'damage', options)" />
+  </BasePopover>
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { RowActionMenu } from '@sylvieshare/share-ui'
+import { computed, shallowRef } from 'vue'
+import { BasePopover } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
-import DamageRollOptions from './DamageRollOptions.vue'
+import WeaponRollSettings from './WeaponRollSettings.vue'
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
 
 const props = defineProps({
@@ -59,8 +54,13 @@ const props = defineProps({
 
 const emit = defineEmits(['attack', 'damage', 'critical'])
 
-function run(close, action, options) {
-  close()
+const selection = shallowRef(null)
+function openMenu(scope, event) {
+  const anchor = event.currentTarget
+  selection.value = selection.value?.anchor === anchor ? null : { scope, anchor }
+}
+function run(action, options) {
+  selection.value = null
   emit(action, options)
 }
 

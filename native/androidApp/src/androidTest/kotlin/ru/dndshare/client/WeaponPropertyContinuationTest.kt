@@ -99,15 +99,39 @@ class WeaponPropertyContinuationTest {
         val images = ImageLoader.Builder(InstrumentationRegistry.getInstrumentation().targetContext).build()
         val context = SheetContext(sheet, metadata, items, images, true, {}, {},
             DndDerivedValues(sheet, items, metadata), SheetJournalState())
+        val menu = mutableStateOf<String?>(null)
+        val rolls = java.util.concurrent.atomic.AtomicInteger()
         try {
             ActivityScenario.launch(ComponentActivity::class.java).use { scenario ->
                 scenario.onActivity { host -> host.setContent {
                     ShareTheme {
-                        CompositionLocalProvider(LocalCharacterSheet provides context) {
+                        CompositionLocalProvider(LocalCharacterSheet provides context.copy(
+                            edit = { menu.value = it }, weaponMenuTarget = menu.value,
+                            dismissWeaponMenu = { menu.value = null },
+                            rollWeapon = { _, _, _ -> rolls.incrementAndGet(); menu.value = null },
+                        )) {
                             Column(Modifier.fillMaxSize().safeDrawingPadding().padding(16.dp)) { DndWeapons(LayoutFormat.Tablet) }
                         }
                     }
                 } }
+                TouchRobot.click("Действия с записью: Копьё молнии")
+                TouchRobot.await { TouchRobot.find("Изменить") != null }
+                assertNull(TouchRobot.find("Бросок оружием"))
+                InstrumentationRegistry.getInstrumentation().uiAutomation.performGlobalAction(
+                    android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK)
+                TouchRobot.click("Атака: Копьё молнии")
+                TouchRobot.await { TouchRobot.find("Бросить на атаку") != null }
+                assertNull(TouchRobot.find("Изменить"))
+                assertNull(TouchRobot.find("Критическое попадание"))
+                assertEquals(0, rolls.get())
+                TouchRobot.click("Бросить на атаку")
+                TouchRobot.await { rolls.get() == 1 && TouchRobot.find("Бросить на атаку") == null }
+                TouchRobot.click("Урон: Копьё молнии")
+                TouchRobot.await { TouchRobot.find("Бросить на урон") != null }
+                assertNull(TouchRobot.find("Преимущество"))
+                assertNull(TouchRobot.find("Закрыть окно"))
+                TouchRobot.click("Бросить на урон")
+                TouchRobot.await { rolls.get() == 2 && TouchRobot.find("Бросить на урон") == null }
                 val use = "Особое применение: Метнуть молнией"
                 TouchRobot.await { TouchRobot.find(use) != null }
                 val heading = TouchRobot.bounds("Свойства")

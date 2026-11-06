@@ -27,7 +27,8 @@
       <WeaponMetricsTable class="w-card-controls"
         :attack="ctx.formatBonus(ctx.attackBonus(entry))" :damage-parts="ctx.damagePartsRaw(entry)"
         :modifier="ctx.damageBonus(entry)" :two-handed-parts="ctx.twoHandedParts(entry)"
-        :properties="ctx.propertyItems(entry)" :interactive="interactive"
+        :properties="ctx.propertyItems(entry)" :interactive="interactive" :roll-scope="rollScope"
+        :can-attack="!!ctx.charCtx.ownerMode && !!weaponItem" :can-damage="!!ctx.charCtx.ownerMode && (!!weaponItem || !!ctx.hasWeaponDamage?.(entry))"
         @roll="(scope, event) => emit('roll', scope, event)"
         @property-enter="(event, property) => ctx.showPropertyTooltip(event, property)"
         @property-leave="ctx.hidePropertyTooltip()"
@@ -48,6 +49,7 @@ const props = defineProps({
   entry: { type: Object, required: true },
   // tile = full interactivity; morph clone = static
   interactive: { type: Boolean, default: false },
+  rollScope: String,
 })
 const emit = defineEmits(['name-down', 'roll'])
 

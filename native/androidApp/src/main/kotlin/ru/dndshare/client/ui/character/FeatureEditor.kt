@@ -63,7 +63,7 @@ internal fun FeatureEditor(
             "proficiencies" -> "Владения"
             "inventory" -> "Предмет"
             "inventory-section" -> "Хранилище"
-            "weapon" -> "Оружие"
+            "weapon" -> if (form.data["instanceOnly"] == JsonPrimitive(true)) "Параметры экземпляра" else "Оружие"
             "spell" -> "Заклинание"
             "spell-tab" -> "Книга заклинаний"
             "spell-slots" -> "Ячейки заклинаний"
@@ -106,7 +106,9 @@ internal fun FeatureEditor(
                 }
             },
         ) {
-            when (kind) {
+            if (kind == "weapon" && form.data["instanceOnly"] == JsonPrimitive(true)) {
+                LocalCharacterSheet.current.items[form.data["item_id"].referenceId()]?.let { MagicInstanceFields(form, it, cache) }
+            } else when (kind) {
                 "notes" -> form.TextField("value", "Заметки", multiline = true)
                 "journal-entry",
                 "journal-section",

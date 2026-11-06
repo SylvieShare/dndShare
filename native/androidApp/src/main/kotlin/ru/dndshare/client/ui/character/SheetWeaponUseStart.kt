@@ -38,6 +38,7 @@ internal suspend fun performWeaponUseStart(
             ability = weapon.ability,
             bonus = weapon.attack,
             manualMode = input.text("mode").ifBlank { "auto" },
+            excludedBonuses = input["excludedBonuses"].arrayValue().mapNotNull { (it as? JsonPrimitive)?.contentOrNull },
             targetUid = uid,
             weaponAttack = true,
             weaponKind = if (plan.event.text("attack_mode") == "melee") "melee" else "ranged",

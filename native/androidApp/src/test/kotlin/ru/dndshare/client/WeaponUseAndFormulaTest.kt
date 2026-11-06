@@ -81,6 +81,25 @@ class WeaponUseAndFormulaTest {
                         "12" to listOf(Suggest(1, 12, "Колющий"), Suggest(2, 12, "Электричество"))
                     )
             )
+        val attuned = weaponItemMenuPatches(sheet, "spear", "weapon-attunement", obj("""{"attuned":true}"""),
+            items + (2L to magic.copy(data = JsonObject(magic.data + ("attunement" to JsonPrimitive("required"))))))
+        val tuned = sheet.copy(data = applySheetPatches(sheet.data, attuned))
+        assertEquals(JsonPrimitive(true), inventoryInstances(tuned).first().first["params"].objectValue()["magic"].objectValue()["attuned"])
+        val moved = tuned.copy(data = applySheetPatches(tuned.data,
+            weaponItemMenuPatches(tuned, "spear", "weapon-to-inventory", JsonObject(emptyMap()), items)))
+        assertTrue(moved.values["weapon"].arrayValue().isEmpty())
+        val carried = requireNotNull(inventoryEntry(moved.values["items"].objectValue(), "spear"))
+        assertEquals(tuned.values["weapon"].arrayValue().first().objectValue()["params"], carried["params"])
+        assertEquals(2L, carried["magic_item_id"].referenceId())
+        val direct = weaponDamagePlan(sheet, "spear", WeaponRollOptions(useKey = "lightning"), items, metadata)
+        assertEquals(2, resourceControls(sheet, items).single().value, "Opening the menu is read-only")
+        val directResult = rollSheet(direct.request, DndDerivedValues(sheet, items, metadata))
+        val afterHit = sheet.copy(data = applySheetPatches(sheet.data, direct.resultPatches(sheet, "spear", false, directResult)))
+        assertEquals(1, resourceControls(afterHit, items).single().value)
+        val directEvent = weaponUseState(afterHit, "spear")
+        assertEquals("rolled", directEvent["steps"].arrayValue().last().objectValue().text("status"))
+        assertEquals("pending", directEvent["steps"].arrayValue().first().objectValue().text("status"))
+        assertFails { weaponDamagePlan(afterHit, "spear", WeaponRollOptions(useEventId = directEvent.text("id"), hitStep = "hit"), items, metadata) }
         val plan = startWeaponUse(sheet, "spear", "lightning", items, metadata)
         var next = sheet.copy(data = applySheetPatches(sheet.data, plan.patches))
         next =
