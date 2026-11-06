@@ -10,12 +10,14 @@
     <EditorSection title="Бонусы">
       <BonusList :bonuses="savingThrow ? saveBonuses : baseData.bonuses || []" @update:bonuses="changeBonuses" />
     </EditorSection>
+    <EditorTotal>Итого: <strong>{{ savingThrow ? signed(total) : total }}</strong></EditorTotal>
   </EditorPanel>
 </template>
 <script setup>
-import { EditorPanel, EditorSection, FormField, FormNumberInput, ToggleSwitch } from '@sylvieshare/share-ui'
+import { EditorPanel, EditorSection, EditorTotal, FormField, FormNumberInput, ToggleSwitch } from '@sylvieshare/share-ui'
+import { signedOrZero as signed } from '@/shared/lib/dnd'
 import BonusList from '@/shared/ui/BonusList.vue'
-const props = defineProps({ savingThrow: Boolean, baseData: Object, saveUp: Boolean, saveSource: String, saveBonuses: Array })
+const props = defineProps({ savingThrow: Boolean, total: Number, baseData: Object, saveUp: Boolean, saveSource: String, saveBonuses: Array })
 const emit = defineEmits(['update-base', 'toggle-save', 'update-save-bonuses'])
 function changeBonuses(bonuses) {
   if (props.savingThrow) emit('update-save-bonuses', bonuses)

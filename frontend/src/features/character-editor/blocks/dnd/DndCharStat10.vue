@@ -32,7 +32,7 @@
     </template>
     <DndStatSkillEditor v-if="editor === 'skill' && editSkill" :skill="editSkill" :total="skillBonus(editSkillId)"
       @change="onSkillChange" @remove="removeCustomSkill" />
-    <DndStatEditor v-else :saving-throw="editor === 'save'" :base-data="numData" :save-up="saveUp"
+    <DndStatEditor v-else :saving-throw="editor === 'save'" :total="editor === 'save' ? save : statDisplayValue" :base-data="numData" :save-up="saveUp"
       :save-source="derivedSaveSource" :save-bonuses="statData.save_bonuses || []"
       @update-base="onBaseChange" @toggle-save="pickSave" @update-save-bonuses="onSaveBonusesChange" />
   </AppModalFrame>

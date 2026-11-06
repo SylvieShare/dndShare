@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.shape.RoundedCornerShape
 import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
 import ru.dndshare.client.model.text
@@ -21,31 +20,34 @@ internal fun BonusFields(form: FeatureFormScope) {
     Text("Бонусы", style = ShareTypography.group)
     key(bonuses.size) {
         bonuses.forEachIndexed { index, raw ->
-            val row = raw.objectValue()
-            if (row["readonly"] == JsonPrimitive(true))
-                Text(
-                    "${row.label()} ${signed(row["value"].number())}",
-                    style = ShareTypography.context,
-                )
-            else {
-                fun change(key: String, value: String) =
-                    form.row(listOf("bonuses"), index, key, JsonPrimitive(value))
-                Surface(color = WebPalette.Raised, shape = RoundedCornerShape(10.dp)) {
-                    Column(Modifier.fillMaxWidth().padding(10.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            ShareTextInput(
-                                row.text("name").ifBlank { row.text("title") },
-                                { change(if ("name" in row) "name" else "title", it) },
-                                "Название бонуса", Modifier.weight(1f), enabled = form.enabled,
-                            )
-                            IconButton(enabled = form.enabled, onClick = {
-                                inputs?.flush()
-                                form.input("bonuses", JsonArray(form.data["bonuses"].arrayValue().filterIndexed { i, _ -> i != index }))
-                            }, modifier = Modifier.semantics { contentDescription = "Удалить бонус" }) {
-                                AppGlyph(Glyph.Trash, Modifier.size(18.dp), WebPalette.TextMuted)
-                            }
-                        }
-                        SheetNumberInput("Значение", row.text("value"), form.enabled) { change("value", it) }
+            val row = raw.bonusRow()
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(DesignTokens.Spacing.Small)) {
+                if (row["readonly"] == JsonPrimitive(true)) {
+                    Column(Modifier.weight(1f)) {
+                        Text(row.label(), style = ShareTypography.group)
+                        Text("Источник: " + row.text("source_label").ifBlank { "способности" },
+                            style = ShareTypography.context, color = WebPalette.TextMuted)
+                    }
+                    Text(signed(row["value"].number()), style = ShareTypography.group)
+                } else {
+                    fun change(key: String, value: String) {
+                        val rows = form.data["bonuses"].arrayValue().toMutableList()
+                        val current = rows.getOrNull(index)?.bonusRow() ?: return
+                        rows[index] = JsonObject(current + (key to JsonPrimitive(value)))
+                        form.input("bonuses", JsonArray(rows))
+                    }
+                    ShareTextInput(
+                        row.text("name").ifBlank { row.text("title") },
+                        { change(if ("name" in row || "title" !in row) "name" else "title", it) },
+                        "Название бонуса", Modifier.weight(1f), enabled = form.enabled, placeholder = "Название",
+                    )
+                    ShareNumberStepper("Значение бонуса", row.text("value"), form.enabled) { change("value", it) }
+                    IconButton(enabled = form.enabled, onClick = {
+                        inputs?.flush()
+                        form.input("bonuses", JsonArray(form.data["bonuses"].arrayValue().filterIndexed { i, _ -> i != index }))
+                    }, modifier = Modifier.semantics { contentDescription = "Удалить бонус" }) {
+                        AppGlyph(Glyph.Trash, Modifier.size(18.dp), WebPalette.TextMuted)
                     }
                 }
             }
@@ -60,7 +62,7 @@ internal fun BonusFields(form: FeatureFormScope) {
                 JsonArray(
                     form.data["bonuses"].arrayValue() +
                         buildJsonObject {
-                            put("title", "Бонус")
+                            put("name", "")
                             put("value", 0)
                         }
                 ),
@@ -68,5 +70,6 @@ internal fun BonusFields(form: FeatureFormScope) {
         },
         enabled = form.enabled,
         compact = true,
+        leadingIcon = Glyph.Plus,
     )
 }

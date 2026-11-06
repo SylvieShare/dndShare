@@ -29,6 +29,7 @@ fun ShareDashedAction(
     compact: Boolean = false,
     textStyle: TextStyle =
         ShareTypography.context.copy(fontSize = 13.sp, fontWeight = FontWeight.Normal),
+    leadingIcon: Glyph? = null,
 ) {
     val border = WebPalette.BorderStrong
     Row(
@@ -60,6 +61,10 @@ fun ShareDashedAction(
         horizontalArrangement = if (compact) Arrangement.Start else Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        if (leadingIcon != null) {
+            AppGlyph(leadingIcon, Modifier.size(14.dp), WebPalette.TextMuted)
+            Spacer(Modifier.width(DesignTokens.Spacing.Compact))
+        }
         Text(
             label,
             style = textStyle,

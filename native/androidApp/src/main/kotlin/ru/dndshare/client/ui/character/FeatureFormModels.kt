@@ -250,7 +250,7 @@ internal fun featureFormPatches(
                 )
             else {
                 val skills = current["skills"].objectValue()
-                if (input["remove"] == JsonPrimitive(true) && id.toLongOrNull() == null)
+                if (input["deleteConfirmed"] == JsonPrimitive(true) && id.toLongOrNull() == null)
                     return patch(stat, JsonObject(current + ("skills" to JsonObject(skills - id))))
                 val original = skills[id].objectValue()
                 val updated =
@@ -316,7 +316,7 @@ internal fun featureFormPatches(
 internal fun validatedBonuses(raw: JsonElement?): JsonArray =
     JsonArray(
         raw.arrayValue().map { value ->
-            val row = value.objectValue()
+            val row = value.bonusRow()
             val number = row.text("value").toIntOrNull() ?: error("Введите числовой бонус.")
             JsonObject(row + ("value" to JsonPrimitive(number)))
         }

@@ -4,11 +4,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.json.JsonPrimitive
-import ru.dndshare.client.character.RuleContext
+import ru.dndshare.client.character.*
 import ru.dndshare.client.ui.designsystem.*
 
 @Composable
-internal fun SkillFeatureFields(form: FeatureFormScope) {
+internal fun SkillFeatureFields(form: FeatureFormScope, removeSkill: () -> Unit) {
     val context = LocalCharacterSheet.current
     val (_, stat, id) = form.editor.fields.target.split(':')
     val ability = dndAbilities.first { it.id == stat }
@@ -36,6 +36,11 @@ internal fun SkillFeatureFields(form: FeatureFormScope) {
     val sources = context.mechanics.rules(rule, scope).map { it.sourceLabel }.distinct()
     if (sources.isNotEmpty()) Text("Источник: ${sources.joinToString()}", style = ShareTypography.context, color = WebPalette.TextMuted)
     BonusFields(form)
+    val rank = if (save) {
+        if (granted > 0 || form.data["up"] == JsonPrimitive(true)) 1 else 0
+    } else maxOf(form.data["up"].number(), granted)
+    val total = context.proficientRollTotal(ability, scope, rank, form.data["bonuses"])
+    StatEditorTotal(signed(total))
     if (id != "save" && id.toLongOrNull() == null)
-        form.Toggle("remove", "Удалить навык")
+        ShareTextButton(onClick = removeSkill, enabled = form.enabled) { Text("Удалить навык", color = WebPalette.Danger) }
 }

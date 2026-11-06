@@ -48,7 +48,7 @@ internal class SheetLiveStats(
 
     fun supports(editor: SheetEditorState) =
         editor.baseline.templateName == "DND5" &&
-            dndAbilities.any { it.id == editor.fields.target } &&
+            isStatEditorTarget(editor.fields.target) &&
             context() != null
 
     suspend fun discard(block: suspend () -> Unit) = gate.withLock { block() }
@@ -77,6 +77,7 @@ internal class SheetLiveStats(
                         editor.baseline.copy(
                             data = applySheetPatches(editor.baseline.data, patches)
                         )
+                    if (projected.data == editor.baseline.data) return@withContext null
                     val all = patches + abilitySpellGrantPatches(projected, data.items)
                     all to editor.baseline.copy(data = applySheetPatches(editor.baseline.data, all))
                 }
@@ -86,6 +87,7 @@ internal class SheetLiveStats(
                 report(editor, error.message ?: "Проверьте введённые значения.")
                 return@withLock LiveStatResult.Invalid
             }
+        if (prepared == null) return@withLock LiveStatResult.Saved
         try {
             val (patches, baseline) = prepared
             sheets.enqueue(

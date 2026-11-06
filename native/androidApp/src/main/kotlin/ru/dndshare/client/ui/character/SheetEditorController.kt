@@ -121,7 +121,7 @@ internal class SheetEditorController(
             loading.value = true
             try {
                 val retained =
-                    if (dndAbilities.any { it.id == target })
+                    if (isStatEditorTarget(target))
                         cache.openForms().lastOrNull {
                             it.uuid == uuid &&
                                 runCatching {

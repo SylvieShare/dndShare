@@ -28,9 +28,6 @@ fun ShareNumberInput(
     enabled: Boolean = true,
     change: (String) -> Unit,
 ) {
-    val state = rememberShareInputState(value, change)
-    val interactions = remember { MutableInteractionSource() }
-    val fill = inputFill(interactions, enabled)
     Row(
         Modifier.fillMaxWidth().heightIn(min = DesignTokens.Layout.TouchMin),
         verticalAlignment = Alignment.CenterVertically,
@@ -42,55 +39,63 @@ fun ShareNumberInput(
             style = fieldTextStyle.copy(fontSize = 13.sp),
             color = WebPalette.TextSecondary,
         )
-        BasicTextField(
-            state = state,
-            enabled = enabled,
-            modifier =
-                Modifier.widthIn(
-                        min =
-                            DesignTokens.Layout.NumberInputWidth +
-                                DesignTokens.Layout.InputStepperWidth * 2
-                    )
-                    .heightIn(min = DesignTokens.Layout.NumberInputHeight)
-                    .inputSurface(fill)
-                    .semantics { contentDescription = label },
-            textStyle =
-                fieldTextStyle.copy(
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    color = WebPalette.TextSecondary,
-                ),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            lineLimits = TextFieldLineLimits.SingleLine,
-            interactionSource = interactions,
-            cursorBrush = SolidColor(WebPalette.Accent),
-            decorator =
-                TextFieldDecorator { field ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        fun step(delta: Long) {
-                            val next =
-                                runCatching {
-                                    Math.addExact(
-                                        state.text.toString().toLongOrNull() ?: 0L,
-                                        delta,
-                                    )
-                                }
-                                    .getOrNull() ?: return
-                            state.edit { replace(0, length, next.toString()) }
-                        }
-                        NumberStep("−", "Уменьшить: $label", enabled) { step(-1) }
-                        Box(
-                            Modifier.width(DesignTokens.Layout.NumberInputWidth),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            field()
-                        }
-                        NumberStep("+", "Увеличить: $label", enabled) { step(1) }
-                    }
-                },
-        )
+        ShareNumberStepper(label, value, enabled, change)
     }
+}
+
+@Composable
+fun ShareNumberStepper(label: String, value: String, enabled: Boolean = true, change: (String) -> Unit) {
+    val state = rememberShareInputState(value, change)
+    val interactions = remember { MutableInteractionSource() }
+    val fill = inputFill(interactions, enabled)
+    BasicTextField(
+        state = state,
+        enabled = enabled,
+        modifier =
+            Modifier.widthIn(
+                    min =
+                        DesignTokens.Layout.NumberInputWidth +
+                            DesignTokens.Layout.InputStepperWidth * 2
+                )
+                .heightIn(min = DesignTokens.Layout.NumberInputHeight)
+                .inputSurface(fill)
+                .semantics { contentDescription = label },
+        textStyle =
+            fieldTextStyle.copy(
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                color = WebPalette.TextSecondary,
+            ),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        lineLimits = TextFieldLineLimits.SingleLine,
+        interactionSource = interactions,
+        cursorBrush = SolidColor(WebPalette.Accent),
+        decorator =
+            TextFieldDecorator { field ->
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    fun step(delta: Long) {
+                        val next =
+                            runCatching {
+                                Math.addExact(
+                                    state.text.toString().toLongOrNull() ?: 0L,
+                                    delta,
+                                )
+                            }
+                                .getOrNull() ?: return
+                        state.edit { replace(0, length, next.toString()) }
+                    }
+                    NumberStep("−", "Уменьшить: $label", enabled) { step(-1) }
+                    Box(
+                        Modifier.width(DesignTokens.Layout.NumberInputWidth),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        field()
+                    }
+                    NumberStep("+", "Увеличить: $label", enabled) { step(1) }
+                }
+            },
+    )
 }
 
 @Composable

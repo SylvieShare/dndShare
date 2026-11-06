@@ -119,6 +119,27 @@ test('editing a skill keeps its original name and changes only that skill', asyn
   await expect.poll(() => page.evaluate(() => window.statState.value.skills[4])).toMatchObject({
     up: 0, override_title: 'Тихий шаг', bonuses: [{ value: 0 }],
   })
+  await dialog.getByRole('spinbutton').fill('-2')
+  await expect(dialog.locator('.share-editor-total')).toContainText('+1')
   await page.keyboard.press('Escape')
   await expect(page.getByRole('button', { name: 'Тихий шаг — проверка' })).toBeVisible()
+})
+
+
+test('save and ability totals follow their own bonus rows before closing', async ({ page }) => {
+  await page.goto('/tests/tutorials/fixtures/stat-rolls.html')
+  await page.getByRole('button', { name: 'Ловкость — спасбросок', exact: true }).click()
+  await page.getByRole('menuitem', { name: 'Изменить' }).click()
+  const dialog = page.getByRole('dialog')
+  await expect(dialog.locator('.share-editor-total')).toContainText('+6')
+  await dialog.getByRole('spinbutton').fill('3')
+  await expect(dialog.locator('.share-editor-total')).toContainText('+8')
+  await page.keyboard.press('Escape')
+  await page.getByRole('button', { name: 'Редактировать: Ловкость', exact: true }).click()
+  await expect(dialog.locator('.share-editor-total')).toContainText('16')
+  await dialog.getByRole('button', { name: 'Добавить бонус' }).click()
+  await dialog.locator('.bl-row input[type=number]').fill('2')
+  await expect(dialog.locator('.share-editor-total')).toContainText('18')
+  await page.keyboard.press('Escape')
+  expect(await page.evaluate(() => window.statState.value.save_bonuses[0].value)).toBe(3)
 })

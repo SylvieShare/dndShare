@@ -3,7 +3,6 @@ package ru.dndshare.client.ui.character
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
@@ -39,11 +38,6 @@ internal fun FeatureEditor(
 ) {
     val form = FeatureFormScope(editor, input, readInput)
     val kind = editor.fields.target.substringBefore(':')
-    val skillId = editor.fields.target.substringAfterLast(':')
-    val skillOriginal = if (kind == "skill" && skillId != "save")
-        LocalCharacterSheet.current.metadata.suggests["15"]?.firstOrNull { it.id.toString() == skillId }?.value
-            ?: skillNames[skillId.toIntOrNull()]
-    else null
     val title =
         when (kind) {
             "journal-entry" -> "Запись дневника"
@@ -65,10 +59,6 @@ internal fun FeatureEditor(
             "identity" -> "Имя персонажа"
             "personality" -> personalityFields[editor.fields.target.substringAfter(':')].orEmpty()
             "money" -> "Кошелёк"
-            "skill" -> if (skillId == "save") {
-                val ability = dndAbilities.firstOrNull { it.id == editor.fields.target.split(':')[1] }
-                "${ability?.title.orEmpty()} — спасбросок"
-            } else editor.fields.input.text("override_title").ifBlank { skillOriginal ?: "Навык" }
             "utility" -> "Показатель"
             "proficiencies" -> "Владения"
             "inventory" -> "Предмет"
@@ -92,17 +82,9 @@ internal fun FeatureEditor(
         LocalShareFormInputs provides inputs,
         LocalRichCatalogue provides cache,
     ) {
-        ShareWindow(
-            onDismissRequest = close,
-            title = {
-                Text(androidx.compose.ui.text.buildAnnotatedString {
-                    append(title)
-                    if (!skillOriginal.isNullOrBlank() && skillOriginal != title)
-                        withStyle(androidx.compose.ui.text.SpanStyle(color = WebPalette.TextMuted)) {
-                            append(" ($skillOriginal)")
-                        }
-                }, style = ShareTypography.header)
-            },
+        ShareFormDialog(
+            title,
+            close,
             dismissEnabled = !editor.saving,
             actions = {
                 ShareTextButton(onClick = close, enabled = !editor.saving) {
@@ -187,7 +169,6 @@ internal fun FeatureEditor(
                                 )
                         }
                 "money" -> MoneyFeatureFields(form)
-                "skill" -> SkillFeatureFields(form)
                 "utility" -> UtilityFeatureFields(form)
                 "proficiencies" ->
                     (listOf("Оружие", "Доспехи", "Инструменты", "Языки") + form.data.keys)

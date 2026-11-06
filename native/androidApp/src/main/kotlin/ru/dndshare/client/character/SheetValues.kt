@@ -7,7 +7,8 @@ import ru.dndshare.client.model.text
 fun JsonElement?.number(default: Int = 0): Int = (this as? JsonPrimitive)?.intOrNull ?: default
 fun JsonElement?.objectValue(): JsonObject = this as? JsonObject ?: JsonObject(emptyMap())
 fun JsonElement?.arrayValue(): List<JsonElement> = (this as? JsonArray).orEmpty()
-fun JsonElement?.bonusTotal(): Int = arrayValue().sumOf { it.objectValue()["value"].number() }
+fun JsonElement.bonusRow(): JsonObject = if (this is JsonObject) this else buildJsonObject { put("value", this@bonusRow) }
+fun JsonElement?.bonusTotal(): Int = arrayValue().sumOf { if (it is JsonObject) it["value"].number() else it.number() }
 fun JsonObject.label(): String = text("name").ifBlank { text("title") }.ifBlank { text("value") }
 fun signed(value: Int): String = if (value >= 0) "+$value" else value.toString()
 fun CharacterSheet.statScore(id: String): Int {

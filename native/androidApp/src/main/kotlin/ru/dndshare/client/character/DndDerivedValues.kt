@@ -81,7 +81,7 @@ class DndDerivedValues(
         it.rule.text("kind") == kind && matches(it, context)
     }
 
-    fun score(id: String): Int {
+    fun score(id: String, baseScore: Int = sheet.statScore(id)): Int {
         val ability = listOf("STR", "DEX", "CON", "INT", "WIS", "CHA").indexOf(id) + 1L
         return effects
             .filter {
@@ -89,7 +89,7 @@ class DndDerivedValues(
                     it.rule.text("kind") == "ability_minimum" &&
                     it.rule["ability_ids"].arrayValue().any { raw -> raw.referenceId() == ability }
             }
-            .fold(sheet.statScore(id)) { best, rule -> maxOf(best, rule.rule["value"].number()) }
+            .fold(baseScore) { best, rule -> maxOf(best, rule.rule["value"].number()) }
     }
 
     fun rank(kind: String, context: RuleContext): Int =

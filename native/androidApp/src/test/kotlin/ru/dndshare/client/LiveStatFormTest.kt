@@ -13,6 +13,51 @@ import ru.dndshare.client.ui.character.*
 @OptIn(ExperimentalCoroutinesApi::class)
 class LiveStatFormTest {
     @Test
+    fun skillAndSaveFlushLastInputAndOpeningDoesNotWrite() = runTest {
+        val api = SheetStateServer()
+        val cache = MemorySheetForms()
+        val repo = CharacterSheetRepository(api, cache, 1, backgroundScope)
+        repo.refresh("hero")
+        val editor = SheetEditorController("hero", 1, SavedStateHandle(), cache, repo,
+            backgroundScope, StandardTestDispatcher(testScheduler))
+        editor.liveContext = { LiveStatContext(emptyMap(), HandbookMetadata(), null) }
+        runCurrent()
+
+        editor.open("skill:DEX:4", api.sheet)
+        runCurrent()
+        advanceTimeBy(200)
+        runCurrent()
+        assertTrue(api.packets.isEmpty())
+        editor.input("up", JsonPrimitive("2"))
+        editor.input("bonuses", buildJsonArray { add(buildJsonObject { put("name", "Плащ"); put("value", "3") }) })
+        runCurrent()
+        advanceTimeBy(200)
+        runCurrent()
+        fun savedDex() = editor.state.value!!.baseline.values["DEX"].objectValue()
+        assertEquals(3, savedDex()["skills"].objectValue()["4"].objectValue()["bonuses"].bonusTotal())
+        editor.input("override_title", JsonPrimitive("Тихий шаг"))
+        editor.dismiss()
+        runCurrent()
+        val saved = repo.local("hero")!!.displayed
+        val skill = saved.values["DEX"].objectValue()["skills"].objectValue()["4"].objectValue()
+        assertEquals("Тихий шаг", skill.text("override_title"))
+        assertEquals(2, skill["up"].number())
+        assertTrue(cache.forms.isEmpty())
+
+        editor.open("skill:DEX:save", saved)
+        runCurrent()
+        editor.input("up", JsonPrimitive(true))
+        editor.input("bonuses", buildJsonArray { add(JsonPrimitive(-2)) })
+        editor.dismiss()
+        runCurrent()
+        val dex = repo.local("hero")!!.displayed.values["DEX"].objectValue()
+        assertEquals(JsonPrimitive(true), dex["save_up"])
+        assertEquals(-2, dex["save_bonuses"].bonusTotal())
+        assertEquals(skill, dex["skills"].objectValue()["4"])
+        assertTrue(cache.forms.isEmpty())
+    }
+
+    @Test
     fun rapidInputCommitsWithoutClosingAndCheckpointAdvances() = runTest {
         val api = SheetStateServer()
         val cache = MemorySheetForms()

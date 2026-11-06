@@ -49,6 +49,7 @@ fun ShareTextInput(
     enabled: Boolean = true,
     multiline: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions(autoCorrectEnabled = false),
+    placeholder: String? = null,
 ) {
     val state = rememberShareInputState(value, onValueChange)
     val interactions = remember { MutableInteractionSource() }
@@ -57,7 +58,7 @@ fun ShareTextInput(
         modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(DesignTokens.Spacing.Compact),
     ) {
-        FieldCaption(label)
+        if (placeholder == null) FieldCaption(label)
         BasicTextField(
             state = state,
             enabled = enabled,
@@ -85,6 +86,8 @@ fun ShareTextInput(
                             vertical = DesignTokens.Layout.InputPaddingVertical,
                         )
                     ) {
+                        if (placeholder != null && state.text.isEmpty())
+                            Text(placeholder, style = fieldTextStyle, color = WebPalette.TextMuted)
                         field()
                     }
                 },
