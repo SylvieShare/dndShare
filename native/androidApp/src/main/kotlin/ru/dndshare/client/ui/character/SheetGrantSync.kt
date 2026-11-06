@@ -3,6 +3,7 @@ package ru.dndshare.client.ui.character
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.dndshare.client.character.*
 
@@ -13,8 +14,9 @@ internal fun CoroutineScope.synchronizeSheetGrants(
     sheets: CharacterSheetRepository,
     snapshot: StateFlow<SheetSnapshot?>,
     content: StateFlow<SheetContentState>,
-) = launch {
+) = launch(Dispatchers.Default) {
     combine(snapshot, content) { sheet, data -> sheet?.displayed to data }
+        .distinctUntilChanged()
         .collect { (sheet, data) ->
             if (sheet == null || sheet.userId != accountId) return@collect
             val latest = sheets.local(uuid)?.displayed ?: return@collect

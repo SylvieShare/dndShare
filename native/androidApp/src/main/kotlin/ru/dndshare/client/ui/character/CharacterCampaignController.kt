@@ -41,7 +41,10 @@ internal class CharacterCampaignController(
         val current = mutable.value
         val token = generation
         val serial = ++requestSerial
-        mutable.update { it.copy(loading = true, error = null) }
+        mutable.update {
+            it.copy(loading = true, error = null,
+                connection = if (it.connection == SessionConnection.Offline) SessionConnection.Connecting else it.connection)
+        }
         try {
             val response = api.characterRequest(uuid, "concentration")
             var players = current.players
@@ -70,6 +73,7 @@ internal class CharacterCampaignController(
             if (token != generation || serial != requestSerial) return
             mutable.update {
                 it.copy(
+                    connection = SessionConnection.Connected,
                     players = players,
                     transfers = transfers,
                     pending = pending,
@@ -80,12 +84,12 @@ internal class CharacterCampaignController(
         } catch (cancelled: CancellationException) {
             throw cancelled
         } catch (error: Exception) {
-            if (token == generation)
+            if (token == generation && serial == requestSerial)
                 mutable.update {
-                    it.copy(error = error.message ?: "Не удалось обновить события сессии.")
+                    it.copy(connection = SessionConnection.Offline, error = error.message ?: "Не удалось обновить события сессии.")
                 }
         } finally {
-            if (token == generation) mutable.update { it.copy(loading = false) }
+            if (token == generation && serial == requestSerial) mutable.update { it.copy(loading = false) }
         }
     }
 
@@ -225,7 +229,12 @@ internal class CharacterCampaignController(
     }
 }
 
+enum class SessionConnection(val label: String) {
+    Connecting("Подключение к сессии"), Connected("Связь с сессией установлена"), Offline("Нет связи с сессией"),
+}
+
 data class SheetCampaignState(
+    val connection: SessionConnection = SessionConnection.Connecting,
     val sessionUuid: String? = null,
     val loading: Boolean = false,
     val busy: Boolean = false,

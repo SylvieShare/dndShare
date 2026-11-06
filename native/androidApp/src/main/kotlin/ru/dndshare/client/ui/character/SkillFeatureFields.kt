@@ -36,11 +36,16 @@ internal fun SkillFeatureFields(form: FeatureFormScope, removeSkill: () -> Unit)
     val sources = context.mechanics.rules(rule, scope).map { it.sourceLabel }.distinct()
     if (sources.isNotEmpty()) Text("Источник: ${sources.joinToString()}", style = ShareTypography.context, color = WebPalette.TextMuted)
     BonusFields(form)
-    val rank = if (save) {
-        if (granted > 0 || form.data["up"] == JsonPrimitive(true)) 1 else 0
-    } else maxOf(form.data["up"].number(), granted)
-    val total = context.proficientRollTotal(ability, scope, rank, form.data["bonuses"])
-    StatEditorTotal(signed(total))
     if (id != "save" && id.toLongOrNull() == null)
         ShareTextButton(onClick = removeSkill, enabled = form.enabled) { Text("Удалить навык", color = WebPalette.Danger) }
+}
+
+internal fun SheetContext.skillEditorTotal(ability: DndAbility, id: String, data: kotlinx.serialization.json.JsonObject): Int {
+    val save = id == "save"
+    val scope = RuleContext(kind = if (save) "saving_throw" else "skill_check", ability = ability.suggestId, skill = id.toLongOrNull())
+    val granted = mechanics.rank(if (save) "save_proficiency" else "skill_proficiency", scope)
+    val rank = if (save) {
+        if (granted > 0 || data["up"] == JsonPrimitive(true)) 1 else 0
+    } else maxOf(data["up"].number(), granted)
+    return proficientRollTotal(ability, scope, rank, data["bonuses"])
 }

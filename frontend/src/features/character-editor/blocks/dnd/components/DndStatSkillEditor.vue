@@ -13,15 +13,13 @@
       <BonusList :bonuses="skill.bonuses" @update:bonuses="bonuses => $emit('change', { bonuses })" />
     </EditorSection>
     <RemoveButton v-if="skill.custom" label="Удалить навык" @click="$emit('remove')" />
-    <EditorTotal>Итого: <strong>{{ signed(total) }}</strong></EditorTotal>
   </EditorPanel>
 </template>
 <script setup>
 import { CircleCheck, Minus, Gem } from '@lucide/vue'
-import { EditorPanel, EditorSection, EditorTotal, FormField, FormTextInput, IconNavigation, RemoveButton } from '@sylvieshare/share-ui'
+import { EditorPanel, EditorSection, FormField, FormTextInput, IconNavigation, RemoveButton } from '@sylvieshare/share-ui'
 import BonusList from '@/shared/ui/BonusList.vue'
-import { signedOrZero as signed } from '@/shared/lib/dnd'
-defineProps({ skill: { type: Object, required: true }, total: Number })
+defineProps({ skill: { type: Object, required: true } })
 defineEmits(['change', 'remove'])
 const ranks = [
   { key: 0, label: 'Без владения', icon: Minus },

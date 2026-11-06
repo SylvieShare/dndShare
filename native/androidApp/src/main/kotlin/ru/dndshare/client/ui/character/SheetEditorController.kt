@@ -42,7 +42,10 @@ internal class SheetEditorController(
             { mutable.value },
             { liveContext?.invoke() },
             { inputWrite?.join() },
-            ::persist,
+            { updated ->
+                if (mutable.value?.fields == updated.fields) mutable.value = updated
+                else persist(updated)
+            },
         )
 
     init {
@@ -159,19 +162,22 @@ internal class SheetEditorController(
                 failures.value?.startsWith("Изменения остались в черновике") == true
         )
             failures.value = null
-        val encoded = WireJson.encodeToString(editor.fields)
-        saved[KEY] =
-            if (encoded.length <= 8_000) encoded
-            else
-                WireJson.encodeToString(
-                    editor.fields.copy(input = JsonObject(emptyMap()), diskInputs = true)
-                )
+        val fields = editor.fields
+        val liveForm = live.supports(editor)
+        // Publish input immediately. Live forms keep the durable copy in Room and a small
+        // saved-state reference, so typing or switching rank never serializes the draft on Main.
         mutable.value = editor
+        val immediate = if (liveForm) null else WireJson.encodeToString(fields)
+        fun diskReference() = WireJson.encodeToString(fields.copy(input = JsonObject(emptyMap()), diskInputs = true))
+        if (immediate != null) saved[KEY] = if (immediate.length <= 8_000) immediate else diskReference()
         inputWrite?.cancel()
         inputWrite = scope.launch {
             try {
+                val encoded = immediate ?: withContext(workDispatcher) { WireJson.encodeToString(fields) }
                 persistence.withLock {
-                    cache.updateFormInputs(uuid, editor.fields.id, encoded)
+                    val updated = cache.updateFormInputs(uuid, fields.id, encoded)
+                    if (liveForm && updated > 0 && mutable.value?.fields?.id == fields.id)
+                        saved[KEY] = diskReference()
                 }
             } catch (cancelled: CancellationException) {
                 throw cancelled

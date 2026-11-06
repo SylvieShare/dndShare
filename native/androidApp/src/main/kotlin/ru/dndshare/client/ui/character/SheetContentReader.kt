@@ -29,6 +29,7 @@ internal class SheetContentReader(
     icons: Flow<InventoryIconsState> = flowOf(InventoryIconsState()),
     fetching: Flow<Boolean> = flowOf(false),
 ) {
+    private val activeTarget = target.distinctUntilChanged()
     val sourceId =
         snapshot
             .map { it?.displayed?.sourceId ?: fallbackSourceId }
@@ -42,12 +43,14 @@ internal class SheetContentReader(
     }
     private val dependencies = MutableStateFlow<List<Long>>(emptyList())
     private val roots =
-        combine(snapshot, extraIds) { sheet, form ->
-                (sheet?.displayed?.data?.let(::referencedItems).orEmpty() + form)
+        combine(snapshot.map { it?.document }.distinctUntilChanged().map { it?.let(::referencedItems).orEmpty() },
+            extraIds.distinctUntilChanged()) { sheetIds, form ->
+                (sheetIds + form)
                     .distinct()
                     .sorted()
             }
             .distinctUntilChanged()
+            .flowOn(Dispatchers.Default)
             .stateIn(scope, SharingStarted.Eagerly, emptyList())
     private val ids =
         combine(roots, dependencies) { root, extra ->
@@ -80,7 +83,7 @@ internal class SheetContentReader(
         combine(
                 sourceId,
                 snapshot.map { it?.displayed?.sourceVersionId }.distinctUntilChanged(),
-                target,
+                activeTarget,
             ) { source, version, editor ->
                 Triple(source, version, editor)
             }
@@ -100,7 +103,7 @@ internal class SheetContentReader(
                 else flowOf(emptyList())
             }
     private val advancement =
-        combine(snapshot, target) { value, editor -> value?.displayed to editor }
+        combine(snapshot, activeTarget) { value, editor -> value?.displayed to editor }
             .flatMapLatest { (sheet, editor) ->
                 if (sheet == null || editor != "level") flowOf(emptyMap<Long, CatalogueItem>())
                 else {

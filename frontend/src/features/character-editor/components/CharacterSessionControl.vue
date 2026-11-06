@@ -1,14 +1,20 @@
 <template>
   <component :is="compact ? 'div' : BaseTile" v-if="session && controller" class="campaign-block" :class="{ 'campaign-block--compact': compact }" data-tutorial="character-session">
     <RouterLink v-if="compact" :to="`/sessions/${session.uuid}`" class="campaign-heading campaign-link" :title="[session.name, chapterLabel].filter(Boolean).join(' · ')">
-      <ScrollText class="campaign-label" :size="20" aria-hidden="true" />
+      <span class="campaign-label campaign-symbol-wrap">
+        <ScrollText :size="20" aria-hidden="true" />
+        <span v-if="linkState" class="campaign-dot" :class="'campaign-dot--' + linkState" role="img" :aria-label="linkLabel" :title="linkLabel" />
+      </span>
       <span class="campaign-copy">
         <span class="campaign-name">{{ session.name }}</span>
         <span class="campaign-chapter">{{ chapterLabel || 'Игровая сессия' }}</span>
       </span>
     </RouterLink>
     <div v-else class="campaign-heading">
-      <span class="campaign-label" role="img" aria-label="Сессия" title="Сессия"><ScrollText :size="24" aria-hidden="true" /></span>
+      <span class="campaign-label campaign-symbol-wrap">
+        <ScrollText :size="24" aria-hidden="true" />
+        <span v-if="linkState" class="campaign-dot" :class="'campaign-dot--' + linkState" role="img" :aria-label="linkLabel" :title="linkLabel" />
+      </span>
       <RouterLink :to="`/sessions/${session.uuid}`" class="campaign-name">{{ session.name }}</RouterLink>
     </div>
     <div class="campaign-actions">
@@ -29,12 +35,17 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount } from 'vue'
+import { computed, inject, onBeforeUnmount } from 'vue'
 import { RouterLink } from 'vue-router'
 import { ActionButton, BaseTile } from '@sylvieshare/share-ui'
 import { Bell, ScrollText, Users } from '@lucide/vue'
 import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 const props = defineProps({ session: Object, controller: Object, compact: Boolean })
+const connection = inject('characterSessionConnection', null)
+const linkState = computed(() => connection?.value.uuid === props.session?.uuid ? connection?.value.status : null)
+const linkLabel = computed(() => ({
+  connected: 'Связь с сессией установлена', error: 'Нет связи с сессией',
+}[linkState.value] || 'Подключение к сессии'))
 const chapterLabel = computed(() => currentChapterLabel({ chapterNumber: props.session?.chapterNumber, chapterName: props.session?.chapterName }, true))
 const playerCount = computed(() => props.controller.state.playersLoaded ? props.controller.recipients.length : null)
 const eventCount = computed(() => props.controller.state.transfers.length + (props.controller.interactions?.state.pending.length || 0))
@@ -55,6 +66,10 @@ onBeforeUnmount(() => anchors.forEach((element, view) => props.controller.unregi
 
 <style scoped>
 .campaign-block { display: flex; flex-direction: column; align-items: stretch; gap: 6px; padding: 6px; }
+.campaign-symbol-wrap { position: relative; }
+.campaign-dot { position: absolute; right: 0; bottom: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--info); }
+.campaign-dot--connected { background: var(--success); }
+.campaign-dot--error { background: var(--danger); }
 .campaign-heading { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 8px 0; }
 .campaign-label { display: flex; flex-shrink: 0; color: var(--text-muted); }
 .campaign-name { color: var(--text-1); font-size: 18px; line-height: 1.3; font-weight: 650; text-decoration: none; overflow-wrap: anywhere; }

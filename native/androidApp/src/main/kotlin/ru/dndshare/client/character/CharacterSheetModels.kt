@@ -80,11 +80,8 @@ data class SheetChange(
 )
 
 data class SheetSnapshot(val sheet: CharacterSheet, val draft: SheetDraft) {
-    val document
-        get() = draft.edits.fold(sheet.data) { data, edit -> applySheetPatches(data, edit.patches) }
-
-    val displayed
-        get() = sheet.copy(data = document)
+    val document by lazy { draft.edits.fold(sheet.data) { data, edit -> applySheetPatches(data, edit.patches) } }
+    val displayed by lazy { if (draft.edits.isEmpty()) sheet else sheet.copy(data = document) }
 }
 
 fun sheetPath(vararg keys: String): List<JsonElement> = keys.map(::JsonPrimitive)

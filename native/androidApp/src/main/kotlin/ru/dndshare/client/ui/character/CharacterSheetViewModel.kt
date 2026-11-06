@@ -129,15 +129,18 @@ internal class CharacterSheetViewModel(
             busy ->
             Triple(load ?: form ?: poll, save, busy)
         }
+    // Prepare document-dependent mechanics once per snapshot/content change, independently of form input.
+    private val preparedSheet = combine(snapshot, content.state) { snapshot, content ->
+        val mechanics = snapshot?.displayed?.let { DndDerivedValues(it, content.items, content.metadata) }
+        Triple(snapshot, content, mechanics)
+    }.flowOn(Dispatchers.Default)
+
     val uiState =
-        combine(snapshot, content.state, sessionPresentation, messages) {
-                sheet,
-                content,
-                ui,
-                messages ->
+        combine(preparedSheet, sessionPresentation, messages) { prepared, ui, messages ->
                 ui.copy(
-                    snapshot = sheet,
-                    content = content,
+                    snapshot = prepared.first,
+                    content = prepared.second,
+                    mechanics = prepared.third,
                     loadError = messages.first,
                     saveMessage = messages.second,
                     connecting = messages.third,
@@ -481,8 +484,8 @@ internal class CharacterSheetViewModel(
             pollError.value = null
         }
         try {
-            remote.poll()
             campaign.reload()
+            remote.poll()
             journalController.poll(
                 navigation.value.sectionName == SheetSection.Journal.name,
                 editor.state.value != null,

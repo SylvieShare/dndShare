@@ -26,13 +26,16 @@
     @roll-skill="(id, mode, excluded) => rollD20Plus(skillTitle(id), skillBonus(id), mode, 'ability_check', { proficiencyRank: skillProficiencyRank(id) }, excluded)"
   />
 
-  <AppModalFrame v-if="editor && canEdit" :title="editorTitle" :padded="false" :z-index="4200" width="460px" @close="editor = null">
-    <template v-if="originalTitle" #title>
-      <h2 class="stat-editor-title">{{ editorTitle }} <small>({{ originalTitle }})</small></h2>
+  <AppModalFrame v-if="editor && canEdit" :title="editorTitle" :padded="false" :z-index="4200" :width="statEditorWidth" @close="editor = null">
+    <template #title>
+      <div class="stat-editor-heading">
+        <h2 class="stat-editor-title">{{ editorTitle }} <small v-if="originalTitle">({{ originalTitle }})</small></h2>
+        <span class="stat-editor-total"><small>Итого</small> <strong>{{ editorTotal }}</strong></span>
+      </div>
     </template>
-    <DndStatSkillEditor v-if="editor === 'skill' && editSkill" :skill="editSkill" :total="skillBonus(editSkillId)"
+    <DndStatSkillEditor v-if="editor === 'skill' && editSkill" :skill="editSkill"
       @change="onSkillChange" @remove="removeCustomSkill" />
-    <DndStatEditor v-else :saving-throw="editor === 'save'" :total="editor === 'save' ? save : statDisplayValue" :base-data="numData" :save-up="saveUp"
+    <DndStatEditor v-else :saving-throw="editor === 'save'" :base-data="numData" :save-up="saveUp"
       :save-source="derivedSaveSource" :save-bonuses="statData.save_bonuses || []"
       @update-base="onBaseChange" @toggle-save="pickSave" @update-save-bonuses="onSaveBonusesChange" />
   </AppModalFrame>
@@ -41,7 +44,8 @@
 <script setup>
 defineOptions({ inheritAttrs: false })
 import { computed, inject, onMounted, ref, watch } from 'vue'
-import { abilityModifier, sumBonuses, resolveNumValue } from '@/shared/lib/dnd'
+import { layoutTokens } from '@/app/design-tokens'
+import { signedOrZero as signed, abilityModifier, sumBonuses, resolveNumValue } from '@/shared/lib/dnd'
 import { armorAbilityRollEffects, resolveRollMode } from '@/features/character-editor/blocks/dnd/lib/rollMode'
 import DndStatEditor from '@/features/character-editor/blocks/dnd/components/DndStatEditor'
 import DndStatSkillEditor from '@/features/character-editor/blocks/dnd/components/DndStatSkillEditor'
@@ -58,6 +62,11 @@ const canEdit = computed(() => !!charCtx.ownerMode)
 // ─── Editor window state ───────────────────────────────────────────────────────
 const editor = ref(null)
 const editSkillId = ref(null)
+const statEditorWidth = layoutTokens['stat-editor-width'] + 'px'
+const editorTotal = computed(() => {
+  if (editor.value === 'skill') return signed(skillBonus(editSkillId.value))
+  return editor.value === 'save' ? signed(save.value) : statDisplayValue.value
+})
 const editorTitle = computed(() => editor.value === 'skill' ? editSkill.value?.title || 'Навык'
   : editor.value === 'save' ? `${displayTitle.value} — спасбросок` : displayTitle.value)
 const originalTitle = computed(() => editor.value === 'skill' && editSkill.value?.originalTitle !== editorTitle.value
@@ -341,6 +350,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.stat-editor-title { margin: 0; color: var(--text-1); font-family: var(--font-display); font-size: 20px; overflow-wrap: anywhere; }
+.stat-editor-heading { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-medium); width: var(--layout-stat-editor-width); min-width: 0; }
+.stat-editor-total { display: inline-flex; gap: var(--spacing-xs); align-items: baseline; white-space: nowrap; color: var(--text-1); font-variant-numeric: tabular-nums; }
+.stat-editor-total small { color: var(--text-muted); }
+.stat-editor-title { min-width: 0; margin: 0; color: var(--text-1); font-family: var(--font-display); font-size: 20px; overflow-wrap: anywhere; }
 .stat-editor-title small { color: var(--text-muted); font-size: .85em; font-weight: 400; }
 </style>

@@ -13,6 +13,59 @@ import ru.dndshare.client.ui.character.*
 @OptIn(ExperimentalCoroutinesApi::class)
 class LiveStatFormTest {
     @Test
+    fun cachedSkillCanBeEditedAndClosedWhileServerIsOfflineOrSlow() = runTest {
+        val server = SheetStateServer()
+        var online = true
+        val started = CompletableDeferred<Unit>()
+        val release = CompletableDeferred<Unit>()
+        val api = object : CharacterSheetApi {
+            override suspend fun character(uuid: String): CharacterSheet {
+                if (!online) throw java.io.IOException("offline")
+                return server.character(uuid)
+            }
+            override suspend fun saveCharacter(uuid: String, packet: SheetPacket): SheetChange {
+                if (!online) throw java.io.IOException("offline")
+                started.complete(Unit)
+                release.await()
+                return server.saveCharacter(uuid, packet)
+            }
+        }
+        val cache = MemorySheetForms()
+        val repo = CharacterSheetRepository(api, cache, 1, backgroundScope)
+        repo.refresh("hero")
+        online = false
+        assertFailsWith<java.io.IOException> { repo.refresh("hero") }
+        val editor = SheetEditorController("hero", 1, SavedStateHandle(), cache, repo,
+            backgroundScope, StandardTestDispatcher(testScheduler))
+        editor.liveContext = { LiveStatContext(emptyMap(), HandbookMetadata(), null) }
+        runCurrent()
+        editor.open("skill:DEX:4", repo.local("hero")!!.displayed)
+        runCurrent()
+        editor.input("up", JsonPrimitive("1"))
+        runCurrent()
+        advanceTimeBy(160)
+        runCurrent()
+        fun rank(sheet: CharacterSheet) = sheet.values["DEX"].objectValue()["skills"].objectValue()["4"].objectValue()["up"].number()
+        assertEquals(1, rank(repo.local("hero")!!.displayed))
+        assertEquals(0, rank(server.sheet))
+
+        online = true
+        advanceTimeBy(600)
+        runCurrent()
+        assertTrue(started.isCompleted)
+        editor.input("up", JsonPrimitive("2"))
+        editor.dismiss()
+        runCurrent()
+        assertNull(editor.state.value)
+        assertEquals(2, rank(repo.local("hero")!!.displayed))
+        assertTrue(server.packets.isEmpty())
+        release.complete(Unit)
+        runCurrent()
+        assertEquals(2, rank(server.sheet))
+        assertTrue(repo.local("hero")!!.draft.edits.isEmpty())
+    }
+
+    @Test
     fun skillAndSaveFlushLastInputAndOpeningDoesNotWrite() = runTest {
         val api = SheetStateServer()
         val cache = MemorySheetForms()

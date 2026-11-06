@@ -1,5 +1,7 @@
 package ru.dndshare.client.ui.character
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -33,8 +35,7 @@ internal fun SheetHeaderWidgets(
     val busy =
         app.busy ||
             ui.commands.pending ||
-            ui.snapshot == null && error == null ||
-            ui.snapshot?.draft?.let { it.edits.isNotEmpty() || it.sending != null } == true
+            ui.snapshot == null && error == null
     Row(
         Modifier.widthIn(max = if (format == LayoutFormat.Phone) 202.dp else 440.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -48,7 +49,17 @@ internal fun SheetHeaderWidgets(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
-                AppGlyph(Glyph.Sessions, Modifier.size(20.dp), WebPalette.TextMuted)
+                val connection = if (ui.campaign.sessionUuid == session.uuid) ui.campaign.connection else SessionConnection.Connecting
+                Box {
+                    AppGlyph(Glyph.Sessions, Modifier.size(20.dp), WebPalette.TextMuted)
+                    val color = when (connection) {
+                        SessionConnection.Connected -> WebPalette.Success
+                        SessionConnection.Connecting -> WebPalette.Info
+                        SessionConnection.Offline -> WebPalette.Danger
+                    }
+                    Spacer(Modifier.align(Alignment.BottomEnd).size(7.dp).background(color, CircleShape)
+                        .semantics { contentDescription = connection.label })
+                }
                 Column(Modifier.weight(1f, fill = false)) {
                     Text(
                         session.name,
@@ -83,7 +94,7 @@ internal fun SheetHeaderWidgets(
             HeaderConnectionState(
                 busy,
                 error,
-                if (app.busy) app.message else "Сохраняем изменения…",
+                if (app.busy) app.message else "Обновляем данные…",
             ),
             retry = {
                 model.retrySave()

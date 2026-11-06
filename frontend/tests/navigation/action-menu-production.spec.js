@@ -86,3 +86,32 @@ for (const width of [390, 834, 1920]) {
 
   })
 }
+
+
+test('sheet session indicator follows its live connection', async ({ page }) => {
+  await page.setViewportSize({ width: 834, height: 1000 })
+  await installCharacterChromeFixture(page)
+  await page.route('**/api/char/chrome-0/sessions', route => route.fulfill({
+    json: { sessions: [{ uuid: 'test-session', name: 'Проверка связи', role: 'player' }] },
+  }))
+  await page.addInitScript(() => {
+    window.EventSource = class extends EventTarget {
+      constructor(url) {
+        super()
+        this.readyState = 0
+        if (url.includes('test-session/live')) window.testSessionStream = this
+      }
+      close() { this.readyState = 2 }
+    }
+  })
+  await page.goto('/char/chrome-0')
+  const status = page.locator('.campaign-dot:visible').first()
+  await expect(status).toHaveAccessibleName('Подключение к сессии')
+  await page.evaluate(() => {
+    window.testSessionStream.readyState = 1
+    window.testSessionStream.onopen()
+  })
+  await expect(status).toHaveAccessibleName('Связь с сессией установлена')
+  await page.evaluate(() => window.testSessionStream.onerror())
+  await expect(status).toHaveAccessibleName('Нет связи с сессией')
+})

@@ -61,16 +61,16 @@ internal class SheetLiveStats(
         val editor = current() ?: return@withLock LiveStatResult.Saved
         if (!supports(editor)) return@withLock LiveStatResult.Saved
         val data = context() ?: return@withLock LiveStatResult.Failed
-        val initial = initialForm(editor.fields.target, editor.baseline, data.items, data.session)
-        if (
-            editor.fields.copy(id = "", error = null, diskInputs = false) ==
-                initial.copy(id = "", error = null, diskInputs = false)
-        )
-            return@withLock LiveStatResult.Saved
         awaitInput()
         val prepared =
             try {
                 withContext(dispatcher) {
+                    val initial = initialForm(editor.fields.target, editor.baseline, data.items, data.session)
+                    if (
+                        editor.fields.copy(id = "", error = null, diskInputs = false) ==
+                            initial.copy(id = "", error = null, diskInputs = false)
+                    )
+                        return@withContext null
                     val patches =
                         formPatches(editor.fields, editor.baseline, data.items, data.metadata)
                     val projected =
@@ -78,8 +78,12 @@ internal class SheetLiveStats(
                             data = applySheetPatches(editor.baseline.data, patches)
                         )
                     if (projected.data == editor.baseline.data) return@withContext null
-                    val all = patches + abilitySpellGrantPatches(projected, data.items)
-                    all to editor.baseline.copy(data = applySheetPatches(editor.baseline.data, all))
+                    val grants = abilitySpellGrantPatches(projected, data.items)
+                    val all = patches + grants
+                    val baseline = projected.copy(data = applySheetPatches(projected.data, grants))
+                    val metadata = formSessionMetadata(editor.fields, editor.baseline, all, data.items, data.session)
+                    val checkpoint = CachedSheetForm(uuid, editor.fields.id, WireJson.encodeToString(baseline))
+                    PreparedEdit(all, baseline, metadata, checkpoint)
                 }
             } catch (cancelled: CancellationException) {
                 throw cancelled
@@ -89,22 +93,8 @@ internal class SheetLiveStats(
             }
         if (prepared == null) return@withLock LiveStatResult.Saved
         try {
-            val (patches, baseline) = prepared
-            sheets.enqueue(
-                uuid,
-                patches,
-                editor.baseline.data,
-                metadata =
-                    formSessionMetadata(
-                        editor.fields,
-                        editor.baseline,
-                        patches,
-                        data.items,
-                        data.session,
-                    ),
-                liveForm =
-                    CachedSheetForm(uuid, editor.fields.id, WireJson.encodeToString(baseline)),
-            )
+            val (patches, baseline, metadata, checkpoint) = prepared
+            sheets.enqueue(uuid, patches, editor.baseline.data, metadata = metadata, liveForm = checkpoint)
             current()
                 ?.takeIf { it.fields.id == editor.fields.id }
                 ?.let {
@@ -132,6 +122,13 @@ internal class SheetLiveStats(
             LiveStatResult.Failed
         }
     }
+
+    private data class PreparedEdit(
+        val patches: List<SheetPatch>,
+        val baseline: CharacterSheet,
+        val metadata: List<kotlinx.serialization.json.JsonObject>,
+        val checkpoint: CachedSheetForm,
+    )
 
     private fun report(editor: SheetEditorState, message: String) {
         current()

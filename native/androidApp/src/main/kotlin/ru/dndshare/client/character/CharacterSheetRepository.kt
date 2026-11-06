@@ -33,7 +33,7 @@ class CharacterSheetRepository(
     fun message(uuid: String): Flow<String?> = messages.map { it[uuid] }.distinctUntilChanged()
 
     fun observe(uuid: String): Flow<SheetSnapshot?> =
-        cache.observe(uuid).map { it?.snapshot() }.flowOn(scope.coroutineContext.minusKey(Job))
+        cache.observe(uuid).map { it?.snapshot()?.also { snapshot -> snapshot.displayed } }.flowOn(scope.coroutineContext.minusKey(Job))
 
     suspend fun local(uuid: String): SheetSnapshot? =
         withContext(scope.coroutineContext.minusKey(Job)) {
@@ -88,13 +88,11 @@ class CharacterSheetRepository(
             lock(uuid).withLock {
                 val existing = cache.get(uuid)?.snapshot()
                 // An immutable in-flight packet must receive its own acknowledgement first.
-                if (existing == null || existing.draft.edits.isEmpty())
-                    put(
-                        uuid,
-                        remote,
-                        existing?.draft?.copy(edits = emptyList(), sending = null, blocked = null)
-                            ?: SheetDraft(),
-                    )
+                if (existing == null) put(uuid, remote, SheetDraft())
+                else if (existing.draft.edits.isEmpty() && remote.version >= existing.sheet.version) {
+                    val cleared = existing.draft.copy(edits = emptyList(), sending = null, blocked = null)
+                    if (remote != existing.sheet || cleared != existing.draft) put(uuid, remote, cleared)
+                }
             }
             retry(uuid)
         }

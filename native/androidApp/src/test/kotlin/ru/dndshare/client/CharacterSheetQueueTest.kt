@@ -118,6 +118,37 @@ class CharacterSheetQueueTest {
         )
 
     @Test
+    fun slowRefreshCannotRollBackAnAcknowledgedEdit() = runTest {
+        val server = Server()
+        val received = CompletableDeferred<Unit>()
+        val release = CompletableDeferred<Unit>()
+        var delayNext = false
+        val api = object : CharacterSheetApi by server {
+            override suspend fun character(uuid: String): CharacterSheet {
+                val answer = server.character(uuid)
+                if (delayNext) {
+                    delayNext = false
+                    received.complete(Unit)
+                    release.await()
+                }
+                return answer
+            }
+        }
+        val repo = CharacterSheetRepository(api, MemorySheets(), 1, backgroundScope)
+        repo.refresh("test")
+        delayNext = true
+        val refreshing = launch { repo.refresh("test") }
+        received.await()
+        repo.enqueue("test", hp(7))
+        runCurrent()
+        val saved = requireNotNull(repo.local("test"))
+        assertTrue(saved.draft.edits.isEmpty())
+        release.complete(Unit)
+        refreshing.join()
+        assertEquals(saved, repo.local("test"))
+    }
+
+    @Test
     fun lostAcknowledgementRetriesTheExactImmutablePacket() = runTest {
         val server = Server()
         val cache = MemorySheets()

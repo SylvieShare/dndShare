@@ -1,4 +1,4 @@
-import { ref, unref, watch } from 'vue'
+import { computed, provide, ref, unref, watch } from 'vue'
 import { useSessionLive } from '@/features/sessions/composables/useSessionLive'
 import { createLiveRoster } from '@/features/sessions/lib/liveRoster'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
@@ -29,6 +29,7 @@ export function useCharacterLive({ uuid, sessionUuid, sync, onMetadata }) {
     },
     onCatchUp: () => sync.catchUp(),
   })
+  provide('characterSessionConnection', computed(() => ({ uuid: unref(sessionUuid), status: live.status.value })))
   watch(
     () => unref(sessionUuid),
     (value) => {

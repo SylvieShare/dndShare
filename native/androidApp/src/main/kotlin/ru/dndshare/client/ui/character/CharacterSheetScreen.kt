@@ -49,10 +49,7 @@ internal fun CharacterSheetScreen(
             else -> close()
         }
     }
-    val mechanics =
-        remember(sheet, ui.content.items, ui.content.metadata) {
-            sheet?.let { DndDerivedValues(it, ui.content.items, ui.content.metadata) }
-        }
+    val mechanics = ui.mechanics
     Box(
         Modifier.fillMaxSize()
             .sheetHistoryKeys(
@@ -243,8 +240,7 @@ internal fun CharacterSheetScreen(
                                         SheetStatDialog(
                                             editor, model::dismissEditor, model::number,
                                             model::input, model::formInput,
-                                            syncPending = ui.snapshot?.draft?.let { it.edits.isNotEmpty() || it.sending != null } == true,
-                                            syncError = ui.snapshot?.draft?.blocked ?: ui.saveMessage,
+                                            syncError = ui.snapshot?.draft?.blocked,
                                             retry = model::retrySave,
                                         )
                                     else if (isFeatureForm(editor.fields.target))

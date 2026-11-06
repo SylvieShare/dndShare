@@ -73,7 +73,6 @@ class MorphBenchmarkActivity : ComponentActivity() {
                                     }
                                 },
                                 readInput = { editor?.fields?.input ?: JsonObject(emptyMap()) },
-                                syncPending = false,
                                 syncError = null,
                                 retry = {},
                             )

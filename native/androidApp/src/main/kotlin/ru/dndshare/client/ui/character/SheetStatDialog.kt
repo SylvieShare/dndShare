@@ -30,24 +30,12 @@ internal fun SheetContext.proficientRollTotal(
 }
 
 @Composable
-internal fun StatEditorTotal(value: String) {
-    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        HorizontalDivider(color = WebPalette.Border)
-        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text("Итого:", Modifier.alignByBaseline(), style = ShareTypography.context, color = WebPalette.TextMuted)
-            Text(value, Modifier.alignByBaseline(), style = ShareTypography.group, color = WebPalette.Text)
-        }
-    }
-}
-
-@Composable
 internal fun SheetStatDialog(
     editor: SheetEditorState,
     close: () -> Unit,
     number: (SheetNumberField, String) -> Unit,
     input: (String, JsonElement) -> Unit,
     readInput: () -> JsonObject,
-    syncPending: Boolean,
     syncError: String?,
     retry: () -> Unit,
 ) {
@@ -64,16 +52,23 @@ internal fun SheetStatDialog(
         else -> editor.fields.input.text("override_title").ifBlank { original ?: "Навык" }
     }
     val form = FeatureFormScope(editor, input, readInput)
+    val total = if (id == null) editor.fields.number.toIntOrNull()?.let {
+        context.mechanics.score(ability.id, it + form.data["bonuses"].bonusTotal()).toString()
+    } ?: "—" else signed(context.skillEditorTotal(ability, id, form.data))
     val inputs = remember(editor.fields.id) { ShareFormInputs() }
     var removing by remember(editor.fields.id) { mutableStateOf(false) }
     CompositionLocalProvider(LocalShareFormInputs provides inputs) {
-        ShareWindow(onDismissRequest = { inputs.flush(); close() }, dismissEnabled = !editor.saving,
+        ShareWindow(modifier = Modifier.widthIn(max = DesignTokens.Layout.StatEditorWidth + 24.dp), onDismissRequest = { inputs.flush(); close() }, dismissEnabled = !editor.saving,
             title = {
-                Text(buildAnnotatedString {
-                    append(title)
-                    if (id != "save" && !original.isNullOrBlank() && original != title)
-                        withStyle(SpanStyle(color = WebPalette.TextMuted)) { append(" ($original)") }
-                }, style = ShareTypography.header)
+                Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(buildAnnotatedString {
+                        append(title)
+                        if (id != "save" && !original.isNullOrBlank() && original != title)
+                            withStyle(SpanStyle(color = WebPalette.TextMuted)) { append(" ($original)") }
+                    }, Modifier.weight(1f), style = ShareTypography.header)
+                    Text("Итого", style = ShareTypography.context, color = WebPalette.TextMuted)
+                    Text(total, style = ShareTypography.header)
+                }
             },
         ) {
             if (id == null) {
@@ -81,15 +76,11 @@ internal fun SheetStatDialog(
                     number(SheetNumberField.Current, it)
                 }
                 BonusFields(form)
-                val total = editor.fields.number.toIntOrNull()?.let {
-                    context.mechanics.score(ability.id, it + form.data["bonuses"].bonusTotal())
-                }
-                StatEditorTotal(total?.toString() ?: "—")
             } else SkillFeatureFields(form) { removing = true }
             if (syncError != null) {
                 Text(syncError, color = WebPalette.Danger)
                 ShareTextButton(retry) { Text("Повторить сохранение") }
-            } else if (syncPending) Text("Сохраняем изменения…", style = ShareTypography.context)
+            }
             editor.fields.error?.let { Text(it, color = WebPalette.Danger) }
         }
     }

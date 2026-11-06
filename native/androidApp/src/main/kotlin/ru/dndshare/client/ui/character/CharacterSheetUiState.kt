@@ -11,6 +11,7 @@ data class SheetJournalState(
 
 data class CharacterSheetUiState(
     val snapshot: SheetSnapshot? = null,
+    val mechanics: ru.dndshare.client.character.DndDerivedValues? = null,
     val content: SheetContentState = SheetContentState(),
     val navigation: SheetNavigationState = SheetNavigationState(),
     val editor: SheetEditorState? = null,

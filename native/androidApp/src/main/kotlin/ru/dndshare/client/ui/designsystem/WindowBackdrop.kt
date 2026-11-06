@@ -38,11 +38,16 @@ internal fun ApplyWindowBackdrop(radius: Dp, dimAmount: Float?) {
     val pixels = with(LocalDensity.current) { if (platformBlur) radius.roundToPx() else 0 }
     SideEffect {
         (view.parent as? DialogWindowProvider)?.window?.let { window ->
-            dimAmount?.let(window::setDimAmount)
+            if (dimAmount != null && window.attributes.dimAmount != dimAmount) window.setDimAmount(dimAmount)
             if (Build.VERSION.SDK_INT >= 31) {
-                if (pixels > 0) window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
-                else window.clearFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
-                window.attributes = window.attributes.apply { blurBehindRadius = pixels }
+                val attributes = window.attributes
+                val blurFlag = WindowManager.LayoutParams.FLAG_BLUR_BEHIND
+                val flags = if (pixels > 0) attributes.flags or blurFlag else attributes.flags and blurFlag.inv()
+                if (attributes.flags != flags || attributes.blurBehindRadius != pixels) {
+                    attributes.flags = flags
+                    attributes.blurBehindRadius = pixels
+                    window.attributes = attributes
+                }
             }
         }
     }
