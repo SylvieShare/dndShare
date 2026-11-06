@@ -51,6 +51,7 @@ fun ShareWindow(
     dismissEnabled: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
     scrollContent: Boolean = true,
+    separateHeader: Boolean = false,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     RegisterWindowBackdrop(8.dp)
@@ -80,21 +81,29 @@ fun ShareWindow(
             shadowElevation = 20.dp,
             border = BorderStroke(DesignTokens.Layout.Border, WebPalette.BorderStrong),
         ) {
-            Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Box(Modifier.weight(1f)) {
-                        ProvideTextStyle(ShareTypography.header) { title?.invoke() }
+            val framePadding = if (separateHeader) PaddingValues(bottom = 18.dp) else PaddingValues(18.dp)
+            Column(Modifier.padding(framePadding), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                Column {
+                    val header = if (separateHeader)
+                        Modifier.heightIn(min = 58.dp).padding(start = 24.dp, end = 6.dp)
+                    else Modifier
+                    Row(Modifier.fillMaxWidth().then(header), verticalAlignment = Alignment.CenterVertically) {
+                        Box(Modifier.weight(1f)) {
+                            ProvideTextStyle(ShareTypography.header) { title?.invoke() }
+                        }
+                        if (separateHeader) VerticalDivider(Modifier.padding(start = 8.dp).height(20.dp), color = WebPalette.BorderStrong)
+                        IconButton(
+                            onClick = onDismissRequest,
+                            enabled = dismissEnabled,
+                            modifier = Modifier.semantics { contentDescription = "Закрыть окно" },
+                        ) {
+                            AppGlyph(Glyph.Close, Modifier.size(18.dp))
+                        }
                     }
-                    IconButton(
-                        onClick = onDismissRequest,
-                        enabled = dismissEnabled,
-                        modifier = Modifier.semantics { contentDescription = "Закрыть окно" },
-                    ) {
-                        AppGlyph(Glyph.Close, Modifier.size(18.dp))
-                    }
+                    if (separateHeader) HorizontalDivider(color = WebPalette.Border)
                 }
                 Column(
-                    Modifier.weight(1f, fill = false)
+                    Modifier.padding(horizontal = if (separateHeader) 18.dp else 0.dp).weight(1f, fill = false)
                         .then(
                             if (scrollContent) Modifier.verticalScroll(rememberScrollState())
                             else Modifier

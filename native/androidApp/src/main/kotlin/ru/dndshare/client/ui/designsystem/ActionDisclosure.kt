@@ -14,11 +14,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
+internal val LocalGroupedDisclosures = staticCompositionLocalOf { false }
 
 /** A quiet action surface. Only focus/selection adds an outline; collapsed inputs retain state. */
 @Composable
@@ -42,10 +46,11 @@ fun ShareActionDisclosure(
         )
     val saved = rememberSaveableStateHolder()
     val inSheet = LocalDisclosureSheets.current
+    val grouped = LocalGroupedDisclosures.current
     Surface(
         modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        color = color.copy(alpha = .075f),
+        shape = if (grouped) RectangleShape else RoundedCornerShape(12.dp),
+        color = if (grouped) color.copy(alpha = .08f).compositeOver(WebPalette.Raised) else color.copy(alpha = .075f),
         border = if (focus) BorderStroke(1.dp, WebPalette.AccentSoft) else null,
     ) {
         Column {
@@ -82,7 +87,7 @@ fun ShareActionDisclosure(
                                 lineHeight = 12.sp,
                                 fontWeight = FontWeight.Bold,
                             ),
-                        color = color,
+                        color = if (grouped) androidx.compose.ui.graphics.lerp(color, WebPalette.Text, .25f) else color,
                     )
                     Text(
                         title,

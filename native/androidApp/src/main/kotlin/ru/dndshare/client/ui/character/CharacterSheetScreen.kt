@@ -28,6 +28,39 @@ internal fun CharacterSheetScreen(
     close: () -> Unit,
     backTitle: String = "Персонажи",
 ) {
+    val editor = ui.editor?.takeIf { it.isDndStat() && ui.sheet?.userId == accountId && ui.mechanics != null }
+    // The modal renders the live document. Keep the covered sheet at its opening state
+    // so Room writes and acknowledgements don't recompose and blur every tab mid-animation.
+    val backdrop = if (editor == null) ui else {
+        val opening = remember(model, editor.fields.id) { ui }
+        // Session notifications and navigation still follow the latest state.
+        val background = ui.copy(snapshot = opening.snapshot, mechanics = opening.mechanics,
+            content = opening.content, editor = opening.editor)
+        remember(background) { background }
+    }
+    CharacterSheetBody(backdrop, model, accountId, cache, format, images, active, close, backTitle)
+    if (editor != null) {
+        SheetStatDialog(
+            editor, requireNotNull(ui.mechanics), model::dismissEditor, model::number,
+            model::input, model::formInput,
+            syncError = ui.snapshot?.draft?.blocked,
+            retry = model::retrySave,
+        )
+    }
+}
+
+@Composable
+private fun CharacterSheetBody(
+    ui: CharacterSheetUiState,
+    model: CharacterSheetViewModel,
+    accountId: Long,
+    cache: CacheDao,
+    format: LayoutFormat,
+    images: ImageLoader,
+    active: Boolean,
+    close: () -> Unit,
+    backTitle: String,
+) {
     val sheet = rememberPresentedSheet(ui.snapshot)
     val navigation = ui.navigation
     val sections = sheetSections(sheet?.templateName ?: "DND5", format)
@@ -234,16 +267,9 @@ internal fun CharacterSheetScreen(
                                     }
                             }
 
-                            ui.editor
+                            ui.editor?.takeUnless { it.isDndStat() }
                                 ?.let { editor ->
-                                    if (editor.isDndStat())
-                                        SheetStatDialog(
-                                            editor, model::dismissEditor, model::number,
-                                            model::input, model::formInput,
-                                            syncError = ui.snapshot?.draft?.blocked,
-                                            retry = model::retrySave,
-                                        )
-                                    else if (isFeatureForm(editor.fields.target))
+                                    if (isFeatureForm(editor.fields.target))
                                         FeatureEditor(
                                             editor,
                                             cache,

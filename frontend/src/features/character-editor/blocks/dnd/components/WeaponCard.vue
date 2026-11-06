@@ -1,5 +1,5 @@
 <template>
-  <MorphTile :outlined="false" embedded padding="0" class="w-card" :class="{ 'sortable-placeholder': ctx.sortable.isSource(entry) }" :data-sortable-key="entry._key">
+  <MorphTile :outlined="false" padding="0" class="w-card" :class="{ 'sortable-placeholder': ctx.sortable.isSource(entry) }" :data-sortable-key="entry._key">
     <RowActionMenu
       ref="actionMenu"
       :heading="ctx.itemTitle(entry)"
@@ -9,7 +9,9 @@
     >
       <template #trigger="{ open: menuOpen }">
         <WeaponCardView ref="cardEl" class="action-menu-source" :class="{ 'action-menu-source--open': menuOpen }"
-          :entry="entry" :interactive="!entry.params?.creation?.expired" @roll="openDirectRoll" @pointerdown="draggedThisGesture = false" @name-down="onNameDown" />
+          :entry="entry" :interactive="!entry.params?.creation?.expired" @roll="openDirectRoll" @pointerdown="draggedThisGesture = false" @name-down="onNameDown">
+          <WeaponItemMechanics v-if="!entry.params?.creation?.expired" :entry="entry" />
+        </WeaponCardView>
       </template>
 
       <template #default="{ close: closeMenu }">
@@ -48,7 +50,6 @@
 
     <RichContent v-if="entry.desc" class="w-desc-text" :html="entry.desc" />
     <CreatedItemStatus :entry="entry" />
-    <WeaponItemMechanics v-if="!entry.params?.creation?.expired" :entry="entry" />
 
     <MorphEditorShell
       v-if="editorOpen"
@@ -145,7 +146,6 @@ function deleteWeapon(closeMenu) {
 </script>
 
 <style scoped>
-/* The enclosing SectionList owns the surface and row separators. */
 .w-card {
   position: relative;
   overflow: clip;

@@ -24,9 +24,8 @@ internal fun SheetRollActions(
     dieColor: Color = WebPalette.TextMuted,
 ) {
     val context = LocalCharacterSheet.current
-    var mode by remember { mutableStateOf("normal") }
-    LaunchedEffect(open) {
-        if (open) mode = resolveSheetRollMode(context.mechanics, request).mode
+    var mode by remember(open) {
+        mutableStateOf(if (open) resolveSheetRollMode(context.mechanics, request).mode else "normal")
     }
     ShareDropdownMenu(open, close, Modifier.width(DesignTokens.Layout.RollModeMenuWidth)) {
         RollBonusSummary(request, dieColor)
@@ -46,7 +45,8 @@ internal fun SheetRollActions(
                 context.roll(request.copy(manualMode = mode))
             },
         )
-        if (context.canEdit && editTarget != null)
+        if (context.canEdit && editTarget != null) {
+            HorizontalDivider(Modifier.padding(horizontal = 7.dp, vertical = 4.dp), color = WebPalette.Border)
             ShareDropdownMenuItem(
                 text = { Text("Изменить") },
                 leadingIcon = { AppGlyph(Glyph.Edit, Modifier.size(18.dp)) },
@@ -55,6 +55,7 @@ internal fun SheetRollActions(
                     context.edit(editTarget)
                 },
             )
+        }
     }
 }
 

@@ -7,8 +7,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.*
@@ -28,6 +30,7 @@ internal fun WeaponMetricsTable(
     openItem: (Long) -> Unit = {},
     attack: (() -> Unit)? = null,
     damage: (() -> Unit)? = null,
+    mechanics: @Composable ColumnScope.() -> Unit = {},
 ) {
     val scale = LocalDensity.current.fontScale.coerceAtLeast(1f)
     val properties = weapon.properties.filter(String::isNotBlank)
@@ -68,18 +71,21 @@ internal fun WeaponMetricsTable(
                     Text("Одной рукой / двумя руками", style = ShareTypography.context, color = WebPalette.TextMuted)
             }
         }
-        if (properties.isNotEmpty())
-            MetricCell("Свойства", Modifier.fillMaxWidth()) {
+        Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(DesignTokens.Radius.Row)),
+            verticalArrangement = Arrangement.spacedBy(1.dp)) {
+            if (properties.isNotEmpty()) MetricCell("Свойства", Modifier.fillMaxWidth(), RectangleShape) {
                 PropertyText(properties, propertyDescriptions, openItem)
             }
+            mechanics()
+        }
     }
 }
 
 @Composable
-private fun MetricCell(label: String, modifier: Modifier, content: @Composable () -> Unit) {
+private fun MetricCell(label: String, modifier: Modifier, shape: Shape = RoundedCornerShape(DesignTokens.Radius.Row), content: @Composable () -> Unit) {
     Column(
         modifier
-            .background(WebPalette.Raised, RoundedCornerShape(DesignTokens.Radius.Row))
+            .background(WebPalette.Raised, shape)
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {

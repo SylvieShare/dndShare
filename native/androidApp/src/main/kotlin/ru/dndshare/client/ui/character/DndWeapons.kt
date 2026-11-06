@@ -17,7 +17,7 @@ internal fun DndWeapons(format: LayoutFormat) {
     val context = LocalCharacterSheet.current
     val direct = context.sheet.values["weapon"].arrayValue().map { it.objectValue() }
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        ShareTile(Modifier.fillMaxWidth(), framed = false, contentPadding = PaddingValues(18.dp)) {
+        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             SheetSummaryHeading(
                 "Оружие",
                 if (context.canEdit && direct.size > 1)

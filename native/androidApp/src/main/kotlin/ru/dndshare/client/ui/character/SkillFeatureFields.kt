@@ -7,43 +7,41 @@ import kotlinx.serialization.json.JsonPrimitive
 import ru.dndshare.client.character.*
 import ru.dndshare.client.ui.designsystem.*
 
+private val proficiencyOptions = listOf(
+    IconSegment("0", "Без владения", Glyph.Minus),
+    IconSegment("1", "Владение", Glyph.CircleCheck),
+    IconSegment("2", "Компетентность", Glyph.Gem),
+)
+
 @Composable
-internal fun SkillFeatureFields(form: FeatureFormScope, removeSkill: () -> Unit) {
-    val context = LocalCharacterSheet.current
+internal fun SkillFeatureFields(form: FeatureFormScope, mechanics: DndDerivedValues, removeSkill: () -> Unit) {
     val (_, stat, id) = form.editor.fields.target.split(':')
     val ability = dndAbilities.first { it.id == stat }
     val save = id == "save"
     val rule = if (save) "save_proficiency" else "skill_proficiency"
     val scope = RuleContext(kind = if (save) "saving_throw" else "skill_check",
         ability = ability.suggestId, skill = id.toLongOrNull())
-    val granted = context.mechanics.rank(rule, scope)
+    val granted = mechanics.rank(rule, scope)
     if (save) {
         ShareToggle("Владение спасброском", granted > 0 || form.data["up"] == JsonPrimitive(true),
             form.enabled && granted == 0) { form.input("up", JsonPrimitive(it)) }
     } else {
         form.TextField("override_title", "Своё название")
         Text("Владение", style = ShareTypography.group)
-        val options = listOf(
-            ShareNavigationItem("0", "Без владения"),
-            ShareNavigationItem("1", "Владение"),
-            ShareNavigationItem("2", "Компетентность"),
-        )
-        ShareIconNavigation(options, form.text("up").ifBlank { "0" },
-            { if (form.enabled) form.set("up", it) }, itemSize = 94.dp, itemHeight = 54.dp) {
-            AppGlyph(when (it) { "2" -> Glyph.Gem; "1" -> Glyph.CircleCheck; else -> Glyph.Minus })
-        }
+        ShareIconSegmentedInput(proficiencyOptions, form.text("up").ifBlank { "0" },
+            form.enabled, itemWidth = 94.dp, itemHeight = 54.dp) { form.set("up", it) }
     }
-    val sources = context.mechanics.rules(rule, scope).map { it.sourceLabel }.distinct()
+    val sources = mechanics.rules(rule, scope).map { it.sourceLabel }.distinct()
     if (sources.isNotEmpty()) Text("Источник: ${sources.joinToString()}", style = ShareTypography.context, color = WebPalette.TextMuted)
     BonusFields(form)
     if (id != "save" && id.toLongOrNull() == null)
         ShareTextButton(onClick = removeSkill, enabled = form.enabled) { Text("Удалить навык", color = WebPalette.Danger) }
 }
 
-internal fun SheetContext.skillEditorTotal(ability: DndAbility, id: String, data: kotlinx.serialization.json.JsonObject): Int {
+internal fun DndDerivedValues.skillEditorTotal(ability: DndAbility, id: String, data: kotlinx.serialization.json.JsonObject): Int {
     val save = id == "save"
     val scope = RuleContext(kind = if (save) "saving_throw" else "skill_check", ability = ability.suggestId, skill = id.toLongOrNull())
-    val granted = mechanics.rank(if (save) "save_proficiency" else "skill_proficiency", scope)
+    val granted = rank(if (save) "save_proficiency" else "skill_proficiency", scope)
     val rank = if (save) {
         if (granted > 0 || data["up"] == JsonPrimitive(true)) 1 else 0
     } else maxOf(data["up"].number(), granted)

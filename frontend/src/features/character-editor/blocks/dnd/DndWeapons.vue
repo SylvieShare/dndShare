@@ -7,44 +7,47 @@
     <div v-if="armorAttackWarning" class="w-armor-warning">
       Атаки Силой и Ловкостью совершаются с помехой: нет владения {{ armorState.nonproficient.map(row => `«${row.name}»`).join(', ') }}.
     </div>
-    <SectionList :outlined="false" title="Оружие">
+    <SectionList embedded title="Оружие">
       <template #body>
-        <table v-if="variant !== 'list' && entries.length" class="w-table" :class="{ 'w-edit': charCtx.ownerMode }">
-          <colgroup v-if="charCtx.ownerMode">
-            <col class="w-order-col" />
-            <col class="w-name-col" />
-            <col class="w-stat-col" />
-            <col class="w-magic-col" />
-            <col class="w-damage-col" />
-            <col class="w-delete-col" />
-          </colgroup>
-          <colgroup v-else>
-            <col class="w-name-col" />
-            <col class="w-attack-col" />
-            <col class="w-damage-col" />
-            <col class="w-props-col" />
-          </colgroup>
-          <thead>
-            <tr>
-              <th v-if="charCtx.ownerMode"></th>
-              <th>Название</th>
-              <th v-if="charCtx.ownerMode">Стата / владение</th>
-              <th v-if="charCtx.ownerMode">Магия</th>
-              <th v-if="!charCtx.ownerMode">Атака</th>
-              <th>{{ charCtx.ownerMode ? 'Доп урон' : 'Урон' }}</th>
-              <th v-if="!charCtx.ownerMode">Свойства</th>
-              <th v-if="charCtx.ownerMode"></th>
-            </tr>
-          </thead>
-          <tbody data-sortable-container="weapons">
-            <WeaponTableRow
-              v-for="(entry, index) in displayEntries"
-              :key="entry._key"
-              :entry="entry"
-              :index="index"
-            />
-          </tbody>
-        </table>
+        <div v-if="variant !== 'list' && entries.length" class="weapon-table-tiles" data-sortable-container="weapons">
+          <BaseTile v-for="(entry, index) in displayEntries" :key="entry._key" :outlined="false"
+            class="weapon-table-tile" :data-sortable-key="entry._key">
+            <table class="w-table" :class="{ 'w-edit': charCtx.ownerMode }">
+              <colgroup v-if="charCtx.ownerMode">
+                <col class="w-order-col" />
+                <col class="w-name-col" />
+                <col class="w-stat-col" />
+                <col class="w-magic-col" />
+                <col class="w-damage-col" />
+                <col class="w-delete-col" />
+              </colgroup>
+              <colgroup v-else>
+                <col class="w-name-col" />
+                <col class="w-attack-col" />
+                <col class="w-damage-col" />
+                <col class="w-props-col" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th v-if="charCtx.ownerMode"></th>
+                  <th>Название</th>
+                  <th v-if="charCtx.ownerMode">Стата / владение</th>
+                  <th v-if="charCtx.ownerMode">Магия</th>
+                  <th v-if="!charCtx.ownerMode">Атака</th>
+                  <th>{{ charCtx.ownerMode ? 'Доп урон' : 'Урон' }}</th>
+                  <th v-if="!charCtx.ownerMode">Свойства</th>
+                  <th v-if="charCtx.ownerMode"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <WeaponTableRow
+                  :entry="entry"
+                  :index="index"
+                />
+              </tbody>
+            </table>
+          </BaseTile>
+        </div>
         <div v-else class="weapon-card-grid" data-sortable-container="weapons">
           <div v-if="!entries.length" class="w-empty">Нет оружия</div>
           <WeaponCard v-for="(entry, index) in displayEntries" :key="entry._key" :entry="entry" :index="index" />
@@ -120,7 +123,7 @@
 import { itemEventData } from '@/features/character-editor/lib/sessionEventData'
 
 import { computed, inject, onMounted, provide, reactive, ref } from 'vue'
-import { AddButton, ActionButton, ConfirmDialog, SectionList } from '@sylvieshare/share-ui'
+import { AddButton, ActionButton, BaseTile, ConfirmDialog, SectionList } from '@sylvieshare/share-ui'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import WeaponCard from '@/features/character-editor/blocks/dnd/components/WeaponCard.vue'
 import WeaponTableRow from '@/features/character-editor/blocks/dnd/components/WeaponTableRow.vue'

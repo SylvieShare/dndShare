@@ -6,7 +6,6 @@
       'w-row-hovered': hovered,
       'sortable-placeholder': ctx.sortable.isSource(entry),
     }"
-    :data-sortable-key="entry._key"
     @mouseenter="hovered = true"
     @mouseleave="hovered = false"
   >
@@ -167,10 +166,19 @@
         </template>
       </template>
       <span v-else>—</span>
+      <WeaponItemMechanics v-if="!entry.params?.creation?.expired" :entry="entry" />
     </td>
   </tr>
-  <tr v-if="!entry.params?.creation?.expired && (ctx.item(entry) || entry.params?.magic?.weapon_use?.status === 'active' || entry.params?.magic?.last_charge_check)" class="w-desc-row">
-    <td :colspan="colspan"><WeaponItemMechanics :entry="entry" /></td>
+  <tr v-if="ctx.charCtx.ownerMode && !entry.params?.creation?.expired && (ctx.item(entry) || entry.params?.magic?.weapon_use?.status === 'active' || entry.params?.magic?.last_charge_check)" class="w-desc-row">
+    <td :colspan="colspan">
+      <div class="w-table-properties">
+        <div v-if="ctx.propertyItems(entry).length" class="w-properties-label">
+          <small>Свойства</small>
+          <span>{{ ctx.propertyItems(entry).map(property => property.label).join(', ') }}</span>
+        </div>
+        <WeaponItemMechanics :entry="entry" />
+      </div>
+    </td>
   </tr>
   <tr
     v-if="ctx.charCtx.ownerMode && (entry.desc || ctx.activeNoteKey === entry._key)"
@@ -229,6 +237,9 @@ const colspan = computed(() => ctx.charCtx.ownerMode ? 6 : 4)
 </script>
 
 <style scoped>
+.w-table-properties { display: grid; gap: 1px; overflow: clip; border-radius: var(--radius-row); }
+.w-properties-label { display: grid; gap: 4px; padding: 8px; background: var(--surface-raised); }
+.w-properties-label small { color: var(--text-muted); }
 .w-row {
   transition: background 0.12s;
 }

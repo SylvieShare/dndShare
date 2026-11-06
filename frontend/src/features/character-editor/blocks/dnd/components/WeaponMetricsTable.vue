@@ -10,19 +10,22 @@
       <span v-else>—</span>
       <small v-if="twoHandedParts.length" class="weapon-metrics__grip">Одной рукой / двумя руками</small>
     </component>
-    <div v-if="visibleProperties.length" class="weapon-metrics__cell weapon-metrics__properties">
-      <span class="weapon-metrics__label">Свойства</span>
-      <div class="weapon-metrics__property-list">
-        <component :is="interactive ? 'button' : 'span'" v-for="(property, index) in visibleProperties" :key="property.id ?? index"
-          :type="interactive ? 'button' : undefined" class="weapon-metrics__property"
-          :class="{ 'weapon-metrics__property--described': interactive }"
-          :aria-expanded="interactive ? openedKey === keyOf(property) : undefined"
-          @click.stop="interactive && showDescription($event, property)" @pointerdown.stop
-          @mouseenter="interactive && property.desc && !opened && $emit('property-enter', $event, property)"
-          @focus="interactive && property.desc && !opened && $emit('property-enter', $event, property)"
-          @mouseleave="$emit('property-leave')" @blur="$emit('property-leave')"
-        >{{ property.label }}</component>
+    <div class="weapon-properties-stack">
+      <div v-if="visibleProperties.length" class="weapon-metrics__cell weapon-metrics__properties">
+        <span class="weapon-metrics__label">Свойства</span>
+        <div class="weapon-metrics__property-list">
+          <component :is="interactive ? 'button' : 'span'" v-for="(property, index) in visibleProperties" :key="property.id ?? index"
+            :type="interactive ? 'button' : undefined" class="weapon-metrics__property"
+            :class="{ 'weapon-metrics__property--described': interactive }"
+            :aria-expanded="interactive ? openedKey === keyOf(property) : undefined"
+            @click.stop="interactive && showDescription($event, property)" @pointerdown.stop
+            @mouseenter="interactive && property.desc && !opened && $emit('property-enter', $event, property)"
+            @focus="interactive && property.desc && !opened && $emit('property-enter', $event, property)"
+            @mouseleave="$emit('property-leave')" @blur="$emit('property-leave')"
+          >{{ property.label }}</component>
+        </div>
       </div>
+      <slot />
     </div>
     <BasePopover :open="!!opened" :anchor="anchor" :z-index="4100" transition-preset="action-menu"
       role="dialog" :aria-label="opened?.label" @update:open="!$event && (openedKey = null)">
@@ -97,7 +100,9 @@ button.weapon-metrics__cell:focus-visible { outline: 2px solid var(--accent-soft
 .weapon-metrics__attack .weapon-metrics__label { position: absolute; top: 8px; left: 8px; }
 .weapon-metrics__bonus { color: var(--accent-soft); font-size: var(--type-weapon-attack-size); line-height: var(--type-weapon-attack-line-height); margin-block: 0; }
 .weapon-metrics__damage { min-height: var(--layout-weapon-metrics-attack-width); gap: 4px; flex: 1.25 1 max-content; max-width: calc(100% - var(--layout-weapon-metrics-attack-width) - var(--layout-weapon-metrics-gap)); }
-.weapon-metrics__properties { flex: 0 0 100%; max-width: 100%; }
+.weapon-properties-stack { flex: 0 0 100%; display: grid; gap: 1px; overflow: clip; border-radius: var(--radius-row); min-width: 0; }
+.weapon-properties-stack:empty { display: none; }
+.weapon-metrics__properties { border-radius: 0; }
 .weapon-metrics__property-list { display: flex; flex-wrap: wrap; gap: 2px 8px; font-size: var(--type-weapon-property-size); line-height: var(--type-weapon-property-line-height); overflow-wrap: break-word; }
 .weapon-metrics__property { appearance: none; font: inherit; color: inherit; text-align: left; min-width: 0; max-width: 100%; background: none; border: 0; padding: 3px 0; }
 .weapon-metrics__property--described { cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; }

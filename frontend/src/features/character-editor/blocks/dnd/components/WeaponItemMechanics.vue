@@ -48,5 +48,12 @@ const visible = computed(() => notes.value.length || confirmed.value.length || a
 function toggle(resource, pip) { if (canManage.value) ctx.toggleWeaponResource?.(resource, pip) }
 </script>
 <style scoped>
-.weapon-item-mechanics { display: grid; gap: 10px; padding: 0 20px 14px 16px; cursor: default; }
+.weapon-item-mechanics { display: grid; gap: 1px; min-width: 0; border-radius: inherit; cursor: default; }
+.weapon-item-mechanics :deep(.item-mechanic-panel) {
+  background: color-mix(in srgb, var(--mechanic-tone, var(--accent)) 8%, var(--surface-raised));
+  border-radius: 0;
+}
+.weapon-item-mechanics :deep(.item-mechanic-title > span) {
+  color: color-mix(in srgb, var(--mechanic-tone, var(--accent)) 75%, var(--text-1));
+}
 </style>

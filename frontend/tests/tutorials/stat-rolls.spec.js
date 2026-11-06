@@ -18,6 +18,8 @@ for (const width of [390, 834, 1920]) {
         await page.getByRole('button', { name: entry.label, exact: true }).click()
         const menu = page.getByRole('menu')
         await expect(menu).toBeVisible()
+        const edit = menu.getByRole('menuitem', { name: 'Изменить' })
+        expect(await edit.evaluate(el => el.previousElementSibling?.getAttribute('role'))).toBe('separator')
         expect(await page.evaluate(() => window.rolls.length)).toBe(index)
         const advantage = menu.getByRole('button', { name: 'Преимущество', exact: true })
         const disadvantage = menu.getByRole('button', { name: 'Помеха', exact: true })

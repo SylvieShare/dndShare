@@ -48,7 +48,7 @@ private fun DndAbilityFace(ability: DndAbility, compact: Boolean) {
     val proficient =
         data["save_up"]?.jsonPrimitive?.booleanOrNull == true ||
             context.mechanics.rank("save_proficiency", saveContext) > 0
-    val save = context.proficientRollTotal(ability, saveContext, if (proficient) 1 else 0, data["save_bonuses"])
+    val save = context.mechanics.proficientRollTotal(ability, saveContext, if (proficient) 1 else 0, data["save_bonuses"])
     val saveRequest = SheetRollRequest(
         "${ability.title} — спасбросок",
         "saving_throw",
@@ -244,7 +244,7 @@ private fun DndAbilityFace(ability: DndAbility, compact: Boolean) {
                 kind = "skill_check",
                 ability = ability.suggestId,
                 skill = skillContext.skill,
-                bonus = context.proficientRollTotal(ability, skillContext, rank, skill["bonuses"]),
+                bonus = context.mechanics.proficientRollTotal(ability, skillContext, rank, skill["bonuses"]),
                 proficiencyRank = rank,
             )
             Row(

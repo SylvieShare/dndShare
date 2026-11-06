@@ -60,9 +60,6 @@
 @media (max-width: 760px) {
   .weapons-block { gap: 12px; }
 
-  .w-card {
-    padding: 0 0 0 16px;
-  }
 
   .w-card-view {
     grid-template-columns: max-content minmax(0, 1fr);
@@ -116,10 +113,10 @@
   .w-empty { padding: 16px; }
 }
 
-.weapon-card-grid { display: flex; flex-direction: column; min-width: 0; }
-.weapon-card-grid > :deep(.w-card) { border-bottom: 1px solid var(--border); }
+.weapon-table-tiles, .weapon-card-grid { display: flex; flex-direction: column; gap: var(--spacing-label); min-width: 0; }
+.weapon-table-tile { padding: var(--spacing-medium); }
 
 @media (--ui-tablet) {
-  .weapons-block :deep(.weapon-card-grid) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
+  .weapons-block :deep(.weapon-card-grid) { display: grid; align-items: start; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
   .weapons-block :deep(.weapon-card-grid > .w-empty) { grid-column: 1 / -1; }
 }

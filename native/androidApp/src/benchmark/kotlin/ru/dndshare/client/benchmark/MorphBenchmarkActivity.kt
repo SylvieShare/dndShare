@@ -24,6 +24,10 @@ class MorphBenchmarkActivity : ComponentActivity() {
         enableEdgeToEdge()
         window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         val extraSkills = intent.getIntExtra("skills", 0).coerceIn(0, 100)
+        if (intent.getBooleanExtra("liveSkill", false)) {
+            showLiveSkillBenchmark(benchmarkSheet(extraSkills))
+            return
+        }
         setContent {
             DndTheme {
                 val sheet = remember { benchmarkSheet(extraSkills) }
@@ -54,7 +58,7 @@ class MorphBenchmarkActivity : ComponentActivity() {
                         }
                         editor?.takeIf { it.isDndStat() }?.let { current ->
                             SheetStatDialog(
-                                current,
+                                current, context.mechanics,
                                 close = { editor = null },
                                 number = { _, value ->
                                     editor = editor?.let {

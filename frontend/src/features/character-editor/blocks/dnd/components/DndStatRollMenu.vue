@@ -21,11 +21,15 @@
     </div>
     <div class="stat-roll-mode-label">Режим броска</div>
     <D20RollControls :scope="scope" :mode="mode" :cancelled="cancelled" @roll="(mode, excluded) => emit('roll', mode, excluded)" />
-    <RowActionItem v-if="editable" action="edit" @click="emit('edit')">Изменить</RowActionItem>
+    <template v-if="editable">
+      <RowActionSeparator />
+      <RowActionItem action="edit" @click="emit('edit')">Изменить</RowActionItem>
+    </template>
   </BasePopover>
 </template>
 <script setup>
 import { BasePopover } from '@sylvieshare/share-ui'
+import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import { signedOrZero as signed } from '@/shared/lib/dnd'

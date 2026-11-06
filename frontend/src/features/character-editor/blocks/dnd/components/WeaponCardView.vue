@@ -31,7 +31,9 @@
         @roll="(scope, event) => emit('roll', scope, event)"
         @property-enter="(event, property) => ctx.showPropertyTooltip(event, property)"
         @property-leave="ctx.hidePropertyTooltip()"
-      />
+      >
+        <slot />
+      </WeaponMetricsTable>
     </div>
   </div>
 </template>
@@ -126,11 +128,17 @@ const weaponItem = computed(() => ctx.item(props.entry))
   font-weight: 700;
 }
 
+@media (--ui-desktop) {
+  .w-card-main:has(.weapon-item-mechanics) .w-icon { align-self: flex-start; margin-block-start: 14px; }
+  .w-card-view:has(.weapon-item-mechanics) { align-items: start; }
+}
+
 @media (--ui-compact) {
   .w-card-main { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 10px 12px; padding: 14px 16px; }
   .w-icon { grid-column: 1; grid-row: 1; }
   .w-card-view { display: contents; }
   .w-card-title { grid-column: 2; grid-row: 1; }
+  .w-card-main:not(:has(.w-icon)) .w-card-title { grid-column: 1 / -1; }
   .w-card-controls { grid-column: 1 / -1; grid-row: 2; }
   .w-name { font-size: 15px; white-space: normal; }
   .w-range { white-space: normal; }

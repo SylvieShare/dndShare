@@ -58,7 +58,7 @@ class SkillEditorSyncTest {
                             CompositionLocalProvider(LocalCharacterSheet provides sheetContext) {
                                 if (!restoring && editor == null) ShareAction("Скрытность", { controller.open("skill:DEX:4", sheet) })
                                 editor?.let { current ->
-                                    SheetStatDialog(current, controller::dismiss, controller::number, controller::input,
+                                    SheetStatDialog(current, sheetContext.mechanics, controller::dismiss, controller::number, controller::input,
                                         { controller.state.value!!.fields.input }, syncError = null, retry = {})
                                 }
                             }
@@ -69,7 +69,9 @@ class SkillEditorSyncTest {
                 TouchRobot.click("Компетентность")
                 withTimeout(10_000) { started.await() }
                 TouchRobot.await("Expertise total while sending") { TouchRobot.find("+4") != null }
-                TouchRobot.click("Без владения")
+                val neutral = TouchRobot.bounds("Без владения")
+                TouchRobot.drag(neutral.exactCenterX(), neutral.exactCenterY(),
+                    neutral.exactCenterX(), neutral.exactCenterY(), duration = 32)
                 TouchRobot.await("New total before acknowledgement") { TouchRobot.find("+0") != null }
                 TouchRobot.click("Закрыть окно")
                 TouchRobot.await("Can dismiss offline") { TouchRobot.find("Закрыть окно") == null }

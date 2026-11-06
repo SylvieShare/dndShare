@@ -352,6 +352,7 @@ onMounted(() => {
 <style scoped>
 .stat-editor-heading { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-medium); width: var(--layout-stat-editor-width); min-width: 0; }
 .stat-editor-total { display: inline-flex; gap: var(--spacing-xs); align-items: baseline; white-space: nowrap; color: var(--text-1); font-variant-numeric: tabular-nums; }
+.stat-editor-total::after { content: ""; height: 20px; align-self: center; margin-inline-start: 8px; border-inline-end: 1px solid var(--border-strong); }
 .stat-editor-total small { color: var(--text-muted); }
 .stat-editor-title { min-width: 0; margin: 0; color: var(--text-1); font-family: var(--font-display); font-size: 20px; overflow-wrap: anywhere; }
 .stat-editor-title small { color: var(--text-muted); font-size: .85em; font-weight: 400; }

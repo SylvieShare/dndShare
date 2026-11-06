@@ -3,7 +3,6 @@ import '@sylvieshare/share-ui/styles.css'
 import '../../src/app/theme.css'
 import { createApp, h, reactive } from 'vue'
 import { createPinia } from 'pinia'
-import { SectionList } from '@sylvieshare/share-ui'
 import WeaponCard from '../../src/features/character-editor/blocks/dnd/components/WeaponCard.vue'
 import { collectCharacterResources, setCharacterResourceAvailable } from '../../src/features/character-editor/lib/characterResources'
 import { availableWeaponUses, startWeaponUse } from '../../src/features/character-editor/lib/weaponUses'
@@ -28,7 +27,7 @@ const ctx = reactive({ ownerMode: true, values: { lvl: { level: 5 }, weapon: [
 window.ctx = ctx
 const weapons = reactive({ charCtx: ctx, itemMap: Object.fromEntries(items), sortable: { dragging: false, isSource: () => false },
  item: entry => items.get(String(entry.magic_item_id ?? entry.item_id)), itemTitle: entry => weapons.item(entry).name,
- itemSubtitle: () => '', magicBonus: () => 0, rangeLabel: () => '30/120 футов', propertyItems: () => [], isWeaponProficient: () => false,
+ itemSubtitle: () => '', magicBonus: () => 0, rangeLabel: () => '30/120 футов', propertyItems: entry => entry.uid === 'javelin' ? [{ id: 1, label: 'Метательное' }] : [], isWeaponProficient: () => false,
  formatBonus: value => '+' + value, attackBonus: () => 5, damageBonus: () => 3, damagePartsRaw: () => [], twoHandedParts: () => [],
  hasWeaponDamage: () => true, weaponDamageActions: () => [], damagePreview: () => '', bonusActionDamageOption: () => null, canMoveWeaponToItems: () => false,
  weaponUses: entry => availableWeaponUses(ctx.values, items, entry.uid, ctx.ownerMode),
@@ -37,5 +36,5 @@ const weapons = reactive({ charCtx: ctx, itemMap: Object.fromEntries(items), sor
  rollAttack(entry, options) { const result = startWeaponUse(ctx.values, items, entry.uid, options.weaponUseKey, { expression: '1d6+3', critical_expression: '2d6+3' }); if (result.error) throw Error(result.error); ctx.updateValues(result.patch) },
  onDragStart() {}, showPropertyTooltip() {}, hidePropertyTooltip() {}, openItemModal() {}, openMagicInstance() {},
 })
-const app = createApp({ render: () => h('main', { style: 'max-width:900px;margin:16px' }, [h(SectionList, { title: 'Оружие' }, () => ctx.values.weapon.map((entry,index) => h(WeaponCard, { entry, index, 'data-testid': entry.uid })))]) })
+const app = createApp({ render: () => h('main', { style: 'max-width:900px;margin:16px' }, [h('section', { style: 'display:grid;gap:10px' }, ctx.values.weapon.map((entry,index) => h(WeaponCard, { entry, index, 'data-testid': entry.uid })))]) })
 app.use(pinia); app.provide('charCtx', ctx); app.provide('weaponsBlockCtx', weapons); app.mount('#app')

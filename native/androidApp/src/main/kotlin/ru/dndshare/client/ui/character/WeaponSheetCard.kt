@@ -8,7 +8,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.font.FontWeight
@@ -101,7 +100,7 @@ internal fun WeaponSheetCard(
                     .background(
                         if (expanded)
                             WebPalette.Accent.copy(alpha = .08f).compositeOver(WebPalette.Surface)
-                        else if (dragging) WebPalette.Raised else Color.Transparent
+                        else if (dragging) WebPalette.Raised else WebPalette.Surface
                     )
                     .clickable(enabled = !dragging, role = Role.Button, onClick = open)
             ) {
@@ -182,6 +181,19 @@ internal fun WeaponSheetCard(
                                 )
                         }
                     }
+                    val metrics: @Composable (Modifier) -> Unit = { cellModifier ->
+                        CompositionLocalProvider(
+                            LocalDisclosureSheets provides (format != LayoutFormat.Wide),
+                            LocalGroupedDisclosures provides true,
+                        ) {
+                            if (weapon != null) WeaponMetricsTable(
+                                title, weapon, cellModifier, descriptions, context.openItem,
+                                attack = if (context.canEdit && !expired) ({ context.edit("weapon-roll:$uid|attack") }) else null,
+                                damage = if (context.canEdit && !expired) ({ context.edit("weapon-roll:$uid|damage") }) else null,
+                            ) { ItemMechanicsPanels(entry, compact = true) }
+                            else Column(cellModifier) { ItemMechanicsPanels(entry, compact = true) }
+                        }
+                    }
                     if (compact)
                         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                             Row(
@@ -191,46 +203,18 @@ internal fun WeaponSheetCard(
                                 icon()
                                 Box(Modifier.weight(1f)) { heading() }
                             }
-                            if (weapon != null)
-                                WeaponMetricsTable(
-                                    title,
-                                    weapon,
-                                    propertyDescriptions = descriptions,
-                                    openItem = context.openItem,
-                                    attack = if (context.canEdit && !expired) ({ context.edit("weapon-roll:$uid|attack") }) else null,
-                                    damage = if (context.canEdit && !expired) ({ context.edit("weapon-roll:$uid|damage") }) else null,
-                                )
+                            metrics(Modifier.fillMaxWidth())
                         }
                     else
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(14.dp),
-                            verticalAlignment = Alignment.CenterVertically,
+                            verticalAlignment = Alignment.Top,
                         ) {
                             icon()
                             Box(Modifier.weight(.9f)) { heading() }
-                            if (weapon != null)
-                                WeaponMetricsTable(
-                                    title,
-                                    weapon,
-                                    Modifier.weight(2.5f),
-                                    descriptions,
-                                    context.openItem,
-                                    attack = if (context.canEdit && !expired) ({ context.edit("weapon-roll:$uid|attack") }) else null,
-                                    damage = if (context.canEdit && !expired) ({ context.edit("weapon-roll:$uid|damage") }) else null,
-                                )
+                            metrics(Modifier.weight(2.5f))
                         }
                 }
-                CompositionLocalProvider(
-                    LocalDisclosureSheets provides (format != LayoutFormat.Wide)
-                ) {
-                    Column(
-                        Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
-                    ) {
-                        ItemMechanicsPanels(entry, compact = true)
-                    }
-                }
-                HorizontalDivider(color = WebPalette.Border)
             }
         },
     )

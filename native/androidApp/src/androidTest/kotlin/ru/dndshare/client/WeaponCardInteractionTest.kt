@@ -138,12 +138,12 @@ class WeaponCardInteractionTest {
                 "Returning to the start must not enqueue an unchanged order",
             )
             assertNull(
-                TouchRobot.find("Свойства"),
+                TouchRobot.find("Изменить"),
                 "A drag must not open an action menu on release",
             )
             assertEquals(setOf("a", "b", "c", "d"), latest.get().toSet())
             TouchRobot.click("Действия с записью: Клинок a")
-            TouchRobot.await { TouchRobot.find("Свойства") != null }
+            TouchRobot.await { TouchRobot.find("Изменить") != null }
         }
     }
 }
