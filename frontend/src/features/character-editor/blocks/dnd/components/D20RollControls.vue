@@ -1,9 +1,11 @@
 <template>
-    <div class="d20-roll-controls">
+  <div class="d20-roll-controls">
+    <div class="d20-roll-options">
       <RollModePicker v-model="rollMode" :disabled="disabled" />
       <RollBonusOptions v-if="scope" :scope="scope" :character-context="characterContext" :roll-context="rollContext" v-model="excludedBonuses" />
-      <RowActionItem :action="action" :disabled="disabled" @click="!disabled && emit('roll', rollMode, excludedBonuses)">{{ rollLabel }}</RowActionItem>
     </div>
+    <RowActionItem :action="action" :disabled="disabled" @click="!disabled && emit('roll', rollMode, excludedBonuses)">{{ rollLabel }}</RowActionItem>
+  </div>
 </template>
 <script setup>
 import RollBonusOptions from './RollBonusOptions.vue'
@@ -26,5 +28,5 @@ const excludedBonuses = ref([])
 const rollMode = ref(props.cancelled ? 'normal' : props.mode)
 </script>
 <style scoped>
-.d20-roll-controls { display: flex; flex-direction: column; gap: 10px; padding: 8px; width: var(--layout-roll-mode-menu-width); max-width: min(100%, calc(100vw - 32px)); box-sizing: border-box; }
+.d20-roll-options { display: flex; flex-direction: column; gap: 10px; padding: 8px; width: var(--layout-roll-mode-menu-width); max-width: min(100%, calc(100vw - 32px)); box-sizing: border-box; }
 </style>
