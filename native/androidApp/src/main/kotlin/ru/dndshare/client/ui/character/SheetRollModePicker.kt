@@ -32,7 +32,7 @@ internal fun SheetRollModePicker(
             color = WebPalette.Danger,
             minHeight = DesignTokens.Layout.RollModeCardMinHeight,
             enabled = enabled,
-        ) { tint -> AppGlyph(Glyph.Down, Modifier.size(20.dp), tint) }
+        ) { tint -> AppGlyph(Glyph.Down, Modifier.size(16.dp), tint) }
         ShareChoiceCard(
             label = "Преимущество",
             description = "Больший из 2к20",
@@ -42,6 +42,6 @@ internal fun SheetRollModePicker(
             color = WebPalette.Success,
             minHeight = DesignTokens.Layout.RollModeCardMinHeight,
             enabled = enabled,
-        ) { tint -> AppGlyph(Glyph.Up, Modifier.size(20.dp), tint) }
+        ) { tint -> AppGlyph(Glyph.Up, Modifier.size(16.dp), tint) }
     }
 }

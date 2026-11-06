@@ -19,6 +19,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun ShareChoiceCard(
@@ -28,7 +29,7 @@ fun ShareChoiceCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     color: Color = WebPalette.Accent,
-    minHeight: Dp = 88.dp,
+    minHeight: Dp = 52.dp,
     enabled: Boolean = true,
     icon: @Composable (Color) -> Unit,
 ) {
@@ -42,32 +43,40 @@ fun ShareChoiceCard(
     )
     val checkOpacity by animateFloatAsState(if (selected) 1f else 0f, label = "Choice card check")
 
-    Column(
+    val titleStyle = ShareTypography.group.copy(
+        fontSize = 13.sp, lineHeight = 18.sp, fontWeight = FontWeight.SemiBold,
+    )
+    val detailColor = if (selected) WebPalette.TextSecondary else WebPalette.TextMuted
+    Row(
         modifier
             .heightIn(min = minHeight)
             .alpha(if (enabled) 1f else .45f)
             .clip(RoundedCornerShape(DesignTokens.Radius.Medium))
             .background(background)
             .selectable(selected, enabled = enabled, role = Role.Button, onClick = onClick)
-            .padding(DesignTokens.Spacing.Medium),
-        verticalArrangement = Arrangement.spacedBy(DesignTokens.Spacing.Small),
+            .padding(DesignTokens.Spacing.Small),
+        horizontalArrangement = Arrangement.spacedBy(DesignTokens.Spacing.Compact),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(
-            Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            icon(foreground)
-            AppGlyph(Glyph.CircleCheck, Modifier.size(20.dp).alpha(checkOpacity), foreground)
-        }
-        Column {
-            Text(label, color = WebPalette.Text, style = ShareTypography.group.copy(fontWeight = FontWeight.SemiBold))
-            if (description.isNotEmpty()) {
-                Text(
-                    description,
-                    color = if (selected) WebPalette.TextSecondary else WebPalette.TextMuted,
-                    style = ShareTypography.context.copy(fontWeight = FontWeight.Normal),
-                )
+        icon(foreground)
+        Column(Modifier.weight(1f)) {
+            if (description.isNotEmpty()) Text(label, style = titleStyle, color = WebPalette.Text)
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(DesignTokens.Spacing.Compact),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                if (description.isEmpty()) {
+                    Text(label, Modifier.weight(1f), style = titleStyle, color = WebPalette.Text)
+                } else {
+                    Text(
+                        description,
+                        Modifier.weight(1f),
+                        style = ShareTypography.context.copy(fontWeight = FontWeight.Normal),
+                        color = detailColor,
+                    )
+                }
+                AppGlyph(Glyph.CircleCheck, Modifier.size(12.dp).alpha(checkOpacity), foreground)
             }
         }
     }

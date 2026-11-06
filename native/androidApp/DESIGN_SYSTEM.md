@@ -41,7 +41,7 @@ Compose-слотами. Пакет использует Android/Compose и corou
 | `ShareWindow`, `ShareFormDialog`, `ShareAlertDialog` | Общая оболочка окна: заголовок, доступное закрытие, прокрутка и фиксированные действия |
 | `ShareSegmentedInput`, `ShareFormSection` | Набор режимов броска и группы полей с веб-композицией |
 | `ShareDropdownMenu`, `ShareDropdownMenuItem` | Собственная поверхность действий, привязка к якорю, границы окна, выход/фокус и отключение действий при закрытии |
-| `ShareChoiceCard` | `ChoiceCard` с контрастной подложкой, иконкой, пояснением и галочкой выбора. Выбранное значение хранит вызывающий компонент |
+| `ShareChoiceCard` | Компактная раскладка `ChoiceCard` со стрелкой или другой иконкой слева от текста и галочкой справа. Высота растёт при переносе текста. Выбранное значение хранит вызывающий компонент |
 | `ShareAction`, `ShareSearch` | ActionButton, строка поиска/поле ввода |
 | `ShareTile` | BaseTile, оболочка коллекции или статьи; optional `accent` соответствует TileAccentStrip; `containerColor`/`borderColor` задают роли поверхности и значимого выделения |
 | `ShareContentRow` | ContentRow: метрика, имя, второе имя, подстрока, маркеры |

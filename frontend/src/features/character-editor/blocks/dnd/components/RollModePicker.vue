@@ -3,6 +3,7 @@
     <ChoiceCard
       v-for="option in options"
       :key="option.mode"
+      layout="inline"
       :label="option.label"
       :description="option.description"
       :color="option.color"

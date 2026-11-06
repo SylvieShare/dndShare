@@ -26,6 +26,18 @@ for (const width of [390, 834, 1920]) {
         await expect(menu).toHaveCSS('transform', 'none')
         const a = await advantage.boundingBox(), d = await disadvantage.boundingBox()
         expect(Math.abs(a.y - d.y)).toBeLessThan(2)
+        await expect(menu.getByText('Режим броска', { exact: true })).toBeVisible()
+        const summary = await menu.locator('.stat-roll-summary').boundingBox()
+        expect(a.y - (summary.y + summary.height)).toBeGreaterThanOrEqual(12)
+        for (const button of [advantage, disadvantage]) {
+          const box = await button.boundingBox()
+          const arrow = await button.locator('.share-choice-card__icon').boundingBox()
+          const label = await button.locator('.share-choice-card__label').boundingBox()
+          expect(box.height).toBeGreaterThanOrEqual(48)
+          expect(box.height).toBeLessThanOrEqual(56)
+          expect(arrow.x + arrow.width).toBeLessThan(label.x)
+          expect(await button.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true)
+        }
         const bounds = await menu.boundingBox()
         expect(bounds.x).toBeGreaterThanOrEqual(0)
         expect(bounds.x + bounds.width).toBeLessThanOrEqual(width)
