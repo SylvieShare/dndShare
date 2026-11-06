@@ -8,7 +8,10 @@ for (const width of [1280,390]) test(`only concrete mechanics host charges, and 
  const mechanics = await javelin.locator('.weapon-item-mechanics').boundingBox()
  expect(mechanics.x).toBeCloseTo(properties.x, 0)
  expect(mechanics.width).toBeCloseTo(properties.width, 0)
- expect(mechanics.y - properties.y - properties.height).toBeCloseTo(1, 0)
+ expect(mechanics.y - properties.y - properties.height).toBeCloseTo(10, 0)
+ for (const tile of [javelin.locator('.weapon-metrics__properties'), javelin.locator('.item-mechanic-panel')]) {
+  expect(await tile.evaluate(el => parseFloat(getComputedStyle(el).borderBottomLeftRadius))).toBeGreaterThan(0)
+ }
  await expect(javelin.locator('.item-mechanic-panel')).toHaveCount(1)
  await expect(mace.locator('.item-mechanic-panel')).toHaveCount(1)
  await expect(plain.locator('.item-mechanic-panel')).toHaveCount(0)

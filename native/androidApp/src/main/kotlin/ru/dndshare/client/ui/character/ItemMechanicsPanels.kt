@@ -28,6 +28,7 @@ internal fun ItemMechanicsPanels(entry: JsonObject, compact: Boolean = false) {
     if (creation?.get("expired") == JsonPrimitive(true)) return
     val uid = entry.text("uid")
     val item = context.items[(entry["magic_item_id"] ?: entry["item_id"]).referenceId()] ?: return
+    if (compact) WeaponCataloguePanels(entry, item)
     val source =
         remember(context.sheet, context.items, uid) {
             selectedWeaponTargets(context.sheet, context.items).firstOrNull { it.uid == uid }

@@ -55,7 +55,7 @@ function isLive(rule) { return event.value?.status === 'active' && event.value.k
 function finishOrConfirm() { if (event.value.steps.some(step => step.status === 'pending')) confirmId.value = event.value.id; else finish(event.value.id) }
 </script>
 <style scoped>
-.weapon-use-panels { display: grid; gap: 1px; }
+.weapon-use-panels { display: grid; gap: var(--spacing-label); }
 .weapon-use-stage { display: grid; gap: 8px; }
 .weapon-use-stage > strong { color: var(--text-1); font-size: 13px; }
 </style>

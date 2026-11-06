@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.*
@@ -49,7 +48,7 @@ fun ShareActionDisclosure(
     val grouped = LocalGroupedDisclosures.current
     Surface(
         modifier.fillMaxWidth(),
-        shape = if (grouped) RectangleShape else RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(12.dp),
         color = if (grouped) color.copy(alpha = .08f).compositeOver(WebPalette.Raised) else color.copy(alpha = .075f),
         border = if (focus) BorderStroke(1.dp, WebPalette.AccentSoft) else null,
     ) {

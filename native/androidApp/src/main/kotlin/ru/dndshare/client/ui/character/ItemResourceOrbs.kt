@@ -25,7 +25,7 @@ internal fun ItemResourceOrbs(
     if (resource.total > 9)
         Text("${resource.value}/${resource.total}", style = ShareTypography.group, color = color)
     else
-        Row {
+        FlowRow {
             for (index in 1..resource.total) ShareResourceOrb(
                 resource.value >= index,
                 "${resource.title} · заряд $index",

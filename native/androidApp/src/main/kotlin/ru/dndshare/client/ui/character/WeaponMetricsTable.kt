@@ -8,8 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
@@ -71,9 +69,8 @@ internal fun WeaponMetricsTable(
                     Text("Одной рукой / двумя руками", style = ShareTypography.context, color = WebPalette.TextMuted)
             }
         }
-        Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(DesignTokens.Radius.Row)),
-            verticalArrangement = Arrangement.spacedBy(1.dp)) {
-            if (properties.isNotEmpty()) MetricCell("Свойства", Modifier.fillMaxWidth(), RectangleShape) {
+        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(DesignTokens.Spacing.Label)) {
+            if (properties.isNotEmpty()) MetricCell("Свойства", Modifier.fillMaxWidth()) {
                 PropertyText(properties, propertyDescriptions, openItem)
             }
             mechanics()
@@ -82,10 +79,10 @@ internal fun WeaponMetricsTable(
 }
 
 @Composable
-private fun MetricCell(label: String, modifier: Modifier, shape: Shape = RoundedCornerShape(DesignTokens.Radius.Row), content: @Composable () -> Unit) {
+private fun MetricCell(label: String, modifier: Modifier, content: @Composable () -> Unit) {
     Column(
         modifier
-            .background(WebPalette.Raised, shape)
+            .background(WebPalette.Raised, RoundedCornerShape(DesignTokens.Radius.Row))
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
