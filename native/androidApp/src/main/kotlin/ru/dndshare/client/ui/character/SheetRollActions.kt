@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
@@ -20,6 +21,7 @@ internal fun SheetRollActions(
     close: () -> Unit,
     request: SheetRollRequest,
     editTarget: String?,
+    dieColor: Color = WebPalette.TextMuted,
 ) {
     val context = LocalCharacterSheet.current
     var mode by remember { mutableStateOf("normal") }
@@ -27,7 +29,7 @@ internal fun SheetRollActions(
         if (open) mode = resolveSheetRollMode(context.mechanics, request).mode
     }
     ShareDropdownMenu(open, close, Modifier.width(DesignTokens.Layout.RollModeMenuWidth)) {
-        RollBonusSummary(request)
+        RollBonusSummary(request, dieColor)
         HorizontalDivider(color = WebPalette.BorderStrong)
         Text(
             "Режим броска",
@@ -57,7 +59,7 @@ internal fun SheetRollActions(
 }
 
 @Composable
-private fun RollBonusSummary(request: SheetRollRequest) {
+private fun RollBonusSummary(request: SheetRollRequest, dieColor: Color) {
     val context = LocalCharacterSheet.current
     Row(
         Modifier.fillMaxWidth().padding(start = 10.dp, end = 10.dp, top = 8.dp, bottom = 12.dp),
@@ -67,7 +69,7 @@ private fun RollBonusSummary(request: SheetRollRequest) {
         ShareDie(
             sides = 20,
             value = "d20",
-            color = WebPalette.TextMuted,
+            color = dieColor,
             modifier = Modifier.clearAndSetSemantics {},
         )
         Column(

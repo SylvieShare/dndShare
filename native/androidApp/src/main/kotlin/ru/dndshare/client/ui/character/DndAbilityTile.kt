@@ -214,6 +214,7 @@ private fun DndAbilityFace(
                         { saveActions = false },
                         saveRequest,
                         "skill:${ability.id}:save",
+                        dieColor = color,
                     )
                 }
             }
@@ -261,6 +262,7 @@ private fun DndAbilityFace(
                     { checkActions = false },
                     checkRequest,
                     ability.id,
+                    dieColor = color,
                 )
             }
         }
@@ -351,6 +353,7 @@ private fun DndAbilityFace(
                         { skillActions = false },
                         request,
                         "skill:${ability.id}:$id",
+                        dieColor = color,
                     )
                 }
             }

@@ -92,6 +92,7 @@
       v-if="rollMenu"
       :key="`${rollMenu.kind}:${rollMenu.id || ''}`"
       :anchor="rollMenu.anchor"
+      :color="color"
       :scope="rollMenu.kind === 'save' ? 'saving_throw' : 'ability_check'"
       :title="rollMenu.title" :total="rollMenu.total" :details="rollMenu.details"
       :editable="showEdit && mode !== 'panel'" @edit="editSelection"
