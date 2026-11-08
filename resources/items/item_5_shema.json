@@ -768,12 +768,46 @@
               {
                 "label": "Постоянное значение",
                 "value": "fixed"
+              },
+              {
+                "label": "Кругов выше базового",
+                "value": "slot_increase"
+              },
+              {
+                "label": "Круг ячейки",
+                "value": "cast_level"
+              },
+              {
+                "label": "Модификатор заклинателя",
+                "value": "casting_modifier"
               }
             ]
           },
           {
             "key": "value",
             "name": "Значение",
+            "type": "int"
+          },
+          {
+            "key": "step",
+            "name": "Шаг изменения",
+            "type": "int",
+            "default": 1
+          },
+          {
+            "key": "multiplier",
+            "name": "За каждый шаг",
+            "type": "int",
+            "default": 1
+          },
+          {
+            "key": "minimum",
+            "name": "Не меньше",
+            "type": "int"
+          },
+          {
+            "key": "maximum",
+            "name": "Не больше",
             "type": "int"
           }
         ]

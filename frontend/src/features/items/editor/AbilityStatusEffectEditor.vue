@@ -12,14 +12,7 @@
     </FormField>
     <LoadingIndicator v-if="loading" label="Загрузка настроек эффекта…" size="xs" inline show-label />
     <button v-if="error" type="button" class="ability-link" @click="loadEffect">Не удалось загрузить эффект. Повторить</button>
-    <div v-for="parameter in parameters" :key="parameter.key" class="ability-action-fields">
-      <FormField :label="parameter.label" vertical :title="`Параметр эффекта ${parameter.key}. Значение можно брать из прогрессии этой способности.`">
-        <FormSelect :value="binding(parameter.key)?.source || ''" :aria-label="parameter.label" @update:value="source => setEffectParameter(data, parameter.key, source)">
-          <option value="">Как в самом эффекте</option><option v-if="allowScaling" value="scaling_value">Из прогрессии способности</option><option value="fixed">Задать число</option>
-        </FormSelect>
-      </FormField>
-      <FormField v-if="binding(parameter.key)?.source === 'fixed'" label="Значение" vertical :title="`Постоянное значение: ${parameter.label}.`"><FormTextInput :value="binding(parameter.key).value" type="number" :aria-label="`Значение: ${parameter.label}`" @update:value="value => setEffectParameter(data, parameter.key, 'fixed', Number(value))" /></FormField>
-    </div>
+    <EffectParameterBinding v-for="parameter in parameters" :key="parameter.key" :parameter="parameter" :data="data" :sources="bindingSources" />
     <FormField label="Своя длительность" title="Если выключено, используется длительность из справочника эффектов."><ToggleSwitch :model-value="!!data.duration" aria-label="Своя длительность" @update:model-value="setDuration" /></FormField>
     <AbilityRuleFields v-if="data.duration" :fields="durationFields" :data="data.duration" @update:data="updateDuration" />
     <AbilityRuleFields :fields="fields.filter(field => field.key === 'concentration')" :data="data" @update:data="value => Object.assign(data, value)" />
@@ -28,19 +21,22 @@
 <script setup>
 import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, inject, onScopeDispose, ref, watch, watchEffect } from 'vue'
-import { FormField, FormSelect, FormTextInput, ToggleSwitch } from '@sylvieshare/share-ui'
+import { FormField, FormSelect, ToggleSwitch } from '@sylvieshare/share-ui'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { itemFieldEditorKey } from '@/features/character-editor/components/useItemFieldEditor'
 import AbilityRuleFields from './AbilityRuleFields.vue'
 import RuleKeyField from './RuleKeyField.vue'
-import { effectParameterOptions, setEffectParameter } from './effectParameterOptions'
+import { effectParameterOptions } from './effectParameterOptions'
+import { effectBindingSources, effectBindingError } from './effectBindingFields'
+import EffectParameterBinding from './EffectParameterBinding.vue'
 const props = defineProps({ data: Object, fields: Array, allowScaling: { type: Boolean, default: true } })
 const editor = inject(itemFieldEditorKey, {})
 const effect = ref(null), loading = ref(false), error = ref(false)
 let request = 0
 const effectId = computed(() => props.data.effect?.id ?? props.data.effect)
 const parameters = computed(() => effectParameterOptions(effect.value, props.data.parameter_bindings))
-const binding = key => props.data.parameter_bindings?.find(row => row.key === key)
+const bindingFields = computed(() => props.fields.find(field => field.key === 'parameter_bindings')?.fields || [])
+const bindingSources = computed(() => effectBindingSources(bindingFields.value, props.allowScaling))
 const otherKeys = computed(() => (editor.itemData?.status_effects || []).filter(row => row !== props.data).map(row => row.key))
 const damageRules = computed(() => (editor.itemData?.weapon_damage || []).filter(row => row.key))
 const durationFields = computed(() => (props.fields.find(field => field.key === 'duration')?.fields || [])
@@ -66,6 +62,11 @@ watchEffect(() => {
   let message = !effectId.value ? 'Связанный эффект: выберите эффект из справочника.' : ''
   if (props.data.weapon_damage_key && !damageRules.value.some(row => row.key === props.data.weapon_damage_key)) message = 'Связанный эффект: выберите существующее правило дополнительного урона.'
   if (props.data.parameter_bindings?.some(row => row.source === 'scaling_value') && !editor.itemData?.scaling?.length) message = 'Связанный эффект: добавьте таблицу развития с уровнем для расчёта параметров.'
+  for (const parameter of parameters.value) {
+    const binding = props.data.parameter_bindings?.find(row => row.key === parameter.key)
+    const issue = effectBindingError(binding, bindingSources.value)
+    if (issue) { message = `${parameter.label}: ${issue}`; break }
+  }
   if (['rounds', 'minutes', 'hours', 'days'].includes(props.data.duration?.kind) && !props.data.duration.formula && !(Number(props.data.duration.value) > 0)) message = 'Длительность эффекта должна быть больше нуля.'
   editor.setValidationError?.(validationKey, message)
 })

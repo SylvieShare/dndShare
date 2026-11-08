@@ -264,7 +264,8 @@
     ],
     "web": [
       "src/features/items/editor/AbilityDependencyEditor.test.js",
-      "src/features/items/editor/catalogue/CatalogueEditor.test.js"
+      "src/features/items/editor/catalogue/CatalogueEditor.test.js",
+      "src/features/items/editor/abilityMechanics.test.js"
     ],
     "android": [
       "FeatureFormsTest"

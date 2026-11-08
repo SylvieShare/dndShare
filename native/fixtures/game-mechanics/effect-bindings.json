@@ -1,0 +1,542 @@
+[
+  {
+    "name": "Стихийное оружие",
+    "baseLevel": 3,
+    "binding": {
+      "key": "weapon_bonus",
+      "source": "slot_increase",
+      "value": 1,
+      "step": 2,
+      "maximum": 3
+    },
+    "attack": true,
+    "die": "d4",
+    "casts": [
+      {
+        "level": 3,
+        "want": 1
+      },
+      {
+        "level": 4,
+        "want": 1
+      },
+      {
+        "level": 5,
+        "want": 2
+      },
+      {
+        "level": 6,
+        "want": 2
+      },
+      {
+        "level": 7,
+        "want": 3
+      },
+      {
+        "level": 9,
+        "want": 3
+      }
+    ],
+    "effect": {
+      "id": 800,
+      "typeId": 15,
+      "name": "Эффект · Стихийное оружие",
+      "data": {
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "weapon_target": {
+          "damage_types": [
+            2
+          ]
+        },
+        "derived_effects": [
+          {
+            "kind": "weapon_attack_bonus",
+            "value_parameter": "weapon_bonus",
+            "target_parameter": "weapon_uid"
+          }
+        ],
+        "weapon_damage": [
+          {
+            "key": "extra",
+            "label": "Стихийное оружие",
+            "dice_count_parameter": "weapon_bonus",
+            "dice": "d4",
+            "damage_type": 2,
+            "double_on_critical": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "Оружие Пустоты",
+    "baseLevel": 4,
+    "binding": {
+      "key": "damage_dice",
+      "source": "slot_increase",
+      "value": 2
+    },
+    "attack": false,
+    "die": "d6",
+    "casts": [
+      {
+        "level": 4,
+        "want": 2
+      },
+      {
+        "level": 5,
+        "want": 3
+      },
+      {
+        "level": 7,
+        "want": 5
+      }
+    ],
+    "effect": {
+      "id": 801,
+      "typeId": 15,
+      "name": "Эффект · Оружие Пустоты",
+      "data": {
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "weapon_target": {
+          "damage_types": [
+            2
+          ]
+        },
+        "derived_effects": [],
+        "weapon_damage": [
+          {
+            "key": "extra",
+            "label": "Оружие Пустоты",
+            "dice_count_parameter": "damage_dice",
+            "dice": "d6",
+            "damage_type": 2,
+            "double_on_critical": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "Параметр от круга ячейки",
+    "baseLevel": 1,
+    "binding": {
+      "key": "bonus",
+      "source": "cast_level",
+      "value": 1,
+      "step": 2,
+      "multiplier": 2,
+      "minimum": 3,
+      "maximum": 7
+    },
+    "attack": true,
+    "die": "d4",
+    "casts": [
+      {
+        "level": 1,
+        "want": 3
+      },
+      {
+        "level": 2,
+        "want": 3
+      },
+      {
+        "level": 4,
+        "want": 5
+      },
+      {
+        "level": 7,
+        "want": 7
+      },
+      {
+        "level": 9,
+        "want": 7
+      }
+    ],
+    "effect": {
+      "id": 802,
+      "typeId": 15,
+      "name": "Эффект · Параметр от круга ячейки",
+      "data": {
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "weapon_target": {
+          "damage_types": [
+            2
+          ]
+        },
+        "derived_effects": [
+          {
+            "kind": "weapon_attack_bonus",
+            "value_parameter": "bonus",
+            "target_parameter": "weapon_uid"
+          }
+        ],
+        "weapon_damage": [
+          {
+            "key": "extra",
+            "label": "Параметр от круга ячейки",
+            "dice_count_parameter": "bonus",
+            "dice": "d4",
+            "damage_type": 2,
+            "double_on_critical": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "Параметр от модификатора",
+    "baseLevel": 1,
+    "binding": {
+      "key": "bonus",
+      "source": "casting_modifier",
+      "value": 1,
+      "multiplier": 2,
+      "minimum": 0,
+      "maximum": 5
+    },
+    "attack": true,
+    "die": "d4",
+    "casts": [
+      {
+        "level": 1,
+        "score": 8,
+        "want": 0
+      },
+      {
+        "level": 1,
+        "score": 12,
+        "want": 3
+      },
+      {
+        "level": 1,
+        "score": 18,
+        "want": 5
+      }
+    ],
+    "effect": {
+      "id": 803,
+      "typeId": 15,
+      "name": "Эффект · Параметр от модификатора",
+      "data": {
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "weapon_target": {
+          "damage_types": [
+            2
+          ]
+        },
+        "derived_effects": [
+          {
+            "kind": "weapon_attack_bonus",
+            "value_parameter": "bonus",
+            "target_parameter": "weapon_uid"
+          }
+        ],
+        "weapon_damage": [
+          {
+            "key": "extra",
+            "label": "Параметр от модификатора",
+            "dice_count_parameter": "bonus",
+            "dice": "d4",
+            "damage_type": 2,
+            "double_on_critical": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "Округление отрицательного модификатора",
+    "baseLevel": 1,
+    "binding": {
+      "key": "bonus",
+      "source": "casting_modifier",
+      "value": 6,
+      "step": 2,
+      "multiplier": 2
+    },
+    "attack": true,
+    "die": "d4",
+    "casts": [
+      {
+        "level": 1,
+        "score": 8,
+        "want": 4
+      },
+      {
+        "level": 1,
+        "score": 6,
+        "want": 4
+      },
+      {
+        "level": 1,
+        "score": 5,
+        "want": 2
+      }
+    ],
+    "effect": {
+      "id": 804,
+      "typeId": 15,
+      "name": "Эффект · Округление отрицательного модификатора",
+      "data": {
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "weapon_target": {
+          "damage_types": [
+            2
+          ]
+        },
+        "derived_effects": [
+          {
+            "kind": "weapon_attack_bonus",
+            "value_parameter": "bonus",
+            "target_parameter": "weapon_uid"
+          }
+        ],
+        "weapon_damage": [
+          {
+            "key": "extra",
+            "label": "Округление отрицательного модификатора",
+            "dice_count_parameter": "bonus",
+            "dice": "d4",
+            "damage_type": 2,
+            "double_on_critical": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "Нулевой множитель",
+    "baseLevel": 1,
+    "binding": {
+      "key": "bonus",
+      "source": "cast_level",
+      "value": 2,
+      "multiplier": 0
+    },
+    "attack": true,
+    "die": "d4",
+    "casts": [
+      {
+        "level": 1,
+        "want": 2
+      },
+      {
+        "level": 9,
+        "want": 2
+      }
+    ],
+    "effect": {
+      "id": 805,
+      "typeId": 15,
+      "name": "Эффект · Нулевой множитель",
+      "data": {
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "weapon_target": {
+          "damage_types": [
+            2
+          ]
+        },
+        "derived_effects": [
+          {
+            "kind": "weapon_attack_bonus",
+            "value_parameter": "bonus",
+            "target_parameter": "weapon_uid"
+          }
+        ],
+        "weapon_damage": [
+          {
+            "key": "extra",
+            "label": "Нулевой множитель",
+            "dice_count_parameter": "bonus",
+            "dice": "d4",
+            "damage_type": 2,
+            "double_on_critical": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "Убывающая величина",
+    "baseLevel": 1,
+    "binding": {
+      "key": "bonus",
+      "source": "cast_level",
+      "value": 10,
+      "multiplier": -1,
+      "minimum": 2
+    },
+    "attack": true,
+    "die": "d4",
+    "casts": [
+      {
+        "level": 1,
+        "want": 9
+      },
+      {
+        "level": 8,
+        "want": 2
+      },
+      {
+        "level": 9,
+        "want": 2
+      }
+    ],
+    "effect": {
+      "id": 806,
+      "typeId": 15,
+      "name": "Эффект · Убывающая величина",
+      "data": {
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "weapon_target": {
+          "damage_types": [
+            2
+          ]
+        },
+        "derived_effects": [
+          {
+            "kind": "weapon_attack_bonus",
+            "value_parameter": "bonus",
+            "target_parameter": "weapon_uid"
+          }
+        ],
+        "weapon_damage": [
+          {
+            "key": "extra",
+            "label": "Убывающая величина",
+            "dice_count_parameter": "bonus",
+            "dice": "d4",
+            "damage_type": 2,
+            "double_on_critical": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "Постоянное число",
+    "baseLevel": 1,
+    "binding": {
+      "key": "bonus",
+      "source": "fixed",
+      "value": 3
+    },
+    "attack": true,
+    "die": "d4",
+    "casts": [
+      {
+        "level": 1,
+        "want": 3
+      },
+      {
+        "level": 7,
+        "want": 3
+      }
+    ],
+    "effect": {
+      "id": 807,
+      "typeId": 15,
+      "name": "Эффект · Постоянное число",
+      "data": {
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "weapon_target": {
+          "damage_types": [
+            2
+          ]
+        },
+        "derived_effects": [
+          {
+            "kind": "weapon_attack_bonus",
+            "value_parameter": "bonus",
+            "target_parameter": "weapon_uid"
+          }
+        ],
+        "weapon_damage": [
+          {
+            "key": "extra",
+            "label": "Постоянное число",
+            "dice_count_parameter": "bonus",
+            "dice": "d4",
+            "damage_type": 2,
+            "double_on_critical": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "Постоянный ноль",
+    "baseLevel": 1,
+    "binding": {
+      "key": "bonus",
+      "source": "fixed",
+      "value": 0
+    },
+    "attack": true,
+    "die": "d4",
+    "casts": [
+      {
+        "level": 1,
+        "want": 0
+      }
+    ],
+    "effect": {
+      "id": 808,
+      "typeId": 15,
+      "name": "Эффект · Постоянный ноль",
+      "data": {
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "weapon_target": {
+          "damage_types": [
+            2
+          ]
+        },
+        "derived_effects": [
+          {
+            "kind": "weapon_attack_bonus",
+            "value_parameter": "bonus",
+            "target_parameter": "weapon_uid"
+          }
+        ],
+        "weapon_damage": [
+          {
+            "key": "extra",
+            "label": "Постоянный ноль",
+            "dice_count_parameter": "bonus",
+            "dice": "d4",
+            "damage_type": 2,
+            "double_on_critical": true
+          }
+        ]
+      }
+    }
+  }
+]

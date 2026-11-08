@@ -21,9 +21,9 @@ def main():
     suites = json.loads((HERE / "suites.json").read_text(encoding="utf8"))
     run([sys.executable, "-m", "unittest", "discover", "-s", HERE])
     run(["go", "test", "./scripts/mechanics/editor-schema", "./scripts/mechanics/catalogue-cleanup", "./internal/store", "-run",
-         "StatusSave|PreparedCharacterRoll|ApplicationHealing|ApplicationConcentration|ApplicationFormula|FeatCanRecreate|StatusDurationKeeps|WeaponCleanup|RemoveOnlyReviewed"])
+         "StatusSave|PreparedCharacterRoll|ApplicationHealing|ApplicationConcentration|ApplicationFormula|FeatCanRecreate|StatusDurationKeeps|WeaponCleanup|RemoveOnlyReviewed|SpellEffectBindings|RepeatSaveFreezes"])
     if os.environ.get("DNDSHARE_TEST_DSN"):
-        run(["go", "test", "-count=1", "./internal/web", "-run", "^TestStatusSaveLostResponsePostgres$"])
+        run(["go", "test", "-count=1", "./internal/web", "-run", "^(TestStatusSaveLostResponsePostgres|TestAuthoredEffectBindingsPostgres)$"])
     if args.client in ("both", "web"):
         web = ROOT / "frontend"
         files = sorted({path for suite in suites for path in suite["web"]})

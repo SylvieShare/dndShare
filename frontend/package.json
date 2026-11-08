@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "test:mechanics:contracts": "vitest run tests/game-mechanics/derived.test.js tests/game-mechanics/editor.test.js tests/game-mechanics/status.test.js && node scripts/character-rules-fixtures.mjs --check",
+    "test:mechanics:contracts": "vitest run tests/game-mechanics/derived.test.js tests/game-mechanics/editor.test.js tests/game-mechanics/status.test.js tests/game-mechanics/effect-bindings.test.js && node scripts/character-rules-fixtures.mjs --check",
     "build": "npm run check:design && npm run check:bindings && npm run check:colors && vite build && npm run check:bundle",
     "check:bindings": "eslint src",
     "check:colors": "node scripts/check-colors.mjs",
