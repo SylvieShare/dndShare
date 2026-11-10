@@ -67,6 +67,8 @@ Compose-анимации учитывают системное отключен�
 `python3 scripts/design/tokens.py`; `--check` проверяет производные CSS/JS/Kotlin.
 `ShareTypography` применяет роли с поддержкой системного масштаба.
 Шапка персонажа использует роль SheetHeader и иконку SheetHeaderIcon без подложки.
+`ShareWorkspaceHeader.containerColor` задаёт непрозрачную заливку вместо
+автоматического затемнения; управляемый `ShareChromeLayout` получает ту же роль цвета.
 Параметры `navigationColor`, `navigationRadius`, `navigationInset` и
 `navigationPadding` у `ShareWorkspaceHeader` задают отдельное оформление
 навигации. `ShareSubheader` предоставляет соответствующие параметры

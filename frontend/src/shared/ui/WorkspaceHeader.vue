@@ -123,5 +123,5 @@ onBeforeUnmount(() => observer?.disconnect());
   .workspace-header-navigation { padding: var(--spacing-xs); }
 }
 @media (prefers-reduced-motion: reduce) { .workspace-header-inner { transition: none; } }
-.workspace-header--solid {background:var(--bg)}
+.workspace-header--solid {background:var(--workspace-header-background, var(--bg));border:0;box-shadow:none}
 </style>

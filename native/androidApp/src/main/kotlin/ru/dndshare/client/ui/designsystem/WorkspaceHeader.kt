@@ -28,16 +28,17 @@ fun ShareWorkspaceHeader(
     navigationInset: Dp = if (compact) DesignTokens.Layout.CompactHeaderInset else 0.dp,
     navigationPadding: PaddingValues? = null,
     navigationElevation: Dp = 0.dp,
+    containerColor: Color? = null,
     content: @Composable RowScope.() -> Unit,
 ) {
     val managed = LocalChromeManaged.current
     Surface(
         modifier.fillMaxWidth(),
-        color = Color.Transparent,
+        color = containerColor ?: Color.Transparent,
     ) {
         Column(
             Modifier.fillMaxWidth().drawWithContent {
-                if (!managed) {
+                if (!managed && containerColor == null) {
                     val tint = WebPalette.Background.copy(alpha = DesignTokens.Chrome.Tint)
                     if (navigation == null) drawRect(tint)
                     else

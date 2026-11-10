@@ -25,7 +25,9 @@
         @close="emit('close')"
       />
 
-      <CharacterSheetTabs data-sheet-chrome class="csm-tabs" :class="{ 'csm-tabs--fit': format === 'tablet' }" pill v-if="format !== 'desktop'" :tabs="activeTabs" :active-tab="activeTab" @select="setActiveTab" />
+      <div v-if="format !== 'desktop'" data-sheet-chrome class="csm-subheader">
+        <CharacterSheetTabs class="csm-tabs" :class="{ 'csm-tabs--fit': format === 'tablet' }" pill :tabs="activeTabs" :active-tab="activeTab" @select="setActiveTab" />
+      </div>
 
       <div data-sheet-chrome v-if="previewMode" class="csm-preview-note">Предпросмотр черновика · только чтение</div>
 
@@ -199,8 +201,9 @@ onMounted(initializeCharacter)
 .csm--preview .desktop-tabs :deep(button[title='Редактировать']) { display: none; }
 .csm-body { margin-top: calc(-1 * var(--sheet-chrome-height, 64px)); padding-top: var(--sheet-chrome-height, 64px); box-sizing: border-box; scroll-padding-top: var(--sheet-chrome-height, 64px); flex: 1; min-height: 0; overflow-x: auto; overflow-y: auto; background: transparent; }
 .csm-body--pager { overflow: hidden; padding-top: 0; }
-.csm-tabs { --surface: var(--subheader); position: relative; z-index: 21; flex: none; border-radius: var(--radius-compact-navigation); background: var(--subheader); margin: 4px 8px; padding: 4px; }
-.csm-tabs--fit { align-self: center; max-width: calc(100% - 16px); }
+.csm-subheader { position: relative; z-index: 21; flex: none; box-sizing: border-box; width: 100%; background: var(--subheader); padding: 4px 8px; }
+.csm-tabs { --surface: var(--subheader); box-sizing: border-box; width: 100%; border: 0; border-radius: 0; background: transparent; margin: 0; padding: 4px; }
+.csm-tabs--fit { width: max-content; max-width: 100%; margin-inline: auto; }
 .csm-body--pager .container { padding: 0; }
 .container { box-sizing: border-box; width: 100%; margin: 0 auto; padding: 18px 16px 28px; background: transparent; }
 .desktop-tabs { display: flex; flex-direction: column; min-height: 100%; }

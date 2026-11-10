@@ -314,7 +314,7 @@ for (const width of [390, 834, 1440]) test(`sheet header is opaque at ${width}`,
   await page.goto('/tests/tutorials/fixtures/tutorials.html?fullApp')
   const header = page.locator('.character-workspace-header')
   await expect(header).toBeVisible()
-  await expect(header).toHaveCSS('background-color', 'rgb(23, 23, 27)')
+  await expect(header).toHaveCSS('background-color', 'rgb(53, 49, 63)')
   await expect(header.locator('.workspace-header-backdrop')).toHaveCount(0)
   await expect(header.locator('.identity small')).toHaveText('3 ур.')
   await expect(page.locator('.character-summary-strip')).toHaveCount(0)

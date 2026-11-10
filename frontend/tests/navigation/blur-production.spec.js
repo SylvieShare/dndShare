@@ -25,7 +25,7 @@ for (const width of [390, 834, 1440]) test(`minified production header really bl
   expect(blurred.equals(sharp), 'Minification must not turn blur into tint only').toBe(false)
   await page.locator('.char-card').first().getByText('Персонаж 0', { exact: true }).click()
   await expect(page.locator('.character-workspace-header .workspace-header-backdrop')).toHaveCount(0)
-  await expect(page.locator('.character-workspace-header')).toHaveCSS('background-color', 'rgb(23, 23, 27)')
+  await expect(page.locator('.character-workspace-header')).toHaveCSS('background-color', 'rgb(53, 49, 63)')
   await page.getByRole('button', { name: 'К списку персонажей' }).click()
   await page.getByRole('button', { name: 'Новый персонаж', exact: true }).click()
   await expect(page.locator('.cc-head-backdrop')).toHaveCSS('backdrop-filter', 'blur(16px)')

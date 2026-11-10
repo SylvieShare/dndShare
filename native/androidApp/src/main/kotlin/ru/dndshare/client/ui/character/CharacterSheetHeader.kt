@@ -43,11 +43,12 @@ internal fun CharacterSheetHeader(
         contentInset = if (format == LayoutFormat.Phone) 8.dp else 14.dp,
         maxContentWidth = DesignTokens.Layout.SheetMax,
         compact = format != LayoutFormat.Wide,
-        navigationColor = WebPalette.Raised,
-        navigationRadius = DesignTokens.Radius.Tile,
+        containerColor = WebPalette.Subheader,
+        navigationColor = Color.Transparent,
+        navigationRadius = 0.dp,
         navigationInset = DesignTokens.Spacing.Page,
         navigationPadding = PaddingValues(0.dp),
-        navigationElevation = DesignTokens.Spacing.Xs,
+        navigationElevation = 0.dp,
         actions = actions,
         navigation =
             if (navigationInHeader && format == LayoutFormat.Tablet)

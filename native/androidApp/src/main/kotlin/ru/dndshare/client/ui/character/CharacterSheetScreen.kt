@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
 import ru.dndshare.client.character.*
@@ -112,7 +113,7 @@ private fun CharacterSheetBody(
     ) {
         ShareChromeLayout(
             modifier = Modifier.shareCanvas(),
-            solidColor = WebPalette.Background,
+            solidColor = WebPalette.Subheader,
             header = {
                 PreparedSheetHeader(
                     sheet,
@@ -151,11 +152,11 @@ private fun CharacterSheetBody(
                     if (sheet != null && pager != null && format != LayoutFormat.Wide)
                         ShareSubheader(
                             maxContentWidth = DesignTokens.Layout.SheetMax,
-                            surfaceColor = WebPalette.Raised,
-                            cornerRadius = DesignTokens.Radius.Tile,
+                            surfaceColor = Color.Transparent,
+                            cornerRadius = 0.dp,
                             horizontalInset = DesignTokens.Spacing.Page,
                             contentPadding = PaddingValues(0.dp),
-                            shadowElevation = DesignTokens.Spacing.Xs,
+                            shadowElevation = 0.dp,
                         ) {
                             PreparedSheetNavigation(
                                 sections,

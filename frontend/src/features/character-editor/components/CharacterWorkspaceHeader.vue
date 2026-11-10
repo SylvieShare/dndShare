@@ -106,12 +106,13 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
 .character-summary-strip {position:relative;z-index:1;height:calc(var(--strip-full-height, 40px) - var(--strip-offset, 0px));overflow:clip}
 .character-summary-strip > :first-child {transform:translateY(calc(-1 * var(--strip-offset, 0px)))}
 .character-workspace-header {
+  --workspace-header-background: var(--subheader);
   --workspace-header-identity-gap: var(--spacing-small);
-  --workspace-subheader-background: var(--surface-raised);
-  --workspace-subheader-radius: var(--radius-tile);
+  --workspace-subheader-background: transparent;
+  --workspace-subheader-radius: 0px;
   --workspace-subheader-inset: var(--spacing-page);
   --workspace-subheader-padding: 0px;
-  --workspace-subheader-shadow: 0 var(--spacing-xs) var(--radius-medium) color-mix(in srgb, var(--scrim) 30%, transparent);
+  --workspace-subheader-shadow: none;
 }
 .character-identity {
   display: flex;
