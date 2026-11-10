@@ -316,11 +316,14 @@ for (const width of [390, 834, 1440]) test(`sheet header is opaque at ${width}`,
   await expect(header).toBeVisible()
   await expect(header).toHaveCSS('background-color', 'rgb(53, 49, 63)')
   await expect(header.locator('.workspace-header-backdrop')).toHaveCount(0)
-  await expect(header.locator('.identity small')).toHaveText('3 ур.')
+  await expect(header.locator('.identity small')).toHaveCount(0)
+  await header.getByRole('button', { name: 'Действия персонажа', exact: true }).click()
+  await expect(page.locator('.ram-heading')).toHaveText('3 ур.')
+  await page.keyboard.press('Escape')
   await expect(page.locator('.character-summary-strip')).toHaveCount(0)
   const geometry = await page.locator('.dnd-heading').evaluate(node => {
     const root = node.getBoundingClientRect(), image = node.querySelector('.portrait').getBoundingClientRect()
-    const hp = node.querySelector('.heading-health').getBoundingClientRect(), css = getComputedStyle(node.querySelector('.heading-health'))
+    const hp = node.querySelector('.heading-health').getBoundingClientRect(), css = getComputedStyle(node.querySelector('.health-track'))
     return { left: hp.left - image.left, right: root.right - hp.right, icon: image.width, hpHeight: hp.height, border: css.borderTopWidth, radius: parseFloat(css.borderTopLeftRadius) }
   })
   expect(Math.abs(geometry.left)).toBeLessThan(1)
@@ -329,6 +332,7 @@ for (const width of [390, 834, 1440]) test(`sheet header is opaque at ${width}`,
   expect(geometry.hpHeight).toBeGreaterThanOrEqual(16)
   expect(geometry.border).toBe('1px')
   expect(geometry.radius).toBeGreaterThan(0)
+  await page.locator('.dnd-heading').evaluate(node => node.blur())
   await testInfo.attach('character-header', { body: await header.screenshot(), contentType: 'image/png' })
 })
 

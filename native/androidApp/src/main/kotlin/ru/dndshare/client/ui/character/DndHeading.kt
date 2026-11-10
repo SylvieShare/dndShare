@@ -1,9 +1,5 @@
 package ru.dndshare.client.ui.character
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,13 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.semantics.ProgressBarRangeInfo
-import androidx.compose.ui.semantics.progressBarRangeInfo
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
@@ -35,15 +28,6 @@ internal fun DndHeading(ctx: SheetContext) {
     val current = hp["current"].number()
     val maximum = ctx.mechanics.hpMaximum()
     val temporary = hp["temp"].number().coerceAtLeast(0)
-    val fraction = if (maximum > 0) (current.toFloat() / maximum).coerceIn(0f, 1f) else 0f
-    val tempFraction = if (maximum > 0) (temporary.toFloat() / maximum).coerceIn(0f, 1f - fraction) else 0f
-    val animatedFraction by animateFloatAsState(fraction, tween(DesignTokens.Motion.Feedback), label = "Header HP")
-    val animatedTemp by animateFloatAsState(tempFraction, tween(DesignTokens.Motion.Feedback), label = "Header temporary HP")
-    val color = when {
-        fraction > .6f -> WebPalette.Success
-        fraction > .25f -> WebPalette.Warning
-        else -> WebPalette.Danger
-    }
     val image = sheet.iconImageUrl?.takeIf(String::isNotBlank) ?: sheet.portrait
     var failed by remember(image) { mutableStateOf(false) }
     var menu by remember { mutableStateOf(false) }
@@ -67,8 +51,6 @@ internal fun DndHeading(ctx: SheetContext) {
                 }
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                     Text(sheet.name, style = ShareTypography.sheetHeader, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    Text(subtitle, style = ShareTypography.context, color = WebPalette.TextMuted,
-                        maxLines = 1, overflow = TextOverflow.Ellipsis)
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         HeaderMetric(Glyph.Shield, "Класс доспеха", ctx.mechanics.armor.total)
                         HeaderMetric(Glyph.Eye, "Пассивное внимание", passiveSkill(ctx, "WIS", 5, 10))
@@ -76,28 +58,11 @@ internal fun DndHeading(ctx: SheetContext) {
                     }
                 }
             }
-            Box(
-                Modifier.fillMaxWidth().height(18.dp).clip(RoundedCornerShape(DesignTokens.Radius.Input))
-                    .background(WebPalette.Background).border(1.dp, color, RoundedCornerShape(DesignTokens.Radius.Input))
-                    .semantics {
-                        contentDescription = "Здоровье: $current из $maximum" + if (temporary > 0) ", временные $temporary" else ""
-                        progressBarRangeInfo = ProgressBarRangeInfo(fraction, 0f..1f)
-                    },
-                contentAlignment = Alignment.Center,
-            ) {
-                if (animatedFraction > 0f)
-                    Box(Modifier.fillMaxHeight().fillMaxWidth(animatedFraction).align(Alignment.CenterStart).background(color.copy(alpha = .32f)))
-                if (animatedTemp > 0f) {
-                    BoxWithConstraints(Modifier.fillMaxSize()) {
-                        Box(Modifier.offset(x = maxWidth * animatedFraction).width(maxWidth * animatedTemp)
-                            .fillMaxHeight().background(WebPalette.Info.copy(alpha = .32f)))
-                    }
-                }
-                Text("$current / $maximum" + if (temporary > 0) " +$temporary" else "",
-                    fontSize = 10.sp, lineHeight = 14.sp)
-            }
+            HeaderHealth(current, maximum, temporary, ctx.images)
         }
         ShareDropdownMenu(menu, { menu = false }) {
+            Text(subtitle, style = ShareTypography.context, color = WebPalette.TextMuted,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp), maxLines = 3, overflow = TextOverflow.Ellipsis)
             ShareDropdownMenuItem(
                 text = { Text("Изменить персонажа") },
                 leadingIcon = { AppGlyph(Glyph.Edit) },

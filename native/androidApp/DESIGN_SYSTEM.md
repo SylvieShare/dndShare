@@ -67,6 +67,9 @@ Compose-анимации учитывают системное отключен�
 `python3 scripts/design/tokens.py`; `--check` проверяет производные CSS/JS/Kotlin.
 `ShareTypography` применяет роли с поддержкой системного масштаба.
 Шапка персонажа использует роль SheetHeader и иконку SheetHeaderIcon без подложки.
+Числа здоровья используют роль SheetHealth; размеры сердца/шкалы — SheetHealthIcon/SheetHealthHeight.
+Игровая композиция HeaderHealth и туман HealthMistDrawing принадлежат экрану персонажа.
+rememberVisualPhase принимает maxFps для ограничения фоновых эффектов; значения читаются в draw-фазе.
 `ShareWorkspaceHeader.containerColor` задаёт непрозрачную заливку вместо
 автоматического затемнения; управляемый `ShareChromeLayout` получает ту же роль цвета.
 Параметры `navigationColor`, `navigationRadius`, `navigationInset` и

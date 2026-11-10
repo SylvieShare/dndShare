@@ -1,5 +1,5 @@
 <template>
-  <RowActionMenu title="Действия персонажа" block>
+  <RowActionMenu title="Действия персонажа" :heading="menuSummary" block>
     <template #trigger="{ open }">
       <button class="dnd-heading action-menu-source" :class="{ 'action-menu-source--open': open }"
         type="button" aria-label="Действия персонажа" :aria-expanded="open">
@@ -8,20 +8,13 @@
           <span v-else>{{ Array.from(name || '?')[0] }}</span>
         </span>
         <span class="identity"><strong>{{ name || 'Лист персонажа' }}</strong>
-          <small v-if="subtitle || level">{{ subtitle }}<template v-if="level"><template v-if="subtitle"> · </template>{{ level }} ур.</template></small>
         </span>
         <span class="heading-metrics">
           <span :aria-label="`Класс доспеха ${armor}`" title="Класс доспеха"><Shield :size="14" />{{ armor }}</span>
           <span :aria-label="`Пассивное внимание ${perception}`" title="Пассивное внимание"><Eye :size="14" />{{ perception }}</span>
           <span :aria-label="`Пассивное расследование ${investigation}`" title="Пассивное расследование"><Search :size="14" />{{ investigation }}</span>
         </span>
-        <span class="heading-health" data-tutorial="character-hp" :style="{ '--hp-color': healthColor }" role="progressbar" aria-label="Здоровье"
-          :aria-valuenow="current" :aria-valuemin="0" :aria-valuemax="Math.max(maximum, current)"
-          :aria-valuetext="`${current} из ${maximum}${temporary ? ', временные ' + temporary : ''}`">
-          <i :style="{ width: healthPercent + '%' }" />
-          <i v-if="temporaryPercent" class="heading-health-temp" :style="{ left: healthPercent + '%', width: temporaryPercent + '%' }" />
-          <span>{{ current }} / {{ maximum }}<template v-if="temporary"> +{{ temporary }}</template></span>
-        </span>
+        <SheetHealth :current="current" :maximum="maximum" :temporary="temporary" />
       </button>
     </template>
     <template #default="{ close }">
@@ -41,6 +34,7 @@ import { computed, inject, ref, watch } from 'vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import { Eye, HeartPulse, Search, Shield, TrendingUp } from '@lucide/vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
+import SheetHealth from './SheetHealth.vue'
 import { levelExperience, levelProgressPercent } from '../../blocks/dnd/lib/experience'
 import { hpMaximum, normalizeHpMaximum } from '../../blocks/dnd/lib/hp'
 import { abilityModifier, resolveNumValue, sumBonuses, proficiencyBonus } from '@/shared/lib/dnd'
@@ -50,6 +44,7 @@ const ctx = inject('charCtx', {})
 const values = computed(() => ctx.values || {})
 const canEdit = computed(() => !!ctx.ownerMode)
 const level = computed(() => values.value.lvl?.level)
+const menuSummary = computed(() => [props.subtitle, level.value ? level.value + ' ур.' : ''].filter(Boolean).join(' · '))
 const experience = computed(() => Number(values.value.lvl?.exp) || 0)
 const nextExperience = computed(() => levelExperience(values.value.lvl).nextLevelExp)
 const progress = computed(() => levelProgressPercent(values.value.lvl))
@@ -60,9 +55,6 @@ const maximum = computed(() => {
   const max = normalizeHpMaximum(values.value.hp?.max)
   return hpMaximum({ max: { ...max, bonuses: [...max.bonuses, ...(ctx.characterHitPoints?.bonuses || [])] } })
 })
-const healthPercent = computed(() => maximum.value > 0 ? Math.max(0, Math.min(100, current.value / maximum.value * 100)) : 0)
-const temporaryPercent = computed(() => maximum.value > 0 ? Math.min(100 - healthPercent.value, temporary.value / maximum.value * 100) : 0)
-const healthColor = computed(() => healthPercent.value > 60 ? 'var(--success)' : healthPercent.value > 25 ? 'var(--warning)' : 'var(--danger)')
 function passive(stat, abilitySuggestId, skillId) {
   const skill = values.value[stat]?.skills?.[skillId] || {}
   const derived = ctx.characterDerivedEffects
@@ -89,14 +81,9 @@ function select(panel, close) { close(); emit('open', panel) }
 .heading-metrics {display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;font-variant-numeric:tabular-nums}
 .heading-metrics > span {display:inline-flex;align-items:center;gap:4px}
 .heading-metrics svg {color:var(--text-muted)}
-.heading-health {position:relative;grid-column:1/-1;display:grid;place-items:center;min-height:18px;border:1px solid var(--hp-color);border-radius:var(--radius-input);overflow:hidden;background:var(--bg);font-size:10px;font-weight:700;line-height:14px;font-variant-numeric:tabular-nums}
-.heading-health > i {position:absolute;inset:0 auto 0 0;background:var(--hp-color);opacity:.32;transition:width var(--motion-feedback)}
-.heading-health > .heading-health-temp {background:var(--info)}
-.heading-health > span {position:relative}
 .experience-action {display:flex;flex-direction:column;gap:5px;width:100%;min-width:0}
 .experience-action small {color:var(--text-muted);font-size:12px}
 .experience-track {height:7px;border-radius:var(--radius-input);overflow:hidden;background:var(--surface-raised)}
 .experience-track i {display:block;height:100%;background:var(--accent-soft)}
 @media (--ui-compact) {.identity {display:block}.identity strong,.identity small{display:block}.identity small{font-size:var(--type-caption-size,12px)}}
-@media (prefers-reduced-motion:reduce) {.heading-health > i{transition:none}}
 </style>
