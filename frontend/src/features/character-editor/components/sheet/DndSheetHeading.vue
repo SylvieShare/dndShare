@@ -83,7 +83,7 @@ function select(panel, close) { close(); emit('open', panel) }
 .portrait {grid-row:1/3;align-self:center;display:grid;place-items:center;width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);overflow:hidden;border-radius:var(--radius-input);color:var(--accent-soft);font-size:var(--type-sheet-header-size)}
 .portrait img {width:100%;height:100%;object-fit:cover}
 .identity {display:flex;flex-direction:column;align-items:flex-start;min-width:0}
-.identity strong,.identity small {overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.identity strong,.identity small {max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .identity strong {font-size:var(--type-sheet-header-size)}
 .identity small {font-size:var(--type-context-size);color:var(--text-muted)}
 .heading-metrics {display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;font-variant-numeric:tabular-nums}

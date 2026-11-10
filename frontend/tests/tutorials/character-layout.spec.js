@@ -225,7 +225,9 @@ test('sheet header uses the character icon before the portrait and handles missi
 
 for (const width of [390, 834, 1440]) test(`sheet content scrolls behind sharp chrome at ${width}`, async ({ page }) => {
   await page.setViewportSize({ width, height: 700 })
-  await fixture(page)
+  const api = await fixture(page)
+  api.document().values.name = 'Лира с очень длинным именем персонажа '.repeat(5)
+  api.document().values.race = { name: 'Полуэльф с длинным названием происхождения '.repeat(5) }
   await page.goto('/tests/tutorials/fixtures/tutorials.html')
   const header = page.locator('.character-workspace-header')
   await expect(header).toBeVisible()
