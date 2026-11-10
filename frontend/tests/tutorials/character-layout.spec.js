@@ -314,6 +314,7 @@ for (const width of [390, 834, 1440]) test(`sheet header is opaque at ${width}`,
   await expect(header).toBeVisible()
   await expect(header).toHaveCSS('background-color', 'rgb(23, 23, 27)')
   await expect(header.locator('.workspace-header-backdrop')).toHaveCount(0)
+  await expect(header.locator('.identity small')).toHaveText('3 ур.')
   await expect(page.locator('.character-summary-strip')).toHaveCount(0)
   const geometry = await page.locator('.dnd-heading').evaluate(node => {
     const root = node.getBoundingClientRect(), image = node.querySelector('.portrait').getBoundingClientRect()

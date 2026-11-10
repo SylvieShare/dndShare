@@ -8,7 +8,7 @@
           <span v-else>{{ Array.from(name || '?')[0] }}</span>
         </span>
         <span class="identity"><strong>{{ name || 'Лист персонажа' }}</strong>
-          <small v-if="subtitle">{{ subtitle }}<template v-if="level"> · {{ level }} ур.</template></small>
+          <small v-if="subtitle || level">{{ subtitle }}<template v-if="level"><template v-if="subtitle"> · </template>{{ level }} ур.</template></small>
         </span>
         <span class="heading-metrics">
           <span :aria-label="`Класс доспеха ${armor}`" title="Класс доспеха"><Shield :size="14" />{{ armor }}</span>
@@ -80,9 +80,9 @@ function select(panel, close) { close(); emit('open', panel) }
 </script>
 <style scoped>
 .dnd-heading {display:grid;grid-template-columns:var(--layout-sheet-header-icon) minmax(0,1fr);gap:4px var(--spacing-small);width:100%;min-width:0;padding:0;border:0;background:transparent;color:var(--text-1);text-align:left;font:inherit;cursor:pointer}
-.portrait {grid-row:1/3;display:grid;place-items:center;width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);overflow:hidden;border-radius:var(--radius-input);color:var(--accent-soft);font-size:var(--type-sheet-header-size)}
+.portrait {grid-row:1/3;align-self:center;display:grid;place-items:center;width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);overflow:hidden;border-radius:var(--radius-input);color:var(--accent-soft);font-size:var(--type-sheet-header-size)}
 .portrait img {width:100%;height:100%;object-fit:cover}
-.identity {display:flex;align-items:baseline;gap:var(--spacing-small);min-width:0}
+.identity {display:flex;flex-direction:column;align-items:flex-start;min-width:0}
 .identity strong,.identity small {overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .identity strong {font-size:var(--type-sheet-header-size)}
 .identity small {font-size:var(--type-context-size);color:var(--text-muted)}
