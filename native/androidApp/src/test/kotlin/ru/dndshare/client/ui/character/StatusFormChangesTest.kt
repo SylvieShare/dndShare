@@ -10,6 +10,35 @@ class StatusFormChangesTest {
     private fun obj(text: String) = WireJson.parseToJsonElement(text).jsonObject
 
     @Test
+    fun headerRemovalTargetsOnlyOneInstanceAndKeepsOtherConditionFields() {
+        val sheet = CharacterSheet("DND5", 1, obj("""{"values":{"states":[{"uid":"first","effect_id":100},{"uid":"second","effect_id":100,"unknown":"keep"}],"exhaustion":{"level":2,"custom":"keep"},"inspiration":true}}"""), 1)
+        fun after(uid: String) = applySheetPatches(sheet.data, removeHeaderStatusPatches(sheet, uid, emptyMap()))["values"].objectValue()
+        assertEquals(obj("""{"uid":"second","effect_id":100,"unknown":"keep"}"""), after("first")["states"].arrayValue().single())
+        assertEquals(JsonPrimitive(false), after("inspiration")["inspiration"])
+        assertEquals(obj("""{"level":0,"custom":"keep"}"""), after("exhaustion")["exhaustion"])
+        assertEquals(sheet.values["states"], after("exhaustion")["states"])
+        assertFailsWith<IllegalArgumentException> { removeHeaderStatusPatches(sheet, "already-removed", emptyMap()) }
+    }
+
+    @Test
+    fun headerRemovalRecognizesAnImportedInstanceWithoutUid() {
+        val sheet = CharacterSheet("DND5", 1, obj("""{"values":{"states":[{"effect_id":100},{"uid":"second","effect_id":100}]}}"""), 1)
+        val values = applySheetPatches(sheet.data, removeHeaderStatusPatches(sheet, "status-100-0", emptyMap()))["values"].objectValue()
+        assertEquals(obj("""{"uid":"second","effect_id":100}"""), values["states"].arrayValue().single())
+    }
+
+    @Test
+    fun removingFromTheHeaderAppliesTheSameEndEffectAsTheStatusEditor() {
+        val sheet = CharacterSheet("DND5", 1, obj("""{"values":{"states":[{"uid":"first","effect_id":100}]}}"""), 1)
+        val effect = CatalogueItem(100, 15, "Исходное", data = obj("""{"on_end_effect":200}"""))
+        val next = CatalogueItem(200, 15, "После окончания")
+        val values = applySheetPatches(sheet.data, removeHeaderStatusPatches(sheet, "first", mapOf(100L to effect, 200L to next)))["values"].objectValue()
+        val state = values["states"].arrayValue().single().objectValue()
+        assertEquals(200, state["effect_id"].number())
+        assertEquals(100, state["source"].objectValue()["item_id"].number())
+    }
+
+    @Test
     fun independentInstancesKeepTheirIdentityWhileDurationAndRemovalAreEditedTogether() {
         val sheet =
             CharacterSheet(

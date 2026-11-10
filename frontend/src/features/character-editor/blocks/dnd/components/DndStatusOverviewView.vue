@@ -1,5 +1,5 @@
 <template>
-  <div v-if="items.length || editable" class="dsov" :class="{ 'dsov--icons-only': iconsOnly }" :style="iconsOnly ? { '--status-icon-size': `${iconSize}px` } : null">
+  <div v-if="items.length || showAddAction" class="dsov" :class="{ 'dsov--icons-only': iconsOnly, 'dsov--header': header }" :style="iconsOnly ? { '--status-icon-size': `${iconSize}px` } : null">
     <div v-if="items.length" class="dsov-row">
       <RowActionMenu
         v-for="item in items"
@@ -38,10 +38,10 @@
                 <span class="dsov-name" :title="item.value">{{ item.value }}</span>
                 <span v-if="item.level" class="dsov-level">Уровень {{ item.level }}</span>
               </span>
-              <span v-if="item.duration" class="dsov-duration" :title="`Длительность: ${item.duration}`">
+              <span v-if="!header && item.duration" class="dsov-duration" :title="`Длительность: ${item.duration}`">
                 <Clock3 :size="12" aria-hidden="true" />{{ item.duration }}
               </span>
-              <span v-if="item.thesis" class="dsov-thesis">{{ item.thesis }}</span>
+              <span v-if="!header && item.thesis" class="dsov-thesis">{{ item.thesis }}</span>
             </span>
           </button>
         </template>
@@ -98,6 +98,7 @@ defineProps({
   iconsOnly: { type: Boolean, default: false },
   iconSize: { type: Number, default: 64 },
   context: { type: Object, default: null },
+  header: Boolean,
 })
 const emit = defineEmits(['add', 'view', 'remove', 'edit-duration', 'increase-level', 'decrease-level', 'show-tooltip', 'hide-tooltip'])
 
@@ -112,6 +113,14 @@ function monogram(value) {
 </script>
 
 <style scoped>
+.dsov.dsov--header {padding:0;gap:8px}
+.dsov--header .dsov-row {gap:8px;flex-wrap:wrap}
+.dsov--header .dsov-effect {width:auto;flex:0 0 auto;grid-template-columns:20px minmax(0,1fr);gap:6px;min-height:32px;padding:4px 6px}
+.dsov--header .dsov-icon {width:20px;height:20px;min-width:20px}
+.dsov--header .dsov-item-icon {width:20px;height:20px}
+.dsov--header .dsov-icon :deep(img), .dsov--header .dsov-icon :deep(svg) {width:20px;height:20px}
+.dsov--header .dsov-copy {gap:0}
+.dsov--header .dsov-name {font-size:12px}
 .dsov { display: flex; min-width: 0; align-items: center; gap: 13px; padding: 0 0 15px 15px; }
 .dsov-row {
   display: flex;

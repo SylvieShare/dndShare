@@ -26,6 +26,7 @@ internal val LocalChromeManaged = staticCompositionLocalOf { false }
 fun ShareChromeLayout(
     modifier: Modifier = Modifier,
     blurEnabled: Boolean = true,
+    solidColor: Color? = null,
     header: @Composable () -> Unit,
     subheader: @Composable () -> Unit = {},
     footer: (@Composable () -> Unit)? = null,
@@ -33,7 +34,7 @@ fun ShareChromeLayout(
     rowScrollOffset: (Int) -> Int = { 0 },
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    val supported = Build.VERSION.SDK_INT >= 31 && blurEnabled
+    val supported = Build.VERSION.SDK_INT >= 31 && blurEnabled && solidColor == null
     val source = if (supported) rememberGraphicsLayer() else null
     val blurred = if (supported) rememberGraphicsLayer() else null
     // Reserve the expanded row once. Animation reads belong to placement and drawing,
@@ -115,7 +116,7 @@ fun ShareChromeLayout(
             subcompose("backdrop") {
                     Canvas(
                         Modifier.fillMaxWidth()
-                            .height(top + DesignTokens.Chrome.FadeTail)
+                            .height(top + if (solidColor == null) DesignTokens.Chrome.FadeTail else 0.dp)
                             .then(
                                 if (source == null) Modifier
                                 else
@@ -129,7 +130,9 @@ fun ShareChromeLayout(
                         val fadeEnd = (size.height - rowScrollOffset(rowHeight).coerceIn(0, rowHeight)).coerceAtLeast(1f)
                         val fadeStart = (mainHeight / fadeEnd).coerceIn(0f, 1f)
                         val tint = WebPalette.Background.copy(alpha = DesignTokens.Chrome.Tint)
-                        if (source != null && blurred != null) {
+                        if (solidColor != null) {
+                            drawRect(solidColor, size = androidx.compose.ui.geometry.Size(size.width, fadeEnd))
+                        } else if (source != null && blurred != null) {
                             blurred.record(
                                 size = IntSize(size.width.toInt(), size.height.toInt())
                             ) {

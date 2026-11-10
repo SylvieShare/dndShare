@@ -1,16 +1,18 @@
 package ru.dndshare.client.ui.character
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.progressBarRangeInfo
@@ -18,134 +20,140 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import kotlinx.serialization.json.*
 import ru.dndshare.client.character.*
-import ru.dndshare.client.model.text
-import ru.dndshare.client.ui.LayoutFormat
 import ru.dndshare.client.ui.designsystem.*
 
 @Composable
-internal fun DndHeading(ctx: SheetContext, format: LayoutFormat, open: (String) -> Unit) {
+internal fun DndHeading(ctx: SheetContext) {
     val sheet = ctx.sheet
-    val subtitle = listOf(sheet.subtitle(), sheet.values["lvl"].objectValue()["level"]?.let { "${it.number()} ур." }.orEmpty()).filter(String::isNotBlank).joinToString(" · ")
+    val level = sheet.values["lvl"].objectValue()
+    val subtitle = listOf(sheet.subtitle(), level["level"].number(1).toString() + " ур.").filter(String::isNotBlank).joinToString(" · ")
     val hp = sheet.values["hp"].objectValue()
     val current = hp["current"].number()
-    val max = ctx.mechanics.hpMaximum()
-    val temp = hp["temp"].number()
-    val fraction = if (max > 0) (current.toFloat() / max).coerceIn(0f, 1f) else 0f
-    val color = when { fraction > .6f -> WebPalette.Success; fraction > .25f -> WebPalette.Warning; else -> WebPalette.Danger }
+    val maximum = ctx.mechanics.hpMaximum()
+    val temporary = hp["temp"].number().coerceAtLeast(0)
+    val fraction = if (maximum > 0) (current.toFloat() / maximum).coerceIn(0f, 1f) else 0f
+    val tempFraction = if (maximum > 0) (temporary.toFloat() / maximum).coerceIn(0f, 1f - fraction) else 0f
+    val animatedFraction by animateFloatAsState(fraction, tween(DesignTokens.Motion.Feedback), label = "Header HP")
+    val animatedTemp by animateFloatAsState(tempFraction, tween(DesignTokens.Motion.Feedback), label = "Header temporary HP")
+    val color = when {
+        fraction > .6f -> WebPalette.Success
+        fraction > .25f -> WebPalette.Warning
+        else -> WebPalette.Danger
+    }
     val image = sheet.iconImageUrl?.takeIf(String::isNotBlank) ?: sheet.portrait
     var failed by remember(image) { mutableStateOf(false) }
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        val level = sheet.values["lvl"].objectValue()
-        val xp = level["exp"].number()
-        val progress = dndLevelProgress(level["level"].number(1), xp)
-        Column(Modifier.width(DesignTokens.Layout.SheetHeaderIcon).clickable { open("profile") }
-            .semantics { contentDescription = "Профиль персонажа" }, horizontalAlignment = Alignment.CenterHorizontally) {
-            Box(Modifier.fillMaxWidth().height(DesignTokens.Layout.SheetHeaderIcon - 5.dp)
-                .clip(RoundedCornerShape(DesignTokens.Radius.Input)), contentAlignment = Alignment.Center) {
-                if (image != null && !failed) AsyncImage(image, null, imageLoader = ctx.images, onError = { failed = true },
-                    contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
-                else Text(sheet.name.take(1), style = ShareTypography.sheetHeader, color = WebPalette.AccentSoft)
-            }
-            Spacer(Modifier.height(2.dp))
-            Box(Modifier.fillMaxWidth().height(3.dp).clip(RoundedCornerShape(2.dp)).background(WebPalette.Raised)
-                .semantics { contentDescription = progress.next?.let { "Прогресс уровня: $xp / $it опыта" } ?: "Максимальный уровень"
-                    progressBarRangeInfo = ProgressBarRangeInfo(progress.percent, 0f..1f) }) {
-                Spacer(Modifier.fillMaxWidth(progress.percent).fillMaxHeight().background(WebPalette.AccentSoft))
-            }
-        }
-        Column(Modifier.weight(1f, fill = false)) {
-            Row(Modifier.clickable { open("profile") }, verticalAlignment = Alignment.CenterVertically) {
-                Text(sheet.name, Modifier.weight(1f, fill = false), style = ShareTypography.sheetHeader, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                if (format != LayoutFormat.Phone) Text("  " + subtitle, style = ShareTypography.context, color = WebPalette.TextMuted, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            }
-            if (format == LayoutFormat.Phone && subtitle.isNotBlank()) Text(subtitle, style = ShareTypography.context, color = WebPalette.TextMuted, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Row(Modifier.heightIn(min = 24.dp).clickable {
-                if (!ctx.canEdit || current <= 0) open("health") else ctx.edit("hp")
-            }.semantics { contentDescription = "Здоровье: $current из $max" },
-                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-                SheetAssetIcon("hp-pulse.svg", ctx, Modifier.size(14.dp), color)
-                Text("$current / $max", style = ShareTypography.context, maxLines = 1)
-                if (temp > 0) Text("+$temp", style = ShareTypography.context, color = WebPalette.Info)
-                if (current <= 0) Text("Спасброски", style = ShareTypography.context, color = color)
-                else Box(Modifier.width(28.dp).height(3.dp).background(WebPalette.Raised)) {
-                    Box(Modifier.fillMaxHeight().fillMaxWidth(fraction).background(color))
+    var menu by remember { mutableStateOf(false) }
+    var healthDetails by remember { mutableStateOf(false) }
+    fun edit(target: String) { menu = false; ctx.edit(target) }
+    val xp = level["exp"].number()
+    val progress = dndLevelProgress(level["level"].number(1), xp)
+    Box(Modifier.fillMaxWidth()) {
+        Column(
+            Modifier.fillMaxWidth().clickable { menu = true }
+                .semantics { contentDescription = "Действия персонажа" },
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Box(Modifier.size(DesignTokens.Layout.SheetHeaderIcon)
+                    .clip(RoundedCornerShape(DesignTokens.Radius.Input)), contentAlignment = Alignment.Center) {
+                    if (image != null && !failed)
+                        AsyncImage(image, null, imageLoader = ctx.images, onError = { failed = true },
+                            contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+                    else Text(sheet.name.take(1), style = ShareTypography.sheetHeader, color = WebPalette.AccentSoft)
+                }
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                    Text(sheet.name, style = ShareTypography.sheetHeader, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(subtitle, style = ShareTypography.context, color = WebPalette.TextMuted,
+                        maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        HeaderMetric(Glyph.Shield, "Класс доспеха", ctx.mechanics.armor.total)
+                        HeaderMetric(Glyph.Eye, "Пассивное внимание", passiveSkill(ctx, "WIS", 5, 10))
+                        HeaderMetric(Glyph.Search, "Пассивное расследование", passiveSkill(ctx, "INT", 4, 5))
+                    }
                 }
             }
-        }
-        if (format == LayoutFormat.Wide) StatusChip(ctx, Modifier.widthIn(max = 170.dp)) { open("statuses") }
-    }
-}
-
-@Composable
-private fun SheetAssetIcon(asset: String, ctx: SheetContext, modifier: Modifier, tint: Color? = null) {
-    AsyncImage(
-        "file:///android_asset/character-sheet/$asset", null, ctx.images,
-        modifier = modifier, colorFilter = tint?.let { ColorFilter.tint(it) },
-        alpha = if (tint == null) .8f else 1f,
-    )
-}
-
-@Composable
-private fun StatusChip(ctx: SheetContext, modifier: Modifier, click: () -> Unit) {
-    val values = ctx.sheet.values
-    val states = values["states"].arrayValue().map {
-        val row = it.objectValue()
-        ctx.items[row["effect_id"].referenceId()]?.name ?: row.label().ifBlank { "Состояние" }
-    }.toMutableList()
-    values["exhaustion"].objectValue()["level"].number().takeIf { it > 0 }?.let { states.add("Истощение $it") }
-    if ((values["inspiration"] as? JsonPrimitive)?.booleanOrNull == true) states.add("Вдохновение")
-    Row(modifier.heightIn(min = 32.dp).clickable(onClick = click).semantics { contentDescription = "Состояния" },
-        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-        AppGlyph(Glyph.Sparkles, Modifier.size(14.dp), WebPalette.AccentSoft)
-        Text(states.firstOrNull() ?: "Состояния", Modifier.weight(1f, fill = false), maxLines = 1, overflow = TextOverflow.Ellipsis,
-            style = ShareTypography.context, color = WebPalette.AccentSoft)
-        if (states.size > 1) Text("+${states.size - 1}", style = ShareTypography.context)
-    }
-}
-
-@Composable
-internal fun DndSummaryStrip(format: LayoutFormat, open: (String) -> Unit) {
-    val ctx = LocalCharacterSheet.current
-    var initiativeMenu by remember { mutableStateOf(false) }
-    val bonus = initiativeSummaryBonus(ctx)
-    Row(Modifier.fillMaxWidth().padding(horizontal = DesignTokens.Spacing.Page),
-        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(if (format == LayoutFormat.Tablet) 14.dp else 8.dp)) {
-        @Composable fun metric(label: String, asset: String, value: String, click: () -> Unit) {
-            Row(Modifier.sizeIn(minWidth = 40.dp, minHeight = 40.dp).clickable(enabled = ctx.canEdit, onClick = click).semantics { contentDescription = "$label $value" },
-                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-                SheetAssetIcon(asset, ctx, Modifier.size(16.dp))
-                if (format == LayoutFormat.Tablet) Text(label, style = ShareTypography.context, color = WebPalette.TextMuted)
-                Text(value, style = ShareTypography.group)
+            Box(
+                Modifier.fillMaxWidth().height(18.dp).clip(RoundedCornerShape(DesignTokens.Radius.Input))
+                    .background(WebPalette.Background).border(1.dp, color, RoundedCornerShape(DesignTokens.Radius.Input))
+                    .semantics {
+                        contentDescription = "Здоровье: $current из $maximum" + if (temporary > 0) ", временные $temporary" else ""
+                        progressBarRangeInfo = ProgressBarRangeInfo(fraction, 0f..1f)
+                    },
+                contentAlignment = Alignment.Center,
+            ) {
+                if (animatedFraction > 0f)
+                    Box(Modifier.fillMaxHeight().fillMaxWidth(animatedFraction).align(Alignment.CenterStart).background(color.copy(alpha = .32f)))
+                if (animatedTemp > 0f) {
+                    BoxWithConstraints(Modifier.fillMaxSize()) {
+                        Box(Modifier.offset(x = maxWidth * animatedFraction).width(maxWidth * animatedTemp)
+                            .fillMaxHeight().background(WebPalette.Info.copy(alpha = .32f)))
+                    }
+                }
+                Text("$current / $maximum" + if (temporary > 0) " +$temporary" else "",
+                    fontSize = 10.sp, lineHeight = 14.sp)
             }
         }
-        metric("КД", "shield.svg", ctx.mechanics.armor.total.toString()) { ctx.edit("utility:armor") }
-        Box {
-            metric("Инициатива", "initiative.svg", signed(bonus)) { initiativeMenu = true }
-            SheetRollActions(initiativeMenu, { initiativeMenu = false }, SheetRollRequest("Инициатива", "initiative", bonus = bonus), "utility:initiative")
+        ShareDropdownMenu(menu, { menu = false }) {
+            ShareDropdownMenuItem(
+                text = { Text("Изменить персонажа") },
+                leadingIcon = { AppGlyph(Glyph.Edit) },
+                enabled = ctx.canEdit,
+                onClick = { edit("identity") },
+            )
+            ShareDropdownMenuItem(
+                text = {
+                    Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        Text("Опыт $xp" + (progress.next?.let { " / $it" } ?: ""))
+                        LinearProgressIndicator(
+                            { progress.percent }, Modifier.fillMaxWidth().height(7.dp).clip(RoundedCornerShape(4.dp)),
+                            color = WebPalette.AccentSoft, trackColor = WebPalette.Raised,
+                        )
+                    }
+                },
+                leadingIcon = { AppGlyph(Glyph.Sparkles) },
+                enabled = ctx.canEdit,
+                onClick = { edit("level") },
+            )
+            ShareDropdownMenuItem(text = { Text(if (ctx.canEdit) "Изменить HP" else "Здоровье") },
+                leadingIcon = { AppGlyph(Glyph.Heart) },
+                onClick = {
+                    if (ctx.canEdit) edit("hp")
+                    else { menu = false; healthDetails = true }
+                })
+            ShareDropdownMenuItem(text = { Text("Добавить состояние") }, leadingIcon = { AppGlyph(Glyph.Plus) },
+                enabled = ctx.canEdit, onClick = { edit("statuses") })
         }
-        metric("Скорость", "speed.svg", "${ctx.mechanics.speed()} фт.") { ctx.edit("utility:speed") }
-        StatusChip(ctx, Modifier.weight(1f)) { open("statuses") }
+    }
+    if (healthDetails) ShareFormDialog("Здоровье", { healthDetails = false }) {
+        SheetFormReadout("Текущие хиты", "$current / $maximum", Glyph.Heart)
+        if (temporary > 0) SheetFormReadout("Временные хиты", temporary.toString())
+        if (current <= 0) {
+            SheetFormReadout("Успехи", hp["ds_success"].number().toString() + " / 3")
+            SheetFormReadout("Провалы", hp["ds_failure"].number().toString() + " / 3")
+        }
     }
 }
 
 @Composable
-internal fun DndOverviewDialog(panel: String, close: () -> Unit, open: (String) -> Unit) {
-    val ctx = LocalCharacterSheet.current
-    val title = when (panel) { "profile" -> "Профиль персонажа"; "statuses" -> "Состояния"; "health" -> "Здоровье"; else -> "Сводка персонажа" }
-    ShareFormDialog(title, close) {
-        CompositionLocalProvider(LocalCharacterSheet provides ctx.copy(edit = { close(); ctx.edit(it) }, roll = { close(); ctx.roll(it) })) {
-            when (panel) {
-                "profile" -> { DndProfileDetails(); val level = ctx.sheet.values["lvl"].objectValue(); DndLevel(level["level"].number(1), level["exp"].number()) }
-                "statuses" -> { DndStatuses(showEmpty = true); if (ctx.canEdit) ShareTextButton({ close(); ctx.edit("statuses") }) { Text("Изменить состояния") } }
-                "health" -> { DndHealth(); if (ctx.canEdit) ShareTextButton({ close(); ctx.edit("hp") }) { Text("Изменить здоровье") } }
-                else -> DndUtilities()
-            }
-            if (panel == "summary") ShareTextButton({ open("profile") }) { Text("Профиль персонажа") }
-            if (panel == "profile") ShareTextButton({ open("summary") }) { Text("Сводка персонажа") }
-            if (panel == "summary" || panel == "profile") ShareTextButton({ open("statuses") }) { Text("Состояния") }
-        }
+private fun HeaderMetric(icon: Glyph, label: String, value: Int) {
+    Row(
+        Modifier.semantics { contentDescription = "$label $value" },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(3.dp),
+    ) {
+        AppGlyph(icon, Modifier.size(14.dp), WebPalette.TextMuted)
+        Text(value.toString(), style = ShareTypography.context)
     }
+}
+
+private fun passiveSkill(ctx: SheetContext, stat: String, ability: Long, skill: Long): Int {
+    val stored = ctx.sheet.values[stat].objectValue()["skills"].objectValue()[skill.toString()].objectValue()
+    val rule = RuleContext(kind = "skill_check", ability = ability, skill = skill)
+    val rank = maxOf(stored["up"].number(), ctx.mechanics.rank("skill_proficiency", rule))
+    return 10 + abilityModifier(ctx.mechanics.score(stat)) + rank * ctx.sheet.proficiency() +
+        stored["bonuses"].bonusTotal() + ctx.mechanics.bonus("skill_bonus", rule.copy(proficient = rank > 0))
 }

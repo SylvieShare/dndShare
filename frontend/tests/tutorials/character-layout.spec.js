@@ -1,6 +1,11 @@
 import { test, expect } from '@playwright/test'
 import { fixture } from './fixtures/character-layout'
 
+async function openHeaderAction(page, name) {
+  await page.getByRole('button', { name: 'Действия персонажа', exact: true }).click()
+  await page.getByRole('menuitem', { name, exact: true }).click()
+}
+
 for (const width of [600, 834, 1100]) test(`tablet sheet uses a shared header and balanced stats at ${width}`, async ({ page }) => {
   const errors = []; page.on('pageerror', error => errors.push(error.message))
   await page.setViewportSize({ width, height: 1100 })
@@ -61,18 +66,18 @@ for (const width of [390, 834, 1440]) test(`health and sheet actions remain reac
   const api = await fixture(page)
   await page.goto('/tests/tutorials/fixtures/tutorials.html')
   const heading = page.locator('.dnd-heading')
-  await expect(heading.getByRole('button', {name: 'Здоровье: 18 из 23'})).toBeVisible()
+  await expect(heading.locator('.heading-health')).toHaveText('18 / 23')
   if (width < 1200) {
     const scroller = page.locator('.mobile-swipe-pane:not([inert]) .mobile-pane-scroll')
     await scroller.evaluate(el => { el.scrollTop = 180 })
-    await expect(page.locator('.character-summary-strip')).toHaveAttribute('inert', '')
+    await expect(page.locator('.character-summary-strip')).toHaveCount(0)
     await expect(page.getByRole('button', {name:'Сводка персонажа',exact:true})).toHaveCount(0)
     await expect(heading).toBeInViewport()
   } else {
     await expect(page.locator('.dnd-desktop-main [data-sheet-field="hp"]')).toHaveCount(0)
     await expect(page.locator('.dnd-desktop-utilities [data-sheet-field="rest"]')).toHaveCount(0)
   }
-  await expect(heading.getByRole('progressbar', {name:'Прогресс уровня'})).toBeVisible()
+  await expect(heading.locator('.portrait-xp')).toHaveCount(0)
   const header = page.locator('.character-workspace-header')
   await header.getByRole('button', {name:'Отдых и рассвет',exact:true}).click()
   await expect(page.getByRole('menuitem', {name:'Короткий отдых'})).toBeVisible()
@@ -80,8 +85,9 @@ for (const width of [390, 834, 1440]) test(`health and sheet actions remain reac
   await header.getByRole('button', {name:'Меню персонажа',exact:true}).click()
   await expect(page.locator('[data-tutorial="character-menu"]:visible')).toBeVisible()
   await page.keyboard.press('Escape')
-  await heading.getByRole('button', {name: 'Здоровье: 18 из 23'}).click()
+  await openHeaderAction(page, 'Изменить HP')
   await expect(page.locator('[data-tutorial="character-hp-editor"]')).toBeVisible()
+  await expect(page.locator('.mes-editor')).toHaveCount(0)
   expect(api.writes).toEqual([])
 })
 
@@ -90,11 +96,11 @@ for (const owner of [false, true]) test(`zero HP opens death saves with the shee
   const api = await fixture(page, 'DND5', owner)
   Object.assign(api.document().values.hp, {current:0,ds_success:1,ds_failure:2})
   await page.goto('/tests/tutorials/fixtures/tutorials.html')
-  await page.getByRole('button', {name:'Здоровье: 0 из 23'}).click()
+  await openHeaderAction(page, owner ? 'Изменить HP' : 'Здоровье')
   const panel = page.getByRole('dialog', {name:'Здоровье',exact:true})
   if (owner) {
     await expect(panel.getByRole('button',{name:'Провалы: 2'})).toHaveAttribute('aria-pressed','true')
-    await expect(panel.getByRole('button',{name:'Изменить здоровье'})).toBeVisible()
+    await expect(panel.getByRole('button',{name:'Урон',exact:true})).toBeVisible()
   } else {
     await expect(panel.getByText('2 / 3')).toBeVisible()
     await expect(panel.getByRole('button',{name:'Изменить здоровье'})).toHaveCount(0)
@@ -146,7 +152,7 @@ test.describe('compact character gestures', () => {
   test('modal tablet sheet uses the same swipe pager', async ({ page }) => {
     await page.setViewportSize({ width: 834, height: 1100 })
     await page.goto('/tests/tutorials/fixtures/character-sheet-save.html')
-    await expect(page.locator('.dnd-heading .name strong')).toHaveText('Торин')
+    await expect(page.locator('.dnd-heading .identity strong')).toHaveText('Торин')
     const modal = await page.locator('.csm').boundingBox()
     const tabs = await page.locator('.csm-tabs').boundingBox()
     expect(tabs.width).toBeLessThan(modal.width - 24)
@@ -223,10 +229,10 @@ for (const width of [390, 834, 1440]) test(`sheet content scrolls behind sharp c
   await page.goto('/tests/tutorials/fixtures/tutorials.html')
   const header = page.locator('.character-workspace-header')
   await expect(header).toBeVisible()
-  await expect(header.getByRole('button', { name: 'Профиль персонажа' })).toHaveText('Л')
+  await expect(header.locator('.portrait')).toHaveText('Л')
   const identity = await header.locator('.dnd-heading').boundingBox()
   const icon = await header.locator('.dnd-heading .portrait').boundingBox()
-  const name = await header.locator('h1').boundingBox()
+  const name = await header.locator('.identity strong').boundingBox()
   expect(icon.x + icon.width).toBeLessThan(name.x)
   expect(name.x + name.width).toBeLessThanOrEqual(identity.x + identity.width + 1)
   await expect.poll(() => page.locator('.view').evaluate(element =>
@@ -299,36 +305,79 @@ test('resize keeps loaded catalogue and current section without refetch', async 
 })
 
 
-for (const width of [390, 834, 1440]) test(`chrome actually blurs the sheet pixels at ${width}`, async ({ page }, testInfo) => {
-  await page.setViewportSize({ width, height: 700 })
+
+for (const width of [390, 834, 1440]) test(`sheet header is opaque at ${width}`, async ({ page }, testInfo) => {
+  await page.setViewportSize({ width, height: 900 })
   await fixture(page)
   await page.goto('/tests/tutorials/fixtures/tutorials.html?fullApp')
   const header = page.locator('.character-workspace-header')
   await expect(header).toBeVisible()
-  if (width < 1200) {
-    await page.getByRole('button', { name: 'Статы', exact: true }).click()
-    await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/dragging|settling/)
-  }
-  const scroller = width < 1200 ? page.locator('.mobile-swipe-pane:not([inert]) .mobile-pane-scroll') : page.locator('.sheet-scroll')
-  await expect.poll(() => scroller.evaluate(element => element.scrollHeight - element.clientHeight)).toBeGreaterThan(20)
-  await scroller.evaluate(element => { element.scrollTop = 200 })
-  await expect.poll(() => scroller.evaluate(element => element.scrollTop)).toBeGreaterThan(20)
-  await page.addStyleTag({ content: '.character-workspace-header .workspace-header-inner { visibility: hidden; }' })
-  const bounds = await header.boundingBox()
-  const clip = { x: Math.ceil(bounds.x) + 8, y: Math.ceil(bounds.y), width: Math.floor(bounds.width) - 24, height: Math.min(50, Math.floor(bounds.height)) }
-  const take = () => page.screenshot({ clip, animations: 'disabled' })
-  await expect(header.locator('.workspace-header-backdrop')).toHaveAttribute('aria-hidden', 'true')
-  const blurred = await take()
-  const stableBlurred = await take()
-  const disabledBlur = await page.addStyleTag({ content: '.character-workspace-header .workspace-header-backdrop { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }' })
-  const sharp = await take()
-  const stable = await take()
-  await disabledBlur.evaluate(element => element.remove())
-  const restored = await take()
-  await testInfo.attach('blurred', { body: blurred, contentType: 'image/png' })
-  await testInfo.attach('sharp', { body: sharp, contentType: 'image/png' })
-  expect(stableBlurred.equals(blurred), 'Blurred scene must be stable').toBe(true)
-  expect(restored.equals(blurred), 'Restoring blur must restore the same scene').toBe(true)
-  expect(stable.equals(sharp), 'Control pixels must be stable').toBe(true)
-  expect(blurred.equals(sharp), 'Blur must change the rendered backdrop, not only computed CSS').toBe(false)
+  await expect(header).toHaveCSS('background-color', 'rgb(23, 23, 27)')
+  await expect(header.locator('.workspace-header-backdrop')).toHaveCount(0)
+  await expect(page.locator('.character-summary-strip')).toHaveCount(0)
+  const geometry = await page.locator('.dnd-heading').evaluate(node => {
+    const root = node.getBoundingClientRect(), image = node.querySelector('.portrait').getBoundingClientRect()
+    const hp = node.querySelector('.heading-health').getBoundingClientRect(), css = getComputedStyle(node.querySelector('.heading-health'))
+    return { left: hp.left - image.left, right: root.right - hp.right, icon: image.width, hpHeight: hp.height, border: css.borderTopWidth, radius: parseFloat(css.borderTopLeftRadius) }
+  })
+  expect(Math.abs(geometry.left)).toBeLessThan(1)
+  expect(Math.abs(geometry.right)).toBeLessThan(1)
+  expect(geometry.icon).toBe(48)
+  expect(geometry.hpHeight).toBeGreaterThanOrEqual(16)
+  expect(geometry.border).toBe('1px')
+  expect(geometry.radius).toBeGreaterThan(0)
+  await testInfo.attach('character-header', { body: await header.screenshot(), contentType: 'image/png' })
+})
+
+for (const width of [390, 834, 1440]) test(`header menu edits character HP and experience without morphs at ${width}`, async ({ page }) => {
+  await page.setViewportSize({ width, height: 1000 })
+  const api = await fixture(page)
+  api.document().values.WIS.skills['10'] = { up: 1, bonuses: [] }
+  api.document().values.INT.skills['5'] = { up: 2, bonuses: [] }
+  await page.goto('/tests/tutorials/fixtures/tutorials.html')
+  const heading = page.locator('.dnd-heading')
+  await expect(heading.locator('[title="Пассивное внимание"]')).toHaveText('15')
+  await expect(heading.locator('[title="Пассивное расследование"]')).toHaveText('16')
+  await openHeaderAction(page, 'Изменить персонажа')
+  const identity = page.getByRole('dialog', { name: 'Персонаж', exact: true })
+  await identity.getByPlaceholder('Имя персонажа').fill('Новая Лира')
+  await identity.getByRole('button', { name: 'Сохранить', exact: true }).click()
+  await expect(heading.locator('.identity strong')).toHaveText('Новая Лира')
+  await openHeaderAction(page, 'Изменить HP')
+  const health = page.getByRole('dialog', { name: 'Здоровье', exact: true })
+  await health.getByRole('button', { name: '4', exact: true }).click()
+  await health.getByRole('button', { name: 'Урон', exact: true }).click()
+  await expect(heading.locator('.heading-health')).toHaveText('14 / 23')
+  await page.keyboard.press('Escape')
+  await expect(health).toHaveCount(0)
+  await page.getByRole('button', { name: 'Действия персонажа', exact: true }).click()
+  await expect(page.getByRole('progressbar', { name: 'Прогресс уровня' })).toBeVisible()
+  await page.getByRole('menuitem', { name: /Опыт/ }).click()
+  const experience = page.getByRole('dialog', { name: 'Опыт', exact: true })
+  await experience.getByRole('button', { name: '1', exact: true }).click()
+  await experience.getByRole('button', { name: '0', exact: true }).click()
+  await experience.getByRole('button', { name: '+ 10 опыт', exact: true }).click()
+  await expect.poll(() => api.document().values.lvl.exp).toBe(710)
+  await expect.poll(() => api.document().values.hp.current).toBe(14)
+  await expect(page.locator('.mes-editor')).toHaveCount(0)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
+})
+
+for (const width of [390, 834, 1440]) test(`active header conditions have their own menu at ${width}`, async ({ page }) => {
+  await page.setViewportSize({ width, height: 900 })
+  const api = await fixture(page)
+  api.document().values.inspiration = true
+  await page.goto('/tests/tutorials/fixtures/tutorials.html')
+  const strip = page.locator('.character-summary-strip')
+  const status = strip.getByRole('button', { name: 'Вдохновение', exact: true })
+  await expect(status).toBeVisible()
+  await expect(status.locator('svg')).toBeVisible()
+  expect((await status.boundingBox()).width).toBeLessThan(200)
+  await status.click()
+  await page.getByRole('menuitem', { name: 'Убрать', exact: true }).click()
+  await expect(strip).toHaveCount(0)
+  await expect.poll(() => api.document().values.inspiration).toBe(false)
+  await openHeaderAction(page, 'Добавить состояние')
+  await expect(page.getByRole('dialog', { name: 'Эффекты и состояния', exact: true })).toBeVisible()
+  await expect(page.locator('.mes-editor')).toHaveCount(0)
 })

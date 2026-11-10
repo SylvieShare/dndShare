@@ -1,5 +1,5 @@
 <template>
-  <DndHpView v-bind="$attrs" ref="tutorialHp" data-tutorial="character-hp" :compact="isCompact" :heading="block.props?.variant === 'heading'"
+  <DndHpView v-if="!block.props?.editorOnly" v-bind="$attrs" ref="tutorialHp" data-tutorial="character-hp" :compact="isCompact" :heading="block.props?.variant === 'heading'"
     :hp="hp" :interactive="canEdit" @open="openEditor" @change="onHpChange" />
 
   <AppModalFrame v-if="detailsOpen" title="Здоровье" @close="detailsOpen = false">
@@ -9,6 +9,10 @@
       <dt>Временные HP</dt><dd>{{ hp.temp || 0 }}</dd>
       <template v-if="hp.current <= 0"><dt>Успехи</dt><dd>{{ hp.ds_success || 0 }} / 3</dd><dt>Провалы</dt><dd>{{ hp.ds_failure || 0 }} / 3</dd></template>
     </dl>
+  </AppModalFrame>
+  <AppModalFrame v-if="calculatorOpen" title="Здоровье" @close="calculatorOpen = false">
+    <DndHpView panel :hp="hp" @change="onHpChange" />
+    <DndHpEditor data-tutorial="character-hp-editor" :hp="hp" @change="onHpChange" />
   </AppModalFrame>
   <MorphEditorShell
     v-if="editorOpen"
@@ -48,8 +52,16 @@ const canEdit = computed(() => !!charCtx.ownerMode)
 const { editorOpen, originRect, originEl, open: openMorph, close } = useMorphOrigin()
 
 const detailsOpen = ref(false)
+const calculatorOpen = ref(false)
+defineExpose({ open: () => { if (canEdit.value) calculatorOpen.value = true; else detailsOpen.value = true } })
 const tutorialHp = ref(null)
 useTutorialAction('character-health', ({ onCleanup }) => {
+  if (props.block?.props?.editorOnly) {
+    const wasOpen = calculatorOpen.value
+    calculatorOpen.value = true
+    onCleanup(() => { calculatorOpen.value = wasOpen })
+    return
+  }
   const wasOpen = editorOpen.value
   onCleanup(() => { if (!wasOpen) close() })
   if (!wasOpen) openMorph({ currentTarget: tutorialHp.value?.rootElement?.() || tutorialHp.value?.$el })

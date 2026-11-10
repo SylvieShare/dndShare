@@ -1,10 +1,11 @@
 <template>
-  <div v-bind="$attrs" ref="root" class="dso-root" :class="`dso-root--${displayMode}`">
+  <div v-show="!block.props?.editorOnly" v-bind="$attrs" ref="root" class="dso-root" :class="`dso-root--${displayMode}`">
     <DndStatusOverviewView
       v-if="summaryItems.length || showAddAction"
       :items="summaryItems"
       :editable="canInteract"
       :show-add-action="showAddAction"
+      :header="block.props?.variant === 'header'"
       @add="pickerOpen = true"
       @view="viewStatus"
       @remove="removeDisplayItem"
@@ -74,6 +75,7 @@ const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: true })
 const root = ref(null)
 const pickerOpen = ref(false)
+defineExpose({ open: () => { if (canInteract.value) pickerOpen.value = true } })
 const viewItem = ref(null)
 const durationUid = ref(null)
 const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })

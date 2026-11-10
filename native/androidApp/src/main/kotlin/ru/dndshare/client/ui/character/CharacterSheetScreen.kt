@@ -93,7 +93,6 @@ private fun CharacterSheetBody(
         }
     }
     val mechanics = ui.mechanics
-    var overview by androidx.compose.runtime.saveable.rememberSaveable(model.uuid) { mutableStateOf<String?>(null) }
     val pageScrollStates = remember(model.uuid, format) { mutableStateMapOf<SheetSection, androidx.compose.foundation.ScrollState>() }
     val sheetContext = if (sheet != null && mechanics != null)
         model.sheetContext(ui, sheet, mechanics, images, canEdit) else null
@@ -113,6 +112,7 @@ private fun CharacterSheetBody(
     ) {
         ShareChromeLayout(
             modifier = Modifier.shareCanvas(),
+            solidColor = WebPalette.Background,
             header = {
                 PreparedSheetHeader(
                     sheet,
@@ -125,16 +125,16 @@ private fun CharacterSheetBody(
                     close,
                     backTitle,
                     navigationInHeader = false,
-                    heading = dndContext?.let { ctx -> { DndHeading(ctx, format) { overview = it } } },
+                    heading = dndContext?.let { ctx -> { DndHeading(ctx) } },
                     actions = { SheetHeaderWidgets(ui, model, format, dndContext) },
                     menu =
                         if (sheet?.templateName == "VTM20") ({ model.edit("menu") })
                         else null,
                 )
             },
-            collapsibleRow = if (dndContext != null && format != LayoutFormat.Wide) ({
+            collapsibleRow = if (dndContext != null && hasHeaderStatuses(dndContext)) ({
                 CompositionLocalProvider(LocalCharacterSheet provides dndContext) {
-                    DndSummaryStrip(format) { overview = it }
+                    DndSummaryStrip()
                 }
             }) else null,
             rowScrollOffset = { height ->
@@ -258,9 +258,6 @@ private fun CharacterSheetBody(
                                     }
                             }
 
-                            if (dndContext != null && overview != null) DndOverviewDialog(
-                                requireNotNull(overview), { overview = null }, { overview = it },
-                            )
                             ui.editor?.takeUnless { it.isDndStat() }
                                 ?.let { editor ->
                                     if (isFeatureForm(editor.fields.target))

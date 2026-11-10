@@ -65,7 +65,8 @@ internal class SheetItemMechanicsController(
                     return@withLock
                 }
                 val patches =
-                    if (operation == "weapon-delete") weaponRemovalPatches(sheet, uid)
+                    if (operation == "status-remove") removeHeaderStatusPatches(sheet, uid, items)
+                    else if (operation == "weapon-delete") weaponRemovalPatches(sheet, uid)
                     else if (operation == "status-parameter") listOf(setStatusParameter(sheet, items, uid, input))
                     else if (operation == "weapon-to-inventory" || operation == "weapon-attunement")
                         weaponItemMenuPatches(sheet, uid, operation, input, items)

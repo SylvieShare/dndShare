@@ -1,6 +1,6 @@
 <template>
   <div v-if="component" v-show="visible" class="character-sheet-field" :data-sheet-field="definition.id" :style="placementStyle">
-    <component :is="component" v-bind="componentProps" @update:value="updateValue" @update:var="updateVar" />
+    <component ref="control" :is="component" v-bind="componentProps" @update:value="updateValue" @update:var="updateVar" />
   </div>
 </template>
 
@@ -19,6 +19,8 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:value', 'update:var'])
 const context = inject(characterSheetContext, null)
+const control = ref(null)
+defineExpose({ open: () => control.value?.open?.() })
 const hidden = ref(false)
 const charCtx = inject('charCtx', { ownerMode: false })
 const visible = computed(() => !hidden.value && !(definition.value.type === 'CHARACTER_READ_ONLY' && charCtx.ownerMode))

@@ -81,7 +81,7 @@ class SheetBaseLayoutTest {
                                         measured["$current:$scale"] = it.size.height
                                     }
                                 ) {
-                                    DndHeading(context, if (current < 600) ru.dndshare.client.ui.LayoutFormat.Phone else ru.dndshare.client.ui.LayoutFormat.Tablet) {}
+                                    DndHeading(context)
                                 }
                             }
                         }

@@ -94,8 +94,8 @@ class CharacterSheetHeaderTest {
                     val header = requireNotNull(bounds[current])
                     val icon = TouchRobot.bounds("Иконка персонажа")
                     val name = TouchRobot.bounds("Лира")
-                    assertEquals(40, icon.width())
-                    assertEquals(40, icon.height())
+                    assertEquals(48, icon.width())
+                    assertEquals(48, icon.height())
                     assertTrue(icon.right <= name.left, "The character icon precedes the identity")
                     assertTrue(name.right <= header.right + 1, "Identity stays inside the header")
                     if (current == 834) {

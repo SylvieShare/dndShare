@@ -1,11 +1,11 @@
 <template>
-  <WorkspaceHeader v-bind="$attrs" class="character-workspace-header" :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" :split-navigation="stackedNavigation">
+  <WorkspaceHeader v-bind="$attrs" class="character-workspace-header" solid :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" :split-navigation="stackedNavigation">
     <template #identity>
       <ActionButton variant="quiet" :icon-only="compact" :aria-label="modal ? 'Закрыть лист' : 'К списку персонажей'" @click="modal ? emit('close') : router.push('/chars')">
         <template #icon><ArrowLeft :size="18" /></template>
         <span v-if="!compact">{{ modal ? 'Закрыть' : 'Персонажи' }}</span>
       </ActionButton>
-      <DndSheetHeading v-if="dnd" :name="name" :subtitle="subtitle" :icon-url="iconUrl" :wide="format === 'desktop'" @open="panel = $event" />
+      <DndSheetHeading v-if="dnd" :name="name" :subtitle="subtitle" :icon-url="iconUrl" @open="openHeading" />
       <div v-else class="character-identity">
         <div class="character-heading-icon" role="img" aria-label="Иконка персонажа">
           <img v-if="iconUrl && !iconFailed" :key="iconUrl" :src="iconUrl" alt="" @error="iconFailed = true" />
@@ -17,9 +17,9 @@
         </div>
       </div>
     </template>
-    <template v-if="dnd && format !== 'desktop'" #between>
+    <template v-if="dnd && hasStates" #between>
       <div ref="stripViewport" class="character-summary-strip">
-        <DndSheetStrip :format="format" @open="panel = $event" />
+        <DndSheetStrip />
       </div>
     </template>
     <template v-if="tabs.length" #navigation>
@@ -31,7 +31,12 @@
         <CharacterBlock block-id="settings" :options="{ header: true }" />
       </div>
       <SettingsMenuTile v-if="showMenu" :block="{ props: { embedded: true } }" />
-      <DndOverviewDialog v-if="dnd && panel" :panel="panel" @open="panel = $event" @close="panel = ''" />
+      <div v-if="dnd" class="heading-editors">
+        <CharacterBlock ref="profileEditor" block-id="char_identity" :options="{ editorOnly: true }" />
+        <CharacterBlock ref="experienceEditor" block-id="lvl" :options="{ editorOnly: true }" />
+        <CharacterBlock ref="healthEditor" block-id="hp" :options="{ editorOnly: true }" />
+        <CharacterBlock ref="statusEditor" block-id="desktop_status_trigger" :options="{ editorOnly: true }" />
+      </div>
       <CharacterSessionControl v-if="!modal" compact :session="session" :controller="transfers" />
     </template>
   </WorkspaceHeader>
@@ -40,7 +45,7 @@
 defineOptions({ inheritAttrs: false })
 import CharacterBlock from './CharacterBlock.vue'
 import { useRouter } from 'vue-router'
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, ref, watch } from 'vue'
 import { ActionButton } from '@sylvieshare/share-ui'
 import { ArrowLeft } from '@lucide/vue'
 import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
@@ -49,11 +54,17 @@ import SettingsMenuTile from '../blocks/generic/SettingsMenuTile.vue'
 import CharacterSheetTabs from './sheet/CharacterSheetTabs.vue'
 import DndSheetHeading from './sheet/DndSheetHeading.vue'
 import DndSheetStrip from './sheet/DndSheetStrip.vue'
-import DndOverviewDialog from './sheet/DndOverviewDialog.vue'
+import { isInspirationActive } from '../blocks/dnd/lib/mobileStatus'
 const props = defineProps({ dnd: Boolean, format: String, modal: Boolean, contentWidth: String, name: String, subtitle: String, iconUrl: String, session: Object, transfers: Object, stackedNavigation: Boolean, compact: Boolean, showMenu: Boolean,
   tabs: { type: Array, default: () => [] }, activeTab: Number })
 const emit = defineEmits(['select-tab', 'close'])
-const panel = ref('')
+const profileEditor = ref(null), experienceEditor = ref(null), healthEditor = ref(null), statusEditor = ref(null)
+const ctx = inject('charCtx', {})
+const hasStates = computed(() => ctx.characterStatuses?.entries?.length || ctx.values?.exhaustion?.level > 0 || isInspirationActive(ctx.values?.inspiration))
+function openHeading(target) {
+  const editors = { profile: profileEditor, experience: experienceEditor, health: healthEditor, 'add-status': statusEditor }
+  editors[target]?.value?.open()
+}
 const stripViewport = ref(null)
 let stripObserver, stripHeight = 0, requestedScroll = 0
 function setSummaryScroll(value) {
@@ -70,6 +81,7 @@ watch(stripViewport, viewport => {
   stripObserver?.disconnect()
   if (!viewport) return
   const row = viewport.firstElementChild
+  if (!row) return
   const measure = () => {
     stripHeight = row.getBoundingClientRect().height
     viewport.style.setProperty('--strip-full-height', stripHeight + 'px')
@@ -87,6 +99,7 @@ const monogram = computed(() => Array.from(String(props.name || '').trim())[0]?.
 watch(() => props.iconUrl, () => { iconFailed.value = false })
 </script>
 <style scoped>
+.heading-editors {position:absolute;width:0;height:0}
 .heading-tools {display:flex;align-items:center;gap:2px;flex:none}
 .heading-tools--stacked {flex-direction:column;gap:0}
 .heading-tools :deep(.share-action-button) {width:36px;height:36px;min-height:36px;padding:0;justify-content:center}

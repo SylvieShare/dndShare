@@ -1,6 +1,6 @@
 <template>
-  <header ref="element" class="workspace-header" :class="{ 'workspace-header--plain': !$slots.navigation || splitNavigation }">
-    <BlurBackdrop class="workspace-header-backdrop" radius="var(--chrome-blur)" />
+  <header ref="element" class="workspace-header" :class="{ 'workspace-header--plain': !$slots.navigation || splitNavigation, 'workspace-header--solid': solid }">
+    <BlurBackdrop v-if="!solid" class="workspace-header-backdrop" radius="var(--chrome-blur)" />
     <div class="workspace-header-inner" :class="{ 'workspace-header-inner--page': page }" :style="{ maxWidth: contentWidth || (page ? 'var(--layout-content-max)' : undefined) }">
     <div class="workspace-header-identity"><slot name="identity" /></div>
     <div v-if="$slots.navigation && !splitNavigation" class="workspace-header-navigation"><slot name="navigation" /></div>
@@ -16,7 +16,7 @@
 <script setup>
 import { BlurBackdrop } from '@sylvieshare/share-ui'
 import { onBeforeUnmount, onMounted, ref } from "vue";
-defineProps({ page: Boolean, contentWidth: String, splitNavigation: Boolean, fitNavigation: Boolean });
+defineProps({ page: Boolean, contentWidth: String, splitNavigation: Boolean, fitNavigation: Boolean, solid: Boolean });
 const element = ref(null),
   emit = defineEmits(["resize"]);
 let observer;
@@ -123,4 +123,5 @@ onBeforeUnmount(() => observer?.disconnect());
   .workspace-header-navigation { padding: var(--spacing-xs); }
 }
 @media (prefers-reduced-motion: reduce) { .workspace-header-inner { transition: none; } }
+.workspace-header--solid {background:var(--bg)}
 </style>

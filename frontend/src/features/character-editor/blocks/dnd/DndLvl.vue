@@ -1,5 +1,6 @@
 <template>
-  <DndLvlView v-bind="$attrs" v-if="isCompact" compact :data="data" @open="open" />
+  <DndLvlView v-bind="$attrs" v-if="block.props?.editorOnly" v-show="false" :data="data" />
+  <DndLvlView v-bind="$attrs" v-else-if="isCompact" compact :data="data" @open="open" />
   <DndLvlView v-bind="$attrs" v-else-if="isMini" mini :data="data" @open="open" />
   <DndLvlView v-bind="$attrs" v-else class="lvl-tile" :data="data" @open="open" />
 
@@ -15,6 +16,10 @@
     <template #editor><DndLvlEditor :data="data" @change="onChange" @levelup="openLevelUp" @manual="openManualClasses" /></template>
   </MorphEditorShell>
 
+  <AppModalFrame v-if="calculatorOpen" title="Опыт" @close="calculatorOpen = false">
+    <DndLvlView panel :data="data" />
+    <DndLvlEditor :data="data" @change="onChange" @levelup="openLevelUp" @manual="openManualClasses" />
+  </AppModalFrame>
   <DndLevelUpModal
     v-if="levelUpOpen"
     :values="levelUpValues"
@@ -32,6 +37,7 @@
 <script setup>
 defineOptions({ inheritAttrs: false })
 import { computed, inject, ref } from 'vue'
+import { AppModalFrame } from '@sylvieshare/share-ui'
 import DndClassesEditorModal from './components/DndClassesEditorModal.vue'
 import DndLevelUpModal from '@/features/character-editor/blocks/dnd/components/DndLevelUpModal'
 import DndLvlEditor from '@/features/character-editor/blocks/dnd/components/DndLvlEditor'
@@ -49,6 +55,8 @@ const { editorOpen, originRect, originEl, open, close } = useMorphOrigin()
 const levelUpOpen = ref(false)
 const levelUpExpFloor = ref(null)
 const manualClassesOpen = ref(false)
+const calculatorOpen = ref(false)
+defineExpose({ open: () => { if (charCtx.ownerMode) calculatorOpen.value = true } })
 
 const isCompact = computed(() => props.block?.props?.variant === 'compact')
 const isMini = computed(() => props.block?.props?.variant === 'mini')
@@ -58,12 +66,14 @@ const levelUpValues = computed(() => levelUpDraftValues(props.values, data.value
 function onChange(d) { emit('update:value', props.block.id, d) }
 
 function openLevelUp(expFloor = null) {
+  calculatorOpen.value = false
   levelUpExpFloor.value = expFloor
   close()
   levelUpOpen.value = true
 }
 
 function openManualClasses() {
+  calculatorOpen.value = false
   close()
   manualClassesOpen.value = true
 }

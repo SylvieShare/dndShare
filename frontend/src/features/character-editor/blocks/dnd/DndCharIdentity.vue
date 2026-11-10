@@ -1,5 +1,5 @@
 <template>
-  <div class="dci-wrap">
+  <div class="dci-wrap" :class="{ 'dci-wrap--editor': block.props?.editorOnly }">
     <div class="dci-main-row">
       <span class="dci-name" :style="nameStyle">{{ nameVal || 'Имя персонажа' }}</span>
       <template v-if="racePart">
@@ -96,6 +96,7 @@ const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: true })
 
 const canEdit = computed(() => charCtx.ownerMode)
+defineExpose({ open: () => { if (canEdit.value) openWindow() } })
 const sourceSuffix = () => contentScopeQuery(charCtx.contentSources, charCtx.sourceVersionId)
 
 const windowOpen = ref(false)
@@ -210,6 +211,7 @@ function close() {
 </script>
 
 <style scoped>
+.dci-wrap--editor > .dci-main-row, .dci-wrap--editor > .dci-classes { display:none; }
 .dci-wrap {
   display: flex;
   flex-direction: column;
