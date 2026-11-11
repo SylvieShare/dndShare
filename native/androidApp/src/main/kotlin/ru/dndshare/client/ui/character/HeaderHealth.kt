@@ -9,12 +9,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.*
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
@@ -31,41 +33,57 @@ internal fun HeaderHealth(current: Int, maximum: Int, temporary: Int, images: Im
     val temp = animateFloatAsState(tempTarget, tween(DesignTokens.Motion.HealthFill, easing = healthEasing), label = "Temporary health liquid")
     val echo = animateFloatAsState(target, tween(DesignTokens.Motion.HealthTrail, delayMillis = DesignTokens.Motion.HealthTrailDelay, easing = healthEasing), label = "Health trail")
     var visible by remember { mutableStateOf(false) }
-    val phase = rememberVisualPhase(visible && (target > 0 || tempTarget > 0), DesignTokens.Motion.HealthCycle / 1000f, maxFps = 24)
-    val baseStyle = ShareTypography.context.copy(lineHeight = ShareTypography.sheetHealth.lineHeight)
+    val phase = rememberVisualPhase(visible && (target > 0 || tempTarget > 0), DesignTokens.Motion.HealthCycle / 1000f, maxFps = 24, pauseOnFocusLoss = false)
+    val baseStyle = ShareTypography.context.copy(lineHeight = ShareTypography.sheetHealth.lineHeight,
+        shadow = Shadow(WebPalette.Background, Offset(0f, 1f), 3f))
     val label = buildAnnotatedString {
-        withStyle(SpanStyle(color = color, fontFamily = ShareTypography.sheetHealth.fontFamily, fontSize = ShareTypography.sheetHealth.fontSize,
+        withStyle(SpanStyle(color = WebPalette.Text, fontFamily = ShareTypography.sheetHealth.fontFamily, fontSize = ShareTypography.sheetHealth.fontSize,
             fontWeight = ShareTypography.sheetHealth.fontWeight, fontFeatureSettings = "'lnum', 'tnum'")) { append(current.toString()) }
-        withStyle(SpanStyle(color = WebPalette.TextMuted, fontSize = 12.sp)) { append(" / $maximum") }
-        if (temporary > 0) withStyle(SpanStyle(color = WebPalette.Info, fontSize = 12.sp)) { append(" +$temporary") }
+        withStyle(SpanStyle(color = WebPalette.TextSecondary, fontSize = 12.sp)) { append(" / $maximum") }
     }
+    val badgeStyle = ShareTypography.context.copy(fontSize = 12.sp, lineHeight = 18.sp, fontWeight = FontWeight.Bold,
+        color = WebPalette.Info, fontFeatureSettings = "'tnum'")
     val measure = rememberTextMeasurer()
-    val textWidth = with(LocalDensity.current) { measure.measure(label, style = baseStyle).size.width.toDp() }
-    BoxWithConstraints(Modifier.fillMaxWidth().clearAndSetSemantics {
-        contentDescription = "Здоровье: $current из $maximum" + if (temporary > 0) ", временные $temporary" else ""
-        progressBarRangeInfo = ProgressBarRangeInfo(target, 0f..1f)
-    }) {
-        val stacked = textWidth + DesignTokens.Layout.SheetHealthIcon + 14.dp + 40.dp > maxWidth
-        val numbers: @Composable () -> Unit = {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+    val density = LocalDensity.current
+    val textWidth = with(density) { measure.measure(label, style = baseStyle).size.width.toDp() }
+    val badgeWidth = if (temporary > 0) with(density) { measure.measure("+$temporary", style = badgeStyle).size.width.toDp() } + 25.dp else 0.dp
+    val shape = RoundedCornerShape(DesignTokens.Radius.Input)
+    BoxWithConstraints(Modifier.fillMaxWidth().heightIn(min = DesignTokens.Layout.SheetHealthHeight)
+        .onGloballyPositioned { visible = !it.boundsInWindow().isEmpty }
+        .clip(shape).background(WebPalette.Background).border(1.dp, color, shape).clearAndSetSemantics {
+            contentDescription = "Здоровье: $current из $maximum" + if (temporary > 0) ", временные $temporary" else ""
+            progressBarRangeInfo = ProgressBarRangeInfo(target, 0f..1f)
+        }, contentAlignment = Alignment.CenterStart) {
+        val stacked = temporary > 0 && textWidth + DesignTokens.Layout.SheetHealthIcon + badgeWidth + 30.dp > maxWidth
+        Canvas(Modifier.matchParentSize().padding(1.dp)) {
+            drawHealthMist(fill.value, temp.value, echo.value, phase.value * 2 * kotlin.math.PI.toFloat(), color, WebPalette.Info,
+                (kotlin.math.abs(target - fill.value) * 5).coerceAtMost(1f))
+            val fadeWidth = (textWidth + DesignTokens.Layout.SheetHealthIcon + 38.dp).toPx().coerceAtLeast(1f)
+            drawRect(Brush.horizontalGradient(0f to WebPalette.Background.copy(alpha = .84f),
+                .6f to WebPalette.Background.copy(alpha = .65f), 1f to Color.Transparent, endX = fadeWidth))
+        }
+        val numbers: @Composable (Modifier) -> Unit = { modifier ->
+            Row(modifier, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 AsyncImage("file:///android_asset/character-sheet/hp-pulse.svg", null, images,
-                    colorFilter = ColorFilter.tint(color), modifier = Modifier.size(DesignTokens.Layout.SheetHealthIcon))
+                    colorFilter = ColorFilter.tint(lerp(color, WebPalette.Text, .45f)), modifier = Modifier.size(DesignTokens.Layout.SheetHealthIcon))
                 Text(label, style = baseStyle, modifier = Modifier.weight(1f, fill = false))
             }
         }
-        val bar: @Composable (Modifier) -> Unit = { modifier ->
-            Canvas(modifier.height(DesignTokens.Layout.SheetHealthHeight).onGloballyPositioned { visible = !it.boundsInWindow().isEmpty }
-                .clip(RoundedCornerShape(DesignTokens.Radius.Input)).background(WebPalette.Background)
-                .border(1.dp, color, RoundedCornerShape(DesignTokens.Radius.Input)).padding(1.dp)) {
-                drawHealthMist(fill.value, temp.value, echo.value, phase.value * 2 * kotlin.math.PI.toFloat(), color, WebPalette.Info)
+        val badge: @Composable () -> Unit = {
+            Row(Modifier.background(WebPalette.Info.copy(alpha = .18f).compositeOver(WebPalette.Background), RoundedCornerShape(DesignTokens.Radius.Xs))
+                .padding(horizontal = 5.dp, vertical = 2.dp), verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                AppGlyph(Glyph.Shield, Modifier.size(12.dp), WebPalette.Info)
+                Text("+$temporary", style = badgeStyle)
             }
         }
-        if (stacked) Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            numbers()
-            bar(Modifier.fillMaxWidth())
-        } else Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            numbers()
-            bar(Modifier.weight(1f))
+        val padding = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 2.dp)
+        if (stacked) Column(padding, verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            numbers(Modifier.fillMaxWidth())
+            Box(Modifier.align(Alignment.End)) { badge() }
+        } else Row(padding, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            numbers(Modifier.weight(1f))
+            if (temporary > 0) badge()
         }
     }
 }

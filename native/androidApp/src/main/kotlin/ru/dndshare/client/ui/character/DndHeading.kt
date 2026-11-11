@@ -35,7 +35,7 @@ internal fun DndHeading(ctx: SheetContext) {
     fun edit(target: String) { menu = false; ctx.edit(target) }
     val xp = level["exp"].number()
     val progress = dndLevelProgress(level["level"].number(1), xp)
-    Box(Modifier.fillMaxWidth()) {
+    Box(Modifier.widthIn(max = DesignTokens.Layout.SheetHeaderTileMax).fillMaxWidth()) {
         Column(
             Modifier.fillMaxWidth().clickable { menu = true }
                 .semantics { contentDescription = "Действия персонажа" },

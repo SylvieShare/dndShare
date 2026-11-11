@@ -1,5 +1,5 @@
 <template>
-  <RowActionMenu title="Действия персонажа" :heading="menuSummary" block>
+  <RowActionMenu title="Действия персонажа" :heading="menuSummary" :trigger-attrs="{ style: { maxWidth: 'var(--layout-sheet-header-tile-max)' } }" block>
     <template #trigger="{ open }">
       <button class="dnd-heading action-menu-source" :class="{ 'action-menu-source--open': open }"
         type="button" aria-label="Действия персонажа" :aria-expanded="open">

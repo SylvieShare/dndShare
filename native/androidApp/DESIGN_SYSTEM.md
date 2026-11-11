@@ -70,6 +70,8 @@ Compose-анимации учитывают системное отключен�
 Числа здоровья используют роль SheetHealth; размеры сердца/шкалы — SheetHealthIcon/SheetHealthHeight.
 Игровая композиция HeaderHealth и туман HealthMistDrawing принадлежат экрану персонажа.
 rememberVisualPhase принимает maxFps для ограничения фоновых эффектов; значения читаются в draw-фазе.
+Его VisualPhaseClock накапливает только видимое время и сохраняет фазу при паузе.
+Lifecycle STARTED управляет фоновой паузой. По умолчанию pauseOnFocusLoss ставит эффект на паузу при потере фокуса без сброса фазы; HP отключает этот флаг, чтобы собственный Popup не прерывал движение.
 `ShareWorkspaceHeader.containerColor` задаёт непрозрачную заливку вместо
 автоматического затемнения; управляемый `ShareChromeLayout` получает ту же роль цвета.
 Параметры `navigationColor`, `navigationRadius`, `navigationInset` и

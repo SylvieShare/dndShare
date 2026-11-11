@@ -12,6 +12,7 @@ export function createHealthMistRenderer(canvas, track) {
   const motion = matchMedia('(prefers-reduced-motion: reduce)')
   let target, from, started = 0, frame = 0, lastPaint = -Infinity, visible = true, destroyed = false
   let width = 0, height = 0, pixelRatio = 1
+  let visualTime = 0, previousPaint = null
   function sample(now) {
     const elapsed = now - started
     return {
@@ -26,12 +27,18 @@ export function createHealthMistRenderer(canvas, track) {
     const value = still ? { ...target, echo: target.fill } : sample(now)
     ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
     drawHealthMist(ctx, width, height, value.fill, value.temporary, value.echo,
-      still ? 0 : now / motionTokens['health-cycle'] * Math.PI * 2, target.color, target.temporaryColor)
+      visualTime / motionTokens['health-cycle'] * Math.PI * 2, target.color, target.temporaryColor,
+      still ? 0 : Math.min(1, Math.abs(target.fill - value.fill) * 5))
   }
   function tick(now) {
     frame = 0
     if (!active()) return
-    if (now - started < settling || now - lastPaint >= 1000 / 24) { draw(now); lastPaint = now }
+    if (now - started < settling || now - lastPaint >= 1000 / 24) {
+      if (previousPaint !== null) visualTime += Math.max(0, now - previousPaint)
+      previousPaint = now
+      draw(now)
+      lastPaint = now
+    }
     if (target && (target.fill > 0 || target.temporary > 0 || now - started < settling))
       frame = requestAnimationFrame(tick)
     else draw(now, true)
@@ -41,7 +48,15 @@ export function createHealthMistRenderer(canvas, track) {
     frame = 0
     if (!target) return
     if (active()) frame = requestAnimationFrame(tick)
-    else draw(performance.now(), true)
+    else {
+      previousPaint = null
+      const now = performance.now()
+      if (now - started < settling) {
+        from = { ...target, echo: target.fill }
+        started = now - settling
+        draw(now, true)
+      }
+    }
   }
   function resize() {
     width = track.clientWidth

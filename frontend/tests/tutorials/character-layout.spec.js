@@ -324,12 +324,13 @@ for (const width of [390, 834, 1440]) test(`sheet header is opaque at ${width}`,
   const geometry = await page.locator('.dnd-heading').evaluate(node => {
     const root = node.getBoundingClientRect(), image = node.querySelector('.portrait').getBoundingClientRect()
     const hp = node.querySelector('.heading-health').getBoundingClientRect(), css = getComputedStyle(node.querySelector('.health-track'))
-    return { left: hp.left - image.left, right: root.right - hp.right, icon: image.width, hpHeight: hp.height, border: css.borderTopWidth, radius: parseFloat(css.borderTopLeftRadius) }
+    return { width: root.width, left: hp.left - image.left, right: root.right - hp.right, icon: image.width, hpHeight: hp.height, border: css.borderTopWidth, radius: parseFloat(css.borderTopLeftRadius) }
   })
   expect(Math.abs(geometry.left)).toBeLessThan(1)
   expect(Math.abs(geometry.right)).toBeLessThan(1)
+  expect(geometry.width).toBeLessThanOrEqual(420)
   expect(geometry.icon).toBe(48)
-  expect(geometry.hpHeight).toBeGreaterThanOrEqual(16)
+  expect(geometry.hpHeight).toBeGreaterThanOrEqual(32)
   expect(geometry.border).toBe('1px')
   expect(geometry.radius).toBeGreaterThan(0)
   await page.locator('.dnd-heading').evaluate(node => node.blur())
