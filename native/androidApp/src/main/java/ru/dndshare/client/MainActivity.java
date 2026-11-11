@@ -16,6 +16,7 @@ import com.getcapacitor.BridgeWebViewClient;
 public class MainActivity extends BridgeActivity {
     @Override public void onCreate(Bundle state) {
         registerPlugin(LocalStorePlugin.class);
+        registerPlugin(CoverDisplayPlugin.class);
         super.onCreate(state);
         if (bridge == null) return;
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
@@ -25,6 +26,11 @@ public class MainActivity extends BridgeActivity {
         bridge.getWebView().getSettings().setTextZoom(Math.round(getResources().getConfiguration().fontScale * 100));
         MediaCache media = new MediaCache(this);
         bridge.setWebViewClient(new BridgeWebViewClient(bridge) {
+            @Override public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                var handle = bridge.getPlugin("CoverDisplay");
+                if (handle != null) ((CoverDisplayPlugin) handle.getInstance()).clearForNavigation();
+            }
             @Override public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 // Same-origin API uses the real HTTPS server, including cookies, SSE and uploads.
                 // All other application routes/assets use Capacitor's packaged local server.

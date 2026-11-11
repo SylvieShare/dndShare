@@ -6,6 +6,7 @@
         <CharacterBlock v-if="group.description" block-id="person_appearance" />
       </div>
       <CharacterBlock v-else-if="group.description" block-id="person_appearance" />
+      <CharacterBlock v-if="group.photos" block-id="person_photos" />
       <div v-if="group.fields.length" class="person-fields" :class="{ 'person-fields--short':group.short }">
         <CharacterBlock v-for="id in group.fields" :key="id" :block-id="id" />
       </div>
@@ -33,7 +34,8 @@ function visible(id) {
 const groups = computed(() => sections.map(section => ({
   ...section, fields:section.fields.filter(visible), portrait:section.appearance && visible('ava'),
   description:section.appearance && visible('person_appearance'),
-})).filter(section => section.fields.length || section.portrait || section.description))
+  photos:section.appearance && visible('person_photos'),
+})).filter(section => section.fields.length || section.portrait || section.description || section.photos))
 const portraitSize = computed(() => props.format === 'desktop' ? {width:'148px',height:'174px'} : {width:'84px',height:'96px'})
 </script>
 <style scoped>

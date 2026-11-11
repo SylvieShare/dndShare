@@ -6,8 +6,8 @@ android {
         applicationId = "ru.dndshare.client"
         minSdk = 26
         targetSdk = 37
-        versionCode = 2
-        versionName = "0.2.0"
+        versionCode = 3
+        versionName = "0.2.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -23,6 +23,9 @@ dependencies {
     implementation(project(":capacitor-android"))
     implementation("androidx.activity:activity:1.13.0")
     implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("androidx.window:window:1.5.1")
+    implementation("androidx.window:window-java:1.5.1")
+    implementation("androidx.annotation:annotation-experimental:1.4.1")
     androidTestImplementation("androidx.test:runner:1.7.0")
     androidTestImplementation("androidx.test.ext:junit:1.3.0")
     androidTestImplementation("androidx.test:core:1.7.0")
@@ -30,8 +33,8 @@ dependencies {
 val bundleWeb by tasks.registering(Exec::class) {
     workingDir = file("../../frontend")
     commandLine("node", "node_modules/vite/bin/vite.js", "build")
-    inputs.files(fileTree("../../frontend/src"), fileTree("../../frontend/public"),
-        file("../../frontend/package-lock.json"), file("../../frontend/vite.config.js"))
+    inputs.files(fileTree("../../frontend/src"), fileTree("../../frontend/public"), fileTree("../../frontend/scripts"),
+        file("../../frontend/index.html"), file("../../frontend/package-lock.json"), file("../../frontend/vite.config.js"))
     outputs.dir("../../frontend/target/dist")
 }
 val copyWeb by tasks.registering(Sync::class) {

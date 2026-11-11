@@ -163,7 +163,7 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
   // ── Touch handlers ────────────────────────────────────────────────────
 
   function isSwipeBlocked(target) {
-    return !!target?.closest?.('input, textarea, select, button, [contenteditable="true"], .mobile-tabbar')
+    return !!target?.closest?.('input, textarea, select, button, [contenteditable="true"], [data-sheet-horizontal-scroll], .mobile-tabbar')
   }
 
   function onTouchStart(event, containerEl) {

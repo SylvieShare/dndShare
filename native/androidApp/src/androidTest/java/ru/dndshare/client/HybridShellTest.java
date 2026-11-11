@@ -45,6 +45,11 @@ public class HybridShellTest {
             evaluate(activity, "window.Capacitor.Plugins.LocalStore.clear({prefix:'test:'})");
             // The same renderer used by maps must expose WebGL2 on the target emulator.
             assertEquals("true", evaluate(activity, "!!document.createElement('canvas').getContext('webgl2')"));
+            evaluate(activity, "window.__coverStatus=null;window.Capacitor.Plugins.CoverDisplay.getStatus().then(value=>window.__coverStatus=value)");
+            waitFor(activity, "typeof window.__coverStatus?.available==='boolean'");
+            assertEquals("false", evaluate(activity, "window.__coverStatus.available"));
+            evaluate(activity, "window.__coverRejected=false;window.Capacitor.Plugins.CoverDisplay.show({owner:'test',photoUid:'photo',data:'AAAA'}).catch(()=>window.__coverRejected=true)");
+            waitFor(activity, "window.__coverRejected===true");
         }
     }
 }

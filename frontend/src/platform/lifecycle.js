@@ -1,9 +1,11 @@
 import { isAndroid, nativeStore } from './storage'
 import { outboxStorage } from './journal'
+import { initializeCoverDisplay } from './coverDisplay'
 
 export function installAndroidLifecycle(router) {
   if (!isAndroid) return
   document.documentElement.dataset.platform = 'android'
+  void initializeCoverDisplay().catch(() => {})
   window.print = () => { void nativeStore.print() }
   async function download(anchor) {
     try {

@@ -1,4 +1,5 @@
 import CharacterReadOnlyNotice from './generic/CharacterReadOnlyNotice.vue'
+import CharacterPhotoGallery from '../components/CharacterPhotoGallery.vue'
 import AvatarBlock from '@/features/character-editor/blocks/generic/AvatarBlock'
 import BlockMoney from '@/features/character-editor/blocks/generic/BlockMoney'
 import BlockResources from '@/features/character-editor/blocks/generic/BlockResources'
@@ -52,6 +53,7 @@ import VtmHealth from '@/features/character-editor/blocks/vtm/VtmHealth'
  */
 export const BLOCK_REGISTRY = {
   AVATARS:          { component: AvatarBlock },
+  CHARACTER_GALLERY: { component: CharacterPhotoGallery },
   BLOCK_ITEMS:      { component: DndItems },
   BLOCK_MONEY:      { component: BlockMoney },
   BLOCK_RESOURCES:  { component: BlockResources },

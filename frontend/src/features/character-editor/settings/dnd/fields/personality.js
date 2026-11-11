@@ -1,4 +1,5 @@
 export default {
+  person_photos: { id: 'person_photos', type: 'CHARACTER_GALLERY', preset: [] },
   "ava": {
     "id": "ava",
     "type": "AVATARS"
