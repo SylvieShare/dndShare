@@ -18,7 +18,7 @@ try {
  doc.areas=[{id:'hall',name:'Зал',color:'#9b84d8',hidden:false,fog:false,tileIds:doc.tiles.map(t=>t.id),objectIds:['chest']}]
  doc.cameras=[];doc.lights=[]
  const models=catalogue.map(({id,definitionId,...model})=>({...model,id:definitionId,uuid:id}))
- const output=path.join(root,'native/androidApp/src/androidTest/assets/maps')
+ const output=path.join(root,'frontend/tests/maps/fixtures/data')
  await fs.writeFile(path.join(output,'editor-review.json'),JSON.stringify({map:canonicalMapData(map),models},null,2)+'\n')
  await fs.writeFile(path.join(output,'review-tile.glb'),Buffer.from(glb))
  console.log(`Paired map: ${doc.tiles.length} tiles, ${doc.objects.length} props, ${models.length} model definitions`)

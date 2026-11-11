@@ -1,0 +1,23 @@
+{
+  "appId": "ru.dndshare.client",
+  "appName": "DnD Share",
+  "webDir": "public",
+  "server": {
+    "hostname": "dndshare.ru",
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#17171b",
+    "allowMixedContent": false,
+    "webContentsDebuggingEnabled": false
+  },
+  "plugins": {
+    "CapacitorCookies": {
+      "enabled": false
+    },
+    "CapacitorHttp": {
+      "enabled": false
+    }
+  },
+  "loggingBehavior": "none"
+}

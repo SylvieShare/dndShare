@@ -1,5 +1,0 @@
-material { name: MapSurfaceOpacity, shadingModel:unlit, vertexDomain:device, culling:none,
-    depthWrite:false, depthCulling:false, blending:custom,
-    blendFunction:{srcRGB:zero,dstRGB:one,srcA:one,dstA:zero},
-    parameters:[{type:float,name:opacity}] }
-fragment { void material(inout MaterialInputs m) { prepareMaterial(m);m.baseColor=vec4(0.0,0.0,0.0,materialParams.opacity); } }

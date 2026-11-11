@@ -1,197 +1,53 @@
 # Android-приложение DnD Share
 
-Модуль `androidApp` на Kotlin и Jetpack Compose: вход, боковое меню всех
-веб-разделов, локальный справочник, список персонажей и адаптивный лист D&D/VTM.
-Перенесены [библиотека, редактор карт и справочник моделей на Filament](../md/features/native-map-editor.md).
-Общий UI-пакет
-находится в [`ui.designsystem`](androidApp/DESIGN_SYSTEM.md). Сервером остаётся основной Go API.
-Поведение описывает [контракт клиента](../md/features/native-client.md).
+Android — оболочка Capacitor над тем же Vue-приложением, которое встраивается в Go.
+Экранов Compose и отдельной реализации игровых правил больше нет. Карты и 3D
+используют общий Three.js/WebGL2. Контракт: [Android-клиент](../md/features/native-client.md).
 
-## Окружение
+## Сборка
 
-Android Studio открывает папку `native`. Нужны JBR из Android Studio,
-Android SDK 37 и platform-tools. Kotlin, AGP, Compose BOM, Room, Ktor, Coil и Filament
-закреплены в Gradle scripts, Gradle wrapper — версией и checksum.
-Основной Filament AAR содержит [исправление ортографического света](vendor/filament/README.md);
-готовый пакет и проверяемая инструкция его пересборки находятся в репозитории.
-Для нативной геометрии/текстур редактора также нужны закреплённые в
-`androidApp/build.gradle.kts` NDK и CMake; Android Studio устанавливает их
-через SDK Manager. Все эти инструменты на текущей машине находятся на диске C.
-Meshoptimizer и Basis Universal включены исходниками с лицензиями в assets.
-Шейдеры Filament поставляются скомпилированными: обычная сборка APK не требует
-`matc`, но проверяет SHA-256 исходников и пакетов. После изменения `.mat`
-выполняется `python3 scripts/native/compile-map-materials.py` с компилятором
-версии из этого скрипта.
+Нужны Node/npm, JBR Android Studio, SDK 37 и platform-tools на диске C.
+Минимум Android 8 (API 26). Версии Capacitor закреплены в frontend/package-lock.json.
+Установка зависимостей: из frontend выполнить npm ci.
 
-На текущем Windows-компьютере инструменты находятся на диске C:
+Из корня в PowerShell:
 
-- Android Studio: `C:\Program Files\Android\Android Studio`;
-- SDK: `%LOCALAPPDATA%\Android\Sdk`;
-- Gradle cache: `%USERPROFILE%\.gradle`.
-
-SDK задаётся окружением или игнорируемым `local.properties`.
-Для сборки APK достаточно JBR Android Studio.
-Минимальная версия приложения — Android 8.0 (API 26), target/compile —
-Android 17 (API 37). Источник этих значений — `androidApp/build.gradle.kts`.
-
-## Сборка и тесты
-
-Из PowerShell в корне репозитория:
-
-```powershell
-.\scripts\native\build.ps1 -Target All
+~~~powershell
 .\scripts\native\build.ps1 -Target Android
-.\scripts\native\build.ps1 -Target Test
-.\scripts\native\build.ps1 -Target DeviceTest
-.\scripts\native\build.ps1 -Target DeviceTest -TestClass ru.dndshare.client.SheetPagerStateTest
-```
+.\scripts\native\build.ps1 -Target DeviceTest -DeviceSerial emulator-5580 -TestClass ru.dndshare.client.HybridShellTest
+~~~
 
-`All` выполняет unit-тесты, Android lint и собирает debug APK. `DeviceTest` требует запущенного
-эмулятора (по умолчанию `emulator-5554`, выбор через `-DeviceSerial`) и выполняет
-instrumented-тесты Room/SQLite, HTTP и отмены проверки
-сессии при выходе. Unit-тесты проверяют поиск, форматы окна, содержимое
-описаний, данные персонажей и cookie-контракт. В `src/testSupport` находится
-общая фикстура сервера листа. Проверки форм охватывают исходную базу после
-пересоздания, конфликт, потерянное подтверждение и малый объём saved state;
-instrumentation проверяет миграции Room и атомарное принятие формы в очередь.
-В `src/testSupport` также находится
-общая фикстура тестовых device services. `DeviceTest` ограничен выбранным
-эмулятором и не затрагивает подключённый телефон.
-Для короткого цикла `-TestClass` выбирает один класс или `package.Class#method`;
-результаты предыдущего запуска удаляются перед instrumentation. Полный проектный
-набор запускается только по прямой команде пользователя.
-CLI-сборки используют `--no-daemon`, чтобы фоновая JVM не удерживала
-Windows/WSL-процесс после завершения автоматической сборки.
-Нулевое число выполненных instrumentation-кейсов считается ошибкой, даже если
-Gradle сообщил успех; проверка читает реальные JUnit `testcase`, исключая skip.
-Проверка валидатора: `scripts/native/test-results.tests.ps1`.
+Gradle собирает frontend через Vite и копирует тот же dist в APK. Для APK не нужны
+NDK, CMake, Filament, Room, Ktor или отдельные шрифты UI. Сжатые HTTP-копии .gz/.br
+в APK не включаются: Android упаковывает исходные веб-ресурсы самостоятельно.
+Готовый файл: androidApp/build/outputs/apk/debug/androidApp-debug.apk.
 
-Артефакт: `androidApp/build/outputs/apk/debug/androidApp-debug.apk`.
-Это пробная установка с debug-подписью; production-подпись и публикация в store
-оформляются отдельно. Скрипт нормализует `PATHEXT` только текущего процесса при
-запуске из WSL.
-
-## Быстродействие эмулятора
-
-Проверять ускорение VM (`emulator -accel-check`) и графический backend отдельно.
-На Windows при рабочем GPU использовать `auto` или `host`; `swiftshader` выполняет
-графику программно на CPU и остаётся вариантом совместимости. Доступные режимы —
-[официальная инструкция Android](https://developer.android.com/studio/run/emulator-acceleration).
-Перед увеличением RAM/числа CPU проверять свободные ресурсы хоста; нехватку
-графического ускорения увеличение RAM не исправляет. Локальные параметры AVD
-и их резервные копии не переносят в Git. Метрики производительности приложения
-снимают на настоящем устройстве, как описано ниже.
-Автоматический AVD запускают без окна, чтобы ввод рабочего стола не вмешивался
-в сценарий. Пример для установленного локального AVD (не запускать второй
-экземпляр уже работающего устройства):
-
-```powershell
-& "$env:LOCALAPPDATA\Android\Sdk\emulator\emulator.exe" -avd DnDShare_API_37 -gpu host -no-window
-```
-
-## Замер морфа на устройстве
-
-`scripts/native/benchmark.ps1 -Serial SERIAL` собирает отдельный недебажный
-R8-вариант `ru.dndshare.client.benchmark` и запускает AndroidX Macrobenchmark:
-10 повторений обычного блока и длинного превью с клавиатурой, FrameTimingMetric
-и Perfetto. Вариант имеет синтетического персонажа, не использует API/аккаунт
-и сохраняет основное приложение. Телефон должен быть разблокирован;
-скрипт отвергает эмулятор. Исходники до/после фиксируются раздельно, результаты
-и трассы находятся в `macrobenchmark/build/outputs/`.
-Данные кадра телефона нельзя подменять замерами SwiftShader эмулятора.
-
-Для замера переключателя владения у той же benchmark-Activity есть режим
-`--ez liveSkill true --ei skills 20`. Он открывает вкладку «Статы» тестового
-персонажа с настоящей локальной очередью Room и задержкой ответа 450 мс.
-Замеряют повторные переходы между «Без владения» и «Компетентность» в одном
-формате окна устройства, отдельно от открытия редактора.
-
-## Общий дизайн с вебом
-
-Источник общих размеров, типографики, порогов и акцентов —
-[design/tokens.json](../design/tokens.json), с генерацией CSS/JS/Compose через
-`python3 scripts/design/tokens.py`. Парный отчёт, окружение и порядок проверок —
-[UI-процесс](../md/frontend/ui-workflow.md). Три основные поверхности берутся из colors тех же токенов. Источник остальных цветов —
-`frontend/src/app/theme.css` и tokens установленного
-`@sylvieshare/share-ui`; иконок — `@lucide/vue`, как в `DesktopSidebar.vue`.
-После обновления веб-палитры или пакетов выполнить из корня репозитория:
-
-```bash
-python3 scripts/native/sync_web_design.py
-python3 scripts/native/sync_web_design.py --check
-```
-
-Нужны установленные зависимости `frontend`. Генератор сохраняет `WebPalette.kt`,
-нативные Lucide vector drawables и лицензию в assets приложения. Производные ресурсы
-коммитятся; обычная Gradle-сборка не требует Node.js или frontend dependencies.
-Проверка `--check` входит в приёмку изменений дизайна. Material использует
-мягкий акцент для читаемых надписей на тёмном фоне, основной веб-акцент — для
-залитых основных кнопок и маркеров выбранного раздела.
+Для установки подготовленного APK используется [install.ps1](../scripts/native/install.ps1)
+с ReleaseManifest. Package ID и подпись сохраняются; старые тестовые локальные
+таблицы Compose-клиента не импортируются. Первый вход в новую оболочку требует сети.
 
 ## Установка и обновление телефона
 
-Один раз включить на телефоне параметры разработчика и «Отладку по USB»,
-подключить USB-кабель с передачей данных, разблокировать экран и подтвердить
-запрос доверия этому компьютеру. Готовые устройства видны командой:
+Включите беспроводную отладку, затем используйте scripts/native/install.ps1
+с подготовленным ReleaseManifest и текущим адресом ADB. Скрипт проверяет SHA-256
+и устанавливает APK через install -r с сохранением данных.
 
-```powershell
-.\scripts\native\install.ps1 -ListDevices
-```
+## Нативная граница
 
-Обновление собирает текущие исходники, устанавливает APK поверх приложения
-через `adb install -r` и запускает его:
+В src/main/java/ru/dndshare/client:
 
-```powershell
-.\scripts\native\install.ps1
-.\scripts\native\install.ps1 -Serial SERIAL_FROM_ADB
-```
+- MainActivity — WebView, локальная раздача интерфейса, API passthrough, insets и Back.
+- LocalStorePlugin — SQLite, выбор места экспорта, печать и очистка сессии.
+- MediaCache — ограниченный ленивый кеш медиа и моделей.
 
-Если для нужного коммита уже есть проверенный APK, для команды «залей на телефон»
-используется его манифест. Установщик проверяет SHA-256, имя пакета и хеш файла
-на устройстве. Gradle в этом режиме не запускается.
+Сборка не загружает HTML/JS интерфейса с сайта. Origin локального приложения —
+https://dndshare.ru; /api использует настоящий HTTPS-сервер и HttpOnly cookies.
+Это сохраняет обычные fetch, XHR, загрузки и EventSource без второго HTTP-клиента.
+Внешние страницы открываются браузером; приложение не исполняет их в своём bridge.
 
-```powershell
-.\scripts\native\install.ps1 -ReleaseManifest build/releases/<SHA>/release.json -Serial SERIAL_FROM_ADB
-```
+## Проверки
 
-Манифест содержит `commitSha`, `android.file` (имя APK рядом с манифестом) и
-`android.sha256`. Без манифеста команда собирает исходники текущей копии.
-
-Без `Serial` выбирается единственный подключённый авторизованный телефон;
-эмулятор автоматически не выбирается. При нескольких устройствах нужно
-указать цель. `-NoLaunch` устанавливает без запуска. Работает и с уже
-подключённым по Wi-Fi ADB-устройством.
-
-Обычное обновление сохраняет локальную базу, кеш и вход в аккаунт при той же
-подписи APK. Скрипт останавливается при конфликте подписи и не удаляет приложение
-или его данные. Ключ debug-подписи хранится локально в `%USERPROFILE%\.android`;
-в Git его не добавляют. Будущие изменения схемы Room сопровождаются миграциями.
-По явной команде пользователя «обнови приложение на телефоне» агент выполняет
-этот скрипт для доступного телефона; выбор уточняется только при неоднозначной цели.
-
-## Проверка с настоящим сервером
-
-`-ApiBaseUrl http://127.0.0.1:<port>` или `http://10.0.2.2:<port>` разрешён
-для локального теста. Такой APK получает ID `ru.dndshare.client.smoke`.
-Обычная сборка использует `https://dndshare.ru`.
-
-`TestNativeClientSmokePostgres` с `DNDSHARE_NATIVE_SMOKE=1` поднимает настоящий
-Go API и изолированный PostgreSQL. `scripts/native/smoke.py` собирает и
-проверяет APK через ADB: форму с клавиатурой, вход и «Назад», 205 записей,
-обзор коллекций, локальные фильтры, ленивое изображение, персонажи,
-сохранение вкладок, свайп меню, заглушки и профиль, приоритет «Назад»,
-перезапуск без сети, три ширины окна/состояния панели, delta и выход.
-Нужен уже запущенный AVD; по умолчанию `emulator-5554`, переопределяется
-`DNDSHARE_ANDROID_SERIAL`. Пользователь Windows для SDK задаётся
-`DNDSHARE_WINDOWS_USER`. Сценарий разрешён только на эмуляторе.
-
-Скрипт использует временный `adb reverse` для связи из эмулятора с Go API в WSL
-и восстанавливает размер/плотность AVD. После smoke обычную сборку запускают
-без `ApiBaseUrl`, чтобы получить APK основного приложения. Production-аккаунты
-для автоматической проверки не используются.
-В UI-процессе smoke APK использует постоянный порт устройства из
-`scripts/visual/endpoint.json`; случайный порт API подключается через reverse.
-Неизменённая сборка с проверенным SHA-256 переиспользуется из
-`build/native-apk-cache`, но проверки выполняются заново.
-
-[README проекта](../README.md) · [Проверки](../md/testing.md)
+HybridShellTest проверяет запуск упакованного frontend, origin, SQLite после
+пересоздания Activity и доступность WebGL2. Общая функциональность проверяется
+узкими браузерными сценариями, а Android — оболочкой и интеграцией устройства.
+Физический телефон не используется вместо тестового эмулятора.

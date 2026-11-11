@@ -105,10 +105,11 @@ export async function writeDocumentResource(record, config) {
     config.canonicalize,
   ).data
   entry.sync.edit(next, {}, { record: false })
-  const wait = entry.sync.whenIdle()
+  await entry.sync.persisted()
   void entry.sync.retry()
-  await wait
-  return copyDocument(entry.record)
+  const result = { ...entry.record, ...entry.sync.data, revision: entry.sync.version }
+  entry.versions.set(result.revision, copyDocument(entry.sync.data))
+  return copyDocument(result)
 }
 
 export async function reloadDocumentResource(record, config) {

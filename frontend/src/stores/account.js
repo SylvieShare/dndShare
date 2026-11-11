@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { clearLocalAccount } from '@/platform/offline'
 import { fetchGet, fetchPost } from '@/shared/api/http'
 
 export const useAccountStore = defineStore('account', {
@@ -53,7 +54,7 @@ export const useAccountStore = defineStore('account', {
       this.user.hasCharacters = !!value
     },
     async logout() {
-      await fetchPost('/user/logout')
+      try { await fetchPost('/user/logout') } finally { await clearLocalAccount() }
       this.status = 'none'
       window.location.reload()
     },

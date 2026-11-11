@@ -4,7 +4,6 @@
   "sourceSha256": "89209c4f81dd952c14712c34a3343de19d415018babab89ac8b37b167c4fa14f",
   "outputs": {
     "frontend/src/app/design-tokens.css": "bcbaff7fa153c8d2f45c9b65820b6d4a1f84523244eb68609a623d1dbf0559d2",
-    "frontend/src/app/design-tokens.js": "284f31662fefb0868c068f4a0ef0ba685cd27c566c60611e714789cd526b7381",
-    "native/androidApp/src/main/kotlin/ru/dndshare/client/ui/designsystem/DesignTokens.kt": "a03a81ea67b118538d13979a54cb537abbb72efa2e04f4370df36827ca048155"
+    "frontend/src/app/design-tokens.js": "284f31662fefb0868c068f4a0ef0ba685cd27c566c60611e714789cd526b7381"
   }
 }

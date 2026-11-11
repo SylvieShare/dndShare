@@ -1,3 +1,0 @@
-material { name: MapReferenceGuides,shadingModel:unlit,blending:transparent,culling:none,
-    depthWrite:false,requires:[color] }
-fragment {void material(inout MaterialInputs m){prepareMaterial(m);m.baseColor=getColor();}}

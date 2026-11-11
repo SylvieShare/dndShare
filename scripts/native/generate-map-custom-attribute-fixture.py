@@ -6,7 +6,7 @@ import struct
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSETS = ROOT / 'native/androidApp/src/androidTest/assets/maps'
+ASSETS = ROOT / 'frontend/tests/maps/fixtures/data'
 source = (ASSETS / 'box-water.glb').read_bytes()
 length = struct.unpack_from('<I', source, 12)[0]
 data = json.loads(source[20:20 + length])

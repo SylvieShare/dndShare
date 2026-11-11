@@ -1,6 +1,5 @@
 param(
-    [ValidateSet('Android', 'All', 'Test', 'DeviceTest')][string]$Target = 'All',
-    [string]$ApiBaseUrl = 'https://dndshare.ru',
+    [ValidateSet('Android', 'All', 'Test', 'DeviceTest')][string]$Target = 'Android',
     [string]$DeviceSerial = 'emulator-5554',
     [string]$TestClass
 )
@@ -39,7 +38,7 @@ if ($TestClass) {
 Push-Location -LiteralPath $project
 try {
     $ErrorActionPreference = 'Continue'
-    & (Join-Path $project 'gradlew.bat') --console=plain --no-daemon @nativeTasks @testArguments "-PapiBaseUrl=$ApiBaseUrl"
+    & (Join-Path $project 'gradlew.bat') --console=plain --no-daemon @nativeTasks @testArguments
     $code = $LASTEXITCODE
     if ($code -ne 0) { exit $code }
     if ($Target -eq 'DeviceTest') {

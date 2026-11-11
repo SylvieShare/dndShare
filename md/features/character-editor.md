@@ -319,6 +319,12 @@ handbook renderer.
 
 ## Форматированные описания
 
+Android использует тот же InputDescription внутри общего Vue-интерфейса.
+Редактирование описаний личности выполняется inline, с плавным изменением высоты;
+карандаш находится рядом с подписью. Заголовки групп внутри личности скрыты,
+поля отделяются увеличенными промежутками и приглушёнными подписями.
+
+
 Character notes/personality fields that are descriptions store the HTML emitted
 by `InputDescription` and render through the DnD adapter over `RichContent`.
 The toolbar inserts ordinary links plus atomic dice/item/suggest references;

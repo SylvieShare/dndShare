@@ -6,7 +6,6 @@ import { fileURLToPath } from 'node:url'
 const expectedOutputs = [
   'frontend/src/app/design-tokens.css',
   'frontend/src/app/design-tokens.js',
-  'native/androidApp/src/main/kotlin/ru/dndshare/client/ui/designsystem/DesignTokens.kt',
 ]
 const hash = text => createHash('sha256').update(text.replaceAll('\r\n', '\n')).digest('hex')
 
@@ -26,7 +25,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   try {
     const failures = checkDesign()
     if (failures.length) throw new Error(`Run python3 scripts/design/tokens.py:\n${failures.join('\n')}`)
-    console.log('Design source and generated CSS/Compose match.')
+    console.log('Design source and generated CSS/JS match.')
   } catch (error) {
     console.error(error.message)
     process.exitCode = 1

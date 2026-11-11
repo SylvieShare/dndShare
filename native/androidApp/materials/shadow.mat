@@ -1,3 +1,0 @@
-material { name: MapShadowProxy,shadingModel:unlit,blending:opaque,culling:none,
-    colorWrite:false,depthWrite:false }
-fragment {void material(inout MaterialInputs m){prepareMaterial(m);m.baseColor=vec4(1.0);}}

@@ -16,11 +16,12 @@
       <button v-else-if="showToggle" class="desc-done-btn" type="button" @click="editOn = false">Готово</button>
     </div>
 
-    <div :class="{ 'desc-body--owner': showToggle && !editing }" @click="showToggle && !editing && (editOn = true)">
+    <div ref="transitionBody" class="desc-transition" :class="{ 'desc-body--owner': showToggle && !editing }" @click="showToggle && !editing && (editOn = true)">
       <RichTextEditor
         ref="editorRef"
         :model-value="value"
         :editable="editing"
+        :aria-label="block.title || block.content?.label"
         :placeholder="block.content?.placeholder ?? 'Текст...'"
         :labels="RUSSIAN_LABELS"
         :show-link-button="false"
@@ -187,6 +188,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
+import { useDescriptionTransition } from '@/shared/lib/useDescriptionTransition'
 import { BasePopover, RichTextEditor } from '@sylvieshare/share-ui'
 import { BookOpenCheck, Calculator, Dices, Ellipsis, HeartPulse, Link2, PackageSearch, Shield } from '@lucide/vue'
 import { useItemTypesStore } from '@/stores/itemTypes'
@@ -232,6 +234,8 @@ const owner = computed(() => Boolean(charCtx.ownerMode))
 const showToggle = computed(() => owner.value && !props.editable)
 const editOn = ref(false)
 const editing = computed(() => props.editable || (owner.value && editOn.value))
+const transitionBody = ref(null)
+useDescriptionTransition(transitionBody, editing)
 const editorRef = ref(null)
 const selectedNode = ref(null)
 const editingTarget = ref(null)
@@ -291,8 +295,9 @@ function openLinkFromMenu() {
 async function editSelectedNode() {
   if (!selectedNode.value) return
   editingTarget.value = selectedNode.value
-  activeEditor.value = selectedNode.value.node.kind
+  const target = selectedNode.value
   selectedNode.value = null
+  activeEditor.value = target.node.kind
   if (activeEditor.value === 'item' && !itemTypeIds.value.length) {
     const types = await useItemTypesStore().ensureAll().catch(() => [])
     itemTypeIds.value = types.map(type => type.id)
@@ -336,133 +341,4 @@ function removeEditingNode() {
 
 </script>
 
-<style scoped>
-.input-desc {
-  display: flex;
-  flex-direction: column;
-  container-type: inline-size;
-}
-.input-desc :deep(.desc-editor),
-.input-desc :deep(.desc-view) {
-  font-family: var(--font-prose);
-  font-optical-sizing: auto;
-}
-
-.input-desc :deep(.desc-editor) {
-  box-sizing: border-box;
-  background: transparent;
-  border: 2px solid var(--border);
-}
-
-.input-desc :deep(.desc-editor:focus) {
-  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
-}
-.desc-head { display: flex; align-items: center; gap: 8px; min-height: 24px; margin-bottom: 4px; }
-
-.desc-title {
-  min-width: 0;
-  overflow: hidden;
-  color: var(--text-2);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-overflow: ellipsis;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.desc-head .field-edit-btn,
-.desc-head .desc-done-btn { margin-left: auto; }
-
-.field-edit-btn {
-  display: grid;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  background: none;
-  border: none;
-  border-radius: var(--r-sm);
-  color: var(--text-muted);
-  cursor: pointer;
-  opacity: 0.35;
-  place-items: center;
-  transition: color 0.15s, opacity 0.15s;
-}
-
-@media (hover: hover) {
-  .input-desc:hover .field-edit-btn { color: var(--accent); opacity: 1; }
-}
-
-.field-edit-btn:focus-visible { color: var(--accent); opacity: 1; }
-
-.desc-done-btn {
-  padding: 3px 8px;
-  background: none;
-  border: none;
-  border-radius: var(--r-sm);
-  color: var(--accent);
-  font: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.12s;
-}
-
-.desc-done-btn:hover { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
-.desc-body--owner { cursor: text; }
-
-.rich-tool-btn {
-  display: grid;
-  min-width: 26px;
-  height: 26px;
-  padding: 0 5px;
-  border: 0;
-  border-radius: var(--r-sm);
-  background: none;
-  color: var(--text-muted);
-  font: 700 13px/1 var(--font-ui);
-  cursor: pointer;
-  place-items: center;
-}
-.rich-tool-btn:hover { background: var(--surface-raised); color: var(--accent-soft); }
-.rich-insert-actions { display: inline-flex; align-items: center; gap: 2px; flex-shrink: 0; }
-.rich-insert-more { display: none; }
-
-.rich-insert-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.rich-insert-menu button {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  gap: 9px;
-  padding: 7px 9px;
-  background: none;
-  border: 0;
-  border-radius: var(--r-sm);
-  color: var(--text-2);
-  font: inherit;
-  font-size: 12px;
-  text-align: left;
-  cursor: pointer;
-}
-
-.rich-insert-menu button:hover { background: var(--surface-raised); color: var(--text-1); }
-.rich-insert-menu button svg { flex-shrink: 0; color: var(--accent-soft); }
-
-@container (max-width: 400px) {
-  .rich-insert-actions { display: none; }
-  .rich-insert-more { display: grid; }
-}
-
-.rich-node-menu { display: flex; flex-direction: column; gap: 5px; max-width: 280px; }
-.rich-node-menu-label { color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-.rich-node-menu strong { overflow: hidden; color: var(--text-1); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
-.rich-node-menu-actions { display: flex; gap: 6px; margin-top: 3px; }
-.rich-node-menu-actions button { padding: 5px 8px; border: 0; border-radius: var(--r-sm); background: var(--surface-raised); color: var(--text-2); font: inherit; font-size: 11px; cursor: pointer; }
-.rich-node-menu-actions button:hover { color: var(--text-1); }
-.rich-node-menu-actions button.danger { margin-left: auto; color: var(--danger); }
-</style>
+<style scoped src="./input-description.css" />

@@ -4,7 +4,7 @@
     <div class="workspace-header-inner" :class="{ 'workspace-header-inner--page': page }" :style="{ maxWidth: contentWidth || (page ? 'var(--layout-content-max)' : undefined) }">
     <div class="workspace-header-identity"><slot name="identity" /></div>
     <div v-if="$slots.navigation && !splitNavigation" class="workspace-header-navigation"><slot name="navigation" /></div>
-    <div class="workspace-header-actions"><slot name="actions" /></div>
+    <div class="workspace-header-actions"><slot name="actions" /><LocalDataStatus /></div>
     </div>
     <slot name="between" />
     <div v-if="$slots.navigation && splitNavigation" class="workspace-subheader">
@@ -14,6 +14,7 @@
   </header>
 </template>
 <script setup>
+import LocalDataStatus from '@/platform/LocalDataStatus.vue'
 import { BlurBackdrop } from '@sylvieshare/share-ui'
 import { onBeforeUnmount, onMounted, ref } from "vue";
 defineProps({ page: Boolean, contentWidth: String, splitNavigation: Boolean, fitNavigation: Boolean, solid: Boolean });
@@ -32,6 +33,7 @@ onMounted(() => {
 onBeforeUnmount(() => observer?.disconnect());
 </script>
 <style scoped>
+:global(html[data-platform="android"]) .workspace-header { padding-top:var(--native-safe-top, 0px); }
 .workspace-header {
   position: relative;
   z-index: 20;

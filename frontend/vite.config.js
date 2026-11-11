@@ -1,3 +1,4 @@
+import { androidInsets } from './scripts/android-insets.mjs'
 import { designMedia } from './scripts/design-media.mjs'
 import { compressedAssets } from './scripts/compressedAssets.mjs'
 import { defineConfig } from 'vite'
@@ -7,7 +8,7 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig({
   cacheDir: process.env.DNDSHARE_VITE_CACHE || undefined,
   plugins: [vue(), compressedAssets()],
-  css: { postcss: { plugins: [designMedia()] } },
+  css: { postcss: { plugins: [designMedia(), androidInsets()] } },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

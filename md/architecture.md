@@ -7,13 +7,11 @@ S3-compatible storage — изображения, аудио и файлы 3D-м
 
 ## Runtime и зависимости
 
-`native/androidApp` содержит Android-приложение на Kotlin и Jetpack Compose,
-модели, HTTP-клиент Ktor и Room/SQLite. Activity и ViewModel управляют lifecycle,
-Keystore защищает сессию, Jetpack WindowManager передаёт состояние сгиба.
-Ресурсы и системная навигация используют Android API.
-Общие UI-примитивы, тема и офлайн-шрифты вынесены в `ui.designsystem`;
-пакет внутри приложения не зависит от моделей, Room или Ktor.
-Описание границ — [нативный клиент](features/native-client.md).
+`native/androidApp` содержит оболочку Capacitor/WebView и плагины SQLite,
+файлов и системной интеграции. Vue/share-ui, игровые правила, Three.js и
+синхронизация общие с браузером. Один frontend dist встраивается в Go и APK.
+В браузере локальная база — IndexedDB, на Android — SQLite; API един.
+Описание границ — [Android-клиент](features/native-client.md).
 
 ```mermaid
 flowchart LR
@@ -21,7 +19,7 @@ flowchart LR
     Browser -->|HTML, JS, CSS| Assets[Frontend assets]
     Assets --- Go
     Client[MCP-клиент] -->|JSON-RPC /mcp| Go
-    Native[Android: Kotlin, Jetpack Compose] -->|HTTP API и handbook sync| Go
+    Native[Android: Capacitor + общий Vue] -->|HTTP API и handbook sync| Go
     Native --> LocalDB[(Локальная SQLite)]
     Go -->|pgx| DB[(PostgreSQL)]
     Go -->|ObjectStorageService| S3[(S3-compatible storage)]

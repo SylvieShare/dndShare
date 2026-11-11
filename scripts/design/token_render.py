@@ -4,7 +4,6 @@ from token_model import digest, literal, media_queries, pascal
 
 CSS = 'frontend/src/app/design-tokens.css'
 JS = 'frontend/src/app/design-tokens.js'
-KOTLIN = 'native/androidApp/src/main/kotlin/ru/dndshare/client/ui/designsystem/DesignTokens.kt'
 
 
 def render(data, source_hash):
@@ -45,24 +44,7 @@ def render(data, source_hash):
     js = [f'// {header}', f'export const layoutTokens = Object.freeze({json.dumps(data["layout"], indent=2)});',
           f'export const motionTokens = Object.freeze({json.dumps(data["motion"], indent=2)});',
           f'export const designMediaQueries = Object.freeze({json.dumps(media_queries(data), indent=2)});', '']
-    kt = [f'// {header}', 'package ru.dndshare.client.ui.designsystem', '',
-          'import androidx.compose.ui.unit.dp', 'import androidx.compose.ui.unit.sp',
-          'import androidx.compose.ui.unit.TextUnit', 'import androidx.compose.ui.text.font.FontWeight', '',
-          'enum class DesignFont { Display, Prose, Ui }',
-          'data class DesignType(val size: TextUnit, val lineHeight: TextUnit, val tracking: TextUnit, val weight: FontWeight, val family: DesignFont)', '',
-          'object DesignTokens {']
-    for group in ['layout', 'spacing', 'radius', 'collection', 'canvas', 'list', 'motion', 'chrome']:
-        kt.append(f'    object {pascal(group)} {{')
-        for name, value in data[group].items():
-            unit = 'f' if (group == 'canvas' and name == 'opacity' or group == 'chrome' and name == 'tint') else '' if group == 'motion' and name != 'distance' else '.dp'
-            kt.append(f'        val {pascal(name)} = {literal(value)}{unit}')
-        kt.append('    }')
-    kt.append('    object Typography {')
-    for name, role in data['typography'].items():
-        kt.append(f'        val {pascal(name)} = DesignType({literal(role["size"])}.sp, '
-                  f'{literal(role["lineHeight"])}.sp, {literal(role["tracking"])}.sp, FontWeight({role["weight"]}), DesignFont.{pascal(role["family"])})')
-    kt += ['    }', '}', '']
-    return {CSS: '\n'.join(css), JS: '\n'.join(js), KOTLIN: '\n'.join(kt)}
+    return {CSS: '\n'.join(css), JS: '\n'.join(js)}
 
 
 def manifest(source_hash, outputs):

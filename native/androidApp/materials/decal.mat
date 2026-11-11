@@ -1,7 +1,0 @@
-material { name: MapDecal, shadingModel: lit, blending: transparent, culling: none,
-    depthWrite:false, requires:[uv0], flipUV:false,
-    parameters:[{type:sampler2d,name:albedo},{type:float4,name:tint}] }
-fragment { void material(inout MaterialInputs m) {
-    prepareMaterial(m); vec4 colour=texture(materialParams_albedo,getUV0())*materialParams.tint;
-    if(colour.a<0.005) discard; m.baseColor=colour; m.roughness=0.85; m.metallic=0.0;
-} }

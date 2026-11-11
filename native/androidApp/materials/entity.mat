@@ -1,3 +1,0 @@
-material { name: MapEntity, shadingModel: unlit, blending: opaque, culling: none,
-    parameters: [{type:float4,name:state}], depthWrite:false }
-fragment { void material(inout MaterialInputs m) { prepareMaterial(m); m.baseColor=materialParams.state; } }

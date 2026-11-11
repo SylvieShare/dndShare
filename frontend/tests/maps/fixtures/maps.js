@@ -9,7 +9,7 @@ import { mapCatalogueFixture } from "./mapCatalogue";
 import { previewFixture } from "./previews";
 import { attachmentExample } from "./attachments";
 import { groupExamples } from "./groups";
-import nativeReview from "../../../../native/androidApp/src/androidTest/assets/maps/editor-review.json";
+import nativeReview from "./data/editor-review.json";
 import { BoxGeometry, Mesh, MeshStandardMaterial, Scene } from "three";
 import { GLTFExporter } from "three/addons/exporters/GLTFExporter.js";
 import { createApp, h } from "vue";

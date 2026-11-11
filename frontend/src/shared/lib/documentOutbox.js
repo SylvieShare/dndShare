@@ -1,6 +1,8 @@
+import { outboxStorage } from '../../platform/journal'
 // Each editor owns a distinct record. Locks protect recovery, not the contents
 // of another editor's queue. Closing a page releases its locks automatically.
 const active = new Set()
+export const hasActiveOutbox = scope => [...active].some(key => key.startsWith(`${scope}:queue:`))
 
 function hold(key) {
   const locks = globalThis.navigator?.locks
@@ -19,9 +21,10 @@ export function createDocumentOutbox(storageKey) {
   const queueId = crypto.randomUUID()
   let scope, recordKey, opening, release, recovered, closed = false
   let buffered, hasBuffered = false
+  let transfer = Promise.resolve()
   const resolveScope = () => scope || (scope = typeof storageKey === 'function' ? storageKey() : storageKey)
   function keys() {
-    const storage = globalThis.localStorage
+    const storage = outboxStorage()
     const result = []
     if (storage?.getItem(scope)) result.push(scope) // Transfer the previous single record once.
     for (let index = 0; index < (storage?.length || 0); index++) {
@@ -40,14 +43,20 @@ export function createDocumentOutbox(storageKey) {
   }
   function writeNow(value) {
     if (!recordKey || closed) return
-    const storage = globalThis.localStorage
+    const storage = outboxStorage()
     if (!storage) return
     if (value) storage.setItem(recordKey, JSON.stringify(value))
     else storage.removeItem(recordKey)
     // Only remove the recovered record after its replacement is durable.
     if (recovered?.adopted) {
-      storage.removeItem(recovered.key)
-      recovered.release()
+      const previous = recovered
+      transfer = transfer.then(async () => {
+        await storage.flush?.()
+        storage.removeItem(previous.key)
+        await storage.flush?.()
+        previous.release()
+      })
+      void transfer.catch(() => {})
       recovered = null
     }
     hasBuffered = false
@@ -61,8 +70,9 @@ export function createDocumentOutbox(storageKey) {
     async read() {
       try {
         await open()
+        await outboxStorage()?.refresh?.()
         if (closed || !scope || !release) return null
-        if (recovered) return JSON.parse(globalThis.localStorage?.getItem(recovered.key) || 'null')
+        if (recovered) return JSON.parse(outboxStorage()?.getItem(recovered.key) || 'null')
         const candidates = keys()
         if (candidates.length && globalThis.window && !globalThis.navigator?.locks)
           throw Object.assign(new Error('Не удалось безопасно восстановить правки. Обновите браузер; очередь сохранена в этом браузере.'), { status: 409 })
@@ -71,7 +81,7 @@ export function createDocumentOutbox(storageKey) {
           const owner = await hold(key)
           if (!owner) continue
           let saved
-          try { saved = JSON.parse(globalThis.localStorage?.getItem(key) || 'null') }
+          try { saved = JSON.parse(outboxStorage()?.getItem(key) || 'null') }
           catch { owner(); continue }
           if (!saved) { owner(); continue }
           recovered = { key, release: owner, adopted: false }
@@ -80,13 +90,14 @@ export function createDocumentOutbox(storageKey) {
         if (hasBuffered) writeNow(buffered)
       } catch (error) {
         if (error.status === 409) throw error
+        if (outboxStorage()?.flush) throw Object.assign(new Error('Не удалось прочитать сохранённые изменения. Повторите попытку.'), { status: 507, cause: error })
         // Editing remains available when storage is unavailable.
       }
       return null
     },
     adopt() { if (recovered) recovered.adopted = true },
     discardRecovered() {
-      if (recovered) globalThis.localStorage?.removeItem(recovered.key)
+      if (recovered) outboxStorage()?.removeItem(recovered.key)
       abandon()
     },
     abandon,
@@ -104,12 +115,14 @@ export function createDocumentOutbox(storageKey) {
         }
       } catch { /* The queue remains available in memory. */ }
     },
+    flush() { const storage = outboxStorage(); return storage?.flush ? transfer.then(() => storage.flush()) : null },
     close() {
       try { if (hasBuffered) writeNow(buffered) } catch { /* quota */ }
       closed = true
       abandon()
-      release?.()
-      void opening?.then(() => release?.())
+      const storage = outboxStorage()
+      if (storage?.flush) void transfer.then(() => storage.flush()).finally(() => { release?.(); void opening?.then(() => release?.()) }).catch(() => {})
+      else { release?.(); void opening?.then(() => release?.()) }
     },
   }
 }

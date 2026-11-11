@@ -143,6 +143,8 @@ export function createDocumentSync(options) {
       publish('saving')
       const request = flight
       try {
+        const durable = outbox.flush()
+        if (durable) await durable
         const response =
           request.receipt || (await options.send(copyDocument(flight.packet)))
         if (flight !== request) return false
@@ -321,6 +323,7 @@ export function createDocumentSync(options) {
   }
   function stop() {
     stopped = true
+    globalThis.window?.removeEventListener?.('online', reconnect)
     clearTimeout(timer)
     persist()
     if (draining) void draining.finally(() => outbox.close())
@@ -364,7 +367,7 @@ export function createDocumentSync(options) {
     } catch (error) {
       blocked = error
       persist()
-      publish('conflict', error)
+      publish(error.status === 409 ? 'conflict' : 'error', error)
       return false
     }
   }
@@ -374,8 +377,11 @@ export function createDocumentSync(options) {
     return restoring
   }
   if (options.restore !== false && outbox.available) void restorePending()
+  function reconnect() { if (!stopped && !blocked && (flight || queue.length)) { clearTimeout(timer); retryDelay = 500; void flush() } }
+  globalThis.window?.addEventListener?.('online', reconnect)
   return {
     edit,
+    persisted: () => outbox.flush(),
     flush,
     receive,
     retry,

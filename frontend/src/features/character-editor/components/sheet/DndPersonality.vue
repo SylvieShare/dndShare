@@ -1,7 +1,6 @@
 <template>
   <div class="personality" :class="'personality--' + format">
     <BaseTile v-for="group in groups" :key="group.title" :outlined="false" class="person-group">
-      <SectionLabel :title="group.title" border />
       <div v-if="group.portrait" class="appearance-head">
         <CharacterBlock block-id="ava" :options="portraitSize" />
         <CharacterBlock v-if="group.description" block-id="person_appearance" />
@@ -16,7 +15,7 @@
 </template>
 <script setup>
 import { computed, inject } from 'vue'
-import { BaseTile, SectionLabel } from '@sylvieshare/share-ui'
+import { BaseTile } from '@sylvieshare/share-ui'
 import CharacterBlock from '../CharacterBlock.vue'
 const props = defineProps({ format: String })
 const ctx = inject('charCtx', {})
@@ -39,8 +38,8 @@ const portraitSize = computed(() => props.format === 'desktop' ? {width:'148px',
 </script>
 <style scoped>
 .personality {display:grid;gap:var(--spacing-page);min-width:0}
-.person-group {display:grid;align-content:start;gap:var(--spacing-medium);padding:var(--spacing-page);min-width:0}
-.person-fields {display:grid;gap:var(--spacing-medium);min-width:0}
+.person-group {display:grid;align-content:start;gap:var(--spacing-section);padding:var(--spacing-page);min-width:0}
+.person-fields {display:grid;gap:var(--spacing-section);min-width:0}
 .person-fields--short {grid-template-columns:repeat(2,minmax(0,1fr))}
 .appearance-head {display:flex;align-items:flex-start;gap:var(--spacing-medium);min-width:0}
 .appearance-head > :first-child {flex:none}.appearance-head > :nth-child(2) {flex:1;min-width:0}

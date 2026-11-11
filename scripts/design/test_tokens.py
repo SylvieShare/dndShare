@@ -15,23 +15,18 @@ class TokenContractTests(unittest.TestCase):
         data['typography']['collection-title']['size'] = 24
         outputs = render(validate(data), 'fixture')
         css = next(value for key, value in outputs.items() if key.endswith('.css'))
-        compose = next(value for key, value in outputs.items() if key.endswith('.kt'))
+        javascript = next(value for key, value in outputs.items() if key.endswith('.js'))
         self.assertIn('--collection-min-height: 176px;', css)
-        self.assertIn('val MinHeight = 176.dp', compose)
         self.assertIn('--motion-navigation: 227ms;', css)
-        self.assertIn('val Navigation = 227', compose)
+        self.assertIn('\"navigation\": 227', javascript)
         self.assertIn('--type-collection-title-size: 24px;', css)
-        self.assertIn('val CollectionTitle = DesignType(24.sp', compose)
 
     def test_chrome_opacity_stays_unitless_and_blur_has_matching_units(self):
         data = load()
         result = render(data, 'chrome')
         css = next(value for key, value in result.items() if key.endswith('.css'))
-        native = next(value for key, value in result.items() if key.endswith('.kt'))
         self.assertIn('--chrome-tint: 0.72;', css)
         self.assertIn('--chrome-blur: 16px;', css)
-        self.assertIn('val Tint = 0.72f', native)
-        self.assertIn('val Blur = 16.dp', native)
         for field, value in [('tint', 1.1), ('tint', 0), ('blur', 0)]:
             invalid = copy.deepcopy(data)
             invalid['chrome'][field] = value

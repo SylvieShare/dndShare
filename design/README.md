@@ -7,7 +7,7 @@ spacing, radius, collection, list и canvas интерпретируются к�
 масштаб шрифта. Motion задаёт длительности целыми миллисекундами;
 исключение — distance в CSS px / dp. Семейства ролей: `ui`, `display`, `prose`.
 
-Общие веб-примитивы и базовые роли палитры принадлежат установленному share-ui.
+Android и браузер используют один набор CSS. Общие веб-примитивы и базовые роли палитры принадлежат установленному share-ui.
 Продуктовые значения трёх основных поверхностей задаются в tokens.json.
 Доменные цвета остаются в product theme; игровые модели не входят в токены.
 Переопределения размеров используют публичные CSS-токены share-ui. Изменение
@@ -20,8 +20,6 @@ API примитивов выполняется через [процесс би�
 ```bash
 python3 scripts/design/tokens.py
 python3 scripts/design/tokens.py --check
-python3 scripts/native/sync_web_design.py
-python3 scripts/native/sync_web_design.py --check
 ```
 
 Генератор валидирует схему, порядок порогов, границы значений и диапазоны шрифтов.
@@ -32,7 +30,7 @@ python3 scripts/native/sync_web_design.py --check
 `frontend/src/app/design-tokens.css` содержит переменные и правила ширины,
 импортируется из product `theme.css`, включая отдельные тестовые страницы;
 `design-tokens.js` — численные значения и media queries для JS/PostCSS;
-`native/androidApp/.../ui/designsystem/DesignTokens.kt` — типизированные dp/sp и роли Compose.
+Android использует эти же CSS/JS внутри упакованного frontend.
 CSS использует `@media (--ui-phone)`, `(--ui-tablet)`, `(--ui-compact)`,
 `(--ui-desktop)` и `(--ui-from-tablet)`: локальный PostCSS-плагин подставляет
 пороги из того же источника. CSS custom properties не подставляются в media query.

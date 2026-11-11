@@ -85,7 +85,6 @@ def make_plan(args, config, workspace, serial, api_port):
               node("webbuild", "run", "build"),
               node("browser", "run", "test:browser", "--"),
               native("nativeAll", "All"), native("nativeDeviceTest", "DeviceTest"),
-              python("palette-icons", "scripts/native/sync_web_design.py"),
               python("tokens", "scripts/design/tokens.py")]
     if (workspace / "scripts/design/fonts.py").is_file():
         stages.append(python("fonts", "scripts/design/fonts.py"))

@@ -1,7 +1,7 @@
 """Deterministic GLB fixtures for independent opaque/alpha/depth rendering checks."""
 from pathlib import Path
 import json,struct
-root=Path(__file__).resolve().parents[2]/'native/androidApp/src/androidTest/assets/maps'
+root=Path(__file__).resolve().parents[2]/'frontend/tests/maps/fixtures/data'
 
 def write(name,planes,unlit=True):
  binary=bytearray();views=[];accessors=[];primitives=[];materials=[]

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate CSS, JS media queries and Compose metrics from one product contract."""
+"""Generate CSS and JS media queries from one product contract."""
 import argparse
 from token_model import ROOT, SOURCE, digest, load
 from token_render import manifest, render
@@ -20,10 +20,10 @@ def main():
                 stale.append(name)
         else:
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(content, encoding='utf-8')
+            path.write_text(content, encoding='utf-8', newline='\n')
     if stale:
         raise SystemExit('Run python3 scripts/design/tokens.py:\n' + '\n'.join(stale))
-    print('Shared design tokens match CSS/Compose' if args.check else 'Shared design tokens generated')
+    print('Shared design tokens match CSS/JS' if args.check else 'Shared design tokens generated')
 
 
 if __name__ == '__main__':
