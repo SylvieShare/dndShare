@@ -34,7 +34,7 @@ public class MainActivity extends BridgeActivity {
             @Override public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 // Same-origin API uses the real HTTPS server, including cookies, SSE and uploads.
                 // All other application routes/assets use Capacitor's packaged local server.
-                if ("dndshare.ru".equals(request.getUrl().getHost()) && request.getUrl().getPath().startsWith("/api/")) return null;
+                if (isApiDataRequest(request)) return null;
                 WebResourceResponse cached = "dndshare.ru".equals(request.getUrl().getHost()) ? null : media.intercept(request);
                 return cached != null ? cached : super.shouldInterceptRequest(view, request);
             }
@@ -54,6 +54,14 @@ public class MainActivity extends BridgeActivity {
                 bridge.getWebView().evaluateJavascript("window.dispatchEvent(new Event('dndshare:back'))", null);
             }
         });
+    }
+    private boolean isApiDataRequest(WebResourceRequest request) {
+        if (!"dndshare.ru".equals(request.getUrl().getHost()) || !request.getUrl().getPath().startsWith("/api/") || request.isForMainFrame()) return false;
+        for (var header : request.getRequestHeaders().entrySet()) {
+            if (header.getKey().equalsIgnoreCase("Accept") && header.getValue().contains("text/html")) return false;
+            if (header.getKey().equalsIgnoreCase("Sec-Fetch-Dest") && java.util.Arrays.asList("document", "iframe", "frame", "object", "embed", "script", "worker", "sharedworker", "serviceworker").contains(header.getValue())) return false;
+        }
+        return true;
     }
     @Override public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);

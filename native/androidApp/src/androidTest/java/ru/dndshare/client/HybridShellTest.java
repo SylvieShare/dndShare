@@ -50,6 +50,10 @@ public class HybridShellTest {
             assertEquals("false", evaluate(activity, "window.__coverStatus.available"));
             evaluate(activity, "window.__coverRejected=false;window.Capacitor.Plugins.CoverDisplay.show({owner:'test',photoUid:'photo',data:'AAAA'}).catch(()=>window.__coverRejected=true)");
             waitFor(activity, "window.__coverRejected===true");
+            // API documents must never become an executable remote page with the native bridge.
+            evaluate(activity, "window.__beforeApiNavigation = true");
+            activity.onActivity(host -> host.getBridge().getWebView().loadUrl("https://dndshare.ru/api/user/checkAuth"));
+            waitFor(activity, "window.__beforeApiNavigation === undefined && !!document.getElementById('app')?.__vue_app__");
         }
     }
 }
