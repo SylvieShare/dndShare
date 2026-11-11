@@ -59,6 +59,7 @@
           @click="emit('navigate')"
         />
       </template>
+      <SidebarNavItem as="button" label="Сообщить об ошибке" title="Сообщить об ошибке · Alt+Shift+E" :icon="Bug" @click="reportError" />
     </template>
 
     <template #account="{ expanded }">
@@ -71,11 +72,12 @@
 import ActiveSessionShortcuts from '@/features/sessions/components/ActiveSessionShortcuts.vue'
 import { computed, nextTick, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { BookOpen, BookOpenCheck, Map, ScrollText, Search, Shield, UserRoundPlus, Users, X } from '@lucide/vue'
+import { BookOpen, BookOpenCheck, Bug, Map, ScrollText, Search, Shield, UserRoundPlus, Users, X } from '@lucide/vue'
 import { AppSidebar, SidebarBrand, SidebarNavItem } from '@sylvieshare/share-ui'
 import HeaderSearch from '@/shared/ui/HeaderSearch'
 import GameContextSelector from '@/shared/ui/GameContextSelector.vue'
 import UserBox from '@/features/auth/components/UserBox'
+import { requestErrorReport } from '@/features/error-report/lib/errorReportLauncher'
 import { resolveAppNavigation } from '@/shared/lib/appNavigation'
 import { useAccountStore } from '@/stores/account'
 import { useGameContextStore } from '@/stores/gameContext'
@@ -110,6 +112,12 @@ function groupLabel(group) { return GROUP_LABELS[group] || '' }
 function startsGroup(item) {
   const index = navigationItems.value.findIndex(entry => entry.key === item.key)
   return index === 0 || navigationItems.value[index - 1]?.group !== item.group
+}
+
+async function reportError() {
+  emit('close-menu')
+  await nextTick()
+  requestErrorReport()
 }
 
 async function openSearch(toggle) {

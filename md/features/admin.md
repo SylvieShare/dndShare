@@ -9,9 +9,13 @@
 - статистика;
 - пользователи и роли;
 - server logs;
-- background jobs и история запусков.
+- background jobs и история запусков;
+- [ошибки страниц](error-reports.md): снимки, одобрение обработки, вопросы,
+  результат, архив и повторное открытие.
 
-Актуальные роли: `ADMIN`, `HANDBOOK_ADMIN`. Роли управления
+Актуальные роли: `ADMIN`, `HANDBOOK_ADMIN`, `ERROR_REPORT_REVIEWER` и
+`ERROR_REPORT_AUTO_APPROVE`. ADMIN также видит всплывающую очередь репортов;
+роль reviewer даёт этот обзор без доступа ко всей админке. Роли управления
 шаблонами нет: character settings находятся в frontend code registry.
 
 `ViewAdmin` сохраняет выбранный раздел в query-параметре. На desktop разделы

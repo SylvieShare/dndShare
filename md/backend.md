@@ -9,7 +9,8 @@
   `sylvieshare-session-uuid` (`uuid`), серверное состояние хранится в
   `users_session`; обе cookie и серверная сессия действуют 30 дней. Смена пароля
   отзывает прежние сессии, login и registration ограничены по частоте.
-- Роли: `ADMIN`, `HANDBOOK_ADMIN`.
+- Роли: `ADMIN`, `HANDBOOK_ADMIN`, `ERROR_REPORT_REVIEWER`,
+  `ERROR_REPORT_AUTO_APPROVE`. Роли репортов описаны в [контракте фичи](features/error-reports.md).
 - Ошибка API имеет тело `{"type": ..., "desc": ...}`. Необработанная паника
   возвращает HTTP 500 и записывается в `logs`.
 - API DTO используют camelCase. Nullable-поля задаются Go-указателями `*T` с

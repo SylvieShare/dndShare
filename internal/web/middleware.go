@@ -28,8 +28,10 @@ const (
 
 // Роли (dndshare.role.name).
 const (
-	RoleAdmin         = "ADMIN"
-	RoleHandbookAdmin = "HANDBOOK_ADMIN"
+	RoleAdmin                  = "ADMIN"
+	RoleHandbookAdmin          = "HANDBOOK_ADMIN"
+	RoleErrorReportReviewer    = "ERROR_REPORT_REVIEWER"
+	RoleErrorReportAutoApprove = "ERROR_REPORT_AUTO_APPROVE"
 )
 
 // recoverer ловит панику, логирует её в dndshare.logs и отдаёт 500 (аналог Advice).

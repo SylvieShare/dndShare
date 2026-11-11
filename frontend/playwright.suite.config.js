@@ -33,7 +33,7 @@ export default defineConfig({
   ] : [
     { name: 'ui', testIgnore: ['**/game-mechanics/*.test.js', '**/maps/**', '**/global-maps/**', '**/image-uploads/**', '**/fullstack/**', ...productionNavigation], use: { baseURL: devURL } },
     { name: 'maps', testMatch: '**/maps/*.spec.js', grepInvert: diagnostics, workers: 1, use: { baseURL: devURL } },
-    { name: 'production', testMatch: ['**/global-maps/*.spec.js', '**/image-uploads/*.spec.js', ...productionNavigation], workers: 1, use: { baseURL: buildURL } },
+    { name: 'production', testMatch: ['**/global-maps/*.spec.js', '**/image-uploads/*.spec.js', '**/error-reports/reporting.spec.js', ...productionNavigation], workers: 1, use: { baseURL: buildURL } },
   ],
   webServer: smokeURL ? [] : [
     ...(models || wants('ui') || wants('maps') ? [{ command: `npm run dev -- --host 127.0.0.1 --port ${devPort} --strictPort`, url: devURL, reuseExistingServer: false, timeout: 120000,

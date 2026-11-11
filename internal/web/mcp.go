@@ -186,6 +186,9 @@ func (s *Server) mcpRequireWrite() error {
 
 // dispatchTool mirrors HandbookMcpTools.kt one-to-one.
 func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json.RawMessage) (any, error) {
+	if strings.HasPrefix(name, "error_report") {
+		return s.dispatchErrorReportTool(r, name, args)
+	}
 	ctx := r.Context()
 	switch name {
 	case "creature_model_archive_list", "creature_model_archive_get", "creature_model_archive_prepare_upload", "creature_model_archive_complete_upload":

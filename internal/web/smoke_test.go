@@ -2,7 +2,6 @@ package web
 
 import (
 	"net/http/httptest"
-	"strings"
 	"testing"
 	"testing/fstest"
 
@@ -28,8 +27,8 @@ func TestHandlerRegistersAllRoutesWithoutConflict(t *testing.T) {
 		{"GET", "/api/user/logout", 405},
 		{"POST", "/api/user/logout", 200},
 		{"POST", "/mcp", 401},
-		{"POST", "/api/error-reports", 404},
-		{"PATCH", "/api/admin-panel/error-reports/1/approval", 404},
+		{"POST", "/api/error-reports", 400},
+		{"PATCH", "/api/admin-panel/error-reports/1/approval", 401},
 		{"PATCH", "/api/sessions/00000000-0000-0000-0000-000000000000/participants-order", 401},
 		{"POST", "/api/char/00000000-0000-0000-0000-000000000000/icon-image", 401},
 		{"DELETE", "/api/char/00000000-0000-0000-0000-000000000000/icon-image", 401},
@@ -45,15 +44,6 @@ func TestHandlerRegistersAllRoutesWithoutConflict(t *testing.T) {
 		h.ServeHTTP(rec, httptest.NewRequest(c.method, c.path, nil))
 		if rec.Code != c.want {
 			t.Fatalf("%s %s: want %d, got %d", c.method, c.path, c.want, rec.Code)
-		}
-	}
-}
-
-func TestMCPDoesNotPublishErrorReportTools(t *testing.T) {
-	for _, definition := range mcpToolDefs() {
-		name, _ := definition["name"].(string)
-		if strings.HasPrefix(name, "error_report") {
-			t.Fatalf("removed tool still published: %s", name)
 		}
 	}
 }

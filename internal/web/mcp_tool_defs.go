@@ -167,6 +167,7 @@ func mcpToolDefs() []map[string]any {
 			properties["contentSourceIds"] = map[string]any{"type": "array", "items": map[string]any{"type": "integer"}, "description": "Selected publications; omitted means all"}
 		}
 	}
+	defs = append(defs, mcpErrorReportDefs()...)
 	defs = append(defs, mapModelToolDefinitions()...)
 	defs = append(defs, itemModelTools()...)
 	defs = append(defs, creatureArchiveTools()...)

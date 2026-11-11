@@ -31,6 +31,7 @@
       <AdminStats v-if="activeTab === 'stats'" />
       <AdminUsers v-else-if="activeTab === 'users'" />
       <AdminLogs v-else-if="activeTab === 'logs'" />
+      <AdminErrorReports v-else-if="activeTab === 'error-reports'" />
       <AdminJobs v-else-if="activeTab === 'jobs'" />
       <ComponentGallery v-else-if="activeTab === 'ui-kit'" />
     </main>
@@ -40,6 +41,7 @@
 <script setup>
 import { computed, defineAsyncComponent, nextTick, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import AdminErrorReports from '../components/AdminErrorReports.vue'
 import AdminJobs from '../components/AdminJobs.vue'
 import AdminLogs from '../components/AdminLogs.vue'
 import AdminStats from '../components/AdminStats.vue'
@@ -54,6 +56,7 @@ const tabs = [
   { id: 'users', label: 'Пользователи' },
   { id: 'logs', label: 'Логи' },
   { id: 'jobs', label: 'Задачи' },
+  { id: 'error-reports', label: 'Ошибки страниц' },
   { id: 'ui-kit', label: 'UI-кит' },
 ]
 

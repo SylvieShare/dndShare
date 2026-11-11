@@ -24,6 +24,8 @@
   </div>
   <AppNotifications v-if="showsApplicationServices"/>
   <ConsoleErrorInbox v-if="showsApplicationServices"/>
+  <ErrorReporter v-if="showsApplicationServices"/>
+  <ErrorReportInbox v-if="showsApplicationServices"/>
 </template>
 
 <script setup>
@@ -32,6 +34,8 @@ import { useRoute } from 'vue-router'
 import AppNavigationShell from '@/shared/ui/AppNavigationShell.vue'
 import AppNotifications from '@/features/notifications/components/AppNotifications.vue'
 import ConsoleErrorInbox from '@/features/console-errors/components/ConsoleErrorInbox.vue'
+import ErrorReporter from '@/features/error-report/components/ErrorReporter.vue'
+import ErrorReportInbox from '@/features/error-report/components/ErrorReportInbox.vue'
 import { pageTransitionName } from '@/app/router'
 import { mobilePageTransitionActive } from '@/app/mobilePageTransition'
 import { useIsMobile } from '@sylvieshare/share-ui'

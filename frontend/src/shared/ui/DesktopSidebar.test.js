@@ -30,6 +30,7 @@ describe('shared navigation across window formats', () => {
     expect(html).toContain('/brand-mark.webp')
     expect(html).toContain('Поиск по справочнику')
     expect(html).toContain('Создать персонажа')
+    expect(html).toContain('Сообщить об ошибке')
     expect(html).not.toContain('href="/maps"')
   })
   it('embeds the same navigation in the expanded drawer', async () => {
@@ -39,6 +40,7 @@ describe('shared navigation across window formats', () => {
     expect(html).toContain('Для игрока')
     expect(html).toContain('Для мастера')
     expect(html).toContain('href="/chars"')
+    expect(html).toContain('Сообщить об ошибке')
     expect(html).not.toContain('Админка')
   })
 })
