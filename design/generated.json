@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "source": "design/tokens.json",
-  "sourceSha256": "a62adc949073180e03cc11988c3e28440f46b72a70567a8b8c867771fc1762c4",
+  "sourceSha256": "e4477edf84a96c3b21a87e12aa8fb8fe008e0ae26b81ee2f4aa1420508cb0199",
   "outputs": {
-    "frontend/src/app/design-tokens.css": "ce3e522cb122cbfbf1e68e11f6582e5520380344ae761989a8f10044c79f6e4a",
-    "frontend/src/app/design-tokens.js": "c783a3aacd4a53e8c3edaab9166b927169cbb1156bc54f5ee3593073a14bcbe9",
-    "native/androidApp/src/main/kotlin/ru/dndshare/client/ui/designsystem/DesignTokens.kt": "fc5ae3cf04f704c29b712e1299002bb73f2392b53ff5fd9e6cf612ddddcb85be"
+    "frontend/src/app/design-tokens.css": "5e4ce5d3fe9a07c47c4d649afd5173774040dd24bdc97170f643b2a80990b1d8",
+    "frontend/src/app/design-tokens.js": "8f809dcc2906630a5fc1512af6a2c39c22060e3ab67c8a8d366d56b1fcd01f4e",
+    "native/androidApp/src/main/kotlin/ru/dndshare/client/ui/designsystem/DesignTokens.kt": "68e8c3fcd99df8c532d67ccda94f2fa65f5578736e6f1dc978f8e11584d2f0c4"
   }
 }

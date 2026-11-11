@@ -1,7 +1,7 @@
 <template>
   <RowActionMenu title="Действия персонажа" :heading="menuSummary" :trigger-attrs="{ style: { maxWidth: 'var(--layout-sheet-header-tile-max)' } }" block>
     <template #trigger="{ open }">
-      <button ref="headingRoot" class="dnd-heading action-menu-source" :class="{ 'action-menu-source--open': open, 'dnd-heading--stacked': stacked }"
+      <button class="dnd-heading action-menu-source" :class="{ 'action-menu-source--open': open }"
         type="button" aria-label="Действия персонажа" :aria-expanded="open">
         <span class="portrait">
           <img v-if="iconUrl && !failed" :src="iconUrl" alt="" @error="failed = true" />
@@ -10,11 +10,11 @@
         <span class="identity"><strong>{{ name || 'Лист персонажа' }}</strong>
         </span>
         <span class="heading-metrics">
-          <SheetHealth :current="current" :maximum="maximum" :temporary="temporary" :compact="stacked" />
-          <span class="heading-metric" :aria-label="`Класс доспеха ${armor}`" title="Класс доспеха"><Shield :size="stacked ? 12 : 14" />{{ armor }}</span>
-          <span class="heading-metric" :aria-label="`Пассивное внимание ${perception}`" title="Пассивное внимание"><Eye :size="stacked ? 12 : 14" />{{ perception }}</span>
-          <span class="heading-metric" :aria-label="`Пассивное расследование ${investigation}`" title="Пассивное расследование"><Search :size="stacked ? 12 : 14" />{{ investigation }}</span>
+          <span class="heading-metric" :aria-label="`Класс доспеха ${armor}`" title="Класс доспеха"><Shield :size="14" />{{ armor }}</span>
+          <span class="heading-metric" :aria-label="`Пассивное внимание ${perception}`" title="Пассивное внимание"><Eye :size="14" />{{ perception }}</span>
+          <span class="heading-metric" :aria-label="`Пассивное расследование ${investigation}`" title="Пассивное расследование"><Search :size="14" />{{ investigation }}</span>
         </span>
+        <SheetHealth :current="current" :maximum="maximum" :temporary="temporary" />
       </button>
     </template>
     <template #default="{ close }">
@@ -30,28 +30,17 @@
   </RowActionMenu>
 </template>
 <script setup>
-import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import { Eye, HeartPulse, Search, Shield, TrendingUp } from '@lucide/vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import SheetHealth from './SheetHealth.vue'
-import { layoutTokens } from '@/app/design-tokens'
 import { levelExperience, levelProgressPercent } from '../../blocks/dnd/lib/experience'
 import { hpMaximum, normalizeHpMaximum } from '../../blocks/dnd/lib/hp'
 import { abilityModifier, resolveNumValue, sumBonuses, proficiencyBonus } from '@/shared/lib/dnd'
 const props = defineProps({ name: String, subtitle: String, iconUrl: String })
 const emit = defineEmits(['open'])
 const ctx = inject('charCtx', {})
-const headingRoot = ref(null), stacked = ref(false)
-let sizeObserver
-onMounted(() => {
-  const root = headingRoot.value
-  const measure = () => { stacked.value = root.clientWidth < layoutTokens['sheet-header-metrics-stacked-max'] }
-  measure()
-  sizeObserver = new ResizeObserver(measure)
-  sizeObserver.observe(root)
-})
-onBeforeUnmount(() => sizeObserver?.disconnect())
 const values = computed(() => ctx.values || {})
 const canEdit = computed(() => !!ctx.ownerMode)
 const level = computed(() => values.value.lvl?.level)
@@ -92,10 +81,6 @@ function select(panel, close) { close(); emit('open', panel) }
 .heading-metrics {display:flex;align-items:center;flex-wrap:wrap;gap:3px 8px;font-size:var(--type-context-size);line-height:var(--type-context-line-height);font-variant-numeric:tabular-nums}
 .heading-metric {display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
 .heading-metrics svg {color:var(--text-muted)}
-.dnd-heading--stacked .portrait {grid-row:1}
-.dnd-heading--stacked .identity {align-self:center}
-.dnd-heading--stacked .heading-metrics {grid-column:1/-1;gap:3px 4px}
-.dnd-heading--stacked .heading-metric {gap:2px}
 .experience-action {display:flex;flex-direction:column;gap:5px;width:100%;min-width:0}
 .experience-action small {color:var(--text-muted);font-size:12px}
 .experience-track {height:7px;border-radius:var(--radius-input);overflow:hidden;background:var(--surface-raised)}

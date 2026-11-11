@@ -36,15 +36,13 @@ internal fun DndHeading(ctx: SheetContext) {
     fun edit(target: String) { menu = false; ctx.edit(target) }
     val xp = level["exp"].number()
     val progress = dndLevelProgress(level["level"].number(1), xp)
-    BoxWithConstraints(Modifier.widthIn(max = DesignTokens.Layout.SheetHeaderTileMax).fillMaxWidth()) {
-        val stacked = maxWidth < DesignTokens.Layout.SheetHeaderMetricsStackedMax
+    Box(Modifier.widthIn(max = DesignTokens.Layout.SheetHeaderTileMax).fillMaxWidth()) {
         val metrics: @Composable () -> Unit = {
-            FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(if (stacked) 4.dp else 8.dp),
+            FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(3.dp), itemVerticalAlignment = Alignment.CenterVertically) {
-                HeaderHealth(current, maximum, temporary, ctx.images, compact = stacked)
-                HeaderMetric(Glyph.Shield, "Класс доспеха", ctx.mechanics.armor.total, stacked)
-                HeaderMetric(Glyph.Eye, "Пассивное внимание", passiveSkill(ctx, "WIS", 5, 10), stacked)
-                HeaderMetric(Glyph.Search, "Пассивное расследование", passiveSkill(ctx, "INT", 4, 5), stacked)
+                HeaderMetric(Glyph.Shield, "Класс доспеха", ctx.mechanics.armor.total)
+                HeaderMetric(Glyph.Eye, "Пассивное внимание", passiveSkill(ctx, "WIS", 5, 10))
+                HeaderMetric(Glyph.Search, "Пассивное расследование", passiveSkill(ctx, "INT", 4, 5))
             }
         }
         Column(
@@ -62,10 +60,10 @@ internal fun DndHeading(ctx: SheetContext) {
                 }
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                     Text(sheet.name, style = ShareTypography.sheetHeader, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    if (!stacked) metrics()
+                    metrics()
                 }
             }
-            if (stacked) metrics()
+            HeaderHealth(current, maximum, temporary, ctx.images)
         }
         ShareDropdownMenu(menu, { menu = false }) {
             Text(subtitle, style = ShareTypography.context, color = WebPalette.TextMuted,
@@ -111,13 +109,13 @@ internal fun DndHeading(ctx: SheetContext) {
 }
 
 @Composable
-private fun HeaderMetric(icon: Glyph, label: String, value: Int, compact: Boolean) {
+private fun HeaderMetric(icon: Glyph, label: String, value: Int) {
     Row(
         Modifier.semantics { contentDescription = "$label $value" },
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(if (compact) 2.dp else 3.dp),
+        horizontalArrangement = Arrangement.spacedBy(3.dp),
     ) {
-        AppGlyph(icon, Modifier.size(if (compact) 12.dp else 14.dp), WebPalette.TextMuted)
+        AppGlyph(icon, Modifier.size(14.dp), WebPalette.TextMuted)
         Text(value.toString(), style = ShareTypography.context)
     }
 }

@@ -322,13 +322,16 @@ for (const width of [390, 834, 1440]) test(`sheet header is opaque at ${width}`,
   await page.keyboard.press('Escape')
   await expect(page.locator('.character-summary-strip')).toHaveCount(0)
   const geometry = await page.locator('.dnd-heading').evaluate(node => {
-    const root = node.getBoundingClientRect(), hp = node.querySelector('.heading-health').getBoundingClientRect()
-    const armor = node.querySelector('[title="Класс доспеха"]').getBoundingClientRect()
-    return { width: root.width, hpRight: hp.right, armorLeft: armor.left, hpMiddle: hp.y + hp.height / 2, armorMiddle: armor.y + armor.height / 2 }
+    const root = node.getBoundingClientRect(), image = node.querySelector('.portrait').getBoundingClientRect()
+    const hp = node.querySelector('.heading-health').getBoundingClientRect(), stats = node.querySelector('.heading-metrics').getBoundingClientRect()
+    const track = node.querySelector('.health-strip').getBoundingClientRect(), readout = node.querySelector('.health-summary').getBoundingClientRect()
+    return { width: root.width, avatarRight: image.right, avatarBottom: image.bottom, statsLeft: stats.left, hpTop: hp.top, trackLeft: track.left, readoutRight: readout.right, trackHeight: track.height }
   })
   expect(geometry.width).toBeLessThanOrEqual(420)
-  expect(geometry.hpRight).toBeLessThan(geometry.armorLeft)
-  expect(Math.abs(geometry.hpMiddle - geometry.armorMiddle)).toBeLessThan(1)
+  expect(geometry.statsLeft).toBeGreaterThan(geometry.avatarRight)
+  expect(geometry.hpTop).toBeGreaterThanOrEqual(geometry.avatarBottom)
+  expect(geometry.readoutRight).toBeLessThan(geometry.trackLeft)
+  expect(geometry.trackHeight).toBe(6)
   await expect(page.locator('.dnd-heading canvas')).toHaveCount(0)
   await page.locator('.dnd-heading').evaluate(node => node.blur())
   await testInfo.attach('character-header', { body: await header.screenshot(), contentType: 'image/png' })

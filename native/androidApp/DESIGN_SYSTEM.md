@@ -67,8 +67,9 @@ Compose-анимации учитывают системное отключен�
 `python3 scripts/design/tokens.py`; `--check` проверяет производные CSS/JS/Kotlin.
 `ShareTypography` применяет роли с поддержкой системного масштаба.
 Шапка персонажа использует роль SheetHeader и иконку SheetHeaderIcon без подложки.
-Числа здоровья используют роли SheetHealth и SheetHealthCompact; сердце — SheetHealthIcon.
-HeaderHealth — простая предметная строка счётчиков, без шкалы и фоновой анимации.
+Числа здоровья используют SheetHealth; сердце — SheetHealthIcon.
+HeaderHealth располагает счётчики слева от общей тонкой HpBar высоты SheetHealthTrackHeight, временные HP — справа.
+HpBar повторяет переход StatBar: HealthFill с кривой (.5,0,.2,1); значения анимации читаются в draw-фазе.
 rememberVisualPhase принимает maxFps для ограничения фоновых эффектов; значения читаются в draw-фазе.
 Его VisualPhaseClock накапливает только видимое время и сохраняет фазу при паузе.
 Lifecycle STARTED управляет фоновой паузой. По умолчанию pauseOnFocusLoss ставит эффект на паузу при потере фокуса без сброса фазы.

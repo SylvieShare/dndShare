@@ -1,6 +1,7 @@
 package ru.dndshare.client.ui.character
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
@@ -275,28 +276,28 @@ internal fun DndStatuses(showEmpty: Boolean = false) {
 }
 
 @Composable
-private fun HpBar(
+internal fun HpBar(
     percent: Float,
     temporary: Float,
     color: Color,
     modifier: Modifier,
     height: androidx.compose.ui.unit.Dp,
 ) {
-    val animated by animateFloatAsState(percent, tween(DesignTokens.Motion.Feedback), label = "HP")
-    val animatedTemp by
-        animateFloatAsState(temporary, tween(DesignTokens.Motion.Feedback), label = "Temporary HP")
+    val animated = animateFloatAsState(percent, tween(DesignTokens.Motion.HealthFill, easing = CubicBezierEasing(.5f, 0f, .2f, 1f)), label = "HP")
+    val animatedTemp =
+        animateFloatAsState(temporary, tween(DesignTokens.Motion.HealthFill, easing = CubicBezierEasing(.5f, 0f, .2f, 1f)), label = "Temporary HP")
     Canvas(
         modifier
             .height(height)
             .clip(RoundedCornerShape(height / 2))
             .background(WebPalette.Background)
     ) {
-        val filled = animated.coerceIn(0f, 1f)
+        val filled = animated.value.coerceIn(0f, 1f)
         drawRect(color, size = Size(size.width * filled, size.height))
-        val extra = animatedTemp.coerceIn(0f, 1f - filled)
+        val extra = animatedTemp.value.coerceIn(0f, 1f - filled)
         if (extra > 0f)
             drawRect(
-                WebPalette.Info,
+                WebPalette.Info.copy(alpha = if (height <= 6.dp) .7f else 1f),
                 topLeft = Offset(size.width * filled, 0f),
                 size = Size(size.width * extra, size.height),
             )

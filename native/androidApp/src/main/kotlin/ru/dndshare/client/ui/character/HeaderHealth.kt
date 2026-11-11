@@ -11,6 +11,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
@@ -18,22 +19,25 @@ import coil3.compose.AsyncImage
 import ru.dndshare.client.ui.designsystem.*
 
 @Composable
-internal fun HeaderHealth(current: Int, maximum: Int, temporary: Int, images: ImageLoader, compact: Boolean = false) {
-    val fraction = if (maximum > 0) current.toFloat() / maximum else 0f
+internal fun HeaderHealth(current: Int, maximum: Int, temporary: Int, images: ImageLoader) {
+    val fraction = if (maximum > 0) (current.toFloat() / maximum).coerceIn(0f, 1f) else 0f
+    val extra = if (maximum > 0) (temporary.toFloat() / maximum).coerceIn(0f, 1f - fraction) else 0f
     val color = when { fraction > .6f -> WebPalette.Success; fraction > .25f -> WebPalette.Warning; else -> WebPalette.Danger }
-    val style = if (compact) ShareTypography.sheetHealthCompact else ShareTypography.sheetHealth
     val label = buildAnnotatedString {
         append(current.toString())
         withStyle(SpanStyle(fontFamily = ShareTypography.context.fontFamily, fontSize = ShareTypography.context.fontSize,
             fontWeight = ShareTypography.context.fontWeight, color = WebPalette.TextMuted)) { append("/$maximum") }
-        if (temporary > 0) withStyle(SpanStyle(fontFamily = ShareTypography.context.fontFamily, fontSize = ShareTypography.context.fontSize,
-            color = lerp(WebPalette.Info, WebPalette.Text, .15f))) { append(" +$temporary") }
     }
-    Row(Modifier.clearAndSetSemantics {
+    Row(Modifier.fillMaxWidth().clearAndSetSemantics {
         contentDescription = "Здоровье: $current из $maximum" + if (temporary > 0) ", временные $temporary" else ""
-    }, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-        AsyncImage("file:///android_asset/character-sheet/hp-pulse.svg", null, images,
-            colorFilter = ColorFilter.tint(color), modifier = Modifier.size(DesignTokens.Layout.SheetHealthIcon))
-        Text(label, style = style.copy(color = WebPalette.Text, fontFeatureSettings = "'lnum', 'tnum'"), modifier = Modifier.weight(1f, fill = false))
+    }, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+            AsyncImage("file:///android_asset/character-sheet/hp-pulse.svg", null, images,
+                colorFilter = ColorFilter.tint(color), modifier = Modifier.size(DesignTokens.Layout.SheetHealthIcon))
+            Text(label, style = ShareTypography.sheetHealth.copy(color = WebPalette.Text, fontFeatureSettings = "'lnum', 'tnum'"))
+        }
+        HpBar(fraction, extra, color, Modifier.weight(1f), DesignTokens.Layout.SheetHealthTrackHeight)
+        if (temporary > 0) Text("+$temporary", style = ShareTypography.context.copy(fontWeight = FontWeight.SemiBold,
+            color = lerp(WebPalette.Info, WebPalette.Text, .15f), fontFeatureSettings = "'tnum'"))
     }
 }

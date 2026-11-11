@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { fixture } from './fixtures/character-layout'
 
-for (const width of [390, 834, 1440]) test(`HP and armor share one simple row at ${width}`, async ({ page }, testInfo) => {
+for (const width of [390, 834, 1440]) test(`HP numbers stay left of the thin bar at ${width}`, async ({ page }, testInfo) => {
   const errors = []
   page.on('pageerror', error => errors.push(error.message))
   await page.setViewportSize({ width, height: 900 })
@@ -13,17 +13,28 @@ for (const width of [390, 834, 1440]) test(`HP and armor share one simple row at
   await expect(health.locator('.health-readout')).toHaveText('9/18')
   await expect(health.locator('.health-temporary')).toHaveText('+5')
   await expect(health.locator('.health-heart')).toBeVisible()
-  await expect(heading.locator('canvas,.health-track')).toHaveCount(0)
+  const meter = health.locator('[role="meter"]')
+  await expect(meter).toHaveAttribute('aria-valuenow', '50')
+  await expect(meter).toHaveText('')
+  await expect(heading.locator('canvas')).toHaveCount(0)
+  const track = await meter.boundingBox(), numbers = await health.locator('.health-summary').boundingBox()
+  const temp = await health.locator('.health-temporary').boundingBox()
+  expect(numbers.x + numbers.width).toBeLessThan(track.x)
+  expect(track.x + track.width).toBeLessThan(temp.x)
+  expect(track.height).toBe(6)
+  const avatar = await heading.locator('.portrait').boundingBox(), name = await heading.locator('.identity').boundingBox()
   const fields = await heading.locator('.heading-metrics > span').evaluateAll(nodes => nodes.map(node => {
     const box = node.getBoundingClientRect()
-    return { left: box.left, right: box.right, middle: box.y + box.height / 2 }
+    return { left: box.left, right: box.right, top: box.top, middle: box.y + box.height / 2 }
   }))
-  expect(fields).toHaveLength(4)
-  for (const field of fields) expect(Math.abs(field.middle - fields[0].middle)).toBeLessThan(1)
-  expect(fields[0].right).toBeLessThan(fields[1].left)
-  const box = await heading.boundingBox()
-  expect(box.width).toBeLessThanOrEqual(420)
-  expect(fields[3].right).toBeLessThanOrEqual(box.x + box.width + 1)
+  expect(fields).toHaveLength(3)
+  for (const field of fields) {
+    expect(Math.abs(field.middle - fields[0].middle)).toBeLessThan(1)
+    expect(field.left).toBeGreaterThan(avatar.x + avatar.width)
+    expect(field.top).toBeGreaterThanOrEqual(name.y + name.height - 1)
+  }
+  expect(numbers.y).toBeGreaterThanOrEqual(avatar.y + avatar.height)
+  expect((await heading.boundingBox()).width).toBeLessThanOrEqual(420)
   await testInfo.attach('inline-health', { body: await page.locator('.character-workspace-header').screenshot(), contentType: 'image/png' })
   expect(errors).toEqual([])
 })
