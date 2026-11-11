@@ -45,10 +45,9 @@ internal fun CharacterSheetHeader(
         compact = format != LayoutFormat.Wide,
         containerColor = WebPalette.Subheader,
         navigationColor = Color.Transparent,
-        navigationDividerColor = WebPalette.Background,
         navigationRadius = 0.dp,
         navigationInset = DesignTokens.Spacing.Page,
-        navigationPadding = PaddingValues(0.dp),
+        navigationPadding = PaddingValues(top = DesignTokens.Spacing.Xs),
         navigationElevation = 0.dp,
         actions = actions,
         navigation =

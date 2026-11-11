@@ -26,7 +26,7 @@ import ru.dndshare.client.model.HandbookMetadata
 import ru.dndshare.client.ui.character.*
 import ru.dndshare.client.ui.designsystem.*
 
-class HealthPopupContinuityTest {
+class VisualPhasePopupContinuityTest {
     @Test fun openingAndClosingTheCharacterMenuNeverRestartsTheVisibleClock() {
         val instrument = InstrumentationRegistry.getInstrumentation()
         val images = ImageLoader.Builder(instrument.targetContext).components { add(SvgDecoder.Factory()) }.build()
@@ -54,7 +54,7 @@ class HealthPopupContinuityTest {
                 } }
                 TouchRobot.await("Initial visible phase") { focused.get() && latest.get() > .4f }
                 val bitmap = requireNotNull(instrument.uiAutomation.takeScreenshot())
-                try { File(instrument.targetContext.getExternalFilesDir(null), "health-overlay.png").outputStream().use {
+                try { File(instrument.targetContext.getExternalFilesDir(null), "visual-phase-popup.png").outputStream().use {
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
                 } } finally { bitmap.recycle() }
                 val before = latest.get()

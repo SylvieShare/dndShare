@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -29,7 +28,6 @@ fun ShareWorkspaceHeader(
     navigationInset: Dp = if (compact) DesignTokens.Layout.CompactHeaderInset else 0.dp,
     navigationPadding: PaddingValues? = null,
     navigationElevation: Dp = 0.dp,
-    navigationDividerColor: Color? = null,
     containerColor: Color? = null,
     content: @Composable RowScope.() -> Unit,
 ) {
@@ -84,7 +82,6 @@ fun ShareWorkspaceHeader(
                         horizontalInset = navigationInset,
                         contentPadding = navigationPadding,
                         shadowElevation = navigationElevation,
-                        dividerColor = navigationDividerColor,
                         content = tabs,
                     )
                 }
@@ -105,7 +102,6 @@ fun ShareSubheader(
     horizontalInset: Dp = if (compact) DesignTokens.Layout.CompactHeaderInset else 0.dp,
     contentPadding: PaddingValues? = null,
     shadowElevation: Dp = 0.dp,
-    dividerColor: Color? = null,
     content: @Composable () -> Unit,
 ) {
     val managed = LocalChromeManaged.current
@@ -123,7 +119,6 @@ fun ShareSubheader(
                         )
                     )
                 drawContent()
-                dividerColor?.let { drawRect(it, size = Size(size.width, DesignTokens.Layout.Border.toPx())) }
             }
             .padding(
                 horizontal = horizontalInset,

@@ -67,11 +67,11 @@ Compose-анимации учитывают системное отключен�
 `python3 scripts/design/tokens.py`; `--check` проверяет производные CSS/JS/Kotlin.
 `ShareTypography` применяет роли с поддержкой системного масштаба.
 Шапка персонажа использует роль SheetHeader и иконку SheetHeaderIcon без подложки.
-Числа здоровья используют роль SheetHealth; размеры сердца/шкалы — SheetHealthIcon/SheetHealthHeight.
-Игровая композиция HeaderHealth и туман HealthMistDrawing принадлежат экрану персонажа.
+Числа здоровья используют роли SheetHealth и SheetHealthCompact; сердце — SheetHealthIcon.
+HeaderHealth — простая предметная строка счётчиков, без шкалы и фоновой анимации.
 rememberVisualPhase принимает maxFps для ограничения фоновых эффектов; значения читаются в draw-фазе.
 Его VisualPhaseClock накапливает только видимое время и сохраняет фазу при паузе.
-Lifecycle STARTED управляет фоновой паузой. По умолчанию pauseOnFocusLoss ставит эффект на паузу при потере фокуса без сброса фазы; HP отключает этот флаг, чтобы собственный Popup не прерывал движение.
+Lifecycle STARTED управляет фоновой паузой. По умолчанию pauseOnFocusLoss ставит эффект на паузу при потере фокуса без сброса фазы.
 `ShareWorkspaceHeader.containerColor` задаёт непрозрачную заливку вместо
 автоматического затемнения; управляемый `ShareChromeLayout` получает ту же роль цвета.
 Параметры `navigationColor`, `navigationRadius`, `navigationInset` и
@@ -79,8 +79,6 @@ Lifecycle STARTED управляет фоновой паузой. По умол�
 навигации. `ShareSubheader` предоставляет соответствующие параметры
 `surfaceColor`, `cornerRadius`, `horizontalInset` и `contentPadding`.
 `navigationElevation` и `shadowElevation` задают тень нижней полосы.
-`navigationDividerColor` и `ShareSubheader.dividerColor` рисуют внутренний верхний
-разделитель толщины Border без дополнительного отступа.
 `ShareIconNavigation.cornerRadius` управляет формой выделения и зоны эффекта нажатия.
 Компактные `ShareBadge` используют роль `BadgeCompact` с текстом 11 sp.
 `ShareTile.contentPadding` задаёт предметный отступ, по умолчанию общий Large;

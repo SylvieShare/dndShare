@@ -43,6 +43,7 @@ private fun textRole(token: DesignType): TextStyle {
 }
 
 object ShareTypography {
+    val sheetHealthCompact = textRole(DesignTokens.Typography.SheetHealthCompact)
     val sheetHealth = textRole(DesignTokens.Typography.SheetHealth)
     val sheetHeader = textRole(DesignTokens.Typography.SheetHeader)
     val badgeCompact = textRole(DesignTokens.Typography.BadgeCompact)

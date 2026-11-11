@@ -109,10 +109,9 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
   --workspace-header-background: var(--subheader);
   --workspace-header-identity-gap: var(--spacing-small);
   --workspace-subheader-background: transparent;
-  --workspace-subheader-divider: var(--bg);
   --workspace-subheader-radius: 0px;
   --workspace-subheader-inset: var(--spacing-page);
-  --workspace-subheader-padding: 0px;
+  --workspace-subheader-padding: var(--spacing-xs) 0 0;
   --workspace-subheader-shadow: none;
 }
 .character-identity {

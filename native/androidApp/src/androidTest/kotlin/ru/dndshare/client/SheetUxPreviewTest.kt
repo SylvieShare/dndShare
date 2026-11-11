@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.LocalContentColor
@@ -55,7 +57,13 @@ class SheetUxPreviewTest {
                                         }
                                     })
                                 if (format != LayoutFormat.Wide) DndSummaryStrip()
-                                if (format != LayoutFormat.Wide) ShareSubheader(surfaceColor = WebPalette.Raised, cornerRadius = DesignTokens.Radius.Tile, horizontalInset = DesignTokens.Spacing.Page, contentPadding = PaddingValues(0.dp)) { SheetNavigation(sections, selected, images, { selected = it }, compact = format == LayoutFormat.Phone, pill = true) }
+                                if (format != LayoutFormat.Wide) CompositionLocalProvider(LocalChromeManaged provides true) {
+                                    ShareSubheader(modifier = Modifier.background(WebPalette.Subheader), surfaceColor = Color.Transparent,
+                                        cornerRadius = 0.dp, horizontalInset = DesignTokens.Spacing.Page,
+                                        contentPadding = PaddingValues(top = DesignTokens.Spacing.Xs)) {
+                                        SheetNavigation(sections, selected, images, { selected = it }, compact = format == LayoutFormat.Phone, pill = true)
+                                    }
+                                }
                                 key(selected) {
                                     if (format == LayoutFormat.Wide) Box(Modifier.weight(1f)) { DndWideSheet(selected, sections, { selected = it }) }
                                     else Column(Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()).padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -86,6 +94,6 @@ class SheetUxPreviewTest {
     }
 
     companion object {
-        const val DATA = """{"values":{"name":"Лира","race":{"name":"Полуэльф"},"classes":[{"name":"Плут","level":3}],"hp":{"current":18,"max":{"base":23,"bonuses":[]},"temp":0,"hitDice":[]},"lvl":{"level":3,"exp":700},"prof_bonus":{"v":2,"auto":true},"speed":{"base":30,"bonuses":[]},"armor":{"bonuses":[]},"initiative":{"base":0,"use_dex":true,"bonuses":[]},"STR":{"value":{"base":10}},"DEX":{"value":{"base":16},"skills":{"4":{"up":2}}},"CON":{"value":{"base":14}},"INT":{"value":{"base":12}},"WIS":{"value":{"base":10}},"CHA":{"value":{"base":14}},"items":{"equipped":[],"sections":[{"id":"bag","name":"Рюкзак","items":[{"uid":"rope","count":2,"override":{"name":"Верёвка"}},{"uid":"torch","count":3,"override":{"name":"Факел"}}],"slots":{"rope":0,"torch":1}}]},"spells":{"schema_version":2,"slot_pools":{"long_rest":[{"level":1,"total":3,"used":1}],"short_rest":[]},"tabs":[{"key":"book","name":"Книга магии","casting_ability":4,"mode":"known","spells":[]}],"grants":[]},"states":[],"exhaustion":{"level":0}},"var":{"stats":{"1":0,"2":3,"3":2,"4":1,"5":0,"6":2}}}"""
+        const val DATA = """{"values":{"name":"Лира","race":{"name":"Полуэльф"},"classes":[{"name":"Плут","level":3}],"hp":{"current":18,"max":{"base":23,"bonuses":[]},"temp":5,"hitDice":[]},"lvl":{"level":3,"exp":700},"prof_bonus":{"v":2,"auto":true},"speed":{"base":30,"bonuses":[]},"armor":{"bonuses":[]},"initiative":{"base":0,"use_dex":true,"bonuses":[]},"STR":{"value":{"base":10}},"DEX":{"value":{"base":16},"skills":{"4":{"up":2}}},"CON":{"value":{"base":14}},"INT":{"value":{"base":12}},"WIS":{"value":{"base":10}},"CHA":{"value":{"base":14}},"items":{"equipped":[],"sections":[{"id":"bag","name":"Рюкзак","items":[{"uid":"rope","count":2,"override":{"name":"Верёвка"}},{"uid":"torch","count":3,"override":{"name":"Факел"}}],"slots":{"rope":0,"torch":1}}]},"spells":{"schema_version":2,"slot_pools":{"long_rest":[{"level":1,"total":3,"used":1}],"short_rest":[]},"tabs":[{"key":"book","name":"Книга магии","casting_ability":4,"mode":"known","spells":[]}],"grants":[]},"states":[],"exhaustion":{"level":0}},"var":{"stats":{"1":0,"2":3,"3":2,"4":1,"5":0,"6":2}}}"""
     }
 }

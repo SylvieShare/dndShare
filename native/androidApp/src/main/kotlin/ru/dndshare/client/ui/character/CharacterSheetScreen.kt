@@ -153,10 +153,9 @@ private fun CharacterSheetBody(
                         ShareSubheader(
                             maxContentWidth = DesignTokens.Layout.SheetMax,
                             surfaceColor = Color.Transparent,
-                            dividerColor = WebPalette.Background,
                             cornerRadius = 0.dp,
                             horizontalInset = DesignTokens.Spacing.Page,
-                            contentPadding = PaddingValues(0.dp),
+                            contentPadding = PaddingValues(top = DesignTokens.Spacing.Xs),
                             shadowElevation = 0.dp,
                         ) {
                             PreparedSheetNavigation(

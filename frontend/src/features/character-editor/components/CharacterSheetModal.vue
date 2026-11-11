@@ -201,8 +201,7 @@ onMounted(initializeCharacter)
 .csm--preview .desktop-tabs :deep(button[title='Редактировать']) { display: none; }
 .csm-body { margin-top: calc(-1 * var(--sheet-chrome-height, 64px)); padding-top: var(--sheet-chrome-height, 64px); box-sizing: border-box; scroll-padding-top: var(--sheet-chrome-height, 64px); flex: 1; min-height: 0; overflow-x: auto; overflow-y: auto; background: transparent; }
 .csm-body--pager { overflow: hidden; padding-top: 0; }
-.csm-subheader { position: relative; z-index: 21; flex: none; box-sizing: border-box; width: 100%; background: var(--subheader); padding: 4px 8px; }
-.csm-subheader::before { content: ''; position: absolute; inset: 0 0 auto; height: var(--layout-border); background: var(--bg); pointer-events: none; }
+.csm-subheader { position: relative; z-index: 21; flex: none; box-sizing: border-box; width: 100%; background: var(--subheader); padding: 8px 8px 4px; }
 .csm-tabs { --surface: var(--subheader); box-sizing: border-box; width: 100%; border: 0; border-radius: 0; background: transparent; margin: 0; padding: 4px; }
 .csm-tabs--fit { width: max-content; max-width: 100%; margin-inline: auto; }
 .csm-body--pager .container { padding: 0; }
