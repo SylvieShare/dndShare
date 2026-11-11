@@ -26,9 +26,12 @@
       <CharacterSheetTabs :pill="compact || stackedNavigation" :tabs="tabs" :active-tab="activeTab" @select="emit('select-tab', $event)" />
     </template>
     <template #actions>
-      <div v-if="dnd" class="heading-tools" :class="{ 'heading-tools--stacked': compact && session && !modal }">
-        <CharacterBlock block-id="rest" :options="{ embedded: true, header: true }" />
-        <CharacterBlock block-id="settings" :options="{ header: true }" />
+      <div class="heading-tools">
+        <CharacterHeaderSessionMenu v-if="!modal && session && transfers" :session="session" :controller="transfers" />
+        <template v-if="dnd">
+          <CharacterBlock block-id="rest" :options="{ embedded: true, header: true }" />
+          <CharacterBlock block-id="settings" :options="{ header: true }" />
+        </template>
       </div>
       <SettingsMenuTile v-if="showMenu" :block="{ props: { embedded: true } }" />
       <div v-if="dnd" class="heading-editors">
@@ -37,7 +40,6 @@
         <CharacterBlock ref="healthEditor" block-id="hp" :options="{ editorOnly: true }" />
         <CharacterBlock ref="statusEditor" block-id="desktop_status_trigger" :options="{ editorOnly: true }" />
       </div>
-      <CharacterSessionControl v-if="!modal" compact :session="session" :controller="transfers" />
     </template>
   </WorkspaceHeader>
 </template>
@@ -49,7 +51,7 @@ import { computed, inject, onBeforeUnmount, ref, watch } from 'vue'
 import { ActionButton } from '@sylvieshare/share-ui'
 import { ArrowLeft } from '@lucide/vue'
 import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
-import CharacterSessionControl from './CharacterSessionControl.vue'
+import CharacterHeaderSessionMenu from './CharacterHeaderSessionMenu.vue'
 import SettingsMenuTile from '../blocks/generic/SettingsMenuTile.vue'
 import CharacterSheetTabs from './sheet/CharacterSheetTabs.vue'
 import DndSheetHeading from './sheet/DndSheetHeading.vue'
@@ -101,8 +103,6 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
 <style scoped>
 .heading-editors {position:absolute;width:0;height:0}
 .heading-tools {display:flex;align-items:center;gap:2px;flex:none}
-.heading-tools--stacked {flex-direction:column;gap:0}
-.heading-tools :deep(.share-action-button) {width:36px;height:36px;min-height:36px;padding:0;justify-content:center}
 .character-summary-strip {position:relative;z-index:1;height:calc(var(--strip-full-height, 40px) - var(--strip-offset, 0px));overflow:clip}
 .character-summary-strip > :first-child {transform:translateY(calc(-1 * var(--strip-offset, 0px)))}
 .character-workspace-header {

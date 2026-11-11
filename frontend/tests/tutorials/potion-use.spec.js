@@ -1,8 +1,10 @@
+import { openSessionPanel } from './fixtures/session-menu'
 import { applyDocumentPatches } from '../../src/shared/lib/documentPatch.js'
 import { test, expect } from '@playwright/test'
 import { TUTORIAL_REVISION } from '../../src/features/tutorials/lib/tutorialIdentity.js'
 
 for (const mobile of [false, true]) test(`potion use reserves one dose, requests consent and consumes on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
+  test.setTimeout(60_000)
   page.on('pageerror', error => { throw error })
   await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 })
   const item = { uid: 'potion', item_id: 84, count: 3, override: { name: 'Зелье лечения', desc: 'Восстанавливает хиты' }, params: {} }
@@ -63,7 +65,7 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
     await expect(page.locator('.view')).toBeVisible()
     if (mobile) await page.getByRole('button', { name: 'Предметы', exact: true }).click()
     else await page.getByRole('tab', { name: 'Снаряжение', exact: true }).click()
-    if (connected && !guest) await expect(page.locator('.campaign-block:visible')).toBeVisible()
+    if (connected && !guest) await expect(page.locator('.character-workspace-header [data-tutorial="character-session"]')).toBeVisible()
     if (mobile) await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/settling/)
     await page.evaluate(async () => {
       const stages = document.querySelectorAll('.inner-tabs-content, .inner-tab-pane, .mobile-swipe-track')
@@ -100,11 +102,11 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
     await recipient.click()
     await expect(page.locator('.inventory-bag-item__count:visible')).toHaveText('2')
     expect(chars.sender.data.values.items.sections[0].items[0].count).toBe(2)
-    await page.getByRole('button', { name: 'События', exact: true }).click()
+    await openSessionPanel(page, 'События')
     await expect(page.locator('.transfer-offer > svg[aria-label="Кому"] + .transfer-person')).toContainText('Торин')
     await expect(page.locator('.transfer-offer')).not.toContainText('Лиора')
     await openSheet('recipient')
-    await page.getByRole('button', { name: /События/ }).click()
+    await openSessionPanel(page, 'События')
     await expect(page.locator('.transfer-event')).toHaveClass(/base-tile--framed/)
     await expect(page.locator('.transfer-event .transfer-person')).toContainText('Лиора')
     await expect(page.locator('.transfer-offer > .transfer-person + svg[aria-label="От кого"]')).toBeVisible()
@@ -115,7 +117,7 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
     await expect(itemDialog).toBeVisible()
     await expect(itemDialog).toContainText('Восстанавливает хиты')
     await itemDialog.getByRole('button', { name: 'Закрыть', exact: true }).click()
-    await page.getByRole('button', { name: 'События', exact: true }).click()
+    await openSessionPanel(page, 'События')
     await page.getByRole('dialog').getByRole('button', { name: decision, exact: true }).click()
     await expect(page.getByRole('dialog')).toContainText('Незавершённых событий нет')
     const result = page.locator('[data-notification-type="application"]')

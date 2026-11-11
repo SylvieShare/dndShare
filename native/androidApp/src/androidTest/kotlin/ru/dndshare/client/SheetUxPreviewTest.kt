@@ -52,8 +52,8 @@ class SheetUxPreviewTest {
                                     heading = { DndHeading(context) },
                                     actions = {
                                         Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
-                                            DndHeaderTools(format == LayoutFormat.Phone, true, {}, {})
-                                            SheetSessionBadge("Пепельная корона", SessionConnection.Connected, 2, 0, {}, {}, {})
+                                            SheetSessionMenu("Пепельная корона", SessionConnection.Connected, 2, 0, {}, {}, {})
+                                            DndHeaderTools(true, {}, {})
                                         }
                                     })
                                 if (format != LayoutFormat.Wide) DndSummaryStrip()

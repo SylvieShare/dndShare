@@ -1,6 +1,6 @@
 <template>
   <div ref="menuAnchor" class="sm-wrap">
-    <ActionButton v-if="block?.props?.header" variant="quiet" icon-only aria-label="Меню персонажа" title="Настройки персонажа" aria-haspopup="menu" :aria-expanded="open" @click="open = !open"><template #icon><Settings :size="18" /></template></ActionButton>
+    <ActionButton v-if="block?.props?.header" variant="quiet" icon-only aria-label="Меню персонажа" title="Настройки персонажа" aria-haspopup="menu" :aria-expanded="open" @click="open = !open"><template #icon><Settings :size="layoutTokens['sheet-header-action-icon']" /></template></ActionButton>
     <UtilityCell v-else-if="block?.props?.embedded" inline label="Меню персонажа" :active="open" aria-haspopup="menu" :aria-expanded="open" @click="open = !open">
       <template #icon><img v-if="iconSrc" class="sm-ic" :src="iconSrc" :style="iconStyle" alt="" aria-hidden="true" /></template>
       <span class="sm-sub">Меню</span>
@@ -68,6 +68,7 @@ import { useTutorialAction } from '@/features/tutorials/composables/useTutorialA
 import { computed, inject, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Settings } from '@lucide/vue'
+import { layoutTokens } from '@/app/design-tokens'
 import { ActionButton, TileAccentStrip, MorphTile } from '@sylvieshare/share-ui'
 import { ToggleSwitch } from '@sylvieshare/share-ui'
 import ContentSourcesModal from '@/features/character-editor/components/ContentSourcesModal.vue'

@@ -1,6 +1,6 @@
 <template>
   <BasePopover :open="open" :anchor="anchor" placement="bottom-end" :min-width="0" :z-index="4000"
-    :close-on-resize="false" :close-on-scroll="false" transition-preset="action-menu" aria-label="Меню персонажа"
+    :close-on-resize="false" :close-on-scroll="false" transition-preset="action-menu" :aria-label="label" :role="role"
     @update:open="$emit('update:open', $event)">
     <div ref="content" class="character-menu-content"><slot /></div>
   </BasePopover>
@@ -8,7 +8,7 @@
 <script setup>
 import { nextTick, ref, watch } from 'vue'
 import { BasePopover } from '@sylvieshare/share-ui'
-const props = defineProps({ open: Boolean, anchor: { type: Object, default: null } })
+const props = defineProps({ open: Boolean, anchor: { type: Object, default: null }, label: { type: String, default: 'Меню персонажа' }, role: { type: String, default: '' } })
 defineEmits(['update:open'])
 const content = ref(null)
 watch(() => props.open, async value => {
