@@ -79,6 +79,8 @@ Lifecycle STARTED управляет фоновой паузой. По умол�
 навигации. `ShareSubheader` предоставляет соответствующие параметры
 `surfaceColor`, `cornerRadius`, `horizontalInset` и `contentPadding`.
 `navigationElevation` и `shadowElevation` задают тень нижней полосы.
+`navigationDividerColor` и `ShareSubheader.dividerColor` рисуют внутренний верхний
+разделитель толщины Border без дополнительного отступа.
 `ShareIconNavigation.cornerRadius` управляет формой выделения и зоны эффекта нажатия.
 Компактные `ShareBadge` используют роль `BadgeCompact` с текстом 11 sp.
 `ShareTile.contentPadding` задаёт предметный отступ, по умолчанию общий Large;

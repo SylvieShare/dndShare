@@ -179,6 +179,7 @@
 @media (--ui-phone) {
   .mobile-sticky-header { background: var(--subheader); border: 0; padding: var(--spacing-xs) var(--spacing-page); box-sizing: border-box; }
   .mobile-sticky-header::after { display: none; }
+  .mobile-sticky-header::before { content: ''; position: absolute; inset: 0 0 auto; height: var(--layout-border); background: var(--bg); pointer-events: none; }
   .mobile-tabbar { --surface: var(--subheader); --mobile-tab-min-width: 44px; --mobile-tab-max-width: 148px; background: transparent; border: 0; border-radius: 0; padding: 4px 8px; gap: 2px; min-height: 48px; box-shadow: none; }
   .mobile-tab-indicator { top: 4px; bottom: 4px; height: auto; border-radius: var(--radius-input); background: color-mix(in srgb, var(--accent) 18%, var(--surface)); transition: none; }
   .mobile-tab-btn {
