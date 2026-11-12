@@ -50,7 +50,7 @@ for (const width of [390, 834, 1440]) test(`HP, shield and stacked passives fit 
   await testInfo.attach('header-composition', { body: await page.locator('.character-workspace-header').screenshot(), contentType: 'image/png' })
   expect(numbers.x + numbers.width).toBeLessThan(temp.x)
   expect(hp.x).toBeGreaterThan(armor.x + armor.width)
-  expect(hp.x - armor.x - armor.width).toBeCloseTo(12, 1)
+  expect(hp.x - armor.x - armor.width).toBeCloseTo(8, 1)
   expect(Math.abs(hp.y + hp.height / 2 - armor.y - armor.height / 2)).toBeLessThan(1)
   expect(combat.top).toBeGreaterThanOrEqual(name.bottom - .5)
   expect(fields).toHaveLength(2)

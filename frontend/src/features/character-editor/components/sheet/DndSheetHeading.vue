@@ -86,7 +86,7 @@ function select(panel, close) { close(); emit('open', panel) }
 .identity small {font-size:var(--type-context-size);color:var(--text-muted)}
 .heading-combat {display:flex;align-items:center;flex-wrap:wrap;gap:var(--spacing-xs) var(--spacing-small);min-width:0;font-size:var(--type-context-size);line-height:var(--type-context-line-height);font-variant-numeric:lining-nums tabular-nums}
 .heading-metrics {display:flex;flex:none;flex-direction:column;justify-content:center;height:var(--layout-sheet-health-height);color:var(--text-muted);font-size:var(--type-context-size);line-height:calc(var(--layout-sheet-health-height) / 2)}
-.heading-armor {display:grid;place-items:center;flex:none;width:var(--layout-sheet-header-armor);height:var(--layout-sheet-header-armor);margin-inline-end:var(--spacing-xs)}
+.heading-armor {display:grid;place-items:center;flex:none;width:var(--layout-sheet-header-armor);height:var(--layout-sheet-header-armor)}
 .heading-armor-icon,.heading-armor-value {grid-area:1/1}
 .heading-armor-icon {width:100%;height:100%;color:var(--text-muted)}
 .heading-armor-value {padding-bottom:2px;font-weight:700;line-height:1}
