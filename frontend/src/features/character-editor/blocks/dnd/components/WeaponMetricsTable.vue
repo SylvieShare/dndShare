@@ -1,14 +1,14 @@
 <template>
   <div class="weapon-metrics" role="group" aria-label="Показатели оружия">
-    <component :is="interactive && canAttack ? 'button' : 'div'" :type="interactive && canAttack ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__attack" :aria-label="interactive && canAttack ? 'Настроить бросок атаки' : undefined" :aria-haspopup="interactive && canAttack ? 'menu' : undefined" :aria-expanded="interactive && canAttack ? rollScope === 'attack' : undefined" @click.stop="interactive && canAttack && emit('roll', 'attack', $event)">
+    <component :is="interactive && canAttack ? 'button' : 'div'" :type="interactive && canAttack ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__attack" data-sheet-swipe :aria-label="interactive && canAttack ? 'Настроить бросок атаки' : undefined" :aria-haspopup="interactive && canAttack ? 'menu' : undefined" :aria-expanded="interactive && canAttack ? rollScope === 'attack' : undefined" @click.stop="interactive && canAttack && emit('roll', 'attack', $event)">
       <span class="weapon-metrics__label">Атака</span>
       <strong class="weapon-metrics__bonus">{{ attack || '—' }}</strong>
     </component>
-    <component :is="interactive && canDamage ? 'button' : 'div'" :type="interactive && canDamage ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__damage" :aria-label="interactive && canDamage ? 'Настроить бросок урона' : undefined" :aria-haspopup="interactive && canDamage ? 'menu' : undefined" :aria-expanded="interactive && canDamage ? rollScope === 'damage' : undefined" @click.stop="interactive && canDamage && emit('roll', 'damage', $event)">
+    <component :is="interactive && canDamage ? 'button' : 'div'" :type="interactive && canDamage ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__damage" data-sheet-swipe :aria-label="interactive && canDamage ? 'Настроить бросок урона' : undefined" :aria-haspopup="interactive && canDamage ? 'menu' : undefined" :aria-expanded="interactive && canDamage ? rollScope === 'damage' : undefined" @click.stop="interactive && canDamage && emit('roll', 'damage', $event)">
       <span class="weapon-metrics__label">Урон</span>
-      <AttackDamage compact v-if="damageParts.length || modifier !== 0" :damage-parts="damageParts" :modifier="modifier" :two-handed-parts="twoHandedParts" wrap-damage />
+      <WeaponDamageBreakdown v-if="damageRows.length || twoHandedRows.length" :rows="damageRows" :alternatives="twoHandedRows" :damage-type="damageType" :damage-color="damageColor" />
       <span v-else>—</span>
-      <small v-if="twoHandedParts.length" class="weapon-metrics__grip">Одной рукой / двумя руками</small>
+      <small v-if="twoHandedRows.length" class="weapon-metrics__grip">Одной рукой / двумя руками</small>
     </component>
     <div class="weapon-properties-stack">
       <div v-if="visibleProperties.length" class="weapon-metrics__cell weapon-metrics__properties">
@@ -38,14 +38,15 @@
   </div>
 </template>
 <script setup>
-import AttackDamage from './AttackDamage.vue'
+import WeaponDamageBreakdown from './WeaponDamageBreakdown.vue'
 import { computed, shallowRef } from 'vue'
 import { BasePopover, RichContent, ActionButton } from '@sylvieshare/share-ui'
 const props = defineProps({
   attack: { type: String, default: '' },
-  damageParts: { type: Array, default: () => [] },
-  modifier: { type: Number, default: 0 },
-  twoHandedParts: { type: Array, default: () => [] },
+  damageRows: { type: Array, default: () => [] },
+  twoHandedRows: { type: Array, default: () => [] },
+  damageType: String,
+  damageColor: String,
   properties: { type: Array, default: () => [] },
   canAttack: { type: Boolean, default: true },
   canDamage: { type: Boolean, default: true },
@@ -95,6 +96,8 @@ button.weapon-metrics__cell:focus-visible { outline: 2px solid var(--accent-soft
 .weapon-metrics__attack {
   flex: 0 0 var(--layout-weapon-metrics-attack-width);
   width: var(--layout-weapon-metrics-attack-width);
+  height: var(--layout-weapon-metrics-attack-width);
+  align-self: flex-start;
   min-height: var(--layout-weapon-metrics-attack-width);
   position: relative;
   justify-content: center;

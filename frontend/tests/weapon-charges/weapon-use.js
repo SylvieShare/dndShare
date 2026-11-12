@@ -50,6 +50,7 @@ const app = createApp({ setup() {
  const entry = computed(() => ctx.values.weapon[0])
  const damage = useWeaponDamageRolls(ctx, { item: () => item, itemTitle: () => item.name, propertyItems: () => [],
    weaponDamageActions: row => weaponUseDamageActions(ctx.values, row.uid), damagePartsRaw: () => [],
+   damageSources: () => [{ source: 'Оружие', expression: '1d6' }, { source: 'Сила', expression: '3' }],
    damageExpression: () => '1d6{Колющий}+3{Колющий}', criticalDamageExpression: () => '2d6{Колющий}+3{Колющий}',
    extraCriticalDice: () => 0, spend: () => true, planWeaponUse: use.plan,
  })

@@ -31,7 +31,7 @@ window.ctx = ctx
 const weapons = reactive({ charCtx: ctx, itemMap: Object.fromEntries(items), sortable: { dragging: false, isSource: () => false },
  item: entry => items.get(String(entry.magic_item_id ?? entry.item_id)), itemTitle: entry => weapons.item(entry).name,
  itemSubtitle: () => '', magicBonus: () => 0, rangeLabel: () => '30/120 футов', propertyItems: entry => entry.uid === 'javelin' ? [{ id: 1, label: 'Метательное' }] : [], isWeaponProficient: () => false,
- formatBonus: value => '+' + value, attackBonus: () => 5, damageBonus: () => 3, damagePartsRaw: () => [], twoHandedParts: () => [],
+ formatBonus: value => '+' + value, attackBonus: () => 5, damageBonus: () => 3, damagePartsRaw: () => [], twoHandedParts: () => [], damageSources: () => [{ source: 'Сила', expression: '3' }],
  hasWeaponDamage: () => true, weaponDamageActions: () => [], damagePreview: () => '', bonusActionDamageOption: () => null, canMoveWeaponToItems: () => false,
  weaponUses: entry => availableWeaponUses(ctx.values, items, entry.uid, ctx.ownerMode),
  weaponResources: entry => collectCharacterResources(ctx.values, items).filter(resource => resource.source.entryKey === entry.uid),

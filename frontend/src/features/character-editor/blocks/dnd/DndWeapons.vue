@@ -63,7 +63,6 @@
         title="Рукопашный удар"
         subtitle="Сила · урон 1 + модификатор"
         :attack-bonus="unarmedAttackBonus"
-        :flat-damage="unarmedDamageFormula"
         damage-type="Дробящий"
         :icon-item="unarmedPresetItem"
         :summary="(options, scope) => presetMenuSummary('unarmed', options, scope)"
@@ -76,8 +75,6 @@
         title="Импровизированное оружие"
         subtitle="Сила · без владения"
         :attack-bonus="improvisedAttackBonus"
-        :damage-parts="improvisedDamageParts"
-        :damage-modifier="strengthModifier + presetDamageBonus"
         :icon-item="improvisedPresetItem"
         :summary="(options, scope) => presetMenuSummary('improvised', options, scope)"
         @attack="options => rollPresetAttack('improvised', options)"
@@ -165,13 +162,8 @@ import { weaponUseDamageActions } from '@/features/character-editor/lib/weaponUs
 import { resolveRollMode } from './lib/rollMode'
 import { prepareWeaponRollEntry, withWeaponThrowAction } from './lib/weaponThrow'
 import { useTwoWeaponFighting } from './composables/useTwoWeaponFighting'
-import {
-  improvisedWeaponAttackBonus as resolveImprovisedWeaponAttackBonus,
-  PRESET_ATTACK_ART_ITEM_IDS,
-  presetDamageExpression as resolvePresetDamageExpression,
-  unarmedStrikeAttackBonus,
-  unarmedStrikeDamage,
-} from '@/features/character-editor/blocks/dnd/lib/presetAttacks'
+import { PRESET_ATTACK_ART_ITEM_IDS } from './lib/presetAttacks'
+import { usePresetAttacks } from './composables/usePresetAttacks'
 
 const props = defineProps(['block', 'value', 'values', 'vars'])
 const emit  = defineEmits(['update:value'])
@@ -314,7 +306,7 @@ function weaponBaseSources(entry, expression, { critical = false, twoHanded = fa
     ? charCtx.characterCombatEffects?.criticalWeaponDiceRules?.(criticalDiceContext(entry)) || [] : []
   const base = rules.length
     ? (twoHanded ? criticalDamageExpressionTwoHanded(entry, 0) : criticalDamageExpression(entry, 0)) : expression
-  const dice = base.replace(/(?:^|[+-])\d+(?:\{[^}]*\})?$/, '')
+  const dice = damageBonus(entry) ? base.replace(/(?:^|[+-])\d+(?:\{[^}]*\})?$/, '') : base
   const rows = dice ? [{ source: 'Оружие', expression: dice }] : []
   const die = expression !== base && dice.match(/^\d+(d\d+(?:\{[^}]*\})?)/i)
   if (die) for (const rule of rules) rows.push({ source: rule.source_label, expression: rule.extra_weapon_dice + die[1] })
@@ -342,24 +334,10 @@ const variant     = computed(() => props.block.props?.variant || props.block.con
 const canAddItems = computed(() => !!charCtx.ownerMode)
 const armorState = computed(() => charCtx.characterArmor?.state || {})
 const armorAttackWarning = computed(() => !!armorState.value.strengthDexDisadvantage)
-const strengthModifier = computed(() => Number(statsVar.value['1']) || 0)
-const unarmedAttackBonus = computed(() => unarmedStrikeAttackBonus(strengthModifier.value, profBonus.value))
-const improvisedAttackBonus = computed(() => resolveImprovisedWeaponAttackBonus(strengthModifier.value))
-const presetDamageEffects = computed(() => charCtx.characterDerivedEffects?.bonus?.('weapon_damage_bonus', {
-  kind: 'attack', abilitySuggestId: 1, weaponKind: 'melee',
-}))
-const presetDamageBonus = computed(() => presetDamageEffects.value?.total || 0)
-const unarmedDamage = computed(() => unarmedStrikeDamage(strengthModifier.value, presetDamageBonus.value))
-const unarmedDamageFormula = computed(() => ({
-  base: 1,
-  modifier: strengthModifier.value + presetDamageBonus.value,
-  total: unarmedDamage.value,
-}))
-const improvisedDamageParts = [{ count: 1, diceSides: 4, diceLabel: 'd4', type: 'Дробящий', typeColor: 'var(--warning)' }]
-const unarmedPresetItem = computed(() => itemMap.value[PRESET_ATTACK_ART_ITEM_IDS.unarmed] || null)
-const improvisedPresetItem = computed(() => itemMap.value[PRESET_ATTACK_ART_ITEM_IDS.improvised] || null)
 
 const dice = useDiceStore()
+const { unarmedAttackBonus, improvisedAttackBonus, unarmedPresetItem, improvisedPresetItem, presetMenuSummary, rollPresetAttack, rollPresetDamage }
+  = usePresetAttacks(charCtx, { statsVar, profBonus, itemMap, attackMode, dice })
 
 const weaponUses = useWeaponUses(charCtx, { title: itemTitle, attack: rollPreparedAttack, prepare(entry, rule) {
   const prepared = { ...entry, _attackMode: rule.attack_mode, _improvisedThrow: false }
@@ -397,55 +375,6 @@ async function rollPreparedAttack(entry, title, log = true, onReroll, attackRoll
 function attackMode(context, manualMode) {
   return charCtx.characterRolls?.resolve?.(manualMode, context)?.mode || resolveRollMode(manualMode,
     armorAttackWarning.value && ['1', '2'].includes(String(context.abilitySuggestId)) ? [{ mode: 'disadvantage' }] : []).mode
-}
-
-function presetAttackDefinition(kind) {
-  if (kind === 'unarmed') {
-    return { title: 'Рукопашный удар', attackBonus: unarmedAttackBonus.value }
-  }
-  return { title: 'Импровизированное оружие', attackBonus: improvisedAttackBonus.value }
-}
-
-function presetMenuSummary(kind, options, scope) {
-  const unarmed = kind === 'unarmed'
-  const parts = []
-  if (scope === 'damage') {
-    parts.push({ source: unarmed ? 'Рукопашный удар' : 'Оружие', expression: unarmed ? '1' : (options.critical ? '2d4' : '1d4') })
-    for (const { source, value } of presetDamageEffects.value?.contributions || []) {
-      if (value) parts.push({ source, expression: String(value) })
-    }
-    const raw = 1 + strengthModifier.value + presetDamageBonus.value
-    if (unarmed && raw < 0) parts.push({ source: 'Минимум урона', expression: String(-raw) })
-  } else if (unarmed && profBonus.value) parts.push({ source: 'Владение', expression: String(profBonus.value) })
-  if (strengthModifier.value) parts.push({ source: 'Сила', expression: String(strengthModifier.value) })
-  return { parts, ability: 'Сила', bonus: presetAttackDefinition(kind).attackBonus,
-    mode: attackMode({ kind: 'attack', abilitySuggestId: 1, weaponKind: 'melee', weaponAttack: !unarmed }, options.attackRollMode) }
-}
-
-async function rollPresetAttack(kind, { attackRollMode = 'auto', excludedBonuses = [] } = {}) {
-  const preset = presetAttackDefinition(kind)
-  const context = { kind: 'attack', abilitySuggestId: 1, weaponKind: 'melee', weaponAttack: kind !== 'unarmed' }
-  const mode = attackMode(context, attackRollMode)
-  const result = await dice.rollD20(`Атака: ${preset.title}`, preset.attackBonus, mode, {
-    roll_kind: 'attack',
-    eventData: { ...itemEventData(kind === 'unarmed' ? unarmedPresetItem.value : improvisedPresetItem.value), attackRoll: true },
-    crit_mode: true,
-    critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(context) || 20,
-    bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }, excludedBonuses),
-      roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
-  })
-  if (!result) return
-  const states = charCtx.characterStatuses?.endOn?.('attack')
-  if (charCtx.ownerMode && states) charCtx.updateValues({ states })
-}
-
-function presetDamageExpression(kind, critical) {
-  return resolvePresetDamageExpression(kind, strengthModifier.value, critical, presetDamageBonus.value)
-}
-
-function rollPresetDamage(kind, critical = false) {
-  const preset = presetAttackDefinition(kind)
-  dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${preset.title}`, presetDamageExpression(kind, critical), { eventData: { damageRoll: true, ...itemEventData(kind === 'unarmed' ? unarmedPresetItem.value : improvisedPresetItem.value) } })
 }
 
 const damageRolls = useWeaponDamageRolls(charCtx, { item, propertyItems, weaponDamageActions, damagePartsRaw,
@@ -633,6 +562,7 @@ provide('weaponsBlockCtx', reactive({
   rollDamage,
   rollWeaponUseStep: weaponUses.rollStep,
   damagePreview,
+  damageSources: damageRolls.previewSources,
   weaponMenuSummary,
   bonusActionDamageOption,
   showPropertyTooltip,
@@ -654,7 +584,6 @@ provide('weaponsBlockCtx', reactive({
   diceOptions,
   damageTypeOptions,
 }))
-
 
 onMounted(() => {
   [

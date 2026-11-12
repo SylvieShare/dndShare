@@ -14,14 +14,9 @@
           <small>{{ subtitle }}</small>
           <span v-if="proficient" class="pac-proficiency">Владение</span>
         </div>
-        <AttackDamage rollable @roll-attack="openMenu('attack', $event)" @roll-damage="openMenu('damage', $event)"
-          :attack="formatBonus(attackBonus)"
-          :damage-parts="damageParts"
-          :modifier="damageModifier"
-          :flat-damage="damageParts.length ? null : flatDamage.total"
-          :flat-damage-type="damageType"
-          :flat-damage-title="flatDamageTitle"
-        />
+        <WeaponMetricsTable :attack="formatBonus(attackBonus)" :damage-rows="summary({}, 'damage').parts"
+          :damage-type="damageType" interactive :roll-scope="selection?.scope"
+          @roll="openMenu" />
       </div>
     </div>
   </article>
@@ -35,21 +30,18 @@
 </template>
 
 <script setup>
-import { computed, shallowRef } from 'vue'
+import { shallowRef } from 'vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import WeaponRollSettings from './WeaponRollSettings.vue'
-import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
+import WeaponMetricsTable from './WeaponMetricsTable.vue'
 
-const props = defineProps({
+defineProps({
   title: { type: String, required: true },
-  summary: Function,
+  summary: { type: Function, required: true },
   subtitle: { type: String, default: '' },
   attackBonus: { type: Number, required: true },
-  damageParts: { type: Array, default: () => [] },
-  damageModifier: { type: Number, default: 0 },
-  flatDamage: { type: Object, default: () => ({ base: 0, modifier: 0, total: 0 }) },
-  damageType: { type: String, default: '' },
+  damageType: { type: String, default: 'Дробящий' },
   iconItem: { type: Object, default: null },
   proficient: { type: Boolean, default: false },
 })
@@ -71,15 +63,6 @@ function formatBonus(value) {
   return bonus >= 0 ? `+${bonus}` : String(bonus)
 }
 
-function signed(value) {
-  const number = Number(value) || 0
-  if (number === 0) return ''
-  return `${number > 0 ? '+' : '−'} ${Math.abs(number)}`
-}
-
-const flatDamageTitle = computed(() => (
-  `${props.flatDamage.base} ${signed(props.flatDamage.modifier)} = ${props.flatDamage.total}`.replace(/\s+/g, ' ').trim()
-))
 </script>
 
 <style scoped>
@@ -105,7 +88,7 @@ const flatDamageTitle = computed(() => (
 .pac-title small { overflow: hidden; color: var(--text-muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
 .pac-proficiency { color: var(--success); font-size: 10px; font-weight: 700; }
 
-@media (max-width: 760px) {
+@media (--ui-compact) {
   .pac-view { grid-template-columns: minmax(0, 1fr); align-items: start; gap: 10px; }
   .pac-title strong { font-size: 15px; }
   .pac-title small { white-space: normal; }

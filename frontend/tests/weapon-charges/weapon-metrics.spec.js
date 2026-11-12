@@ -18,8 +18,12 @@ for (const [viewport, width] of [[390, 282], [834, 340], [1440, 550]]) {
     const value = await table.locator('.weapon-metrics__bonus').boundingBox()
     expect(value.x + value.width / 2).toBeCloseTo(attack.x + attack.width / 2, 0)
     expect(value.y + value.height / 2).toBeCloseTo(attack.y + attack.height / 2, 0)
-    expect(attack.height).toBeGreaterThanOrEqual(attack.width)
-    expect(damage.height).toBeCloseTo(attack.height, 0)
+    expect(attack.height).toBeCloseTo(attack.width, 0)
+    expect(damage.height).toBeGreaterThanOrEqual(attack.height)
+    await expect(table.locator('.weapon-damage__source')).toHaveText(['Оружие', 'Сила', 'Ярость'])
+    await expect(table.locator('.weapon-damage__type')).toHaveText(['Дробящий'])
+    await expect(table.locator('.weapon-damage__flat')).toHaveText(['1', '2'])
+    await expect(table.locator('.weapon-damage__flat').first()).toHaveCSS('font-size', '28px')
     await expect(table.getByText('Одной рукой / двумя руками', { exact: true })).toBeVisible()
     expect(properties.y).toBeGreaterThan(damage.y + damage.height)
     expect(await table.evaluate(e => e.scrollWidth <= e.clientWidth)).toBe(true)
@@ -33,8 +37,8 @@ for (const [viewport, width] of [[390, 282], [834, 340], [1440, 550]]) {
     await page.keyboard.press('Escape')
     await expect(popup).not.toBeVisible()
     await page.evaluate(() => {
-      window.metricsData.twoHandedParts = []
-      window.metricsData.damageParts = Array.from({ length: 6 }, (_, i) => ({ count: 1, diceSides: i % 2 ? 8 : 6, type: 'Дробящий', typeColor: '#fbbf24' }))
+      window.metricsData.twoHandedRows = []
+      window.metricsData.damageRows = Array.from({ length: 6 }, (_, i) => ({ source: 'Источник ' + i, expression: `1d${i % 2 ? 8 : 6}{Дробящий|#fbbf24}` }))
     })
     const cell = table.locator('.weapon-metrics__damage')
     expect(await cell.evaluate(e => e.scrollWidth <= e.clientWidth)).toBe(true)
@@ -48,8 +52,8 @@ test('simple weapons keep properties below a square attack and hide absent prope
   await page.locator('main').evaluate(e => { e.style.width = '282px' })
   await page.evaluate(() => {
     Object.assign(window.metricsData, {
-      modifier: 0, twoHandedParts: [],
-      damageParts: [{ count: 1, diceSides: 6, type: 'Колющий', typeColor: '#94a3b8' }],
+      twoHandedRows: [],
+      damageRows: [{ source: 'Оружие', expression: '1d6{Колющий|#94a3b8}' }],
       properties: [{ id: 2, label: 'Метательное', desc: 'Можно метнуть.' }],
     })
   })

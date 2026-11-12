@@ -20,6 +20,7 @@ export function useTabSwipe(activeTabs, swipeEnabled) {
   let swipeSettleTimer = null
   let touchStartX = null
   let touchStartY = null
+  let suppressSwipeClick = false
 
   // ── Tab pane cache (stable component instances per tab) ──────────────
   const tabPaneCache = {}
@@ -157,11 +158,14 @@ export function useTabSwipe(activeTabs, swipeEnabled) {
   // ── Touch handlers ────────────────────────────────────────────────────
 
   function isSwipeBlocked(target) {
-    return !!target?.closest?.('input, textarea, select, button, [contenteditable="true"], [data-sheet-horizontal-scroll], .share-icon-navigation')
+    if (target?.closest?.('input, textarea, select, [contenteditable="true"], [data-sheet-horizontal-scroll], .share-icon-navigation')) return true
+    const button = target?.closest?.('button')
+    return !!button && !button.hasAttribute('data-sheet-swipe')
   }
 
   function onTouchStart(event, containerEl) {
     if (!swipeEnabled.value || activeTabs.value.length < 2) return
+    suppressSwipeClick = false
     if (isSwipeBlocked(event.target)) return
     if (tabDragSettling.value) return
     const touch = event.changedTouches?.[0]
@@ -191,6 +195,7 @@ export function useTabSwipe(activeTabs, swipeEnabled) {
         return
       }
       tabDragActive.value = true
+      suppressSwipeClick = true
       tabDragDirection.value = dx < 0 ? -1 : 1
       markTabVisited(tabIndexFrom(activeTab.value, dx < 0 ? 1 : -1))
       tabSwipeWrapMode.value = wrapModeForDirection(tabDragDirection.value)
@@ -228,6 +233,13 @@ export function useTabSwipe(activeTabs, swipeEnabled) {
     touchStartY = null
     if (tabDragActive.value && !tabDragSettling.value) settleSwipeTo(activeTab.value)
     else resetSwipe()
+  }
+
+  function onSwipeClick(event) {
+    if (!suppressSwipeClick || event.detail === 0 || event.pointerType === 'mouse') return
+    suppressSwipeClick = false
+    event.preventDefault()
+    event.stopPropagation()
   }
 
   // ── Public setActiveTab (also used by tabbar click) ──────────────────
@@ -291,6 +303,7 @@ export function useTabSwipe(activeTabs, swipeEnabled) {
     onTouchMove,
     onTouchEnd,
     cancelTouch,
+    onSwipeClick,
     tabRenderComponent,
     tabKey,
   }

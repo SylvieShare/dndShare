@@ -5,6 +5,7 @@
         :inert="index !== activeTab" :style="{ visibility: index === activeTab || tabDragActive || tabDragSettling ? 'visible' : 'hidden' }">
         <div :ref="element => panes[index] = element" class="mobile-pane-scroll"
           @touchstart.passive="event => onTouchStart(event, track)" @touchmove="onTouchMove"
+          @click.capture="onSwipeClick"
           @touchend.passive="onTouchEnd" @touchcancel.passive="cancelTouch">
           <slot v-if="isReady(index)" :index="index" />
           <CharacterSheetSkeleton v-else class="mobile-pane-skeleton" />
@@ -19,7 +20,7 @@ import { usePreparedTabs } from '../../composables/usePreparedTabs'
 import CharacterSheetSkeleton from './CharacterSheetSkeleton.vue'
 const props = defineProps({ controller: { type: Object, required: true }, tabs: { type: Array, required: true } })
 const { activeTab, tabDragActive, tabDragSettling, mobileTrackIndexes, mobileSwipeTrackStyle,
-  onTouchStart, onTouchMove, onTouchEnd, cancelTouch } = props.controller
+  onTouchStart, onTouchMove, onTouchEnd, cancelTouch, onSwipeClick } = props.controller
 const { isReady } = usePreparedTabs(toRef(props, 'tabs'), activeTab, computed(() => tabDragActive.value || tabDragSettling.value))
 const track = ref(null), panes = []
 defineExpose({ trackElement: () => track.value, scrollElement: index => panes[index] })
