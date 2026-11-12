@@ -124,7 +124,7 @@ function monogram(value) {
 .dsov.dsov--header {padding:0;gap:8px}
 .dsov--header .dsov-row {gap:8px;flex-wrap:nowrap;max-width:100%;overscroll-behavior-x:contain}
 .dsov--header .dsov-row > * {flex:none}
-.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-icon) minmax(0,1fr);gap:var(--spacing-small);min-height:var(--layout-sheet-header-icon);padding:0 var(--spacing-compact)}
+.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-icon) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:var(--layout-sheet-header-icon);padding:0 var(--spacing-compact)}
 .dsov--header .dsov-icon {width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);min-width:var(--layout-sheet-header-icon);border-radius:var(--radius-input)}
 .dsov--header .dsov-item-icon {width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon)}
 .dsov--header .dsov-icon :deep(img), .dsov--header .dsov-icon :deep(svg) {width:100%;height:100%}
