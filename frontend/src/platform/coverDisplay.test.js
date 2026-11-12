@@ -6,28 +6,26 @@ vi.mock('../shared/lib/imageUpload', () => ({ PORTRAIT_IMAGE_MAX_BYTES: 8 * 1024
 beforeEach(() => {
   vi.resetModules()
   vi.clearAllMocks()
-  native.getStatus.mockResolvedValue({ foldable: true, available: true, active: false, owner: '', photoUid: '' })
-  native.hide.mockResolvedValue({ active: false, owner: '', photoUid: '' })
+  native.getStatus.mockResolvedValue({ foldable: true, available: true, active: false, selected: false, owner: '', photoUid: '' })
+  native.hide.mockResolvedValue({ active: false, selected: false, owner: '', photoUid: '' })
   vi.stubGlobal('FileReader', class { readAsDataURL() { this.result = 'data:image/webp;base64,AAAA'; queueMicrotask(() => this.onload()) } })
 })
-it('does not present a late image after its character was closed', async () => {
+it('does not present a late image after the user explicitly cancels it', async () => {
   const cover = await import('./coverDisplay')
   await cover.initializeCoverDisplay()
-  cover.activateCoverOwner('character-a')
   let complete
   vi.stubGlobal('fetch', vi.fn(() => new Promise(resolve => { complete = resolve })))
   const showing = cover.showCoverPhoto('character-a', { uid: 'photo-a', url: 'https://example.com/a.webp' })
-  await cover.releaseCoverOwner('character-a')
+  await cover.stopCover('character-a')
   complete(new Response('image', { headers: { 'Content-Type': 'image/webp' } }))
   await showing
   expect(native.show).not.toHaveBeenCalled()
   expect(cover.coverState.busy).toBe(false)
   vi.unstubAllGlobals()
 })
-it('passes the character lease and image identity to the native presentation', async () => {
+it('passes the photo origin and image identity to the native presentation', async () => {
   const cover = await import('./coverDisplay')
   await cover.initializeCoverDisplay()
-  cover.activateCoverOwner('character-b')
   vi.stubGlobal('fetch', vi.fn(async () => new Response('image', { headers: { 'Content-Type': 'image/webp' } })))
   native.show.mockResolvedValue({ active: true, owner: 'character-b', photoUid: 'photo-b' })
   await cover.showCoverPhoto('character-b', { uid: 'photo-b', url: 'https://example.com/b.webp' })
@@ -36,10 +34,18 @@ it('passes the character lease and image identity to the native presentation', a
   vi.unstubAllGlobals()
 })
 
+it('adopts a selected native photo after the web interface reloads without cancelling it', async () => {
+  native.getStatus.mockResolvedValue({ foldable: true, available: true, active: true, selected: true, owner: 'character', photoUid: 'photo' })
+  const cover = await import('./coverDisplay')
+  await cover.initializeCoverDisplay()
+  expect(cover.coverState.selected).toBe(true)
+  expect(cover.coverState.photoUid).toBe('photo')
+  expect(native.hide).not.toHaveBeenCalled()
+})
+
 it('keeps the latest photo when earlier image loading finishes last', async () => {
   const cover = await import('./coverDisplay')
   await cover.initializeCoverDisplay()
-  cover.activateCoverOwner('character')
   const responses = []
   vi.stubGlobal('fetch', vi.fn(() => new Promise(resolve => responses.push(resolve))))
   native.show.mockResolvedValue({ active: true, owner: 'character', photoUid: 'latest' })

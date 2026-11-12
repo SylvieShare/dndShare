@@ -87,7 +87,6 @@
 </template>
 
 <script setup>
-import { activateCoverOwner, releaseCoverOwner } from '@/platform/coverDisplay'
 import { provideSheetFields } from '../lib/sheetContext'
 import { useSheetChrome } from '../composables/useSheetChrome'
 import CharacterWorkspaceHeader from '@/features/character-editor/components/CharacterWorkspaceHeader.vue'
@@ -123,8 +122,6 @@ const sessionEventsStore = useSessionEventsStore()
 // Snapshot the uuid from the route. Guard against the rare race where setup runs
 // before route params settle (would otherwise fetch /char/undefined).
 const uuid = route.params.uuid || router.currentRoute.value.params.uuid
-activateCoverOwner(uuid)
-onBeforeUnmount(() => { void releaseCoverOwner(uuid) })
 
 // ── Mobile detection ──────────────────────────────────────────────────
 const { phone: isMobile, format } = useAppLayout()

@@ -9,11 +9,11 @@
         </template>
         <template #default="{ close }">
           <RowActionItem :icon="Expand" @click="viewing = photo; close()">Посмотреть</RowActionItem>
-          <RowActionItem v-if="coverState.foldable" :icon="PanelsTopLeft" :disabled="!coverState.available || coverState.busy" @click="present(photo); close()">
-            {{ coverState.owner === ownerId && coverState.photoUid === photo.uid ? 'Показать ещё раз на внешнем экране' : 'Показывать на внешнем экране' }}
+          <RowActionItem v-if="coverState.foldable" :icon="PanelsTopLeft" :disabled="!coverState.available || coverState.pendingOwner === ownerId && coverState.pendingPhotoUid === photo.uid" @click="present(photo); close()">
+            {{ selected(photo) ? coverState.active ? 'Показать ещё раз на внешнем экране' : 'Возобновить показ на внешнем экране' : 'Показывать на внешнем экране' }}
             <small v-if="!coverState.available" class="photo-menu-hint">{{ coverState.reason }}</small>
           </RowActionItem>
-          <RowActionItem v-if="coverState.owner === ownerId && coverState.photoUid === photo.uid" :icon="PanelTopClose" @click="stopCover(ownerId); close()">Убрать с внешнего экрана</RowActionItem>
+          <RowActionItem v-if="selected(photo)" :icon="PanelTopClose" @click="stopCoverPhoto(ownerId, photo.uid); close()">Убрать с внешнего экрана</RowActionItem>
           <RowActionItem v-if="owner" :icon="Trash2" tone="danger" @click="removing = photo; close()">Удалить</RowActionItem>
         </template>
       </RowActionMenu>
@@ -34,7 +34,7 @@ import { computed, inject, onBeforeUnmount, ref, watch } from 'vue'
 import { ActionButton, AppModalFrame, ConfirmDialog, LoadingIndicator, RowActionItem, RowActionMenu } from '@sylvieshare/share-ui'
 import { Expand, PanelsTopLeft, PanelTopClose, Plus, Trash2 } from '@lucide/vue'
 import { prepareImageUpload, PORTRAIT_IMAGE_MAX_BYTES } from '@/shared/lib/imageUpload'
-import { coverState, showCoverPhoto, stopCover, stopCoverPhoto } from '@/platform/coverDisplay'
+import { coverState, showCoverPhoto, stopCoverPhoto } from '@/platform/coverDisplay'
 import CharacterPhotoImage from './CharacterPhotoImage.vue'
 
 const props = defineProps({ block: Object, value: { type: Array, default: () => [] } })
@@ -43,6 +43,7 @@ const context = inject('charCtx', {})
 const owner = computed(() => Boolean(context.ownerMode))
 const ownerId = computed(() => String(context.characterUuid || ''))
 const photos = computed(() => Array.isArray(props.value) ? props.value : [])
+function selected(photo) { return coverState.owner === ownerId.value && coverState.photoUid === photo.uid || coverState.pendingOwner === ownerId.value && coverState.pendingPhotoUid === photo.uid }
 const input = ref(null), viewing = ref(null), removing = ref(null), error = ref(''), pending = ref([]), uploading = ref(false)
 let disposed = false
 const controller = new AbortController()

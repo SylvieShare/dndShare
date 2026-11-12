@@ -50,10 +50,28 @@ public class HybridShellTest {
             assertEquals("false", evaluate(activity, "window.__coverStatus.available"));
             evaluate(activity, "window.__coverRejected=false;window.Capacitor.Plugins.CoverDisplay.show({owner:'test',photoUid:'photo',data:'AAAA'}).catch(()=>window.__coverRejected=true)");
             waitFor(activity, "window.__coverRejected===true");
+            // Minimize and a frontend reload must preserve the selected photo.
+            activity.onActivity(host -> ((CoverDisplayPlugin) host.getBridge().getPlugin("CoverDisplay").getInstance()).rememberPhoto(
+                "test-character", "test-photo", android.graphics.Bitmap.createBitmap(2, 2, android.graphics.Bitmap.Config.ARGB_8888)));
+            activity.moveToState(androidx.lifecycle.Lifecycle.State.CREATED);
+            activity.moveToState(androidx.lifecycle.Lifecycle.State.RESUMED);
+            evaluate(activity, "window.__selectionKept=false;window.Capacitor.Plugins.CoverDisplay.getStatus().then(value=>window.__selectionKept=value.selected&&value.photoUid==='test-photo')");
+            waitFor(activity, "window.__selectionKept===true");
             // API documents must never become an executable remote page with the native bridge.
             evaluate(activity, "window.__beforeApiNavigation = true");
             activity.onActivity(host -> host.getBridge().getWebView().loadUrl("https://dndshare.ru/api/user/checkAuth"));
             waitFor(activity, "window.__beforeApiNavigation === undefined && !!document.getElementById('app')?.__vue_app__");
+            evaluate(activity, "window.__selectionKept=false;window.Capacitor.Plugins.CoverDisplay.getStatus().then(value=>window.__selectionKept=value.selected&&value.photoUid==='test-photo')");
+            waitFor(activity, "window.__selectionKept===true");
+            evaluate(activity, "window.__selectionCleared=false;window.Capacitor.Plugins.CoverDisplay.hide({owner:'test-character'}).then(value=>window.__selectionCleared=!value.selected)");
+            waitFor(activity, "window.__selectionCleared===true");
+            activity.onActivity(host -> ((CoverDisplayPlugin) host.getBridge().getPlugin("CoverDisplay").getInstance()).rememberPhoto(
+                "test-character", "test-photo", android.graphics.Bitmap.createBitmap(2, 2, android.graphics.Bitmap.Config.ARGB_8888)));
+        }
+        try (var activity = ActivityScenario.launch(MainActivity.class)) {
+            waitFor(activity, "!!window.Capacitor?.Plugins?.CoverDisplay && !!document.getElementById('app').__vue_app__");
+            evaluate(activity, "window.__selectionCleared=false;window.Capacitor.Plugins.CoverDisplay.getStatus().then(value=>window.__selectionCleared=!value.selected)");
+            waitFor(activity, "window.__selectionCleared===true");
         }
     }
 }
