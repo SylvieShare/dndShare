@@ -7,15 +7,16 @@ async function sheetFixture(page) {
   return api
 }
 
-for (const width of [390, 834, 1440]) test(`HP, shield and stacked passives share a row at ${width}`, async ({ page }, testInfo) => {
+for (const width of [390, 834, 1440]) test(`HP, shield and stacked passives fit without overlap at ${width}`, async ({ page }, testInfo) => {
   const errors = []
   page.on('pageerror', error => errors.push(error.message))
   await page.setViewportSize({ width, height: 900 })
   const api = await sheetFixture(page)
   Object.assign(api.document().values.hp, { current: 18, max: { base: 23, bonuses: [] }, temp: 5 })
   await page.goto('/char/test')
-  await page.evaluate(() => document.fonts.ready)
   const heading = page.locator('.dnd-heading'), health = heading.locator('.heading-health')
+  await expect(health).toBeVisible({ timeout: 15000 })
+  await page.evaluate(() => document.fonts.ready)
   await expect(health).toHaveAttribute('aria-label', 'Здоровье: 18 из 23, временные 5')
   await expect(health.locator('.health-readout')).toHaveText('18/23')
   await expect(health.locator('.health-temporary')).toHaveText('+5')
@@ -49,20 +50,30 @@ for (const width of [390, 834, 1440]) test(`HP, shield and stacked passives shar
   await testInfo.attach('header-composition', { body: await page.locator('.character-workspace-header').screenshot(), contentType: 'image/png' })
   expect(numbers.x + numbers.width).toBeLessThan(temp.x)
   expect(hp.x).toBeGreaterThan(armor.x + armor.width)
+  expect(hp.x - armor.x - armor.width).toBeCloseTo(12, 1)
   expect(Math.abs(hp.y + hp.height / 2 - armor.y - armor.height / 2)).toBeLessThan(1)
   expect(combat.top).toBeGreaterThanOrEqual(name.bottom - .5)
   expect(fields).toHaveLength(2)
+  const passivesWrapped = fields[0].top >= hp.bottom
   for (const field of fields) {
-    expect(field.left, JSON.stringify({ combat, armor, hp, fields })).toBeGreaterThan(hp.x + hp.width)
-    expect(field.top).toBeGreaterThanOrEqual(hp.y - 1)
-    expect(field.bottom).toBeLessThanOrEqual(hp.y + hp.height + 1)
+    if (passivesWrapped) {
+      expect(field.top).toBeGreaterThanOrEqual(hp.bottom + 3.5)
+      expect(field.left).toBeGreaterThanOrEqual(combat.left - .5)
+    } else {
+      expect(field.left - hp.right).toBeCloseTo(8, 1)
+      expect(field.top).toBeGreaterThanOrEqual(hp.y - 1)
+      expect(field.bottom).toBeLessThanOrEqual(hp.y + hp.height + 1)
+    }
+    expect(field.bottom).toBeLessThanOrEqual(combat.bottom + .5)
   }
   expect(fields[1].top).toBeGreaterThanOrEqual(fields[0].bottom - .5)
   await expect(health.locator('strong')).toHaveCSS('font-weight', '800')
   expect(await health.locator('strong').evaluate(node => getComputedStyle(node).fontFamily)).toBe(await heading.locator('.identity strong').evaluate(node => getComputedStyle(node).fontFamily))
-  await expect(health).toHaveCSS('padding-left', '8px')
+  await expect(health).toHaveCSS('padding-left', '10px')
+  await expect(health).toHaveCSS('padding-right', '10px')
   // Transformed bounds may exceed the CSS width by a floating-point fraction.
   expect((await heading.boundingBox()).width).toBeLessThanOrEqual(420.5)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
   expect(errors).toEqual([])
 })
 

@@ -27,11 +27,11 @@
                 :item="statusIconItem(item, failedIcons.has(item.id))"
                 @error.capture="failedIcons.add(item.id)"
                 :fallback-to-type="false"
-                :size="header ? 20 : iconSize"
+                :size="header ? headerIconSize : iconSize"
               />
-              <BatteryLow v-else-if="item.kind === 'exhaustion'" :size="38" :stroke-width="1.7" aria-hidden="true" />
-              <Sparkles v-else-if="item.kind === 'inspiration'" :size="40" :stroke-width="1.7" aria-hidden="true" />
-              <Sparkles v-else-if="iconsOnly || header" :size="header ? 20 : iconSize - 4" aria-hidden="true" />
+              <BatteryLow v-else-if="item.kind === 'exhaustion'" :size="header ? headerIconSize : 38" :stroke-width="1.7" aria-hidden="true" />
+              <Sparkles v-else-if="item.kind === 'inspiration'" :size="header ? headerIconSize : 40" :stroke-width="1.7" aria-hidden="true" />
+              <Sparkles v-else-if="iconsOnly || header" :size="header ? headerIconSize : iconSize - 4" aria-hidden="true" />
               <span v-else class="dsov-monogram" aria-hidden="true">{{ monogram(item.value) }}</span>
             </span>
 
@@ -94,7 +94,9 @@ import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import { statusIconItem } from '../../../lib/statusIcon'
+import { layoutTokens } from '@/app/design-tokens'
 const failedIcons=reactive(new Set())
+const headerIconSize = layoutTokens['sheet-header-status-icon']
 
 defineProps({
   items: { type: Array, default: () => [] },
@@ -120,10 +122,10 @@ function monogram(value) {
 <style scoped>
 .dsov.dsov--header {padding:0;gap:8px}
 .dsov--header .dsov-row {gap:8px;flex-wrap:wrap;max-width:100%}
-.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:20px minmax(0,1fr);gap:6px;min-height:32px;padding:4px 6px}
-.dsov--header .dsov-icon {width:20px;height:20px;min-width:20px}
-.dsov--header .dsov-item-icon {width:20px;height:20px}
-.dsov--header .dsov-icon :deep(img), .dsov--header .dsov-icon :deep(svg) {width:20px;height:20px}
+.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-status-icon) minmax(0,1fr);gap:6px;min-height:32px;padding:4px 6px}
+.dsov--header .dsov-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon);min-width:var(--layout-sheet-header-status-icon)}
+.dsov--header .dsov-item-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon)}
+.dsov--header .dsov-icon :deep(img), .dsov--header .dsov-icon :deep(svg) {width:100%;height:100%}
 .dsov--header .dsov-copy {gap:0}
 .dsov--header .dsov-name {font-size:12px}
 .dsov--header .dsov-add {width:auto;height:32px;padding-inline:8px;font-size:12px;white-space:nowrap}
@@ -148,6 +150,7 @@ function monogram(value) {
   flex: 0 0 300px;
   padding: 0;
   border: 0;
+  border-radius: var(--radius-row);
   background: none;
   color: var(--text-1);
   font: inherit;
