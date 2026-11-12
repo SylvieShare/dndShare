@@ -9,7 +9,8 @@ import '@sylvieshare/share-ui/styles.css'
 import '../../../src/app/theme.css'
 
 const pinia = createPinia()
-useSuggestStore(pinia).set(16, [{ id: 2, value: 'Ловкость', color: 'var(--accent)', svgId: 901 }])
+useSuggestStore(pinia).set(16, [{ id: 2, value: 'Ловкость', color: 'var(--accent)', svgId: 901,
+  svg: new URLSearchParams(location.search).has('inlineSvg') ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L4 13h6l-1 9 11-13h-7z"/></svg>' : undefined }])
 useSuggestStore(pinia).set(17, [{ id: 4, value: 'Скрытность', desc: 'Описание навыка' }])
 window.rolls = []
 window.writes = []

@@ -4,6 +4,14 @@ import { fetchGetEmpty } from '@/shared/api/http'
 const pending = new Map()
 const memory = new Map()
 
+export async function rememberSvgAsset(id, svg) {
+  if (!/^[1-9]\d*$/.test(String(id)) || !/<svg[\s>]/i.test(svg)) return
+  const key = `public:svg:${id}`
+  if (memory.get(key) === svg) return
+  memory.set(key, svg)
+  try { const db = await openLocalDatabase(); await db.batch([{ key, value: svg }]) } catch { /* Artwork remains available in memory. */ }
+}
+
 // SVG IDs are public, immutable asset references. Keep only requested icons;
 // handbook metadata deliberately does not carry their artwork.
 export function loadSvgAsset(id) {

@@ -15,7 +15,7 @@
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { SkeletonBlock } from '@sylvieshare/share-ui'
 import { svgColorFilter } from '@/shared/lib/svgColorFilter'
-import { loadSvgAsset } from '@/shared/lib/svgAsset'
+import { loadSvgAsset, rememberSvgAsset } from '@/shared/lib/svgAsset'
 
 const props = defineProps({
   // Inline SVG markup (e.g. a suggest's / item-type's `svg` field).
@@ -38,6 +38,7 @@ async function loadAsset() {
   const current = ++generation
   releaseAsset()
   loading.value = !props.svg && !!props.svgId
+  if (props.svg && props.svgId) { await rememberSvgAsset(props.svgId, props.svg); return }
   if (!loading.value) return
   try {
     const svg = await loadSvgAsset(props.svgId)

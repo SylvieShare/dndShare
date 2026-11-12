@@ -193,3 +193,17 @@ test('save and ability totals follow their own bonus rows before closing', async
   await page.keyboard.press('Escape')
   expect(await page.evaluate(() => window.statState.value.save_bonuses[0].value)).toBe(3)
 })
+
+test('inline dictionary artwork is cached before metadata switches to an ID-only icon', async ({ page }) => {
+  let requests = 0
+  await page.route('**/api/svg/901', route => { requests++; return route.abort() })
+  await page.goto('/tests/tutorials/fixtures/stat-rolls.html?inlineSvg')
+  await expect(page.locator('.stat-icon svg')).toBeVisible()
+  await expect.poll(() => page.evaluate(async () => {
+    const { openLocalDatabase } = await import('/src/platform/storage.js')
+    return await (await openLocalDatabase()).get('public:svg:901') || ''
+  })).toContain('<svg')
+  await page.goto('/tests/tutorials/fixtures/stat-rolls.html')
+  await expect.poll(() => page.locator('.stat-icon').evaluate(node => node.style.maskImage)).toContain('blob:')
+  expect(requests).toBe(0)
+})
