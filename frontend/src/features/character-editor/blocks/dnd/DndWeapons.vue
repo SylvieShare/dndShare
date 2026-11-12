@@ -7,7 +7,7 @@
     <div v-if="armorAttackWarning" class="w-armor-warning">
       Атаки Силой и Ловкостью совершаются с помехой: нет владения {{ armorState.nonproficient.map(row => `«${row.name}»`).join(', ') }}.
     </div>
-    <SectionList embedded title="Оружие">
+    <SectionList embedded aria-label="Оружие">
       <template #body>
         <div v-if="variant !== 'list' && entries.length" class="weapon-table-tiles" data-sortable-container="weapons">
           <BaseTile v-for="(entry, index) in displayEntries" :key="entry._key" :outlined="false"
