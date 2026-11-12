@@ -3,11 +3,12 @@ import { fixture } from './fixtures/character-layout'
 
 test.use({ hasTouch: true })
 
-async function openSheet(page, width = 390, reducedMotion = 'no-preference') {
+async function openSheet(page, width = 390, reducedMotion = 'no-preference', path = '/tests/tutorials/fixtures/tutorials.html') {
   await page.setViewportSize({ width, height: 1100 })
   await page.emulateMedia({ reducedMotion })
   const api = await fixture(page)
-  await page.goto('/tests/tutorials/fixtures/tutorials.html')
+  await page.route('**/api/handbook/sync?**', route => route.fulfill({ json: { protocol: 1, entries: [], hasMore: false, cursor: 'empty', visibleIds: [], metadata: { types: [], suggests: {}, suggestTypes: [], books: [] } } }))
+  await page.goto(path)
   await expect(page.getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
   await expect(page.locator('.share-icon-navigation__label').first()).toHaveCSS('opacity', '1')
   return api
@@ -48,7 +49,7 @@ const state = page => page.locator('.share-icon-navigation--compact').evaluate(b
 }))
 
 for (const width of [390, 834]) test(`a tapped tab leaves no stale frame after a swipe at ${width}`, async ({ page }, testInfo) => {
-  await openSheet(page, width)
+  await openSheet(page, width, 'no-preference', '/char/test')
   const previous = page.getByRole('button', { name: 'Оружие', exact: true })
   const next = page.getByRole('button', { name: 'Магия', exact: true })
   await previous.tap()
