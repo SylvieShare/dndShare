@@ -1,5 +1,5 @@
 <template>
-  <div class="dict-view">
+  <div class="dict-view" data-workspace-scroll>
     <template v-if="item">
       <div
         class="view-head"

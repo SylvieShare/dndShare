@@ -1,5 +1,5 @@
 <template>
-  <div class="hb-landing">
+  <div class="hb-landing" data-workspace-scroll>
 
     <!-- Collections for the global game context. -->
     <div class="hb-content">

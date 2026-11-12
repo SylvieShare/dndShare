@@ -1,5 +1,5 @@
 <template>
-  <div class="detail-panel">
+  <div class="detail-panel" data-workspace-scroll>
     <template v-if="item">
 
       <ItemDetailHeader v-if="showTitle" :item="item" :type="type">

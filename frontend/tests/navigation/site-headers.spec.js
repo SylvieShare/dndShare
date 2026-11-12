@@ -49,3 +49,23 @@ for(const width of [390,834,1440]) test(`creation uses one common header at ${wi
   await page.locator('.cc-head').getByRole('button',{name:'Закрыть создание персонажа'}).click()
   await expect(page.locator('#app-subheader').getByRole('button',{name:'Новый персонаж',exact:true})).toBeVisible()
 })
+
+test('nested content columns keep elevation while either visible column is scrolled',async({page})=>{
+  await api(page);await page.goto('/handbook')
+  await expect(page.locator('.app-header')).toBeVisible()
+  await page.evaluate(()=>{
+    const stage=document.querySelector('.page-transition-stage')
+    for(const id of ['left-test-scroll','right-test-scroll']) {
+      const node=document.createElement('div');node.id=id;node.dataset.workspaceScroll='';node.style.cssText=`position:fixed;top:200px;left:${id.startsWith('left')?300:450}px;width:120px;height:100px;overflow:auto`
+      const content=document.createElement('div');content.style.height='600px';node.append(content);stage.append(node)
+    }
+    document.querySelector('#left-test-scroll').scrollTop=40
+  })
+  const header=page.locator('.app-header')
+  await expect(header).toHaveAttribute('data-workspace-scrolled','')
+  await page.locator('#right-test-scroll').evaluate(node=>{node.scrollTop=30})
+  await page.locator('#right-test-scroll').evaluate(node=>{node.scrollTop=0;node.dispatchEvent(new Event('scroll'))})
+  await expect(header).toHaveAttribute('data-workspace-scrolled','')
+  await page.locator('#left-test-scroll').evaluate(node=>{node.scrollTop=0})
+  await expect(header).not.toHaveAttribute('data-workspace-scrolled')
+})

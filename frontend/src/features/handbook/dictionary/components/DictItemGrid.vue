@@ -1,5 +1,5 @@
 <template>
-  <div class="dict-grid-panel">
+  <div class="dict-grid-panel" data-workspace-scroll>
     <template v-if="!type">
       <div class="empty-hint">Выберите словарь</div>
     </template>
