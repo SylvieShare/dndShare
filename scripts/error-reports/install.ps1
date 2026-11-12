@@ -21,13 +21,17 @@ if (Test-Path -LiteralPath $configFile) {
     $previous = Get-Content -LiteralPath $configFile -Raw | ConvertFrom-Json
     if ($previous.threadId -ne "$ThreadId") { throw 'This computer already has a dispatcher bound to another chat.' }
 }
-foreach ($file in @('dispatcher.py','transport.py','state.py','reportctl.py')) {
+foreach ($file in @('dispatcher.py','transport.py','state.py','auth_headers.py','configure_mcp.py')) {
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot $file) -Destination (Join-Path $workerRoot $file)
 }
 @{
     version=1; threadId="$ThreadId"; projectDirectory=$projectRoot; tokenEnvFile=$credentialFile;
     baseUrl=$BaseUrl; codexExecutable=$codex; codexHome=$codexHome; pythonExecutable=$python; stateDirectory=$stateRoot
 } | ConvertTo-Json | Set-Content -LiteralPath $configFile -Encoding utf8
+
+$codexConfig = Join-Path $codexHome 'config.toml'
+& $python -X utf8 (Join-Path $workerRoot 'configure_mcp.py') --codex-config $codexConfig --dispatcher-config $configFile --helper (Join-Path $workerRoot 'auth_headers.py')
+if ($LASTEXITCODE -ne 0) { throw 'Native report MCP configuration failed; dispatcher startup was not changed.' }
 
 $workerScript = Join-Path $workerRoot 'dispatcher.py'
 $workerArguments = '"' + $workerScript + '" --config "' + $configFile + '"'
@@ -37,6 +41,9 @@ try {
     $existing = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
     if ($existing -and ($existing.Actions.Arguments -notcontains $workerArguments)) {
         throw 'A different task already uses the dispatcher task name.'
+    }
+    if ($existing -and $existing.State -eq 'Running') {
+        Stop-ScheduledTask -TaskName $taskName
     }
     $action = New-ScheduledTaskAction -Execute $pythonw -Argument $workerArguments -WorkingDirectory $workerRoot
     $trigger = New-ScheduledTaskTrigger -AtLogOn -User ([Security.Principal.WindowsIdentity]::GetCurrent().Name)
@@ -66,4 +73,5 @@ if ($Start) {
 }
 Write-Output "Dispatcher configuration: $configFile"
 Write-Output "Startup mode: $startupMode"
-Write-Output "Agent client: $python $(Join-Path $workerRoot 'reportctl.py') --config $configFile"
+Write-Output "Agent MCP server: dndshare_reports ($codexConfig)"
+Write-Output 'Reload MCP connections in Codex settings to apply the configuration to existing chats.'

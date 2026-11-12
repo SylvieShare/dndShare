@@ -10,6 +10,7 @@ import (
 // compactErrorReport keeps every field needed for diagnosis while omitting
 // queue/workflow fields that are fixed by ListApprovedErrorReports.
 type compactErrorReport struct {
+	Timing                  *store.ErrorReportTiming   `json:"timing"`
 	ID                      int64                      `json:"id"`
 	Title                   *string                    `json:"title"`
 	Description             string                     `json:"description"`
@@ -38,6 +39,7 @@ func newCompactErrorReportList(reports []store.ErrorReport) compactErrorReportLi
 	for _, report := range reports {
 		result.IDs = append(result.IDs, report.ID)
 		result.Reports = append(result.Reports, compactErrorReport{
+			Timing:                  report.Timing,
 			ID:                      report.ID,
 			Title:                   report.Title,
 			Description:             report.Description,

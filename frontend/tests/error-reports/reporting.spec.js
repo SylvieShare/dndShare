@@ -180,3 +180,54 @@ test.describe('touch report shortcut', () => {
     await expect(page.getByRole('dialog')).toHaveCount(0)
   })
 })
+
+for (const width of [390, 834, 1440]) {
+  test(`timing chart follows the conversation in inbox and admin at ${width}`, async ({ page }, info) => {
+    await page.setViewportSize({ width, height: 1000 })
+    const timing = { totalMs: 660000, beforeWorkMs: 240000, activePhase: null, activeUntil: null,
+      snapshotAt: createdAt, phases: [
+        { phase: 'analysis', durationMs: 120000 }, { phase: 'fix', durationMs: 300000 },
+        { phase: 'test', durationMs: 180000 }, { phase: 'deploy', durationMs: 60000 },
+      ] }
+    await fixture(page, { roles: ['ADMIN'], reports: [report(33, { status: 'RESOLVED', timing,
+      messages: [{ id: 1, sender: 'AI', message: 'Уточнение', createdAt }],
+    })] })
+    await page.goto('/handbook')
+    await page.getByRole('button', { name: 'Открыть список заявок: 1' }).click()
+    await page.locator('.review-inbox').getByText('Ошибка 33', { exact: true }).click()
+    const dialog = page.getByRole('dialog', { name: 'Ошибка 33' })
+    const chart = dialog.getByRole('region', { name: 'Время работы над репортом' })
+    await expect(chart.getByText('11 мин', { exact: true })).toBeVisible()
+    for (const label of ['Анализ', 'Исправление', 'Тестирование', 'Раскатка']) await expect(chart.getByText(label, { exact: true })).toBeVisible()
+    await expect(chart.getByText('4 мин', { exact: true })).toBeVisible()
+    expect(await chart.evaluate(element => element.getBoundingClientRect().top
+      >= element.previousElementSibling.getBoundingClientRect().bottom)).toBe(true)
+    await chart.screenshot({ path: info.outputPath(`timing-${width}.png`) })
+    expect(await chart.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+    await page.keyboard.press('Escape')
+    await page.goto('/admin?tab=error-reports')
+    await page.locator('.report-filters').getByRole('button', { name: /^Завершены/ }).click()
+    await expect(page.locator('.report-card').getByRole('region', { name: 'Время работы над репортом' }).getByText('11 мин', { exact: true })).toBeVisible()
+  })
+}
+
+test('timing shows missing history honestly and stops ticking at lease expiry', async ({ page }) => {
+  await page.clock.install({ time: new Date('2026-11-12T12:00:00Z') })
+  const reports = [report(34), report(35, { status: 'IN_PROGRESS', timing: {
+    phases: [{ phase: 'fix', durationMs: 10000 }], beforeWorkMs: 1000,
+    activePhase: 'fix', snapshotAt: '2026-11-12T12:00:00Z', activeUntil: '2026-11-12T12:00:03Z',
+  } })]
+  await fixture(page, { roles: ['ADMIN'], reports })
+  await page.goto('/handbook')
+  await page.getByRole('button', { name: 'Открыть список заявок: 2' }).click()
+  await page.locator('.review-inbox').getByText('Ошибка 34', { exact: true }).click()
+  await expect(page.getByText('Замеры появятся, когда чат начнёт отмечать этапы работы.')).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await page.locator('.review-inbox').getByText('Ошибка 35', { exact: true }).click()
+  const chart = page.getByRole('dialog', { name: 'Ошибка 35' }).getByRole('region', { name: 'Время работы над репортом' })
+  await expect(chart.getByText('Сейчас: Исправление')).toBeVisible()
+  await page.clock.fastForward(10000)
+  await expect(chart.locator('.segment-donut__legend strong').nth(1)).toHaveText('13 с')
+  await expect(chart.getByText('Сейчас: Исправление')).toHaveCount(0)
+})

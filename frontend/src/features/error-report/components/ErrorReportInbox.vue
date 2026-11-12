@@ -170,11 +170,13 @@
           </div>
         </form>
       </section>
+      <ErrorReportTiming :timing="activeReport.timing" />
     </div>
   </AppModalFrame>
 </template>
 
 <script setup>
+import ErrorReportTiming from './ErrorReportTiming.vue'
 import { FormTextarea } from '@sylvieshare/share-ui'
 import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'

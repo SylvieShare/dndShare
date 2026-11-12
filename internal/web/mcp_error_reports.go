@@ -26,6 +26,33 @@ func newErrorReportListProbe(hasReports bool) errorReportListProbe {
 func (s *Server) dispatchErrorReportTool(r *http.Request, name string, args map[string]json.RawMessage) (any, error) {
 	ctx := r.Context()
 	switch name {
+	case "error_report_phase_set":
+		if err := s.mcpRequireWrite(); err != nil {
+			return nil, err
+		}
+		id, err := argInt64(args, "id")
+		if err != nil {
+			return nil, err
+		}
+		phase, err := argString(args, "phase")
+		if err != nil {
+			return nil, err
+		}
+		if !store.ValidErrorReportPhase(phase) {
+			return nil, errors.New("phase must be analysis, fix, test, deploy or pause")
+		}
+		leaseID, err := errorReportLeaseIDArg(args)
+		if err != nil {
+			return nil, err
+		}
+		updated, err := s.store.SetClaimedErrorReportPhase(ctx, id, phase, leaseID)
+		if err != nil {
+			return nil, err
+		}
+		if !updated {
+			return nil, errors.New("report is not owned by an active lease")
+		}
+		return map[string]any{"id": id, "phase": phase}, nil
 	case "error_report_get":
 		id, err := argInt64(args, "id")
 		if err != nil {

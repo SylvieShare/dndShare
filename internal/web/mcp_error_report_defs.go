@@ -2,6 +2,13 @@ package web
 
 func mcpErrorReportDefs() []map[string]any {
 	return []map[string]any{
+		mcpDefinition("error_report_phase_set",
+			"Record elapsed work time for the claimed report. Start analysis immediately before diagnosis, fix before edits, test before validation/build, deploy before publication and rollout verification. Repeat phases when needed; their durations accumulate. Use pause before unrelated work or waiting for a person. Requires the active owning lease. Same-phase retries preserve the timer. Resolve, questions, release and expiry stop timing automatically. Call on every phase transition; never estimate historical durations.",
+			mcpObjectSchema(map[string]any{
+				"id":      mcpIntegerProperty("Claimed report id"),
+				"phase":   map[string]any{"type": "string", "enum": []string{"analysis", "fix", "test", "deploy", "pause"}},
+				"leaseId": mcpStringProperty("Lease that owns this report"),
+			}, "id", "phase", "leaseId")),
 		mcpDefinition("error_report_get", "Read the current approved report by ID, including claimed or finished reports, messages and screenshot flags. Unapproved reports are not exposed.", mcpObjectSchema(map[string]any{"id": mcpIntegerProperty("Report ID")}, "id")),
 		mcpDefinition("error_reports_list",
 			"List actionable open admin-approved page error reports, newest first. Finished/unapproved reports, unanswered AI questions, and serious changes awaiting ADMIN approval are not exposed. A report becomes visible again after an answer or serious-change approval. Use summaryOnly=true with limit=1 for the pre-lock empty-queue probe. Scheduled automation should use compact=true for the post-lock batch; it returns {ids: number[], reports: [...]}, preserving diagnostic evidence while omitting fixed queue/workflow fields.",

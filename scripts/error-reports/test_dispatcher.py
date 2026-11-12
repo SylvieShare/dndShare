@@ -9,7 +9,6 @@ import unittest
 from unittest.mock import patch
 
 from dispatcher import deliver, enqueue, event_key
-from reportctl import Reports
 from state import State, singleton
 from transport import Client, ProtocolError, load_config, parse_events
 
@@ -63,6 +62,7 @@ class DeliveryTest(unittest.TestCase):
             args = run.call_args.args[0]
             self.assertEqual(args[0:4], ['codex.exe', 'queue', '--thread', THREAD])
             self.assertNotIn('evil.exe', ' '.join(args))
+            self.assertIn('dndshare_reports', ' '.join(args))
             self.assertFalse(run.call_args.kwargs.get('shell', False))
             receipt.stdout = 'success'
             with self.assertRaises(RuntimeError): enqueue(event, config)
@@ -110,21 +110,6 @@ class TransportTest(unittest.TestCase):
             with self.assertRaises(ProtocolError): client.open('/redirect')
         self.assertEqual([path for path, auth in requests], ['/mcp', '/mcp/error-report-events?after=10', '/redirect'])
         self.assertTrue(all(auth == 'Bearer test-only-secret' for path, auth in requests))
-
-
-class AgentClientTest(unittest.TestCase):
-    def test_lease_handle_is_persisted_but_not_returned_to_the_agent(self):
-        with tempfile.TemporaryDirectory() as directory:
-            report = Reports({'stateDirectory': directory})
-            with patch.object(report.client, 'value', return_value={'acquired': True, 'leaseId': 'private-handle', 'expiresAt': 'later'}):
-                self.assertNotIn('private-handle', json.dumps(report.acquire()))
-            with patch.object(report.client, 'value', return_value={'claimedIds': [121], 'expiresAt': 'later'}) as call:
-                from argparse import Namespace
-                report.execute(Namespace(action='claim', ids=[121]))
-                self.assertEqual(call.call_args.args[1]['leaseId'], 'private-handle')
-            with patch.object(report.client, 'value', return_value={'released': True}):
-                report.execute(Namespace(action='release'))
-                self.assertFalse(report.lease_file.exists())
 
 
 if __name__ == '__main__': unittest.main()

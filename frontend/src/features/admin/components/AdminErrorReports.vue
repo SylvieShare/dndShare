@@ -175,6 +175,7 @@
             </button>
           </form>
         </section>
+        <ErrorReportTiming :timing="report.timing" />
       </article>
     </div>
 
@@ -191,6 +192,7 @@
 </template>
 
 <script setup>
+import ErrorReportTiming from '@/features/error-report/components/ErrorReportTiming.vue'
 import { CompactCheckbox, FormTextarea } from '@sylvieshare/share-ui'
 import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { SkeletonBlock } from '@sylvieshare/share-ui'

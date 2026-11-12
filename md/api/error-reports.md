@@ -44,8 +44,16 @@ element ограничен 16 KiB. Снимки — data URL JPEG/PNG/WebP, до
 | `POST /{id}/reopen` | Вернуть RESOLVED/ARCHIVED в OPEN, сохранив evidence и сообщения |
 | `DELETE /{id}` | Безвозвратно удалить заявку и сообщения |
 
-Жизненный цикл, сообщения, claim и screenshot-флаги входят в DTO. Неизвестная
-заявка/недоступное изображение даёт `404`, неподходящий переход — `409` или
+Жизненный цикл, сообщения, claim и screenshot-флаги входят в DTO. Существующая
+заявка без замеров имеет `timing:null`. Иначе `timing` содержит
+`phases:[{phase,durationMs}]` в порядке analysis/fix/test/deploy, `totalMs`,
+`beforeWorkMs`, `firstStartedAt`, `snapshotAt`, `activePhase`, `activeUntil`,
+`intervalCount`. Все длительности — целые миллисекунды. Текущий этап уже включён
+до snapshotAt, клиент добавляет только время после снимка, не позднее activeUntil.
+После остановки activePhase/activeUntil равны null. Те же поля доступны в MCP get
+и compact list; отдельного публичного endpoint записи времени нет.
+
+Неизвестная заявка/недоступное изображение даёт `404`, неподходящий переход — `409` или
 `404` по его текущим предусловиям. Изображения отдаются с приватным
 `Cache-Control: no-store`, без встраивания в JSON списков.
 

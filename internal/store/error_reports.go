@@ -11,6 +11,7 @@ import (
 // Element stays as JSON so the browser can include selector and accessibility
 // metadata without requiring a schema migration for every new diagnostic field.
 type ErrorReport struct {
+	Timing                        *ErrorReportTiming   `json:"timing"`
 	ID                            int64                `json:"id"`
 	Title                         *string              `json:"title"`
 	Description                   string               `json:"description"`
@@ -259,6 +260,9 @@ func (s *Store) listErrorReports(ctx context.Context, limit, offset int, approve
 		if reportMessages := byReportID[reports[i].ID]; reportMessages != nil {
 			reports[i].Messages = reportMessages
 		}
+	}
+	if err := s.attachErrorReportTimings(ctx, reports, reportIDs); err != nil {
+		return nil, err
 	}
 	return reports, nil
 }
