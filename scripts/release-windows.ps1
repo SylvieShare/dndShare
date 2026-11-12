@@ -26,9 +26,25 @@ $root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 if (!(Test-Path -LiteralPath $GitBash -PathType Leaf)) { throw 'Git for Windows Bash is required.' }
 if ($Mode -eq 'Rollback') {
     Assert-Clean $root
-    Push-Location $root
-    try { Invoke-Checked $GitBash @('deploy/deploy.sh', '--rollback') }
-    finally { Pop-Location }
+    $rollbackSha = Invoke-Checked git @('-C', $root, 'rev-parse', 'HEAD')
+    $rollbackGitDir = Invoke-Checked git @('-C', $root, 'rev-parse', '--path-format=absolute', '--git-common-dir')
+    $rollbackCheckout = Join-Path (Split-Path -Parent $rollbackGitDir) 'build/ui-release/windows-rollback'
+    $rollbackLockPath = Join-Path $rollbackGitDir 'ui-locks/windows-release.lock'
+    New-Item -ItemType Directory -Force (Split-Path -Parent $rollbackLockPath) | Out-Null
+    try { $rollbackLock = [IO.File]::Open($rollbackLockPath, 'OpenOrCreate', 'ReadWrite', 'None') }
+    catch { throw "Another Windows release owns $rollbackLockPath" }
+    try {
+        if (Test-Path -LiteralPath $rollbackCheckout) {
+            Assert-Clean $rollbackCheckout
+            Invoke-Checked git @('-C', $rollbackCheckout, '-c', 'core.autocrlf=false', 'checkout', '--detach', $rollbackSha)
+        } else {
+            Invoke-Checked git @('-C', $root, '-c', 'core.autocrlf=false', 'worktree', 'add', '--detach', $rollbackCheckout, $rollbackSha)
+        }
+        Assert-Clean $rollbackCheckout
+        Push-Location $rollbackCheckout
+        try { Invoke-Checked $GitBash @('deploy/deploy.sh', '--rollback') }
+        finally { Pop-Location }
+    } finally { $rollbackLock.Dispose() }
     return
 }
 if (!$Commit) { throw 'Specify the commit to release.' }
