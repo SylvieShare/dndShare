@@ -93,40 +93,64 @@ test('the simple counter retains menu edits and death saves', async ({ page }) =
   await expect(health.getByRole('button', { name: 'Успехи: 1' })).toBeVisible()
 })
 
-test('the background beat travels, pauses in the background and respects reduced motion', async ({ page }) => {
+test('the ECG pen follows the fixed peaks and dips, pauses and respects reduced motion', async ({ page }, testInfo) => {
   await page.setViewportSize({ width: 390, height: 900 })
   await sheetFixture(page)
   await page.goto('/char/test')
-  const health = page.locator('.heading-health'), beat = health.locator('.health-beat')
-  await expect(beat).toHaveCSS('animation-duration', '6s')
+  const health = page.locator('.heading-health'), beat = health.locator('.health-beat'), head = beat.locator('.health-beat-head')
+  await expect(head).toHaveCSS('animation-duration', '6s')
+  await expect(beat).toHaveCSS('transform', 'none')
   const frames = await health.evaluate(node => {
-    const wave = node.querySelector('.health-beat'), animation = wave.getAnimations()[0]
-    animation.pause()
-    return [900, 2700, 4800].map(time => {
-      animation.currentTime = time
-      const style = getComputedStyle(wave), number = node.querySelector('.health-readout strong').getBoundingClientRect()
-      return { x: new DOMMatrixReadOnly(style.transform).m41, opacity: Number(style.opacity), numberX: number.x, numberWidth: number.width }
+    const wave = node.querySelector('.health-beat'), pen = wave.querySelector('.health-beat-head')
+    const animations = [...wave.querySelectorAll('path')].map(path => path.getAnimations()[0])
+    animations.forEach(animation => animation.pause())
+    const total = pen.getTotalLength()
+    return [{ x: 20, y: 17 }, { x: 59, y: 4 }, { x: 69, y: 28 }].map(point => {
+      let low = 0, high = total
+      for (let i = 0; i < 24; i++) {
+        const middle = (low + high) / 2
+        if (pen.getPointAtLength(middle).x < point.x) low = middle
+        else high = middle
+      }
+      // Place the short pen stroke across the target corner, not beyond it.
+      const time = ((low + high) / (2 * total) + .006) * 3300
+      animations.forEach(animation => { animation.currentTime = time })
+      const style = getComputedStyle(pen), number = node.querySelector('.health-readout strong').getBoundingClientRect()
+      return {
+        onTrajectory: pen.isPointInStroke(new DOMPoint(point.x, point.y)),
+        onBaselineAtPeak: pen.isPointInStroke(new DOMPoint(59, 17)),
+        offset: parseFloat(style.strokeDashoffset), opacity: Number(style.opacity),
+        numberX: number.x, numberWidth: number.width,
+      }
     })
   })
-  expect(frames[1].x).toBeGreaterThan(frames[0].x)
-  expect(frames[1].opacity).toBeGreaterThan(0)
-  expect(frames[1].opacity).toBeLessThanOrEqual(.15)
-  expect(frames[2].opacity).toBe(0)
+  expect(frames.every(frame => frame.onTrajectory)).toBe(true)
+  expect(frames.every(frame => !frame.onBaselineAtPeak)).toBe(true)
+  expect(frames[1].offset).toBeLessThan(frames[0].offset)
+  expect(frames[2].offset).toBeLessThan(frames[1].offset)
+  expect(frames[1].opacity).toBeCloseTo(.24, 2)
   expect(frames[1].numberX).toBeCloseTo(frames[0].numberX, 1)
   expect(frames[1].numberWidth).toBeCloseTo(frames[0].numberWidth, 1)
-  await beat.evaluate(node => node.getAnimations()[0].play())
+  await page.locator('.dnd-heading').screenshot({ path: testInfo.outputPath('ecg-dip.png') })
+  await beat.evaluate(node => {
+    node.querySelectorAll('path').forEach(path => { path.getAnimations()[0].currentTime = 4800 })
+  })
+  await expect(head).toHaveCSS('opacity', '0')
+  await expect(beat.locator('.health-beat-trail')).toHaveCSS('opacity', '0')
+  await beat.evaluate(node => node.querySelectorAll('path').forEach(path => path.getAnimations()[0].play()))
   await page.evaluate(() => {
     Object.defineProperty(document, 'hidden', { configurable: true, value: true })
     document.dispatchEvent(new Event('visibilitychange'))
   })
-  await expect(beat).toHaveCSS('animation-play-state', 'paused')
+  await expect(head).toHaveCSS('animation-play-state', 'paused')
   await page.evaluate(() => {
     delete document.hidden
     document.dispatchEvent(new Event('visibilitychange'))
   })
-  await expect(beat).toHaveCSS('animation-play-state', 'running')
+  await expect(head).toHaveCSS('animation-play-state', 'running')
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  await expect(beat).toHaveCSS('animation-name', 'none')
-  await expect(beat).toHaveCSS('opacity', '0.09')
+  await expect(head).toHaveCSS('animation-name', 'none')
+  await expect(head).toHaveCSS('opacity', '0')
+  await expect(beat.locator('.health-beat-memory')).toHaveCSS('opacity', '0.09')
   await expect(health.locator('.health-readout')).toHaveText('18/23')
 })
