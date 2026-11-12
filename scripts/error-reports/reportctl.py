@@ -96,6 +96,8 @@ def parser():
 
 
 if __name__ == '__main__':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
     args = parser().parse_args()
     try:
         print(json.dumps(Reports(load_config(args.config)).execute(args), ensure_ascii=False, indent=2))
