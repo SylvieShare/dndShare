@@ -114,7 +114,7 @@ onBeforeUnmount(() => observer?.disconnect());
 .workspace-header::after {content:'';position:absolute;z-index:2;top:100%;left:0;right:0;height:var(--layout-workspace-header-shadow-height);background:linear-gradient(to bottom,color-mix(in srgb,var(--scrim) 28%,transparent),transparent);opacity:var(--workspace-scroll-depth,0);pointer-events:none;transition:opacity var(--motion-feedback);}
 .workspace-header:not([data-workspace-scrolled])::after {visibility:hidden;opacity:0;transition:none;}
 .workspace-header--context .workspace-header-identity {grid-column:1;grid-row:1}
-.workspace-header--context .workspace-header-inner {row-gap:var(--spacing-xs)}
+.workspace-header--context .workspace-header-inner {row-gap:var(--workspace-header-context-gap,var(--spacing-xs))}
 .workspace-header--context .workspace-header-actions {grid-column:-2/-1;grid-row:1}
 .workspace-header-context {grid-column:1/-1;grid-row:2;min-width:0}
 .workspace-header--context-inline .workspace-header-inner {grid-template-columns:max-content minmax(0,1fr) auto}

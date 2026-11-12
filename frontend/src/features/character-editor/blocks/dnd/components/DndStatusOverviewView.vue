@@ -1,6 +1,6 @@
 <template>
   <div v-if="items.length || showAddAction" class="dsov" :class="{ 'dsov--icons-only': iconsOnly, 'dsov--header': header }" :style="iconsOnly ? { '--status-icon-size': `${iconSize}px` } : null">
-    <div v-if="items.length" class="dsov-row" data-sheet-horizontal-scroll>
+    <div class="dsov-row" data-sheet-horizontal-scroll>
       <RowActionMenu
         v-for="item in items"
         :key="item.id"
@@ -77,12 +77,12 @@
           </RowActionItem>
         </template>
       </RowActionMenu>
-    </div>
 
-    <button v-if="showAddAction" class="dsov-add" type="button" :aria-label="header ? 'Добавить состояние' : undefined" :disabled="!editable" @click.stop="$emit('add')">
-      <Plus :size="15" :stroke-width="1.8" aria-hidden="true" />
-      <span>Состояние</span>
-    </button>
+      <button v-if="showAddAction" class="dsov-add" type="button" :aria-label="header ? 'Добавить состояние' : undefined" :disabled="!editable" @click.stop="$emit('add')">
+        <Plus :size="15" :stroke-width="1.8" aria-hidden="true" />
+        <span>Состояние</span>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -122,7 +122,7 @@ function monogram(value) {
 
 <style scoped>
 .dsov.dsov--header {padding:0;gap:8px}
-.dsov--header .dsov-row {gap:8px;flex-wrap:nowrap;max-width:100%;overscroll-behavior-x:contain}
+.dsov--header .dsov-row {gap:8px;flex-wrap:nowrap;max-width:100%;padding-block:var(--spacing-xs);margin-block:calc(-1 * var(--spacing-xs));overscroll-behavior-x:contain}
 .dsov--header .dsov-row > * {flex:none}
 .dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-icon) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:var(--layout-sheet-header-icon);padding:0 var(--spacing-compact)}
 .dsov--header .dsov-icon {width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);min-width:var(--layout-sheet-header-icon);border-radius:var(--radius-input)}

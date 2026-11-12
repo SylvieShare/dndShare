@@ -80,7 +80,10 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
 .heading-editors {position:absolute;width:0;height:0}
 .heading-tools {display:flex;align-items:center;gap:2px;flex:none}
 .character-summary-strip {position:relative;z-index:1}
-.character-workspace-header { --workspace-header-identity-gap: var(--spacing-small); }
+.character-workspace-header {
+  --workspace-header-identity-gap: var(--spacing-small);
+  --workspace-header-context-gap: var(--spacing-small);
+}
 .character-identity {
   display: flex;
   align-items: center;
