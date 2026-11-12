@@ -18,6 +18,19 @@ for (const width of [390, 834, 1440]) test(`gallery scrolls horizontally, opens 
   const api = await open(page, width)
   const gallery = page.locator('[data-sheet-field="person_photos"]:visible')
   const strip = gallery.locator('.photo-strip')
+  const layout = await gallery.evaluate(field => {
+    const tile = field.closest('.person-group')
+    const sheet = tile.parentElement
+    const appearance = sheet.querySelector('[data-sheet-field="person_appearance"]').closest('.person-group')
+    return {
+      separate: appearance !== tile,
+      belowAppearance: tile.getBoundingClientRect().top >= appearance.getBoundingClientRect().bottom,
+      columns: new Set([...sheet.children].map(block => Math.round(block.getBoundingClientRect().left))).size,
+    }
+  })
+  expect(layout.separate).toBe(true)
+  expect(layout.belowAppearance).toBe(true)
+  if (width >= 600 && width < 1200) expect(layout.columns).toBe(1)
   expect(await strip.evaluate(element => element.scrollWidth > element.clientWidth)).toBe(true)
   await gallery.getByRole('button', { name: 'Фотография 1', exact: true }).click()
   await page.getByRole('menuitem', { name: 'Посмотреть', exact: true }).click()

@@ -31,11 +31,17 @@ function visible(id) {
   const value = ctx.values?.[id]
   return id === 'ava' ? Boolean(value?.url) : Boolean(String(value ?? '').trim())
 }
-const groups = computed(() => sections.map(section => ({
-  ...section, fields:section.fields.filter(visible), portrait:section.appearance && visible('ava'),
-  description:section.appearance && visible('person_appearance'),
-  photos:section.appearance && visible('person_photos'),
-})).filter(section => section.fields.length || section.portrait || section.description || section.photos))
+const groups = computed(() => sections.flatMap(section => {
+  const group = {
+    ...section,
+    fields: section.fields.filter(visible),
+    portrait: section.appearance && visible('ava'),
+    description: section.appearance && visible('person_appearance'),
+  }
+  const result = group.fields.length || group.portrait || group.description ? [group] : []
+  if (section.appearance && visible('person_photos')) result.push({ title: 'Фотографии', fields: [], photos: true })
+  return result
+}))
 const portraitSize = computed(() => props.format === 'desktop' ? {width:'148px',height:'174px'} : {width:'84px',height:'96px'})
 </script>
 <style scoped>
@@ -46,5 +52,4 @@ const portraitSize = computed(() => props.format === 'desktop' ? {width:'148px',
 .appearance-head {display:flex;align-items:flex-start;gap:var(--spacing-medium);min-width:0}
 .appearance-head > :first-child {flex:none}.appearance-head > :nth-child(2) {flex:1;min-width:0}
 .person-empty {color:var(--text-muted);margin:var(--spacing-page)}
-@media (min-width:700px) { .personality--tablet {grid-template-columns:repeat(2,minmax(0,1fr));align-items:start} }
 </style>
