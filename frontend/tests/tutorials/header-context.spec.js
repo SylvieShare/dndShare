@@ -18,13 +18,10 @@ for(const [width,longName,inline] of [[390,false,false],[700,false,false],[834,f
   test(`conditions use available header space at ${width} (long name=${longName})`,async({page},testInfo)=>{
     await open(page,width,{longName})
     const header=page.locator('.character-workspace-header')
-    await expect.poll(()=>header.evaluate(node=>node.classList.contains('workspace-header--context-inline'))).toBe(inline)
-    const placement=await header.evaluate(node=>{
+    await expect.poll(()=>header.evaluate(node=>{
       const tile=node.querySelector('.dnd-heading').getBoundingClientRect(),context=node.querySelector('.workspace-header-context').getBoundingClientRect()
-      return {tileRight:tile.right,tileBottom:tile.bottom,contextLeft:context.left,contextTop:context.top}
-    })
-    if(inline) expect(placement.contextLeft).toBeGreaterThan(placement.tileRight)
-    else expect(placement.contextTop).toBeGreaterThanOrEqual(placement.tileBottom-.5)
+      return {inline:node.classList.contains('workspace-header--context-inline'),right:context.left>tile.right,below:context.top>=tile.bottom-.5}
+    })).toMatchObject(inline ? {inline:true,right:true} : {inline:false,below:true})
     await expect(header.locator('.dsov-icon .item-icon')).toBeVisible()
     await expect(header.locator('.dsov-icon')).toHaveCSS('width','24px')
     await expect(header.locator('.dsov-icon .item-icon')).toHaveCSS('width','24px')
