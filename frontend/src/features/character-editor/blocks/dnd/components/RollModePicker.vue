@@ -20,5 +20,5 @@ defineProps({
 const emit = defineEmits(['update:modelValue'])
 </script>
 <style scoped>
-.roll-mode-picker { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-small); --choice-card-min-height: var(--layout-roll-mode-card-min-height); }
+.roll-mode-picker { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-small); --choice-card-min-height: var(--layout-roll-mode-card-min-height); --choice-card-padding: var(--spacing-compact) var(--spacing-small); --choice-card-gap: var(--spacing-xs); }
 </style>

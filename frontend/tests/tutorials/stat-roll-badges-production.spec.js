@@ -46,8 +46,8 @@ for (const width of [390, 834, 1440]) test(`stat dice badges, cached icons and e
   for (const mode of ['Помеха', 'Преимущество']) {
     const option = menu.getByRole('button', { name: mode, exact: true })
     await expect(option).toHaveClass(/share-choice-card--tinted/)
-    expect((await option.boundingBox()).height).toBeGreaterThanOrEqual(88)
-    expect((await option.boundingBox()).height).toBeLessThanOrEqual(90)
+    expect((await option.boundingBox()).height).toBeGreaterThanOrEqual(72)
+    expect((await option.boundingBox()).height).toBeLessThanOrEqual(74)
     await expect(option.locator('.share-choice-card__check')).toHaveCount(0)
     await expect(option.locator('.share-choice-card__label')).toHaveCSS('font-size', '16px')
   }
