@@ -325,12 +325,14 @@ for (const width of [390, 834, 1440]) test(`sheet header is opaque at ${width}`,
     const root = node.getBoundingClientRect(), image = node.querySelector('.portrait').getBoundingClientRect()
     const hp = node.querySelector('.heading-health').getBoundingClientRect(), stats = node.querySelector('.heading-metrics').getBoundingClientRect()
     const combat = node.querySelector('.heading-combat').getBoundingClientRect()
-    return { width: root.width, avatarRight: image.right, statsLeft: stats.left, hpLeft: hp.left, statsTop: stats.top, combatBottom: combat.bottom }
+    return { width: root.width, avatarRight: image.right, statsLeft: stats.left, hpLeft: hp.left, hpRight: hp.right, statsTop: stats.top, statsBottom: stats.bottom, combatTop: combat.top, combatBottom: combat.bottom }
   })
   expect(geometry.width).toBeLessThanOrEqual(420)
   expect(geometry.statsLeft).toBeGreaterThan(geometry.avatarRight)
   expect(geometry.hpLeft).toBeGreaterThan(geometry.avatarRight)
-  expect(geometry.statsTop).toBeGreaterThanOrEqual(geometry.combatBottom)
+  expect(geometry.statsLeft).toBeGreaterThan(geometry.hpRight)
+  expect(geometry.statsTop).toBeGreaterThanOrEqual(geometry.combatTop - .5)
+  expect(geometry.statsBottom).toBeLessThanOrEqual(geometry.combatBottom + .5)
   await expect(page.locator('.dnd-heading [role="meter"]')).toHaveCount(0)
   await expect(page.locator('.dnd-heading canvas')).toHaveCount(0)
   await page.locator('.dnd-heading').evaluate(node => node.blur())

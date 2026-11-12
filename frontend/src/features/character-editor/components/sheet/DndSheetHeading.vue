@@ -11,12 +11,15 @@
         <span class="identity"><strong>{{ name || 'Лист персонажа' }}</strong>
         </span>
         <span class="heading-combat">
-          <span class="heading-metric heading-armor" :aria-label="`Класс доспеха ${armor}`" title="Класс доспеха"><Shield :size="14" />{{ armor }}</span>
+          <span class="heading-armor" :aria-label="`Класс доспеха ${armor}`" title="Класс доспеха">
+            <Shield class="heading-armor-icon" :stroke-width="1.35" aria-hidden="true" />
+            <span class="heading-armor-value">{{ armor }}</span>
+          </span>
           <SheetHealth :current="current" :maximum="maximum" :temporary="temporary" />
-        </span>
-        <span class="heading-metrics">
-          <span class="heading-metric" :aria-label="`Пассивное внимание ${perception}`" title="Пассивное внимание"><Eye :size="14" />{{ perception }}</span>
-          <span class="heading-metric" :aria-label="`Пассивное расследование ${investigation}`" title="Пассивное расследование"><Search :size="14" />{{ investigation }}</span>
+          <span class="heading-metrics">
+            <span class="heading-metric" :aria-label="`Пассивное внимание ${perception}`" title="Пассивное внимание"><Eye :size="14" />{{ perception }}</span>
+            <span class="heading-metric" :aria-label="`Пассивное расследование ${investigation}`" title="Пассивное расследование"><Search :size="14" />{{ investigation }}</span>
+          </span>
         </span>
       </button>
     </template>
@@ -74,18 +77,21 @@ watch(() => props.iconUrl, () => { failed.value = false })
 function select(panel, close) { close(); emit('open', panel) }
 </script>
 <style scoped>
-.dnd-heading {display:grid;grid-template-columns:var(--layout-sheet-header-icon) minmax(0,1fr);column-gap:var(--spacing-small);width:100%;min-width:0;padding:0;border:0;background:transparent;color:var(--text-1);text-align:left;font:inherit;cursor:pointer}
-.portrait {grid-row:1/4;align-self:center;display:grid;place-items:center;width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);overflow:hidden;border-radius:var(--radius-input);color:var(--accent-soft);font-size:var(--type-sheet-header-size)}
+.dnd-heading {display:grid;grid-template-columns:var(--layout-sheet-header-icon) minmax(0,1fr);column-gap:var(--spacing-small);row-gap:calc(var(--spacing-xs) / 2);width:100%;min-width:0;padding:0;border:0;background:transparent;color:var(--text-1);text-align:left;font:inherit;cursor:pointer}
+.portrait {grid-row:1/3;align-self:center;display:grid;place-items:center;width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);overflow:hidden;border-radius:var(--radius-input);color:var(--accent-soft);font-size:var(--type-sheet-header-size)}
 .portrait img {width:100%;height:100%;object-fit:cover}
 .identity {display:flex;flex-direction:column;align-items:flex-start;min-width:0}
 .identity strong,.identity small {max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .identity strong {font-size:var(--type-sheet-header-size);line-height:var(--type-sheet-header-line-height)}
 .identity small {font-size:var(--type-context-size);color:var(--text-muted)}
-.heading-combat,.heading-metrics {display:flex;align-items:center;flex-wrap:wrap;gap:0 var(--spacing-small);min-width:0;font-size:var(--type-context-size);line-height:var(--type-context-line-height);font-variant-numeric:lining-nums tabular-nums}
-.heading-metrics {color:var(--text-muted)}
-.heading-armor {font-weight:600}
-.heading-metric {display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
-.heading-combat > .heading-metric svg,.heading-metrics svg {color:var(--text-muted)}
+.heading-combat {display:flex;align-items:center;flex-wrap:wrap;gap:var(--spacing-xs);min-width:0;font-size:var(--type-context-size);line-height:var(--type-context-line-height);font-variant-numeric:lining-nums tabular-nums}
+.heading-metrics {display:flex;flex:none;flex-direction:column;justify-content:center;height:var(--layout-sheet-health-height);color:var(--text-muted);font-size:var(--type-context-size);line-height:calc(var(--layout-sheet-health-height) / 2)}
+.heading-armor {display:grid;place-items:center;flex:none;width:var(--layout-sheet-header-armor);height:var(--layout-sheet-header-armor)}
+.heading-armor-icon,.heading-armor-value {grid-area:1/1}
+.heading-armor-icon {width:100%;height:100%;color:var(--text-muted)}
+.heading-armor-value {padding-bottom:2px;font-weight:700;line-height:1}
+.heading-metric {display:inline-flex;align-items:center;gap:2px;white-space:nowrap}
+.heading-metrics svg {color:var(--text-muted)}
 .experience-action {display:flex;flex-direction:column;gap:5px;width:100%;min-width:0}
 .experience-action small {color:var(--text-muted);font-size:12px}
 .experience-track {height:7px;border-radius:var(--radius-input);overflow:hidden;background:var(--surface-raised)}
