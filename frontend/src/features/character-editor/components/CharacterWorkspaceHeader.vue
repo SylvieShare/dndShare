@@ -18,7 +18,7 @@
       </div>
     </template>
     <template v-if="dnd && hasStates" #between>
-      <div ref="stripViewport" class="character-summary-strip">
+      <div class="character-summary-strip">
         <DndSheetStrip />
       </div>
     </template>
@@ -47,7 +47,7 @@
 defineOptions({ inheritAttrs: false })
 import CharacterBlock from './CharacterBlock.vue'
 import { useRouter } from 'vue-router'
-import { computed, inject, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { ActionButton } from '@sylvieshare/share-ui'
 import { layoutTokens } from '@/app/design-tokens'
 import { ArrowLeft } from '@lucide/vue'
@@ -70,34 +70,11 @@ function openHeading(target) {
   const editors = { profile: profileEditor, experience: experienceEditor, health: healthEditor, 'add-status': statusEditor }
   editors[target]?.value?.open()
 }
-const stripViewport = ref(null)
-let stripObserver, stripHeight = 0, requestedScroll = 0
 function setScrollPosition(value) {
-  requestedScroll = Math.max(0, value)
-  workspace.value?.$el?.style.setProperty('--sheet-scroll-depth', String(Math.min(1, requestedScroll / layoutTokens['sheet-header-shadow-distance'])))
-  const viewport = stripViewport.value
-  if (!viewport || !stripHeight) return
-  const offset = Math.min(requestedScroll, stripHeight)
-  viewport.style.setProperty('--strip-offset', offset + 'px')
-  viewport.inert = offset === stripHeight
-  if (viewport.inert) viewport.setAttribute('aria-hidden', 'true')
-  else viewport.removeAttribute('aria-hidden')
+  const scroll = Math.max(0, Number(value) || 0), element = workspace.value?.$el
+  element?.toggleAttribute('data-sheet-scrolled', scroll > 0)
+  element?.style.setProperty('--sheet-scroll-depth', String(Math.min(1, scroll / layoutTokens['sheet-header-shadow-distance'])))
 }
-watch(stripViewport, viewport => {
-  stripObserver?.disconnect()
-  if (!viewport) return
-  const row = viewport.firstElementChild
-  if (!row) return
-  const measure = () => {
-    stripHeight = row.getBoundingClientRect().height
-    viewport.style.setProperty('--strip-full-height', stripHeight + 'px')
-    setScrollPosition(requestedScroll)
-  }
-  measure()
-  stripObserver = new ResizeObserver(measure)
-  stripObserver.observe(row)
-}, { flush: 'post' })
-onBeforeUnmount(() => stripObserver?.disconnect())
 defineExpose({ setScrollPosition })
 const router = useRouter()
 const iconFailed = ref(false)
@@ -107,8 +84,7 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
 <style scoped>
 .heading-editors {position:absolute;width:0;height:0}
 .heading-tools {display:flex;align-items:center;gap:2px;flex:none}
-.character-summary-strip {position:relative;z-index:1;height:calc(var(--strip-full-height, 40px) - var(--strip-offset, 0px));overflow:clip}
-.character-summary-strip > :first-child {transform:translateY(calc(-1 * var(--strip-offset, 0px)))}
+.character-summary-strip {position:relative;z-index:1}
 .character-workspace-header {
   --workspace-header-background: var(--subheader);
   --workspace-header-identity-gap: var(--spacing-small);
@@ -132,6 +108,7 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
   pointer-events: none;
   transition: opacity var(--motion-feedback);
 }
+.character-workspace-header:not([data-sheet-scrolled])::after { visibility: hidden; opacity: 0; transition: none; }
 @media (prefers-reduced-motion: reduce) { .character-workspace-header::after { transition: none; } }
 .character-identity {
   display: flex;
