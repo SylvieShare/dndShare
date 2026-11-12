@@ -12,13 +12,14 @@ import subprocess
 import sys
 import tempfile
 import time
+from toolchain import project_environment
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def run(command, cwd=ROOT, env=None):
     print("\n> " + " ".join(map(str, command)), flush=True)
-    subprocess.run(list(map(str, command)), cwd=cwd, env=env, check=True)
+    subprocess.run(list(map(str, command)), cwd=cwd, env=project_environment(ROOT, env), check=True)
 
 
 def free_port():

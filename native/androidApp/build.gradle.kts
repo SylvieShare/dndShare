@@ -30,10 +30,10 @@ android {
 dependencies {
     implementation(project(":capacitor-android"))
     implementation("androidx.activity:activity:1.13.0")
-    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("androidx.appcompat:appcompat:1.8.0")
     implementation("androidx.window:window:1.5.1")
     implementation("androidx.window:window-java:1.5.1")
-    implementation("androidx.annotation:annotation-experimental:1.4.1")
+    implementation("androidx.annotation:annotation-experimental:1.6.0")
     androidTestImplementation("androidx.test:runner:1.7.0")
     androidTestImplementation("androidx.test.ext:junit:1.3.0")
     androidTestImplementation("androidx.test:core:1.7.0")

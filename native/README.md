@@ -6,7 +6,9 @@ Android — оболочка Capacitor над тем же Vue-приложени
 
 ## Сборка
 
-Нужны Node/npm, JBR Android Studio, SDK 37 и platform-tools на диске C.
+Нужны Node/npm, JDK 25, SDK 37 и platform-tools на диске C.
+Точные версии задают .node-version и native/.java-version. Build.ps1 выбирает
+установленные C:/Tools/NodeJS и C:/Tools/Java; Android Studio JBR не подменяется.
 Минимум Android 8 (API 26). Версии Capacitor закреплены в frontend/package-lock.json.
 Установка зависимостей: из frontend выполнить npm ci.
 
@@ -22,11 +24,11 @@ NDK, CMake, Filament, Room, Ktor или отдельные шрифты UI. Сж
 в APK не включаются: Android упаковывает исходные веб-ресурсы самостоятельно.
 Готовый файл: androidApp/build/outputs/apk/debug/androidApp-debug.apk.
 
-В релизе после Prepare из той же чистой release-копии выполнить
-scripts/native/build.ps1 -Target Android -PreparedFrontend. Флаг проверяет commit
-и версии, затем упаковывает готовый dist без повторного Vite build. Это сохраняет
-одинаковые байты веб-ресурсов сайта, APK и OTA; .vite manifest — служебный файл
-сборщика и не является исполняемым ресурсом APK.
+Для общего релиза использовать scripts/release-windows.ps1 -Mode Prepare
+-Commit SHA -Android. Он собирает APK из того же подготовленного dist,
+побайтово сверяет ресурсы и сохраняет android/release.json рядом с dndshare.apk
+в build/releases/SHA. Этот manifest передаётся install.ps1. Служебный .vite
+manifest и HTTP-копии .gz/.br не включаются в APK.
 
 Для установки подготовленного APK используется [install.ps1](../scripts/native/install.ps1)
 с ReleaseManifest. Package ID и подпись сохраняются; старые тестовые локальные

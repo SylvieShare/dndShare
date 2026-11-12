@@ -151,6 +151,7 @@ switch_release() {
   sudo systemctl enable "$(unit_name "$target_slot")"
   curl -fsS --max-time 15 -X POST "http://127.0.0.1:$port/internal/deployment/activate?commit=$commit" > /dev/null
   finished=true
+  sudo systemctl start --no-block dndshare-prune.service || true
   echo "Active slot: $target_slot ($commit). Previous: ${old_slot}."
 }
 
@@ -165,6 +166,10 @@ install_release() {
   tar -xzf release.tar.gz
   [[ "$(od -An -N4 -tx1 dndshare.new | tr -d ' \n')" == 7f454c46 ]]
   chmod +x dndshare.new dndshare-run.sh fetch-secrets.sh
+  if [[ "$(active_slot)" != legacy ]]; then
+    python3 ./retention.py --root "$root" --assets "$release_root/dndshare-frontend-assets/static" --capture-port "$(slot_port "$(active_slot)")" ||
+      echo 'Previous inventory could not be converted; static retention will remain conservative.' >&2
+  fi
   while IFS= read -r unit_line; do case "$unit_line" in Environment=*) export "${unit_line#Environment=}" ;; esac; done < dndshare.service
   ./fetch-secrets.sh "$stage/validated.env"
   mkdir -p "$root/releases" "$root/slots" "$release_root/dndshare-frontend-assets/static"
@@ -174,9 +179,9 @@ install_release() {
   if [[ ! -d "$directory" ]]; then
     mkdir "$stage/runtime"
     cp dndshare.new "$stage/runtime/dndshare"
-    cp dndshare-run.sh fetch-secrets.sh fetch-secrets.py nginx-dndshare.conf nginx-dndshare-http.conf "$stage/runtime/"
+    cp dndshare-run.sh fetch-secrets.sh fetch-secrets.py nginx-dndshare.conf nginx-dndshare-http.conf frontend.sha256 release-info.json "$stage/runtime/"
     printf '%s\n' "$commit" > "$stage/runtime/commit"
-    (cd "$stage/runtime"; sha256sum dndshare dndshare-run.sh fetch-secrets.sh fetch-secrets.py > binary.sha256)
+    (cd "$stage/runtime"; sha256sum dndshare dndshare-run.sh fetch-secrets.sh fetch-secrets.py frontend.sha256 release-info.json > binary.sha256)
     mv -- "$stage/runtime" "$directory"
   fi
   [[ ! -L "$directory" && "$(cd "$directory" && pwd -P)" == "$directory" ]]
@@ -184,19 +189,39 @@ install_release() {
   (cd "$directory"; sha256sum -c binary.sha256)
   sudo install -d -m 755 "$system_root/systemd/system" "$system_root/nginx/conf.d" "$system_root/letsencrypt/renewal-hooks/deploy" "$system_root/systemd/journald.conf.d"
   sudo install -m 644 dndshare.service "$system_root/systemd/system/dndshare@.service"
+  mkdir -p "$root/tools"
+  install -m 750 retention.py "$root/tools/retention.py"
+  sudo install -m 644 dndshare-prune.service "$system_root/systemd/system/dndshare-prune.service"
+  sudo install -m 644 dndshare-prune.timer "$system_root/systemd/system/dndshare-prune.timer"
   sudo install -m 750 certbot-reload-nginx.sh "$system_root/letsencrypt/renewal-hooks/deploy/dndshare-nginx"
   sudo install -m 644 journald-storage.conf "$system_root/systemd/journald.conf.d/60-dndshare-storage.conf"
   sudo systemctl daemon-reload
   switch_release "$commit" "$directory"
+  sudo systemctl enable --now dndshare-prune.timer || true
+}
+deployment_state() {
+  local slot current previous_slot previous=''
+  slot="$(active_slot)"
+  current="$(health_commit "$(slot_port "$slot")")"
+  previous_slot="$(cat "$root/previous" 2>/dev/null || true)"
+  if [[ "$previous_slot" == blue || "$previous_slot" == green ]]; then previous="$(cat "$root/slots/$previous_slot/commit")"; fi
+  [[ -z "$current" || "$current" =~ ^[0-9a-f]{40}$ ]]
+  [[ -z "$previous" || "$previous" =~ ^[0-9a-f]{40}$ ]]
+  printf '{"activeCommit":"%s","previousCommit":"%s","slot":"%s"}\n' "$current" "$previous" "$slot"
 }
 rollback_release() {
   candidate_started=false
+  local expected_before="${1:-}" expected_target="${2:-}"
+  if [[ -n "$expected_before" && "$(health_commit "$(slot_port "$(active_slot)")")" != "$expected_before" ]]; then
+    echo 'Active release changed after the rollback was queued.' >&2; return 1
+  fi
   target_slot="$(cat "$root/previous")"
   [[ "$target_slot" == blue || "$target_slot" == green ]] || { echo 'No previous managed slot.' >&2; return 1; }
   stage="$(mktemp -d "$release_root/dndshare-deploy.XXXXXX")"
   local directory commit
   directory="$(readlink -f "$root/slots/$target_slot")"
   commit="$(cat "$directory/commit")"
+  [[ -z "$expected_target" || "$commit" == "$expected_target" ]] || { echo 'Previous release changed after the rollback was queued.' >&2; return 1; }
   [[ "$commit" =~ ^[0-9a-f]{40}$ && "$directory" == "$root/releases/$commit" ]]
   (cd "$directory"; sha256sum -c binary.sha256)
   switch_release "$commit" "$directory"
@@ -207,5 +232,5 @@ if [[ "${DNDSHARE_DEPLOY_LIBRARY_ONLY:-0}" != 1 ]]; then
   trap restore ERR HUP INT TERM
   exec 9>"$release_root/.dndshare-deploy.lock"
   flock -w 300 9
-  case "${1:-}" in install) shift; install_release "$@" ;; rollback) rollback_release ;; *) exit 2 ;; esac
+  case "${1:-}" in install) shift; install_release "$@" ;; rollback) rollback_release "${2:-}" "${3:-}" ;; state) deployment_state ;; *) exit 2 ;; esac
 fi

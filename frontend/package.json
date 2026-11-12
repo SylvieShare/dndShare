@@ -22,23 +22,35 @@
   "dependencies": {
     "@capacitor/android": "8.6.0",
     "@capacitor/core": "8.6.0",
-    "@lucide/vue": "^1.46.0",
+    "@lucide/vue": "^1.72.0",
     "@sylvieshare/share-ui": "https://github.com/SylvieShare/share-ui/archive/refs/tags/v0.59.0.tar.gz",
     "html-to-image": "1.11.13",
-    "pinia": "^3.0.4",
-    "three": "0.186.1",
-    "three-mesh-bvh": "0.9.16",
-    "vue": "^3.5.42",
-    "vue-router": "^5.3.1"
+    "pinia": "^4.1.0",
+    "three": "0.187.0",
+    "three-mesh-bvh": "0.9.18",
+    "vue": "^3.5.45",
+    "vue-router": "^5.5.0",
+    "@vue/devtools-api": "^8.2.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.63.0",
-    "@vitejs/plugin-vue": "^6.0.9",
-    "eslint": "^10.13.0",
-    "eslint-plugin-vue": "^10.11.1",
+    "@playwright/test": "^1.65.0",
+    "@vitejs/plugin-vue": "^6.0.11",
+    "eslint": "^10.14.0",
+    "eslint-plugin-vue": "^10.12.1",
     "fflate": "0.8.3",
-    "globals": "^17.13.0",
-    "vite": "^8.3.0",
-    "vitest": "^4.1.11"
+    "globals": "^17.14.0",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0"
+  },
+  "engines": {
+    "node": "^24.0.0"
+  },
+  "overrides": {
+    "@eslint/config-array": {
+      "minimatch": "^11.0.8"
+    },
+    "eslint": {
+      "minimatch": "^11.0.8"
+    }
   }
 }

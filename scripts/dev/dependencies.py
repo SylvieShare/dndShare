@@ -29,7 +29,10 @@ def check_packages(source, modules):
 
 
 def choose_modules(source, node, env):
-    candidates = [source / "frontend/node_modules",
+    candidates = []
+    if env.get('DNDSHARE_MODULES_CACHE'):
+        candidates.append(Path(env['DNDSHARE_MODULES_CACHE'])/digest(source/'frontend/package-lock.json')/'frontend/node_modules')
+    candidates += [source / "frontend/node_modules",
                   source / "build/unified-shell-validation/frontend/node_modules",
                   source / "build/header-validation-fc4a9a54/frontend/node_modules"]
     errors = []
@@ -104,4 +107,5 @@ def environment(config):
     if config.get("android_home"):
         env.update(ANDROID_HOME=config["android_home"], ANDROID_SDK_ROOT=config["android_home"],
                    JAVA_HOME=config["java_home"], DNDSHARE_POWERSHELL=config["powershell"])
+    if config.get('modules_cache'):env['DNDSHARE_MODULES_CACHE']=config['modules_cache']
     return env

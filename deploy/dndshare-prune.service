@@ -1,0 +1,15 @@
+[Unit]
+Description=Prune expired DnD Share release artifacts
+
+[Service]
+Type=oneshot
+User=sylvieshare
+ExecStart=/usr/bin/python3 /home/sylvieshare/dndshare-deployment/tools/retention.py --root /home/sylvieshare/dndshare-deployment --assets /home/sylvieshare/dndshare-frontend-assets/static --keep 5 --asset-days 30 --apply
+TimeoutStartSec=600
+Nice=10
+IOSchedulingClass=idle
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/sylvieshare/dndshare-deployment /home/sylvieshare/dndshare-frontend-assets /home/sylvieshare/.dndshare-deploy.lock

@@ -8,6 +8,9 @@ $ErrorActionPreference = 'Stop'
 # WSL may pass a reduced PATHEXT; use Windows' executable extensions locally.
 $env:PATHEXT = [Environment]::GetEnvironmentVariable('PATHEXT', 'Machine')
 $project = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..\native'))
+. (Join-Path $PSScriptRoot '..\node-environment.ps1')
+Use-ProjectNode -RepositoryRoot (Split-Path -Parent $project)
+Use-ProjectJava -RepositoryRoot (Split-Path -Parent $project)
 if ($PreparedFrontend) {
     if ($Target -ne 'Android') { throw 'PreparedFrontend is only available for an Android release build.' }
     $sourceRoot = Split-Path -Parent $project
@@ -17,8 +20,6 @@ if ($PreparedFrontend) {
     $built = Get-Content -LiteralPath (Join-Path $sourceRoot 'frontend\target\dist\build-info.json') -Raw | ConvertFrom-Json
     if ($built.commitSha -ne (& git -C $sourceRoot rev-parse HEAD)) { throw 'Prepare the frontend from this exact commit first.' }
 }
-$env:JAVA_HOME = [Environment]::GetEnvironmentVariable('JAVA_HOME', 'User')
-if (-not $env:JAVA_HOME) { $env:JAVA_HOME = 'C:\Program Files\Android\Android Studio\jbr' }
 $env:ANDROID_HOME = [Environment]::GetEnvironmentVariable('ANDROID_HOME', 'User')
 if (-not $env:ANDROID_HOME) { $env:ANDROID_HOME = Join-Path $env:LOCALAPPDATA 'Android\Sdk' }
 $env:Path = (Join-Path $env:JAVA_HOME 'bin') + ';' + $env:Path

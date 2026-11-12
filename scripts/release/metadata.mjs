@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url'
 export const root = fileURLToPath(new URL('../../', import.meta.url))
 export const digest = data => createHash('sha256').update(data).digest('hex')
 export function normalizedSourceBytes(name, bytes) {
-  const text = /(?:^|\/)go\.(?:mod|sum)$|\.(go|java|js|mjs|vue|json|css|kts|xml|sql|html|pem|properties|svg|md|txt)$/.test(name)
+  const text = /(?:^|\/)(?:go\.(?:mod|sum)|\.node-version|\.java-version|\.npmrc)$|\.(go|java|js|mjs|vue|json|css|kts|xml|sql|html|pem|properties|svg|md|txt)$/.test(name)
   return text ? Buffer.from(bytes.toString('utf8').replaceAll('\r\n', '\n')) : bytes
 }
 export const readVersions = () => JSON.parse(fs.readFileSync(path.join(root, 'release/versions.json'), 'utf8'))
@@ -36,8 +36,8 @@ export function fingerprints(versions = readVersions()) {
   const lock = JSON.parse(fs.readFileSync(path.join(root, 'frontend/package-lock.json'), 'utf8'))
   const nativeDependencies = Object.fromEntries(['@capacitor/android', '@capacitor/core'].map(name => [name, lock.packages[`node_modules/${name}`]]))
   const tabletWidth = JSON.parse(fs.readFileSync(path.join(root, 'design/tokens.json'), 'utf8')).layout.tablet
-  const android = sourceHash([...filesUnder('native/androidApp/src/main'), 'native/androidApp/build.gradle.kts', 'native/build.gradle.kts', 'native/settings.gradle.kts', 'native/gradle/wrapper/gradle-wrapper.properties', 'release/frontend-ota-public.pem', 'scripts/release/metadata.mjs'], { nativeDependencies, tabletWidth, contracts: versions.contracts, updaterProtocol: 1 })
-  const frontend = sourceHash([...filesUnder('frontend/src'), ...filesUnder('frontend/public'), ...filesUnder('design'), 'frontend/vite.config.js', 'frontend/index.html', 'frontend/package.json', 'frontend/package-lock.json', 'frontend/scripts/android-insets.mjs', 'frontend/scripts/design-media.mjs', 'frontend/scripts/compressedAssets.mjs', 'scripts/release/metadata.mjs'], { android, contracts: versions.contracts })
+  const android = sourceHash([...filesUnder('native/androidApp/src/main'), 'native/.java-version', 'native/androidApp/build.gradle.kts', 'native/build.gradle.kts', 'native/settings.gradle.kts', 'native/gradle/wrapper/gradle-wrapper.properties', 'native/gradle/wrapper/gradle-wrapper.jar', 'release/frontend-ota-public.pem', 'scripts/release/metadata.mjs'], { nativeDependencies, tabletWidth, contracts: versions.contracts, updaterProtocol: 1 })
+  const frontend = sourceHash([...filesUnder('frontend/src'), ...filesUnder('frontend/public'), ...filesUnder('design'), '.node-version', 'frontend/.npmrc', 'frontend/vite.config.js', 'frontend/index.html', 'frontend/package.json', 'frontend/package-lock.json', 'frontend/scripts/android-insets.mjs', 'frontend/scripts/design-media.mjs', 'frontend/scripts/compressedAssets.mjs', 'scripts/release/metadata.mjs'], { android, contracts: versions.contracts })
   const backend = sourceHash(['go.mod', 'go.sum', 'main.go', ...filesUnder('internal').filter(name => /\.(go|sql)$/.test(name) && !name.startsWith('internal/assets/dist/') && !name.startsWith('internal/web/testdata/'))], { apiContract: versions.contracts.api })
   return { backend, frontend, android }
 }

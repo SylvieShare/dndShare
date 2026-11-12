@@ -62,8 +62,8 @@ class RoutesTest(unittest.TestCase):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.touch()
         names = [stage.name for stage in self.plan(self.arguments("verify", "--tag", "backend"))]
-        self.assertEqual(names, ["webunit", "webbuild", "browser", "nativeAll", "nativeDeviceTest",
-                                 "palette-icons", "tokens", "fonts", "wiki", "go-test", "go-vet", "go-build"])
+        self.assertEqual(names, ["webunit", "mechanics-contracts", "webbuild", "browser", "nativeAll", "nativeDeviceTest",
+                                 "tokens", "fonts", "wiki", "go-test", "go-vet", "go-build"])
         self.assertNotIn("go-test", [stage.name for stage in self.plan(self.arguments("verify"))])
         (self.root / "scripts/design/fonts.py").unlink()
         self.assertNotIn("fonts", [stage.name for stage in self.plan(self.arguments("verify"))])

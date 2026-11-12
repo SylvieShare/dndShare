@@ -95,8 +95,17 @@ Android-оболочка находится в [native/](native/README.md).
 
 ## Локальная разработка
 
-Frontend: из `frontend/` выполнить `npm install`, затем `npm run dev`.
-Backend: из корня загрузить локальный `.env` и выполнить `go run .`.
+Версия Node закреплена в [.node-version](.node-version), Go — в [go.mod](go.mod).
+Windows-сборки используют Node на C:/Tools/NodeJS; команды релиза и Android
+выбирают его автоматически. Для ручной работы в PowerShell из корня:
+
+~~~powershell
+. ./scripts/node-environment.ps1
+Use-ProjectNode -RepositoryRoot (Get-Location)
+~~~
+
+Frontend: из `frontend/` выполнить `npm ci`, затем `npm run dev`.
+Backend: из корня загрузить локальный `.env` и выполнить `go run .` (GOTOOLCHAIN=auto).
 Vite использует порт 5173 и проксирует API/MCP на 8080.
 `npm run build` в `frontend/` создаёт `frontend/target/dist`; deploy встраивает
 его в `internal/assets/dist`. Правила окружения — [деплой](md/deploy.md).
@@ -144,6 +153,9 @@ Vite использует порт 5173 и проксирует API/MCP на 808
 Изменения только Markdown и инструментов разработки или выпуска коммитятся и отправляются
 в main после своих проверок; production-бинарь ради них не пересобирается.
 Порядок выпуска и работа с параллельными изменениями — [runbook](md/deploy.md).
+Подготовленный артефакт хранится отдельно по SHA и не пересобирается при публикации.
+Публикации проходят через общую долговечную очередь; старый запрос не заменяет
+более новый активный commit. Очистка сервера защищает оба слота и текущие ассеты.
 
 Android-клиент выпускается отдельным APK после
 проверок из [native/README.md](native/README.md), с записью исходного commit.

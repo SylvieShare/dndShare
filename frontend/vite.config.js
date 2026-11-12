@@ -7,7 +7,7 @@ import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 
 const build = buildMetadata()
-export default defineConfig({
+export default defineConfig(({ isPreview }) => ({
   define: { __DNDSHARE_BUILD__: JSON.stringify(build.frontend) },
   cacheDir: process.env.DNDSHARE_VITE_CACHE || undefined,
   plugins: [vue(), { name: 'dndshare-build-info', generateBundle() { this.emitFile({ type: 'asset', fileName: 'build-info.json', source: JSON.stringify(build.frontend) }) } }, compressedAssets()],
@@ -30,7 +30,7 @@ export default defineConfig({
   build: {
     // deploy/deploy.sh copies this directory into internal/assets/dist before
     // building the embedded Go binary.
-    outDir: 'target/dist',
+    outDir: isPreview && process.env.DNDSHARE_PREVIEW_DIST ? process.env.DNDSHARE_PREVIEW_DIST : 'target/dist',
     assetsDir: 'static',
     emptyOutDir: true,
     // Keep one JS bundle and one stylesheet: open tabs must not fetch a page
@@ -43,4 +43,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))

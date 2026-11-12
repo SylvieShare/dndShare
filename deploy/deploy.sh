@@ -13,7 +13,8 @@ ssh_bin="${DNDSHARE_RELEASE_SSH:-ssh}"
 scp_bin="${DNDSHARE_RELEASE_SCP:-scp}"
 ssh_options=(-i "$SSH_KEY" -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=15 -o ServerAliveInterval=15 -o ServerAliveCountMax=3)
 frontend="$ROOT_DIR/frontend"
-output="$ROOT_DIR/build/web-release"
+output="${DNDSHARE_RELEASE_OUTPUT:-$ROOT_DIR/build/web-release}"
+frontend_dist="${DNDSHARE_FRONTEND_DIST:-$frontend/target/dist}"
 
 require_clean() {
   local status
@@ -23,7 +24,7 @@ require_clean() {
 }
 
 frontend_checksums() (
-  cd "$frontend/target/dist"
+  cd "$frontend_dist"
   find . -type f -print0 | sort -z | xargs -0 sha256sum
 )
 
@@ -51,6 +52,7 @@ prepare() {
   )
   node scripts/release/pack-frontend.mjs
   frontend_checksums > "$output/frontend.sha256"
+  node scripts/release/metadata.mjs > "$output/release-info.json"
 
   assets="$ROOT_DIR/internal/assets/dist"
   if [[ -e "$assets" || -L "$assets" ]]; then
@@ -68,10 +70,11 @@ prepare() {
   # Keep old hashed assets available to open tabs. The transfer also includes
   # the service configuration, but it uses just one compressed archive.
   COPYFILE_DISABLE=1 tar -czf "$output/release.tar.gz" \
-    -C "$output" dndshare.new \
+    -C "$output" dndshare.new frontend.sha256 release-info.json \
     -C "$frontend/target/dist" static \
     -C "$ROOT_DIR/deploy" dndshare.service dndshare-run.sh fetch-secrets.sh fetch-secrets.py \
-    nginx-dndshare.conf nginx-dndshare-http.conf journald-storage.conf certbot-reload-nginx.sh
+    nginx-dndshare.conf nginx-dndshare-http.conf journald-storage.conf certbot-reload-nginx.sh \
+    retention.py dndshare-prune.service dndshare-prune.timer
   archive_hash="$(sha256sum "$output/release.tar.gz" | awk '{print $1}')"
   require_clean
   [[ "$(git rev-parse HEAD)" == "$commit" ]] || { echo 'HEAD changed during build.' >&2; exit 1; }
@@ -87,8 +90,8 @@ publish() {
   [[ "$commit" =~ ^[0-9a-f]{40}$ && "$commit" == "$(git rev-parse HEAD)" && "$archive_hash" =~ ^[0-9a-f]{64}$ ]] ||
     { echo 'Prepared release does not match HEAD.' >&2; exit 1; }
   if git show-ref --verify --quiet refs/remotes/origin/main; then
-    git merge-base --is-ancestor origin/main "$commit" ||
-      { echo 'Release is older than origin/main.' >&2; exit 1; }
+    git merge-base --is-ancestor "$commit" origin/main ||
+      { echo 'Release must be a committed part of origin/main.' >&2; exit 1; }
   fi
   printf '%s  %s\n' "$archive_hash" "$output/release.tar.gz" | sha256sum -c -
   frontend_checksums | cmp -s "$output/frontend.sha256" - ||
@@ -115,6 +118,9 @@ REMOTE
 
   # Until activation begins, the uploader owns staging cleanup.
   trap cleanup_upload EXIT
+  if [[ "$before" != none && "$before" != "$commit" ]]; then
+    git merge-base --is-ancestor "$before" "$commit" || { echo 'Refusing to deploy over a newer or divergent active release.' >&2; exit 1; }
+  fi
   echo "==> Передача сжатого архива на $VM_HOST"
   "$scp_bin" "${ssh_options[@]}" "$output/release.tar.gz" "$target:$DEPLOY_DIR/release.tar.gz"
   echo "==> Передача завершена за $((SECONDS - started)) с"
@@ -127,6 +133,11 @@ case "${1:-}" in
   '') prepare; publish ;;
   --prepare) prepare ;;
   --publish) publish ;;
-  --rollback) "$ssh_bin" "${ssh_options[@]}" "$target" 'bash -s -- rollback' < "$ROOT_DIR/deploy/activate-release.sh" ;;
+  --rollback)
+    expected_before="${2:-}"; expected_target="${3:-}"
+    [[ -z "$expected_before" || "$expected_before" =~ ^[0-9a-f]{40}$ ]]
+    [[ -z "$expected_target" || "$expected_target" =~ ^[0-9a-f]{40}$ ]]
+    "$ssh_bin" "${ssh_options[@]}" "$target" "bash -s -- rollback '$expected_before' '$expected_target'" < "$ROOT_DIR/deploy/activate-release.sh" ;;
+  --state) "$ssh_bin" "${ssh_options[@]}" "$target" 'bash -s -- state' < "$ROOT_DIR/deploy/activate-release.sh" ;;
   *) echo "Usage: $0 [--prepare | --publish | --rollback]" >&2; exit 2 ;;
 esac

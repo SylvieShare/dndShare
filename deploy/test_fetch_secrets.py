@@ -81,15 +81,21 @@ class FetchSecretsTest(unittest.TestCase):
             fetch = home / "fetch-secrets.sh"
             fetch.write_text('#!/bin/bash\nexit 0\n')
             fetch.chmod(0o700)
-            (home / "dndshare.env").write_text(secrets.payload_env(payload(
-                DB_URL="old-database", DB_USER="old-user", SESSION_SECURE_COOKIE="false")))
+            runtime = home / 'dndshare-deployment'
+            runtime.mkdir()
+            (runtime / 'runtime-8081.env').write_text(secrets.payload_env(payload(
+                DB_URL="old-database", DB_USER="old-user", SESSION_SECURE_COOKIE="false",
+                PORT='8080', HTTP_HOST='0.0.0.0', DB_POOL_MAX_CONNS='1', DEPLOYMENT_CANDIDATE='false')))
+            runner=home/'dndshare-run.sh'
+            runner.write_text((DEPLOY/'dndshare-run.sh').read_text())
             binary = home / "dndshare"
-            binary.write_text('#!/bin/bash\nprintf "%s\\n" "$DB_URL" "$DB_USER" "$SESSION_SECURE_COOKIE"\n')
+            binary.write_text('#!/bin/bash\nprintf "%s\\n" "$DB_URL" "$DB_USER" "$SESSION_SECURE_COOKIE" "$PORT" "$HTTP_HOST" "$DB_POOL_MAX_CONNS" "$DEPLOYMENT_CANDIDATE"\n')
             binary.chmod(0o700)
-            result = subprocess.run(["bash", str(DEPLOY / "dndshare-run.sh")], check=True, capture_output=True,
-                                    text=True, env={**os.environ, "HOME": str(home), "DB_URL": "new-database",
-                                                    "DB_USER": "new-user", "SESSION_SECURE_COOKIE": "true"})
-            self.assertEqual(result.stdout.splitlines(), ["new-database", "new-user", "true"])
+            result = subprocess.run(["bash", str(runner)], check=True, capture_output=True,
+                                    text=True, env={**os.environ, "DNDSHARE_DEPLOY_HOME": str(home), "DB_URL": "new-database",
+                                                    "DB_USER": "new-user", "SESSION_SECURE_COOKIE": "true",
+                                                    'PORT':'8081','HTTP_HOST':'127.0.0.1','DB_POOL_MAX_CONNS':'10','DEPLOYMENT_CANDIDATE':'true'})
+            self.assertEqual(result.stdout.splitlines(), ["new-database", "new-user", "true",'8081','127.0.0.1','10','true'])
 
 
 if __name__ == "__main__":

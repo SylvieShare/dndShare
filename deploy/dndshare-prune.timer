@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily retention for DnD Share release artifacts
+
+[Timer]
+OnCalendar=*-*-* 04:00:00 Europe/Moscow
+RandomizedDelaySec=600
+Persistent=true
+Unit=dndshare-prune.service
+
+[Install]
+WantedBy=timers.target

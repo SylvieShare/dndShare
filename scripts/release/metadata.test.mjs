@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { digest, normalizedSourceBytes } from './metadata.mjs'
 
 test('source fingerprints agree across Windows and Linux text checkouts', () => {
-  for (const name of ['go.mod', 'go.sum', 'internal/example.go', 'frontend/example.vue', 'release/key.pem']) {
+  for (const name of ['go.mod', 'go.sum', '.node-version', 'native/.java-version', 'frontend/.npmrc', 'internal/example.go', 'frontend/example.vue', 'release/key.pem']) {
     assert.equal(digest(normalizedSourceBytes(name, Buffer.from('one\r\ntwo\r\n'))),
       digest(normalizedSourceBytes(name, Buffer.from('one\ntwo\n'))), name)
   }
