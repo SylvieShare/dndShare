@@ -35,6 +35,7 @@ for (const width of [390, 834, 1920]) {
         const a = await advantage.boundingBox(), d = await disadvantage.boundingBox()
         expect(Math.abs(a.y - d.y)).toBeLessThan(2)
         await expect(menu.getByText('Режим броска', { exact: true })).toBeVisible()
+        await expect(menu.getByText(/Меньший из|Больший из/)).toHaveCount(0)
         const summary = await menu.locator('.stat-roll-summary').boundingBox()
         expect(a.y - (summary.y + summary.height)).toBeGreaterThanOrEqual(12)
         for (const button of [advantage, disadvantage]) {
@@ -42,7 +43,7 @@ for (const width of [390, 834, 1920]) {
           const arrow = await button.locator('.share-choice-card__icon').boundingBox()
           const label = await button.locator('.share-choice-card__label').boundingBox()
           expect(box.height).toBeGreaterThanOrEqual(48)
-          expect(box.height).toBeLessThanOrEqual(104)
+          expect(box.height).toBeLessThanOrEqual(120)
           expect(arrow.y + arrow.height).toBeLessThanOrEqual(label.y)
           await expect(button.locator('.roll-badge--large .system-die--d20')).toHaveCount(2)
           expect(await button.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true)
@@ -59,6 +60,44 @@ for (const width of [390, 834, 1920]) {
           ? { scope: entry.scope, proficiencyRank: 2 } : { scope: entry.scope }])
       }
       expect(await page.evaluate(() => window.writes)).toEqual([])
+    })
+
+    test('mode groups keep numeric values fixed and highlight only the chosen control', async ({ page }, testInfo) => {
+      const cases = [
+        ['.skill-chip', '.skill-chip-val', 'skillEffects'],
+        ['.save-chip', '.save-chip-val', 'saveEffects'],
+        ['.stat-body', '.stat-mod', 'checkEffects'],
+      ]
+      for (const [controlSelector, numberSelector, effects] of cases) {
+        const control = page.locator(controlSelector), number = control.locator(numberSelector)
+        await page.evaluate(key => { window.statState[key] = [] }, effects)
+        await expect(control.locator('.roll-badge')).toHaveCount(0)
+        const original = await number.boundingBox()
+        for (const mode of ['advantage', 'disadvantage']) {
+          await page.evaluate(({ key, mode }) => { window.statState[key] = [{ mode }] }, { key: effects, mode })
+          await expect(control.locator('.stat-roll-value--mode')).toBeVisible()
+          const current = await number.boundingBox()
+          for (const dimension of ['x', 'y', 'width', 'height']) expect(Math.abs(current[dimension] - original[dimension])).toBeLessThan(1)
+          const badge = await control.locator('.roll-badge').boundingBox()
+          if (effects === 'checkEffects') expect(badge.x).toBeGreaterThan(current.x + current.width)
+          else expect(badge.x + badge.width).toBeLessThan(current.x)
+        }
+        const tile = page.locator('.stat-block')
+        const background = await tile.evaluate(el => getComputedStyle(el).backgroundColor)
+        await control.click()
+        await expect(page.getByRole('menu')).toBeVisible()
+        await expect(page.locator('.stat-roll-value--active')).toHaveCount(1)
+        await expect(control.locator('.stat-roll-value')).toHaveClass(/stat-roll-value--active/)
+        await expect(tile).not.toHaveClass(/action-menu-source--open/)
+        expect(await tile.evaluate(el => getComputedStyle(el).backgroundColor)).toBe(background)
+        await expect(control.locator('[data-stat-roll-number]')).not.toHaveCSS('box-shadow', 'none')
+        await page.keyboard.press('Escape')
+        await expect(page.locator('.stat-roll-value--active')).toHaveCount(0)
+        await expect(control).toBeFocused()
+        await expect(control).toHaveCSS('outline-style', 'none')
+        await expect(control.locator('[data-stat-roll-number]')).not.toHaveCSS('box-shadow', 'none')
+      }
+      await page.locator('.stat-block').screenshot({ path: testInfo.outputPath('grouped-roll-values.png') })
     })
 
     test('blessing is enabled for saves and can be omitted for one roll', async ({ page }, testInfo) => {

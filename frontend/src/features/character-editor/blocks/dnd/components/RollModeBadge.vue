@@ -1,5 +1,5 @@
 <template>
-  <span v-if="mode !== 'normal' || cancelled" class="roll-badge" :class="[`roll-badge--${cancelled ? 'cancelled' : mode}`, { 'roll-badge--large': variant === 'large' }]" :title="title" role="img" :aria-label="title" :style="{ '--roll-mode-color': color, '--roll-mode-die-size': `${dieSize}px` }">
+  <span v-if="mode !== 'normal' || cancelled" class="roll-badge" :class="[`roll-badge--${cancelled ? 'cancelled' : mode}`, { 'roll-badge--large': variant === 'large', 'roll-badge--embedded': embedded }]" :title="title" role="img" :aria-label="title" :style="{ '--roll-mode-color': color, '--roll-mode-die-size': `${dieSize}px` }">
     <template v-if="cancelled">ОБЫЧ.</template>
     <template v-else>
       <span class="roll-badge__dice" aria-hidden="true">
@@ -24,6 +24,7 @@ const props = defineProps({
   cancelled: { type: Boolean, default: false },
   variant: { type: String, default: 'compact', validator: value => ['compact', 'large'].includes(value) },
   showCaption: { type: Boolean, default: true },
+  embedded: { type: Boolean, default: false },
 })
 const title = computed(() => [props.cancelled ? 'Обычный бросок' : props.mode === 'advantage' ? 'Преимущество' : 'Помеха', props.source].filter(Boolean).join(' · '))
 const color = computed(() => props.cancelled ? 'var(--text-muted)' : props.mode === 'advantage' ? 'var(--success)' : 'var(--danger)')
@@ -55,4 +56,5 @@ const dieSize = computed(() => layoutTokens[props.variant === 'large' ? 'roll-mo
 .roll-badge__die--discarded .roll-badge__face {opacity:.6}
 .roll-badge__strike {position:absolute;left:8%;right:8%;top:50%;height:1.5px;border-radius:var(--radius-xs);background:currentColor;box-shadow:0 0 0 .5px var(--surface);transform:rotate(-45deg);pointer-events:none}
 .roll-badge--cancelled {padding:1px 5px;border-radius:var(--radius-badge);background:var(--surface-raised)}
+.roll-badge--embedded:not(.roll-badge--cancelled) {padding:0;background:transparent}
 </style>

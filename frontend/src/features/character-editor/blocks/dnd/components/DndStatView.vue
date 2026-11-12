@@ -5,7 +5,7 @@
       :show-edit-icon="false"
       :edit-fade="editFade"
       @edit="$emit('edit')"
-     class="stat-view" :class="{ 'stat-view--mobile': mobileVariant, 'action-menu-source--open': !!rollMenu }">
+     class="stat-view" :class="{ 'stat-view--mobile': mobileVariant }">
     <template #decoration><TileAccentStrip v-if="mode !== 'panel'" :color="color" /></template>
 
     <!-- ── Head: editable name + save chip ── -->
@@ -23,10 +23,13 @@
           @keydown.enter.prevent="openRollMenu($event, 'save')"
           @keydown.space.prevent="openRollMenu($event, 'save')"
         >
-          <span class="save-label">Спас</span>
-          <span v-if="saveUp" class="proficiency-dot" aria-hidden="true"></span>
-          <span class="save-chip-val">{{ signed(save) }}</span>
-          <RollModeBadge :mode="saveMode" :source="saveModeSource" :cancelled="saveModeCancelled" />
+          <StatRollValue :mode="saveMode" :source="saveModeSource" :cancelled="saveModeCancelled" :active="rollMenu?.kind === 'save'">
+            <span class="save-number">
+              <span class="save-label">Спас</span>
+              <span v-if="saveUp" class="proficiency-dot" aria-hidden="true"></span>
+              <span class="save-chip-val">{{ signed(save) }}</span>
+            </span>
+          </StatRollValue>
         </div>
       </template>
 
@@ -43,9 +46,12 @@
       @keydown.space.prevent="openRollMenu($event, 'stat')"
     >
       <SvgIcon v-if="suggestSvg || suggestSvgId" class="stat-icon" :svg="suggestSvg" :svg-id="suggestSvgId" :color="color" />
-      <span class="stat-mod" :style="{ color }">{{ signed(mod) }}</span>
-      <span class="stat-raw">({{ raw }})</span>
-      <RollModeBadge :mode="checkMode" :source="checkModeSource" :cancelled="checkModeCancelled" />
+      <StatRollValue primary :mode="checkMode" :source="checkModeSource" :cancelled="checkModeCancelled" :active="rollMenu?.kind === 'stat'">
+        <span class="stat-number">
+          <span class="stat-mod" :style="{ color }">{{ signed(mod) }}</span>
+          <span class="stat-raw">({{ raw }})</span>
+        </span>
+      </StatRollValue>
     </div>
 
     <!-- ── Skills ── -->
@@ -72,7 +78,6 @@
             <span v-if="skill.up >= 2" class="proficiency-dot"></span>
           </span>
         </span>
-        <RollModeBadge :mode="skill.rollMode" :source="skill.rollModeSource" :cancelled="skill.rollModeCancelled" />
         <span
           class="skill-chip"
           role="button"
@@ -84,7 +89,11 @@
           @click.stop="openRollMenu($event, 'skill', skill)"
           @keydown.enter.prevent="openRollMenu($event, 'skill', skill)"
           @keydown.space.prevent="openRollMenu($event, 'skill', skill)"
-        >{{ signed(skill.bonus) }}</span>
+        >
+          <StatRollValue :mode="skill.rollMode" :source="skill.rollModeSource" :cancelled="skill.rollModeCancelled" :active="rollMenu?.kind === 'skill' && rollMenu?.id === skill.id">
+            <span class="skill-chip-val">{{ signed(skill.bonus) }}</span>
+          </StatRollValue>
+        </span>
       </div>
     </div>
 
@@ -135,7 +144,7 @@ import { formatBonus as signed } from '@/shared/lib/dnd'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import SvgIcon from '@/shared/ui/SvgIcon'
 import DndStatRollMenu from './DndStatRollMenu.vue'
-import RollModeBadge from '@/features/character-editor/blocks/dnd/components/RollModeBadge.vue'
+import StatRollValue from './StatRollValue.vue'
 
 const props = defineProps({
   title: { type: String, default: '' },
@@ -169,12 +178,13 @@ const rollMenu = shallowRef(null)
 
 function openRollMenu(event, kind, skill) {
   hideTooltip()
-  if (rollMenu.value?.anchor === event.currentTarget) {
+  const anchor = event.currentTarget
+  if (rollMenu.value?.anchor === anchor) {
     rollMenu.value = null
     return
   }
   rollMenu.value = {
-    anchor: event.currentTarget, kind, id: skill?.id,
+    anchor, kind, id: skill?.id,
     title: skill?.title || `${props.title} — ${kind === 'save' ? 'спасбросок' : 'проверка'}`,
     total: skill?.bonus ?? (kind === 'save' ? props.save : props.checkTotal ?? props.mod),
     details: skill?.bonusDetails || basicDetails(kind),
@@ -235,144 +245,4 @@ function hideTooltip() {
 onBeforeUnmount(hideTooltip)
 </script>
 
-<style scoped>
-.stat-view {
-  padding: var(--spacing-small) var(--spacing-medium) var(--spacing-medium);
-  position: relative;
-  box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
-}
-
-.stat-icon { width: 26px; height: 26px; align-self: center; flex-shrink: 0; }
-
-/* ── Save chip ── */
-.save-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: color-mix(in srgb, var(--surface-raised) 60%, var(--surface));
-  border: 0;
-  border-radius: 8px;
-  padding: 3px 8px 3px 6px;
-  user-select: none;
-  cursor: pointer;
-  transition: background-color 0.15s;
-  flex-shrink: 0;
-  box-sizing: border-box;
-  min-height: var(--layout-sheet-value-height);
-  min-width: calc(var(--layout-sheet-value-width) + 12px);
-  justify-content: center;
-  font-family: var(--type-sheet-save-family);
-  font-size: var(--type-sheet-save-size);
-  font-weight: var(--type-sheet-save-weight);
-  line-height: var(--type-sheet-save-line-height);
-  letter-spacing: var(--type-sheet-save-tracking);
-}
-@media (hover: hover) { .save-chip:hover { background: var(--surface-active); } }
-
-.save-label {
-  color: var(--text-muted);
-  flex-shrink: 0;
-}
-
-.save-chip-val { color: var(--text-1); font-weight: 700; }
-
-/* ── Modifier ── */
-.stat-body {
-  display: flex;
-  align-items: baseline;
-  gap: 7px;
-  cursor: pointer;
-}
-
-.stat-mod {
-  font-family: var(--type-sheet-stat-family);
-  font-variant-numeric: tabular-nums;
-  font-size: var(--type-sheet-stat-size);
-  font-weight: var(--type-sheet-stat-weight);
-  line-height: 1;
-  letter-spacing: var(--type-sheet-stat-tracking);
-}
-
-.stat-raw { color: var(--text-2); font-size: 15px; font-weight: 500; }
-
-/* ── Skills ── */
-.skills { display: flex; flex-direction: column; gap: 1px; margin-top: var(--spacing-xs); }
-
-.skill-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding-block: 2px;
-  border-radius: 7px;
-  min-height: 26px;
-}
-
-.skill-skeleton { justify-content: space-between; pointer-events: none; }
-.skill-label { display: flex; flex: 1; align-items: center; gap: var(--spacing-compact); min-width: 0; }
-.skill-name {
-  color: var(--text-1);
-  font-size: 13px;
-  flex: 0 1 auto;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.skill-proficiency { display: inline-flex; gap: var(--spacing-xs); flex: none; }
-.proficiency-dot {
-  width: var(--spacing-compact);
-  height: var(--spacing-compact);
-  flex: none;
-  border-radius: 50%;
-  background: var(--text-2);
-}
-
-.skill-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  min-height: var(--layout-sheet-value-height);
-  background: var(--surface-raised);
-  border: 0;
-  border-radius: 7px;
-  padding: 2px 7px 3px;
-  color: var(--text-1);
-  font-size: 13px;
-  font-weight: 700;
-  flex-shrink: 0;
-  min-width: var(--layout-sheet-value-width);
-  text-align: center;
-  line-height: 1.3;
-  cursor: pointer;
-  transition: border-color 0.12s, background 0.12s;
-}
-@media (hover: hover) { .skill-chip:hover { background: var(--surface-active); } }
-
-.skill-tooltip-breakdown { display: grid; gap: 6px; width: min(100%, 340px); min-width: 0; margin-left: auto; }
-.skill-tooltip-row { display: grid; grid-template-columns: minmax(0, 1fr) 3.25ch; align-items: baseline; column-gap: 12px; color: var(--text-muted); font-size: 11px; line-height: 1.25; }
-.skill-tooltip-row span { min-width: 0; overflow-wrap: anywhere; text-align: right; }
-.skill-tooltip-row strong { color: var(--text-1); font-size: 12px; font-variant-numeric: tabular-nums; text-align: right; }
-.skill-tooltip-total { margin-top: 2px; padding-top: 6px; border-top: 1px solid var(--border); color: var(--text-1); font-weight: 700; }
-
-/* ── Mobile variant ── */
-.stat-view--mobile .skill-chip, .stat-view--mobile .save-chip { min-height: var(--layout-sheet-value-compact-height); }
-.stat-view--mobile .skill-chip { min-width: var(--layout-sheet-value-compact-width); }
-.stat-view--mobile .save-chip { min-width: calc(var(--layout-sheet-value-compact-width) + 12px); }
-.stat-view--mobile .skill-item { min-height: 32px; border-radius: 10px; gap: 8px; }
-.stat-view--mobile .skill-name { font-size: 15px; }
-.stat-view--mobile .skill-chip { padding: 4px 10px 5px; font-size: 16px; border-radius: 9px; }
-.stat-view--mobile .save-chip {
-  padding: 5px 8px 5px 6px;
-  border-radius: 10px;
-  font-size: var(--type-sheet-save-compact-size);
-  line-height: var(--type-sheet-save-compact-line-height);
-}
-.stat-view--mobile .stat-mod { font-size: var(--type-sheet-stat-compact-size); letter-spacing: var(--type-sheet-stat-compact-tracking); }
-.stat-view--mobile .stat-raw { font-size: 18px; }
-.stat-view--mobile .stat-icon { width: 32px; height: 32px; }
-.stat-view--mobile .skills { gap: 2px; }
-
-</style>
+<style scoped src="./DndStatView.css" />

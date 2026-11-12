@@ -18,13 +18,15 @@ useDiceStore(pinia).rollD20 = (title, bonus, mode, options) => window.rolls.push
 const state = reactive({
   value: { value: { base: 16, bonuses: [] }, save_up: true, save_bonuses: [{ value: 1 }], skills: { 4: { up: 2 } } },
   checkEffects: [{ mode: 'disadvantage', source: 'Эффект проверки' }],
+  saveEffects: [{ mode: 'advantage', source: 'Эффект спасброска' }],
+  skillEffects: [{ mode: 'advantage', source: 'Способность' }, { mode: 'disadvantage', source: 'Доспех' }],
 })
 window.statState = state
 const ctx = {
   ownerMode: true,
   characterRolls: { effects: ({ kind }) => kind === 'skill_check'
-    ? [{ mode: 'advantage', source: 'Способность' }, { mode: 'disadvantage', source: 'Доспех' }]
-    : kind === 'saving_throw' ? [{ mode: 'advantage', source: 'Эффект спасброска' }] : state.checkEffects },
+    ? state.skillEffects
+    : kind === 'saving_throw' ? state.saveEffects : state.checkEffects },
   characterDerivedEffects: blessingEffects(),
   characterCombatEffects: {
     rollTriggers: scope => [{ scope }],
