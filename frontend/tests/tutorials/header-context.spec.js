@@ -1,10 +1,10 @@
 import { expect,test } from '@playwright/test'
 import { fixture } from './fixtures/character-layout'
 
-async function open(page,width,{longName=false,owner=true,withCondition=true,deferredSVG=false}={}) {
+async function open(page,width,{longName=false,owner=true,withCondition=true,deferredSVG=false,duration={kind:'manual'}}={}) {
   await page.setViewportSize({width,height:650})
   const state=await fixture(page,'DND5',owner)
-  if(withCondition) state.document().values.states=[{uid:'poison',effect_id:951}]
+  if(withCondition) state.document().values.states=[{uid:'poison',effect_id:951,duration}]
   if(longName) state.document().values.name='Очень длинное имя персонажа '.repeat(5)
   await page.route(url=>url.pathname==='/api/items/by-ids',route=>route.fulfill({json:{items:[{id:951,typeId:15,name:'Отравление',svgId:deferredSVG?99:undefined,data:{code:'poisoned',desc:'Состояние отравления'}}]}}))
   if(deferredSVG) await page.route('**/api/svg/99',route=>route.fulfill({contentType:'image/svg+xml',body:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M2 2h20v20H2z"/></svg>'}))
@@ -16,15 +16,20 @@ async function open(page,width,{longName=false,owner=true,withCondition=true,def
 }
 for(const [width,longName,inline] of [[390,false,false],[700,false,false],[834,false,true],[834,true,false],[1440,true,true]]) {
   test(`conditions use available header space at ${width} (long name=${longName})`,async({page},testInfo)=>{
-    await open(page,width,{longName})
+    await open(page,width,{longName,duration:{kind:'minutes',value:10}})
     const header=page.locator('.character-workspace-header')
     await expect.poll(()=>header.evaluate(node=>{
       const tile=node.querySelector('.dnd-heading').getBoundingClientRect(),context=node.querySelector('.workspace-header-context').getBoundingClientRect()
       return {inline:node.classList.contains('workspace-header--context-inline'),right:context.left>tile.right,below:context.top>=tile.bottom-.5}
     })).toMatchObject(inline ? {inline:true,right:true} : {inline:false,below:true})
     await expect(header.locator('.dsov-icon .item-icon')).toBeVisible()
-    await expect(header.locator('.dsov-icon')).toHaveCSS('width','24px')
-    await expect(header.locator('.dsov-icon .item-icon')).toHaveCSS('width','24px')
+    const portraitSize=await header.locator('.portrait').evaluate(node=>getComputedStyle(node).width)
+    await expect(header.locator('.dsov-icon')).toHaveCSS('width',portraitSize)
+    await expect(header.locator('.dsov-icon .item-icon')).toHaveCSS('width',portraitSize)
+    await expect(header.locator('.dsov-duration')).toHaveText('10 минут')
+    await expect(header.locator('.dsov-duration svg')).toBeVisible()
+    const caption=await header.locator('.dsov-copy').evaluate(node=>({nameBottom:node.querySelector('.dsov-name').getBoundingClientRect().bottom,durationTop:node.querySelector('.dsov-duration').getBoundingClientRect().top}))
+    expect(caption.durationTop).toBeGreaterThan(caption.nameBottom)
     await expect.poll(()=>header.locator('.dsov-icon img').evaluate(img=>img.complete && img.naturalWidth>0)).toBe(true)
     const iconBounds=await header.locator('.dsov-icon').evaluate(node=>{
       const box=node.getBoundingClientRect(),image=node.querySelector('img').getBoundingClientRect()
@@ -47,6 +52,7 @@ for(const [width,longName,inline] of [[390,false,false],[700,false,false],[834,f
     await expect(character).toHaveCSS('border-bottom-right-radius','12px')
     await page.keyboard.press('Escape')
     const add=header.getByRole('button',{name:'Добавить состояние',exact:true})
+    await expect(add).toHaveText('Состояние')
     await expect(add).toHaveCSS('border-top-style','dashed')
     await add.click();await expect(page.getByRole('dialog',{name:'Эффекты и состояния',exact:true})).toBeVisible()
     await page.keyboard.press('Escape')
@@ -62,9 +68,20 @@ test('read-only characters expose icons but cannot add conditions',async({page})
   await open(page,834,{owner:false})
   await expect(page.getByRole('button',{name:'Добавить состояние',exact:true})).toBeDisabled()
   await expect(page.locator('.dsov-icon .item-icon')).toBeVisible()
+  await expect(page.locator('.dsov-duration')).toHaveText('До ручного снятия')
 })
 
 test('condition icons referenced by SVG ID load into the header',async({page})=>{
   await open(page,834,{deferredSVG:true})
   await expect(page.locator('.dsov-icon .svg-icon--asset')).toHaveCSS('mask-image',/blob:/)
+})
+
+test('long condition durations wrap within a phone header',async({page})=>{
+  const text='До окончания следующего продолжительного отдыха и выполнения условия. '.repeat(3).slice(0,200)
+  await open(page,390,{duration:{kind:'custom',text}})
+  await expect(page.locator('.dsov-duration')).toHaveText(text)
+  await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(390)
+  const bounds=await page.locator('.dsov-effect').evaluate(node=>({card:node.getBoundingClientRect().toJSON(),label:node.querySelector('.dsov-duration').getBoundingClientRect().toJSON()}))
+  expect(bounds.label.right).toBeLessThanOrEqual(bounds.card.right+.5)
+  expect(bounds.label.bottom).toBeLessThanOrEqual(bounds.card.bottom+.5)
 })

@@ -13,7 +13,7 @@ describe('desktop status overview', () => {
     expect(source).toContain('v-if="summaryItems.length || showAddAction"')
     expect(viewSource).not.toContain('sheet-tile-title')
     expect(viewSource).toContain('class="dsov-add"')
-    expect(viewSource).toContain("header ? 'Добавить состояние' : 'Состояние'")
+    expect(viewSource).toContain('<span>Состояние</span>')
     expect(viewSource).not.toContain('<Pencil')
     expect(viewSource).toMatch(/\.dsov-add \{[\s\S]*?border: 1px dashed/)
     expect(viewSource).toMatch(/\.dsov \{[\s\S]*?padding: 0 0 15px 15px;/)

@@ -12,7 +12,8 @@
             class="dsov-effect action-menu-source"
             :class="{ 'action-menu-source--open': open }"
             type="button"
-            :aria-label="iconsOnly ? item.value : undefined"
+            :aria-label="iconsOnly || header ? item.value : undefined"
+            :aria-description="header && item.duration ? `Длительность: ${item.duration}` : undefined"
             :style="{ '--status-color': item.color || 'var(--text-muted)' }"
             @click="$emit('hide-tooltip')"
             @mouseenter="$emit('show-tooltip', $event, item)"
@@ -40,8 +41,8 @@
                 <span class="dsov-name" :title="item.value">{{ item.value }}</span>
                 <span v-if="item.level" class="dsov-level">Уровень {{ item.level }}</span>
               </span>
-              <span v-if="!header && item.duration" class="dsov-duration" :title="`Длительность: ${item.duration}`">
-                <Clock3 :size="12" aria-hidden="true" />{{ item.duration }}
+              <span v-if="item.duration" class="dsov-duration" :title="`Длительность: ${item.duration}`">
+                <Hourglass :size="12" aria-hidden="true" />{{ item.duration }}
               </span>
               <span v-if="!header && item.thesis" class="dsov-thesis">{{ item.thesis }}</span>
             </span>
@@ -78,9 +79,9 @@
       </RowActionMenu>
     </div>
 
-    <button v-if="showAddAction" class="dsov-add" type="button" :disabled="!editable" @click.stop="$emit('add')">
+    <button v-if="showAddAction" class="dsov-add" type="button" :aria-label="header ? 'Добавить состояние' : undefined" :disabled="!editable" @click.stop="$emit('add')">
       <Plus :size="15" :stroke-width="1.8" aria-hidden="true" />
-      <span>{{ header ? 'Добавить состояние' : 'Состояние' }}</span>
+      <span>Состояние</span>
     </button>
   </div>
 </template>
@@ -88,7 +89,7 @@
 <script setup>
 import StatusMechanicsMenu from './StatusMechanicsMenu.vue'
 import { reactive } from 'vue'
-import { BatteryLow, Clock3, Minus, Plus, Sparkles } from '@lucide/vue'
+import { BatteryLow, Clock3, Hourglass, Minus, Plus, Sparkles } from '@lucide/vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
@@ -96,7 +97,7 @@ import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import { statusIconItem } from '../../../lib/statusIcon'
 import { layoutTokens } from '@/app/design-tokens'
 const failedIcons=reactive(new Set())
-const headerIconSize = layoutTokens['sheet-header-status-icon']
+const headerIconSize = layoutTokens['sheet-header-icon']
 
 defineProps({
   items: { type: Array, default: () => [] },
@@ -122,13 +123,14 @@ function monogram(value) {
 <style scoped>
 .dsov.dsov--header {padding:0;gap:8px}
 .dsov--header .dsov-row {gap:8px;flex-wrap:wrap;max-width:100%}
-.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-status-icon) minmax(0,1fr);gap:6px;min-height:32px;padding:4px 6px}
-.dsov--header .dsov-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon);min-width:var(--layout-sheet-header-status-icon)}
-.dsov--header .dsov-item-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon)}
+.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-icon) minmax(0,1fr);gap:var(--spacing-small);min-height:var(--layout-sheet-header-icon);padding:0 var(--spacing-compact)}
+.dsov--header .dsov-icon {width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);min-width:var(--layout-sheet-header-icon);border-radius:var(--radius-input)}
+.dsov--header .dsov-item-icon {width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon)}
 .dsov--header .dsov-icon :deep(img), .dsov--header .dsov-icon :deep(svg) {width:100%;height:100%}
-.dsov--header .dsov-copy {gap:0}
-.dsov--header .dsov-name {font-size:12px}
-.dsov--header .dsov-add {width:auto;height:32px;padding-inline:8px;font-size:12px;white-space:nowrap}
+.dsov--header .dsov-copy {gap:var(--spacing-xs)}
+.dsov--header .dsov-name {font-size:var(--type-group-size);line-height:var(--type-group-line-height)}
+.dsov--header .dsov-duration {font-size:var(--type-context-size);line-height:var(--type-context-line-height)}
+.dsov--header .dsov-add {width:auto;height:var(--layout-touch-min);padding-inline:var(--spacing-small);font-size:var(--type-group-size);white-space:nowrap}
 .dsov--header {flex-wrap:wrap}
 .dsov-add:disabled {opacity:.45;cursor:not-allowed}
 .dsov { display: flex; min-width: 0; align-items: center; gap: 13px; padding: 0 0 15px 15px; }
