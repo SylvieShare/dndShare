@@ -23,7 +23,7 @@
           @keydown.enter.prevent="openRollMenu($event, 'save')"
           @keydown.space.prevent="openRollMenu($event, 'save')"
         >
-          <StatRollValue :mode="saveMode" :source="saveModeSource" :cancelled="saveModeCancelled" :active="rollMenu?.kind === 'save'">
+          <StatRollValue :compact="mobileVariant" :mode="saveMode" :source="saveModeSource" :cancelled="saveModeCancelled" :active="rollMenu?.kind === 'save'">
             <span class="save-number">
               <span class="save-label">Спас</span>
               <span v-if="saveUp" class="proficiency-dot" aria-hidden="true"></span>
@@ -46,7 +46,7 @@
       @keydown.space.prevent="openRollMenu($event, 'stat')"
     >
       <SvgIcon v-if="suggestSvg || suggestSvgId" class="stat-icon" :svg="suggestSvg" :svg-id="suggestSvgId" :color="color" />
-      <StatRollValue primary :mode="checkMode" :source="checkModeSource" :cancelled="checkModeCancelled" :active="rollMenu?.kind === 'stat'">
+      <StatRollValue primary :compact="mobileVariant" :mode="checkMode" :source="checkModeSource" :cancelled="checkModeCancelled" :active="rollMenu?.kind === 'stat'">
         <span class="stat-number">
           <span class="stat-mod" :style="{ color }">{{ signed(mod) }}</span>
           <span class="stat-raw">({{ raw }})</span>
@@ -90,7 +90,7 @@
           @keydown.enter.prevent="openRollMenu($event, 'skill', skill)"
           @keydown.space.prevent="openRollMenu($event, 'skill', skill)"
         >
-          <StatRollValue :mode="skill.rollMode" :source="skill.rollModeSource" :cancelled="skill.rollModeCancelled" :active="rollMenu?.kind === 'skill' && rollMenu?.id === skill.id">
+          <StatRollValue :compact="mobileVariant" :mode="skill.rollMode" :source="skill.rollModeSource" :cancelled="skill.rollModeCancelled" :active="rollMenu?.kind === 'skill' && rollMenu?.id === skill.id">
             <span class="skill-chip-val">{{ signed(skill.bonus) }}</span>
           </StatRollValue>
         </span>

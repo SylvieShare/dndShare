@@ -30,6 +30,9 @@ for (const width of [390, 834, 1440]) test(`stat dice badges, cached icons and e
   await expect.poll(() => strength.locator('.stat-icon').evaluate(node => node.style.maskImage)).toContain('blob:')
   await expect.poll(() => page.locator('.stat-icon').evaluateAll(nodes => nodes.filter(node => node.style.maskImage.includes('blob:')).length)).toBe(6)
   await expect(strength.locator('.system-die__value')).toHaveText(['1', '20'])
+  const valueHeight = (await strength.locator('.stat-mod').boundingBox()).height
+  expect((await strength.locator('.stat-roll-value').boundingBox()).height).toBeLessThanOrEqual(valueHeight + 1)
+  expect((await strength.locator('.roll-badge').boundingBox()).height).toBeLessThanOrEqual(valueHeight)
   await page.locator('[data-sheet-field="STR"]').screenshot({ path: testInfo.outputPath('stat-dice-badge.png') })
   await page.screenshot({ path: testInfo.outputPath('stats-layout.png') })
   await strength.click()

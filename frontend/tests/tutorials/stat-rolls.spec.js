@@ -74,6 +74,11 @@ for (const width of [390, 834, 1920]) {
         await page.evaluate(key => { window.statState[key] = [] }, effects)
         await expect(control.locator('.roll-badge')).toHaveCount(0)
         const original = await number.boundingBox()
+        const expectedHeight = effects === 'checkEffects' ? (width < 640 ? 44 : 26) : (width < 640 ? 32 : 28)
+        const group = control.locator('.stat-roll-value')
+        const originalGroup = await group.boundingBox()
+        expect(originalGroup.height).toBeGreaterThanOrEqual(expectedHeight)
+        expect(originalGroup.height).toBeLessThanOrEqual(expectedHeight + 1)
         for (const mode of ['advantage', 'disadvantage']) {
           await page.evaluate(({ key, mode }) => { window.statState[key] = [{ mode }] }, { key: effects, mode })
           await expect(control.locator('.stat-roll-value--mode')).toBeVisible()
@@ -81,6 +86,9 @@ for (const width of [390, 834, 1920]) {
           const current = await number.boundingBox()
           for (const dimension of ['x', 'y', 'width', 'height']) expect(Math.abs(current[dimension] - original[dimension])).toBeLessThan(1)
           const badge = await control.locator('.roll-badge').boundingBox()
+          expect((await group.boundingBox()).height).toBe(originalGroup.height)
+          expect(badge.height).toBeLessThanOrEqual(expectedHeight)
+          expect(await group.evaluate(el => getComputedStyle(el, '::before').inset)).toBe('0px')
           if (effects === 'checkEffects') expect(badge.x).toBeGreaterThan(current.x + current.width)
           else expect(badge.x + badge.width).toBeLessThan(current.x)
         }
