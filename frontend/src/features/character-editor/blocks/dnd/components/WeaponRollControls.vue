@@ -10,13 +10,13 @@
     <RollModePicker v-if="scope === 'attack'" :model-value="attackRollMode" neutral-mode="auto" @update:model-value="emit('update:attackRollMode', $event)" />
     <template v-if="scope === 'damage'">
       <FormField label="Критическое попадание" title="Удваивает кости урона, но не постоянные прибавки.">
-        <ToggleSwitch :model-value="critical" aria-label="Критическое попадание" @update:model-value="emit('update:critical', $event)" />
+        <ToggleSwitch surface="raised" :model-value="critical" aria-label="Критическое попадание" @update:model-value="emit('update:critical', $event)" />
       </FormField>
       <FormField v-if="bonusActionOption" label="Урон бонусным действием" :title="bonusActionOption.hint">
-        <ToggleSwitch :model-value="bonusAction" :disabled="twoHanded" aria-label="Урон бонусным действием" @update:model-value="!twoHanded && emit('update:bonusAction', $event)" />
+        <ToggleSwitch surface="raised" :model-value="bonusAction" :disabled="twoHanded" aria-label="Урон бонусным действием" @update:model-value="!twoHanded && emit('update:bonusAction', $event)" />
       </FormField>
       <FormField v-if="versatile" label="Двумя руками" title="Использует кость урона для хвата двумя руками.">
-        <ToggleSwitch :model-value="twoHanded" :disabled="thrown || bonusAction" aria-label="Двумя руками" @update:model-value="!thrown && !bonusAction && emit('update:twoHanded', $event)" />
+        <ToggleSwitch surface="raised" :model-value="twoHanded" :disabled="thrown || bonusAction" aria-label="Двумя руками" @update:model-value="!thrown && !bonusAction && emit('update:twoHanded', $event)" />
       </FormField>
     </template>
     <ChoiceCard v-for="option in (scope === 'attack' && useKey ? [] : modes)" :key="option.key"

@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 
 const statSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L4 13h6l-1 9 11-13h-7z"/></svg>'
 test.beforeEach(async ({ page }) => {
-  await page.route('**/api/svg/901', route => route.fulfill({ contentType: 'image/svg+xml', body: statSvg }))
+  await page.route('**/api/svg/*', route => route.fulfill({ contentType: 'image/svg+xml', body: statSvg }))
 })
 
 for (const width of [390, 834, 1920]) {
@@ -42,8 +42,9 @@ for (const width of [390, 834, 1920]) {
           const arrow = await button.locator('.share-choice-card__icon').boundingBox()
           const label = await button.locator('.share-choice-card__label').boundingBox()
           expect(box.height).toBeGreaterThanOrEqual(48)
-          expect(box.height).toBeLessThanOrEqual(56)
-          expect(arrow.x + arrow.width).toBeLessThan(label.x)
+          expect(box.height).toBeLessThanOrEqual(104)
+          expect(arrow.y + arrow.height).toBeLessThanOrEqual(label.y)
+          await expect(button.locator('.roll-badge--large .system-die--d20')).toHaveCount(2)
           expect(await button.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true)
         }
         const bounds = await menu.boundingBox()
@@ -60,11 +61,31 @@ for (const width of [390, 834, 1920]) {
       expect(await page.evaluate(() => window.writes)).toEqual([])
     })
 
-    test('blessing is enabled for saves and can be omitted for one roll', async ({ page }) => {
+    test('blessing is enabled for saves and can be omitted for one roll', async ({ page }, testInfo) => {
       const trigger = page.getByRole('button', { name: 'Ловкость — спасбросок', exact: true })
       await trigger.click()
-      await expect(page.getByRole('switch', { name: 'Благословение' })).toHaveAttribute('aria-checked', 'true')
-      await page.getByRole('switch', { name: 'Благословение' }).click()
+      const blessing = page.getByRole('switch', { name: 'Благословение', exact: true })
+      await expect(blessing).toHaveAttribute('aria-checked', 'true')
+      expect(await blessing.evaluate(node => node.previousElementSibling?.getAttribute('role'))).not.toBe('separator')
+      await expect.poll(() => blessing.locator('.item-icon .svg-icon').evaluate(node => node.style.maskImage)).toContain('blob:')
+      await blessing.locator('.roll-bonus-option__name').click()
+      await expect(blessing).toHaveAttribute('aria-checked', 'false')
+      await page.mouse.move(0, 0)
+      const contrast = await blessing.locator('.share-toggle-switch__track').evaluate(track => {
+        let parent = track.parentElement
+        while (parent && getComputedStyle(parent).backgroundColor === 'rgba(0, 0, 0, 0)') parent = parent.parentElement
+        return { track: getComputedStyle(track).backgroundColor, background: parent && getComputedStyle(parent).backgroundColor }
+      })
+      expect(contrast.track).not.toBe(contrast.background)
+      await page.getByRole('menu').screenshot({ path: testInfo.outputPath('roll-menu.png'), animations: 'disabled' })
+      await blessing.locator('.item-icon').click()
+      await expect(blessing).toHaveAttribute('aria-checked', 'true')
+      await blessing.locator('.roll-bonus-option__formula').click()
+      await expect(blessing).toHaveAttribute('aria-checked', 'false')
+      await blessing.press('Space')
+      await expect(blessing).toHaveAttribute('aria-checked', 'true')
+      await blessing.press('Space')
+      await expect(blessing).toHaveAttribute('aria-checked', 'false')
       await page.getByRole('menuitem', { name: 'Бросить', exact: true }).click()
       expect(await page.evaluate(() => window.rolls.at(-1).options.bonus_formula)).toBe('')
       await expect(page.getByRole('menu')).toHaveCount(0)

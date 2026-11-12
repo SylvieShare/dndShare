@@ -8,9 +8,10 @@ for (const width of [390, 834, 1440]) test(`stat dice badges, cached icons and e
   api.document().values.abilities_class = [{ id: 777 }]
   await page.route('**/api/items/by-ids?**', route => {
     const ids = new URL(route.request().url()).searchParams.get('ids').split(',').map(Number)
-    return route.fulfill({ json: { items: ids.map(id => ({ id, typeId: id === 777 ? 5 : 1, name: id === 777 ? 'Режимы характеристик' : 'Предмет', data: id === 777 ? { derived_effects: [
+    return route.fulfill({ json: { items: ids.map(id => ({ id, typeId: id === 777 ? 5 : 1, iconSvgId: id === 777 ? 920 : null, name: id === 777 ? 'Режимы характеристик' : 'Предмет', data: id === 777 ? { derived_effects: [
       { kind: 'roll_mode', mode: 'advantage', scopes: ['ability_check'], ability_ids: [1] },
       { kind: 'roll_mode', mode: 'disadvantage', scopes: ['ability_check'], ability_ids: [2] },
+      { kind: 'roll_bonus', formula: '1d4', scopes: ['ability_check'] },
     ] } : {} })) } })
   })
   const suggests = {
@@ -23,6 +24,7 @@ for (const width of [390, 834, 1440]) test(`stat dice badges, cached icons and e
   await page.goto('/char/test')
   const strength = page.getByRole('button', { name: 'Сила — проверка', exact: true })
   const dexterity = page.getByRole('button', { name: 'Ловкость — проверка', exact: true })
+  await expect(strength).toBeVisible({ timeout: 15000 })
   await expect(strength.locator('.roll-badge__die--discarded')).toHaveAttribute('data-roll-value', '1')
   await expect(dexterity.locator('.roll-badge__die--discarded')).toHaveAttribute('data-roll-value', '20')
   await expect.poll(() => strength.locator('.stat-icon').evaluate(node => node.style.maskImage)).toContain('blob:')
@@ -32,6 +34,11 @@ for (const width of [390, 834, 1440]) test(`stat dice badges, cached icons and e
   await strength.click()
   const menu = page.getByRole('menu', { name: 'Сила — проверка', exact: true })
   const edit = menu.getByRole('menuitem', { name: 'Изменить', exact: true })
+  await expect(menu.getByRole('button', { name: 'Преимущество', exact: true }).locator('.roll-badge--large .system-die')).toHaveCount(2)
+  const bonus = menu.getByRole('switch', { name: 'Режимы характеристик', exact: true })
+  await expect.poll(() => bonus.locator('.item-icon .svg-icon').evaluate(node => node.style.maskImage)).toContain('blob:')
+  await bonus.locator('.roll-bonus-option__name').click()
+  await expect(bonus).toHaveAttribute('aria-checked', 'false')
   expect((await edit.boundingBox()).y).toBeLessThan((await menu.getByText('Режим броска', { exact: true }).boundingBox()).y)
   await edit.click()
   await expect(page.getByRole('dialog', { name: 'Сила', exact: true })).toBeVisible()

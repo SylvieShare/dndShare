@@ -25,10 +25,12 @@ const props = defineProps({
   filter: { type: Boolean, default: false },
 })
 
-const usesTypeIcon = computed(() => !props.item?.iconImageUrl && !props.item?.svg && !props.item?.svgId && props.fallbackToType && !!(props.type?.iconImageUrl || props.type?.svg || props.type?.svgId))
+const itemSvgId = computed(() => props.item?.iconSvgId ?? props.item?.svgId ?? null)
+const typeSvgId = computed(() => props.type?.iconSvgId ?? props.type?.svgId ?? null)
+const usesTypeIcon = computed(() => !props.item?.iconImageUrl && !props.item?.svg && !itemSvgId.value && props.fallbackToType && !!(props.type?.iconImageUrl || props.type?.svg || typeSvgId.value))
 const iconImageUrl = computed(() => props.item?.iconImageUrl || (usesTypeIcon.value ? props.type.iconImageUrl : ''))
 const iconSvg = computed(() => props.item?.svg || (usesTypeIcon.value ? props.type?.svg : '') || '')
-const iconSvgId = computed(() => props.item?.svgId || (usesTypeIcon.value ? props.type?.svgId : null))
+const iconSvgId = computed(() => itemSvgId.value || (usesTypeIcon.value ? typeSvgId.value : null))
 const iconStyle = computed(() => {
   const size = typeof props.size === 'number' ? `${props.size}px` : props.size
   return { width: size, height: size }

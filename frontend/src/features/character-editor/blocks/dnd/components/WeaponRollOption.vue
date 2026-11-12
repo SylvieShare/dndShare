@@ -10,7 +10,7 @@
         <SpellSlotSphere :size="22" :color="option.resourceCost.color" :spent="option.resourceCost.unavailable" :interactive="false" aria-hidden="true" />
       </span>
       <WeaponResourceAmount v-if="option.units" :units="option.units" :label="option.label" :disabled="option.disabled" @change="value => $emit('amount', option.key, value)" />
-      <ToggleSwitch v-else :model-value="option.checked" :disabled="option.disabled" :aria-label="option.label" @update:model-value="value => $emit('select', option.key, value)" />
+      <ToggleSwitch v-else surface="raised" :model-value="option.checked" :disabled="option.disabled" :aria-label="option.label" @update:model-value="value => $emit('select', option.key, value)" />
     </FormField>
     <small v-if="option.condition" class="damage-option-condition">{{ option.condition }}</small>
   </div>

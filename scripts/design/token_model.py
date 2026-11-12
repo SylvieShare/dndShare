@@ -26,7 +26,7 @@ REQUIRED = {
                'checkbox-size', 'slider-track', 'slider-thumb', 'compact-header-inset', 'morph-dismiss-distance',
                'item-view-window-blur', 'item-view-window-width', 'item-view-window-compact-max', 'weapon-metrics-attack-width', 'weapon-metrics-gap', 'weapon-metrics-attack-min-height',
                'morph-stacked-max', 'morph-editor-width', 'morph-preview-min', 'morph-preview-max-height', 'morph-margin',
-               'stat-editor-width', 'roll-mode-menu-width', 'roll-mode-card-min-height', 'roll-mode-badge-die', 'weapon-damage-die'},
+               'stat-editor-width', 'roll-mode-menu-width', 'roll-mode-card-min-height', 'roll-mode-badge-die', 'roll-mode-menu-die', 'weapon-damage-die'},
     'collection': {'min-height', 'padding', 'emblem', 'art-inset', 'grid-gap'},
     'canvas': {'step', 'radius', 'opacity'},
     'spacing': {'xs', 'compact', 'small', 'label', 'medium', 'large', 'page', 'section'},

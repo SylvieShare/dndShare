@@ -74,6 +74,7 @@ export function collectCharacterDerivedEffects(values = {}, itemsById = new Map(
       key: `${valueId}:${entry.uid || entry.id}:derived:${index}`,
       ownerLevel,
       source_label: item.name || 'Способность',
+      source_item: item,
       source_entry: entry,
       weapon_uid: item.data?.weapon && ['weapon_attack_bonus', 'weapon_damage_bonus', 'critical_threshold'].includes(rule.kind) ? entry.uid : null,
     })
