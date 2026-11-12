@@ -1,6 +1,6 @@
 <template>
   <EditorPanel>
-    <FormField label="Своё название">
+    <FormField label="Переименовать навык">
       <FormTextInput :value="skill.override_title" :placeholder="skill.originalTitle || 'Название навыка'"
         @update:value="override_title => $emit('change', { override_title })" />
     </FormField>
