@@ -1,5 +1,5 @@
 <template>
-  <ChoiceCard layout="icon" tinted centered :label="label" :color="color" :model-value="selected" :disabled="disabled"
+  <ChoiceCard layout="icon" tinted centered selection-indicator="outline" :label="label" :color="color" :model-value="selected" :disabled="disabled"
     :style="{ '--choice-card-icon-size': `${layoutTokens['roll-mode-menu-die']}px`, '--choice-card-label-size': 'var(--type-roll-mode-option-size)', '--choice-card-label-line-height': 'var(--type-roll-mode-option-line-height)' }"
     @update:model-value="emit('select', $event)">
     <template #icon><RollModeBadge :mode="mode" variant="large" :show-caption="false" embedded /></template>

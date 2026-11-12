@@ -43,9 +43,14 @@ for (const width of [390, 834, 1440]) test(`stat dice badges, cached icons and e
   for (const mode of ['Помеха', 'Преимущество']) {
     const option = menu.getByRole('button', { name: mode, exact: true })
     await expect(option).toHaveClass(/share-choice-card--tinted/)
-    expect((await option.boundingBox()).height).toBeGreaterThanOrEqual(112)
+    expect((await option.boundingBox()).height).toBeGreaterThanOrEqual(88)
+    expect((await option.boundingBox()).height).toBeLessThanOrEqual(90)
+    await expect(option.locator('.share-choice-card__check')).toHaveCount(0)
     await expect(option.locator('.share-choice-card__label')).toHaveCSS('font-size', '16px')
   }
+  await expect(menu.getByRole('button', { name: 'Преимущество', exact: true })).toHaveCSS('box-shadow', /inset/)
+  await expect(menu.getByRole('button', { name: 'Помеха', exact: true })).toHaveCSS('box-shadow', 'none')
+  await expect(strength.locator('[data-stat-roll-number]')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)')
   await expect(menu.getByRole('button', { name: 'Преимущество', exact: true }).locator('.roll-badge--large .system-die')).toHaveCount(2)
   const bonus = menu.getByRole('switch', { name: 'Режимы характеристик', exact: true })
   await expect.poll(() => bonus.locator('.item-icon .svg-icon').evaluate(node => node.style.maskImage)).toContain('blob:')

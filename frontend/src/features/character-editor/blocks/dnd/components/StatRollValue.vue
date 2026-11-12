@@ -18,8 +18,9 @@ const hasMode = computed(() => !props.cancelled && ['advantage', 'disadvantage']
 .stat-roll-value__number {display:inline-flex;align-items:center;flex:none;min-width:0;border-radius:var(--radius-input);background:var(--surface-raised);box-shadow:var(--stat-roll-focus-ring,none);transition:background-color var(--motion-feedback),box-shadow var(--motion-feedback)}
 .stat-roll-value--primary {min-height:calc(var(--layout-roll-mode-menu-die) + var(--type-context-line-height))}
 .stat-roll-value--primary .stat-roll-value__number {background:transparent}
-.stat-roll-value--primary.stat-roll-value--mode .stat-roll-value__number {background:var(--surface-raised)}
-.stat-roll-value:hover .stat-roll-value__number {background:var(--surface-active)}
+.stat-roll-value:not(.stat-roll-value--mode):hover .stat-roll-value__number {background:var(--surface-active)}
 .stat-roll-value--active .stat-roll-value__number {background:color-mix(in srgb,var(--accent) 16%,var(--surface-raised));box-shadow:0 0 0 var(--layout-border) var(--accent-soft)}
+.stat-roll-value--mode .stat-roll-value__number {background:transparent}
+.stat-roll-value--mode:hover::before {background:color-mix(in srgb,var(--stat-roll-mode-color) 18%,transparent)}
 @media (prefers-reduced-motion: reduce) {.stat-roll-value__number {transition:none}}
 </style>
