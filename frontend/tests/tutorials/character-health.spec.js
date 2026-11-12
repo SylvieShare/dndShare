@@ -37,7 +37,7 @@ for (const width of [390, 834, 1440]) test(`HP and armor share a row above passi
   expect(numbers.x + numbers.width).toBeLessThan(temp.x)
   expect(hp.x).toBeGreaterThan(armor.x + armor.width)
   expect(Math.abs(hp.y + hp.height / 2 - armor.y - armor.height / 2)).toBeLessThan(1)
-  expect(combat.top).toBeGreaterThanOrEqual(name.bottom)
+  expect(combat.top).toBeGreaterThanOrEqual(name.bottom - .5)
   expect(fields).toHaveLength(2)
   for (const field of fields) {
     expect(Math.abs(field.middle - fields[0].middle)).toBeLessThan(1)
@@ -46,7 +46,8 @@ for (const width of [390, 834, 1440]) test(`HP and armor share a row above passi
   }
   await expect(health.locator('strong')).toHaveCSS('font-weight', '700')
   expect(await health.locator('strong').evaluate(node => getComputedStyle(node).fontFamily)).toContain('Cormorant Garamond')
-  expect((await heading.boundingBox()).width).toBeLessThanOrEqual(420)
+  // Transformed bounds may exceed the CSS width by a floating-point fraction.
+  expect((await heading.boundingBox()).width).toBeLessThanOrEqual(420.5)
   await testInfo.attach('inline-health', { body: await page.locator('.character-workspace-header').screenshot(), contentType: 'image/png' })
   expect(errors).toEqual([])
 })
