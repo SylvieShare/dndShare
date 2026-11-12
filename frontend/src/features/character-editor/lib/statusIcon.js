@@ -9,7 +9,7 @@ const names = {
 }
 export function statusIconItem(entry, failed=false) {
   const item=entry.item
-  if(!failed && (item?.iconImageUrl || item?.svg)) return item
+  if(!failed && (item?.iconImageUrl || item?.svg || item?.svgId)) return item
   const code=item?.data?.code || names[String(entry.value || '').toLowerCase()]
-  return codes.has(code) ? {...item,iconImageUrl:'',svg:`/static/conditions/${code}.svg`} : null
+  return codes.has(code) ? {...item,iconImageUrl:`/static/conditions/${code}.svg`,svg:'',svgId:null} : null
 }

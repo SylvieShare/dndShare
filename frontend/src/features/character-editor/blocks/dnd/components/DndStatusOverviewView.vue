@@ -27,7 +27,7 @@
                 :item="statusIconItem(item, failedIcons.has(item.id))"
                 @error.capture="failedIcons.add(item.id)"
                 :fallback-to-type="false"
-                :size="iconSize"
+                :size="header ? 20 : iconSize"
               />
               <BatteryLow v-else-if="item.kind === 'exhaustion'" :size="38" :stroke-width="1.7" aria-hidden="true" />
               <Sparkles v-else-if="item.kind === 'inspiration'" :size="40" :stroke-width="1.7" aria-hidden="true" />
