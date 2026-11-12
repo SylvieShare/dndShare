@@ -22,19 +22,22 @@ for (const width of [390, 834, 1440]) test(`HP and armor share a row above passi
   await expect(health.locator('.health-heart')).toBeVisible()
   await expect(health.locator('[role="meter"]')).toHaveCount(0)
   await expect(heading.locator('canvas')).toHaveCount(0)
-  const numbers = await health.locator('.health-summary').boundingBox()
-  const temp = await health.locator('.health-temporary').boundingBox()
+  const { numbers, temp, avatar, name, combat, armor, hp, fields } = await heading.evaluate(node => {
+    const box = selector => node.querySelector(selector).getBoundingClientRect().toJSON()
+    return {
+      numbers: box('.health-summary'), temp: box('.health-temporary'),
+      avatar: box('.portrait'), name: box('.identity'),
+      combat: box('.heading-combat'), armor: box('.heading-armor'), hp: box('.heading-health'),
+      fields: [...node.querySelectorAll('.heading-metrics > span')].map(field => {
+        const rect = field.getBoundingClientRect()
+        return { left: rect.left, top: rect.top, middle: rect.y + rect.height / 2 }
+      }),
+    }
+  })
   expect(numbers.x + numbers.width).toBeLessThan(temp.x)
-  const avatar = await heading.locator('.portrait').boundingBox(), name = await heading.locator('.identity').boundingBox()
-  const combat = await heading.locator('.heading-combat').boundingBox(), armor = await heading.locator('.heading-armor').boundingBox()
-  const hp = await health.boundingBox()
   expect(hp.x).toBeGreaterThan(armor.x + armor.width)
   expect(Math.abs(hp.y + hp.height / 2 - armor.y - armor.height / 2)).toBeLessThan(1)
-  expect(combat.y).toBeGreaterThanOrEqual(name.y + name.height)
-  const fields = await heading.locator('.heading-metrics > span').evaluateAll(nodes => nodes.map(node => {
-    const box = node.getBoundingClientRect()
-    return { left: box.left, right: box.right, top: box.top, middle: box.y + box.height / 2 }
-  }))
+  expect(combat.top).toBeGreaterThanOrEqual(name.bottom)
   expect(fields).toHaveLength(2)
   for (const field of fields) {
     expect(Math.abs(field.middle - fields[0].middle)).toBeLessThan(1)
