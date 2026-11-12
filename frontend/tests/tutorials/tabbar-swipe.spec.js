@@ -47,6 +47,35 @@ const state = page => page.locator('.share-icon-navigation--compact').evaluate(b
   }),
 }))
 
+for (const width of [390, 834]) test(`a tapped tab leaves no stale frame after a swipe at ${width}`, async ({ page }, testInfo) => {
+  await openSheet(page, width)
+  const previous = page.getByRole('button', { name: 'Оружие', exact: true })
+  const next = page.getByRole('button', { name: 'Магия', exact: true })
+  await previous.tap()
+  await expect(previous).toHaveAttribute('aria-current', 'page')
+  await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/settling/)
+  const drag = await gesture(page)
+  await drag.move(.65)
+  await drag.end()
+  await expect(next).toHaveAttribute('aria-current', 'page')
+  await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/dragging|settling/)
+  await testInfo.attach('previous-tab-state', { body: JSON.stringify(await previous.evaluate(node => ({
+    hover: node.matches(':hover'), focus: node.matches(':focus'), focusVisible: node.matches(':focus-visible'),
+    border: getComputedStyle(node).borderColor, outline: getComputedStyle(node).outlineStyle,
+    hoverCapable: matchMedia('(hover: hover)').matches,
+  }))), contentType: 'application/json' })
+  await expect(previous).toHaveCSS('border-top-color', 'rgba(0, 0, 0, 0)')
+  expect(await previous.evaluate(node => node.matches(':focus-visible'))).toBe(false)
+  // Switching back to a keyboard must still show and move its own focus ring.
+  await previous.tap()
+  await page.keyboard.press('ArrowRight')
+  await expect(next).toBeFocused()
+  await expect(next).toHaveCSS('outline-style', 'solid')
+  await expect(next).toHaveCSS('outline-width', '2px')
+  await page.keyboard.press('Enter')
+  await expect(next).toHaveAttribute('aria-current', 'page')
+})
+
 for (const width of [390, 590]) test(`icons and captions follow a held swipe continuously at ${width}`, async ({ page }, testInfo) => {
   const api = await openSheet(page, width)
   const initial = await state(page)

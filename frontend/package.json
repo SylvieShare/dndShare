@@ -23,14 +23,14 @@
     "@capacitor/android": "8.6.0",
     "@capacitor/core": "8.6.0",
     "@lucide/vue": "^1.72.0",
-    "@sylvieshare/share-ui": "https://github.com/SylvieShare/share-ui/archive/refs/tags/v0.59.0.tar.gz",
+    "@sylvieshare/share-ui": "https://github.com/SylvieShare/share-ui/archive/refs/tags/v0.59.1.tar.gz",
+    "@vue/devtools-api": "^8.2.1",
     "html-to-image": "1.11.13",
     "pinia": "^4.1.0",
     "three": "0.187.0",
     "three-mesh-bvh": "0.9.18",
     "vue": "^3.5.45",
-    "vue-router": "^5.5.0",
-    "@vue/devtools-api": "^8.2.1"
+    "vue-router": "^5.5.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.0",
