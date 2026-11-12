@@ -10,7 +10,7 @@ const models = process.env.DNDSHARE_TEST_MODELS === '1'
 const hardware = models && process.env.DNDSHARE_TEST_HARDWARE === '1'
 const smokeURL = process.env.DNDSHARE_SMOKE_URL
 const diagnostics = /@local-model|@gpu/
-const productionNavigation = ['**/navigation/blur-production.spec.js', '**/navigation/action-menu-production.spec.js']
+const productionNavigation = ['**/navigation/blur-production.spec.js', '**/navigation/action-menu-production.spec.js', '**/navigation/android-insets-production.spec.js']
 const selected = process.argv.flatMap((argument, index, args) =>
   argument === '--project' ? [args[index + 1]] : argument.startsWith('--project=') ? [argument.slice(10)] : [])
 const wants = name => !selected.length || selected.some(project => project === name || project.includes('*'))
