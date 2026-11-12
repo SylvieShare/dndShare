@@ -201,6 +201,14 @@ Singleton `error_report_automation_lock` содержит непрозрачну
 возвращает незавершённые заявки в OPEN. Истёкшие claims восстанавливаются при
 чтении. Чтение также архивирует исправления старше одного часа.
 
+`error_report_event` добавляется миграцией 017. Триггеры сохраняют created,
+approved, answered, reopened, serious-approved и recovered в той же транзакции,
+что соответствующее изменение. Журнал содержит только id заявки, вид и время.
+Отдельная публикация committed-строк назначает последовательный delivery_id под
+advisory lock; бизнес-записи не ждут эту блокировку. Cursor не пропускает поздние
+commits. При удалении заявки журнал удаляется через FK cascade.
+[Доставка](../features/error-report-dispatch.md).
+
 [Поведение](../features/error-reports.md) · [HTTP](../api/error-reports.md).
 
 ## Админ-джобы

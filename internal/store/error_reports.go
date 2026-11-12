@@ -121,14 +121,14 @@ func (s *Store) ListErrorReports(ctx context.Context, limit, offset int) ([]Erro
 	if err := s.archiveExpiredResolvedErrorReports(ctx); err != nil {
 		return nil, err
 	}
-	return s.listErrorReports(ctx, limit, offset, false, false)
+	return s.listErrorReports(ctx, limit, offset, false, false, 0)
 }
 
 func (s *Store) ListApprovedErrorReports(ctx context.Context, limit, offset int) ([]ErrorReport, error) {
 	if err := s.requeueExpiredErrorReportClaims(ctx); err != nil {
 		return nil, err
 	}
-	return s.listErrorReports(ctx, limit, offset, true, true)
+	return s.listErrorReports(ctx, limit, offset, true, true, 0)
 }
 
 func (s *Store) ListReviewerErrorReports(ctx context.Context, limit, offset int) ([]ErrorReport, error) {
@@ -138,7 +138,7 @@ func (s *Store) ListReviewerErrorReports(ctx context.Context, limit, offset int)
 	if err := s.archiveExpiredResolvedErrorReports(ctx); err != nil {
 		return nil, err
 	}
-	return s.listErrorReports(ctx, limit, offset, false, true)
+	return s.listErrorReports(ctx, limit, offset, false, true, 0)
 }
 
 func (s *Store) requeueExpiredErrorReportClaims(ctx context.Context) error {
@@ -159,7 +159,7 @@ func (s *Store) archiveExpiredResolvedErrorReports(ctx context.Context) error {
 	return err
 }
 
-func (s *Store) listErrorReports(ctx context.Context, limit, offset int, approvedOnly, reviewerVisibleOnly bool) ([]ErrorReport, error) {
+func (s *Store) listErrorReports(ctx context.Context, limit, offset int, approvedOnly, reviewerVisibleOnly bool, reportID int64) ([]ErrorReport, error) {
 	rows, err := s.pool.Query(ctx, `
 		SELECT er.id, er.title, er.description, er.page_url, er.element, er.user_id, u.login,
 		       er.approved, er.status, er.processing_run_id, er.processing_started_at,
@@ -181,7 +181,8 @@ func (s *Store) listErrorReports(ctx context.Context, limit, offset int, approve
 		FROM dndshare.error_report er
 		LEFT JOIN dndshare.users u ON u.id = er.user_id
 		LEFT JOIN dndshare.users approver ON approver.id = er.serious_change_approved_by_user_id
-		WHERE (NOT $4::bool OR er.status <> 'ARCHIVED')
+		WHERE ($5::bigint = 0 OR er.id = $5)
+		  AND (NOT $4::bool OR er.status <> 'ARCHIVED')
 		  AND (NOT $3::bool OR (
 		    er.approved AND er.status = 'OPEN' AND COALESCE((
 		        SELECT m.sender <> 'AI'
@@ -193,7 +194,7 @@ func (s *Store) listErrorReports(ctx context.Context, limit, offset int, approve
 		    AND (er.serious_change_requested_at IS NULL OR er.serious_change_approved_at IS NOT NULL)
 		  ))
 		ORDER BY er.created_at DESC, er.id DESC
-		LIMIT $1 OFFSET $2`, limit, offset, approvedOnly, reviewerVisibleOnly)
+		LIMIT $1 OFFSET $2`, limit, offset, approvedOnly, reviewerVisibleOnly, reportID)
 	if err != nil {
 		return nil, err
 	}

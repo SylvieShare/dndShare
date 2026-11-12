@@ -2,7 +2,9 @@
 
 MCP реализован в `internal/web/mcp*.go` как JSON-RPC 2.0 over `POST /mcp`.
 `mcp.go` содержит transport/dispatch, а tool schemas, аргументы и mutations
-вынесены в тематические файлы. GET/SSE transport и Spring AI отсутствуют.
+вынесены в тематические файлы. Сам MCP использует POST. Отдельный авторизованный SSE-поток
+/mcp/error-report-events доставляет события репортов локальному обработчику;
+[его контракт](error-report-dispatch.md). Spring AI отсутствует.
 
 ## Access
 
@@ -19,7 +21,7 @@ aliases для прежних имён не поддерживаются.
 
 Восстановлены `error_reports_list`, `error_report_screenshot`,
 `error_report_lock_acquire/renew/release`, `error_reports_claim`,
-`error_report_title_set`, `error_report_question_create`,
+`error_report_get`, `error_report_title_set`, `error_report_question_create`,
 `error_report_serious_change_request`, `error_report_resolve`.
 Диагностика и снимки читаются только у одобренных заявок; изменение требует
 MCP_WRITE_ENABLED и действующего lease владельца claim. Ответы JSON сохраняют

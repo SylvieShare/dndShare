@@ -26,6 +26,12 @@ func newErrorReportListProbe(hasReports bool) errorReportListProbe {
 func (s *Server) dispatchErrorReportTool(r *http.Request, name string, args map[string]json.RawMessage) (any, error) {
 	ctx := r.Context()
 	switch name {
+	case "error_report_get":
+		id, err := argInt64(args, "id")
+		if err != nil {
+			return nil, err
+		}
+		return s.store.GetApprovedErrorReport(ctx, id)
 	case "error_reports_list":
 		summaryOnly, err := argBoolDefault(args, "summaryOnly", false)
 		if err != nil {

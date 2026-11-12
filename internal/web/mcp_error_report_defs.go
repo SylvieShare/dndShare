@@ -2,6 +2,7 @@ package web
 
 func mcpErrorReportDefs() []map[string]any {
 	return []map[string]any{
+		mcpDefinition("error_report_get", "Read the current approved report by ID, including claimed or finished reports, messages and screenshot flags. Unapproved reports are not exposed.", mcpObjectSchema(map[string]any{"id": mcpIntegerProperty("Report ID")}, "id")),
 		mcpDefinition("error_reports_list",
 			"List actionable open admin-approved page error reports, newest first. Finished/unapproved reports, unanswered AI questions, and serious changes awaiting ADMIN approval are not exposed. A report becomes visible again after an answer or serious-change approval. Use summaryOnly=true with limit=1 for the pre-lock empty-queue probe. Scheduled automation should use compact=true for the post-lock batch; it returns {ids: number[], reports: [...]}, preserving diagnostic evidence while omitting fixed queue/workflow fields.",
 			mcpObjectSchema(map[string]any{
