@@ -4,7 +4,6 @@
       <div v-for="index in mobileTrackIndexes" :key="tabs[index]?.id ?? index" class="mobile-swipe-pane"
         :inert="index !== activeTab" :style="{ visibility: index === activeTab || tabDragActive || tabDragSettling ? 'visible' : 'hidden' }">
         <div :ref="element => panes[index] = element" class="mobile-pane-scroll"
-          @scroll.passive="index === activeTab && emit('scroll-position', $event.currentTarget.scrollTop)"
           @touchstart.passive="event => onTouchStart(event, track)" @touchmove="onTouchMove"
           @touchend.passive="onTouchEnd" @touchcancel.passive="cancelTouch">
           <slot v-if="isReady(index)" :index="index" />
@@ -15,7 +14,7 @@
   </div>
 </template>
 <script setup>
-import { computed, ref, toRef, watch, nextTick } from 'vue'
+import { computed, ref, toRef } from 'vue'
 import { usePreparedTabs } from '../../composables/usePreparedTabs'
 import CharacterSheetSkeleton from './CharacterSheetSkeleton.vue'
 const props = defineProps({ controller: { type: Object, required: true }, tabs: { type: Array, required: true } })
@@ -23,8 +22,6 @@ const { activeTab, tabDragActive, tabDragSettling, mobileTrackIndexes, mobileSwi
   onTouchStart, onTouchMove, onTouchEnd, cancelTouch } = props.controller
 const { isReady } = usePreparedTabs(toRef(props, 'tabs'), activeTab, computed(() => tabDragActive.value || tabDragSettling.value))
 const track = ref(null), panes = []
-const emit = defineEmits(['scroll-position'])
-watch(activeTab, async index => { await nextTick(); emit('scroll-position', panes[index]?.scrollTop || 0) })
 defineExpose({ trackElement: () => track.value, scrollElement: index => panes[index] })
 </script>
 <style scoped>

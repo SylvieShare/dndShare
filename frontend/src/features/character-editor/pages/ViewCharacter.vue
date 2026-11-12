@@ -19,7 +19,7 @@
           <CharacterSheetSkeleton />
         </div>
       <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="initializeCharacter">Повторить</button></div>
-      <CharacterSwipePager @scroll-position="workspaceHeaderEl?.setSummaryScroll($event)" v-else-if="compactLayout && template" ref="swipePagerEl" :controller="swipe" :tabs="activeTabs">
+      <CharacterSwipePager v-else-if="compactLayout && template" ref="swipePagerEl" :controller="swipe" :tabs="activeTabs">
         <template #default="{ index }">
           <div class="container" :style="containerWidthForTab(index)">
             <component :is="tabRenderComponent(index, TabPane)" :definition="template" :format="format" :section="activeTabs[index]?.id"
@@ -49,6 +49,7 @@
 <script setup>
 import { provideSheetFields } from '../lib/sheetContext'
 import { useSheetChrome } from '../composables/useSheetChrome'
+import { useSheetScrollPosition } from '../composables/useSheetScrollPosition'
 import CharacterWorkspaceHeader from '@/features/character-editor/components/CharacterWorkspaceHeader.vue'
 import CharacterTransferDialogs from '@/features/character-editor/components/CharacterTransferDialogs.vue'
 import { useCharacterTransfers } from '@/features/character-editor/composables/useCharacterTransfers'
@@ -270,6 +271,7 @@ function activeScrollElement() {
     ? swipePagerEl.value?.scrollElement(activeTab.value)
     : sheetScrollEl.value
 }
+useSheetScrollPosition(workspaceHeaderEl, activeScrollElement)
 
 function syncActiveScrollListener(options = {}) {
   startScrollListener(activeScrollElement(), {

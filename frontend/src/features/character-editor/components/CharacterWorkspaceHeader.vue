@@ -1,5 +1,5 @@
 <template>
-  <WorkspaceHeader v-bind="$attrs" class="character-workspace-header" solid :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" split-navigation :fit-navigation="format !== 'phone'">
+  <WorkspaceHeader ref="workspace" v-bind="$attrs" class="character-workspace-header" solid :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" split-navigation :fit-navigation="format !== 'phone'">
     <template #identity>
       <ActionButton variant="quiet" :icon-only="compact" :aria-label="modal ? 'Закрыть лист' : 'К списку персонажей'" @click="modal ? emit('close') : router.push('/chars')">
         <template #icon><ArrowLeft :size="18" /></template>
@@ -49,6 +49,7 @@ import CharacterBlock from './CharacterBlock.vue'
 import { useRouter } from 'vue-router'
 import { computed, inject, onBeforeUnmount, ref, watch } from 'vue'
 import { ActionButton } from '@sylvieshare/share-ui'
+import { layoutTokens } from '@/app/design-tokens'
 import { ArrowLeft } from '@lucide/vue'
 import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
 import CharacterHeaderSessionMenu from './CharacterHeaderSessionMenu.vue'
@@ -61,6 +62,7 @@ const props = defineProps({ dnd: Boolean, format: String, modal: Boolean, conten
   selection: Array, animateNavigation: { type: Boolean, default: true },
   tabs: { type: Array, default: () => [] }, activeTab: Number })
 const emit = defineEmits(['select-tab', 'close'])
+const workspace = ref(null)
 const profileEditor = ref(null), experienceEditor = ref(null), healthEditor = ref(null), statusEditor = ref(null)
 const ctx = inject('charCtx', {})
 const hasStates = computed(() => ctx.characterStatuses?.entries?.length || ctx.values?.exhaustion?.level > 0 || isInspirationActive(ctx.values?.inspiration))
@@ -70,8 +72,9 @@ function openHeading(target) {
 }
 const stripViewport = ref(null)
 let stripObserver, stripHeight = 0, requestedScroll = 0
-function setSummaryScroll(value) {
+function setScrollPosition(value) {
   requestedScroll = Math.max(0, value)
+  workspace.value?.$el?.style.setProperty('--sheet-scroll-depth', String(Math.min(1, requestedScroll / layoutTokens['sheet-header-shadow-distance'])))
   const viewport = stripViewport.value
   if (!viewport || !stripHeight) return
   const offset = Math.min(requestedScroll, stripHeight)
@@ -88,14 +91,14 @@ watch(stripViewport, viewport => {
   const measure = () => {
     stripHeight = row.getBoundingClientRect().height
     viewport.style.setProperty('--strip-full-height', stripHeight + 'px')
-    setSummaryScroll(requestedScroll)
+    setScrollPosition(requestedScroll)
   }
   measure()
   stripObserver = new ResizeObserver(measure)
   stripObserver.observe(row)
 }, { flush: 'post' })
 onBeforeUnmount(() => stripObserver?.disconnect())
-defineExpose({ setSummaryScroll })
+defineExpose({ setScrollPosition })
 const router = useRouter()
 const iconFailed = ref(false)
 const monogram = computed(() => Array.from(String(props.name || '').trim())[0]?.toUpperCase() || '?')
@@ -116,6 +119,20 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
   --workspace-subheader-padding: 0;
   --workspace-subheader-shadow: none;
 }
+.character-workspace-header::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: var(--layout-sheet-header-shadow-height);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--scrim) 28%, transparent), transparent);
+  opacity: var(--sheet-scroll-depth, 0);
+  pointer-events: none;
+  transition: opacity var(--motion-feedback);
+}
+@media (prefers-reduced-motion: reduce) { .character-workspace-header::after { transition: none; } }
 .character-identity {
   display: flex;
   align-items: center;

@@ -32,13 +32,13 @@
 
       <div data-sheet-chrome v-if="previewMode" class="csm-preview-note">Предпросмотр черновика · только чтение</div>
 
-      <div class="csm-body" :class="{ 'csm-body--pager': compactLayout }">
+      <div ref="bodyScroll" class="csm-body" :class="{ 'csm-body--pager': compactLayout }">
         <div v-if="loading" class="character-loading">
           <CharacterSheetSkeleton />
         </div>
 
         <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="initializeCharacter">Повторить</button></div>
-        <CharacterSwipePager @scroll-position="sheetHeader?.setSummaryScroll($event)" v-else-if="template && compactLayout" ref="swipePagerEl" :controller="swipe" :tabs="activeTabs">
+        <CharacterSwipePager v-else-if="template && compactLayout" ref="swipePagerEl" :controller="swipe" :tabs="activeTabs">
           <template #default="{ index }">
             <div class="container" :style="containerWidthForTab(index)">
               <CharacterTabPane :definition="template" :format="format" :section="activeTabs[index]?.id"
@@ -74,6 +74,7 @@
 <script setup>
 import { provideSheetFields } from '../lib/sheetContext'
 import { useSheetChrome } from '../composables/useSheetChrome'
+import { useSheetScrollPosition } from '../composables/useSheetScrollPosition'
 import CharacterSheetSkeleton from './sheet/CharacterSheetSkeleton.vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import { AppModal } from '@sylvieshare/share-ui'
@@ -100,6 +101,7 @@ const props = defineProps({
   zIndex: { type: Number, default: 3000 },
 })
 const chromeRoot = ref(null)
+const bodyScroll = ref(null)
 useSheetChrome(chromeRoot)
 const emit = defineEmits(['close'])
 const sessionEventsStore = useSessionEventsStore()
@@ -155,6 +157,7 @@ const compactLayout = computed(() => format.value !== 'desktop')
 const swipePagerEl = ref(null)
 const swipe = useTabSwipe(activeTabs, compactLayout)
 const { activeTab, visitedTabIndexes, markTabVisited, resetSwipe, mobileTabSelection, tabDragActive, tabDragSettling } = swipe
+useSheetScrollPosition(sheetHeader, () => compactLayout.value ? swipePagerEl.value?.scrollElement(activeTab.value) : bodyScroll.value)
 watch(format, (next, previous) => {
   const id = swipe.requestedTab.value ?? sheetTabs(template.value, previous)[activeTab.value]?.id
   resetSwipe()

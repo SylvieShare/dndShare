@@ -2,7 +2,9 @@
   <IconNavigation :items="items" :model-value="tabs?.[activeTab]?.id ?? activeTab" pill :layout="layout" :size="format === 'phone' ? layoutTokens['sheet-navigation-compact'] : layoutTokens['sheet-navigation-item']"
     :height="layoutTokens[format === 'desktop' ? 'sheet-navigation-desktop-height' : 'sheet-navigation-height']"
     :icon-size="layoutTokens[format === 'desktop' ? 'sheet-navigation-desktop-icon' : 'sheet-navigation-icon']"
-    :label-size="format === 'desktop' ? 'var(--type-header-size)' : null" :selected-size="layoutTokens['sheet-navigation-selected']" :selection="selection" :animate="animate"
+    :label-size="format === 'desktop' ? 'var(--type-header-size)' : format === 'tablet' ? 'var(--type-sheet-navigation-caption-size)' : null"
+    :content-sized="format === 'tablet'" :style="{ '--icon-navigation-label-line-height': format === 'tablet' ? 'var(--type-sheet-navigation-caption-line-height)' : undefined }"
+    :selected-size="layoutTokens['sheet-navigation-selected']" :selection="selection" :animate="animate"
     radius="var(--radius-input)" :label="format === 'phone' ? 'Вкладки персонажа' : 'Раздел персонажа'" :data-sheet-navigation="format"
     data-tutorial="character-tabs" @select="emit('select', $event)">
     <template #icon="{ item }">
