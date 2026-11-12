@@ -69,7 +69,7 @@ for (const width of [390, 834]) for (const scope of ['attack', 'damage']) test(`
   await expect(page.getByRole('menu', { name: scope === 'attack' ? 'Атака' : 'Урон', exact: true })).toBeVisible()
   await page.keyboard.press('Escape')
   await expect(page.getByRole('menu')).toHaveCount(0)
-  expect(await touchSwipe(page, cell.locator(scope === 'attack' ? '.weapon-metrics__bonus' : '.system-die').first(), 24)).toBe(true)
+  expect(await touchSwipe(page, cell.locator('.system-die').first(), 24)).toBe(true)
   await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/dragging|settling/)
   await expect(page.getByRole('menu')).toHaveCount(0)
   const afterCancel = await cell.boundingBox()

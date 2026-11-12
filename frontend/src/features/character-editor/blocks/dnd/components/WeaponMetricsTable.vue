@@ -2,7 +2,8 @@
   <div class="weapon-metrics" role="group" aria-label="Показатели оружия">
     <component :is="interactive && canAttack ? 'button' : 'div'" :type="interactive && canAttack ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__attack" data-sheet-swipe :aria-label="interactive && canAttack ? 'Настроить бросок атаки' : undefined" :aria-haspopup="interactive && canAttack ? 'menu' : undefined" :aria-expanded="interactive && canAttack ? rollScope === 'attack' : undefined" @click.stop="interactive && canAttack && emit('roll', 'attack', $event)">
       <span class="weapon-metrics__label">Атака</span>
-      <strong class="weapon-metrics__bonus">{{ attack || '—' }}</strong>
+      <WeaponDamageBreakdown v-if="attackRows.length" :rows="attackRows" label="Состав атаки" :aria-description="`Бонус атаки ${attack || '0'}`" damage-color="var(--accent-soft)" dice-labels />
+      <span v-else>—</span>
     </component>
     <component :is="interactive && canDamage ? 'button' : 'div'" :type="interactive && canDamage ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__damage" data-sheet-swipe :aria-label="interactive && canDamage ? 'Настроить бросок урона' : undefined" :aria-haspopup="interactive && canDamage ? 'menu' : undefined" :aria-expanded="interactive && canDamage ? rollScope === 'damage' : undefined" @click.stop="interactive && canDamage && emit('roll', 'damage', $event)">
       <span class="weapon-metrics__label">Урон</span>
@@ -43,6 +44,7 @@ import { computed, shallowRef } from 'vue'
 import { BasePopover, RichContent, ActionButton } from '@sylvieshare/share-ui'
 const props = defineProps({
   attack: { type: String, default: '' },
+  attackRows: { type: Array, default: () => [] },
   damageRows: { type: Array, default: () => [] },
   twoHandedRows: { type: Array, default: () => [] },
   damageType: String,
@@ -94,18 +96,12 @@ button.weapon-metrics__cell:focus-visible { outline: 2px solid var(--accent-soft
 .weapon-metrics__grip { color: var(--text-muted); font-size: 10px; line-height: 14px; white-space: normal; }
 .weapon-metrics__label { color: var(--text-muted); font-size: 10px; line-height: 12px; }
 .weapon-metrics__attack {
-  flex: 0 0 var(--layout-weapon-metrics-attack-width);
-  width: var(--layout-weapon-metrics-attack-width);
-  height: var(--layout-weapon-metrics-attack-width);
-  align-self: flex-start;
+  flex: 1 1 max-content;
+  max-width: 100%;
   min-height: var(--layout-weapon-metrics-attack-width);
-  position: relative;
-  justify-content: center;
-  align-items: center;
+  gap: 4px;
 }
-.weapon-metrics__attack .weapon-metrics__label { position: absolute; top: 8px; left: 8px; }
-.weapon-metrics__bonus { color: var(--accent-soft); font-size: var(--type-weapon-attack-size); line-height: var(--type-weapon-attack-line-height); margin-block: 0; }
-.weapon-metrics__damage { min-height: var(--layout-weapon-metrics-attack-width); gap: 4px; flex: 1.25 1 max-content; max-width: calc(100% - var(--layout-weapon-metrics-attack-width) - var(--layout-weapon-metrics-gap)); }
+.weapon-metrics__damage { min-height: var(--layout-weapon-metrics-attack-width); gap: 4px; flex: 1.25 1 max-content; max-width: 100%; }
 .weapon-properties-stack { flex: 0 0 100%; display: grid; gap: var(--layout-weapon-metrics-gap); min-width: 0; }
 .weapon-properties-stack:empty { display: none; }
 .weapon-metrics__property-list { display: flex; flex-wrap: wrap; gap: 2px 8px; font-size: var(--type-weapon-property-size); line-height: var(--type-weapon-property-line-height); overflow-wrap: break-word; }

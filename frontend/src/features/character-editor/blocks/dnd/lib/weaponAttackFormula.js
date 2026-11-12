@@ -1,0 +1,9 @@
+export function weaponAttackFormula(summary, rules = [], excluded = []) {
+  const mode = summary.mode
+  const bonuses = rules.filter(rule => !excluded.includes(rule.key))
+    .map(rule => ({ source: rule.source_label || 'Бонус', expression: rule.formula }))
+  return [{
+    source: mode === 'advantage' ? 'Преимущество' : mode === 'disadvantage' ? 'Помеха' : 'Атака',
+    expression: ['advantage', 'disadvantage'].includes(mode) ? '2d20' : '1d20',
+  }, ...summary.parts, ...bonuses]
+}

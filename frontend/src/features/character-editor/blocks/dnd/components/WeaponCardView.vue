@@ -25,7 +25,7 @@
         <span v-if="ctx.isWeaponProficient(entry)" class="w-proficiency">Владение</span>
       </div>
       <WeaponMetricsTable v-if="weaponItem || (!entry.item_id && !entry.magic_item_id)" class="w-card-controls"
-        :attack="ctx.formatBonus(ctx.attackBonus(entry))" :damage-rows="damageRows" :two-handed-rows="twoHandedRows"
+        :attack="ctx.formatBonus(ctx.attackBonus(entry))" :attack-rows="attackRows" :damage-rows="damageRows" :two-handed-rows="twoHandedRows"
         :damage-type="String(primaryDamage?.type || '')" :damage-color="primaryDamage?.typeColor"
         :properties="ctx.propertyItems(entry)" :interactive="interactive" :roll-scope="rollScope"
         :can-attack="!!ctx.charCtx.ownerMode && !!weaponItem" :can-damage="!!ctx.charCtx.ownerMode && (!!weaponItem || !!ctx.hasWeaponDamage?.(entry))"
@@ -43,6 +43,7 @@
 import WeaponAttunementStatus from './WeaponAttunementStatus.vue'
 import { computed, inject } from 'vue'
 import WeaponMetricsTable from './WeaponMetricsTable.vue'
+import { weaponAttackFormula } from '../lib/weaponAttackFormula'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 const props = defineProps({
@@ -59,6 +60,10 @@ const ctx = inject('weaponsBlockCtx')
 const weaponItem = computed(() => ctx.item(props.entry))
 const primaryDamage = computed(() => ctx.damagePartsRaw(props.entry)[0])
 const selectedActions = computed(() => ctx.weaponDamageActions(props.entry).filter(action => action.target_choice?.selected).map(action => action.key))
+const attackRows = computed(() => weaponAttackFormula(
+  ctx.weaponMenuSummary(props.entry, { actionKeys: selectedActions.value }, 'attack'),
+  ctx.charCtx.characterDerivedEffects?.rollBonusOptions?.({ kind: 'attack' }) || [],
+))
 const damageRows = computed(() => ctx.damageSources(props.entry, { actionKeys: selectedActions.value }))
 const twoHandedRows = computed(() => ctx.twoHandedParts(props.entry).length ? ctx.damageSources(props.entry, { twoHanded: true, actionKeys: selectedActions.value }) : [])
 </script>

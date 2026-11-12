@@ -14,7 +14,7 @@
           <small>{{ subtitle }}</small>
           <span v-if="proficient" class="pac-proficiency">Владение</span>
         </div>
-        <WeaponMetricsTable :attack="formatBonus(attackBonus)" :damage-rows="summary({}, 'damage').parts"
+        <WeaponMetricsTable :attack="formatBonus(attackBonus)" :attack-rows="attackRows" :damage-rows="summary({}, 'damage').parts"
           :damage-type="damageType" interactive :roll-scope="selection?.scope"
           @roll="openMenu" />
       </div>
@@ -30,13 +30,14 @@
 </template>
 
 <script setup>
-import { shallowRef } from 'vue'
+import { computed, inject, shallowRef } from 'vue'
+import { weaponAttackFormula } from '../lib/weaponAttackFormula'
 import { BasePopover } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import WeaponRollSettings from './WeaponRollSettings.vue'
 import WeaponMetricsTable from './WeaponMetricsTable.vue'
 
-defineProps({
+const props = defineProps({
   title: { type: String, required: true },
   summary: { type: Function, required: true },
   subtitle: { type: String, default: '' },
@@ -47,6 +48,9 @@ defineProps({
 })
 
 const emit = defineEmits(['attack', 'damage', 'critical'])
+const charCtx = inject('charCtx', {})
+const attackRows = computed(() => weaponAttackFormula(props.summary({}, 'attack'),
+  charCtx.characterDerivedEffects?.rollBonusOptions?.({ kind: 'attack' }) || []))
 
 const selection = shallowRef(null)
 function openMenu(scope, event) {

@@ -1,5 +1,5 @@
 <template>
-  <span class="weapon-damage" aria-label="Состав урона">
+  <span class="weapon-damage" :aria-label="label">
     <span v-for="(group, gi) in groups" :key="group.type" class="weapon-damage__group" :style="{ '--damage-color': group.color }">
       <span class="weapon-damage__terms">
         <span v-for="(column, ci) in group.columns" :key="column.source" class="weapon-damage__addend">
@@ -13,7 +13,7 @@
                   <span v-if="ti || term.sign !== '+'" class="weapon-damage__operator">{{ term.sign === '-' ? '−' : term.sign }}</span>
                   <template v-if="term.kind === 'dice'">
                     <span v-if="term.n !== 1" class="weapon-damage__count">{{ term.n }}×</span>
-                    <SystemDie :sides="term.sides" :size="layoutTokens['weapon-damage-die']" :color="group.color" />
+                    <SystemDie :sides="term.sides" :value="diceLabels ? 'd' + term.sides : undefined" :size="layoutTokens['weapon-damage-die']" :color="group.color" />
                   </template>
                   <strong v-else class="weapon-damage__flat">{{ term.value }}</strong>
                 </span>
@@ -32,7 +32,8 @@ import { computed } from 'vue'
 import { layoutTokens } from '@/app/design-tokens'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import { weaponDamageDisplay } from '../lib/weaponDamageDisplay'
-const props = defineProps({ rows: { type: Array, default: () => [] }, alternatives: { type: Array, default: () => [] }, damageType: String, damageColor: String })
+const props = defineProps({ rows: { type: Array, default: () => [] }, alternatives: { type: Array, default: () => [] }, damageType: String, damageColor: String,
+  label: { type: String, default: 'Состав урона' }, diceLabels: Boolean })
 const groups = computed(() => weaponDamageDisplay(props.rows, props.alternatives, { type: props.damageType, color: props.damageColor }))
 </script>
 <style scoped>

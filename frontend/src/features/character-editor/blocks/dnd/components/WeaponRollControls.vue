@@ -54,17 +54,14 @@ import WeaponUseDamageMenu from './WeaponUseDamageMenu.vue'
 import { weaponDamageActionFormula, weaponDamageActionParts } from '@/shared/lib/weaponDamageOptions'
 import { computed, inject, toRef, ref } from 'vue'
 import { useWeaponBonusTransfer } from '../composables/useWeaponBonusTransfer'
+import { weaponAttackFormula } from '../lib/weaponAttackFormula'
 const props = defineProps({ weapon: Object, weaponTitle: String, summary: Object, weaponUid: String, attackRollMode: { type: String, default: 'auto' }, uses: { type: Array, default: () => [] }, useKey: { type: String, default: '' }, scope: { type: String, default: 'damage' }, options: { type: Array, default: () => [] }, critical: Boolean, twoHanded: Boolean, bonusAction: Boolean, bonusActionOption: Object, versatile: Boolean, thrown: Boolean, preview: { type: String, default: '' } })
 const excludedBonuses = ref([])
 const charCtx = inject('charCtx', {})
 const formulaRows = computed(() => {
   if (props.scope === 'damage') return props.summary.parts
-  const bonuses = (charCtx.characterDerivedEffects?.rollBonusOptions?.({ kind: 'attack' }) || [])
-    .filter(rule => !excludedBonuses.value.includes(rule.key))
-    .map(rule => ({ source: rule.source_label || 'Бонус', expression: rule.formula }))
-  const mode = props.summary.mode
-  return [{ source: mode === 'advantage' ? 'Преимущество' : mode === 'disadvantage' ? 'Помеха' : 'Атака',
-    expression: ['advantage', 'disadvantage'].includes(mode) ? '2d20' : '1d20' }, ...props.summary.parts, ...bonuses]
+  return weaponAttackFormula(props.summary,
+    charCtx.characterDerivedEffects?.rollBonusOptions?.({ kind: 'attack' }) || [], excludedBonuses.value)
 })
 const { transfer, setAmount } = useWeaponBonusTransfer(charCtx, toRef(props, 'weaponUid'))
 const hasCustomOptions = computed(() => props.scope === 'attack'
