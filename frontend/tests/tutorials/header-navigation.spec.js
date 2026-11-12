@@ -51,7 +51,7 @@ for (const [width, format, layout] of [[390, 'phone', 'compact'], [834, 'tablet'
     const scroller = page.locator(format === 'desktop' ? '.sheet-scroll' : '.mobile-swipe-pane:not([inert]) .mobile-pane-scroll')
     await scroller.evaluate(node => { node.scrollTop = 180 })
     await expectContinuousHeader(page)
-    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
     expect(api.writes).toEqual([])
     await testInfo.attach(`header-${format}`, { body: await page.screenshot(), contentType: 'image/png' })
   })
