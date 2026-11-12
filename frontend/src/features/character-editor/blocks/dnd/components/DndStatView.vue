@@ -42,7 +42,7 @@
       @keydown.enter.prevent="openRollMenu($event, 'stat')"
       @keydown.space.prevent="openRollMenu($event, 'stat')"
     >
-      <SvgIcon v-if="suggestSvg" class="stat-icon" :svg="suggestSvg" color="var(--text-2)" />
+      <SvgIcon v-if="suggestSvg || suggestSvgId" class="stat-icon" :svg="suggestSvg" :svg-id="suggestSvgId" color="var(--text-2)" />
       <span class="stat-mod" :style="{ color }">{{ signed(mod) }}</span>
       <span class="stat-raw">({{ raw }})</span>
       <RollModeBadge :mode="checkMode" :source="checkModeSource" :cancelled="checkModeCancelled" />
@@ -141,6 +141,7 @@ const props = defineProps({
   title: { type: String, default: '' },
   color: { type: String, default: 'var(--text-muted)' },
   suggestSvg: { type: String, default: '' },
+  suggestSvgId: { type: [Number, String], default: null },
   checkTotal: Number,
   proficiencyBonus: { type: Number, default: 0 },
   mod: { type: Number, default: 0 },

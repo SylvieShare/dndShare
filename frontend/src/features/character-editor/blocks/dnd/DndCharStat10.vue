@@ -3,6 +3,7 @@
     :title="displayTitle"
     :color="statColor"
     :suggest-svg="titleSuggest?.svg || ''"
+    :suggest-svg-id="titleSuggest?.svgId"
     :mod="mod" :check-total="checkTotal" :proficiency-bonus="profBonus"
     :raw="statDisplayValue"
     :save="save"

@@ -19,12 +19,12 @@
         </dl>
       </div>
     </div>
+    <template v-if="editable">
+      <RowActionItem action="edit" @click="emit('edit')">Изменить</RowActionItem>
+      <RowActionSeparator />
+    </template>
     <div class="stat-roll-mode-label">Режим броска</div>
     <D20RollControls :scope="scope" :mode="mode" :cancelled="cancelled" @roll="(mode, excluded) => emit('roll', mode, excluded)" />
-    <template v-if="editable">
-      <RowActionSeparator />
-      <RowActionItem action="edit" @click="emit('edit')">Изменить</RowActionItem>
-    </template>
   </BasePopover>
 </template>
 <script setup>

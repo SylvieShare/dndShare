@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test'
 
+const statSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L4 13h6l-1 9 11-13h-7z"/></svg>'
+test.beforeEach(async ({ page }) => {
+  await page.route('**/api/svg/901', route => route.fulfill({ contentType: 'image/svg+xml', body: statSvg }))
+})
+
 for (const width of [390, 834, 1920]) {
   test.describe(`stat roll menu at ${width}px`, () => {
     test.beforeEach(async ({ page }) => {
@@ -19,7 +24,8 @@ for (const width of [390, 834, 1920]) {
         const menu = page.getByRole('menu')
         await expect(menu).toBeVisible()
         const edit = menu.getByRole('menuitem', { name: 'Изменить' })
-        expect(await edit.evaluate(el => el.previousElementSibling?.getAttribute('role'))).toBe('separator')
+        expect(await edit.evaluate(el => el.nextElementSibling?.getAttribute('role'))).toBe('separator')
+        expect((await edit.boundingBox()).y).toBeLessThan((await menu.getByText('Режим броска', { exact: true }).boundingBox()).y)
         expect(await page.evaluate(() => window.rolls.length)).toBe(index)
         const advantage = menu.getByRole('button', { name: 'Преимущество', exact: true })
         const disadvantage = menu.getByRole('button', { name: 'Помеха', exact: true })
@@ -125,6 +131,48 @@ test('editing a skill keeps its original name and changes only that skill', asyn
   await expect(dialog.locator('.stat-editor-heading .stat-editor-total')).toContainText('+1')
   await page.keyboard.press('Escape')
   await expect(page.getByRole('button', { name: 'Тихий шаг — проверка' })).toBeVisible()
+})
+
+for (const width of [390, 834, 1440]) test(`roll badges show the discarded d20 and readable stat icons at ${width}`, async ({ page }, testInfo) => {
+  await page.setViewportSize({ width, height: 900 })
+  await page.goto('/tests/tutorials/fixtures/stat-rolls.html')
+  const advantage = page.locator('.save-chip .roll-badge'), disadvantage = page.locator('.stat-body .roll-badge')
+  await expect(advantage).toHaveAttribute('aria-label', /Преимущество.*Эффект спасброска/)
+  await expect(disadvantage).toHaveAttribute('aria-label', /Помеха.*Эффект проверки/)
+  for (const [badge, discarded] of [[advantage, '1'], [disadvantage, '20']]) {
+    await expect(badge.locator('.system-die--d20')).toHaveCount(2)
+    await expect(badge.locator('.system-die__value')).toHaveText(['1', '20'])
+    await expect(badge.locator('.roll-badge__strike')).toHaveCount(1)
+    await expect(badge.locator('.roll-badge__die--discarded')).toHaveAttribute('data-roll-value', discarded)
+    expect(await badge.evaluate(node => node.scrollWidth <= node.clientWidth)).toBe(true)
+  }
+  const colors = await page.evaluate(() => {
+    const probe = document.createElement('span'); document.body.append(probe)
+    const result = ['--success', '--danger'].map(name => { probe.style.color = `var(${name})`; return getComputedStyle(probe).color })
+    probe.remove(); return result
+  })
+  await expect(advantage).toHaveCSS('color', colors[0])
+  await expect(disadvantage).toHaveCSS('color', colors[1])
+  await expect(page.locator('.skill-item .roll-badge--cancelled')).toHaveText('ОБЫЧ.')
+  await expect.poll(() => page.locator('.stat-icon').evaluate(node => node.style.maskImage)).toContain('blob:')
+  expect((await page.locator('.stat-icon').boundingBox()).width).toBeGreaterThan(20)
+  await page.locator('.stat-block').screenshot({ path: testInfo.outputPath('stat-roll-badges.png') })
+  await page.evaluate(() => { window.statState.checkEffects = []; window.statState.value.check_roll_mode = 'normal' })
+  await expect(page.locator('.stat-body .roll-badge')).toHaveCount(0)
+})
+
+test('a stripped SVG reference is restored from the local cache after an offline reload', async ({ page }) => {
+  let requests = 0
+  await page.route('**/api/svg/901', route => { requests++; return route.fulfill({ contentType: 'image/svg+xml', body: statSvg.replace('viewBox=', 'onload="window.svgAssetExecuted=true" viewBox=') }) })
+  await page.goto('/tests/tutorials/fixtures/stat-rolls.html')
+  await expect.poll(() => page.locator('.stat-icon').evaluate(node => node.style.maskImage)).toContain('blob:')
+  expect(requests).toBe(1)
+  expect(await page.evaluate(() => window.svgAssetExecuted)).toBeUndefined()
+  await page.route('**/api/svg/901', route => { requests++; return route.abort() })
+  await page.reload()
+  await expect.poll(() => page.locator('.stat-icon').evaluate(node => node.style.maskImage)).toContain('blob:')
+  expect(requests).toBe(1)
+  expect(await page.evaluate(() => window.svgAssetExecuted)).toBeUndefined()
 })
 
 

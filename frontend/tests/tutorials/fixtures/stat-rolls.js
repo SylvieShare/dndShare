@@ -9,7 +9,7 @@ import '@sylvieshare/share-ui/styles.css'
 import '../../../src/app/theme.css'
 
 const pinia = createPinia()
-useSuggestStore(pinia).set(16, [{ id: 2, value: 'Ловкость', color: 'var(--accent)' }])
+useSuggestStore(pinia).set(16, [{ id: 2, value: 'Ловкость', color: 'var(--accent)', svgId: 901 }])
 useSuggestStore(pinia).set(17, [{ id: 4, value: 'Скрытность', desc: 'Описание навыка' }])
 window.rolls = []
 window.writes = []
