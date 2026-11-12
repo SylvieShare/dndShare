@@ -5,8 +5,8 @@
     "build": 1
   },
   "frontend": {
-    "version": "0.3.3",
-    "build": 4
+    "version": "0.3.4",
+    "build": 5
   },
   "android": {
     "version": "0.3.3",
