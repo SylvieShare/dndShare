@@ -3,6 +3,7 @@ import { createErrorReport } from '../api/errorReportApi'
 import { describeElement, screenshotContextsFor, selectorFor } from '../lib/errorReportElement'
 import { captureSelectedArea, withTimeout } from '../lib/errorReportScreenshot'
 import { ERROR_REPORT_REQUEST_EVENT } from '../lib/errorReportLauncher'
+import { installErrorReportTouchGesture } from '../lib/errorReportTouchGesture'
 
 export function useErrorReporter() {
   const selecting = ref(false)
@@ -26,6 +27,7 @@ export function useErrorReporter() {
   let screenshotGeneration = 0
   let screenshotSession = 0
   let pendingScreenshot = null
+  let stopTouchGesture = null
   const screenshotContextElements = ref([])
 
   const highlightStyle = computed(() => ({
@@ -297,12 +299,16 @@ export function useErrorReporter() {
   }
 
   onMounted(() => {
+    stopTouchGesture = installErrorReportTouchGesture(startSelection, {
+      canActivate: () => !selecting.value && !formOpen.value,
+    })
     document.addEventListener('keydown', onGlobalKeydown)
     window.addEventListener(ERROR_REPORT_REQUEST_EVENT, startSelection)
     window.addEventListener('dndshare:back', onNativeBack, true)
   })
 
   onBeforeUnmount(() => {
+    stopTouchGesture?.()
     stopSelection()
     resetScreenshot()
     clearTimeout(toastTimer)

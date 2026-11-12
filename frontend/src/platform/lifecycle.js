@@ -30,7 +30,10 @@ export function installAndroidLifecycle(router) {
     const anchor = event.target.closest?.('a[download]')
     if (anchor) { event.preventDefault(); void download(anchor) }
   }, true)
-  window.addEventListener('dndshare:back', async () => {
+  window.addEventListener('dndshare:back', async event => {
+    // Let feature handlers cancel Back before applying navigation or exit.
+    await Promise.resolve()
+    if (event.defaultPrevented) return
     const editor = document.activeElement
     if (editor?.matches('input,textarea,[contenteditable=true]')) { editor.blur(); return }
     // All shared floating surfaces already implement Escape with top-layer ownership.

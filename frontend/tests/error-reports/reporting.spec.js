@@ -129,3 +129,54 @@ test('hotkey cancels selection and submission works if screenshot capture fails'
   await expect(dialog).toHaveCount(0)
   expect(submitted.screenshot).toBeUndefined()
 })
+
+test.describe('touch report shortcut', () => {
+  test.use({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 900 } })
+
+  async function contacts(page, count, { cancel = false, beforeRelease } = {}) {
+    const cdp = await page.context().newCDPSession(page)
+    const points = Array.from({ length: count }, (_, id) => ({ id, x: 40 + id * 75, y: 700, radiusX: 8, radiusY: 8, force: 1 }))
+    try {
+      for (let current = 1; current <= count; current++) {
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: points.slice(0, current) })
+      }
+      await beforeRelease?.()
+      if (cancel) await cdp.send('Input.dispatchTouchEvent', { type: 'touchCancel', touchPoints: [] })
+      else await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+    } finally { await cdp.detach() }
+  }
+
+  test('four fingers open the picker; a separate tap selects, and an open draft is preserved', async ({ page }) => {
+    let submissions = 0
+    await fixture(page, { onCreate: route => { submissions++; return route.fulfill({ status: 201, json: report(5) }) } })
+    await page.goto('/handbook')
+    await expect(page.locator('.hb-collection-card')).toHaveCount(1)
+    await contacts(page, 4, { beforeRelease: async () => {
+      await expect(page.locator('.selection-hint')).toHaveCount(0)
+    } })
+    await expect(page.locator('.selection-hint')).toBeVisible()
+    await expect(page.getByRole('dialog')).toHaveCount(0)
+    await expect(page).toHaveURL(/\/handbook$/)
+    await page.locator('.hb-collection-card').tap()
+    const form = page.getByRole('dialog', { name: 'Что работает неправильно?' })
+    await expect(form.getByAltText('Скриншот выбранного элемента')).toBeVisible({ timeout: 20000 })
+    await form.getByRole('textbox').fill('Не потерять описание')
+    await contacts(page, 4)
+    await expect(form.getByRole('textbox')).toHaveValue('Не потерять описание')
+    await expect(form).toHaveCount(1)
+    expect(submissions).toBe(0)
+  })
+
+  test('one to three fingers and a cancelled gesture do not open the reporter', async ({ page }) => {
+    await fixture(page)
+    await page.goto('/handbook')
+    await expect(page.locator('.hb-collection-card')).toHaveCount(1)
+    for (const count of [1, 2, 3]) {
+      await contacts(page, count)
+      await expect(page.locator('.selection-hint')).toHaveCount(0)
+    }
+    await contacts(page, 4, { cancel: true })
+    await expect(page.locator('.selection-hint')).toHaveCount(0)
+    await expect(page.getByRole('dialog')).toHaveCount(0)
+  })
+})

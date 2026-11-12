@@ -51,7 +51,7 @@ public class MainActivity extends BridgeActivity {
         });
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override public void handleOnBackPressed() {
-                bridge.getWebView().evaluateJavascript("window.dispatchEvent(new Event('dndshare:back'))", null);
+                bridge.getWebView().evaluateJavascript("window.dispatchEvent(new Event('dndshare:back',{cancelable:true}))", null);
             }
         });
     }
