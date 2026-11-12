@@ -262,18 +262,20 @@ onBeforeUnmount(hideTooltip)
   min-height: var(--layout-sheet-value-height);
   min-width: calc(var(--layout-sheet-value-width) + 12px);
   justify-content: center;
+  font-family: var(--type-sheet-save-family);
+  font-size: var(--type-sheet-save-size);
+  font-weight: var(--type-sheet-save-weight);
+  line-height: var(--type-sheet-save-line-height);
+  letter-spacing: var(--type-sheet-save-tracking);
 }
 @media (hover: hover) { .save-chip:hover { background: var(--surface-active); } }
 
 .save-label {
   color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 400;
-  line-height: 1;
   flex-shrink: 0;
 }
 
-.save-chip-val { color: var(--text-1); font-size: 13px; font-weight: 700; line-height: 1; }
+.save-chip-val { color: var(--text-1); font-weight: 700; }
 
 /* ── Modifier ── */
 .stat-body {
@@ -361,8 +363,12 @@ onBeforeUnmount(hideTooltip)
 .stat-view--mobile .skill-item { min-height: 32px; border-radius: 10px; gap: 8px; }
 .stat-view--mobile .skill-name { font-size: 15px; }
 .stat-view--mobile .skill-chip { padding: 4px 10px 5px; font-size: 16px; border-radius: 9px; }
-.stat-view--mobile .save-chip { padding: 5px 8px 5px 6px; border-radius: 10px; }
-.stat-view--mobile .save-chip-val { font-size: 15px; }
+.stat-view--mobile .save-chip {
+  padding: 5px 8px 5px 6px;
+  border-radius: 10px;
+  font-size: var(--type-sheet-save-compact-size);
+  line-height: var(--type-sheet-save-compact-line-height);
+}
 .stat-view--mobile .stat-mod { font-size: var(--type-sheet-stat-compact-size); letter-spacing: var(--type-sheet-stat-compact-tracking); }
 .stat-view--mobile .stat-raw { font-size: 18px; }
 .stat-view--mobile .stat-icon { width: 32px; height: 32px; }
