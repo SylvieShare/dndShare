@@ -5,12 +5,12 @@
     "build": 1
   },
   "frontend": {
-    "version": "0.3.5",
-    "build": 6
+    "version": "0.3.6",
+    "build": 7
   },
   "android": {
-    "version": "0.3.3",
-    "build": 7
+    "version": "0.3.4",
+    "build": 8
   },
   "contracts": {
     "api": 1,
@@ -18,7 +18,7 @@
   },
   "fingerprints": {
     "backend": "525ec52b8dc26250187f1e45702321205cbcb3d7304c2a9ce0e9c58e8b4edea0",
-    "frontend": "f306be49e4c2f90855837843ae553f2c302b438da4612c363f34e01cab60eea5",
-    "android": "d2b6c665f2e9eaef1b523b4320e82e858e74ed6dac5ce66fc822cefae522c14e"
+    "frontend": "f0436c9e8c5dbd707735e41ba5ef1d02bf6e34d7a44c593bf34cb56c8b3a921e",
+    "android": "98ad1718dc742f43bc1620a29dbc980e350409f1d58ebd9cc4c59b8b0a6e2a67"
   }
 }

@@ -6,6 +6,10 @@ import { fileURLToPath } from 'node:url'
 
 export const root = fileURLToPath(new URL('../../', import.meta.url))
 export const digest = data => createHash('sha256').update(data).digest('hex')
+export function normalizedSourceBytes(name, bytes) {
+  const text = /(?:^|\/)go\.(?:mod|sum)$|\.(go|java|js|mjs|vue|json|css|kts|xml|sql|html|pem|properties|svg|md|txt)$/.test(name)
+  return text ? Buffer.from(bytes.toString('utf8').replaceAll('\r\n', '\n')) : bytes
+}
 export const readVersions = () => JSON.parse(fs.readFileSync(path.join(root, 'release/versions.json'), 'utf8'))
 export function filesUnder(relative) {
   const output = []
@@ -23,8 +27,7 @@ export function filesUnder(relative) {
 }
 function sourceHash(files, extra = {}) {
   const values = [...new Set(files)].sort().map(name => {
-    let bytes = fs.readFileSync(path.join(root, name))
-    if (/\.(go|java|js|mjs|vue|json|css|kts|xml|sql|html|pem|properties|svg|md|txt)$/.test(name)) bytes = Buffer.from(bytes.toString('utf8').replaceAll('\r\n', '\n'))
+    const bytes = normalizedSourceBytes(name, fs.readFileSync(path.join(root, name)))
     return [name, digest(bytes)]
   })
   return digest(JSON.stringify({ files: values, extra }))
