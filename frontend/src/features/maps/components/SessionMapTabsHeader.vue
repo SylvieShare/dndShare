@@ -1,5 +1,5 @@
 <template>
-  <header class="session-map-tabs-header" data-tutorial="session-map-toolbar">
+  <WorkspaceSubheader class="session-map-tabs-header" data-tutorial="session-map-toolbar" :fit="false">
     <div class="session-map-tab-list">
       <SlidingTabs
         variant="chips"
@@ -43,10 +43,11 @@
       ></ActionButton>
     </div>
     <div class="session-map-header-broadcast"><slot /></div>
-  </header>
+  </WorkspaceSubheader>
 </template>
 <script setup>
 import { computed } from "vue";
+import WorkspaceSubheader from '@/shared/ui/WorkspaceSubheader.vue';
 import { ActionButton, SlidingTabs } from "@sylvieshare/share-ui";
 import { Image, Map, MonitorUp, Pencil, Plus } from "@lucide/vue";
 const props = defineProps({
@@ -68,13 +69,8 @@ const tabs = computed(() =>
 </script>
 <style scoped>
 .session-map-tabs-header {
-  display: flex;
-  align-items: stretch;
   flex: none;
   min-width: 0;
-  min-height: 64px;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
   z-index: 21;
 }
 .session-map-tab-list {
@@ -93,7 +89,6 @@ const tabs = computed(() =>
   align-items: center;
   flex: none;
   min-width: 0;
-  border-left: 1px solid var(--border);
   padding: 6px 12px;
 }
 .session-map-header-broadcast:empty {

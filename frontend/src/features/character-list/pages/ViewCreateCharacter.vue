@@ -1,21 +1,6 @@
 <template>
   <div class="cc" :class="{ 'cc--embedded': embedded }">
-    <header class="cc-head">
-      <BlurBackdrop class="cc-head-backdrop" radius="var(--chrome-blur)" />
-      <div class="cc-head-main">
-        <button class="cc-x" title="Закрыть" @click="exit">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
-        </button>
-        <div class="cc-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8L19 13M17.8 6.2L19 5M3 21l9-9M12.2 6.2L11 5" /></svg>
-          Создание персонажа
-        </div>
-        <button class="cc-mobile-reset" title="Начать создание сначала" @click="resetOpen = true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" /></svg>
-          <span>Сбросить</span>
-        </button>
-      </div>
-    </header>
+    <CharacterCreationHeader class="cc-head" :scroll-source="mainRef" @close="exit" @reset="resetOpen = true" />
 
     <div class="cc-body">
       <CreateStepRail
@@ -83,7 +68,8 @@
 </template>
 
 <script setup>
-import { BlurBackdrop, LoadingIndicator } from '@sylvieshare/share-ui'
+import { LoadingIndicator } from '@sylvieshare/share-ui'
+import CharacterCreationHeader from '../components/CharacterCreationHeader.vue'
 import { computed, onMounted, provide, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import CreateStepRail from '@/features/character-list/components/wizard/CreateStepRail.vue'
@@ -399,7 +385,6 @@ onMounted(() => initialize())
   border-inline: none;
 }
 
-.cc-head,
 .cc-body,
 .cc-foot {
   --cc-main-max: 1120px;
@@ -410,12 +395,6 @@ onMounted(() => initialize())
   padding-inline: 24px;
 }
 .cc-head { position: relative; z-index: 20; isolation: isolate; }
-.cc-head-backdrop {
-  --blur-backdrop-inset: 0 0 calc(-1 * var(--chrome-fade-tail));
-  --blur-backdrop-background: color-mix(in srgb, var(--bg) calc(var(--chrome-tint) * 100%), transparent);
-  --blur-backdrop-mask: linear-gradient(to bottom, var(--text-on-accent) 64px, transparent);
-  z-index: 0;
-}
 .cc-head-main {
   position: relative;
   z-index: 1;

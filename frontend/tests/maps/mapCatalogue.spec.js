@@ -41,7 +41,7 @@ test("catalogue subscriptions, five-star replacement and removal use the same ro
   page,
 }) => {
   await ready(page);
-  await page.getByRole("tab", { name: "Каталог", exact: true }).click();
+  await page.getByRole("button", { name: "Каталог", exact: true }).click();
   const entry = page.locator(".map-library-entry");
   await expect(entry.getByText("Зал алхимика", { exact: true })).toBeVisible();
   await expect(entry.getByText("architect", { exact: true })).toBeVisible();
@@ -70,7 +70,7 @@ test("catalogue subscriptions, five-star replacement and removal use the same ro
     entry.getByRole("button", { name: "Снять оценку", exact: true }),
   ).toHaveCount(0);
   await entry.getByRole("button", { name: "Подписаться", exact: true }).click();
-  await page.getByRole("tab", { name: "Подписки", exact: true }).click();
+  await page.getByRole("button", { name: "Подписки", exact: true }).click();
   await expect(page.locator(".map-library-entry")).toHaveCount(1);
   await page.getByRole("button", { name: "Список", exact: true }).click();
   await expect(entry).toHaveClass(/--list/);
@@ -84,7 +84,7 @@ test("published previews stay read-only and subscription unlocks copying", async
   page,
 }) => {
   await ready(page);
-  await page.getByRole("tab", { name: "Каталог", exact: true }).click();
+  await page.getByRole("button", { name: "Каталог", exact: true }).click();
   await page
     .getByRole("button", { name: "Открыть карту Зал алхимика", exact: true })
     .click();
@@ -113,7 +113,7 @@ test("mobile rows retain rating controls without overflowing the page", async ({
 }) => {
   await ready(page);
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.getByRole("tab", { name: "Каталог", exact: true }).click();
+  await page.getByRole("button", { name: "Каталог", exact: true }).click();
   await page.getByRole("button", { name: "Список", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Подписаться", exact: true }),
@@ -144,11 +144,11 @@ test("session picker subscribes and opens an independent catalogue map", async (
     name: "Добавить 3D карту",
     exact: true,
   });
-  await picker.getByRole("tab", { name: "Каталог", exact: true }).click();
+  await picker.getByRole("button", { name: "Каталог", exact: true }).click();
   await picker
     .getByRole("button", { name: "Подписаться", exact: true })
     .click();
-  await picker.getByRole("tab", { name: "Подписки", exact: true }).click();
+  await picker.getByRole("button", { name: "Подписки", exact: true }).click();
   await picker.getByRole("button", { name: "Выбрать", exact: true }).click();
   await expect(picker).toHaveCount(0);
   await expect

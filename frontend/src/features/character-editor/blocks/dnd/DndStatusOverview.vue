@@ -140,7 +140,7 @@ const displayItems = computed(() => [
 const canInteract = computed(() => !!charCtx.ownerMode)
 const displayMode = computed(() => props.block.content?.display || 'all')
 const summaryItems = computed(() => (displayMode.value === 'trigger' ? [] : displayItems.value))
-const showAddAction = computed(() => canInteract.value && displayMode.value !== 'summary')
+const showAddAction = computed(() => props.block.props?.showAddAction ?? (canInteract.value && displayMode.value !== 'summary'))
 
 function updateValue(id, value) {
   emit('update:value', id, value)

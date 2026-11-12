@@ -6,14 +6,14 @@
         :format="windowFormat" :compact="windowFormat === 'phone'" :name="charName" :subtitle="charSub" :icon-url="iconImageUrl || data.values?.ava?.url"
         :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="activeTabs" :active-tab="activeTab"
         :selection="mobileTabSelection" :animate-navigation="!tabDragActive || tabDragSettling" @select-tab="setActiveTab" @close="emit('close')" />
-      <CharEditorToolbar v-else data-sheet-chrome
+      <CharEditorToolbar ref="sheetHeader" v-else data-sheet-chrome
         modal
         :publicVisible="publicVisible"
         :canEdit="canEdit"
         :canTogglePublic="isOwner"
         :saveStatus="saveStatus"
         :pendingSecondsLeft="pendingSecondsLeft"
-        :tabs="toolbarTabs"
+        :tabs="activeTabs"
         :activeTab="activeTab"
           :toolbarValues="data.values"
         :toolbarVars="data.var"
@@ -25,10 +25,6 @@
         @update:var="onUpdateVar"
         @close="emit('close')"
       />
-
-      <div v-if="template?.system !== 'dnd5e' && format !== 'desktop'" data-sheet-chrome class="csm-subheader">
-        <CharacterSheetTabs :format="windowFormat" :tabs="activeTabs" :active-tab="activeTab" :selection="mobileTabSelection" :animate="!tabDragActive || tabDragSettling" @select="setActiveTab" />
-      </div>
 
       <div data-sheet-chrome v-if="previewMode" class="csm-preview-note">Предпросмотр черновика · только чтение</div>
 
@@ -74,7 +70,7 @@
 <script setup>
 import { provideSheetFields } from '../lib/sheetContext'
 import { useSheetChrome } from '../composables/useSheetChrome'
-import { useSheetScrollPosition } from '../composables/useSheetScrollPosition'
+import { useWorkspaceScrollPosition } from '@/shared/composables/useWorkspaceScrollPosition'
 import CharacterSheetSkeleton from './sheet/CharacterSheetSkeleton.vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import { AppModal } from '@sylvieshare/share-ui'
@@ -84,7 +80,6 @@ import CharacterTabPane from './CharacterTabPane.vue'
 import { useAppLayout } from '@/shared/composables/useAppLayout'
 import { sheetTabIndex, sheetTabs } from '../lib/sheetPresentation'
 import CharacterWorkspaceHeader from './CharacterWorkspaceHeader.vue'
-import CharacterSheetTabs from './sheet/CharacterSheetTabs.vue'
 import CharacterSwipePager from './sheet/CharacterSwipePager.vue'
 import { useTabSwipe } from '../composables/useTabSwipe'
 import { useCharacterData } from '@/features/character-editor/composables/useCharacterData'
@@ -112,7 +107,7 @@ const format = computed(() => windowFormat.value === 'phone' ? 'tablet' : window
 
 const {
   loading, loadError, template, data, charCtx, isOwner, publicVisible, version, serverDocument, sourceVersionId, applyCharacter, applyMetadata,
-  activeTabs, toolbarTabs, charName, charSub, iconImageUrl,
+  activeTabs, charName, charSub, iconImageUrl,
   load, loadPreview, containerWidthForTab, getInitialTabs,
   updateValue, updateValues, updateVar, onPublicToggle: updatePublicVisible,
 } = useCharacterData(props.uuid, format)
@@ -157,7 +152,7 @@ const compactLayout = computed(() => format.value !== 'desktop')
 const swipePagerEl = ref(null)
 const swipe = useTabSwipe(activeTabs, compactLayout)
 const { activeTab, visitedTabIndexes, markTabVisited, resetSwipe, mobileTabSelection, tabDragActive, tabDragSettling } = swipe
-useSheetScrollPosition(sheetHeader, () => compactLayout.value ? swipePagerEl.value?.scrollElement(activeTab.value) : bodyScroll.value)
+useWorkspaceScrollPosition(sheetHeader, () => compactLayout.value ? swipePagerEl.value?.scrollElement(activeTab.value) : bodyScroll.value)
 watch(format, (next, previous) => {
   const id = swipe.requestedTab.value ?? sheetTabs(template.value, previous)[activeTab.value]?.id
   resetSwipe()

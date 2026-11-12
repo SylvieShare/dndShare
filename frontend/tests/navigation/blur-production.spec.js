@@ -1,63 +1,23 @@
-import { test, expect } from '@playwright/test'
+import { test,expect } from '@playwright/test'
 import { installCharacterChromeFixture } from './characterChromeFixture.js'
 
-for (const width of [390, 834, 1440]) test(`minified production header really blurs at ${width}`, async ({ page }, testInfo) => {
-  await page.setViewportSize({ width, height: 700 })
-  await installCharacterChromeFixture(page)
-  await page.goto('/chars')
-  await expect(page.locator('.char-card')).toHaveCount(30)
-  const header = page.locator('.app-header')
-  const backdrop = header.locator('.workspace-header-backdrop')
-  await expect(backdrop).toHaveCSS('backdrop-filter', 'blur(16px)')
-  await page.evaluate(() => scrollTo(0, 350))
-  await page.addStyleTag({ content: '.app-header .workspace-header-inner { visibility: hidden; }' })
-  const box = await header.boundingBox()
-  const clip = { x: Math.ceil(box.x) + 8, y: Math.ceil(box.y), width: Math.floor(box.width) - 24, height: 50 }
-  const take = () => page.screenshot({ clip, animations: 'disabled' })
-  const blurred = await take()
-  const off = await page.addStyleTag({ content: '.workspace-header-backdrop { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }' })
-  const sharp = await take()
-  await off.evaluate(element => element.remove())
-  const restored = await take()
-  await testInfo.attach('production-blurred', { body: blurred, contentType: 'image/png' })
-  await testInfo.attach('production-sharp', { body: sharp, contentType: 'image/png' })
-  expect(restored.equals(blurred), 'The scene must be stable through the blur cycle').toBe(true)
-  expect(blurred.equals(sharp), 'Minification must not turn blur into tint only').toBe(false)
-  await page.locator('.char-card').first().getByText('Персонаж 0', { exact: true }).click()
+for(const width of [390,834,1440]) test(`production page headers share opaque surfaces at ${width}`,async({page})=>{
+  await page.setViewportSize({width,height:700});await installCharacterChromeFixture(page);await page.goto('/chars')
+  const header=page.locator('.app-header')
+  await expect(header).toHaveCSS('background-color','rgb(53, 49, 63)')
+  await expect(header.locator('.workspace-header-backdrop')).toHaveCount(0)
+  await expect(header.locator('.workspace-subheader')).toBeVisible()
+  await page.evaluate(()=>scrollTo(0,250));await expect(header).toHaveAttribute('data-workspace-scrolled','')
+  await page.evaluate(()=>scrollTo(0,0));await expect(header).not.toHaveAttribute('data-workspace-scrolled')
+  await page.locator('.char-card').first().getByText('Персонаж 0',{exact:true}).click()
+  await expect(page.locator('.character-workspace-header')).toHaveCSS('background-color','rgb(53, 49, 63)')
   await expect(page.locator('.character-workspace-header .workspace-header-backdrop')).toHaveCount(0)
-  await expect(page.locator('.character-workspace-header')).toHaveCSS('background-color', 'rgb(53, 49, 63)')
-  await page.getByRole('button', { name: 'К списку персонажей' }).click()
-  await page.getByRole('button', { name: 'Новый персонаж', exact: true }).click()
-  await expect(page.locator('.cc-head-backdrop')).toHaveCSS('backdrop-filter', 'blur(16px)')
 })
 
-test('tablet sheet subheader fits its tabs in the production build', async ({ page }, testInfo) => {
-  await page.setViewportSize({ width: 834, height: 900 })
-  await installCharacterChromeFixture(page)
-  await page.goto('/chars')
-  await page.locator('.char-card').first().getByText('Персонаж 0', { exact: true }).click()
-  const row = page.locator('.character-workspace-header .workspace-subheader')
-  const tabs = row.getByRole('navigation', { name: 'Раздел персонажа' })
-  await expect(tabs.getByRole('button', { name: 'Статы', exact: true })).toBeVisible()
-
-  for (const width of [834, 600]) {
-    await page.setViewportSize({ width, height: 900 })
-    const { widthDifference, centerOffset, overflow } = await row.evaluate(element => {
-      const outer = element.getBoundingClientRect()
-      const inner = element.querySelector('.workspace-subheader-inner').getBoundingClientRect()
-      const nav = element.querySelector('nav')
-      return {
-        widthDifference: outer.width - inner.width,
-        centerOffset: Math.abs(inner.x + inner.width / 2 - outer.x - outer.width / 2),
-        overflow: nav.scrollWidth - nav.clientWidth,
-      }
-    })
-    expect(widthDifference).toBeGreaterThan(24)
-    expect(centerOffset).toBeLessThan(1)
-    expect(overflow).toBeLessThanOrEqual(1)
-    await testInfo.attach(`sheet-tabs-${width}`, { body: await row.screenshot(), contentType: 'image/png' })
-  }
-  const last = tabs.getByRole('button').last()
-  await last.click()
-  await expect(last).toHaveAttribute('aria-current', 'page')
+test('tablet navigation keeps readable captions in the shared production subheader',async({page})=>{
+  await page.setViewportSize({width:834,height:700});await installCharacterChromeFixture(page);await page.goto('/chars')
+  await page.locator('.char-card').first().getByText('Персонаж 0',{exact:true}).click()
+  const nav=page.getByRole('navigation',{name:'Раздел персонажа'})
+  await expect(nav).toHaveClass(/share-icon-navigation--content/)
+  await expect(nav.getByRole('button',{name:'Статы',exact:true}).locator('.share-icon-navigation__label')).toHaveCSS('font-size','12px')
 })

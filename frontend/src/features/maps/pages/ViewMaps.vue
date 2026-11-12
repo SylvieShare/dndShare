@@ -1,11 +1,7 @@
 <template>
   <main class="maps-page">
-    <header>
-      <span>МАСТЕРСКАЯ</span>
-      <h1>Карты</h1>
-      <p>Собирайте свои карты и делитесь ими в бесплатном каталоге.</p>
-    </header>
-    <MapLibrary v-if="account.authStatus === 'success'" />
+    <p>Собирайте свои карты и делитесь ими в бесплатном каталоге.</p>
+    <MapLibrary v-if="account.authStatus === 'success'" page-chrome />
     <p v-else-if="account.authStatus === 'none'" role="status">
       Войдите, чтобы открыть карты.
     </p>

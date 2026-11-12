@@ -39,7 +39,7 @@
           >{{ field.nameShort || field.name }}</button>
         </div>
       </div>
-      <div ref="scrollEl" class="list-body" @scroll="onScroll">
+      <div ref="scrollEl" class="list-body" data-workspace-scroll @scroll="onScroll">
         <LoadingState v-if="loading" class="empty-hint" label="Загрузка..." compact />
         <div v-else-if="loadError && !items.length" class="empty-hint" role="alert">{{ loadError }} <button type="button" @click="$emit('retry')">Повторить</button></div>
         <div v-else-if="items.length === 0" class="empty-hint">Нет объектов</div>

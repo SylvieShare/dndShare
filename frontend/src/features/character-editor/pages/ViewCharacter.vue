@@ -49,7 +49,7 @@
 <script setup>
 import { provideSheetFields } from '../lib/sheetContext'
 import { useSheetChrome } from '../composables/useSheetChrome'
-import { useSheetScrollPosition } from '../composables/useSheetScrollPosition'
+import { useWorkspaceScrollPosition } from '@/shared/composables/useWorkspaceScrollPosition'
 import CharacterWorkspaceHeader from '@/features/character-editor/components/CharacterWorkspaceHeader.vue'
 import CharacterTransferDialogs from '@/features/character-editor/components/CharacterTransferDialogs.vue'
 import { useCharacterTransfers } from '@/features/character-editor/composables/useCharacterTransfers'
@@ -271,7 +271,7 @@ function activeScrollElement() {
     ? swipePagerEl.value?.scrollElement(activeTab.value)
     : sheetScrollEl.value
 }
-useSheetScrollPosition(workspaceHeaderEl, activeScrollElement)
+useWorkspaceScrollPosition(workspaceHeaderEl, activeScrollElement)
 
 function syncActiveScrollListener(options = {}) {
   startScrollListener(activeScrollElement(), {

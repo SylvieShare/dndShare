@@ -1,5 +1,5 @@
 <template>
-  <WorkspaceHeader class="map-workspace-header">
+  <WorkspaceHeader ref="workspace" class="map-workspace-header" :scroll-source="null">
     <template #identity>
       <ActionButton
         variant="quiet"
@@ -23,6 +23,9 @@ import { ActionButton } from "@sylvieshare/share-ui";
 import { ArrowLeft } from "@lucide/vue";
 import WorkspaceHeader from "@/shared/ui/WorkspaceHeader.vue";
 import MapReferenceButton from "./MapReferenceButton.vue";
+import { ref } from 'vue';
+const workspace=ref(null);
+defineExpose({setScrollPosition:value=>workspace.value?.setScrollPosition(value)});
 defineProps({ editor: Object, admin: Boolean });
 const emit = defineEmits(["close", "reference"]);
 </script>

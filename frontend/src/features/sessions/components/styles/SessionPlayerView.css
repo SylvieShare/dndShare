@@ -8,6 +8,9 @@
     radial-gradient(circle at 16% 8%, color-mix(in srgb, var(--accent) 13%, transparent), transparent 36%),
     var(--bg);
 }
+.player-session-header {position:sticky;top:0}
+.player-session-header h1 {margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--type-header-family);font-size:var(--type-header-size);line-height:var(--type-header-line-height);font-weight:var(--type-header-weight)}
+.player-session-header .player-session__eyebrow {margin:0;letter-spacing:0;text-transform:none}
 
 .player-session__backdrop {
   position: fixed;

@@ -1,5 +1,9 @@
 <template>
-  <main class="player-session">
+  <main ref="scrollRoot" class="player-session">
+    <WorkspaceHeader page class="player-session-header" :scroll-source="scrollRoot" data-tutorial="session-overview">
+      <template #identity><SessionBackButton /><h1>{{ session.name }}</h1></template>
+      <template #actions><div data-tutorial="session-connection" class="player-session__eyebrow"><span class="player-session__live-dot" :class="`player-session__live-dot--${liveStatus}`" />{{ liveLabel }}</div><SessionTutorialSettings /></template>
+    </WorkspaceHeader>
     <div
       v-if="chapterImage"
       class="player-session__backdrop"
@@ -8,20 +12,13 @@
     />
 
     <div class="player-session__content">
-      <header data-tutorial="session-overview" class="player-session__intro">
-        <SessionBackButton />
-        <div data-tutorial="session-connection" class="player-session__eyebrow">
-          <span class="player-session__live-dot" :class="`player-session__live-dot--${liveStatus}`" />
-          {{ liveLabel }}
-        </div>
-        <h1>{{ session.name }}</h1>
-        <SessionTutorialSettings />
+      <div class="player-session__intro">
         <p v-if="session.description">{{ session.description }}</p>
         <div class="player-session__meta">
           <span v-if="session.systemName">{{ session.systemName }} {{ session.rulesVersion }}</span>
           <span>{{ participantCountLabel }}</span>
         </div>
-      </header>
+      </div>
 
       <div class="player-session__grid">
         <BaseTile data-tutorial="session-chapter" class="current-chapter" color="var(--accent)" framed>
@@ -119,13 +116,15 @@
 <script setup>
 import SessionTutorialSettings from '@/features/tutorials/components/SessionTutorialSettings.vue'
 import SessionBackButton from './SessionBackButton.vue'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
 import { RouterLink } from 'vue-router'
 import { BookOpen, ExternalLink, UsersRound } from '@lucide/vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { pvAvatar, pvName, pvSubtitle, pvHp } from '@/features/sessions/lib/participantView'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 import SessionMeetingsCard from './SessionMeetingsCard.vue'
+const scrollRoot=ref(null)
 
 const props = defineProps({
   session: { type: Object, required: true },

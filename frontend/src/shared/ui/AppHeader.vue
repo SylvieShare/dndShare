@@ -1,5 +1,5 @@
 <template>
-  <WorkspaceHeader page class="app-header" :split-navigation="isCharacterList" @resize="emit('resize', $event)" :style="{ '--workspace-header-identity-gap': 'var(--spacing-small)' }" :class="{
+  <WorkspaceHeader ref="workspace" page class="app-header" :scroll-source="null" :navigation-visible="hasNavigation" :fit-navigation="false" @resize="emit('resize', $event)" :style="{ '--workspace-header-identity-gap': 'var(--spacing-small)' }" :class="{
     'app-header--collapsible': headerCollapsible,
     'app-header--mobile-hidden': mobileHeaderHidden,
     'header-hidden': effectiveHeaderHidden,
@@ -15,7 +15,7 @@
         <span v-if="contextLabel && compact" class="header-context">{{ contextLabel }}</span>
       </div>
     </template>
-    <template v-if="isCharacterList" #navigation><div id="app-character-subheader" class="character-subheader-outlet" /></template>
+    <template #navigation><div ref="navigationOutlet" id="app-subheader" class="app-subheader-outlet" /></template>
     <template #actions>
       <div id="app-header-actions" class="header-actions" />
       <span v-if="headerContext.chip" class="header-chip"
@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { Menu } from '@lucide/vue'
 import { useAppLayout } from '@/shared/composables/useAppLayout'
@@ -38,11 +38,22 @@ import { gameContextPresentation } from '@/shared/lib/gameContextPresentation'
 import { useUiStore } from '@/stores/ui'
 import { useGameContextStore } from '@/stores/gameContext'
 import { MOBILE_HEADER_COLLAPSIBLE, MOBILE_HEADER_HIDDEN, resolveMobileHeaderMode } from '@/shared/lib/mobileHeader'
+import { useAppWorkspaceScroll } from '@/shared/composables/useAppWorkspaceScroll'
 
 defineProps({ menuOpen: Boolean })
 const emit = defineEmits(['open-menu', 'resize'])
 const route = useRoute()
 const uiStore = useUiStore()
+const workspace=ref(null), navigationOutlet=ref(null), hasNavigation=ref(false)
+let navigationObserver
+useAppWorkspaceScroll(workspace)
+onMounted(()=>{
+  const measure=()=>{hasNavigation.value=!!navigationOutlet.value?.childElementCount}
+  navigationObserver=new MutationObserver(measure)
+  if(navigationOutlet.value) navigationObserver.observe(navigationOutlet.value,{childList:true})
+  measure()
+})
+onBeforeUnmount(()=>navigationObserver?.disconnect())
 const gameContext = useGameContextStore()
 const { phone, compact } = useAppLayout()
 const headerMode = computed(() => resolveMobileHeaderMode(route.meta))
@@ -54,7 +65,7 @@ const headerContext = computed(() => uiStore.resolveHeader(route.name, route.met
 const isCharacterList = computed(() => route.path === '/chars')
 const isHandbook = computed(() => route.meta?.section === 'handbook')
 const sectionTitles = { handbook: 'Справочник', rules: 'Правила игрока' }
-const title = computed(() => isCharacterList.value ? 'DnD Share' : sectionTitles[route.meta?.section] || headerContext.value.title)
+const title = computed(() => ['Characters','Sessions'].includes(route.name) ? 'DnD Share' : sectionTitles[route.meta?.section] || headerContext.value.title)
 const contextLabel = computed(() => {
   const current = gameContextPresentation(gameContext.selectedSource, gameContext.selectedVersion)
   return [current.name, current.edition].filter(Boolean).join(' · ')
@@ -68,7 +79,7 @@ const contextLabel = computed(() => {
   max-height: none;
   transition: max-height .22s ease, opacity .18s ease, border-color .22s ease;
 }
-.character-subheader-outlet { width: 100%; min-width: 0; }
+.app-subheader-outlet { display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:var(--spacing-small);width:100%;min-width:0; }
 .header-menu {
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   width: var(--layout-touch-min); height: var(--layout-touch-min); padding: 0; border: 0; border-radius: var(--radius-row);

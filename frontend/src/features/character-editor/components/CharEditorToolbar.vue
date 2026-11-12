@@ -1,6 +1,6 @@
 <template>
-  <div v-bind="$attrs" ref="toolbarRootEl" class="toolbar">
-    <div class="toolbar-inner" :class="{ 'has-blocks': toolbarBlocksList }">
+  <WorkspaceHeader v-bind="$attrs" ref="toolbarRootEl" class="toolbar" :scroll-source="null">
+    <template #identity>
 
       <!-- Left: back + identity -->
       <div class="tb-left">
@@ -36,6 +36,8 @@
         </div>
       </div>
 
+    </template>
+    <template v-if="toolbarBlocksList || tabs?.length" #navigation>
       <!-- Center: toolbar blocks or tabs -->
       <template v-if="toolbarBlocksList">
         <div
@@ -53,20 +55,9 @@
         </div>
       </template>
 
-      <div v-if="!toolbarBlocksList && tabs?.length" class="tb-tabs">
-        <button
-          v-for="(tab, i) in tabs"
-          :key="i"
-          class="tb-tab"
-          :class="{ active: activeTab === i }"
-          :title="tab.title || 'Раздел'"
-          @click="$emit('update:activeTab', i)"
-        >
-          <img v-if="tab.svg" class="tb-tab-icon" :src="tab.svg" :alt="tab.title || 'Раздел'" />
-          <span v-else>{{ tab.title }}</span>
-        </button>
-      </div>
-
+      <WorkspaceNavigation v-if="!toolbarBlocksList && tabs?.length" :items="navigationItems" :model-value="activeTab" label="Раздел персонажа" @select="emit('update:activeTab',$event)" />
+    </template>
+    <template #actions>
       <!-- Right: menu -->
       <div class="tb-right">
         <div class="menu-wrap">
@@ -121,8 +112,8 @@
         </div>
       </div>
 
-    </div>
-  </div>
+    </template>
+  </WorkspaceHeader>
 
   <ContentSourcesModal
     v-if="sourcesOpen"
@@ -147,6 +138,8 @@ import ContentSourcesModal from '@/features/character-editor/components/ContentS
 import { ToggleSwitch } from '@sylvieshare/share-ui'
 import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
+import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
+import WorkspaceNavigation from '@/shared/ui/WorkspaceNavigation.vue'
 
 import CharacterBlock from "./CharacterBlock.vue"
 
@@ -172,6 +165,7 @@ const emit = defineEmits(['update:publicVisible', 'update:activeTab', 'update:va
 
 const router = useRouter()
 const toolbarRootEl = ref(null)
+const navigationItems=computed(()=>(props.tabs || []).map((tab,index)=>({key:index,label:tab.title,svg:tab.svg})))
 const menuAnchor = ref(null)
 const menuOpen = ref(false)
 const sourcesOpen = ref(false)
@@ -182,7 +176,7 @@ useTutorialAction('character-menu', ({ onCleanup }) => {
 })
 const sourceDraft = ref(normalizeContentSourceSettings(null))
 
-defineExpose({ rootElement: () => toolbarRootEl.value })
+defineExpose({ rootElement: () => toolbarRootEl.value?.$el, setScrollPosition:value=>toolbarRootEl.value?.setScrollPosition(value) })
 
 function chapterLabel(s) {
   return currentChapterLabel(s, true)

@@ -1,10 +1,9 @@
 import { watch } from 'vue'
 
-// Page and modal share one active-scroll binding. Inactive panes cannot change chrome.
-export function useSheetScrollPosition(header, getScrollElement) {
+export function useWorkspaceScrollPosition(header, getScrollElement) {
   watch(() => [header.value, getScrollElement()], ([chrome, element], _, cleanup) => {
     if (!chrome) return
-    const update = () => chrome.setScrollPosition?.(element?.scrollTop || 0)
+    const update = () => chrome.setScrollPosition?.(typeof window !== 'undefined' && element === window ? window.scrollY : element?.scrollTop || 0)
     update()
     element?.addEventListener('scroll', update, { passive: true })
     cleanup(() => element?.removeEventListener('scroll', update))

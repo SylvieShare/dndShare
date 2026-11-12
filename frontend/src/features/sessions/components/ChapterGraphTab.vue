@@ -1,6 +1,7 @@
 <template>
   <div class="chapter-graph-tab" :style="{ '--chapter-chrome-height': `${chromeHeight}px` }">
     <ChapterGraphToolbar
+      ref="workspaceHeader"
       @resize="chromeHeight = $event; emit('toolbar-resize', $event)"
       :arcs="graph.arcs.value"
       :selected-arc="graph.selectedArc.value"
@@ -25,7 +26,7 @@
       <template #tools><SessionToolbarTools v-if="isDm" ref="toolsRail" :session-uuid="sessionUuid" :presentation="presentation" :timers="timers" :show-shortcut-hints="showShortcutHints" /></template>
     </ChapterGraphToolbar>
 
-    <div class="chapter-canvas-stage share-app-canvas" :class="{ 'chapter-canvas-stage--story': primaryView === 'story' }" data-tutorial="session-content">
+    <div class="chapter-canvas-stage share-app-canvas" :class="{ 'chapter-canvas-stage--story': primaryView === 'story' }" data-tutorial="session-content" @scroll.capture="trackWorkspaceScroll">
       <div v-if="actionError" class="chapter-action-error" role="alert">{{ actionError }}</div>
       <LoadingState v-if="primaryView === 'story' && graph.loading.value" class="chapter-graph-loading" label="Загружаем карту кампании…" compact />
       <SessionGraphCanvas
@@ -191,6 +192,7 @@ import ArcEditorModal from '@/features/sessions/components/ArcEditorModal.vue'
 import ChapterEdgeModal from '@/features/sessions/components/ChapterEdgeModal.vue'
 import ChapterEditorModal from '@/features/sessions/components/ChapterEditorModal.vue'
 import ChapterGraphToolbar from '@/features/sessions/components/ChapterGraphToolbar.vue'
+import { useWorkspaceScrollRegion } from '@/shared/composables/useWorkspaceScrollRegion'
 import SessionGraphCanvas from '@/features/sessions/components/SessionGraphCanvas.vue'
 import SessionTabWorkspace from '@/features/sessions/components/SessionTabWorkspace.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
@@ -225,6 +227,8 @@ const emit = defineEmits([
 ])
 
 const canvas = ref(null)
+const workspaceHeader=ref(null)
+const trackWorkspaceScroll=useWorkspaceScrollRegion(workspaceHeader,()=>`${props.primaryView}:${props.workspaceLayoutMode}`)
 const toolsRail = ref(null)
 const actionError = ref('')
 const saving = ref(false)
@@ -557,6 +561,6 @@ function chapterPayload(chapter, patch = {}) {
 .chapter-canvas-stage--story { --app-canvas-dot-color: var(--app-story-canvas-dot-color); --app-canvas-pattern: var(--app-story-canvas-pattern); }
 .chapter-canvas-stage { margin-top: calc(-1 * var(--chapter-chrome-height, 64px)); position: relative; display: flex; flex: 1; min-height: 0; overflow: hidden; }
 .chapter-graph-loading { display: grid; flex: 1; place-items: center; color: var(--text-muted); font-size: 13px; }
-.chapter-action-error { position: absolute; z-index: 30; top: 66px; left: 50%; max-width: 520px; padding: 7px 12px; border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent); border-radius: 7px; background: var(--popover-bg); color: var(--danger); font-size: 11px; transform: translateX(-50%); box-shadow: var(--shadow-lg); }
+.chapter-action-error { position: absolute; z-index: 30; top: calc(var(--chapter-chrome-height,64px) + 4px); left: 50%; max-width: 520px; padding: 7px 12px; border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent); border-radius: 7px; background: var(--popover-bg); color: var(--danger); font-size: 11px; transform: translateX(-50%); box-shadow: var(--shadow-lg); }
 
 </style>

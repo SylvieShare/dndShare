@@ -28,7 +28,7 @@ import { useAccountStore } from '@/stores/account'
 const { compact } = useAppLayout()
 const route = useRoute()
 const account = useAccountStore()
-const headerShown = computed(() => (compact.value || route.meta?.section === 'handbook' || route.path === '/chars') && route.meta?.mobileHeader !== 'hidden')
+const headerShown = computed(() => route.meta?.mobileHeader !== 'hidden')
 const menuOpen = ref(false)
 const drawerSidebar = ref(null)
 function setHeaderHeight(height) {
@@ -36,7 +36,7 @@ function setHeaderHeight(height) {
 }
 watch(headerShown, shown => {
   if (!shown) document.documentElement.style.setProperty('--header-h', '0px')
-})
+},{immediate:true})
 onBeforeUnmount(() => document.documentElement.style.removeProperty('--header-h'))
 async function openMenu(intent) {
   if (!compact.value) return

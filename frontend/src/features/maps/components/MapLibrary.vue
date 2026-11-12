@@ -1,15 +1,15 @@
 <template>
   <div class="map-library">
-    <div class="map-library-heading">
-      <SlidingTabs
+    <PageHeaderPortal :local="!pageChrome"><div class="map-library-heading">
+      <WorkspaceNavigation
         v-model="c.scope"
-        :tabs="TABS"
-        aria-label="Разделы карт"
+        :items="TABS"
+        label="Разделы карт"
       /><ActionButton v-if="!picker" @click="c.create"
         ><template #icon><Plus :size="17" /></template>Создать
         карту</ActionButton
       >
-    </div>
+    </div></PageHeaderPortal>
     <div class="map-library-toolbar">
       <FormTextInput
         v-model:value="c.query"
@@ -175,19 +175,20 @@ import {
   FormTextInput,
   LoadingState,
   SearchMultiSelect,
-  SlidingTabs,
 } from "@sylvieshare/share-ui";
 import { BookmarkPlus, Copy, LayoutGrid, List, Map, Plus } from "@lucide/vue";
 import { useMapLibrary } from "../composables/useMapLibrary";
 import MapLibraryEntry from "./MapLibraryEntry.vue";
+import WorkspaceNavigation from '@/shared/ui/WorkspaceNavigation.vue';
+import PageHeaderPortal from '@/shared/ui/PageHeaderPortal.vue';
 const MapCanvas = defineAsyncComponent(() => import("./MapCanvas.vue"));
-const props = defineProps({ picker: Boolean }),
+const props = defineProps({ picker: Boolean, pageChrome:Boolean }),
   emit = defineEmits(["select"]);
 const c = reactive(useMapLibrary(props, emit));
 const TABS = [
-  { key: "own", title: "Мои" },
-  { key: "subscriptions", title: "Подписки" },
-  { key: "catalogue", title: "Каталог" },
+  { key: "own", label: "Мои", icon:Map },
+  { key: "subscriptions", label: "Подписки", icon:BookmarkPlus },
+  { key: "catalogue", label: "Каталог", icon:LayoutGrid },
 ];
 const LAYOUTS = [
   { key: "grid", label: "Плитки", icon: LayoutGrid },
@@ -231,6 +232,7 @@ const EMPTY = {
   gap: 12px;
 }
 .map-library-heading {
+  width:100%;min-width:0;
   justify-content: space-between;
 }
 .map-library-toolbar > input {

@@ -1,5 +1,5 @@
 <template>
-  <WorkspaceHeader :split-navigation="compact" class="chapter-toolbar" @resize="emit('resize', $event)">
+  <WorkspaceHeader ref="workspace" :scroll-source="null" class="chapter-toolbar" @resize="emit('resize', $event)">
     <template #identity>
     <SessionBackButton />
     <SessionToolbarIdentity
@@ -11,7 +11,7 @@
     />
     </template>
     <template #navigation><div class="chapter-toolbar-center">
-      <IconNavigation :pill="compact" data-tutorial="session-navigation" class="chapter-primary-nav"
+      <WorkspaceNavigation data-tutorial="session-navigation" class="chapter-primary-nav"
         :items="navigationItems" :model-value="navigationKey" label="Раздел сессии" @select="selectView">
         <template #icon="{ item }">
           <component :is="item.icon" :size="24" :style="item.key === 'combat' && encounterActive && navigationKey !== 'combat' ? { color: 'var(--danger)' } : undefined" aria-hidden="true" />
@@ -20,7 +20,7 @@
           <span v-if="item.key === 'combat' && encounterActive" class="chapter-combat-running-indicator" aria-hidden="true" />
           <kbd v-if="showShortcutHints && item.shortcut" class="chapter-shortcut-hint" aria-hidden="true">{{ item.key === 'combat' ? shortcutLabels.panel : shortcutLabels.alt }}+{{ item.shortcut }}</kbd>
         </template>
-      </IconNavigation>
+      </WorkspaceNavigation>
 
 
     </div>
@@ -31,9 +31,8 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useAppLayout } from '@/shared/composables/useAppLayout'
-import { IconNavigation } from '@sylvieshare/share-ui'
+import { computed,ref } from 'vue'
+import WorkspaceNavigation from '@/shared/ui/WorkspaceNavigation.vue'
 import { sessionNavigationItems, selectedSessionNavigation } from '../lib/sessionNavigation'
 import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
 import SessionToolbarIdentity from './SessionToolbarIdentity.vue'
@@ -59,8 +58,9 @@ const emit = defineEmits([
   'select-view', 'resize',
   'edit-session', 'session-updated', 'open-combat',
 ])
-const { compact } = useAppLayout()
 const shortcutLabels = sessionShortcutLabels()
+const workspace=ref(null)
+defineExpose({setScrollPosition:value=>workspace.value?.setScrollPosition(value)})
 const navigationItems = computed(() => sessionNavigationItems(props))
 const navigationKey = computed(() => selectedSessionNavigation(props.primaryView, props.combatActive))
 function selectView(key) {

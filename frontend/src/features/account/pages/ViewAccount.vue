@@ -10,11 +10,7 @@
     </header>
 
     <section class="account-surface">
-      <SlidingTabs v-model="activeTab" :tabs="tabs" aria-label="Разделы аккаунта">
-        <template #icon="{ tab }">
-          <component :is="tab.key === 'password' ? LockKeyhole : tab.key === 'tutorials' ? BookOpen : HardDrive" :size="15" aria-hidden="true" />
-        </template>
-      </SlidingTabs>
+      <PageHeaderPortal><WorkspaceNavigation v-model="activeTab" :items="navigationItems" label="Разделы аккаунта" /></PageHeaderPortal>
 
       <section
         v-if="activeTab === 'password'"
@@ -177,7 +173,9 @@ import {
   Music2,
   ShieldCheck,
 } from '@lucide/vue'
-import { FormField, FormTextInput, SegmentDonutChart, SlidingTabs } from '@sylvieshare/share-ui'
+import { FormField, FormTextInput, SegmentDonutChart } from '@sylvieshare/share-ui'
+import PageHeaderPortal from '@/shared/ui/PageHeaderPortal.vue'
+import WorkspaceNavigation from '@/shared/ui/WorkspaceNavigation.vue'
 import { fetchGet, fetchPut } from '@/shared/api/http'
 import { useAccountStore } from '@/stores/account'
 import { formatBytes, formatStorageDate, hasKnownFileSize } from '@/shared/lib/storageUsage'
@@ -212,6 +210,7 @@ const tabs = [
   { key: 'password', title: 'Пароль', id: 'account-password-tab', panelId: 'account-password-panel' },
   { key: 'storage', title: 'Использование пространства', id: 'account-storage-tab', panelId: 'account-storage-panel' },
 ]
+const navigationItems=tabs.map(tab=>({...tab,label:tab.title,icon:tab.key==='password'?LockKeyhole:tab.key==='tutorials'?BookOpen:HardDrive,attrs:{id:tab.id,'aria-controls':tab.panelId}}))
 const username = computed(() => accountStore.user?.login || 'Игрок')
 const initial = computed(() => (username.value[0] || '?').toUpperCase())
 const canChangePassword = computed(() => Boolean(password.current && password.next && password.confirm))

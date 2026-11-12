@@ -35,6 +35,6 @@ for (const width of [320, 834, 1440]) test(`character actions stay in sharp subh
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
   await subheader.getByRole('button', { name: 'Новый персонаж', exact: true }).click()
   await expect(page).toHaveURL(/\/chars\/new/)
-  await expect(page.locator('#app-character-subheader')).toHaveCount(0)
+  await expect(page.locator('#app-subheader')).toHaveCount(0)
   expect(errors).toEqual([])
 })

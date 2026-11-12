@@ -5,6 +5,7 @@
         v-for="item in items"
         :key="item.id"
         :title="`Действия: ${item.value}`"
+        :trigger-attrs="{style:{maxWidth:'100%'}}"
       >
         <template #trigger="{ open }">
           <button
@@ -21,15 +22,16 @@
           >
             <span class="dsov-icon">
               <ItemIcon
-                v-if="item.item && (item.item.iconImageUrl || item.item.svg)"
+                v-if="statusIconItem(item, failedIcons.has(item.id))"
                 class="dsov-item-icon"
-                :item="item.item"
+                :item="statusIconItem(item, failedIcons.has(item.id))"
+                @error.capture="failedIcons.add(item.id)"
                 :fallback-to-type="false"
                 :size="iconSize"
               />
               <BatteryLow v-else-if="item.kind === 'exhaustion'" :size="38" :stroke-width="1.7" aria-hidden="true" />
               <Sparkles v-else-if="item.kind === 'inspiration'" :size="40" :stroke-width="1.7" aria-hidden="true" />
-              <Sparkles v-else-if="iconsOnly" :size="iconSize - 4" aria-hidden="true" />
+              <Sparkles v-else-if="iconsOnly || header" :size="header ? 20 : iconSize - 4" aria-hidden="true" />
               <span v-else class="dsov-monogram" aria-hidden="true">{{ monogram(item.value) }}</span>
             </span>
 
@@ -76,20 +78,23 @@
       </RowActionMenu>
     </div>
 
-    <button v-if="showAddAction" class="dsov-add" type="button" @click.stop="$emit('add')">
+    <button v-if="showAddAction" class="dsov-add" type="button" :disabled="!editable" @click.stop="$emit('add')">
       <Plus :size="15" :stroke-width="1.8" aria-hidden="true" />
-      <span>Состояние</span>
+      <span>{{ header ? 'Добавить состояние' : 'Состояние' }}</span>
     </button>
   </div>
 </template>
 
 <script setup>
 import StatusMechanicsMenu from './StatusMechanicsMenu.vue'
+import { reactive } from 'vue'
 import { BatteryLow, Clock3, Minus, Plus, Sparkles } from '@lucide/vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
+import { statusIconItem } from '../../../lib/statusIcon'
+const failedIcons=reactive(new Set())
 
 defineProps({
   items: { type: Array, default: () => [] },
@@ -114,13 +119,16 @@ function monogram(value) {
 
 <style scoped>
 .dsov.dsov--header {padding:0;gap:8px}
-.dsov--header .dsov-row {gap:8px;flex-wrap:wrap}
-.dsov--header .dsov-effect {width:auto;flex:0 0 auto;grid-template-columns:20px minmax(0,1fr);gap:6px;min-height:32px;padding:4px 6px}
+.dsov--header .dsov-row {gap:8px;flex-wrap:wrap;max-width:100%}
+.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:20px minmax(0,1fr);gap:6px;min-height:32px;padding:4px 6px}
 .dsov--header .dsov-icon {width:20px;height:20px;min-width:20px}
 .dsov--header .dsov-item-icon {width:20px;height:20px}
 .dsov--header .dsov-icon :deep(img), .dsov--header .dsov-icon :deep(svg) {width:20px;height:20px}
 .dsov--header .dsov-copy {gap:0}
 .dsov--header .dsov-name {font-size:12px}
+.dsov--header .dsov-add {width:auto;height:32px;padding-inline:8px;font-size:12px;white-space:nowrap}
+.dsov--header {flex-wrap:wrap}
+.dsov-add:disabled {opacity:.45;cursor:not-allowed}
 .dsov { display: flex; min-width: 0; align-items: center; gap: 13px; padding: 0 0 15px 15px; }
 .dsov-row {
   display: flex;

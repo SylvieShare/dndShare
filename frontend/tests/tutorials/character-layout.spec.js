@@ -70,7 +70,7 @@ for (const width of [390, 834, 1440]) test(`health and sheet actions remain reac
   if (width < 1200) {
     const scroller = page.locator('.mobile-swipe-pane:not([inert]) .mobile-pane-scroll')
     await scroller.evaluate(el => { el.scrollTop = 180 })
-    await expect(page.locator('.character-summary-strip')).toHaveCount(0)
+    await expect(page.locator('.character-summary-strip')).toHaveCount(1)
     await expect(page.getByRole('button', {name:'Сводка персонажа',exact:true})).toHaveCount(0)
     await expect(heading).toBeInViewport()
   } else {
@@ -320,7 +320,7 @@ for (const width of [390, 834, 1440]) test(`sheet header is opaque at ${width}`,
   await header.getByRole('button', { name: 'Действия персонажа', exact: true }).click()
   await expect(page.locator('.ram-heading')).toHaveText('3 ур.')
   await page.keyboard.press('Escape')
-  await expect(page.locator('.character-summary-strip')).toHaveCount(0)
+  await expect(page.locator('.character-summary-strip')).toHaveCount(1)
   const geometry = await page.locator('.dnd-heading').evaluate(node => {
     const root = node.getBoundingClientRect(), image = node.querySelector('.portrait').getBoundingClientRect()
     const hp = node.querySelector('.heading-health').getBoundingClientRect(), stats = node.querySelector('.heading-metrics').getBoundingClientRect()
@@ -385,7 +385,7 @@ for (const width of [390, 834, 1440]) test(`active header conditions have their 
   expect((await status.boundingBox()).width).toBeLessThan(200)
   await status.click()
   await page.getByRole('menuitem', { name: 'Убрать', exact: true }).click()
-  await expect(strip).toHaveCount(0)
+  await expect(strip.getByRole('button', { name: 'Вдохновение', exact: true })).toHaveCount(0)
   await expect.poll(() => api.document().values.inspiration).toBe(false)
   await openHeaderAction(page, 'Добавить состояние')
   await expect(page.getByRole('dialog', { name: 'Эффекты и состояния', exact: true })).toBeVisible()

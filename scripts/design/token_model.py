@@ -15,10 +15,10 @@ KEY = re.compile(r'^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$')
 REQUIRED = {
     'chrome': {'blur', 'tint', 'fade-tail'},
     'layout': {'tablet', 'desktop', 'sidebar-collapsed', 'sidebar-expanded', 'drawer', 'content-max', 'header', 'border', 'touch-min', 'map-sidebar', 'map-rail', 'map-compact-peek', 'map-navigation-item',
-               'sheet-header-shadow-distance', 'sheet-header-shadow-height',
+               'workspace-header-shadow-distance', 'workspace-header-shadow-height',
                'sheet-gallery-height', 'sheet-gallery-add-width',
                'sheet-value-height', 'sheet-value-width', 'sheet-value-compact-height', 'sheet-value-compact-width',
-               'sheet-header-icon', 'sheet-header-action-icon', 'sheet-header-tile-max', 'sheet-header-armor', 'sheet-health-height', 'sheet-health-icon', 'sheet-navigation-item', 'sheet-navigation-height', 'sheet-navigation-icon', 'sheet-navigation-selected', 'sheet-navigation-compact', 'sheet-navigation-desktop-icon', 'sheet-navigation-desktop-height',
+               'sheet-header-icon', 'sheet-header-action-icon', 'sheet-header-tile-max', 'sheet-header-armor', 'sheet-health-height', 'sheet-health-icon', 'workspace-navigation-item', 'workspace-navigation-height', 'workspace-navigation-icon', 'workspace-navigation-selected', 'workspace-navigation-compact', 'workspace-navigation-desktop-icon', 'workspace-navigation-desktop-height',
                'sheet-max', 'sheet-stat-min', 'sheet-base-min', 'sheet-stats-column', 'sheet-utilities-column',
                'sheet-stats-column-min', 'sheet-utilities-column-min',
                'input-height', 'number-input-height', 'number-input-width', 'input-stepper-width',

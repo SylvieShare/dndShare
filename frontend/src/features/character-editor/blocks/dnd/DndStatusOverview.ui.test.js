@@ -13,7 +13,7 @@ describe('desktop status overview', () => {
     expect(source).toContain('v-if="summaryItems.length || showAddAction"')
     expect(viewSource).not.toContain('sheet-tile-title')
     expect(viewSource).toContain('class="dsov-add"')
-    expect(viewSource).toContain('<span>Состояние</span>')
+    expect(viewSource).toContain("header ? 'Добавить состояние' : 'Состояние'")
     expect(viewSource).not.toContain('<Pencil')
     expect(viewSource).toMatch(/\.dsov-add \{[\s\S]*?border: 1px dashed/)
     expect(viewSource).toMatch(/\.dsov \{[\s\S]*?padding: 0 0 15px 15px;/)
@@ -25,7 +25,7 @@ describe('desktop status overview', () => {
 
   it('renders raster or SVG item icons instead of reducing them to color dots', () => {
     expect(viewSource).toContain('<ItemIcon')
-    expect(viewSource).toContain('item.item.iconImageUrl || item.item.svg')
+    expect(viewSource).toContain('statusIconItem(item, failedIcons.has(item.id))')
     expect(editorSource).toContain('<ItemIcon')
     expect(viewSource).not.toContain('dsov-dot')
   })

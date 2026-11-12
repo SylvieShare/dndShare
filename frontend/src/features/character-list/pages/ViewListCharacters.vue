@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <Teleport v-if="route.path === '/chars'" defer to="#app-character-subheader">
+    <PageHeaderPortal>
     <div class="page-header">
       <h1 class="page-title">Персонажи</h1>
       <button class="create-btn" type="button" @click="openCreateModal">
@@ -8,7 +8,7 @@
         Новый персонаж
       </button>
     </div>
-    </Teleport>
+    </PageHeaderPortal>
 
     <p v-if="loadError && chars.length" role="alert">{{ loadError }} <button type="button" @click="loadChars()">Повторить</button></p>
     <CharacterListSkeleton v-if="loading && !chars.length" />
@@ -63,6 +63,7 @@ export default { name: 'ViewListCharacters' }
 
 <script setup>
 import CharacterListSkeleton from '../components/CharacterListSkeleton.vue'
+import PageHeaderPortal from '@/shared/ui/PageHeaderPortal.vue'
 import { computed, onActivated, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CharBox from "@/features/character-list/components/CharBox"

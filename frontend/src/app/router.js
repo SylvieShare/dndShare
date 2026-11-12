@@ -174,6 +174,7 @@ const routes = [
         name: "CreateCharacter",
         component: ViewCreateCharacter,
         meta: {
+            mobileHeader: 'hidden',
             title: 'Создание персонажа',
             section: 'characters',
             depth: 1,

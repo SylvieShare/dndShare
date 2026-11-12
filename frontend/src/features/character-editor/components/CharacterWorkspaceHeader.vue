@@ -1,5 +1,6 @@
 <template>
-  <WorkspaceHeader ref="workspace" v-bind="$attrs" class="character-workspace-header" solid :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" split-navigation :fit-navigation="format !== 'phone'">
+  <WorkspaceHeader ref="workspace" v-bind="$attrs" class="character-workspace-header" :scroll-source="null" :context-placement="format === 'phone' ? 'row' : 'auto'"
+    :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" :fit-navigation="format !== 'phone'">
     <template #identity>
       <ActionButton variant="quiet" :icon-only="compact" :aria-label="modal ? 'Закрыть лист' : 'К списку персонажей'" @click="modal ? emit('close') : router.push('/chars')">
         <template #icon><ArrowLeft :size="18" /></template>
@@ -17,9 +18,9 @@
         </div>
       </div>
     </template>
-    <template v-if="dnd && hasStates" #between>
+    <template v-if="dnd" #context>
       <div class="character-summary-strip">
-        <DndSheetStrip />
+        <DndSheetStrip show-add />
       </div>
     </template>
     <template v-if="tabs.length" #navigation>
@@ -47,9 +48,8 @@
 defineOptions({ inheritAttrs: false })
 import CharacterBlock from './CharacterBlock.vue'
 import { useRouter } from 'vue-router'
-import { computed, inject, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { ActionButton } from '@sylvieshare/share-ui'
-import { layoutTokens } from '@/app/design-tokens'
 import { ArrowLeft } from '@lucide/vue'
 import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
 import CharacterHeaderSessionMenu from './CharacterHeaderSessionMenu.vue'
@@ -57,23 +57,18 @@ import SettingsMenuTile from '../blocks/generic/SettingsMenuTile.vue'
 import CharacterSheetTabs from './sheet/CharacterSheetTabs.vue'
 import DndSheetHeading from './sheet/DndSheetHeading.vue'
 import DndSheetStrip from './sheet/DndSheetStrip.vue'
-import { isInspirationActive } from '../blocks/dnd/lib/mobileStatus'
 const props = defineProps({ dnd: Boolean, format: String, modal: Boolean, contentWidth: String, name: String, subtitle: String, iconUrl: String, session: Object, transfers: Object, compact: Boolean, showMenu: Boolean,
   selection: Array, animateNavigation: { type: Boolean, default: true },
   tabs: { type: Array, default: () => [] }, activeTab: Number })
 const emit = defineEmits(['select-tab', 'close'])
 const workspace = ref(null)
 const profileEditor = ref(null), experienceEditor = ref(null), healthEditor = ref(null), statusEditor = ref(null)
-const ctx = inject('charCtx', {})
-const hasStates = computed(() => ctx.characterStatuses?.entries?.length || ctx.values?.exhaustion?.level > 0 || isInspirationActive(ctx.values?.inspiration))
 function openHeading(target) {
   const editors = { profile: profileEditor, experience: experienceEditor, health: healthEditor, 'add-status': statusEditor }
   editors[target]?.value?.open()
 }
 function setScrollPosition(value) {
-  const scroll = Math.max(0, Number(value) || 0), element = workspace.value?.$el
-  element?.toggleAttribute('data-sheet-scrolled', scroll > 0)
-  element?.style.setProperty('--sheet-scroll-depth', String(Math.min(1, scroll / layoutTokens['sheet-header-shadow-distance'])))
+  workspace.value?.setScrollPosition(value)
 }
 defineExpose({ setScrollPosition })
 const router = useRouter()
@@ -85,31 +80,7 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
 .heading-editors {position:absolute;width:0;height:0}
 .heading-tools {display:flex;align-items:center;gap:2px;flex:none}
 .character-summary-strip {position:relative;z-index:1}
-.character-workspace-header {
-  --workspace-header-background: var(--subheader);
-  --workspace-header-identity-gap: var(--spacing-small);
-  --workspace-subheader-background: color-mix(in srgb, var(--subheader) 75%, var(--bg));
-  --workspace-subheader-outer-background: var(--workspace-subheader-background);
-  --workspace-subheader-radius: 0px;
-  --workspace-subheader-inset: var(--spacing-page);
-  --workspace-subheader-padding: 0;
-  --workspace-subheader-shadow: none;
-}
-.character-workspace-header::after {
-  content: '';
-  position: absolute;
-  z-index: 2;
-  top: 100%;
-  left: 0;
-  right: 0;
-  height: var(--layout-sheet-header-shadow-height);
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--scrim) 28%, transparent), transparent);
-  opacity: var(--sheet-scroll-depth, 0);
-  pointer-events: none;
-  transition: opacity var(--motion-feedback);
-}
-.character-workspace-header:not([data-sheet-scrolled])::after { visibility: hidden; opacity: 0; transition: none; }
-@media (prefers-reduced-motion: reduce) { .character-workspace-header::after { transition: none; } }
+.character-workspace-header { --workspace-header-identity-gap: var(--spacing-small); }
 .character-identity {
   display: flex;
   align-items: center;

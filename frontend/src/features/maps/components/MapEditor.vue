@@ -1,6 +1,7 @@
 <template>
   <main
     class="map-editor-workspace"
+    @scroll.capture="trackWorkspaceScroll"
     :class="{ 'map-editor-workspace--embedded': embedded }"
     :style="{
       '--map-overlay-left': `${Math.max(0, sidebarWidth - railWidth)}px`,
@@ -8,6 +9,7 @@
     }"
   >
     <MapEditorHeader
+      ref="workspaceHeader"
       v-if="!embedded"
       :editor="e"
       :admin="isAdmin && !sessionMode"
@@ -168,6 +170,9 @@ import {
 import { X } from "@lucide/vue";
 import MapEditingTools from "./MapEditingTools.vue";
 import MapEditorHeader from "./MapEditorHeader.vue";
+import { useWorkspaceScrollRegion } from '@/shared/composables/useWorkspaceScrollRegion';
+const workspaceHeader=ref(null);
+const trackWorkspaceScroll=useWorkspaceScrollRegion(workspaceHeader);
 import MapSelectionPanel from "./MapSelectionPanel.vue";
 import MapSaveErrorDialog from "./MapSaveErrorDialog.vue";
 import MapTileReference from "./MapTileReference.vue";

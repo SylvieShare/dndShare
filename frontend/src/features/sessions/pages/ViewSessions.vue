@@ -1,5 +1,6 @@
 <template>
   <div class="page">
+    <PageHeaderPortal><div class="sessions-subheader">
     <div class="page-header">
       <div class="header-left">
         <h1 class="page-title">Сессии</h1>
@@ -25,18 +26,8 @@
       </div>
     </div>
 
-    <div class="filter-pills">
-      <button
-        v-for="f in FILTERS"
-        :key="f.key"
-        class="pill"
-        :class="{ active: filter === f.key, 'pill--lg': f.key === 'gm' || f.key === 'player' }"
-        @click="filter = f.key"
-      >
-        {{ f.label }}
-        <span class="pill-count">{{ filterCount(f.key) }}</span>
-      </button>
-    </div>
+    <WorkspaceNavigation v-model="filter" :items="filterItems" label="Категории сессий" />
+    </div></PageHeaderPortal>
 
     <LoadingState v-if="loading" label="Загружаем сессии…" />
 
@@ -140,6 +131,8 @@
 
 <script setup>
 import { LoadingIndicator } from '@sylvieshare/share-ui'
+import PageHeaderPortal from '@/shared/ui/PageHeaderPortal.vue'
+import WorkspaceNavigation from '@/shared/ui/WorkspaceNavigation.vue'
 import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -156,6 +149,7 @@ const FILTERS = [
   { key: 'gm',      label: 'Я веду' },
   { key: 'player',  label: 'Я играю' },
 ]
+const filterItems=computed(()=>FILTERS.map(item=>({...item,label:`${item.label} (${filterCount(item.key)})`,icon:item.key==='gm'?Sparkles:item.key==='player'?ArrowRight:KeyRound})))
 
 const router = useRouter()
 const route = useRoute()

@@ -37,7 +37,7 @@ describe('app header', () => {
   it('keeps the page title in its subheader outlet without repeating it in the main row', async () => {
     const html = await renderHeader('/chars')
     expect(html).toContain('DnD Share')
-    expect(html).toContain('id="app-character-subheader"')
+    expect(html).toContain('id="app-subheader"')
     expect(html).not.toContain('class="header-title">Персонажи')
   })
   it('retains a semantic parent action on a nested page', async () => {
