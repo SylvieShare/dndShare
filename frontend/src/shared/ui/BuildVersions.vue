@@ -1,6 +1,6 @@
 <template>
   <button ref="anchor" type="button" class="build-versions" :class="{ 'build-versions--compact': !expanded }" :aria-label="`Версии: фронт ${frontendBuild.version}, бэк ${backendVersion}`" @click="open = !open">
-    <template v-if="expanded"><span>Фронт {{ frontendBuild.version }}</span><span>Бэк {{ backendVersion }}<span v-if="!versionState.serverFresh" title="Последняя известная версия"> ·</span></span><span v-if="versionState.native?.pending" class="build-update-ready">Обновление готово</span></template>
+    <template v-if="expanded"><span>Фронт {{ frontendBuild.version }}</span><span>Бэк {{ backendVersion }}<span v-if="!versionState.serverFresh" title="Последняя известная версия"> ·</span></span><span v-if="versionState.native?.android">Приложение {{ versionState.native.android.version }}</span><span v-if="versionState.native?.pending" class="build-update-ready">Обновление готово</span></template>
     <Info v-else :size="16" aria-hidden="true" />
   </button>
   <BasePopover :open="open" :anchor="anchor" placement="bottom-start" transition-preset="action-menu" :min-width="260" role="dialog" aria-label="Версии приложения" @update:open="open = $event">
