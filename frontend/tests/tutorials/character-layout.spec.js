@@ -324,14 +324,14 @@ for (const width of [390, 834, 1440]) test(`sheet header is opaque at ${width}`,
   const geometry = await page.locator('.dnd-heading').evaluate(node => {
     const root = node.getBoundingClientRect(), image = node.querySelector('.portrait').getBoundingClientRect()
     const hp = node.querySelector('.heading-health').getBoundingClientRect(), stats = node.querySelector('.heading-metrics').getBoundingClientRect()
-    const track = node.querySelector('.health-strip').getBoundingClientRect(), readout = node.querySelector('.health-summary').getBoundingClientRect()
-    return { width: root.width, avatarRight: image.right, avatarBottom: image.bottom, statsLeft: stats.left, hpTop: hp.top, trackLeft: track.left, readoutRight: readout.right, trackHeight: track.height }
+    const combat = node.querySelector('.heading-combat').getBoundingClientRect()
+    return { width: root.width, avatarRight: image.right, statsLeft: stats.left, hpLeft: hp.left, statsTop: stats.top, combatBottom: combat.bottom }
   })
   expect(geometry.width).toBeLessThanOrEqual(420)
   expect(geometry.statsLeft).toBeGreaterThan(geometry.avatarRight)
-  expect(geometry.hpTop).toBeGreaterThanOrEqual(geometry.avatarBottom)
-  expect(geometry.readoutRight).toBeLessThan(geometry.trackLeft)
-  expect(geometry.trackHeight).toBe(6)
+  expect(geometry.hpLeft).toBeGreaterThan(geometry.avatarRight)
+  expect(geometry.statsTop).toBeGreaterThanOrEqual(geometry.combatBottom)
+  await expect(page.locator('.dnd-heading [role="meter"]')).toHaveCount(0)
   await expect(page.locator('.dnd-heading canvas')).toHaveCount(0)
   await page.locator('.dnd-heading').evaluate(node => node.blur())
   await testInfo.attach('character-header', { body: await header.screenshot(), contentType: 'image/png' })

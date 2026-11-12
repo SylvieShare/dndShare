@@ -2,19 +2,22 @@
   <RowActionMenu title="Действия персонажа" :heading="menuSummary" :trigger-attrs="{ style: { maxWidth: 'var(--layout-sheet-header-tile-max)' } }" block>
     <template #trigger="{ open }">
       <button class="dnd-heading action-menu-source" :class="{ 'action-menu-source--open': open }"
-        type="button" aria-label="Действия персонажа" :aria-expanded="open">
+        type="button" aria-label="Действия персонажа" :aria-expanded="open"
+        :aria-description="`${name || 'Персонаж'}: здоровье ${current} из ${maximum}${temporary ? ', временные HP ' + temporary : ''}, класс доспеха ${armor}, пассивное внимание ${perception}, расследование ${investigation}`">
         <span class="portrait">
           <img v-if="iconUrl && !failed" :src="iconUrl" alt="" @error="failed = true" />
           <span v-else>{{ Array.from(name || '?')[0] }}</span>
         </span>
         <span class="identity"><strong>{{ name || 'Лист персонажа' }}</strong>
         </span>
+        <span class="heading-combat">
+          <span class="heading-metric heading-armor" :aria-label="`Класс доспеха ${armor}`" title="Класс доспеха"><Shield :size="14" />{{ armor }}</span>
+          <SheetHealth :current="current" :maximum="maximum" :temporary="temporary" />
+        </span>
         <span class="heading-metrics">
-          <span class="heading-metric" :aria-label="`Класс доспеха ${armor}`" title="Класс доспеха"><Shield :size="14" />{{ armor }}</span>
           <span class="heading-metric" :aria-label="`Пассивное внимание ${perception}`" title="Пассивное внимание"><Eye :size="14" />{{ perception }}</span>
           <span class="heading-metric" :aria-label="`Пассивное расследование ${investigation}`" title="Пассивное расследование"><Search :size="14" />{{ investigation }}</span>
         </span>
-        <SheetHealth :current="current" :maximum="maximum" :temporary="temporary" />
       </button>
     </template>
     <template #default="{ close }">
@@ -71,16 +74,18 @@ watch(() => props.iconUrl, () => { failed.value = false })
 function select(panel, close) { close(); emit('open', panel) }
 </script>
 <style scoped>
-.dnd-heading {display:grid;grid-template-columns:var(--layout-sheet-header-icon) minmax(0,1fr);gap:4px var(--spacing-small);width:100%;min-width:0;padding:0;border:0;background:transparent;color:var(--text-1);text-align:left;font:inherit;cursor:pointer}
-.portrait {grid-row:1/3;align-self:center;display:grid;place-items:center;width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);overflow:hidden;border-radius:var(--radius-input);color:var(--accent-soft);font-size:var(--type-sheet-header-size)}
+.dnd-heading {display:grid;grid-template-columns:var(--layout-sheet-header-icon) minmax(0,1fr);column-gap:var(--spacing-small);width:100%;min-width:0;padding:0;border:0;background:transparent;color:var(--text-1);text-align:left;font:inherit;cursor:pointer}
+.portrait {grid-row:1/4;align-self:center;display:grid;place-items:center;width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);overflow:hidden;border-radius:var(--radius-input);color:var(--accent-soft);font-size:var(--type-sheet-header-size)}
 .portrait img {width:100%;height:100%;object-fit:cover}
 .identity {display:flex;flex-direction:column;align-items:flex-start;min-width:0}
 .identity strong,.identity small {max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.identity strong {font-size:var(--type-sheet-header-size)}
+.identity strong {font-size:var(--type-sheet-header-size);line-height:var(--type-sheet-header-line-height)}
 .identity small {font-size:var(--type-context-size);color:var(--text-muted)}
-.heading-metrics {display:flex;align-items:center;flex-wrap:wrap;gap:3px 8px;font-size:var(--type-context-size);line-height:var(--type-context-line-height);font-variant-numeric:tabular-nums}
+.heading-combat,.heading-metrics {display:flex;align-items:center;flex-wrap:wrap;gap:0 var(--spacing-small);min-width:0;font-size:var(--type-context-size);line-height:var(--type-context-line-height);font-variant-numeric:lining-nums tabular-nums}
+.heading-metrics {color:var(--text-muted)}
+.heading-armor {font-weight:600}
 .heading-metric {display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
-.heading-metrics svg {color:var(--text-muted)}
+.heading-combat > .heading-metric svg,.heading-metrics svg {color:var(--text-muted)}
 .experience-action {display:flex;flex-direction:column;gap:5px;width:100%;min-width:0}
 .experience-action small {color:var(--text-muted);font-size:12px}
 .experience-track {height:7px;border-radius:var(--radius-input);overflow:hidden;background:var(--surface-raised)}
