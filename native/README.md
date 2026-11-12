@@ -22,6 +22,12 @@ NDK, CMake, Filament, Room, Ktor или отдельные шрифты UI. Сж
 в APK не включаются: Android упаковывает исходные веб-ресурсы самостоятельно.
 Готовый файл: androidApp/build/outputs/apk/debug/androidApp-debug.apk.
 
+В релизе после Prepare из той же чистой release-копии выполнить
+scripts/native/build.ps1 -Target Android -PreparedFrontend. Флаг проверяет commit
+и версии, затем упаковывает готовый dist без повторного Vite build. Это сохраняет
+одинаковые байты веб-ресурсов сайта, APK и OTA; .vite manifest — служебный файл
+сборщика и не является исполняемым ресурсом APK.
+
 Для установки подготовленного APK используется [install.ps1](../scripts/native/install.ps1)
 с ReleaseManifest. Package ID и подпись сохраняются; старые тестовые локальные
 таблицы Compose-клиента не импортируются. Первый вход в новую оболочку требует сети.

@@ -12,6 +12,10 @@
     "webContentsDebuggingEnabled": false
   },
   "plugins": {
+    "SystemBars": {
+      "hidden": true,
+      "insetsHandling": "disable"
+    },
     "CapacitorCookies": {
       "enabled": false
     },

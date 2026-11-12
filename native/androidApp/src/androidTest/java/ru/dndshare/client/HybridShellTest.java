@@ -24,6 +24,8 @@ public class HybridShellTest {
             if (!hidden.get()) Thread.sleep(100);
         }
         assertTrue("Status and navigation bars must be hidden", hidden.get());
+        activity.onActivity(host -> assertEquals("WebView must use the full window height",
+            host.getWindow().getDecorView().getHeight(), host.getBridge().getWebView().getHeight()));
     }
     private String evaluate(ActivityScenario<MainActivity> activity, String script) throws Exception {
         var result = new AtomicReference<String>();
@@ -45,6 +47,13 @@ public class HybridShellTest {
             waitFor(activity, "!!window.Capacitor?.Plugins?.LocalStore && !!document.getElementById('app').__vue_app__");
             assertEquals("\"https://dndshare.ru\"", evaluate(activity, "location.origin"));
             assertSystemBarsHidden(activity);
+            int fullHeight = Integer.parseInt(evaluate(activity, "innerHeight"));
+            evaluate(activity, "const input=document.createElement('input');input.id='ime-test';input.style='position:fixed;top:100px;left:10px';document.body.append(input);input.focus()");
+            activity.onActivity(host -> androidx.core.view.WindowCompat.getInsetsController(host.getWindow(), host.getBridge().getWebView()).show(androidx.core.view.WindowInsetsCompat.Type.ime()));
+            waitFor(activity, "innerHeight < " + fullHeight);
+            evaluate(activity, "document.getElementById('ime-test').remove()");
+            activity.onActivity(host -> androidx.core.view.WindowCompat.getInsetsController(host.getWindow(), host.getBridge().getWebView()).hide(androidx.core.view.WindowInsetsCompat.Type.ime()));
+            waitFor(activity, "innerHeight === " + fullHeight);
             evaluate(activity, "window.__storageTest=false;window.Capacitor.Plugins.LocalStore.batch({changes:[{key:'test:atomic',value:JSON.stringify({saved:42})}]}).then(()=>window.__storageTest=true)");
             waitFor(activity, "window.__storageTest===true");
             activity.recreate();

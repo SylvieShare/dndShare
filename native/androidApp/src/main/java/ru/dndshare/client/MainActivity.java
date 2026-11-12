@@ -62,15 +62,19 @@ public class MainActivity extends BridgeActivity {
             }
             @Override public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                ViewCompat.requestApplyInsets(view);
+                ViewCompat.requestApplyInsets(getWindow().getDecorView());
             }
         });
-        ViewCompat.setOnApplyWindowInsetsListener(bridge.getWebView(), (view, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(getWindow().getDecorView(), (view, insets) -> {
             // Transient system bars overlay the UI; revealing them must not resize the page.
             var bars = insets.getInsets(WindowInsetsCompat.Type.displayCutout());
+            var keyboard = insets.getInsets(WindowInsetsCompat.Type.ime());
+            view.setPadding(bars.left, 0, bars.right, keyboard.bottom);
             float density = getResources().getDisplayMetrics().density;
             bridge.getWebView().evaluateJavascript("document.documentElement.style.setProperty('--native-safe-top','" + bars.top / density + "px');document.documentElement.style.setProperty('--native-safe-bottom','" + bars.bottom / density + "px')", null);
-            return insets;
+            return new WindowInsetsCompat.Builder(insets)
+                .setInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout() | WindowInsetsCompat.Type.ime(), androidx.core.graphics.Insets.NONE)
+                .build();
         });
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override public void handleOnBackPressed() {
@@ -82,6 +86,7 @@ public class MainActivity extends BridgeActivity {
         var controller = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
         controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
         controller.hide(WindowInsetsCompat.Type.statusBars() | WindowInsetsCompat.Type.navigationBars());
+        ViewCompat.requestApplyInsets(getWindow().getDecorView());
     }
     @Override public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);

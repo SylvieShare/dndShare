@@ -1,12 +1,22 @@
 param(
     [ValidateSet('Android', 'All', 'Test', 'DeviceTest')][string]$Target = 'Android',
     [string]$DeviceSerial = 'emulator-5554',
-    [string]$TestClass
+    [string]$TestClass,
+    [switch]$PreparedFrontend
 )
 $ErrorActionPreference = 'Stop'
 # WSL may pass a reduced PATHEXT; use Windows' executable extensions locally.
 $env:PATHEXT = [Environment]::GetEnvironmentVariable('PATHEXT', 'Machine')
 $project = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..\native'))
+if ($PreparedFrontend) {
+    if ($Target -ne 'Android') { throw 'PreparedFrontend is only available for an Android release build.' }
+    $sourceRoot = Split-Path -Parent $project
+    if (& git -C $sourceRoot status --porcelain) { throw 'A prepared frontend requires a clean release checkout.' }
+    & node (Join-Path $sourceRoot 'scripts\release\versions.mjs') --check
+    if ($LASTEXITCODE -ne 0) { throw 'Component versions do not match the release source.' }
+    $built = Get-Content -LiteralPath (Join-Path $sourceRoot 'frontend\target\dist\build-info.json') -Raw | ConvertFrom-Json
+    if ($built.commitSha -ne (& git -C $sourceRoot rev-parse HEAD)) { throw 'Prepare the frontend from this exact commit first.' }
+}
 $env:JAVA_HOME = [Environment]::GetEnvironmentVariable('JAVA_HOME', 'User')
 if (-not $env:JAVA_HOME) { $env:JAVA_HOME = 'C:\Program Files\Android\Android Studio\jbr' }
 $env:ANDROID_HOME = [Environment]::GetEnvironmentVariable('ANDROID_HOME', 'User')
@@ -30,6 +40,7 @@ if ($Target -eq 'DeviceTest') {
     'DeviceTest' { @(':androidApp:connectedDebugAndroidTest') }
     'All' { @(':androidApp:testDebugUnitTest', ':androidApp:lintDebug', ':androidApp:assembleDebug') }
 })
+if ($PreparedFrontend) { $nativeTasks += @('-x', ':androidApp:bundleWeb') }
 $testArguments = @()
 if ($TestClass) {
     if ($Target -ne 'DeviceTest' -or $TestClass -notmatch '^[A-Za-z0-9_.$#]+$') { throw 'TestClass requires DeviceTest and a qualified test name.' }
