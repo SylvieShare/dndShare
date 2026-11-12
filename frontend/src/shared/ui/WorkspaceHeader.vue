@@ -69,13 +69,13 @@ onBeforeUnmount(() => observer?.disconnect());
   box-sizing: border-box;
   width: 100%;
   margin-inline: auto;
-  padding: var(--spacing-xs) var(--spacing-page);
+  padding: var(--spacing-small) var(--spacing-page);
   transition: max-width var(--motion-navigation);
 }
 .workspace-header-inner--page { padding-inline: var(--spacing-page); }
 .workspace-header-identity {
   min-width: 0;
-  min-height: calc(var(--layout-header) - 2 * var(--spacing-xs) - var(--layout-border));
+  min-height: calc(var(--layout-header) - 2 * var(--spacing-small) - var(--layout-border));
   display: flex;
   align-items: center;
   gap: var(--workspace-header-identity-gap, 0px);
