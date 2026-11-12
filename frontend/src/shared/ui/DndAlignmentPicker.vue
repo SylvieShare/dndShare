@@ -15,18 +15,21 @@
     </button>
     <span v-else class="alignment-readonly">{{ normalizedValue || placeholder }}</span>
 
-    <BasePopover v-model:open="open" :anchor="trigger" placement="bottom-start" :min-width="330">
+    <BasePopover v-model:open="open" :anchor="trigger" placement="bottom-start" :min-width="0" transition-preset="action-menu">
       <div class="alignment-popover" role="grid" aria-label="Мировоззрение">
-        <button
+        <ChoiceCard
           v-for="alignment in DND_ALIGNMENTS"
           :key="alignment"
           class="alignment-option"
-          :class="{ 'alignment-option--active': normalizedValue === alignment }"
-          type="button"
+          layout="icon"
+          :label="alignment"
+          :model-value="normalizedValue === alignment"
           role="gridcell"
           :aria-selected="normalizedValue === alignment"
-          @click="select(alignment)"
-        >{{ alignment }}</button>
+          @update:model-value="select(alignment)"
+        >
+          <template #icon><component :is="alignmentIcons[alignment]" :stroke-width="1.6" aria-hidden="true" /></template>
+        </ChoiceCard>
       </div>
     </BasePopover>
   </div>
@@ -34,7 +37,8 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { BasePopover } from '@sylvieshare/share-ui'
+import { BasePopover, ChoiceCard } from '@sylvieshare/share-ui'
+import { Bird, CircleDot, Crown, Flame, HandHeart, Scale, ShieldCheck, Skull, Wind } from '@lucide/vue'
 import { DND_ALIGNMENTS, normalizeDndAlignment } from '@/shared/lib/dndAlignment'
 
 const props = defineProps({
@@ -46,6 +50,17 @@ const emit = defineEmits(['update:modelValue'])
 const trigger = ref(null)
 const open = ref(false)
 const normalizedValue = computed(() => normalizeDndAlignment(props.modelValue))
+const alignmentIcons = {
+  'Законно-добрый': ShieldCheck,
+  'Нейтрально-добрый': HandHeart,
+  'Хаотично-добрый': Bird,
+  'Законно-нейтральный': Scale,
+  'Нейтральный': CircleDot,
+  'Хаотично-нейтральный': Wind,
+  'Законно-злой': Crown,
+  'Нейтрально-злой': Skull,
+  'Хаотично-злой': Flame,
+}
 
 function select(value) {
   emit('update:modelValue', value)
@@ -75,21 +90,14 @@ function select(value) {
 .alignment-trigger--empty { color: var(--text-muted); }
 .alignment-trigger svg { width: 14px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .alignment-readonly { display: inline-flex; min-height: 28px; align-items: center; color: var(--text-1); font-size: 15px; }
-.alignment-popover { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; width: min(420px, calc(100vw - 32px)); padding: 7px; }
-.alignment-option {
-  min-height: 54px;
-  padding: 7px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
-  color: var(--text-2);
-  font: inherit;
-  font-size: 11px;
-  font-weight: 650;
-  line-height: 1.25;
-  cursor: pointer;
+.alignment-popover {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-compact);
+  width: min(var(--layout-morph-editor-width), calc(100vw - 2 * var(--spacing-page)));
 }
-.alignment-option:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); color: var(--text-1); }
-.alignment-option--active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 15%, var(--surface)); color: var(--accent-soft); }
-@media (max-width: 390px) { .alignment-popover { gap: 4px; padding: 5px; }.alignment-option { min-height: 50px; padding: 5px 3px; font-size: 10px; } }
+.alignment-option {
+  --choice-card-label-size: var(--type-context-size);
+  --choice-card-label-line-height: var(--type-context-line-height);
+}
 </style>

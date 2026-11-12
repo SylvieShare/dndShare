@@ -384,7 +384,8 @@ Key rules:
 - feat and item selection uses the handbook `ItemPickerModal`;
 - the Personality step's dice action uses the shared race-aware name generator,
   preferring the selected subrace and avoiding an unchanged consecutive result;
-- the Personality step uses the same fixed 3×3 D&D alignment enum as the sheet;
+- the Personality step uses the same fixed 3×3 D&D alignment enum as the sheet,
+  with a distinct icon above each compact caption and a checkmark on the selected value;
 - classes whose handbook `spellcasting.start_level` is 1 create a spellbook in
   the creation wizard; the class item becomes the unique owner of its tab.
   When the tab mode supports preparation, selected

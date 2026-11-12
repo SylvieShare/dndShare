@@ -350,7 +350,11 @@ schema key; components do not try `desc` and then `description`.
 
 `person_alignment` is a fixed nine-value D&D enum rendered by the shared 3×3
 alignment popover in both the character sheet and the creation wizard. The
-print view renders larger, always-open spell-slot circles and gives inline rich
+popover uses `ChoiceCard layout="icon"`: each value has its own Lucide icon above
+a compact caption. The selected value has an accent surface and a checkmark;
+the three-column grid fits narrow windows without truncating names. Selection
+still saves the same enum string, and Escape dismisses the popover.
+The print view renders larger, always-open spell-slot circles and gives inline rich
 dice formulas a quieter paper style inside feature and spell descriptions.
 Print CSS uses semantic `--font-print-ui`, `--font-print-display` and
 `--font-print-prose` stacks. Their current Arial/Georgia values deliberately
