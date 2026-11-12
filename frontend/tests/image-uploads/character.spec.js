@@ -38,7 +38,7 @@ test('portrait keeps cropping and uploads WebP', async ({ page }) => {
   await openCharacter(page)
   const uploads = await captureUploads(page)
   const buffer = await raster(page, 'image/png', 600, 800)
-  await page.getByRole('tab', { name: 'Личность', exact: true }).click()
+  await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Личность', exact: true }).click()
   await page.locator('.avatar input[type=file]').first().setInputFiles({ name: 'Портрет.png', mimeType: 'image/png', buffer })
   await expect(page.locator('.avatar-crop-stage img')).toBeVisible()
   await page.getByRole('button', { name: 'Применить', exact: true }).click()

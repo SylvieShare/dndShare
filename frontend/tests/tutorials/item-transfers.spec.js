@@ -69,7 +69,7 @@ for (const mobile of [false, true]) test(`item transfer request, refusal and acc
     await expect(button).toHaveAttribute('title', /Тайны долины.*Гл. 3 · Забытый храм/)
     await expect(header.getByRole('button', { name:'К списку персонажей' })).toBeVisible()
 
-    if (!mobile) await page.getByRole('tab', { name: 'Снаряжение', exact: true }).click()
+    if (!mobile) await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Снаряжение', exact: true }).click()
     await expect(page.locator('.character-workspace-header [data-tutorial="character-session"]')).toBeVisible()
     if (mobile) await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/settling/)
     await page.evaluate(async () => {

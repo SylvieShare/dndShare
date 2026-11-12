@@ -36,7 +36,7 @@ for (const mobile of [false, true]) test(`potion self-use applies healing and ef
   })
   await page.goto('/tests/tutorials/fixtures/tutorials.html?page=/char/hero')
   if (mobile) await page.getByRole('button', { name: 'Предметы', exact: true }).click()
-  else await page.getByRole('tab', { name: 'Снаряжение', exact: true }).click()
+  else await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Снаряжение', exact: true }).click()
   const row = page.locator('.inventory-bag-item:visible')
   await row.scrollIntoViewIfNeeded()
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))

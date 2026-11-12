@@ -1,5 +1,5 @@
 <template>
-  <WorkspaceHeader v-bind="$attrs" class="character-workspace-header" solid :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" :split-navigation="stackedNavigation">
+  <WorkspaceHeader v-bind="$attrs" class="character-workspace-header" solid :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" split-navigation :fit-navigation="format !== 'phone'">
     <template #identity>
       <ActionButton variant="quiet" :icon-only="compact" :aria-label="modal ? 'Закрыть лист' : 'К списку персонажей'" @click="modal ? emit('close') : router.push('/chars')">
         <template #icon><ArrowLeft :size="18" /></template>
@@ -23,7 +23,7 @@
       </div>
     </template>
     <template v-if="tabs.length" #navigation>
-      <CharacterSheetTabs :pill="compact || stackedNavigation" :tabs="tabs" :active-tab="activeTab" @select="emit('select-tab', $event)" />
+      <CharacterSheetTabs :format="format" :tabs="tabs" :active-tab="activeTab" :selection="selection" :animate="animateNavigation" @select="emit('select-tab', $event)" />
     </template>
     <template #actions>
       <div class="heading-tools">
@@ -57,7 +57,8 @@ import CharacterSheetTabs from './sheet/CharacterSheetTabs.vue'
 import DndSheetHeading from './sheet/DndSheetHeading.vue'
 import DndSheetStrip from './sheet/DndSheetStrip.vue'
 import { isInspirationActive } from '../blocks/dnd/lib/mobileStatus'
-const props = defineProps({ dnd: Boolean, format: String, modal: Boolean, contentWidth: String, name: String, subtitle: String, iconUrl: String, session: Object, transfers: Object, stackedNavigation: Boolean, compact: Boolean, showMenu: Boolean,
+const props = defineProps({ dnd: Boolean, format: String, modal: Boolean, contentWidth: String, name: String, subtitle: String, iconUrl: String, session: Object, transfers: Object, compact: Boolean, showMenu: Boolean,
+  selection: Array, animateNavigation: { type: Boolean, default: true },
   tabs: { type: Array, default: () => [] }, activeTab: Number })
 const emit = defineEmits(['select-tab', 'close'])
 const profileEditor = ref(null), experienceEditor = ref(null), healthEditor = ref(null), statusEditor = ref(null)
@@ -108,10 +109,11 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
 .character-workspace-header {
   --workspace-header-background: var(--subheader);
   --workspace-header-identity-gap: var(--spacing-small);
-  --workspace-subheader-background: transparent;
+  --workspace-subheader-background: color-mix(in srgb, var(--subheader) 75%, var(--bg));
+  --workspace-subheader-outer-background: var(--workspace-subheader-background);
   --workspace-subheader-radius: 0px;
   --workspace-subheader-inset: var(--spacing-page);
-  --workspace-subheader-padding: var(--spacing-xs) 0 0;
+  --workspace-subheader-padding: 0;
   --workspace-subheader-shadow: none;
 }
 .character-identity {

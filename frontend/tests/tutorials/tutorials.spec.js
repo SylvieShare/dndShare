@@ -174,10 +174,10 @@ test('mobile panes mount on first visit and survive cyclic swipes', async ({page
   // Keep the gesture on its original element while cyclic ordering changes.
   const original = page.locator('.mobile-pane-scroll[data-retained=yes]')
   await touch(original, 'touchend', 310)
-  await expect(page.locator('.mobile-tab-btn').last()).toHaveClass(/active/)
+  await expect(page.locator('.share-icon-navigation__item').last()).toHaveClass(/share-icon-navigation__item--selected/)
   await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/dragging|settling/)
-  await page.locator('.mobile-tab-btn').first().click()
-  await expect(page.locator('.mobile-tab-btn').first()).toHaveClass(/active/)
+  await page.locator('.share-icon-navigation__item').first().click()
+  await expect(page.locator('.share-icon-navigation__item').first()).toHaveClass(/share-icon-navigation__item--selected/)
   await expect(original).toHaveAttribute('data-retained', 'yes')
   expect(await populated()).toBe(2)
 })
@@ -189,7 +189,7 @@ test('sheet header follows the centered width of its active tab', async ({ page 
   const header = page.locator('.character-workspace-header')
   const content = page.locator('.desktop-tabs > .container:visible')
   await expect(content).toBeVisible()
-  await expect(header.locator('h1')).toHaveCSS('font-size', '16px')
+  await expect(header.locator('.dnd-heading .identity strong')).toHaveCSS('font-size', '20px')
   for (const width of [1440, 1920, 2560]) {
     await page.setViewportSize({ width, height: 1000 })
     await expect.poll(async () => {
@@ -198,7 +198,7 @@ test('sheet header follows the centered width of its active tab', async ({ page 
       return Math.max(Math.abs(body.x - bar.x), Math.abs(body.width - bar.width))
     }).toBeLessThan(.5)
   }
-  await page.getByRole('tab', { name: 'Снаряжение', exact: true }).click()
+  await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Снаряжение', exact: true }).click()
   await expect.poll(async () => {
     const body = await content.boundingBox()
     const bar = await header.locator('.workspace-header-inner').boundingBox()

@@ -43,7 +43,7 @@ for (const mobile of [false, true]) test(`concentration links and self applicati
   await page.goto('/tests/tutorials/fixtures/tutorials.html?page=/char/hero')
   await expect(page.locator('.view')).toBeVisible()
   if (mobile) await page.getByRole('button', { name: 'Магия', exact: true }).click()
-  else await page.getByRole('tab', { name: 'Магия', exact: true }).click()
+  else await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Магия', exact: true }).click()
   const block = page.locator('.spell-concentration:visible')
   await expect(block).toHaveCount(0)
   if (mobile) await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/settling/)

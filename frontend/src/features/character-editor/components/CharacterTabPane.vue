@@ -1,7 +1,7 @@
 <template>
   <div class="character-sheet" :class="'character-sheet--' + format">
     <template v-if="definition?.system === 'dnd5e'">
-      <DndDesktopBody v-if="format === 'desktop'" :section="section" @select-tab="emit('select-tab', $event)" />
+      <DndDesktopBody v-if="format === 'desktop'" :section="section" />
       <DndSection v-else :section="section" :format="format" />
     </template>
     <VtmSheet v-else-if="definition?.system === 'vtm-v20'" :section="section" :format="format" />
@@ -22,7 +22,7 @@ const props = defineProps({
   values: { type: Object, default: () => ({}) },
   vars: { type: Object, default: () => ({}) },
 })
-const emit = defineEmits(['update:value', 'update:var', 'select-tab'])
+const emit = defineEmits(['update:value', 'update:var'])
 provide(characterSheetContext, {
   definition: computed(() => props.definition),
   values: computed(() => props.values),

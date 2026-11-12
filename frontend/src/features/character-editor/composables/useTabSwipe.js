@@ -1,8 +1,8 @@
-import { ref, computed, watch, onBeforeUnmount, nextTick } from 'vue'
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
 
-import { tabSelectionWeights, useMobileTabBar } from './useMobileTabBar'
+import { tabSelectionWeights } from './tabSelection'
 
-export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
+export function useTabSwipe(activeTabs, swipeEnabled) {
   const activeTab = ref(0)
   const visitedTabs = ref([])
   const requestedTab = ref(null)
@@ -65,8 +65,6 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
     (tabDragActive.value || tabDragSettling.value)
       ? -currentMobileTrackOffsetValue.value / tabDragWidth.value : mobileActiveSlot.value,
   ))
-  const tabbar = useMobileTabBar(activeTab, mobileTabSelection, mobileTabbarRef)
-  const { updateMobileTabRects, scrollActiveMobileTabIntoView } = tabbar
 
   // ── Watchers ──────────────────────────────────────────────────────────
 
@@ -77,10 +75,6 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
 
   watch(activeTab, index => {
     markTabVisited(index)
-    nextTick(() => {
-      updateMobileTabRects()
-      scrollActiveMobileTabIntoView()
-    })
   })
 
   onBeforeUnmount(() => {
@@ -163,7 +157,7 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
   // ── Touch handlers ────────────────────────────────────────────────────
 
   function isSwipeBlocked(target) {
-    return !!target?.closest?.('input, textarea, select, button, [contenteditable="true"], [data-sheet-horizontal-scroll], .mobile-tabbar')
+    return !!target?.closest?.('input, textarea, select, button, [contenteditable="true"], [data-sheet-horizontal-scroll], .share-icon-navigation')
   }
 
   function onTouchStart(event, containerEl) {
@@ -238,7 +232,7 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
 
   // ── Public setActiveTab (also used by tabbar click) ──────────────────
 
-  function setActiveTab(index, mobileTrackEl, tabbarEl) {
+  function setActiveTab(index, mobileTrackEl) {
     if (index === activeTab.value && !tabDragActive.value && !tabDragSettling.value) return
     if (swipeEnabled.value) {
       if (tabDragActive.value || tabDragSettling.value) {
@@ -253,7 +247,6 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
       }
       tabDragWidth.value =
         mobileTrackEl?.clientWidth ||
-        tabbarEl?.clientWidth ||
         window.innerWidth || 1
       tabSwipeWrapMode.value = null
       tabSwipeBaseOffset.value = -mobileActiveSlot.value * tabDragWidth.value
@@ -289,11 +282,8 @@ export function useTabSwipe(activeTabs, swipeEnabled, mobileTabbarRef = null) {
     tabDragSettling,
     mobileTrackIndexes,
     mobileSwipeTrackStyle,
-    ...tabbar,
     mobileTabSelection,
     markTabVisited,
-    updateMobileTabRects,
-    scrollActiveMobileTabIntoView,
     resetSwipe,
     settleSwipeTo,
     setActiveTab,

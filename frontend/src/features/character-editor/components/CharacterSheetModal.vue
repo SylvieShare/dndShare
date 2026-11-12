@@ -4,7 +4,8 @@
     <div ref="chromeRoot" :inert="edition.busy" class="csm share-app-canvas" :class="{ 'csm--preview': previewMode }">
       <CharacterWorkspaceHeader ref="sheetHeader" v-if="template?.system === 'dnd5e' && !loading" dnd modal data-sheet-chrome
         :format="windowFormat" :compact="windowFormat === 'phone'" :name="charName" :subtitle="charSub" :icon-url="iconImageUrl || data.values?.ava?.url"
-        @close="emit('close')" />
+        :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="activeTabs" :active-tab="activeTab"
+        :selection="mobileTabSelection" :animate-navigation="!tabDragActive || tabDragSettling" @select-tab="setActiveTab" @close="emit('close')" />
       <CharEditorToolbar v-else data-sheet-chrome
         modal
         :publicVisible="publicVisible"
@@ -25,8 +26,8 @@
         @close="emit('close')"
       />
 
-      <div v-if="format !== 'desktop'" data-sheet-chrome class="csm-subheader">
-        <CharacterSheetTabs class="csm-tabs" :class="{ 'csm-tabs--fit': format === 'tablet' }" pill :tabs="activeTabs" :active-tab="activeTab" @select="setActiveTab" />
+      <div v-if="template?.system !== 'dnd5e' && format !== 'desktop'" data-sheet-chrome class="csm-subheader">
+        <CharacterSheetTabs :format="windowFormat" :tabs="activeTabs" :active-tab="activeTab" :selection="mobileTabSelection" :animate="!tabDragActive || tabDragSettling" @select="setActiveTab" />
       </div>
 
       <div data-sheet-chrome v-if="previewMode" class="csm-preview-note">Предпросмотр черновика · только чтение</div>
@@ -54,7 +55,7 @@
             :style="containerWidthForTab(index)"
           >
             <CharacterTabPane :definition="template" :format="format" :section="activeTabs[format === 'desktop' && template.system === 'dnd5e' ? activeTab : index]?.id"
-              :values="data.values" :vars="data.var" @select-tab="setActiveTab"
+              :values="data.values" :vars="data.var"
               @update:value="onUpdateValue" @update:var="onUpdateVar" />
           </div>
         </div>
@@ -153,7 +154,7 @@ charCtx.logSessionEvent = event => {
 const compactLayout = computed(() => format.value !== 'desktop')
 const swipePagerEl = ref(null)
 const swipe = useTabSwipe(activeTabs, compactLayout)
-const { activeTab, visitedTabIndexes, markTabVisited, resetSwipe } = swipe
+const { activeTab, visitedTabIndexes, markTabVisited, resetSwipe, mobileTabSelection, tabDragActive, tabDragSettling } = swipe
 watch(format, (next, previous) => {
   const id = swipe.requestedTab.value ?? sheetTabs(template.value, previous)[activeTab.value]?.id
   resetSwipe()
@@ -202,8 +203,6 @@ onMounted(initializeCharacter)
 .csm-body { margin-top: calc(-1 * var(--sheet-chrome-height, 64px)); padding-top: var(--sheet-chrome-height, 64px); box-sizing: border-box; scroll-padding-top: var(--sheet-chrome-height, 64px); flex: 1; min-height: 0; overflow-x: auto; overflow-y: auto; background: transparent; }
 .csm-body--pager { overflow: hidden; padding-top: 0; }
 .csm-subheader { position: relative; z-index: 21; flex: none; box-sizing: border-box; width: 100%; background: var(--subheader); padding: 8px 8px 4px; }
-.csm-tabs { --surface: var(--subheader); box-sizing: border-box; width: 100%; border: 0; border-radius: 0; background: transparent; margin: 0; padding: 4px; }
-.csm-tabs--fit { width: max-content; max-width: 100%; margin-inline: auto; }
 .csm-body--pager .container { padding: 0; }
 .container { box-sizing: border-box; width: 100%; margin: 0 auto; padding: 18px 16px 28px; background: transparent; }
 .desktop-tabs { display: flex; flex-direction: column; min-height: 100%; }

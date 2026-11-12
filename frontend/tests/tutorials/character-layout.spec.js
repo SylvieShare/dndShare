@@ -154,7 +154,7 @@ test.describe('compact character gestures', () => {
     await page.goto('/tests/tutorials/fixtures/character-sheet-save.html')
     await expect(page.locator('.dnd-heading .identity strong')).toHaveText('Торин')
     const modal = await page.locator('.csm').boundingBox()
-    const tabs = await page.locator('.csm-tabs').boundingBox()
+    const tabs = await page.locator('.csm [data-sheet-navigation]').boundingBox()
     expect(tabs.width).toBeLessThan(modal.width - 24)
     expect(tabs.x + tabs.width / 2).toBeCloseTo(modal.x + modal.width / 2, 0)
     await swipe(page)
@@ -174,7 +174,7 @@ for (const width of [390, 834, 1440]) test(`all sheet tabs are retained before d
   await panes.evaluateAll(nodes => nodes.forEach((node, index) => { node.dataset.retainedIdentity = 'pane-' + index }))
   if (width < 600) await page.getByRole('button', { name: 'Дневник', exact: true }).click()
   else if (width < 1200) await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Дневник', exact: true }).click()
-  else await page.locator('.dnd-desktop-main').getByRole('tab', { name: 'Дневник', exact: true }).click()
+  else await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Дневник', exact: true }).click()
   await expect.poll(() => panes.evaluateAll(nodes => nodes.map(node => node.dataset.retainedIdentity))).toEqual(Array.from({ length: width < 1200 ? 7 : 6 }, (_, index) => 'pane-' + index))
   expect(api.writes).toEqual([])
   expect(errors).toEqual([])
@@ -290,7 +290,7 @@ test('resize keeps loaded catalogue and current section without refetch', async 
   await expect(page.locator('.inner-tab-pane .sheet-skeleton')).toHaveCount(0)
   // Visit all data-owning sections before measuring resize-only requests.
   for (const label of ['Магия', 'Способности', 'Снаряжение', 'Оружие']) {
-    await page.locator('.dnd-desktop-main').getByRole('tab', { name: label, exact: true }).click()
+    await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: label, exact: true }).click()
   }
   await expect(page.getByText('Кешированный посох', { exact: true }).first()).toBeVisible()
   await page.waitForTimeout(500)

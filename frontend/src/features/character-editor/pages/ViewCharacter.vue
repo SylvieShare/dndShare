@@ -3,52 +3,12 @@
     <CharacterEditionDialog :controller="edition" />
     <CharacterTransferDialogs :controller="transfers" :character-uuid="uuid" />
     <PageTutorial :tutorial="characterTutorial" :mobile="isMobile" />
-    <CharacterWorkspaceHeader :dnd="template?.system === 'dnd5e' && !loading" :format="format" data-sheet-chrome :stacked-navigation="format === 'tablet'" ref="workspaceHeaderEl" :show-menu="template?.system === 'vtm-v20'" :compact="isMobile" :name="charName" :subtitle="charSub" :icon-url="headerIconUrl" :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="format === 'tablet' || format === 'desktop' && template?.system === 'vtm-v20' ? activeTabs : []" :active-tab="activeTab" @select-tab="onSetActiveTab" />
-
-
-    <div
-      v-if="isMobile && mobileTabs.length"
-      data-sheet-chrome
-      class="mobile-sticky-header"
-      :style="{ top: toolbarHeight + 'px' }"
-      @wheel.prevent="onFixedHeaderWheel"
-      @touchstart.passive="onFixedHeaderTouchStart"
-      @touchmove="onFixedHeaderTouchMove"
-      @touchend.passive="onFixedHeaderTouchEnd"
-      @touchcancel.passive="onFixedHeaderTouchEnd"
-    >
-      <nav
-        v-if="mobileTabs.length"
-        ref="mobileTabbarEl"
-        class="mobile-tabbar"
-        data-tutorial="character-tabs"
-        :class="{ dragging: tabDragActive, settling: tabDragSettling }"
-        aria-label="Вкладки персонажа"
-      >
-        <span class="mobile-tab-indicator" :style="mobileTabIndicatorStyle"></span>
-        <button
-          v-for="(tab, i) in mobileTabs"
-          :key="tabKey(tab, i)"
-          :ref="el => setMobileTabButtonRef(el, i)"
-          class="mobile-tab-btn"
-          :class="{ active: activeTab === i }"
-          :style="mobileTabButtonStyles[i]"
-          :aria-current="activeTab === i ? 'page' : undefined"
-          type="button"
-          :title="tab.title || 'Раздел'" :aria-label="tab.title || 'Раздел'"
-          @click="onSetActiveTab(i)"
-        >
-          <span
-            v-if="tab.svg"
-            class="mobile-tab-icon"
-            :style="{ '--mobile-tab-icon': `url(&quot;${tab.svg}&quot;)` }"
-            role="img"
-            :aria-label="tab.title || 'Раздел'"
-          ></span>
-          <span class="mobile-tab-caption" :class="{ 'mobile-tab-caption--only': !tab.svg }" aria-hidden="true">{{ tab.title || 'Раздел' }}</span>
-        </button>
-      </nav>
-    </div>
+    <CharacterWorkspaceHeader ref="workspaceHeaderEl" data-sheet-chrome :dnd="template?.system === 'dnd5e' && !loading" :format="format"
+      :show-menu="template?.system === 'vtm-v20'" :compact="isMobile" :name="charName" :subtitle="charSub" :icon-url="headerIconUrl"
+      :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth"
+      :tabs="activeTabs" :active-tab="activeTab" :selection="mobileTabSelection" :animate-navigation="!tabDragActive || tabDragSettling"
+      @select-tab="onSetActiveTab" @wheel="onFixedHeaderWheel" @touchstart.passive="onFixedHeaderTouchStart"
+      @touchmove="onFixedHeaderTouchMove" @touchend.passive="onFixedHeaderTouchEnd" @touchcancel.passive="onFixedHeaderTouchEnd" />
 
     <div
       ref="sheetScrollEl"
@@ -70,7 +30,7 @@
       <div v-else-if="template" class="desktop-tabs">
         <div class="container" :style="containerWidthForTab(activeTab)">
           <CharacterTabPane :definition="template" :format="format" :section="activeTabs[activeTab]?.id"
-            :values="data.values" :vars="data.var" @select-tab="onSetActiveTab"
+            :values="data.values" :vars="data.var"
             @update:value="onUpdateValue" @update:var="onUpdateVar" />
         </div>
 
@@ -132,7 +92,6 @@ const tutorialRoot = ref(null)
 const tutorialReady = ref(false)
 const workspaceHeaderEl = ref(null)
 const sheetScrollEl = ref(null)
-const mobileTabbarEl = ref(null)
 const swipePagerEl = ref(null)
 const fixedHeaderTouch = ref(null)
 
@@ -144,7 +103,7 @@ const {
   loading, loadError, template, data, charCtx, isOwner, publicVisible,
   version, serverDocument, sourceVersionId, contentSources, sessions, topSession, hasSessionContext,
   loadSessions, applyCharacter, applyMetadata,
-  activeTabs, mobileTabs,
+  activeTabs,
   headerTitle, charName, charSub, iconImageUrl, commonMobileScrollHide,
   load, loadSync, containerWidthForTab, getInitialTabs,
   updateValue, updateValues, updateVar, updateContentSources, onPublicToggle,
@@ -219,20 +178,17 @@ Object.assign(charCtx, {
 
 useSheetChrome(tutorialRoot)
 
-const swipe = useTabSwipe(activeTabs, compactLayout, mobileTabbarEl)
+const swipe = useTabSwipe(activeTabs, compactLayout)
 const {
   activeTab,
   tabDragActive, tabDragSettling,
-  mobileTabIndicatorStyle, mobileTabButtonStyles,
-  markTabVisited, setMobileTabButtonRef, updateMobileTabRects,
-  scrollActiveMobileTabIntoView, setActiveTab,
+  mobileTabSelection, markTabVisited, setActiveTab,
   resetSwipe,
-  tabRenderComponent, tabKey,
+  tabRenderComponent,
 } = swipe
 
 const {
-  toolbarHeight, stripHidden, viewStyle,
-  startScrollListener, stopScrollListener, revealHeader, observeToolbar, disconnectToolbar,
+  viewStyle, startScrollListener, stopScrollListener, revealHeader,
 } = useScrollHide(isMobile, commonMobileScrollHide, { mobileAppHeaderVisible: false })
 
 const { startViewportHeightSync, stopViewportHeightSync } = useCharacterViewport(isMobile)
@@ -273,10 +229,6 @@ watch([activeTab, format], () => {
   const preserveHeaderHidden = uiStore.headerHidden
   nextTick(() => {
     syncActiveScrollListener({ preserveHeaderHidden })
-    if (isMobile.value) {
-      updateMobileTabRects(mobileTabbarEl.value)
-      scrollActiveMobileTabIntoView()
-    }
   })
 })
 
@@ -310,12 +262,7 @@ function recordSnapshot() {
 
 function onSetActiveTab(value) {
   const index = typeof value === 'string' ? sheetTabIndex(activeTabs.value, value) : value
-  updateMobileTabRects(mobileTabbarEl.value)
-  setActiveTab(index, swipePagerEl.value?.trackElement(), mobileTabbarEl.value)
-}
-
-function onResize() {
-  updateMobileTabRects(mobileTabbarEl.value)
+  setActiveTab(index, swipePagerEl.value?.trackElement())
 }
 
 function activeScrollElement() {
@@ -340,6 +287,8 @@ function scrollActiveContentBy(deltaY) {
 }
 
 function onFixedHeaderWheel(event) {
+  if (Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return
+  event.preventDefault()
   scrollActiveContentBy(event.deltaY)
 }
 
@@ -419,17 +368,12 @@ async function initializeCharacter() {
 
   uiStore.setHeaderTitle(headerTitle.value)
 
-  window.addEventListener('resize', onResize)
-
   await nextTick()
 
   ready = true
   tutorialReady.value = true
 
   nextTick(() => {
-    observeToolbar(workspaceHeaderEl.value?.$el)
-    updateMobileTabRects(mobileTabbarEl.value)
-    scrollActiveMobileTabIntoView()
     syncActiveScrollListener()
   })
 
@@ -440,9 +384,7 @@ async function initializeCharacter() {
 onBeforeUnmount(() => {
   document.body.classList.remove('character-view-active')
   stopViewportHeightSync()
-  window.removeEventListener('resize', onResize)
   stopScrollListener()
-  disconnectToolbar()
   uiStore.setHeaderTitle('')
   sessionEventsStore.clearContext(activeEventSessionUuid)
 })

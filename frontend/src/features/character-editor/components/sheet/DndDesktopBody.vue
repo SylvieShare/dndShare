@@ -3,7 +3,6 @@
     <aside class="dnd-desktop-stats"><DndStats format="desktop" /></aside>
     <main class="dnd-desktop-main">
       <CharacterBlock block-id="read_only_notice" />
-      <SlidingTabs data-tutorial="character-tabs" :tabs="tabs" :model-value="section" @update:model-value="emit('select-tab', $event)" />
       <div class="inner-tabs-content">
         <section v-for="(tab, index) in tabs" :key="tab.key" v-show="tab.key === section" :inert="tab.key !== section" class="inner-tab-pane">
           <DndSection v-if="isReady(index)" :section="tab.key" format="desktop" />
@@ -25,14 +24,12 @@
 import { computed } from 'vue'
 import { usePreparedTabs } from '../../composables/usePreparedTabs'
 import CharacterSheetSkeleton from './CharacterSheetSkeleton.vue'
-import { SlidingTabs } from '@sylvieshare/share-ui'
 import CharacterBlock from '../CharacterBlock.vue'
 import DndStats from './DndStats.vue'
 import DndUtilities from './DndUtilities.vue'
 import DndSection from './DndSection.vue'
 import definition from '../../settings/dnd/definition'
 const props = defineProps({ section: String })
-const emit = defineEmits(['select-tab'])
 const tabs = computed(() => definition.tabs.desktop.map(tab => ({ id: tab.id, key: tab.id, title: tab.title })))
 const { isReady } = usePreparedTabs(tabs, computed(() => tabs.value.findIndex(tab => tab.key === props.section)), computed(() => false))
 

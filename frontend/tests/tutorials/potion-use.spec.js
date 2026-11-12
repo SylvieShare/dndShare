@@ -64,7 +64,7 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
     await page.goto(`/tests/tutorials/fixtures/tutorials.html?page=/char/${uuid}${guest ? '&guest' : ''}`, { waitUntil: 'domcontentloaded' })
     await expect(page.locator('.view')).toBeVisible()
     if (mobile) await page.getByRole('button', { name: 'Предметы', exact: true }).click()
-    else await page.getByRole('tab', { name: 'Снаряжение', exact: true }).click()
+    else await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Снаряжение', exact: true }).click()
     if (connected && !guest) await expect(page.locator('.character-workspace-header [data-tutorial="character-session"]')).toBeVisible()
     if (mobile) await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/settling/)
     await page.evaluate(async () => {

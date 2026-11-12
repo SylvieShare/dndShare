@@ -33,20 +33,20 @@ describe('character workspace header', () => {
     expect(html).not.toContain('data-tutorial="character-session"')
   })
 
-  it('shows the chapter and live player/event counts next to the session link', async () => {
+  it('keeps the session button, current chapter title and incoming event badge', async () => {
     const html = await render({ name: 'Лиора', transfers,
       session: { uuid: 'campaign', name: 'Тайны долины', chapterNumber: 3, chapterName: 'Забытый храм' },
     })
-    expect(html).toContain('href="/sessions/campaign"')
+    expect(html).toContain('aria-label="Сессия"')
     expect(html).toContain('Гл. 3 · Забытый храм')
-    expect(html).toContain('Игроки: 1')
-    expect(html).toContain('События: 2. Входящих: 2')
-    expect(html).toContain('campaign-icon--notify')
+    expect(html).toContain('session-count--incoming')
+    expect(html).toContain('>2</span>')
+    expect(html).toContain('aria-expanded="false"')
   })
 
   it('uses a neutral subtitle when the session has no current chapter', async () => {
     const html = await render({ transfers, session: { uuid: 'campaign', name: 'Тайны долины' } })
-    expect(html).toContain('Игровая сессия')
+    expect(html).toContain('title="Тайны долины"')
     expect(html).not.toContain('Гл.')
   })
 })

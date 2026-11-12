@@ -9,7 +9,7 @@ async function openSheet(page, width = 390, reducedMotion = 'no-preference') {
   const api = await fixture(page)
   await page.goto('/tests/tutorials/fixtures/tutorials.html')
   await expect(page.getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
-  await expect(page.locator('.mobile-tab-caption').first()).toHaveCSS('opacity', '1')
+  await expect(page.locator('.share-icon-navigation__label').first()).toHaveCSS('opacity', '1')
   return api
 }
 
@@ -17,7 +17,14 @@ const frame = page => page.evaluate(() => new Promise(resolve => requestAnimatio
 async function gesture(page, direction = -1) {
   const client = await page.context().newCDPSession(page)
   const width = await page.locator('.mobile-swipe-track').evaluate(el => el.clientWidth)
-  const start = { x: width * (direction < 0 ? .85 : .15), y: 960 }
+  const start = await page.locator('.mobile-swipe-pane:not([inert])').evaluate((pane, direction) => {
+    const rect = pane.getBoundingClientRect(), x = rect.x + rect.width * (direction < 0 ? .85 : .15)
+    for (let y = innerHeight - 140; y > 250; y -= 24) {
+      const target = document.elementFromPoint(x, y)
+      if (pane.contains(target) && !target.closest('button,input,textarea,select,[contenteditable="true"]')) return { x, y }
+    }
+    throw new Error('No non-interactive area for a page swipe')
+  }, direction)
   await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [start] })
   return {
     async move(progress) {
@@ -31,12 +38,12 @@ async function gesture(page, direction = -1) {
   }
 }
 
-const state = page => page.locator('.mobile-tabbar').evaluate(bar => ({
+const state = page => page.locator('.share-icon-navigation--compact').evaluate(bar => ({
   scroll: bar.scrollLeft,
-  tabs: [...bar.querySelectorAll('.mobile-tab-btn')].map(button => {
-    const rect = button.getBoundingClientRect(), icon = button.querySelector('.mobile-tab-icon').getBoundingClientRect()
+  tabs: [...bar.querySelectorAll('.share-icon-navigation__item')].map(button => {
+    const rect = button.getBoundingClientRect(), icon = button.querySelector('.share-icon-navigation__icon').getBoundingClientRect()
     return { x: rect.x + bar.scrollLeft, width: rect.width, iconX: icon.x + bar.scrollLeft, iconY: icon.y,
-      opacity: Number(getComputedStyle(button.querySelector('.mobile-tab-caption')).opacity) }
+      opacity: Number(getComputedStyle(button.querySelector('.share-icon-navigation__label')).opacity) }
   }),
 }))
 
@@ -67,7 +74,7 @@ for (const width of [390, 590]) test(`icons and captions follow a held swipe con
   await testInfo.attach('held-swipe', { body: await page.screenshot(), contentType: 'image/png' })
   await drag.end()
   await expect(page.getByRole('button', { name: 'Оружие', exact: true })).toHaveAttribute('aria-current', 'page')
-  await expect(page.locator('.mobile-tab-caption').nth(1)).toHaveCSS('opacity', '1')
+  await expect(page.locator('.share-icon-navigation__label').nth(1)).toHaveCSS('opacity', '1')
   const settled = await state(page)
   expect(settled.tabs[1].width).toBeCloseTo(initial.tabs[0].width, 1)
   expect(settled.tabs[0].width).toBeCloseTo(initial.tabs[1].width, 1)
@@ -82,8 +89,8 @@ test('reverse movement and cancellation fade captions back without changing the 
   expect((await state(page)).tabs[1].opacity).toBeCloseTo(.2, 2)
   await drag.end('touchCancel')
   await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/dragging|settling/)
-  await expect(page.locator('.mobile-tab-caption').first()).toHaveCSS('opacity', '1')
-  await expect(page.locator('.mobile-tab-caption').nth(1)).toHaveCSS('opacity', '0')
+  await expect(page.locator('.share-icon-navigation__label').first()).toHaveCSS('opacity', '1')
+  await expect(page.locator('.share-icon-navigation__label').nth(1)).toHaveCSS('opacity', '0')
   await expect(page.getByRole('button', { name: 'Статы', exact: true })).toHaveAttribute('aria-current', 'page')
 })
 
@@ -96,15 +103,15 @@ test('wrapped swipe fades the first and last labels, and reduced motion settles 
   expect(held.tabs.at(-1).opacity).toBeCloseTo(.3, 2)
   await drag.end()
   await expect(page.getByRole('button', { name: 'Дневник', exact: true })).toHaveAttribute('aria-current', 'page')
-  await expect(page.locator('.mobile-tab-caption').last()).toHaveCSS('opacity', '1')
-  const transitions = await page.locator('.mobile-tabbar').evaluate(el => [...el.querySelectorAll('button, .mobile-tab-icon, .mobile-tab-caption, .mobile-tab-indicator')].map(node => getComputedStyle(node).transitionDuration))
+  await expect(page.locator('.share-icon-navigation__label').last()).toHaveCSS('opacity', '1')
+  const transitions = await page.locator('.share-icon-navigation--compact').evaluate(el => [...el.querySelectorAll('button, .share-icon-navigation__icon, .share-icon-navigation__label, .share-icon-navigation__indicator')].map(node => getComputedStyle(node).transitionDuration))
   expect(transitions.every(value => value === '0s')).toBe(true)
 })
 
 test('a quick second selection replaces the in-flight movement', async ({ page }) => {
   await openSheet(page)
   await page.getByRole('button', { name: 'Оружие', exact: true }).dispatchEvent('click')
-  await expect(page.locator('.mobile-tabbar')).toHaveClass(/settling/)
+  await expect(page.locator('.mobile-swipe-stage')).toHaveClass(/settling/)
   await page.getByRole('button', { name: 'Магия', exact: true }).dispatchEvent('click')
   await expect(page.getByRole('button', { name: 'Магия', exact: true })).toHaveAttribute('aria-current', 'page')
   await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/dragging|settling/)

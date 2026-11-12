@@ -2,13 +2,11 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  height: 100dvh; /* overridden by viewStyle computed */
+  height: 100dvh;
   overflow: hidden;
 }
 
-:global(body.character-view-active) {
-  overflow: hidden;
-}
+:global(body.character-view-active) { overflow: hidden; }
 
 .sheet-scroll {
   flex: 1;
@@ -18,195 +16,28 @@
   overflow-x: auto;
   overflow-y: auto;
   overscroll-behavior-y: none;
+  /* Content scrolls behind one continuously painted, measured header. */
+  margin-top: calc(-1 * var(--sheet-chrome-height, 64px));
+  padding-top: var(--sheet-chrome-height, 64px);
+  box-sizing: border-box;
+  scroll-padding-top: var(--sheet-chrome-height, 64px);
 }
 
-
-.container {
-  margin: 0 auto;
-}
-
-.desktop-tabs {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-}
-
-.desktop-tabs > .container {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  width: 100%;
-  min-height: 0;
-}
+.container { margin: 0 auto; }
+.desktop-tabs { display: flex; flex-direction: column; min-height: 100%; }
+.desktop-tabs > .container { display: flex; flex: 1 1 auto; flex-direction: column; width: 100%; min-height: 0; }
+.character-loading { min-height: 100%; display: grid; place-items: center; padding: 32px; box-sizing: border-box; }
 
 @media (--ui-phone) {
-  .container {
-    padding: var(--spacing-page) var(--spacing-page) var(--spacing-section);
-  }
-
+  .container { padding: var(--spacing-page) var(--spacing-page) var(--spacing-section); }
   .mobile-pane-scroll > .container {
     display: flex;
     flex-direction: column;
     min-height: 100%;
     padding-bottom: max(88px, calc(24px + env(safe-area-inset-bottom)));
   }
-
-  .sheet-scroll {
-    overflow-x: hidden;
-    overflow-y: hidden;
-  }
-
-  .mobile-sticky-header {
-    position: sticky;
-    z-index: 21;
-    background: var(--surface);
-  }
-
-  .mobile-sticky-header::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    right: 0;
-    left: 0;
-    z-index: 0;
-    height: 18px;
-    pointer-events: none;
-    background: linear-gradient(
-      to bottom,
-      color-mix(in srgb, var(--scrim) 24%, transparent),
-      transparent
-    );
-  }
-
-  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .mobile-sticky-header::after {
-      background: color-mix(in srgb, var(--scrim) 24%, transparent);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      mask-image: linear-gradient(to bottom, var(--text-on-accent) 20%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to bottom, var(--text-on-accent) 20%, transparent 100%);
-    }
-  }
-
-  .mobile-tabbar {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    gap: 4px;
-    padding: 6px 8px 8px;
-    overflow-x: auto;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    min-height: 44px;
-  }
-
-  .mobile-tabbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  .mobile-tab-btn {
-    position: relative;
-    z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1 0 auto;
-    min-width: 44px;
-    max-width: 148px;
-    min-height: 30px;
-    border: none;
-    border-radius: 7px;
-    background: transparent;
-    color: var(--text-muted);
-    font: inherit;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 0 12px;
-    cursor: pointer;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    touch-action: manipulation;
-    transition: color 0.15s;
-  }
-
-  .mobile-tab-indicator {
-    position: absolute;
-    left: 0;
-    bottom: 4px;
-    height: 3px;
-    border-radius: 999px;
-    background: var(--accent);
-    pointer-events: none;
-    transition: transform 0.18s ease, width 0.18s ease;
-  }
-
-  .mobile-tabbar.dragging .mobile-tab-indicator {
-    transition: none;
-  }
-
-  .mobile-tabbar.settling .mobile-tab-indicator {
-    transition: transform 0.26s cubic-bezier(0.25, 0.1, 0.25, 1), width 0.26s cubic-bezier(0.25, 0.1, 0.25, 1);
-  }
-
-  .mobile-tab-icon {
-    width: 22px;
-    height: 22px;
-    display: block;
-    flex: 0 0 auto;
-    background: currentColor;
-    mask: var(--mobile-tab-icon) center / contain no-repeat;
-    -webkit-mask: var(--mobile-tab-icon) center / contain no-repeat;
-    transition: color 0.15s ease;
-  }
-
-  .mobile-tab-btn.active .mobile-tab-icon {
-    color: currentColor;
-  }
 }
-
-.character-loading { min-height: 100%; display: grid; place-items: center; padding: 32px; box-sizing: border-box; }
-
 @media (--ui-compact) {
-  .sheet-scroll { overflow: hidden; }
+  .sheet-scroll { overflow: hidden; padding-top: 0; }
   .container { width: 100%; box-sizing: border-box; }
 }
-
-@media (prefers-reduced-motion: reduce) { .mobile-tab-indicator { transition: none; } }
-
-@media (--ui-phone) {
-  .mobile-sticky-header { background: var(--subheader); border: 0; padding: var(--spacing-xs) var(--spacing-page); box-sizing: border-box; }
-  .mobile-sticky-header::after { display: none; }
-  .mobile-tabbar { --surface: var(--subheader); --mobile-tab-min-width: 44px; --mobile-tab-max-width: 148px; background: transparent; border: 0; border-radius: 0; padding: 8px 8px 4px; gap: 2px; min-height: 48px; box-shadow: none; }
-  .mobile-tab-indicator { top: 4px; bottom: 4px; height: auto; border-radius: var(--radius-input); background: color-mix(in srgb, var(--accent) 18%, var(--surface)); transition: none; }
-  .mobile-tab-btn {
-    --tab-width: var(--mobile-tab-width, calc(var(--mobile-tab-min-width) + (var(--layout-sheet-navigation-selected) - var(--mobile-tab-min-width)) * var(--tab-selection, 0)));
-    border-radius: var(--radius-input); flex: 1 0 var(--tab-width); min-width: var(--tab-width); padding: 0;
-    color: color-mix(in srgb, var(--accent-soft) calc(var(--tab-selection, 0) * 100%), var(--text-muted));
-    transition: none;
-  }
-  .mobile-tab-icon { transform: translateY(calc(-7px * var(--tab-selection, 0))); transition: none; }
-  .mobile-tab-caption {
-    position: absolute; top: calc(50% + 4px); left: 0; right: 0;
-    font-size: 10px; line-height: 14px; opacity: var(--tab-selection, 0);
-    transition: none; pointer-events: none;
-  }
-  .mobile-tab-caption--only { position: static; opacity: 1; }
-  .mobile-tabbar.dragging :is(.mobile-tab-btn, .mobile-tab-icon, .mobile-tab-caption) { transition: none; }
-  .mobile-tabbar.settling :is(.mobile-tab-btn, .mobile-tab-icon, .mobile-tab-caption) {
-    transition-property: flex-basis, min-width, color, transform, opacity;
-    transition-duration: .26s;
-    transition-timing-function: cubic-bezier(.25,.1,.25,1);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mobile-tabbar :is(.mobile-tab-btn, .mobile-tab-icon, .mobile-tab-caption, .mobile-tab-indicator),
-  .mobile-tabbar.settling :is(.mobile-tab-btn, .mobile-tab-icon, .mobile-tab-caption, .mobile-tab-indicator) { transition: none; }
-}
-
-/* The scroller paints beneath both chrome rows; padding belongs to its content. */
-.sheet-scroll { margin-top: calc(-1 * var(--sheet-chrome-height, 64px)); padding-top: var(--sheet-chrome-height, 64px); box-sizing: border-box; scroll-padding-top: var(--sheet-chrome-height, 64px); }
-@media (--ui-compact) { .sheet-scroll { padding-top: 0; } }

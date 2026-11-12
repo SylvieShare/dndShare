@@ -1,7 +1,6 @@
-import { createRenderer, defineComponent, h, nextTick, onMounted, ref } from 'vue'
+import { createRenderer, defineComponent, h, nextTick, ref } from 'vue'
 import { describe, expect, it } from 'vitest'
 import { useTabSwipe } from './useTabSwipe'
-import { measureMobileTabRects, mobileTabRectsEqual } from './useMobileTabBar'
 
 function hostNode(type, text = '') {
   return {
@@ -47,75 +46,7 @@ const testRenderer = createRenderer({
   },
 })
 
-describe('mobile character tab geometry', () => {
-  it('measures buttons relative to the scrolled tabbar', () => {
-    const tabbar = {
-      scrollLeft: 24,
-      getBoundingClientRect: () => ({ left: 10 }),
-    }
-    const buttons = [
-      { getBoundingClientRect: () => ({ left: 18, width: 44 }) },
-      { getBoundingClientRect: () => ({ left: 70, width: 56 }) },
-    ]
-
-    expect(measureMobileTabRects(tabbar, buttons)).toEqual([
-      { x: 32, width: 44 },
-      { x: 84, width: 56 },
-    ])
-  })
-
-  it('keeps holes for tabs whose element is not mounted yet', () => {
-    const tabbar = {
-      scrollLeft: 0,
-      getBoundingClientRect: () => ({ left: 5 }),
-    }
-
-    expect(measureMobileTabRects(tabbar, [null])).toEqual([null])
-  })
-
-  it('recognizes unchanged geometry so a measurement cannot retrigger rendering', () => {
-    expect(mobileTabRectsEqual(
-      [{ x: 8, width: 44 }, null, { x: 60, width: 56 }],
-      [{ x: 8, width: 44 }, null, { x: 60, width: 56 }],
-    )).toBe(true)
-
-    expect(mobileTabRectsEqual(
-      [{ x: 8, width: 44 }],
-      [{ x: 9, width: 44 }],
-    )).toBe(false)
-  })
-
-  it('does not turn button function refs into a render and measurement loop', async () => {
-    const tabs = ref([{ title: 'Статы' }])
-    const mobile = ref(true)
-    const tabbar = ref({
-      scrollLeft: 0,
-      getBoundingClientRect: () => ({ left: 10 }),
-    })
-    let renderCount = 0
-    let swipe
-
-    const app = testRenderer.createApp(defineComponent({
-      setup() {
-        swipe = useTabSwipe(tabs, mobile, tabbar)
-        onMounted(() => swipe.updateMobileTabRects())
-        return () => {
-          renderCount += 1
-          return h('div', [
-            h('span', { style: swipe.mobileTabIndicatorStyle.value }),
-            h('button', { ref: el => swipe.setMobileTabButtonRef(el, 0) }),
-          ])
-        }
-      },
-    }))
-
-    app.mount(hostNode('root'))
-    await nextTick()
-    await nextTick()
-    expect(renderCount).toBe(2)
-    app.unmount()
-  })
-
+describe('character swipe geometry', () => {
   it('positions a restored tab before the mobile pane width is measured', async () => {
     const tabs = ref([
       { title: 'Статы' },
