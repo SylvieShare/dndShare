@@ -42,7 +42,7 @@
       @keydown.enter.prevent="openRollMenu($event, 'stat')"
       @keydown.space.prevent="openRollMenu($event, 'stat')"
     >
-      <SvgIcon v-if="suggestSvg || suggestSvgId" class="stat-icon" :svg="suggestSvg" :svg-id="suggestSvgId" color="var(--text-2)" />
+      <SvgIcon v-if="suggestSvg || suggestSvgId" class="stat-icon" :svg="suggestSvg" :svg-id="suggestSvgId" :color="color" />
       <span class="stat-mod" :style="{ color }">{{ signed(mod) }}</span>
       <span class="stat-raw">({{ raw }})</span>
       <RollModeBadge :mode="checkMode" :source="checkModeSource" :cancelled="checkModeCancelled" />

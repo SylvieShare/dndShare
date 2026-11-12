@@ -2,10 +2,13 @@
   <span v-if="mode !== 'normal' || cancelled" class="roll-badge" :class="`roll-badge--${cancelled ? 'cancelled' : mode}`" :title="title" role="img" :aria-label="title" :style="{ '--roll-mode-color': color }">
     <template v-if="cancelled">ОБЫЧ.</template>
     <template v-else>
-      <span v-for="value in [1, 20]" :key="value" class="roll-badge__die" :class="{ 'roll-badge__die--discarded': value === (mode === 'advantage' ? 1 : 20) }" :data-roll-value="value" aria-hidden="true">
-        <span class="roll-badge__face"><SystemDie :sides="20" :value="value" :size="layoutTokens['roll-mode-badge-die']" :color="color" :animated="false" /></span>
-        <span v-if="value === (mode === 'advantage' ? 1 : 20)" class="roll-badge__strike" />
+      <span class="roll-badge__dice" aria-hidden="true">
+        <span v-for="value in [1, 20]" :key="value" class="roll-badge__die" :class="{ 'roll-badge__die--discarded': value === (mode === 'advantage' ? 1 : 20) }" :data-roll-value="value">
+          <span class="roll-badge__face"><SystemDie :sides="20" :value="value" :size="layoutTokens['roll-mode-badge-die']" :color="color" :animated="false" /></span>
+          <span v-if="value === (mode === 'advantage' ? 1 : 20)" class="roll-badge__strike" />
+        </span>
       </span>
+      <small class="roll-badge__caption" aria-hidden="true">{{ mode === 'advantage' ? 'Преимущество' : 'Помеха' }}</small>
     </template>
   </span>
 </template>
@@ -27,6 +30,7 @@ const color = computed(() => props.cancelled ? 'var(--text-muted)' : props.mode 
 <style scoped>
 .roll-badge {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   align-self: center;
   flex-shrink: 0;
@@ -38,6 +42,9 @@ const color = computed(() => props.cancelled ? 'var(--text-muted)' : props.mode 
   letter-spacing: var(--type-badge-compact-tracking);
   line-height: var(--type-badge-compact-line-height);
 }
+.roll-badge--advantage,.roll-badge--disadvantage {padding:2px var(--spacing-xs);border-radius:var(--radius-input);background:color-mix(in srgb,var(--roll-mode-color) 9%,transparent)}
+.roll-badge__dice {display:inline-flex;align-items:center}
+.roll-badge__caption {font-family:var(--type-roll-mode-caption-family);font-size:var(--type-roll-mode-caption-size);line-height:var(--type-roll-mode-caption-line-height);font-weight:var(--type-roll-mode-caption-weight);letter-spacing:var(--type-roll-mode-caption-tracking);white-space:nowrap}
 .roll-badge__die {position:relative;display:inline-flex;flex:none;width:var(--layout-roll-mode-badge-die);height:var(--layout-roll-mode-badge-die)}
 .roll-badge__die + .roll-badge__die {margin-inline-start:calc(var(--spacing-xs) / -2)}
 .roll-badge__face {display:inline-flex}

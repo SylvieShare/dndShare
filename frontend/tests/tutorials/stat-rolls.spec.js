@@ -139,6 +139,8 @@ for (const width of [390, 834, 1440]) test(`roll badges show the discarded d20 a
   const advantage = page.locator('.save-chip .roll-badge'), disadvantage = page.locator('.stat-body .roll-badge')
   await expect(advantage).toHaveAttribute('aria-label', /Преимущество.*Эффект спасброска/)
   await expect(disadvantage).toHaveAttribute('aria-label', /Помеха.*Эффект проверки/)
+  await expect(advantage.locator('.roll-badge__caption')).toHaveText('Преимущество')
+  await expect(disadvantage.locator('.roll-badge__caption')).toHaveText('Помеха')
   for (const [badge, discarded] of [[advantage, '1'], [disadvantage, '20']]) {
     await expect(badge.locator('.system-die--d20')).toHaveCount(2)
     await expect(badge.locator('.system-die__value')).toHaveText(['1', '20'])
@@ -155,6 +157,7 @@ for (const width of [390, 834, 1440]) test(`roll badges show the discarded d20 a
   await expect(disadvantage).toHaveCSS('color', colors[1])
   await expect(page.locator('.skill-item .roll-badge--cancelled')).toHaveText('ОБЫЧ.')
   await expect.poll(() => page.locator('.stat-icon').evaluate(node => node.style.maskImage)).toContain('blob:')
+  expect(await page.locator('.stat-icon').evaluate(node => getComputedStyle(node).color)).toBe(await page.locator('.stat-mod').evaluate(node => getComputedStyle(node).color))
   expect((await page.locator('.stat-icon').boundingBox()).width).toBeGreaterThan(20)
   await page.locator('.stat-block').screenshot({ path: testInfo.outputPath('stat-roll-badges.png') })
   await page.evaluate(() => { window.statState.checkEffects = []; window.statState.value.check_roll_mode = 'normal' })
