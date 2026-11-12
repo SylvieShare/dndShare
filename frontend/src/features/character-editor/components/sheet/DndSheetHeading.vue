@@ -97,4 +97,5 @@ function select(panel, close) { close(); emit('open', panel) }
 .experience-track {height:7px;border-radius:var(--radius-input);overflow:hidden;background:var(--surface-raised)}
 .experience-track i {display:block;height:100%;background:var(--accent-soft)}
 @media (--ui-compact) {.identity {display:block}.identity strong,.identity small{display:block}.identity small{font-size:var(--type-caption-size,12px)}}
+@media (--ui-phone) {.dnd-heading {column-gap:var(--spacing-xs)}.heading-combat {column-gap:calc(var(--spacing-compact) / 2)}}
 </style>

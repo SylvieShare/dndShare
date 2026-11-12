@@ -42,7 +42,8 @@ class TokenContractTests(unittest.TestCase):
         for group, name, value in [('layout', 'sheet-stats-column-min', 320), ('layout', 'touch-min', 40), ('layout', 'tablet', 1200),
                                    ('collection', 'min-height', 16), ('canvas', 'opacity', 2),
                                    ('list', 'metric-min', 100), ('list', 'icon', 100),
-                                   ('motion', 'enter', 1.5), ('spacing', 'xs', True), ('radius', 'tile', float('nan'))]:
+                                   ('motion', 'enter', 1.5), ('motion', 'sheet-health-pulse-fast', 6001),
+                                   ('spacing', 'xs', True), ('radius', 'tile', float('nan'))]:
             data = copy.deepcopy(load())
             data[group][name] = value
             with self.subTest(group=group, name=name), self.assertRaises(ValueError):

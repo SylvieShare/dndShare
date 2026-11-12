@@ -17,7 +17,7 @@ REQUIRED = {
     'layout': {'tablet', 'desktop', 'sidebar-collapsed', 'sidebar-expanded', 'drawer', 'content-max', 'header', 'border', 'touch-min', 'map-sidebar', 'map-rail', 'map-compact-peek', 'map-navigation-item',
                'sheet-gallery-height', 'sheet-gallery-add-width',
                'sheet-value-height', 'sheet-value-width', 'sheet-value-compact-height', 'sheet-value-compact-width',
-               'sheet-header-icon', 'sheet-header-action-icon', 'sheet-header-tile-max', 'sheet-header-armor', 'sheet-health-height', 'sheet-navigation-item', 'sheet-navigation-height', 'sheet-navigation-icon', 'sheet-navigation-selected',
+               'sheet-header-icon', 'sheet-header-action-icon', 'sheet-header-tile-max', 'sheet-header-armor', 'sheet-health-height', 'sheet-health-icon', 'sheet-navigation-item', 'sheet-navigation-height', 'sheet-navigation-icon', 'sheet-navigation-selected',
                'sheet-max', 'sheet-stat-min', 'sheet-base-min', 'sheet-stats-column', 'sheet-utilities-column',
                'sheet-stats-column-min', 'sheet-utilities-column-min',
                'input-height', 'number-input-height', 'number-input-width', 'input-stepper-width',
@@ -30,7 +30,7 @@ REQUIRED = {
     'canvas': {'step', 'radius', 'opacity'},
     'spacing': {'xs', 'compact', 'small', 'label', 'medium', 'large', 'page', 'section'},
     'list': {'min-height', 'icon', 'gap', 'padding-end', 'metric-min', 'metric-max', 'metric-padding-max', 'body-top', 'body-bottom', 'row-margin', 'row-gap'},
-    'motion': {'enter', 'exit', 'navigation', 'feedback', 'distance', 'morph-open', 'morph-close', 'sheet-health-pulse'},
+    'motion': {'enter', 'exit', 'navigation', 'feedback', 'distance', 'morph-open', 'morph-close', 'sheet-health-pulse', 'sheet-health-pulse-fast'},
     'radius': {'xs', 'small', 'medium', 'large', 'xl', 'tile', 'badge', 'row', 'morph', 'input', 'compact-navigation'},
 }
 
@@ -81,6 +81,8 @@ def validate(data):
         raise ValueError('Invalid list geometry')
     if any(not isinstance(value, int) for key, value in data['motion'].items() if key != 'distance'):
         raise ValueError('Motion durations must be whole milliseconds')
+    if data['motion']['sheet-health-pulse-fast'] >= data['motion']['sheet-health-pulse']:
+        raise ValueError('Low-health pulse must be faster than the full-health pulse')
     if not 0 < data['canvas']['opacity'] <= 1:
         raise ValueError('Canvas opacity must be in (0,1]')
     if data['chrome']['blur'] <= 0:

@@ -12,18 +12,16 @@ for (const width of [390, 834, 1440]) test(`HP, shield and stacked passives shar
   page.on('pageerror', error => errors.push(error.message))
   await page.setViewportSize({ width, height: 900 })
   const api = await sheetFixture(page)
-  Object.assign(api.document().values.hp, { current: 9, max: { base: 18, bonuses: [] }, temp: 5 })
+  Object.assign(api.document().values.hp, { current: 18, max: { base: 23, bonuses: [] }, temp: 5 })
   await page.goto('/char/test')
-  expect(await page.evaluate(async () => {
-    const fonts = await document.fonts.load('700 20px "Cormorant Garamond"')
-    await document.fonts.ready
-    return fonts.length > 0
-  })).toBe(true)
+  await page.evaluate(() => document.fonts.ready)
   const heading = page.locator('.dnd-heading'), health = heading.locator('.heading-health')
-  await expect(health).toHaveAttribute('aria-label', 'Здоровье: 9 из 18, временные 5')
-  await expect(health.locator('.health-readout')).toHaveText('9/18')
+  await expect(health).toHaveAttribute('aria-label', 'Здоровье: 18 из 23, временные 5')
+  await expect(health.locator('.health-readout')).toHaveText('18/23')
   await expect(health.locator('.health-temporary')).toHaveText('+5')
   await expect(health.locator('.health-beat')).toBeVisible()
+  await expect(health.locator('.health-heart')).toBeVisible()
+  await expect(health.locator('.health-heart')).toHaveAttribute('aria-hidden', 'true')
   await expect(heading.locator('.heading-armor-value')).toHaveText('11')
   const shieldCenter = await heading.locator('.heading-armor').evaluate(node => {
     const shield = node.querySelector('svg').getBoundingClientRect()
@@ -60,8 +58,9 @@ for (const width of [390, 834, 1440]) test(`HP, shield and stacked passives shar
     expect(field.bottom).toBeLessThanOrEqual(hp.y + hp.height + 1)
   }
   expect(fields[1].top).toBeGreaterThanOrEqual(fields[0].bottom - .5)
-  await expect(health.locator('strong')).toHaveCSS('font-weight', '700')
-  expect(await health.locator('strong').evaluate(node => getComputedStyle(node).fontFamily)).toContain('Cormorant Garamond')
+  await expect(health.locator('strong')).toHaveCSS('font-weight', '800')
+  expect(await health.locator('strong').evaluate(node => getComputedStyle(node).fontFamily)).toBe(await heading.locator('.identity strong').evaluate(node => getComputedStyle(node).fontFamily))
+  await expect(health).toHaveCSS('padding-left', '8px')
   // Transformed bounds may exceed the CSS width by a floating-point fraction.
   expect((await heading.boundingBox()).width).toBeLessThanOrEqual(420.5)
   expect(errors).toEqual([])
@@ -89,7 +88,14 @@ test('the simple counter retains menu edits and death saves', async ({ page }) =
   await health.getByRole('button', { name: '0', exact: true }).click()
   await health.getByRole('button', { name: 'Урон', exact: true }).click()
   await expect(heading.locator('.health-readout')).toHaveText('0/23')
-  expect((await heading.locator('.health-readout strong').boundingBox()).width).toBeCloseTo(numberWidth, 1)
+  const number = heading.locator('.health-readout strong')
+  expect((await number.boundingBox()).width).toBeLessThan(numberWidth)
+  const naturalWidth = await number.evaluate(node => {
+    const text = document.createRange()
+    text.selectNodeContents(node)
+    return text.getBoundingClientRect().width
+  })
+  expect((await number.boundingBox()).width).toBeCloseTo(naturalWidth, 1)
   await expect(health.getByRole('button', { name: 'Успехи: 1' })).toBeVisible()
 })
 
@@ -153,4 +159,37 @@ test('the ECG pen follows the fixed peaks and dips, pauses and respects reduced 
   await expect(head).toHaveCSS('opacity', '0')
   await expect(beat.locator('.health-beat-memory')).toHaveCSS('opacity', '0.09')
   await expect(health.locator('.health-readout')).toHaveText('18/23')
+})
+
+test('HP percentage changes pulse speed without replacing or resetting the strokes', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 900 })
+  const api = await sheetFixture(page)
+  Object.assign(api.document().values.hp, { current: 50, max: { base: 100, bonuses: [] }, temp: 500 })
+  await page.goto('/char/test')
+  const beat = page.locator('.health-beat')
+  const rates = () => beat.evaluate(node => node.getAnimations({ subtree: true }).map(animation => animation.playbackRate))
+  await expect.poll(rates).toEqual([1.5, 1.5, 1.5])
+  await beat.evaluate(node => {
+    window.headerPulseSnapshot = node.getAnimations({ subtree: true })
+    window.headerPulseSnapshot.forEach(animation => { animation.pause(); animation.currentTime = 1234 })
+  })
+  await page.getByRole('button', { name: 'Действия персонажа', exact: true }).click()
+  await page.getByRole('menuitem', { name: 'Изменить HP', exact: true }).click()
+  const calculator = page.getByRole('dialog', { name: 'Здоровье', exact: true })
+  async function apply(amount, action, readout, rate) {
+    for (const digit of String(amount)) await calculator.getByRole('button', { name: digit, exact: true }).click()
+    await calculator.getByRole('button', { name: action, exact: true }).click()
+    await expect(page.locator('.health-readout')).toHaveText(readout)
+    await expect.poll(rates).toEqual([rate, rate, rate])
+    expect(await beat.evaluate(node => node.getAnimations({ subtree: true }).every((animation, index) => animation === window.headerPulseSnapshot[index] && animation.currentTime === 1234))).toBe(true)
+  }
+  await apply(500, 'Урон', '50/100', 1.5) // Temporary HP do not affect the rate.
+  await apply(40, 'Урон', '10/100', 2.5)
+  await apply(90, 'Лечение', '100/100', 1)
+  await apply(100, 'Урон', '0/100', 3)
+  await apply(10, 'Лечение', '10/100', 2.5)
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await expect(beat.locator('.health-beat-head')).toHaveCSS('animation-name', 'none')
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await expect.poll(rates).toEqual([2.5, 2.5, 2.5])
 })

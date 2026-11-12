@@ -55,7 +55,7 @@ onBeforeUnmount(() => observer?.disconnect());
   display: grid;
   grid-template-columns: minmax(150px, 1fr) auto minmax(142px, 1fr);
   align-items: center;
-  gap: var(--spacing-medium);
+  gap: var(--spacing-medium) var(--workspace-header-column-gap, var(--spacing-medium));
   min-height: var(--layout-header);
   box-sizing: border-box;
   width: 100%;
@@ -92,7 +92,7 @@ onBeforeUnmount(() => observer?.disconnect());
 @container (max-width:1100px) {
   .workspace-header-inner {
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: 4px 14px;
+    gap: 4px var(--workspace-header-column-gap, 14px);
   }
   .workspace-header-navigation {
     grid-row: 2;

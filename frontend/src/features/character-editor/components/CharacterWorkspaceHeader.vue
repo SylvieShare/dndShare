@@ -157,5 +157,6 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
   line-height: var(--type-context-line-height);
 }
 .character-workspace-header--compact .character-identity { padding-left: 0; border-left: 0; }
+@media (--ui-phone) { .character-workspace-header { --workspace-header-column-gap: var(--spacing-xs); --workspace-header-identity-gap: var(--spacing-xs); } }
 @media (--ui-compact) { .character-identity { padding-left: 0; border-left: 0; } }
 </style>
