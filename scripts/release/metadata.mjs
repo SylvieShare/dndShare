@@ -35,7 +35,8 @@ function sourceHash(files, extra = {}) {
 export function fingerprints(versions = readVersions()) {
   const lock = JSON.parse(fs.readFileSync(path.join(root, 'frontend/package-lock.json'), 'utf8'))
   const nativeDependencies = Object.fromEntries(['@capacitor/android', '@capacitor/core'].map(name => [name, lock.packages[`node_modules/${name}`]]))
-  const android = sourceHash([...filesUnder('native/androidApp/src/main'), 'native/androidApp/build.gradle.kts', 'native/build.gradle.kts', 'native/settings.gradle.kts', 'native/gradle/wrapper/gradle-wrapper.properties', 'release/frontend-ota-public.pem', 'scripts/release/metadata.mjs'], { nativeDependencies, contracts: versions.contracts, updaterProtocol: 1 })
+  const tabletWidth = JSON.parse(fs.readFileSync(path.join(root, 'design/tokens.json'), 'utf8')).layout.tablet
+  const android = sourceHash([...filesUnder('native/androidApp/src/main'), 'native/androidApp/build.gradle.kts', 'native/build.gradle.kts', 'native/settings.gradle.kts', 'native/gradle/wrapper/gradle-wrapper.properties', 'release/frontend-ota-public.pem', 'scripts/release/metadata.mjs'], { nativeDependencies, tabletWidth, contracts: versions.contracts, updaterProtocol: 1 })
   const frontend = sourceHash([...filesUnder('frontend/src'), ...filesUnder('frontend/public'), ...filesUnder('design'), 'frontend/vite.config.js', 'frontend/index.html', 'frontend/package.json', 'frontend/package-lock.json', 'frontend/scripts/android-insets.mjs', 'frontend/scripts/design-media.mjs', 'frontend/scripts/compressedAssets.mjs', 'scripts/release/metadata.mjs'], { android, contracts: versions.contracts })
   const backend = sourceHash(['go.mod', 'go.sum', 'main.go', ...filesUnder('internal').filter(name => /\.(go|sql)$/.test(name) && !name.startsWith('internal/assets/dist/') && !name.startsWith('internal/web/testdata/'))], { apiContract: versions.contracts.api })
   return { backend, frontend, android }

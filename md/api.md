@@ -17,6 +17,10 @@
 
 ## Общие правила
 
+Служебный POST /internal/deployment/activate?commit=SHA предназначен только для
+локального blue-green controller; nginx закрывает /internal/. Это не клиентский
+API. Порядок активации и завершения задач описан в [выпуске](deploy.md#blue-green-deployment).
+
 - JSON keys — camelCase. Успешный JSON-ответ без значения сериализуется как `null`;
   ответы HTTP 204/304 остаются без тела.
 - Ошибка — JSON `{ "type": "...", "desc": "..." }`.

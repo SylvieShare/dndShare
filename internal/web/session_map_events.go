@@ -47,6 +47,8 @@ func (s *Server) streamMapEvents(w http.ResponseWriter, r *http.Request, sid int
 	defer ticker.Stop()
 	for {
 		select {
+		case <-s.deployment.draining:
+			return
 		case id, open := <-updates:
 			if !open || !write(fmt.Sprintf("id: %d\ndata: refresh\n\n", id)) {
 				return

@@ -18,12 +18,13 @@ public class HybridShellTest {
         while (!hidden.get() && System.currentTimeMillis() < deadline) {
             activity.onActivity(host -> {
                 var insets = androidx.core.view.ViewCompat.getRootWindowInsets(host.getWindow().getDecorView());
-                hidden.set(insets != null && !insets.isVisible(androidx.core.view.WindowInsetsCompat.Type.statusBars())
+                boolean phone = host.getResources().getConfiguration().screenWidthDp < host.getResources().getInteger(R.integer.tablet_min_width_dp);
+                hidden.set(insets != null && insets.isVisible(androidx.core.view.WindowInsetsCompat.Type.statusBars()) == phone
                     && !insets.isVisible(androidx.core.view.WindowInsetsCompat.Type.navigationBars()));
             });
             if (!hidden.get()) Thread.sleep(100);
         }
-        assertTrue("Status and navigation bars must be hidden", hidden.get());
+        assertTrue("Phone status bar must be visible, navigation hidden", hidden.get());
         activity.onActivity(host -> assertEquals("WebView must use the full window height",
             host.getWindow().getDecorView().getHeight(), host.getBridge().getWebView().getHeight()));
     }

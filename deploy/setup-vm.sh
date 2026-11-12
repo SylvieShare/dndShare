@@ -27,7 +27,8 @@ chmod 644 /etc/ssl/certs/yandex-cloud-ca.pem
 install -m 750 -o "$APP_USER" -g "$APP_USER" "$SCRIPT_DIR/dndshare-run.sh" "/home/$APP_USER/dndshare-run.sh"
 install -m 750 -o "$APP_USER" -g "$APP_USER" "$SCRIPT_DIR/fetch-secrets.sh" "/home/$APP_USER/fetch-secrets.sh"
 install -m 750 -o "$APP_USER" -g "$APP_USER" "$SCRIPT_DIR/fetch-secrets.py" "/home/$APP_USER/fetch-secrets.py"
-install -m 644 "$SCRIPT_DIR/dndshare.service" /etc/systemd/system/dndshare.service
+install -m 644 "$SCRIPT_DIR/dndshare.service" /etc/systemd/system/dndshare@.service
+printf 'upstream dndshare_backend { server 127.0.0.1:8080; }\n' > /etc/nginx/conf.d/dndshare-upstream.conf
 mkdir -p /var/www/dndshare-acme
 if [ -s /etc/letsencrypt/live/dndshare.ru/fullchain.pem ]; then
   install -m 644 "$SCRIPT_DIR/nginx-dndshare.conf" /etc/nginx/sites-available/dndshare
@@ -40,7 +41,6 @@ nginx -t
 systemctl enable --now nginx
 systemctl reload nginx
 systemctl daemon-reload
-systemctl enable dndshare
 ufw allow OpenSSH
 ufw allow 'Nginx Full'
 ufw --force enable

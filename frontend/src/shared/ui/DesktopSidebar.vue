@@ -130,6 +130,7 @@ defineExpose({ focusSearch: () => searchRef.value?.focus() })
 </script>
 
 <style scoped>
+:global(html[data-platform="android"]) .desktop-sidebar--drawer { padding-top:var(--native-safe-top, 0px);box-sizing:border-box }
 .sidebar-account-content { display:flex;flex-direction:column;width:100%;min-width:0 }
 .sidebar-menu-trigger {
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;

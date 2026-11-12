@@ -231,6 +231,10 @@ func (s *Server) handleJobStart(w http.ResponseWriter, r *http.Request) {
 	}
 	run, known, err := s.jobs.start(r.Context(), r.PathValue("code"), uid)
 	if err != nil {
+		if errors.Is(err, errDeploymentDraining) {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]any{"desc": "Фоновая задача будет доступна после завершения обновления сервера."})
+			return
+		}
 		if errors.Is(err, errJobAlreadyRunning) {
 			conflict(w, "Джоба уже выполняется")
 			return

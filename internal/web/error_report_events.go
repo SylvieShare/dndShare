@@ -77,6 +77,8 @@ func (s *Server) handleErrorReportEvents(w http.ResponseWriter, r *http.Request)
 			continue
 		}
 		select {
+		case <-s.deployment.draining:
+			return
 		case <-r.Context().Done():
 			return
 		case <-heartbeat.C:

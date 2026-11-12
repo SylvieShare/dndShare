@@ -23,15 +23,25 @@ type Store struct {
 	pool *pgxpool.Pool
 }
 
-// Open создаёт пул и накатывает идемпотентную схему.
+// Open создаёт пул (четыре соединения по умолчанию, один необязательный лимит)
+// и накатывает идемпотентную схему.
 // Simple-протокол — чтобы работать через пулер YC (порт 6432, transaction pooling).
-func Open(ctx context.Context, dsn string) (*Store, error) {
+func Open(ctx context.Context, dsn string, maxConnections ...int32) (*Store, error) {
 	cfg, err := pgxpool.ParseConfig(dsn)
 	if err != nil {
 		return nil, fmt.Errorf("parse dsn: %w", err)
 	}
 	cfg.ConnConfig.DefaultQueryExecMode = pgx.QueryExecModeSimpleProtocol
-	cfg.MaxConns = 10
+	cfg.MaxConns = 4
+	if len(maxConnections) > 1 {
+		return nil, fmt.Errorf("one pool limit is supported")
+	}
+	if len(maxConnections) == 1 {
+		cfg.MaxConns = maxConnections[0]
+	}
+	if cfg.MaxConns < 1 || cfg.MaxConns > 64 {
+		return nil, fmt.Errorf("invalid database pool limit")
+	}
 
 	pool, err := pgxpool.NewWithConfig(ctx, cfg)
 	if err != nil {

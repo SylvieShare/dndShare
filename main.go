@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"log"
+	"net"
 	"net/http"
 	"os/signal"
 	"syscall"
@@ -27,7 +28,7 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
-	st, err := store.Open(ctx, cfg.DSN)
+	st, err := store.Open(ctx, cfg.DSN, cfg.PoolMaxConns)
 	if err != nil {
 		log.Fatalf("store: %v", err)
 	}
@@ -39,17 +40,20 @@ func main() {
 	}
 
 	// После старта гасим админ-джобы, зависшие в RUNNING после рестарта (аналог @PostConstruct).
-	if n, err := st.MarkRunningJobsFailedAtBoot(ctx, "Прервано рестартом приложения"); err != nil {
+	if cfg.DeploymentCandidate {
+		log.Printf("deployment candidate: job recovery waits for the previous instance to stop")
+	} else if n, err := st.MarkRunningJobsFailedAtBoot(ctx, "Прервано рестартом приложения"); err != nil {
 		log.Printf("mark running jobs failed at boot: %v", err)
 	} else if n > 0 {
 		log.Printf("marked %d interrupted jobs as FAILED on boot", n)
 	}
 
 	s3 := storage.New(cfg.Storage)
+	app := web.New(cfg, st, s3)
 
 	srv := &http.Server{
-		Addr:              ":" + cfg.Port,
-		Handler:           web.New(cfg, st, s3).Handler(),
+		Addr:              net.JoinHostPort(cfg.Host, cfg.Port),
+		Handler:           app.Handler(),
 		ReadHeaderTimeout: 15 * time.Second,
 		// ReadTimeout щедрый: аплоады треков до 50 МБ. WriteTimeout закрывает медленных
 		// читателей, IdleTimeout — простаивающие keep-alive соединения (защита от slowloris).
@@ -67,9 +71,14 @@ func main() {
 
 	<-ctx.Done()
 	log.Printf("shutting down")
-	shutdownCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	app.BeginDrain()
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(shutdownCtx); err != nil {
 		log.Printf("shutdown: %v", err)
+		_ = srv.Close()
+	}
+	if err := app.WaitForJobs(shutdownCtx); err != nil {
+		log.Printf("job shutdown: %v", err)
 	}
 }

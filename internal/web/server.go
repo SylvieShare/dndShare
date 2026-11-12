@@ -19,6 +19,7 @@ type Server struct {
 	mapEvents     *displayEventHub
 	sessionLive   *sessionLiveHub
 	authLimiter   *authRateLimiter
+	deployment    deploymentState
 }
 
 // routeRegistrars — реестр функций регистрации маршрутов. Каждый файл-фича добавляет
@@ -36,6 +37,7 @@ func New(cfg config.Config, st *store.Store, s3 *storage.Service) *Server {
 		mapEvents:     newDisplayEventHub(),
 		sessionLive:   newSessionLiveHub(),
 		authLimiter:   newAuthRateLimiter(),
+		deployment:    deploymentState{disabled: cfg.DeploymentCandidate, draining: make(chan struct{})},
 	}
 	s.jobs = newJobRunner(s)
 	return s

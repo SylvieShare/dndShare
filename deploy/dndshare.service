@@ -1,5 +1,5 @@
 [Unit]
-Description=dndShare (Go)
+Description=dndShare (%i)
 After=network-online.target
 Wants=network-online.target
 # Не молотить бесконечно при падениях (напр. недоступна БД):
@@ -10,7 +10,10 @@ StartLimitBurst=4
 [Service]
 Type=simple
 User=sylvieshare
-WorkingDirectory=/home/sylvieshare
+WorkingDirectory=/home/sylvieshare/dndshare-deployment/slots/%i
+EnvironmentFile=/home/sylvieshare/dndshare-deployment/%i.env
+Environment=HTTP_HOST=127.0.0.1
+Environment=DB_POOL_MAX_CONNS=10
 Environment=APP_ENV=production
 Environment=FRONTEND_ASSET_CACHE_DIR=/home/sylvieshare/dndshare-frontend-assets
 Environment=TRUST_PROXY_HEADERS=true
@@ -24,12 +27,13 @@ Environment=DB_URL=jdbc:postgresql://rc1d-t6pv758r8anrqimo.mdb.yandexcloud.net:6
 Environment=DB_USER=sylvie
 # HTTP используется только для подготовки; production cookies требуют HTTPS.
 Environment=SESSION_SECURE_COOKIE=true
-ExecStart=/home/sylvieshare/dndshare-run.sh
+ExecStart=/home/sylvieshare/dndshare-deployment/slots/%i/dndshare-run.sh
+TimeoutStopSec=135
 Restart=always
 RestartSec=15
 SuccessExitStatus=143
-StandardOutput=append:/home/sylvieshare/dndshare-log.txt
-StandardError=append:/home/sylvieshare/dndshare-log.txt
+StandardOutput=journal
+StandardError=journal
 
 [Install]
 WantedBy=multi-user.target

@@ -1,7 +1,10 @@
 plugins { id("com.android.application") }
 val releases = groovy.json.JsonSlurper().parse(file("../../release/versions.json")) as Map<*, *>
 val nativeRelease = releases["android"] as Map<*, *>
+val design = groovy.json.JsonSlurper().parse(file("../../design/tokens.json")) as Map<*, *>
+val tabletWidth = (design["layout"] as Map<*, *>)["tablet"] as Number
 android {
+    buildFeatures { resValues = true }
     namespace = "ru.dndshare.client"
     compileSdk = 37
     defaultConfig {
@@ -10,6 +13,7 @@ android {
         targetSdk = 37
         versionCode = (nativeRelease["build"] as Number).toInt()
         versionName = nativeRelease["version"] as String
+        resValue("integer", "tablet_min_width_dp", tabletWidth.toInt().toString())
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

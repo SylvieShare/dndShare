@@ -99,7 +99,9 @@ publish() {
 set -euo pipefail
 available_bytes=$(df -PB1 "$HOME" | awk 'NR==2 {print $4}')
 [[ "$available_bytes" -ge 268435456 ]] || { echo 'Need at least 256 MiB free on the VM.' >&2; exit 1; }
-health="$(curl -fsS --max-time 2 http://127.0.0.1:8080/api/health 2>/dev/null || true)"
+slot="$(cat "$HOME/dndshare-deployment/active" 2>/dev/null || true)"
+case "$slot" in ''|blue) port=8080 ;; green) port=8081 ;; *) echo 'Invalid active slot.' >&2; exit 1 ;; esac
+health="$(curl -fsS --max-time 2 "http://127.0.0.1:$port/api/health" 2>/dev/null || true)"
 before=''
 if [[ "$health" == *'"status":"ok"'* ]]; then
   before="$(sed -n 's/.*"commitSha":"\([0-9a-f]\{40\}\)".*/\1/p' <<< "$health")"

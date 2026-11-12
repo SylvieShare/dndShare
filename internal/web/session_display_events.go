@@ -119,6 +119,8 @@ func (s *Server) handlePublicDisplayEvents(w http.ResponseWriter, r *http.Reques
 	defer heartbeat.Stop()
 	for {
 		select {
+		case <-s.deployment.draining:
+			return
 		case eventID, open := <-updates:
 			if !open || write(fmt.Sprintf("id: %d\ndata: refresh\n\n", eventID)) != nil {
 				return

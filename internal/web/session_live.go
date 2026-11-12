@@ -237,6 +237,8 @@ func (s *Server) handleSessionLive(w http.ResponseWriter, r *http.Request) {
 	defer heartbeat.Stop()
 	for {
 		select {
+		case <-s.deployment.draining:
+			return
 		case <-subscription.wake:
 			eventID, update := s.sessionLive.drain(subscription)
 			if update.Participants && !stillAllowed() {

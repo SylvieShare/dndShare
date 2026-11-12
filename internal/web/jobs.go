@@ -168,6 +168,11 @@ func (r *jobRunner) listAvailable() []jobMeta {
 }
 
 func (r *jobRunner) start(ctx context.Context, code string, userID int64) (any, bool, error) {
+	unlock, allowed := r.server.deployment.beginJob()
+	if !allowed {
+		return nil, true, errDeploymentDraining
+	}
+	defer unlock()
 	def, ok := r.registry[code]
 	if !ok {
 		return nil, false, nil // неизвестный код

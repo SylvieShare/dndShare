@@ -13,6 +13,9 @@ type Config struct {
 	FrontendAssetCacheDir string
 	Environment           string
 	Port                  string
+	Host                  string
+	PoolMaxConns          int32
+	DeploymentCandidate   bool
 	DSN                   string
 	SecureCookie          string // auto | true | false
 	DevOrigin             string // CORS-origin для vite (локальная разработка)
@@ -55,10 +58,21 @@ func Load() (Config, error) {
 	if err != nil {
 		return Config{}, err
 	}
+	candidate, err := envBool("DEPLOYMENT_CANDIDATE", false)
+	if err != nil {
+		return Config{}, err
+	}
+	poolLimit, err := strconv.Atoi(env("DB_POOL_MAX_CONNS", "4"))
+	if err != nil || poolLimit < 1 || poolLimit > 64 {
+		return Config{}, fmt.Errorf("DB_POOL_MAX_CONNS must be between 1 and 64")
+	}
 	cfg := Config{
 		FrontendAssetCacheDir: env("FRONTEND_ASSET_CACHE_DIR", ""),
 		Environment:           environment,
 		Port:                  env("PORT", "8080"),
+		Host:                  env("HTTP_HOST", ""),
+		PoolMaxConns:          int32(poolLimit),
+		DeploymentCandidate:   candidate,
 		DSN:                   dsn,
 		SecureCookie:          strings.ToLower(env("SESSION_SECURE_COOKIE", "auto")),
 		DevOrigin:             "http://localhost:5173",
