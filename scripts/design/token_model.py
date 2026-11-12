@@ -15,6 +15,7 @@ KEY = re.compile(r'^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$')
 REQUIRED = {
     'chrome': {'blur', 'tint', 'fade-tail'},
     'layout': {'tablet', 'desktop', 'sidebar-collapsed', 'sidebar-expanded', 'drawer', 'content-max', 'header', 'border', 'touch-min', 'map-sidebar', 'map-rail', 'map-compact-peek', 'map-navigation-item',
+               'sheet-gallery-height', 'sheet-gallery-add-width',
                'sheet-value-height', 'sheet-value-width', 'sheet-value-compact-height', 'sheet-value-compact-width',
                'sheet-header-icon', 'sheet-header-action-icon', 'sheet-header-tile-max', 'sheet-health-icon', 'sheet-navigation-item', 'sheet-navigation-height', 'sheet-navigation-icon', 'sheet-navigation-selected',
                'sheet-max', 'sheet-stat-min', 'sheet-base-min', 'sheet-stats-column', 'sheet-utilities-column',

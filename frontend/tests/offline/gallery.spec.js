@@ -2,10 +2,12 @@ import { expect, test } from '@playwright/test'
 import { fixture } from '../tutorials/fixtures/character-layout'
 
 const photoUrl = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="180" height="240"><rect width="180" height="240" fill="#35313f"/><circle cx="90" cy="85" r="43" fill="#b79cec"/><path d="M20 240a70 90 0 01140 0" fill="#766098"/></svg>')
-async function open(page, width, owner = true) {
+const landscapeUrl = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="180"><rect width="360" height="180" fill="#35313f"/></svg>')
+const squareUrl = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" fill="#766098"/></svg>')
+async function open(page, width, owner = true, count = 7) {
   await page.setViewportSize({ width, height: 1000 })
   const api = await fixture(page, 'DND5', owner)
-  api.document().values.person_photos = Array.from({ length: 7 }, (_, index) => ({ uid: `photo-${index}`, imageId: index + 1, url: photoUrl, name: `Фото ${index + 1}` }))
+  api.document().values.person_photos = Array.from({ length: count }, (_, index) => ({ uid: `photo-${index}`, imageId: index + 1, url: [photoUrl, landscapeUrl, squareUrl][index % 3], name: `Фото ${index + 1}` }))
   await page.route('**/api/handbook/sync?**', route => route.fulfill({ json: { protocol: 1, entries: [], hasMore: false, cursor: 'empty', visibleIds: [], metadata: { types: [], suggests: {}, suggestTypes: [], books: [] } } }))
   await page.route('**/api/storage/images', route => route.fulfill({ json: { upload_id: 801, url: photoUrl, key: 'gallery-photo.webp' } }))
   await page.goto('/char/test')
@@ -18,6 +20,18 @@ for (const width of [390, 834, 1440]) test(`gallery scrolls horizontally, opens 
   const api = await open(page, width)
   const gallery = page.locator('[data-sheet-field="person_photos"]:visible')
   const strip = gallery.locator('.photo-strip')
+  await expect(gallery.getByText('Галерея', { exact: true })).toBeVisible()
+  await gallery.scrollIntoViewIfNeeded()
+  for (let index = 0; index < 3; index++) await expect(gallery.locator('.photo-thumb img').nth(index)).toHaveClass(/loaded/)
+  const addHeight = (await gallery.getByRole('button', { name: 'Добавить', exact: true }).boundingBox()).height
+  const dimensions = await gallery.locator('.photo-thumb img').evaluateAll(images => images.slice(0, 3).map(image => ({
+    width: image.getBoundingClientRect().width, height: image.getBoundingClientRect().height,
+    naturalRatio: image.naturalWidth / image.naturalHeight,
+  })))
+  for (const image of dimensions) {
+    expect(image.height).toBe(addHeight)
+    expect(image.width / image.height).toBeCloseTo(image.naturalRatio, 2)
+  }
   const layout = await gallery.evaluate(field => {
     const tile = field.closest('.person-group')
     const sheet = tile.parentElement
@@ -58,4 +72,44 @@ test('read-only galleries expose viewing without upload or removal', async ({ pa
   await expect(page.getByRole('menuitem', { name: 'Посмотреть', exact: true })).toBeVisible()
   await expect(page.getByRole('menuitem', { name: 'Удалить', exact: true })).toHaveCount(0)
   expect(api.writes).toEqual([])
+})
+
+test('an empty gallery retains its title and upload preview uses the common height', async ({ page }) => {
+  const api = await open(page, 475, true, 0)
+  const gallery = page.locator('[data-sheet-field="person_photos"]:visible')
+  await expect(gallery.getByText('Галерея', { exact: true })).toBeVisible()
+  let releaseUpload
+  const pendingUpload = new Promise(resolve => { releaseUpload = resolve })
+  await page.route('**/api/storage/images', async route => {
+    await pendingUpload
+    await route.fulfill({ json: { upload_id: 801, url: landscapeUrl } })
+  })
+  try {
+    await gallery.locator('input[type=file]').setInputFiles({ name: 'landscape.svg', mimeType: 'image/svg+xml', buffer: Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="180"><rect width="360" height="180" fill="#35313f"/></svg>') })
+    const pending = gallery.locator('.photo-pending')
+    await expect(pending.locator('img')).toHaveClass(/loaded/)
+    const previewBox = await pending.boundingBox()
+    const add = gallery.getByRole('button', { name: 'Добавить', exact: true })
+    await expect(add).toBeDisabled()
+    expect(previewBox.height).toBe((await add.boundingBox()).height)
+    expect(previewBox.width / previewBox.height).toBeCloseTo(2, 2)
+    releaseUpload()
+    await expect(pending).toHaveCount(0)
+    await expect.poll(() => api.document().values.person_photos.length).toBe(1)
+    await expect(add).toBeEnabled()
+  } finally { releaseUpload() }
+})
+
+test('an unavailable photo ends loading while the gallery height stays usable', async ({ page }) => {
+  const api = await fixture(page)
+  api.document().values.person_photos = [{ uid: 'missing', imageId: 1, url: '/unavailable-photo.webp' }]
+  await page.route('**/unavailable-photo.webp', route => route.fulfill({ status: 404, body: '' }))
+  await page.goto('/char/test?tab=personality', { waitUntil: 'networkidle' })
+  const gallery = page.locator('[data-sheet-field="person_photos"]:visible')
+  await gallery.scrollIntoViewIfNeeded()
+  await expect(gallery.getByRole('img', { name: 'Фотография недоступна' })).toBeVisible()
+  const image = gallery.getByRole('button', { name: 'Фотография 1', exact: true })
+  const add = gallery.getByRole('button', { name: 'Добавить', exact: true })
+  expect((await image.boundingBox()).height).toBe((await add.boundingBox()).height)
+  await expect(add).toBeEnabled()
 })

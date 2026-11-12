@@ -1,10 +1,11 @@
 <template>
-  <div v-if="photos.length || owner" class="photo-gallery" aria-label="Фотографии персонажа">
+  <div v-if="photos.length || owner" class="photo-gallery" aria-label="Галерея персонажа">
+    <MorphTileHeader title="Галерея" :show-edit="false" />
     <div class="photo-strip" data-sheet-horizontal-scroll>
       <RowActionMenu v-for="(photo, index) in photos" :key="photo.uid" title="Действия с фотографией">
         <template #trigger="{ open }">
           <button class="photo-thumb" type="button" :aria-label="`Фотография ${index + 1}`" aria-haspopup="menu" :aria-expanded="open">
-            <CharacterPhotoImage :src="photo.thumbnailUrl || photo.url" :alt="photo.name || `Фотография ${index + 1}`" />
+            <CharacterPhotoImage :src="photo.thumbnailUrl || photo.url" :alt="photo.name || `Фотография ${index + 1}`" fit="natural" />
           </button>
         </template>
         <template #default="{ close }">
@@ -17,7 +18,7 @@
           <RowActionItem v-if="owner" :icon="Trash2" tone="danger" @click="removing = photo; close()">Удалить</RowActionItem>
         </template>
       </RowActionMenu>
-      <div v-for="entry in pending" :key="entry.uid" class="photo-thumb photo-pending"><img :src="entry.preview" alt="Загружаемая фотография" /><LoadingIndicator label="Загрузка фотографии" size="sm" /></div>
+      <div v-for="entry in pending" :key="entry.uid" class="photo-thumb photo-pending"><CharacterPhotoImage :src="entry.preview" alt="Загружаемая фотография" fit="natural" /><LoadingIndicator label="Загрузка фотографии" size="sm" /></div>
       <ActionButton v-if="owner" class="photo-add" layout="stacked" variant="dashed" :disabled="uploading" @click="input.click()"><template #icon><Plus :size="24" /></template>Добавить</ActionButton>
     </div>
     <input ref="input" class="photo-file-input" type="file" multiple accept="image/*" aria-label="Добавить фотографии" @change="selectFiles" />
@@ -31,7 +32,7 @@
 
 <script setup>
 import { computed, inject, onBeforeUnmount, ref, watch } from 'vue'
-import { ActionButton, AppModalFrame, ConfirmDialog, LoadingIndicator, RowActionItem, RowActionMenu } from '@sylvieshare/share-ui'
+import { ActionButton, AppModalFrame, ConfirmDialog, LoadingIndicator, MorphTileHeader, RowActionItem, RowActionMenu } from '@sylvieshare/share-ui'
 import { Expand, PanelsTopLeft, PanelTopClose, Plus, Trash2 } from '@lucide/vue'
 import { prepareImageUpload, PORTRAIT_IMAGE_MAX_BYTES } from '@/shared/lib/imageUpload'
 import { coverState, showCoverPhoto, stopCoverPhoto } from '@/platform/coverDisplay'
@@ -103,15 +104,15 @@ watch(() => photos.value.map(photo => photo.uid), (ids, previous) => {
 </script>
 
 <style scoped>
-.photo-gallery { min-width:0 }
+.photo-gallery { display:grid;gap:var(--spacing-small);min-width:0 }
 .photo-strip { display:flex;align-items:stretch;gap:var(--spacing-small);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:thin;padding-block:var(--spacing-xs);max-width:100% }
 .photo-strip > * { flex:none;scroll-snap-align:start }
-.photo-thumb { display:grid;place-items:center;width:100px;height:132px;padding:0;border:0;border-radius:var(--r-md);background:var(--surface-raised);overflow:hidden;cursor:pointer }
+.photo-thumb { display:grid;place-items:center;height:var(--layout-sheet-gallery-height);padding:0;border:0;border-radius:var(--r-md);background:var(--surface-raised);overflow:hidden;cursor:pointer }
 .photo-thumb > * { grid-area:1/1;min-width:0 }
 .photo-thumb:focus-visible { outline:2px solid var(--accent);outline-offset:-2px }
-.photo-add { width:100px;min-height:132px }
+.photo-add { width:var(--layout-sheet-gallery-add-width);--action-button-height:var(--layout-sheet-gallery-height) }
 .photo-pending { position:relative }
-.photo-pending img { opacity:.4 }
+.photo-pending > .character-photo-image { opacity:.4 }
 .photo-pending > :last-child { position:absolute }
 .photo-file-input { display:none }
 .photo-error { color:var(--danger);font-size:12px;margin:var(--spacing-small) 0 0 }
