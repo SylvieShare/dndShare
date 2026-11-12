@@ -129,6 +129,8 @@ function monogram(value) {
 .dsov--header .dsov-item-icon {width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon)}
 .dsov--header .dsov-icon :deep(img), .dsov--header .dsov-icon :deep(svg) {width:100%;height:100%}
 .dsov--header .dsov-copy {gap:var(--spacing-xs)}
+.dsov--header .dsov-heading {flex-direction:column;align-items:stretch;gap:var(--spacing-xs)}
+.dsov--header .dsov-level {white-space:nowrap}
 .dsov--header .dsov-name {font-size:var(--type-group-size);line-height:var(--type-group-line-height)}
 .dsov--header .dsov-duration {font-size:var(--type-context-size);line-height:var(--type-context-line-height)}
 .dsov--header .dsov-add {width:auto;height:var(--layout-touch-min);padding-inline:var(--spacing-small);font-size:var(--type-group-size);white-space:nowrap}
