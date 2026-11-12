@@ -34,6 +34,7 @@ for (const width of [390, 834, 1440]) test(`stat dice badges, cached icons and e
   await page.screenshot({ path: testInfo.outputPath('stats-layout.png') })
   await strength.click()
   const menu = page.getByRole('menu', { name: 'Сила — проверка', exact: true })
+  await expect(menu).toHaveCSS('transform', 'none')
   const edit = menu.getByRole('menuitem', { name: 'Изменить', exact: true })
   await expect(page.locator('.stat-roll-value--active')).toHaveCount(1)
   await expect(strength.locator('.stat-roll-value')).toHaveClass(/stat-roll-value--active/)
