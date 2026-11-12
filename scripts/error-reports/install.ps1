@@ -35,6 +35,17 @@ if ($LASTEXITCODE -ne 0) { throw 'Native report MCP configuration failed; dispat
 
 $workerScript = Join-Path $workerRoot 'dispatcher.py'
 $workerArguments = '"' + $workerScript + '" --config "' + $configFile + '"'
+$previousWorker = $null
+$healthFile = Join-Path $stateRoot 'health.json'
+if (Test-Path -LiteralPath $healthFile) {
+    $workerHealth = Get-Content -LiteralPath $healthFile -Raw | ConvertFrom-Json
+    $workerProcess = Get-CimInstance Win32_Process -Filter "ProcessId=$([int]$workerHealth.pid)" -ErrorAction SilentlyContinue
+    if ($workerProcess -and $workerProcess.ExecutablePath -eq $pythonw -and
+        $workerProcess.CommandLine -match [regex]::Escape($workerScript) -and
+        $workerProcess.CommandLine -match [regex]::Escape($configFile)) {
+        $previousWorker = Get-Process -Id $workerProcess.ProcessId -ErrorAction SilentlyContinue
+    }
+}
 $taskName = 'DnDShare-Report-Chat'
 $startupMode = 'task'
 try {
@@ -56,6 +67,13 @@ try {
 } catch [Microsoft.Management.Infrastructure.CimException] {
     if ($_.Exception.NativeErrorCode -notin @(5,2)) { throw }
     $startupMode = 'startup-shortcut'
+}
+if ($previousWorker -and !$previousWorker.HasExited) {
+    # Stop-ScheduledTask may return before its process releases the singleton lock.
+    # This handle was verified against our executable, script and configuration.
+    try { $previousWorker.Kill() }
+    catch [System.InvalidOperationException] { if (!$previousWorker.HasExited) { throw } }
+    if (!$previousWorker.WaitForExit(10000)) { throw 'The previous dispatcher has not exited; do not start a second worker.' }
 }
 if ($startupMode -eq 'startup-shortcut' -and $Start) {
     $shortcutFile = Join-Path ([Environment]::GetFolderPath('Startup')) 'DnDShare Report Chat.lnk'
