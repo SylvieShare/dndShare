@@ -1,6 +1,6 @@
 <template>
   <div v-if="items.length || showAddAction" class="dsov" :class="{ 'dsov--icons-only': iconsOnly, 'dsov--header': header }" :style="iconsOnly ? { '--status-icon-size': `${iconSize}px` } : null">
-    <div v-if="items.length" class="dsov-row">
+    <div v-if="items.length" class="dsov-row" data-sheet-horizontal-scroll>
       <RowActionMenu
         v-for="item in items"
         :key="item.id"
@@ -122,7 +122,8 @@ function monogram(value) {
 
 <style scoped>
 .dsov.dsov--header {padding:0;gap:8px}
-.dsov--header .dsov-row {gap:8px;flex-wrap:wrap;max-width:100%}
+.dsov--header .dsov-row {gap:8px;flex-wrap:nowrap;max-width:100%;overscroll-behavior-x:contain}
+.dsov--header .dsov-row > * {flex:none}
 .dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-icon) minmax(0,1fr);gap:var(--spacing-small);min-height:var(--layout-sheet-header-icon);padding:0 var(--spacing-compact)}
 .dsov--header .dsov-icon {width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);min-width:var(--layout-sheet-header-icon);border-radius:var(--radius-input)}
 .dsov--header .dsov-item-icon {width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon)}
@@ -131,7 +132,7 @@ function monogram(value) {
 .dsov--header .dsov-name {font-size:var(--type-group-size);line-height:var(--type-group-line-height)}
 .dsov--header .dsov-duration {font-size:var(--type-context-size);line-height:var(--type-context-line-height)}
 .dsov--header .dsov-add {width:auto;height:var(--layout-touch-min);padding-inline:var(--spacing-small);font-size:var(--type-group-size);white-space:nowrap}
-.dsov--header {flex-wrap:wrap}
+.dsov--header {flex-wrap:nowrap}
 .dsov-add:disabled {opacity:.45;cursor:not-allowed}
 .dsov { display: flex; min-width: 0; align-items: center; gap: 13px; padding: 0 0 15px 15px; }
 .dsov-row {

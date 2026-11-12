@@ -13,6 +13,6 @@ const hasStates = computed(() => ctx.characterStatuses?.entries?.length || ctx.v
 </script>
 <style scoped>
 .strip {display:flex; align-items:center; gap:var(--spacing-label); min-width:0; margin:auto; min-height:var(--layout-sheet-header-icon)}
-.strip :deep(.character-sheet-field){flex:none}
+.strip :deep(.character-sheet-field){flex:1;min-width:0}
 @media (--ui-compact){.strip{gap:var(--spacing-xs)}}
 </style>

@@ -5,11 +5,17 @@ export function useWorkspaceContextLayout(main, identity, context, actions, prop
   const inline = ref(false)
   let observer, mutations, frame, fonts
   function intrinsicWidth(node) {
-    const width = node.style.width, maxWidth = node.style.maxWidth
-    node.style.width = 'max-content'; node.style.maxWidth = 'none'
-    const result = node.offsetWidth
-    node.style.width = width; node.style.maxWidth = maxWidth
-    return result
+    // Resizing the live context resets nested scroll positions and closes menus.
+    // A sibling keeps the same inherited styles without touching live controls.
+    const measure = node.cloneNode(true)
+    measure.inert = true
+    measure.setAttribute('aria-hidden', 'true')
+    Object.assign(measure.style, {
+      position: 'fixed', left: '-100000px', top: '0', visibility: 'hidden',
+      pointerEvents: 'none', width: 'max-content', maxWidth: 'none',
+    })
+    node.parentElement.appendChild(measure)
+    try { return measure.offsetWidth } finally { measure.remove() }
   }
   function measure() {
     if (!main.value || !context.value || !identity.value || !actions.value) return
