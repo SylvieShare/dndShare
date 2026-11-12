@@ -40,3 +40,5 @@ __pycache__/
 # Pinned, source-addressed worktree candidate
 /.ui-workspace.json
 /.ui-run.lock
+/internal/clientrelease/updates/*
+!/internal/clientrelease/updates/.gitkeep

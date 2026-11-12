@@ -1,5 +1,5 @@
 <template>
-  <div v-if="photos.length || owner" class="photo-gallery" aria-label="Галерея персонажа">
+  <div v-if="photos.length || owner" class="photo-gallery" aria-label="Галерея персонажа" :aria-busy="uploading">
     <MorphTileHeader title="Галерея" :show-edit="false" />
     <div class="photo-strip" data-sheet-horizontal-scroll>
       <RowActionMenu v-for="(photo, index) in photos" :key="photo.uid" title="Действия с фотографией">

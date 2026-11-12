@@ -43,11 +43,13 @@ prepare() {
   command -v "$go_bin" >/dev/null 2>&1 || go_bin=/usr/local/go/bin/go
 
   echo "==> Сборка веба и Go ($commit)"
+  node scripts/release/versions.mjs --check
   (
     cd "$frontend"
     if [[ ! -f node_modules/.bin/vite ]]; then npm ci; fi
     npm run build
   )
+  node scripts/release/pack-frontend.mjs
   frontend_checksums > "$output/frontend.sha256"
 
   assets="$ROOT_DIR/internal/assets/dist"
@@ -60,7 +62,7 @@ prepare() {
   printf '\n' > "$assets/.gitkeep"
   cp -R "$frontend/target/dist/." "$assets/"
   CGO_ENABLED=0 GOOS=linux GOARCH=amd64 "$go_bin" build -trimpath \
-    -ldflags="-s -w -X dndshare/internal/web.BuildCommit=$commit" \
+    -ldflags="$(node scripts/release/metadata.mjs --go-flags)" \
     -o "$output/dndshare.new" .
 
   # Keep old hashed assets available to open tabs. The transfer also includes

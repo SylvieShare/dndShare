@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "backend": {
+    "version": "0.3.0",
+    "build": 1
+  },
+  "frontend": {
+    "version": "0.3.2",
+    "build": 3
+  },
+  "android": {
+    "version": "0.3.2",
+    "build": 6
+  },
+  "contracts": {
+    "api": 1,
+    "data": 1
+  },
+  "fingerprints": {
+    "backend": "525ec52b8dc26250187f1e45702321205cbcb3d7304c2a9ce0e9c58e8b4edea0",
+    "frontend": "9b38ebf0272429b5231d7cc1b73d28390a322156d5e2b7cebc8b0bfb473c71ed",
+    "android": "283dd7be324a0e48c7939b07607a60a5d774f1fdffb1a9ab3cba5ac02025103b"
+  }
+}

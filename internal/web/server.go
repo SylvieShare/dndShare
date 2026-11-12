@@ -58,7 +58,8 @@ func (s *Server) handlerWithSPA(spa http.Handler) http.Handler {
 	mux.Handle("/", spa)
 
 	var h http.Handler = mux
-	h = s.session(h)   // резолвит userID в контекст (не блокирует)
+	h = s.session(h) // резолвит userID в контекст (не блокирует)
+	h = s.clientContract(h)
 	h = s.cors(h)      // CORS для vite (dev)
 	h = s.recoverer(h) // паника → 500 + запись в logs
 	return h

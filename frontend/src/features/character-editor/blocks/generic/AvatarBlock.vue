@@ -2,6 +2,7 @@
   <div
     ref="avatarEl"
     class="avatar"
+    :aria-busy="uploading || iconUploading"
     :style="avatarStyle"
     :class="{
       'avatar-dragging': isDragging,

@@ -84,6 +84,10 @@ func (s *Server) cors(next http.Handler) http.Handler {
 // авторизацию проверяют сами хендлеры (mustUser / requireRole).
 func (s *Server) session(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet && publicBuildPath(r.URL.Path) {
+			next.ServeHTTP(w, r)
+			return
+		}
 		// Статике и SPA-фолбэку личность не нужна — не ходим в БД на каждый JS/CSS/картинку.
 		if isAPIPath(r.URL.Path) {
 			if uid, ok := s.resolveUser(r); ok {

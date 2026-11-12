@@ -1,4 +1,6 @@
 plugins { id("com.android.application") }
+val releases = groovy.json.JsonSlurper().parse(file("../../release/versions.json")) as Map<*, *>
+val nativeRelease = releases["android"] as Map<*, *>
 android {
     namespace = "ru.dndshare.client"
     compileSdk = 37
@@ -6,8 +8,8 @@ android {
         applicationId = "ru.dndshare.client"
         minSdk = 26
         targetSdk = 37
-        versionCode = 3
-        versionName = "0.2.1"
+        versionCode = (nativeRelease["build"] as Number).toInt()
+        versionName = nativeRelease["version"] as String
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -18,6 +20,8 @@ android {
         targetCompatibility = JavaVersion.VERSION_21
     }
     sourceSets.getByName("main").assets.srcDir(file("build/web-assets"))
+    sourceSets.getByName("main").assets.srcDir(file("build/runtime-assets"))
+    sourceSets.getByName("androidTest").assets.srcDir(file("build/ota-test-assets"))
 }
 dependencies {
     implementation(project(":capacitor-android"))
@@ -34,7 +38,8 @@ val bundleWeb by tasks.registering(Exec::class) {
     workingDir = file("../../frontend")
     commandLine("node", "node_modules/vite/bin/vite.js", "build")
     inputs.files(fileTree("../../frontend/src"), fileTree("../../frontend/public"), fileTree("../../frontend/scripts"),
-        file("../../frontend/index.html"), file("../../frontend/package-lock.json"), file("../../frontend/vite.config.js"))
+        file("../../frontend/index.html"), file("../../frontend/package-lock.json"), file("../../frontend/vite.config.js"),
+        fileTree("../../release"), fileTree("../../scripts/release"), fileTree("src/main"), file("build.gradle.kts"))
     outputs.dir("../../frontend/target/dist")
 }
 val copyWeb by tasks.registering(Sync::class) {
@@ -42,4 +47,18 @@ val copyWeb by tasks.registering(Sync::class) {
     from("../../frontend/target/dist") { into("public"); exclude("**/*.gz", "**/*.br") }
     into(layout.buildDirectory.dir("web-assets"))
 }
-tasks.named("preBuild") { dependsOn(copyWeb) }
+val runtimeMetadata by tasks.registering(Exec::class) {
+    dependsOn(bundleWeb)
+    workingDir = file("../..")
+    commandLine("node", "scripts/release/metadata.mjs", "--native-out", file("build/runtime-assets").absolutePath)
+    inputs.files(fileTree("src/main"), file("build.gradle.kts"), fileTree("../../release"), fileTree("../../scripts/release"), file("../../frontend/package-lock.json"), file("../../frontend/target/dist/build-info.json"))
+    outputs.file("build/runtime-assets/client-runtime.json")
+}
+tasks.named("preBuild") { dependsOn(copyWeb, runtimeMetadata) }
+val updaterFixtures by tasks.registering(Exec::class) {
+    workingDir = file("../..")
+    commandLine("node", "scripts/release/test-bundles.mjs", file("build/ota-test-assets/ota").absolutePath)
+    inputs.files(fileTree("../../scripts/release"), file("../../frontend/package-lock.json"))
+    outputs.dir("build/ota-test-assets/ota")
+}
+tasks.matching { it.name.contains("AndroidTest") }.configureEach { dependsOn(updaterFixtures) }

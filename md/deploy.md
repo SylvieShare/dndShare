@@ -62,6 +62,13 @@ deploy поверх более нового выпуска без явной з�
 `deploy/deploy.sh --prepare` и `deploy/deploy.sh --publish` в одной чистой копии.
 Запуск `deploy/deploy.sh` без параметров выполняет оба этапа.
 
+## Подписанный frontend
+
+До commit выполнить node scripts/release/versions.mjs --bump и --check.
+Prepare проверяет отпечатки, собирает frontend, подписывает ZIP и встраивает
+metadata/пакет в Go. Нужен закрытый ключ вне Git; настройка и совместимость —
+[версии и OTA](features/client-updates.md). Публикуется только проверенный архив.
+
 ## Что делает deploy
 
 1. `--prepare` собирает Vue, встраивает результат в Go и формирует один

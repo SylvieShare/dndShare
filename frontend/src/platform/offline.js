@@ -4,6 +4,8 @@ import { prepareLocalJournal, outboxStorage } from './journal'
 import { invalidateLocalHandbook, localHandbookResponse, saveCatalogueMutation, syncHandbook } from './handbook'
 import { updateConfirmedSnapshot } from './snapshots'
 import { resumeLocalQueues } from './recoverQueues'
+import { apiHeaders } from './build'
+import { trackMutation } from './updates'
 
 export const localState = reactive({ online: true, syncing: false, error: '', accountId: null, ready: false })
 let database, network, controller, scope = 'public:', refreshTimer, bootPromise
@@ -89,7 +91,15 @@ export function synchronizeLocalData() {
 
 async function localFetch(input, init = {}) {
   const url = new URL(typeof input === 'string' || input instanceof URL ? input : input.url, location.href)
+  const mutating = url.origin === location.origin && url.pathname.startsWith('/api/') && !['GET', 'HEAD'].includes((init.method || input.method || 'GET').toUpperCase())
+  if (mutating) trackMutation(1)
+  try { return await cachedFetch(input, init) } finally { if (mutating) trackMutation(-1) }
+}
+async function cachedFetch(input, init = {}) {
+  const url = new URL(typeof input === 'string' || input instanceof URL ? input : input.url, location.href)
   if (url.origin !== location.origin || !url.pathname.startsWith('/api/')) return network(input, init)
+  if (url.pathname === '/api/build-info' || url.pathname.startsWith('/api/frontend-updates/')) return network(input, { ...init, cache: 'no-store' })
+  init = { ...init, headers: apiHeaders(init.headers || input.headers) }
   const method = (init.method || input.method || 'GET').toUpperCase()
   const epoch = accountEpoch
   const auth = url.pathname === '/api/user/checkAuth'

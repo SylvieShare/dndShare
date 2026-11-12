@@ -12,6 +12,19 @@ import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class HybridShellTest {
+    private void assertSystemBarsHidden(ActivityScenario<MainActivity> activity) throws Exception {
+        var hidden = new java.util.concurrent.atomic.AtomicBoolean();
+        long deadline = System.currentTimeMillis() + 5000;
+        while (!hidden.get() && System.currentTimeMillis() < deadline) {
+            activity.onActivity(host -> {
+                var insets = androidx.core.view.ViewCompat.getRootWindowInsets(host.getWindow().getDecorView());
+                hidden.set(insets != null && !insets.isVisible(androidx.core.view.WindowInsetsCompat.Type.statusBars())
+                    && !insets.isVisible(androidx.core.view.WindowInsetsCompat.Type.navigationBars()));
+            });
+            if (!hidden.get()) Thread.sleep(100);
+        }
+        assertTrue("Status and navigation bars must be hidden", hidden.get());
+    }
     private String evaluate(ActivityScenario<MainActivity> activity, String script) throws Exception {
         var result = new AtomicReference<String>();
         var done = new CountDownLatch(1);
@@ -31,6 +44,7 @@ public class HybridShellTest {
         try (var activity = ActivityScenario.launch(MainActivity.class)) {
             waitFor(activity, "!!window.Capacitor?.Plugins?.LocalStore && !!document.getElementById('app').__vue_app__");
             assertEquals("\"https://dndshare.ru\"", evaluate(activity, "location.origin"));
+            assertSystemBarsHidden(activity);
             evaluate(activity, "window.__storageTest=false;window.Capacitor.Plugins.LocalStore.batch({changes:[{key:'test:atomic',value:JSON.stringify({saved:42})}]}).then(()=>window.__storageTest=true)");
             waitFor(activity, "window.__storageTest===true");
             activity.recreate();
@@ -55,6 +69,7 @@ public class HybridShellTest {
                 "test-character", "test-photo", android.graphics.Bitmap.createBitmap(2, 2, android.graphics.Bitmap.Config.ARGB_8888)));
             activity.moveToState(androidx.lifecycle.Lifecycle.State.CREATED);
             activity.moveToState(androidx.lifecycle.Lifecycle.State.RESUMED);
+            assertSystemBarsHidden(activity);
             evaluate(activity, "window.__selectionKept=false;window.Capacitor.Plugins.CoverDisplay.getStatus().then(value=>window.__selectionKept=value.selected&&value.photoUid==='test-photo')");
             waitFor(activity, "window.__selectionKept===true");
             // API documents must never become an executable remote page with the native bridge.

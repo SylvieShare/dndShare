@@ -64,6 +64,11 @@ stats, jobs и [сообщения об ошибках](api/error-reports.md).
 внешние URL без собственного объекта хранилища исключаются.
 
 
+## Версии клиента
+
+Публичные build-info и frontend-updates endpoints, заголовок API-контракта
+и подписанный формат описаны в [обновлениях клиента](features/client-updates.md#http-контракт).
+
 ## Связанные страницы
 
 [Оглавление wiki](README.md) · [Музыка](features/music.md) · [Admin panel](features/admin.md)

@@ -63,12 +63,13 @@
     </template>
 
     <template #account="{ expanded }">
-      <UserBox :expanded="expanded" />
+      <div class="sidebar-account-content"><BuildVersions :expanded="expanded" /><UserBox :expanded="expanded" /></div>
     </template>
   </AppSidebar>
 </template>
 
 <script setup>
+import BuildVersions from '@/shared/ui/BuildVersions.vue'
 import ActiveSessionShortcuts from '@/features/sessions/components/ActiveSessionShortcuts.vue'
 import { computed, nextTick, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
@@ -129,6 +130,7 @@ defineExpose({ focusSearch: () => searchRef.value?.focus() })
 </script>
 
 <style scoped>
+.sidebar-account-content { display:flex;flex-direction:column;width:100%;min-width:0 }
 .sidebar-menu-trigger {
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   width: 44px; height: 48px; border: 0; border-radius: 9px; padding: 0;
