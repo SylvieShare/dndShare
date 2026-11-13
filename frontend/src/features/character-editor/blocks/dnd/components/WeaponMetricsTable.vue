@@ -131,7 +131,7 @@ button.weapon-metrics__cell:focus-visible { outline: 2px solid var(--accent-soft
 }
 .weapon-metrics__damage { min-height: var(--layout-weapon-metrics-attack-width); max-width: 100%; }
 .weapon-metrics__attack,.weapon-metrics__damage {display:grid;grid-template-columns:calc(var(--layout-weapon-metrics-icon) + var(--spacing-small)) minmax(0,1fr);align-items:center;gap:var(--spacing-small)}
-.weapon-metrics__identity {display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--spacing-xs);min-width:0;color:var(--text-muted)}
+.weapon-metrics__identity {display:flex;flex-direction:column;align-items:center;justify-content:center;align-self:stretch;gap:var(--spacing-xs);min-width:0;color:var(--text-muted);border-inline-end:1px solid var(--border)}
 .weapon-metrics__identity .weapon-metrics__label {font-size:var(--type-context-size);line-height:var(--type-context-line-height);text-align:center}
 .weapon-metrics__icon {flex:none;opacity:.5}
 .weapon-metrics__formula-content {display:flex;flex-direction:column;gap:var(--spacing-xs);min-width:0;max-width:100%}
