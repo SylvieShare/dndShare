@@ -121,10 +121,10 @@ function monogram(value) {
 </script>
 
 <style scoped>
-.dsov.dsov--header {padding:0;gap:var(--spacing-compact)}
-.dsov--header .dsov-row {gap:var(--spacing-compact);flex-wrap:nowrap;max-width:100%;padding-block:var(--spacing-xs);margin-block:calc(-1 * var(--spacing-xs));overscroll-behavior-x:contain}
+.dsov.dsov--header {padding:0;gap:var(--spacing-small)}
+.dsov--header .dsov-row {gap:var(--spacing-small);flex-wrap:nowrap;max-width:100%;padding-block:var(--spacing-xs);margin-block:calc(-1 * var(--spacing-xs));overscroll-behavior-x:contain}
 .dsov--header .dsov-row > * {flex:none}
-.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-status-icon) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:var(--layout-touch-min);padding:0 var(--spacing-compact)}
+.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-status-icon) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:calc(var(--layout-sheet-header-status-icon) + 2 * var(--spacing-xs));padding:var(--spacing-xs) var(--spacing-small);border-radius:var(--radius-tile);background:var(--surface)}
 .dsov--header .dsov-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon);min-width:var(--layout-sheet-header-status-icon);border-radius:var(--radius-input)}
 .dsov--header .dsov-item-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon)}
 .dsov--header .dsov-icon :deep(img), .dsov--header .dsov-icon :deep(svg) {width:100%;height:100%}
