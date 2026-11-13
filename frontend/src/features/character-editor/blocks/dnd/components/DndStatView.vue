@@ -9,6 +9,7 @@
     <template #decoration><TileAccentStrip v-if="mode !== 'panel'" :color="color" /></template>
 
     <!-- ── Head: editable name + save chip ── -->
+      <template #title><span class="stat-title">{{ title }}</span></template>
 
       <template #aside>
         <div

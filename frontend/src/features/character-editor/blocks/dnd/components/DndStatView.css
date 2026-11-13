@@ -7,6 +7,7 @@
 }
 
 .stat-icon { width: 26px; height: 26px; align-self: center; flex-shrink: 0; }
+.stat-title { font-size: var(--type-group-size); line-height: var(--type-group-line-height); }
 
 /* ── Save chip ── */
 .save-chip {
@@ -49,6 +50,7 @@
 /* ── Modifier ── */
 .stat-body {
   display: flex;
+  margin-top: var(--spacing-small);
   align-items: center;
   gap: 7px;
   cursor: pointer;

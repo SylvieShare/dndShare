@@ -48,7 +48,7 @@ const dieSize = computed(() => layoutTokens[props.variant === 'large' ? 'roll-mo
 }
 .roll-badge--advantage,.roll-badge--disadvantage {padding:2px var(--spacing-xs);border-radius:var(--radius-input);background:color-mix(in srgb,var(--roll-mode-color) 9%,transparent)}
 .roll-badge__dice {display:inline-flex;align-items:center}
-.roll-badge__caption {font-family:var(--type-roll-mode-caption-family);font-size:var(--type-roll-mode-caption-size);line-height:var(--type-roll-mode-caption-line-height);font-weight:var(--type-roll-mode-caption-weight);letter-spacing:var(--type-roll-mode-caption-tracking);white-space:nowrap}
+.roll-badge__caption {padding-inline:var(--spacing-xs);font-family:var(--type-roll-mode-caption-family);font-size:var(--type-roll-mode-caption-size);line-height:var(--type-roll-mode-caption-line-height);font-weight:var(--type-roll-mode-caption-weight);letter-spacing:var(--type-roll-mode-caption-tracking);white-space:nowrap}
 .roll-badge--large .roll-badge__caption {font-size:var(--roll-mode-caption-size,var(--type-context-size));line-height:var(--roll-mode-caption-line-height,var(--type-context-line-height))}
 .roll-badge__die {position:relative;display:inline-flex;flex:none;width:var(--roll-mode-fit-die-size,var(--roll-mode-die-size));height:var(--roll-mode-fit-die-size,var(--roll-mode-die-size))}
 .roll-badge__die + .roll-badge__die {margin-inline-start:calc(var(--spacing-xs) / -2)}
