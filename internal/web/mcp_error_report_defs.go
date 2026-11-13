@@ -19,7 +19,7 @@ func mcpErrorReportDefs() []map[string]any {
 				"compact":     mcpBooleanProperty("Return the diagnostic projection used by automation without redundant queue/workflow fields"),
 			})),
 		mcpDefinition("error_report_lock_acquire",
-			"Atomically acquire the shared error-report automation lease before reading or changing reports. If acquired is false, another run is active and this run must stop. Returns a short-lived opaque leaseId handle; release it in a final cleanup step. Requires MCP write operations to be enabled.",
+			"Atomically acquire the shared error-report automation lease before processing or changing reports. If acquired is false, another run is active and this run must stop. Returns a short-lived opaque leaseId handle; release it in a final cleanup step. Requires MCP write operations to be enabled.",
 			mcpObjectSchema(map[string]any{
 				"ttlMinutes": mcpIntegerProperty("Lease lifetime, 5..120 minutes (default 45)"),
 			})),
@@ -35,9 +35,9 @@ func mcpErrorReportDefs() []map[string]any {
 				"leaseId": mcpStringProperty("Opaque handle returned by error_report_lock_acquire"),
 			}, "leaseId")),
 		mcpDefinition("error_reports_claim",
-			"Atomically mark a batch from the current actionable queue as IN_PROGRESS for the active automation lease. Claimed reports disappear from error_reports_list, remain visible to reviewers as 'В работе', and return to OPEN if the lease expires or is released before completion. Call immediately after the post-lock error_reports_list and before reading project context.",
+			"Atomically mark only the selected actionable reports as IN_PROGRESS for the active lease. Claiming the whole queue is not required. A local notification selects one report ID; explicitly requested batches remain atomic. Claims return to OPEN if the lease expires or is released before completion.",
 			mcpObjectSchema(map[string]any{
-				"ids":     map[string]any{"type": "array", "items": map[string]any{"type": "integer"}, "description": "All actionable report ids from the post-lock list, 1..500"},
+				"ids":     map[string]any{"type": "array", "items": map[string]any{"type": "integer"}, "description": "Selected actionable report IDs, 1..500; use only the notification's ID for one local report"},
 				"leaseId": mcpStringProperty("Opaque handle returned by error_report_lock_acquire"),
 			}, "ids", "leaseId")),
 		mcpDefinition("error_report_title_set",

@@ -8,7 +8,7 @@ import threading
 import unittest
 from unittest.mock import patch
 
-from dispatcher import deliver, enqueue, event_key
+from dispatcher import AGENT_PROCEDURE, deliver, enqueue, event_key, message_for
 from state import State, singleton
 from transport import Client, ProtocolError, load_config, parse_events
 
@@ -62,10 +62,21 @@ class DeliveryTest(unittest.TestCase):
             args = run.call_args.args[0]
             self.assertEqual(args[0:4], ['codex.exe', 'queue', '--thread', THREAD])
             self.assertNotIn('evil.exe', ' '.join(args))
-            self.assertIn('dndshare_reports', ' '.join(args))
+            self.assertIn(AGENT_PROCEDURE, ' '.join(args))
             self.assertFalse(run.call_args.kwargs.get('shell', False))
             receipt.stdout = 'success'
             with self.assertRaises(RuntimeError): enqueue(event, config)
+
+    def test_notifications_stay_short_and_point_to_the_published_procedure(self):
+        self.assertTrue((Path(__file__).resolve().parents[2] / AGENT_PROCEDURE).is_file())
+        for kind in ['created', 'approved', 'answered', 'reopened', 'serious-approved', 'recovered']:
+            for approved in [True, False]:
+                event = {'kind': kind, 'id': 4321, 'reportId': 987654321, 'approved': approved}
+                message = message_for(event, {})
+                self.assertLess(len(message), 400)
+                self.assertIn(event_key(event), message)
+                self.assertIn('987654321', message)
+                self.assertIn(AGENT_PROCEDURE, message)
 
 
 class TransportTest(unittest.TestCase):
