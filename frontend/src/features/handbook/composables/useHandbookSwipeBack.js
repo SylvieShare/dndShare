@@ -1,3 +1,5 @@
+import { isSortableGestureActive } from '@sylvieshare/share-ui'
+
 const INTERACTIVE_TARGETS = [
   'a',
   'button',
@@ -24,7 +26,7 @@ export function useHandbookSwipeBack(onBack, options = {}) {
   }
 
   function onTouchStart(event) {
-    if (!enabled() || event.touches?.length !== 1 || !isHandbookSwipeBackTarget(event.target)) {
+    if (isSortableGestureActive() || !enabled() || event.touches?.length !== 1 || !isHandbookSwipeBackTarget(event.target)) {
       reset()
       return
     }
@@ -33,6 +35,7 @@ export function useHandbookSwipeBack(onBack, options = {}) {
   }
 
   function onTouchMove(event) {
+    if (isSortableGestureActive()) { reset(); return }
     if (!gesture || event.touches?.length !== 1) return
     const touch = event.touches[0]
     gesture.x = touch.clientX
@@ -52,6 +55,7 @@ export function useHandbookSwipeBack(onBack, options = {}) {
   }
 
   function onTouchEnd(event) {
+    if (isSortableGestureActive()) { reset(); return }
     if (!gesture) return
     const touch = event.changedTouches?.[0]
     const dx = (touch?.clientX ?? gesture.x) - gesture.startX

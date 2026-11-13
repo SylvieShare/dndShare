@@ -1,4 +1,5 @@
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
+import { isSortableGestureActive } from '@sylvieshare/share-ui'
 
 import { tabSelectionWeights } from './tabSelection'
 
@@ -166,6 +167,7 @@ export function useTabSwipe(activeTabs, swipeEnabled) {
   function onTouchStart(event, containerEl) {
     if (!swipeEnabled.value || activeTabs.value.length < 2) return
     suppressSwipeClick = false
+    if (isSortableGestureActive()) { resetSwipe(); return }
     if (isSwipeBlocked(event.target)) return
     if (tabDragSettling.value) return
     const touch = event.changedTouches?.[0]
@@ -183,6 +185,7 @@ export function useTabSwipe(activeTabs, swipeEnabled) {
   }
 
   function onTouchMove(event) {
+    if (isSortableGestureActive()) { resetSwipe(); return }
     if (!swipeEnabled.value || activeTabs.value.length < 2 || touchStartX == null) return
     const touch = event.changedTouches?.[0]
     if (!touch) return
@@ -207,6 +210,7 @@ export function useTabSwipe(activeTabs, swipeEnabled) {
   }
 
   function onTouchEnd(event) {
+    if (isSortableGestureActive()) { resetSwipe(); return }
     if (!swipeEnabled.value || activeTabs.value.length < 2 || touchStartX == null) return
     const touch = event.changedTouches?.[0]
     if (!touch) return

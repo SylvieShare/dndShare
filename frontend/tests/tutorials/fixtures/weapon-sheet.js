@@ -1,4 +1,4 @@
-import { fixture } from './character-layout'
+import { fixture } from './character-layout.js'
 
 export async function weaponSheetFixture(page, owner = true) {
   const api = await fixture(page, 'DND5', owner, true)

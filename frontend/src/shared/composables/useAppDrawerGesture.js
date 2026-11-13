@@ -1,4 +1,5 @@
 import { onBeforeUnmount, onMounted } from 'vue'
+import { isSortableGestureActive } from '@sylvieshare/share-ui'
 
 // Reserve the first 24px for the app drawer; gestures inside a page keep their own meaning.
 export function useAppDrawerGesture(enabled, open) {
@@ -6,13 +7,14 @@ export function useAppDrawerGesture(enabled, open) {
   function start(event) {
     gesture = null
     const touch = event.touches?.[0]
-    if (!enabled() || event.touches.length !== 1 || touch.clientX > 24
+    if (isSortableGestureActive() || !enabled() || event.touches.length !== 1 || touch.clientX > 24
       || event.target.closest?.('button, a, input, textarea, select, [role="dialog"], [contenteditable="true"]')
       || document.querySelector('[aria-modal="true"]')) return
     gesture = { x: touch.clientX, y: touch.clientY }
     event.stopPropagation()
   }
   function move(event) {
+    if (isSortableGestureActive()) { gesture = null; return }
     if (!gesture || event.touches.length !== 1) return
     const touch = event.touches[0]
     const dx = touch.clientX - gesture.x

@@ -1,5 +1,9 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { useHandbookSwipeBack } from './useHandbookSwipeBack'
+
+const sortable = vi.hoisted(() => ({ active: false }))
+vi.mock('@sylvieshare/share-ui', () => ({ isSortableGestureActive: () => sortable.active }))
+afterEach(() => { sortable.active = false })
 
 function touchEvent(x, y, overrides = {}) {
   return {
@@ -13,6 +17,20 @@ function touchEvent(x, y, overrides = {}) {
 }
 
 describe('useHandbookSwipeBack', () => {
+  it('does not navigate on a sortable gesture, including ownership acquired after touchstart', () => {
+    const onBack = vi.fn(), swipe = useHandbookSwipeBack(onBack)
+    swipe.onTouchStart(touchEvent(20, 100))
+    sortable.active = true
+    swipe.onTouchMove(touchEvent(120, 100))
+    sortable.active = false
+    swipe.onTouchEnd(touchEvent(120, 100, { touches: [] }))
+    expect(onBack).not.toHaveBeenCalled()
+    swipe.onTouchStart(touchEvent(20, 100))
+    swipe.onTouchMove(touchEvent(120, 100))
+    swipe.onTouchEnd(touchEvent(120, 100, { touches: [] }))
+    expect(onBack).toHaveBeenCalledOnce()
+  })
+
   it('goes back after a deliberate horizontal swipe to the right', () => {
     const onBack = vi.fn()
     const swipe = useHandbookSwipeBack(onBack)
