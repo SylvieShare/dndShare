@@ -35,6 +35,11 @@
 
 ## List contract
 
+Название «Персонажи» и действие «Новый персонаж» находятся в одной строке
+AppHeader. Отдельного сабхеадера списка нет. Действие использует HeaderCreateAction:
+на телефоне видна короткая подпись «Новый», доступное имя остаётся полным.
+PageHeaderPortal переносит только действие и скрывает его при уходе с кешированной страницы.
+
 `GET /api/chars` returns `chars` and batched `sessionsByChar`. Cards are grouped
 by `sourceId/sourceName`, show the concrete rules edition and the most recently
 changed session. В обоих клиентах список не имеет поля поиска; название и действие создания находятся в сабхеадере.

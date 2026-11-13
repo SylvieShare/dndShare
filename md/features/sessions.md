@@ -24,6 +24,13 @@ and matching store files.
 
 ## Страницы и доступ
 
+У списка сессий одна строка AppHeader с названием и созданием. Фильтры ролей,
+счётчик и присоединение по коду находятся в содержимом; отдельного глобального
+сабхеадера списка нет. В самой сессии вкладки находятся в локальной капсуле:
+под основной строкой на телефоне/планшете, а на desktop — внутри неё, с иконкой
+над подписью. Выбранный раздел и DOM-экземпляр навигации сохраняются при смене
+формата. Общий контракт — [шапка сайта](../frontend/workspace-header.md).
+
 - `/sessions` — campaigns available to the user.
 - `/sessions/:uuid` — DM workspace or the participant-facing session page,
   depending on the current user's role.

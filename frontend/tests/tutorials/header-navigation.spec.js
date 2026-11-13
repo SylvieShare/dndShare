@@ -17,10 +17,11 @@ async function openSheet(page, width) {
 async function expectContinuousHeader(page) {
   const geometry = await page.locator('.character-workspace-header').evaluate(header => {
     const main = header.querySelector('.workspace-header-inner'), band = header.querySelector('.workspace-subheader')
-    const a = main.getBoundingClientRect(), b = band.getBoundingClientRect(), root = header.getBoundingClientRect()
+    const a = main.getBoundingClientRect(), b = band.getBoundingClientRect(), root = header.getBoundingClientRect(),surface=band.querySelector('.workspace-subheader-inner'),c=surface.getBoundingClientRect()
     return { gap: b.top - a.bottom, bottom: root.bottom - b.bottom,
       mainBackground: getComputedStyle(header).backgroundColor, bandBackground: getComputedStyle(band).backgroundColor,
       border: getComputedStyle(band).borderTopWidth,
+      leftInset:c.left-b.left,rightInset:b.right-c.right,surfaceBackground:getComputedStyle(surface).backgroundColor,radius:getComputedStyle(surface).borderTopLeftRadius,
       seamBelongsToHeader: header.contains(document.elementFromPoint(root.x + root.width / 2, b.top + .5)) }
   })
   expect(Math.abs(geometry.gap)).toBeLessThan(.5)
@@ -28,6 +29,11 @@ async function expectContinuousHeader(page) {
   expect(geometry.bandBackground).not.toBe('rgba(0, 0, 0, 0)')
   expect(geometry.bandBackground).not.toBe(geometry.mainBackground)
   expect(geometry.border).toBe('0px')
+  expect(geometry.bandBackground).toBe('rgb(23, 23, 27)')
+  expect(geometry.surfaceBackground).toBe('rgb(48, 45, 58)')
+  expect(geometry.leftInset).toBeGreaterThan(0)
+  expect(geometry.rightInset).toBeGreaterThan(0)
+  expect(parseFloat(geometry.radius)).toBeGreaterThan(8)
   expect(geometry.seamBelongsToHeader).toBe(true)
 }
 

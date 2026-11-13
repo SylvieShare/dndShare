@@ -34,11 +34,11 @@ describe('app header', () => {
     expect(html).not.toContain('brand-menu')
     expect(html).not.toContain('Обновить')
   })
-  it('keeps the page title in its subheader outlet without repeating it in the main row', async () => {
+  it('keeps the page title and action outlet in one header row', async () => {
     const html = await renderHeader('/chars')
-    expect(html).toContain('DnD Share')
-    expect(html).toContain('id="app-subheader"')
-    expect(html).not.toContain('class="header-title">Персонажи')
+    expect(html).toContain('id="app-header-actions"')
+    expect(html).not.toContain('id="app-subheader"')
+    expect(html).toMatch(/<h1[^>]*class="header-title"[^>]*>Персонажи<\/h1>/)
   })
   it('retains a semantic parent action on a nested page', async () => {
     const html = await renderHeader('/account')

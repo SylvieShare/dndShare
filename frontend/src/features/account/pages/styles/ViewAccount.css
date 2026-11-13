@@ -10,10 +10,11 @@
 .account-avatar { display: grid; width: 62px; height: 62px; flex: 0 0 62px; border: 1px solid color-mix(in srgb, var(--accent) 48%, var(--border)); border-radius: 18px; background: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--accent) 38%, transparent), transparent 58%), var(--surface); box-shadow: 0 14px 34px color-mix(in srgb, var(--accent) 14%, transparent); color: var(--text-1); font-family: var(--font-display); font-size: 30px; font-weight: 700; place-items: center; }
 .account-identity { min-width: 0; }
 .account-identity > span { display: block; margin-bottom: 3px; color: var(--accent-soft); font-size: 9px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
-.account-identity h1 { margin: 0; overflow: hidden; color: var(--text-1); font-family: var(--font-display); font-size: clamp(27px, 5vw, 38px); line-height: 1; text-overflow: ellipsis; white-space: nowrap; }
+.account-identity h2 { margin: 0; overflow: hidden; color: var(--text-1); font-family: var(--font-display); font-size: clamp(27px, 5vw, 38px); line-height: 1; text-overflow: ellipsis; white-space: nowrap; }
 .account-identity p { margin: 7px 0 0; color: var(--text-muted); font-size: 12px; }
 
-.account-surface { overflow: hidden; border: 1px solid var(--border); border-radius: 18px; background: color-mix(in srgb, var(--surface) 95%, transparent); box-shadow: 0 24px 60px color-mix(in srgb, var(--bg) 52%, transparent); }
+.account-surface { overflow: hidden;border-radius:var(--radius-large);background:var(--surface); }
+.account-navigation {margin:var(--spacing-small);max-width:calc(100% - 2 * var(--spacing-small))}
 .account-surface :deep(.share-sliding-tabs) { border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--surface-raised) 42%, transparent); }
 .account-panel { min-height: 430px; padding: clamp(24px, 5vw, 46px); box-sizing: border-box; }
 .account-panel--password { max-width: 620px; }

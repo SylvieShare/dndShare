@@ -5,8 +5,8 @@
   --action-menu-item-press-scale: 1;
   --action-menu-icon-press-scale: 0.96;
   /* Frameless groups need distinguishable surfaces in both web and Compose. */
-  --surface-raised: #34343e;
-  --surface-active: #42424f;
+  --surface-raised: color-mix(in srgb, var(--surface) 93%, var(--text-1));
+  --surface-active: color-mix(in srgb, var(--surface) 86%, var(--text-1));
   --popover-bg: var(--surface-raised);
   --popover-border-width: 1px;
   --text-muted: #a0a0ad;

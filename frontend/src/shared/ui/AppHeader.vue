@@ -1,5 +1,5 @@
 <template>
-  <WorkspaceHeader ref="workspace" page class="app-header" :scroll-source="null" :navigation-visible="hasNavigation" :fit-navigation="false" @resize="emit('resize', $event)" :style="{ '--workspace-header-identity-gap': 'var(--spacing-small)' }" :class="{
+  <WorkspaceHeader ref="workspace" page class="app-header" :scroll-source="null" @resize="emit('resize', $event)" :style="{ '--workspace-header-identity-gap': 'var(--spacing-small)' }" :class="{
     'app-header--collapsible': headerCollapsible,
     'app-header--mobile-hidden': mobileHeaderHidden,
     'header-hidden': effectiveHeaderHidden,
@@ -11,11 +11,10 @@
       </button>
       <MobileHeaderBack v-if="mobileBackTarget && (!isHandbook || route.query.item)" :to="mobileBackTarget" :icon-only="isHandbook" />
       <div class="header-heading">
-        <slot name="title"><span class="header-title">{{ title }}</span></slot>
+        <slot name="title"><h1 class="header-title">{{ title }}</h1></slot>
         <span v-if="contextLabel && compact" class="header-context">{{ contextLabel }}</span>
       </div>
     </template>
-    <template #navigation><div ref="navigationOutlet" id="app-subheader" class="app-subheader-outlet" /></template>
     <template #actions>
       <div id="app-header-actions" class="header-actions" />
       <span v-if="headerContext.chip" class="header-chip"
@@ -27,7 +26,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { Menu } from '@lucide/vue'
 import { useAppLayout } from '@/shared/composables/useAppLayout'
@@ -44,16 +43,8 @@ defineProps({ menuOpen: Boolean })
 const emit = defineEmits(['open-menu', 'resize'])
 const route = useRoute()
 const uiStore = useUiStore()
-const workspace=ref(null), navigationOutlet=ref(null), hasNavigation=ref(false)
-let navigationObserver
+const workspace=ref(null)
 useAppWorkspaceScroll(workspace)
-onMounted(()=>{
-  const measure=()=>{hasNavigation.value=!!navigationOutlet.value?.childElementCount}
-  navigationObserver=new MutationObserver(measure)
-  if(navigationOutlet.value) navigationObserver.observe(navigationOutlet.value,{childList:true})
-  measure()
-})
-onBeforeUnmount(()=>navigationObserver?.disconnect())
 const gameContext = useGameContextStore()
 const { phone, compact } = useAppLayout()
 const headerMode = computed(() => resolveMobileHeaderMode(route.meta))
@@ -62,10 +53,9 @@ const mobileHeaderHidden = computed(() => phone.value && headerMode.value === MO
 const effectiveHeaderHidden = computed(() => headerCollapsible.value && uiStore.headerHidden)
 const mobileBackTarget = computed(() => resolveMobileBackTarget(route))
 const headerContext = computed(() => uiStore.resolveHeader(route.name, route.meta?.title, false))
-const isCharacterList = computed(() => route.path === '/chars')
 const isHandbook = computed(() => route.meta?.section === 'handbook')
 const sectionTitles = { handbook: 'Справочник', rules: 'Правила игрока' }
-const title = computed(() => ['Characters','Sessions'].includes(route.name) ? 'DnD Share' : sectionTitles[route.meta?.section] || headerContext.value.title)
+const title = computed(() => sectionTitles[route.meta?.section] || headerContext.value.title)
 const contextLabel = computed(() => {
   const current = gameContextPresentation(gameContext.selectedSource, gameContext.selectedVersion)
   return [current.name, current.edition].filter(Boolean).join(' · ')
@@ -79,7 +69,6 @@ const contextLabel = computed(() => {
   max-height: none;
   transition: max-height .22s ease, opacity .18s ease, border-color .22s ease;
 }
-.app-subheader-outlet { display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:var(--spacing-small);width:100%;min-width:0; }
 .header-menu {
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   width: var(--layout-touch-min); height: var(--layout-touch-min); padding: 0; border: 0; border-radius: var(--radius-row);
@@ -87,7 +76,7 @@ const contextLabel = computed(() => {
 }
 .header-menu:hover { background: var(--surface-raised); }
 .header-heading { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; padding: 0; }
-.header-title { font-family: var(--type-header-family); letter-spacing: var(--type-header-tracking); font-size: var(--type-header-size); line-height: var(--type-header-line-height); font-weight: var(--type-header-weight); }
+.header-title { margin:0;font-family:var(--type-workspace-title-family);letter-spacing:var(--type-workspace-title-tracking);font-size:var(--type-workspace-title-size);line-height:var(--type-workspace-title-line-height);font-weight:var(--type-workspace-title-weight); }
 .header-context { color: var(--text-2); font-family: var(--type-context-family); letter-spacing: var(--type-context-tracking); font-size: var(--type-context-size); line-height: var(--type-context-line-height); font-weight: var(--type-context-weight); }
 .header-title, .header-context { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .header-actions { display: flex; align-items: center; flex: 0 0 auto; }

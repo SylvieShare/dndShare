@@ -15,5 +15,5 @@ defineProps({scrollSource:Object})
 const emit=defineEmits(['close','reset'])
 </script>
 <style scoped>
-.creation-title {display:flex;align-items:center;gap:var(--spacing-small);font-family:var(--type-header-family);font-size:var(--type-header-size);font-weight:var(--type-header-weight);line-height:var(--type-header-line-height)}
+.creation-title {display:flex;align-items:center;gap:var(--spacing-small);font-family:var(--type-workspace-title-family);font-size:var(--type-workspace-title-size);font-weight:var(--type-workspace-title-weight);line-height:var(--type-workspace-title-line-height)}
 </style>

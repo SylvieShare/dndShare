@@ -1,5 +1,5 @@
 <template>
-  <WorkspaceHeader ref="workspace" :scroll-source="null" class="chapter-toolbar" @resize="emit('resize', $event)">
+  <WorkspaceHeader ref="workspace" :scroll-source="null" class="chapter-toolbar" :navigation-placement="format === 'desktop' ? 'inline' : 'below'" :fit-navigation="format !== 'phone'" @resize="emit('resize', $event)">
     <template #identity>
     <SessionBackButton />
     <SessionToolbarIdentity
@@ -12,7 +12,7 @@
     </template>
     <template #navigation><div class="chapter-toolbar-center">
       <WorkspaceNavigation data-tutorial="session-navigation" class="chapter-primary-nav"
-        :items="navigationItems" :model-value="navigationKey" label="Раздел сессии" @select="selectView">
+        :items="navigationItems" :model-value="navigationKey" :format="format === 'desktop' ? 'tablet' : format" label="Раздел сессии" @select="selectView">
         <template #icon="{ item }">
           <component :is="item.icon" :size="24" :style="item.key === 'combat' && encounterActive && navigationKey !== 'combat' ? { color: 'var(--danger)' } : undefined" aria-hidden="true" />
         </template>
@@ -39,6 +39,7 @@ import SessionToolbarIdentity from './SessionToolbarIdentity.vue'
 import SessionBackButton from './SessionBackButton.vue'
 import SessionToolbarMusic from './SessionToolbarMusic.vue'
 import { sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
+import { useAppLayout } from '@/shared/composables/useAppLayout'
 
 const props = defineProps({
   arcs: { type: Array, default: () => [] },
@@ -59,6 +60,7 @@ const emit = defineEmits([
   'edit-session', 'session-updated', 'open-combat',
 ])
 const shortcutLabels = sessionShortcutLabels()
+const { format } = useAppLayout()
 const workspace=ref(null)
 defineExpose({setScrollPosition:value=>workspace.value?.setScrollPosition(value)})
 const navigationItems = computed(() => sessionNavigationItems(props))
@@ -70,7 +72,7 @@ function selectView(key) {
 </script>
 
 <style scoped>
-.chapter-toolbar-center { display: flex; align-items: center; justify-self: center; min-width: 0; max-width: 100%; }
+.chapter-toolbar-center { display:flex;align-items:center;justify-content:center;min-width:0;max-width:100%;width:100%; }
 .chapter-shortcut-hint {
   position: absolute;
   z-index: 2;
@@ -93,10 +95,6 @@ function selectView(key) {
   animation: chapter-combat-live 1.8s ease-in-out infinite;
 }
 @keyframes chapter-combat-live { 50% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 18%, transparent); } }
-@container (max-width: 1100px) {
-  .chapter-toolbar-center { grid-row: 2; grid-column: 1 / -1; }
-}
-@media (max-width: 760px) { .chapter-toolbar-center { justify-self: stretch; } }
 @media (prefers-reduced-motion: reduce) {
   .chapter-shortcut-hint, .chapter-combat-running-indicator { animation: none; }
 }

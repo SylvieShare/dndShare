@@ -1,13 +1,16 @@
 <template>
-  <header ref="element" class="workspace-header" :class="{ 'workspace-header--solid': solid, 'workspace-header--context': !!$slots.context, 'workspace-header--context-inline': contextInline }">
+  <header ref="element" class="workspace-header" :class="{ 'workspace-header--solid': solid, 'workspace-header--context': !!$slots.context, 'workspace-header--context-inline': contextInline, 'workspace-header--navigation-inline': navigationPlacement === 'inline' && navigationVisible }">
     <BlurBackdrop v-if="!solid" class="workspace-header-backdrop" radius="var(--chrome-blur)" />
     <div ref="main" class="workspace-header-inner" :class="{ 'workspace-header-inner--page': page }" :style="{ maxWidth: contentWidth || (page ? 'var(--layout-content-max)' : undefined) }">
     <div ref="identity" class="workspace-header-identity"><slot name="identity" /></div>
+    <div :id="navigationId" v-show="navigationPlacement === 'inline' && navigationVisible" class="workspace-header-navigation" />
     <div v-if="$slots.context" ref="context" class="workspace-header-context"><slot name="context" /></div>
     <div ref="actions" class="workspace-header-actions"><slot name="actions" /><LocalDataStatus /></div>
     </div>
     <slot name="between" />
-    <WorkspaceSubheader v-if="$slots.navigation" v-show="navigationVisible" :fit="fitNavigation" :content-width="contentWidth || (page ? 'var(--layout-content-max)' : undefined)"><slot name="navigation" /></WorkspaceSubheader>
+    <Teleport :to="'#' + navigationId" :disabled="navigationPlacement !== 'inline'" defer>
+      <WorkspaceSubheader v-if="$slots.navigation" v-show="navigationVisible" :inline="navigationPlacement === 'inline'" :fit="fitNavigation" :content-width="contentWidth || (page ? 'var(--layout-content-max)' : undefined)"><slot name="navigation" /></WorkspaceSubheader>
+    </Teleport>
   </header>
 </template>
 <script setup>
@@ -17,12 +20,22 @@ import WorkspaceSubheader from './WorkspaceSubheader.vue'
 import { useWorkspaceContextLayout } from '@/shared/composables/useWorkspaceContextLayout'
 import { useWorkspaceScrollPosition } from '@/shared/composables/useWorkspaceScrollPosition'
 import { layoutTokens } from '@/app/design-tokens'
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-const props = defineProps({ page: Boolean, contentWidth: String, fitNavigation: {type:Boolean,default:true}, solid: {type:Boolean,default:true}, navigationVisible:{type:Boolean,default:true}, scrollSource:{type:Object,default:undefined}, contextPlacement:{type:String,default:'auto'} });
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from "vue";
+const props = defineProps({ page: Boolean, contentWidth: String, fitNavigation: {type:Boolean,default:true}, solid: {type:Boolean,default:true}, navigationVisible:{type:Boolean,default:true}, navigationPlacement:{type:String,default:'below'}, scrollSource:{type:Object,default:undefined}, contextPlacement:{type:String,default:'auto'} });
+const navigationId = `workspace-navigation-${useId()}`
 const element = ref(null),
   emit = defineEmits(["resize"]);
 const main=ref(null), identity=ref(null), context=ref(null), actions=ref(null)
 const contextInline=useWorkspaceContextLayout(main,identity,context,actions,props)
+watch(()=>props.navigationPlacement,async()=>{
+  const focused=document.activeElement
+  if(!focused?.closest('.workspace-subheader') || !element.value?.contains(focused))return
+  await nextTick()
+  if(focused.isConnected && (document.activeElement===document.body || document.activeElement===focused)) {
+    focused.focus({preventScroll:true})
+    focused.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'})
+  }
+})
 function setScrollPosition(value) {
   const scroll=Math.max(0,Number(value)||0)
   element.value?.toggleAttribute('data-workspace-scrolled',scroll>0)
@@ -98,6 +111,7 @@ onBeforeUnmount(() => observer?.disconnect());
   align-items: center;
   gap: 10px;
 }
+.workspace-header-navigation { display:flex;align-items:center;justify-content:center;min-width:0; }
 @container (max-width:1100px) {
   .workspace-header-inner {
     grid-template-columns: minmax(0, 1fr) auto;
@@ -131,5 +145,6 @@ onBeforeUnmount(() => observer?.disconnect());
 .workspace-header--context-inline .workspace-header-inner {grid-template-columns:max-content minmax(0,1fr) auto}
 .workspace-header--context-inline .workspace-header-context {grid-column:2;grid-row:1;margin-inline-start:var(--workspace-context-inline-offset,0px)}
 .workspace-header--context-inline .workspace-header-identity {max-width:100%}
+.workspace-header--navigation-inline .workspace-header-inner {grid-template-columns:fit-content(var(--layout-workspace-inline-identity-max)) minmax(0,1fr) auto}
 @media (prefers-reduced-motion:reduce) {.workspace-header::after{transition:none}}
 </style>

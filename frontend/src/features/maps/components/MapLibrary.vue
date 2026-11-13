@@ -1,15 +1,15 @@
 <template>
   <div class="map-library">
-    <PageHeaderPortal :local="!pageChrome"><div class="map-library-heading">
+    <div class="map-library-heading">
       <WorkspaceNavigation
         v-model="c.scope"
         :items="TABS"
         label="Разделы карт"
-      /><ActionButton v-if="!picker" @click="c.create"
-        ><template #icon><Plus :size="17" /></template>Создать
-        карту</ActionButton
-      >
-    </div></PageHeaderPortal>
+      />
+      <PageHeaderPortal v-if="!picker" :local="!pageChrome">
+        <HeaderCreateAction label="Создать карту" @click="c.create" />
+      </PageHeaderPortal>
+    </div>
     <div class="map-library-toolbar">
       <FormTextInput
         v-model:value="c.query"
@@ -176,11 +176,12 @@ import {
   LoadingState,
   SearchMultiSelect,
 } from "@sylvieshare/share-ui";
-import { BookmarkPlus, Copy, LayoutGrid, List, Map, Plus } from "@lucide/vue";
+import { BookmarkPlus, Copy, LayoutGrid, List, Map } from "@lucide/vue";
 import { useMapLibrary } from "../composables/useMapLibrary";
 import MapLibraryEntry from "./MapLibraryEntry.vue";
 import WorkspaceNavigation from '@/shared/ui/WorkspaceNavigation.vue';
 import PageHeaderPortal from '@/shared/ui/PageHeaderPortal.vue';
+import HeaderCreateAction from '@/shared/ui/HeaderCreateAction.vue';
 const MapCanvas = defineAsyncComponent(() => import("./MapCanvas.vue"));
 const props = defineProps({ picker: Boolean, pageChrome:Boolean }),
   emit = defineEmits(["select"]);

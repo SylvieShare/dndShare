@@ -4,13 +4,13 @@
       <div class="account-avatar" aria-hidden="true">{{ initial }}</div>
       <div class="account-identity">
         <span>Аккаунт игрока</span>
-        <h1>{{ username }}</h1>
+        <h2>{{ username }}</h2>
         <p>Безопасность, обучение и загруженные материалы.</p>
       </div>
     </header>
 
     <section class="account-surface">
-      <PageHeaderPortal><WorkspaceNavigation v-model="activeTab" :items="navigationItems" label="Разделы аккаунта" /></PageHeaderPortal>
+      <WorkspaceNavigation class="account-navigation" v-model="activeTab" :items="navigationItems" label="Разделы аккаунта" />
 
       <section
         v-if="activeTab === 'password'"
@@ -174,7 +174,6 @@ import {
   ShieldCheck,
 } from '@lucide/vue'
 import { FormField, FormTextInput, SegmentDonutChart } from '@sylvieshare/share-ui'
-import PageHeaderPortal from '@/shared/ui/PageHeaderPortal.vue'
 import WorkspaceNavigation from '@/shared/ui/WorkspaceNavigation.vue'
 import { fetchGet, fetchPut } from '@/shared/api/http'
 import { useAccountStore } from '@/stores/account'

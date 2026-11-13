@@ -30,8 +30,8 @@ const collection = computed(() => props.type !== undefined ? props.type
 <style scoped>
 .handbook-heading {
   display: flex; align-items: center; gap: var(--spacing-small); min-width: 0;
-  font-family: var(--type-header-family); font-size: var(--type-header-size);
-  font-weight: var(--type-header-weight); line-height: var(--type-header-line-height);
+  font-family: var(--type-workspace-title-family); font-size: var(--type-workspace-title-size);
+  font-weight: var(--type-workspace-title-weight); line-height: var(--type-workspace-title-line-height);
 }
 .handbook-home-link { position: relative; flex-shrink: 0; color: var(--text-1); text-decoration: none; transition: color var(--motion-feedback); }
 .handbook-home-link::after { content: ''; position: absolute; inset: -12px 0; }

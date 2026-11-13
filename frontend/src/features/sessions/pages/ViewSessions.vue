@@ -1,33 +1,9 @@
 <template>
   <div class="page">
-    <PageHeaderPortal><div class="sessions-subheader">
-    <div class="page-header">
-      <div class="header-left">
-        <h1 class="page-title">Сессии</h1>
-        <span v-if="sessions.length" class="total-badge">{{ sessions.length }}</span>
-      </div>
-      <div v-if="loading || hasAnything" class="header-right">
-        <div class="code-entry" :class="{ 'code-entry--invalid': joinError }" :title="joinError || undefined">
-          <span class="code-label">КОД</span>
-          <input
-            v-model="joinCode"
-            class="code-input"
-            type="text"
-            placeholder="XXXXX-00000"
-            maxlength="11"
-            :aria-invalid="!!joinError"
-            @keydown.enter="handleJoin"
-          />
-          <button class="btn-join" :disabled="!joinCode.trim() || joining" @click="handleJoin">
-            <LoadingIndicator v-if="joining" label="..." size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ joining ? '...' : 'Войти' }}
-          </button>
-        </div>
-        <button class="btn-create" @click="showModal = true">+ Создать сессию</button>
-      </div>
-    </div>
-
-    <WorkspaceNavigation v-model="filter" :items="filterItems" label="Категории сессий" />
-    </div></PageHeaderPortal>
+    <PageHeaderPortal>
+      <HeaderCreateAction v-if="loading || hasAnything" label="Создать сессию" @click="showModal = true" />
+    </PageHeaderPortal>
+    <SessionsListToolbar v-model:filter="filter" v-model:join-code="joinCode" :items="filterItems" :count="sessions.length" :joining="joining" :error="joinError" :show-join="loading || !!hasAnything" @join="handleJoin" />
 
     <LoadingState v-if="loading" label="Загружаем сессии…" />
 
@@ -132,7 +108,8 @@
 <script setup>
 import { LoadingIndicator } from '@sylvieshare/share-ui'
 import PageHeaderPortal from '@/shared/ui/PageHeaderPortal.vue'
-import WorkspaceNavigation from '@/shared/ui/WorkspaceNavigation.vue'
+import HeaderCreateAction from '@/shared/ui/HeaderCreateAction.vue'
+import SessionsListToolbar from '../components/SessionsListToolbar.vue'
 import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'

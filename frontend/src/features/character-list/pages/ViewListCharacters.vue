@@ -1,13 +1,7 @@
 <template>
   <div class="page">
     <PageHeaderPortal>
-    <div class="page-header">
-      <h1 class="page-title">Персонажи</h1>
-      <button class="create-btn" type="button" @click="openCreateModal">
-        <span class="create-btn-plus" aria-hidden="true">+</span>
-        Новый персонаж
-      </button>
-    </div>
+      <HeaderCreateAction label="Новый персонаж" short-label="Новый" @click="openCreateModal" />
     </PageHeaderPortal>
 
     <p v-if="loadError && chars.length" role="alert">{{ loadError }} <button type="button" @click="loadChars()">Повторить</button></p>
@@ -64,6 +58,7 @@ export default { name: 'ViewListCharacters' }
 <script setup>
 import CharacterListSkeleton from '../components/CharacterListSkeleton.vue'
 import PageHeaderPortal from '@/shared/ui/PageHeaderPortal.vue'
+import HeaderCreateAction from '@/shared/ui/HeaderCreateAction.vue'
 import { computed, onActivated, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CharBox from "@/features/character-list/components/CharBox"
@@ -202,59 +197,6 @@ onActivated(() => {
   max-width: 1400px;
   margin: 0 auto;
   box-sizing: border-box;
-}
-
-.page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px 12px;
-  flex-wrap: wrap;
-  width: 100%;
-  min-height: 48px;
-  padding-inline: 16px;
-  box-sizing: border-box;
-}
-
-.page-title {
-  flex: 1 1 110px;
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--text-1, var(--text-on-accent));
-  margin: 0;
-}
-
-.create-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  min-height: 34px;
-  padding: 0 13px;
-  border: 0;
-  border-radius: 9px;
-  background: var(--accent);
-  color: var(--text-on-accent);
-  font: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: filter 0.15s, transform 0.15s;
-}
-
-.create-btn:hover {
-  filter: brightness(1.1);
-}
-
-.create-btn:active {
-  transform: translateY(1px);
-}
-
-.create-btn-plus {
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1;
 }
 
 .chars-grid {
