@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <TransitionGroup name="notification-stack" tag="div" class="notification-stack" aria-label="Уведомления" aria-live="polite" aria-relevant="additions">
-      <BaseTile elevated :outlined="false" v-for="entry in store.entries" :key="entry.id" role="status" class="app-notification" :data-notification-type="entry.type"
+      <BaseTile surface="popover" elevated :outlined="false" v-for="entry in store.entries" :key="entry.id" role="status" class="app-notification" :data-notification-type="entry.type"
         @pointerenter="store.pause(entry.id, 'hover')" @pointerleave="store.resume(entry.id, 'hover')"
         @focusin="store.pause(entry.id, 'focus')" @focusout="onFocusOut($event, entry.id)"
         @pointerdown="swipe.onPointerDown($event, entry.id)" @pointermove="swipe.onPointerMove"
