@@ -8,8 +8,8 @@ describe('weapon card icon', () => {
   it('renders handbook image or SVG in the shared 64px slot', () => {
     expect(source).toContain("import ItemIcon from '@/features/items/components/ItemIcon.vue'")
     expect(source).toContain('weaponItem?.iconImageUrl || weaponItem?.svg')
-    expect(source).toContain(':size="64"')
-    expect(source).toMatch(/\.w-icon \{[^}]*flex: 0 0 64px;[^}]*width: 64px;[^}]*height: 64px;/)
+    expect(source).toContain(':size="layoutTokens[\'weapon-card-icon\']"')
+    expect(source).toContain('<WeaponCardLayout')
   })
 
   it('shows resolved weapon proficiency on the tile', () => {

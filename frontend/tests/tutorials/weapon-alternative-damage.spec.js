@@ -12,17 +12,17 @@ async function open(page, { owner = true, remaining = 1 } = {}) {
   api.suggests[12].push({ id: 9, typeId: 12, value: 'Молния', color: 'var(--warning)' })
   await page.goto('/char/test?tab=weapons', { waitUntil: 'networkidle' })
   const card = page.locator('.w-card:visible').first()
-  await expect(card.locator('.weapon-metrics__alternative')).toHaveCount(2)
+  await expect(card.locator('.weapon-metrics__alternative')).toHaveCount(1)
   return { api, card, magic: () => api.document().values.weapon[0].params.magic }
 }
 
-test('separate alternative cells preview freely and share the existing one-time use payment', async ({ page }) => {
+test('the line damage and the paid target modifier share the existing one-time use payment', async ({ page }) => {
   const { api, card, magic } = await open(page)
   const line = card.locator('[data-damage-key="lightning_throw:line"]')
-  const target = card.locator('[data-damage-key="lightning_throw:target"]')
+  const target = card.locator('.weapon-metrics__damage:not(.weapon-metrics__alternative)')
   await expect(line.locator('.weapon-damage__count')).toHaveText(['4×'])
   await expect(line.locator('.weapon-damage__type')).toHaveText(['Молния'])
-  await expect(target.locator('.weapon-damage__source')).toHaveText(['Оружие', 'Сила', 'Ярость', 'Метнуть молнией'])
+  await expect(target.locator('.weapon-damage__source')).toHaveText(['Оружие', 'Сила', 'Ярость'])
   expect(magic().remaining).toBe(1)
   expect(api.writes).toEqual([])
   await line.click()
@@ -33,13 +33,16 @@ test('separate alternative cells preview freely and share the existing one-time 
   await expect.poll(() => magic().remaining).toBe(0)
   await expect.poll(() => magic().weapon_use.steps.map(step => step.status)).toEqual(['rolled', 'pending'])
   await target.click()
+  await menu.getByRole('switch', { name: 'Метнуть молнией', exact: true }).click()
+  await expect(target.locator('.weapon-damage__source')).toHaveText(['Оружие', 'Сила', 'Ярость', 'Метнуть молнией'])
   await menu.getByRole('switch', { name: 'Критическое попадание', exact: true }).click()
   await expect(target.locator('.weapon-damage__count')).toHaveText(['2×', '8×'])
   await menu.getByRole('menuitem', { name: 'Бросить на урон', exact: true }).click()
   await expect.poll(() => magic().weapon_use.steps.map(step => step.status)).toEqual(['rolled', 'rolled'])
   expect(magic().remaining).toBe(0)
   await target.click()
-  await expect(menu.getByRole('menuitem', { name: 'Бросить на урон', exact: true })).toBeDisabled()
+  await expect(menu.getByRole('switch', { name: 'Метнуть молнией', exact: true })).toHaveCount(0)
+  await expect(menu.getByRole('menuitem', { name: 'Бросить на урон', exact: true })).toBeEnabled()
 })
 
 test('a reader sees alternative formulas without editable roll controls or writes', async ({ page }) => {

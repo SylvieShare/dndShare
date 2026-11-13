@@ -20,6 +20,7 @@
 
 | Задача | Стандарт | Когда использовать |
 |---|---|---|
+| Оружие и базовые атаки | `WeaponCardLayout` → `WeaponMetricsTable`, `SectionLabel` | [Общая компоновка](../features/character-editor/weapon-presentation.md) во всех форматах: иконка с названием сверху, показатели ниже. Сетка зависит от ширины блока и ограничена двумя колонками. Удержание для сортировки принадлежит `share-ui/useSortable activationDelay`; приложение сохраняет перестановку экземпляров. |
 | Галерея личности и внешний экран | `CharacterPhotoGallery`, `CharacterCoverControls` → `MorphTileHeader`, `RowActionMenu`, `ToggleSwitch` | Предметная композиция фотографий и управления Android-показом. Общие элементы и меню принадлежат share-ui; capability, очередь, выбранный кадр и жизненный цикл — платформенному адаптеру. Контракт — [галерея](../features/character-editor/gallery.md). |
 | Blur-подложка | `share-ui/BlurBackdrop` | Декоративный слой размытия с `radius` и CSS-параметрами bounds/tint/mask. Существующая поверхность использует `backdropBlurStyle`, а анимируемый overlay — `applyBackdropBlur`. Оба свойства фильтра задаются inline и переживают минификацию. Layout и передний план принадлежат экрану. |
 | Рабочая шапка | `shared/ui/WorkspaceHeader`, `WorkspaceSubheader`, `WorkspaceNavigation` | Общая оболочка сайта и Android с локальной капсулой вкладок, context и тенью. У обычных страниц одна строка; PageHeaderPortal передаёт основные действия. Вкладки листа находятся ниже, вкладки сессии в широком формате — внутри основной строки. Контракт — [шапка сайта](workspace-header.md). |

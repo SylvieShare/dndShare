@@ -9,46 +9,7 @@
     </div>
     <SectionList embedded aria-label="Оружие">
       <template #body>
-        <div v-if="variant !== 'list' && entries.length" class="weapon-table-tiles" data-sortable-container="weapons">
-          <BaseTile v-for="(entry, index) in displayEntries" :key="entry._key" :outlined="false"
-            class="weapon-table-tile" :data-sortable-key="entry._key">
-            <table class="w-table" :class="{ 'w-edit': charCtx.ownerMode }">
-              <colgroup v-if="charCtx.ownerMode">
-                <col class="w-order-col" />
-                <col class="w-name-col" />
-                <col class="w-stat-col" />
-                <col class="w-magic-col" />
-                <col class="w-damage-col" />
-                <col class="w-delete-col" />
-              </colgroup>
-              <colgroup v-else>
-                <col class="w-name-col" />
-                <col class="w-attack-col" />
-                <col class="w-damage-col" />
-                <col class="w-props-col" />
-              </colgroup>
-              <thead>
-                <tr>
-                  <th v-if="charCtx.ownerMode"></th>
-                  <th>Название</th>
-                  <th v-if="charCtx.ownerMode">Стата / владение</th>
-                  <th v-if="charCtx.ownerMode">Магия</th>
-                  <th v-if="!charCtx.ownerMode">Атака</th>
-                  <th>{{ charCtx.ownerMode ? 'Доп урон' : 'Урон' }}</th>
-                  <th v-if="!charCtx.ownerMode">Свойства</th>
-                  <th v-if="charCtx.ownerMode"></th>
-                </tr>
-              </thead>
-              <tbody>
-                <WeaponTableRow
-                  :entry="entry"
-                  :index="index"
-                />
-              </tbody>
-            </table>
-          </BaseTile>
-        </div>
-        <div v-else class="weapon-card-grid" data-sortable-container="weapons">
+        <div class="weapon-card-grid" data-sortable-container="weapons">
           <div v-if="!entries.length" class="w-empty">Нет оружия</div>
           <WeaponCard v-for="(entry, index) in displayEntries" :key="entry._key" :entry="entry" :index="index" />
         </div>
@@ -58,7 +19,9 @@
       </template>
     </SectionList>
 
-    <SectionList :outlined="false" title="Базовые атаки">
+    <section class="weapon-presets" aria-label="Базовые атаки">
+      <SectionLabel title="Базовые атаки" size="medium" line :space-after="0" />
+      <div class="weapon-card-grid">
       <PresetAttackCard
         title="Рукопашный удар"
         subtitle="Сила · урон 1 + модификатор"
@@ -81,7 +44,8 @@
         @damage="rollPresetDamage('improvised')"
         @critical="rollPresetDamage('improvised', true)"
       />
-    </SectionList>
+      </div>
+    </section>
 
     <ItemPickerModal
       configure-instance
@@ -124,10 +88,10 @@ import { weaponUseDamageSelection } from '@/features/character-editor/lib/weapon
 import { itemEventData } from '@/features/character-editor/lib/sessionEventData'
 
 import { computed, inject, onMounted, provide, reactive, ref } from 'vue'
-import { AddButton, ActionButton, BaseTile, ConfirmDialog, SectionList } from '@sylvieshare/share-ui'
+import { AddButton, ActionButton, ConfirmDialog, SectionList, SectionLabel } from '@sylvieshare/share-ui'
+import { motionTokens } from '@/app/design-tokens'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import WeaponCard from '@/features/character-editor/blocks/dnd/components/WeaponCard.vue'
-import WeaponTableRow from '@/features/character-editor/blocks/dnd/components/WeaponTableRow.vue'
 import PresetAttackCard from '@/features/character-editor/blocks/dnd/components/PresetAttackCard.vue'
 import { useWeaponEntries } from './composables/useWeaponEntries'
 import { useWeaponMechanics } from './composables/useWeaponMechanics'
@@ -173,7 +137,6 @@ const weaponMechanics = useWeaponMechanics(charCtx)
 
 const modalEntry             = ref(null)
 const inferredTagSuggestTypeId = ref(null)
-const activeNoteKey          = ref(null)
 const pickerOpen             = ref(false)
 const tooltip                = reactive({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
 
@@ -330,7 +293,6 @@ function attackBonus(entry) {
 }
 
 const modalItem = computed(() => modalEntry.value ? itemMap.value[modalEntry.value.magic_item_id ?? modalEntry.value.item_id] : null)
-const variant     = computed(() => props.block.props?.variant || props.block.content?.variant || 'list')
 const canAddItems = computed(() => !!charCtx.ownerMode)
 const armorState = computed(() => charCtx.characterArmor?.state || {})
 const armorAttackWarning = computed(() => !!armorState.value.strengthDexDisadvantage)
@@ -474,7 +436,6 @@ function deleteWeapon(index) {
   discardWeapon(entry.uid)
 }
 function discardWeapon(uid) {
-  if (activeNoteKey.value === uid) activeNoteKey.value = null
   entries.value = entries.value.filter(row => row.uid !== uid)
   const patch = { [props.block.id]: entries.value.map(cleanEntry) }
   if (charCtx.characterStatuses?.removeByParam) patch.states = charCtx.characterStatuses.removeByParam('weapon_uid', uid)
@@ -500,12 +461,14 @@ function moveWeaponToItems(index) {
 }
 
 const sortable = useSortable({
-  groups: { weapons: { items: entries } },
+  activationDelay: motionTokens['weapon-drag-hold'],
+  groups: { weapons: { items: entries, layout: 'grid' } },
   getKey: e => e._key,
   onDrop: ({ item, toIndex }) => {
+    if (!charCtx.ownerMode) return
     const arr = [...entries.value]
     const srcIdx = arr.findIndex(e => e._key === item._key)
-    if (srcIdx === -1) return
+    if (srcIdx === -1 || srcIdx === toIndex) return
     const [moved] = arr.splice(srcIdx, 1)
     arr.splice(Math.min(toIndex, arr.length), 0, moved)
     entries.value = arr
@@ -578,8 +541,6 @@ provide('weaponsBlockCtx', reactive({
   moveWeaponToItems,
   onDragStart,
   openItemModal: entry => { modalEntry.value = entry },
-  toggleNote: key => { activeNoteKey.value = activeNoteKey.value === key ? null : key },
-  activeNoteKey,
   statOptions,
   magicOptions,
   diceOptions,

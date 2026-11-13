@@ -1,25 +1,29 @@
 <template>
-  <article class="pac-card">
-    <div class="pac-main">
+  <BaseTile :outlined="false" class="pac-card">
+    <WeaponCardLayout>
+      <template #icon>
       <ItemIcon
         class="pac-icon"
         :item="iconItem"
-        :size="64"
+        :size="layoutTokens['weapon-card-icon']"
         :fallback-to-type="false"
         :placeholder="!iconItem"
       />
-      <div class="pac-view">
+      </template>
+      <template #heading>
         <div class="pac-title">
           <strong>{{ title }}</strong>
           <small>{{ subtitle }}</small>
           <span v-if="proficient" class="pac-proficiency">Владение</span>
         </div>
+      </template>
+      <template #controls>
         <WeaponMetricsTable :attack="formatBonus(attackBonus)" :attack-rows="attackRows" :attack-color="attackColor" :damage-rows="damageRows"
           :damage-type="damageType" interactive :roll-scope="selection?.scope"
           @roll="openMenu" />
-      </div>
-    </div>
-  </article>
+      </template>
+    </WeaponCardLayout>
+  </BaseTile>
   <BasePopover v-if="selection" :open="true" :anchor="selection.anchor" :key="selection.scope"
     :aria-label="selection.scope === 'attack' ? 'Атака' : 'Урон'" role="menu" :z-index="4100" transition-preset="action-menu"
     @update:open="!$event && closeMenu()">
@@ -33,7 +37,9 @@
 <script setup>
 import { computed, inject, shallowRef } from 'vue'
 import { weaponAttackColor, weaponAttackFormula } from '../lib/weaponAttackFormula'
-import { BasePopover } from '@sylvieshare/share-ui'
+import { BasePopover, BaseTile } from '@sylvieshare/share-ui'
+import { layoutTokens } from '@/app/design-tokens'
+import WeaponCardLayout from './WeaponCardLayout.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import WeaponRollSettings from './WeaponRollSettings.vue'
 import WeaponMetricsTable from './WeaponMetricsTable.vue'
@@ -82,27 +88,11 @@ function formatBonus(value) {
   position: relative;
   box-sizing: border-box;
   overflow: clip;
-  cursor: pointer;
-}
-.pac-main { display: flex; align-items: stretch; min-width: 0; min-height: 86px; }
-.pac-icon { display: flex; flex: 0 0 64px; align-self: center; align-items: center; justify-content: center; width: 64px; height: 64px; overflow: hidden; }
-.pac-view {
-  display: grid;
-  flex: 1 1 auto;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 14px;
-  align-items: center;
-  min-width: 0;
-  padding: 14px 20px 14px 16px;
+  cursor: default;
 }
 .pac-title { display: flex; min-width: 0; flex-direction: column; gap: 1px; }
-.pac-title strong { overflow: hidden; color: var(--text-1); font-size: 14px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
-.pac-title small { overflow: hidden; color: var(--text-muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.pac-title strong { overflow-wrap:anywhere; color: var(--text-1); font-size: 15px; font-weight: 600; }
+.pac-title small { color: var(--text-muted); font-size: 11px; }
 .pac-proficiency { color: var(--success); font-size: 10px; font-weight: 700; }
 
-@media (--ui-compact) {
-  .pac-view { grid-template-columns: minmax(0, 1fr); align-items: start; gap: 10px; }
-  .pac-title strong { font-size: 15px; }
-  .pac-title small { white-space: normal; }
-}
 </style>

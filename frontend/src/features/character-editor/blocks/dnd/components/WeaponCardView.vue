@@ -1,21 +1,20 @@
 <template>
   <!-- Shared weapon row, rendered both in the list tile and inside the morph #view, so the geometry
        can never drift between the two. Values open their corresponding roll settings. -->
-  <div class="w-card-main">
+  <WeaponCardLayout class="w-card-main">
+    <template v-if="weaponItem?.iconImageUrl || weaponItem?.svg || weaponItem?.svgId || weaponItem?.iconSvgId" #icon>
     <ItemIcon
-      v-if="weaponItem?.iconImageUrl || weaponItem?.svg"
       class="w-icon"
       :item="weaponItem"
-      :size="64"
+      :size="layoutTokens['weapon-card-icon']"
       :fallback-to-type="false"
     />
-    <div class="w-card-view">
+    </template>
+    <template #heading>
       <div class="w-card-title">
         <div class="w-name-main">
           <span
             class="w-name"
-            :class="{ 'w-name-drag': interactive && ctx.charCtx.ownerMode }"
-            @pointerdown="interactive && emit('name-down', $event)"
           >{{ ctx.itemTitle(entry) }}</span>
           <span v-if="ctx.magicBonus(entry) > 0" class="w-name-magic">+{{ ctx.magicBonus(entry) }}</span>
         </div>
@@ -24,7 +23,9 @@
         <WeaponAttunementStatus :entry="entry" :item="ctx.itemMap?.[entry.magic_item_id]" />
         <span v-if="ctx.isWeaponProficient(entry)" class="w-proficiency">Владение</span>
       </div>
-      <WeaponMetricsTable v-if="weaponItem || (!entry.item_id && !entry.magic_item_id)" class="w-card-controls"
+    </template>
+    <template v-if="weaponItem || (!entry.item_id && !entry.magic_item_id)" #controls>
+      <WeaponMetricsTable class="w-card-controls"
         :attack="ctx.formatBonus(attackSummary.bonus)" :attack-rows="attackRows" :attack-color="attackColor" :damage-rows="damageRows" :two-handed-rows="twoHandedRows"
         :alternative-damage="alternativeDamage" :damage-key="damageKey"
         :damage-type="String(primaryDamage?.type || '')" :damage-color="primaryDamage?.typeColor"
@@ -36,8 +37,8 @@
       >
         <slot />
       </WeaponMetricsTable>
-    </div>
-  </div>
+    </template>
+  </WeaponCardLayout>
 </template>
 
 <script setup>
@@ -46,6 +47,8 @@ import { computed, inject } from 'vue'
 import WeaponMetricsTable from './WeaponMetricsTable.vue'
 import { useWeaponCardPreview } from '../composables/useWeaponCardPreview'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import WeaponCardLayout from './WeaponCardLayout.vue'
+import { layoutTokens } from '@/app/design-tokens'
 
 const props = defineProps({
   entry: { type: Object, required: true },
@@ -55,7 +58,7 @@ const props = defineProps({
   damageKey: String,
   rollPreview: Object,
 })
-const emit = defineEmits(['name-down', 'roll'])
+const emit = defineEmits(['roll'])
 
 const ctx = inject('weaponsBlockCtx')
 
@@ -67,28 +70,6 @@ const { attackSummary, attackRows, attackColor, damageRows, twoHandedRows, alter
 </script>
 
 <style scoped>
-/* icon column (flush left, fixed-size square, vertically centred) + the padded content grid */
-.w-card-main { display: flex; align-items: stretch; gap: 0; min-width: 0; }
-.w-icon {
-  flex: 0 0 64px;
-  align-self: center;
-  width: 64px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-2);
-  overflow: hidden;
-}
-.w-card-view {
-  flex: 1 1 auto;
-  display: grid;
-  grid-template-columns: minmax(0, .9fr) minmax(0, 2.5fr);
-  align-items: center;
-  gap: 14px;
-  min-width: 0;
-  padding: 14px 20px 14px 16px;
-}
 
 .w-card-title {
   display: flex;
@@ -105,16 +86,13 @@ const { attackSummary, attackRows, attackColor, damageRows, twoHandedRows, alter
 }
 
 .w-name {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text-1);
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* The name remains the reorder handle for owners; a click is handled by the card action menu. */
-.w-name-drag { cursor: grab; touch-action: none; }
-.w-name-drag:active { cursor: grabbing; }
 
 .w-name-magic {
   font-size: 11px;
@@ -126,7 +104,7 @@ const { attackSummary, attackRows, attackColor, damageRows, twoHandedRows, alter
 .w-range, .w-subtitle {
   font-size: 11px;
   color: var(--text-muted);
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -137,19 +115,4 @@ const { attackSummary, attackRows, attackColor, damageRows, twoHandedRows, alter
   font-weight: 700;
 }
 
-@media (--ui-desktop) {
-  .w-card-main:has(.weapon-item-mechanics) .w-icon { align-self: flex-start; margin-block-start: 14px; }
-  .w-card-view:has(.weapon-item-mechanics) { align-items: start; }
-}
-
-@media (--ui-compact) {
-  .w-card-main { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 10px 12px; padding: 14px 16px; }
-  .w-icon { grid-column: 1; grid-row: 1; }
-  .w-card-view { display: contents; }
-  .w-card-title { grid-column: 2; grid-row: 1; }
-  .w-card-main:not(:has(.w-icon)) .w-card-title { grid-column: 1 / -1; }
-  .w-card-controls { grid-column: 1 / -1; grid-row: 2; }
-  .w-name { font-size: 15px; white-space: normal; }
-  .w-range { white-space: normal; }
-}
 </style>

@@ -23,7 +23,7 @@
     "@capacitor/android": "8.6.0",
     "@capacitor/core": "8.6.0",
     "@lucide/vue": "^1.72.0",
-    "@sylvieshare/share-ui": "https://github.com/SylvieShare/share-ui/archive/refs/tags/v0.66.0.tar.gz",
+    "@sylvieshare/share-ui": "https://github.com/SylvieShare/share-ui/archive/refs/tags/v0.67.0.tar.gz",
     "@vue/devtools-api": "^8.2.1",
     "html-to-image": "1.11.13",
     "pinia": "^4.1.0",

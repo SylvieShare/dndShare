@@ -79,42 +79,14 @@ allow choosing a named preset from the root collection and its linked types.
 Selection survives moving, stacking and transfers; URLs are resolved from the
 shared preset catalogue rather than stored in the character. Empty backpack
 cells use the separate S3 artwork of an open empty pouch. Inventory icons scale inside
-the square bag cells; equipment state is marked by the purple cell frame. Weapon cards use the same 64×64 slot and prefer the
-handbook `iconImageUrl`, falling back to the weapon SVG; the rest of the
-weapon-specific attack, damage and property composition remains unchanged. A
-click on a weapon tile opens its action menu instead of navigating directly
-from the name. Attack, damage, critical damage and ability-contributed damage
-rolls live only in that menu; the displayed attack and damage values are not
-independent click targets. Logical groups use the shared action-menu separator.
-Attack, damage, critical damage and feature damage actions use distinct Lucide
-icons instead of the generic ellipsis. The source tile stays highlighted while
-its menu is open; spell, inventory and potion action menus follow the same
-interaction rule. Magic weapons that require attunement show **Настроено** /
-**Не настроено** below their name, using the state of that instance. The status
-is visible to owners and readers on desktop/mobile; the weapon menu changes it.
-Weapons share one **Оружие** tile with row separators and an
-owner-only **Добавить оружие** footer. A second **Базовые атаки** tile contains
-two always-available rows for Strength-based unarmed and improvised-weapon
-attack, damage and critical rolls, also separated by a line.
-`share-ui/SectionList` owns the common surface, heading and separators for
-weapons, basic attacks and spell levels (including granted spells). Ability
-categories and action types use its embedded list inside their existing tiles.
-Separators divide menu-trigger roots, so expanded and compact ability rows both
-show them correctly. Spell row transitions and weapon/spell sortable containers
-are passed through the same component. The weapon table variant remains a table
-inside the weapon group.
+the square bag cells; equipment state is marked by the purple cell frame.
+
+Композиция карточек, базовые атаки, меню и перенос удержанием описаны отдельно:
+[Карточки оружия и сортировка](weapon-presentation.md).
+
 Unarmed attacks include proficiency and deal `max(0, 1 + Strength modifier)`;
 the generic improvised weapon is not proficient and deals `1d4 + Strength`.
-The rows reuse the weapon tile geometry and `AttackDamage`: attack is a numeric
-bonus without a decorative d20 and damage has no enclosing formula frame. The
-unarmed total keeps `1 + Strength modifier = total` in its hover explanation;
-zero is valid and the total never becomes negative. Their 64 px illustrations
-reuse system artwork from the Unarmed Strike and Club handbook items, so the
-sheet does not ship duplicate raster assets or diverge from the weapon art set.
-Prominent feature metrics such as Sneak Attack still render their actual system
-dice before the flat modifier.
-The remaining menu contains handbook description, edit, move-to-inventory and
-delete actions according to the viewer's permissions and linked item state.
+
 Every owned inventory item, potion and tool uses `item_id`, an explicit `count` and a
 typed `params` object. `params` contains values of the concrete instance and is
 not an alternative handbook-data or free-form override store. Item-type
@@ -201,7 +173,7 @@ duration text.
 экземпляра. Крит увеличивает только кости. Цели и действия обучения не меняются.
 
 При последнем заряде предмета с `last_charge` под оружием появляется временный
-блок проверки. Он работает также в табличном виде и после переноса в инвентарь.
+блок проверки. Он работает во всех форматах и после переноса в инвентарь.
 Бросок доступен владельцу; читатель видит ожидание. При утрате магии блок показывает
 результат и подтверждаемую отмену ошибки. У Посоха ударов это к20 и утрата магии
 на 1. Состояние хранится на экземпляре; детали — в `magic-items.md`.
@@ -348,7 +320,7 @@ current automation limits.
 доступна только для авторских выборов и ручного максимума. `magicItemSettings`
 обновляет настройку по UID, не сбрасывая ресурсы, и разрешает только первоначальное
 заполнение отсутствующей основы. Выбранная основа не редактируется. Один компонент
-используется в инвентаре, карточках оружия и табличном варианте.
+используется в инвентаре и карточках оружия во всех форматах.
 
 ## Выбор расхода и предпросмотр урона
 
@@ -556,7 +528,7 @@ and the full quantity, including when the chip truncates a long number.
 проклятие, выбранная цель, применения, перенос в КД, последний заряд и эффекты.
 `weapon_notes` показываются по условию конкретного экземпляра; проклятие «Меча
 мести» появляется только после настройки и остаётся доступным в меню рюкзака.
-Одинаковые правила работают в карточках, таблице и режиме чтения. Текстовые
+Одинаковые правила работают в карточках всех форматов и режиме чтения. Текстовые
 последствия проклятия учитываются вручную. Контракт — в `magic-items.md`.
 
 Миграция 158 переносит `values.potions` всех персонажей (включая удалённых) в первое
@@ -585,7 +557,7 @@ ID справочника при наличии, удалённое количе
 
 ## Карточки свойств и зарядов
 
-Карточки под оружием закрыты при первом показе, в том числе в табличном режиме.
+Карточки под оружием закрыты при первом показе во всех форматах.
 Нажатие на заголовок и Enter/Space плавно раскрывают и сворачивают правила и
 действия за 220 мс; стрелка поворачивается вместе с переходом. Повторное нажатие
 меняет направление с текущей высоты, после перехода высота снова определяется

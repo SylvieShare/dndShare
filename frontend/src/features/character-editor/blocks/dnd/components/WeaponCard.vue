@@ -1,5 +1,8 @@
 <template>
-  <MorphTile :outlined="false" padding="0" class="w-card" :class="{ 'sortable-placeholder': ctx.sortable.isSource(entry) }" :data-sortable-key="entry._key">
+  <MorphTile :outlined="false" padding="0" class="w-card"
+    :class="{ 'w-card--draggable': ctx.charCtx.ownerMode && !entry.params?.creation?.expired, 'sortable-placeholder': ctx.sortable.isSource(entry), 'w-card--drop-target': ctx.sortable.dragging && ctx.sortable.targetIndex === index && !ctx.sortable.isSource(entry) }"
+    :data-sortable-key="entry._key" :data-sortable-slot="index" role="group" :aria-label="ctx.itemTitle(entry)" tabindex="0" aria-haspopup="menu"
+    @pointerdown.capture="draggedThisGesture = false" @pointerdown="onCardDown" @click.capture="suppressDragClick" @keydown="openActionsWithKeyboard">
     <RowActionMenu
       ref="actionMenu"
       :heading="ctx.itemTitle(entry)"
@@ -10,7 +13,7 @@
       <template #trigger="{ open: menuOpen }">
         <WeaponCardView ref="cardEl" class="action-menu-source" :class="{ 'action-menu-source--open': menuOpen }"
           :entry="entry" :roll-scope="directRoll?.scope" :damage-key="directRoll?.selection?.key" :roll-preview="rollPreview"
-          :interactive="!entry.params?.creation?.expired" @roll="openDirectRoll" @pointerdown="draggedThisGesture = false" @name-down="onNameDown">
+          :interactive="!entry.params?.creation?.expired" @roll="openDirectRoll">
           <WeaponItemMechanics v-if="!entry.params?.creation?.expired" :entry="entry" />
         </WeaponCardView>
       </template>
@@ -90,7 +93,7 @@ import UsableItemAction from '@/features/character-editor/components/UsableItemA
 import ItemTransferAction from '@/features/character-editor/components/ItemTransferAction.vue'
 import MagicItemMenuActions from './MagicItemMenuActions.vue'
 import { ArrowRightLeft } from '@lucide/vue'
-import { computed, inject, shallowRef, ref, watch } from 'vue'
+import { computed, inject, nextTick, shallowRef, ref, watch } from 'vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
@@ -130,15 +133,28 @@ const hasDamage = computed(() => ctx.hasWeaponDamage(props.entry))
 const hasTwoHandedDamage = computed(() => ctx.twoHandedParts(props.entry).length > 0)
 const weaponDamageActions = computed(() => ctx.weaponDamageActions(props.entry))
 
-// reorder by dragging the name; the sortable's 4px threshold keeps a plain click a click. A drag
-// flips `sortable.dragging` mid-gesture — we remember it so the trailing click doesn't open the menu.
+// A short press opens actions; a held press reorders the tile. Roll/form controls keep their own gestures.
 const draggedThisGesture = ref(false)
 watch(() => ctx.sortable.dragging, v => { if (v) draggedThisGesture.value = true })
+watch(() => ctx.sortable.suppressNextClick, v => { if (v) draggedThisGesture.value = true })
 
 function openEditor() { openFrom(cardEl.value?.$el || cardEl.value) }
-function onNameDown(e) {
+function onCardDown(event) {
+  const control = event.target.closest('button,a,input,select,textarea,summary,[contenteditable="true"],[role="button"],[role="switch"]')
+  if (control && event.currentTarget.contains(control)) return
+  if (ctx.charCtx.ownerMode && !props.entry.params?.creation?.expired) ctx.onDragStart(event, props.entry, props.index)
+}
+async function openActionsWithKeyboard(event) {
+  if (event.target !== event.currentTarget || !['Enter', ' '].includes(event.key)) return
+  event.preventDefault()
   draggedThisGesture.value = false
-  if (ctx.charCtx.ownerMode) ctx.onDragStart(e, props.entry, props.index)
+  await nextTick()
+  actionMenu.value?.toggle()
+}
+function suppressDragClick(event) {
+  if (!draggedThisGesture.value) return
+  event.preventDefault()
+  event.stopImmediatePropagation()
 }
 function openDescription(closeMenu) {
   closeMenu()
@@ -176,10 +192,15 @@ function deleteWeapon(closeMenu) {
 
 .w-card.sortable-placeholder {
   background: color-mix(in srgb, var(--accent) 8%, transparent);
-  border: 2px dashed color-mix(in srgb, var(--accent) 50%, transparent);
+  outline: 2px dashed color-mix(in srgb, var(--accent) 50%, transparent);
+  outline-offset: -2px;
   border-radius: 8px;
 }
 .w-card.sortable-placeholder > * { visibility: hidden; }
+.w-card--draggable {cursor:grab;user-select:none;-webkit-touch-callout:none}
+.w-card--draggable:active {cursor:grabbing}
+.w-card:focus-visible {outline:2px solid var(--accent-soft);outline-offset:2px}
+.w-card--drop-target {box-shadow:inset 0 0 0 2px var(--accent-soft)}
 
 .w-desc-text {
   padding: 0 20px 14px 16px;

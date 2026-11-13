@@ -27,12 +27,13 @@ REQUIRED = {
                'item-view-window-blur', 'item-view-window-width', 'item-view-window-compact-max', 'weapon-metrics-attack-width', 'weapon-metrics-gap', 'weapon-metrics-attack-min-height',
                'weapon-metrics-icon',
                'morph-stacked-max', 'morph-editor-width', 'morph-preview-min', 'morph-preview-max-height', 'morph-margin',
-               'stat-editor-width', 'roll-mode-menu-width', 'roll-mode-card-min-height', 'roll-mode-badge-die', 'roll-mode-menu-die', 'weapon-damage-die'},
+               'stat-editor-width', 'roll-mode-menu-width', 'roll-mode-card-min-height', 'roll-mode-badge-die', 'roll-mode-menu-die', 'weapon-damage-die',
+               'weapon-card-min', 'weapon-card-icon', 'weapon-card-padding'},
     'collection': {'min-height', 'padding', 'emblem', 'art-inset', 'grid-gap'},
     'canvas': {'step', 'radius', 'opacity'},
     'spacing': {'xs', 'compact', 'small', 'label', 'medium', 'large', 'page', 'section'},
     'list': {'min-height', 'icon', 'gap', 'padding-end', 'metric-min', 'metric-max', 'metric-padding-max', 'body-top', 'body-bottom', 'row-margin', 'row-gap'},
-    'motion': {'enter', 'exit', 'navigation', 'feedback', 'distance', 'morph-open', 'morph-close', 'sheet-health-pulse', 'sheet-health-pulse-fast'},
+    'motion': {'enter', 'exit', 'navigation', 'feedback', 'distance', 'morph-open', 'morph-close', 'sheet-health-pulse', 'sheet-health-pulse-fast', 'weapon-drag-hold'},
     'radius': {'xs', 'small', 'medium', 'large', 'xl', 'tile', 'badge', 'row', 'morph', 'input', 'compact-navigation'},
 }
 

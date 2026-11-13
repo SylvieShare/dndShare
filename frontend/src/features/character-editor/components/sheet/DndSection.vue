@@ -3,7 +3,7 @@
     <CharacterBlock v-if="format !== 'desktop'" block-id="read_only_notice" />
     <DndStats v-if="section === 'stats'" :format="format" />
     <CharacterBlock v-else-if="section === 'weapons'" block-id="weapon"
-      :options="{ variant: 'list', show_add_in_view: true }" />
+      :options="{ show_add_in_view: true }" />
     <CharacterBlock v-else-if="section === 'spells'" block-id="spells" :options="{ show_add_in_view: true }" />
     <template v-else-if="section === 'inventory'">
       <CharacterBlock block-id="items" />
