@@ -5,7 +5,7 @@
     <PageTutorial :tutorial="characterTutorial" :mobile="isMobile" />
     <CharacterWorkspaceHeader ref="workspaceHeaderEl" data-sheet-chrome :dnd="template?.system === 'dnd5e' && !loading" :format="format"
       :show-menu="template?.system === 'vtm-v20'" :compact="isMobile" :name="charName" :subtitle="charSub" :icon-url="headerIconUrl"
-      :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth"
+      :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth" :desktop-navigation-target="desktopNavigationTarget"
       :tabs="activeTabs" :active-tab="activeTab" :selection="mobileTabSelection" :animate-navigation="!tabDragActive || tabDragSettling"
       @select-tab="onSetActiveTab" @wheel="onFixedHeaderWheel" @touchstart.passive="onFixedHeaderTouchStart"
       @touchmove="onFixedHeaderTouchMove" @touchend.passive="onFixedHeaderTouchEnd" @touchcancel.passive="onFixedHeaderTouchEnd" />
@@ -29,7 +29,7 @@
       </CharacterSwipePager>
       <div v-else-if="template" class="desktop-tabs">
         <div class="container" :style="containerWidthForTab(activeTab)">
-          <CharacterTabPane :definition="template" :format="format" :section="activeTabs[activeTab]?.id"
+          <CharacterTabPane :definition="template" :format="format" :section="activeTabs[activeTab]?.id" @navigation-target="desktopNavigationTarget = $event"
             :values="data.values" :vars="data.var"
             @update:value="onUpdateValue" @update:var="onUpdateVar" />
         </div>
@@ -54,7 +54,7 @@ import CharacterTransferDialogs from '@/features/character-editor/components/Cha
 import { useCharacterTransfers } from '@/features/character-editor/composables/useCharacterTransfers'
 import PageTutorial from '@/features/tutorials/components/PageTutorial.vue'
 import { useCharacterTutorial } from '@/features/tutorials/composables/useCharacterTutorial'
-import { ref, watch, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, nextTick, computed, shallowRef } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CharacterTabPane from '@/features/character-editor/components/CharacterTabPane.vue'
 import CharacterSheetSkeleton from '@/features/character-editor/components/sheet/CharacterSheetSkeleton.vue'
@@ -86,6 +86,7 @@ const uuid = route.params.uuid || router.currentRoute.value.params.uuid
 // ── Mobile detection ──────────────────────────────────────────────────
 const { phone: isMobile, format } = useAppLayout()
 const compactLayout = computed(() => format.value !== 'desktop')
+const desktopNavigationTarget = shallowRef(null)
 
 // ── Template refs ─────────────────────────────────────────────────────
 const tutorialRoot = ref(null)

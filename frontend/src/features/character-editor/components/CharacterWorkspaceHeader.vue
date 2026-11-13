@@ -1,6 +1,8 @@
 <template>
   <WorkspaceHeader ref="workspace" v-bind="$attrs" class="character-workspace-header" :scroll-source="null" :context-placement="format === 'phone' ? 'row' : 'auto'"
-    :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" :fit-navigation="format !== 'phone'">
+    :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" :fit-navigation="format !== 'phone'"
+    :navigation-placement="dnd && format === 'desktop' ? 'external' : 'below'"
+    :navigation-target="dnd && format === 'desktop' ? desktopNavigationTarget : undefined">
     <template #identity>
       <ActionButton variant="quiet" :icon-only="compact" :aria-label="modal ? 'Закрыть лист' : 'К списку персонажей'" @click="modal ? emit('close') : router.push('/chars')">
         <template #icon><ArrowLeft :size="18" /></template>
@@ -24,7 +26,7 @@
       </div>
     </template>
     <template v-if="tabs.length" #navigation>
-      <CharacterSheetTabs :format="format" :tabs="tabs" :active-tab="activeTab" :selection="selection" :animate="animateNavigation" @select="emit('select-tab', $event)" />
+      <CharacterSheetTabs :format="dnd && format === 'desktop' ? 'tablet' : format" :tabs="tabs" :active-tab="activeTab" :selection="selection" :animate="animateNavigation" @select="emit('select-tab', $event)" />
     </template>
     <template #actions>
       <div class="heading-tools">
@@ -60,7 +62,7 @@ import DndSheetHeading from './sheet/DndSheetHeading.vue'
 import DndSheetStrip from './sheet/DndSheetStrip.vue'
 import { isInspirationActive } from '../blocks/dnd/lib/mobileStatus'
 const props = defineProps({ dnd: Boolean, format: String, modal: Boolean, contentWidth: String, name: String, subtitle: String, iconUrl: String, session: Object, transfers: Object, compact: Boolean, showMenu: Boolean,
-  selection: Array, animateNavigation: { type: Boolean, default: true },
+  desktopNavigationTarget: Object, selection: Array, animateNavigation: { type: Boolean, default: true },
   tabs: { type: Array, default: () => [] }, activeTab: Number })
 const emit = defineEmits(['select-tab', 'close'])
 const charCtx = inject('charCtx', {})

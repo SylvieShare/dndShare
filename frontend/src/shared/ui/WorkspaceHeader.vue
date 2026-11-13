@@ -8,8 +8,8 @@
     <div ref="actions" class="workspace-header-actions"><slot name="actions" /><LocalDataStatus /></div>
     </div>
     <slot name="between" />
-    <Teleport :to="'#' + navigationId" :disabled="navigationPlacement !== 'inline'" defer>
-      <WorkspaceSubheader v-if="$slots.navigation" v-show="navigationVisible" :inline="navigationPlacement === 'inline'" :fit="fitNavigation" :content-width="contentWidth || (page ? 'var(--layout-content-max)' : undefined)"><slot name="navigation" /></WorkspaceSubheader>
+    <Teleport :to="navigationTarget || '#' + navigationId" :disabled="!navigationTarget && navigationPlacement !== 'inline'" defer>
+      <WorkspaceSubheader ref="navigation" v-if="$slots.navigation" v-show="navigationVisible" :inline="!!navigationTarget || navigationPlacement === 'inline'" :fit="fitNavigation" :content-width="contentWidth || (page ? 'var(--layout-content-max)' : undefined)"><slot name="navigation" /></WorkspaceSubheader>
     </Teleport>
   </header>
 </template>
@@ -21,21 +21,21 @@ import { useWorkspaceContextLayout } from '@/shared/composables/useWorkspaceCont
 import { useWorkspaceScrollPosition } from '@/shared/composables/useWorkspaceScrollPosition'
 import { layoutTokens } from '@/app/design-tokens'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from "vue";
-const props = defineProps({ page: Boolean, contentWidth: String, fitNavigation: {type:Boolean,default:true}, solid: {type:Boolean,default:true}, navigationVisible:{type:Boolean,default:true}, navigationPlacement:{type:String,default:'below'}, scrollSource:{type:Object,default:undefined}, contextPlacement:{type:String,default:'auto'} });
+const props = defineProps({ page: Boolean, contentWidth: String, fitNavigation: {type:Boolean,default:true}, solid: {type:Boolean,default:true}, navigationVisible:{type:Boolean,default:true}, navigationPlacement:{type:String,default:'below'}, navigationTarget:Object, scrollSource:{type:Object,default:undefined}, contextPlacement:{type:String,default:'auto'} });
 const navigationId = `workspace-navigation-${useId()}`
 const element = ref(null),
   emit = defineEmits(["resize"]);
-const main=ref(null), identity=ref(null), context=ref(null), actions=ref(null)
+const main=ref(null), identity=ref(null), context=ref(null), actions=ref(null), navigation=ref(null)
 const contextInline=useWorkspaceContextLayout(main,identity,context,actions,props)
-watch(()=>props.navigationPlacement,async()=>{
+watch([()=>props.navigationPlacement,()=>props.navigationTarget],async()=>{
   const focused=document.activeElement
-  if(!focused?.closest('.workspace-subheader') || !element.value?.contains(focused))return
+  if(!navigation.value?.$el?.contains(focused))return
   await nextTick()
   if(focused.isConnected && (document.activeElement===document.body || document.activeElement===focused)) {
     focused.focus({preventScroll:true})
     focused.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'})
   }
-})
+},{flush:'sync'})
 function setScrollPosition(value) {
   const scroll=Math.max(0,Number(value)||0)
   element.value?.toggleAttribute('data-workspace-scrolled',scroll>0)

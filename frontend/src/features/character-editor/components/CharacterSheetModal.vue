@@ -4,7 +4,7 @@
     <div :inert="edition.busy" class="csm share-app-canvas" :class="{ 'csm--preview': previewMode }">
       <CharacterWorkspaceHeader ref="sheetHeader" v-if="template?.system === 'dnd5e' && !loading" dnd modal data-sheet-chrome
         :format="windowFormat" :compact="windowFormat === 'phone'" :name="charName" :subtitle="charSub" :icon-url="iconImageUrl || data.values?.ava?.url"
-        :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="activeTabs" :active-tab="activeTab"
+        :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="activeTabs" :active-tab="activeTab" :desktop-navigation-target="desktopNavigationTarget"
         :selection="mobileTabSelection" :animate-navigation="!tabDragActive || tabDragSettling" @select-tab="setActiveTab" @close="emit('close')" />
       <CharEditorToolbar ref="sheetHeader" v-else data-sheet-chrome
         modal
@@ -50,7 +50,7 @@
             class="container"
             :style="containerWidthForTab(index)"
           >
-            <CharacterTabPane :definition="template" :format="format" :section="activeTabs[format === 'desktop' && template.system === 'dnd5e' ? activeTab : index]?.id"
+            <CharacterTabPane :definition="template" :format="format" :section="activeTabs[format === 'desktop' && template.system === 'dnd5e' ? activeTab : index]?.id" @navigation-target="desktopNavigationTarget = $event"
               :values="data.values" :vars="data.var"
               @update:value="onUpdateValue" @update:var="onUpdateVar" />
           </div>
@@ -71,7 +71,7 @@
 import { provideSheetFields } from '../lib/sheetContext'
 import { useWorkspaceScrollPosition } from '@/shared/composables/useWorkspaceScrollPosition'
 import CharacterSheetSkeleton from './sheet/CharacterSheetSkeleton.vue'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch, shallowRef } from 'vue'
 import { AppModal } from '@sylvieshare/share-ui'
 import CharEditorToolbar from '@/features/character-editor/components/CharEditorToolbar'
 import CharacterSaveErrorToast from '@/features/character-editor/components/CharacterSaveErrorToast.vue'
@@ -99,6 +99,7 @@ const emit = defineEmits(['close'])
 const sessionEventsStore = useSessionEventsStore()
 const previewMode = computed(() => Boolean(props.draft))
 const { format: windowFormat } = useAppLayout()
+const desktopNavigationTarget = shallowRef(null)
 // The modal uses the compact pager on both phone and tablet.
 const format = computed(() => windowFormat.value === 'phone' ? 'tablet' : windowFormat.value)
 

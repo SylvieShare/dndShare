@@ -2,6 +2,7 @@
   <div class="dnd-desktop-body">
     <aside class="dnd-desktop-stats"><DndStats format="desktop" /></aside>
     <main class="dnd-desktop-main">
+      <div ref="navigationTarget" class="dnd-desktop-navigation" />
       <CharacterBlock block-id="read_only_notice" />
       <div class="inner-tabs-content">
         <section v-for="(tab, index) in tabs" :key="tab.key" v-show="tab.key === section" :inert="tab.key !== section" class="inner-tab-pane">
@@ -21,7 +22,7 @@
   </div>
 </template>
 <script setup>
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { usePreparedTabs } from '../../composables/usePreparedTabs'
 import CharacterSheetSkeleton from './CharacterSheetSkeleton.vue'
 import CharacterBlock from '../CharacterBlock.vue'
@@ -30,6 +31,10 @@ import DndUtilities from './DndUtilities.vue'
 import DndSection from './DndSection.vue'
 import definition from '../../settings/dnd/definition'
 const props = defineProps({ section: String })
+const emit = defineEmits(['navigation-target'])
+const navigationTarget = ref(null)
+onMounted(() => emit('navigation-target', navigationTarget.value))
+onBeforeUnmount(() => emit('navigation-target', null))
 const tabs = computed(() => definition.tabs.desktop.map(tab => ({ id: tab.id, key: tab.id, title: tab.title })))
 const { isReady } = usePreparedTabs(tabs, computed(() => tabs.value.findIndex(tab => tab.key === props.section)), computed(() => false))
 
@@ -39,7 +44,9 @@ const { isReady } = usePreparedTabs(tabs, computed(() => tabs.value.findIndex(ta
 .dnd-desktop-stats { flex: 0 1 var(--layout-sheet-stats-column); min-width: var(--layout-sheet-stats-column-min); }
 .dnd-desktop-utilities { flex: 0 1 var(--layout-sheet-utilities-column); min-width: var(--layout-sheet-utilities-column-min); }
 .dnd-desktop-stats, .dnd-desktop-utilities { padding: 20px; }
-.dnd-desktop-main { padding-top:var(--spacing-page); flex: 1 1 calc(var(--layout-sheet-max) - var(--layout-sheet-stats-column) - var(--layout-sheet-utilities-column) - 30px); min-width: 0; display: flex; flex-direction: column; gap: 11px; }
+.dnd-desktop-main { padding-top:var(--spacing-page); align-self:stretch; flex: 1 1 calc(var(--layout-sheet-max) - var(--layout-sheet-stats-column) - var(--layout-sheet-utilities-column) - 30px); min-width: 0; display: flex; flex-direction: column; gap: 11px; }
+.dnd-desktop-navigation { position:sticky;top:0;z-index:10;min-width:0;padding-bottom:var(--spacing-small);background:var(--bg); }
+.dnd-desktop-navigation:empty { display:none; }
 .dnd-desktop-utilities { gap: 15px; }
 .inner-tabs-content { padding-top: 3px; min-width: 0; }
 .inner-tab-pane { animation: sheet-section-in var(--motion-navigation); }
