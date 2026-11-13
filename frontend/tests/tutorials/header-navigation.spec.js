@@ -11,6 +11,7 @@ async function openSheet(page, width) {
   await page.goto('/char/test')
   await expect(page.locator('[data-sheet-navigation]')).toBeVisible({timeout:15000})
   await page.evaluate(() => document.fonts.ready)
+  await expect(page.locator('.view')).toHaveCSS('transform', 'none')
   return api
 }
 
@@ -22,11 +23,15 @@ async function expectContinuousHeader(page) {
     await expect(navigation).toBeVisible()
     const geometry = await navigation.evaluate(node => {
       const nav = node.getBoundingClientRect(), main = node.closest('.dnd-desktop-main').getBoundingClientRect()
-      return { start: nav.left - main.left, end: main.right - nav.right, overflow: getComputedStyle(node).overflowX }
+      return { start: nav.left - main.left, end: main.right - nav.right, overflow: getComputedStyle(node).overflowX,
+        background: getComputedStyle(node.closest('.dnd-desktop-navigation')).backgroundColor,
+        shadow: getComputedStyle(node.closest('.workspace-subheader-inner')).boxShadow }
     })
     expect(geometry.start).toBeGreaterThanOrEqual(-1)
     expect(geometry.end).toBeGreaterThanOrEqual(-1)
     expect(geometry.overflow).toBe('auto')
+    expect(geometry.background).toBe('rgba(0, 0, 0, 0)')
+    expect(geometry.shadow).not.toBe('none')
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize().width)
     return
   }
@@ -34,17 +39,18 @@ async function expectContinuousHeader(page) {
     const main = header.querySelector('.workspace-header-inner'), band = header.querySelector('.workspace-subheader')
     const a = main.getBoundingClientRect(), b = band.getBoundingClientRect(), root = header.getBoundingClientRect(),surface=band.querySelector('.workspace-subheader-inner'),c=surface.getBoundingClientRect()
     return { gap: b.top - a.bottom, bottom: root.bottom - b.bottom,
-      mainBackground: getComputedStyle(header).backgroundColor, bandBackground: getComputedStyle(band).backgroundColor,
+      mainBackground: getComputedStyle(header).backgroundColor, mainBackgroundImage: getComputedStyle(header).backgroundImage, bandBackground: getComputedStyle(band).backgroundColor,
       border: getComputedStyle(band).borderTopWidth,
-      leftInset:c.left-b.left,rightInset:b.right-c.right,surfaceBackground:getComputedStyle(surface).backgroundColor,radius:getComputedStyle(surface).borderTopLeftRadius,
+      leftInset:c.left-b.left,rightInset:b.right-c.right,surfaceBackground:getComputedStyle(surface).backgroundColor,shadow:getComputedStyle(surface).boxShadow,radius:getComputedStyle(surface).borderTopLeftRadius,
       seamBelongsToHeader: header.contains(document.elementFromPoint(root.x + root.width / 2, b.top + .5)) }
   })
   expect(Math.abs(geometry.gap)).toBeLessThan(.5)
   expect(Math.abs(geometry.bottom)).toBeLessThan(.5)
-  expect(geometry.bandBackground).not.toBe('rgba(0, 0, 0, 0)')
-  expect(geometry.bandBackground).not.toBe(geometry.mainBackground)
+  expect(geometry.mainBackground).toBe('rgba(0, 0, 0, 0)')
+  expect(geometry.mainBackgroundImage).toContain('linear-gradient')
   expect(geometry.border).toBe('0px')
-  expect(geometry.bandBackground).toBe('rgb(23, 23, 27)')
+  expect(geometry.bandBackground).toBe('rgba(0, 0, 0, 0)')
+  expect(geometry.shadow).not.toBe('none')
   expect(geometry.surfaceBackground).toBe('rgb(48, 45, 58)')
   expect(geometry.leftInset).toBeGreaterThan(0)
   expect(geometry.rightInset).toBeGreaterThan(0)
@@ -56,6 +62,7 @@ for (const [width, format, layout] of [[390, 'phone', 'compact'], [834, 'tablet'
   test(`local ${format} navigation stays aligned and accessible`, async ({ page }, testInfo) => {
     const api = await openSheet(page, width)
     const navigation = page.locator('[data-sheet-navigation]')
+    const initialNavigationY = (await navigation.boundingBox()).y
     await expect(navigation).toHaveAttribute('data-sheet-navigation', format === 'desktop' ? 'tablet' : format)
     await expect(navigation).toHaveClass(new RegExp(`share-icon-navigation--${layout}`))
     await expect(page.locator('[data-tutorial="character-tabs"]')).toHaveCount(1)
@@ -78,8 +85,11 @@ for (const [width, format, layout] of [[390, 'phone', 'compact'], [834, 'tablet'
     await scroller.evaluate(node => { node.scrollTop = 180 })
     await expectContinuousHeader(page)
     if (format === 'desktop') {
-      const header = await page.locator('.character-workspace-header').boundingBox()
-      await expect.poll(async () => (await navigation.boundingBox()).y).toBeCloseTo(header.y + header.height, 0)
+      await expect.poll(async () => (await navigation.boundingBox()).y).toBeCloseTo(initialNavigationY, 0)
+      const main = await page.locator('.dnd-desktop-main').boundingBox()
+      const nav = await navigation.boundingBox()
+      expect(await page.evaluate(({ x, y }) => !!document.elementFromPoint(x, y)?.closest('.dnd-desktop-navigation'),
+        {x: main.x + 1, y: nav.y + nav.height / 2})).toBe(false)
     }
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
     expect(api.writes).toEqual([])

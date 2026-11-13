@@ -1,5 +1,5 @@
 <template>
-  <WorkspaceHeader ref="workspace" v-bind="$attrs" class="character-workspace-header" :scroll-source="null" :context-placement="format === 'phone' ? 'row' : 'auto'"
+  <WorkspaceHeader ref="workspace" v-bind="$attrs" class="character-workspace-header" navigation-floating :scroll-source="null" :context-placement="format === 'phone' ? 'row' : 'auto'"
     :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" :fit-navigation="format !== 'phone'"
     :navigation-placement="dnd && format === 'desktop' ? 'external' : 'below'"
     :navigation-target="dnd && format === 'desktop' ? desktopNavigationTarget : undefined">
