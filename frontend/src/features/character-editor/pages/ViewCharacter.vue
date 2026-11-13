@@ -5,7 +5,7 @@
     <PageTutorial :tutorial="characterTutorial" :mobile="isMobile" />
     <CharacterWorkspaceHeader ref="workspaceHeaderEl" data-sheet-chrome :dnd="template?.system === 'dnd5e' && !loading" :format="format"
       :show-menu="template?.system === 'vtm-v20'" :compact="isMobile" :name="charName" :subtitle="charSub" :icon-url="headerIconUrl"
-      :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth" :desktop-navigation-target="desktopNavigationTarget"
+      :session="activeSession" :transfers="transfers" :content-width="containerWidthForTab(activeTab).maxWidth" :navigation-target="compactLayout ? compactNavigationTarget : desktopNavigationTarget"
       :tabs="activeTabs" :active-tab="activeTab" :selection="mobileTabSelection" :animate-navigation="!tabDragActive || tabDragSettling"
       @select-tab="onSetActiveTab" @wheel="onFixedHeaderWheel" @touchstart.passive="onFixedHeaderTouchStart"
       @touchmove="onFixedHeaderTouchMove" @touchend.passive="onFixedHeaderTouchEnd" @touchcancel.passive="onFixedHeaderTouchEnd" />
@@ -19,7 +19,8 @@
           <CharacterSheetSkeleton />
         </div>
       <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="initializeCharacter">Повторить</button></div>
-      <CharacterSwipePager v-else-if="compactLayout && template" ref="swipePagerEl" :controller="swipe" :tabs="activeTabs">
+      <CharacterSwipePager v-else-if="compactLayout && template" ref="swipePagerEl" :controller="swipe" :tabs="activeTabs"
+        :navigation="template.system === 'dnd5e'" @navigation-target="compactNavigationTarget = $event">
         <template #default="{ index }">
           <div class="container" :style="containerWidthForTab(index)">
             <component :is="tabRenderComponent(index, TabPane)" :definition="template" :format="format" :section="activeTabs[index]?.id"
@@ -87,6 +88,7 @@ const uuid = route.params.uuid || router.currentRoute.value.params.uuid
 const { phone: isMobile, format } = useAppLayout()
 const compactLayout = computed(() => format.value !== 'desktop')
 const desktopNavigationTarget = shallowRef(null)
+const compactNavigationTarget = shallowRef(null)
 
 // ── Template refs ─────────────────────────────────────────────────────
 const tutorialRoot = ref(null)

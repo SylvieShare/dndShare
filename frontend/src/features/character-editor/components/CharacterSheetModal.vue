@@ -4,7 +4,7 @@
     <div :inert="edition.busy" class="csm share-app-canvas" :class="{ 'csm--preview': previewMode }">
       <CharacterWorkspaceHeader ref="sheetHeader" v-if="template?.system === 'dnd5e' && !loading" dnd modal data-sheet-chrome
         :format="windowFormat" :compact="windowFormat === 'phone'" :name="charName" :subtitle="charSub" :icon-url="iconImageUrl || data.values?.ava?.url"
-        :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="activeTabs" :active-tab="activeTab" :desktop-navigation-target="desktopNavigationTarget"
+        :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="activeTabs" :active-tab="activeTab" :navigation-target="compactLayout ? compactNavigationTarget : desktopNavigationTarget"
         :selection="mobileTabSelection" :animate-navigation="!tabDragActive || tabDragSettling" @select-tab="setActiveTab" @close="emit('close')" />
       <CharEditorToolbar ref="sheetHeader" v-else data-sheet-chrome
         modal
@@ -34,7 +34,8 @@
         </div>
 
         <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="initializeCharacter">Повторить</button></div>
-        <CharacterSwipePager v-else-if="template && compactLayout" ref="swipePagerEl" :controller="swipe" :tabs="activeTabs">
+        <CharacterSwipePager v-else-if="template && compactLayout" ref="swipePagerEl" :controller="swipe" :tabs="activeTabs"
+          :navigation="template.system === 'dnd5e'" @navigation-target="compactNavigationTarget = $event">
           <template #default="{ index }">
             <div class="container" :style="containerWidthForTab(index)">
               <CharacterTabPane :definition="template" :format="format" :section="activeTabs[index]?.id"
@@ -100,6 +101,7 @@ const sessionEventsStore = useSessionEventsStore()
 const previewMode = computed(() => Boolean(props.draft))
 const { format: windowFormat } = useAppLayout()
 const desktopNavigationTarget = shallowRef(null)
+const compactNavigationTarget = shallowRef(null)
 // The modal uses the compact pager on both phone and tablet.
 const format = computed(() => windowFormat.value === 'phone' ? 'tablet' : windowFormat.value)
 

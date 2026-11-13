@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { fixture } from './fixtures/character-layout'
 
 async function openSheet(page, width) {
-  await page.setViewportSize({ width, height: 1000 })
+  await page.setViewportSize({ width, height: 600 })
   const api = await fixture(page)
   await page.route('**/api/handbook/sync?**', route => route.fulfill({ json: {
     protocol: 1, entries: [], hasMore: false, cursor: 'empty', visibleIds: [],
@@ -16,6 +16,7 @@ async function openSheet(page, width) {
 }
 
 async function expectContinuousHeader(page) {
+  await expect(page.locator('.character-workspace-header .workspace-subheader')).toHaveCount(0)
   if (await page.locator('.dnd-desktop-navigation').count()) {
     const header = page.locator('.character-workspace-header')
     await expect(header.locator('.workspace-subheader')).toHaveCount(0)
@@ -35,27 +36,26 @@ async function expectContinuousHeader(page) {
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize().width)
     return
   }
-  const geometry = await page.locator('.character-workspace-header').evaluate(header => {
-    const main = header.querySelector('.workspace-header-inner'), band = header.querySelector('.workspace-subheader')
-    const a = main.getBoundingClientRect(), b = band.getBoundingClientRect(), root = header.getBoundingClientRect(),surface=band.querySelector('.workspace-subheader-inner'),c=surface.getBoundingClientRect()
-    return { gap: b.top - a.bottom, bottom: root.bottom - b.bottom,
-      mainBackground: getComputedStyle(header).backgroundColor, mainBackgroundImage: getComputedStyle(header).backgroundImage, bandBackground: getComputedStyle(band).backgroundColor,
-      border: getComputedStyle(band).borderTopWidth,
-      leftInset:c.left-b.left,rightInset:b.right-c.right,surfaceBackground:getComputedStyle(surface).backgroundColor,shadow:getComputedStyle(surface).boxShadow,radius:getComputedStyle(surface).borderTopLeftRadius,
-      seamBelongsToHeader: header.contains(document.elementFromPoint(root.x + root.width / 2, b.top + .5)) }
+  const geometry = await page.locator('.mobile-sheet-navigation').evaluate(host => {
+    const pane=host.parentElement.querySelector('.mobile-swipe-pane:not([inert]) .mobile-pane-scroll')
+    const band=host.querySelector('.workspace-subheader'),surface=band.querySelector('.workspace-subheader-inner')
+    const a=host.getBoundingClientRect(),b=pane.getBoundingClientRect(),c=surface.getBoundingClientRect()
+    return { gap:a.top-b.top,inset:parseFloat(getComputedStyle(pane).paddingTop),height:a.height,
+      scrollbarInset:parseFloat(getComputedStyle(pane,'::-webkit-scrollbar-track').marginTop),
+      background:getComputedStyle(host).backgroundColor,bandBackground:getComputedStyle(band).backgroundColor,
+      leftInset:c.left-a.left,rightInset:a.right-c.right,surfaceBackground:getComputedStyle(surface).backgroundColor,
+      shadow:getComputedStyle(surface).boxShadow,radius:getComputedStyle(surface).borderTopLeftRadius }
   })
   expect(Math.abs(geometry.gap)).toBeLessThan(.5)
-  expect(Math.abs(geometry.bottom)).toBeLessThan(.5)
-  expect(geometry.mainBackground).toBe('rgba(0, 0, 0, 0)')
-  expect(geometry.mainBackgroundImage).toContain('linear-gradient')
-  expect(geometry.border).toBe('0px')
+  expect(geometry.inset).toBeCloseTo(geometry.height,0)
+  expect(geometry.scrollbarInset).toBeCloseTo(geometry.height,0)
+  expect(geometry.background).toBe('rgba(0, 0, 0, 0)')
   expect(geometry.bandBackground).toBe('rgba(0, 0, 0, 0)')
   expect(geometry.shadow).not.toBe('none')
   expect(geometry.surfaceBackground).toBe('rgb(48, 45, 58)')
   expect(geometry.leftInset).toBeGreaterThan(0)
   expect(geometry.rightInset).toBeGreaterThan(0)
   expect(parseFloat(geometry.radius)).toBeGreaterThan(8)
-  expect(geometry.seamBelongsToHeader).toBe(true)
 }
 
 for (const [width, format, layout] of [[390, 'phone', 'compact'], [834, 'tablet', 'stacked'], [1440, 'desktop', 'stacked']]) {
@@ -82,14 +82,28 @@ for (const [width, format, layout] of [[390, 'phone', 'compact'], [834, 'tablet'
       expect(stats.y).toBeLessThanOrEqual(main.y + 1)
     }
     const scroller = page.locator(format === 'desktop' ? '.sheet-scroll' : '.mobile-swipe-pane:not([inert]) .mobile-pane-scroll')
+    await expect.poll(()=>scroller.evaluate(node=>node.scrollHeight-node.clientHeight)).toBeGreaterThan(180)
+    if (format !== 'desktop') {
+      await first.dispatchEvent('wheel',{deltaY:40,deltaX:0})
+      await expect.poll(()=>scroller.evaluate(node=>node.scrollTop)).toBeGreaterThan(0)
+      await scroller.evaluate(node=>{node.scrollTop=0})
+      const button=await first.boundingBox(),cdp=await page.context().newCDPSession(page)
+      const x=button.x+button.width/2,y=button.y+button.height/2
+      await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]})
+      for(const distance of [10,25,40]) await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y-distance}]})
+      await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]})
+      await expect.poll(()=>scroller.evaluate(node=>node.scrollTop)).toBeGreaterThan(0)
+    }
     await scroller.evaluate(node => { node.scrollTop = 180 })
     await expectContinuousHeader(page)
     if (format === 'desktop') {
-      await expect.poll(async () => (await navigation.boundingBox()).y).toBeCloseTo(initialNavigationY, 0)
-      const main = await page.locator('.dnd-desktop-main').boundingBox()
-      const nav = await navigation.boundingBox()
-      expect(await page.evaluate(({ x, y }) => !!document.elementFromPoint(x, y)?.closest('.dnd-desktop-navigation'),
-        {x: main.x + 1, y: nav.y + nav.height / 2})).toBe(false)
+      const scrollTop=await scroller.evaluate(node=>node.scrollTop)
+      await expect.poll(async () => (await navigation.boundingBox()).y).toBeCloseTo(initialNavigationY-scrollTop,0)
+    } else {
+      const surface=await page.locator('.mobile-sheet-navigation .workspace-subheader-inner').boundingBox()
+      expect(await page.evaluate(({x,y})=>!!document.elementFromPoint(x,y)?.closest('.character-sheet'),
+        {x:surface.x+1,y:surface.y+1})).toBe(true)
+      await expect.poll(async () => (await navigation.boundingBox()).y).toBeCloseTo(initialNavigationY,0)
     }
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
     expect(api.writes).toEqual([])
@@ -133,7 +147,7 @@ test('resizing changes presentation while retaining the selected section and doc
   expect(api.writes).toEqual([])
 })
 
-test('Android safe area and subheader remain one opaque surface', async ({ page }) => {
+test('Android safe area keeps the floating tabs below the main header', async ({ page }) => {
   await openSheet(page, 390)
   await page.evaluate(() => {
     document.documentElement.dataset.platform = 'android'

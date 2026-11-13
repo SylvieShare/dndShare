@@ -2,7 +2,7 @@
   <WorkspaceHeader ref="workspace" v-bind="$attrs" class="character-workspace-header" navigation-floating :scroll-source="null" :context-placement="format === 'phone' ? 'row' : 'auto'"
     :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" :fit-navigation="format !== 'phone'"
     :navigation-placement="dnd && format === 'desktop' ? 'external' : 'below'"
-    :navigation-target="dnd && format === 'desktop' ? desktopNavigationTarget : undefined">
+    :navigation-target="navigationTarget">
     <template #identity>
       <ActionButton variant="quiet" :icon-only="compact" :aria-label="modal ? 'Закрыть лист' : 'К списку персонажей'" @click="modal ? emit('close') : router.push('/chars')">
         <template #icon><ArrowLeft :size="18" /></template>
@@ -62,7 +62,7 @@ import DndSheetHeading from './sheet/DndSheetHeading.vue'
 import DndSheetStrip from './sheet/DndSheetStrip.vue'
 import { isInspirationActive } from '../blocks/dnd/lib/mobileStatus'
 const props = defineProps({ dnd: Boolean, format: String, modal: Boolean, contentWidth: String, name: String, subtitle: String, iconUrl: String, session: Object, transfers: Object, compact: Boolean, showMenu: Boolean,
-  desktopNavigationTarget: Object, selection: Array, animateNavigation: { type: Boolean, default: true },
+  navigationTarget: Object, selection: Array, animateNavigation: { type: Boolean, default: true },
   tabs: { type: Array, default: () => [] }, activeTab: Number })
 const emit = defineEmits(['select-tab', 'close'])
 const charCtx = inject('charCtx', {})
