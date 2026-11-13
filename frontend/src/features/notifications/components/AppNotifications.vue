@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <TransitionGroup name="notification-stack" tag="div" class="notification-stack" aria-label="Уведомления" aria-live="polite" aria-relevant="additions">
-      <BaseTile :outlined="false" v-for="entry in store.entries" :key="entry.id" role="status" class="app-notification" :data-notification-type="entry.type"
+      <BaseTile elevated :outlined="false" v-for="entry in store.entries" :key="entry.id" role="status" class="app-notification" :data-notification-type="entry.type"
         @pointerenter="store.pause(entry.id, 'hover')" @pointerleave="store.resume(entry.id, 'hover')"
         @focusin="store.pause(entry.id, 'focus')" @focusout="onFocusOut($event, entry.id)"
         @pointerdown="swipe.onPointerDown($event, entry.id)" @pointermove="swipe.onPointerMove"
@@ -39,8 +39,21 @@ function onFocusOut(event, id) {
 onBeforeUnmount(() => { swipe.dispose(); store.clear() })
 </script>
 <style scoped>
-.notification-stack { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 9000; display: flex; flex-direction: column; align-items: stretch; gap: 10px; width: min(380px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow-y: auto; pointer-events: none; }
-.app-notification { position: relative; flex: none; pointer-events: auto; padding: 14px; color: var(--text-1); font-size: 13px; overflow: hidden; box-shadow: var(--shadow-lg); touch-action: pan-y; transform: translateX(var(--notification-swipe-x, 0px)); opacity: var(--notification-swipe-opacity, 1); transition: transform .18s ease, opacity .18s ease; }
+.notification-stack {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  box-sizing: border-box;
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  overflow-y: auto;
+  pointer-events: none;
+}
+.app-notification { position: relative; flex: none; width: min(380px, 100%); pointer-events: auto; padding: 14px; color: var(--text-1); font-size: 13px; overflow: hidden; touch-action: pan-y; transform: translateX(var(--notification-swipe-x, 0px)); opacity: var(--notification-swipe-opacity, 1); transition: transform .18s ease, opacity .18s ease; }
+.app-notification:first-child { margin-top: auto; }
 .app-notification.notification--swiping { user-select: none; transition: none; }
 .app-notification.notification--swipe-dismiss { transition: transform .16s ease-out, opacity .16s ease-out; }
 .notification-close { position: absolute; top: 5px; right: 5px; z-index: 1; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: var(--r-sm); background: none; color: var(--text-muted); cursor: pointer; }
