@@ -63,7 +63,7 @@ onBeforeUnmount(() => observer?.disconnect());
   background: transparent;
 }
 .workspace-header-backdrop {
-  --blur-backdrop-inset: 0 0 calc(-1 * (var(--chrome-fade-tail) + var(--workspace-extra-fade, 0px)));
+  --blur-backdrop-inset: 0 0 calc(-1 * var(--chrome-fade-tail));
   --blur-backdrop-background: color-mix(in srgb, var(--bg) calc(var(--chrome-tint) * 100%), transparent);
   --blur-backdrop-mask: linear-gradient(to bottom, var(--text-on-accent) var(--workspace-main-height), transparent 100%);
   z-index: 0;

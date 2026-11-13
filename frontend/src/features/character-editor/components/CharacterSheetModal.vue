@@ -1,7 +1,7 @@
 <template>
   <AppModal fullscreen :z-index="zIndex" @close="emit('close')">
     <CharacterEditionDialog :controller="edition" />
-    <div ref="chromeRoot" :inert="edition.busy" class="csm share-app-canvas" :class="{ 'csm--preview': previewMode }">
+    <div :inert="edition.busy" class="csm share-app-canvas" :class="{ 'csm--preview': previewMode }">
       <CharacterWorkspaceHeader ref="sheetHeader" v-if="template?.system === 'dnd5e' && !loading" dnd modal data-sheet-chrome
         :format="windowFormat" :compact="windowFormat === 'phone'" :name="charName" :subtitle="charSub" :icon-url="iconImageUrl || data.values?.ava?.url"
         :content-width="containerWidthForTab(activeTab).maxWidth" :tabs="activeTabs" :active-tab="activeTab"
@@ -69,7 +69,6 @@
 
 <script setup>
 import { provideSheetFields } from '../lib/sheetContext'
-import { useSheetChrome } from '../composables/useSheetChrome'
 import { useWorkspaceScrollPosition } from '@/shared/composables/useWorkspaceScrollPosition'
 import CharacterSheetSkeleton from './sheet/CharacterSheetSkeleton.vue'
 import { computed, onMounted, ref, watch } from 'vue'
@@ -95,9 +94,7 @@ const props = defineProps({
   isDm: { type: Boolean, default: false },
   zIndex: { type: Number, default: 3000 },
 })
-const chromeRoot = ref(null)
 const bodyScroll = ref(null)
-useSheetChrome(chromeRoot)
 const emit = defineEmits(['close'])
 const sessionEventsStore = useSessionEventsStore()
 const previewMode = computed(() => Boolean(props.draft))
@@ -198,8 +195,8 @@ onMounted(initializeCharacter)
 .csm { display: flex; flex-direction: column; height: 100%; min-height: 0; }
 .csm-preview-note { flex: none; padding: 5px 14px; border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--accent) 8%, var(--bg)); color: var(--accent-soft); font-size: 10px; font-weight: 700; letter-spacing: .04em; text-align: center; text-transform: uppercase; }
 .csm--preview .desktop-tabs :deep(button[title='Редактировать']) { display: none; }
-.csm-body { margin-top: calc(-1 * var(--sheet-chrome-height, 64px)); padding-top: var(--sheet-chrome-height, 64px); box-sizing: border-box; scroll-padding-top: var(--sheet-chrome-height, 64px); flex: 1; min-height: 0; overflow-x: auto; overflow-y: auto; background: transparent; }
-.csm-body--pager { overflow: hidden; padding-top: 0; }
+.csm-body { box-sizing: border-box; flex: 1; min-height: 0; overflow-x: auto; overflow-y: auto; background: transparent; }
+.csm-body--pager { overflow: hidden; }
 .csm-subheader { position: relative; z-index: 21; flex: none; box-sizing: border-box; width: 100%; background: var(--subheader); padding: 8px 8px 4px; }
 .csm-body--pager .container { padding: 0; }
 .container { box-sizing: border-box; width: 100%; margin: 0 auto; padding: 18px 16px 28px; background: transparent; }

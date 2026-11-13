@@ -48,7 +48,6 @@
 
 <script setup>
 import { provideSheetFields } from '../lib/sheetContext'
-import { useSheetChrome } from '../composables/useSheetChrome'
 import { useWorkspaceScrollPosition } from '@/shared/composables/useWorkspaceScrollPosition'
 import CharacterWorkspaceHeader from '@/features/character-editor/components/CharacterWorkspaceHeader.vue'
 import CharacterTransferDialogs from '@/features/character-editor/components/CharacterTransferDialogs.vue'
@@ -176,8 +175,6 @@ Object.assign(charCtx, {
     }
   },
 })
-
-useSheetChrome(tutorialRoot)
 
 const swipe = useTabSwipe(activeTabs, compactLayout)
 const {
