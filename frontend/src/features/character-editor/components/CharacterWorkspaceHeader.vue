@@ -92,6 +92,7 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
 .character-workspace-header {
   --workspace-header-identity-gap: var(--spacing-small);
   --workspace-header-context-gap: var(--spacing-small);
+  --workspace-context-inline-offset: var(--spacing-large);
 }
 .character-identity {
   display: flex;
