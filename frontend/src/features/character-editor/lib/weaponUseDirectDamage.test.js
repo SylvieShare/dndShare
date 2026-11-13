@@ -12,8 +12,8 @@ import { MAGIC_VALUE_ID } from './characterMagicItems'
 
 const rule = lightningThrow
 beforeEach(() => setActivePinia(createPinia()))
-function fixture(extras = []) {
-  const item = { id: 284, typeId: 19, name: 'Копьё', data: { attunement: 'none', max_use: 1, weapon_uses: [rule] } }
+function fixture(extras = [], definition = rule) {
+  const item = { id: 284, typeId: 19, name: 'Копьё', data: { attunement: 'none', max_use: 1, weapon_uses: [definition] } }
   const ctx = reactive({ ownerMode: true,
     values: { lvl: { level: 5 }, weapon: [{ uid: 'a', item_id: 1448, magic_item_id: 284, params: { magic: { remaining: 1 } } }] },
     characterResources: { itemsById: new Map([['284', item]]) },
@@ -28,11 +28,45 @@ function fixture(extras = []) {
   const damage = useWeaponDamageRolls(ctx, { item: () => item, propertyItems: () => [], itemTitle: () => item.name,
     weaponDamageActions: entry => [...weaponUseDamageActions(ctx.values, entry.uid), ...extras],
     damagePartsRaw: () => [], damageExpression: () => base.expression, criticalDamageExpression: () => base.critical_expression,
+    weaponBaseSources: (_entry, _expression, { critical }) => critical ? base.critical_base_sources : base.base_sources,
     extraCriticalDice: () => 0, spend: () => true, planWeaponUse: use.plan,
   })
   const roll = vi.spyOn(useDiceStore(), 'roll').mockReturnValue({ total: 15, parts: [] })
   return { ctx, use, damage, attack, roll, entry: () => ctx.values.weapon[0] }
 }
+
+it('projects unavailable alternative damage without planning or spending its charge', () => {
+ const { ctx, damage, entry, roll } = fixture()
+ entry().params.magic.remaining = 0
+ const step = { ...rule.steps[1], damage_type_label: 'Молния', damage_type_color: '#ff0' }
+ expect(damage.previewUseSources(entry(), rule, step, { critical: true })).toEqual([
+  { source: 'Оружие', expression: '2d6' }, { source: 'Сила', expression: '3' },
+  { source: rule.title, expression: '8d6{Молния|#ff0}' },
+ ])
+ expect(weaponUseState(ctx.values, 'a')).toBeUndefined()
+ expect(entry().params.magic.remaining).toBe(0)
+ expect(roll).not.toHaveBeenCalled()
+})
+
+it('keeps a saved hit snapshot complete without adding the weapon base a second time', () => {
+ const { damage, entry } = fixture()
+ const step = { ...rule.steps[1], expression: '1d6+3+4d6{Молния}', critical_expression: '2d6+3+8d6{Молния}' }
+ expect(damage.previewUseSources(entry(), rule, step)).toEqual([{ source: rule.title, expression: step.expression }])
+ expect(damage.previewUseSources(entry(), rule, step, { critical: true })).toEqual([{ source: rule.title, expression: step.critical_expression }])
+})
+
+it('requires an explicit hit step for a multi-target use and pays once for that step', () => {
+ const multiple = structuredClone(rule)
+ multiple.steps.push({ ...structuredClone(rule.steps[1]), key: 'second', title: 'Вторая цель' })
+ const { damage, entry, roll } = fixture([], multiple)
+ expect(damage.damagePreview(entry(), { weaponUseKey: rule.key })).toBe('')
+ expect(damage.damagePreview(entry(), { weaponUseKey: rule.key, weaponUseStepKey: 'missing' })).toBe('')
+ expect(entry().params.magic.remaining).toBe(1)
+ damage.rollDamage(entry(), { weaponUseKey: rule.key, weaponUseStepKey: 'second' })
+ expect(roll).toHaveBeenCalledOnce()
+ expect(entry().params.magic.remaining).toBe(0)
+ expect(entry().params.magic.weapon_use.steps.map(step => step.status)).toEqual(['pending', 'pending', 'rolled'])
+})
 it('previews without spending, then pays once for target damage and resolves the flat line', async () => {
   const { ctx, use, damage, attack, roll, entry } = fixture()
   const options = { weaponUseKey: rule.key, critical: true, bonusAction: true, twoHanded: true }

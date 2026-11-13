@@ -7,3 +7,7 @@ export function weaponAttackFormula(summary, rules = [], excluded = []) {
     expression: ['advantage', 'disadvantage'].includes(mode) ? '2d20' : '1d20',
   }, ...summary.parts, ...bonuses]
 }
+
+export function weaponAttackColor(mode) {
+  return mode === 'advantage' ? 'var(--success)' : mode === 'disadvantage' ? 'var(--danger)' : 'var(--accent-soft)'
+}

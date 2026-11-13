@@ -1,7 +1,7 @@
 import { fixture } from './character-layout'
 
-export async function weaponSheetFixture(page) {
-  const api = await fixture(page, 'DND5', true, true)
+export async function weaponSheetFixture(page, owner = true) {
+  const api = await fixture(page, 'DND5', owner, true)
   api.document().values.weapon[0].proficient = true
   const catalogue = {
     201: { id: 201, typeId: 1, name: 'Тестовое копьё', data: { attacks: [{ count: 1, dice_id: 'd6', type: 1 }], universe_attacks: [{ count: 1, dice_id: 'd8', type: 1 }] } },
@@ -17,5 +17,5 @@ export async function weaponSheetFixture(page) {
   }
   await page.route('**/api/suggest/batch?**', route => route.fulfill({ json: { items: suggests } }))
   await page.route('**/api/handbook/sync?**', route => route.fulfill({ json: { protocol: 1, entries: [], hasMore: false, cursor: 'empty', visibleIds: [], metadata: { types: [], suggests, suggestTypes: [], books: [] } } }))
-  return { ...api, catalogue }
+  return { ...api, catalogue, suggests }
 }

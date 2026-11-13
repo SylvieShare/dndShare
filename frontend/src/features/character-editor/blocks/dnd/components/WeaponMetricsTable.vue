@@ -2,14 +2,23 @@
   <div class="weapon-metrics" role="group" aria-label="Показатели оружия">
     <component :is="interactive && canAttack ? 'button' : 'div'" :type="interactive && canAttack ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__attack" data-sheet-swipe :aria-label="interactive && canAttack ? 'Настроить бросок атаки' : undefined" :aria-haspopup="interactive && canAttack ? 'menu' : undefined" :aria-expanded="interactive && canAttack ? rollScope === 'attack' : undefined" @click.stop="interactive && canAttack && emit('roll', 'attack', $event)">
       <span class="weapon-metrics__label">Атака</span>
-      <WeaponDamageBreakdown v-if="attackRows.length" :rows="attackRows" label="Состав атаки" :aria-description="`Бонус атаки ${attack || '0'}`" damage-color="var(--accent-soft)" dice-labels />
+      <WeaponDamageBreakdown v-if="attackRows.length" :rows="attackRows" label="Состав атаки" :aria-description="`Бонус атаки ${attack || '0'}`" :damage-color="attackColor" dice-labels />
       <span v-else>—</span>
     </component>
-    <component :is="interactive && canDamage ? 'button' : 'div'" :type="interactive && canDamage ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__damage" data-sheet-swipe :aria-label="interactive && canDamage ? 'Настроить бросок урона' : undefined" :aria-haspopup="interactive && canDamage ? 'menu' : undefined" :aria-expanded="interactive && canDamage ? rollScope === 'damage' : undefined" @click.stop="interactive && canDamage && emit('roll', 'damage', $event)">
+    <component :is="interactive && canDamage ? 'button' : 'div'" :type="interactive && canDamage ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__damage" data-sheet-swipe :aria-label="interactive && canDamage ? 'Настроить бросок урона' : undefined" :aria-haspopup="interactive && canDamage ? 'menu' : undefined" :aria-expanded="interactive && canDamage ? rollScope === 'damage' && !damageKey : undefined" @click.stop="interactive && canDamage && emit('roll', 'damage', $event)">
       <span class="weapon-metrics__label">Урон</span>
       <WeaponDamageBreakdown v-if="damageRows.length || twoHandedRows.length" :rows="damageRows" :alternatives="twoHandedRows" :damage-type="damageType" :damage-color="damageColor" />
       <span v-else>—</span>
       <small v-if="twoHandedRows.length" class="weapon-metrics__grip">Одной рукой / двумя руками</small>
+    </component>
+    <component :is="interactive && canDamage ? 'button' : 'div'" v-for="cell in alternativeDamage" :key="cell.key"
+      :type="interactive && canDamage ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__damage weapon-metrics__alternative"
+      :data-damage-key="cell.key" data-sheet-swipe :aria-label="interactive && canDamage ? `Настроить урон: ${cell.title}` : undefined"
+      :aria-description="cell.error || undefined" :aria-haspopup="interactive && canDamage ? 'menu' : undefined"
+      :aria-expanded="interactive && canDamage ? damageKey === cell.key : undefined"
+      @click.stop="interactive && canDamage && emit('roll', 'damage', $event, cell.selection)">
+      <span class="weapon-metrics__label">Урон · {{ cell.title }}</span>
+      <WeaponDamageBreakdown :rows="cell.rows" :label="`Состав урона: ${cell.title}`" />
     </component>
     <div class="weapon-properties-stack">
       <div v-if="visibleProperties.length" class="weapon-metrics__cell weapon-metrics__properties">
@@ -45,8 +54,11 @@ import { BasePopover, RichContent, ActionButton } from '@sylvieshare/share-ui'
 const props = defineProps({
   attack: { type: String, default: '' },
   attackRows: { type: Array, default: () => [] },
+  attackColor: { type: String, default: 'var(--accent-soft)' },
   damageRows: { type: Array, default: () => [] },
   twoHandedRows: { type: Array, default: () => [] },
+  alternativeDamage: { type: Array, default: () => [] },
+  damageKey: String,
   damageType: String,
   damageColor: String,
   properties: { type: Array, default: () => [] },

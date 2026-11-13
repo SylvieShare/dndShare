@@ -563,6 +563,7 @@ provide('weaponsBlockCtx', reactive({
   rollWeaponUseStep: weaponUses.rollStep,
   damagePreview,
   damageSources: damageRolls.previewSources,
+  weaponUseSources: damageRolls.previewUseSources,
   weaponMenuSummary,
   bonusActionDamageOption,
   showPropertyTooltip,

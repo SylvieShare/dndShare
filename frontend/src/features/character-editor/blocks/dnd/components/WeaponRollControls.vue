@@ -29,11 +29,9 @@
     <WeaponBonusTransferSelector v-if="scope === 'attack' && transfer?.active" :transfer="transfer" :disabled="!charCtx.ownerMode" @change="setAmount" />
     <WeaponRollOption v-for="use in scope === 'attack' ? uses : damageUses" :key="use.key" :option="useOption(use)" @select="(key, value) => emit('update:useKey', value ? key : '')" />
     <WeaponRollOption v-for="option in (scope === 'attack' && useKey ? [] : extras)" :key="option.key" :option="option" @select="(key, value) => emit('select', key, value)" @amount="(key, value) => emit('amount', key, value)" />
-    <RollBonusOptions v-if="scope === 'attack'" scope="attack" v-model="excludedBonuses" />
-    <WeaponFormulaPreview v-if="summary && formulaRows.length" :rows="formulaRows" :scope="scope" />
-    <DamageFormulaPreview v-else-if="!summary && scope === 'damage'" :expression="preview" />
+    <RollBonusOptions v-if="scope === 'attack'" scope="attack" :model-value="excludedBonuses" @update:model-value="emit('update:excludedBonuses', $event)" />
     <small v-if="blocked" role="alert">{{ blocked.resourceError }}</small>
-    <RowActionItem :disabled="!!blocked" :action="scope === 'attack' ? 'attack' : 'damage'" @click="!blocked && emit('roll', excludedBonuses)">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</RowActionItem>
+    <RowActionItem :disabled="!!blocked" :action="scope === 'attack' ? 'attack' : 'damage'" @click="!blocked && emit('roll')">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</RowActionItem>
     <WeaponUseDamageMenu v-if="scope === 'damage'" :weapon-uid="weaponUid" :uses="uses" @roll="emit('roll-step', $event)" />
   </div>
 </template>
@@ -41,28 +39,22 @@
 import { Crosshair, Swords } from '@lucide/vue'
 import { signedOrZero as signed } from '@/shared/lib/dnd'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
-import WeaponFormulaPreview from './WeaponFormulaPreview.vue'
 import RollModePicker from './RollModePicker.vue'
 import RollBonusOptions from './RollBonusOptions.vue'
 import WeaponBonusTransferSelector from './WeaponBonusTransferSelector.vue'
 import { ChoiceCard, FormField, ToggleSwitch } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
-import DamageFormulaPreview from './DamageFormulaPreview.vue'
 import WeaponRollOption from './WeaponRollOption.vue'
 import WeaponUseDamageMenu from './WeaponUseDamageMenu.vue'
 import { weaponDamageActionFormula, weaponDamageActionParts } from '@/shared/lib/weaponDamageOptions'
-import { computed, inject, toRef, ref } from 'vue'
+import { computed, inject, toRef } from 'vue'
 import { useWeaponBonusTransfer } from '../composables/useWeaponBonusTransfer'
-import { weaponAttackFormula } from '../lib/weaponAttackFormula'
-const props = defineProps({ weapon: Object, weaponTitle: String, summary: Object, weaponUid: String, attackRollMode: { type: String, default: 'auto' }, uses: { type: Array, default: () => [] }, useKey: { type: String, default: '' }, scope: { type: String, default: 'damage' }, options: { type: Array, default: () => [] }, critical: Boolean, twoHanded: Boolean, bonusAction: Boolean, bonusActionOption: Object, versatile: Boolean, thrown: Boolean, preview: { type: String, default: '' } })
-const excludedBonuses = ref([])
+const props = defineProps({ weapon: Object, weaponTitle: String, summary: Object, weaponUid: String,
+  attackRollMode: { type: String, default: 'auto' }, uses: { type: Array, default: () => [] }, useKey: { type: String, default: '' },
+  scope: { type: String, default: 'damage' }, options: { type: Array, default: () => [] }, excludedBonuses: { type: Array, default: () => [] },
+  critical: Boolean, twoHanded: Boolean, bonusAction: Boolean, bonusActionOption: Object, versatile: Boolean, thrown: Boolean })
 const charCtx = inject('charCtx', {})
-const formulaRows = computed(() => {
-  if (props.scope === 'damage') return props.summary.parts
-  return weaponAttackFormula(props.summary,
-    charCtx.characterDerivedEffects?.rollBonusOptions?.({ kind: 'attack' }) || [], excludedBonuses.value)
-})
 const { transfer, setAmount } = useWeaponBonusTransfer(charCtx, toRef(props, 'weaponUid'))
 const hasCustomOptions = computed(() => props.scope === 'attack'
   ? transfer.value?.active || props.uses.length > 0 || (!props.useKey && extras.value.length > 0)
@@ -84,7 +76,7 @@ const chosenUse = computed(() => props.uses.find(use => use.key === props.useKey
 const blocked = computed(() => props.useKey && (!chosenUse.value || chosenUse.value.error)
   ? { resourceError: chosenUse.value?.error || 'Режим недоступен.' }
   : props.scope === 'damage' && props.options.find(option => option.checked && option.resourceError))
-const emit = defineEmits(['update:attackRollMode', 'update:useKey', 'update:critical', 'update:twoHanded', 'update:bonusAction', 'select', 'amount', 'roll', 'roll-step'])
+const emit = defineEmits(['update:attackRollMode', 'update:useKey', 'update:critical', 'update:twoHanded', 'update:bonusAction', 'update:excludedBonuses', 'select', 'amount', 'roll', 'roll-step'])
 </script>
 <style scoped>
 .weapon-roll-heading { display: flex; align-items: center; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border-strong); }

@@ -14,7 +14,7 @@
           <small>{{ subtitle }}</small>
           <span v-if="proficient" class="pac-proficiency">Владение</span>
         </div>
-        <WeaponMetricsTable :attack="formatBonus(attackBonus)" :attack-rows="attackRows" :damage-rows="summary({}, 'damage').parts"
+        <WeaponMetricsTable :attack="formatBonus(attackBonus)" :attack-rows="attackRows" :attack-color="attackColor" :damage-rows="damageRows"
           :damage-type="damageType" interactive :roll-scope="selection?.scope"
           @roll="openMenu" />
       </div>
@@ -22,8 +22,9 @@
   </article>
   <BasePopover v-if="selection" :open="true" :anchor="selection.anchor" :key="selection.scope"
     :aria-label="selection.scope === 'attack' ? 'Атака' : 'Урон'" role="menu" :z-index="4100" transition-preset="action-menu"
-    @update:open="!$event && (selection = null)">
+    @update:open="!$event && closeMenu()">
     <WeaponRollSettings :scope="selection.scope" :weapon-title="title" :weapon="iconItem" :summary="summary"
+      @preview="preview = $event"
       @attack="options => run('attack', options)"
       @roll="options => run(options.critical ? 'critical' : 'damage', options)" />
   </BasePopover>
@@ -31,7 +32,7 @@
 
 <script setup>
 import { computed, inject, shallowRef } from 'vue'
-import { weaponAttackFormula } from '../lib/weaponAttackFormula'
+import { weaponAttackColor, weaponAttackFormula } from '../lib/weaponAttackFormula'
 import { BasePopover } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import WeaponRollSettings from './WeaponRollSettings.vue'
@@ -49,16 +50,23 @@ const props = defineProps({
 
 const emit = defineEmits(['attack', 'damage', 'critical'])
 const charCtx = inject('charCtx', {})
-const attackRows = computed(() => weaponAttackFormula(props.summary({}, 'attack'),
-  charCtx.characterDerivedEffects?.rollBonusOptions?.({ kind: 'attack' }) || []))
+const preview = shallowRef(null)
+const options = computed(() => preview.value?.options || {})
+const attackSummary = computed(() => props.summary(options.value, 'attack'))
+const attackColor = computed(() => weaponAttackColor(attackSummary.value.mode))
+const attackRows = computed(() => weaponAttackFormula(attackSummary.value,
+  charCtx.characterDerivedEffects?.rollBonusOptions?.({ kind: 'attack' }) || [], options.value.excludedBonuses || []))
+const damageRows = computed(() => props.summary(options.value, 'damage').parts)
 
 const selection = shallowRef(null)
 function openMenu(scope, event) {
   const anchor = event.currentTarget
-  selection.value = selection.value?.anchor === anchor ? null : { scope, anchor }
+  if (selection.value?.anchor === anchor) closeMenu()
+  else { preview.value = null; selection.value = { scope, anchor } }
 }
+function closeMenu() { selection.value = null; preview.value = null }
 function run(action, options) {
-  selection.value = null
+  closeMenu()
   emit(action, options)
 }
 

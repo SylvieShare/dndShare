@@ -33,6 +33,8 @@ const weapons = reactive({ charCtx: ctx, itemMap: Object.fromEntries(items), sor
  itemSubtitle: () => '', magicBonus: () => 0, rangeLabel: () => '30/120 футов', propertyItems: entry => entry.uid === 'javelin' ? [{ id: 1, label: 'Метательное' }] : [], isWeaponProficient: () => false,
  formatBonus: value => '+' + value, attackBonus: () => 5, damageBonus: () => 3, damagePartsRaw: () => [], twoHandedParts: () => [], damageSources: () => [{ source: 'Сила', expression: '3' }],
  hasWeaponDamage: () => true, weaponDamageActions: () => [], damagePreview: () => '', bonusActionDamageOption: () => null, canMoveWeaponToItems: () => false,
+ weaponMenuSummary: () => ({ bonus: 5, mode: 'normal', parts: [{ source: 'Сила', expression: '3' }] }),
+ weaponUseSources: (_entry, use, step) => [{ source: use.title, expression: `${step.dice_count}${step.dice}` }],
  weaponUses: entry => availableWeaponUses(ctx.values, items, entry.uid, ctx.ownerMode),
  weaponResources: entry => collectCharacterResources(ctx.values, items).filter(resource => resource.source.entryKey === entry.uid),
  toggleWeaponResource(resource, pip) { ctx.updateValues(setCharacterResourceAvailable(ctx.values, items, resource.key, pip <= resource.value ? pip - 1 : pip)) },

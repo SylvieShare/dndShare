@@ -12,10 +12,11 @@ import { payWeaponUse } from '@/features/character-editor/lib/weaponUsePayment'
 export function useWeaponDamageRolls(charCtx, calc) {
   const dice = useDiceStore(), error = ref('')
   const values = () => unref(charCtx.values) || {}
-  function prepare(entry, { critical = false, twoHanded = false, bonusAction = false, weaponUseKey = '', actionKeys = [], actionAmounts = {} } = {}) {
+  function prepare(entry, { critical = false, twoHanded = false, bonusAction = false, weaponUseKey = '', weaponUseStepKey = '', actionKeys = [], actionAmounts = {} } = {}) {
     const usePlan = weaponUseKey ? calc.planWeaponUse?.(entry, weaponUseKey) : null
     if (weaponUseKey && (!usePlan || usePlan.error)) return { error: usePlan?.error || 'Применение недоступно.', expr: '' }
-    const pending = usePlan ? weaponUseDamageActions({ ...values(), ...usePlan.patch }, entry.uid) : []
+    const pending = usePlan ? weaponUseDamageActions({ ...values(), ...usePlan.patch }, entry.uid)
+      .filter(action => !weaponUseStepKey || action.prepaid.stepKey === weaponUseStepKey) : []
     if (usePlan && pending.length !== 1) return { error: 'Выберите урон только по одной цели применения.', expr: '' }
     if (pending.length) actionKeys = [...actionKeys, pending[0].key]
     const use = weaponUseDamageSelection({ ...values(), ...usePlan?.patch }, entry.uid, actionKeys)
@@ -38,6 +39,18 @@ export function useWeaponDamageRolls(charCtx, calc) {
     return { entry, actions, selectedActions, primary, baseExpression, expr, twoHanded, bonusAction, actionKeys, usePlan, use: use.action?.prepaid }
   }
   function damagePreview(entry, options) { return prepare(entry, options).expr }
+  // Read-only projection: showing an unavailable use must not plan or pay for it.
+  function previewUseSources(entry, use, step, { critical = false } = {}) {
+    if (step.kind === 'weapon_damage' && step.sources) return critical ? step.critical_sources || step.sources : step.sources
+    if (step.expression) return [{ source: step.kind === 'weapon_damage' ? use.title : step.title,
+      expression: critical && step.kind === 'weapon_damage' ? step.critical_expression : step.expression }]
+    const extra = { source: step.kind === 'weapon_damage' ? use.title : step.title,
+      expression: weaponDamageActionExpression({ baseExpression: '', action: step, critical: step.kind === 'weapon_damage' && critical }) }
+    if (step.kind !== 'weapon_damage') return [extra]
+    const prepared = { ...entry, _attackMode: use.attack_mode, _improvisedThrow: false }
+    const expression = critical ? calc.criticalDamageExpression(prepared, calc.extraCriticalDice(prepared)) : calc.damageExpression(prepared)
+    return [...calc.weaponBaseSources(prepared, expression, { critical }), extra]
+  }
   function previewSources(entry, options) {
     const roll = prepare(entry, options)
     if (!roll.expr) return []
@@ -80,5 +93,5 @@ export function useWeaponDamageRolls(charCtx, calc) {
     }
     return result
   }
-  return { damagePreview, previewSources, rollDamage, error }
+  return { damagePreview, previewSources, previewUseSources, rollDamage, error }
 }

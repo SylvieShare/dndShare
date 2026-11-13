@@ -1,12 +1,13 @@
 <template>
   <WeaponRollControls
     :summary="rollSummary" :weapon="weapon" :weapon-title="weaponTitle"
-    :scope="scope" :weapon-uid="weaponUid" :uses="uses" :preview="previewFormula"
+    :scope="scope" :weapon-uid="weaponUid" :uses="uses"
     :options="menuOptions(scope)" :bonus-action-option="availableBonusAction" :versatile="versatile" :thrown="thrown"
     v-model:attack-roll-mode="attackRollMode" v-model:use-key="useKey" v-model:critical="critical"
     v-model:two-handed="twoHanded" v-model:bonus-action="bonusAction"
+    v-model:excluded-bonuses="excludedBonuses"
     @select="select" @amount="setAmount"
-    @roll="excludedBonuses => emit(scope === 'attack' ? 'attack' : 'roll', { ...options, excludedBonuses })"
+    @roll="emit(scope === 'attack' ? 'attack' : 'roll', options)"
     @roll-step="step => emit('roll-step', step)"
   />
 </template>
@@ -18,18 +19,20 @@ import { damageAttackMode, selectedDamageActions, toggleDamageAction, weaponDama
 const props = defineProps({ summary: Function, weapon: Object, weaponTitle: String, weaponUid: String, actions: { type: Array, default: () => [] }, versatile: Boolean, scope: { type: String, required: true }, preview: Function, bonusActionOption: Function, uses: { type: Array, default: () => [] } })
 const charCtx = inject('charCtx', {})
 const selectedKeys = computed(() => [...selected.value, ...props.actions.filter(action => action.target_choice?.selected).map(action => action.key)])
-const emit = defineEmits(['roll', 'attack', 'roll-step'])
+const emit = defineEmits(['roll', 'attack', 'roll-step', 'preview'])
 const critical = ref(false), twoHanded = ref(false), bonusAction = ref(false), selected = ref([]), amounts = ref({}), useKey = ref(''), attackRollMode = ref('auto')
+const excludedBonuses = ref([])
 const thrown = computed(() => props.uses.find(use => use.key === useKey.value)?.attack_mode === 'thrown' || damageAttackMode(props.actions, selectedKeys.value) === 'thrown')
 const menuOptions = scope => weaponDamageMenuOptions(props.actions, selectedKeys.value, critical.value, scope, twoHanded.value, amounts.value)
 const availableBonusAction = computed(() => props.bonusActionOption?.({ actionKeys: selectedKeys.value }) || null)
 watch(availableBonusAction, option => { if (!option) bonusAction.value = false })
 const options = computed(() => ({ critical: critical.value, twoHanded: props.versatile && twoHanded.value && !thrown.value && !bonusAction.value,
   bonusAction: bonusAction.value && !!availableBonusAction.value,
-  attackRollMode: attackRollMode.value, weaponUseKey: useKey.value, actionAmounts: { ...amounts.value },
+  attackRollMode: attackRollMode.value, excludedBonuses: [...excludedBonuses.value], weaponUseKey: useKey.value, actionAmounts: { ...amounts.value },
   actionKeys: selectedDamageActions(props.actions, selectedKeys.value).map(action => action.key) }))
 const rollSummary = computed(() => props.summary?.(options.value, props.scope))
-const previewFormula = computed(() => !props.summary ? props.preview?.(options.value) || '' : '')
+watch([options, rollSummary], ([current, summary]) => emit('preview', { scope: props.scope, options: current, summary,
+  expression: !props.summary ? props.preview?.(current) || '' : '' }), { immediate: true })
 function setAmount(key, amount) {
   const option = menuOptions('damage').find(row => row.key === key)
   if (!option?.units || !Number.isInteger(amount) || amount < 0 || amount > option.units.max) return

@@ -9,7 +9,8 @@
     >
       <template #trigger="{ open: menuOpen }">
         <WeaponCardView ref="cardEl" class="action-menu-source" :class="{ 'action-menu-source--open': menuOpen }"
-          :entry="entry" :roll-scope="directRoll?.scope" :interactive="!entry.params?.creation?.expired" @roll="openDirectRoll" @pointerdown="draggedThisGesture = false" @name-down="onNameDown">
+          :entry="entry" :roll-scope="directRoll?.scope" :damage-key="directRoll?.selection?.key" :roll-preview="rollPreview"
+          :interactive="!entry.params?.creation?.expired" @roll="openDirectRoll" @pointerdown="draggedThisGesture = false" @name-down="onNameDown">
           <WeaponItemMechanics v-if="!entry.params?.creation?.expired" :entry="entry" />
         </WeaponCardView>
       </template>
@@ -45,12 +46,14 @@
       </template>
     </RowActionMenu>
 
-    <BasePopover v-if="directRoll" :key="directRoll.scope" :open="true" :anchor="directRoll.anchor"
+    <BasePopover v-if="directRoll" :key="`${directRoll.scope}:${directRoll.selection?.key || ''}`" :open="true" :anchor="directRoll.anchor"
       role="menu" :aria-label="directRoll.scope === 'attack' ? 'Атака' : 'Урон'" :z-index="4100"
       transition-preset="action-menu" @update:open="!$event && closeRoll()">
-      <WeaponRollSettings :scope="directRoll.scope" :weapon="ctx.item(entry)" :weapon-title="ctx.itemTitle(entry)"
-        :summary="ctx.weaponMenuSummary && ((options, scope) => ctx.weaponMenuSummary(entry, options, scope))" :weapon-uid="entry.uid" :actions="weaponDamageActions"
-        :uses="ctx.weaponUses(entry)" :preview="options => ctx.damagePreview(entry, options)"
+      <WeaponAlternativeDamageMenu v-if="directRoll.selection" :entry="entry" :selection="directRoll.selection" @preview="rollPreview = $event"
+        @roll="options => rollDamage(closeRoll, options)" @roll-step="options => { closeRoll(); ctx.rollWeaponUseStep(entry, options.weaponUseKey, options.stepKey) }" />
+      <WeaponRollSettings v-else :scope="directRoll.scope" :weapon="ctx.item(entry)" :weapon-title="ctx.itemTitle(entry)"
+        :summary="menuSummary" :weapon-uid="entry.uid" :actions="weaponDamageActions"
+        :uses="ctx.weaponUses(entry)" @preview="rollPreview = $event"
         :bonus-action-option="options => ctx.bonusActionDamageOption(entry, options)" :versatile="hasTwoHandedDamage"
         @attack="options => rollAttack(closeRoll, options)" @roll="options => rollDamage(closeRoll, options)"
         @roll-step="options => { closeRoll(); ctx.rollWeaponUseStep(entry, options.weaponUseKey, options.stepKey) }" />
@@ -94,6 +97,7 @@ import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import WeaponRollSettings from './WeaponRollSettings.vue'
+import WeaponAlternativeDamageMenu from './WeaponAlternativeDamageMenu.vue'
 import WeaponCardView from '@/features/character-editor/blocks/dnd/components/WeaponCardView.vue'
 import WeaponEditor from '@/features/character-editor/blocks/dnd/components/WeaponEditor.vue'
 import WeaponItemMechanics from './WeaponItemMechanics.vue'
@@ -108,12 +112,15 @@ const ctx = inject('weaponsBlockCtx')
 const cardEl = ref(null)
 const actionMenu = ref(null)
 const directRoll = shallowRef(null)
-function closeRoll() { directRoll.value = null }
-function openDirectRoll(scope, event) {
+const rollPreview = shallowRef(null)
+function menuSummary(options, scope) { return ctx.weaponMenuSummary(props.entry, options, scope) }
+function closeRoll() { directRoll.value = null; rollPreview.value = null }
+function openDirectRoll(scope, event, selection) {
   if (!ctx.charCtx.ownerMode || props.entry.params?.creation?.expired || (!ctx.item(props.entry) && (scope === 'attack' || !hasDamage.value))) return
   const anchor = event.currentTarget
   actionMenu.value?.close()
-  directRoll.value = directRoll.value?.anchor === anchor ? null : { scope, anchor }
+  if (directRoll.value?.anchor === anchor) closeRoll()
+  else { rollPreview.value = null; directRoll.value = { scope, anchor, selection } }
 }
 watch(() => [ctx.charCtx.ownerMode, props.entry.params?.creation?.expired], ([owner, expired]) => {
   if (!owner || expired) closeRoll()
