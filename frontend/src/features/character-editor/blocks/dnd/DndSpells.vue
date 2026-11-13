@@ -1,14 +1,22 @@
 <template>
   <div v-show="!blockHidden" class="spells-block">
-    <DetailSection label="Правила сотворения" collapsible :default-open="false"><p class="sp-rule-note" role="note">{{ rules.spellcastingRule }}</p></DetailSection>
+    <DetailSection label="Правила сотворения" collapsible :default-open="false">
+      <BaseTile class="sp-casting-notice sp-rule-note" role="note" color="var(--info)" framed :outlined="false">
+        <BookOpen class="sp-casting-notice__icon" :size="24" aria-hidden="true" />
+        <div class="sp-casting-notice__content"><p>{{ rules.spellcastingRule }}</p></div>
+      </BaseTile>
+    </DetailSection>
     <SpellConcentrationBlock />
 
-    <div v-if="spellcastingBlocked" class="sp-casting-warning" role="status">
-      <strong>Сотворение заклинаний недоступно</strong>
-      <span v-for="restriction in spellcastingRestrictions" :key="restriction.key">
-        {{ restriction.message }}
-      </span>
-    </div>
+    <BaseTile v-if="spellcastingBlocked" class="sp-casting-notice sp-casting-warning" role="status" color="var(--danger)" framed :outlined="false">
+      <CircleOff class="sp-casting-notice__icon" :size="24" aria-hidden="true" />
+      <div class="sp-casting-notice__content">
+        <strong>Сотворение заклинаний недоступно</strong>
+        <span v-for="restriction in spellcastingRestrictions" :key="restriction.key">
+          {{ restriction.message }}
+        </span>
+      </div>
+    </BaseTile>
 
     <SpellSlotsBar
       v-if="activeSlotPools.length || (canInteract && tabs.length)"
@@ -206,6 +214,7 @@ import SpellCard from '@/features/character-editor/blocks/dnd/components/SpellCa
 import SpellSlotsBar from '@/features/character-editor/blocks/dnd/components/SpellSlotsBar.vue'
 import DndSpellbookSettingsModal from '@/features/character-editor/blocks/dnd/DndSpellbookSettingsModal.vue'
 import { BaseTile, SectionList } from '@sylvieshare/share-ui'
+import { BookOpen, CircleOff } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { useSpellDamageTypes } from './composables/useSpellDamageTypes'
 import { useSpellRolls } from './composables/useSpellRolls'

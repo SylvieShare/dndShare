@@ -2,14 +2,10 @@
   min-width: 0;
   color: var(--text-1);
 }
-.sp-rule-note {
-  margin-bottom: 12px;
-  padding: 10px 12px;
-  color: var(--text-muted);
-  font-size: 12px;
-  line-height: 1.5;
-}
-.sp-casting-warning { display: flex; flex-direction: column; gap: 3px; margin-bottom: 12px; padding: 10px 12px; border: 1px solid color-mix(in srgb, var(--danger) 50%, var(--border)); border-radius: 10px; background: color-mix(in srgb, var(--danger) 9%, transparent); color: var(--text-2); font-size: 12px; line-height: 1.4; }
+.sp-casting-notice {display:flex;align-items:center;gap:var(--spacing-label);margin:0 0 var(--spacing-label);padding:var(--spacing-label);color:var(--text-2);font-size:var(--type-group-size);line-height:var(--type-group-line-height)}
+.sp-casting-notice__icon {flex:none;color:var(--tile-color)}
+.sp-casting-notice__content {display:flex;flex-direction:column;gap:var(--spacing-xs);min-width:0}
+.sp-casting-notice__content p {margin:0}
 .sp-casting-warning strong { color: var(--danger); }
 
 /* ── Группы заклинаний (каждый уровень — своя строка) ── */
