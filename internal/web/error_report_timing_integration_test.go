@@ -46,13 +46,13 @@ func TestErrorReportTimingPostgres(t *testing.T) {
 	if _, err := f.store.SetClaimedErrorReportPhase(ctx, id, "invented", lease.LeaseID); err == nil {
 		t.Fatal("invalid phase accepted")
 	}
-	for _, phase := range []string{"analysis", "fix", "test", "fix", "test", "deploy"} {
+	for _, phase := range []string{"analysis", "fix", "test", "fix", "test", "build", "deploy"} {
 		setPhase(phase)
 		advance()
 	}
 	setPhase("deploy") // Retry must keep the existing interval, including its start.
 	current := reportTool(t, s, "error_report_get", map[string]any{"id": id}).(store.ErrorReport)
-	if current.Timing == nil || current.Timing.IntervalCount != 6 || current.Timing.TotalMs < 360000 || *current.Timing.ActivePhase != "deploy" {
+	if current.Timing == nil || current.Timing.IntervalCount != 7 || current.Timing.TotalMs < 420000 || *current.Timing.ActivePhase != "deploy" {
 		t.Fatalf("timing %#v", current.Timing)
 	}
 	if current.Timing.BeforeWorkMs < 3000000 {
@@ -61,9 +61,12 @@ func TestErrorReportTimingPostgres(t *testing.T) {
 	if current.Timing.Phases[1].DurationMs < 120000 || current.Timing.Phases[2].DurationMs < 120000 {
 		t.Fatalf("repeated phases not summed %#v", current.Timing.Phases)
 	}
+	if current.Timing.Phases[3].Phase != "build" || current.Timing.Phases[3].DurationMs < 60000 || current.Timing.IncludesBuildInTest {
+		t.Fatalf("separate build timing %#v", current.Timing)
+	}
 	setPhase("pause")
 	paused := reportTool(t, s, "error_report_get", map[string]any{"id": id}).(store.ErrorReport)
-	if paused.Timing.ActivePhase != nil || paused.Timing.IntervalCount != 6 {
+	if paused.Timing.ActivePhase != nil || paused.Timing.IntervalCount != 7 {
 		t.Fatalf("pause %#v", paused.Timing)
 	}
 	setPhase("analysis")
@@ -85,13 +88,21 @@ func TestErrorReportTimingPostgres(t *testing.T) {
 	reportTool(t, s, "error_report_resolve", map[string]any{"id": id, "resolution": "Опубликовано", "leaseId": lease.LeaseID})
 	listed, _ := f.request(admin, "GET", "/api/error-report-review/reports", "", 200)
 	timing := listed["reports"].([]any)[0].(map[string]any)["timing"].(map[string]any)
-	if timing["activePhase"] != nil || timing["intervalCount"] != float64(8) {
+	if timing["activePhase"] != nil || timing["intervalCount"] != float64(9) {
 		t.Fatalf("public timing %#v", timing)
 	}
 	f.request(admin, "POST", fmt.Sprintf("/api/admin-panel/error-reports/%d/reopen", id), "", 200)
 	reopened := reportTool(t, s, "error_report_get", map[string]any{"id": id}).(store.ErrorReport)
-	if reopened.Timing.IntervalCount != 8 {
+	if reopened.Timing.IntervalCount != 9 {
 		t.Fatal("reopen discarded timing history")
+	}
+	// Old test intervals keep their measured duration and declare the mixed scope.
+	if _, err := f.pool.Exec(ctx, `UPDATE dndshare.error_report_work_interval SET separate_build=false WHERE error_report_id=$1 AND phase='test'`, id); err != nil {
+		t.Fatal(err)
+	}
+	legacy := reportTool(t, s, "error_report_get", map[string]any{"id": id}).(store.ErrorReport)
+	if !legacy.Timing.IncludesBuildInTest || legacy.Timing.TotalMs != reopened.Timing.TotalMs {
+		t.Fatal("legacy measurements were lost or reinterpreted")
 	}
 	f.request(admin, "DELETE", fmt.Sprintf("/api/admin-panel/error-reports/%d", id), "", 200)
 	var intervals int

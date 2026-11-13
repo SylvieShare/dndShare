@@ -14,6 +14,7 @@
       </SegmentDonutChart>
       <p class="report-timing__waiting">До начала работы <strong>{{ formatReportDuration(timing.beforeWorkMs) }}</strong></p>
       <p class="report-timing__note">Время по отметкам этапов. Повторные проходы суммируются; паузы и ожидание ответа исключены.</p>
+      <p v-if="timing.includesBuildInTest" class="report-timing__note">В старых отметках сборка учтена в тестировании. Отдельного замера для неё нет.</p>
     </template>
     <p v-else class="report-timing__note">Замеры появятся, когда чат начнёт отмечать этапы работы.</p>
   </section>

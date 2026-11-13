@@ -2,6 +2,7 @@ export const reportWorkPhases = [
   { key: 'analysis', label: 'Анализ', color: 'var(--info)' },
   { key: 'fix', label: 'Исправление', color: 'var(--accent)' },
   { key: 'test', label: 'Тестирование', color: 'var(--warning)' },
+  { key: 'build', label: 'Сборка', color: 'var(--text-muted)' },
   { key: 'deploy', label: 'Раскатка', color: 'var(--success)' },
 ]
 

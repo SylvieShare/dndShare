@@ -1,7 +1,9 @@
 package ru.dndshare.client;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.util.Base64;
 import android.webkit.CookieManager;
 import android.os.SystemClock;
 import android.view.InputDevice;
@@ -39,6 +41,14 @@ public class ErrorReportUiTest {
     }
 
     private void fourFingerTap(ActivityScenario<MainActivity> activity) throws Exception {
+        long focusDeadline = SystemClock.elapsedRealtime() + 10000;
+        var focused = new AtomicReference<Boolean>(false);
+        do {
+            activity.onActivity(host -> focused.set(host.getBridge().getWebView().hasWindowFocus()));
+            if (focused.get()) break;
+            SystemClock.sleep(100);
+        } while (SystemClock.elapsedRealtime() < focusDeadline);
+        assertTrue("Native window focus did not arrive", focused.get());
         waitFor(activity, "document.hasFocus()");
         int[] bounds = new int[4];
         activity.onActivity(host -> {
@@ -85,6 +95,7 @@ public class ErrorReportUiTest {
         try (var activity = ActivityScenario.launch(MainActivity.class)) {
             waitFor(activity, "!!document.getElementById('app')?.__vue_app__ && document.documentElement.dataset.platform==='android'");
             evaluate(activity, "window.__reportFetch=window.fetch;window.fetch=async function(url,options){if(new URL(url,location.href).pathname==='/api/error-reports'){window.__nativeReport=JSON.parse(options.body);return new Response(JSON.stringify({id:123}),{status:201,headers:{'Content-Type':'application/json'}})}return window.__reportFetch.apply(this,arguments)};const target=document.createElement('button');target.id='native-report-target';target.textContent='Report target';target.style.cssText='position:fixed;left:24px;top:120px;width:220px;height:90px;background:rgb(40,35,55);color:white;z-index:100';document.body.append(target);window.__reportRoute=location.href");
+            assertEquals("true", evaluate(activity, "(()=>{const canvas=document.createElement('canvas');canvas.id='native-report-webgl';canvas.width=150;canvas.height=130;canvas.style.cssText='position:fixed;right:20px;top:250px;width:150px;height:130px;z-index:100';document.body.append(canvas);const gl=canvas.getContext('webgl2',{preserveDrawingBuffer:false});if(!gl)return false;gl.clearColor(.9,.1,.2,1);gl.clear(gl.COLOR_BUFFER_BIT);gl.flush();return true})()"));
             fourFingerTap(activity);
             waitFor(activity, "!!document.querySelector('.selection-hint')");
             assertEquals("true", evaluate(activity, "!document.getElementById('error-report-form') && location.href===window.__reportRoute"));
@@ -96,6 +107,21 @@ public class ErrorReportUiTest {
             waitFor(activity, "!!document.querySelector('.selection-hint')");
             evaluate(activity, "document.getElementById('native-report-target').click()");
             waitFor(activity, "!!document.querySelector('.screenshot-preview')?.src.startsWith('data:image/jpeg;base64,')");
+            waitFor(activity, "!!document.querySelector('.screenshot-viewport-preview')?.src.startsWith('data:image/jpeg;base64,')");
+            String viewportURL = (String) new org.json.JSONTokener(evaluate(activity, "document.querySelector('.screenshot-viewport-preview').src")).nextValue();
+            byte[] viewportBytes = Base64.decode(viewportURL.substring(viewportURL.indexOf(',') + 1), Base64.DEFAULT);
+            assertTrue("Viewport must fit the server attachment limit", viewportBytes.length <= 2 * 1024 * 1024);
+            Bitmap viewport = BitmapFactory.decodeByteArray(viewportBytes, 0, viewportBytes.length);
+            assertNotNull("Viewport must be a valid JPEG", viewport);
+            int samples = 0, red = 0;
+            for (int y = 0; y < viewport.getHeight(); y += 4) for (int x = 0; x < viewport.getWidth(); x += 4) {
+                int pixel = viewport.getPixel(x, y); samples++;
+                if (android.graphics.Color.red(pixel) > 180 && android.graphics.Color.green(pixel) < 65 && android.graphics.Color.blue(pixel) < 95) red++;
+            }
+            assertTrue("Native viewport must include the rendered WebGL canvas before the modal dims it: " + red + "/" + samples, red > samples / 100);
+            File capturedViewport = new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null), "error-report-viewport.jpg");
+            try (var output = new FileOutputStream(capturedViewport)) { output.write(viewportBytes); }
+            viewport.recycle();
             evaluate(activity, "const field=document.getElementById('error-report-description');field.value='Ошибка в Android';field.dispatchEvent(new Event('input',{bubbles:true}))");
             waitFor(activity, "Array.from(document.querySelectorAll('.aem-footer button')).some(button=>button.textContent.trim()==='Отправить'&&!button.disabled)");
             File image = new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null), "error-report-form.png");
@@ -105,7 +131,8 @@ public class ErrorReportUiTest {
             evaluate(activity, "Array.from(document.querySelectorAll('.aem-footer button')).find(button=>button.textContent.trim()==='Отправить').click()");
             waitFor(activity, "window.__nativeReport?.description==='Ошибка в Android' && !document.getElementById('error-report-form')");
             assertEquals("true", evaluate(activity, "window.__nativeReport.element.client==='android' && window.__nativeReport.element.selector==='#native-report-target' && window.__nativeReport.screenshot.startsWith('data:image/jpeg;base64,')"));
-            evaluate(activity, "window.fetch=window.__reportFetch;document.getElementById('native-report-target').remove()");
+            assertEquals("true", evaluate(activity, "window.__nativeReport.viewportScreenshot.startsWith('data:image/jpeg;base64,') && window.__nativeReport.viewportScreenshot!==window.__nativeReport.screenshot"));
+            evaluate(activity, "window.fetch=window.__reportFetch;document.getElementById('native-report-target').remove();document.getElementById('native-report-webgl').remove()");
         }
     }
 }

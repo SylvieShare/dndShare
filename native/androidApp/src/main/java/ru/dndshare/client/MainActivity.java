@@ -36,6 +36,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(LocalStorePlugin.class);
         registerPlugin(CoverDisplayPlugin.class);
         registerPlugin(FrontendUpdaterPlugin.class);
+        registerPlugin(ReportCapturePlugin.class);
         super.onCreate(state);
         if (bridge == null) return;
         systemChrome = new SystemChrome(this, bridge.getWebView());

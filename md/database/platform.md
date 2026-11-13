@@ -185,7 +185,7 @@ key или DB-backed bytes, для `music_track` — системный приз
 
 ## Сообщения об ошибках
 
-`error_report_work_interval` хранит интервалы этапов analysis/fix/test/deploy:
+`error_report_work_interval` хранит интервалы этапов analysis/fix/test/build/deploy:
 ссылку на заявку, начало и nullable-конец. Частичный уникальный индекс допускает
 один незавершённый интервал на заявку. MCP-переходы проверяют активный lease и
 владение claim, сериализуются блокировкой строки заявки; повтор текущего этапа
@@ -195,6 +195,9 @@ key или DB-backed bytes, для `music_track` — системный приз
 интервал ограничивается expiry даже до уборки истёкших claims. Повторное открытие
 сохраняет историю, удаление заявки удаляет интервалы через FK cascade.
 Миграция `018_error_report_timing.sql` — только DDL, без исторического заполнения.
+`019_error_report_build_timing.sql` добавляет фазу build и признак separate_build.
+Новые интервалы записываются с true; прежние test сохраняют фактическое время,
+включавшее подготовку сборки, и отражаются как includesBuildInTest в DTO.
 
 `error_report`, `error_report_message` и `error_report_automation_lock` снова
 используются runtime. Их прежние строки и назначения ролей сохранены;

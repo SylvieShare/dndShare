@@ -3,10 +3,10 @@ package web
 func mcpErrorReportDefs() []map[string]any {
 	return []map[string]any{
 		mcpDefinition("error_report_phase_set",
-			"Record elapsed work time for the claimed report. Start analysis immediately before diagnosis, fix before edits, test before validation/build, deploy before publication and rollout verification. Repeat phases when needed; their durations accumulate. Use pause before unrelated work or waiting for a person. Requires the active owning lease. Same-phase retries preserve the timer. Resolve, questions, release and expiry stop timing automatically. Call on every phase transition; never estimate historical durations.",
+			"Record elapsed work time for the claimed report. Start analysis immediately before diagnosis, fix before edits, test before tests and acceptance, build before dependency installation, compilation, packaging and signing, deploy before publication and rollout verification. Prepare the build separately from tests of its immutable output, then switch back to test for acceptance. Repeat phases when needed; their durations accumulate. Use pause before unrelated work or waiting for a person. Requires the active owning lease. Same-phase retries preserve the timer. Resolve, questions, release and expiry stop timing automatically. Never estimate historical durations.",
 			mcpObjectSchema(map[string]any{
 				"id":      mcpIntegerProperty("Claimed report id"),
-				"phase":   map[string]any{"type": "string", "enum": []string{"analysis", "fix", "test", "deploy", "pause"}},
+				"phase":   map[string]any{"type": "string", "enum": []string{"analysis", "fix", "test", "build", "deploy", "pause"}},
 				"leaseId": mcpStringProperty("Lease that owns this report"),
 			}, "id", "phase", "leaseId")),
 		mcpDefinition("error_report_get", "Read the current approved report by ID, including claimed or finished reports, messages and screenshot flags. Unapproved reports are not exposed.", mcpObjectSchema(map[string]any{"id": mcpIntegerProperty("Report ID")}, "id")),

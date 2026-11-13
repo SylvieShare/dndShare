@@ -15,19 +15,20 @@ type ErrorReportPhaseDuration struct {
 
 // Durations are elapsed wall time between explicit phase transitions, not CPU time.
 type ErrorReportTiming struct {
-	Phases         []ErrorReportPhaseDuration `json:"phases"`
-	TotalMs        int64                      `json:"totalMs"`
-	BeforeWorkMs   int64                      `json:"beforeWorkMs"`
-	FirstStartedAt time.Time                  `json:"firstStartedAt"`
-	SnapshotAt     time.Time                  `json:"snapshotAt"`
-	ActivePhase    *string                    `json:"activePhase"`
-	ActiveUntil    *time.Time                 `json:"activeUntil"`
-	IntervalCount  int                        `json:"intervalCount"`
+	Phases              []ErrorReportPhaseDuration `json:"phases"`
+	TotalMs             int64                      `json:"totalMs"`
+	BeforeWorkMs        int64                      `json:"beforeWorkMs"`
+	FirstStartedAt      time.Time                  `json:"firstStartedAt"`
+	SnapshotAt          time.Time                  `json:"snapshotAt"`
+	ActivePhase         *string                    `json:"activePhase"`
+	ActiveUntil         *time.Time                 `json:"activeUntil"`
+	IntervalCount       int                        `json:"intervalCount"`
+	IncludesBuildInTest bool                       `json:"includesBuildInTest"`
 }
 
 func ValidErrorReportPhase(phase string) bool {
 	switch phase {
-	case "analysis", "fix", "test", "deploy", "pause":
+	case "analysis", "fix", "test", "build", "deploy", "pause":
 		return true
 	}
 	return false
@@ -74,8 +75,8 @@ func (s *Store) SetClaimedErrorReportPhase(ctx context.Context, id int64, phase,
 			return false, err
 		}
 		if phase != "pause" {
-			if _, err := tx.Exec(ctx, `INSERT INTO dndshare.error_report_work_interval(error_report_id,phase,started_at)
-                VALUES($1,$2,$3)`, id, phase, boundary); err != nil {
+			if _, err := tx.Exec(ctx, `INSERT INTO dndshare.error_report_work_interval(error_report_id,phase,started_at,separate_build)
+                VALUES($1,$2,$3,true)`, id, phase, boundary); err != nil {
 				return false, err
 			}
 		}
@@ -85,7 +86,7 @@ func (s *Store) SetClaimedErrorReportPhase(ctx context.Context, id int64, phase,
 
 func (s *Store) attachErrorReportTimings(ctx context.Context, reports []ErrorReport, ids []int64) error {
 	rows, err := s.pool.Query(ctx, `
-        SELECT w.error_report_id,w.phase,w.started_at,w.ended_at,er.processing_expires_at,statement_timestamp()
+        SELECT w.error_report_id,w.phase,w.started_at,w.ended_at,er.processing_expires_at,statement_timestamp(),w.separate_build
         FROM dndshare.error_report_work_interval w
         JOIN dndshare.error_report er ON er.id=w.error_report_id
         WHERE w.error_report_id=ANY($1::bigint[]) ORDER BY w.error_report_id,w.id`, ids)
@@ -102,16 +103,20 @@ func (s *Store) attachErrorReportTimings(ctx context.Context, reports []ErrorRep
 		var phase string
 		var start, snapshot time.Time
 		var end, expires *time.Time
-		if err := rows.Scan(&id, &phase, &start, &end, &expires, &snapshot); err != nil {
+		var separateBuild bool
+		if err := rows.Scan(&id, &phase, &start, &end, &expires, &snapshot, &separateBuild); err != nil {
 			return err
 		}
 		report := &reports[index[id]]
 		if report.Timing == nil {
 			report.Timing = &ErrorReportTiming{FirstStartedAt: start, SnapshotAt: snapshot,
 				BeforeWorkMs: max(0, start.Sub(report.CreatedAt).Milliseconds()),
-				Phases:       []ErrorReportPhaseDuration{{Phase: "analysis"}, {Phase: "fix"}, {Phase: "test"}, {Phase: "deploy"}}}
+				Phases:       []ErrorReportPhaseDuration{{Phase: "analysis"}, {Phase: "fix"}, {Phase: "test"}, {Phase: "build"}, {Phase: "deploy"}}}
 		}
 		timing := report.Timing
+		if phase == "test" && !separateBuild {
+			timing.IncludesBuildInTest = true
+		}
 		finish := snapshot
 		if end != nil {
 			finish = *end

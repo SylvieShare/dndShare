@@ -39,7 +39,7 @@ func (s *Server) dispatchErrorReportTool(r *http.Request, name string, args map[
 			return nil, err
 		}
 		if !store.ValidErrorReportPhase(phase) {
-			return nil, errors.New("phase must be analysis, fix, test, deploy or pause")
+			return nil, errors.New("phase must be analysis, fix, test, build, deploy or pause")
 		}
 		leaseID, err := errorReportLeaseIDArg(args)
 		if err != nil {

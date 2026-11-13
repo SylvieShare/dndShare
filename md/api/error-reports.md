@@ -11,6 +11,10 @@
 Ответ `201` — сохранённая заявка. Автор определяется серверной сессией;
 `userId`, `approved` и статус из входного JSON не принимаются.
 
+Android автоматически заполняет viewportScreenshot нативным JPEG видимой области
+WebView, снятым перед открытием формы. В браузере поле не отправляется. Предпросмотр,
+отмена и ошибка захвата описаны в [контракте фичи](../features/error-reports.md#отправка).
+
 Описание и сообщения содержат 1–4000 символов, заголовок — 1–160, URL — 1–2048;
 element ограничен 16 KiB. Снимки — data URL JPEG/PNG/WebP, до 2 MiB декодированных
 байтов каждый; MIME проверяется по сигнатуре. Списки возвращают признаки
@@ -46,9 +50,11 @@ element ограничен 16 KiB. Снимки — data URL JPEG/PNG/WebP, до
 
 Жизненный цикл, сообщения, claim и screenshot-флаги входят в DTO. Существующая
 заявка без замеров имеет `timing:null`. Иначе `timing` содержит
-`phases:[{phase,durationMs}]` в порядке analysis/fix/test/deploy, `totalMs`,
+`phases:[{phase,durationMs}]` в порядке analysis/fix/test/build/deploy, `totalMs`,
 `beforeWorkMs`, `firstStartedAt`, `snapshotAt`, `activePhase`, `activeUntil`,
-`intervalCount`. Все длительности — целые миллисекунды. Текущий этап уже включён
+`intervalCount`, `includesBuildInTest`. Последний флаг означает наличие ранних
+интервалов test, куда ещё входила сборка; их длительности сохраняются без оценки
+неизвестных частей. Все длительности — целые миллисекунды. Текущий этап уже включён
 до snapshotAt, клиент добавляет только время после снимка, не позднее activeUntil.
 После остановки activePhase/activeUntil равны null. Те же поля доступны в MCP get
 и compact list; отдельного публичного endpoint записи времени нет.

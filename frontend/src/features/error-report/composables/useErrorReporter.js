@@ -1,4 +1,6 @@
-import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { isAndroid } from '@/platform/storage'
+import { captureReportViewport } from '@/platform/reportCapture'
 import { createErrorReport } from '../api/errorReportApi'
 import { describeElement, screenshotContextsFor, selectorFor } from '../lib/errorReportElement'
 import { captureSelectedArea, withTimeout } from '../lib/errorReportScreenshot'
@@ -18,6 +20,9 @@ export function useErrorReporter() {
   const screenshotDataURL = ref('')
   const screenshotCapturing = ref(false)
   const screenshotError = ref('')
+  const viewportScreenshotDataURL = ref('')
+  const viewportScreenshotError = ref('')
+  const preparingReport = ref(false)
   const screenshotContextLevel = ref(0)
   const screenshotFrameSize = reactive({ width: 0, height: 0 })
   const highlight = reactive({ visible: false, top: 0, left: 0, width: 0, height: 0 })
@@ -47,7 +52,7 @@ export function useErrorReporter() {
   }))
 
   function startSelection() {
-    if (selecting.value || formOpen.value) return
+    if (selecting.value || formOpen.value || preparingReport.value) return
     submitError.value = ''
     selectedElement.value = null
     hoveredElement = null
@@ -75,6 +80,7 @@ export function useErrorReporter() {
 
   function cancelSelection() {
     stopSelection()
+    resetScreenshot()
   }
 
   function eventElement(event) {
@@ -112,7 +118,7 @@ export function useErrorReporter() {
     highlight.visible = rect.width > 0 && rect.height > 0
   }
 
-  function onElementClick(event) {
+  async function onElementClick(event) {
     if (!selecting.value) return
     const target = eventElement(event)
     if (!target) return
@@ -132,6 +138,24 @@ export function useErrorReporter() {
     screenshotDataURL.value = ''
     screenshotError.value = ''
     screenshotCapturing.value = true
+    if (isAndroid) {
+      preparingReport.value = true
+      try {
+        // Remove the picker before copying pixels, and keep the form/keyboard out of this frame.
+        await nextTick()
+        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+        if (session !== screenshotSession) return
+        const image = await withTimeout(captureReportViewport(), 5000)
+        if (session !== screenshotSession) return
+        viewportScreenshotDataURL.value = image
+      } catch {
+        if (session === screenshotSession) viewportScreenshotError.value = 'Не удалось создать снимок экрана. Заявку можно отправить без него.'
+      } finally {
+        if (session === screenshotSession) preparingReport.value = false
+      }
+      if (session !== screenshotSession) return
+      if (selectedPageURL.value !== window.location.href) { resetScreenshot(); return }
+    }
     formOpen.value = true
   }
 
@@ -241,6 +265,7 @@ export function useErrorReporter() {
         pageUrl: selectedPageURL.value,
         element: selectedElement.value,
         screenshot: screenshotDataURL.value || undefined,
+        viewportScreenshot: viewportScreenshotDataURL.value || undefined,
       })
       closeAfterSubmit()
       showToast('Спасибо! Заявка об ошибке отправлена')
@@ -266,6 +291,9 @@ export function useErrorReporter() {
     screenshotDataURL.value = ''
     screenshotCapturing.value = false
     screenshotError.value = ''
+    viewportScreenshotDataURL.value = ''
+    viewportScreenshotError.value = ''
+    preparingReport.value = false
     screenshotContextLevel.value = 0
     screenshotContextElements.value = []
     screenshotFrameSize.width = 0
@@ -279,7 +307,7 @@ export function useErrorReporter() {
   }
 
   function onGlobalKeydown(event) {
-    if (event.key === 'Escape' && selecting.value) {
+    if (event.key === 'Escape' && (selecting.value || preparingReport.value)) {
       event.preventDefault()
       cancelSelection()
       return
@@ -292,7 +320,7 @@ export function useErrorReporter() {
   }
 
   function onNativeBack(event) {
-    if (!selecting.value) return
+    if (!selecting.value && !preparingReport.value) return
     event.preventDefault()
     event.stopImmediatePropagation()
     cancelSelection()
@@ -300,7 +328,7 @@ export function useErrorReporter() {
 
   onMounted(() => {
     stopTouchGesture = installErrorReportTouchGesture(startSelection, {
-      canActivate: () => !selecting.value && !formOpen.value,
+      canActivate: () => !selecting.value && !formOpen.value && !preparingReport.value,
     })
     document.addEventListener('keydown', onGlobalKeydown)
     window.addEventListener(ERROR_REPORT_REQUEST_EVENT, startSelection)
@@ -321,6 +349,7 @@ export function useErrorReporter() {
     selecting, formOpen, submitting, description,
     submitError, selectedElement, reportForm, toast,
     screenshotDataURL, screenshotCapturing, screenshotError, screenshotContextLevel,
+    viewportScreenshotDataURL, viewportScreenshotError,
     highlight, highlightStyle, maxScreenshotContextLevel, screenshotContextLabel,
     screenshotFrameStyle, cancelSelection, closeForm, submitReport,
     changeScreenshotContext, onReportModalOpened,

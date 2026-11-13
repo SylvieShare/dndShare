@@ -60,6 +60,15 @@
               {{ screenshotError }} Заявку можно отправить без снимка элемента.
             </div>
           </figure>
+          <figure v-if="viewportScreenshotDataURL || viewportScreenshotError" class="screenshot-preview-card">
+            <figcaption>
+              <strong>Экран приложения</strong>
+              <span>Автоматический снимок перед открытием формы</span>
+            </figcaption>
+            <img v-if="viewportScreenshotDataURL" class="screenshot-viewport-preview"
+              :src="viewportScreenshotDataURL" alt="Скриншот экрана приложения" />
+            <div v-else class="screenshot-state screenshot-state-error screenshot-state-inside">{{ viewportScreenshotError }}</div>
+          </figure>
         </div>
       </div>
       <FormField label="Описание" vertical>
@@ -89,6 +98,7 @@ const {
   selecting, formOpen, submitting, description,
   submitError, selectedElement, reportForm, toast,
   screenshotDataURL, screenshotCapturing, screenshotError, screenshotContextLevel,
+  viewportScreenshotDataURL, viewportScreenshotError,
   highlight, highlightStyle, maxScreenshotContextLevel, screenshotContextLabel,
   screenshotFrameStyle, cancelSelection, closeForm, submitReport,
   changeScreenshotContext, onReportModalOpened,
