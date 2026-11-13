@@ -15,10 +15,11 @@
             <span class="heading-armor-value">{{ armor }}</span>
           </button>
           <SheetHealth interactive :current="current" :maximum="maximum" :temporary="temporary" aria-haspopup="dialog" @click="openPanel('health')" />
-          <span class="heading-metrics">
-            <button class="heading-metric" type="button" :aria-label="`Пассивное внимание ${perception}`" title="Пассивное внимание" aria-haspopup="dialog" :aria-expanded="passiveOpen && passiveKind === 'perception'" @click="openPassive('perception', $event)"><Eye :size="14" aria-hidden="true" />{{ perception }}</button>
-            <button class="heading-metric" type="button" :aria-label="`Пассивное расследование ${investigation}`" title="Пассивное расследование" aria-haspopup="dialog" :aria-expanded="passiveOpen && passiveKind === 'investigation'" @click="openPassive('investigation', $event)"><Search :size="14" aria-hidden="true" />{{ investigation }}</button>
-          </span>
+          <button class="heading-metrics" type="button" :aria-label="`Пассивные показатели: внимание ${perception}, расследование ${investigation}`"
+            title="Пассивные показатели" aria-haspopup="dialog" :aria-expanded="passiveOpen" @click="openPassive($event)">
+            <span class="heading-metric"><Eye :size="14" aria-hidden="true" />{{ perception }}</span>
+            <span class="heading-metric"><Search :size="14" aria-hidden="true" />{{ investigation }}</span>
+          </button>
         </span>
       </div>
     </template>
@@ -33,8 +34,8 @@
       <RowActionItem action="create" :disabled="!canEdit" @click="select('add-status', close)">Добавить состояние</RowActionItem>
     </template>
   </RowActionMenu>
-  <SheetPassiveDetails :open="passiveOpen" :kind="passiveKind" :anchor="passiveAnchor"
-    :value="passiveKind === 'perception' ? perception : investigation" @update:open="passiveOpen = $event" />
+  <SheetPassiveDetails :open="passiveOpen" :anchor="passiveAnchor"
+    :perception="perception" :investigation="investigation" @update:open="passiveOpen = $event" />
 </template>
 <script setup>
 import { computed, inject, ref, shallowRef, watch } from 'vue'
@@ -48,13 +49,12 @@ import { hpMaximum, normalizeHpMaximum } from '../../blocks/dnd/lib/hp'
 import { abilityModifier, resolveNumValue, sumBonuses, proficiencyBonus } from '@/shared/lib/dnd'
 const props = defineProps({ name: String, subtitle: String, iconUrl: String })
 const emit = defineEmits(['open'])
-const actions = ref(null), passiveOpen = ref(false), passiveKind = ref('perception'), passiveAnchor = shallowRef(null)
+const actions = ref(null), passiveOpen = ref(false), passiveAnchor = shallowRef(null)
 function openPanel(panel) { actions.value?.close(); passiveOpen.value = false; emit('open', panel) }
-function openPassive(kind, event) {
+function openPassive(event) {
   actions.value?.close()
   passiveAnchor.value = event.currentTarget
-  passiveOpen.value = !(passiveOpen.value && passiveKind.value === kind)
-  passiveKind.value = kind
+  passiveOpen.value = !passiveOpen.value
 }
 const ctx = inject('charCtx', {})
 const values = computed(() => ctx.values || {})
@@ -95,14 +95,14 @@ function select(panel, close) { close(); emit('open', panel) }
 .identity strong {font-size:var(--type-sheet-header-size);line-height:var(--type-sheet-header-line-height)}
 .identity small {font-size:var(--type-context-size);color:var(--text-muted)}
 .heading-combat {display:flex;align-items:center;flex-wrap:wrap;gap:var(--spacing-xs) var(--spacing-small);min-width:0;font-size:var(--type-context-size);line-height:var(--type-context-line-height);font-variant-numeric:lining-nums tabular-nums}
-.heading-metrics {display:flex;flex:none;flex-direction:column;justify-content:center;height:var(--layout-sheet-health-height);color:var(--text-muted);font-size:var(--type-context-size);line-height:calc(var(--layout-sheet-health-height) / 2)}
+.heading-metrics {display:flex;flex:none;flex-direction:column;justify-content:center;min-width:var(--layout-touch-min);height:var(--layout-sheet-health-height);padding:0 var(--spacing-xs);border:0;border-radius:var(--radius-input);background:transparent;color:var(--text-muted);font:inherit;font-size:var(--type-context-size);line-height:calc(var(--layout-sheet-health-height) / 2);text-align:left;cursor:pointer}
 .heading-armor {display:grid;place-items:center;flex:none;width:var(--layout-sheet-header-armor);height:var(--layout-sheet-header-armor);padding:0;border:0;background:transparent;color:inherit;font:inherit;border-radius:var(--radius-input);cursor:pointer}
 .heading-armor-icon,.heading-armor-value {grid-area:1/1}
 .heading-armor-icon {width:100%;height:100%;color:var(--text-muted)}
 .heading-armor-value {padding-bottom:2px;font-weight:700;line-height:1}
-.heading-metric {display:inline-flex;align-items:center;gap:2px;white-space:nowrap;padding:0;border:0;background:transparent;color:inherit;font:inherit;line-height:inherit;text-align:left;border-radius:var(--radius-input);cursor:pointer}
-.portrait:focus-visible,.heading-armor:focus-visible,.heading-metric:focus-visible {outline:2px solid var(--accent-soft);outline-offset:2px}
-.heading-armor:hover:not(:disabled),.heading-metric:hover,.heading-metric[aria-expanded="true"] {background:var(--surface-raised)}
+.heading-metric {display:inline-flex;align-items:center;gap:2px;white-space:nowrap}
+.portrait:focus-visible,.heading-armor:focus-visible,.heading-metrics:focus-visible {outline:2px solid var(--accent-soft);outline-offset:2px}
+.heading-armor:hover:not(:disabled),.heading-metrics:hover,.heading-metrics[aria-expanded="true"] {background:var(--surface-raised)}
 .heading-armor:disabled {cursor:default}
 .heading-metrics svg {color:var(--text-muted)}
 .experience-action {display:flex;flex-direction:column;gap:5px;width:100%;min-width:0}
