@@ -11,9 +11,9 @@ for (const width of [390, 704, 1440]) test(`attack formula matches its roll menu
   await page.goto('/char/test?tab=weapons', { waitUntil: 'networkidle' })
   const card = page.locator('.w-card:visible').first()
   const attack = card.getByRole('button', { name: 'Настроить бросок атаки', exact: true })
-  const sources = ['Атака', 'Сила', 'Магия оружия', 'Владение', 'Точность', 'Благословение']
+  const sources = ['Бросок', 'Владение', 'Сила', 'Магия оружия', 'Точность', 'Благословение']
   await expect(attack.locator('.weapon-damage__source')).toHaveText(sources)
-  await expect(attack.locator('.weapon-damage__flat')).toHaveText(['1', '1', '2', '2'])
+  await expect(attack.locator('.weapon-damage__flat')).toHaveText(['2', '1', '1', '2'])
   await expect(attack.getByRole('img', { name: 'd20: d20', exact: true })).toBeVisible()
   await expect(attack.getByRole('img', { name: 'd4: d4', exact: true })).toBeVisible()
   expect(await attack.evaluate(node => node.scrollWidth <= node.clientWidth)).toBe(true)
@@ -22,8 +22,12 @@ for (const width of [390, 704, 1440]) test(`attack formula matches its roll menu
   await expect(menu.locator('.weapon-formula-row > small')).toHaveText(sources)
   await page.keyboard.press('Escape')
   await card.screenshot({ path: testInfo.outputPath('attack-formula.png') })
-  for (const preset of await page.locator('.pac-card').all()) {
+  const presets = page.locator('.pac-card')
+  await expect(presets).toHaveCount(2)
+  for (const [index, preset] of (await presets.all()).entries()) {
     await expect(preset.locator('.weapon-metrics__attack').getByRole('img', { name: 'd20: d20', exact: true })).toBeVisible()
+    const labels = await preset.locator('.weapon-metrics__attack .weapon-damage__source').allTextContents()
+    expect(labels.slice(0, 2)).toEqual(['Бросок', index === 0 ? 'Владение' : 'Сила'])
   }
   expect(api.writes).toEqual([])
 })
@@ -36,7 +40,7 @@ test('attack formula preserves a negative ability modifier without proficiency',
   api.document().values.abilities_class = []
   await page.goto('/char/test?tab=weapons', { waitUntil: 'networkidle' })
   const attack = page.locator('.w-card:visible').first().locator('.weapon-metrics__attack')
-  await expect(attack.locator('.weapon-damage__source')).toHaveText(['Атака', 'Сила'])
+  await expect(attack.locator('.weapon-damage__source')).toHaveText(['Бросок', 'Сила'])
   await expect(attack.locator('.weapon-damage__operator')).toHaveText(['−'])
   await expect(attack.locator('.weapon-damage__flat')).toHaveText(['2'])
 })

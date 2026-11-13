@@ -10,7 +10,7 @@ for (const [viewport, width] of [[390, 282], [834, 340], [1440, 550]]) {
     await expect(table.locator('.weapon-metrics__attack')).toHaveCSS('border-top-left-radius', '10px')
     const attackCell = table.locator('.weapon-metrics__attack')
     const damageCell = table.locator('.weapon-metrics__damage')
-    await expect(attackCell.locator('.weapon-damage__source')).toHaveText(['Атака', 'Сила', 'Владение', 'Магия оружия'])
+    await expect(attackCell.locator('.weapon-damage__source')).toHaveText(['Бросок', 'Владение', 'Сила', 'Магия оружия'])
     await expect(attackCell.getByRole('img', { name: 'd20: d20', exact: true })).toBeVisible()
     await expect(table.locator('.weapon-metrics__property-list')).toHaveCSS('font-size', '14px')
     await expect(table.locator('.ad-atk')).toHaveCount(0)

@@ -3,7 +3,7 @@ import '../../src/app/theme.css'
 import { createApp, h, reactive } from 'vue'
 import WeaponMetricsTable from '../../src/features/character-editor/blocks/dnd/components/WeaponMetricsTable.vue'
 const data = reactive({ attack: '+7',
-  attackRows: [{ source: 'Атака', expression: '1d20' }, { source: 'Сила', expression: '3' }, { source: 'Владение', expression: '2' }, { source: 'Магия оружия', expression: '2' }],
+  attackRows: [{ source: 'Бросок', expression: '1d20' }, { source: 'Владение', expression: '2' }, { source: 'Сила', expression: '3' }, { source: 'Магия оружия', expression: '2' }],
   damageRows: [{ source: 'Оружие', expression: '1d6{Дробящий|#fbbf24}' }, { source: 'Сила', expression: '1' }, { source: 'Ярость', expression: '2' }],
   twoHandedRows: [{ source: 'Оружие', expression: '1d8{Дробящий|#fbbf24}' }, { source: 'Сила', expression: '1' }, { source: 'Ярость', expression: '2' }],
   properties: [{ id: 1, label: 'Универсальное', desc: 'Две руки' }, { id: 2, label: 'Метательное' }],

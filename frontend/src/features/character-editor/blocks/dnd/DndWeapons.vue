@@ -293,9 +293,9 @@ function modifierSources(entry, damage) {
   const rows = []
   function add(source, value) { if (value) rows.push({ source, expression: String(value) }) }
   const stat = statMod(entry)
+  if (!damage && !entry._improvisedThrow && isWeaponProficient(entry)) add('Владение', profBonus.value)
   add(weaponAbilityName(entry), damage && entry._bonusActionDamage && !bonusActionDamageOption(entry)?.addAbilityModifier ? Math.min(0, stat) : stat)
   add('Магия оружия', magicBonus(entry))
-  if (!damage && !entry._improvisedThrow && isWeaponProficient(entry)) add('Владение', profBonus.value)
   const bonus = charCtx.characterDerivedEffects?.bonus?.(damage ? 'weapon_damage_bonus' : 'weapon_attack_bonus', weaponEffectContext(entry))
   for (const part of bonus?.contributions || []) add(part.source, part.value)
   return rows
