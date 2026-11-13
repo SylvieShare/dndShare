@@ -27,7 +27,7 @@
     @roll-skill="(id, mode, excluded) => rollD20Plus(skillTitle(id), skillBonus(id), mode, 'ability_check', { proficiencyRank: skillProficiencyRank(id) }, excluded)"
   />
 
-  <AppModalFrame v-if="editor && canEdit" :title="editorTitle" :padded="false" :z-index="4200" :width="statEditorWidth" @close="editor = null">
+  <AppModalFrame v-if="editor && canEdit" :title="editorTitle" :outlined="false" :padded="false" :z-index="4200" :width="statEditorWidth" @close="editor = null">
     <template #title>
       <div class="stat-editor-heading">
         <h2 class="stat-editor-title">{{ editorTitle }} <small v-if="originalTitle">({{ originalTitle }})</small></h2>

@@ -40,7 +40,7 @@
     </StatTileFace>
   </slot>
 
-  <AppModalFrame v-if="editorOpen" :title="editorTitle || label" :width="460" :z-index="3100" @close="editorOpen = false">
+  <AppModalFrame v-if="editorOpen" :title="editorTitle || label" :outlined="false" :width="460" :z-index="3100" @close="editorOpen = false">
     <template #header-actions>
       <span class="utility-result"><img v-if="icon" :src="icon" alt="" /><b>{{ pre }}{{ value }}{{ unit ? ' ' + unit : '' }}</b></span>
     </template>
