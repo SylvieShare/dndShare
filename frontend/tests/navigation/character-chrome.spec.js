@@ -18,7 +18,7 @@ for (const width of [320, 834, 1440]) test(`character actions stay in the main h
   const colors = await page.locator('.app-header').evaluate(element => {
     const css = getComputedStyle(element); return { surface: css.getPropertyValue('--subheader'), block: css.getPropertyValue('--surface'), bg: css.backgroundColor }
   })
-  expect(colors.bg).toBe('rgb(40, 38, 48)')
+  expect(colors.bg).toBe('rgb(48, 42, 61)')
   await expect(page.locator('.app-header')).toHaveCSS('filter', 'none')
   await expect(page.locator('.app-header .workspace-header-backdrop')).toHaveCount(0)
   await expect(page.locator('.app-header .workspace-subheader')).toHaveCount(0)
