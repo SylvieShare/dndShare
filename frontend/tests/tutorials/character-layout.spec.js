@@ -223,7 +223,7 @@ test('sheet header uses the character icon before the portrait and handles missi
   expect(api.writes).toEqual([])
 })
 
-for (const width of [390, 834, 1440]) test(`sheet content scrolls behind sharp chrome at ${width}`, async ({ page }) => {
+for (const width of [390, 834, 1440]) test(`sheet content scrolls below fixed chrome at ${width}`, async ({ page }) => {
   await page.setViewportSize({ width, height: 700 })
   const api = await fixture(page)
   api.document().values.name = 'Лира с очень длинным именем персонажа '.repeat(5)
@@ -237,10 +237,8 @@ for (const width of [390, 834, 1440]) test(`sheet content scrolls behind sharp c
   const name = await header.locator('.identity strong').boundingBox()
   expect(icon.x + icon.width).toBeLessThan(name.x)
   expect(name.x + name.width).toBeLessThanOrEqual(identity.x + identity.width + 1)
-  await expect.poll(() => page.locator('.view').evaluate(element =>
-    parseFloat(getComputedStyle(element).getPropertyValue('--sheet-chrome-height')))).toBeGreaterThan(60)
   const viewport = page.locator('.sheet-scroll')
-  expect((await viewport.boundingBox()).y).toBeCloseTo((await page.locator('.view').boundingBox()).y, 0)
+  await expect.poll(async () => (await viewport.boundingBox()).y-((await header.boundingBox()).y+(await header.boundingBox()).height)).toBeCloseTo(0,0)
   if (width < 1200) {
     const button = page.getByRole('button', { name: 'Статы', exact: true })
     await button.click()

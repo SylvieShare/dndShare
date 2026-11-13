@@ -16,11 +16,7 @@
   overflow-x: auto;
   overflow-y: auto;
   overscroll-behavior-y: none;
-  /* Content scrolls behind one continuously painted, measured header. */
-  margin-top: calc(-1 * var(--sheet-chrome-height, 64px));
-  padding-top: var(--sheet-chrome-height, 64px);
   box-sizing: border-box;
-  scroll-padding-top: var(--sheet-chrome-height, 64px);
 }
 
 .container { margin: 0 auto; }
@@ -38,6 +34,6 @@
   }
 }
 @media (--ui-compact) {
-  .sheet-scroll { overflow: hidden; padding-top: 0; }
+  .sheet-scroll { overflow: hidden; }
   .container { width: 100%; box-sizing: border-box; }
 }

@@ -46,7 +46,7 @@ for (const width of [390, 834, 1440]) for (const inspiration of [false, true]) {
     await expect(header).not.toHaveAttribute('data-workspace-scrolled')
     await expect.poll(() => scroller.evaluate(node => {
       const header = document.querySelector('.character-workspace-header')
-      return Math.abs(parseFloat(getComputedStyle(node).paddingTop) - header.getBoundingClientRect().height)
+      return Math.abs(node.getBoundingClientRect().top - header.getBoundingClientRect().bottom)
     })).toBeLessThan(.5)
     const gap = await page.locator('.stat-block:visible').first().evaluate(node => node.getBoundingClientRect().top
       - document.querySelector('.character-workspace-header').getBoundingClientRect().bottom)
