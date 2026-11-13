@@ -11,7 +11,7 @@ async function open(page, width, owner = true, count = 7) {
   await page.route('**/api/handbook/sync?**', route => route.fulfill({ json: { protocol: 1, entries: [], hasMore: false, cursor: 'empty', visibleIds: [], metadata: { types: [], suggests: {}, suggestTypes: [], books: [] } } }))
   await page.route('**/api/storage/images', route => route.fulfill({ json: { upload_id: 801, url: photoUrl, key: 'gallery-photo.webp' } }))
   await page.goto('/char/test')
-  await page.getByRole(width >= 1200 ? 'tab' : 'button', { name: 'Личность', exact: true }).click()
+  await page.getByRole('button', { name: 'Личность', exact: true }).click()
   if (width < 1200) await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/dragging|settling/)
   return api
 }

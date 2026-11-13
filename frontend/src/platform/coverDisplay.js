@@ -4,7 +4,7 @@ import { isAndroid } from './storage'
 import { prepareImageUpload, PORTRAIT_IMAGE_MAX_BYTES } from '../shared/lib/imageUpload'
 
 const display = registerPlugin('CoverDisplay')
-export const coverState = reactive({ foldable: false, available: false, active: false, selected: false, busy: false, owner: '', photoUid: '', pendingOwner: '', pendingPhotoUid: '', reason: '' })
+export const coverState = reactive({ foldable: false, supported: false, available: false, active: false, selected: false, busy: false, loading: false, autoplay: false, autoOwner: '', autoPhotoCount: 0, displayWidth: 0, displayHeight: 0, owner: '', photoUid: '', pendingOwner: '', pendingPhotoUid: '', reason: '', error: '' })
 let generation = 0
 let pendingRequest
 
@@ -16,8 +16,8 @@ export async function initializeCoverDisplay() {
 }
 
 export async function stopCover(owner) {
-  if (pendingRequest?.owner === owner) {
-    pendingRequest.controller.abort()
+  if (pendingRequest?.owner === owner || coverState.pendingOwner === owner) {
+    pendingRequest?.controller.abort()
     pendingRequest = null
     generation++
     coverState.busy = false
@@ -25,6 +25,46 @@ export async function stopCover(owner) {
     coverState.pendingPhotoUid = ''
   }
   if (isAndroid && owner) Object.assign(coverState, await display.hide({ owner: String(owner) }))
+}
+
+export async function startCoverSlideshow(owner, photos) {
+  if (!isAndroid || !coverState.available || !owner) throw new Error(coverState.reason || 'Внешний экран сейчас недоступен')
+  pendingRequest?.controller.abort()
+  pendingRequest = null
+  const request = ++generation
+  coverState.busy = true
+  coverState.pendingOwner = owner
+  coverState.pendingPhotoUid = ''
+  try {
+    const status = await display.startSlideshow({ owner, photos: photoSources(photos) })
+    if (request === generation) Object.assign(coverState, status)
+  } finally {
+    if (request === generation) { coverState.busy = false; coverState.pendingOwner = ''; coverState.pendingPhotoUid = '' }
+  }
+}
+
+export async function pauseCoverSlideshow(owner) {
+  if (!isAndroid || coverState.autoOwner !== owner && coverState.pendingOwner !== owner) return
+  if (coverState.pendingOwner === owner) {
+    generation++; coverState.busy = false; coverState.pendingOwner = ''; coverState.pendingPhotoUid = ''
+  }
+  Object.assign(coverState, await display.pauseSlideshow({ owner }))
+}
+
+export async function updateCoverGallery(owner, photos) {
+  if (!isAndroid || !owner) return
+  if (pendingRequest?.owner === owner && !photos.some(photo => photo.uid === pendingRequest.photoUid)) {
+    const photoUid = pendingRequest.photoUid
+    pendingRequest.controller.abort(); pendingRequest = null; generation++
+    coverState.busy = false; coverState.pendingOwner = ''; coverState.pendingPhotoUid = ''
+    Object.assign(coverState, await display.cancelPhoto({ owner, photoUid }))
+  }
+  if (coverState.autoplay && coverState.autoOwner === owner) Object.assign(coverState, await display.updateSlideshow({ owner, photos: photoSources(photos) }))
+  else if (coverState.owner === owner && !photos.some(photo => photo.uid === coverState.photoUid)) await stopCover(owner)
+}
+
+function photoSources(photos) {
+  return photos.map(({ uid, url, thumbnailUrl, imageId }) => ({ uid, url, thumbnailUrl: thumbnailUrl || '', imageId }))
 }
 export async function stopCoverPhoto(owner, photoUid) {
   if (pendingRequest?.owner === owner && pendingRequest.photoUid === photoUid || coverState.owner === owner && coverState.photoUid === photoUid) await stopCover(owner)
@@ -61,7 +101,7 @@ export async function showCoverPhoto(owner, photo) {
     const status = await display.show({ owner, photoUid: photo.uid, data })
     if (request === generation) Object.assign(coverState, status)
   } catch (error) {
-    if (error.name !== 'AbortError') throw error
+    if (request === generation && error.name !== 'AbortError') throw error
   } finally {
     if (pendingRequest?.controller === controller) { pendingRequest = null; coverState.busy = false; coverState.pendingOwner = ''; coverState.pendingPhotoUid = '' }
   }

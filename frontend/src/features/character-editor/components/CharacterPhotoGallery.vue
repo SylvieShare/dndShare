@@ -1,11 +1,12 @@
 <template>
   <div v-if="photos.length || owner" class="photo-gallery" aria-label="Галерея персонажа" :aria-busy="uploading">
-    <MorphTileHeader title="Галерея" :show-edit="false" />
+    <MorphTileHeader title="Галерея" :show-edit="false"><template #aside><CharacterCoverControls :owner="ownerId" :photos="photos" /></template></MorphTileHeader>
     <div class="photo-strip" data-sheet-horizontal-scroll>
       <RowActionMenu v-for="(photo, index) in photos" :key="photo.uid" title="Действия с фотографией">
         <template #trigger="{ open }">
-          <button class="photo-thumb" type="button" :aria-label="`Фотография ${index + 1}`" aria-haspopup="menu" :aria-expanded="open">
+          <button class="photo-thumb" :class="{ 'photo-thumb--displayed': displayed(photo) }" type="button" :aria-label="`Фотография ${index + 1}`" :aria-description="displayed(photo) ? 'Сейчас на внешнем экране' : undefined" aria-haspopup="menu" :aria-expanded="open">
             <CharacterPhotoImage :src="photo.thumbnailUrl || photo.url" :alt="photo.name || `Фотография ${index + 1}`" fit="natural" />
+            <span v-if="displayed(photo)" class="photo-display-label">На экране</span>
           </button>
         </template>
         <template #default="{ close }">
@@ -35,8 +36,9 @@ import { computed, inject, onBeforeUnmount, ref, watch } from 'vue'
 import { ActionButton, AppModalFrame, ConfirmDialog, LoadingIndicator, MorphTileHeader, RowActionItem, RowActionMenu } from '@sylvieshare/share-ui'
 import { Expand, PanelsTopLeft, PanelTopClose, Plus, Trash2 } from '@lucide/vue'
 import { prepareImageUpload, PORTRAIT_IMAGE_MAX_BYTES } from '@/shared/lib/imageUpload'
-import { coverState, showCoverPhoto, stopCoverPhoto } from '@/platform/coverDisplay'
+import { coverState, showCoverPhoto, stopCoverPhoto, updateCoverGallery } from '@/platform/coverDisplay'
 import CharacterPhotoImage from './CharacterPhotoImage.vue'
+import CharacterCoverControls from './CharacterCoverControls.vue'
 
 const props = defineProps({ block: Object, value: { type: Array, default: () => [] } })
 const emit = defineEmits(['update:value'])
@@ -45,6 +47,7 @@ const owner = computed(() => Boolean(context.ownerMode))
 const ownerId = computed(() => String(context.characterUuid || ''))
 const photos = computed(() => Array.isArray(props.value) ? props.value : [])
 function selected(photo) { return coverState.owner === ownerId.value && coverState.photoUid === photo.uid || coverState.pendingOwner === ownerId.value && coverState.pendingPhotoUid === photo.uid }
+function displayed(photo) { return coverState.active && coverState.owner === ownerId.value && coverState.photoUid === photo.uid }
 const input = ref(null), viewing = ref(null), removing = ref(null), error = ref(''), pending = ref([]), uploading = ref(false)
 let disposed = false
 const controller = new AbortController()
@@ -94,12 +97,11 @@ async function removePhoto() {
   const photo = removing.value
   removing.value = null
   if (!photo || !owner.value) return
-  await stopCoverPhoto(ownerId.value, photo.uid)
   emit('update:value', props.block.id, photos.value.filter(entry => entry.uid !== photo.uid))
 }
 onBeforeUnmount(() => { disposed = true; controller.abort(); pending.value.forEach(entry => URL.revokeObjectURL(entry.preview)) })
-watch(() => photos.value.map(photo => photo.uid), (ids, previous) => {
-  for (const uid of previous || []) if (!ids.includes(uid)) void stopCoverPhoto(ownerId.value, uid)
+watch(() => JSON.stringify(photos.value.map(photo => [photo.uid, photo.url, photo.imageId, photo.thumbnailUrl])), () => {
+  void updateCoverGallery(ownerId.value, photos.value).catch(problem => { error.value = problem.message })
 })
 </script>
 
@@ -107,9 +109,11 @@ watch(() => photos.value.map(photo => photo.uid), (ids, previous) => {
 .photo-gallery { display:grid;gap:var(--spacing-small);min-width:0 }
 .photo-strip { display:flex;align-items:stretch;gap:var(--spacing-small);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:thin;padding-block:var(--spacing-xs);max-width:100% }
 .photo-strip > * { flex:none;scroll-snap-align:start }
-.photo-thumb { display:grid;place-items:center;height:var(--layout-sheet-gallery-height);padding:0;border:0;border-radius:var(--r-md);background:var(--surface-raised);overflow:hidden;cursor:pointer }
+.photo-thumb { position:relative;display:grid;place-items:center;height:var(--layout-sheet-gallery-height);padding:0;border:0;border-radius:var(--r-md);background:var(--surface-raised);overflow:hidden;cursor:pointer }
 .photo-thumb > * { grid-area:1/1;min-width:0 }
 .photo-thumb:focus-visible { outline:2px solid var(--accent);outline-offset:-2px }
+.photo-thumb--displayed::after {content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 2px var(--accent-soft);pointer-events:none}
+.photo-display-label {position:absolute;inset-inline:var(--spacing-xs);bottom:var(--spacing-xs);padding:var(--spacing-xs);border-radius:var(--radius-small);background:color-mix(in srgb,var(--subheader) 94%,transparent);color:var(--accent-soft);font-size:var(--type-badge-compact-size);line-height:var(--type-badge-compact-line-height);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
 .photo-add { width:var(--layout-sheet-gallery-add-width);--action-button-height:var(--layout-sheet-gallery-height) }
 .photo-pending { position:relative }
 .photo-pending > .character-photo-image { opacity:.4 }
