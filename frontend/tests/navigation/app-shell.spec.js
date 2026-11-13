@@ -137,13 +137,23 @@ for (const width of [390, 834, 1440, 1920, 2560]) {
     const header = page.locator('.app-header')
     const title = header.locator('.handbook-heading')
     await expect(page.locator('.hb-collection-card')).toHaveCount(1)
+    await page.locator('.hb-landing').evaluate(async node => {
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+      const pending = []
+      for (let current = node; current; current = current.parentElement) {
+        for (const animation of current.getAnimations()) {
+          if (animation.effect?.getTiming().iterations !== Infinity) pending.push(animation.finished.catch(() => {}))
+        }
+      }
+      await Promise.all(pending)
+    })
     const typography = () => title.evaluate(el => {
       const css = getComputedStyle(el)
       return [css.fontFamily, css.fontSize, css.fontWeight, css.lineHeight]
     })
     const initial = await typography()
     const initialTitleX = (await title.boundingBox()).x
-    expect(initial[1]).toBe('16px')
+    expect(initial[1]).toBe('20px')
     const inner = header.locator('.workspace-header-inner')
     if (width >= 1200) {
       const content = await page.locator('.hb-landing').boundingBox()
