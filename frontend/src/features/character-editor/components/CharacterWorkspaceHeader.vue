@@ -1,8 +1,8 @@
 <template>
-  <WorkspaceHeader ref="workspace" v-bind="$attrs" class="character-workspace-header" navigation-floating :scroll-source="null" :context-placement="format === 'phone' ? 'row' : 'auto'"
+  <WorkspaceHeader ref="workspace" v-bind="$attrs" class="character-workspace-header" :scroll-source="null" :context-placement="format === 'phone' ? 'row' : 'auto'"
     :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" :fit-navigation="format !== 'phone'"
     :navigation-placement="dnd && format === 'desktop' ? 'external' : 'below'"
-    :navigation-target="navigationTarget">
+    :navigation-target="dnd && format === 'desktop' ? navigationTarget : undefined">
     <template #identity>
       <ActionButton variant="quiet" :icon-only="compact" :aria-label="modal ? 'Закрыть лист' : 'К списку персонажей'" @click="modal ? emit('close') : router.push('/chars')">
         <template #icon><ArrowLeft :size="18" /></template>

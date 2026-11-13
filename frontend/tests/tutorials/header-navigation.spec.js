@@ -16,7 +16,6 @@ async function openSheet(page, width) {
 }
 
 async function expectContinuousHeader(page) {
-  await expect(page.locator('.character-workspace-header .workspace-subheader')).toHaveCount(0)
   if (await page.locator('.dnd-desktop-navigation').count()) {
     const header = page.locator('.character-workspace-header')
     await expect(header.locator('.workspace-subheader')).toHaveCount(0)
@@ -24,38 +23,40 @@ async function expectContinuousHeader(page) {
     await expect(navigation).toBeVisible()
     const geometry = await navigation.evaluate(node => {
       const nav = node.getBoundingClientRect(), main = node.closest('.dnd-desktop-main').getBoundingClientRect()
+      const bar=node.closest('.workspace-subheader'),surface=node.closest('.workspace-subheader-inner'),rect=bar.getBoundingClientRect()
       return { start: nav.left - main.left, end: main.right - nav.right, overflow: getComputedStyle(node).overflowX,
-        background: getComputedStyle(node.closest('.dnd-desktop-navigation')).backgroundColor,
-        shadow: getComputedStyle(node.closest('.workspace-subheader-inner')).boxShadow }
+        barStart:rect.left-main.left,barEnd:main.right-rect.right,background:getComputedStyle(bar).backgroundColor,
+        shadow:getComputedStyle(surface).boxShadow,radius:getComputedStyle(surface).borderTopLeftRadius }
     })
     expect(geometry.start).toBeGreaterThanOrEqual(-1)
     expect(geometry.end).toBeGreaterThanOrEqual(-1)
     expect(geometry.overflow).toBe('auto')
-    expect(geometry.background).toBe('rgba(0, 0, 0, 0)')
-    expect(geometry.shadow).not.toBe('none')
+    expect(geometry.background).toBe('rgb(40, 38, 48)')
+    expect(geometry.shadow).toBe('none')
+    expect(geometry.radius).toBe('0px')
+    expect(Math.abs(geometry.barStart)).toBeLessThan(1)
+    expect(Math.abs(geometry.barEnd)).toBeLessThan(1)
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize().width)
     return
   }
-  const geometry = await page.locator('.mobile-sheet-navigation').evaluate(host => {
-    const pane=host.parentElement.querySelector('.mobile-swipe-pane:not([inert]) .mobile-pane-scroll')
-    const band=host.querySelector('.workspace-subheader'),surface=band.querySelector('.workspace-subheader-inner')
-    const a=host.getBoundingClientRect(),b=pane.getBoundingClientRect(),c=surface.getBoundingClientRect()
-    return { gap:a.top-b.top,inset:parseFloat(getComputedStyle(pane).paddingTop),height:a.height,
-      scrollbarInset:parseFloat(getComputedStyle(pane,'::-webkit-scrollbar-track').marginTop),
-      background:getComputedStyle(host).backgroundColor,bandBackground:getComputedStyle(band).backgroundColor,
-      leftInset:c.left-a.left,rightInset:a.right-c.right,surfaceBackground:getComputedStyle(surface).backgroundColor,
+  const geometry = await page.locator('.character-workspace-header').evaluate(header => {
+    const main=header.querySelector('.workspace-header-inner'),band=header.querySelector('.workspace-subheader'),surface=band.querySelector('.workspace-subheader-inner')
+    const a=main.getBoundingClientRect(),b=band.getBoundingClientRect(),c=header.getBoundingClientRect()
+    return {gap:b.top-a.bottom,bottom:c.bottom-b.bottom,left:b.left-c.left,right:c.right-b.right,
+      background:getComputedStyle(header).backgroundColor,bandBackground:getComputedStyle(band).backgroundColor,
+      surfaceBackground:getComputedStyle(surface).backgroundColor,
       shadow:getComputedStyle(surface).boxShadow,radius:getComputedStyle(surface).borderTopLeftRadius }
   })
   expect(Math.abs(geometry.gap)).toBeLessThan(.5)
-  expect(geometry.inset).toBeCloseTo(geometry.height,0)
-  expect(geometry.scrollbarInset).toBeCloseTo(geometry.height,0)
-  expect(geometry.background).toBe('rgba(0, 0, 0, 0)')
-  expect(geometry.bandBackground).toBe('rgba(0, 0, 0, 0)')
-  expect(geometry.shadow).not.toBe('none')
-  expect(geometry.surfaceBackground).toBe('rgb(48, 45, 58)')
-  expect(geometry.leftInset).toBeGreaterThan(0)
-  expect(geometry.rightInset).toBeGreaterThan(0)
-  expect(parseFloat(geometry.radius)).toBeGreaterThan(8)
+  expect(Math.abs(geometry.bottom)).toBeLessThan(.5)
+  expect(Math.abs(geometry.left)).toBeLessThan(.5)
+  expect(Math.abs(geometry.right)).toBeLessThan(.5)
+  expect(geometry.background).toBe('rgb(40, 38, 48)')
+  expect(geometry.bandBackground).toBe(geometry.background)
+  expect(geometry.shadow).toBe('none')
+  expect(geometry.surfaceBackground).toBe('rgba(0, 0, 0, 0)')
+  expect(geometry.radius).toBe('0px')
+  await expect(page.locator('.mobile-sheet-navigation')).toHaveCount(0)
 }
 
 for (const [width, format, layout] of [[390, 'phone', 'compact'], [834, 'tablet', 'stacked'], [1440, 'desktop', 'stacked']]) {
@@ -100,9 +101,6 @@ for (const [width, format, layout] of [[390, 'phone', 'compact'], [834, 'tablet'
       const scrollTop=await scroller.evaluate(node=>node.scrollTop)
       await expect.poll(async () => (await navigation.boundingBox()).y).toBeCloseTo(initialNavigationY-scrollTop,0)
     } else {
-      const surface=await page.locator('.mobile-sheet-navigation .workspace-subheader-inner').boundingBox()
-      expect(await page.evaluate(({x,y})=>!!document.elementFromPoint(x,y)?.closest('.character-sheet'),
-        {x:surface.x+1,y:surface.y+1})).toBe(true)
       await expect.poll(async () => (await navigation.boundingBox()).y).toBeCloseTo(initialNavigationY,0)
     }
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
@@ -147,7 +145,7 @@ test('resizing changes presentation while retaining the selected section and doc
   expect(api.writes).toEqual([])
 })
 
-test('Android safe area keeps the floating tabs below the main header', async ({ page }) => {
+test('Android safe area keeps the docked bar below the main header', async ({ page }) => {
   await openSheet(page, 390)
   await page.evaluate(() => {
     document.documentElement.dataset.platform = 'android'

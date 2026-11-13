@@ -44,8 +44,8 @@ const { isReady } = usePreparedTabs(tabs, computed(() => tabs.value.findIndex(ta
 .dnd-desktop-stats { flex: 0 1 var(--layout-sheet-stats-column); min-width: var(--layout-sheet-stats-column-min); }
 .dnd-desktop-utilities { flex: 0 1 var(--layout-sheet-utilities-column); min-width: var(--layout-sheet-utilities-column-min); }
 .dnd-desktop-stats, .dnd-desktop-utilities { padding: 20px; }
-.dnd-desktop-main { padding-top:var(--spacing-page); align-self:stretch; flex: 1 1 calc(var(--layout-sheet-max) - var(--layout-sheet-stats-column) - var(--layout-sheet-utilities-column) - 30px); min-width: 0; display: flex; flex-direction: column; gap: 11px; }
-.dnd-desktop-navigation { min-width:0;padding-bottom:var(--spacing-small); }
+.dnd-desktop-main { align-self:stretch; flex: 1 1 calc(var(--layout-sheet-max) - var(--layout-sheet-stats-column) - var(--layout-sheet-utilities-column) - 30px); min-width: 0; display: flex; flex-direction: column; gap: 11px; }
+.dnd-desktop-navigation { min-width:0; }
 .dnd-desktop-navigation:empty { display:none; }
 .dnd-desktop-utilities { gap: 15px; }
 .inner-tabs-content { padding-top: 3px; min-width: 0; }

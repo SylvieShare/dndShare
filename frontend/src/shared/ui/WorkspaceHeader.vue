@@ -1,5 +1,5 @@
 <template>
-  <header ref="element" class="workspace-header" :class="{ 'workspace-header--solid': solid, 'workspace-header--floating-navigation': navigationFloating, 'workspace-header--context': !!$slots.context, 'workspace-header--context-inline': contextInline, 'workspace-header--navigation-inline': navigationPlacement === 'inline' && navigationVisible }">
+  <header ref="element" class="workspace-header" :class="{ 'workspace-header--solid': solid, 'workspace-header--context': !!$slots.context, 'workspace-header--context-inline': contextInline, 'workspace-header--navigation-inline': navigationPlacement === 'inline' && navigationVisible }">
     <BlurBackdrop v-if="!solid" class="workspace-header-backdrop" radius="var(--chrome-blur)" />
     <div ref="main" class="workspace-header-inner" :class="{ 'workspace-header-inner--page': page }" :style="{ maxWidth: contentWidth || (page ? 'var(--layout-content-max)' : undefined) }">
     <div ref="identity" class="workspace-header-identity"><slot name="identity" /></div>
@@ -9,7 +9,7 @@
     </div>
     <slot name="between" />
     <Teleport :to="navigationTarget || '#' + navigationId" :disabled="!navigationTarget && navigationPlacement !== 'inline'" defer>
-      <WorkspaceSubheader ref="navigation" v-if="$slots.navigation" v-show="navigationVisible" :inline="!!navigationTarget || navigationPlacement === 'inline'" :floating="navigationFloating" :fit="fitNavigation" :content-width="contentWidth || (page ? 'var(--layout-content-max)' : undefined)"><slot name="navigation" /></WorkspaceSubheader>
+      <WorkspaceSubheader ref="navigation" v-if="$slots.navigation" v-show="navigationVisible" :inline="!!navigationTarget || navigationPlacement === 'inline'" :fit="fitNavigation" :content-width="contentWidth || (page ? 'var(--layout-content-max)' : undefined)"><slot name="navigation" /></WorkspaceSubheader>
     </Teleport>
   </header>
 </template>
@@ -21,7 +21,7 @@ import { useWorkspaceContextLayout } from '@/shared/composables/useWorkspaceCont
 import { useWorkspaceScrollPosition } from '@/shared/composables/useWorkspaceScrollPosition'
 import { layoutTokens } from '@/app/design-tokens'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from "vue";
-const props = defineProps({ page: Boolean, contentWidth: String, fitNavigation: {type:Boolean,default:true}, solid: {type:Boolean,default:true}, navigationVisible:{type:Boolean,default:true}, navigationPlacement:{type:String,default:'below'}, navigationTarget:Object, navigationFloating:Boolean, scrollSource:{type:Object,default:undefined}, contextPlacement:{type:String,default:'auto'} });
+const props = defineProps({ page: Boolean, contentWidth: String, fitNavigation: {type:Boolean,default:true}, solid: {type:Boolean,default:true}, navigationVisible:{type:Boolean,default:true}, navigationPlacement:{type:String,default:'below'}, navigationTarget:Object, scrollSource:{type:Object,default:undefined}, contextPlacement:{type:String,default:'auto'} });
 const navigationId = `workspace-navigation-${useId()}`
 const element = ref(null),
   emit = defineEmits(["resize"]);
@@ -136,9 +136,7 @@ onBeforeUnmount(() => observer?.disconnect());
 }
 @media (prefers-reduced-motion: reduce) { .workspace-header-inner { transition: none; } }
 .workspace-header--solid {background:var(--workspace-header-background, var(--subheader));border:0;box-shadow:none}
-.workspace-header--floating-navigation { --workspace-header-background:linear-gradient(to bottom,var(--subheader) calc(var(--workspace-main-height) + var(--native-safe-top,0px)),transparent 0); }
 .workspace-header::after {content:'';position:absolute;z-index:2;top:100%;left:0;right:0;height:var(--layout-workspace-header-shadow-height);background:linear-gradient(to bottom,color-mix(in srgb,var(--scrim) 28%,transparent),transparent);opacity:var(--workspace-scroll-depth,0);pointer-events:none;transition:opacity var(--motion-feedback);}
-.workspace-header--floating-navigation::after {top:calc(var(--workspace-main-height) + var(--native-safe-top,0px));}
 .workspace-header:not([data-workspace-scrolled])::after {visibility:hidden;opacity:0;transition:none;}
 .workspace-header--context .workspace-header-identity {grid-column:1;grid-row:1}
 .workspace-header--context .workspace-header-inner {row-gap:var(--workspace-header-context-gap,var(--spacing-xs))}
