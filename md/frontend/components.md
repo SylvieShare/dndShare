@@ -20,6 +20,7 @@
 
 | Задача | Стандарт | Когда использовать |
 |---|---|---|
+| Галерея личности и внешний экран | `CharacterPhotoGallery`, `CharacterCoverControls` → `MorphTileHeader`, `RowActionMenu`, `ToggleSwitch` | Предметная композиция фотографий и управления Android-показом. Общие элементы и меню принадлежат share-ui; capability, очередь, выбранный кадр и жизненный цикл — платформенному адаптеру. Контракт — [галерея](../features/character-editor/gallery.md). |
 | Blur-подложка | `share-ui/BlurBackdrop` | Декоративный слой размытия с `radius` и CSS-параметрами bounds/tint/mask. Существующая поверхность использует `backdropBlurStyle`, а анимируемый overlay — `applyBackdropBlur`. Оба свойства фильтра задаются inline и переживают минификацию. Layout и передний план принадлежат экрану. |
 | Рабочая шапка | `shared/ui/WorkspaceHeader`, `WorkspaceSubheader`, `WorkspaceNavigation` | Общая непрозрачная оболочка сайта и Android с адаптивной навигацией, context и тенью по прокрутке. Обычные страницы передают содержимое через PageHeaderPortal; fullscreen используют adapter-ы. Контракт — [шапка сайта](workspace-header.md). |
 | Низкоуровневое модальное окно | `share-ui/AppModal` | Инфраструктура backdrop, Escape, focus/слоёв, анимации и `role=dialog`. Напрямую используется только специализированными fullscreen-workspace; Escape закрывает только верхнее окно стека. |

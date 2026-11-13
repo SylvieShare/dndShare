@@ -128,11 +128,15 @@ public class LocalStorePlugin extends Plugin {
         });
     }
     @PluginMethod public void clearSession(PluginCall call) {
-        getActivity().runOnUiThread(() -> CookieManager.getInstance().removeAllCookies(done -> {
-            CookieManager.getInstance().flush();
-            bridge.getWebView().clearCache(true);
-            worker.execute(() -> { MediaCache.clear(getContext()); call.resolve(); });
-        }));
+        getActivity().runOnUiThread(() -> {
+            var cover = bridge.getPlugin("CoverDisplay");
+            if (cover != null) ((CoverDisplayPlugin) cover.getInstance()).clearForLogout();
+            CookieManager.getInstance().removeAllCookies(done -> {
+                CookieManager.getInstance().flush();
+                bridge.getWebView().clearCache(true);
+                worker.execute(() -> { MediaCache.clear(getContext()); CoverPhotoStore.clear(getContext()); call.resolve(); });
+            });
+        });
     }
     @Override protected void handleOnDestroy() {
         worker.execute(() -> database.close());

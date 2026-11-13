@@ -21,8 +21,10 @@ export function useWorkspaceContextLayout(main, identity, context, actions, prop
     if (!main.value || !context.value || !identity.value || !actions.value) return
     if (props.contextPlacement !== 'auto') { inline.value = props.contextPlacement === 'inline'; return }
     const style = getComputedStyle(main.value)
+    // offsetWidth excludes the context's inline margin; reserve it before fitting.
+    const inlineOffset = Math.max(0, parseFloat(style.getPropertyValue('--workspace-context-inline-offset')) || 0)
     const available = main.value.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight)
-      - actions.value.offsetWidth - intrinsicWidth(identity.value) - 2 * parseFloat(style.columnGap || 0)
+      - actions.value.offsetWidth - intrinsicWidth(identity.value) - 2 * parseFloat(style.columnGap || 0) - inlineOffset
     inline.value = available >= intrinsicWidth(context.value)
   }
   function schedule() { cancelAnimationFrame(frame); frame = requestAnimationFrame(measure) }

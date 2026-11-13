@@ -129,7 +129,7 @@ onBeforeUnmount(() => observer?.disconnect());
 .workspace-header--context .workspace-header-actions {grid-column:-2/-1;grid-row:1}
 .workspace-header-context {grid-column:1/-1;grid-row:2;min-width:0}
 .workspace-header--context-inline .workspace-header-inner {grid-template-columns:max-content minmax(0,1fr) auto}
-.workspace-header--context-inline .workspace-header-context {grid-column:2;grid-row:1}
+.workspace-header--context-inline .workspace-header-context {grid-column:2;grid-row:1;margin-inline-start:var(--workspace-context-inline-offset,0px)}
 .workspace-header--context-inline .workspace-header-identity {max-width:100%}
 @media (prefers-reduced-motion:reduce) {.workspace-header::after{transition:none}}
 </style>
