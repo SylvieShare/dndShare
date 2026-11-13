@@ -37,4 +37,14 @@ describe('weapon damage source display', () => {
     const group = weaponDamageDisplay([{ source: 'Особый урон', expression: '2d6*2-1' }])[0]
     expect(group.columns[0].variants[0].map(term => term.sign)).toEqual(['+', '×', '-'])
   })
+  it('keeps the base roll identity separate from bonus labels and across mode captions', () => {
+    for (const source of ['Бросок', 'Преимущество', 'Помеха']) {
+      const [group] = weaponDamageDisplay([
+        { key: 'attack-roll', roll: true, source, expression: '2d20' },
+        { source: 'attack-roll', expression: '1d20' },
+      ])
+      expect(group.columns.map(column => column.key)).toEqual(['key:attack-roll', 'source:attack-roll'])
+      expect(group.columns.map(column => column.roll)).toEqual([true, false])
+    }
+  })
 })

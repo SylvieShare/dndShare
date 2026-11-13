@@ -2,7 +2,7 @@
   <div class="weapon-metrics" role="group" aria-label="Показатели оружия">
     <component :is="interactive && canAttack ? 'button' : 'div'" :type="interactive && canAttack ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__attack" data-sheet-swipe :aria-label="interactive && canAttack ? 'Настроить бросок атаки' : undefined" :aria-haspopup="interactive && canAttack ? 'menu' : undefined" :aria-expanded="interactive && canAttack ? rollScope === 'attack' : undefined" @click.stop="interactive && canAttack && emit('roll', 'attack', $event)">
       <span class="weapon-metrics__label">Атака</span>
-      <WeaponDamageBreakdown v-if="attackRows.length" :rows="attackRows" label="Состав атаки" :aria-description="`Бонус атаки ${attack || '0'}`" :damage-color="attackColor" dice-labels />
+      <WeaponDamageBreakdown v-if="attackRows.length" :rows="attackRows" label="Состав атаки" :aria-description="`Бонус атаки ${attack || '0'}`" damage-color="var(--accent-soft)" :roll-color="attackColor" dice-labels />
       <span v-else>—</span>
     </component>
     <component :is="interactive && canDamage ? 'button' : 'div'" :type="interactive && canDamage ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__damage" data-sheet-swipe :aria-label="interactive && canDamage ? 'Настроить бросок урона' : undefined" :aria-haspopup="interactive && canDamage ? 'menu' : undefined" :aria-expanded="interactive && canDamage ? rollScope === 'damage' && !damageKey : undefined" @click.stop="interactive && canDamage && emit('roll', 'damage', $event)">

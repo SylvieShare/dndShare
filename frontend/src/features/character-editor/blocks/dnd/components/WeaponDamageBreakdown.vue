@@ -1,17 +1,18 @@
 <template>
-  <TransitionGroup tag="span" class="weapon-damage" :aria-label="label" :css="false"
-    @enter="motion.enter" @leave="motion.leave" @enter-cancelled="motion.cancel" @leave-cancelled="motion.cancel">
+  <span ref="root" class="weapon-damage" :aria-label="label">
     <span v-for="(group, gi) in groups" :key="group.type" class="weapon-damage__group" :style="{ '--damage-color': group.color }">
-      <TransitionGroup tag="span" class="weapon-damage__terms" :css="false"
-        @enter="motion.enter" @leave="motion.leave" @enter-cancelled="motion.cancel" @leave-cancelled="motion.cancel">
-        <span v-for="(column, ci) in group.columns" :key="columnKey(column)" class="weapon-damage__addend">
+      <span class="weapon-damage__terms">
+        <span v-for="(column, ci) in group.columns" :key="column.key" class="weapon-damage__addend"
+          :data-formula-key="JSON.stringify([group.type, column.key])" :data-formula-roll="column.roll || undefined"
+          :data-formula-signature="columnSignature(column, gi, ci)">
           <span v-if="gi || ci || column.operator === '−'" class="weapon-damage__operator">{{ column.operator }}</span>
           <span class="weapon-damage__column">
             <span class="weapon-damage__formula">
               <template v-for="(terms, vi) in column.variants" :key="vi">
                 <span v-if="vi" class="weapon-damage__operator" title="Одной рукой / двумя руками">/</span>
                 <span v-if="!terms.length" class="weapon-damage__flat">0</span>
-                <span v-for="(term, ti) in terms" :key="ti" class="weapon-damage__value">
+                <span v-for="(term, ti) in terms" :key="ti" class="weapon-damage__value"
+                  :style="column.roll && term.kind === 'dice' && term.sides === 20 && rollColor ? { color: rollColor } : undefined">
                   <span v-if="ti || term.sign !== '+'" class="weapon-damage__operator">{{ term.sign === '-' ? '−' : term.sign }}</span>
                   <template v-if="term.kind === 'dice'">
                     <span v-if="term.n !== 1" class="weapon-damage__count">{{ term.n }}×</span>
@@ -24,26 +25,30 @@
             <small class="weapon-damage__source">{{ column.source }}</small>
           </span>
         </span>
-      </TransitionGroup>
+      </span>
       <small v-if="group.type" class="weapon-damage__type">{{ group.type }}</small>
     </span>
-  </TransitionGroup>
+    <span v-for="flash in flashes" :key="flash.id" class="weapon-formula-flash" :data-formula-flash="flash.key" :style="flash.style" aria-hidden="true"
+      @animationend="removeFlash(flash.id)" @animationcancel="removeFlash(flash.id)" />
+  </span>
 </template>
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { layoutTokens } from '@/app/design-tokens'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import { weaponDamageDisplay } from '../lib/weaponDamageDisplay'
-import { useWeaponFormulaMotion } from '../composables/useWeaponFormulaMotion'
+import { useWeaponFormulaFlash } from '../composables/useWeaponFormulaFlash'
 const props = defineProps({ rows: { type: Array, default: () => [] }, alternatives: { type: Array, default: () => [] }, damageType: String, damageColor: String,
-  label: { type: String, default: 'Состав урона' }, diceLabels: Boolean })
+  label: { type: String, default: 'Состав урона' }, diceLabels: Boolean, rollColor: String })
 const groups = computed(() => weaponDamageDisplay(props.rows, props.alternatives, { type: props.damageType, color: props.damageColor }))
-const motion = useWeaponFormulaMotion()
-const columnKey = column => `${column.source}:${JSON.stringify(column.variants)}`
+const root = ref(null)
+const { flashes, removeFlash } = useWeaponFormulaFlash(root)
+const columnSignature = (column, gi, ci) => JSON.stringify([column.source, column.operator, column.variants,
+  !!(gi || ci || column.operator === '−'), column.roll ? props.rollColor : null])
 </script>
 <style scoped>
-.weapon-damage {display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--spacing-small);min-width:0;max-width:100%}
-.weapon-damage__group {display:flex;flex-direction:column;align-items:center;gap:var(--spacing-xs);min-width:0;max-width:100%;color:var(--damage-color);transition:color var(--motion-feedback)}
+.weapon-damage {position:relative;isolation:isolate;display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--spacing-small);min-width:0;max-width:100%}
+.weapon-damage__group {display:flex;flex-direction:column;align-items:center;gap:var(--spacing-xs);min-width:0;max-width:100%;color:var(--damage-color)}
 .weapon-damage__terms,.weapon-damage__formula {display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--spacing-xs);min-width:0;max-width:100%}
 .weapon-damage__addend,.weapon-damage__value {display:inline-flex;align-items:flex-start;gap:2px;min-width:0;max-width:100%}
 .weapon-damage__addend {flex:0 0 auto}
@@ -55,5 +60,7 @@ const columnKey = column => `${column.source}:${JSON.stringify(column.variants)}
 .weapon-damage__operator {color:var(--text-muted)}
 .weapon-damage__source {max-width:calc(var(--layout-weapon-damage-die) * 2);color:var(--text-muted);font-size:var(--type-context-size);line-height:var(--type-context-line-height);font-weight:500;text-align:center;overflow-wrap:anywhere;white-space:normal}
 .weapon-damage__type {align-self:stretch;padding-block-start:var(--spacing-xs);border-block-start:var(--layout-border) solid color-mix(in srgb,var(--damage-color) 70%,transparent);font-size:var(--type-context-size);line-height:var(--type-context-line-height);font-weight:600;text-align:center;overflow-wrap:anywhere;white-space:normal}
-@media (prefers-reduced-motion:reduce) {.weapon-damage__group {transition:none}}
+.weapon-formula-flash {position:absolute;z-index:-1;pointer-events:none;border-radius:var(--radius-input);background:color-mix(in srgb,var(--accent-soft) 35%,transparent);opacity:0;animation:weapon-formula-flash var(--motion-navigation) ease-out}
+@keyframes weapon-formula-flash {0%,100% {opacity:0} 15% {opacity:1}}
+@media (prefers-reduced-motion:reduce) {.weapon-formula-flash {display:none;animation:none}}
 </style>
