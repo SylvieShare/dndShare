@@ -1,4 +1,5 @@
 <template>
+  <template v-if="!editorOnly">
   <RowActionMenu v-if="variant === 'strip' && rollable" :title="label">
     <template #trigger><button type="button" class="stat-strip" :aria-label="label + ' ' + pre + value"><img :src="icon" alt="" /><span class="stat-strip-label">{{ label }}</span><span>{{ pre }}{{ value }}{{ unit ? ' ' + unit : '' }}</span></button></template>
     <template #default="{ close: closeMenu }">
@@ -40,6 +41,7 @@
     </StatTileFace>
   </slot>
 
+  </template>
   <AppModalFrame v-if="editorOpen" :title="editorTitle || label" :outlined="false" :width="460" :z-index="3100" @close="editorOpen = false">
     <template #header-actions>
       <span class="utility-result"><img v-if="icon" :src="icon" alt="" /><b>{{ pre }}{{ value }}{{ unit ? ' ' + unit : '' }}</b></span>
@@ -61,6 +63,7 @@ import StatTileFace from '@/features/character-editor/blocks/dnd/components/Stat
 
 const props = defineProps({
   editorTitle: String,
+  editorOnly: Boolean,
   variant: { type: String, default: '' },
   embedded: Boolean,
   label: { type: String, default: '' },
@@ -79,6 +82,7 @@ const charCtx = inject('charCtx', { ownerMode: true })
 const canEdit = computed(() => !!charCtx.ownerMode)
 const editorOpen = ref(false)
 function open() { if (canEdit.value) editorOpen.value = true }
+defineExpose({ open })
 function runAction() { if (props.rollable || canEdit.value) emit('action') }
 </script>
 

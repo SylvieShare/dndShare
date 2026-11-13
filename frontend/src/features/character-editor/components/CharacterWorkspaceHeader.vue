@@ -39,6 +39,7 @@
         <CharacterBlock ref="profileEditor" block-id="char_identity" :options="{ editorOnly: true }" />
         <CharacterBlock ref="experienceEditor" block-id="lvl" :options="{ editorOnly: true }" />
         <CharacterBlock ref="healthEditor" block-id="hp" :options="{ editorOnly: true }" />
+        <CharacterBlock ref="armorEditor" block-id="armor" :options="{ editorOnly: true }" />
         <CharacterBlock ref="statusEditor" block-id="desktop_status_trigger" :options="{ editorOnly: true }" />
       </div>
     </template>
@@ -65,9 +66,9 @@ const emit = defineEmits(['select-tab', 'close'])
 const charCtx = inject('charCtx', {})
 const hasConditions = computed(() => !!(charCtx.characterStatuses?.entries?.length || charCtx.values?.exhaustion?.level > 0 || isInspirationActive(charCtx.values?.inspiration)))
 const workspace = ref(null)
-const profileEditor = ref(null), experienceEditor = ref(null), healthEditor = ref(null), statusEditor = ref(null)
+const profileEditor = ref(null), experienceEditor = ref(null), healthEditor = ref(null), armorEditor = ref(null), statusEditor = ref(null)
 function openHeading(target) {
-  const editors = { profile: profileEditor, experience: experienceEditor, health: healthEditor, 'add-status': statusEditor }
+  const editors = { profile: profileEditor, experience: experienceEditor, health: healthEditor, armor: armorEditor, 'add-status': statusEditor }
   editors[target]?.value?.open()
 }
 function setScrollPosition(value) {

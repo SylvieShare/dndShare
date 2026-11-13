@@ -1,5 +1,7 @@
 <template>
   <StatTile
+    ref="tile"
+    :editor-only="block.props?.editorOnly"
     :variant="variant"
     :embedded="block.props?.embedded"
     label="КД" editor-title="Класс доспеха"
@@ -53,7 +55,7 @@
 
 <script setup>
 import { MorphTile } from '@sylvieshare/share-ui'
-import { computed, inject } from 'vue'
+import { computed, inject, ref } from 'vue'
 import BonusList from '@/shared/ui/BonusList'
 import { EditorPanel, EditorSection } from '@sylvieshare/share-ui'
 import StatTile from '@/features/character-editor/blocks/dnd/components/StatTile'
@@ -61,6 +63,8 @@ import { deriveEquippedArmor } from '@/features/character-editor/blocks/dnd/lib/
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
+const tile = ref(null)
+defineExpose({ open: () => tile.value?.open() })
 const charCtx = inject('charCtx', {})
 
 const variant = computed(() => props.block?.props?.variant || props.block?.content?.variant || '')

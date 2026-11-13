@@ -1,6 +1,6 @@
 <template>
-  <span class="heading-health" role="group" data-tutorial="character-hp"
-    :class="{ 'heading-health--paused': pageHidden }"
+  <component :is="interactive ? 'button' : 'span'" :type="interactive ? 'button' : undefined" class="heading-health" :role="interactive ? undefined : 'group'" data-tutorial="character-hp"
+    :class="{ 'heading-health--paused': pageHidden, 'heading-health--interactive': interactive }"
     :style="{ '--health-color': color }" :aria-label="description" title="Здоровье">
     <svg ref="pulseSvg" class="health-beat" viewBox="0 0 128 32" preserveAspectRatio="none" aria-hidden="true" @animationstart="updatePulseRate">
       <path class="health-beat-ink health-beat-memory" :d="beatPath" pathLength="1" />
@@ -12,13 +12,13 @@
       <span class="health-readout"><strong>{{ current }}</strong><small>/{{ maximum }}</small></span>
     </span>
     <small v-if="temporary" class="health-temporary" :title="'Временные HP: ' + temporary">+{{ temporary }}</small>
-  </span>
+  </component>
 </template>
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { motionTokens } from '@/app/design-tokens'
 import { Heart } from '@lucide/vue'
-const props = defineProps({ current: Number, maximum: Number, temporary: Number })
+const props = defineProps({ current: Number, maximum: Number, temporary: Number, interactive: Boolean })
 const beatPath = 'M0 17H32L42 12L49 22L59 4L69 28L78 17H128'
 const pulseSvg = ref(null)
 const pageHidden = ref(typeof document !== 'undefined' && document.hidden)
@@ -45,6 +45,8 @@ const description = computed(() => 'Здоровье: ' + props.current + ' из
 </script>
 <style scoped>
 .heading-health {position:relative;isolation:isolate;display:inline-flex;flex:none;align-items:center;gap:var(--spacing-xs);height:var(--layout-sheet-health-height);box-sizing:border-box;min-width:0;padding:0 var(--spacing-label);overflow:hidden;border:var(--layout-border) solid color-mix(in srgb,var(--health-color) 32%,transparent);border-radius:var(--radius-input);background:color-mix(in srgb,var(--health-color) 5%,transparent);white-space:nowrap;font-family:var(--type-sheet-health-family);font-size:var(--type-sheet-health-size);font-weight:var(--type-sheet-health-weight);line-height:var(--type-sheet-health-line-height);font-variant-numeric:lining-nums tabular-nums}
+.heading-health--interactive {cursor:pointer}
+.heading-health--interactive:focus-visible {outline:2px solid var(--accent-soft);outline-offset:2px}
 .health-beat {position:absolute;inset:0;width:100%;height:100%;pointer-events:none;color:var(--health-color)}
 .health-beat-ink {fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;opacity:0;animation-duration:var(--motion-sheet-health-pulse);animation-timing-function:linear;animation-iteration-count:infinite}
 .health-beat-memory {stroke-dasharray:1 1;stroke-dashoffset:1;animation-name:health-beat-draw}

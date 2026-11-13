@@ -1,27 +1,26 @@
 <template>
-  <RowActionMenu title="Действия персонажа" :heading="menuSummary" :trigger-attrs="{ style: { maxWidth: 'var(--layout-sheet-header-tile-max)' } }" block>
+  <RowActionMenu ref="actions" title="Действия персонажа" :heading="menuSummary" :trigger-attrs="{ style: { maxWidth: 'var(--layout-sheet-header-tile-max)' } }" block>
     <template #trigger="{ open }">
-      <button class="dnd-heading action-menu-source" :class="{ 'action-menu-source--open': open }"
-        type="button" aria-label="Действия персонажа" :aria-expanded="open"
-        :aria-description="`${name || 'Персонаж'}: здоровье ${current} из ${maximum}${temporary ? ', временные HP ' + temporary : ''}, класс доспеха ${armor}, пассивное внимание ${perception}, расследование ${investigation}`">
-        <span class="portrait">
+      <div class="dnd-heading action-menu-source" :class="{ 'action-menu-source--open': open }">
+        <button class="portrait" type="button" aria-label="Действия персонажа" aria-haspopup="menu" :aria-expanded="open"
+          :aria-description="`${name || 'Персонаж'}: здоровье ${current} из ${maximum}${temporary ? ', временные HP ' + temporary : ''}, класс доспеха ${armor}, пассивное внимание ${perception}, расследование ${investigation}`">
           <img v-if="iconUrl && !failed" :src="iconUrl" alt="" @error="failed = true" />
           <span v-else>{{ Array.from(name || '?')[0] }}</span>
-        </span>
+        </button>
         <span class="identity"><strong>{{ name || 'Лист персонажа' }}</strong>
         </span>
-        <span class="heading-combat">
-          <span class="heading-armor" :aria-label="`Класс доспеха ${armor}`" title="Класс доспеха">
+        <span class="heading-combat" @click.stop>
+          <button class="heading-armor" type="button" :disabled="!canEdit" :aria-label="`Класс доспеха ${armor}`" title="Класс доспеха" aria-haspopup="dialog" @click="openPanel('armor')">
             <Shield class="heading-armor-icon" :stroke-width="1.35" aria-hidden="true" />
             <span class="heading-armor-value">{{ armor }}</span>
-          </span>
-          <SheetHealth :current="current" :maximum="maximum" :temporary="temporary" />
+          </button>
+          <SheetHealth interactive :current="current" :maximum="maximum" :temporary="temporary" aria-haspopup="dialog" @click="openPanel('health')" />
           <span class="heading-metrics">
-            <span class="heading-metric" :aria-label="`Пассивное внимание ${perception}`" title="Пассивное внимание"><Eye :size="14" />{{ perception }}</span>
-            <span class="heading-metric" :aria-label="`Пассивное расследование ${investigation}`" title="Пассивное расследование"><Search :size="14" />{{ investigation }}</span>
+            <button class="heading-metric" type="button" :aria-label="`Пассивное внимание ${perception}`" title="Пассивное внимание" aria-haspopup="dialog" :aria-expanded="passiveOpen && passiveKind === 'perception'" @click="openPassive('perception', $event)"><Eye :size="14" aria-hidden="true" />{{ perception }}</button>
+            <button class="heading-metric" type="button" :aria-label="`Пассивное расследование ${investigation}`" title="Пассивное расследование" aria-haspopup="dialog" :aria-expanded="passiveOpen && passiveKind === 'investigation'" @click="openPassive('investigation', $event)"><Search :size="14" aria-hidden="true" />{{ investigation }}</button>
           </span>
         </span>
-      </button>
+      </div>
     </template>
     <template #default="{ close }">
       <RowActionItem action="edit" :disabled="!canEdit" @click="select('profile', close)">Изменить персонажа</RowActionItem>
@@ -34,18 +33,29 @@
       <RowActionItem action="create" :disabled="!canEdit" @click="select('add-status', close)">Добавить состояние</RowActionItem>
     </template>
   </RowActionMenu>
+  <SheetPassiveDetails :open="passiveOpen" :kind="passiveKind" :anchor="passiveAnchor"
+    :value="passiveKind === 'perception' ? perception : investigation" @update:open="passiveOpen = $event" />
 </template>
 <script setup>
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, ref, shallowRef, watch } from 'vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import { Eye, HeartPulse, Search, Shield, TrendingUp } from '@lucide/vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import SheetHealth from './SheetHealth.vue'
+import SheetPassiveDetails from './SheetPassiveDetails.vue'
 import { levelExperience, levelProgressPercent } from '../../blocks/dnd/lib/experience'
 import { hpMaximum, normalizeHpMaximum } from '../../blocks/dnd/lib/hp'
 import { abilityModifier, resolveNumValue, sumBonuses, proficiencyBonus } from '@/shared/lib/dnd'
 const props = defineProps({ name: String, subtitle: String, iconUrl: String })
 const emit = defineEmits(['open'])
+const actions = ref(null), passiveOpen = ref(false), passiveKind = ref('perception'), passiveAnchor = shallowRef(null)
+function openPanel(panel) { actions.value?.close(); passiveOpen.value = false; emit('open', panel) }
+function openPassive(kind, event) {
+  actions.value?.close()
+  passiveAnchor.value = event.currentTarget
+  passiveOpen.value = !(passiveOpen.value && passiveKind.value === kind)
+  passiveKind.value = kind
+}
 const ctx = inject('charCtx', {})
 const values = computed(() => ctx.values || {})
 const canEdit = computed(() => !!ctx.ownerMode)
@@ -78,7 +88,7 @@ function select(panel, close) { close(); emit('open', panel) }
 </script>
 <style scoped>
 .dnd-heading {display:grid;grid-template-columns:var(--layout-sheet-header-icon) minmax(0,1fr);column-gap:var(--spacing-small);row-gap:calc(var(--spacing-xs) / 2);width:100%;min-width:0;padding:0;border:0;border-radius:var(--radius-tile);background:transparent;color:var(--text-1);text-align:left;font:inherit;cursor:pointer}
-.portrait {grid-row:1/3;align-self:center;display:grid;place-items:center;width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);overflow:hidden;border-radius:var(--radius-input);color:var(--accent-soft);font-size:var(--type-sheet-header-size)}
+.portrait {grid-row:1/3;align-self:center;display:grid;place-items:center;width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);padding:0;border:0;background:transparent;cursor:pointer;overflow:hidden;border-radius:var(--radius-input);color:var(--accent-soft);font-size:var(--type-sheet-header-size)}
 .portrait img {width:100%;height:100%;object-fit:cover}
 .identity {display:flex;flex-direction:column;align-items:flex-start;min-width:0}
 .identity strong,.identity small {max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -86,11 +96,14 @@ function select(panel, close) { close(); emit('open', panel) }
 .identity small {font-size:var(--type-context-size);color:var(--text-muted)}
 .heading-combat {display:flex;align-items:center;flex-wrap:wrap;gap:var(--spacing-xs) var(--spacing-small);min-width:0;font-size:var(--type-context-size);line-height:var(--type-context-line-height);font-variant-numeric:lining-nums tabular-nums}
 .heading-metrics {display:flex;flex:none;flex-direction:column;justify-content:center;height:var(--layout-sheet-health-height);color:var(--text-muted);font-size:var(--type-context-size);line-height:calc(var(--layout-sheet-health-height) / 2)}
-.heading-armor {display:grid;place-items:center;flex:none;width:var(--layout-sheet-header-armor);height:var(--layout-sheet-header-armor)}
+.heading-armor {display:grid;place-items:center;flex:none;width:var(--layout-sheet-header-armor);height:var(--layout-sheet-header-armor);padding:0;border:0;background:transparent;color:inherit;font:inherit;border-radius:var(--radius-input);cursor:pointer}
 .heading-armor-icon,.heading-armor-value {grid-area:1/1}
 .heading-armor-icon {width:100%;height:100%;color:var(--text-muted)}
 .heading-armor-value {padding-bottom:2px;font-weight:700;line-height:1}
-.heading-metric {display:inline-flex;align-items:center;gap:2px;white-space:nowrap}
+.heading-metric {display:inline-flex;align-items:center;gap:2px;white-space:nowrap;padding:0;border:0;background:transparent;color:inherit;font:inherit;line-height:inherit;text-align:left;border-radius:var(--radius-input);cursor:pointer}
+.portrait:focus-visible,.heading-armor:focus-visible,.heading-metric:focus-visible {outline:2px solid var(--accent-soft);outline-offset:2px}
+.heading-armor:hover:not(:disabled),.heading-metric:hover,.heading-metric[aria-expanded="true"] {background:var(--surface-raised)}
+.heading-armor:disabled {cursor:default}
 .heading-metrics svg {color:var(--text-muted)}
 .experience-action {display:flex;flex-direction:column;gap:5px;width:100%;min-width:0}
 .experience-action small {color:var(--text-muted);font-size:12px}

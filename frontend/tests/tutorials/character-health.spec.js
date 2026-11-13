@@ -41,7 +41,7 @@ for (const width of [390, 834, 1440]) test(`HP, shield and stacked passives fit 
       numbers: box('.health-summary'), temp: box('.health-temporary'),
       avatar: box('.portrait'), name: box('.identity'),
       combat: box('.heading-combat'), armor: box('.heading-armor'), hp: box('.heading-health'),
-      fields: [...node.querySelectorAll('.heading-metrics > span')].map(field => {
+      fields: [...node.querySelectorAll('.heading-metric')].map(field => {
         const rect = field.getBoundingClientRect()
         return { left: rect.left, top: rect.top, bottom: rect.bottom }
       }),
@@ -85,7 +85,7 @@ test('the simple counter retains menu edits and death saves', async ({ page }) =
   await page.goto('/char/test')
   const heading = page.locator('.dnd-heading')
   await expect(heading).not.toContainText('Полуэльф')
-  await heading.click()
+  await heading.getByRole('button', { name: 'Действия персонажа', exact: true }).click()
   await expect(page.locator('.ram-heading')).toContainText('Полуэльф')
   await page.getByRole('menuitem', { name: 'Изменить HP', exact: true }).click()
   const health = page.getByRole('dialog', { name: 'Здоровье', exact: true })
