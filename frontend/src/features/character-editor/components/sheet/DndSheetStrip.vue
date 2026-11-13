@@ -12,7 +12,7 @@ defineProps({showAdd:Boolean})
 const hasStates = computed(() => ctx.characterStatuses?.entries?.length || ctx.values?.exhaustion?.level > 0 || isInspirationActive(ctx.values?.inspiration))
 </script>
 <style scoped>
-.strip {display:flex; align-items:center; gap:var(--spacing-label); min-width:0; margin:auto; min-height:var(--layout-sheet-header-icon)}
+.strip {display:flex; align-items:center; gap:var(--spacing-label); min-width:0; margin:auto; min-height:var(--layout-touch-min)}
 .strip :deep(.character-sheet-field){flex:1;min-width:0}
 @media (--ui-compact){.strip{gap:var(--spacing-xs)}}
 </style>

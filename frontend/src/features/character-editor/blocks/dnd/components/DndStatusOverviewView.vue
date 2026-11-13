@@ -97,7 +97,7 @@ import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import { statusIconItem } from '../../../lib/statusIcon'
 import { layoutTokens } from '@/app/design-tokens'
 const failedIcons=reactive(new Set())
-const headerIconSize = layoutTokens['sheet-header-icon']
+const headerIconSize = layoutTokens['sheet-header-status-icon']
 
 defineProps({
   items: { type: Array, default: () => [] },
@@ -121,15 +121,15 @@ function monogram(value) {
 </script>
 
 <style scoped>
-.dsov.dsov--header {padding:0;gap:8px}
-.dsov--header .dsov-row {gap:8px;flex-wrap:nowrap;max-width:100%;padding-block:var(--spacing-xs);margin-block:calc(-1 * var(--spacing-xs));overscroll-behavior-x:contain}
+.dsov.dsov--header {padding:0;gap:var(--spacing-compact)}
+.dsov--header .dsov-row {gap:var(--spacing-compact);flex-wrap:nowrap;max-width:100%;padding-block:var(--spacing-xs);margin-block:calc(-1 * var(--spacing-xs));overscroll-behavior-x:contain}
 .dsov--header .dsov-row > * {flex:none}
-.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-icon) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:var(--layout-sheet-header-icon);padding:0 var(--spacing-compact)}
-.dsov--header .dsov-icon {width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);min-width:var(--layout-sheet-header-icon);border-radius:var(--radius-input)}
-.dsov--header .dsov-item-icon {width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon)}
+.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-status-icon) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:var(--layout-touch-min);padding:0 var(--spacing-compact)}
+.dsov--header .dsov-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon);min-width:var(--layout-sheet-header-status-icon);border-radius:var(--radius-input)}
+.dsov--header .dsov-item-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon)}
 .dsov--header .dsov-icon :deep(img), .dsov--header .dsov-icon :deep(svg) {width:100%;height:100%}
-.dsov--header .dsov-copy {gap:var(--spacing-xs)}
-.dsov--header .dsov-heading {flex-direction:column;align-items:stretch;gap:var(--spacing-xs)}
+.dsov--header .dsov-copy {gap:calc(var(--spacing-xs) / 2)}
+.dsov--header .dsov-heading {flex-direction:column;align-items:stretch;gap:calc(var(--spacing-xs) / 2)}
 .dsov--header .dsov-level {white-space:nowrap}
 .dsov--header .dsov-name {font-size:var(--type-group-size);line-height:var(--type-group-line-height)}
 .dsov--header .dsov-duration {font-size:var(--type-context-size);line-height:var(--type-context-line-height)}
