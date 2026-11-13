@@ -1,11 +1,12 @@
 import { lightningThrow } from '../../../../tests/fixtures/mechanics.js'
 import { beforeEach, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
-import { reactive } from 'vue'
+import { reactive, shallowRef } from 'vue'
 import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
 import { useWeaponUses } from '../blocks/dnd/composables/useWeaponUses'
 import { useWeaponDamageRolls } from '../blocks/dnd/composables/useWeaponDamageRolls'
+import { useWeaponCardPreview } from '../blocks/dnd/composables/useWeaponCardPreview'
 import { weaponUseDamageActions } from './weaponUseDamage'
 import { weaponUseState } from './weaponUses'
 import { MAGIC_VALUE_ID } from './characterMagicItems'
@@ -34,6 +35,38 @@ function fixture(extras = [], definition = rule) {
   const roll = vi.spyOn(useDiceStore(), 'roll').mockReturnValue({ total: 15, parts: [] })
   return { ctx, use, damage, attack, roll, entry: () => ctx.values.weapon[0] }
 }
+
+it('keeps hit damage in the main preview option and only independent damage in separate cells', async () => {
+ const { ctx, use, damage, entry, roll } = fixture()
+ const draft = shallowRef(null)
+ const card = useWeaponCardPreview({ charCtx: ctx,
+  weaponDamageActions: row => weaponUseDamageActions(ctx.values, row.uid),
+  weaponMenuSummary: () => ({ bonus: 3, mode: 'normal', parts: [] }),
+  damageSources: damage.previewSources, twoHandedParts: () => [], weaponUses: use.choices,
+  weaponUseSources: damage.previewUseSources,
+ }, entry, () => draft.value)
+ const base = [{ source: 'Оружие', expression: '1d6' }, { source: 'Сила', expression: '3' }]
+ expect(card.alternativeDamage.value.map(cell => cell.key)).toEqual(['lightning_throw:line'])
+ expect(card.damageRows.value).toEqual(base)
+ draft.value = { scope: 'damage', options: { weaponUseKey: rule.key } }
+ expect(card.damageRows.value).toEqual([...base, { source: rule.title, expression: '4d6{Молния|#ff0}' }])
+ draft.value = { scope: 'damage', options: { weaponUseKey: rule.key, critical: true } }
+ expect(card.damageRows.value).toEqual([
+  { source: 'Оружие', expression: '2d6' }, { source: 'Сила', expression: '3' },
+  { source: rule.title, expression: '8d6{Молния|#ff0}' },
+ ])
+ draft.value = null
+ expect(card.damageRows.value).toEqual(base)
+ expect(entry().params.magic).toEqual({ remaining: 1 })
+ expect(roll).not.toHaveBeenCalled()
+ await use.rollStep(entry(), rule.key, 'line')
+ expect(card.alternativeDamage.value.map(cell => [cell.key, cell.disabled])).toEqual([['lightning_throw:line', true]])
+ const action = weaponUseDamageActions(ctx.values, entry().uid)[0]
+ draft.value = { scope: 'damage', options: { actionKeys: [action.key] } }
+ expect(card.damageRows.value).toEqual([...base, { source: rule.title, expression: '4d6{Молния|#ff0}' }])
+ expect(entry().params.magic.remaining).toBe(0)
+ expect(roll).toHaveBeenCalledOnce()
+})
 
 it('projects unavailable alternative damage without planning or spending its charge', () => {
  const { ctx, damage, entry, roll } = fixture()

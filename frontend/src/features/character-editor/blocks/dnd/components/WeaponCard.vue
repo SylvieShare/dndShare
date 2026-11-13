@@ -50,7 +50,7 @@
       role="menu" :aria-label="directRoll.scope === 'attack' ? 'Атака' : 'Урон'" :z-index="4100"
       transition-preset="action-menu" @update:open="!$event && closeRoll()">
       <WeaponAlternativeDamageMenu v-if="directRoll.selection" :entry="entry" :selection="directRoll.selection" @preview="rollPreview = $event"
-        @roll="options => rollDamage(closeRoll, options)" @roll-step="options => { closeRoll(); ctx.rollWeaponUseStep(entry, options.weaponUseKey, options.stepKey) }" />
+        @roll-step="options => { closeRoll(); ctx.rollWeaponUseStep(entry, options.weaponUseKey, options.stepKey) }" />
       <WeaponRollSettings v-else :scope="directRoll.scope" :weapon="ctx.item(entry)" :weapon-title="ctx.itemTitle(entry)"
         :summary="menuSummary" :weapon-uid="entry.uid" :actions="weaponDamageActions"
         :uses="ctx.weaponUses(entry)" @preview="rollPreview = $event"
