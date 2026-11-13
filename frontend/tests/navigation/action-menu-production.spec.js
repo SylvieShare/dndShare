@@ -77,7 +77,7 @@ for (const width of [390, 834, 1920]) {
     const editor = page.getByRole('dialog', { name: / — спасбросок$/ })
     await expect(editor.getByRole('switch', { name: 'Владение спасброском' })).toBeVisible()
     await expect(editor.getByText('Основное значение')).toHaveCount(0)
-    await expect(editor.locator('.am-card')).toHaveCSS('border-top-width', '1px')
+    await expect(editor.locator('.am-card')).toHaveCSS('border-top-width', '0px')
     await expect(editor.locator('.am-card')).toHaveCSS('background-color', 'rgb(39, 39, 46)')
     await expect(editor).toHaveCSS('backdrop-filter', 'blur(6px)')
     await testInfo.attach('editor-surface', { body: await page.screenshot(), contentType: 'image/png' })
