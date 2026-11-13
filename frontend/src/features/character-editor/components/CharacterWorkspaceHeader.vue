@@ -18,9 +18,9 @@
         </div>
       </div>
     </template>
-    <template v-if="dnd" #context>
+    <template v-if="dnd && hasConditions" #context>
       <div class="character-summary-strip">
-        <DndSheetStrip show-add />
+        <DndSheetStrip />
       </div>
     </template>
     <template v-if="tabs.length" #navigation>
@@ -48,7 +48,7 @@
 defineOptions({ inheritAttrs: false })
 import CharacterBlock from './CharacterBlock.vue'
 import { useRouter } from 'vue-router'
-import { computed, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { ActionButton } from '@sylvieshare/share-ui'
 import { ArrowLeft } from '@lucide/vue'
 import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
@@ -57,10 +57,13 @@ import SettingsMenuTile from '../blocks/generic/SettingsMenuTile.vue'
 import CharacterSheetTabs from './sheet/CharacterSheetTabs.vue'
 import DndSheetHeading from './sheet/DndSheetHeading.vue'
 import DndSheetStrip from './sheet/DndSheetStrip.vue'
+import { isInspirationActive } from '../blocks/dnd/lib/mobileStatus'
 const props = defineProps({ dnd: Boolean, format: String, modal: Boolean, contentWidth: String, name: String, subtitle: String, iconUrl: String, session: Object, transfers: Object, compact: Boolean, showMenu: Boolean,
   selection: Array, animateNavigation: { type: Boolean, default: true },
   tabs: { type: Array, default: () => [] }, activeTab: Number })
 const emit = defineEmits(['select-tab', 'close'])
+const charCtx = inject('charCtx', {})
+const hasConditions = computed(() => !!(charCtx.characterStatuses?.entries?.length || charCtx.values?.exhaustion?.level > 0 || isInspirationActive(charCtx.values?.inspiration)))
 const workspace = ref(null)
 const profileEditor = ref(null), experienceEditor = ref(null), healthEditor = ref(null), statusEditor = ref(null)
 function openHeading(target) {
@@ -80,6 +83,12 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
 .heading-editors {position:absolute;width:0;height:0}
 .heading-tools {display:flex;align-items:center;gap:2px;flex:none}
 .character-summary-strip {position:relative;z-index:1}
+.character-workspace-header:not(.workspace-header--context-inline) .character-summary-strip {
+  --status-scroll-inset-start: var(--workspace-context-inset-start, var(--spacing-page));
+  --status-scroll-inset-end: var(--workspace-context-inset-end, var(--spacing-page));
+  margin-inline-start: calc(-1 * var(--status-scroll-inset-start));
+  margin-inline-end: calc(-1 * var(--status-scroll-inset-end));
+}
 .character-workspace-header {
   --workspace-header-identity-gap: var(--spacing-small);
   --workspace-header-context-gap: var(--spacing-small);

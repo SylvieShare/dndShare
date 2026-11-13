@@ -31,13 +31,24 @@ function setScrollPosition(value) {
 useWorkspaceScrollPosition(computed(()=>element.value && {setScrollPosition}),()=>props.scrollSource === undefined ? (typeof window==='undefined'?null:window) : props.scrollSource)
 defineExpose({setScrollPosition})
 let observer;
+function updateSize() {
+  if (!element.value || !main.value) return
+  const style = getComputedStyle(main.value)
+  const contextStyle = context.value ? getComputedStyle(context.value) : null
+  const left = main.value.offsetLeft + parseFloat(style.paddingLeft) + parseFloat(contextStyle?.paddingLeft || 0)
+  const right = element.value.clientWidth - main.value.offsetLeft - main.value.offsetWidth + parseFloat(style.paddingRight) + parseFloat(contextStyle?.paddingRight || 0)
+  const start = style.direction === 'rtl' ? right : left
+  const end = style.direction === 'rtl' ? left : right
+  element.value.style.setProperty('--workspace-context-inset-start', `${Math.max(0, start)}px`)
+  element.value.style.setProperty('--workspace-context-inset-end', `${Math.max(0, end)}px`)
+  element.value.style.setProperty('--workspace-main-height', `${main.value.offsetHeight}px`)
+  emit('resize', element.value.offsetHeight)
+}
 onMounted(() => {
-  observer = new ResizeObserver(() => {
-    if (!element.value) return
-    element.value.style.setProperty('--workspace-main-height', `${main.value.offsetHeight}px`);
-    emit("resize", element.value.offsetHeight);
-  });
+  observer = new ResizeObserver(updateSize);
   observer.observe(element.value);
+  observer.observe(main.value);
+  updateSize();
 });
 onBeforeUnmount(() => observer?.disconnect());
 </script>

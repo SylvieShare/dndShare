@@ -122,9 +122,9 @@ function monogram(value) {
 
 <style scoped>
 .dsov.dsov--header {padding:0;gap:var(--spacing-small)}
-.dsov--header .dsov-row {gap:var(--spacing-small);flex-wrap:nowrap;max-width:100%;padding-block:var(--spacing-xs);margin-block:calc(-1 * var(--spacing-xs));overscroll-behavior-x:contain}
+.dsov--header .dsov-row {gap:var(--spacing-small);flex-wrap:nowrap;max-width:100%;box-sizing:border-box;padding-block:var(--spacing-xs);padding-inline:var(--status-scroll-inset-start,0px) var(--status-scroll-inset-end,0px);margin-block:calc(-1 * var(--spacing-xs));overscroll-behavior-x:contain}
 .dsov--header .dsov-row > * {flex:none}
-.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-status-icon) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:var(--layout-sheet-header-status-icon);padding:0 var(--spacing-small);border-radius:var(--radius-tile);background:var(--surface)}
+.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-status-icon) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:var(--layout-sheet-header-status-icon);padding:0 var(--spacing-medium) 0 var(--spacing-small);border-radius:var(--radius-tile);background:var(--surface)}
 .dsov--header .dsov-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon);min-width:var(--layout-sheet-header-status-icon);border-radius:var(--radius-input)}
 .dsov--header .dsov-item-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon)}
 .dsov--header .dsov-icon :deep(img), .dsov--header .dsov-icon :deep(svg) {width:100%;height:100%}

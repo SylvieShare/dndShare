@@ -10,11 +10,12 @@ async function open(page,width,{longName=false,owner=true,withCondition=true,def
   if(deferredSVG) await page.route('**/api/svg/99',route=>route.fulfill({contentType:'image/svg+xml',body:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M2 2h20v20H2z"/></svg>'}))
   await page.route('**/api/handbook/sync?**',route=>route.fulfill({json:{protocol:1,entries:[],hasMore:false,cursor:'empty',visibleIds:[],metadata:{types:[],suggests:{},suggestTypes:[],books:[]}}}))
   await page.goto('/char/test')
-  await expect(page.getByRole('button',{name:'Добавить состояние',exact:true})).toBeVisible({timeout:15000})
+  await expect(page.getByRole('button',{name:'Действия персонажа',exact:true})).toBeVisible({timeout:15000})
+  if(withCondition) await expect(page.locator('.dsov-effect')).toHaveCount(1)
   await page.evaluate(()=>document.fonts.ready)
   return state
 }
-for(const [width,longName,inline] of [[390,false,false],[700,false,false],[834,false,true],[834,true,false],[1440,true,true]]) {
+for(const [width,longName,inline] of [[390,false,false],[700,false,true],[834,false,true],[834,true,false],[1440,true,true]]) {
   test(`conditions use available header space at ${width} (long name=${longName})`,async({page},testInfo)=>{
     await open(page,width,{longName,duration:{kind:'minutes',value:10}})
     const header=page.locator('.character-workspace-header')
@@ -51,25 +52,28 @@ for(const [width,longName,inline] of [[390,false,false],[700,false,false],[834,f
     await character.click()
     await expect(character).toHaveClass(/action-menu-source--open/)
     await expect(character).toHaveCSS('border-bottom-right-radius','12px')
-    await page.keyboard.press('Escape')
-    const add=header.getByRole('button',{name:'Добавить состояние',exact:true})
-    await expect(add).toHaveText('Состояние')
-    await expect(add).toHaveCSS('border-top-style','dashed')
+    await expect(header.getByRole('button',{name:'Добавить состояние',exact:true})).toHaveCount(0)
+    const add=page.getByRole('menuitem',{name:'Добавить состояние',exact:true})
     await add.click();await expect(page.getByRole('dialog',{name:'Эффекты и состояния',exact:true})).toBeVisible()
     await page.keyboard.press('Escape')
     await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
     await testInfo.attach(`context-${width}-${longName}`,{body:await header.screenshot(),contentType:'image/png'})
   })
 }
-test('the condition row and add button remain present on an empty phone sheet',async({page})=>{
+test('an empty phone sheet adds conditions through the character tile without an empty row',async({page})=>{
   await open(page,390,{withCondition:false})
-  await expect(page.locator('.workspace-header-context').getByRole('button',{name:'Добавить состояние',exact:true})).toBeVisible()
+  await expect(page.locator('.workspace-header-context')).toHaveCount(0)
+  await page.getByRole('button',{name:'Действия персонажа',exact:true}).click()
+  await page.getByRole('menuitem',{name:'Добавить состояние',exact:true}).click()
+  await expect(page.getByRole('dialog',{name:'Эффекты и состояния',exact:true})).toBeVisible()
 })
 test('read-only characters expose icons but cannot add conditions',async({page})=>{
   await open(page,834,{owner:false})
-  await expect(page.getByRole('button',{name:'Добавить состояние',exact:true})).toBeDisabled()
+  await expect(page.getByRole('button',{name:'Добавить состояние',exact:true})).toHaveCount(0)
   await expect(page.locator('.dsov-icon .item-icon')).toBeVisible()
   await expect(page.locator('.dsov-duration')).toHaveText('До ручного снятия')
+  await page.getByRole('button',{name:'Действия персонажа',exact:true}).click()
+  await expect(page.getByRole('menuitem',{name:'Добавить состояние',exact:true})).toBeDisabled()
 })
 
 test('condition icons referenced by SVG ID load into the header',async({page})=>{

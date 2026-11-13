@@ -22,8 +22,8 @@ for (const width of [390, 834, 1440]) for (const inspiration of [false, true]) {
     const header = page.locator('.character-workspace-header'), strip = header.locator('.character-summary-strip')
     const scroller = page.locator(width < 1200 ? '.mobile-swipe-pane:not([inert]) .mobile-pane-scroll' : '.sheet-scroll')
     await expect.poll(() => scroller.evaluate(node => node.scrollHeight - node.clientHeight)).toBeGreaterThan(180)
-    await expect(strip).toHaveCount(1)
-    await expect(strip.getByRole('button',{name:'Добавить состояние',exact:true})).toBeVisible()
+    await expect(strip).toHaveCount(inspiration ? 1 : 0)
+    await expect(header.getByRole('button',{name:'Добавить состояние',exact:true})).toHaveCount(0)
     const initial = await header.boundingBox()
     await scroller.evaluate(node => { node.scrollTop = 180 })
     await expect(header).toHaveAttribute('data-workspace-scrolled', '')
@@ -56,14 +56,17 @@ for (const width of [390, 834, 1440]) for (const inspiration of [false, true]) {
   })
 }
 
-test('removing the last condition keeps the phone add action without a spacer jump', async ({ page }) => {
+test('removing the last condition collapses the row and keeps addition in the character menu', async ({ page }) => {
   const api = await open(page, 390, true)
   const header = page.locator('.character-workspace-header'), strip = header.locator('.character-summary-strip')
   const height = (await header.boundingBox()).height
   await strip.getByRole('button', { name: 'Вдохновение', exact: true }).click()
   await page.getByRole('menuitem', { name: 'Убрать', exact: true }).click()
-  await expect(strip.getByRole('button',{name:'Вдохновение',exact:true})).toHaveCount(0)
-  await expect(strip.getByRole('button',{name:'Добавить состояние',exact:true})).toBeVisible()
+  await expect(strip).toHaveCount(0)
+  await expect(header.locator('.workspace-header-context')).toHaveCount(0)
   await expect.poll(() => api.document().values.inspiration).toBe(false)
-  expect((await header.boundingBox()).height).toBeCloseTo(height,0)
+  await expect.poll(async () => (await header.boundingBox()).height).toBeLessThan(height)
+  await page.getByRole('button',{name:'Действия персонажа',exact:true}).click()
+  await page.getByRole('menuitem',{name:'Добавить состояние',exact:true}).click()
+  await expect(page.getByRole('dialog',{name:'Эффекты и состояния',exact:true})).toBeVisible()
 })
