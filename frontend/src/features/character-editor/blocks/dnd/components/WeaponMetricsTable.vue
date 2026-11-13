@@ -80,8 +80,8 @@ function showDescription(event, property) {
 </script>
 <style scoped>
 .weapon-metrics {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   align-items: stretch;
   gap: var(--layout-weapon-metrics-gap);
   border: 0;
@@ -108,13 +108,12 @@ button.weapon-metrics__cell:focus-visible { outline: 2px solid var(--accent-soft
 .weapon-metrics__grip { color: var(--text-muted); font-size: 10px; line-height: 14px; white-space: normal; }
 .weapon-metrics__label { color: var(--text-muted); font-size: 10px; line-height: 12px; }
 .weapon-metrics__attack {
-  flex: 1 1 max-content;
   max-width: 100%;
   min-height: var(--layout-weapon-metrics-attack-width);
   gap: 4px;
 }
-.weapon-metrics__damage { min-height: var(--layout-weapon-metrics-attack-width); gap: 4px; flex: 1.25 1 max-content; max-width: 100%; }
-.weapon-properties-stack { flex: 0 0 100%; display: grid; gap: var(--layout-weapon-metrics-gap); min-width: 0; }
+.weapon-metrics__damage { min-height: var(--layout-weapon-metrics-attack-width); gap: 4px; max-width: 100%; }
+.weapon-properties-stack { display: grid; gap: var(--layout-weapon-metrics-gap); min-width: 0; }
 .weapon-properties-stack:empty { display: none; }
 .weapon-metrics__property-list { display: flex; flex-wrap: wrap; gap: 2px 8px; font-size: var(--type-weapon-property-size); line-height: var(--type-weapon-property-line-height); overflow-wrap: break-word; }
 .weapon-metrics__property { appearance: none; font: inherit; color: inherit; text-align: left; min-width: 0; max-width: 100%; background: none; border: 0; padding: 3px 0; }
