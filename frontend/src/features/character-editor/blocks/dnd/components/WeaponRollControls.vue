@@ -100,5 +100,5 @@ const emit = defineEmits(['update:attackRollMode', 'update:useKey', 'update:crit
   box-sizing: border-box;
 }
 .weapon-roll-controls--dialog {width:100%;max-width:none;max-height:none;padding:0;overflow:visible}
-.weapon-roll-options {display:grid;grid-auto-flow:column;grid-auto-columns:minmax(var(--layout-weapon-roll-option-min),1fr);gap:var(--spacing-small);overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:thin;padding:var(--spacing-xs);margin-inline:calc(-1 * var(--spacing-xs));--choice-card-icon-size:var(--layout-weapon-roll-option-icon);--choice-card-min-height:var(--layout-weapon-roll-option-height);--choice-card-padding:var(--spacing-small);--choice-card-gap:var(--spacing-small)}
+.weapon-roll-options {display:grid;grid-auto-flow:column;grid-auto-columns:var(--layout-weapon-roll-option-width);justify-content:start;gap:var(--spacing-xs);overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:thin;padding:var(--spacing-xs);margin-inline:calc(-1 * var(--spacing-xs));--choice-card-icon-size:var(--layout-weapon-roll-option-icon);--choice-card-min-height:var(--layout-weapon-roll-option-height);--choice-card-padding:var(--spacing-xs) var(--spacing-compact);--choice-card-gap:var(--spacing-xs)}
 </style>
