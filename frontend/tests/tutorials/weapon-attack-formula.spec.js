@@ -91,7 +91,7 @@ for (const reduced of [false, true]) test(`window formula flashes changed source
   const damage = card.locator('.weapon-metrics__damage').first()
   await damage.click()
   const damageDialog = page.getByRole('dialog', { name: /· Урон$/ })
-  await damageDialog.getByRole('switch', { name: 'Критическое попадание', exact: true }).click()
+  await damageDialog.getByRole('button', { name: 'Критическое попадание', exact: true }).click()
   await expect(damageDialog.locator('.weapon-roll-preview .weapon-damage__count')).toHaveText(['2×'])
   await expect(damage.locator('.weapon-damage__count')).toHaveCount(0)
   await expect(damage.locator('[data-formula-flash]')).toHaveCount(0)

@@ -8,23 +8,14 @@
       <b v-if="scope === 'attack' && summary">{{ signed(summary.bonus) }}</b>
     </div>
     <RollModePicker v-if="scope === 'attack'" :model-value="attackRollMode" neutral-mode="auto" @update:model-value="emit('update:attackRollMode', $event)" />
-    <template v-if="scope === 'damage'">
-      <FormField label="Критическое попадание" title="Удваивает кости урона, но не постоянные прибавки.">
-        <ToggleSwitch surface="raised" :model-value="critical" aria-label="Критическое попадание" @update:model-value="emit('update:critical', $event)" />
-      </FormField>
-      <FormField v-if="bonusActionOption" label="Урон бонусным действием" :title="bonusActionOption.hint">
-        <ToggleSwitch surface="raised" :model-value="bonusAction" :disabled="twoHanded" aria-label="Урон бонусным действием" @update:model-value="!twoHanded && emit('update:bonusAction', $event)" />
-      </FormField>
-      <FormField v-if="versatile" label="Двумя руками" title="Использует кость урона для хвата двумя руками.">
-        <ToggleSwitch surface="raised" :model-value="twoHanded" :disabled="thrown || bonusAction" aria-label="Двумя руками" @update:model-value="!thrown && !bonusAction && emit('update:twoHanded', $event)" />
-      </FormField>
-    </template>
-    <ChoiceCard v-for="option in (scope === 'attack' && useKey ? [] : modes)" :key="option.key"
-      layout="inline" :label="option.label" :description="(option.range || '20/60') + ' фт.'"
-      :title="option.hint" :model-value="option.checked" :disabled="option.disabled"
-      @update:model-value="checked => emit('select', option.key, checked)">
-      <template #icon><Crosshair aria-hidden="true" /></template>
-    </ChoiceCard>
+    <div v-if="baseOptions.length" class="weapon-roll-options" role="group" :aria-label="scope === 'damage' ? 'Параметры урона' : 'Способ атаки'">
+      <ChoiceCard v-for="option in baseOptions" :key="option.key" layout="icon" centered selection-indicator="outline"
+        :label="option.label" :description="option.description" :title="option.hint"
+        :model-value="option.checked" :disabled="option.disabled" :color="option.color"
+        @update:model-value="checked => !option.disabled && option.select(checked)">
+        <template #icon><component :is="option.icon" aria-hidden="true" /></template>
+      </ChoiceCard>
+    </div>
     <RowActionSeparator v-if="hasCustomOptions" />
     <WeaponBonusTransferSelector v-if="scope === 'attack' && transfer?.active" :transfer="transfer" :disabled="!charCtx.ownerMode" @change="setAmount" />
     <WeaponRollOption v-for="use in scope === 'attack' ? uses : damageUses" :key="use.key" :option="useOption(use)" @select="(key, value) => emit('update:useKey', value ? key : '')" />
@@ -37,13 +28,13 @@
   </div>
 </template>
 <script setup>
-import { Crosshair, Swords } from '@lucide/vue'
+import { Crosshair, Swords, Hand, Sparkles, Zap } from '@lucide/vue'
 import { signedOrZero as signed } from '@/shared/lib/dnd'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RollModePicker from './RollModePicker.vue'
 import RollBonusOptions from './RollBonusOptions.vue'
 import WeaponBonusTransferSelector from './WeaponBonusTransferSelector.vue'
-import { ActionButton, ChoiceCard, FormField, ToggleSwitch } from '@sylvieshare/share-ui'
+import { ActionButton, ChoiceCard } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import WeaponRollOption from './WeaponRollOption.vue'
@@ -72,6 +63,18 @@ function useOption(use) {
     resourceCost: use.resource_cost ? { amount: use.resource_cost, color: use.resource?.color_point, unavailable: use.disabled } : null }
 }
 const modes = computed(() => props.options.filter(option => option.mode))
+const baseOptions = computed(() => [
+  ...(props.scope === 'damage' ? [
+    { key: 'critical', label: 'Критическое попадание', icon: Sparkles, color: 'var(--warning)', checked: props.critical,
+      hint: 'Удваивает кости урона, но не постоянные прибавки.', select: value => emit('update:critical', value) },
+    ...(props.versatile ? [{ key: 'two-handed', label: 'Двумя руками', icon: Hand, checked: props.twoHanded, disabled: props.thrown || props.bonusAction,
+      hint: 'Использует кость урона для хвата двумя руками.', select: value => emit('update:twoHanded', value) }] : []),
+    ...(props.bonusActionOption ? [{ key: 'bonus-action', label: 'Урон бонусным действием', icon: Zap, checked: props.bonusAction, disabled: props.twoHanded,
+      hint: props.bonusActionOption.hint, select: value => emit('update:bonusAction', value) }] : []),
+  ] : []),
+  ...(props.scope === 'attack' && props.useKey ? [] : modes.value).map(option => ({ ...option, icon: Crosshair,
+    description: (option.range || '20/60') + ' фт.', select: value => emit('select', option.key, value) })),
+])
 const extras = computed(() => props.options.filter(option => !option.mode))
 const chosenUse = computed(() => props.uses.find(use => use.key === props.useKey))
 const blocked = computed(() => props.useKey && (!chosenUse.value || chosenUse.value.error)
@@ -97,4 +100,5 @@ const emit = defineEmits(['update:attackRollMode', 'update:useKey', 'update:crit
   box-sizing: border-box;
 }
 .weapon-roll-controls--dialog {width:100%;max-width:none;max-height:none;padding:0;overflow:visible}
+.weapon-roll-options {display:grid;grid-auto-flow:column;grid-auto-columns:minmax(var(--layout-weapon-roll-option-min),1fr);gap:var(--spacing-small);overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:thin;padding:var(--spacing-xs);margin-inline:calc(-1 * var(--spacing-xs));--choice-card-icon-size:var(--layout-weapon-roll-option-icon);--choice-card-min-height:var(--layout-weapon-roll-option-height);--choice-card-padding:var(--spacing-small);--choice-card-gap:var(--spacing-small)}
 </style>

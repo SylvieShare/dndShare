@@ -18,7 +18,7 @@ for (const width of [1280, 390]) test(`direct damage menu separates the target f
  await expect(page.getByRole('button', { name: 'Бросить на атаку', exact: true })).toHaveCount(0)
  await menu(page, 'Бросить на урон')
  await page.getByRole('switch', { name: 'Метнуть молнией', exact: true }).click()
- await page.getByRole('switch', { name: 'Критическое попадание', exact: true }).click()
+ await page.getByRole('button', { name: 'Критическое попадание', exact: true }).click()
  expect((await current(page)).remaining).toBe(1)
  const target = page.getByRole('menuitem', { name: 'Бросить на урон', exact: true }).last()
  const line = page.getByRole('menuitem', { name: 'Урон по линии', exact: true })

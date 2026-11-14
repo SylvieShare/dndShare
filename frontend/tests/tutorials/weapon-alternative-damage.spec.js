@@ -36,7 +36,7 @@ test('the line damage and the paid target modifier share the existing one-time u
   await menu.getByRole('switch', { name: 'Метнуть молнией', exact: true }).click()
   await expect(menu.locator('.weapon-roll-preview .weapon-damage__source')).toHaveText(['Оружие', 'Сила', 'Ярость', 'Метнуть молнией'])
   await expect(target.locator('.weapon-damage__source')).toHaveText(['Оружие', 'Сила', 'Ярость'])
-  await menu.getByRole('switch', { name: 'Критическое попадание', exact: true }).click()
+  await menu.getByRole('button', { name: 'Критическое попадание', exact: true }).click()
   await expect(menu.locator('.weapon-roll-preview .weapon-damage__count')).toHaveText(['2×', '8×'])
   await menu.getByRole('button', { name: 'Бросить на урон', exact: true }).click()
   await expect.poll(() => magic().weapon_use.steps.map(step => step.status)).toEqual(['rolled', 'rolled'])
