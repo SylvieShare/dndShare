@@ -3,6 +3,18 @@ import { syncHandbook, filterLocalItems } from './handbook'
 import { allLocalRecords } from './storage'
 vi.mock('./storage', () => ({ allLocalRecords: vi.fn() }))
 
+it.each([409, 426, 500, 504])('preserves HTTP %s when handbook synchronization fails', async status => {
+  const db = { get: async () => null, batch: vi.fn() }
+  const request = vi.fn(async () => Response.json({}, { status }))
+  await expect(syncHandbook(db, request, 'account:1:', 1, new AbortController().signal)).rejects.toMatchObject({ status })
+  expect(db.batch).not.toHaveBeenCalled()
+})
+it('marks an unsupported handbook protocol before writing local data', async () => {
+  const db = { get: async () => null, batch: vi.fn() }
+  await expect(syncHandbook(db, async () => Response.json({ protocol: 999, entries: [] }), 'account:1:', 1, new AbortController().signal)).rejects.toMatchObject({ code: 'SYNC_PROTOCOL' })
+  expect(db.batch).not.toHaveBeenCalled()
+})
+
 it('commits a page with its cursor and resumes an interrupted download without losing tombstones', async () => {
   const records = new Map()
   const db = { get: async key => records.get(key), batch: vi.fn(async changes => { for (const { key, value } of changes) { if (value == null) records.delete(key); else records.set(key, value) } }) }

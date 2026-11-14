@@ -41,6 +41,9 @@ import { mobilePageTransitionActive } from '@/app/mobilePageTransition'
 import { useIsMobile } from '@sylvieshare/share-ui'
 import { useTextStore } from '@/stores/text'
 import { useGameContextStore } from '@/stores/gameContext'
+import { useLocalSyncFeedback } from '@/platform/useLocalSyncFeedback'
+
+useLocalSyncFeedback()
 
 const route = useRoute()
 const isMobile = useIsMobile()

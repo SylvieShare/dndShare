@@ -1,6 +1,28 @@
 import { afterEach, expect, it, vi } from 'vitest'
 import { createDocumentSync } from './documentSync'
 afterEach(() => vi.useRealTimers())
+it.each([408, 429, 500, 502, 503, 504])('keeps retrying HTTP %s with the same packet until it is acknowledged', async status => {
+  vi.useFakeTimers()
+  const states = [], packets = []
+  const send = vi.fn(async packet => {
+    packets.push(structuredClone(packet))
+    if (packets.length < 3) throw Object.assign(new Error('temporary'), { status })
+    return { version: packet.baseVersion + 1, mutationId: packet.mutationId, patches: packet.patches }
+  })
+  const sync = createDocumentSync({ data: { a: 1 }, version: 1, send, onStatus: state => states.push(state.status) })
+  try {
+    sync.edit({ a: 2 })
+    await sync.flush()
+    expect(states).toContain('retrying')
+    expect(states).not.toContain('error')
+    await vi.advanceTimersByTimeAsync(2000)
+    expect(packets).toHaveLength(3)
+    expect(packets[1]).toEqual(packets[0])
+    expect(packets[2]).toEqual(packets[0])
+    expect(sync.pending).toBe(false)
+    expect(sync.confirmed).toEqual({ a: 2 })
+  } finally { sync.stop() }
+})
 it('freezes a failed packet and preserves edits queued while it is in flight', async () => {
   vi.useFakeTimers()
   const packets = []

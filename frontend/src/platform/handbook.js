@@ -28,9 +28,9 @@ export async function syncHandbook(db, request, scope, sourceId, signal) {
   while (!signal.aborted) {
     const response = await request(`/api/handbook/sync?sourceId=${sourceId}&limit=250${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''}`, { signal })
     if (response.status === 409 && !reset) { cursor = ''; reset = true; continue }
-    if (!response.ok) throw new Error(`Синхронизация справочника: ${response.status}`)
+    if (!response.ok) throw Object.assign(new Error(`Синхронизация справочника: ${response.status}`), { status: response.status })
     const page = await response.json()
-    if (page.protocol !== 1 || !Array.isArray(page.entries)) throw new Error('Формат справочника не поддерживается этой версией приложения.')
+    if (page.protocol !== 1 || !Array.isArray(page.entries)) throw Object.assign(new Error('Формат справочника не поддерживается этой версией приложения.'), { code: 'SYNC_PROTOCOL' })
     const changes = page.entries.map(entry => ({ key: `${key}item:${entry.id}`, value: entry.deleted ? null : entry.item }))
     if (page.metadata) changes.push({ key: `${key}metadata`, value: page.metadata })
     cursor = page.hasMore ? page.nextCursor : page.cursor

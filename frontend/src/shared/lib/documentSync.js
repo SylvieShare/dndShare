@@ -215,7 +215,7 @@ export function createDocumentSync(options) {
             error = failure
           }
         }
-        if (error.status && error.status < 500 && error.status !== 429) {
+        if (error.status && error.status < 500 && ![408, 429].includes(error.status)) {
           blocked = error
           publish('error', error)
           return false

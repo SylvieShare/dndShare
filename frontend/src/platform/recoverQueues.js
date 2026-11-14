@@ -14,6 +14,7 @@ function endpoint(key, account) {
 }
 
 export async function resumeLocalQueues(account, signal) {
+  const problems = []
   const storage = outboxStorage()
   await storage.refresh?.()
   const scopes = new Set(Array.from({ length: storage.length }, (_, index) => storage.key(index)?.split(':queue:')[0]).filter(Boolean))
@@ -32,11 +33,18 @@ export async function resumeLocalQueues(account, signal) {
       if (!response.ok) throw Object.assign(new Error(payload.desc || 'Не удалось синхронизировать изменения'), { status: response.status })
       return payload
     }
+    let state
     const sync = createDocumentSync({
       data: saved.base, version: saved.version, storageKey: key,
       send: packet => request(url, { method: 'PATCH', body: JSON.stringify(packet) }),
       load: version => request(`${url.replace(/\/data$/, '')}/changes?after=${version}`),
+      onStatus: value => { state = value },
     })
-    try { await sync.ready; await sync.flush() } finally { sync.stop() }
+    try {
+      await sync.ready
+      await sync.flush()
+      if (state?.error) problems.push({ url, error: state.error })
+    } finally { sync.stop() }
   }
+  return problems
 }

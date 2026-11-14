@@ -5,7 +5,7 @@
     <div ref="identity" class="workspace-header-identity"><slot name="identity" /></div>
     <div :id="navigationId" v-show="navigationPlacement === 'inline' && navigationVisible" class="workspace-header-navigation" />
     <div v-if="$slots.context" ref="context" class="workspace-header-context"><slot name="context" /></div>
-    <div ref="actions" class="workspace-header-actions"><slot name="actions" /><LocalDataStatus /></div>
+    <div ref="actions" class="workspace-header-actions"><slot name="actions" /></div>
     </div>
     <slot name="between" />
     <Teleport :to="navigationTarget || '#' + navigationId" :disabled="!navigationTarget && navigationPlacement !== 'inline'" defer>
@@ -14,7 +14,6 @@
   </header>
 </template>
 <script setup>
-import LocalDataStatus from '@/platform/LocalDataStatus.vue'
 import { BlurBackdrop } from '@sylvieshare/share-ui'
 import WorkspaceSubheader from './WorkspaceSubheader.vue'
 import { useWorkspaceContextLayout } from '@/shared/composables/useWorkspaceContextLayout'

@@ -33,7 +33,7 @@ test('downloaded sheet and an unvisited catalogue query work without API access 
     return response.json()
   })
   expect(result.items.map(item => item.name)).toEqual(['Локальный меч'])
-  await expect(page.getByRole('button', { name: 'Работа без сети', exact: true }).first()).toBeVisible()
+  await expect(page.locator('.local-status')).toHaveCount(0)
 })
 
 test('a local edit survives reload offline and reaches the server once after reconnect', async ({ page }) => {
