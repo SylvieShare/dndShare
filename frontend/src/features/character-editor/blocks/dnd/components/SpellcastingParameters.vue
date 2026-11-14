@@ -39,7 +39,7 @@ defineEmits(['settings'])
 .spell-parameter--save {--spell-parameter-art:url('@/assets/ui/spell-stat-save.webp')}
 .spell-parameter-label {color:var(--text-2);font-family:var(--type-spell-parameter-label-family);font-size:var(--type-spell-parameter-label-size);line-height:var(--type-spell-parameter-label-line-height);font-weight:var(--type-spell-parameter-label-weight)}
 .spell-parameter-value {color:var(--text-1);font-family:var(--type-spell-parameter-value-family);font-size:var(--type-spell-parameter-value-size);line-height:var(--type-spell-parameter-value-line-height);font-weight:var(--type-spell-parameter-value-weight);font-variant-numeric:tabular-nums}
-.spell-parameter-value--name {font-size:var(--type-spell-parameter-name-size);font-weight:var(--type-spell-parameter-name-weight);overflow-wrap:anywhere}
+.spell-parameter-value--name {font-family:var(--type-spell-parameter-name-family);font-size:var(--type-spell-parameter-name-size);line-height:var(--type-spell-parameter-name-line-height);font-weight:var(--type-spell-parameter-name-weight);overflow-wrap:anywhere}
 .spell-parameter-settings-cell {display:flex;min-width:0;padding:var(--spacing-compact)}
 .spell-parameter-settings {flex:1;min-width:0}
 .spell-parameter-settings-icon {flex:none}
