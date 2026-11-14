@@ -2,13 +2,13 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
-const source = ['./DndSpells.vue', './composables/useSpellPicker.js', './composables/useSpellbookTabs.js'].map(path => readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8')).join('\n')
+const source = ['./DndSpells.vue', './composables/useSpellPicker.js', './composables/useSpellbookTabs.js', './components/SpellbookNavigation.vue'].map(path => readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8')).join('\n')
 const cardSource = readFileSync(fileURLToPath(new URL('./components/SpellCard.vue', import.meta.url)), 'utf8')
 const settingsSource = readFileSync(fileURLToPath(new URL('./DndSpellbookSettingsModal.vue', import.meta.url)), 'utf8')
 
 describe('spellcasting restrictions', () => {
   it('combines armor and active-effect restrictions in one notice', () => {
-    expect(source).toContain('class="sp-casting-warning"')
+    expect(source).toMatch(/class="[^"]*\bsp-casting-warning\b/)
     expect(source).toContain("activityBlocks?.('spellcasting')")
     expect(source).toContain('v-for="restriction in spellcastingRestrictions"')
     expect(source).not.toContain('sp-armor-warning')
@@ -38,8 +38,8 @@ describe('multiclass spellcasting UI', () => {
   })
 
   it('uses the same tabs UI for zero, one and several sources', () => {
-    expect(source).toContain('v-for="tab in spellTabs"')
-    expect(source).toContain('class="sp-tab-add"')
+    expect(source).toContain(':tabs="spellTabs"')
+    expect(source).toContain('class="spellbook-add"')
     expect(source).toContain('v-if="!tabs.length"')
     expect(source).toContain('class="sp-standalone"')
     expect(source.indexOf(':show-stats="false"')).toBeLessThan(source.indexOf('aria-label="Источники магии"'))

@@ -96,6 +96,26 @@ describe('character swipe geometry', () => {
     } finally { app.unmount() }
   })
 
+  it('accepts an opted-in button and suppresses its touch click only after a swipe', () => {
+    const {app,swipe,event}=mountedSwipe()
+    const button={closest:selector=>selector==='[data-sheet-swipe]'?{}:null}
+    const touch=x=>({...event(x),target:{closest:selector=>selector==='button'?button:null}})
+    try{
+      swipe.onTouchStart(touch(300),{clientWidth:704})
+      swipe.onTouchEnd(touch(300))
+      const tap={detail:1,pointerType:'touch',preventDefault:vi.fn(),stopPropagation:vi.fn()}
+      swipe.onSwipeClick(tap)
+      expect(tap.preventDefault).not.toHaveBeenCalled()
+      swipe.onTouchStart(touch(300),{clientWidth:704})
+      swipe.onTouchMove(touch(150))
+      swipe.onTouchEnd(touch(150))
+      expect(swipe.activeTab.value).toBe(1)
+      swipe.onSwipeClick(tap)
+      expect(tap.preventDefault).toHaveBeenCalledOnce()
+      expect(tap.stopPropagation).toHaveBeenCalledOnce()
+    }finally{app.unmount()}
+  })
+
   it('positions a restored tab before the mobile pane width is measured', async () => {
     const tabs = ref([
       { title: 'Статы' },

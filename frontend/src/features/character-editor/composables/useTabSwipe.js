@@ -161,7 +161,7 @@ export function useTabSwipe(activeTabs, swipeEnabled) {
   function isSwipeBlocked(target) {
     if (target?.closest?.('input, textarea, select, [contenteditable="true"], [data-sheet-horizontal-scroll], .share-icon-navigation')) return true
     const button = target?.closest?.('button')
-    return !!button && !button.hasAttribute('data-sheet-swipe')
+    return !!button && !button.closest?.('[data-sheet-swipe]')
   }
 
   function onTouchStart(event, containerEl) {

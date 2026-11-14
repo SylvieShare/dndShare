@@ -1,5 +1,6 @@
 import { computed, reactive } from 'vue'
 import { useSortable } from '@sylvieshare/share-ui'
+import { motionTokens } from '@/app/design-tokens'
 import { useCharacterItemCatalog } from '../../../composables/useCharacterItemCatalog'
 import { SPELL_LEVELS } from '../lib/spellEntry'
 import { spellEntry, spellbookItemIds } from '../lib/spellbook'
@@ -89,6 +90,7 @@ export function useSpellbookEntries({ props, charCtx, tabs, grants, itemMap, act
   }))
 
   const sortable = useSortable({
+    activationDelay: motionTokens['weapon-drag-hold'],
     groups: spellGroups,
     getKey: e => e.ref.key,
     onDrop: ({ item, toGroup, toIndex }) => {

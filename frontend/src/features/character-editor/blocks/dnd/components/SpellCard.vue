@@ -241,7 +241,7 @@ const hasHigherLevelChoice = computed(() =>
   !props.entry.ref.slotless && (slotOptions.value.length > 1 || slotOptions.value.some(option => option.level > baseLvl.value))
 )
 
-// Drag the whole row to reorder; the sortable's 4px threshold keeps a plain tap a click. A drag flips
+// Hold the row to reorder; a quick horizontal gesture remains a sheet swipe. A drag flips
 // `sortable.dragging` mid-gesture — we remember it so the trailing click doesn't open the spell modal.
 const draggedThisGesture = ref(false)
 watch(() => ctx.sortable.dragging, v => { if (v) draggedThisGesture.value = true })

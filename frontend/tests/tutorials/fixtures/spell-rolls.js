@@ -53,6 +53,7 @@ const value = { schema_version: 2,
     spells: items.filter(item => item.id !== 7).map(item => ({ key: String(item.id), id: item.id, prepared: item.data.lvl > 0 })) }], grants: [{ key: 'innate:7', id: 7, slotless: true, cast_level: 2, source: { label: 'Дьявольское наследие' } }],
 }
 const slotScenario = new URLSearchParams(location.search).get('slots')
+if (new URLSearchParams(location.search).has('books')) value.tabs.push({ key:'sorcerer',name:'Чародей',casting_ability:6,mode:'known',spells:[] })
 if (slotScenario === 'base-only') value.slot_pools = { long_rest: [{ level: 1, total: 2, used: 0 }], short_rest: [{ level: 3, total: 0, used: 0 }] }
 if (slotScenario === 'pact-spent') value.slot_pools = { long_rest: [{ level: 1, total: 2, used: 0 }], short_rest: [{ level: 3, total: 1, used: 1 }] }
 if (slotScenario === 'rest') value.slot_pools = { long_rest: [{ level: 1, total: 2, used: 2 }, { level: 3, total: 1, used: 1 }], short_rest: [{ level: 3, total: 1, used: 1 }] }

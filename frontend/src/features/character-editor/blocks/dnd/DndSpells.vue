@@ -1,5 +1,5 @@
 <template>
-  <div v-show="!blockHidden" class="spells-block">
+  <div v-show="!blockHidden" class="spells-block" data-sheet-swipe>
     <BaseTile class="sp-casting-notice sp-rule-note" role="note" color="var(--info)" framed :outlined="false">
       <BookOpen class="sp-casting-notice__icon" :size="24" aria-hidden="true" />
       <div class="sp-casting-notice__content"><p>{{ rules.spellcastingRule }}</p></div>
@@ -54,21 +54,13 @@
       </div>
     </section>
 
-    <nav class="sp-tabs" aria-label="Источники магии">
-      <button
-        v-for="tab in spellTabs"
-        :key="tab.key"
-        type="button"
-        :class="{ active: activeSpellTab === tab.key }"
-        @click="activeSpellTab = tab.key"
-      >{{ tab.label }}</button>
-      <button v-if="canInteract" type="button" class="sp-tab-add" @click="createTab">+ Вкладка</button>
-    </nav>
+    <SpellbookNavigation v-model="activeSpellTab" :tabs="spellTabs" :editable="canInteract" :panel-id="spellbookPanelId" @add="createTab" />
 
     <div v-if="!tabs.length" class="spells-empty">Создай вкладку магии, чтобы добавлять заклинания.</div>
 
-    <DetailSection v-if="activeTabSource && hasStatConfig" label="Параметры книги магии" collapsible :default-open="false">
+    <section v-if="activeTabSource" :id="spellbookPanelId" role="tabpanel" :aria-label="activeTab?.name || 'Книга магии'">
     <SpellSlotsBar
+      v-if="hasStatConfig"
       :has-stat-config="hasStatConfig"
       :can-interact="canInteract"
       :stat-path="statPath"
@@ -89,7 +81,6 @@
       external-editor
       @edit="tabEditorOpen = true"
     />
-    </DetailSection>
 
     <!-- Заклинания по уровням (мультиколонки) -->
     <div v-if="activeTabSource" class="spells-groups">
@@ -138,6 +129,8 @@
       </div>
       <button class="sp-picker-btn" @click="pickerOpen = true">+ Найти заклинание...</button>
     </div>
+
+    </section>
 
     <ItemPickerModal
       v-if="pickerOpen && block.content.item_type_id"
@@ -201,12 +194,12 @@
 </template>
 
 <script setup>
-import { DetailSection } from '@sylvieshare/share-ui'
+import SpellbookNavigation from './components/SpellbookNavigation.vue'
 import { dndRules } from '@/shared/lib/dndRules'
 import SpellConcentrationBlock from './components/SpellConcentrationBlock.vue'
 import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
 
-import { computed, inject, onMounted, provide, reactive, ref, watch } from 'vue'
+import { computed, inject, onMounted, provide, reactive, ref, useId, watch } from 'vue'
 
 import SpellCard from '@/features/character-editor/blocks/dnd/components/SpellCard.vue'
 import SpellSlotsBar from '@/features/character-editor/blocks/dnd/components/SpellSlotsBar.vue'
@@ -238,6 +231,7 @@ import {
 } from '@/features/character-editor/blocks/dnd/lib/spellbook'
 
 const props = defineProps(['block', 'value', 'values'])
+const spellbookPanelId = `spellbook-${useId()}`
 const emit  = defineEmits(['update:value'])
 const charCtx       = inject('charCtx',       () => ({ ownerMode: true, dictionaries: {} }))
 const rules = computed(() => dndRules(charCtx?.rulesVersion))

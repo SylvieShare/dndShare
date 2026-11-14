@@ -1,5 +1,5 @@
 <template>
-  <div class="sp-bar">
+  <div class="sp-bar" :style="{ '--spell-slot-hit-size': `${slotHitSize}px` }">
     <MorphTile :outlined="false" v-if="showStats && hasStatConfig" class="sp-stats-panel" edit-label="Редактировать"
         :title="castingPanelTitle"
         :show-edit="canInteract && showCastingConfig"
@@ -39,9 +39,8 @@
       >
       <div class="sp-pools">
         <section v-for="pool in activeSlotPools" :key="pool.rest" class="sp-pool">
-          <div class="sp-pool-head">
+          <div v-if="activeSlotPools.length > 1" class="sp-pool-head">
             <span>{{ pool.rest === 'short_rest' ? 'Короткий отдых' : 'Долгий отдых' }}</span>
-            <small>{{ pool.rest === 'short_rest' ? 'восстанавливаются также после долгого' : 'восстанавливаются после долгого' }}</small>
           </div>
           <div class="sp-slots">
             <div v-for="slot in pool.slots" :key="slot.level" class="sp-slot-row">
@@ -54,7 +53,7 @@
                   <ActionButton v-for="i in orbOrder(slot.total)" :key="i" icon-only variant="quiet" class="sp-orb-hit"
                     :disabled="!canInteract" :aria-label="`Ячейка ${slot.level} круга · ${i}`"
                     :aria-pressed="i > slot.used" @click="$emit('toggle-slot', pool.rest, slot.level, i)">
-                    <SpellSlotSphere :spent="i <= slot.used" :level="slot.level" :interactive="canInteract" />
+                    <template #icon><SpellSlotSphere :spent="i <= slot.used" :level="slot.level" :size="slotOrbSize" :interactive="canInteract" /></template>
                   </ActionButton>
                 </template>
                 <template v-else>
@@ -93,9 +92,13 @@ import { computed, ref } from 'vue'
 
 import DndSpellbookSettingsModal from '@/features/character-editor/blocks/dnd/DndSpellbookSettingsModal.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
-import { ActionButton, MorphTile } from '@sylvieshare/share-ui'
+import { ActionButton, MorphTile, useMediaQuery } from '@sylvieshare/share-ui'
+import { designMediaQueries, layoutTokens } from '@/app/design-tokens'
 
 const editOpen = ref(false)
+const touchTargets = useMediaQuery(`${designMediaQueries['--ui-compact']}, (pointer: coarse)`)
+const slotHitSize = computed(() => layoutTokens[touchTargets.value ? 'spell-slot-touch-hit-size' : 'spell-slot-hit-size'])
+const slotOrbSize = computed(() => layoutTokens[touchTargets.value ? 'spell-slot-touch-orb-size' : 'spell-slot-orb-size'])
 
 const props = defineProps({
   hasStatConfig:   { type: Boolean, default: false },
@@ -139,24 +142,23 @@ const castingPanelTitle = computed(() => props.castingStats.length <= 1 && props
 .sp-bar {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  margin-bottom: 18px;
+  gap: var(--spacing-medium);
+  margin-bottom: var(--spacing-medium);
 }
 
-.sp-stats-panel,
-.sp-slots-panel {
+.sp-stats-panel {
   padding: 18px;
 }
+.sp-slots-panel { padding:var(--spacing-medium); }
 
 
 .sp-caster-stats { display: grid; gap: 8px; }
 .sp-caster-row { display: grid; grid-template-columns: minmax(90px, 1fr) repeat(3, auto); align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); color: var(--text-2); font-size: 12px; }
 .sp-caster-row:last-child { border-bottom: 0; }
 .sp-caster-row strong { color: var(--text-1); }
-.sp-pools { display: grid; gap: 14px; }
-.sp-pool + .sp-pool { padding-top: 14px; border-top: 1px solid var(--border); }
+.sp-pools { display: grid; gap: var(--spacing-small); }
+.sp-pool + .sp-pool { padding-top: var(--spacing-small); border-top: 1px solid var(--border); }
 .sp-pool-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px; color: var(--text-1); font-size: 12px; font-weight: 750; }
-.sp-pool-head small { color: var(--text-muted); font-size: 10px; font-weight: 500; }
 
 /* ── Статы (строка безрамочных плиток сверху) ── */
 .sp-stats {
@@ -224,8 +226,8 @@ const castingPanelTitle = computed(() => props.castingStats.length <= 1 && props
 .sp-slot-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 0;
+  gap: var(--spacing-small);
+  padding: calc(var(--spacing-xs) / 2) 0;
   border-top: 1px solid color-mix(in srgb, var(--text-on-accent) 7%, transparent);
 }
 .sp-slot-row:first-of-type {
@@ -234,7 +236,7 @@ const castingPanelTitle = computed(() => props.castingStats.length <= 1 && props
 
 .sp-lvl {
   flex: none;
-  width: 40px;
+  width: 32px;
   text-align: right;
   line-height: 1;
 }
@@ -261,8 +263,9 @@ const castingPanelTitle = computed(() => props.castingStats.length <= 1 && props
   gap: 0;
   align-items: center;
   min-width: 0;
-  min-height: 48px;
+  min-height: var(--spell-slot-hit-size);
 }
+.sp-orb-hit { --action-button-icon-size:var(--spell-slot-hit-size); }
 
 .sp-orb-hit:disabled { opacity: 1; }
 
@@ -277,8 +280,7 @@ const castingPanelTitle = computed(() => props.castingStats.length <= 1 && props
     margin-bottom: 12px;
   }
 
-  .sp-stats-panel,
-  .sp-slots-panel {
+  .sp-stats-panel {
     padding: 14px;
   }
 
@@ -314,8 +316,5 @@ const castingPanelTitle = computed(() => props.castingStats.length <= 1 && props
   .sp-tval-stat { font-size: 16px; }
   .sp-tline { width: 28px; }
 
-  .sp-slot-row {
-    padding: 9px 0;
-  }
 }
 </style>
