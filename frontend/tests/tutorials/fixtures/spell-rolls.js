@@ -5,12 +5,14 @@ import DndRest from '../../../src/features/character-editor/blocks/dnd/DndRest.v
 import DndSpells from '../../../src/features/character-editor/blocks/dnd/DndSpells.vue'
 import { useDiceStore } from '../../../src/stores/dice'
 import { useSuggestStore } from '../../../src/stores/suggest'
+import { useItemTypesStore } from '../../../src/stores/itemTypes'
 import { itemsApi } from '../../../src/shared/api/itemsApi'
 import { resolveRollMode } from '../../../src/features/character-editor/blocks/dnd/lib/rollMode'
 import '@sylvieshare/share-ui/styles.css'
 import '../../../src/app/theme.css'
 
 const pinia = createPinia()
+useItemTypesStore(pinia).types = [{ id: 5, name: 'Заклинания', coverImageUrl: '/tests/tutorials/fixtures/spell-covers/default.webp' }]
 useSuggestStore(pinia).set(16, [{ id: 4, value: 'Интеллект' }])
 useSuggestStore(pinia).set(12, [{ id: 10, value: new URLSearchParams(location.search).has('long-type') ? 'Некротической энергией' : 'Некротический' }])
 useSuggestStore(pinia).set(7, [])
@@ -32,6 +34,11 @@ if (new URLSearchParams(location.search).has('presentation')) {
   items.push({ id: 8, name: 'Божественное оружие', nameEn: 'Spiritual Weapon with a deliberately long English title', data: { lvl: 2, time: { kind: 'bonus_action' }, range: { kind: 'ranged', distance: 60 }, duration: '1 минута', components: { v: true, s: true }, damage: { range_attack: true, add_mod: true, scaling: 'slot', scaling_step: 2, dices: [{ count: 1, dice_id: 'd8' }], addon: [{ count: 1, dice_id: 'd8' }] } } })
 }
 if (new URLSearchParams(location.search).has('long-name')) items.find(item => item.id === 8).name += ' — заклинание с очень длинным названием, которое должно полностью переноситься на следующие строки'
+if (new URLSearchParams(location.search).has('covers')) {
+  Object.assign(items.find(item => item.id === 8), { coverImageUrl: '/tests/tutorials/fixtures/spell-covers/custom.webp' })
+  Object.assign(items.find(item => item.id === 8).data, { components: { v: true, s: true, m: 'Крошечный серебряный молот' } })
+  items.find(item => item.id === 3).coverImageUrl = '/missing-spell-cover.webp'
+}
 itemsApi.byIds = async ids => ({ items: items.filter(item => ids.map(Number).includes(item.id)) })
 window.rolls = []; window.writes = []; window.events = []
 const dice = useDiceStore(pinia)

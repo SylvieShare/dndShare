@@ -1,8 +1,8 @@
 <template>
-  <div class="spell-metadata">
-    <div v-if="flags.length || components.length || rangeText || data.duration" class="spell-meta-table">
+  <div class="spell-metadata" :class="{ 'spell-metadata--quiet': quiet }">
+    <div v-if="flags.length || (showComponents && components.length) || rangeText || data.duration" class="spell-meta-table">
       <span v-for="flag in flags" :key="flag.key" class="spell-meta-part spell-meta-flag" :class="`spell-meta-${flag.key}`" tabindex="0" :aria-label="flag.label" @mouseenter="show($event, flag.label)" @mouseleave="tooltip = null" @focus="show($event, flag.label)" @blur="tooltip = null">{{ flag.letter }}</span>
-      <span v-if="components.length" class="spell-meta-part spell-components">
+      <span v-if="showComponents && components.length" class="spell-meta-part spell-components">
         <span v-for="part in components" :key="part.key" tabindex="0" :aria-label="part.label" @mouseenter="show($event, part.label)" @mouseleave="tooltip = null" @focus="show($event, part.label)" @blur="tooltip = null"><component :is="part.icon" :size="16" aria-hidden="true" /></span>
       </span>
       <span v-if="rangeText" class="spell-meta-part" :title="rangeHint"><component :is="rangeIcon" :size="16" aria-hidden="true" />{{ rangeText }}<UserRound v-if="data.range?.can_self && data.range.kind !== 'self'" :size="14" aria-label="Можно на себя" /></span>
@@ -17,17 +17,14 @@ import { computed, shallowRef } from 'vue'
 import { AudioLines, Hand, Fingerprint, Gem, Crosshair, UserRound, Eye, Infinity, Circle, Cone, MoveRight, Box, Cylinder, Shapes, Hourglass } from '@lucide/vue'
 import { FloatingTooltip } from '@sylvieshare/share-ui'
 import ActionTiming from '@/shared/ui/ActionTiming.vue'
-import { rangeLabel, spellDurationLabel } from '@/shared/lib/spellPresentation'
-const props = defineProps({ data: { type: Object, required: true }, rangeOverride: String })
+import { rangeLabel, spellDurationLabel, spellComponentDetails } from '@/shared/lib/spellPresentation'
+const props = defineProps({ data: { type: Object, required: true }, rangeOverride: String, showComponents: { type: Boolean, default: true }, quiet: Boolean })
 const flags = computed(() => [
   { key: 'concentration', letter: 'К', label: 'Концентрация' },
   { key: 'ritual', letter: 'Р', label: 'Ритуал' },
 ].filter(flag => props.data[flag.key]))
-const components = computed(() => [
-  { key: 'v', icon: AudioLines, label: 'Вербальный компонент: магические слова' },
-  { key: 's', icon: Hand, label: 'Соматический компонент: жесты свободной рукой' },
-  { key: 'm', icon: Gem, label: `Материальный компонент${typeof props.data.components?.m === 'string' ? ': ' + props.data.components.m : ''}` },
-].filter(part => props.data.components?.[part.key]))
+const componentIcons = { v: AudioLines, s: Hand, m: Gem }
+const components = computed(() => spellComponentDetails(props.data.components).map(part => ({ ...part, icon: componentIcons[part.key] })))
 const rangeText = computed(() => props.rangeOverride || rangeLabel(props.data.range))
 const rangeHint = computed(() => [rangeText.value, props.data.range?.can_self && 'Можно выбрать себя, если это допускают условия заклинания'].filter(Boolean).join(' · '))
 const rangeIcon = computed(() => props.rangeOverride ? Crosshair : ({ sphere: Circle, radius: Circle, cone: Cone, line: MoveRight, cube: Box, cylinder: Cylinder, hemisphere: Circle }[props.data.range?.shape] || { self: UserRound, touch: Fingerprint, ranged: Crosshair, sight: Eye, unlimited: Infinity }[props.data.range?.kind] || Shapes))
@@ -45,4 +42,8 @@ const show = (event, text) => { tooltip.value = { anchor: event.currentTarget, t
 .spell-meta-flag:first-child { border-radius: 5px 0 0 5px; }
 .spell-meta-concentration { color: var(--accent-soft); }
 .spell-meta-ritual { color: var(--success); }
+.spell-metadata--quiet {gap:var(--spacing-small)}
+.spell-metadata--quiet .spell-meta-table {border:0;background:transparent;flex-wrap:wrap;gap:var(--spacing-xs)}
+.spell-metadata--quiet .spell-meta-part {padding:var(--spacing-xs) var(--spacing-compact);border:0;border-radius:var(--radius-xs);background:color-mix(in srgb,var(--bg) 65%,transparent)}
+.spell-metadata--quiet .spell-meta-flag {background:color-mix(in srgb,currentColor 15%,var(--bg))}
 </style>

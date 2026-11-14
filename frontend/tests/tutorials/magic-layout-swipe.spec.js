@@ -77,7 +77,7 @@ test.describe('magic touch interactions',()=>{
  }
  for(const width of [390,834])test(`swiping from a slot and a clickable spell does not activate them at ${width}`,async({page})=>{
   const {api,errors}=await open(page,width)
-  for(const selector of ['.sp-orb-hit','.spell-row .sp-name','.spell-parameter-settings']){
+  for(const selector of ['.sp-orb-hit','.spell-row .sp-name','.spell-parameter-settings','.spell-component-trigger']){
    await magic(page)
    const target=page.locator('.mobile-swipe-pane:not([inert])').locator(selector).first()
    await touch(page,target,-Math.min(180,width*.4))

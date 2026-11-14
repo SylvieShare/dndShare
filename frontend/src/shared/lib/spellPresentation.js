@@ -9,6 +9,13 @@ export const ACTION_TYPES = [
 export const TIME_UNITS = { rounds: 'раунд.', minutes: 'мин.', hours: 'ч.', days: 'дн.' }
 export const RANGE_KINDS = { self: 'От себя', touch: 'Касание', ranged: 'Дальнее', sight: 'Видимость', unlimited: 'Без ограничений', custom: 'Своё значение' }
 export const AREA_SHAPES = { sphere: 'Сфера', radius: 'Радиус', cone: 'Конус', line: 'Линия', cube: 'Куб', cylinder: 'Цилиндр', hemisphere: 'Полусфера' }
+export function spellComponentDetails(components) {
+  return [
+    { key: 'v', letter: 'В', label: 'Вербальный компонент: магические слова' },
+    { key: 's', letter: 'С', label: 'Соматический компонент: жесты свободной рукой' },
+    { key: 'm', letter: 'М', label: `Материальный компонент${typeof components?.m === 'string' ? ': ' + components.m : ''}` },
+  ].filter(part => components?.[part.key])
+}
 export function timeLabel(time, withCondition = true) {
   if (!time?.kind) return ''
   const main = time.kind === 'custom' ? time.text || '' : TIME_UNITS[time.kind] ? `${time.value ?? '…'} ${TIME_UNITS[time.kind]}` : ACTION_TYPES.find(row => row.value === time.kind)?.label || ''

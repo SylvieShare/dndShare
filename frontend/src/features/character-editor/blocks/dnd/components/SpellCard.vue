@@ -2,7 +2,7 @@
   <CharacterItemSkeleton v-if="!entry.item && ctx.itemLoading?.(entry.ref.id)" />
   <RowActionMenu v-else ref="actionMenu" :heading="entry.item?.name" block :disabled="draggedThisGesture">
     <template #trigger="{ open: menuOpen }">
-      <div
+      <BaseTile :outlined="false" :interactive="!!entry.item"
         class="spell-row action-menu-source"
         :class="{
           'spell-row-clickable': !!entry.item,
@@ -21,35 +21,9 @@
       :permanent="false"
     />
 
-    <div class="sp-lead">
-      <ItemIcon
-        v-if="entry.item?.iconImageUrl"
-        class="sp-item-icon"
-        :item="entry.item"
-        :fallback-to-type="false"
-        :size="64"
-      />
-      <span
-        v-else-if="school"
-        class="sp-school"
-        :style="{ color: school.color || 'var(--text-muted)' }"
-        :title="school.value"
-      >
-        <span v-if="school.svg" class="sp-school-svg" v-html="school.svg" />
-        <Sparkles v-else :size="17" aria-hidden="true" />
-      </span>
-    </div>
-
-    <div class="sp-info">
-      <div class="sp-name-row">
-        <span class="sp-name">{{ entry.item ? entry.item.name : '...' }}</span>
-        <span v-if="nameEn" class="sp-name-en" :title="nameEn">{{ nameEn }}</span>
-      </div>
-      <SpellMetadata v-if="entry.item?.data" :data="data" :range-override="ctx.spellRangeOverride?.(entry.item)" />
-      <span v-if="grantSummary" class="sp-grant">{{ grantSummary }}</span>
-    </div>
-
-    <div v-if="hasMetrics" class="sp-metrics">
+    <SpellCardContent :item="entry.item" :school="school" :name-en="nameEn" :grant-summary="grantSummary"
+      :range-override="ctx.spellRangeOverride?.(entry.item)" :scaling-hint="scalingHint">
+    <template v-if="hasMetrics" #metrics>
       <span v-if="saveTag" class="sp-save" title="Спасбросок">
         <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6l7-3z" /></svg>
         {{ saveTag }}
@@ -71,11 +45,10 @@
           <SpellScalingFormula :rule="data.heal" :base-level="baseLvl" :color="data.heal?.kind === 'temporary_hp' ? 'var(--info)' : 'var(--success)'" />
         </template>
       </AttackDamage>
-    </div>
-
-      <SpellEffectFormulas :entry="entry" :cast-level="castLevel" />
-      <small v-if="scalingHint" class="sp-scaling-hint">{{ scalingHint }}</small>
-      </div>
+    </template>
+      <template #effects><SpellEffectFormulas :entry="entry" :cast-level="castLevel" /></template>
+    </SpellCardContent>
+      </BaseTile>
     </template>
 
     <template #default="{ close }">
@@ -157,10 +130,10 @@
 </template>
 
 <script setup>
-import SpellMetadata from '@/features/items/components/SpellMetadata.vue'
+import SpellCardContent from './SpellCardContent.vue'
 import SpellApplicationMenu from './SpellApplicationMenu.vue'
 import SpellCreationMenu from './SpellCreationMenu.vue'
-import { Focus, Sparkles, Sprout } from '@lucide/vue'
+import { Focus, Sprout } from '@lucide/vue'
 import SpellEffectFormulas from './SpellEffectFormulas.vue'
 import SpellScalingFormula from './SpellScalingFormula.vue'
 import { hasInlineSpellScaling, spellScalingHint, spellInstances } from '../lib/spellScaling'
@@ -171,9 +144,8 @@ import CharacterItemSkeleton from '@/features/character-editor/components/sheet/
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
 import PreparedSpellBrackets from '@/features/character-editor/blocks/dnd/components/PreparedSpellBrackets.vue'
-import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
-import { RowActionMenu } from '@sylvieshare/share-ui'
+import { BaseTile, RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'
 import { SAVE_ABBR } from '@/shared/lib/dndStats'
 
@@ -293,139 +265,13 @@ function removeSpell(close) {
 </script>
 
 <style scoped>
-.spell-row {
-  flex-wrap: wrap;
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-height: 60px;
-  padding: 12px 4px;
-  transition: background 0.12s, padding 0.15s;
-  cursor: default;
-}
-.spell-row-prepared { padding-inline: 28px; }
-.spell-row > :not(.sp-prepared-brackets) {
-  position: relative;
-  z-index: 1;
-}
-.sp-prepared-brackets {
-  position: absolute;
-  z-index: 2;
-  inset: 7px 10px;
-  color: color-mix(in srgb, var(--accent) 62%, transparent);
-  pointer-events: none;
-}
-.spell-row-clickable { cursor: pointer; }
-.spell-row-draggable { cursor: grab; touch-action: pan-y; }
-.spell-row-draggable:active { cursor: grabbing; }
-@media (hover: hover) {
-  .spell-row-clickable:hover { background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent); }
-}
-
-.sp-lead {
-  flex: none;
-  display: flex;
-  align-items: center;
-  gap: 11px;
-}
-
-.sp-school {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  flex: none;
-}
-.sp-item-icon { flex: none; }
-.sp-school-svg { display: inline-flex; }
-.sp-school-svg :deep(svg) { width: 20px; height: 20px; }
-
-.sp-info {
-  flex: 1 1 220px;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.sp-name-row {
-  display: flex;
-  align-items: baseline;
-  gap: 7px;
-  min-width: 0;
-}
-
-.sp-name {
-  flex-shrink: 0;
-  max-width: 100%;
-  min-width: 0;
-  color: var(--text-1);
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.3;
-  overflow-wrap: anywhere;
-}
-
-.sp-name-en {
-  min-width: 0;
-  color: var(--text-muted);
-  font-size: 11px;
-  line-height: 1.4;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.sp-grant {
-  min-width: 0;
-  color: var(--accent-soft);
-  font-size: 11px;
-  font-weight: 650;
-  line-height: 1.25;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.sp-scaling-hint { flex-basis: 100%; color: var(--text-muted); font-size: 11px; line-height: 1.35; }
-
-.sp-metrics {
-  flex: none;
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  gap: 8px;
-  min-width: 0;
-}
-
-.sp-save {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-
-.sp-mul {
-  color: var(--text-2);
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.sortable-placeholder {
-  background: color-mix(in srgb, var(--accent) 8%, transparent) !important;
-  outline: 2px dashed color-mix(in srgb, var(--accent) 50%, transparent);
-  outline-offset: -2px;
-}
-.sortable-placeholder > * { visibility: hidden; }
+.spell-row {position:relative;isolation:isolate;overflow:hidden;min-width:0;container-type:inline-size}
+.spell-row-clickable {cursor:pointer}
+.spell-row-draggable {cursor:grab;touch-action:pan-y}
+.spell-row-draggable:active {cursor:grabbing}
+.sp-prepared-brackets {position:absolute;z-index:2;inset:var(--spacing-compact);color:color-mix(in srgb,var(--accent) 62%,transparent);pointer-events:none}
+.sp-save {display:inline-flex;align-items:center;gap:var(--spacing-xs);color:var(--text-2);font-size:var(--type-context-size);font-weight:700;white-space:nowrap}
+.sp-mul {color:var(--text-2);font-size:var(--type-group-size);font-weight:700}
+.sortable-placeholder {background:color-mix(in srgb,var(--accent) 8%,transparent)!important;outline:2px dashed color-mix(in srgb,var(--accent) 50%,transparent);outline-offset:-2px}
+.sortable-placeholder>* {visibility:hidden}
 </style>

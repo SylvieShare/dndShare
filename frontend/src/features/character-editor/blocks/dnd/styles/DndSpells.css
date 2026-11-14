@@ -20,6 +20,7 @@
   font-size: 13px;
   padding: 8px 4px;
 }
+.spells-level-list {display:flex;flex-direction:column;gap:var(--spacing-small);min-width:0}
 
 .sp-standalone { margin-bottom: 18px; }
 .sp-standalone-title {

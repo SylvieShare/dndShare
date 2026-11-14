@@ -41,7 +41,8 @@
     <section v-if="grantedSpellsByLevel.length" class="sp-standalone">
       <div class="sp-standalone-title">Дарованные заклинания</div>
       <div class="spells-groups">
-        <SectionList :outlined="false" v-for="group in grantedSpellsByLevel" :key="`grant:${group.level}`" :title="groupTitle(group.level)">
+        <SectionList embedded v-for="group in grantedSpellsByLevel" :key="`grant:${group.level}`" :title="groupTitle(group.level)">
+          <template #body><div class="spells-level-list">
           <SpellCard
             v-for="(entry, idx) in group.items"
             :key="entry.ref.key"
@@ -50,6 +51,7 @@
             :idx="idx"
             standalone
           />
+          </div></template>
         </SectionList>
       </div>
     </section>
@@ -100,12 +102,12 @@
         </span>
       </div>
 
-      <SectionList :outlined="false"
+      <SectionList embedded
         v-for="group in spellsByLevel"
         :key="group.level"
         :title="groupTitle(group.level)"
-        :list-attrs="{ 'data-sortable-container': 'level-' + group.level }"
       >
+        <template #body><div class="spells-level-list" :data-sortable-container="'level-' + group.level">
         <SpellCard
           v-for="(entry, idx) in displayLevel(group.level)"
           :key="entry.ref.key"
@@ -113,6 +115,7 @@
           :level="group.level"
           :idx="idx"
         />
+        </div></template>
       </SectionList>
     </div>
 
