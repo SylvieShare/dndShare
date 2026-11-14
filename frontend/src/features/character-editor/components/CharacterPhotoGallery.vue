@@ -10,13 +10,13 @@
           </button>
         </template>
         <template #default="{ close }">
-          <RowActionItem :icon="Expand" @click="viewing = photo; close()">Посмотреть</RowActionItem>
+          <CharacterMenuActions :view="() => { viewing = photo; close() }" view-label="Посмотреть" :view-icon="Expand"
+            :remove="owner ? () => { removing = photo; close() } : undefined" />
           <RowActionItem v-if="coverState.foldable" :icon="PanelsTopLeft" :disabled="!coverState.available || coverState.pendingOwner === ownerId && coverState.pendingPhotoUid === photo.uid" @click="present(photo); close()">
             {{ selected(photo) ? coverState.active ? 'Показать ещё раз на внешнем экране' : 'Возобновить показ на внешнем экране' : 'Показывать на внешнем экране' }}
             <small v-if="!coverState.available" class="photo-menu-hint">{{ coverState.reason }}</small>
           </RowActionItem>
           <RowActionItem v-if="selected(photo)" :icon="PanelTopClose" @click="stopCoverPhoto(ownerId, photo.uid); close()">Убрать с внешнего экрана</RowActionItem>
-          <RowActionItem v-if="owner" :icon="Trash2" tone="danger" @click="removing = photo; close()">Удалить</RowActionItem>
         </template>
       </RowActionMenu>
       <div v-for="entry in pending" :key="entry.uid" class="photo-thumb photo-pending"><CharacterPhotoImage :src="entry.preview" alt="Загружаемая фотография" fit="natural" /><LoadingIndicator label="Загрузка фотографии" size="sm" /></div>
@@ -32,9 +32,10 @@
 </template>
 
 <script setup>
+import CharacterMenuActions from './CharacterMenuActions.vue'
 import { computed, inject, onBeforeUnmount, ref, watch } from 'vue'
 import { ActionButton, AppModalFrame, ConfirmDialog, LoadingIndicator, MorphTileHeader, RowActionItem, RowActionMenu } from '@sylvieshare/share-ui'
-import { Expand, PanelsTopLeft, PanelTopClose, Plus, Trash2 } from '@lucide/vue'
+import { Expand, PanelsTopLeft, PanelTopClose, Plus } from '@lucide/vue'
 import { prepareImageUpload, PORTRAIT_IMAGE_MAX_BYTES } from '@/shared/lib/imageUpload'
 import { coverState, showCoverPhoto, stopCoverPhoto, updateCoverGallery } from '@/platform/coverDisplay'
 import CharacterPhotoImage from './CharacterPhotoImage.vue'

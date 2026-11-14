@@ -5,7 +5,6 @@
     @pointerdown.capture="draggedThisGesture = false" @pointerdown="onCardDown" @click.capture="suppressDragClick" @keydown="openActionsWithKeyboard">
     <RowActionMenu
       ref="actionMenu"
-      :heading="ctx.itemTitle(entry)"
       block
       :title="`Действия: ${ctx.itemTitle(entry)}`"
       :disabled="draggedThisGesture || (!ctx.charCtx.ownerMode && !ctx.item(entry))"
@@ -23,16 +22,9 @@
       </template>
 
       <template #default="{ close: closeMenu }">
-        <RowActionItem
-          v-if="ctx.item(entry)"
-          action="view"
-          @click="openDescription(closeMenu)"
-        >Открыть описание</RowActionItem>
-        <RowActionItem
-          v-if="ctx.charCtx.ownerMode"
-          action="edit"
-          @click="editWeapon(closeMenu)"
-        >Изменить</RowActionItem>
+        <CharacterMenuActions :view="ctx.item(entry) ? () => openDescription(closeMenu) : undefined"
+          :edit="ctx.charCtx.ownerMode ? () => editWeapon(closeMenu) : undefined"
+          :remove="ctx.charCtx.ownerMode ? () => deleteWeapon(closeMenu) : undefined" />
         <CreatedItemActions :entry="entry" @close="closeMenu" />
         <UsableItemAction source="weapon" :item="ctx.item(entry)" :entry="entry" :name="ctx.itemTitle(entry)" @close="closeMenu" />
         <ItemTransferAction source="weapon" :entry="entry" :name="ctx.itemTitle(entry)" @close="closeMenu" />
@@ -43,13 +35,6 @@
           @click="moveToItems(closeMenu)"
         >Переместить в вещи</RowActionItem>
         <MagicItemMenuActions v-if="ctx.charCtx.ownerMode && entry.magic_item_id" :item="ctx.itemMap[entry.magic_item_id]" :entry="entry" :values="ctx.charCtx.values" @update:values="patch => ctx.charCtx.updateValues(patch)" @configure="ctx.openMagicInstance(entry)" @close="closeMenu" />
-        <RowActionSeparator v-if="ctx.charCtx.ownerMode" />
-        <RowActionItem
-          v-if="ctx.charCtx.ownerMode"
-          action="delete"
-          tone="danger"
-          @click="deleteWeapon(closeMenu)"
-        >Удалить</RowActionItem>
       </template>
     </RowActionMenu>
 
@@ -87,6 +72,7 @@
   </MorphTile>
 </template>
 <script setup>
+import CharacterMenuActions from '@/features/character-editor/components/CharacterMenuActions.vue'
 import { ActionButton, MorphTile } from '@sylvieshare/share-ui'
 import CreatedItemStatus from '@/features/character-editor/components/CreatedItemStatus.vue'
 import CreatedItemActions from '@/features/character-editor/components/CreatedItemActions.vue'
@@ -102,7 +88,6 @@ import { computed, inject, nextTick, shallowRef, ref, watch } from 'vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
-import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import WeaponRollSettings from './WeaponRollSettings.vue'
 import WeaponAlternativeDamageMenu from './WeaponAlternativeDamageMenu.vue'

@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test'
 async function openDescription(page, name) {
   const row = page.locator('.spell-row').filter({ has: page.locator('.sp-name', { hasText: new RegExp(`^${name}$`) }) })
   await row.click()
-  await page.getByRole('menuitem', { name: 'Открыть описание', exact: true }).click()
+  await page.getByRole('button', { name: 'Открыть описание', exact: true }).click()
   return page.getByRole('dialog').last()
 }
 

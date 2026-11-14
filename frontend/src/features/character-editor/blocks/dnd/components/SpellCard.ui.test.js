@@ -12,7 +12,8 @@ describe('character spell card actions', () => {
     expect(source).toContain("option.remaining }}/{{ option.total")
     expect(source).toContain('Выберите ячейку')
     expect(source).not.toContain('choosingSlot')
-    expect(source).toContain('action="delete"')
+    expect(source).toContain('<CharacterMenuActions')
+    expect(source).toContain('() => removeSpell(close)')
     expect(source).not.toContain('class="sp-del"')
   })
 

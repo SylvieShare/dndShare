@@ -61,11 +61,10 @@
 
   <BasePopover v-model:open="actionsOpen" :anchor="avatarEl" placement="bottom-start" :min-width="180" :z-index="3200" transition-preset="action-menu">
     <div class="avatar-actions" role="menu" aria-label="Действия с портретом">
+      <CharacterMenuActions :edit="imageUrl ? cropCurrent : undefined" edit-label="Кадрировать"
+        :remove="imageUrl ? clearImage : undefined" remove-label="Очистить" />
       <button type="button" role="menuitem" @click="chooseFile">Загрузить изображение</button>
       <button type="button" role="menuitem" @click="chooseIconFile">Загрузить иконку</button>
-      <button v-if="imageUrl" type="button" role="menuitem" @click="cropCurrent">Кадрировать</button>
-      <div v-if="imageUrl" class="avatar-actions-separator" />
-      <button v-if="imageUrl" type="button" role="menuitem" class="avatar-action-danger" @click="clearImage">Очистить</button>
     </div>
   </BasePopover>
 
@@ -79,6 +78,7 @@
 </template>
 
 <script setup>
+import CharacterMenuActions from '@/features/character-editor/components/CharacterMenuActions.vue'
 import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { BasePopover } from '@sylvieshare/share-ui'
@@ -364,6 +364,4 @@ onBeforeUnmount(clearCropObjectUrl)
   cursor: pointer;
 }
 .avatar-actions button:hover { background: var(--surface-raised); color: var(--text-1); }
-.avatar-actions .avatar-action-danger { color: var(--danger); }
-.avatar-actions-separator { height: 1px; margin: 3px 5px; background: var(--border); }
 </style>

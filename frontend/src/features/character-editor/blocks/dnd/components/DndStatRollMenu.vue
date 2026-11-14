@@ -19,18 +19,14 @@
         </dl>
       </div>
     </div>
-    <template v-if="editable">
-      <RowActionItem action="edit" @click="emit('edit')">Изменить</RowActionItem>
-      <RowActionSeparator />
-    </template>
+    <CharacterMenuActions :edit="editable ? () => emit('edit') : undefined" />
     <div class="stat-roll-mode-label">Режим броска</div>
     <D20RollControls :scope="scope" :mode="mode" :cancelled="cancelled" @roll="(mode, excluded) => emit('roll', mode, excluded)" />
   </BasePopover>
 </template>
 <script setup>
+import CharacterMenuActions from '@/features/character-editor/components/CharacterMenuActions.vue'
 import { BasePopover } from '@sylvieshare/share-ui'
-import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
-import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 import { formatBonus as signed } from '@/shared/lib/dnd'
 import D20RollControls from './D20RollControls.vue'

@@ -11,7 +11,7 @@
       </template>
     </ActionButton>
     <CharacterMenuPopover v-model:open="open" :anchor="trigger?.$el" label="Сессия" role="menu">
-      <div class="session-heading">{{ heading }}</div>
+      <div v-if="chapterLabel" class="session-heading">{{ heading }}</div>
       <ActionMenuItem :icon="ScrollText" @click="open = false; router.push(`/sessions/${session.uuid}`)">Открыть сессию</ActionMenuItem>
       <ActionMenuItem :icon="Users" @click="show('players')">
         Игроки <template #suffix>{{ playerCount ?? '—' }}</template>
@@ -37,7 +37,8 @@ const router = useRouter(), trigger = ref(null), open = ref(false)
 const connection = inject('characterSessionConnection', null)
 const linkState = computed(() => connection?.value.uuid === props.session.uuid ? connection?.value.status : null)
 const linkLabel = computed(() => ({ connected: 'Связь с сессией установлена', error: 'Нет связи с сессией' }[linkState.value] || 'Подключение к сессии'))
-const heading = computed(() => [props.session.name, currentChapterLabel({ chapterNumber: props.session.chapterNumber, chapterName: props.session.chapterName }, true)].filter(Boolean).join(' · '))
+const chapterLabel = computed(() => currentChapterLabel({ chapterNumber: props.session.chapterNumber, chapterName: props.session.chapterName }, true))
+const heading = computed(() => [props.session.name, chapterLabel.value].filter(Boolean).join(' · '))
 const playerCount = computed(() => props.controller.state.playersLoaded ? props.controller.recipients.length : null)
 const eventCount = computed(() => props.controller.state.transfers.length + (props.controller.interactions?.state.pending.length || 0))
 // Panels outlive the menu. Their anchor must remain in the header after the item disappears.

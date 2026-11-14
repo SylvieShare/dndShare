@@ -1,6 +1,6 @@
 <template>
   <CharacterItemSkeleton v-if="!entry.item && ctx.itemLoading?.(entry.ref.id)" />
-  <RowActionMenu v-else ref="actionMenu" :heading="entry.item?.name" block :disabled="draggedThisGesture">
+  <RowActionMenu v-else ref="actionMenu" :title="`Действия: ${entry.item?.name || 'Заклинание'}`" block :disabled="draggedThisGesture">
     <template #trigger="{ open: menuOpen }">
       <BaseTile :outlined="false" :interactive="!!entry.item"
         class="spell-row action-menu-source"
@@ -52,11 +52,11 @@
     </template>
 
     <template #default="{ close }">
+      <CharacterMenuActions :view="() => openDetails(close)"
+        :remove="ctx.charCtx.ownerMode && !isReadonlyGrant ? () => removeSpell(close) : undefined" />
       <SpellCreationMenu :entry="entry" :cast-level="castLevel" @close="close" />
       <SpellApplicationMenu ref="applicationMenu" :entry="entry" :cast-level="castLevel" @close="close" />
       <SpellRollMenu ref="rollMenu" :entry="entry" :cast-level="castLevel" @close="close" />
-      <RowActionSeparator v-if="hasMetrics" />
-      <RowActionItem action="view" @click="openDetails(close)">Открыть описание</RowActionItem>
       <RowActionItem
         v-if="ctx.charCtx.ownerMode && canPrepare"
         action="prepare"
@@ -119,17 +119,12 @@
         {{ useLabel }}
       </RowActionItem>
       <RowActionItem v-if="ctx.charCtx.ownerMode && entry.item?.data?.concentration" :icon="Focus" :disabled="ctx.spellcastingBlocked || ctx.charCtx.itemTransfers?.busy" @click="startConcentration(close)">Начать концентрацию</RowActionItem>
-      <RowActionItem
-        v-if="ctx.charCtx.ownerMode && !isReadonlyGrant"
-        action="delete"
-        tone="danger"
-        @click="removeSpell(close)"
-      >Удалить</RowActionItem>
     </template>
   </RowActionMenu>
 </template>
 
 <script setup>
+import CharacterMenuActions from '@/features/character-editor/components/CharacterMenuActions.vue'
 import SpellCardContent from './SpellCardContent.vue'
 import SpellApplicationMenu from './SpellApplicationMenu.vue'
 import SpellCreationMenu from './SpellCreationMenu.vue'
@@ -141,7 +136,6 @@ import { computed, inject, nextTick, ref, watch } from 'vue'
 
 import SpellRollMenu from './SpellRollMenu.vue'
 import CharacterItemSkeleton from '@/features/character-editor/components/sheet/CharacterItemSkeleton.vue'
-import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
 import PreparedSpellBrackets from '@/features/character-editor/blocks/dnd/components/PreparedSpellBrackets.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'

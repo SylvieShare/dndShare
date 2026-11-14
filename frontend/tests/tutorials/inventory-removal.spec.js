@@ -54,7 +54,7 @@ for (const mobile of [false, true]) test(`inventory removal and HP calculator sa
     data: { source: { itemId: 42, name: 'Факел', instanceUid: 'torch' }, itemId: 42, count: 1, remaining: 2 },
   })])
   await openItem()
-  await page.getByRole('menuitem', { name: 'Удалить предмет', exact: true }).click()
+  await page.getByRole('button', { name: 'Удалить предмет', exact: true }).click()
   await expect(row).toHaveCount(0)
   await expect.poll(() => saves.length).toBe(2)
   expect(saves[1].data.values.items.sections[0].items).toEqual([])

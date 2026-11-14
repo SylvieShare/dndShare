@@ -2,6 +2,7 @@
 <SkeletonBlock v-if="entry.loading" width="100%" height="72px" aria-label="Загружаем предмет" />
 <RowActionMenu v-else
   block
+  :title="`Действия: ${entry.display.name}`"
   :disabled="draggedThisGesture || (!canManage && entry.item_id == null)"
 >
   <template #trigger="{ open: menuOpen }">
@@ -14,7 +15,6 @@
   </template>
 
   <template #default="{ close }">
-    <InventoryItemMenuHeader :name="entry.display.name" />
     <span class="di-item-meta">Количество: {{ entry.count }}</span>
     <div v-if="isToolEntry(entry) || entryHasProficiency(entry) || armorMeta(entry)" class="di-item-meta">
       <span v-if="isToolEntry(entry)">{{ toolCategoryLabel(entry) }}</span>
@@ -35,6 +35,9 @@
     <WeaponBonusTransferPanel v-if="entry.params?.magic?.bonus_transfer" :uid="entry.uid" />
     <WeaponUsePanel v-if="entry.params?.magic?.weapon_use?.status === 'active'" :uid="entry.uid" />
     <ItemLastChargeCheck v-if="entry.params?.magic?.last_charge_check" :uid="entry.uid" />
+    <CharacterMenuActions :view="entry.item_id != null ? () => viewEntry(entry, close) : undefined"
+      :edit="canManage && entry.item_id == null ? () => editEntry(sectionId, entry, close) : undefined"
+      :remove="canManage ? () => deleteEntry(sectionId, entry, close) : undefined" remove-label="Удалить предмет" />
     <RowActionItem v-if="canEquip(entry)" :icon="isEquipped(entry) ? Shirt : ShieldCheck" tone="accent" @click="toggleEquipment(entry, close)">
       {{ isEquipped(entry) ? 'Снять' : 'Экипировать' }}
     </RowActionItem>
@@ -42,11 +45,6 @@
     <CreatedItemActions :entry="entry" @close="close" />
     <ItemTransferAction source="items" :entry="entry" :name="entry.display.name" @close="close" />
     <MagicItemMenuActions v-if="canManage && entryTypeId(entry) === MAGIC_ITEM_TYPE_ID" :item="entry.display.base" :entry="entry" :values="charCtx.values" @update:values="patch => charCtx.updateValues(patch)" @configure="openMagic(entry)" @close="close" />
-    <RowActionItem
-      v-if="entry.item_id != null"
-      action="view"
-      @click="viewEntry(entry, close)"
-    >Открыть описание</RowActionItem>
     <RowActionSubmenu v-if="isToolEntry(entry)" label="Характеристика для проверки" :min-width="230">
       <template #trigger="{ open }">
         <RowActionItem :icon="Dices" tone="accent" submenu :submenu-open="open">Бросок</RowActionItem>
@@ -80,23 +78,12 @@
       action="delete"
       @click="deleteOneEntry(sectionId, entry, close)"
     >Уменьшить на 1</RowActionItem>
-    <RowActionItem
-      v-if="canManage && entry.item_id == null"
-      action="edit"
-      @click="editEntry(sectionId, entry, close)"
-    >Изменить</RowActionItem>
-    <RowActionItem
-      v-if="canManage"
-      action="delete"
-      tone="danger"
-      @click="deleteEntry(sectionId, entry, close)"
-    >Удалить предмет</RowActionItem>
   </template>
 </RowActionMenu>
 </template>
 
 <script setup>
-import InventoryItemMenuHeader from '@/features/inventory/components/InventoryItemMenuHeader.vue'
+import CharacterMenuActions from '@/features/character-editor/components/CharacterMenuActions.vue'
 import InventoryBagItem from '@/features/inventory/components/InventoryBagItem.vue'
 import CreatedItemStatus from '@/features/character-editor/components/CreatedItemStatus.vue'
 import CreatedItemActions from '@/features/character-editor/components/CreatedItemActions.vue'

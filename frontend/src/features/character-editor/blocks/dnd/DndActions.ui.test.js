@@ -48,7 +48,7 @@ describe('character action block', () => {
     expect(blockSource).toContain(':readonly-actions="readonlyActions"')
     expect(viewSource).not.toContain('Переместить выше')
     expect(viewSource).not.toContain('Переместить ниже')
-    expect(viewSource).toContain('action="edit"')
+    expect(viewSource).toContain('() => edit(action, close)')
     expect(editorSource).toContain('title="Свои действия"')
     expect(editorSource).toContain('title="Из листа"')
     expect(editorSource).toContain('Добавить действие')

@@ -19,7 +19,7 @@
         :key="action.key"
         :ref="menu => setActionMenu(action.key, menu)"
         block
-        :title="`Действия: ${action.title}`" :heading="action.title"
+        :title="`Действия: ${action.title}`"
         :disabled="!canOpenActionMenu(action)"
       >
         <template #trigger="{ open }">
@@ -97,6 +97,8 @@
         </template>
 
         <template #default="{ close }">
+          <CharacterMenuActions :edit="!action.readonly ? () => edit(action, close) : undefined" edit-label="Редактировать"
+            :remove="!action.readonly ? () => remove(action, close) : undefined" />
           <RowActionItem
             v-for="roll in action.dice_rolls || []"
             :key="roll.key"
@@ -126,10 +128,6 @@
             {{ effect.title }}
             <template #suffix>{{ effect.suffix }}</template>
           </RowActionItem>
-          <RowActionSeparator v-if="(action.dice_rolls?.length || canActivateTarget(action) || action.menu_effects?.length) && !action.readonly" />
-          <RowActionItem v-if="!action.readonly" action="edit" @click="edit(action, close)">Редактировать</RowActionItem>
-          <RowActionSeparator v-if="!action.readonly" />
-          <RowActionItem v-if="!action.readonly" action="delete" tone="danger" @click="remove(action, close)">Удалить</RowActionItem>
         </template>
       </RowActionMenu>
 
@@ -148,6 +146,7 @@
 </template>
 
 <script setup>
+import CharacterMenuActions from '@/features/character-editor/components/CharacterMenuActions.vue'
 import ActionTiming from '@/shared/ui/ActionTiming.vue'
 import { actionIcon as groupIcon } from '@/shared/ui/actionTimingIcons'
 import DndRichContent from '@/shared/ui/DndRichContent.vue'
@@ -160,7 +159,6 @@ import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import ResourceRestIcons from '@/features/character-editor/blocks/generic/components/ResourceRestIcons.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
-import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import { MorphTile, TileAccentStrip, ActionButton } from '@sylvieshare/share-ui'
 
 const props = defineProps({

@@ -19,7 +19,7 @@ for (const width of [390,834,1440]) test(`inventory has page-aligned larger cell
   expect(Math.abs(boxes.section-boxes.grid)).toBeLessThan(1)
   expect(boxes.cell).toBeGreaterThanOrEqual(80)
   await source.click()
-  await expect(page.getByRole('menuitem',{name:'Удалить предмет',exact:true})).toBeVisible()
+  await expect(page.getByRole('button',{name:'Удалить предмет',exact:true})).toBeVisible()
   await page.keyboard.press('Escape')
   await source.scrollIntoViewIfNeeded()
   const from=await source.boundingBox(),target=await bag.locator('[data-sortable-slot="2"]').boundingBox()

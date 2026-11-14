@@ -55,5 +55,5 @@ test('a failed default cover leaves usable content without a loading placeholder
  await expect(row.locator('.spell-card-cover-image')).toHaveCount(0)
  await expect(row.locator('.spell-card-cover-skeleton')).toHaveCount(0)
  await row.locator('.sp-name').click()
- await expect(page.getByRole('menuitem',{name:'Открыть описание',exact:true})).toBeVisible()
+ await expect(page.getByRole('button',{name:'Открыть описание',exact:true})).toBeVisible()
 })

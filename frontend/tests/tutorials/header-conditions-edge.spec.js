@@ -61,7 +61,7 @@ test('removing the last condition collapses the row and keeps addition in the ch
   const header = page.locator('.character-workspace-header'), strip = header.locator('.character-summary-strip')
   const height = (await header.boundingBox()).height
   await strip.getByRole('button', { name: 'Вдохновение', exact: true }).click()
-  await page.getByRole('menuitem', { name: 'Убрать', exact: true }).click()
+  await page.getByRole('button', { name: 'Убрать', exact: true }).click()
   await expect(strip).toHaveCount(0)
   await expect(header.locator('.workspace-header-context')).toHaveCount(0)
   await expect.poll(() => api.document().values.inspiration).toBe(false)

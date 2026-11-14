@@ -52,12 +52,9 @@
 
         <template #default="{ close }">
           <StatusMechanicsMenu v-if="editable && item.kind === 'states' && item.item" :uid="item.id" :effect="item.item" :context="context" />
-          <RowActionItem v-if="item.item" action="view" tone="info" @click="select(item, close, 'view')">
-            Посмотреть
-          </RowActionItem>
-          <RowActionItem v-if="editable && item.kind === 'states'" :icon="Clock3" @click="select(item, close, 'edit-duration')">
-            Изменить длительность
-          </RowActionItem>
+          <CharacterMenuActions :view="item.item ? () => select(item, close, 'view') : undefined" view-label="Посмотреть"
+            :edit="editable && item.kind === 'states' ? () => select(item, close, 'edit-duration') : undefined" edit-label="Изменить длительность"
+            :remove="editable ? () => select(item, close, 'remove') : undefined" remove-label="Убрать" />
           <RowActionItem
             v-if="editable && item.adjustableLevel && (!item.maxLevel || item.level < item.maxLevel)"
             :icon="Plus"
@@ -72,10 +69,6 @@
           >
             Понизить уровень
           </RowActionItem>
-          <RowActionSeparator v-if="editable" />
-          <RowActionItem v-if="editable" action="remove" tone="danger" @click="select(item, close, 'remove')">
-            Убрать
-          </RowActionItem>
         </template>
       </RowActionMenu>
 
@@ -88,13 +81,13 @@
 </template>
 
 <script setup>
+import CharacterMenuActions from '@/features/character-editor/components/CharacterMenuActions.vue'
 import StatusMechanicsMenu from './StatusMechanicsMenu.vue'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
-import { BatteryLow, Clock3, Hourglass, Minus, Plus, Sparkles } from '@lucide/vue'
+import { BatteryLow, Hourglass, Minus, Plus, Sparkles } from '@lucide/vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
-import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import { statusIconItem } from '../../../lib/statusIcon'
 import { statusPolarity } from '@/features/items/lib/statusEffectPresentation'
 import { layoutTokens } from '@/app/design-tokens'

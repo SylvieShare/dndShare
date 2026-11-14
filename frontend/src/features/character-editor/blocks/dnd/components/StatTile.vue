@@ -3,7 +3,7 @@
   <RowActionMenu v-if="variant === 'strip' && rollable" :title="label">
     <template #trigger><button type="button" class="stat-strip" :aria-label="label + ' ' + pre + value"><img :src="icon" alt="" /><span class="stat-strip-label">{{ label }}</span><span>{{ pre }}{{ value }}{{ unit ? ' ' + unit : '' }}</span></button></template>
     <template #default="{ close: closeMenu }">
-      <RowActionItem v-if="canEdit" action="edit" @click="closeMenu(); open()">Изменить</RowActionItem>
+      <CharacterMenuActions :edit="canEdit ? () => { closeMenu(); open() } : undefined" />
       <RowActionItem :icon="Dices" @click="closeMenu(); runAction()">Бросить кубик</RowActionItem>
     </template>
   </RowActionMenu>
@@ -25,7 +25,7 @@
       </StatTileFace>
     </template>
     <template #default="{ close: closeMenu }">
-      <RowActionItem v-if="canEdit" action="edit" @click="closeMenu(); open()">Изменить</RowActionItem>
+      <CharacterMenuActions :edit="canEdit ? () => { closeMenu(); open() } : undefined" />
       <RowActionItem :icon="Dices" @click="closeMenu(); runAction()">Бросить кубик</RowActionItem>
     </template>
   </RowActionMenu>
@@ -55,6 +55,7 @@
 </template>
 
 <script setup>
+import CharacterMenuActions from '@/features/character-editor/components/CharacterMenuActions.vue'
 defineOptions({ inheritAttrs: false })
 // Shared shell for the small "label + value" sheet tiles (AC / initiative / speed / prof-bonus).
 // Owners can open the editor; `rollable` tiles keep their dice action on read-only sheets.

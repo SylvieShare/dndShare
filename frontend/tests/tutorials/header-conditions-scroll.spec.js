@@ -64,7 +64,7 @@ for (const width of [390, 475, 834, 1440, 1920]) test(`header conditions scroll 
   await last.focus()
   await last.click()
   const menu = page.getByRole('menu', { name: `Действия: ${names.at(-1)}`, exact: true })
-  await expect(menu.getByRole('menuitem', { name: 'Изменить длительность', exact: true })).toBeVisible()
+  await expect(menu.getByRole('button', { name: 'Изменить длительность', exact: true })).toBeVisible()
   await page.keyboard.press('Escape')
   await page.getByRole('button',{name:'Действия персонажа',exact:true}).click()
   await page.getByRole('menuitem',{name:'Добавить состояние',exact:true}).click()

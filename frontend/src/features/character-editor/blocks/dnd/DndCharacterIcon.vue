@@ -27,8 +27,8 @@
 
     <BasePopover v-if="canEdit" v-model:open="menuOpen" :anchor="iconEl" placement="bottom-start" :min-width="150" :z-index="3200" transition-preset="action-menu">
       <div class="dci-icon-menu" role="menu" aria-label="Действия с иконкой">
+        <CharacterMenuActions :remove="hasOwnIcon ? clearIcon : undefined" remove-label="Очистить" />
         <button type="button" role="menuitem" @click="chooseFile">Загрузить</button>
-        <button v-if="hasOwnIcon" type="button" role="menuitem" class="dci-icon-clear" @click="clearIcon">Очистить</button>
         <span v-if="error" class="dci-icon-error" role="alert">{{ error }}</span>
       </div>
     </BasePopover>
@@ -36,6 +36,7 @@
 </template>
 
 <script setup>
+import CharacterMenuActions from '@/features/character-editor/components/CharacterMenuActions.vue'
 import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, inject, ref } from 'vue'
 import { BasePopover } from '@sylvieshare/share-ui'
@@ -135,7 +136,6 @@ async function clearIcon() {
   cursor: pointer;
 }
 .dci-icon-menu button:hover { background: var(--surface-raised); color: var(--text-1); }
-.dci-icon-menu .dci-icon-clear { color: var(--danger); }
 .dci-icon-error { max-width: 220px; padding: 6px 10px; color: var(--danger); font-size: 10px; line-height: 1.35; }
 
 </style>

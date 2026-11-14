@@ -87,7 +87,8 @@
         </template>
 
         <template #default="{ close }">
-          <RowActionItem action="view" tone="info" @click="select(entry, close, 'view')">Посмотреть</RowActionItem>
+          <CharacterMenuActions :view="() => select(entry, close, 'view')" view-label="Посмотреть"
+            :remove="manage && !entry.selection_managed ? () => select(entry, close, 'remove') : undefined" />
           <RowActionItem
             v-if="manage && entry.usable_resource?.value > 0"
             action="use"
@@ -97,15 +98,6 @@
             Использовать ({{ entry.usable_resource.value }}/{{ entry.usable_resource.total }})
           </RowActionItem>
           <RowActionItem v-if="manage && entry.selection_parent" action="edit" @click="select(entry, close, 'select-abilities')">Выбрать способности</RowActionItem>
-          <RowActionSeparator v-if="manage && !entry.selection_managed" />
-          <RowActionItem
-            v-if="manage && !entry.selection_managed"
-            action="delete"
-            tone="danger"
-            @click="select(entry, close, 'remove')"
-          >
-            Удалить
-          </RowActionItem>
         </template>
       </RowActionMenu>
     </SectionList>
@@ -113,6 +105,7 @@
 </template>
 
 <script setup>
+import CharacterMenuActions from '@/features/character-editor/components/CharacterMenuActions.vue'
 import { SkeletonBlock } from '@sylvieshare/share-ui'
 import { Activity, Plus } from '@lucide/vue'
 import { RowActionMenu, SectionList } from '@sylvieshare/share-ui'
@@ -122,7 +115,6 @@ import DndRichContent from '@/shared/ui/DndRichContent.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ResourceRestIcons from '@/features/character-editor/blocks/generic/components/ResourceRestIcons.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
-import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 
 defineProps({
   entries: { type: Array, default: () => [] },

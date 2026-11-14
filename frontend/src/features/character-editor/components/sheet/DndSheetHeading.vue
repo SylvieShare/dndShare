@@ -7,7 +7,7 @@
         :edit-armor="canEdit" armor-control edit-health @armor="openPanel('armor')" @health="openPanel('health')" />
     </template>
     <template #default="{ close }">
-      <RowActionItem action="edit" :disabled="!canEdit" @click="select('profile', close)">Изменить персонажа</RowActionItem>
+      <CharacterMenuActions :edit="() => select('profile', close)" :edit-disabled="!canEdit" edit-label="Изменить персонажа" />
       <RowActionItem :icon="TrendingUp" :disabled="!canEdit" @click="select('experience', close)">
         <span class="experience-action"><span>Опыт <small>{{ experience }}<template v-if="nextExperience !== null"> / {{ nextExperience }}</template></small></span>
           <span class="experience-track" role="progressbar" aria-label="Прогресс уровня" :aria-valuenow="Math.round(progress)" :aria-valuemin="0" :aria-valuemax="100"><i :style="{ width: progress + '%' }" /></span>
@@ -30,6 +30,7 @@
   </RowActionMenu>
 </template>
 <script setup>
+import CharacterMenuActions from '@/features/character-editor/components/CharacterMenuActions.vue'
 import { computed, inject, ref } from 'vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import { Award, Footprints, HeartPulse, Shield, TrendingUp, Zap } from '@lucide/vue'

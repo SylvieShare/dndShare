@@ -14,7 +14,7 @@ async function editDuration(page, mobile) {
     await page.getByRole('button', { name: 'Изменить длительность: Ускорение', exact: true }).first().click()
   } else {
     await page.locator('.dsov-effect').first().click()
-    await page.getByRole('menuitem', { name: 'Изменить длительность', exact: true }).click()
+    await page.getByRole('button', { name: 'Изменить длительность', exact: true }).click()
   }
 }
 
@@ -54,7 +54,7 @@ test('readers see durations and cannot edit or use potions', async ({ page }) =>
   await page.goto('/tests/weapon-charges/status-duration.html?reader')
   await expect(page.locator('.dsov-duration').first()).toHaveText('10 минут')
   await page.locator('.dsov-effect').first().click()
-  await expect(page.getByRole('menuitem', { name: 'Изменить длительность', exact: true })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Изменить длительность', exact: true })).toHaveCount(0)
   await page.keyboard.press('Escape')
   await page.getByRole('button', { name: 'Зелье скорости' }).click()
   await expect(page.getByRole('menuitem', { name: 'Использовать на…', exact: true })).toHaveCount(0)
