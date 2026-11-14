@@ -1,5 +1,5 @@
 <template>
-  <section class="session-graph-canvas" :data-level="displayLevel">
+  <section class="session-graph-canvas" :class="{ 'session-graph-canvas--sidebar-moving': sidebar?.moving.value }" :data-level="displayLevel">
     <NestedGraphCanvas
       ref="canvas"
       class="session-graph-canvas__nested"
@@ -20,6 +20,8 @@
       :can-edit="isDm && workspaceMode !== 'combat'"
       :spotlight-node-id="activeSpotlightId"
       :spotlight-offset-x="spotlightOffsetX"
+      :spotlight-x="spotlightX"
+      :spotlight-y="chromeHeight + 14"
       :initial-top="activeInitialTop"
       :empty-title="emptyCopy.title"
       :empty-description="emptyCopy.description"
@@ -76,43 +78,9 @@
       {{ backLabel }}
     </button>
 
-    <div
-      v-if="showChapterAncestor && workspaceMode !== 'combat'"
-      class="session-graph-ancestor session-graph-ancestor--chapter"
-      title="Действия с главой"
-      :role="isDm ? 'button' : undefined"
-      :tabindex="isDm ? 0 : -1"
-      :aria-label="activeChapter ? `Действия с главой ${activeChapter.number}` : 'Действия с главой'"
-      @click.stop="openChapterAncestorMenu"
-      @dblclick.stop="returnToChapters"
-      @keydown.enter.stop.prevent="openChapterAncestorMenu"
-      @keydown.space.stop.prevent="openChapterAncestorMenu"
-    >
-      <ChapterGraphNode
-        v-if="activeChapter"
-        embedded
-        :show-link-port="false"
-        :chapter="activeChapter"
-        :current="activeChapter.id === currentChapterId"
-        spotlight
-      />
-    </div>
-    <div
-      v-if="displayLevel === 'blocks' && workspaceMode !== 'combat' && selectedScene"
-      class="session-graph-ancestor session-graph-ancestor--scene"
-      title="Действия со сценарием"
-      :role="isDm ? 'button' : undefined"
-      :tabindex="isDm ? 0 : -1"
-      @click.stop="openSceneAncestorMenu"
-      @dblclick.stop="returnFromSceneAncestor"
-      @keydown.enter.stop.prevent="openSceneAncestorMenu"
-      @keydown.space.stop.prevent="openSceneAncestorMenu"
-    >
-      <SceneGraphNode
-        :scene="selectedScene"
-        spotlight
-      />
-    </div>
+    <SessionGraphAncestors v-if="showChapterAncestor && workspaceMode !== 'combat'" :chapter="activeChapter" :scene="selectedScene"
+      :level="displayLevel" :is-dm="isDm" :current-chapter-id="currentChapterId" @scroll="ancestorScrollLeft = $event"
+      @chapter-menu="openChapterAncestorMenu" @chapter-back="returnToChapters" @scene-menu="openSceneAncestorMenu" @scene-back="returnFromSceneAncestor" />
 
     <CanvasActionDock
       v-if="isDm && workspaceMode !== 'combat'"
@@ -212,8 +180,10 @@ import { ArrowLeft } from '@lucide/vue'
 import CanvasActionDock from '@/features/sessions/components/CanvasActionDock.vue'
 import CanvasHotkeyHints from '@/features/sessions/components/CanvasHotkeyHints.vue'
 import ChapterEdgeModal from '@/features/sessions/components/ChapterEdgeModal.vue'
+import SessionGraphAncestors from './SessionGraphAncestors.vue'
 import ChapterGraphNode from '@/features/sessions/components/ChapterGraphNode.vue'
 import GraphDeleteDialog from '@/features/sessions/components/GraphDeleteDialog.vue'
+import { workspaceSidebarContext } from '@/shared/lib/workspaceSidebarContext'
 import NestedGraphCanvas from '@/features/narrative-graph/components/NarrativeGraphCanvas.vue'
 import NestedEdgeMenus from '@/features/sessions/components/NestedEdgeMenus.vue'
 import SceneBlockEditorModal from '@/features/sessions/components/SceneBlockEditorModal.vue'
@@ -240,6 +210,7 @@ const props = defineProps({
   workspaceChapterId: { type: [Number, String], default: null },
   workspaceScene: { type: Object, default: null },
   workspaceLevel: { type: String, default: 'chapters' },
+  chromeHeight: { type: Number, default: 64 },
   workspaceLayoutMode: { type: String, default: null },
   currentChapterId: { type: [Number, String], default: null },
   chapterLinkingFrom: { type: Object, default: null },
@@ -253,6 +224,9 @@ const emit = defineEmits([
 ])
 
 const canvas = ref(null)
+const sidebar = inject(workspaceSidebarContext, null)
+const ancestorScrollLeft = ref(0)
+const spotlightScrollLeft = ref(0)
 const blockMenus = ref(null)
 const sceneMenus = ref(null)
 const edgeMenus = ref(null)
@@ -269,6 +243,7 @@ const sceneCreatePosition = ref({ x: 48, y: 210 })
 const pendingDelete = ref(null)
 const {
   displayLevel,
+  initialTopForLevel,
   selectedScene,
   transitionSpotlight,
   activeChapterId,
@@ -303,7 +278,7 @@ const activeFromKey = computed(() => displayLevel.value === 'chapters' ? 'fromCh
 const activeToKey = computed(() => displayLevel.value === 'chapters' ? 'toChapterId' : displayLevel.value === 'scenes' ? 'toSceneId' : 'toItemId')
 const activeNodeWidth = computed(() => displayLevel.value === 'blocks' ? 300 : 236)
 const activeNodeHeight = computed(() => displayLevel.value === 'blocks' ? 96 : 156)
-const activeInitialTop = computed(() => displayLevel.value === 'chapters' ? 80 : 210)
+const activeInitialTop = computed(() => initialTopForLevel(displayLevel.value))
 const activeLoading = computed(() => displayLevel.value === 'scenes' ? sceneGraph.loading.value : displayLevel.value === 'blocks' ? blockGraph.loading.value : false)
 const activeError = computed(() => displayLevel.value === 'scenes' ? sceneGraph.error.value : displayLevel.value === 'blocks' ? blockGraph.error.value : '')
 const activeLinkingFrom = computed(() => displayLevel.value === 'chapters' ? props.chapterLinkingFrom : displayLevel.value === 'scenes' ? sceneLinkingFrom.value : blockLinkingFrom.value)
@@ -311,8 +286,14 @@ const activeSpotlightId = computed(() => transitionSpotlight.value?.level === di
   ? transitionSpotlight.value.id
   : null)
 const spotlightOffsetX = computed(() => transitionSpotlight.value?.level === displayLevel.value
-  ? transitionSpotlight.value.offset
+  ? transitionSpotlight.value.offset - spotlightScrollLeft.value
   : 0)
+const spotlightX = computed(() => activeSpotlightId.value != null && sidebar?.safeLeft ? sidebar.safeLeft.value + spotlightOffsetX.value : null)
+// Returning removes a card and clamps the strip's scrollLeft before the first
+// paint. Keep the starting offset until the spotlight has left that position.
+watch(transitionSpotlight, value => {
+  if (value) spotlightScrollLeft.value = value.level === 'chapters' && displayLevel.value === 'chapters' ? 0 : ancestorScrollLeft.value
+}, { flush: 'sync' })
 const showChapterAncestor = computed(() => ['scenes', 'blocks'].includes(displayLevel.value) && !!activeChapter.value)
 const canvasActions = computed(() => narrativeCanvasActions(displayLevel.value))
 const emptyCopy = computed(() => narrativeCanvasEmptyCopy(displayLevel.value))

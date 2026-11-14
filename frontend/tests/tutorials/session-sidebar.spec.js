@@ -15,7 +15,7 @@ for(const width of [390,834,1440])test(`one persistent session sidebar at ${widt
   await expect(players.locator('.heading-metric')).toHaveText(['16','18'])
   const status=players.getByRole('button',{name:'Благословение',exact:true})
   await expect(status).toContainText('1 минута')
-  await expect(status.locator('.item-icon')).toHaveCSS('width','56px')
+  await expect(status.locator('.item-icon')).toHaveCSS('width','40px')
   await expect(sidebar).toHaveCSS('border-top-width','1px')
   await expect(nav).not.toHaveCSS('box-shadow','none')
   await expect(sidebar).toHaveCSS('opacity','1')

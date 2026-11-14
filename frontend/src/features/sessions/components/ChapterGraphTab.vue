@@ -34,6 +34,7 @@
         v-show="primaryView === 'story' && !mapBackground"
         ref="canvas"
         :graph="graph"
+        :chrome-height="chromeHeight"
         :session-uuid="sessionUuid"
         :is-dm="isDm"
         :current-chapter-id="graph.currentChapter.value?.id"

@@ -12,11 +12,15 @@ class TokenContractTests(unittest.TestCase):
         data = load()
         data['collection']['min-height'] = 176
         data['motion']['navigation'] = 227
+        data['spacing']['page'] = 24
         data['typography']['collection-title']['size'] = 24
         outputs = render(validate(data), 'fixture')
         css = next(value for key, value in outputs.items() if key.endswith('.css'))
         javascript = next(value for key, value in outputs.items() if key.endswith('.js'))
         self.assertIn('--collection-min-height: 176px;', css)
+        self.assertIn('--spacing-page: 24px;', css)
+        self.assertIn('export const spacingTokens', javascript)
+        self.assertIn('"page": 24', javascript)
         self.assertIn('--motion-navigation: 227ms;', css)
         self.assertIn('\"navigation\": 227', javascript)
         self.assertIn('--type-collection-title-size: 24px;', css)

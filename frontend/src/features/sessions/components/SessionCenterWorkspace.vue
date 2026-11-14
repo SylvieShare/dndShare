@@ -58,8 +58,7 @@ defineExpose({ toggleCombat: () => encounterTab.value?.toggleCombat() })
   animation: session-workspace-in 0.21s cubic-bezier(0.22, 1, 0.36, 1) both;
   transition:
     opacity 0.18s ease,
-    transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
-    left 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+    transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .session-center-workspace--closing {

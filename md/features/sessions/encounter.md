@@ -332,12 +332,14 @@ not the card. Long names truncate within the available width; metrics wrap as a 
 compact encounter `ParticipantStats`; ready name and HP stay visible while numeric
 mechanics show a skeleton. Passive skill math is shared with the sheet's menu table.
 
-Active character states below the summary use `DndStatusOverviewView(header)`:
-56px icons, name, duration and polarity-colored parchment, with horizontal overflow.
-The scrollbar is hidden; scrolling, touch gestures and keyboard focus remain available.
+Player summaries have transparent resting surfaces and separators between rows.
+Active character states below the summary use `DndStatusOverviewView(header, stacked, compact)`:
+40px icons, a minimum 48px touch target, name, duration and polarity-colored parchment.
+States form a vertical list inside the scrolling player panel. Character-header
+states keep their existing 56px horizontal presentation; NPC icon-only states remain 32px.
 They use the same handbook tooltip and action menu as the sheet: viewing, duration,
 levels, removal and effect-specific mechanics. The menu follows its source during
-inner-row scrolling and closes when the source leaves that row's viewport.
+panel scrolling and closes when the source leaves that panel's viewport.
 The adapter retains the shared resources, defenses and versioned character-command
 queue; rejected saves show an error and do not apply unconfirmed data. Status actions
 do not open the participant menu, reorder the card or change combat selection.

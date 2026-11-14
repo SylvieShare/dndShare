@@ -48,7 +48,7 @@
     <div
       v-else-if="session"
       class="campaign-workspace"
-      :style="{ '--session-toolbar-height': `${toolbarHeight}px`, '--session-map-panel-width': `${mapPanelWidth}px`, '--session-sidebar-rail': `${sidebar.rail.value}px`, '--session-sidebar-width': `${sidebar.width.value}px` }"
+      :style="{ '--session-toolbar-height': `${toolbarHeight}px`, '--session-map-panel-width': `${mapPanelWidth}px`, '--session-sidebar-rail': `${sidebar.rail.value}px`, '--session-sidebar-width': `${sidebar.width.value}px`, '--session-content-left': `${sidebar.safeLeft.value}px` }"
       :class="{
         'campaign-workspace--combat': primaryView === 'story' && workspaceMotionMode === 'combat',
         'campaign-workspace--map': mapVisible,
@@ -154,7 +154,11 @@
 
 
       <SessionWorkspaceSidebar :controller="sidebar">
-        <div class="col-section-title" role="group" aria-label="Действия с участниками">
+        <template #players-actions>
+          <SessionPlayersMenu :live-status="liveStatus" :sync-status="syncStatus" :syncing="syncRunning || liveCatchingUp"
+            @join="openJoinOwn" @create="openCreate" @copy-code="copyCode" @copy-link="copyLink" />
+        </template>
+        <div v-if="playersRailMode === 'combat'" class="col-section-title" role="group" aria-label="Действия с участниками">
           <button
             v-if="playersRailMode === 'combat'"
             type="button"
@@ -181,24 +185,7 @@
             <LogIn :size="17" />
             <span v-if="selectedPlayersToCombat.length" class="players-action-count">{{ selectedPlayersToCombat.length }}</span>
           </button>
-          <span class="live-indicator" :class="[liveStatus, syncStatus]" :title="liveStatus === 'connected' ? 'Сессия синхронизирована' : 'Восстанавливаем связь с сессией'">
-            <span class="live-bar" :class="{ running: syncRunning || liveCatchingUp }" />
-          </span>
-          <div class="players-actions">
-            <RowActionMenu>
-              <template #trigger>
-                <button type="button" class="players-actions-trigger" title="Действия с игроками" aria-label="Действия с игроками">
-                  +
-                </button>
-              </template>
-              <template #default="{ close }">
-                <RowActionItem action="join" @click="openJoinOwn(); close()">Присоединить своего персонажа</RowActionItem>
-                <RowActionItem action="create" @click="openCreate(); close()">Создать персонажа</RowActionItem>
-                <RowActionItem action="copy" @click="copyCode(); close()">Скопировать код приглашения</RowActionItem>
-                <RowActionItem action="copy-link" @click="copyLink(); close()">Скопировать ссылку приглашения</RowActionItem>
-              </template>
-            </RowActionMenu>
-          </div>
+
 
         </div>
 
@@ -286,9 +273,8 @@ import EncounterReviveModal from '@/features/sessions/components/EncounterRevive
 import SessionChronicleWorkspace from '@/features/sessions/components/SessionChronicleWorkspace.vue'
 import SessionEditModal from '@/features/sessions/components/SessionEditModal.vue'
 import SessionJoinModal from '@/features/sessions/components/SessionJoinModal.vue'
-import RowActionItem from '@/shared/ui/RowActionItem.vue'
-import { RowActionMenu } from '@sylvieshare/share-ui'
 import SessionCenterWorkspace from '@/features/sessions/components/SessionCenterWorkspace.vue'
+import SessionPlayersMenu from '@/features/sessions/components/SessionPlayersMenu.vue'
 import SessionWorkspaceSidebar from '@/features/sessions/components/SessionWorkspaceSidebar.vue'
 import { useSessionSidebar } from '../composables/useSessionSidebar'
 import SessionParticipantCard from '@/features/sessions/components/SessionParticipantCard'

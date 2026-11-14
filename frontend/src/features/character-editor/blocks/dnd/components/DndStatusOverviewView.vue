@@ -1,5 +1,5 @@
 <template>
-  <div v-if="items.length || showAddAction" class="dsov" :class="{ 'dsov--icons-only': iconsOnly, 'dsov--header': header }" :style="iconsOnly ? { '--status-icon-size': `${iconSize}px` } : null">
+  <div v-if="items.length || showAddAction" class="dsov" :class="{ 'dsov--icons-only': iconsOnly, 'dsov--header': header, 'dsov--stacked': stacked, 'dsov--compact': compact }" :style="iconsOnly ? { '--status-icon-size': `${iconSize}px` } : header ? { '--status-header-icon-size': `${headerIconSize}px` } : null">
     <div ref="row" class="dsov-row" :class="{ 'dsov-row--scrollable': rowOverflows === true, 'dsov-row--fits': rowOverflows === false }" data-sheet-horizontal-scroll>
       <RowActionMenu
         v-for="item in items"
@@ -89,7 +89,7 @@
 
 <script setup>
 import StatusMechanicsMenu from './StatusMechanicsMenu.vue'
-import { onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { BatteryLow, Clock3, Hourglass, Minus, Plus, Sparkles } from '@lucide/vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
@@ -99,7 +99,6 @@ import { statusIconItem } from '../../../lib/statusIcon'
 import { statusPolarity } from '@/features/items/lib/statusEffectPresentation'
 import { layoutTokens } from '@/app/design-tokens'
 const failedIcons=reactive(new Set())
-const headerIconSize = layoutTokens['sheet-header-status-icon']
 
 const props = defineProps({
   items: { type: Array, default: () => [] },
@@ -109,7 +108,10 @@ const props = defineProps({
   iconSize: { type: Number, default: 64 },
   context: { type: Object, default: null },
   header: Boolean,
+  stacked: Boolean,
+  compact: Boolean,
 })
+const headerIconSize = computed(() => layoutTokens[props.compact ? 'status-compact-icon' : 'sheet-header-status-icon'])
 const emit = defineEmits(['add', 'view', 'remove', 'edit-duration', 'increase-level', 'decrease-level', 'show-tooltip', 'hide-tooltip'])
 const row = ref(null), rowOverflows = ref(null)
 let rowObserver, rowMeasureFrame
@@ -147,9 +149,9 @@ function monogram(value) {
 .dsov--header .dsov-row {gap:var(--spacing-small);flex-wrap:nowrap;max-width:100%;box-sizing:border-box;padding-block:0;padding-inline:var(--status-scroll-inset-start,0px) var(--status-scroll-inset-end,0px);margin-block:0;overscroll-behavior-x:contain}
 .dsov--header .dsov-row > * {flex:none}
 .dsov--header .dsov-row--fits {overflow:visible}
-.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-status-icon) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:var(--layout-sheet-header-status-icon);padding:0 calc(var(--spacing-large) + var(--spacing-xs)) 0 var(--spacing-medium);border-radius:var(--radius-tile)}
-.dsov--header .dsov-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon);min-width:var(--layout-sheet-header-status-icon)}
-.dsov--header .dsov-item-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon)}
+.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--status-header-icon-size,var(--layout-sheet-header-status-icon)) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:var(--status-header-icon-size,var(--layout-sheet-header-status-icon));padding:0 calc(var(--spacing-large) + var(--spacing-xs)) 0 var(--spacing-medium);border-radius:var(--radius-tile)}
+.dsov--header .dsov-icon {width:var(--status-header-icon-size,var(--layout-sheet-header-status-icon));height:var(--status-header-icon-size,var(--layout-sheet-header-status-icon));min-width:var(--status-header-icon-size,var(--layout-sheet-header-status-icon))}
+.dsov--header .dsov-item-icon {width:var(--status-header-icon-size,var(--layout-sheet-header-status-icon));height:var(--status-header-icon-size,var(--layout-sheet-header-status-icon))}
 .dsov--header .dsov-icon :deep(img), .dsov--header .dsov-icon :deep(svg) {width:100%;height:100%}
 .dsov--header .dsov-copy {gap:calc(var(--spacing-xs) / 2)}
 .dsov--header .dsov-heading {flex-direction:column;align-items:stretch;gap:calc(var(--spacing-xs) / 2)}
@@ -158,6 +160,12 @@ function monogram(value) {
 .dsov--header .dsov-duration {font-size:var(--type-context-size);line-height:var(--type-context-line-height)}
 .dsov--header .dsov-add {width:auto;height:var(--layout-touch-min);padding-inline:var(--spacing-small);font-size:var(--type-group-size);white-space:nowrap}
 .dsov--header {flex-wrap:nowrap}
+.dsov--stacked .dsov-row {flex:1;flex-direction:column;align-items:stretch;gap:var(--spacing-xs);overflow:visible;width:100%}
+.dsov--stacked .dsov-effect {width:100%}
+.dsov--compact .dsov-effect {min-height:var(--layout-touch-min);padding-inline:var(--spacing-small) var(--spacing-medium)}
+.dsov--compact .dsov-name {font-size:var(--type-caption-size);line-height:var(--type-caption-line-height)}
+.dsov--compact .dsov-heading {flex-direction:row;flex-wrap:wrap;align-items:center}
+.dsov--compact .dsov-level {font-size:var(--type-context-size);line-height:var(--type-context-line-height)}
 .dsov-add:disabled {opacity:.45;cursor:not-allowed}
 .dsov { display: flex; min-width: 0; align-items: center; gap: 13px; padding: 0 0 15px 15px; }
 .dsov-row {

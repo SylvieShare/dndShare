@@ -308,6 +308,15 @@ preview columns. The selected chapter,
 scenario and narrative level remain mounted as hidden state, so closing combat
 restores the same canvas without reloading or resetting it. Reduced-motion users
 skip the transition.
+Pinned chapter/scenario cards and the spotlight destination sit 14px below the
+measured session header, including its compact navigation row. The ancestor strip
+scrolls horizontally without a visible scrollbar on narrow windows. Its live
+scroll offset also feeds the return spotlight position. Sidebar ResizeObserver
+width is the single source of horizontal motion: pinned cards and combat workspace
+follow it directly, without a second left-position tween. Spotlight transforms
+also follow that live width while the sidebar is moving; normal level transitions
+retain their own animation. Desktop safe-left includes Page spacing; compact
+windows reserve the navigation rail and Page spacing.
 A regular node click opens its action popover: its first action explicitly opens the chapter scenarios, then it can mark
 it as `Сейчас здесь`, change status, edit, start a transition, move to another
 arc or delete.

@@ -4,6 +4,7 @@
       persistent-content :padded="false" tabs-label="Боковые вкладки сессии" collapse-label="Свернуть боковую панель"
       :compact-peek="layoutTokens['session-sidebar-peek']"
       @update:tab="controller.selected.value = $event" @resize="controller.resize">
+      <template v-if="controller.selected.value === 'players'" #header-actions><slot name="players-actions" /></template>
       <div :ref="node => controller.target.value = node" class="session-sidebar-panels">
         <div v-show="controller.selected.value === 'players'" class="session-sidebar-players" data-tutorial="session-players"><slot /></div>
       </div>

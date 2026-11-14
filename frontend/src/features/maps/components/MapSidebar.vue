@@ -6,6 +6,9 @@
   <aside
     v-else
     v-bind="$attrs"
+    @transitionrun="trackMotion($event, true)"
+    @transitionend="trackMotion($event, false)"
+    @transitioncancel="trackMotion($event, false)"
     ref="element"
     class="map-sidebar map-sidebar--overlay"
     :style="{
@@ -41,6 +44,8 @@
             tabs.find((item) => item.key === tab)?.label
           }}</strong></Transition
         >
+        <div class="map-sidebar-heading-actions">
+        <slot name="header-actions" />
         <ActionButton
           variant="quiet"
           icon-only
@@ -51,6 +56,7 @@
         >
           <template #icon><PanelLeftClose :size="20" /></template>
         </ActionButton>
+        </div>
       </header>
       <div class="map-sidebar-viewport">
         <Transition
@@ -105,6 +111,8 @@ const collapsed = ref(
   window.matchMedia(`(max-width: ${props.collapseAt}px)`).matches,
 );
 const opening = ref(false);
+const moving = ref(false);
+function trackMotion(event, active) { if (event.target === element.value && event.propertyName === 'width') moving.value = active; }
 const panelWidth = ref(null);
 let observer,
   revealTimer = 0;
@@ -209,6 +217,7 @@ onBeforeUnmount(() => {
 });
 defineExpose({
   collapsed,
+  moving,
   openTab,
   collapse,
   bounds: () => hosted ? host.bounds() : element.value?.getBoundingClientRect(),
@@ -299,6 +308,7 @@ defineExpose({
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.map-sidebar-heading-actions {display:flex;align-items:center;gap:var(--spacing-xs);flex:none}
 .map-sidebar-viewport {
   flex: 1;
   min-height: 0;

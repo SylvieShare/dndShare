@@ -42,6 +42,7 @@ def render(data, source_hash):
         '  :root { --app-sidebar-w: 0px; }', '}', '',
     ]
     js = [f'// {header}', f'export const layoutTokens = Object.freeze({json.dumps(data["layout"], indent=2)});',
+          f'export const spacingTokens = Object.freeze({json.dumps(data["spacing"], indent=2)});',
           f'export const motionTokens = Object.freeze({json.dumps(data["motion"], indent=2)});',
           f'export const designMediaQueries = Object.freeze({json.dumps(media_queries(data), indent=2)});', '']
     return {CSS: '\n'.join(css), JS: '\n'.join(js)}

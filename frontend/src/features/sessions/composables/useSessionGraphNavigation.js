@@ -43,9 +43,10 @@ export function useSessionGraphNavigation({ props, emit, canvas }) {
   }
 
   function activateLevel(level) {
-    canvas.value?.prepareView(graphKeyFor(level), level === 'chapters' ? 80 : 210)
+    canvas.value?.prepareView(graphKeyFor(level), initialTopForLevel(level))
     displayLevel.value = level
   }
+  function initialTopForLevel(level) { return (Number(props.chromeHeight) || 0) + (level === 'chapters' ? 16 : 210) }
 
   function scheduleTransition(callback) {
     if (transitionTimer != null) clearTimeout(transitionTimer)
@@ -189,6 +190,7 @@ export function useSessionGraphNavigation({ props, emit, canvas }) {
 
   return {
     displayLevel,
+    initialTopForLevel,
     selectedScene,
     transitionSpotlight,
     activeChapterId,
