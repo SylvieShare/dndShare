@@ -4,26 +4,26 @@
   "assets": [
     {
       "asset": "frontend/src/assets/ui/roll-mode-advantage.webp",
-      "sha256": "456168005416495e3cdc1579355c3e677b86ee3e689467f8966850352a9cfa39",
-      "sourceSha256": "49916428f4ebddbf249c13e0a0d56a97993e49014f61fbe53b5a0d18e5a6b36a",
-      "prompt": "Use case: precise-object-edit / compact adaptation. Edit target: the attached advantage icon. Create its TINY UI badge version for 14-24 px display. Keep ONLY ONE d20: the foreground emerald-green die, isolated, centered and enlarged to occupy 90% of a square canvas. REMOVE the rear die completely and REMOVE the cancellation stripe. REPLACE the 20 with ONE LARGE SOLID IVORY UPWARD ARROW on the front face: thick vertical shaft and broad triangular arrowhead, clear UP direction. No numerals or letters anywhere. Preserve the recognizable green d20 silhouette and deep-plum cel-shaded fantasy art identity, but simplify it to just 3-4 broad color planes, thicker clean outer contour and very few interior edges. A wide nearly flat frontal face lets the large ivory arrow dominate. No tiny bevel lines, no decorative detail. Strong silhouette readable at 14 px and 16 px, high contrast arrow on green. Not a UI tile: just one painted fantasy die with an up arrow. No surrounding circle, frame, rear objects, particles, glow, backdrop, floor, shadow outside the die. Genuine TRANSPARENT background with even 5% clear margin. Entire die visible.",
+      "sha256": "9e49a4c1c3c33c83393dfeb46598486df415e82266e476fd23232aed7f97b139",
+      "sourceSha256": "c26271d710acb15759c85a2fa708dbb745272c179992da63ff6d63fd6061b9c8",
+      "prompt": "Use case: precise-object-edit. Edit target: the attached compact green d20 UI marker. Make a faithful replacement of THIS exact icon, preserving the single emerald green d20, its frontal geometric silhouette and 3-4 flat cel-shaded planes, centered ivory upward arrow, square composition and approximately 5% transparent margin. The required correction: replace ALL burgundy/maroon/plum outlines, including the outer perimeter and ALL internal triangular facet edges, with a uniform COOL NEUTRAL CHARCOAL / BLUE-GRAY outline, approximately #202B35. No red, magenta, purple, brown or warm-colored ink anywhere in the contour. Keep the contour clean and moderately thick so it is readable at 28-32 pixels. Preserve strong clean green fill and solid ivory UP arrow. No numbers, letters, extra dice, glow, external shadow, framing tile, decoration or backdrop. Genuine fully TRANSPARENT background. Entire die visible. Minimal crisp polished flat fantasy game UI icon.",
       "width": 256,
       "height": 256,
       "format": "WebP",
       "quality": 0.92,
-      "bytes": 11372,
+      "bytes": 10198,
       "transparent": true
     },
     {
       "asset": "frontend/src/assets/ui/roll-mode-disadvantage.webp",
-      "sha256": "8880b7eeffecdb7730c9aaf5481543c22834283225fce8767f7c3980a5e7752a",
-      "sourceSha256": "69bcfe94672218e109c36544f8536cb44b26a3863a79bc4f80552bd1dacc2867",
-      "prompt": "Use case: precise-object-edit / compact adaptation. Edit target: the attached disadvantage icon. Create its TINY UI badge version for 14-24 px display. Keep ONLY ONE d20: the foreground crimson-red die, isolated, centered and enlarged to occupy 90% of a square canvas. REMOVE the rear die completely and REMOVE the cancellation stripe. REPLACE the 1 with ONE LARGE SOLID IVORY DOWNWARD ARROW on the front face: thick vertical shaft and broad triangular arrowhead, clear DOWN direction. No numerals or letters anywhere. Preserve the recognizable red d20 silhouette and deep-plum cel-shaded fantasy art identity, but simplify it to just 3-4 broad color planes, thicker clean outer contour and very few interior edges. A wide nearly flat frontal face lets the large ivory arrow dominate. No tiny bevel lines, no decorative detail. Strong silhouette readable at 14 px and 16 px, high contrast arrow on red. Not a UI tile: just one painted fantasy die with a down arrow. No surrounding circle, frame, rear objects, particles, glow, backdrop, floor, shadow outside the die. Genuine TRANSPARENT background with even 5% clear margin. Entire die visible. Match the simple frontal shape of a compact green upward-arrow counterpart.",
+      "sha256": "e6c4f74a233753bb3293ce99ca1e4a6d939d9c543125126b3718513621bc1143",
+      "sourceSha256": "94ceafe04bb140325a71e5d0df251619ddcbd1c4c2bb8f2e2805fa12eab53e5c",
+      "prompt": "Use case: precise-object-edit. Edit target: the attached compact red d20 UI marker. Make a faithful replacement of THIS exact icon, preserving the single ruby red d20, its frontal geometric silhouette and 3-4 flat cel-shaded planes, centered ivory downward arrow, square composition and approximately 5% transparent margin. The required correction: replace ALL burgundy/maroon/plum outlines, including the outer perimeter and ALL internal triangular facet edges, with a uniform COOL NEUTRAL CHARCOAL / BLUE-GRAY outline, approximately #202B35. The contour itself must have NO red, magenta, purple, brown or warm tint; red is confined to the die FILL. Keep the contour clean and moderately thick so it is readable at 28-32 pixels. Preserve solid ivory DOWN arrow. Match the simple compact green upward-arrow counterpart in silhouette, stroke weight, lighting and proportions. No numbers, letters, extra dice, glow, external shadow, framing tile, decoration or backdrop. Genuine fully TRANSPARENT background. Entire die visible. Minimal crisp polished flat fantasy game UI icon.",
       "width": 256,
       "height": 256,
       "format": "WebP",
       "quality": 0.92,
-      "bytes": 10388,
+      "bytes": 11650,
       "transparent": true
     }
   ]
