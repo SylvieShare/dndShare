@@ -1,5 +1,5 @@
 <template>
-  <header ref="element" class="workspace-header" :class="{ 'workspace-header--solid': solid, 'workspace-header--context': !!$slots.context, 'workspace-header--context-inline': contextInline, 'workspace-header--navigation-inline': navigationPlacement === 'inline' && navigationVisible }">
+  <header ref="element" class="workspace-header" :class="{ 'workspace-header--solid': solid, 'workspace-header--navigation-joined': navigationJoined && !!navigationTarget, 'workspace-header--context': !!$slots.context, 'workspace-header--context-inline': contextInline, 'workspace-header--navigation-inline': navigationPlacement === 'inline' && navigationVisible }">
     <BlurBackdrop v-if="!solid" class="workspace-header-backdrop" radius="var(--chrome-blur)" />
     <div ref="main" class="workspace-header-inner" :class="{ 'workspace-header-inner--page': page }" :style="{ maxWidth: contentWidth || (page ? 'var(--layout-content-max)' : undefined) }">
     <div ref="identity" class="workspace-header-identity"><slot name="identity" /></div>
@@ -20,7 +20,7 @@ import { useWorkspaceContextLayout } from '@/shared/composables/useWorkspaceCont
 import { useWorkspaceScrollPosition } from '@/shared/composables/useWorkspaceScrollPosition'
 import { layoutTokens } from '@/app/design-tokens'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from "vue";
-const props = defineProps({ page: Boolean, contentWidth: String, fitNavigation: {type:Boolean,default:true}, solid: {type:Boolean,default:true}, navigationVisible:{type:Boolean,default:true}, navigationPlacement:{type:String,default:'below'}, navigationTarget:Object, scrollSource:{type:Object,default:undefined}, contextPlacement:{type:String,default:'auto'} });
+const props = defineProps({ page: Boolean, contentWidth: String, fitNavigation: {type:Boolean,default:true}, solid: {type:Boolean,default:true}, navigationVisible:{type:Boolean,default:true}, navigationPlacement:{type:String,default:'below'}, navigationTarget:Object, navigationJoined:Boolean, scrollSource:{type:Object,default:undefined}, contextPlacement:{type:String,default:'auto'} });
 const navigationId = `workspace-navigation-${useId()}`
 const element = ref(null),
   emit = defineEmits(["resize"]);
@@ -32,7 +32,11 @@ watch([()=>props.navigationPlacement,()=>props.navigationTarget],async()=>{
   await nextTick()
   if(focused.isConnected && (document.activeElement===document.body || document.activeElement===focused)) {
     focused.focus({preventScroll:true})
-    focused.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'})
+    for(let viewport=focused.parentElement;viewport && navigation.value?.$el?.contains(viewport);viewport=viewport.parentElement){
+      if(!['auto','scroll'].includes(getComputedStyle(viewport).overflowX))continue
+      const item=focused.getBoundingClientRect(),frame=viewport.getBoundingClientRect()
+      viewport.scrollLeft+=Math.min(0,item.left-frame.left)+Math.max(0,item.right-frame.right)
+    }
   }
 },{flush:'sync'})
 function setScrollPosition(value) {
@@ -43,6 +47,11 @@ function setScrollPosition(value) {
 useWorkspaceScrollPosition(computed(()=>element.value && {setScrollPosition}),()=>props.scrollSource === undefined ? (typeof window==='undefined'?null:window) : props.scrollSource)
 defineExpose({setScrollPosition})
 let observer;
+watch(()=>props.navigationTarget,(target,previous)=>{
+  if(previous)observer?.unobserve(previous)
+  if(target)observer?.observe(target)
+  nextTick(updateSize)
+},{flush:'post'})
 function updateSize() {
   if (!element.value || !main.value) return
   const style = getComputedStyle(main.value)
@@ -54,12 +63,18 @@ function updateSize() {
   element.value.style.setProperty('--workspace-context-inset-start', `${Math.max(0, start)}px`)
   element.value.style.setProperty('--workspace-context-inset-end', `${Math.max(0, end)}px`)
   element.value.style.setProperty('--workspace-main-height', `${main.value.offsetHeight}px`)
+  if(props.navigationJoined && props.navigationTarget){
+    const header=element.value.getBoundingClientRect(),target=props.navigationTarget.getBoundingClientRect()
+    element.value.style.setProperty('--workspace-navigation-left',`${target.left-header.left}px`)
+    element.value.style.setProperty('--workspace-navigation-right',`${target.right-header.left}px`)
+  }
   emit('resize', element.value.offsetHeight)
 }
 onMounted(() => {
   observer = new ResizeObserver(updateSize);
   observer.observe(element.value);
   observer.observe(main.value);
+  if(props.navigationTarget)observer.observe(props.navigationTarget)
   updateSize();
 });
 onBeforeUnmount(() => observer?.disconnect());
@@ -137,6 +152,7 @@ onBeforeUnmount(() => observer?.disconnect());
 .workspace-header--solid {background:var(--workspace-header-background, var(--subheader));border:0;box-shadow:none}
 .workspace-header::after {content:'';position:absolute;z-index:2;top:100%;left:0;right:0;height:var(--layout-workspace-header-shadow-height);background:linear-gradient(to bottom,color-mix(in srgb,var(--scrim) 28%,transparent),transparent);opacity:var(--workspace-scroll-depth,0);pointer-events:none;transition:opacity var(--motion-feedback);}
 .workspace-header:not([data-workspace-scrolled])::after {visibility:hidden;opacity:0;transition:none;}
+.workspace-header--navigation-joined::after {clip-path:polygon(0 0,0 100%,calc(var(--workspace-navigation-left) - var(--radius-workspace-join)) 100%,calc(var(--workspace-navigation-left) - var(--radius-workspace-join)) 0,calc(var(--workspace-navigation-right) + var(--radius-workspace-join)) 0,calc(var(--workspace-navigation-right) + var(--radius-workspace-join)) 100%,100% 100%,100% 0);}
 .workspace-header--context .workspace-header-identity {grid-column:1;grid-row:1}
 .workspace-header--context .workspace-header-inner {row-gap:var(--workspace-header-context-gap,var(--spacing-xs))}
 .workspace-header--context .workspace-header-actions {grid-column:-2/-1;grid-row:1}

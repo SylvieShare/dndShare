@@ -1,9 +1,13 @@
 import { test, expect } from '@playwright/test'
 import { fixture } from './fixtures/character-layout'
 
-async function openSheet(page, width) {
+async function openSheet(page, width, withCondition=false) {
   await page.setViewportSize({ width, height: 600 })
   const api = await fixture(page)
+  if(withCondition){
+    api.document().values.states=[{uid:'poison',effect_id:951,duration:{kind:'minutes',value:10}}]
+    await page.route(url=>url.pathname==='/api/items/by-ids',route=>route.fulfill({json:{items:[{id:951,typeId:15,name:'Отравление',data:{code:'poisoned',desc:'Состояние отравления'}}]}}))
+  }
   await page.route('**/api/handbook/sync?**', route => route.fulfill({ json: {
     protocol: 1, entries: [], hasMore: false, cursor: 'empty', visibleIds: [],
     metadata: { types: [], suggests: {}, suggestTypes: [], books: [] },
@@ -26,7 +30,7 @@ async function expectContinuousHeader(page) {
       const bar=node.closest('.workspace-subheader'),surface=node.closest('.workspace-subheader-inner'),rect=bar.getBoundingClientRect()
       return { start: nav.left - main.left, end: main.right - nav.right, overflow: getComputedStyle(node).overflowX,
         barStart:rect.left-main.left,barEnd:main.right-rect.right,background:getComputedStyle(bar).backgroundColor,
-        shadow:getComputedStyle(surface).boxShadow,radius:getComputedStyle(surface).borderTopLeftRadius }
+        shadow:getComputedStyle(surface).boxShadow,radius:getComputedStyle(surface).borderTopLeftRadius,bottomRadius:getComputedStyle(bar).borderBottomLeftRadius }
     })
     expect(geometry.start).toBeGreaterThanOrEqual(-1)
     expect(geometry.end).toBeGreaterThanOrEqual(-1)
@@ -34,6 +38,7 @@ async function expectContinuousHeader(page) {
     expect(geometry.background).toBe('rgb(48, 42, 61)')
     expect(geometry.shadow).toBe('none')
     expect(geometry.radius).toBe('0px')
+    expect(geometry.bottomRadius).toBe('16px')
     expect(Math.abs(geometry.barStart)).toBeLessThan(1)
     expect(Math.abs(geometry.barEnd)).toBeLessThan(1)
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize().width)
@@ -98,8 +103,7 @@ for (const [width, format, layout] of [[390, 'phone', 'compact'], [834, 'tablet'
     await scroller.evaluate(node => { node.scrollTop = 180 })
     await expectContinuousHeader(page)
     if (format === 'desktop') {
-      const scrollTop=await scroller.evaluate(node=>node.scrollTop)
-      await expect.poll(async () => (await navigation.boundingBox()).y).toBeCloseTo(initialNavigationY-scrollTop,0)
+      await expect.poll(async () => (await navigation.boundingBox()).y).toBeCloseTo(initialNavigationY,0)
     } else {
       await expect.poll(async () => (await navigation.boundingBox()).y).toBeCloseTo(initialNavigationY,0)
     }
@@ -124,6 +128,24 @@ test('desktop tabs replace only the central section and retain both side columns
   await expect(page.locator('.dnd-desktop-main [data-tutorial="character-tabs"]')).toHaveCount(1)
   expect(api.requests.filter(path => path === '/api/char/test')).toHaveLength(reads)
   expect(api.writes).toEqual([])
+})
+
+for(const withCondition of [false,true])test(`joined desktop navigation stays attached and keeps content reachable (conditions=${withCondition})`,async({page},info)=>{
+  const api=await openSheet(page,1440,withCondition)
+  const header=page.locator('.character-workspace-header'),nav=page.locator('[data-sheet-navigation]'),scroller=page.locator('.sheet-scroll')
+  await expect(header).toHaveClass(/workspace-header--navigation-joined/)
+  const fixed=await header.boundingBox()
+  await scroller.evaluate(node=>{node.scrollTop=180})
+  await expect.poll(async()=>(await nav.boundingBox()).y).toBeCloseTo(fixed.y+fixed.height,0)
+  await nav.getByRole('button',{name:'Оружие',exact:true}).click()
+  await expect(scroller).toHaveJSProperty('scrollTop',180)
+  const curve=await page.locator('.dnd-desktop-navigation').evaluate(node=>({width:getComputedStyle(node,'::before').width,pointer:getComputedStyle(node,'::before').pointerEvents}))
+  expect(curve).toEqual({width:'12px',pointer:'none'})
+  const target=page.locator('.dnd-desktop-main .inner-tab-pane:visible button').first()
+  await target.evaluate(node=>node.scrollIntoView({block:'start'}))
+  expect((await target.boundingBox()).y).toBeGreaterThanOrEqual((await nav.boundingBox()).y+(await nav.boundingBox()).height)
+  expect(api.writes).toEqual([])
+  await info.attach(`joined-desktop-${withCondition}`,{body:await page.screenshot(),contentType:'image/png'})
 })
 
 test('resizing changes presentation while retaining the selected section and document', async ({ page }) => {

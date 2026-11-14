@@ -34,7 +34,7 @@ REQUIRED = {
     'spacing': {'xs', 'compact', 'small', 'label', 'medium', 'large', 'page', 'section'},
     'list': {'min-height', 'icon', 'gap', 'padding-end', 'metric-min', 'metric-max', 'metric-padding-max', 'body-top', 'body-bottom', 'row-margin', 'row-gap'},
     'motion': {'enter', 'exit', 'navigation', 'feedback', 'distance', 'morph-open', 'morph-close', 'sheet-health-pulse', 'sheet-health-pulse-fast', 'weapon-drag-hold'},
-    'radius': {'xs', 'small', 'medium', 'large', 'xl', 'tile', 'badge', 'row', 'morph', 'input', 'compact-navigation'},
+    'radius': {'xs', 'small', 'medium', 'large', 'xl', 'tile', 'badge', 'row', 'morph', 'input', 'compact-navigation', 'workspace-join', 'workspace-bottom'},
 }
 
 
