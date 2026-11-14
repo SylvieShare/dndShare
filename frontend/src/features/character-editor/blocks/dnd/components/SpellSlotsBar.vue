@@ -1,27 +1,9 @@
 <template>
   <div class="sp-bar" :style="{ '--spell-slot-hit-size': `${slotHitSize}px` }">
-    <MorphTile :outlined="false" v-if="showStats && hasStatConfig" class="sp-stats-panel" edit-label="Редактировать"
-        :title="castingPanelTitle"
-        :show-edit="canInteract && showCastingConfig"
-        @edit="openEditor"
-      >
-      <div v-if="castingStats.length <= 1" class="sp-stats">
-        <div class="sp-tile sp-tile--base">
-          <span class="sp-tlabel">Базовая хар-ка</span>
-          <span class="sp-tval sp-tval-stat">{{ statLabel || '—' }}</span>
-          <span class="sp-tline"></span>
-        </div>
-        <div class="sp-tile sp-tile--dc" :title="saveFormula">
-          <span class="sp-tlabel">СЛ спасброска</span>
-          <span class="sp-tval">{{ saveDC }}</span>
-          <span class="sp-tline"></span>
-        </div>
-        <div class="sp-tile sp-tile--atk" :title="attackFormula">
-          <span class="sp-tlabel">Атака закл.</span>
-          <span class="sp-tval sp-tval-atk">{{ attackBonus >= 0 ? '+' + attackBonus : attackBonus }}</span>
-          <span class="sp-tline"></span>
-        </div>
-      </div>
+    <div v-if="showStats && hasStatConfig" class="sp-stats-panel">
+      <SpellcastingParameters v-if="castingStats.length <= 1" :stat-label="statLabel" :save-d-c="saveDC"
+        :attack-bonus="attackBonus" :save-formula="saveFormula" :attack-formula="attackFormula"
+        :editable="canInteract && showCastingConfig" @settings="openEditor" />
       <div v-else class="sp-caster-stats">
         <div v-for="row in castingStats" :key="row.key" class="sp-caster-row">
           <strong>{{ row.label }}</strong>
@@ -29,8 +11,9 @@
           <span>СЛ {{ row.saveDC }}</span>
           <span>Атака {{ row.attackBonus >= 0 ? '+' + row.attackBonus : row.attackBonus }}</span>
         </div>
+        <ActionButton v-if="canInteract && showCastingConfig" variant="secondary" @click="openEditor">Настройки вкладки</ActionButton>
       </div>
-    </MorphTile>
+    </div>
 
     <MorphTile :outlined="false" v-if="showSlots && (activeSlotPools.length > 0 || canInteract)" class="sp-slots-panel" edit-label="Редактировать"
         title="Ячейки заклинаний"
@@ -92,6 +75,7 @@ import { computed, ref } from 'vue'
 
 import DndSpellbookSettingsModal from '@/features/character-editor/blocks/dnd/DndSpellbookSettingsModal.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
+import SpellcastingParameters from './SpellcastingParameters.vue'
 import { ActionButton, MorphTile, useMediaQuery } from '@sylvieshare/share-ui'
 import { designMediaQueries, layoutTokens } from '@/app/design-tokens'
 
@@ -133,9 +117,6 @@ function orbOrder(total) {
 const signedPart = value => Number(value) >= 0 ? `+ ${Number(value)}` : `− ${Math.abs(Number(value))}`
 const saveFormula = computed(() => `8 + бонус мастерства + модификатор ${props.statLabel || 'базовой характеристики'} ${signedPart(props.saveBonusExtra)} = ${props.saveDC}`)
 const attackFormula = computed(() => `Бонус мастерства + модификатор ${props.statLabel || 'базовой характеристики'} ${signedPart(props.attackBonusExtra)} = ${props.attackBonus >= 0 ? '+' : ''}${props.attackBonus}`)
-const castingPanelTitle = computed(() => props.castingStats.length <= 1 && props.castingLabel
-  ? `Параметры магии · ${props.castingLabel}`
-  : 'Параметры магии')
 </script>
 
 <style scoped>
@@ -146,9 +127,6 @@ const castingPanelTitle = computed(() => props.castingStats.length <= 1 && props
   margin-bottom: var(--spacing-medium);
 }
 
-.sp-stats-panel {
-  padding: 18px;
-}
 .sp-slots-panel { padding:var(--spacing-medium); }
 
 
@@ -159,68 +137,6 @@ const castingPanelTitle = computed(() => props.castingStats.length <= 1 && props
 .sp-pools { display: grid; gap: var(--spacing-small); }
 .sp-pool + .sp-pool { padding-top: var(--spacing-small); border-top: 1px solid var(--border); }
 .sp-pool-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px; color: var(--text-1); font-size: 12px; font-weight: 750; }
-
-/* ── Статы (строка безрамочных плиток сверху) ── */
-.sp-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.sp-tile {
-  position: relative;
-  flex: 1 1 120px;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  overflow: hidden;
-  background: var(--bg);
-  border: none;
-  border-radius: var(--r-md);
-  padding: 12px 13px;
-  --c: var(--accent);
-}
-.sp-tile--dc  { --c: var(--info); }
-.sp-tile--atk { --c: var(--accent-soft); }
-
-.sp-tlabel {
-  display: block;
-  color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  line-height: 1.15;
-  text-transform: uppercase;
-}
-
-.sp-tval {
-  display: block;
-  color: var(--text-1);
-  font-size: 26px;
-  font-weight: 800;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-
-.sp-tval-stat {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-1);
-}
-
-.sp-tval-atk {
-  color: var(--text-1);
-}
-
-.sp-tline {
-  display: block;
-  margin-top: auto;
-  height: 3px;
-  border-radius: 2px;
-  background: var(--c);
-  box-shadow: 0 0 9px color-mix(in srgb, var(--c) 70%, transparent);
-}
 
 /* ── Ячейки (ряды по кругам) ── */
 .sp-slot-row {
@@ -275,46 +191,6 @@ const castingPanelTitle = computed(() => props.castingStats.length <= 1 && props
 }
 
 @media (max-width: 760px) {
-  .sp-bar {
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-
-  .sp-stats-panel {
-    padding: 14px;
-  }
-
-  .sp-stats {
-    flex-wrap: nowrap;
-    gap: 0;
-  }
-
-  .sp-caster-row {
-    grid-template-columns: 1fr auto;
-    gap: 5px 10px;
-  }
-
-  .sp-tile {
-    flex-basis: 0;
-    gap: 7px;
-    padding: 6px 10px 4px;
-    border: none;
-    border-radius: 0;
-    background: transparent;
-  }
-
-  .sp-tile + .sp-tile {
-    border-left: 1px solid var(--border);
-  }
-
-  .sp-tlabel {
-    min-height: 21px;
-    font-size: 9px;
-  }
-
-  .sp-tval { font-size: 23px; }
-  .sp-tval-stat { font-size: 16px; }
-  .sp-tline { width: 28px; }
-
+  .sp-caster-row {grid-template-columns:1fr auto;gap:5px 10px}
 }
 </style>

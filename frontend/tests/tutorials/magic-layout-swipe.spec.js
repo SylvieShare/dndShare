@@ -11,6 +11,13 @@ for(const width of [390,834,1920])for(const both of [false,true])test(`compact s
   await expect(slots.getByText(/восстанавливаются/)).toHaveCount(0)
   await expect(page.getByText('Параметры книги магии',{exact:true})).toHaveCount(0)
   await expect(page.locator('.sp-stats-panel')).toBeVisible()
+  await expect(page.locator('.sp-stats-panel')).toHaveCSS('background-color','rgba(0, 0, 0, 0)')
+  expect(await page.locator('.spell-parameter-label').allTextContents()).toEqual(['Базовая хар-ка','Атака заклинанием','СЛ спасброска'])
+  const settings=page.getByRole('button',{name:'Настройки вкладки',exact:true})
+  await expect(settings).toBeVisible()
+  const columns=await page.locator('.spell-parameters-grid').evaluate(n=>getComputedStyle(n).gridTemplateColumns.split(' ').length)
+  expect(columns).toBe(width===390?2:4)
+  await settings.click();await expect(page.getByRole('dialog')).toBeVisible();await page.keyboard.press('Escape')
   const book=page.getByRole('tab',{name:'Волшебник',exact:true})
   await expect(book).toHaveAttribute('aria-selected','true')
   await expect(book.locator('.spellbook-paper--active')).toHaveCount(1)
@@ -66,12 +73,13 @@ test.describe('magic touch interactions',()=>{
  }
  for(const width of [390,834])test(`swiping from a slot and a clickable spell does not activate them at ${width}`,async({page})=>{
   const {api,errors}=await open(page,width)
-  for(const selector of ['.sp-orb-hit','.spell-row .sp-name']){
+  for(const selector of ['.sp-orb-hit','.spell-row .sp-name','.spell-parameter-settings']){
    await magic(page)
    const target=page.locator('.mobile-swipe-pane:not([inert])').locator(selector).first()
    await touch(page,target,-Math.min(180,width*.4))
    await expect(page.locator('[data-sheet-navigation] [aria-current="page"]')).toHaveText('Предметы')
    await expect(page.getByRole('menu')).toHaveCount(0)
+   await expect(page.getByRole('dialog')).toHaveCount(0)
    expect(api.document().values.spells.slot_pools.long_rest[0].used).toBe(0)
    expect(api.writes).toEqual([])
   }

@@ -118,11 +118,16 @@ watch(() => props.spent, (v) => {
   position: relative;
   display: inline-block;
   cursor: pointer;
-  transition: transform 0.12s;
 }
-.ss:not(.ss-ro):hover,
-.ss-on:not(.ss-ro):hover ~ .ss-on:not(.ss-ro),
-.ss-off:not(.ss-ro):has(~ .ss-off:not(.ss-ro):hover) { transform: scale(1.12); }
+@media (hover: hover) and (pointer: fine) {
+  .ss:not(.ss-ro):hover,
+  .ss-on:not(.ss-ro):hover ~ .ss-on:not(.ss-ro),
+  .ss-off:not(.ss-ro):has(~ .ss-off:not(.ss-ro):hover) {
+    --ss-liquid-color: color-mix(in srgb, var(--ss-c) 86%, var(--text-on-accent));
+    --ss-glass-fill: color-mix(in srgb, var(--ss-c) 12%, var(--bg));
+    --ss-glass-rim: color-mix(in srgb, var(--ss-c) 65%, var(--text-on-accent));
+  }
+}
 .ss-ro { cursor: default; }
 
 /* glass — matches PotionVial's .pv-glass (dark fill + thin grey border, clips its own outer halo only) */
@@ -130,9 +135,9 @@ watch(() => props.spent, (v) => {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: #0d0e15;
-  border: 1.5px solid #3a3d4d;
-  transition: box-shadow 0.4s, border-color 0.4s, filter 0.4s;
+  background: var(--ss-glass-fill, #0d0e15);
+  border: 1.5px solid var(--ss-glass-rim, #3a3d4d);
+  transition: box-shadow 0.4s, border-color var(--motion-enter) ease, background-color var(--motion-enter) ease, filter 0.4s;
 }
 
 /* round inner well, inset by the glass thickness; clips the liquid to a circle and
@@ -150,10 +155,10 @@ watch(() => props.spent, (v) => {
   right: 0;
   bottom: 0;
   height: 0;
-  background: var(--ss-c);
+  background: var(--ss-liquid-color, var(--ss-c));
   border-top: 2px solid rgba(255, 255, 255, 0.5);
 }
-.ss-ready .ss-liquid { transition: height 0.55s cubic-bezier(0.5, 0, 0.2, 1), filter 0.4s; }
+.ss-ready .ss-liquid { transition: height 0.55s cubic-bezier(0.5, 0, 0.2, 1), background-color var(--motion-enter) ease; }
 
 .ss-shine {
   position: absolute;
@@ -194,7 +199,7 @@ watch(() => props.spent, (v) => {
 /* ── charged (idle) ── */
 .ss-on .ss-liquid { height: 100%; }
 .ss-on .ss-flask {
-  border-color: color-mix(in srgb, var(--ss-c) 50%, #3a3d4d);
+  border-color: var(--ss-glass-rim, color-mix(in srgb, var(--ss-c) 50%, #3a3d4d));
 }
 .ss-on .ss-bubble { animation: ss-bub var(--d) ease-in infinite; }
 
@@ -232,5 +237,6 @@ watch(() => props.spent, (v) => {
 
 @media (prefers-reduced-motion: reduce) {
   .ss-on .ss-bubble { animation: none !important; }
+  .ss-flask, .ss-ready .ss-liquid { transition: none; }
 }
 </style>
