@@ -17,7 +17,7 @@ const props=defineProps({components:Object})
 const requirement=computed(()=>spellMaterialRequirement(props.components))
 </script>
 <style scoped>
-.spell-material-requirement {display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:start;gap:var(--spacing-compact);width:var(--spell-material-width,100%);max-width:100%;padding:var(--spacing-compact) var(--spacing-small);color:var(--text-1);font-family:var(--type-context-family);font-size:var(--type-context-size);line-height:var(--type-context-line-height);text-align:left;overflow-wrap:anywhere}
+.spell-material-requirement {display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:start;gap:var(--spacing-compact);width:100%;max-width:100%;padding:var(--spacing-compact) var(--spacing-small);color:var(--text-1);font-family:var(--type-context-family);font-size:var(--type-context-size);line-height:var(--type-context-line-height);text-align:left;overflow-wrap:anywhere}
 .spell-material-requirement--priced {color:var(--warning)}
 .spell-material-marker {display:inline-flex;align-items:center;gap:calc(var(--spacing-xs) / 2)}
 .spell-material-marker svg {flex:none}

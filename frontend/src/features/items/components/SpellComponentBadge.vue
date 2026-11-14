@@ -1,13 +1,15 @@
 <template>
-  <div v-if="inlineParts.length || (showMaterial && parts.length)" class="spell-component-badge">
-    <div v-if="inlineParts.length" class="spell-component-controls"><ActionButton class="spell-component-trigger" variant="quiet" icon-only :aria-label="label" aria-haspopup="dialog"
+  <div v-if="parts.length" class="spell-component-badge">
+    <div class="spell-component-controls"><ActionButton class="spell-component-trigger" variant="quiet" icon-only :aria-label="label" aria-haspopup="dialog"
       :aria-expanded="open" :aria-controls="open ? popupId : undefined" @click.stop="toggle">
-      <template #icon><span class="spell-component-letters" aria-hidden="true"><span v-for="part in inlineParts" :key="part.key" class="spell-component-pair"><component :is="part.icon" :size="layoutTokens['spell-component-icon-size']" />{{ part.letter }}</span></span></template>
+      <template #icon><span class="spell-component-letters" aria-hidden="true"><span v-for="part in parts" :key="part.key" class="spell-component-pair"><component :is="part.icon" :size="layoutTokens['spell-component-icon-size']" />{{ part.letter }}</span></span></template>
     </ActionButton></div>
-    <SpellMaterialRequirement v-if="showMaterial" :components="components" />
     <BasePopover v-model:open="open" :anchor="anchor" :id="popupId" role="dialog" aria-label="Компоненты заклинания"
       placement="bottom-end" :min-width="layoutTokens['spell-component-popup-width']" :z-index="9500" transition-preset="action-menu">
-      <div class="spell-component-details"><p v-for="part in parts" :key="part.key"><component :is="part.icon" :size="layoutTokens['spell-component-icon-size']" aria-hidden="true" /><strong>{{ part.letter }}</strong><span>{{ part.label }}</span></p></div>
+      <div class="spell-component-details">
+        <p v-for="part in nonMaterialParts" :key="part.key"><component :is="part.icon" :size="layoutTokens['spell-component-icon-size']" aria-hidden="true" /><strong>{{ part.letter }}</strong><span>{{ part.label }}</span></p>
+        <SpellMaterialRequirement :components="components" />
+      </div>
     </BasePopover>
   </div>
 </template>
@@ -18,9 +20,9 @@ import { spellComponentDetails } from '@/shared/lib/spellPresentation'
 import { spellComponentIcons } from '@/features/items/lib/spellComponentIcons'
 import SpellMaterialRequirement from './SpellMaterialRequirement.vue'
 import { layoutTokens } from '@/app/design-tokens'
-const props = defineProps({ components: Object, showMaterial: {type:Boolean,default:true} })
+const props = defineProps({ components: Object })
 const parts = computed(() => spellComponentDetails(props.components).map(part => ({ ...part, icon: spellComponentIcons[part.key] })))
-const inlineParts = computed(() => parts.value.filter(part=>part.key!=='m'))
+const nonMaterialParts = computed(() => parts.value.filter(part=>part.key!=='m'))
 const label = computed(() => 'Компоненты заклинания: ' + parts.value.map(part => part.letter).join(', '))
 const open = ref(false), anchor = shallowRef(null), popupId = `spell-components-${useId()}`
 function toggle(event) { anchor.value = event.currentTarget; open.value = !open.value }
