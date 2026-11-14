@@ -55,6 +55,13 @@ for (const width of [390, 834, 1440]) test(`stat dice badges, dictionary raster 
     expect((await option.boundingBox()).height).toBeLessThanOrEqual(50)
     await expect(option.locator('.share-choice-card__check')).toHaveCount(0)
     await expect(option.locator('.share-choice-card__label')).toHaveCSS('font-size', '13px')
+    const centers = await option.evaluate(node => {
+      const button = node.getBoundingClientRect()
+      const icon = node.querySelector('.roll-badge__image').getBoundingClientRect()
+      const caption = node.querySelector('.share-choice-card__label').getBoundingClientRect()
+      return [button.x + button.width / 2, (icon.left + caption.right) / 2]
+    })
+    expect(Math.abs(centers[0] - centers[1])).toBeLessThan(1)
   }
   await expect(menu.getByRole('button', { name: 'Преимущество', exact: true })).toHaveCSS('box-shadow', /inset/)
   await expect(menu.getByRole('button', { name: 'Помеха', exact: true })).toHaveCSS('box-shadow', 'none')

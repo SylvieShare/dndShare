@@ -6,7 +6,7 @@
         <span class="weapon-metrics__label">Атака</span>
       </span>
       <div class="weapon-metrics__formula-content">
-        <WeaponDamageBreakdown :rows="attackBonusRows" label="Бонусы атаки" :aria-description="`Бонус атаки ${attack || '0'}`" damage-color="var(--accent-soft)" :roll-color="attackColor" dice-labels />
+        <WeaponDamageBreakdown :rows="attackBonusRows" label="Бонусы атаки" :aria-description="`Бонус атаки ${attack || '0'}`" damage-color="var(--accent-soft)" :roll-color="attackColor" />
       </div>
     </component>
     <component :is="interactive && canDamage ? 'button' : 'div'" :type="interactive && canDamage ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__damage" data-sheet-swipe :aria-label="interactive && canDamage ? 'Настроить бросок урона' : undefined" :aria-haspopup="interactive && canDamage ? 'dialog' : undefined" :aria-expanded="interactive && canDamage ? rollScope === 'damage' && !damageKey : undefined" @click.stop="interactive && canDamage && emit('roll', 'damage', $event)">

@@ -16,7 +16,7 @@
                   <span v-if="ti || term.sign !== '+'" class="weapon-damage__operator">{{ term.sign === '-' ? '−' : term.sign }}</span>
                   <template v-if="term.kind === 'dice'">
                     <span v-if="term.n !== 1" class="weapon-damage__count">{{ term.n }}×</span>
-                    <span class="weapon-damage__die"><SystemDie :sides="term.sides" :value="diceLabels ? 'd' + term.sides : undefined" :size="layoutTokens['weapon-damage-die']" color="currentColor" />
+                    <span class="weapon-damage__die"><SystemDie :sides="term.sides" :size="layoutTokens['weapon-damage-die']" color="currentColor" />
                       <WeaponGripIcon v-if="run.grip" :hands="run.grip" />
                     </span>
                   </template>
@@ -42,7 +42,7 @@ import WeaponGripIcon from './WeaponGripIcon.vue'
 import { weaponDamageDisplay } from '../lib/weaponDamageDisplay'
 import { useWeaponFormulaFlash } from '../composables/useWeaponFormulaFlash'
 const props = defineProps({ rows: { type: Array, default: () => [] }, alternatives: { type: Array, default: () => [] }, damageType: String, damageColor: String,
-  label: { type: String, default: 'Состав урона' }, diceLabels: Boolean, rollColor: String })
+  label: { type: String, default: 'Состав урона' }, rollColor: String })
 const groups = computed(() => weaponDamageDisplay(props.rows, props.alternatives, { type: props.damageType, color: props.damageColor }))
 const root = ref(null)
 const { flashes, removeFlash } = useWeaponFormulaFlash(root)

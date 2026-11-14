@@ -1,5 +1,5 @@
 <template>
-  <ChoiceCard layout="inline" selection-indicator="outline" :label="label" :color="color" :model-value="selected" :disabled="disabled"
+  <ChoiceCard layout="inline" centered selection-indicator="outline" :label="label" :color="color" :model-value="selected" :disabled="disabled"
     @update:model-value="emit('select', $event)">
     <template #icon><RollModeBadge :mode="mode" variant="marker" :show-caption="false" embedded /></template>
   </ChoiceCard>

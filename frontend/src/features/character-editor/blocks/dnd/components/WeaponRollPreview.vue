@@ -1,7 +1,7 @@
 <template>
   <div class="weapon-roll-preview" aria-label="Превью броска">
     <div class="weapon-roll-preview__heading"><span>{{ heading || (scope === 'attack' ? 'Формула атаки' : 'Формула урона') }}</span><b v-if="scope === 'attack'">{{ signed(attackBonus) }}</b></div>
-    <WeaponDamageBreakdown v-if="scope === 'attack'" :rows="attackRows" label="Состав атаки" :roll-color="attackColor" damage-color="var(--accent-soft)" dice-labels />
+    <WeaponDamageBreakdown v-if="scope === 'attack'" :rows="attackRows" label="Состав атаки" :roll-color="attackColor" damage-color="var(--accent-soft)" />
     <WeaponDamageBreakdown v-else :rows="damageRows" label="Состав урона" :damage-type="damageType" :damage-color="damageColor" />
   </div>
 </template>
