@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { effectScope, nextTick, ref } from 'vue'
-import { useSessionParticipantRail } from './useSessionParticipantRail'
 import { useSessionSelection } from './useSessionSelection'
 import { sessionWorkspaceKey, useSessionWorkspace } from './useSessionWorkspace'
 import { kickParticipant } from '@/shared/api/sessionsApi'
@@ -24,22 +23,6 @@ function workspace(uuid = 'session') {
   const graph = { loaded: ref(true), chapters: ref([chapter]), selectArc: vi.fn(), focusCurrent: () => chapter }
   return { ...scope.run(() => useSessionWorkspace({ sessionUuid: uuid, chapterGraph: graph })), graph }
 }
-
-it('preserves the rail preference across combat and keeps different sessions independent', async () => {
-  const mode = ref(null)
-  const rail = scope.run(() => useSessionParticipantRail({ sessionUuid: 'one', workspaceMotionMode: mode }))
-  expect(rail.mode.value).toBe('normal')
-  rail.toggle()
-  await nextTick()
-  expect(rail.mode.value).toBe('compact')
-  mode.value = 'combat'
-  rail.toggle()
-  expect(rail.mode.value).toBe('combat')
-  mode.value = null
-  expect(rail.mode.value).toBe('compact')
-  expect(scope.run(() => useSessionParticipantRail({ sessionUuid: 'one', workspaceMotionMode: mode })).mode.value).toBe('compact')
-  expect(scope.run(() => useSessionParticipantRail({ sessionUuid: 'two', workspaceMotionMode: mode })).mode.value).toBe('normal')
-})
 
 it('removes a participant only after the server responds and deduplicates an in-flight kick', async () => {
   let release

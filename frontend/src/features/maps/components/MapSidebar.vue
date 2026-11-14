@@ -1,10 +1,17 @@
 <template>
+  <Teleport v-if="hosted" :to="host.target.value || 'body'" :disabled="!host.target.value">
+    <div v-show="host.target.value && host.activeView.value === workspaceKey && host.selected.value.startsWith(workspaceKey + ':')"
+      v-bind="$attrs" class="map-sidebar-content map-sidebar-hosted-content" :data-sidebar-owner="workspaceKey"><slot /></div>
+  </Teleport>
   <aside
+    v-else
+    v-bind="$attrs"
     ref="element"
     class="map-sidebar map-sidebar--overlay"
     :style="{
       '--map-sidebar-panel-width':
         panelWidth == null ? undefined : `${panelWidth}px`,
+      '--map-sidebar-compact-peek': `${compactPeek}px`,
     }"
     :class="{
       'map-sidebar--collapsed': collapsed,
@@ -37,8 +44,8 @@
         <ActionButton
           variant="quiet"
           icon-only
-          aria-label="Свернуть панель карты"
-          title="Свернуть панель карты"
+          :aria-label="collapseLabel"
+          :title="collapseLabel"
           :aria-expanded="!collapsed"
           @click="collapse"
         >
@@ -52,7 +59,7 @@
           @before-leave="leavePage"
           @before-enter="enterPage"
         >
-          <div :key="tab" class="map-sidebar-content" :data-tab="tab">
+          <div :key="persistentContent ? 'workspace' : tab" class="map-sidebar-content" :class="{ 'map-sidebar-content--flush': !padded }" :data-tab="tab">
             <slot />
           </div>
         </Transition>
@@ -61,17 +68,37 @@
   </aside>
 </template>
 <script setup>
-import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+defineOptions({ inheritAttrs: false });
+import { inject, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { ActionButton, IconNavigation } from "@sylvieshare/share-ui";
 import { PanelLeftClose } from "@lucide/vue";
 import { layoutTokens } from "@/app/design-tokens";
+import { workspaceSidebarContext } from '@/shared/lib/workspaceSidebarContext';
 const props = defineProps({
   tabs: { type: Array, required: true },
   tab: { type: String, required: true },
   tabsLabel: { type: String, default: "Вкладки карты" },
   collapseAt: { type: Number, default: layoutTokens.desktop - 1 },
+  workspaceKey: { type: String, default: '' },
+  persistentContent: Boolean,
+  padded: { type: Boolean, default: true },
+  collapseLabel: { type: String, default: 'Свернуть панель карты' },
+  compactPeek: { type: Number, default: layoutTokens['map-compact-peek'] },
 });
 const emit = defineEmits(["update:tab", "select", "resize"]);
+const host = inject(workspaceSidebarContext, null);
+const hosted = !!host && !!props.workspaceKey;
+if (hosted) {
+  const unregister = host.register(props.workspaceKey, { tabs: () => props.tabs, resize: (width, rail) => emit('resize', width, rail) });
+  onBeforeUnmount(unregister);
+  watch(host.selected, selected => {
+    if (host.activeView.value !== props.workspaceKey) return;
+    const prefix = props.workspaceKey + ':';
+    const key = selected.startsWith(prefix) ? selected.slice(prefix.length) : selected;
+    if (selected.startsWith(prefix)) emit('update:tab', key);
+    emit('select', key);
+  }, { immediate: true });
+}
 const element = ref(null);
 const navigation = ref(null);
 const collapsed = ref(
@@ -139,6 +166,7 @@ function toggleTab(key) {
   else openTab(key);
 }
 function openTab(key) {
+  if (hosted) { host.select(props.workspaceKey, key); return; }
   const reveal = collapsed.value;
   if (reveal) {
     opening.value = true;
@@ -152,11 +180,13 @@ function openTab(key) {
   emit("select", key);
 }
 function collapse() {
+  if (hosted) { host.collapse(); return; }
   collapsed.value = true;
   opening.value = false;
   clearTimeout(revealTimer);
 }
 onMounted(() => {
+  if (hosted) return;
   compactQuery = window.matchMedia(`(max-width: ${props.collapseAt}px)`);
   compactQuery.addEventListener("change", compactChanged);
   measurePanel();
@@ -178,14 +208,18 @@ onBeforeUnmount(() => {
   clearTimeout(revealTimer);
 });
 defineExpose({
+  collapsed,
   openTab,
   collapse,
-  bounds: () => element.value?.getBoundingClientRect(),
+  bounds: () => hosted ? host.bounds() : element.value?.getBoundingClientRect(),
 });
 </script>
 <style scoped>
 .map-sidebar {
-  --map-sidebar-width: min(var(--layout-map-sidebar), calc(100vw - var(--layout-map-compact-peek)));
+  --workspace-sidebar-border: color-mix(in srgb, var(--accent-soft) 18%, var(--surface));
+  box-sizing: border-box;
+  border-top: var(--layout-border) solid var(--workspace-sidebar-border);
+  --map-sidebar-width: min(var(--layout-map-sidebar), calc(100vw - var(--map-sidebar-compact-peek,var(--layout-map-compact-peek))));
   width: var(--map-sidebar-width);
   flex: none;
   min-height: 0;
@@ -195,6 +229,7 @@ defineExpose({
   transition: width 260ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .map-sidebar-tabs {
+  box-shadow: inset -1px 0 0 var(--workspace-sidebar-border);
   z-index: 1;
   height: 100%;
   background: var(--surface);
@@ -321,4 +356,8 @@ defineExpose({
   border: 0;
   border-top: 1px solid var(--border-strong);
 }
+.map-sidebar-content--flush {padding:0;gap:0}
+.map-sidebar-hosted-content {box-sizing:border-box;animation:hosted-sidebar-in var(--motion-enter) ease both}
+@keyframes hosted-sidebar-in {from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce) {.map-sidebar-hosted-content {animation:none}}
 </style>

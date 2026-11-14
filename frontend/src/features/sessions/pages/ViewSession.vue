@@ -48,11 +48,10 @@
     <div
       v-else-if="session"
       class="campaign-workspace"
-      :style="{ '--session-toolbar-height': `${toolbarHeight}px`, '--session-map-panel-width': `${mapPanelWidth}px` }"
+      :style="{ '--session-toolbar-height': `${toolbarHeight}px`, '--session-map-panel-width': `${mapPanelWidth}px`, '--session-sidebar-rail': `${sidebar.rail.value}px`, '--session-sidebar-width': `${sidebar.width.value}px` }"
       :class="{
         'campaign-workspace--combat': primaryView === 'story' && workspaceMotionMode === 'combat',
         'campaign-workspace--map': mapVisible,
-        'campaign-workspace--players-collapsed': playersRailMode === 'compact',
       }"
     >
       <ChapterGraphTab
@@ -154,9 +153,8 @@
       <div v-if="combatWorkspaceError" class="combat-import-error" role="alert">{{ combatWorkspaceError }}</div>
 
 
-      <aside v-show="!mapVisible && primaryView !== 'globalMaps'" data-tutorial="session-players" class="workspace-dock workspace-dock--left">
-        <div class="col-section-title">
-          <span class="players-heading-label">ИГРОКИ</span>
+      <SessionWorkspaceSidebar :controller="sidebar">
+        <div class="col-section-title" role="group" aria-label="Действия с участниками">
           <button
             v-if="playersRailMode === 'combat'"
             type="button"
@@ -201,19 +199,7 @@
               </template>
             </RowActionMenu>
           </div>
-          <button
-            type="button"
-            class="players-rail-toggle"
-            :class="{ 'players-rail-toggle--error': kickError || colorError || participantOrderError }"
-            :title="playersRailMode === 'compact' ? 'Развернуть игроков' : 'Свернуть игроков'"
-            :aria-label="playersRailMode === 'compact' ? 'Развернуть игроков' : 'Свернуть игроков'"
-            :aria-expanded="playersRailMode !== 'compact'"
-            :disabled="playersRailMode === 'combat'"
-            @click="togglePlayersRail"
-          >
-            <PanelLeftOpen v-if="playersRailMode === 'compact'" :size="15" />
-            <PanelLeftClose v-else :size="15" />
-          </button>
+
         </div>
 
         <div v-if="participants.length" class="participants-list" data-sortable-container="participants">
@@ -228,7 +214,6 @@
             :reorder-enabled="isDm && participants.length > 1 && !participantOrderSaving"
             :reorder-placeholder="participantSortable.isSource(p)"
             :should-suppress-reorder-click="participantSortable.shouldSuppressClick"
-            :compact="playersRailMode === 'compact'"
             :combat-mode="playersRailMode === 'combat'"
             :combatant="encounterPlayer(p.charId)"
             :combat-selected="isEncounterPlayerSelected(p.charId)"
@@ -246,7 +231,7 @@
         <div v-if="kickError || colorError || participantOrderError" class="participant-action-error" role="alert">
           {{ kickError || colorError || participantOrderError }}
         </div>
-      </aside>
+      </SessionWorkspaceSidebar>
 
       <DndHpCalcModal
         v-if="encounter.hpCalcPlayer"
@@ -292,7 +277,7 @@ import { onBeforeRouteLeave, useRoute } from 'vue-router'
 import { ref } from 'vue'
 import PageTutorial from '@/features/tutorials/components/PageTutorial.vue'
 import { LoadingState } from '@sylvieshare/share-ui'
-import { ListChecks, LogIn, PanelLeftClose, PanelLeftOpen } from '@lucide/vue'
+import { ListChecks, LogIn } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import CharacterCreateWizardModal from '@/features/character-list/components/CharacterCreateWizardModal.vue'
 import CharacterSheetModal from '@/features/character-editor/components/CharacterSheetModal.vue'
@@ -304,6 +289,8 @@ import SessionJoinModal from '@/features/sessions/components/SessionJoinModal.vu
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import SessionCenterWorkspace from '@/features/sessions/components/SessionCenterWorkspace.vue'
+import SessionWorkspaceSidebar from '@/features/sessions/components/SessionWorkspaceSidebar.vue'
+import { useSessionSidebar } from '../composables/useSessionSidebar'
 import SessionParticipantCard from '@/features/sessions/components/SessionParticipantCard'
 import SessionPlayerView from '@/features/sessions/components/SessionPlayerView.vue'
 import SessionBackButton from '@/features/sessions/components/SessionBackButton.vue'
@@ -336,10 +323,11 @@ const {
   session, sessionMaterials, sessionSettings, settingsSaving, settingsError, sessionTimers, sessionTutorial,
   sessionUuid, sessionWorld, setEncounterPlayerSelected, setParticipantColor,
   sheetUuid, shortcutLabels, showShortcutHints, startParticipantDrag, syncRunning,
-  syncStatus, toggleAllEncounterPlayers, togglePlayersRail, tutorialMobile, tutorialRoot,
+  syncStatus, toggleAllEncounterPlayers, tutorialMobile, tutorialRoot,
   updateSessionSetting, updateWorkspaceContext, workspaceChapter, workspaceClosing, workspaceLevel,
   workspaceMode, workspaceMotionMode, workspaceScene, worldLayer,
 } = useSessionPage()
+const sidebar = useSessionSidebar(primaryView)
 const route = useRoute()
 const requestedOccurrenceId = computed(() => Number(route.query.occurrence) || null)
 provide('applicationEncounter', encounter)

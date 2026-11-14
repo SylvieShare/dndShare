@@ -38,6 +38,6 @@ defineProps({ mode: { type: String, default: 'column', validator: value => ['ful
 .session-tab-workspace--full .session-tab-workspace-content { max-width: none; }
 
 @media (max-width: 760px) {
-  .session-tab-workspace--column { padding: calc(var(--chapter-chrome-height, 0px) + 16px) calc(var(--chapter-safe-right, 0px) + 12px) 16px 16px; }
+  .session-tab-workspace--column { padding: calc(var(--chapter-chrome-height, 0px) + 16px) calc(var(--chapter-safe-right, 0px) + 12px) 16px max(16px, var(--chapter-safe-left,16px)); }
 }
 </style>

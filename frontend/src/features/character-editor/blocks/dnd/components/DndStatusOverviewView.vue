@@ -5,6 +5,7 @@
         v-for="item in items"
         :key="item.id"
         :title="`Действия: ${item.value}`"
+        follow-anchor
         :trigger-attrs="{style:{maxWidth:'100%'}}"
       >
         <template #trigger="{ open }">

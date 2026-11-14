@@ -48,39 +48,15 @@ export async function checkHeadingActions(page, { width, owner = true, rootUrl =
   await expect(health).toHaveCount(0)
   const afterHealth = structuredClone(api.writes)
 
-  const button = heading.getByRole('button', { name: /^Пассивные показатели:/ })
-  await expect(button).toHaveCount(1)
-  await expect(button.locator('button')).toHaveCount(0)
-  const hitArea = await button.boundingBox()
-  expect(hitArea.width).toBeGreaterThanOrEqual(48)
-  expect(hitArea.height).toBeGreaterThanOrEqual(32)
-  for (const source of ['upper', 'lower', 'keyboard']) {
-    if (source === 'keyboard') { await button.focus(); await page.keyboard.press('Enter') }
-    else await button.click({ position: { x: hitArea.width / 2, y: hitArea.height * (source === 'upper' ? .25 : .75) } })
-    const description = page.getByRole('dialog', { name: 'Пассивные показатели', exact: true })
-    await expect(description).toBeVisible()
-    await expect(button).toHaveAttribute('aria-expanded', 'true')
-    await expect(description.locator('.passive-skill')).toHaveCount(2)
-    await expect(description.getByText('Внимательность', { exact: true })).toBeVisible()
-    await expect(description.getByText('Анализ', { exact: true })).toBeVisible()
-    await expect(description.locator('.passive-formula strong')).toHaveText(owner ? ['10 +3 = 13', '10 +2 = 12'] : ['10 +0 = 10', '10 -1 = 9'])
-    await expect(description.getByText(/Используется без броска костей/)).toBeVisible()
-    await expect(page.getByRole('menu')).toHaveCount(0)
-    const bounds = await description.boundingBox()
-    expect(bounds.x).toBeGreaterThanOrEqual(0)
-    expect(bounds.x + bounds.width).toBeLessThanOrEqual(width)
-    expect(bounds.y).toBeGreaterThanOrEqual(0)
-    expect(bounds.y + bounds.height).toBeLessThanOrEqual(page.viewportSize().height)
-    if (capture && source === 'upper') await capture(page, width, owner)
-    if (source === 'upper') { await button.focus(); await page.keyboard.press('Space') }
-    else if (source === 'lower') await page.keyboard.press('Escape')
-    else await button.click({ position: { x: hitArea.width - 3, y: hitArea.height / 2 } })
-    await expect(description).toHaveCount(0)
-  }
-  await heading.getByRole('button', { name: 'Действия персонажа', exact: true }).click()
-  await expect(page.getByRole('menuitem', { name: owner ? 'Изменить HP' : 'Здоровье', exact: true })).toBeVisible()
+  await expect(heading.locator('.heading-metrics')).toHaveCount(0)
+  await heading.getByRole('button', { name:'Действия персонажа', exact:true }).click()
+  const menu=page.getByRole('menu',{name:'Действия персонажа',exact:true})
+  const table=menu.getByRole('table',{name:'Пассивные показатели'})
+  await expect(table.getByRole('cell')).toHaveText(owner?['13','12']:['10','9'])
+  await expect(menu.getByRole('menuitem',{name:owner?/^Изменить HP/:/^Здоровье/})).toBeVisible()
+  if(capture)await capture(page,width,owner)
   await page.keyboard.press('Escape')
-  await expect(page.getByRole('menu')).toHaveCount(0)
+  await expect(menu).toHaveCount(0)
   expect(api.writes).toEqual(afterHealth)
   if (!owner || width !== 475) expect(api.writes).toEqual(before)
   const controls = await heading.locator('.heading-armor,.heading-health,.heading-metrics').evaluateAll(nodes => nodes.map(node => {
@@ -89,7 +65,7 @@ export async function checkHeadingActions(page, { width, owner = true, rootUrl =
   for (const control of controls) expect(control.right).toBeLessThanOrEqual(width)
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
   return { width, owner, armorEditor: owner, healthMode: owner ? 'calculator' : 'read-only',
-    passiveSharedTrigger: true, passiveHitArea: { width: hitArea.width, height: hitArea.height },
-    passiveKeyboard: ['Enter', 'Space'], passiveDescriptions: 2, nestedButtons: false, menuPreserved: true, controls,
+    passivesInMenu: true,
+    passiveRows: 2, nestedButtons: false, menuPreserved: true, controls,
     hpMutationChecked: owner && width === 475, noUnexpectedWrites: true }
 }

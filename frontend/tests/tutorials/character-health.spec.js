@@ -7,7 +7,7 @@ async function sheetFixture(page) {
   return api
 }
 
-for (const width of [390, 834, 1440]) test(`HP, shield and stacked passives fit without overlap at ${width}`, async ({ page }, testInfo) => {
+for (const width of [390, 834, 1440]) test(`HP and shield fit without overlap; passives stay in the menu at ${width}`, async ({ page }, testInfo) => {
   const errors = []
   page.on('pageerror', error => errors.push(error.message))
   await page.setViewportSize({ width, height: 900 })
@@ -35,16 +35,13 @@ for (const width of [390, 834, 1440]) test(`HP, shield and stacked passives fit 
   await expect(health.locator('.health-beat')).toHaveAttribute('aria-hidden', 'true')
   await expect(health.locator('[role="meter"]')).toHaveCount(0)
   await expect(heading.locator('canvas')).toHaveCount(0)
-  const { numbers, temp, avatar, name, combat, armor, hp, passives, fields } = await heading.evaluate(node => {
+  const { numbers, temp, avatar, name, combat, armor, hp } = await heading.evaluate(node => {
     const box = selector => node.querySelector(selector).getBoundingClientRect().toJSON()
     return {
       numbers: box('.health-summary'), temp: box('.health-temporary'),
       avatar: box('.portrait'), name: box('.identity'),
-      combat: box('.heading-combat'), armor: box('.heading-armor'), hp: box('.heading-health'), passives: box('.heading-metrics'),
-      fields: [...node.querySelectorAll('.heading-metric')].map(field => {
-        const rect = field.getBoundingClientRect()
-        return { left: rect.left, top: rect.top, bottom: rect.bottom }
-      }),
+      combat: box('.heading-combat'), armor: box('.heading-armor'), hp: box('.heading-health'),
+
     }
   })
   await testInfo.attach('header-composition', { body: await page.locator('.character-workspace-header').screenshot(), contentType: 'image/png' })
@@ -53,20 +50,7 @@ for (const width of [390, 834, 1440]) test(`HP, shield and stacked passives fit 
   expect(hp.x - armor.x - armor.width).toBeCloseTo(8, 1)
   expect(Math.abs(hp.y + hp.height / 2 - armor.y - armor.height / 2)).toBeLessThan(1)
   expect(combat.top).toBeGreaterThanOrEqual(name.bottom - .5)
-  expect(fields).toHaveLength(2)
-  const passivesWrapped = fields[0].top >= hp.bottom
-  if (!passivesWrapped) expect(passives.left - hp.right).toBeCloseTo(8, 1)
-  for (const field of fields) {
-    if (passivesWrapped) {
-      expect(field.top).toBeGreaterThanOrEqual(hp.bottom + 3.5)
-      expect(field.left).toBeGreaterThanOrEqual(combat.left - .5)
-    } else {
-      expect(field.top).toBeGreaterThanOrEqual(hp.y - 1)
-      expect(field.bottom).toBeLessThanOrEqual(hp.y + hp.height + 1)
-    }
-    expect(field.bottom).toBeLessThanOrEqual(combat.bottom + .5)
-  }
-  expect(fields[1].top).toBeGreaterThanOrEqual(fields[0].bottom - .5)
+  await expect(heading.locator('.heading-metrics')).toHaveCount(0)
   await expect(health.locator('strong')).toHaveCSS('font-weight', '700')
   expect(await health.locator('strong').evaluate(node => getComputedStyle(node).fontFamily)).toContain('Cormorant Garamond')
   const uiFamily = await heading.locator('.identity strong').evaluate(node => getComputedStyle(node).fontFamily)
@@ -90,7 +74,7 @@ test('the simple counter retains menu edits and death saves', async ({ page }) =
   await expect(heading).not.toContainText('Полуэльф')
   await heading.getByRole('button', { name: 'Действия персонажа', exact: true }).click()
   await expect(page.locator('.ram-heading')).toContainText('Полуэльф')
-  await page.getByRole('menuitem', { name: 'Изменить HP', exact: true }).click()
+  await page.getByRole('menuitem', { name: /^Изменить HP/ }).click()
   const health = page.getByRole('dialog', { name: 'Здоровье', exact: true })
   await health.getByRole('button', { name: '4', exact: true }).click()
   await health.getByRole('button', { name: 'Урон', exact: true }).click()
@@ -188,7 +172,7 @@ test('HP percentage changes pulse speed without replacing or resetting the strok
     window.headerPulseSnapshot.forEach(animation => { animation.pause(); animation.currentTime = 1234 })
   })
   await page.getByRole('button', { name: 'Действия персонажа', exact: true }).click()
-  await page.getByRole('menuitem', { name: 'Изменить HP', exact: true }).click()
+  await page.getByRole('menuitem', { name: /^Изменить HP/ }).click()
   const calculator = page.getByRole('dialog', { name: 'Здоровье', exact: true })
   async function apply(amount, action, readout, rate) {
     for (const digit of String(amount)) await calculator.getByRole('button', { name: digit, exact: true }).click()

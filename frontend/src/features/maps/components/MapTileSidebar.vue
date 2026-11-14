@@ -4,6 +4,7 @@
     v-model:tab="tab"
     class="map-tile-sidebar"
     :tabs="tabs"
+    :workspace-key="sessionMode ? 'maps' : ''"
     aria-label="Каталог плиток"
     tabs-label="Боковые вкладки редактора"
     @select="emit('tab', $event)"

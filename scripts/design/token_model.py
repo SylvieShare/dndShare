@@ -14,7 +14,7 @@ FONT_WEIGHTS = {'display': (500, 700), 'prose': (400, 700), 'ui': (100, 900)}
 KEY = re.compile(r'^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$')
 REQUIRED = {
     'chrome': {'blur', 'tint', 'fade-tail'},
-    'layout': {'tablet', 'desktop', 'sidebar-collapsed', 'sidebar-expanded', 'drawer', 'content-max', 'header', 'border', 'touch-min', 'map-sidebar', 'map-rail', 'map-compact-peek', 'map-navigation-item',
+    'layout': {'tablet', 'desktop', 'sidebar-collapsed', 'sidebar-expanded', 'drawer', 'content-max', 'header', 'border', 'touch-min', 'map-sidebar', 'map-rail', 'map-compact-peek', 'session-sidebar-peek', 'map-navigation-item',
                'workspace-header-shadow-distance', 'workspace-header-shadow-height', 'workspace-row-divider-height', 'workspace-inline-identity-max',
                'sheet-gallery-height', 'sheet-gallery-add-width', 'sheet-header-menu-width', 'sheet-header-menu-cell-height',
                'sheet-value-height', 'sheet-value-width', 'sheet-value-compact-height', 'sheet-value-compact-width',

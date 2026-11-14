@@ -8,10 +8,10 @@
   >
     <RowActionMenu>
       <template #trigger>
-        <SessionCreatureTile
+        <SessionPlayerTile
           class="p-card"
           :class="{ 'p-card--combat': combatMode, 'p-card--statuses': hasStatuses, 'p-card--compact': compact, 'p-card--current': combatMode && combatCurrent, 'p-card--reorderable': reorderEnabled }"
-          :name="displayName" :avatar-url="avaUrl" :icon="isIcon" :avatar-color="avatarColor"
+          :participant="participant" :name="displayName" :avatar-url="avaUrl" :hp="hp" :health-visible="showHp" :show-stats="isDm && isDnd"
           :color="participant.color" :compact="compact" :current="combatMode && combatCurrent"
           :controls-visible="combatMode" :has-statuses="hasStatuses"
         >
@@ -21,19 +21,17 @@
           <template #name-suffix>
             <span v-if="combatant?.position === 'reserve' && combatant.initiative != null" class="p-initiative-chip" title="Подготовленная инициатива" :aria-label="`Подготовленная инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span>
           </template>
-          <template #health>
+          <template v-if="showHp && isDead" #health>
             <template v-if="showHp">
               <div v-if="isDead" class="ds-row">
                 <span class="ds-label">При смерти</span>
                 <span class="ds-counts">(✓ {{ hp.ds_success }} / ✕ {{ hp.ds_failure }})</span>
                 <button v-if="isDm" type="button" class="ds-revive" title="Воскресить игрока" aria-label="Воскресить игрока" @click.stop="$emit('revive')"><HeartPulse :size="14" /></button>
               </div>
-              <SessionHpBar v-else :hp="hp" size="compact" />
             </template>
           </template>
-          <template v-if="isDm && isDnd" #stats><ParticipantStats :participant="participant" /></template>
-          <template #statuses><ParticipantStatuses :participant="participant" :editable="isDm" /></template>
-        </SessionCreatureTile>
+          <template #statuses><ParticipantStatuses :participant="participant" :editable="isDm" detailed /></template>
+        </SessionPlayerTile>
       </template>
 
       <template #default="{ close }">
@@ -94,17 +92,14 @@ import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'
 import EncounterInitiativeMenu from './EncounterInitiativeMenu.vue'
-import SessionHpBar from './SessionHpBar.vue'
-import SessionCreatureTile from './SessionCreatureTile.vue'
+import SessionPlayerTile from './SessionPlayerTile.vue'
 import { pvAvatar, pvHp, pvHpPath, pvName } from '@/features/sessions/lib/participantView'
 
 const ParticipantStatuses = defineAsyncComponent(() => import('./ParticipantStatuses.vue'))
-const ParticipantStats = defineAsyncComponent(() => import('./ParticipantStats.vue'))
 const encounter = inject('applicationEncounter', null)
 const templates = useTemplateStore()
 const isDnd = computed(() => settingAccessors(templates.byId(props.participant.templateId))?.system === 'dnd5e')
 
-const AVATAR_COLORS = ['var(--accent)', 'var(--accent)', 'var(--info)', 'var(--danger)', 'var(--success)', 'var(--warning)', 'var(--danger)']
 
 const props = defineProps({
   participant: { type: Object, required: true },
@@ -161,17 +156,15 @@ function assignColor(color, close) {
 }
 
 const displayName = computed(() => pvName(props.participant) || '(без имени)')
-const initial = computed(() => displayName.value.charAt(0).toUpperCase())
 
 const avaUrl = computed(() => pvAvatar(props.participant))
-const isIcon = computed(() => Boolean(props.participant.iconImageUrl))
 
 
 const hp = computed(() => {
   const v = pvHp(props.participant)
   if (!v) return null
   return {
-    current:    Number(v.current)    ?? 0,
+    current:    Number(v.current)    || 0,
     max:        hpMaximum(v),
     temp:       Number(v.temp)       || 0,
     ds_success: Number(v.ds_success) || 0,
@@ -182,11 +175,6 @@ const hp = computed(() => {
 const showHp = computed(() => hp.value !== null && hp.value.max > 0)
 const canCalculateHp = computed(() => props.isDm && !!encounter && !!props.combatant && !!hp.value && !!pvHpPath(props.participant))
 const isDead = computed(() => showHp.value && hp.value.current <= 0)
-
-const avatarColor = computed(() => {
-  const code = initial.value.charCodeAt(0)
-  return AVATAR_COLORS[code % AVATAR_COLORS.length]
-})
 
 </script>
 

@@ -12,19 +12,13 @@
   <ItemTooltip v-if="tooltip" :anchor="tooltip.anchor" :title="tooltip.label" :desc="tooltip.description" :width="280" :z-index="9500" />
 </template>
 <script setup>
-import { computed, ref, shallowRef, watch } from 'vue'
+import { computed, shallowRef } from 'vue'
 import { Eye, Search, Shield } from '@lucide/vue'
 import { LoadingIndicator } from '@sylvieshare/share-ui'
-import { itemsApi } from '@/shared/api/itemsApi'
-import { useSuggestStore } from '@/stores/suggest'
-import { featureItemIds, inventoryEntries } from '@/features/character-editor/lib/characterMagicItems'
-import { armorBaseId } from '@/features/character-editor/lib/magicArmor'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
-import { participantDefenses } from '../lib/participantDefenses'
+import { useParticipantDefenses } from '../composables/useParticipantDefenses'
 const props = defineProps({ participant: { type: Object, required: true } })
-const items = shallowRef(new Map()), loading = ref(true), error = ref(''), suggest = useSuggestStore()
-const values = computed(() => props.participant.data?.values || {})
-const stats = computed(() => participantDefenses(values.value, items.value, type => suggest.items(type), props.participant.sourceVersion || '2014'))
+const { stats, loading, error } = useParticipantDefenses(() => props.participant)
 const indicators = computed(() => [
   { key: 'ac', label: 'Класс доспеха', value: stats.value.armorClass, icon: Shield, description: 'Защита от попадания атакой. Учитывает экипированные доспехи, щит и настроенные бонусы.' },
   ...stats.value.passives.map(skill => ({ ...skill, key: skill.id, icon: skill.id === '10' ? Eye : Search,
@@ -33,32 +27,6 @@ const indicators = computed(() => [
 const tooltip = shallowRef(null)
 function showTooltip(event, indicator) { tooltip.value = { ...indicator, anchor: event.currentTarget } }
 
-const referenceKey = computed(() => JSON.stringify([
-  [...new Set([...featureItemIds(values.value), ...(values.value.states || []).map(state => state.effect_id)].filter(Boolean))].sort(),
-  inventoryEntries(values.value).map(({entry}) => [entry.magic_item_id, entry.item_id, entry.params?.base_item_id]),
-  props.participant.sourceVersion,
-]))
-watch(referenceKey, async (_, __, onCleanup) => {
-  let cancelled = false
-  onCleanup(() => { cancelled = true })
-  loading.value = true; error.value = ''
-  try {
-    const loaded = new Map()
-    const ids = [...new Set([...featureItemIds(values.value), ...(values.value.states || []).map(state => state.effect_id)].filter(Boolean))]
-    const load = async ids => {
-      for (let i = 0; i < ids.length; i += 100) {
-        const result = await itemsApi.byIds(ids.slice(i, i + 100))
-        for (const item of result.items || []) loaded.set(String(item.id), item)
-      }
-    }
-    await suggest.ensure(3)
-    await load(ids)
-    const bases = inventoryEntries(values.value).map(({ entry }) => armorBaseId(loaded.get(String(entry.magic_item_id ?? entry.item_id)), entry)).filter(id => id && !loaded.has(String(id)))
-    await load([...new Set(bases)])
-    if (!cancelled) items.value = loaded
-  } catch (cause) { if (!cancelled) error.value = cause.message || 'Не удалось рассчитать показатели.' }
-  finally { if (!cancelled) loading.value = false }
-}, { immediate: true })
 </script>
 <style scoped>
 .participant-stats { display: flex; align-items: center; min-height: 18px; line-height: 18px; }

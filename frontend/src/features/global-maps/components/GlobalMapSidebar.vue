@@ -1,5 +1,5 @@
 <template>
-  <MapSidebar ref="sidebar" v-model:tab="tab" class="global-map-sidebar" :tabs="tabs" aria-label="Карты мира и маршруты"
+  <MapSidebar ref="sidebar" v-model:tab="tab" class="global-map-sidebar" workspace-key="globalMaps" :tabs="tabs" aria-label="Карты мира и маршруты"
     @resize="(width, rail) => { if (rail > 0) emit('navigation-width', rail); emit('sidebar-width', width) }">
     <p v-if="controller.selected" class="global-map-save-status" role="status">{{ controller.saving ? 'Сохраняем…' : controller.hasPending() ? 'Есть несохранённые изменения' : 'Сохранено' }}</p>
     <template v-if="tab === 'maps'">

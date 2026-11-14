@@ -128,8 +128,8 @@ for (const mobile of [false, true])
     expect(canvas.y + canvas.height).toBeCloseTo(stage.y + stage.height, 0);
     expect(canvas.x).toBeGreaterThan(stage.x);
     await expect(
-      page.locator('[data-tutorial="session-players"]'),
-    ).not.toBeVisible();
+      page.getByRole("navigation",{name:"Боковые вкладки сессии"}),
+    ).toBeVisible();
     await expect(
       page
         .locator(".chapter-toolbar")

@@ -1,7 +1,7 @@
 <template>
-  <div class="participant-statuses" role="group" aria-label="Эффекты и состояния" @pointerdown.stop @click.stop @contextmenu.stop @keydown.stop>
+  <div class="participant-statuses" :class="{ 'participant-statuses--detailed': detailed }" role="group" aria-label="Эффекты и состояния" @pointerdown.stop @click.stop @contextmenu.stop @keydown.stop>
     <DndStatusOverviewView
-      :items="items" :editable="context.ownerMode" :context="context" icons-only :icon-size="32"
+      :items="items" :editable="context.ownerMode" :context="context" :icons-only="!detailed" :header="detailed" :icon-size="32"
       @view="viewItem = $event.item"
       @remove="$emit('remove', $event)"
       @increase-level="$emit('change-level', $event, 1)"
@@ -24,11 +24,12 @@ import { defineAsyncComponent, shallowRef } from 'vue'
 import DndStatusOverviewView from '@/features/character-editor/blocks/dnd/components/DndStatusOverviewView.vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
 const ItemViewModal = defineAsyncComponent(() => import('@/features/handbook/components/ItemViewModal.vue'))
-defineProps({ items: { type: Array, default: () => [] }, context: { type: Object, default: () => ({}) } })
+defineProps({ items: { type: Array, default: () => [] }, context: { type: Object, default: () => ({}) }, detailed: Boolean })
 defineEmits(['remove', 'change-level', 'edit-duration'])
 const tooltip = shallowRef(null), viewItem = shallowRef(null)
 function showTooltip(event, item) { tooltip.value = { ...item, anchor: event.currentTarget } }
 </script>
 <style scoped>
 .participant-statuses { min-width: 0; height: 36px; }
+.participant-statuses--detailed {height:auto;--status-scroll-inset-start:0px;--status-scroll-inset-end:0px}
 </style>

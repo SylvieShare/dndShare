@@ -9,7 +9,6 @@ import { useSessionSelection } from '@/features/sessions/composables/useSessionS
 import { useSessionWorkspace } from '@/features/sessions/composables/useSessionWorkspace'
 import { useSessionPrimaryView } from '@/features/sessions/composables/useSessionPrimaryView'
 import { useSessionWorld } from '@/features/sessions/composables/useSessionWorld'
-import { useSessionParticipantRail } from '@/features/sessions/composables/useSessionParticipantRail'
 import { useSessionMaterials } from '@/features/sessions/composables/useSessionMaterials'
 import { useSessionPresentation } from '@/features/sessions/composables/useSessionPresentation'
 import { useSessionTimers } from '@/features/sessions/composables/useSessionTimers'
@@ -347,10 +346,7 @@ export function useSessionPage() {
     await openSceneWorkspace(scene)
   }
   const visibleWorkspaceMotionMode = computed(() => primaryView.value === 'story' ? workspaceMotionMode.value : null)
-  const {
-    mode: playersRailMode,
-    toggle: togglePlayersRail,
-  } = useSessionParticipantRail({ sessionUuid, workspaceMotionMode: visibleWorkspaceMotionMode })
+  const playersRailMode = computed(() => visibleWorkspaceMotionMode.value === 'combat' ? 'combat' : 'normal')
 
   const {syncStatus,syncRunning,refreshParticipants,liveStatus,liveCatchingUp,startSessionLive} = useSessionRealtime({sessionUuid,session,participants,currentChapter,sessionRole,myCharUuid,isDm,coloringIds,participantOrderSaving,presentation,sessionEventsStore})
 
@@ -526,7 +522,7 @@ export function useSessionPage() {
     session, sessionMaterials, sessionSettings, settingsSaving, settingsError, sessionTimers, sessionTutorial,
     sessionUuid, sessionWorld, setEncounterPlayerSelected, setParticipantColor,
     sheetUuid, shortcutLabels, showShortcutHints, startParticipantDrag, syncRunning,
-    syncStatus, toggleAllEncounterPlayers, togglePlayersRail, tutorialMobile, tutorialRoot,
+    syncStatus, toggleAllEncounterPlayers, tutorialMobile, tutorialRoot,
     updateSessionSetting, updateWorkspaceContext, workspaceChapter, workspaceClosing, workspaceLevel,
     workspaceMode, workspaceMotionMode, workspaceScene, worldLayer,
   }

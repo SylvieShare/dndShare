@@ -52,30 +52,11 @@ do not duplicate themselves in the global bottom-right popup stack. The same
 header action is highlighted while results exist and clears them on the next
 click.
 
-Players have no separate encounter reserve section. Opening combat smoothly
-widens the existing left participant rail from 264px by the checkbox strip plus the card gap (36px + 9px, total 309px); every player tile gains the
-encounter checkbox with additional horizontal spacing; the current turn is
-highlighted there. The tile shows the name and HP, with 14px right padding;
-race/class are absent from the tile; a prepared initiative is shown as a chip beside the name while the player remains in reserve. For the DM, D&D participants show equipped AC and passive Perception/Investigation directly below HP, to the right of the portrait.
-The three indicators form one row: number followed by icon, with vertical
-dividers. Hover or keyboard focus opens the shared `ItemTooltip` with the
-indicator name, meaning and passive calculation. Before combat starts, the combat-tab menu exposes an initiative submenu with
-a numeric input and a roll action. These controls remain mounted inside a fixed-height
-tile and slide in from behind its left edge together with the widening rail;
-closing combat sends them back left instead of mounting or unmounting them.
-Players that enter combat also appear in the common
-initiative-ordered combat scene alongside NPCs while remaining visible in the
-left rail. Common scene and reserve rows use `SessionCombatantTile`, backed by the same `SessionCreatureTile` as the player rail and map roster. Initiative is a chip beside the name and is edited in the row menu even during combat (reroll is available before combat). HP uses the 6px compact bar; AC and optional player passives sit below it. Tiles have a 72px minimum height around 64px portraits and no trailing ellipsis; clicking the tile or pressing Enter/Space while focused opens its menu. Selection squares are 20px in rows, the player rail and chronicle target selection. The left-rail tile and portrait keep
-the same height and circular geometry in and out of combat; the larger combat-scene
-portrait is circular too. Player photos use a soft alpha fade around their edges. An
-assigned session color appears as the 2px frame of both the left-rail player tile
-and the common combat-scene row; it is not repeated on the portrait or as a left
-strip. Player rows do not repeat a `PC` type chip. NPC artwork keeps its centered 64×64
-geometry instead of falling back to a name initial. Every combat-scene tile has a numbered marker on its
-left.
-`ViewSession.vue` owns the single `useEncounter` instance shared by the rail and
-`EncounterTab`, so selection and initiative always address the same encounter
-record.
+Players have no separate encounter reserve section. The persistent workspace sidebar
+keeps the Players panel available in combat. Each player receives a selection checkbox
+beside the name; AC, HP and passive skills use the common character summary tile.
+A prepared initiative remains a chip beside the name while the player is in reserve.
+Selection and current-turn highlights retain the encounter commands and permissions.
 
 The DM-only Settings tab persists participant visibility and automatic NPC HP
 rolling in the session's structured `settings` JSONB. `combat.autoRollNpcHp`
@@ -341,54 +322,34 @@ Chronicle attack target controls share the roll's row on the right, with chosen 
 `SessionAttackTargets` сохраняет выбор в событии через API; цели видны в хронике мастера,
 права доступа к событиям не расширяются. Сравнения атаки с КД в этом компоненте нет.
 
-`SessionCreatureTile` owns the shared visual layout, including optional controls, a letter before the name and statuses. Roll results belong to a separate `EncounterRow` overlay positioned within the visible tile bounds. `SessionParticipantCard` preserves player actions; `SessionCombatantTile` supplies encounter data and is reused by both combat lists and the map roster. The roll drawer slides over the tile from the right and stays within it on narrow screens; it does not wrap below or take list width. Initiative stays immediately after the name and does not shrink; `useCreatureNameFit` measures the remaining row width and reduces the name font from 13px until the full name fits, recalculating after resizes, data and font updates. AC and passives keep their natural widths and align left. The tile shows portrait, name and HP, with 14px right padding.
-For the DM, D&D tiles also show AC and passive skills below HP in the same
-information column; the action menu contains only actions.
-For the DM, active D&D effect/state instances from the character's `values.states`
-appear as 32px icons in a separate row below the information column, to the
-right of the portrait and aligned with the name/HP column.
-A muted `состояния:` caption occupies the portrait column to the left of the
-icons and is shown only when statuses are present.
-Hover/focus shows the shared item tooltip with description and instance duration;
-click or Enter/Space opens the same action menu as the character sheet, through
-`DndStatusOverviewView(iconsOnly)`. It offers handbook viewing, duration changes,
-supported level changes, removal and effect-specific mechanics. The session
-adapter uses the sheet's resources, statuses, defenses, armor and roll calculators.
-Changes go through the shared versioned character-command queue, with confirmed
-data applied after acknowledgement and a visible error if saving is rejected.
-Status icons do not open the
-participant menu, reorder the rail or toggle combat selection. The row scrolls
-horizontally when necessary. A tile with statuses is 112px tall (72px otherwise),
-while its combat checkbox stays vertically centered across the entire tile.
-Compact mode hides the status row and makes it inert; a tile remains 48px tall.
-Numeric NPC conditions and applied effect instances use the same 32px icon presentation and handbook tooltip. Applied effects support duration, level, removal and mechanics; numeric conditions support viewing and removal without changing their stored format.
-Its combat strip contains a checkbox with wider side spacing; AC and initiative
-are not rendered in that strip. The tile uses lazy `ParticipantStats` for D&D
-characters viewed by the DM, backed by `participantDefenses`, the shared equipment/derived-effect
-calculators, and item hydration including magic armor bases. `EncounterInitiativeMenu`
-is shared with creature rows and shown before combat starts.
-`handleCtrlSelection` is the shared capture handler for the participant rail,
-`EncounterRow` and `SessionTargetPicker`; macOS Ctrl-contextmenu also toggles once.
-Drag starts ignore Ctrl and Cmd. Disabled selection and ordinary clicks keep their behavior.
+`SessionCreatureTile` remains the shared NPC/encounter-row composition. Player cards in
+the sidebar use `SessionPlayerTile`, which composes the same `CharacterSummaryTile`
+and `SheetHealth` as the character header: portrait, name, shield AC, numeric HP
+with temporary HP, and two passive values for D&D participants viewed by the DM.
+The combat checkbox occupies the name row. Race/class remain in the sheet/menu,
+not the card. Long names truncate within the available width; metrics wrap as a group.
+`useParticipantDefenses` owns asynchronous hydration for both this card and the
+compact encounter `ParticipantStats`; ready name and HP stay visible while numeric
+mechanics show a skeleton. Passive skill math is shared with the sheet's menu table.
 
-Participant tile indicators are a single row of 13px numbers and 14px icons with
-vertical dividers. Passive Perception and Investigation use muted gray for both
-numbers and icons; AC retains its primary number and blue shield. The indicators
-are centered vertically between the bottom of the HP bar and the lower edge of
-the main portrait/information area; the optional status row sits separately below.
-The grid column is constrained to the available width: long names
-fit through a smaller name font while HP, initiative and indicators remain inside the tile.
-The compact rail hides the information column and makes it
-inert, including the indicators. Hover and keyboard focus open the shared `ItemTooltip` for the name,
-meaning and passive calculation. The player rail uses `--participant-rail-width`
-(264px), `--participant-selection-width` (36px) and `--participant-card-gap` (9px).
-Combat adds exactly the selection width plus gap; graph safe-area offsets use the
-same sum. The checkbox strip has 10px left / 2px right padding, so the original
-name/HP area retains its width as the rail expands.
+Active character states below the summary use `DndStatusOverviewView(header)`:
+56px icons, name, duration and polarity-colored parchment, with horizontal overflow.
+They use the same handbook tooltip and action menu as the sheet: viewing, duration,
+levels, removal and effect-specific mechanics. The menu follows its source during
+inner-row scrolling and closes when the source leaves that row's viewport.
+The adapter retains the shared resources, defenses and versioned character-command
+queue; rejected saves show an error and do not apply unconfirmed data. Status actions
+do not open the participant menu, reorder the card or change combat selection.
+Card height follows content; compact summaries hide their information and states.
+NPC numeric conditions and effect instances retain compact 32px icon menus.
 
-`CompactCheckbox` from share-ui 0.24.0 exposes `size` (default 18px); encounter, participant and target-selection rows pass 20px. Base geometry stays in the library. `ItemTooltip` forwards an optional `zIndex` to FloatingTooltip, retaining 4000 by default; participant indicator descriptions use 9500 above menus and submenus.
-
-`ArmorClassChip` is the shared session AC presentation (number then blue shield). `SessionHpBar.size` defaults to small (4px); the participant rail passes compact (6px), while creature rows use medium (14px). Target pickers pass medium with decoration. `loadSessionTargets` hydrates the same character/NPC snapshots for attack, impact and saving-throw pickers and calculates AC with shared armor/effect rules. `SaveFormulaPreview` renders d20 mode, fixed bonus and extra dice from `sessionSaveProfile`; no second bonus calculation is maintained. The picker uses CompactCheckbox at 20px, including Ctrl/Cmd row selection. `ActionButton` dashed styling belongs to share-ui 0.25.0.
+`EncounterInitiativeMenu` remains shared with creature rows. `handleCtrlSelection`
+handles Ctrl/Cmd selection in the player list, encounter rows and target picker;
+macOS Ctrl-contextmenu toggles once. Drag ignores these modifiers and form controls.
+`CompactCheckbox` uses its public size=20 API. The former floating player rail and
+its independent collapsed-state preference are removed; one sidebar owns collapse.
+`ArmorClassChip` and `SessionHpBar` remain the compact AC/HP presentations for
+encounter rows, chronicle result rows and target pickers.
 
 ## Связанные страницы
 
