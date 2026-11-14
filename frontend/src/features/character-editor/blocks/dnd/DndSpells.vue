@@ -1,11 +1,9 @@
 <template>
   <div v-show="!blockHidden" class="spells-block">
-    <DetailSection label="Правила сотворения" collapsible :default-open="false">
-      <BaseTile class="sp-casting-notice sp-rule-note" role="note" color="var(--info)" framed :outlined="false">
-        <BookOpen class="sp-casting-notice__icon" :size="24" aria-hidden="true" />
-        <div class="sp-casting-notice__content"><p>{{ rules.spellcastingRule }}</p></div>
-      </BaseTile>
-    </DetailSection>
+    <BaseTile class="sp-casting-notice sp-rule-note" role="note" color="var(--info)" framed :outlined="false">
+      <BookOpen class="sp-casting-notice__icon" :size="24" aria-hidden="true" />
+      <div class="sp-casting-notice__content"><p>{{ rules.spellcastingRule }}</p></div>
+    </BaseTile>
     <SpellConcentrationBlock />
 
     <BaseTile v-if="spellcastingBlocked" class="sp-casting-notice sp-casting-warning" role="status" color="var(--danger)" framed :outlined="false">
