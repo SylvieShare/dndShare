@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { fixture } from './fixtures/character-layout'
 
-for (const width of [390, 834, 1440]) test(`stat dice badges, cached icons and edit order work in the app at ${width}`, async ({ page }, testInfo) => {
+for (const width of [390, 834, 1440]) test(`stat dice badges, dictionary raster icons and edit order work in the app at ${width}`, async ({ page }, testInfo) => {
   const errors = []; page.on('pageerror', error => errors.push(error.message))
   await page.setViewportSize({ width, height: 1000 })
   const api = await fixture(page)
@@ -14,8 +14,9 @@ for (const width of [390, 834, 1440]) test(`stat dice badges, cached icons and e
       { kind: 'roll_bonus', formula: '1d4', scopes: ['ability_check'] },
     ] } : {} })) } })
   })
+  const raster = await page.evaluate(() => { const canvas=document.createElement('canvas');canvas.width=canvas.height=8;canvas.getContext('2d').fillRect(0,0,8,8);return canvas.toDataURL('image/webp') })
   const suggests = {
-    16: ['Сила', 'Ловкость', 'Выносливость', 'Интеллект', 'Мудрость', 'Харизма'].map((value, index) => ({ id: index + 1, value, svgId: 901 + index })),
+    16: ['Сила', 'Ловкость', 'Выносливость', 'Интеллект', 'Мудрость', 'Харизма'].map((value, index) => ({ id: index + 1, value, svgId: 901 + index, iconImageUrl:raster })),
     15: [],
   }
   await page.route('**/api/suggest/batch?**', route => route.fulfill({ json: { items: suggests } }))
@@ -27,12 +28,12 @@ for (const width of [390, 834, 1440]) test(`stat dice badges, cached icons and e
   await expect(strength).toBeVisible({ timeout: 15000 })
   await expect(strength.locator('.roll-badge__die--discarded')).toHaveAttribute('data-roll-value', '1')
   await expect(dexterity.locator('.roll-badge__die--discarded')).toHaveAttribute('data-roll-value', '20')
-  await expect.poll(() => strength.locator('.stat-icon').evaluate(node => node.style.maskImage)).toContain('blob:')
-  await expect.poll(() => page.locator('.stat-icon').evaluateAll(nodes => nodes.filter(node => node.style.maskImage.includes('blob:')).length)).toBe(6)
+  await expect.poll(() => page.locator('.stat-icon img').evaluateAll(nodes => nodes.filter(node => node.complete && node.naturalWidth===8).length)).toBe(6)
+  await expect(page.locator('.stat-icon .svg-icon')).toHaveCount(0)
   await expect(strength.locator('.system-die__value')).toHaveText(['1', '20'])
   const valueHeight = await strength.locator('.stat-mod').evaluate(el => el.clientHeight)
-  expect(await strength.locator('.stat-roll-value').evaluate(el => el.clientHeight)).toBeLessThanOrEqual(valueHeight + 1)
-  expect(await strength.locator('.roll-badge').evaluate(el => el.clientHeight)).toBeLessThanOrEqual(valueHeight)
+  expect(await strength.locator('.stat-roll-value').evaluate(el => el.clientHeight)).toBeLessThanOrEqual(valueHeight + 25)
+  expect(await strength.locator('.roll-badge').evaluate(el => el.clientHeight)).toBeLessThanOrEqual(24)
   await page.locator('[data-sheet-field="STR"]').screenshot({ path: testInfo.outputPath('stat-dice-badge.png') })
   await page.screenshot({ path: testInfo.outputPath('stats-layout.png') })
   await strength.click()

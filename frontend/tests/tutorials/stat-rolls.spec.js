@@ -64,6 +64,10 @@ for (const width of [390, 834, 1920]) {
     })
 
     test('mode groups keep numeric values fixed and highlight only the chosen control', async ({ page }, testInfo) => {
+      const icon=await page.locator('.stat-icon').boundingBox(),title=await page.locator('.stat-title').boundingBox(),modifier=await page.locator('.stat-mod').boundingBox(),save=await page.locator('.save-number').boundingBox()
+      expect(icon.x+icon.width).toBeLessThanOrEqual(Math.min(title.x,modifier.x))
+      expect(save.x).toBeGreaterThanOrEqual(Math.max(title.x+title.width,modifier.x+modifier.width))
+      expect(Math.abs(save.y+save.height/2-(title.y+modifier.y+modifier.height)/2)).toBeLessThanOrEqual(3)
       const cases = [
         ['.skill-chip', '.skill-chip-val', 'skillEffects'],
         ['.save-chip', '.save-chip-val', 'saveEffects'],
@@ -74,7 +78,9 @@ for (const width of [390, 834, 1920]) {
         await page.evaluate(key => { window.statState[key] = [] }, effects)
         await expect(control.locator('.roll-badge')).toHaveCount(0)
         const original = await number.boundingBox()
-        const expectedHeight = effects === 'checkEffects' ? (width < 640 ? 44 : 26) : (width < 640 ? 32 : 28)
+        const stacked = effects !== 'skillEffects'
+        const numberHeight = effects === 'checkEffects' ? (width < 640 ? 36 : 30) : effects === 'saveEffects' ? 48 : (width < 640 ? 32 : 28)
+        const expectedHeight = numberHeight + (stacked ? 24 : 0)
         const group = control.locator('.stat-roll-value')
         const originalGroup = await group.boundingBox()
         expect(originalGroup.height).toBeGreaterThanOrEqual(expectedHeight)
@@ -87,9 +93,9 @@ for (const width of [390, 834, 1920]) {
           for (const dimension of ['x', 'y', 'width', 'height']) expect(Math.abs(current[dimension] - original[dimension])).toBeLessThan(1)
           const badge = await control.locator('.roll-badge').boundingBox()
           expect((await group.boundingBox()).height).toBe(originalGroup.height)
-          expect(badge.height).toBeLessThanOrEqual(expectedHeight)
+          expect(badge.height).toBeLessThanOrEqual(stacked ? 24 : numberHeight)
           expect(await group.evaluate(el => getComputedStyle(el, '::before').inset)).toBe('0px')
-          if (effects === 'checkEffects') expect(badge.x).toBeGreaterThan(current.x + current.width)
+          if (stacked) expect(badge.y).toBeGreaterThanOrEqual(current.y + current.height)
           else expect(badge.x + badge.width).toBeLessThan(current.x)
         }
         const tile = page.locator('.stat-block')

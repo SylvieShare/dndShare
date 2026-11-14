@@ -148,6 +148,21 @@ for(const withCondition of [false,true])test(`joined desktop navigation stays at
   await info.attach(`joined-desktop-${withCondition}`,{body:await page.screenshot(),contentType:'image/png'})
 })
 
+for(const width of [390,834,1440])for(const withCondition of [false,true])test(`fold dividers separate visible header rows at ${width} (conditions=${withCondition})`,async({page})=>{
+  const api=await openSheet(page,width,withCondition)
+  const header=page.locator('.character-workspace-header')
+  const bar=page.locator('[data-sheet-navigation]').locator('xpath=..')
+  await expect(page.locator('.workspace-subheader .workspace-row-divider')).toBeVisible()
+  const separate=withCondition && !(await header.evaluate(n=>n.classList.contains('workspace-header--context-inline')))
+  await expect(page.locator('.workspace-row-divider:visible')).toHaveCount(separate?2:1)
+  for(const divider of await page.locator('.workspace-row-divider:visible').all())await expect(divider).toHaveCSS('pointer-events','none')
+  const before=await bar.boundingBox()
+  await page.locator('[data-sheet-navigation]').getByRole('button',{name:'Магия',exact:true}).click()
+  await expect(page.locator('[data-sheet-section="spells"]:visible')).toBeVisible()
+  expect((await bar.boundingBox()).height).toBe(before.height)
+  expect(api.writes).toEqual([])
+})
+
 test('resizing changes presentation while retaining the selected section and document', async ({ page }) => {
   const api = await openSheet(page, 834)
   await page.getByRole('navigation', { name: 'Раздел персонажа' }).getByRole('button', { name: 'Магия', exact: true }).click()

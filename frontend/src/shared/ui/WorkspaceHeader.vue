@@ -4,23 +4,27 @@
     <div ref="main" class="workspace-header-inner" :class="{ 'workspace-header-inner--page': page }" :style="{ maxWidth: contentWidth || (page ? 'var(--layout-content-max)' : undefined) }">
     <div ref="identity" class="workspace-header-identity"><slot name="identity" /></div>
     <div :id="navigationId" v-show="navigationPlacement === 'inline' && navigationVisible" class="workspace-header-navigation" />
-    <div v-if="$slots.context" ref="context" class="workspace-header-context"><slot name="context" /></div>
+    <div v-if="$slots.context" ref="context" class="workspace-header-context" :class="{ 'workspace-header-context--divided': rowDividers }">
+      <WorkspaceRowDivider v-if="rowDividers" class="workspace-header-context-divider" />
+      <slot name="context" />
+    </div>
     <div ref="actions" class="workspace-header-actions"><slot name="actions" /></div>
     </div>
     <slot name="between" />
     <Teleport :to="navigationTarget || '#' + navigationId" :disabled="!navigationTarget && navigationPlacement !== 'inline'" defer>
-      <WorkspaceSubheader ref="navigation" v-if="$slots.navigation" v-show="navigationVisible" :inline="!!navigationTarget || navigationPlacement === 'inline'" :fit="fitNavigation" :content-width="contentWidth || (page ? 'var(--layout-content-max)' : undefined)"><slot name="navigation" /></WorkspaceSubheader>
+      <WorkspaceSubheader ref="navigation" v-if="$slots.navigation" v-show="navigationVisible" :row-divider="rowDividers" :inline="!!navigationTarget || navigationPlacement === 'inline'" :fit="fitNavigation" :content-width="contentWidth || (page ? 'var(--layout-content-max)' : undefined)"><slot name="navigation" /></WorkspaceSubheader>
     </Teleport>
   </header>
 </template>
 <script setup>
 import { BlurBackdrop } from '@sylvieshare/share-ui'
 import WorkspaceSubheader from './WorkspaceSubheader.vue'
+import WorkspaceRowDivider from './WorkspaceRowDivider.vue'
 import { useWorkspaceContextLayout } from '@/shared/composables/useWorkspaceContextLayout'
 import { useWorkspaceScrollPosition } from '@/shared/composables/useWorkspaceScrollPosition'
 import { layoutTokens } from '@/app/design-tokens'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from "vue";
-const props = defineProps({ page: Boolean, contentWidth: String, fitNavigation: {type:Boolean,default:true}, solid: {type:Boolean,default:true}, navigationVisible:{type:Boolean,default:true}, navigationPlacement:{type:String,default:'below'}, navigationTarget:Object, navigationJoined:Boolean, scrollSource:{type:Object,default:undefined}, contextPlacement:{type:String,default:'auto'} });
+const props = defineProps({ page: Boolean, contentWidth: String, fitNavigation: {type:Boolean,default:true}, solid: {type:Boolean,default:true}, navigationVisible:{type:Boolean,default:true}, navigationPlacement:{type:String,default:'below'}, navigationTarget:Object, navigationJoined:Boolean, rowDividers:Boolean, scrollSource:{type:Object,default:undefined}, contextPlacement:{type:String,default:'auto'} });
 const navigationId = `workspace-navigation-${useId()}`
 const element = ref(null),
   emit = defineEmits(["resize"]);
@@ -157,6 +161,9 @@ onBeforeUnmount(() => observer?.disconnect());
 .workspace-header--context .workspace-header-inner {row-gap:var(--workspace-header-context-gap,var(--spacing-xs))}
 .workspace-header--context .workspace-header-actions {grid-column:-2/-1;grid-row:1}
 .workspace-header-context {grid-column:1/-1;grid-row:2;min-width:0}
+.workspace-header-context--divided {position:relative}
+.workspace-header-context-divider {top:calc(var(--workspace-header-context-gap,var(--spacing-xs)) / -2)}
+.workspace-header--context-inline .workspace-header-context-divider {display:none}
 .workspace-header--context-inline .workspace-header-inner {grid-template-columns:max-content minmax(0,1fr) auto}
 .workspace-header--context-inline .workspace-header-context {grid-column:2;grid-row:1;margin-inline-start:var(--workspace-context-inline-offset,0px)}
 .workspace-header--context-inline .workspace-header-identity {max-width:100%}

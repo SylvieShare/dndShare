@@ -2,7 +2,7 @@
   <WorkspaceHeader ref="workspace" v-bind="$attrs" class="character-workspace-header" :scroll-source="null" :context-placement="format === 'phone' ? 'row' : 'auto'"
     :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" :fit-navigation="format !== 'phone'"
     :navigation-placement="dnd && format === 'desktop' ? 'external' : 'below'"
-    :navigation-joined="dnd && format === 'desktop'"
+    :navigation-joined="dnd && format === 'desktop'" row-dividers
     :navigation-target="dnd && format === 'desktop' ? navigationTarget : undefined">
     <template #identity>
       <ActionButton variant="quiet" :icon-only="compact" :aria-label="modal ? 'Закрыть лист' : 'К списку персонажей'" @click="modal ? emit('close') : router.push('/chars')">

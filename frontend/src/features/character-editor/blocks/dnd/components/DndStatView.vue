@@ -1,17 +1,34 @@
 <template>
-  <MorphTile :embedded="mode === 'panel'" :outlined="false" padding="0" edit-label="Редактировать"
-      :title="title"
-      :show-edit="showEdit"
-      :show-edit-icon="false"
-      :edit-fade="editFade"
-      @edit="$emit('edit')"
+  <MorphTile :embedded="mode === 'panel'" :outlined="false" padding="0"
      class="stat-view" :class="{ 'stat-view--mobile': mobileVariant }">
     <template #decoration><TileAccentStrip v-if="mode !== 'panel'" :color="color" /></template>
 
-    <!-- ── Head: editable name + save chip ── -->
-      <template #title><span class="stat-title">{{ title }}</span></template>
-
-      <template #aside>
+    <div class="stat-summary" :class="{ 'stat-summary--icon': hasIcon }">
+      <ItemIcon v-if="hasIcon" class="stat-icon" :item="iconItem" :fallback-to-type="false" :size="iconSize" :color="color" />
+      <div class="stat-identity">
+        <MorphTileHeader :title="title" :show-edit="showEdit" :show-edit-icon="false"
+          :edit-fade="editFade" edit-label="Редактировать" @edit="$emit('edit')">
+          <span class="stat-title" :title="title">{{ title }}</span>
+        </MorphTileHeader>
+        <div
+          class="stat-body"
+          role="button"
+          tabindex="0"
+          :aria-label="`${title} — проверка`"
+          aria-haspopup="menu"
+          :aria-expanded="rollMenu?.kind === 'stat'"
+          @click.stop="openRollMenu($event, 'stat')"
+          @keydown.enter.prevent="openRollMenu($event, 'stat')"
+          @keydown.space.prevent="openRollMenu($event, 'stat')"
+        >
+          <StatRollValue primary stacked :compact="mobileVariant" :mode="checkMode" :source="checkModeSource" :cancelled="checkModeCancelled" :active="rollMenu?.kind === 'stat'">
+            <span class="stat-number">
+              <span class="stat-mod" :style="{ color }">{{ signed(mod) }}</span>
+              <span class="stat-raw">({{ raw }})</span>
+            </span>
+          </StatRollValue>
+        </div>
+      </div>
         <div
           class="save-chip"
           role="button"
@@ -24,7 +41,7 @@
           @keydown.enter.prevent="openRollMenu($event, 'save')"
           @keydown.space.prevent="openRollMenu($event, 'save')"
         >
-          <StatRollValue :compact="mobileVariant" :mode="saveMode" :source="saveModeSource" :cancelled="saveModeCancelled" :active="rollMenu?.kind === 'save'">
+          <StatRollValue stacked :compact="mobileVariant" :mode="saveMode" :source="saveModeSource" :cancelled="saveModeCancelled" :active="rollMenu?.kind === 'save'">
             <span class="save-number">
               <span class="save-label">Спас</span>
               <span v-if="saveUp" class="proficiency-dot" aria-hidden="true"></span>
@@ -32,27 +49,6 @@
             </span>
           </StatRollValue>
         </div>
-      </template>
-
-    <!-- ── Modifier + raw value ── -->
-    <div
-      class="stat-body"
-      role="button"
-      tabindex="0"
-      :aria-label="`${title} — проверка`"
-      aria-haspopup="menu"
-      :aria-expanded="rollMenu?.kind === 'stat'"
-      @click.stop="openRollMenu($event, 'stat')"
-      @keydown.enter.prevent="openRollMenu($event, 'stat')"
-      @keydown.space.prevent="openRollMenu($event, 'stat')"
-    >
-      <SvgIcon v-if="suggestSvg || suggestSvgId" class="stat-icon" :svg="suggestSvg" :svg-id="suggestSvgId" :color="color" />
-      <StatRollValue primary :compact="mobileVariant" :mode="checkMode" :source="checkModeSource" :cancelled="checkModeCancelled" :active="rollMenu?.kind === 'stat'">
-        <span class="stat-number">
-          <span class="stat-mod" :style="{ color }">{{ signed(mod) }}</span>
-          <span class="stat-raw">({{ raw }})</span>
-        </span>
-      </StatRollValue>
     </div>
 
     <!-- ── Skills ── -->
@@ -139,19 +135,19 @@
 </template>
 
 <script setup>
-import { MorphTile, SkeletonBlock, TileAccentStrip } from '@sylvieshare/share-ui'
-import { onBeforeUnmount, ref, shallowRef } from 'vue'
+import { MorphTile, MorphTileHeader, SkeletonBlock, TileAccentStrip } from '@sylvieshare/share-ui'
+import { computed, onBeforeUnmount, ref, shallowRef } from 'vue'
+import { layoutTokens } from '@/app/design-tokens'
 import { formatBonus as signed } from '@/shared/lib/dnd'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
-import SvgIcon from '@/shared/ui/SvgIcon'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import DndStatRollMenu from './DndStatRollMenu.vue'
 import StatRollValue from './StatRollValue.vue'
 
 const props = defineProps({
   title: { type: String, default: '' },
   color: { type: String, default: 'var(--text-muted)' },
-  suggestSvg: { type: String, default: '' },
-  suggestSvgId: { type: [Number, String], default: null },
+  iconItem: { type: Object, default: null },
   checkTotal: Number,
   proficiencyBonus: { type: Number, default: 0 },
   mod: { type: Number, default: 0 },
@@ -176,6 +172,8 @@ const props = defineProps({
 })
 const emit = defineEmits(['edit', 'roll-stat', 'roll-save', 'roll-skill'])
 const rollMenu = shallowRef(null)
+const hasIcon = computed(() => !!(props.iconItem?.iconImageUrl || props.iconItem?.svg || props.iconItem?.iconSvgId || props.iconItem?.svgId))
+const iconSize = computed(() => layoutTokens[props.mobileVariant ? 'sheet-stat-compact-icon' : 'sheet-stat-icon'])
 
 function openRollMenu(event, kind, skill) {
   hideTooltip()

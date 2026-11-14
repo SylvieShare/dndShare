@@ -22,6 +22,11 @@ API примитивов выполняется через [процесс би�
 
 ## Изменение
 
+Шапка характеристики использует SheetStatIcon (40) и SheetStatCompactIcon (48),
+модификатор — SheetStat (30) и SheetStatCompact (36). SheetStatModeDie (14)
+задаёт компактный значок режима под числом. WorkspaceRowDividerHeight (3)
+задаёт высоту декоративной складки между строками шапки.
+
 Из корня репозитория:
 
 ```bash

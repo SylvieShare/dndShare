@@ -6,13 +6,24 @@
   min-width: 0;
 }
 
-.stat-icon { width: 26px; height: 26px; align-self: center; flex-shrink: 0; }
-.stat-title { font-size: var(--type-group-size); line-height: var(--type-group-line-height); }
+.stat-summary {
+  --stat-roll-badge-space: calc(var(--layout-sheet-stat-mode-die) + var(--type-roll-mode-caption-line-height));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--spacing-small);
+  min-width: 0;
+}
+.stat-summary--icon { grid-template-columns: var(--layout-sheet-stat-icon) minmax(0, 1fr) auto; }
+.stat-identity { min-width: 0; }
+.stat-icon { width: var(--layout-sheet-stat-icon); height: var(--layout-sheet-stat-icon); margin-bottom: var(--stat-roll-badge-space); flex-shrink: 0; }
+.stat-title { display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:var(--type-sheet-save-size);line-height:var(--type-group-line-height);letter-spacing:var(--type-sheet-save-tracking); }
 
 /* ── Save chip ── */
 .save-chip {
   display: inline-flex;
   flex-shrink: 0;
+  min-width: calc(var(--layout-sheet-value-width) + var(--spacing-medium));
   border: 0;
   padding: 0;
   background: transparent;
@@ -26,17 +37,17 @@
 .save-number {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 3px;
   border: 0;
   border-radius: 8px;
-  padding: 3px 8px 3px 6px;
+  padding: 3px var(--spacing-xs);
   user-select: none;
   cursor: pointer;
   transition: background-color 0.15s;
   flex-shrink: 0;
   box-sizing: border-box;
-  min-height: var(--layout-sheet-value-height);
-  min-width: calc(var(--layout-sheet-value-width) + 12px);
+  min-height: var(--layout-touch-min);
+  min-width: calc(var(--layout-sheet-value-width) + var(--spacing-medium));
   justify-content: center;
 }
 
@@ -50,7 +61,7 @@
 /* ── Modifier ── */
 .stat-body {
   display: flex;
-  margin-top: var(--spacing-small);
+  min-width: 0;
   align-items: center;
   gap: 7px;
   cursor: pointer;
@@ -70,7 +81,7 @@
   letter-spacing: var(--type-sheet-stat-tracking);
 }
 
-.stat-raw { color: var(--text-2); font-size: 15px; font-weight: 500; }
+.stat-raw { color: var(--text-2); font-size: var(--type-group-size); font-weight: 500; }
 
 /* ── Skills ── */
 .skills { display: flex; flex-direction: column; gap: 1px; margin-top: var(--spacing-xs); }
@@ -139,9 +150,10 @@
 .skill-tooltip-total { margin-top: 2px; padding-top: 6px; border-top: 1px solid var(--border); color: var(--text-1); font-weight: 700; }
 
 /* ── Mobile variant ── */
-.stat-view--mobile .skill-chip-val, .stat-view--mobile .save-number { min-height: var(--layout-sheet-value-compact-height); }
+.stat-view--mobile .stat-title { font-size: var(--type-group-size); }
+.stat-view--mobile .skill-chip-val { min-height: var(--layout-sheet-value-compact-height); }
 .stat-view--mobile .skill-chip-val { min-width: var(--layout-sheet-value-compact-width); }
-.stat-view--mobile .save-number { min-width: calc(var(--layout-sheet-value-compact-width) + 12px); }
+.stat-view--mobile .save-chip, .stat-view--mobile .save-number { min-width: calc(var(--layout-sheet-value-compact-width) + var(--spacing-medium)); }
 .stat-view--mobile .skill-item { min-height: 32px; border-radius: 10px; gap: 8px; }
 .stat-view--mobile .skill-name { font-size: 15px; }
 .stat-view--mobile .skill-chip-val { padding: 4px 10px 5px; font-size: 16px; border-radius: 9px; }
@@ -149,8 +161,9 @@
   font-size: var(--type-sheet-save-compact-size);
   line-height: var(--type-sheet-save-compact-line-height);
 }
-.stat-view--mobile .save-number {padding:5px 8px 5px 6px}
+.stat-view--mobile .save-number {padding:5px var(--spacing-xs)}
 .stat-view--mobile .stat-mod { font-size: var(--type-sheet-stat-compact-size); letter-spacing: var(--type-sheet-stat-compact-tracking); }
-.stat-view--mobile .stat-raw { font-size: 18px; }
-.stat-view--mobile .stat-icon { width: 32px; height: 32px; }
+.stat-view--mobile .stat-raw { font-size: var(--type-sheet-save-compact-size); }
+.stat-view--mobile .stat-summary--icon { grid-template-columns: var(--layout-sheet-stat-compact-icon) minmax(0, 1fr) auto; }
+.stat-view--mobile .stat-icon { width: var(--layout-sheet-stat-compact-icon); height: var(--layout-sheet-stat-compact-icon); }
 .stat-view--mobile .skills { gap: 2px; }

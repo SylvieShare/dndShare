@@ -1,10 +1,12 @@
 <template>
   <div class="workspace-subheader" :class="{ 'workspace-subheader--inline': inline }">
+    <WorkspaceRowDivider v-if="rowDivider" />
     <div class="workspace-subheader-inner" :class="{ 'workspace-subheader-inner--fit': fit }" :style="{ '--workspace-subheader-max-width':contentWidth || '100%' }"><slot /></div>
   </div>
 </template>
 <script setup>
-defineProps({ contentWidth: String, fit: { type: Boolean, default: true }, inline:Boolean })
+import WorkspaceRowDivider from './WorkspaceRowDivider.vue'
+defineProps({ contentWidth: String, fit: { type: Boolean, default: true }, inline:Boolean, rowDivider:Boolean })
 </script>
 <style scoped>
 .workspace-subheader { position:relative;z-index:1;flex:none;min-width:0;padding:0 var(--workspace-subheader-inset,var(--spacing-page));background:var(--subheader); }
