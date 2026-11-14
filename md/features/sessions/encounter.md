@@ -334,6 +334,7 @@ mechanics show a skeleton. Passive skill math is shared with the sheet's menu ta
 
 Active character states below the summary use `DndStatusOverviewView(header)`:
 56px icons, name, duration and polarity-colored parchment, with horizontal overflow.
+The scrollbar is hidden; scrolling, touch gestures and keyboard focus remain available.
 They use the same handbook tooltip and action menu as the sheet: viewing, duration,
 levels, removal and effect-specific mechanics. The menu follows its source during
 inner-row scrolling and closes when the source leaves that row's viewport.

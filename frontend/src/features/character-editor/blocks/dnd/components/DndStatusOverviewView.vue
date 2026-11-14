@@ -167,8 +167,9 @@ function monogram(value) {
   align-items: center;
   gap: 13px;
   overflow-x: auto;
-  scrollbar-width: thin;
+  scrollbar-width: none;
 }
+.dsov-row::-webkit-scrollbar { display: none; }
 .dsov-effect {
   --status-tone: var(--info);
   --status-background: color-mix(in srgb, var(--status-tone) 24%, var(--surface));
