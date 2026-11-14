@@ -1,6 +1,7 @@
 <template>
-  <span v-if="mode !== 'normal' || cancelled" class="roll-badge" :class="[`roll-badge--${cancelled ? 'cancelled' : mode}`, { 'roll-badge--large': variant === 'large', 'roll-badge--embedded': embedded }]" :title="title" role="img" :aria-label="title" :style="{ '--roll-mode-color': color, '--roll-mode-die-size': `${dieSize}px` }">
-    <template v-if="cancelled">ОБЫЧ.</template>
+  <span v-if="mode !== 'normal' || cancelled" class="roll-badge" :class="[`roll-badge--${cancelled ? 'cancelled' : mode}`, { 'roll-badge--large': variant === 'large', 'roll-badge--marker': variant === 'marker', 'roll-badge--embedded': embedded }]" :title="title" role="img" :aria-label="title" :style="{ '--roll-mode-color': color, '--roll-mode-die-size': `${dieSize}px` }">
+    <template v-if="cancelled">{{ variant === 'marker' ? '=' : 'ОБЫЧ.' }}</template>
+    <img v-else-if="variant === 'marker'" class="roll-badge__image" :src="markerImage" :width="layoutTokens['roll-mode-marker']" :height="layoutTokens['roll-mode-marker']" alt="" />
     <template v-else>
       <span class="roll-badge__dice" aria-hidden="true">
         <span v-for="value in [1, 20]" :key="value" class="roll-badge__die" :class="{ 'roll-badge__die--discarded': value === (mode === 'advantage' ? 1 : 20) }" :data-roll-value="value">
@@ -17,18 +18,21 @@
 import { computed } from 'vue'
 import { layoutTokens } from '@/app/design-tokens'
 import SystemDie from '@/shared/ui/SystemDie.vue'
+import advantageMarker from '@/assets/ui/roll-mode-advantage.webp'
+import disadvantageMarker from '@/assets/ui/roll-mode-disadvantage.webp'
 
 const props = defineProps({
   mode: { type: String, default: 'normal' },
   source: { type: String, default: '' },
   cancelled: { type: Boolean, default: false },
-  variant: { type: String, default: 'compact', validator: value => ['compact', 'large'].includes(value) },
+  variant: { type: String, default: 'compact', validator: value => ['compact', 'large', 'marker'].includes(value) },
   showCaption: { type: Boolean, default: true },
   embedded: { type: Boolean, default: false },
 })
 const title = computed(() => [props.cancelled ? 'Обычный бросок' : props.mode === 'advantage' ? 'Преимущество' : 'Помеха', props.source].filter(Boolean).join(' · '))
 const color = computed(() => props.cancelled ? 'var(--text-muted)' : props.mode === 'advantage' ? 'var(--success)' : 'var(--danger)')
 const dieSize = computed(() => layoutTokens[props.variant === 'large' ? 'roll-mode-menu-die' : 'roll-mode-badge-die'])
+const markerImage = computed(() => props.mode === 'advantage' ? advantageMarker : disadvantageMarker)
 </script>
 
 <style scoped>
@@ -57,4 +61,7 @@ const dieSize = computed(() => layoutTokens[props.variant === 'large' ? 'roll-mo
 .roll-badge__strike {position:absolute;left:8%;right:8%;top:50%;height:1.5px;border-radius:var(--radius-xs);background:currentColor;box-shadow:0 0 0 .5px var(--surface);transform:rotate(-45deg);pointer-events:none}
 .roll-badge--cancelled {padding:1px 5px;border-radius:var(--radius-badge);background:var(--surface-raised)}
 .roll-badge--embedded:not(.roll-badge--cancelled) {padding:0;background:transparent}
+.roll-badge--marker {width:var(--roll-mode-marker-size,var(--layout-roll-mode-marker));height:var(--roll-mode-marker-size,var(--layout-roll-mode-marker));justify-content:center;padding:0;background:transparent}
+.roll-badge--marker.roll-badge--cancelled {font-size:var(--type-group-size);line-height:1;padding:0;background:transparent}
+.roll-badge__image {display:block;width:100%;height:100%;object-fit:contain}
 </style>

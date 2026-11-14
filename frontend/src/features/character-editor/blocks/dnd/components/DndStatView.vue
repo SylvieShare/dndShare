@@ -3,7 +3,7 @@
      class="stat-view" :class="{ 'stat-view--mobile': mobileVariant }">
     <template #decoration><TileAccentStrip v-if="mode !== 'panel'" :color="color" /></template>
 
-    <div class="stat-summary" :class="{ 'stat-summary--icon': hasIcon, 'stat-summary--mode': hasSummaryMode }">
+    <div class="stat-summary" :class="{ 'stat-summary--icon': hasIcon }">
       <ItemIcon v-if="hasIcon" class="stat-icon" :item="iconItem" :fallback-to-type="false" :size="iconSize" :color="color" />
       <div class="stat-identity">
         <MorphTileHeader :title="title" :show-edit="showEdit" :show-edit-icon="false"
@@ -21,7 +21,7 @@
           @keydown.enter.prevent="openRollMenu($event, 'stat')"
           @keydown.space.prevent="openRollMenu($event, 'stat')"
         >
-          <StatRollValue primary stacked :compact="mobileVariant" :mode="checkMode" :source="checkModeSource" :cancelled="checkModeCancelled" :active="rollMenu?.kind === 'stat'">
+          <StatRollValue primary :compact="mobileVariant" :mode="checkMode" :source="checkModeSource" :cancelled="checkModeCancelled" :active="rollMenu?.kind === 'stat'">
             <span class="stat-number">
               <span class="stat-mod" :style="{ color }">{{ signed(mod) }}</span>
               <span class="stat-raw">({{ raw }})</span>
@@ -41,7 +41,7 @@
           @keydown.enter.prevent="openRollMenu($event, 'save')"
           @keydown.space.prevent="openRollMenu($event, 'save')"
         >
-          <StatRollValue stacked :compact="mobileVariant" :mode="saveMode" :source="saveModeSource" :cancelled="saveModeCancelled" :active="rollMenu?.kind === 'save'">
+          <StatRollValue :compact="mobileVariant" :mode="saveMode" :source="saveModeSource" :cancelled="saveModeCancelled" :active="rollMenu?.kind === 'save'">
             <span class="save-number">
               <span class="save-label">СПАС</span>
               <span class="save-divider" aria-hidden="true">|</span>
@@ -173,7 +173,6 @@ const props = defineProps({
 })
 const emit = defineEmits(['edit', 'roll-stat', 'roll-save', 'roll-skill'])
 const rollMenu = shallowRef(null)
-const hasSummaryMode = computed(() => props.checkModeCancelled || props.saveModeCancelled || [props.checkMode, props.saveMode].some(mode => ['advantage', 'disadvantage'].includes(mode)))
 const hasIcon = computed(() => !!(props.iconItem?.iconImageUrl || props.iconItem?.svg || props.iconItem?.iconSvgId || props.iconItem?.svgId))
 const iconSize = computed(() => layoutTokens[props.mobileVariant ? 'sheet-stat-compact-icon' : 'sheet-stat-icon'])
 
