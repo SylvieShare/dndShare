@@ -37,7 +37,8 @@ and matching store files.
 Ширина ограничена MapSidebar и оставляет минимум SessionSidebarPeek (24) px
 видимого workspace. Карта и мир сохраняют свои canvas и инструменты фокуса.
 Сверху под шапкой и между полосой иконок и содержимым проходит линия в 1 px:
-AccentSoft 18% смешан с Surface, без яркой рамки вокруг всего workspace.
+нейтральный Border (#323238), согласованный с нижним разделителем общей шапки.
+Полоса иконок использует Background, панель — Subheader, плитки — Surface.
 Панель имеет собственную прокрутку; скрытое содержимое inert.
 
 Игроки используют `SessionPlayerTile` на общем `CharacterSummaryTile` с листом:

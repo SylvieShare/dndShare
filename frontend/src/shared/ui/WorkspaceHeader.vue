@@ -155,9 +155,10 @@ onBeforeUnmount(() => observer?.disconnect());
 }
 @media (prefers-reduced-motion: reduce) { .workspace-header-inner { transition: none; } }
 .workspace-header--solid {background:var(--workspace-header-background, var(--subheader));border:0;box-shadow:none}
+.workspace-header--solid::before {content:'';position:absolute;z-index:3;top:100%;left:0;right:0;height:var(--layout-border);background:var(--border);pointer-events:none;}
 .workspace-header::after {content:'';position:absolute;z-index:2;top:100%;left:0;right:0;height:var(--layout-workspace-header-shadow-height);background:linear-gradient(to bottom,color-mix(in srgb,var(--scrim) 28%,transparent),transparent);opacity:var(--workspace-scroll-depth,0);pointer-events:none;transition:opacity var(--motion-feedback);}
 .workspace-header:not([data-workspace-scrolled])::after {visibility:hidden;opacity:0;transition:none;}
-.workspace-header--navigation-joined::after {clip-path:polygon(0 0,0 100%,calc(var(--workspace-navigation-left) - var(--radius-workspace-join)) 100%,calc(var(--workspace-navigation-left) - var(--radius-workspace-join)) 0,calc(var(--workspace-navigation-right) + var(--radius-workspace-join)) 0,calc(var(--workspace-navigation-right) + var(--radius-workspace-join)) 100%,100% 100%,100% 0);}
+.workspace-header--navigation-joined::before,.workspace-header--navigation-joined::after {clip-path:polygon(0 0,0 100%,calc(var(--workspace-navigation-left) - var(--radius-workspace-join)) 100%,calc(var(--workspace-navigation-left) - var(--radius-workspace-join)) 0,calc(var(--workspace-navigation-right) + var(--radius-workspace-join)) 0,calc(var(--workspace-navigation-right) + var(--radius-workspace-join)) 100%,100% 100%,100% 0);}
 .workspace-header--context .workspace-header-identity {grid-column:1;grid-row:1}
 .workspace-header--context .workspace-header-inner {row-gap:var(--workspace-header-context-gap,var(--spacing-xs))}
 .workspace-header--context .workspace-header-actions {grid-column:-2/-1;grid-row:1}

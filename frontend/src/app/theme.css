@@ -4,12 +4,8 @@
   --action-menu-trigger-press-scale: 1;
   --action-menu-item-press-scale: 1;
   --action-menu-icon-press-scale: 0.96;
-  /* Frameless groups need distinguishable surfaces in both web and Compose. */
-  --surface-raised: color-mix(in srgb, var(--surface) 93%, var(--text-1));
-  --surface-active: color-mix(in srgb, var(--surface) 86%, var(--text-1));
-  --popover-bg: var(--surface-raised);
+  /* Product surfaces, dividers and text come from the generated neutral palette. */
   --popover-border-width: 1px;
-  --text-muted: #a0a0ad;
   /* Long-form descriptions use an editorial face distinct from UI chrome. */
   --font-prose: "Literata", Georgia, "Times New Roman", serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
@@ -57,11 +53,11 @@ body .rc.dnd-rich-content table {
   max-width: 100%;
   margin: 14px 0;
   overflow-x: auto;
-  border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border));
+  border: 1px solid var(--border-strong);
   border-collapse: separate;
   border-spacing: 0;
   border-radius: var(--r-md);
-  background: color-mix(in srgb, var(--accent) 3%, var(--surface));
+  background: var(--surface);
   font-family: var(--font-prose);
   font-size: .94em;
 }
@@ -82,7 +78,7 @@ body .rc.dnd-rich-content td:last-child { border-right: 0; }
 body .rc.dnd-rich-content tbody tr:last-child td { border-bottom: 0; }
 
 body .rc.dnd-rich-content th {
-  background: color-mix(in srgb, var(--accent) 11%, var(--surface-raised));
+  background: var(--surface-raised);
   color: var(--text-1);
   font-family: var(--font-ui);
   font-size: .82em;

@@ -1,9 +1,10 @@
 # CSS variables
 
-The shared application palette lives in `@sylvieshare/share-ui/styles.css`.
+Shared palette defaults live in `@sylvieshare/share-ui/styles.css`; the complete
+DnD Share neutral dark palette is authoritative in `design/tokens.json`.
 Product dimensions, responsive thresholds, typography roles and the exact purple
 accent shades come from [design/tokens.json](../design/tokens.json), generated into
-`frontend/src/app/design-tokens.css`/JS and Android Compose tokens.
+`frontend/src/app/design-tokens.css`/JS, shared by web and Android WebView.
 The product `theme.css` imports generated CSS, including for isolated UI fixtures.
 `frontend/src/app/theme.css` contains domain colors, product font stacks and the
 player-handout paper palettes. Local `fonts.css` supplies variable WOFF2 from the
@@ -27,29 +28,30 @@ The dark UI uses one application canvas plus a compact surface scale. Do not cre
 
 | Token | Value | Purpose |
 | --- | --- | --- |
-| `--bg` | `#17171b` | Background of every form, wizard and editor, plus global header chrome. |
+| `--bg` | `#1a1a1e` | Application canvas, forms and the main navigation rail. |
 | `--app-canvas-bg` | `var(--bg)` | Shared routed-page and session-canvas background. |
-| `--app-canvas-dot-color` | 42% of `--border-strong` | Shared color for the global and session-canvas dot grid. |
+| `--app-canvas-dot-color` | transparent | Ordinary pages have no dot grid. |
 | `--app-canvas-dot-size` | `24px` | Shared static dot-grid step; session zoom scales the same base step. |
-| `--app-canvas-pattern` | 1px radial dot | Reusable global page backdrop pattern. |
-| `--surface` | `#27272e` | Cards, tiles and unified content panels on `--bg`. |
-| `--subheader` | `#35313f` | Navigation capsules, visually separate from base cards. |
-| `--surface-raised` | `#34343e` | Inputs, selects, toggles and quiet buttons. This is the default control background on `--bg`. |
-| `--surface-active` | `#42424f` | Hovered, pressed and selected neutral controls. |
-| `--popover-bg` | `#202024` | Dropdowns, tooltips and detached popovers. |
+| `--app-canvas-pattern` | none | Flat application canvas. |
+| `--app-story-canvas-pattern` | 1px radial dot | Explicit chapter/story canvas; its dot color derives from `--border-strong`. |
+| `--surface` | `#26262b` | Cards, tiles and unified content panels on `--bg`. |
+| `--subheader` | `#1e1e22` | Shared headers, local tab bars and workspace side panels. |
+| `--surface-raised` | `#303035` | Inputs, selects, toggles and quiet buttons. This is the default control background on `--bg`. |
+| `--surface-active` | `#3b3b42` | Hovered, pressed and selected neutral controls. |
+| `--popover-bg` | `#2b2b30` | Dropdowns, tooltips and detached popovers. |
 | `--scrim` | black at 62% | Modal/overlay dimming. |
 
-Canvas rule: every routed screen inherits the shared `--app-canvas-bg` plus
-`--app-canvas-pattern` backdrop from `App.vue`; print mode explicitly removes
-the pattern. Full-page features stay transparent unless their working canvas
-must deliberately hide the global grid: the full character-creation wizard uses opaque `--bg`; the handbook overview
-stays transparent and handbook list rows use `--surface`. The
-pannable session chapter grid may reposition and scale the pattern, but must use
-the same background and dot-color tokens. The global header and regular forms,
-editors and modal bodies use `--bg`; toolbar chrome inside a `--bg` editor uses
-`--surface`. The session command bar and desktop sidebar use the same surface with a
-`--border-strong` divider and a short shadow. The sidebar opts into
-`AppSidebar.elevated` throughout the application. A standard modal header uses
+Canvas rule: routed screens inherit the flat `--app-canvas-bg`; the session's
+pannable story/chapter view explicitly enables the shared story dot pattern.
+Print mode removes it. Full-page features stay transparent unless their working
+canvas requires an opaque background: the character-creation wizard uses `--bg`,
+while handbook list rows use `--surface`. The global header and session command
+bar use `--subheader`; forms, editors and modal bodies use `--bg`. Workspace
+panels use Subheader, navigation rails use Background, and cards use Surface.
+The ordinary desktop sidebar uses the standard `AppSidebar` surface.
+Shared headers have one persistent 1px neutral bottom divider and keep their
+existing scroll-dependent shadow. Lines use opaque neutral Border (#323238)
+and BorderStrong (#45454d); purple is reserved for accent states. A standard modal header uses
 `--surface`, while its body and footer use `--bg`, matching the contrast model of
 character-sheet morph editors. Fields are `var(--surface-raised)`, field borders
 are `var(--border-strong)`, and focus is `var(--accent)`. `AppModal`/`AppModalFrame`
@@ -61,9 +63,9 @@ already supply this modal canvas; do not wrap their content in an additional gre
 | --- | --- |
 | `--border` | Quiet dividers and card outlines. |
 | `--border-strong` | Field, modal and popover borders. |
-| `--text-1` | Primary text. |
-| `--text-2` | Secondary text. |
-| `--text-muted` | Labels, placeholders, disabled/decorative text. |
+| `--text-1` | Primary text (#ececef). |
+| `--text-2` | Secondary text (#bdbdc6). |
+| `--text-muted` | Labels, placeholders, disabled/decorative text (#a8a8b2). |
 | `--text-on-accent` | Text/icons on filled accent and semantic buttons. |
 
 Three text levels are enough. Do not reintroduce a separate faint text color; non-essential text uses `--text-muted`.

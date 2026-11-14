@@ -46,7 +46,7 @@ const { isReady } = usePreparedTabs(tabs, computed(() => tabs.value.findIndex(ta
 .dnd-desktop-stats, .dnd-desktop-utilities { padding: 20px; }
 .dnd-desktop-main { align-self:stretch; flex: 1 1 calc(var(--layout-sheet-max) - var(--layout-sheet-stats-column) - var(--layout-sheet-utilities-column) - 30px); min-width: 0; display: flex; flex-direction: column; gap: 11px; }
 .dnd-desktop-navigation { position:sticky;top:0;z-index:12;min-width:0;filter:drop-shadow(0 3px 5px color-mix(in srgb,var(--scrim) 24%,transparent)); }
-.dnd-desktop-navigation :deep(> .workspace-subheader) { border-radius:0 0 var(--radius-workspace-bottom) var(--radius-workspace-bottom);overflow:hidden; }
+.dnd-desktop-navigation :deep(> .workspace-subheader) { border-radius:0 0 var(--radius-workspace-bottom) var(--radius-workspace-bottom);overflow:hidden;box-shadow:inset 0 -1px 0 var(--border); }
 .dnd-desktop-navigation::before,.dnd-desktop-navigation::after { content:'';position:absolute;top:0;width:var(--radius-workspace-join);height:var(--radius-workspace-join);pointer-events:none; }
 .dnd-desktop-navigation::before { right:100%;background:radial-gradient(circle at 0 100%,transparent calc(var(--radius-workspace-join) - .5px),var(--subheader) var(--radius-workspace-join)); }
 .dnd-desktop-navigation::after { left:100%;background:radial-gradient(circle at 100% 100%,transparent calc(var(--radius-workspace-join) - .5px),var(--subheader) var(--radius-workspace-join)); }

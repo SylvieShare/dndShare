@@ -8,7 +8,7 @@
   inset-inline: 0;
   top: 0;
   height: var(--layout-workspace-row-divider-height);
-  background: color-mix(in srgb, var(--accent-soft) 65%, var(--text-muted));
+  background: var(--border-strong);
   opacity: .55;
   pointer-events: none;
   -webkit-mask-image: linear-gradient(to right, transparent, var(--text-1) 9%, var(--text-1) 91%, transparent);

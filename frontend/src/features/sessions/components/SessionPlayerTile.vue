@@ -21,8 +21,8 @@ const props = defineProps({ participant: Object, name: String, avatarUrl: String
 const { stats, loading, error } = useParticipantDefenses(() => props.participant, () => props.showStats)
 </script>
 <style scoped>
-.session-player-tile.base-tile {padding:var(--spacing-small) var(--spacing-xs);min-width:0;width:100%;box-sizing:border-box;--tile-surface:var(--bg);background:var(--tile-surface);box-shadow:inset 3px 0 0 var(--player-color);overflow:hidden}
-.session-player-tile--current.base-tile {--tile-surface:color-mix(in srgb,var(--accent) 12%,var(--bg))}
+.session-player-tile.base-tile {padding:var(--spacing-small) var(--spacing-xs);min-width:0;width:100%;box-sizing:border-box;--tile-surface:var(--surface);background:var(--tile-surface);box-shadow:inset 3px 0 0 var(--player-color);overflow:hidden}
+.session-player-tile--current.base-tile {--tile-surface:color-mix(in srgb,var(--accent) 12%,var(--surface))}
 .session-player-tile--compact.base-tile {padding:calc(var(--spacing-medium) / 2);width:var(--layout-touch-min);height:var(--layout-touch-min)}
 .p-combat-controls {display:flex;align-items:center;justify-content:center;width:var(--participant-selection-width,36px);flex:none;margin-left:auto}
 .p-statuses-area {margin-top:var(--spacing-small);min-width:0;--status-scroll-inset-start:0px;--status-scroll-inset-end:0px}

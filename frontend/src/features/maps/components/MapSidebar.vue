@@ -216,7 +216,7 @@ defineExpose({
 </script>
 <style scoped>
 .map-sidebar {
-  --workspace-sidebar-border: color-mix(in srgb, var(--accent-soft) 18%, var(--surface));
+  --workspace-sidebar-border: var(--border);
   box-sizing: border-box;
   border-top: var(--layout-border) solid var(--workspace-sidebar-border);
   --map-sidebar-width: min(var(--layout-map-sidebar), calc(100vw - var(--map-sidebar-compact-peek,var(--layout-map-compact-peek))));
@@ -224,7 +224,7 @@ defineExpose({
   flex: none;
   min-height: 0;
   display: flex;
-  background: var(--surface);
+  background: var(--subheader);
   overflow: clip;
   transition: width 260ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
@@ -232,7 +232,7 @@ defineExpose({
   box-shadow: inset -1px 0 0 var(--workspace-sidebar-border);
   z-index: 1;
   height: 100%;
-  background: var(--surface);
+  background: var(--bg);
 }
 .map-sidebar--overlay {
   position: absolute;
@@ -264,7 +264,7 @@ defineExpose({
   visibility: hidden;
 }
 .map-sidebar-panel {
-  background: var(--surface);
+  background: var(--subheader);
   flex: none;
   width: var(--map-sidebar-panel-width, calc(var(--map-sidebar-width) - var(--layout-map-rail)));
   min-width: 0;

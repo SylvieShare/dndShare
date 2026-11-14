@@ -7,7 +7,6 @@
     :show-toggle="mode === 'desktop'"
     :storage-key="mode === 'desktop' ? 'dndshare-desktop-sidebar-expanded' : ''"
     :default-expanded="true"
-    elevated
     :mobile-breakpoint="0"
     aria-label="Основная навигация"
     expand-label="Раскрыть панель"
