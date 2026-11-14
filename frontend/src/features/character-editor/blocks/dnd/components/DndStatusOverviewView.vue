@@ -125,7 +125,7 @@ function monogram(value) {
 .dsov.dsov--header {padding:0;gap:var(--spacing-small)}
 .dsov--header .dsov-row {gap:var(--spacing-small);flex-wrap:nowrap;max-width:100%;box-sizing:border-box;padding-block:var(--spacing-xs);padding-inline:var(--status-scroll-inset-start,0px) var(--status-scroll-inset-end,0px);margin-block:calc(-1 * var(--spacing-xs));overscroll-behavior-x:contain}
 .dsov--header .dsov-row > * {flex:none}
-.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-status-icon) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:var(--layout-sheet-header-status-icon);padding:0 var(--spacing-medium) 0 0;border-radius:var(--radius-tile)}
+.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-status-icon) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:var(--layout-sheet-header-status-icon);padding:0 var(--spacing-large);border-radius:var(--radius-tile)}
 .dsov--header .dsov-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon);min-width:var(--layout-sheet-header-status-icon)}
 .dsov--header .dsov-item-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon)}
 .dsov--header .dsov-icon :deep(img), .dsov--header .dsov-icon :deep(svg) {width:100%;height:100%}
@@ -161,7 +161,7 @@ function monogram(value) {
   align-items: center;
   gap: 0;
   flex: 0 0 300px;
-  padding: 0;
+  padding: 0 var(--spacing-large);
   border: 0;
   border-radius: var(--radius-row);
   background: transparent;
@@ -213,7 +213,7 @@ function monogram(value) {
 .dsov-item-icon { width: 64px; height: 64px; }
 .dsov--icons-only { padding: 0; gap: 4px; }
 .dsov--icons-only .dsov-row { flex: 1; gap: 4px; height: calc(var(--status-icon-size) + 4px); overflow-y: hidden; }
-.dsov--icons-only .dsov-effect { width: var(--status-icon-size); height: var(--status-icon-size); flex-basis: var(--status-icon-size); grid-template-columns: var(--status-icon-size); }
+.dsov--icons-only .dsov-effect { width: var(--status-icon-size); height: var(--status-icon-size); flex-basis: var(--status-icon-size); grid-template-columns: var(--status-icon-size); padding: 0; }
 .dsov--icons-only .dsov-icon, .dsov--icons-only .dsov-item-icon { width: var(--status-icon-size); height: var(--status-icon-size); }
 .dsov-item-icon :deep(img),
 .dsov-item-icon :deep(svg) { width: 100%; height: 100%; object-fit: cover; }
