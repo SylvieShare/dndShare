@@ -1,0 +1,486 @@
+{
+  "schema": 1,
+  "generatedFrom": "frontend/tests/tutorials/fixtures/weapon-sheet.js",
+  "responses": {
+    "/api/user/checkAuth": {
+      "auth": true,
+      "user": {
+        "id": 1,
+        "login": "tester",
+        "roles": [],
+        "hasCharacters": true,
+        "gameContext": {
+          "sourceVersionId": 1
+        }
+      }
+    },
+    "/api/char/test": {
+      "templateName": "DND5",
+      "userId": 1,
+      "sourceVersionId": 1,
+      "version": 1,
+      "data": {
+        "values": {
+          "name": "Лира",
+          "char_name": "Алекс",
+          "hp": {
+            "current": 18,
+            "max": {
+              "base": 23,
+              "bonuses": []
+            },
+            "hitDice": []
+          },
+          "lvl": {
+            "level": 3,
+            "exp": 700
+          },
+          "prof_bonus": {
+            "v": 2,
+            "auto": true
+          },
+          "speed": {
+            "base": 30,
+            "bonuses": []
+          },
+          "armor": {
+            "bonuses": []
+          },
+          "initiative": {
+            "base": 0,
+            "use_dex": true,
+            "bonuses": []
+          },
+          "items": {
+            "equipped": [
+              {
+                "uid": "potion",
+                "item_id": 202,
+                "count": 1
+              }
+            ],
+            "sections": []
+          },
+          "states": [],
+          "exhaustion": {
+            "level": 0
+          },
+          "clan": "Тореадор",
+          "strength": 3,
+          "dexterity": 2,
+          "stamina": 2,
+          "STR": {
+            "value": {
+              "base": 12,
+              "bonuses": []
+            },
+            "skills": {
+              "100": {
+                "up": 0,
+                "override_title": "Навык 1.1"
+              }
+            }
+          },
+          "DEX": {
+            "value": {
+              "base": 13,
+              "bonuses": []
+            },
+            "skills": {
+              "110": {
+                "up": 0,
+                "override_title": "Навык 2.1"
+              },
+              "111": {
+                "up": 0,
+                "override_title": "Навык 2.2"
+              },
+              "112": {
+                "up": 0,
+                "override_title": "Навык 2.3"
+              }
+            }
+          },
+          "CON": {
+            "value": {
+              "base": 14,
+              "bonuses": []
+            },
+            "skills": {}
+          },
+          "INT": {
+            "value": {
+              "base": 15,
+              "bonuses": []
+            },
+            "skills": {
+              "130": {
+                "up": 0,
+                "override_title": "Навык 4.1"
+              },
+              "131": {
+                "up": 0,
+                "override_title": "Навык 4.2"
+              },
+              "132": {
+                "up": 0,
+                "override_title": "Навык 4.3"
+              },
+              "133": {
+                "up": 0,
+                "override_title": "Навык 4.4"
+              },
+              "134": {
+                "up": 0,
+                "override_title": "Навык 4.5"
+              }
+            }
+          },
+          "WIS": {
+            "value": {
+              "base": 16,
+              "bonuses": []
+            },
+            "skills": {
+              "140": {
+                "up": 0,
+                "override_title": "Навык 5.1"
+              },
+              "141": {
+                "up": 0,
+                "override_title": "Навык 5.2"
+              },
+              "142": {
+                "up": 0,
+                "override_title": "Навык 5.3"
+              },
+              "143": {
+                "up": 0,
+                "override_title": "Навык 5.4"
+              },
+              "144": {
+                "up": 0,
+                "override_title": "Навык 5.5"
+              }
+            }
+          },
+          "CHA": {
+            "value": {
+              "base": 17,
+              "bonuses": []
+            },
+            "skills": {
+              "150": {
+                "up": 0,
+                "override_title": "Навык 6.1"
+              },
+              "151": {
+                "up": 0,
+                "override_title": "Навык 6.2"
+              },
+              "152": {
+                "up": 0,
+                "override_title": "Навык 6.3"
+              },
+              "153": {
+                "up": 0,
+                "override_title": "Навык 6.4"
+              }
+            }
+          },
+          "weapon": [
+            {
+              "uid": "native-spear",
+              "item_id": 201,
+              "desc": ""
+            },
+            {
+              "uid": "native-sword",
+              "item_id": 211,
+              "desc": "<p>Unequal height fixture.</p><p>Second detail line.</p>"
+            },
+            {
+              "uid": "native-bow",
+              "item_id": 212,
+              "desc": ""
+            }
+          ],
+          "classes": [
+            {
+              "id": 203,
+              "name": "Воин",
+              "level": 3
+            }
+          ],
+          "abilities_class": [
+            {
+              "id": 205
+            }
+          ],
+          "spells": {
+            "tabs": [
+              {
+                "key": "book",
+                "name": "Книга заклинаний",
+                "mode": "known",
+                "spells": [
+                  {
+                    "key": "spell",
+                    "id": 206
+                  }
+                ]
+              }
+            ],
+            "grants": []
+          }
+        },
+        "var": {
+          "stats": {
+            "1": 1,
+            "2": 1,
+            "3": 2,
+            "4": 2,
+            "5": 3,
+            "6": 3
+          }
+        }
+      }
+    },
+    "/api/account/tutorials": {
+      "tutorials": [
+        {
+          "flowId": "character",
+          "sourceKey": "edition:1",
+          "device": "mobile",
+          "status": "completed",
+          "revision": 58
+        },
+        {
+          "flowId": "character",
+          "sourceKey": "edition:1",
+          "device": "desktop",
+          "status": "completed",
+          "revision": 58
+        }
+      ]
+    },
+    "/api/sources": {
+      "sources": [
+        {
+          "id": 1,
+          "name": "DND5e",
+          "versions": [
+            {
+              "id": 1,
+              "version": "2014"
+            }
+          ]
+        }
+      ]
+    },
+    "/api/suggest/batch": {
+      "items": {
+        "12": [
+          {
+            "id": 1,
+            "typeId": 12,
+            "value": "Колющий"
+          }
+        ],
+        "14": [],
+        "15": [],
+        "16": [
+          {
+            "id": 1,
+            "typeId": 16,
+            "value": "Сила"
+          },
+          {
+            "id": 2,
+            "typeId": 16,
+            "value": "Ловкость"
+          },
+          {
+            "id": 3,
+            "typeId": 16,
+            "value": "Телосложение"
+          },
+          {
+            "id": 4,
+            "typeId": 16,
+            "value": "Интеллект"
+          },
+          {
+            "id": 5,
+            "typeId": 16,
+            "value": "Мудрость"
+          },
+          {
+            "id": 6,
+            "typeId": 16,
+            "value": "Харизма"
+          }
+        ]
+      }
+    },
+    "/api/handbook/sync": {
+      "protocol": 1,
+      "entries": [],
+      "hasMore": false,
+      "cursor": "empty",
+      "visibleIds": [],
+      "metadata": {
+        "types": [],
+        "suggests": {
+          "12": [
+            {
+              "id": 1,
+              "typeId": 12,
+              "value": "Колющий"
+            }
+          ],
+          "14": [],
+          "15": [],
+          "16": [
+            {
+              "id": 1,
+              "typeId": 16,
+              "value": "Сила"
+            },
+            {
+              "id": 2,
+              "typeId": 16,
+              "value": "Ловкость"
+            },
+            {
+              "id": 3,
+              "typeId": 16,
+              "value": "Телосложение"
+            },
+            {
+              "id": 4,
+              "typeId": 16,
+              "value": "Интеллект"
+            },
+            {
+              "id": 5,
+              "typeId": 16,
+              "value": "Мудрость"
+            },
+            {
+              "id": 6,
+              "typeId": 16,
+              "value": "Харизма"
+            }
+          ]
+        },
+        "suggestTypes": [],
+        "books": []
+      }
+    },
+    "/api/chars": {},
+    "/api/templates": {},
+    "/api/item-types": {},
+    "/api/suggest/types": {},
+    "/api/content-sources": {},
+    "/api/build-info": {}
+  },
+  "items": {
+    "201": {
+      "id": 201,
+      "typeId": 1,
+      "name": "Native Spear",
+      "data": {
+        "attacks": [
+          {
+            "count": 1,
+            "dice_id": "d6",
+            "type": 1
+          }
+        ],
+        "universe_attacks": [
+          {
+            "count": 1,
+            "dice_id": "d8",
+            "type": 1
+          }
+        ]
+      }
+    },
+    "202": {
+      "id": 202,
+      "typeId": 5,
+      "name": "Предмет 202",
+      "data": {}
+    },
+    "203": {
+      "id": 203,
+      "typeId": 3,
+      "name": "Предмет 203",
+      "data": {}
+    },
+    "205": {
+      "id": 205,
+      "typeId": 5,
+      "name": "Ярость",
+      "data": {
+        "derived_effects": [
+          {
+            "kind": "weapon_damage_bonus",
+            "value": 2
+          }
+        ]
+      }
+    },
+    "206": {
+      "id": 206,
+      "typeId": 6,
+      "name": "Предмет 206",
+      "data": {
+        "lvl": 1
+      }
+    },
+    "211": {
+      "id": 211,
+      "typeId": 1,
+      "name": "Native Sword",
+      "data": {
+        "attacks": [
+          {
+            "count": 1,
+            "dice_id": "d6",
+            "type": 1
+          }
+        ],
+        "universe_attacks": [
+          {
+            "count": 1,
+            "dice_id": "d8",
+            "type": 1
+          }
+        ]
+      }
+    },
+    "212": {
+      "id": 212,
+      "typeId": 1,
+      "name": "Native Bow",
+      "data": {
+        "attacks": [
+          {
+            "count": 1,
+            "dice_id": "d6",
+            "type": 1
+          }
+        ],
+        "universe_attacks": [
+          {
+            "count": 1,
+            "dice_id": "d8",
+            "type": 1
+          }
+        ]
+      }
+    }
+  }
+}
