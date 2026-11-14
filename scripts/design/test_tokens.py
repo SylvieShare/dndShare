@@ -39,7 +39,8 @@ class TokenContractTests(unittest.TestCase):
         self.assertEqual(media_queries(data)['--ui-tablet'], '(700px <= width < 1200px)')
 
     def test_invalid_accessibility_geometry_and_fonts_fail_early(self):
-        for group, name, value in [('layout', 'sheet-stats-column-min', 320), ('layout', 'touch-min', 40), ('layout', 'tablet', 1200),
+        maximum_column = load()['layout']['sheet-stats-column']
+        for group, name, value in [('layout', 'sheet-stats-column-min', maximum_column + 1), ('layout', 'touch-min', 40), ('layout', 'tablet', 1200),
                                    ('collection', 'min-height', 16), ('canvas', 'opacity', 2),
                                    ('list', 'metric-min', 100), ('list', 'icon', 100),
                                    ('motion', 'enter', 1.5), ('motion', 'sheet-health-pulse-fast', 6001),

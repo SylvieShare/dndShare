@@ -5,10 +5,10 @@
 
     <div class="stat-summary" :class="{ 'stat-summary--icon': hasIcon }">
       <ItemIcon v-if="hasIcon" class="stat-icon" :item="iconItem" :fallback-to-type="false" :size="iconSize" :color="color" />
-      <div class="stat-identity">
+      <div ref="titleContainer" class="stat-identity">
         <MorphTileHeader :title="title" :show-edit="showEdit" :show-edit-icon="false"
           :edit-fade="editFade" edit-label="Редактировать" @edit="$emit('edit')">
-          <span class="stat-title" :title="title">{{ title }}</span>
+          <span ref="titleElement" class="stat-title" :title="title">{{ title }}</span>
         </MorphTileHeader>
         <div
           class="stat-body"
@@ -144,6 +144,7 @@ import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import DndStatRollMenu from './DndStatRollMenu.vue'
 import StatRollValue from './StatRollValue.vue'
+import { useStatTitleFit } from './useStatTitleFit'
 
 const props = defineProps({
   title: { type: String, default: '' },
@@ -173,6 +174,8 @@ const props = defineProps({
 })
 const emit = defineEmits(['edit', 'roll-stat', 'roll-save', 'roll-skill'])
 const rollMenu = shallowRef(null)
+const titleElement = ref(null), titleContainer = ref(null)
+useStatTitleFit(titleElement, titleContainer, () => props.title, () => props.mobileVariant)
 const hasIcon = computed(() => !!(props.iconItem?.iconImageUrl || props.iconItem?.svg || props.iconItem?.iconSvgId || props.iconItem?.svgId))
 const iconSize = computed(() => layoutTokens[props.mobileVariant ? 'sheet-stat-compact-icon' : 'sheet-stat-icon'])
 

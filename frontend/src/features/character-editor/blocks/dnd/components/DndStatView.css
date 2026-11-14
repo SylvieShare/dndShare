@@ -16,7 +16,7 @@
 .stat-summary--icon { grid-template-columns: var(--layout-sheet-stat-icon) minmax(0, 1fr) auto; }
 .stat-identity { min-width: 0; container-type:inline-size; }
 .stat-icon { width: var(--layout-sheet-stat-icon); height: var(--layout-sheet-stat-icon); flex-shrink: 0; }
-.stat-title { display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:clamp(var(--type-context-size),12cqi,var(--type-sheet-save-size));line-height:var(--type-group-line-height);letter-spacing:var(--type-sheet-save-tracking); }
+.stat-title { --stat-title-max-size:var(--type-sheet-save-size);display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:var(--stat-title-fitted-size,var(--stat-title-max-size));line-height:var(--type-group-line-height);letter-spacing:var(--type-sheet-save-tracking); }
 
 /* ── Save chip ── */
 .save-chip {
@@ -154,7 +154,7 @@
 .skill-tooltip-total { margin-top: 2px; padding-top: 6px; border-top: 1px solid var(--border); color: var(--text-1); font-weight: 700; }
 
 /* ── Mobile variant ── */
-.stat-view--mobile .stat-title { font-size:clamp(var(--type-context-size),12cqi,var(--type-group-size)); }
+.stat-view--mobile .stat-title { --stat-title-max-size:var(--type-group-size); }
 .stat-view--mobile .save-number {min-height:var(--layout-sheet-value-compact-height)}
 .stat-view--mobile .skill-chip-val { min-height: var(--layout-sheet-value-compact-height); }
 .stat-view--mobile .skill-chip-val { min-width: var(--layout-sheet-value-compact-width); }
