@@ -1,5 +1,5 @@
 <template>
-  <StatTile editor-title="Бонус владения"
+  <StatTile ref="tile" editor-title="Бонус владения" :editor-only="block.props?.editorOnly"
     :variant="variant"
     :embedded="block.props?.embedded"
     label="Мастерство"
@@ -43,8 +43,9 @@
 
 <script setup>
 import { MorphTile } from '@sylvieshare/share-ui'
-import { computed, watch } from 'vue'
-import { d20Expr, proficiencyBonus, sumBonuses } from '@/shared/lib/dnd'
+import { computed, inject, ref, watch } from 'vue'
+import { d20Expr } from '@/shared/lib/dnd'
+import { proficiencySummary } from '@/features/character-editor/lib/utilityValues'
 import BonusList from '@/shared/ui/BonusList'
 import { EditorPanel } from '@sylvieshare/share-ui'
 import { EditorSection } from '@sylvieshare/share-ui'
@@ -54,35 +55,24 @@ import StatTile from '@/features/character-editor/blocks/dnd/components/StatTile
 import { ToggleSwitch } from '@sylvieshare/share-ui'
 import { useDiceStore } from '@/stores/dice'
 
-function levelToProf(level) {
-  return proficiencyBonus(level)
-}
-
 const props = defineProps(['block', 'values', 'value'])
 const emit = defineEmits(['update:value'])
+const charCtx = inject('charCtx', { ownerMode: false })
+const tile = ref(null)
+defineExpose({ open: () => tile.value?.open(), action: () => rollProf() })
 
 const diceStore = useDiceStore()
 
 const variant = computed(() => props.block.props?.variant || props.block.content?.variant || '')
 const iconSrc = computed(() => props.block?.content?.svg || null)
 
-const autoValue = computed(() => {
-  const level = parseInt(props.values?.[props.block.content.level_id]?.level) || 1
-  return levelToProf(level)
-})
-const stored = computed(() => {
-  if (!props.value || props.value.auto !== false) {
-    return { v: autoValue.value, auto: true, bonuses: props.value?.bonuses || [] }
-  }
-  return { ...props.value, bonuses: props.value.bonuses || [] }
-})
-const displayValue = computed(() => {
-  const base = stored.value.auto !== false ? autoValue.value : (stored.value.v || 0)
-  return base + sumBonuses(stored.value.bonuses)
-})
+const summary = computed(() => proficiencySummary(props.value, props.values?.[props.block.content.level_id]?.level))
+const autoValue = computed(() => summary.value.autoValue)
+const stored = computed(() => summary.value.stored)
+const displayValue = computed(() => summary.value.total)
 
 watch(autoValue, newVal => {
-  if (stored.value.auto !== false) {
+  if (charCtx.ownerMode && stored.value.auto !== false && props.value?.v !== newVal) {
     emit('update:value', props.block.id, { ...stored.value, v: newVal, auto: true })
   }
 })

@@ -1,5 +1,7 @@
 <template>
   <StatTile
+    ref="tile"
+    :editor-only="block.props?.editorOnly"
     :variant="variant"
     :embedded="block.props?.embedded"
     label="Скорость"
@@ -21,27 +23,26 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue'
-import { speedRuleContext, totalSpeed } from '@/features/character-editor/lib/characterDerivedEffects'
+import { computed, inject, ref } from 'vue'
+import { speedSummary } from '@/features/character-editor/lib/utilityValues'
 import NumBonusEditor from '@/features/character-editor/blocks/dnd/components/NumBonusEditor'
 import StatTile from '@/features/character-editor/blocks/dnd/components/StatTile'
 
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', {})
+const tile = ref(null)
+defineExpose({ open: () => tile.value?.open() })
 
 const variant = computed(() => props.block?.props?.variant || props.block?.content?.variant || '')
 const iconSrc = computed(() => props.block?.content?.svg || null)
 
-const numData = computed(() => {
-  return props.value && typeof props.value === 'object'
-    ? props.value
-    : { base: 0, bonuses: [] }
-})
-const displayValue = computed(() => totalSpeed(numData.value, derivedSpeed.value, speedPenalty.value))
-const armorState = computed(() => charCtx.characterArmor?.state || {})
-const speedPenalty = computed(() => Number(armorState.value.speedPenalty) || 0)
-const derivedSpeed = computed(() => charCtx.characterDerivedEffects?.speed?.(speedRuleContext(armorState.value)) || { total: 0, sources: [] })
+const summary = computed(() => speedSummary(props.value, charCtx))
+const numData = computed(() => summary.value.data)
+const displayValue = computed(() => summary.value.total)
+const armorState = computed(() => summary.value.armor)
+const speedPenalty = computed(() => summary.value.penalty)
+const derivedSpeed = computed(() => summary.value.derived)
 
 function onChange(data) { emit('update:value', props.block.id, data) }
 </script>

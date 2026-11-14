@@ -1,5 +1,7 @@
 <template>
   <StatTile
+    ref="tile"
+    :editor-only="block.props?.editorOnly"
     :variant="variant"
     :embedded="block.props?.embedded"
     label="Инициатива"
@@ -24,8 +26,8 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue'
-import { abilityModByPath, sumBonuses } from '@/shared/lib/dnd'
+import { computed, inject, ref } from 'vue'
+import { initiativeSummary } from '@/features/character-editor/lib/utilityValues'
 import NumBonusEditor from '@/features/character-editor/blocks/dnd/components/NumBonusEditor'
 import StatTile from '@/features/character-editor/blocks/dnd/components/StatTile'
 import { ToggleSwitch } from '@sylvieshare/share-ui'
@@ -34,25 +36,19 @@ import { useDiceStore } from '@/stores/dice'
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', {})
+const tile = ref(null)
+defineExpose({ open: () => tile.value?.open(), action: () => rollInit() })
 
 const diceStore = useDiceStore()
 
 const variant = computed(() => props.block?.props?.variant || props.block?.content?.variant || '')
 const iconSrc = computed(() => props.block?.content?.svg || null)
 
-const numData = computed(() => {
-  if (props.value && typeof props.value === 'object') return props.value
-  return { base: parseInt(props.value) || 0, bonuses: [] }
-})
-const dexMod = computed(() => abilityModByPath(props.values, props.block.content?.dex_mod_path))
-const dexExtra = computed(() => (numData.value.use_dex && dexMod.value !== null ? dexMod.value : 0))
-const displayValue = computed(() => {
-  const d = numData.value
-  return (d.base || 0) + sumBonuses(d.bonuses) + dexExtra.value + derivedBonus.value
-})
-const derivedBonus = computed(() => charCtx.characterDerivedEffects?.bonus?.('check_bonus', {
-  kind: 'initiative', abilitySuggestId: 2, proficient: false,
-})?.total || 0)
+const summary = computed(() => initiativeSummary(props.value, props.values, charCtx, props.block.content?.dex_mod_path ?? null))
+const numData = computed(() => summary.value.data)
+const dexMod = computed(() => summary.value.dexMod)
+const dexExtra = computed(() => summary.value.dexExtra)
+const displayValue = computed(() => summary.value.total)
 
 function onChange(data) { emit('update:value', props.block.id, data) }
 function setUseDex(v) { emit('update:value', props.block.id, { ...numData.value, use_dex: v }) }

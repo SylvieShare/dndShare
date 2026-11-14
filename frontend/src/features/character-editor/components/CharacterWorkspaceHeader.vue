@@ -44,6 +44,9 @@
         <CharacterBlock ref="healthEditor" block-id="hp" :options="{ editorOnly: true }" />
         <CharacterBlock ref="armorEditor" block-id="armor" :options="{ editorOnly: true }" />
         <CharacterBlock ref="statusEditor" block-id="desktop_status_trigger" :options="{ editorOnly: true }" />
+        <CharacterBlock ref="speedEditor" block-id="speed" :options="{ editorOnly: true }" />
+        <CharacterBlock ref="initiativeEditor" block-id="initiative" :options="{ editorOnly: true }" />
+        <CharacterBlock ref="proficiencyEditor" block-id="prof_bonus" :options="{ editorOnly: true }" />
       </div>
     </template>
   </WorkspaceHeader>
@@ -70,8 +73,12 @@ const charCtx = inject('charCtx', {})
 const hasConditions = computed(() => !!(charCtx.characterStatuses?.entries?.length || charCtx.values?.exhaustion?.level > 0 || isInspirationActive(charCtx.values?.inspiration)))
 const workspace = ref(null)
 const profileEditor = ref(null), experienceEditor = ref(null), healthEditor = ref(null), armorEditor = ref(null), statusEditor = ref(null)
+const speedEditor = ref(null), initiativeEditor = ref(null), proficiencyEditor = ref(null)
 function openHeading(target) {
-  const editors = { profile: profileEditor, experience: experienceEditor, health: healthEditor, armor: armorEditor, 'add-status': statusEditor }
+  const rolls = { 'roll-initiative': initiativeEditor, 'roll-proficiency': proficiencyEditor }
+  if (rolls[target]) { rolls[target].value?.action(); return }
+  const editors = { profile: profileEditor, experience: experienceEditor, health: healthEditor, armor: armorEditor, 'add-status': statusEditor,
+    speed: speedEditor, initiative: initiativeEditor, proficiency: proficiencyEditor }
   editors[target]?.value?.open()
 }
 function setScrollPosition(value) {

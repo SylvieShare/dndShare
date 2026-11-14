@@ -31,6 +31,20 @@
         </span>
       </RowActionItem>
       <RowActionItem :icon="HeartPulse" @click="select('health', close)">{{ canEdit ? 'Изменить HP' : 'Здоровье' }}</RowActionItem>
+      <RowActionItem :icon="Footprints" :disabled="!canEdit" @click="select('speed', close)">
+        Скорость<template #suffix><strong class="utility-value">{{ speed }} фт</strong></template>
+      </RowActionItem>
+      <RowActionSubmenu v-for="metric in rollMetrics" :key="metric.key">
+        <template #trigger="{ open }">
+          <RowActionItem :icon="metric.icon" submenu :submenu-open="open">
+            {{ metric.label }}<template #suffix><strong class="utility-value">{{ signed(metric.value) }}</strong></template>
+          </RowActionItem>
+        </template>
+        <template #default="{ close: closeSubmenu }">
+          <RowActionItem v-if="canEdit" action="edit" @click="closeSubmenu(); select(metric.key, close)">Изменить</RowActionItem>
+          <RowActionItem :icon="Dices" @click="closeSubmenu(); select(`roll-${metric.key}`, close)">Бросить кубик</RowActionItem>
+        </template>
+      </RowActionSubmenu>
       <RowActionItem action="create" :disabled="!canEdit" @click="select('add-status', close)">Добавить состояние</RowActionItem>
     </template>
   </RowActionMenu>
@@ -39,14 +53,15 @@
 </template>
 <script setup>
 import { computed, inject, ref, shallowRef, watch } from 'vue'
-import { RowActionMenu } from '@sylvieshare/share-ui'
-import { Eye, HeartPulse, Search, Shield, TrendingUp } from '@lucide/vue'
+import { RowActionMenu, RowActionSubmenu } from '@sylvieshare/share-ui'
+import { Award, Dices, Eye, Footprints, HeartPulse, Search, Shield, TrendingUp, Zap } from '@lucide/vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import SheetHealth from './SheetHealth.vue'
 import SheetPassiveDetails from './SheetPassiveDetails.vue'
 import { levelExperience, levelProgressPercent } from '../../blocks/dnd/lib/experience'
 import { hpMaximum, normalizeHpMaximum } from '../../blocks/dnd/lib/hp'
-import { abilityModifier, resolveNumValue, sumBonuses, proficiencyBonus } from '@/shared/lib/dnd'
+import { abilityModifier, formatBonus as signed, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
+import { initiativeSummary, proficiencySummary, speedSummary } from '../../lib/utilityValues'
 const props = defineProps({ name: String, subtitle: String, iconUrl: String })
 const emit = defineEmits(['open'])
 const actions = ref(null), passiveOpen = ref(false), passiveAnchor = shallowRef(null)
@@ -60,6 +75,13 @@ const ctx = inject('charCtx', {})
 const values = computed(() => ctx.values || {})
 const canEdit = computed(() => !!ctx.ownerMode)
 const level = computed(() => values.value.lvl?.level)
+const speed = computed(() => speedSummary(values.value.speed, ctx).total)
+const initiative = computed(() => initiativeSummary(values.value.initiative, values.value, ctx).total)
+const proficiency = computed(() => proficiencySummary(values.value.prof_bonus, level.value).total)
+const rollMetrics = computed(() => [
+  { key: 'initiative', label: 'Инициатива', icon: Zap, value: initiative.value },
+  { key: 'proficiency', label: 'Мастерство', icon: Award, value: proficiency.value },
+])
 const menuSummary = computed(() => [props.subtitle, level.value ? level.value + ' ур.' : ''].filter(Boolean).join(' · '))
 const experience = computed(() => Number(values.value.lvl?.exp) || 0)
 const nextExperience = computed(() => levelExperience(values.value.lvl).nextLevelExp)
@@ -75,10 +97,8 @@ function passive(stat, abilitySuggestId, skillId) {
   const skill = values.value[stat]?.skills?.[skillId] || {}
   const derived = ctx.characterDerivedEffects
   const rank = Math.max(Number(skill.up) || 0, derived?.skillProficiency?.(skillId)?.rank || 0)
-  const stored = values.value.prof_bonus || {}
-  const proficiency = (stored.auto === false ? Number(stored.v) || 0 : proficiencyBonus(level.value || 1)) + sumBonuses(stored.bonuses)
   const bonus = derived?.bonus?.('skill_bonus', { kind: 'skill_check', abilitySuggestId, skillId, proficient: rank > 0 })?.total || 0
-  return 10 + abilityModifier(resolveNumValue(values.value[stat]?.value) || 10) + rank * proficiency + sumBonuses(skill.bonuses) + bonus
+  return 10 + abilityModifier(resolveNumValue(values.value[stat]?.value) || 10) + rank * proficiency.value + sumBonuses(skill.bonuses) + bonus
 }
 const perception = computed(() => passive('WIS', '5', '10'))
 const investigation = computed(() => passive('INT', '4', '5'))
@@ -107,6 +127,7 @@ function select(panel, close) { close(); emit('open', panel) }
 .heading-metrics svg {color:var(--text-muted)}
 .experience-action {display:flex;flex-direction:column;gap:5px;width:100%;min-width:0}
 .experience-action small {color:var(--text-muted);font-size:12px}
+.utility-value {font-variant-numeric:tabular-nums;font-size:var(--type-group-size);font-weight:600;color:var(--text-1);white-space:nowrap}
 .experience-track {height:7px;border-radius:var(--radius-input);overflow:hidden;background:var(--surface-raised)}
 .experience-track i {display:block;height:100%;background:var(--accent-soft)}
 @media (--ui-compact) {.identity {display:block}.identity strong,.identity small{display:block}.identity small{font-size:var(--type-caption-size,12px)}}

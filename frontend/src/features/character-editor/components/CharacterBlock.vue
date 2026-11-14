@@ -20,7 +20,7 @@ const props = defineProps({
 const emit = defineEmits(['update:value', 'update:var'])
 const context = inject(characterSheetContext, null)
 const control = ref(null)
-defineExpose({ open: () => control.value?.open?.() })
+defineExpose({ open: () => control.value?.open?.(), action: () => control.value?.action?.() })
 const hidden = ref(false)
 const charCtx = inject('charCtx', { ownerMode: false })
 const visible = computed(() => !hidden.value && !(definition.value.type === 'CHARACTER_READ_ONLY' && charCtx.ownerMode))
