@@ -102,7 +102,7 @@ body .rc.dnd-rich-content tbody tr:nth-child(even) td {
 
 .action-menu-source--open {
   border-color: color-mix(in srgb, var(--accent-soft) 58%, var(--border)) !important;
-  background-color: color-mix(in srgb, var(--accent) 9%, var(--surface)) !important;
+  background-color: var(--action-menu-source-background, color-mix(in srgb, var(--accent) 9%, var(--surface))) !important;
   outline: 1px solid color-mix(in srgb, var(--accent-soft) 35%, transparent);
   outline-offset: -1px;
 }

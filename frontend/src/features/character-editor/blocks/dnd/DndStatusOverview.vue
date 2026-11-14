@@ -118,6 +118,7 @@ const displayItems = computed(() => [
   ...(exhaustionLevel.value > 0 ? [{
     id: 'exhaustion',
     kind: 'exhaustion',
+    polarity: 'negative',
     value: exhaustionItem.value?.name || 'Истощение',
     desc: exhaustionEffects.value.join(' · '),
     thesis: exhaustionItem.value?.data?.thesis || '- Уровни накапливают штрафы\n- Продолжительный отдых снимает один уровень',
@@ -130,6 +131,7 @@ const displayItems = computed(() => [
   ...(inspirationActive.value ? [{
     id: 'inspiration',
     kind: 'inspiration',
+    polarity: 'positive',
     value: inspirationItem.value?.name || dndRules(charCtx.rulesVersion).inspirationName,
     desc: inspirationItem.value?.data?.desc || '',
     thesis: inspirationItem.value?.data?.thesis || dndRules(charCtx.rulesVersion).inspirationDescription,

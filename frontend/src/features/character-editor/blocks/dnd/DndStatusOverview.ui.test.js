@@ -32,7 +32,7 @@ describe('desktop status overview', () => {
 
   it('keeps 64px icons with the name and thesis to their right', () => {
     expect(viewSource).toMatch(/\.dsov-icon \{[\s\S]*?width: 64px;[\s\S]*?height: 64px;/)
-    expect(viewSource).toMatch(/\.dsov-effect \{[\s\S]*?grid-template-columns: 64px minmax\(0, 1fr\);[\s\S]*?border: 0;[\s\S]*?background: none;/)
+    expect(viewSource).toMatch(/\.dsov-effect \{[\s\S]*?grid-template-columns: 64px minmax\(0, 1fr\);[\s\S]*?border: 0;[\s\S]*?background: var\(--status-background\);/)
     expect(viewSource).toContain('class="dsov-copy"')
     expect(viewSource).toContain('class="dsov-name"')
     expect(viewSource).toContain('class="dsov-thesis"')

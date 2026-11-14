@@ -16,7 +16,7 @@ const props = defineProps({ participant: { type: Object, required: true }, edita
 const { context, statuses, updateValues, error } = useParticipantStatusContext(() => props.participant, () => props.editable)
 const items = computed(() => statuses.value.map(status => ({
   id: status.uid, kind: 'states', value: status.title, desc: status.description,
-  item: status.item, color: status.color,
+  item: status.item, color: status.color, polarity: status.polarity,
   level: Math.max(0, Number(status.params?.level ?? status.item?.data?.level) || 0),
   adjustableLevel: Number(status.item?.data?.level) > 0,
   maxLevel: Math.max(0, Number(status.item?.data?.max_level) || 0),

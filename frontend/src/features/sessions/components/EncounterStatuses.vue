@@ -18,8 +18,8 @@ const { itemById, itemsById } = useItemReferenceMap(computed(() => [props.combat
 const context = computed(() => ({ ...npcApplicationContext(props.combatant, itemById(props.combatant.itemId), itemsById.value, props.editable), overlayZIndex: 9600 }))
 const statuses = computed(() => collectCharacterStatuses(values.value, itemsById.value))
 const items = computed(() => [
-  ...conditions.value.map(id => ({ id: `condition:${id}`, kind: 'condition', value: itemById(id)?.name || 'Состояние', desc: itemById(id)?.data?.desc || itemById(id)?.data?.description || '', item: itemById(id) })),
-  ...statuses.value.map(s => ({ id: s.uid, kind: 'states', value: s.title, desc: s.description, item: s.item, color: s.color,
+  ...conditions.value.map(id => ({ id: `condition:${id}`, kind: 'condition', value: itemById(id)?.name || 'Состояние', desc: itemById(id)?.data?.desc || itemById(id)?.data?.description || '', item: itemById(id), polarity: itemById(id)?.data?.polarity })),
+  ...statuses.value.map(s => ({ id: s.uid, kind: 'states', value: s.title, desc: s.description, item: s.item, color: s.color, polarity: s.polarity,
     level: Number(s.params?.level ?? s.item?.data?.level) || 0, adjustableLevel: Number(s.item?.data?.level) > 0, maxLevel: Number(s.item?.data?.max_level) || 0,
     duration: statusDuration(s.duration) + (s.concentration ? ' · концентрация' : '') })),
 ])

@@ -11,10 +11,10 @@
           <button
             class="dsov-effect action-menu-source"
             :class="{ 'action-menu-source--open': open }"
+            :data-polarity="item.polarity === 'positive' ? 'positive' : item.polarity === 'negative' ? 'negative' : 'neutral'"
             type="button"
             :aria-label="iconsOnly || header ? item.value : undefined"
-            :aria-description="header && item.duration ? `Длительность: ${item.duration}` : undefined"
-            :style="{ '--status-color': item.color || 'var(--text-muted)' }"
+            :aria-description="[statusPolarity(item.polarity).label, item.duration ? `Длительность: ${item.duration}` : ''].filter(Boolean).join(' · ')"
             @click="$emit('hide-tooltip')"
             @mouseenter="$emit('show-tooltip', $event, item)"
             @mouseleave="$emit('hide-tooltip')"
@@ -95,6 +95,7 @@ import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import { statusIconItem } from '../../../lib/statusIcon'
+import { statusPolarity } from '@/features/items/lib/statusEffectPresentation'
 import { layoutTokens } from '@/app/design-tokens'
 const failedIcons=reactive(new Set())
 const headerIconSize = layoutTokens['sheet-header-status-icon']
@@ -124,7 +125,7 @@ function monogram(value) {
 .dsov.dsov--header {padding:0;gap:var(--spacing-small)}
 .dsov--header .dsov-row {gap:var(--spacing-small);flex-wrap:nowrap;max-width:100%;box-sizing:border-box;padding-block:var(--spacing-xs);padding-inline:var(--status-scroll-inset-start,0px) var(--status-scroll-inset-end,0px);margin-block:calc(-1 * var(--spacing-xs));overscroll-behavior-x:contain}
 .dsov--header .dsov-row > * {flex:none}
-.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-status-icon) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:var(--layout-sheet-header-status-icon);padding:0 var(--spacing-medium) 0 0;border-radius:var(--radius-tile);background:var(--surface)}
+.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-status-icon) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:var(--layout-sheet-header-status-icon);padding:0 var(--spacing-medium) 0 0;border-radius:var(--radius-tile);background:var(--status-background)}
 .dsov--header .dsov-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon);min-width:var(--layout-sheet-header-status-icon);border-radius:var(--radius-input)}
 .dsov--header .dsov-item-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon)}
 .dsov--header .dsov-icon :deep(img), .dsov--header .dsov-icon :deep(svg) {width:100%;height:100%}
@@ -147,6 +148,10 @@ function monogram(value) {
   scrollbar-width: thin;
 }
 .dsov-effect {
+  --status-tone: var(--info);
+  --status-background: color-mix(in srgb, var(--status-tone) 24%, var(--surface));
+  --status-secondary: color-mix(in srgb, var(--text-1) 85%, var(--surface));
+  --action-menu-source-background: color-mix(in srgb, var(--status-tone) 32%, var(--surface));
   display: grid;
   width: 300px;
   grid-template-columns: 64px minmax(0, 1fr);
@@ -156,13 +161,15 @@ function monogram(value) {
   padding: 0;
   border: 0;
   border-radius: var(--radius-row);
-  background: none;
+  background: var(--status-background);
   color: var(--text-1);
   font: inherit;
   text-align: left;
   cursor: pointer;
   transition: transform 0.14s;
 }
+.dsov-effect[data-polarity="positive"] { --status-tone:var(--success); }
+.dsov-effect[data-polarity="negative"] { --status-tone:var(--danger); }
 .dsov-icon {
   display: grid;
   width: 64px;
@@ -185,12 +192,12 @@ function monogram(value) {
   gap: 5px;
 }
 .dsov-heading { display: flex; min-width: 0; align-items: center; gap: 5px; }
-.dsov-duration { display: flex; align-items: center; gap: 4px; color: var(--text-muted); font-size: 10px; line-height: 1.3; overflow-wrap: anywhere; }
+.dsov-duration { display: flex; align-items: center; gap: 4px; color: var(--status-secondary); font-size: 10px; line-height: 1.3; overflow-wrap: anywhere; }
 .dsov-duration svg { flex-shrink: 0; }
 .dsov-name { min-width: 0; overflow: hidden; font-size: 11px; font-weight: 750; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
-.dsov-level { flex: 0 0 auto; color: var(--status-color); font-size: 8px; font-weight: 700; line-height: 1; }
+.dsov-level { flex: 0 0 auto; color: var(--status-secondary); font-size: 8px; font-weight: 700; line-height: 1; }
 .dsov-thesis {
-  color: var(--text-muted);
+  color: var(--status-secondary);
   font-size: 9px;
   line-height: 1.35;
   white-space: pre-line;

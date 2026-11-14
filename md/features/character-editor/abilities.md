@@ -177,6 +177,10 @@ allows the same catalogue effect to be added manually from the status block.
 The same `DndStatusOverviewView` renders the session participant's 32px icon-only
 strip and retains the sheet's status action menu. Its optional `context` supplies
 the participant's mechanics; ordinary sheet presentation remains 64px with text.
+The common status tiles tint their backgrounds by catalogue polarity: green for
+positive, red for negative and blue for neutral or unspecified effects. Inspiration
+is positive and exhaustion negative. The tint is retained while the action menu
+is open; duration and level use readable neutral text.
 Abilities, feats and spells declare zero or more links in `status_effects`;
 several links are presented as independent choices. A link may bind the owning
 ability's current scaling value into a named effect parameter.
