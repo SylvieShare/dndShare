@@ -81,7 +81,6 @@ describe('handbook item detail cover', () => {
     expect(spellSummarySource).toContain('Дистанция')
     expect(spellSummarySource).toContain('Длительность')
     expect(spellContentSource).toContain('<SpellMetadata v-if="!summaryInHeader" :data="data" />')
-    expect(spellContentSource).toContain('Материальный компонент:')
   })
 
   it('gives armor a 4:3 object showcase with side stats and a bottom requirement rail', () => {

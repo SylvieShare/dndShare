@@ -24,5 +24,6 @@ describe('explicit spell material prices',()=>{
   const m='алмаз стоимостью 100 зм или рубин стоимостью 200 зм'
   expect(spellMaterialRequirement({m})).toMatchObject({name:m,priceLabel:'100 зм · 200 зм'})
  })
- it.each([undefined,{}, {m:true},{m:'Светлячок'},{m:'серебряная проволока длиной 20 см'},{m:'пластина толщиной 2 мм'},{m:'100 золотых пластинок'},{m:'0 зм'},{m:'-100 зм'},{m:'1 змея'}])('does not invent a material price for %j',components=>expect(spellMaterialRequirement(components)).toBeNull())
+ it.each([undefined,{}, {m:false},{m:''}])('hides an absent material for %j',components=>expect(spellMaterialRequirement(components)).toBeNull())
+ it.each([{m:true},{m:'Светлячок'},{m:'серебряная проволока длиной 20 см'},{m:'пластина толщиной 2 мм'},{m:'100 золотых пластинок'},{m:'0 зм'},{m:'-100 зм'},{m:'1 змея'}])('keeps an unpriced material without inventing a price for %j',components=>expect(spellMaterialRequirement(components)).toMatchObject({name:expect.any(String),priceLabel:''}))
 })

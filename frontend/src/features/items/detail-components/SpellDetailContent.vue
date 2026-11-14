@@ -16,7 +16,6 @@
     </div>
 
     <SpellMetadata v-if="!summaryInHeader" :data="data" />
-    <div v-if="materialComponent && (!summaryInHeader || !pricedMaterial)" class="sdc-comp-m"><strong>Материальный компонент:</strong> {{ materialComponent }}</div>
 
     <div v-if="classes.length" class="sdc-refs">
       <span class="sdc-ref-label">Доступно классам</span>
@@ -43,7 +42,6 @@ import { DetailSection } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
 import { itemsApi } from '@/shared/api/itemsApi'
-import {spellMaterialRequirement} from '@/features/items/lib/spellMaterialRequirement'
 
 const props = defineProps({
   item: { type: Object, required: true },
@@ -76,8 +74,6 @@ const schoolDetails = computed(() => suggestItems('schoolId').find(row => String
 const school = computed(() => schoolDetails.value.value || '')
 const schoolStyle = computed(() => ({ '--school-color': schoolDetails.value.color || 'var(--text-2)' }))
 const classes = computed(() => classIds.value.map(id => classNames.value[id]).filter(Boolean))
-const materialComponent = computed(() => typeof data.value.components?.m === 'string' ? data.value.components.m : '')
-const pricedMaterial = computed(() => spellMaterialRequirement(data.value.components))
 const timeCondition = computed(() => String(data.value.time?.condition || '').trim())
 const nameEnFormatted = computed(() =>
   (props.item.nameEn || '')
@@ -128,7 +124,6 @@ const nameEnFormatted = computed(() =>
 }
 .sdc-name-en { font-size: 13px; color: var(--text-muted); }
 
-.sdc-comp-m { font-size: 12px; color: var(--text-muted); }
 .sdc-time-condition {margin:0;color:var(--text-1);font-size:var(--type-group-size);line-height:var(--type-group-line-height);white-space:pre-wrap}
 
 .sdc-refs { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }

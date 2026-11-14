@@ -12,6 +12,7 @@
         <span v-for="flag in flags" :key="flag.key" class="spell-meta-part spell-meta-flag" :class="`spell-meta-${flag.key}`" :aria-label="flag.label">{{ flag.label }}</span>
       </span>
     </div>
+    <SpellMaterialRequirement v-if="showComponents" :components="data.components" />
     <ActionTiming v-if="data.time?.kind" :time="data.time" />
   </div>
   <FloatingTooltip v-if="tooltip" :anchor="tooltip.anchor" :width="260" :z-index="9500">{{ tooltip.text }}</FloatingTooltip>
@@ -23,12 +24,13 @@ import { FloatingTooltip } from '@sylvieshare/share-ui'
 import ActionTiming from '@/shared/ui/ActionTiming.vue'
 import { rangeLabel, spellDurationLabel, spellComponentDetails } from '@/shared/lib/spellPresentation'
 import { spellComponentIcons } from '@/features/items/lib/spellComponentIcons'
+import SpellMaterialRequirement from './SpellMaterialRequirement.vue'
 const props = defineProps({ data: { type: Object, required: true }, rangeOverride: String, showComponents: { type: Boolean, default: true }, quiet: Boolean })
 const flags = computed(() => [
   { key: 'concentration', label: 'Концентрация' },
   { key: 'ritual', label: 'Ритуал' },
 ].filter(flag => props.data[flag.key]))
-const components = computed(() => spellComponentDetails(props.data.components).map(part => ({ ...part, icon: spellComponentIcons[part.key] })))
+const components = computed(() => spellComponentDetails(props.data.components).filter(part=>part.key!=='m').map(part => ({ ...part, icon: spellComponentIcons[part.key] })))
 const rangeText = computed(() => props.rangeOverride || rangeLabel(props.data.range))
 const rangeHint = computed(() => [rangeText.value, props.data.range?.can_self && 'Можно выбрать себя, если это допускают условия заклинания'].filter(Boolean).join(' · '))
 const rangeIcon = computed(() => props.rangeOverride ? Crosshair : ({ sphere: Circle, radius: Circle, cone: Cone, line: MoveRight, cube: Box, cylinder: Cylinder, hemisphere: Circle }[props.data.range?.shape] || { self: UserRound, touch: Fingerprint, ranged: Crosshair, sight: Eye, unlimited: Infinity }[props.data.range?.kind] || Shapes))

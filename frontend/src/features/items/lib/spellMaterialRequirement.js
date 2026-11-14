@@ -17,9 +17,8 @@ function currencyLabel(raw) {
 }
 
 export function spellMaterialRequirement(components) {
-  if (typeof components?.m !== 'string') return null
-  const description = components.m.replace(/\s+/gu, ' ').trim()
-  if (!description) return null
+  if (!components?.m) return null
+  const description = (typeof components.m === 'string' ? components.m.replace(/\s+/gu, ' ').trim() : '') || 'Материальный компонент'
   const prices = []
   for (const match of description.matchAll(PRICE)) {
     if (!/[1-9]/u.test(match.groups.amount)) continue
@@ -32,7 +31,7 @@ export function spellMaterialRequirement(components) {
     const amount = match.groups.amount.replace(/\s+/gu, ' ').trim()
     prices.push({ label: `${MINIMUM.test(before) ? 'от ' : ''}${amount} ${currency}`, match, prefix })
   }
-  if (!prices.length) return null
+  if (!prices.length) return {description,name:description,priceLabel:''}
   let name = description
   // Only simplify a single unambiguous price clause. Keep alternatives and per-unit rules verbatim.
   if (prices.length === 1 && !CONTEXT_DEPENDENT.test(description)) {
