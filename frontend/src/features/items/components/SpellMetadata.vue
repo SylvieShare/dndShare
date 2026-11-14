@@ -18,17 +18,17 @@
 </template>
 <script setup>
 import { computed, shallowRef } from 'vue'
-import { AudioLines, Hand, Fingerprint, Gem, Crosshair, UserRound, Eye, Infinity, Circle, Cone, MoveRight, Box, Cylinder, Shapes, Hourglass } from '@lucide/vue'
+import { Fingerprint, Crosshair, UserRound, Eye, Infinity, Circle, Cone, MoveRight, Box, Cylinder, Shapes, Hourglass } from '@lucide/vue'
 import { FloatingTooltip } from '@sylvieshare/share-ui'
 import ActionTiming from '@/shared/ui/ActionTiming.vue'
 import { rangeLabel, spellDurationLabel, spellComponentDetails } from '@/shared/lib/spellPresentation'
+import { spellComponentIcons } from '@/features/items/lib/spellComponentIcons'
 const props = defineProps({ data: { type: Object, required: true }, rangeOverride: String, showComponents: { type: Boolean, default: true }, quiet: Boolean })
 const flags = computed(() => [
   { key: 'concentration', label: 'Концентрация' },
   { key: 'ritual', label: 'Ритуал' },
 ].filter(flag => props.data[flag.key]))
-const componentIcons = { v: AudioLines, s: Hand, m: Gem }
-const components = computed(() => spellComponentDetails(props.data.components).map(part => ({ ...part, icon: componentIcons[part.key] })))
+const components = computed(() => spellComponentDetails(props.data.components).map(part => ({ ...part, icon: spellComponentIcons[part.key] })))
 const rangeText = computed(() => props.rangeOverride || rangeLabel(props.data.range))
 const rangeHint = computed(() => [rangeText.value, props.data.range?.can_self && 'Можно выбрать себя, если это допускают условия заклинания'].filter(Boolean).join(' · '))
 const rangeIcon = computed(() => props.rangeOverride ? Crosshair : ({ sphere: Circle, radius: Circle, cone: Cone, line: MoveRight, cube: Box, cylinder: Cylinder, hemisphere: Circle }[props.data.range?.shape] || { self: UserRound, touch: Fingerprint, ranged: Crosshair, sight: Eye, unlimited: Infinity }[props.data.range?.kind] || Shapes))

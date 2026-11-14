@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test'
 
-for(const width of [390,834,1440])test(`quiet spell covers and component overlay at ${width}`,async({page},info)=>{
+for(const width of [320,390,834,1440])test(`quiet spell covers and component overlay at ${width}`,async({page},info)=>{
  await page.setViewportSize({width,height:1000})
  await page.emulateMedia({reducedMotion:'reduce'})
  const errors=[];page.on('pageerror',error=>errors.push(error.message))
@@ -15,6 +15,7 @@ for(const width of [390,834,1440])test(`quiet spell covers and component overlay
  await expect(custom.locator('.sp-school')).toHaveCount(0)
  await expect(custom.locator('.spell-components')).toHaveCount(0)
  await expect(custom.locator('.spell-component-letters')).toHaveText('ВСМ')
+ await expect(custom.locator('.spell-component-pair svg')).toHaveCount(3)
  await expect(custom.locator('.spell-duration-meta .spell-meta-part')).toHaveText(['вплоть до 1 минуты'])
  await expect(custom.locator('.spell-meta-flags .spell-meta-part')).toHaveText(['Концентрация','Ритуал'])
  const badge=custom.getByRole('button',{name:'Компоненты заклинания: В, С, М',exact:true})
