@@ -113,7 +113,7 @@ const hasComponents = computed(() => spellComponentDetails(data.value.components
   align-items:flex-end;
   gap:var(--spacing-xs);
 }
-.spell-summary-component-badge {width:100%;--spell-material-width:100%}
+.spell-summary-component-badge {width:100%}
 .spell-summary-components-label {color:var(--text-2);font-size:var(--type-context-size);line-height:var(--type-context-line-height)}
 @media (--ui-phone){.spell-summary-grid{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}.spell-summary-time-card{grid-column:1 / -1}}
 

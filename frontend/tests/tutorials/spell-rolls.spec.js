@@ -244,7 +244,7 @@ for (const mobile of [false, true]) test(`spell presentation ${mobile ? 'mobile'
   await light.getByLabel('Концентрация', { exact: true }).hover()
   await expect(page.getByText('Концентрация', { exact: true })).toBeVisible()
   await light.getByRole('button', { name: 'Компоненты заклинания: В, М', exact: true }).click()
-  await expect(page.getByText('Материальный компонент: Светлячок', { exact: true })).toBeVisible()
+  await expect(page.getByRole('dialog',{name:'Компоненты заклинания',exact:true}).locator('.spell-material-name')).toHaveText('Светлячок')
   await page.keyboard.press('Escape')
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
   await page.goto('/tests/tutorials/fixtures/spell-rolls.html?presentation&long-name')
