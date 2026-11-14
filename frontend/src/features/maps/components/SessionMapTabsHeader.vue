@@ -69,6 +69,7 @@ const tabs = computed(() =>
 </script>
 <style scoped>
 .session-map-tabs-header {
+  margin-left: var(--session-sidebar-rail, 0px);
   flex: none;
   min-width: 0;
   z-index: 21;
@@ -118,5 +119,8 @@ const tabs = computed(() =>
     border-top: 1px solid var(--border);
     justify-content: flex-end;
   }
+}
+@media (--ui-desktop) {
+  .session-map-tabs-header { margin-left: var(--session-sidebar-width, var(--session-sidebar-rail, 0px)); }
 }
 </style>

@@ -120,6 +120,9 @@ for (const mobile of [false, true])
     await page.getByRole("button", { name: "Карта", exact: true }).click();
     await expect(page.locator(".chapter-canvas-stage")).toHaveCSS("background-image", "none");
     await expect(page.locator(".session-map-workspace")).toBeVisible();
+    const mapHeader = await page.locator('.session-map-tab-list').boundingBox();
+    const navigationRail = await page.getByRole('navigation',{name:'Боковые вкладки сессии'}).boundingBox();
+    expect(mapHeader.x).toBeGreaterThanOrEqual(navigationRail.x + navigationRail.width - .5);
     await expect(page.getByText("Подготавливаем карту…")).toHaveCount(0);
     const before = await page.locator(".map-canvas canvas").elementHandle();
     const canvas = await page.locator(".map-canvas-surface").boundingBox();
