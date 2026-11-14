@@ -60,17 +60,6 @@ export function useSpellbookTabs({ props, charCtx, tabs, grants, activeTab, acti
     return !entry?.ref?.source && ['prepared', 'spellbook'].includes(spellTabForEntry(entry)?.mode)
   }
 
-  function setSpellcastingSource(entry, key) {
-    if (!charCtx.ownerMode) return
-    const from = activeTab.value
-    const target = tabs.value.find((tab) => tab.key === key)
-    if (!from || !target || from.key === target.key) return
-    if (target.spells.some((candidate) => String(candidate.id) === String(entry.ref.id))) return
-    from.spells = from.spells.filter((candidate) => candidate.key !== entry.ref.key)
-    target.spells.push(entry.ref)
-    emitChange()
-  }
-
   function spellCastingAbility(entry) {
     if (entry?.ref?.casting_ability != null) return entry.ref.casting_ability
     return spellTabForEntry(entry)?.casting_ability ?? ''
@@ -114,5 +103,5 @@ export function useSpellbookTabs({ props, charCtx, tabs, grants, activeTab, acti
     }
   }
 
-  return { updateActiveTab, createTab, setActiveTabClass, deleteTab, spellCanPrepare, setSpellcastingSource, spellCastingAbility, statModifierForAbility, spellAttackBonus, spellSaveDC, spellAbilityLabel, loadClassItems }
+  return { updateActiveTab, createTab, setActiveTabClass, deleteTab, spellCanPrepare, spellCastingAbility, statModifierForAbility, spellAttackBonus, spellSaveDC, spellAbilityLabel, loadClassItems }
 }

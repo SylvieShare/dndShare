@@ -69,25 +69,6 @@
         {{ isPrepared ? 'Снять подготовку' : 'Подготовить' }}
       </RowActionItem>
       <RowActionSubmenu
-        v-if="ctx.charCtx.ownerMode && ctx.spellcastingSources.length > 1 && !isReadonlyGrant"
-        label="Класс заклинания"
-      >
-        <template #trigger="{ open }">
-          <RowActionItem action="source" submenu :submenu-open="open">
-            Класс заклинания
-          </RowActionItem>
-        </template>
-        <template #default="{ close: closeSources }">
-          <RowActionItem
-            v-for="source in ctx.spellcastingSources"
-            :key="source.key"
-            action="source"
-            :tone="source.key === ctx.activeTabKey ? 'accent' : 'default'"
-            @click="setSource(source.key, closeSources, close)"
-          >{{ source.label }}</RowActionItem>
-        </template>
-      </RowActionSubmenu>
-      <RowActionSubmenu
         v-if="ctx.charCtx.ownerMode && spendsSlot && canUse && hasHigherLevelChoice"
         label="Выберите ячейку"
       >
@@ -236,12 +217,6 @@ async function useWithoutChoice(close) {
 
 async function useAtSlot(option, closeSubmenu, closeMenu) {
   await ctx.useSpell(props.entry, option)
-  closeSubmenu()
-  closeMenu()
-}
-
-function setSource(key, closeSubmenu, closeMenu) {
-  ctx.setSpellcastingSource(props.entry, key)
   closeSubmenu()
   closeMenu()
 }

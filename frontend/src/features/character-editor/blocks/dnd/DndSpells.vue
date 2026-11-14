@@ -304,7 +304,6 @@ const spellcastingRestrictions = computed(() => {
 })
 const spellcastingBlocked = computed(() => spellcastingRestrictions.value.length > 0)
 const spellTabs = computed(() => tabs.value.map((tab) => ({ key: tab.key, label: tab.name })))
-const spellcastingSources = spellTabs
 const activeTab = computed(() => tabs.value.find((tab) => tab.key === activeSpellTab.value) || null)
 const activeTabSource = activeTab
 const activeTabSpells = computed(() => activeTab.value?.spells || [])
@@ -450,7 +449,7 @@ const {
 
 const {
   updateActiveTab, createTab, setActiveTabClass, deleteTab,
-  spellCanPrepare, setSpellcastingSource, spellCastingAbility, statModifierForAbility,
+  spellCanPrepare, spellCastingAbility, statModifierForAbility,
   spellAttackBonus, spellSaveDC, spellAbilityLabel, loadClassItems,
 } = useSpellbookTabs({
   props, charCtx, tabs, grants, activeTab, activeSpellTab, tabEditorOpen, classItemMap,
@@ -535,10 +534,7 @@ provide('spellsBlockCtx', reactive({
   groupedSpellSlotOptions, availableSpellSlotOptions,
   spellRollLevel, rememberSpellRollLevel,
   useSpell,
-  spellcastingSources,
-  activeTabKey: activeSpellTab,
   spellCanPrepare, canPrepareEntry,
-  setSpellcastingSource,
   spellcastingBlocked,
   statusEffectLinks,
 }))
