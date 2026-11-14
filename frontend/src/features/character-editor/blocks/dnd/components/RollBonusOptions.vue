@@ -8,7 +8,7 @@
         :title="`${rule.source_label || 'Бонус к броску'}: ${formula(rule)}`"
         :model-value="!modelValue.includes(rule.key)" @update:model-value="value => toggle(rule.key, value)">
         <template #icon>
-          <ItemIcon v-if="rule.source_item || rule.source_status?.item" :item="rule.source_item || rule.source_status.item" :size="layoutTokens['weapon-roll-option-icon']" :fallback-to-type="false" placeholder />
+          <ItemIcon v-if="sourceIcon(rule)" :item="sourceIcon(rule)" :size="layoutTokens['weapon-roll-option-icon']" :fallback-to-type="false" />
           <Sparkles v-else aria-hidden="true" />
         </template>
       </ChoiceCard>
@@ -28,6 +28,10 @@ const emit = defineEmits(['update:modelValue'])
 const ctx = inject('charCtx', {})
 const rules = computed(() => props.scope ? (props.characterContext || ctx).characterDerivedEffects?.rollBonusOptions?.({ kind: props.scope, ...props.rollContext }) || [] : [])
 const formula = rule => rule.formula.replace(/\{[^}]*\}/g, '').replaceAll('d', 'к')
+function sourceIcon(rule) {
+  const item = rule.source_item || rule.source_status?.item
+  return item && (item.iconImageUrl || item.svg || item.iconSvgId || item.svgId) ? item : null
+}
 function toggle(key, enabled) {
   emit('update:modelValue', enabled ? props.modelValue.filter(value => value !== key) : [...props.modelValue, key])
 }

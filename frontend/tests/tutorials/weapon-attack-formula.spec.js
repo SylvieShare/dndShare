@@ -17,6 +17,7 @@ for (const width of [390, 704, 1440]) test(`attack-window preview colors only th
   await attack.click()
   const dialog = page.getByRole('dialog', { name: /· Атака$/ }), preview = dialog.locator('.weapon-roll-preview')
   await expect(dialog.getByRole('group', { name: 'Дополнительные эффекты', exact: true })).toBeVisible()
+  await expect(dialog.getByRole('button', { name: 'Благословение', exact: true }).locator('.share-choice-card__icon > svg')).toBeVisible()
   await dialog.screenshot({ path: testInfo.outputPath('attack-options.png'), animations: 'disabled' })
   await expect(preview.locator('.weapon-damage__source')).toHaveText(sources)
   await expect(preview.getByRole('img', { name: 'd20: d20', exact: true })).toBeVisible()
