@@ -1,5 +1,11 @@
 <template>
-  <div :class="{ 'damage-dependent-option': option.nested }">
+  <ChoiceCard v-if="!option.units" layout="icon" centered selection-indicator="outline"
+    :label="option.label" :description="[option.damageParts?.length ? option.formula : '', option.resourceCost && `−${option.resourceCost.amount}`].filter(Boolean).join(' · ')"
+    :title="option.hint" :model-value="option.checked" :disabled="option.disabled"
+    @update:model-value="value => $emit('select', option.key, value)">
+    <template #icon><Sparkles aria-hidden="true" /></template>
+  </ChoiceCard>
+  <div v-else :class="{ 'damage-dependent-option': option.nested }">
     <FormField :label="option.label" :title="option.hint">
       <span v-if="option.damageParts.length" class="damage-option-formula" :aria-label="`${option.formulaVerb} ${option.formula}`" role="img">
         <span aria-hidden="true">{{ option.formulaPrefix }}</span>
@@ -9,14 +15,14 @@
         <span aria-hidden="true">−{{ option.resourceCost.amount > 1 ? option.resourceCost.amount : '' }}</span>
         <SpellSlotSphere :size="22" :color="option.resourceCost.color" :spent="option.resourceCost.unavailable" :interactive="false" aria-hidden="true" />
       </span>
-      <WeaponResourceAmount v-if="option.units" :units="option.units" :label="option.label" :disabled="option.disabled" @change="value => $emit('amount', option.key, value)" />
-      <ToggleSwitch v-else surface="raised" :model-value="option.checked" :disabled="option.disabled" :aria-label="option.label" @update:model-value="value => $emit('select', option.key, value)" />
+      <WeaponResourceAmount :units="option.units" :label="option.label" :disabled="option.disabled" @change="value => $emit('amount', option.key, value)" />
     </FormField>
     <small v-if="option.condition" class="damage-option-condition">{{ option.condition }}</small>
   </div>
 </template>
 <script setup>
-import { FormField, ToggleSwitch } from '@sylvieshare/share-ui'
+import { ChoiceCard, FormField } from '@sylvieshare/share-ui'
+import { Sparkles } from '@lucide/vue'
 import WeaponResourceAmount from './WeaponResourceAmount.vue'
 import DamageDice from './DamageDice.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'

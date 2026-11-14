@@ -33,7 +33,7 @@ test('the line damage and the paid target modifier share the existing one-time u
   await expect.poll(() => magic().remaining).toBe(0)
   await expect.poll(() => magic().weapon_use.steps.map(step => step.status)).toEqual(['rolled', 'pending'])
   await target.click()
-  await menu.getByRole('switch', { name: 'Метнуть молнией', exact: true }).click()
+  await menu.getByRole('button', { name: 'Метнуть молнией', exact: true }).click()
   await expect(menu.locator('.weapon-roll-preview .weapon-damage__source')).toHaveText(['Оружие', 'Сила', 'Ярость', 'Метнуть молнией'])
   await expect(target.locator('.weapon-damage__source')).toHaveText(['Оружие', 'Сила', 'Ярость'])
   await menu.getByRole('button', { name: 'Критическое попадание', exact: true }).click()
@@ -42,7 +42,7 @@ test('the line damage and the paid target modifier share the existing one-time u
   await expect.poll(() => magic().weapon_use.steps.map(step => step.status)).toEqual(['rolled', 'rolled'])
   expect(magic().remaining).toBe(0)
   await target.click()
-  await expect(menu.getByRole('switch', { name: 'Метнуть молнией', exact: true })).toHaveCount(0)
+  await expect(menu.getByRole('button', { name: 'Метнуть молнией', exact: true })).toHaveCount(0)
   await expect(menu.getByRole('button', { name: 'Бросить на урон', exact: true })).toBeEnabled()
 })
 

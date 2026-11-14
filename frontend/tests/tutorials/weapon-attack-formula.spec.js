@@ -16,6 +16,8 @@ for (const width of [390, 704, 1440]) test(`attack-window preview colors only th
   await expect(attack.locator('.weapon-damage__flat')).toHaveText(['2', '1', '1', '2'])
   await attack.click()
   const dialog = page.getByRole('dialog', { name: /· Атака$/ }), preview = dialog.locator('.weapon-roll-preview')
+  await expect(dialog.getByRole('group', { name: 'Дополнительные эффекты', exact: true })).toBeVisible()
+  await dialog.screenshot({ path: testInfo.outputPath('attack-options.png'), animations: 'disabled' })
   await expect(preview.locator('.weapon-damage__source')).toHaveText(sources)
   await expect(preview.getByRole('img', { name: 'd20: d20', exact: true })).toBeVisible()
   const flatColors = await preview.locator('.weapon-damage__flat').evaluateAll(nodes => nodes.map(node => getComputedStyle(node).color))
@@ -27,7 +29,7 @@ for (const width of [390, 704, 1440]) test(`attack-window preview colors only th
   expect(advantageColor).not.toBe(bonusColor)
   expect(await preview.getByRole('img', { name: 'd4: d4', exact: true }).evaluate(node => getComputedStyle(node).color)).toBe(bonusColor)
   expect(await preview.locator('.weapon-damage__flat').evaluateAll(nodes => nodes.map(node => getComputedStyle(node).color))).toEqual(flatColors)
-  await dialog.getByRole('switch', { name: 'Благословение', exact: true }).click()
+  await dialog.getByRole('button', { name: 'Благословение', exact: true }).click()
   await expect(preview.getByRole('img', { name: 'd4: d4', exact: true })).toHaveCount(0)
   await expect(attack.locator('.weapon-damage__source')).toHaveText(sources.slice(1))
   await expect(attack.getByRole('img', { name: 'd4: d4', exact: true })).toBeVisible()
@@ -73,7 +75,7 @@ for (const reduced of [false, true]) test(`window formula flashes changed source
   const card = page.locator('.w-card:visible').first(), attack = card.locator('.weapon-metrics__attack')
   await attack.click()
   const dialog = page.getByRole('dialog', { name: /· Атака$/ }), preview = dialog.locator('.weapon-roll-preview')
-  const update = await dialog.getByRole('switch', { name: 'Благословение', exact: true }).evaluate(async node => {
+  const update = await dialog.getByRole('button', { name: 'Благословение', exact: true }).evaluate(async node => {
     node.click(); await new Promise(requestAnimationFrame)
     const formula = document.querySelector('.weapon-roll-preview')
     return { labels: [...formula.querySelectorAll('.weapon-damage__source')].map(node => node.textContent),

@@ -8,7 +8,7 @@
       <b v-if="scope === 'attack' && summary">{{ signed(summary.bonus) }}</b>
     </div>
     <RollModePicker v-if="scope === 'attack'" :model-value="attackRollMode" neutral-mode="auto" @update:model-value="emit('update:attackRollMode', $event)" />
-    <div v-if="baseOptions.length" class="weapon-roll-options" role="group" :aria-label="scope === 'damage' ? 'Параметры урона' : 'Способ атаки'">
+    <div v-if="baseOptions.length" class="weapon-roll-options dnd-roll-option-strip" role="group" :aria-label="scope === 'damage' ? 'Параметры урона' : 'Способ атаки'">
       <ChoiceCard v-for="option in baseOptions" :key="option.key" layout="icon" centered selection-indicator="outline"
         :label="option.label" :description="option.description" :title="option.hint"
         :model-value="option.checked" :disabled="option.disabled" :color="option.color"
@@ -16,11 +16,17 @@
         <template #icon><component :is="option.icon" aria-hidden="true" /></template>
       </ChoiceCard>
     </div>
-    <RowActionSeparator v-if="hasCustomOptions" />
-    <WeaponBonusTransferSelector v-if="scope === 'attack' && transfer?.active" :transfer="transfer" :disabled="!charCtx.ownerMode" @change="setAmount" />
-    <WeaponRollOption v-for="use in scope === 'attack' ? uses : damageUses" :key="use.key" :option="useOption(use)" @select="(key, value) => emit('update:useKey', value ? key : '')" />
-    <WeaponRollOption v-for="option in (scope === 'attack' && useKey ? [] : extras)" :key="option.key" :option="option" @select="(key, value) => emit('select', key, value)" @amount="(key, value) => emit('amount', key, value)" />
-    <RollBonusOptions v-if="scope === 'attack'" scope="attack" :model-value="excludedBonuses" @update:model-value="emit('update:excludedBonuses', $event)" />
+    <RollBonusOptions :scope="scope === 'attack' ? 'attack' : undefined" :has-additional-options="!!hasCustomOptions"
+      :model-value="excludedBonuses" @update:model-value="emit('update:excludedBonuses', $event)">
+      <template v-if="additionalUses.length || toggleExtras.length" #default>
+        <WeaponRollOption v-for="use in additionalUses" :key="use.key" :option="useOption(use)" @select="(key, value) => emit('update:useKey', value ? key : '')" />
+        <WeaponRollOption v-for="option in toggleExtras" :key="option.key" :option="option" @select="(key, value) => emit('select', key, value)" />
+      </template>
+      <template v-if="(scope === 'attack' && transfer?.active) || countedExtras.length" #details>
+        <WeaponBonusTransferSelector v-if="scope === 'attack' && transfer?.active" :transfer="transfer" :disabled="!charCtx.ownerMode" @change="setAmount" />
+        <WeaponRollOption v-for="option in countedExtras" :key="option.key" :option="option" @amount="(key, value) => emit('amount', key, value)" />
+      </template>
+    </RollBonusOptions>
     <small v-if="blocked" role="alert">{{ blocked.resourceError }}</small>
     <ActionButton v-if="dialog" :disabled="!!blocked" @click="!blocked && emit('roll')">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</ActionButton>
     <RowActionItem v-else :disabled="!!blocked" :action="scope === 'attack' ? 'attack' : 'damage'" @click="!blocked && emit('roll')">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</RowActionItem>
@@ -36,12 +42,12 @@ import RollBonusOptions from './RollBonusOptions.vue'
 import WeaponBonusTransferSelector from './WeaponBonusTransferSelector.vue'
 import { ActionButton, ChoiceCard } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
-import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import WeaponRollOption from './WeaponRollOption.vue'
 import WeaponUseDamageMenu from './WeaponUseDamageMenu.vue'
 import { weaponDamageActionFormula, weaponDamageActionParts } from '@/shared/lib/weaponDamageOptions'
 import { computed, inject, toRef } from 'vue'
 import { useWeaponBonusTransfer } from '../composables/useWeaponBonusTransfer'
+import './RollOptionTiles.css'
 const props = defineProps({ dialog: Boolean, weapon: Object, weaponTitle: String, summary: Object, weaponUid: String,
   attackRollMode: { type: String, default: 'auto' }, uses: { type: Array, default: () => [] }, useKey: { type: String, default: '' },
   scope: { type: String, default: 'damage' }, options: { type: Array, default: () => [] }, excludedBonuses: { type: Array, default: () => [] },
@@ -76,6 +82,10 @@ const baseOptions = computed(() => [
     description: (option.range || '20/60') + ' фт.', select: value => emit('select', option.key, value) })),
 ])
 const extras = computed(() => props.options.filter(option => !option.mode))
+const additionalUses = computed(() => props.scope === 'attack' ? props.uses : damageUses.value)
+const availableExtras = computed(() => props.scope === 'attack' && props.useKey ? [] : extras.value)
+const toggleExtras = computed(() => availableExtras.value.filter(option => !option.units))
+const countedExtras = computed(() => availableExtras.value.filter(option => option.units))
 const chosenUse = computed(() => props.uses.find(use => use.key === props.useKey))
 const blocked = computed(() => props.useKey && (!chosenUse.value || chosenUse.value.error)
   ? { resourceError: chosenUse.value?.error || 'Режим недоступен.' }
@@ -100,5 +110,4 @@ const emit = defineEmits(['update:attackRollMode', 'update:useKey', 'update:crit
   box-sizing: border-box;
 }
 .weapon-roll-controls--dialog {width:100%;max-width:none;max-height:none;padding:0;overflow:visible}
-.weapon-roll-options {display:grid;grid-auto-flow:column;grid-auto-columns:var(--layout-weapon-roll-option-width);justify-content:start;gap:var(--spacing-xs);overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:thin;padding:var(--spacing-xs);margin-inline:calc(-1 * var(--spacing-xs));--choice-card-icon-size:var(--layout-weapon-roll-option-icon);--choice-card-min-height:var(--layout-weapon-roll-option-height);--choice-card-padding:var(--spacing-xs) var(--spacing-compact);--choice-card-gap:var(--spacing-xs)}
 </style>
