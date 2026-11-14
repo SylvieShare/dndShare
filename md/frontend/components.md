@@ -25,7 +25,7 @@
 | Постоянная панель сессии | `SessionWorkspaceSidebar`, `useSessionSidebar` → `MapSidebar`, `share-ui/IconNavigation` | Один rail и область содержимого для игроков, карты и мира. Вложенные редакторы передают панели через Teleport, сохраняя локальное состояние. Слот `MapSidebar.header-actions` размещает действия напротив заголовка; `SessionPlayersMenu` передаёт пунктирный SVG-плюс, меню приглашения/создания и индикатор соединения. Измеренная ширина панели задаёт единую анимацию safe-area холста. |
 | Дополнительные эффекты броска | `RollBonusOptions`, `WeaponRollOption` → `share-ui/ChoiceCard` | Компактные кнопки с источником и формулой в отдельной группе под основными режимами. Одинаковая композиция для оружия, характеристик, спасбросков и других d20-бросков; количество зарядов остаётся отдельным контролом. |
 | Параметры броска оружия | `share-ui/ChoiceCard layout="icon" selection-indicator="outline"` | Одна горизонтальная полоса кнопок с иконкой и подписью для критического попадания, хвата, метания и бонусного действия. Выбор, доступность и игровые ограничения задаёт `WeaponRollControls`. |
-| Оружие и базовые атаки | `WeaponCardLayout` → `WeaponMetricsTable`, `WeaponRollDialog`, `WeaponRollPreview`, `SectionLabel` | [Общая компоновка](../features/character-editor/weapon-presentation.md): карточки одной колонкой, атака и урон рядом при достаточной ширине. Живое превью находится в окне броска. Карточка сворачивается без изменения документа. Удержание и ближайшие позиции сортировки принадлежат `share-ui/useSortable`; приложение сохраняет перестановку экземпляров. |
+| Оружие и базовые атаки | `WeaponCardLayout` → `WeaponMetricsTable`, `CharacterRollDialog`, `WeaponRollPreview`, `SectionLabel` | [Общая компоновка](../features/character-editor/weapon-presentation.md): карточки одной колонкой, атака и урон рядом при достаточной ширине. Живое превью находится в окне броска. Карточка сворачивается без изменения документа. Удержание и ближайшие позиции сортировки принадлежат `share-ui/useSortable`; приложение сохраняет перестановку экземпляров. |
 | Галерея личности и внешний экран | `CharacterPhotoGallery`, `CharacterCoverControls` → `MorphTileHeader`, `RowActionMenu`, `ToggleSwitch` | Предметная композиция фотографий и управления Android-показом. Общие элементы и меню принадлежат share-ui; capability, очередь, выбранный кадр и жизненный цикл — платформенному адаптеру. Контракт — [галерея](../features/character-editor/gallery.md). |
 | Blur-подложка | `share-ui/BlurBackdrop` | Декоративный слой размытия с `radius` и CSS-параметрами bounds/tint/mask. Существующая поверхность использует `backdropBlurStyle`, а анимируемый overlay — `applyBackdropBlur`. Оба свойства фильтра задаются inline и переживают минификацию. Layout и передний план принадлежат экрану. |
 | Рабочая шапка | `shared/ui/WorkspaceHeader`, `WorkspaceSubheader`, `WorkspaceNavigation` | Общая оболочка сайта и Android с примыкающим сплошным баром вкладок, context и тенью. У обычных страниц одна строка; PageHeaderPortal передаёт основные действия. Вкладки листа находятся ниже, вкладки сессии в широком формате — внутри основной строки. Контракт — [шапка сайта](workspace-header.md). |
@@ -81,6 +81,11 @@ D&D и VTM. `CharacterBlock` адаптирует один существующ�
 `IconNavigation`, desktop-разделы — `SlidingTabs`.
 
 ## Подробные композиции
+
+`CharacterRollDialog` объединяет окна бросков оружия, базовых атак и заклинаний.
+Он владеет `AppModalFrame`, общей шириной и закреплённым слотом превью; игровые
+настройки и подтверждение передают предметные `WeaponRollSettings` и `SpellRollDialog`.
+
 
 `SpellbookNavigation` собирает источники магии на `SlidingTabs plain` с
 декоративным слоем пергамента и отдельным `ActionButton` добавления. Клавиатура,

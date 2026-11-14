@@ -17,6 +17,7 @@ import { computed, inject, ref, watch } from 'vue'
 import { FormField, ToggleSwitch } from '@sylvieshare/share-ui'
 
 const props = defineProps({ entry: { type: Object, required: true }, castLevel: Number, spendByDefault: Boolean, application: Boolean })
+const emit = defineEmits(['preview'])
 const ctx = inject('spellsBlockCtx')
 const baseLevel = computed(() => Number(props.entry.item?.data?.lvl) || 0)
 const available = computed(() => ctx.availableSpellSlotOptions(props.entry))
@@ -35,6 +36,7 @@ watch(levels, usable => { if (usable.length && !usable.includes(level.value)) le
 const pools = computed(() => available.value.filter(option => option.level === level.value))
 const slot = computed(() => pools.value.find(option => option.pool === 'short_rest') || pools.value[0])
 const disabled = computed(() => ctx.charCtx.itemTransfers?.busy || ctx.spellcastingBlocked || (spend.value && (!ctx.charCtx.ownerMode || !slot.value)))
+watch([level, spend], ([castLevel, spend]) => emit('preview', { castLevel, spend }), { immediate: true, flush: 'sync' })
 
 async function commit() {
   if (disabled.value) return false

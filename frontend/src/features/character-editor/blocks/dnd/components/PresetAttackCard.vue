@@ -24,13 +24,13 @@
       </template>
     </WeaponCardLayout>
   </BaseTile>
-  <WeaponRollDialog v-if="selection" :key="selection.scope" :title="`${title} · ${selection.scope === 'attack' ? 'Атака' : 'Урон'}`" @close="closeMenu">
+  <CharacterRollDialog v-if="selection" :key="selection.scope" :title="`${title} · ${selection.scope === 'attack' ? 'Атака' : 'Урон'}`" @close="closeMenu">
     <template #preview><WeaponRollPreview :scope="selection.scope" :attack-bonus="previewAttackSummary.bonus" :attack-rows="previewAttackRows" :attack-color="previewAttackColor" :damage-rows="previewDamageRows" :damage-type="damageType" /></template>
     <WeaponRollSettings dialog :scope="selection.scope" :weapon-title="title" :weapon="iconItem" :summary="summary"
       @preview="preview = $event"
       @attack="options => run('attack', options)"
       @roll="options => run(options.critical ? 'critical' : 'damage', options)" />
-  </WeaponRollDialog>
+  </CharacterRollDialog>
 </template>
 
 <script setup>
@@ -42,7 +42,7 @@ import WeaponCardLayout from './WeaponCardLayout.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import WeaponRollSettings from './WeaponRollSettings.vue'
 import WeaponMetricsTable from './WeaponMetricsTable.vue'
-import WeaponRollDialog from './WeaponRollDialog.vue'
+import CharacterRollDialog from '@/features/character-editor/components/CharacterRollDialog.vue'
 import WeaponRollPreview from './WeaponRollPreview.vue'
 
 const props = defineProps({

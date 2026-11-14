@@ -56,7 +56,7 @@
         :remove="ctx.charCtx.ownerMode && !isReadonlyGrant ? () => removeSpell(close) : undefined" />
       <SpellCreationMenu :entry="entry" :cast-level="castLevel" @close="close" />
       <SpellApplicationMenu ref="applicationMenu" :entry="entry" :cast-level="castLevel" @close="close" />
-      <SpellRollMenu ref="rollMenu" :entry="entry" :cast-level="castLevel" @close="close" />
+      <SpellRollMenu :entry="entry" :cast-level="castLevel" @open="selection => openRoll(selection, close)" @close="close" />
       <RowActionItem
         v-if="ctx.charCtx.ownerMode && canPrepare"
         action="prepare"
@@ -102,6 +102,7 @@
       <RowActionItem v-if="ctx.charCtx.ownerMode && entry.item?.data?.concentration" :icon="Focus" :disabled="ctx.spellcastingBlocked || ctx.charCtx.itemTransfers?.busy" @click="startConcentration(close)">Начать концентрацию</RowActionItem>
     </template>
   </RowActionMenu>
+  <SpellRollDialog v-if="rollSelection" :key="rollSelection" :entry="entry" :cast-level="castLevel" :selection="rollSelection" @close="rollSelection = null" />
 </template>
 
 <script setup>
@@ -113,9 +114,11 @@ import { Focus, Sprout } from '@lucide/vue'
 import SpellEffectFormulas from './SpellEffectFormulas.vue'
 import SpellScalingFormula from './SpellScalingFormula.vue'
 import { hasInlineSpellScaling, spellScalingHint, spellInstances } from '../lib/spellScaling'
-import { computed, inject, nextTick, ref, watch } from 'vue'
+import { computed, inject, nextTick, ref, toRef, watch } from 'vue'
 
 import SpellRollMenu from './SpellRollMenu.vue'
+import SpellRollDialog from './SpellRollDialog.vue'
+import { useSpellRollOptions } from '../composables/useSpellRollOptions'
 import CharacterItemSkeleton from '@/features/character-editor/components/sheet/CharacterItemSkeleton.vue'
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
 import PreparedSpellBrackets from '@/features/character-editor/blocks/dnd/components/PreparedSpellBrackets.vue'
@@ -132,12 +135,18 @@ const props = defineProps({
 })
 
 const ctx = inject('spellsBlockCtx')
-const actionMenu = ref(null), rollMenu = ref(null), applicationMenu = ref(null)
+const actionMenu = ref(null), applicationMenu = ref(null), rollSelection = ref(null)
+const { options: rollOptions } = useSpellRollOptions(toRef(props, 'entry'))
+function openRoll(selection, close = () => {}) { close(); rollSelection.value = selection }
 async function openDirectRoll(kind, event) {
-  actionMenu.value?.open(event)
-  await nextTick()
-  if (kind === 'heal' && props.entry.item?.data?.heal?.apply !== false) applicationMenu.value?.open()
-  else rollMenu.value?.openRoll(kind)
+  if (kind === 'heal' && props.entry.item?.data?.heal?.apply !== false) {
+    actionMenu.value?.open(event)
+    await nextTick()
+    applicationMenu.value?.open()
+  } else {
+    const option = rollOptions.value.find(option => option.kind === kind && option.primary) || rollOptions.value.find(option => option.kind === kind)
+    if (kind === 'attack' || option) openRoll(kind === 'attack' ? 'attack' : option.key)
+  }
 }
 
 const data = computed(() => props.entry.item?.data || {})

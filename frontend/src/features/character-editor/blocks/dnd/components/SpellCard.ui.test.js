@@ -26,11 +26,11 @@ describe('character spell card actions', () => {
     expect(source).not.toContain('isAlwaysPrepared')
   })
 
-  it('reuses the row roll menu for direct metric actions', () => {
+  it('opens the roll window for direct metric actions', () => {
     expect(source).toContain('<SpellRollMenu')
     expect(source).not.toContain(':rollable=')
     expect(source).toContain('@roll-attack')
-    expect(source).toContain('rollMenu.value?.openRoll(kind)')
+    expect(source).toContain('<SpellRollDialog')
     expect(source).not.toContain('damage-menu')
     expect(source).not.toContain('class="sp-step"')
     expect(source).not.toContain('classSourceSummary')

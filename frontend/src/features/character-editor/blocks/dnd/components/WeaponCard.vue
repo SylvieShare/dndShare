@@ -38,7 +38,7 @@
       </template>
     </RowActionMenu>
 
-    <WeaponRollDialog v-if="directRoll" :key="`${directRoll.scope}:${directRoll.selection?.key || ''}`" :title="`${ctx.itemTitle(entry)} · ${directRoll.scope === 'attack' ? 'Атака' : 'Урон'}`" @close="closeRoll">
+    <CharacterRollDialog v-if="directRoll" :key="`${directRoll.scope}:${directRoll.selection?.key || ''}`" :title="`${ctx.itemTitle(entry)} · ${directRoll.scope === 'attack' ? 'Атака' : 'Урон'}`" @close="closeRoll">
       <template #preview><WeaponRollPreview :scope="directRoll.scope" :attack-bonus="previewAttackSummary.bonus" :attack-rows="previewAttackRows" :attack-color="previewAttackColor"
         :heading="selectedAlternative?.title" :damage-rows="selectedAlternative?.rows || previewDamageRows" /></template>
       <WeaponAlternativeDamageMenu v-if="directRoll.selection" dialog :entry="entry" :selection="directRoll.selection" @preview="rollPreview = $event"
@@ -49,7 +49,7 @@
         :bonus-action-option="options => ctx.bonusActionDamageOption(entry, options)" :versatile="hasTwoHandedDamage"
         @attack="options => rollAttack(closeRoll, options)" @roll="options => rollDamage(closeRoll, options)"
         @roll-step="options => { closeRoll(); ctx.rollWeaponUseStep(entry, options.weaponUseKey, options.stepKey) }" />
-    </WeaponRollDialog>
+    </CharacterRollDialog>
 
     <MorphEditorShell
       v-if="editorOpen"
@@ -80,7 +80,7 @@ import UsableItemAction from '@/features/character-editor/components/UsableItemA
 import ItemTransferAction from '@/features/character-editor/components/ItemTransferAction.vue'
 import MagicItemMenuActions from './MagicItemMenuActions.vue'
 import { ArrowRightLeft, ChevronDown } from '@lucide/vue'
-import WeaponRollDialog from './WeaponRollDialog.vue'
+import CharacterRollDialog from '@/features/character-editor/components/CharacterRollDialog.vue'
 import WeaponRollPreview from './WeaponRollPreview.vue'
 import { useWeaponCardPreview } from '../composables/useWeaponCardPreview'
 import { useWeaponDisclosure } from '../composables/useWeaponDisclosure'
