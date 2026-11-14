@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { weaponDamageDisplay } from './weaponDamageDisplay'
+import { evaluateDiceParts, parseDiceExpression } from '@/shared/lib/dice'
 
 describe('weapon damage source display', () => {
   const sources = [
@@ -19,6 +20,65 @@ describe('weapon damage source display', () => {
     const groups = weaponDamageDisplay(sources, [{ source: 'Оружие', expression: '1d8{Колющий}' }, ...sources.slice(1)])
     expect(groups[0].columns[0].variants.map(terms => terms[0].sides)).toEqual([6, 8])
     expect(groups[0].columns.slice(1).map(column => column.variants.length)).toEqual([1, 1])
+  })
+  it('places the common die after d8/d10 once, including a die identical to the two-handed base', () => {
+    const [group] = weaponDamageDisplay([
+      { source: 'Оружие', expression: '1d8+1d10' }, { source: 'Магия оружия', expression: '1' },
+    ], [
+      { source: 'Оружие', expression: '1d10+1d10' }, { source: 'Магия оружия', expression: '1' },
+    ])
+    expect(group.columns.map(column => column.source)).toEqual(['Оружие', 'Магия оружия'])
+    expect(group.columns[0].variants.map(terms => terms.map(term => term.sides))).toEqual([[8], [10]])
+    expect(group.columns[0].shared.map(term => term.sides)).toEqual([10])
+    expect(group.columns[1].variants).toHaveLength(1)
+  })
+  it('matches repeated addends one for one and preserves different quantities and signs', () => {
+    const column = (left, right) => weaponDamageDisplay([{ source: 'Оружие', expression: left }], [{ source: 'Оружие', expression: right }])[0].columns[0]
+    const repeated = column('1d8+1d6+1d6', '1d10+1d6')
+    expect(repeated.variants.map(terms => terms.map(term => term.sides))).toEqual([[8, 6], [10]])
+    expect(repeated.shared.map(term => term.sides)).toEqual([6])
+    expect(column('1d8+1d6', '1d10+2d6').shared).toEqual([])
+    expect(column('1d8-1d6', '1d10+1d6').shared).toEqual([])
+    const negative = column('1d8-2', '1d10-2')
+    expect(negative.operator).toBe('+')
+    expect(negative.shared).toMatchObject([{ sign: '-', kind: 'flat', value: 2 }])
+  })
+  it('never moves a die between damage types or source identities', () => {
+    const groups = weaponDamageDisplay([
+      { source: 'Оружие', expression: '1d8{Рубящий}+1d6{Огонь}' },
+      { source: 'Эффект', expression: '1d6{Рубящий}' },
+    ], [
+      { source: 'Оружие', expression: '1d10{Рубящий}+1d6{Огонь}' },
+      { source: 'Эффект', expression: '1d6{Рубящий}' },
+    ])
+    expect(groups.map(group => group.type)).toEqual(['Рубящий', 'Огонь'])
+    expect(groups[0].columns.map(column => column.source)).toEqual(['Оружие', 'Эффект'])
+    expect(groups[0].columns[0].shared).toEqual([])
+    expect(groups[1].columns[0].variants).toHaveLength(1)
+  })
+  it('keeps multiplied expressions intact instead of factoring across their operators', () => {
+    const column = weaponDamageDisplay([{ expression: '1d8*2+1d6' }], [{ expression: '1d10*2+1d6' }])[0].columns[0]
+    expect(column.shared).toEqual([])
+    expect(column.variants.map(terms => terms.map(term => term.sign))).toEqual([['+', '×', '+'], ['+', '×', '+']])
+  })
+  it.each([
+    ['1d8+1d10', '1d10+1d10'], ['1d8+2d6-3', '1d10+2d6-3'],
+    ['1d8-2', '1d10-2'], ['-1d8', '-1d10'], ['1d8+1d6+1d6', '1d10+1d6'],
+    ['1d8+1d6', '1d6+1d8'], ['1d8*2+1d6', '1d10*2+1d6'],
+  ])('preserves each displayed grip total and leaves input rows untouched: %s / %s', (left, right) => {
+    const rows = [{ source: 'Оружие', expression: left }], alternatives = [{ source: 'Оружие', expression: right }]
+    const original = structuredClone({ rows, alternatives })
+    const groups = weaponDamageDisplay(rows, alternatives)
+    const maximum = term => term.kind === 'dice' ? term.n * term.sides : term.value
+    for (const [index, expression] of [left, right].entries()) {
+      const displayed = groups.flatMap(group => group.columns).reduce((total, column) => {
+        const terms = [...column.variants[Math.min(index, column.variants.length - 1)], ...column.shared]
+        const normalized = terms.map(term => ({ ...term, operator: term.sign === '×' ? '*' : term.sign }))
+        return total + (column.operator === '−' ? -1 : 1) * evaluateDiceParts(normalized, maximum).total
+      }, 0)
+      expect(displayed).toBe(evaluateDiceParts(parseDiceExpression(expression), maximum).total)
+    }
+    expect({ rows, alternatives }).toEqual(original)
   })
   it('groups equal types once, including mixed-type weapon damage', () => {
     const groups = weaponDamageDisplay([...sources, { source: 'Оружие', expression: '1d4{Огонь}' }, { source: 'Пламя', expression: '2{Огонь}' }])

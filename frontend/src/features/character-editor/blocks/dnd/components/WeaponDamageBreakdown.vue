@@ -8,10 +8,10 @@
           <span v-if="gi || ci || column.operator === '−'" class="weapon-damage__operator">{{ column.operator }}</span>
           <span class="weapon-damage__column">
             <span class="weapon-damage__formula">
-              <template v-for="(terms, vi) in column.variants" :key="vi">
-                <span v-if="vi" class="weapon-damage__operator" title="Одной рукой / двумя руками">/</span>
-                <span v-if="!terms.length" class="weapon-damage__flat">0</span>
-                <span v-for="(term, ti) in terms" :key="ti" class="weapon-damage__value"
+              <template v-for="(run, ri) in formulaRuns(column)" :key="ri">
+                <span v-if="run.separator" class="weapon-damage__operator" :title="run.separator === '/' ? 'Одной рукой / двумя руками' : undefined">{{ run.separator }}</span>
+                <span v-if="!run.terms.length" class="weapon-damage__flat">0</span>
+                <span v-for="(term, ti) in run.terms" :key="ti" class="weapon-damage__value"
                   :style="column.roll && term.kind === 'dice' && term.sides === 20 && rollColor ? { color: rollColor } : undefined">
                   <span v-if="ti || term.sign !== '+'" class="weapon-damage__operator">{{ term.sign === '-' ? '−' : term.sign }}</span>
                   <template v-if="term.kind === 'dice'">
@@ -43,8 +43,12 @@ const props = defineProps({ rows: { type: Array, default: () => [] }, alternativ
 const groups = computed(() => weaponDamageDisplay(props.rows, props.alternatives, { type: props.damageType, color: props.damageColor }))
 const root = ref(null)
 const { flashes, removeFlash } = useWeaponFormulaFlash(root)
-const columnSignature = (column, gi, ci) => JSON.stringify([column.source, column.operator, column.variants,
+const columnSignature = (column, gi, ci) => JSON.stringify([column.source, column.operator, column.variants, column.shared,
   !!(gi || ci || column.operator === '−'), column.roll ? props.rollColor : null])
+const formulaRuns = column => [
+  ...column.variants.map((terms, index) => ({ terms, separator: index ? '/' : '' })),
+  ...(column.shared.length ? [{ terms: column.shared, separator: column.shared[0].sign === '+' ? '+' : '' }] : []),
+]
 </script>
 <style scoped>
 .weapon-damage {position:relative;isolation:isolate;display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--spacing-small);min-width:0;max-width:100%}
