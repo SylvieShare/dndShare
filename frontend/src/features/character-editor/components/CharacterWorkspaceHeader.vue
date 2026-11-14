@@ -2,7 +2,7 @@
   <WorkspaceHeader ref="workspace" v-bind="$attrs" class="character-workspace-header" :scroll-source="null" :context-placement="format === 'phone' ? 'row' : 'auto'"
     :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" :fit-navigation="format !== 'phone'"
     :navigation-placement="dnd && format === 'desktop' ? 'external' : 'below'"
-    :navigation-joined="dnd && format === 'desktop'" row-dividers
+    row-dividers
     :navigation-target="dnd && format === 'desktop' ? navigationTarget : undefined">
     <template #identity>
       <ActionButton variant="quiet" :icon-only="compact" :aria-label="modal ? 'Закрыть лист' : 'К списку персонажей'" @click="modal ? emit('close') : router.push('/chars')">
@@ -92,7 +92,7 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
 .heading-editors {position:absolute;width:0;height:0}
 .heading-tools {display:flex;align-items:center;gap:2px;flex:none}
 .character-summary-strip {position:relative;z-index:1}
-.character-workspace-header.workspace-header--context:not(.workspace-header--context-inline):has(.dsov-row--fits) {
+.character-workspace-header.workspace-header--context:not(.workspace-header--context-inline) {
   --workspace-header-bottom-inset: 0px;
 }
 .character-workspace-header:not(.workspace-header--context-inline) .character-summary-strip {

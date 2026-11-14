@@ -144,9 +144,9 @@ function monogram(value) {
 
 <style scoped>
 .dsov.dsov--header {padding:0;gap:var(--spacing-small)}
-.dsov--header .dsov-row {gap:var(--spacing-small);flex-wrap:nowrap;max-width:100%;box-sizing:border-box;padding-block:var(--spacing-xs);padding-inline:var(--status-scroll-inset-start,0px) var(--status-scroll-inset-end,0px);margin-block:calc(-1 * var(--spacing-xs));overscroll-behavior-x:contain}
+.dsov--header .dsov-row {gap:var(--spacing-small);flex-wrap:nowrap;max-width:100%;box-sizing:border-box;padding-block:0;padding-inline:var(--status-scroll-inset-start,0px) var(--status-scroll-inset-end,0px);margin-block:0;overscroll-behavior-x:contain}
 .dsov--header .dsov-row > * {flex:none}
-.dsov--header .dsov-row--fits {overflow:visible;padding-block:0;margin-block:0}
+.dsov--header .dsov-row--fits {overflow:visible}
 .dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-status-icon) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:var(--layout-sheet-header-status-icon);padding:0 calc(var(--spacing-large) + var(--spacing-xs)) 0 var(--spacing-medium);border-radius:var(--radius-tile)}
 .dsov--header .dsov-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon);min-width:var(--layout-sheet-header-status-icon)}
 .dsov--header .dsov-item-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon)}
@@ -223,7 +223,7 @@ function monogram(value) {
   outline: 2px solid var(--accent-soft);
   outline-offset: 2px;
 }
-.dsov--header .dsov-row--fits .dsov-effect:focus-visible {outline-offset:-2px}
+.dsov--header .dsov-effect:focus-visible {outline-offset:-2px}
 .dsov-icon {
   display: grid;
   width: 64px;
@@ -280,6 +280,7 @@ function monogram(value) {
 
 @media (hover: hover) {
   .dsov-effect:hover { transform: translateY(-1px); }
+  .dsov--header .dsov-effect:hover { transform: none; }
   .dsov-add:hover { border-color: var(--text-muted); color: var(--text-2); }
 }
 @media (prefers-reduced-motion: reduce) {

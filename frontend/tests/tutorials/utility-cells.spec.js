@@ -10,7 +10,6 @@ for(const width of [320,390,834,1440])test(`character menu grid and direct dialo
   page.on('pageerror',error=>{throw error})
   await page.setViewportSize({width,height:900})
   await page.goto('/tests/tutorials/fixtures/utility-cells.html')
-  for(const id of ['speed','initiative','prof_bonus','armor'])await expect(page.locator(`.test-utilities [data-sheet-field="${id}"]`)).toHaveCount(0)
   let menu=await openMenu(page)
   const cells=menu.getByRole('group',{name:'Показатели персонажа'}).getByRole('menuitem')
   await expect(cells).toHaveCount(4)

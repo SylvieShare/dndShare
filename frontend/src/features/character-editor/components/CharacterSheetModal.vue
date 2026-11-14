@@ -100,7 +100,7 @@ const sessionEventsStore = useSessionEventsStore()
 const previewMode = computed(() => Boolean(props.draft))
 const { format: windowFormat } = useAppLayout()
 const desktopNavigationTarget = shallowRef(null)
-// The modal uses the compact pager on both phone and tablet.
+// Keep the padded compact presentation; navigation follows the real window format.
 const format = computed(() => windowFormat.value === 'phone' ? 'tablet' : windowFormat.value)
 
 const {
@@ -108,7 +108,7 @@ const {
   activeTabs, charName, charSub, iconImageUrl,
   load, loadPreview, containerWidthForTab, getInitialTabs,
   updateValue, updateValues, updateVar, onPublicToggle: updatePublicVisible,
-} = useCharacterData(props.uuid, format)
+} = useCharacterData(props.uuid, windowFormat)
 provideSheetFields(template, data, onUpdateValue, onUpdateVar)
 const sheetHeader = ref(null)
 
@@ -151,7 +151,8 @@ const swipePagerEl = ref(null)
 const swipe = useTabSwipe(activeTabs, compactLayout)
 const { activeTab, visitedTabIndexes, markTabVisited, resetSwipe, mobileTabSelection, tabDragActive, tabDragSettling } = swipe
 useWorkspaceScrollPosition(sheetHeader, () => compactLayout.value ? swipePagerEl.value?.scrollElement(activeTab.value) : bodyScroll.value)
-watch(format, (next, previous) => {
+watch(windowFormat, (next, previous) => {
+  if (sheetTabs(template.value, next) === sheetTabs(template.value, previous)) return
   const id = swipe.requestedTab.value ?? sheetTabs(template.value, previous)[activeTab.value]?.id
   resetSwipe()
   activeTab.value = sheetTabIndex(activeTabs.value, id)

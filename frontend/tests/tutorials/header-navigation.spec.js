@@ -35,10 +35,10 @@ async function expectContinuousHeader(page) {
     expect(geometry.start).toBeGreaterThanOrEqual(-1)
     expect(geometry.end).toBeGreaterThanOrEqual(-1)
     expect(geometry.overflow).toBe('auto')
-    expect(geometry.background).toBe('rgb(30, 30, 34)')
+    expect(geometry.background).toBe('rgb(38, 38, 43)')
     expect(geometry.shadow).toBe('none')
     expect(geometry.radius).toBe('0px')
-    expect(geometry.bottomRadius).toBe('16px')
+    expect(geometry.bottomRadius).toBe(await page.evaluate(()=>getComputedStyle(document.documentElement).getPropertyValue('--radius-tile').trim()))
     expect(Math.abs(geometry.barStart)).toBeLessThan(1)
     expect(Math.abs(geometry.barEnd)).toBeLessThan(1)
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize().width)
@@ -103,7 +103,7 @@ for (const [width, format, layout] of [[390, 'phone', 'compact'], [834, 'tablet'
     await scroller.evaluate(node => { node.scrollTop = 180 })
     await expectContinuousHeader(page)
     if (format === 'desktop') {
-      await expect.poll(async () => (await navigation.boundingBox()).y).toBeCloseTo(initialNavigationY,0)
+      await expect.poll(async () => (await navigation.boundingBox()).y).toBeCloseTo(initialNavigationY-180,0)
     } else {
       await expect.poll(async () => (await navigation.boundingBox()).y).toBeCloseTo(initialNavigationY,0)
     }
@@ -130,31 +130,32 @@ test('desktop tabs replace only the central section and retain both side columns
   expect(api.writes).toEqual([])
 })
 
-for(const withCondition of [false,true])test(`joined desktop navigation stays attached and keeps content reachable (conditions=${withCondition})`,async({page},info)=>{
+for(const withCondition of [false,true])test(`desktop navigation scrolls inside the central column (conditions=${withCondition})`,async({page},info)=>{
   const api=await openSheet(page,1440,withCondition)
   const header=page.locator('.character-workspace-header'),nav=page.locator('[data-sheet-navigation]'),scroller=page.locator('.sheet-scroll')
-  await expect(header).toHaveClass(/workspace-header--navigation-joined/)
-  const fixed=await header.boundingBox()
+  await expect(header).not.toHaveClass(/workspace-header--navigation-joined/)
+  const fixed=await header.boundingBox(),start=await nav.boundingBox()
+  expect(start.y).toBeGreaterThan(fixed.y+fixed.height+15)
   await scroller.evaluate(node=>{node.scrollTop=180})
-  await expect.poll(async()=>(await nav.boundingBox()).y).toBeCloseTo(fixed.y+fixed.height,0)
-  await nav.getByRole('button',{name:'Оружие',exact:true}).click()
-  await expect(scroller).toHaveJSProperty('scrollTop',180)
-  const curve=await page.locator('.dnd-desktop-navigation').evaluate(node=>({width:getComputedStyle(node,'::before').width,pointer:getComputedStyle(node,'::before').pointerEvents}))
-  expect(curve).toEqual({width:'12px',pointer:'none'})
+  await expect.poll(async()=>(await nav.boundingBox()).y).toBeCloseTo(start.y-180,0)
+  expect((await header.boundingBox()).y).toBeCloseTo(fixed.y,0)
+  const decoration=await page.locator('.dnd-desktop-navigation').evaluate(node=>getComputedStyle(node,'::before').content)
+  expect(decoration).toBe('none')
   const target=page.locator('.dnd-desktop-main .inner-tab-pane:visible button').first()
   await target.evaluate(node=>node.scrollIntoView({block:'start'}))
-  expect((await target.boundingBox()).y).toBeGreaterThanOrEqual((await nav.boundingBox()).y+(await nav.boundingBox()).height)
+  expect((await target.boundingBox()).y).toBeGreaterThanOrEqual((await scroller.boundingBox()).y-.5)
   expect(api.writes).toEqual([])
-  await info.attach(`joined-desktop-${withCondition}`,{body:await page.screenshot(),contentType:'image/png'})
+  await info.attach(`local-desktop-${withCondition}`,{body:await page.screenshot(),contentType:'image/png'})
 })
 
 for(const width of [390,834,1440])for(const withCondition of [false,true])test(`fold dividers separate visible header rows at ${width} (conditions=${withCondition})`,async({page})=>{
   const api=await openSheet(page,width,withCondition)
   const header=page.locator('.character-workspace-header')
   const bar=page.locator('[data-sheet-navigation]').locator('xpath=..')
-  await expect(page.locator('.workspace-subheader .workspace-row-divider')).toBeVisible()
+  const navDividers=width>=1200?0:1
+  await expect(page.locator('.workspace-subheader .workspace-row-divider')).toHaveCount(navDividers)
   const separate=withCondition && !(await header.evaluate(n=>n.classList.contains('workspace-header--context-inline')))
-  await expect(page.locator('.workspace-row-divider:visible')).toHaveCount(separate?2:1)
+  await expect(page.locator('.workspace-row-divider:visible')).toHaveCount(navDividers+(separate?1:0))
   if(separate){
     await expect(header.locator('.dsov-row:visible')).toHaveClass(/dsov-row--fits/)
     await expect(header.locator('.workspace-header-inner')).toHaveCSS('padding-bottom','0px')

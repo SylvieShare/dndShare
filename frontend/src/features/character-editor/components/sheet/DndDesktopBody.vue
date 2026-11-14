@@ -1,6 +1,6 @@
 <template>
-  <div class="dnd-desktop-body">
-    <aside class="dnd-desktop-stats"><DndStats format="desktop" /></aside>
+  <div ref="body" class="dnd-desktop-body">
+    <aside ref="statsColumn" class="dnd-desktop-stats"><DndStats format="desktop" /></aside>
     <main class="dnd-desktop-main">
       <div ref="navigationTarget" class="dnd-desktop-navigation" />
       <CharacterBlock block-id="read_only_notice" />
@@ -11,12 +11,11 @@
         </section>
       </div>
     </main>
-    <aside class="dnd-desktop-utilities sheet-stack">
-      <DndUtilities />
+    <aside ref="utilitiesColumn" class="dnd-desktop-utilities sheet-stack">
+      <CharacterBlock block-id="defenses" />
       <CharacterBlock block-id="feature_widgets" />
       <CharacterBlock block-id="actions" />
       <CharacterBlock block-id="resources" />
-      <CharacterBlock block-id="defenses" />
       <CharacterBlock block-id="proficiencies" />
     </aside>
   </div>
@@ -24,15 +23,17 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { usePreparedTabs } from '../../composables/usePreparedTabs'
+import { useBottomPinnedColumns } from '../../composables/useBottomPinnedColumns'
 import CharacterSheetSkeleton from './CharacterSheetSkeleton.vue'
 import CharacterBlock from '../CharacterBlock.vue'
 import DndStats from './DndStats.vue'
-import DndUtilities from './DndUtilities.vue'
 import DndSection from './DndSection.vue'
 import definition from '../../settings/dnd/definition'
 const props = defineProps({ section: String })
 const emit = defineEmits(['navigation-target'])
 const navigationTarget = ref(null)
+const body = ref(null), statsColumn = ref(null), utilitiesColumn = ref(null)
+useBottomPinnedColumns(body, [statsColumn, utilitiesColumn])
 onMounted(() => emit('navigation-target', navigationTarget.value))
 onBeforeUnmount(() => emit('navigation-target', null))
 const tabs = computed(() => definition.tabs.desktop.map(tab => ({ id: tab.id, key: tab.id, title: tab.title })))
@@ -43,17 +44,13 @@ const { isReady } = usePreparedTabs(tabs, computed(() => tabs.value.findIndex(ta
 .dnd-desktop-body { display: flex; align-items: flex-start; gap: 15px; }
 .dnd-desktop-stats { flex: 0 1 var(--layout-sheet-stats-column); min-width: var(--layout-sheet-stats-column-min); }
 .dnd-desktop-utilities { flex: 0 1 var(--layout-sheet-utilities-column); min-width: var(--layout-sheet-utilities-column-min); }
-.dnd-desktop-stats, .dnd-desktop-utilities { padding: 20px; }
-.dnd-desktop-main { align-self:stretch; flex: 1 1 calc(var(--layout-sheet-max) - var(--layout-sheet-stats-column) - var(--layout-sheet-utilities-column) - 30px); min-width: 0; display: flex; flex-direction: column; gap: 11px; }
-.dnd-desktop-navigation { position:sticky;top:0;z-index:12;min-width:0;filter:drop-shadow(0 3px 5px color-mix(in srgb,var(--scrim) 24%,transparent)); }
-.dnd-desktop-navigation :deep(> .workspace-subheader) { border-radius:0 0 var(--radius-workspace-bottom) var(--radius-workspace-bottom);overflow:hidden;box-shadow:inset 0 -1px 0 var(--border); }
-.dnd-desktop-navigation::before,.dnd-desktop-navigation::after { content:'';position:absolute;top:0;width:var(--radius-workspace-join);height:var(--radius-workspace-join);pointer-events:none; }
-.dnd-desktop-navigation::before { right:100%;background:radial-gradient(circle at 0 100%,transparent calc(var(--radius-workspace-join) - .5px),var(--subheader) var(--radius-workspace-join)); }
-.dnd-desktop-navigation::after { left:100%;background:radial-gradient(circle at 100% 100%,transparent calc(var(--radius-workspace-join) - .5px),var(--subheader) var(--radius-workspace-join)); }
+.dnd-desktop-stats, .dnd-desktop-utilities { position:sticky;top:var(--sheet-side-sticky-top,0px);padding:var(--spacing-page); }
+.dnd-desktop-main { align-self:stretch; flex: 1 1 calc(var(--layout-sheet-max) - var(--layout-sheet-stats-column) - var(--layout-sheet-utilities-column) - 30px); min-width: 0; display: flex; flex-direction: column; gap: 11px;padding-top:var(--spacing-page); }
+.dnd-desktop-navigation { min-width:0;--workspace-subheader-background:var(--surface);--workspace-subheader-padding:var(--spacing-small); }
+.dnd-desktop-navigation :deep(> .workspace-subheader) { border-radius:var(--radius-tile);overflow:hidden; }
 .dnd-desktop-navigation:empty { display:none; }
 .dnd-desktop-utilities { gap: 15px; }
 .inner-tabs-content { padding-top: 3px; min-width: 0; }
-.inner-tabs-content :deep(:where([data-tutorial],[data-sheet-section],[id],button,input,select,textarea,a,[contenteditable])) { scroll-margin-top:calc(var(--layout-workspace-navigation-height) + 2 * var(--spacing-xs) + var(--spacing-small)); }
 .inner-tab-pane { animation: sheet-section-in var(--motion-navigation); }
 @keyframes sheet-section-in { from { opacity: 0; transform: translateY(6px); } }
 @media (prefers-reduced-motion: reduce) { .inner-tab-pane { animation: none; } }

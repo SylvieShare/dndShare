@@ -69,6 +69,7 @@ const tabs = computed(() =>
 </script>
 <style scoped>
 .session-map-tabs-header {
+  border-bottom: var(--layout-border) solid var(--border);
   margin-left: var(--session-sidebar-rail, 0px);
   flex: none;
   min-width: 0;

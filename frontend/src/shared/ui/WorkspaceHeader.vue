@@ -12,7 +12,7 @@
     </div>
     <slot name="between" />
     <Teleport :to="navigationTarget || '#' + navigationId" :disabled="!navigationTarget && navigationPlacement !== 'inline'" defer>
-      <WorkspaceSubheader ref="navigation" v-if="$slots.navigation" v-show="navigationVisible" :row-divider="rowDividers" :inline="!!navigationTarget || navigationPlacement === 'inline'" :fit="fitNavigation" :content-width="contentWidth || (page ? 'var(--layout-content-max)' : undefined)"><slot name="navigation" /></WorkspaceSubheader>
+      <WorkspaceSubheader ref="navigation" v-if="$slots.navigation" v-show="navigationVisible" :row-divider="rowDividers && !navigationTarget" :inline="!!navigationTarget || navigationPlacement === 'inline'" :fit="fitNavigation" :content-width="contentWidth || (page ? 'var(--layout-content-max)' : undefined)"><slot name="navigation" /></WorkspaceSubheader>
     </Teleport>
   </header>
 </template>

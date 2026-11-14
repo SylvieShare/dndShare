@@ -264,6 +264,8 @@ defineExpose({
   visibility: hidden;
 }
 .map-sidebar-panel {
+  box-sizing: border-box;
+  border-inline-end: var(--layout-border) solid var(--workspace-sidebar-border);
   background: var(--subheader);
   flex: none;
   width: var(--map-sidebar-panel-width, calc(var(--map-sidebar-width) - var(--layout-map-rail)));

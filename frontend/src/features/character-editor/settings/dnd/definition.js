@@ -15,13 +15,15 @@ const sections = [
   { id: 'personality', title: 'Личность', svg: '/static/tab-personality.svg' },
   { id: 'journal', title: 'Дневник', svg: '/static/edit-note.svg' },
 ]
+const phoneSections = sections.filter(tab => tab.id !== 'abilities')
+phoneSections.splice(phoneSections.findIndex(tab => tab.id === 'inventory'), 0, sections.find(tab => tab.id === 'abilities'))
 
 // Game-field parameters and navigation labels; placement belongs to Vue components.
 export default {
   system: 'dnd5e', width: layoutTokens['sheet-max'],
   blocks: { ...stats, ...identity, ...personality, ...features, ...equipment, ...utilities },
   tabs: {
-    phone: [statsTab, ...sections],
+    phone: [statsTab, ...phoneSections],
     tablet: [statsTab, ...sections],
     desktop: [sections[0], sections[1], sections[3], { ...sections[2], title: 'Снаряжение' }, sections[4], sections[5]],
   },
