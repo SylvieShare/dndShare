@@ -21,7 +21,7 @@ function onError(event) { failed.value = [...failed.value, event.currentTarget.g
 </script>
 <style scoped>
 .spell-card-cover {position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
-.spell-card-cover-image,.spell-card-cover-skeleton {position:absolute;inset:0 0 0 auto;width:78%;height:100%;mask-image:linear-gradient(90deg,transparent 0%,#000 66%)}
+.spell-card-cover-image,.spell-card-cover-skeleton {position:absolute;inset:0 0 0 auto;width:78%;height:100%;mask-image:linear-gradient(90deg,transparent 0%,var(--text-1) 66%)}
 .spell-card-cover-image {object-fit:cover;object-position:65% center;opacity:0;transition:opacity var(--motion-enter) ease}
 .spell-card-cover-image--ready {opacity:.56}
 .spell-card-cover-skeleton {opacity:.15}
