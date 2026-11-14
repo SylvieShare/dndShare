@@ -19,7 +19,7 @@ test('status cards retain semantic fills and readable captions while their menu 
   await expect(header.locator('.dsov-effect')).toHaveCount(6,{timeout:15000})
   const color=async(name)=>header.getByRole('button',{name,exact:true}).evaluate(node=>{
     const decode=value=>value.match(/[\d.]+/g).slice(0,3).map(Number).map(v=>value.startsWith('color(')?v*255:v)
-    const bg=decode(getComputedStyle(node).backgroundColor)
+    const bg=decode(getComputedStyle(node,'::before').backgroundColor)
     const luminance=rgb=>rgb.map(v=>v/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4).reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0)
     const text=[...node.querySelectorAll('.dsov-name,.dsov-duration,.dsov-level')].map(element=>{
       const a=luminance(decode(getComputedStyle(element).color)),b=luminance(bg)

@@ -1,0 +1,14 @@
+{
+  "asset": "frontend/src/assets/ui/status-parchment.webp",
+  "generationMode": "built-in image_gen",
+  "prompt": "Use case: ui-mockup. Asset type: reusable UI background texture, NOT a complete mockup. Input image is a STYLE REFERENCE only: use the restrained dark violet \"Ночной пергамент\" material and organic paper edge from that reference. Create ONE isolated square parchment panel asset, flat front-on, on a GENUINELY TRANSPARENT background. The square fills roughly 94% of the canvas, generous undamaged center. Matte dark smoky violet dyed paper, nearly flat center #392D45, one broad subtle shadow color #31273B and one muted lit edge #4B3B56. Low-detail hand-painted cel shading with only these 3-4 tones. Soft small irregular torn-paper edges, variation only around outer 4% of panel, restrained lower-right folded paper corner INSIDE the outer 8% only. Quiet center must be evenly filled and empty for real UI text. This will be used with CSS nine-slice: keep ALL characterful edge details in the outer 8%, repeatable straight middle edges, completely quiet center. No icon, NO TEXT, no numbers, no letters, no symbols, no wax seal, no buttons, no ornament. No border outline. No photoreal grain, no heavy texture, no stains. No sci-fi, no facets, no metal, no bevels, no neon. Crisp painterly silhouette without drop shadow outside. Completely transparent outside paper, opaque paper center. Intended final asset 1024x1024.",
+  "reference": "Ночной пергамент — выбранный пользователем эскиз",
+  "sourceSha256": "4016dfa10a349cfebf3355bd1f3cc263118bbd6dce1e83875449e02c0a7e1a3b",
+  "sha256": "bfdb5c03a95ce44b5c66d5787022d8871a09dd828acd85ba2eea3e3f9be84cb5",
+  "width": 512,
+  "height": 512,
+  "format": "WebP",
+  "quality": 0.85,
+  "transparent": true,
+  "recipe": "Chromium Canvas 2D: uniform resize from 1280x1280 to 512x512; WebP encode at 0.85; no artistic edits."
+}

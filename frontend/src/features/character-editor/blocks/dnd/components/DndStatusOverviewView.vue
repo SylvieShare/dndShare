@@ -125,8 +125,8 @@ function monogram(value) {
 .dsov.dsov--header {padding:0;gap:var(--spacing-small)}
 .dsov--header .dsov-row {gap:var(--spacing-small);flex-wrap:nowrap;max-width:100%;box-sizing:border-box;padding-block:var(--spacing-xs);padding-inline:var(--status-scroll-inset-start,0px) var(--status-scroll-inset-end,0px);margin-block:calc(-1 * var(--spacing-xs));overscroll-behavior-x:contain}
 .dsov--header .dsov-row > * {flex:none}
-.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-status-icon) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:var(--layout-sheet-header-status-icon);padding:0 var(--spacing-medium) 0 0;border-radius:var(--radius-tile);background:var(--status-background)}
-.dsov--header .dsov-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon);min-width:var(--layout-sheet-header-status-icon);border-radius:var(--radius-input)}
+.dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-status-icon) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:var(--layout-sheet-header-status-icon);padding:0 var(--spacing-medium) 0 0;border-radius:var(--radius-tile)}
+.dsov--header .dsov-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon);min-width:var(--layout-sheet-header-status-icon)}
 .dsov--header .dsov-item-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon)}
 .dsov--header .dsov-icon :deep(img), .dsov--header .dsov-icon :deep(svg) {width:100%;height:100%}
 .dsov--header .dsov-copy {gap:calc(var(--spacing-xs) / 2)}
@@ -151,7 +151,10 @@ function monogram(value) {
   --status-tone: var(--info);
   --status-background: color-mix(in srgb, var(--status-tone) 24%, var(--surface));
   --status-secondary: color-mix(in srgb, var(--text-1) 85%, var(--surface));
-  --action-menu-source-background: color-mix(in srgb, var(--status-tone) 32%, var(--surface));
+  --action-menu-source-background: transparent;
+  --status-paper: url('@/assets/ui/status-parchment.webp');
+  position: relative;
+  isolation: isolate;
   display: grid;
   width: 300px;
   grid-template-columns: 64px minmax(0, 1fr);
@@ -161,7 +164,7 @@ function monogram(value) {
   padding: 0;
   border: 0;
   border-radius: var(--radius-row);
-  background: var(--status-background);
+  background: transparent;
   color: var(--text-1);
   font: inherit;
   text-align: left;
@@ -170,12 +173,42 @@ function monogram(value) {
 }
 .dsov-effect[data-polarity="positive"] { --status-tone:var(--success); }
 .dsov-effect[data-polarity="negative"] { --status-tone:var(--danger); }
+.dsov-effect::before,
+.dsov-effect::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.dsov-effect::before {
+  background: var(--status-background);
+  -webkit-mask: var(--status-paper) center / 100% 100% no-repeat;
+  mask: var(--status-paper) center / 100% 100% no-repeat;
+  transition: background-color 140ms ease;
+}
+.dsov-effect::after {
+  background: var(--status-paper) center / 100% 100% no-repeat;
+  mix-blend-mode: luminosity;
+  opacity: .24;
+}
+.dsov-effect.action-menu-source--open {
+  --status-background: color-mix(in srgb, var(--status-tone) 32%, var(--surface));
+  outline: none;
+}
+.dsov-effect:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 2px;
+}
 .dsov-icon {
   display: grid;
   width: 64px;
   height: 64px;
   place-items: center;
   overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 .dsov-item-icon { width: 64px; height: 64px; }
 .dsov--icons-only { padding: 0; gap: 4px; }
@@ -224,5 +257,8 @@ function monogram(value) {
 @media (hover: hover) {
   .dsov-effect:hover { transform: translateY(-1px); }
   .dsov-add:hover { border-color: var(--text-muted); color: var(--text-2); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dsov-effect, .dsov-effect::before { transition: none; }
 }
 </style>
