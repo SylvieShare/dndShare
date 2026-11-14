@@ -44,8 +44,13 @@ defineEmits(['settings'])
 .spell-parameter-settings {flex:1;min-width:0}
 .spell-parameter-settings-icon {flex:none}
 .spell-parameter-settings-label {display:flex;flex-direction:column;align-items:flex-start;line-height:var(--type-group-line-height);text-align:left;white-space:nowrap}
-/* Keep the intrinsic 512x320 illustration proportions on phones. */
-@media (--ui-phone){.spell-parameter{min-height:0;aspect-ratio:8 / 5}}
+@media (--ui-phone){
+  .spell-parameter{min-height:var(--layout-spell-stat-compact-height);padding:var(--spacing-label) var(--spacing-medium)}
+  .spell-parameter::before{background-position:right center;background-size:auto 100%;opacity:.42}
+  .spell-parameter-label{color:var(--text-1);font-size:var(--type-spell-parameter-label-compact-size);line-height:var(--type-spell-parameter-label-compact-line-height);font-weight:var(--type-spell-parameter-label-compact-weight)}
+  .spell-parameter-value{line-height:var(--type-spell-parameter-value-compact-line-height)}
+  .spell-parameter-value:not(.spell-parameter-value--name){font-size:var(--type-spell-parameter-value-compact-size)}
+}
 @container (max-width:560px){.spell-parameters-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @container (max-width:300px){
   .spell-parameter-label{font-size:var(--type-context-size);line-height:var(--type-context-line-height)}

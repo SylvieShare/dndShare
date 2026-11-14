@@ -18,8 +18,8 @@ for(const width of [390,834,1920])for(const both of [false,true])test(`compact s
   const columns=await page.locator('.spell-parameters-grid').evaluate(n=>getComputedStyle(n).gridTemplateColumns.split(' ').length)
   expect(columns).toBe(width===390?2:4)
   if(width<600){
-    const ratios=await page.locator('.spell-parameter').evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect();return r.width/r.height}))
-    for(const ratio of ratios)expect(ratio).toBeCloseTo(8/5,2)
+    const tiles=await page.locator('.spell-parameter').evaluateAll(nodes=>nodes.map(n=>({height:n.getBoundingClientRect().height,artSize:getComputedStyle(n,'::before').backgroundSize,labelColor:getComputedStyle(n.querySelector('.spell-parameter-label')).color,valueColor:getComputedStyle(n.querySelector('.spell-parameter-value')).color})))
+    for(const tile of tiles){expect(tile.height).toBeLessThanOrEqual(84.5);expect(tile.artSize).toBe('auto 100%');expect(tile.labelColor).toBe(tile.valueColor)}
   }
   await settings.click();await expect(page.getByRole('dialog')).toBeVisible();await page.keyboard.press('Escape')
   const book=page.getByRole('tab',{name:'Волшебник',exact:true})
