@@ -6,8 +6,7 @@
         <span class="weapon-metrics__label">Атака</span>
       </span>
       <div class="weapon-metrics__formula-content">
-        <WeaponDamageBreakdown v-if="attackRows.length" :rows="attackRows" label="Состав атаки" :aria-description="`Бонус атаки ${attack || '0'}`" damage-color="var(--accent-soft)" :roll-color="attackColor" dice-labels />
-        <span v-else>—</span>
+        <WeaponDamageBreakdown :rows="attackBonusRows" label="Бонусы атаки" :aria-description="`Бонус атаки ${attack || '0'}`" damage-color="var(--accent-soft)" :roll-color="attackColor" dice-labels />
       </div>
     </component>
     <component :is="interactive && canDamage ? 'button' : 'div'" :type="interactive && canDamage ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__damage" data-sheet-swipe :aria-label="interactive && canDamage ? 'Настроить бросок урона' : undefined" :aria-haspopup="interactive && canDamage ? 'dialog' : undefined" :aria-expanded="interactive && canDamage ? rollScope === 'damage' && !damageKey : undefined" @click.stop="interactive && canDamage && emit('roll', 'damage', $event)">
@@ -84,6 +83,10 @@ const props = defineProps({
   interactive: { type: Boolean, default: false },
 })
 const emit = defineEmits(['property-enter', 'property-leave', 'roll'])
+const attackBonusRows = computed(() => {
+  const rows = props.attackRows.filter(row => !row.roll)
+  return rows.length ? rows : [{ source: 'Бонус атаки', expression: props.attack || '0' }]
+})
 const openedKey = shallowRef(null), anchor = shallowRef(null)
 const keyOf = property => property.id ?? property.label
 const visibleProperties = computed(() => props.properties.filter(property => String(property.label || '').trim()))
