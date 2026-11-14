@@ -1,5 +1,5 @@
 <template>
-  <RowActionMenu ref="actions" title="Действия персонажа" :heading="menuSummary" :trigger-attrs="{ style: { maxWidth: 'var(--layout-sheet-header-tile-max)' } }" block>
+  <RowActionMenu ref="actions" title="Действия персонажа" :heading="menuSummary" :width="layoutTokens['sheet-header-menu-width']" :trigger-attrs="{ style: { maxWidth: 'var(--layout-sheet-header-tile-max)' } }" block>
     <template #trigger="{ open }">
       <div class="dnd-heading action-menu-source" :class="{ 'action-menu-source--open': open }">
         <button class="portrait" type="button" aria-label="Действия персонажа" aria-haspopup="menu" :aria-expanded="open"
@@ -30,21 +30,17 @@
           <span class="experience-track" role="progressbar" aria-label="Прогресс уровня" :aria-valuenow="Math.round(progress)" :aria-valuemin="0" :aria-valuemax="100"><i :style="{ width: progress + '%' }" /></span>
         </span>
       </RowActionItem>
-      <RowActionItem :icon="HeartPulse" @click="select('health', close)">{{ canEdit ? 'Изменить HP' : 'Здоровье' }}</RowActionItem>
-      <RowActionItem :icon="Footprints" :disabled="!canEdit" @click="select('speed', close)">
-        Скорость<template #suffix><strong class="utility-value">{{ speed }} фт</strong></template>
+      <RowActionItem :icon="HeartPulse" @click="select('health', close)">
+        {{ canEdit ? 'Изменить HP' : 'Здоровье' }}
+        <template #suffix><SheetHealth :current="current" :maximum="maximum" :temporary="temporary" /></template>
       </RowActionItem>
-      <RowActionSubmenu v-for="metric in rollMetrics" :key="metric.key">
-        <template #trigger="{ open }">
-          <RowActionItem :icon="metric.icon" submenu :submenu-open="open">
-            {{ metric.label }}<template #suffix><strong class="utility-value">{{ signed(metric.value) }}</strong></template>
-          </RowActionItem>
-        </template>
-        <template #default="{ close: closeSubmenu }">
-          <RowActionItem v-if="canEdit" action="edit" @click="closeSubmenu(); select(metric.key, close)">Изменить</RowActionItem>
-          <RowActionItem :icon="Dices" @click="closeSubmenu(); select(`roll-${metric.key}`, close)">Бросить кубик</RowActionItem>
-        </template>
-      </RowActionSubmenu>
+      <div class="character-utility-grid" role="group" aria-label="Показатели персонажа">
+        <UtilityCell v-for="metric in metrics" :key="metric.key" stacked role="menuitem"
+          :label="metric.label" :disabled="!canEdit && !metric.rollable" aria-haspopup="dialog" @click="select(metric.key, close)">
+          <span class="utility-label">{{ metric.label }}</span>
+          <span class="utility-readout"><component :is="metric.icon" :size="20" aria-hidden="true" /><strong>{{ metric.value }}</strong></span>
+        </UtilityCell>
+      </div>
       <RowActionItem action="create" :disabled="!canEdit" @click="select('add-status', close)">Добавить состояние</RowActionItem>
     </template>
   </RowActionMenu>
@@ -53,9 +49,11 @@
 </template>
 <script setup>
 import { computed, inject, ref, shallowRef, watch } from 'vue'
-import { RowActionMenu, RowActionSubmenu } from '@sylvieshare/share-ui'
-import { Award, Dices, Eye, Footprints, HeartPulse, Search, Shield, TrendingUp, Zap } from '@lucide/vue'
+import { RowActionMenu } from '@sylvieshare/share-ui'
+import { Award, Eye, Footprints, HeartPulse, Search, Shield, TrendingUp, Zap } from '@lucide/vue'
+import { layoutTokens } from '@/app/design-tokens'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
+import UtilityCell from '../UtilityCell.vue'
 import SheetHealth from './SheetHealth.vue'
 import SheetPassiveDetails from './SheetPassiveDetails.vue'
 import { levelExperience, levelProgressPercent } from '../../blocks/dnd/lib/experience'
@@ -78,15 +76,17 @@ const level = computed(() => values.value.lvl?.level)
 const speed = computed(() => speedSummary(values.value.speed, ctx).total)
 const initiative = computed(() => initiativeSummary(values.value.initiative, values.value, ctx).total)
 const proficiency = computed(() => proficiencySummary(values.value.prof_bonus, level.value).total)
-const rollMetrics = computed(() => [
-  { key: 'initiative', label: 'Инициатива', icon: Zap, value: initiative.value },
-  { key: 'proficiency', label: 'Мастерство', icon: Award, value: proficiency.value },
-])
 const menuSummary = computed(() => [props.subtitle, level.value ? level.value + ' ур.' : ''].filter(Boolean).join(' · '))
 const experience = computed(() => Number(values.value.lvl?.exp) || 0)
 const nextExperience = computed(() => levelExperience(values.value.lvl).nextLevelExp)
 const progress = computed(() => levelProgressPercent(values.value.lvl))
 const armor = computed(() => ctx.characterArmor?.state?.total ?? 10 + abilityModifier(resolveNumValue(values.value.DEX?.value) || 10))
+const metrics = computed(() => [
+  { key: 'speed', label: 'Скорость', icon: Footprints, value: speed.value + ' фт' },
+  { key: 'initiative', label: 'Инициатива', icon: Zap, value: signed(initiative.value), rollable: true },
+  { key: 'proficiency', label: 'Мастерство', icon: Award, value: signed(proficiency.value), rollable: true },
+  { key: 'armor', label: 'КД', icon: Shield, value: armor.value },
+])
 const current = computed(() => Number(values.value.hp?.current) || 0)
 const temporary = computed(() => Math.max(0, Number(values.value.hp?.temp) || 0))
 const maximum = computed(() => {
@@ -127,7 +127,11 @@ function select(panel, close) { close(); emit('open', panel) }
 .heading-metrics svg {color:var(--text-muted)}
 .experience-action {display:flex;flex-direction:column;gap:5px;width:100%;min-width:0}
 .experience-action small {color:var(--text-muted);font-size:12px}
-.utility-value {font-variant-numeric:tabular-nums;font-size:var(--type-group-size);font-weight:600;color:var(--text-1);white-space:nowrap}
+.character-utility-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:var(--layout-sheet-header-menu-cell-height);gap:var(--layout-border);margin:var(--spacing-xs);overflow:hidden;border-radius:var(--radius-input);background:var(--border)}
+.character-utility-grid .utility-cell {background:var(--bg)}
+.utility-label {color:var(--text-muted);font-size:var(--type-context-size);font-weight:500}
+.utility-readout {display:flex;align-items:center;gap:var(--spacing-small);font-size:var(--type-sheet-header-size);font-variant-numeric:tabular-nums;white-space:nowrap}
+.utility-readout svg {flex:none;color:var(--text-muted)}
 .experience-track {height:7px;border-radius:var(--radius-input);overflow:hidden;background:var(--surface-raised)}
 .experience-track i {display:block;height:100%;background:var(--accent-soft)}
 @media (--ui-compact) {.identity {display:block}.identity strong,.identity small{display:block}.identity small{font-size:var(--type-caption-size,12px)}}

@@ -46,7 +46,11 @@
     <template #header-actions>
       <span class="utility-result"><img v-if="icon" :src="icon" alt="" /><b>{{ pre }}{{ value }}{{ unit ? ' ' + unit : '' }}</b></span>
     </template>
-    <slot name="editor" />
+    <slot v-if="canEdit" name="editor" />
+    <p v-else class="utility-readonly">Редактирование доступно владельцу персонажа.</p>
+    <template v-if="rollable" #footer>
+      <ActionButton @click="editorOpen = false; runAction()"><template #icon><Dices :size="18" /></template>Бросить кубик</ActionButton>
+    </template>
   </AppModalFrame>
 </template>
 
@@ -56,7 +60,7 @@ defineOptions({ inheritAttrs: false })
 // Owners can open the editor; `rollable` tiles keep their dice action on read-only sheets.
 // The colored strip appears only while `toggled` (AC with its shield up), so resting tiles have no strip.
 import { computed, inject, ref } from 'vue'
-import { AppModalFrame, RowActionMenu, TileAccentStrip } from '@sylvieshare/share-ui'
+import { ActionButton, AppModalFrame, RowActionMenu, TileAccentStrip } from '@sylvieshare/share-ui'
 import { Dices } from '@lucide/vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import StatTileFace from '@/features/character-editor/blocks/dnd/components/StatTileFace'
@@ -81,7 +85,7 @@ const emit = defineEmits(['action'])
 const charCtx = inject('charCtx', { ownerMode: true })
 const canEdit = computed(() => !!charCtx.ownerMode)
 const editorOpen = ref(false)
-function open() { if (canEdit.value) editorOpen.value = true }
+function open() { if (canEdit.value || props.rollable) editorOpen.value = true }
 defineExpose({ open })
 function runAction() { if (props.rollable || canEdit.value) emit('action') }
 </script>
@@ -135,5 +139,6 @@ function runAction() { if (props.rollable || canEdit.value) emit('action') }
 
 <style scoped>
 .utility-result{display:inline-flex;align-items:center;gap:6px;color:var(--text-1);font-variant-numeric:tabular-nums}.utility-result img{width:18px;height:18px}
+.utility-readonly {color:var(--text-muted);font-size:var(--type-context-size)}
 .stat-strip { display:inline-flex; align-items:center; gap:4px; min-height:40px; padding:2px 0; border:0; background:transparent; color:var(--text-1); font:inherit; font-weight:600; cursor:pointer } .stat-strip-label {display:none} .stat-strip img { width:16px; height:16px; object-fit:contain; opacity:.8 }
 </style>

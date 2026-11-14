@@ -75,8 +75,6 @@ const workspace = ref(null)
 const profileEditor = ref(null), experienceEditor = ref(null), healthEditor = ref(null), armorEditor = ref(null), statusEditor = ref(null)
 const speedEditor = ref(null), initiativeEditor = ref(null), proficiencyEditor = ref(null)
 function openHeading(target) {
-  const rolls = { 'roll-initiative': initiativeEditor, 'roll-proficiency': proficiencyEditor }
-  if (rolls[target]) { rolls[target].value?.action(); return }
   const editors = { profile: profileEditor, experience: experienceEditor, health: healthEditor, armor: armorEditor, 'add-status': statusEditor,
     speed: speedEditor, initiative: initiativeEditor, proficiency: proficiencyEditor }
   editors[target]?.value?.open()

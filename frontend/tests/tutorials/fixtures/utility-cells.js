@@ -15,7 +15,7 @@ const pinia = createPinia()
 document.body.style.cssText='margin:0;background:var(--bg)'
 const ownerMode = !new URLSearchParams(location.search).has('readonly')
 const values = reactive(blankValues())
-Object.assign(values,{speed:{base:30,bonuses:[]},initiative:{base:1,bonuses:[],use_dex:true},prof_bonus:{v:3,auto:true,bonuses:[]},lvl:{level:5,exp:6500},DEX:{...values.DEX,value:{base:14,bonuses:[]}}})
+Object.assign(values,{hp:{current:12,max:{base:18,bonuses:[]},temp:5},speed:{base:30,bonuses:[]},initiative:{base:1,bonuses:[],use_dex:true},prof_bonus:{v:3,auto:true,bonuses:[]},lvl:{level:5,exp:6500},DEX:{...values.DEX,value:{base:14,bonuses:[]}}})
 window.utilityValues=values
 const ctx = reactive({ ownerMode, canEdit: ownerMode, rulesVersion: '2014', values,
   characterArmor:{state:{total:16,dexterity:2,speedPenalty:10,strengthRequired:15,body:{name:'Тяжёлый доспех',value:16,item:{data:{category:'heavy',armor:{use_dex:false}}}},nonproficient:[],abilityBonuses:[]}},
