@@ -1,5 +1,6 @@
 <template>
   <WeaponRollControls
+    :dialog="dialog"
     :summary="rollSummary" :weapon="weapon" :weapon-title="weaponTitle"
     :scope="scope" :weapon-uid="weaponUid" :uses="uses"
     :options="menuOptions(scope)" :bonus-action-option="availableBonusAction" :versatile="versatile" :thrown="thrown"
@@ -16,7 +17,7 @@ import { changeSelectedTarget } from '@/features/character-editor/lib/selectedTa
 import { computed, inject, ref, unref, watch } from 'vue'
 import WeaponRollControls from './WeaponRollControls.vue'
 import { damageAttackMode, selectedDamageActions, toggleDamageAction, weaponDamageMenuOptions } from '@/shared/lib/weaponDamageOptions'
-const props = defineProps({ summary: Function, weapon: Object, weaponTitle: String, weaponUid: String, actions: { type: Array, default: () => [] }, versatile: Boolean, scope: { type: String, required: true }, preview: Function, bonusActionOption: Function, uses: { type: Array, default: () => [] } })
+const props = defineProps({ dialog: Boolean, summary: Function, weapon: Object, weaponTitle: String, weaponUid: String, actions: { type: Array, default: () => [] }, versatile: Boolean, scope: { type: String, required: true }, preview: Function, bonusActionOption: Function, uses: { type: Array, default: () => [] } })
 const charCtx = inject('charCtx', {})
 const selectedKeys = computed(() => [...selected.value, ...props.actions.filter(action => action.target_choice?.selected).map(action => action.key)])
 const emit = defineEmits(['roll', 'attack', 'roll-step', 'preview'])

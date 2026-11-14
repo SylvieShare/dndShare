@@ -1,6 +1,6 @@
 <template>
-  <div class="weapon-roll-controls" :class="{ 'weapon-roll-controls--attack': scope === 'attack' }" role="group" :aria-label="scope === 'attack' ? 'Атака' : 'Урон'">
-    <div v-if="weaponTitle" class="weapon-roll-heading">
+  <div class="weapon-roll-controls" :class="{ 'weapon-roll-controls--attack': scope === 'attack', 'weapon-roll-controls--dialog': dialog }" role="group" :aria-label="scope === 'attack' ? 'Атака' : 'Урон'">
+    <div v-if="weaponTitle && !dialog" class="weapon-roll-heading">
       <ItemIcon v-if="weapon?.iconImageUrl || weapon?.svg" :item="weapon" :size="40" />
       <Swords v-else :size="34" aria-hidden="true" />
       <div><strong>{{ weaponTitle }} · {{ scope === 'attack' ? 'Атака' : 'Урон' }}</strong>
@@ -31,8 +31,9 @@
     <WeaponRollOption v-for="option in (scope === 'attack' && useKey ? [] : extras)" :key="option.key" :option="option" @select="(key, value) => emit('select', key, value)" @amount="(key, value) => emit('amount', key, value)" />
     <RollBonusOptions v-if="scope === 'attack'" scope="attack" :model-value="excludedBonuses" @update:model-value="emit('update:excludedBonuses', $event)" />
     <small v-if="blocked" role="alert">{{ blocked.resourceError }}</small>
-    <RowActionItem :disabled="!!blocked" :action="scope === 'attack' ? 'attack' : 'damage'" @click="!blocked && emit('roll')">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</RowActionItem>
-    <WeaponUseDamageMenu v-if="scope === 'damage'" :weapon-uid="weaponUid" :uses="uses" @roll="emit('roll-step', $event)" />
+    <ActionButton v-if="dialog" :disabled="!!blocked" @click="!blocked && emit('roll')">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</ActionButton>
+    <RowActionItem v-else :disabled="!!blocked" :action="scope === 'attack' ? 'attack' : 'damage'" @click="!blocked && emit('roll')">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</RowActionItem>
+    <WeaponUseDamageMenu v-if="scope === 'damage'" :dialog="dialog" :weapon-uid="weaponUid" :uses="uses" @roll="emit('roll-step', $event)" />
   </div>
 </template>
 <script setup>
@@ -42,7 +43,7 @@ import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RollModePicker from './RollModePicker.vue'
 import RollBonusOptions from './RollBonusOptions.vue'
 import WeaponBonusTransferSelector from './WeaponBonusTransferSelector.vue'
-import { ChoiceCard, FormField, ToggleSwitch } from '@sylvieshare/share-ui'
+import { ActionButton, ChoiceCard, FormField, ToggleSwitch } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import WeaponRollOption from './WeaponRollOption.vue'
@@ -50,7 +51,7 @@ import WeaponUseDamageMenu from './WeaponUseDamageMenu.vue'
 import { weaponDamageActionFormula, weaponDamageActionParts } from '@/shared/lib/weaponDamageOptions'
 import { computed, inject, toRef } from 'vue'
 import { useWeaponBonusTransfer } from '../composables/useWeaponBonusTransfer'
-const props = defineProps({ weapon: Object, weaponTitle: String, summary: Object, weaponUid: String,
+const props = defineProps({ dialog: Boolean, weapon: Object, weaponTitle: String, summary: Object, weaponUid: String,
   attackRollMode: { type: String, default: 'auto' }, uses: { type: Array, default: () => [] }, useKey: { type: String, default: '' },
   scope: { type: String, default: 'damage' }, options: { type: Array, default: () => [] }, excludedBonuses: { type: Array, default: () => [] },
   critical: Boolean, twoHanded: Boolean, bonusAction: Boolean, bonusActionOption: Object, versatile: Boolean, thrown: Boolean })
@@ -95,4 +96,5 @@ const emit = defineEmits(['update:attackRollMode', 'update:useKey', 'update:crit
   overflow-y: auto;
   box-sizing: border-box;
 }
+.weapon-roll-controls--dialog {width:100%;max-width:none;max-height:none;padding:0;overflow:visible}
 </style>

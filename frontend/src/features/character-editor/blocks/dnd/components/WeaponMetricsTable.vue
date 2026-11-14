@@ -1,6 +1,6 @@
 <template>
   <div class="weapon-metrics" role="group" aria-label="Показатели оружия">
-    <component :is="interactive && canAttack ? 'button' : 'div'" :type="interactive && canAttack ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__attack" data-sheet-swipe :aria-label="interactive && canAttack ? 'Настроить бросок атаки' : undefined" :aria-haspopup="interactive && canAttack ? 'menu' : undefined" :aria-expanded="interactive && canAttack ? rollScope === 'attack' : undefined" @click.stop="interactive && canAttack && emit('roll', 'attack', $event)">
+    <component :is="interactive && canAttack ? 'button' : 'div'" :type="interactive && canAttack ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__attack" data-sheet-swipe :aria-label="interactive && canAttack ? 'Настроить бросок атаки' : undefined" :aria-haspopup="interactive && canAttack ? 'dialog' : undefined" :aria-expanded="interactive && canAttack ? rollScope === 'attack' : undefined" @click.stop="interactive && canAttack && emit('roll', 'attack', $event)">
       <span class="weapon-metrics__identity" data-metric-kind="attack">
         <Crosshair class="weapon-metrics__icon" :size="layoutTokens['weapon-metrics-icon']" :stroke-width="1.7" aria-hidden="true" />
         <span class="weapon-metrics__label">Атака</span>
@@ -10,7 +10,7 @@
         <span v-else>—</span>
       </div>
     </component>
-    <component :is="interactive && canDamage ? 'button' : 'div'" :type="interactive && canDamage ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__damage" data-sheet-swipe :aria-label="interactive && canDamage ? 'Настроить бросок урона' : undefined" :aria-haspopup="interactive && canDamage ? 'menu' : undefined" :aria-expanded="interactive && canDamage ? rollScope === 'damage' && !damageKey : undefined" @click.stop="interactive && canDamage && emit('roll', 'damage', $event)">
+    <component :is="interactive && canDamage ? 'button' : 'div'" :type="interactive && canDamage ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__damage" data-sheet-swipe :aria-label="interactive && canDamage ? 'Настроить бросок урона' : undefined" :aria-haspopup="interactive && canDamage ? 'dialog' : undefined" :aria-expanded="interactive && canDamage ? rollScope === 'damage' && !damageKey : undefined" @click.stop="interactive && canDamage && emit('roll', 'damage', $event)">
       <span class="weapon-metrics__identity" data-metric-kind="damage">
         <Swords class="weapon-metrics__icon" :size="layoutTokens['weapon-metrics-icon']" :stroke-width="1.7" aria-hidden="true" />
         <span class="weapon-metrics__label">Урон</span>
@@ -18,13 +18,12 @@
       <div class="weapon-metrics__formula-content">
         <WeaponDamageBreakdown v-if="damageRows.length || twoHandedRows.length" :rows="damageRows" :alternatives="twoHandedRows" :damage-type="damageType" :damage-color="damageColor" />
         <span v-else>—</span>
-        <small v-if="twoHandedRows.length" class="weapon-metrics__grip">Одной рукой / двумя руками</small>
       </div>
     </component>
     <component :is="interactive && canDamage ? 'button' : 'div'" v-for="cell in alternativeDamage" :key="cell.key"
       :type="interactive && canDamage ? 'button' : undefined" class="weapon-metrics__cell weapon-metrics__damage weapon-metrics__alternative"
       :data-damage-key="cell.key" data-sheet-swipe :aria-label="interactive && canDamage ? `Настроить урон: ${cell.title}` : undefined"
-      :aria-description="cell.error || undefined" :aria-haspopup="interactive && canDamage ? 'menu' : undefined"
+      :aria-description="cell.error || undefined" :aria-haspopup="interactive && canDamage ? 'dialog' : undefined"
       :aria-expanded="interactive && canDamage ? damageKey === cell.key : undefined"
       @click.stop="interactive && canDamage && emit('roll', 'damage', $event, cell.selection)">
       <span class="weapon-metrics__identity" data-metric-kind="special">
@@ -37,8 +36,7 @@
       </div>
     </component>
     <div class="weapon-properties-stack">
-      <div v-if="visibleProperties.length" class="weapon-metrics__cell weapon-metrics__properties">
-        <span class="weapon-metrics__label">Свойства</span>
+      <div v-if="visibleProperties.length" class="weapon-metrics__cell weapon-metrics__properties" role="group" aria-label="Свойства оружия">
         <div class="weapon-metrics__property-list">
           <component :is="interactive ? 'button' : 'span'" v-for="(property, index) in visibleProperties" :key="property.id ?? index"
             :type="interactive ? 'button' : undefined" class="weapon-metrics__property"
@@ -98,8 +96,8 @@ function showDescription(event, property) {
 </script>
 <style scoped>
 .weapon-metrics {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   align-items: stretch;
   gap: var(--layout-weapon-metrics-gap);
   border: 0;
@@ -123,7 +121,6 @@ function showDescription(event, property) {
 button.weapon-metrics__cell { cursor: pointer; }
 button.weapon-metrics__cell[aria-expanded="true"] { background: color-mix(in srgb, var(--accent) 12%, var(--surface-raised)); }
 button.weapon-metrics__cell:focus-visible { outline: 2px solid var(--accent-soft); outline-offset: 2px; }
-.weapon-metrics__grip { color: var(--text-muted); font-size: 10px; line-height: 14px; white-space: normal; }
 .weapon-metrics__label { color: var(--text-muted); font-size: 10px; line-height: 12px; }
 .weapon-metrics__attack {
   max-width: 100%;
@@ -131,11 +128,13 @@ button.weapon-metrics__cell:focus-visible { outline: 2px solid var(--accent-soft
 }
 .weapon-metrics__damage { min-height: var(--layout-weapon-metrics-attack-width); max-width: 100%; }
 .weapon-metrics__attack,.weapon-metrics__damage {display:grid;grid-template-columns:calc(var(--layout-weapon-metrics-icon) + var(--spacing-small) + var(--spacing-small)) minmax(0,1fr);align-items:center;gap:var(--spacing-small)}
+.weapon-metrics__attack,.weapon-metrics__damage {flex:1 0 max-content;min-width:min(100%,var(--layout-weapon-metric-min))}
+.weapon-metrics__alternative {flex-basis:100%;width:100%;min-width:0}
 .weapon-metrics__identity {display:flex;flex-direction:column;align-items:center;justify-content:center;align-self:stretch;gap:var(--spacing-xs);padding-inline-end:var(--spacing-small);min-width:0;color:var(--text-muted);border-inline-end:1px solid var(--border)}
 .weapon-metrics__identity .weapon-metrics__label {font-size:var(--type-context-size);line-height:var(--type-context-line-height);text-align:center}
 .weapon-metrics__icon {flex:none;opacity:.5}
 .weapon-metrics__formula-content {display:flex;flex-direction:column;gap:var(--spacing-xs);min-width:0;max-width:100%}
-.weapon-properties-stack { display: grid; gap: var(--layout-weapon-metrics-gap); min-width: 0; }
+.weapon-properties-stack { display: grid; gap: var(--layout-weapon-metrics-gap); min-width: 0; flex:1 0 100%; }
 .weapon-properties-stack:empty { display: none; }
 .weapon-metrics__property-list { display: flex; flex-wrap: wrap; gap: 2px 8px; font-size: var(--type-weapon-property-size); line-height: var(--type-weapon-property-line-height); overflow-wrap: break-word; }
 .weapon-metrics__property { appearance: none; font: inherit; color: inherit; text-align: left; min-width: 0; max-width: 100%; background: none; border: 0; padding: 3px 0; }

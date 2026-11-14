@@ -25,8 +25,7 @@ for (const width of [390, 834, 1440, 1920]) test(`weapon and basic-attack cards 
   await expect(basics.locator('.share-section-label__line')).toBeVisible()
   await expect(basics.locator('.pac-card')).toHaveCount(2)
   await expect(block.locator('.w-table')).toHaveCount(0)
-  const gridWidth = (await grid.boundingBox()).width
-  const columns = Math.min(2, Math.max(1, Math.floor((gridWidth + 12) / (280 + 12))))
+  const columns = 1
   for (const [container, selector] of [[grid, '.w-card'], [basics.locator('.weapon-card-grid'), '.pac-card']]) {
     const positions = await container.locator(selector).evaluateAll(nodes => nodes.map(node => Math.round(node.getBoundingClientRect().x)))
     expect(new Set(positions).size).toBe(columns)
@@ -41,10 +40,13 @@ for (const width of [390, 834, 1440, 1920]) test(`weapon and basic-attack cards 
       expect(await card.evaluate(node => node.scrollWidth <= node.clientWidth)).toBe(true)
     }
   }
-  if (width === 1920) expect(columns).toBe(2)
+  const attack = await grid.locator('.w-card').first().locator('.weapon-metrics__attack').boundingBox()
+  const damage = await grid.locator('.w-card').first().locator('.weapon-metrics__damage').first().boundingBox()
+  if (width === 390) expect(damage.y).toBeGreaterThanOrEqual(attack.y + attack.height)
+  if (width === 834 || width === 1920) expect(Math.abs(damage.y - attack.y)).toBeLessThan(1)
   await block.screenshot({ path: testInfo.outputPath('weapon-cards.png'), animations: 'disabled' })
   await basics.locator('.pac-card').first().getByRole('button', { name: 'Настроить бросок атаки', exact: true }).click()
-  await expect(page.getByRole('menu', { name: 'Атака', exact: true })).toBeVisible()
+  await expect(page.getByRole('dialog', { name: /· Атака$/ })).toBeVisible()
   await page.keyboard.press('Escape')
   expect(errors).toEqual([])
 })
@@ -72,7 +74,7 @@ for (const width of [834, 1920]) test(`held dragging reorders across columns, re
   await expect(page.getByRole('menu', { name: 'Действия: Длинный меч' })).toBeVisible()
   await page.keyboard.press('Escape')
   await card.getByRole('button', { name: 'Настроить бросок атаки', exact: true }).click()
-  await expect(page.getByRole('menu', { name: 'Атака', exact: true })).toBeVisible()
+  await expect(page.getByRole('dialog', { name: /· Атака$/ })).toBeVisible()
 })
 
 test('a held touch reorders tablet weapons while short motion keeps scrolling and tab swipes', async ({ page }) => {
@@ -94,6 +96,26 @@ test('a held touch reorders tablet weapons while short motion keeps scrolling an
   for (let step = 1; step <= 5; step++) await client.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ ...start, x: start.x - step * 52 }] })
   await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
   await expect(page.getByRole('button', { name: 'Магия', exact: true })).toHaveAttribute('aria-current', 'page')
+  await expect(page.getByRole('menu')).toHaveCount(0)
+})
+
+test('dropping into gaps and at the list end persists the nearest position without opening a picker', async ({ page }) => {
+  const { api, grid } = await openWeapons(page, 1920)
+  const first = grid.locator('.w-card').nth(0), second = grid.locator('.w-card').nth(1)
+  const name = await first.locator('.w-name').boundingBox()
+  const firstBox = await first.boundingBox(), secondBox = await second.boundingBox()
+  await page.mouse.move(name.x + 8, name.y + 8); await page.mouse.down()
+  await expect(grid.locator('.sortable-placeholder')).toHaveCount(1)
+  await page.mouse.move(firstBox.x + firstBox.width / 2, (firstBox.y + firstBox.height + secondBox.y) / 2)
+  await page.mouse.up()
+  await expect.poll(() => api.document().values.weapon.map(entry => entry.uid)).toEqual(['second', 'first', 'third'])
+  const moved = await grid.locator('[data-sortable-key="first"] .w-name').boundingBox()
+  const last = await grid.locator('.w-card').last().boundingBox()
+  await page.mouse.move(moved.x + 8, moved.y + 8); await page.mouse.down()
+  await expect(grid.locator('.sortable-placeholder')).toHaveCount(1)
+  await page.mouse.move(last.x + 30, last.y + last.height + 10); await page.mouse.up()
+  await expect.poll(() => api.document().values.weapon.map(entry => entry.uid)).toEqual(['second', 'third', 'first'])
+  await expect(page.getByRole('dialog')).toHaveCount(0)
   await expect(page.getByRole('menu')).toHaveCount(0)
 })
 

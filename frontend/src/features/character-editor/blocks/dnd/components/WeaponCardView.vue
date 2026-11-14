@@ -1,7 +1,7 @@
 <template>
   <!-- Shared weapon row, rendered both in the list tile and inside the morph #view, so the geometry
        can never drift between the two. Values open their corresponding roll settings. -->
-  <WeaponCardLayout class="w-card-main">
+  <WeaponCardLayout class="w-card-main" :collapsed="collapsed">
     <template v-if="weaponItem?.iconImageUrl || weaponItem?.svg || weaponItem?.svgId || weaponItem?.iconSvgId" #icon>
     <ItemIcon
       class="w-icon"
@@ -10,6 +10,7 @@
       :fallback-to-type="false"
     />
     </template>
+    <template v-if="$slots.actions" #actions><slot name="actions" /></template>
     <template #heading>
       <div class="w-card-title">
         <div class="w-name-main">
@@ -24,8 +25,8 @@
         <span v-if="ctx.isWeaponProficient(entry)" class="w-proficiency">Владение</span>
       </div>
     </template>
-    <template v-if="weaponItem || (!entry.item_id && !entry.magic_item_id)" #controls>
-      <WeaponMetricsTable class="w-card-controls"
+    <template v-if="weaponItem || (!entry.item_id && !entry.magic_item_id) || $slots.footer" #controls>
+      <WeaponMetricsTable v-if="weaponItem || (!entry.item_id && !entry.magic_item_id)" class="w-card-controls"
         :attack="ctx.formatBonus(attackSummary.bonus)" :attack-rows="attackRows" :attack-color="attackColor" :damage-rows="damageRows" :two-handed-rows="twoHandedRows"
         :alternative-damage="alternativeDamage" :damage-key="damageKey"
         :damage-type="String(primaryDamage?.type || '')" :damage-color="primaryDamage?.typeColor"
@@ -37,6 +38,7 @@
       >
         <slot />
       </WeaponMetricsTable>
+      <slot name="footer" />
     </template>
   </WeaponCardLayout>
 </template>
@@ -56,7 +58,7 @@ const props = defineProps({
   interactive: { type: Boolean, default: false },
   rollScope: String,
   damageKey: String,
-  rollPreview: Object,
+  collapsed: Boolean,
 })
 const emit = defineEmits(['roll'])
 
@@ -66,7 +68,7 @@ const ctx = inject('weaponsBlockCtx')
 const weaponItem = computed(() => ctx.item(props.entry))
 const primaryDamage = computed(() => ctx.damagePartsRaw(props.entry)[0])
 const { attackSummary, attackRows, attackColor, damageRows, twoHandedRows, alternativeDamage }
-  = useWeaponCardPreview(ctx, () => props.entry, () => props.rollPreview)
+  = useWeaponCardPreview(ctx, () => props.entry, () => null)
 </script>
 
 <style scoped>

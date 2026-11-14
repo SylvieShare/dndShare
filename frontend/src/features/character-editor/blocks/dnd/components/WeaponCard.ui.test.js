@@ -25,7 +25,8 @@ describe('weapon card actions', () => {
 
   it('opens existing roll controls from metric buttons', () => {
     expect(source).toContain('@roll="openDirectRoll"')
-    expect(source).toContain(':anchor="directRoll.anchor"')
+    expect(source).toContain('<WeaponRollDialog')
+    expect(source).toContain('<WeaponRollPreview')
     expect(source).not.toContain('@roll-damage')
     expect(source).not.toContain('@roll-critical')
   })

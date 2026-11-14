@@ -6,7 +6,7 @@
           :data-formula-key="JSON.stringify([group.type, column.key])" :data-formula-roll="column.roll || undefined"
           :data-formula-signature="columnSignature(column, gi, ci)">
           <span v-if="gi || ci || column.operator === '−'" class="weapon-damage__operator">{{ column.operator }}</span>
-          <span class="weapon-damage__column">
+          <span class="weapon-damage__column" :class="{ 'weapon-damage__column--grips': column.variants.length === 2 }">
             <span class="weapon-damage__formula">
               <template v-for="(run, ri) in formulaRuns(column)" :key="ri">
                 <span v-if="run.separator" class="weapon-damage__operator" :title="run.separator === '/' ? 'Одной рукой / двумя руками' : undefined">{{ run.separator }}</span>
@@ -16,7 +16,9 @@
                   <span v-if="ti || term.sign !== '+'" class="weapon-damage__operator">{{ term.sign === '-' ? '−' : term.sign }}</span>
                   <template v-if="term.kind === 'dice'">
                     <span v-if="term.n !== 1" class="weapon-damage__count">{{ term.n }}×</span>
-                    <SystemDie :sides="term.sides" :value="diceLabels ? 'd' + term.sides : undefined" :size="layoutTokens['weapon-damage-die']" color="currentColor" />
+                    <span class="weapon-damage__die"><SystemDie :sides="term.sides" :value="diceLabels ? 'd' + term.sides : undefined" :size="layoutTokens['weapon-damage-die']" color="currentColor" />
+                      <WeaponGripIcon v-if="run.grip" :hands="run.grip" />
+                    </span>
                   </template>
                   <strong v-else class="weapon-damage__flat">{{ term.value }}</strong>
                 </span>
@@ -36,6 +38,7 @@
 import { computed, ref } from 'vue'
 import { layoutTokens } from '@/app/design-tokens'
 import SystemDie from '@/shared/ui/SystemDie.vue'
+import WeaponGripIcon from './WeaponGripIcon.vue'
 import { weaponDamageDisplay } from '../lib/weaponDamageDisplay'
 import { useWeaponFormulaFlash } from '../composables/useWeaponFormulaFlash'
 const props = defineProps({ rows: { type: Array, default: () => [] }, alternatives: { type: Array, default: () => [] }, damageType: String, damageColor: String,
@@ -46,7 +49,7 @@ const { flashes, removeFlash } = useWeaponFormulaFlash(root)
 const columnSignature = (column, gi, ci) => JSON.stringify([column.source, column.operator, column.variants, column.shared,
   !!(gi || ci || column.operator === '−'), column.roll ? props.rollColor : null])
 const formulaRuns = column => [
-  ...column.variants.map((terms, index) => ({ terms, separator: index ? '/' : '' })),
+  ...column.variants.map((terms, index) => ({ terms, separator: index ? '/' : '', grip: column.variants.length === 2 ? index + 1 : 0 })),
   ...(column.shared.length ? [{ terms: column.shared, separator: column.shared[0].sign === '+' ? '+' : '' }] : []),
 ]
 </script>
@@ -57,6 +60,11 @@ const formulaRuns = column => [
 .weapon-damage__addend,.weapon-damage__value {display:inline-flex;align-items:flex-start;gap:2px;min-width:0;max-width:100%}
 .weapon-damage__addend {flex:0 0 auto}
 .weapon-damage__column {display:flex;flex-direction:column;align-items:center;gap:0;min-width:0;max-width:100%}
+.weapon-damage__column--grips {display:grid;justify-items:center}
+.weapon-damage__column--grips .weapon-damage__source {grid-column:1/-1;justify-self:stretch;max-width:none}
+.weapon-damage__column--grips .weapon-damage__formula {padding-bottom:var(--spacing-xs)}
+.weapon-damage__die {position:relative;display:inline-flex;flex:none}
+.weapon-damage__die > .weapon-grip {position:absolute;right:-4px;bottom:-3px}
 .weapon-damage__formula {align-items:center;justify-content:center;min-height:var(--layout-weapon-damage-die)}
 .weapon-damage__value {align-items:center}
 .weapon-damage__flat {display:inline-flex;align-items:center;min-height:var(--layout-weapon-damage-die);font-family:var(--type-weapon-damage-value-family);font-size:var(--type-weapon-damage-value-size);line-height:var(--type-weapon-damage-value-line-height);font-weight:var(--type-weapon-damage-value-weight);font-variant-numeric:tabular-nums}

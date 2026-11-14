@@ -7,9 +7,9 @@
     <div v-if="armorAttackWarning" class="w-armor-warning">
       Атаки Силой и Ловкостью совершаются с помехой: нет владения {{ armorState.nonproficient.map(row => `«${row.name}»`).join(', ') }}.
     </div>
-    <SectionList embedded aria-label="Оружие">
+    <SectionList embedded aria-label="Оружие" data-sortable-container="weapons">
       <template #body>
-        <div class="weapon-card-grid" data-sortable-container="weapons">
+        <div class="weapon-card-grid">
           <div v-if="!entries.length" class="w-empty">Нет оружия</div>
           <WeaponCard v-for="(entry, index) in displayEntries" :key="entry._key" :entry="entry" :index="index" />
         </div>
@@ -462,7 +462,7 @@ function moveWeaponToItems(index) {
 
 const sortable = useSortable({
   activationDelay: motionTokens['weapon-drag-hold'],
-  groups: { weapons: { items: entries, layout: 'grid' } },
+  groups: { weapons: { items: entries, layout: 'grid', hitTest: 'nearest' } },
   getKey: e => e._key,
   onDrop: ({ item, toIndex }) => {
     if (!charCtx.ownerMode) return

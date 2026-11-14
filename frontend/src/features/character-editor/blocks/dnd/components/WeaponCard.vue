@@ -12,9 +12,13 @@
     >
       <template #trigger="{ open: menuOpen }">
         <WeaponCardView ref="cardEl" class="action-menu-source" :class="{ 'action-menu-source--open': menuOpen }"
-          :entry="entry" :roll-scope="directRoll?.scope" :damage-key="directRoll?.selection?.key" :roll-preview="rollPreview"
+          :entry="entry" :roll-scope="directRoll?.scope" :damage-key="directRoll?.selection?.key" :collapsed="collapsed"
           :interactive="!entry.params?.creation?.expired" @roll="openDirectRoll">
-          <WeaponItemMechanics v-if="!entry.params?.creation?.expired" :entry="entry" />
+          <template #actions><ActionButton icon-only variant="quiet" :aria-label="`${collapsed ? 'Развернуть' : 'Свернуть'} ${ctx.itemTitle(entry)}`" :aria-expanded="!collapsed" @click.stop="toggleCollapsed" @pointerdown.stop>
+            <template #icon><ChevronDown :size="20" class="weapon-collapse-chevron" :class="{ 'weapon-collapse-chevron--expanded': !collapsed }" aria-hidden="true" /></template>
+          </ActionButton></template>
+          <template #default><WeaponItemMechanics v-if="!entry.params?.creation?.expired" :entry="entry" /></template>
+          <template #footer><RichContent v-if="entry.desc" class="w-desc-text" :html="entry.desc" /><CreatedItemStatus :entry="entry" /></template>
         </WeaponCardView>
       </template>
 
@@ -49,21 +53,18 @@
       </template>
     </RowActionMenu>
 
-    <BasePopover v-if="directRoll" :key="`${directRoll.scope}:${directRoll.selection?.key || ''}`" :open="true" :anchor="directRoll.anchor"
-      role="menu" :aria-label="directRoll.scope === 'attack' ? 'Атака' : 'Урон'" :z-index="4100"
-      transition-preset="action-menu" @update:open="!$event && closeRoll()">
-      <WeaponAlternativeDamageMenu v-if="directRoll.selection" :entry="entry" :selection="directRoll.selection" @preview="rollPreview = $event"
+    <WeaponRollDialog v-if="directRoll" :key="`${directRoll.scope}:${directRoll.selection?.key || ''}`" :title="`${ctx.itemTitle(entry)} · ${directRoll.scope === 'attack' ? 'Атака' : 'Урон'}`" @close="closeRoll">
+      <template #preview><WeaponRollPreview :scope="directRoll.scope" :attack-bonus="previewAttackSummary.bonus" :attack-rows="previewAttackRows" :attack-color="previewAttackColor"
+        :heading="selectedAlternative?.title" :damage-rows="selectedAlternative?.rows || previewDamageRows" /></template>
+      <WeaponAlternativeDamageMenu v-if="directRoll.selection" dialog :entry="entry" :selection="directRoll.selection" @preview="rollPreview = $event"
         @roll-step="options => { closeRoll(); ctx.rollWeaponUseStep(entry, options.weaponUseKey, options.stepKey) }" />
-      <WeaponRollSettings v-else :scope="directRoll.scope" :weapon="ctx.item(entry)" :weapon-title="ctx.itemTitle(entry)"
+      <WeaponRollSettings v-else dialog :scope="directRoll.scope" :weapon="ctx.item(entry)" :weapon-title="ctx.itemTitle(entry)"
         :summary="menuSummary" :weapon-uid="entry.uid" :actions="weaponDamageActions"
         :uses="ctx.weaponUses(entry)" @preview="rollPreview = $event"
         :bonus-action-option="options => ctx.bonusActionDamageOption(entry, options)" :versatile="hasTwoHandedDamage"
         @attack="options => rollAttack(closeRoll, options)" @roll="options => rollDamage(closeRoll, options)"
         @roll-step="options => { closeRoll(); ctx.rollWeaponUseStep(entry, options.weaponUseKey, options.stepKey) }" />
-    </BasePopover>
-
-    <RichContent v-if="entry.desc" class="w-desc-text" :html="entry.desc" />
-    <CreatedItemStatus :entry="entry" />
+    </WeaponRollDialog>
 
     <MorphEditorShell
       v-if="editorOpen"
@@ -86,13 +87,17 @@
   </MorphTile>
 </template>
 <script setup>
-import { BasePopover, MorphTile } from '@sylvieshare/share-ui'
+import { ActionButton, MorphTile } from '@sylvieshare/share-ui'
 import CreatedItemStatus from '@/features/character-editor/components/CreatedItemStatus.vue'
 import CreatedItemActions from '@/features/character-editor/components/CreatedItemActions.vue'
 import UsableItemAction from '@/features/character-editor/components/UsableItemAction.vue'
 import ItemTransferAction from '@/features/character-editor/components/ItemTransferAction.vue'
 import MagicItemMenuActions from './MagicItemMenuActions.vue'
-import { ArrowRightLeft } from '@lucide/vue'
+import { ArrowRightLeft, ChevronDown } from '@lucide/vue'
+import WeaponRollDialog from './WeaponRollDialog.vue'
+import WeaponRollPreview from './WeaponRollPreview.vue'
+import { useWeaponCardPreview } from '../composables/useWeaponCardPreview'
+import { useWeaponDisclosure } from '../composables/useWeaponDisclosure'
 import { computed, inject, nextTick, shallowRef, ref, watch } from 'vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
@@ -116,14 +121,17 @@ const cardEl = ref(null)
 const actionMenu = ref(null)
 const directRoll = shallowRef(null)
 const rollPreview = shallowRef(null)
+const { collapsed, toggle: toggleCollapsed } = useWeaponDisclosure(ctx.charCtx, () => props.entry.uid)
+const { attackSummary: previewAttackSummary, attackRows: previewAttackRows, attackColor: previewAttackColor,
+  damageRows: previewDamageRows, alternativeDamage: previewAlternatives } = useWeaponCardPreview(ctx, () => props.entry, () => rollPreview.value)
+const selectedAlternative = computed(() => previewAlternatives.value.find(row => row.key === directRoll.value?.selection?.key))
 function menuSummary(options, scope) { return ctx.weaponMenuSummary(props.entry, options, scope) }
 function closeRoll() { directRoll.value = null; rollPreview.value = null }
 function openDirectRoll(scope, event, selection) {
   if (!ctx.charCtx.ownerMode || props.entry.params?.creation?.expired || (!ctx.item(props.entry) && (scope === 'attack' || !hasDamage.value))) return
-  const anchor = event.currentTarget
   actionMenu.value?.close()
-  if (directRoll.value?.anchor === anchor) closeRoll()
-  else { rollPreview.value = null; directRoll.value = { scope, anchor, selection } }
+  rollPreview.value = { scope, options: {} }
+  directRoll.value = { scope, selection }
 }
 watch(() => [ctx.charCtx.ownerMode, props.entry.params?.creation?.expired], ([owner, expired]) => {
   if (!owner || expired) closeRoll()
@@ -203,7 +211,7 @@ function deleteWeapon(closeMenu) {
 .w-card--drop-target {box-shadow:inset 0 0 0 2px var(--accent-soft)}
 
 .w-desc-text {
-  padding: 0 20px 14px 16px;
+  margin-top: var(--spacing-small);
   font-size: 12px;
   color: var(--text-2);
   line-height: 1.45;
@@ -211,5 +219,8 @@ function deleteWeapon(closeMenu) {
 
 /* Keep the shared row geometry when opening the editor. */
 .w-morph-row { min-width: 0; }
+.weapon-collapse-chevron {transition:transform var(--motion-navigation)}
+.weapon-collapse-chevron--expanded {transform:rotate(180deg)}
+@media (prefers-reduced-motion:reduce) {.weapon-collapse-chevron {transition:none}}
 
 </style>
