@@ -58,7 +58,7 @@ const description = computed(() => 'Здоровье: ' + props.current + ' из
 .health-heart {flex:none;width:var(--layout-sheet-health-icon);height:var(--layout-sheet-health-icon);stroke:var(--health-color);fill:color-mix(in srgb,var(--health-color) 18%,transparent)}
 .health-readout {display:inline-flex;align-items:baseline;gap:1px}
 .health-readout strong {color:var(--health-color);font-weight:inherit}
-.health-readout small {font-size:var(--type-context-size);line-height:var(--type-context-line-height);font-weight:500;color:var(--text-muted)}
+.health-readout small {font-family:var(--type-context-family);font-size:var(--type-context-size);line-height:var(--type-context-line-height);font-weight:500;color:var(--text-muted)}
 .health-temporary {font-family:var(--type-context-family);font-size:var(--type-context-size);line-height:var(--type-context-line-height);font-weight:600;color:color-mix(in srgb,var(--info) 85%,var(--text-1))}
 @keyframes health-beat-draw {
   0% {stroke-dashoffset:1;opacity:0}

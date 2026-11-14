@@ -17,6 +17,10 @@ for(const width of [390,834,1920])for(const both of [false,true])test(`compact s
   await expect(settings).toBeVisible()
   const columns=await page.locator('.spell-parameters-grid').evaluate(n=>getComputedStyle(n).gridTemplateColumns.split(' ').length)
   expect(columns).toBe(width===390?2:4)
+  if(width<600){
+    const ratios=await page.locator('.spell-parameter').evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect();return r.width/r.height}))
+    for(const ratio of ratios)expect(ratio).toBeCloseTo(8/5,2)
+  }
   await settings.click();await expect(page.getByRole('dialog')).toBeVisible();await page.keyboard.press('Escape')
   const book=page.getByRole('tab',{name:'Волшебник',exact:true})
   await expect(book).toHaveAttribute('aria-selected','true')

@@ -35,12 +35,12 @@ for (const width of [390, 834, 1440]) test(`HP, shield and stacked passives fit 
   await expect(health.locator('.health-beat')).toHaveAttribute('aria-hidden', 'true')
   await expect(health.locator('[role="meter"]')).toHaveCount(0)
   await expect(heading.locator('canvas')).toHaveCount(0)
-  const { numbers, temp, avatar, name, combat, armor, hp, fields } = await heading.evaluate(node => {
+  const { numbers, temp, avatar, name, combat, armor, hp, passives, fields } = await heading.evaluate(node => {
     const box = selector => node.querySelector(selector).getBoundingClientRect().toJSON()
     return {
       numbers: box('.health-summary'), temp: box('.health-temporary'),
       avatar: box('.portrait'), name: box('.identity'),
-      combat: box('.heading-combat'), armor: box('.heading-armor'), hp: box('.heading-health'),
+      combat: box('.heading-combat'), armor: box('.heading-armor'), hp: box('.heading-health'), passives: box('.heading-metrics'),
       fields: [...node.querySelectorAll('.heading-metric')].map(field => {
         const rect = field.getBoundingClientRect()
         return { left: rect.left, top: rect.top, bottom: rect.bottom }
@@ -55,20 +55,23 @@ for (const width of [390, 834, 1440]) test(`HP, shield and stacked passives fit 
   expect(combat.top).toBeGreaterThanOrEqual(name.bottom - .5)
   expect(fields).toHaveLength(2)
   const passivesWrapped = fields[0].top >= hp.bottom
+  if (!passivesWrapped) expect(passives.left - hp.right).toBeCloseTo(8, 1)
   for (const field of fields) {
     if (passivesWrapped) {
       expect(field.top).toBeGreaterThanOrEqual(hp.bottom + 3.5)
       expect(field.left).toBeGreaterThanOrEqual(combat.left - .5)
     } else {
-      expect(field.left - hp.right).toBeCloseTo(8, 1)
       expect(field.top).toBeGreaterThanOrEqual(hp.y - 1)
       expect(field.bottom).toBeLessThanOrEqual(hp.y + hp.height + 1)
     }
     expect(field.bottom).toBeLessThanOrEqual(combat.bottom + .5)
   }
   expect(fields[1].top).toBeGreaterThanOrEqual(fields[0].bottom - .5)
-  await expect(health.locator('strong')).toHaveCSS('font-weight', '800')
-  expect(await health.locator('strong').evaluate(node => getComputedStyle(node).fontFamily)).toBe(await heading.locator('.identity strong').evaluate(node => getComputedStyle(node).fontFamily))
+  await expect(health.locator('strong')).toHaveCSS('font-weight', '700')
+  expect(await health.locator('strong').evaluate(node => getComputedStyle(node).fontFamily)).toContain('Cormorant Garamond')
+  const uiFamily = await heading.locator('.identity strong').evaluate(node => getComputedStyle(node).fontFamily)
+  expect(await health.locator('.health-readout small').evaluate(node => getComputedStyle(node).fontFamily)).toBe(uiFamily)
+  expect(await health.locator('.health-temporary').evaluate(node => getComputedStyle(node).fontFamily)).toBe(uiFamily)
   await expect(health).toHaveCSS('padding-left', '10px')
   await expect(health).toHaveCSS('padding-right', '10px')
   // Transformed bounds may exceed the CSS width by a floating-point fraction.

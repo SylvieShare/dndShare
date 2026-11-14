@@ -44,6 +44,8 @@ defineEmits(['settings'])
 .spell-parameter-settings {flex:1;min-width:0}
 .spell-parameter-settings-icon {flex:none}
 .spell-parameter-settings-label {display:flex;flex-direction:column;align-items:flex-start;line-height:var(--type-group-line-height);text-align:left;white-space:nowrap}
+/* The painted plates have an intrinsic 512x320 canvas. */
+@media (--ui-phone){.spell-parameter{min-height:0;aspect-ratio:8 / 5}}
 @container (max-width:560px){.spell-parameters-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @container (max-width:300px){
   .spell-parameter-settings-cell{padding-inline:0}
