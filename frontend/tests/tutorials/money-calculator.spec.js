@@ -1,14 +1,14 @@
 import { test, expect } from '@playwright/test'
 
-for (const mobile of [false, true]) {
-  test(`money display integrates currency and flashes real balance changes (${mobile ? 'mobile' : 'desktop'})`, async ({ page }) => {
+for (const width of [390,834,1280]) {
+  test(`money display integrates currency and flashes real balance changes (${width})`, async ({ page }) => {
     page.on('pageerror', error => { throw error })
-    await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1280, height: 1000 })
+    await page.setViewportSize({width,height:1000})
     await page.goto('/tests/tutorials/fixtures/money-calculator.html')
     await expect(page.locator('.money-amount--gain, .money-amount--spend')).toHaveCount(0)
     await page.locator('.money-tile').click()
-    const editor = page.locator('.mes-editor')
-    const preview = page.locator('.mes-view')
+    const editor = page.getByRole('dialog', { name: 'Деньги', exact: true })
+    const preview = editor.locator('.money-view--panel')
     const selector = editor.getByRole('combobox', { name: 'Валюта калькулятора' })
     const display = editor.locator('.cp-display')
     await expect(display.getByRole('combobox')).toBeVisible()
@@ -80,7 +80,7 @@ test('read-only balances update with static color feedback for reduced motion', 
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/tests/tutorials/fixtures/money-calculator.html?readonly')
   await page.locator('.money-tile').click()
-  await expect(page.locator('.mes-editor')).toHaveCount(0)
+  await expect(page.getByRole('dialog')).toHaveCount(0)
   await page.evaluate(() => { window.moneyState.money.amounts[1] += 7 })
   const coin = page.locator('[data-money-id="1"]')
   await expect(coin.locator('.ma-value')).toHaveText('17')

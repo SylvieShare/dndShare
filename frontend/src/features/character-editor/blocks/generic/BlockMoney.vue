@@ -1,27 +1,14 @@
 <template>
-  <BlockMoneyView v-bind="$attrs" ref="tileRef" class="money-tile"
+  <BlockMoneyView v-bind="$attrs" class="money-tile"
     :inline="inline" :title="blockTitle" :loading="loading" :coins="displayCoins"
     :interactive="canInteract" :editable="canInteract"
-    @click="canInteract && open($event)" @edit="openFrom(tileRef?.$el)"
+    @click="openEditor" @edit="openEditor"
   />
 
-  <MorphEditorShell
-    v-if="editorOpen"
-    :origin-rect="originRect"
-    :origin-el="originEl"
-    orientation="vertical"
-    :strip="false"
-    :view-width="moneyViewWidth"
-    @close="closeEditor"
-  >
-    <template #view="{ revealed }">
-      <MoneyMorphPreview v-if="inline" :origin-el="originEl" :origin-rect="originRect" :revealed="revealed"
-        :view-width="moneyViewWidth" :loading="loading" :coins="displayCoins" />
-      <BlockMoneyView v-else panel :title="blockTitle" :loading="loading" :coins="displayCoins" />
-    </template>
-
-    <template #editor>
-      <EditorPanel compact class="mc-ed" :class="{ 'mc-error': calcError }">
+  <AppModalFrame v-if="editorOpen" :title="blockTitle || 'Кошелёк'" compact :width="layoutTokens['money-calculator-width']"
+    :z-index="3100" close-label="Закрыть калькулятор" @close="closeEditor">
+      <div class="mc-ed" :class="{ 'mc-error': calcError }">
+        <BlockMoneyView panel :loading="loading" :coins="displayCoins" />
         <CalcPad v-model="calcExpr">
           <template #display-trailing>
             <MoneyCurrencyPicker v-model="calcCoinId" :coins="coins" />
@@ -31,9 +18,8 @@
           <button class="mc-btn mc-minus" type="button" @click="applyCalc(-1)">Дать</button>
           <button class="mc-btn mc-plus" type="button" @click="applyCalc(1)">Взять</button>
         </div>
-      </EditorPanel>
-    </template>
-  </MorphEditorShell>
+      </div>
+  </AppModalFrame>
 
 </template>
 
@@ -41,20 +27,16 @@
 defineOptions({ inheritAttrs: false })
 import { computed, inject, ref, watch } from 'vue'
 import BlockMoneyView from '@/features/character-editor/blocks/generic/components/BlockMoneyView'
-import MoneyMorphPreview from './components/MoneyMorphPreview.vue'
 import CalcPad from '@/features/character-editor/components/CalcPad'
-import { EditorPanel } from '@sylvieshare/share-ui'
-import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
-import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
+import { AppModalFrame } from '@sylvieshare/share-ui'
+import { layoutTokens } from '@/app/design-tokens'
 import { useSuggestStore } from '@/stores/suggest'
 import MoneyCurrencyPicker from './components/MoneyCurrencyPicker.vue'
 
 const props = defineProps({ block: Object, value: { default: null }, inline: Boolean })
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: false })
-const tileRef = ref(null)
-const { editorOpen, originRect, originEl, open, openFrom, close } = useMorphOrigin()
-const moneyViewWidth = computed(() => props.inline ? Math.max(300, (originRect.value?.width || 0) + 2) : 300)
+const editorOpen = ref(false)
 
 const loading = ref(false)
 const calcExpr = ref('')
@@ -99,7 +81,7 @@ const payload = computed(() => ({
 
 const nonZero = computed(() => coins.value.filter(coin => amount(coin.id) > 0))
 
-// flattened for BlockMoneyView (tile + morph share it): inject the resolved amount per coin
+// The wallet and dialog share the resolved balances and feedback.
 const displayCoins = computed(() => [...nonZero.value].reverse().map(coin => ({
   id: coin.id,
   title: coin.title,
@@ -110,6 +92,7 @@ const displayCoins = computed(() => [...nonZero.value].reverse().map(coin => ({
 })))
 
 const canInteract = computed(() => charCtx.ownerMode)
+watch(canInteract, allowed => { if (!allowed) closeEditor() })
 
 watch(suggestTypeId, () => { loadCoins() }, { immediate: true })
 watch(coins, (list) => {
@@ -119,8 +102,9 @@ watch(coins, (list) => {
 function closeEditor() {
   calcExpr.value = ''
   calcError.value = false
-  close()
+  editorOpen.value = false
 }
+function openEditor() { if (canInteract.value) editorOpen.value = true }
 
 async function loadCoins() {
   if (!suggestTypeId.value) return
@@ -168,6 +152,7 @@ function evalExpr(expr) {
 }
 
 function applyCalc(sign) {
+  if (!canInteract.value) return
   const id = calcCoinId.value
   const amt = evalExpr(calcExpr.value)
   if (!id || !amt) return
@@ -183,6 +168,7 @@ function applyCalc(sign) {
 </script>
 
 <style scoped>
+.mc-ed {display:grid;gap:var(--spacing-medium);padding-block:var(--spacing-small);--calc-key-padding-block:var(--spacing-section);--calc-display-padding-block:var(--spacing-label);--calc-pad-gap:var(--spacing-small)}
 .mc-error :deep(.cp-display) {
   border-color: var(--danger);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 18%, transparent);

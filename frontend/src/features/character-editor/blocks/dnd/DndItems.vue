@@ -295,7 +295,7 @@ const { pendingWeapon, confirmWeapon, specializedDestination, canMoveToSpecializ
 const { sortable, sectionGroup, onRowDown } = useInventoryLayout({
   model, canDrag, entryWithDisplay, emitModel, hideTooltip,
 })
-const draggedThisGesture = computed(() => sortable.suppressNextClick)
+const draggedThisGesture = computed(() => sortable.dragging || sortable.suppressNextClick)
 
 function emitModel(next) {
   normalizeInventorySpaces(next)

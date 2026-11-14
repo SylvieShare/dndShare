@@ -66,7 +66,7 @@ onBeforeUnmount(() => {
 watch(() => [props.adaptive, props.sortable?.dragging], updateColumns)
 </script>
 <style scoped>
-.inventory-bag-grid { position: relative; display: grid; gap: 8px; width: 100%; max-width: 360px; align-self: center; }
+.inventory-bag-grid { position: relative; display: grid; gap: var(--layout-inventory-cell-gap); width: 100%; max-width: 360px; align-self: center; }
 .inventory-bag-grid--adaptive { max-width: none; align-self: stretch; }
 .inventory-bag-cell { aspect-ratio: 1; min-width: 0; display: flex; align-items: center; justify-content: center; box-shadow: none; }
 .inventory-bag-cell::after { content: ''; position: absolute; inset: 0; border: 2px solid transparent; border-radius: inherit; pointer-events: none; z-index: 1; }

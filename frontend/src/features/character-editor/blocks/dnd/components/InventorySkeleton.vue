@@ -15,6 +15,6 @@ defineProps({ sections: { type: Array, default: () => [] } })
 <style scoped src="../styles/DndItems.css"></style>
 <style scoped>
 .inventory-loading-sections { display: flex; flex-direction: column; gap: 20px; }
-.inventory-loading-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 8px; }
+.inventory-loading-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--layout-inventory-cell-min), 1fr)); gap: var(--layout-inventory-cell-gap); }
 .inventory-loading-cell { aspect-ratio: 1; }
 </style>

@@ -1,5 +1,6 @@
 import { reactive } from 'vue'
 import { useSortable } from '@sylvieshare/share-ui'
+import { motionTokens } from '@/app/design-tokens'
 import { cloneModel, EQUIPPED_ID } from '../lib/itemSection'
 import { inventorySpaceEntries, moveInventoryCell } from '../lib/inventorySpaces'
 
@@ -18,6 +19,7 @@ export function useInventoryLayout({ model, canDrag, entryWithDisplay, emitModel
   const sectionGroup = id => `sec_${id}`
   const parseGroup = group => String(group).slice(4)
   const sortable = reactive(useSortable({
+    activationDelay: motionTokens['weapon-drag-hold'],
     groups: new Proxy({}, {
       get(_, group) {
         const id = parseGroup(group)

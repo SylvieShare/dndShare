@@ -1,3 +1,4 @@
+import { layoutTokens } from '@/app/design-tokens'
 export const BAG_COLUMNS = 4
 
 // Explicit positions reserve cells first; new entries fill the first hole.
@@ -22,7 +23,8 @@ export function resolveBagSlots(entries, positions = {}, getKey = entry => entry
 }
 
 export function bagColumnCount(width) {
-  return Math.max(1, Math.floor((Math.max(0, Number(width) || 0) + 8) / 80))
+  const gap = layoutTokens['inventory-cell-gap']
+  return Math.max(1, Math.floor((Math.max(0, Number(width) || 0) + gap) / (layoutTokens['inventory-cell-min'] + gap)))
 }
 
 export function bagCells(entries, positions = {}, getKey = entry => entry.uid, columns = BAG_COLUMNS) {

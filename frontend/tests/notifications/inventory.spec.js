@@ -27,6 +27,7 @@ for (const mobile of [false, true]) test(`character bag layouts and moves on ${m
     const from = await source.boundingBox(), to = await target.boundingBox()
     await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2)
     await page.mouse.down()
+    await expect(page.locator('.sortable-ghost')).toBeVisible()
     await page.mouse.move(to.x + to.width / 2, to.y + to.height / 2, { steps: 8 })
     await page.mouse.up()
   }

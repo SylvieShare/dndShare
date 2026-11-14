@@ -10,8 +10,8 @@ const model = () => ({ equipped: [entry('worn')], sections: [
 
 describe('bag cells', () => {
   it('fits cells to the available width and grows rows for the current column count', () => {
-    expect(bagColumnCount(664)).toBe(8)
-    expect(bagColumnCount(330)).toBe(4)
+    expect(bagColumnCount(664)).toBe(7)
+    expect(bagColumnCount(330)).toBe(3)
     expect(bagColumnCount(230)).toBe(2)
     expect(bagColumnCount(0)).toBe(1)
     expect(bagCells(['a', 'b', 'c', 'd'].map(entry), {}, undefined, 6)).toHaveLength(12)

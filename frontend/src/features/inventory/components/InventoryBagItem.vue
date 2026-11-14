@@ -1,5 +1,5 @@
 <template>
-  <div ref="element" class="inventory-bag-item action-menu-source" :class="{ 'inventory-bag-item--source': source, 'inventory-bag-item--draggable': draggable }"
+  <div ref="element" class="inventory-bag-item action-menu-source" :class="{ 'inventory-bag-item--source': source, 'inventory-bag-item--draggable': draggable, 'inventory-bag-item--hold': holdToDrag }"
     role="button" :tabindex="disabled ? -1 : 0" :aria-disabled="disabled" @keydown.enter.prevent="!disabled && $event.currentTarget.click()" @keydown.space.prevent="!disabled && $event.currentTarget.click()"
     :data-sortable-key="itemKey" :aria-label="name" :aria-description="description || undefined">
     <span class="inventory-bag-item__art" aria-hidden="true">
@@ -24,7 +24,7 @@ import { computed, ref } from 'vue'
 import { Hand, Package, Shirt } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { useInventoryQuantityMotion } from '../composables/useInventoryQuantityMotion'
-const props = defineProps({ itemKey: [String, Number], item: Object, name: String, count: Number, source: Boolean, draggable: Boolean, status: String, disabled: Boolean, equipped: Boolean, simplified: Boolean, wearable: Boolean, usable: Boolean })
+const props = defineProps({ itemKey: [String, Number], item: Object, name: String, count: Number, source: Boolean, draggable: Boolean, holdToDrag: Boolean, status: String, disabled: Boolean, equipped: Boolean, simplified: Boolean, wearable: Boolean, usable: Boolean })
 const element = ref(null)
 const feedback = useInventoryQuantityMotion(element, props)
 const description = computed(() => [
@@ -39,6 +39,7 @@ const description = computed(() => [
 .inventory-bag-item { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 8px; box-sizing: border-box; color: var(--text-muted); cursor: pointer; border-radius: var(--r-lg); }
 .inventory-bag-item.action-menu-source--open { transform: none; }
 .inventory-bag-item--draggable { cursor: grab; touch-action: none; }
+.inventory-bag-item--hold {touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .inventory-bag-item--draggable:active { cursor: grabbing; }
 .inventory-bag-item--source { opacity: .25; }
 .inventory-bag-item__art { display: flex; align-items: center; justify-content: center; width: 100%; height: calc(100% - 26px); align-self: flex-start; pointer-events: none; }

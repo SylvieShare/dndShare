@@ -42,7 +42,7 @@ function backspace() {
 .cp-wrap {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: var(--calc-pad-gap, 5px);
 }
 
 .cp-display-row {
@@ -59,7 +59,7 @@ function backspace() {
   background: var(--surface-raised);
   border: 1px solid var(--border-strong);
   border-radius: 8px;
-  padding: 6px 12px;
+  padding: var(--calc-display-padding-block, 6px) 12px;
   min-height: 40px;
 }
 
@@ -102,7 +102,7 @@ function backspace() {
 .cp-pad {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
+  gap: var(--calc-pad-gap, 5px);
 }
 
 .cp-key {
@@ -113,7 +113,7 @@ function backspace() {
   font-size: 17px;
   font-weight: 600;
   font-family: inherit;
-  padding: 20px 0;
+  padding: var(--calc-key-padding-block, 20px) 0;
   cursor: pointer;
   line-height: 1;
   transition: background 0.1s;

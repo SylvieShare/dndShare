@@ -5,7 +5,7 @@
   :disabled="draggedThisGesture || (!canManage && entry.item_id == null)"
 >
   <template #trigger="{ open: menuOpen }">
-    <InventoryBagItem :item-key="entry.uid" :item="{ iconImageUrl: entry.display.iconImageUrl || entry.display.typeImageUrl, svg: entry.display.svg }"
+    <InventoryBagItem hold-to-drag data-sheet-swipe :item-key="entry.uid" :item="{ iconImageUrl: entry.display.iconImageUrl || entry.display.typeImageUrl, svg: entry.display.svg }"
       :name="entry.display.name" :count="entry.count" :source="sortable.isSource(entry)" :draggable="canDrag"
       :disabled="draggedThisGesture || (!canManage && entry.item_id == null)" :status="entry.params?.magic?.attuned ? 'Настроен' : ''"
       :equipped="isEquipped(entry)" v-bind="traits" :class="{ 'action-menu-source--open': menuOpen }"
