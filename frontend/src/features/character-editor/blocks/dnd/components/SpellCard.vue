@@ -21,7 +21,7 @@
       :permanent="false"
     />
 
-    <SpellCardContent :item="entry.item" :school="school" :name-en="nameEn" :grant-summary="grantSummary"
+    <SpellCardContent :item="entry.item" :name-en="nameEn" :grant-summary="grantSummary"
       :range-override="ctx.spellRangeOverride?.(entry.item)" :scaling-hint="scalingHint">
     <template v-if="hasMetrics" #metrics>
       <span v-if="saveTag" class="sp-save" title="Спасбросок">
@@ -168,7 +168,6 @@ async function openDirectRoll(kind, event) {
 const data = computed(() => props.entry.item?.data || {})
 const nameEn = computed(() => String(props.entry.item?.nameEn || '').trim())
 const dmg = computed(() => data.value.damage || {})
-const school = computed(() => ctx.schoolMeta(props.entry.item))
 
 const baseLvl = computed(() => Number(data.value.lvl) || 0)
 const isReadonlyGrant = computed(() => props.standalone || !!props.entry.ref.source)

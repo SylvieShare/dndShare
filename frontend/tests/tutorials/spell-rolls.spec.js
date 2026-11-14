@@ -234,8 +234,10 @@ for (const mobile of [false, true]) test(`spell presentation ${mobile ? 'mobile'
     const cells = await row.locator('.spell-meta-part').evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().top))
     expect(cells.length).toBeGreaterThan(0)
   }
-  await expect(light.locator('.spell-meta-part').nth(0)).toHaveText('К')
-  await expect(light.locator('.spell-meta-part').nth(1)).toHaveText('Р')
+  await expect(light.locator('.spell-meta-part')).toHaveText(['Касание','1 час','Концентрация','Ритуал'])
+  const flagsLayout=await light.locator('.spell-meta-part').evaluateAll(parts=>parts.map(part=>part.getBoundingClientRect().toJSON()))
+  expect(flagsLayout[2].left).toBeGreaterThanOrEqual(flagsLayout[1].right)
+  expect(flagsLayout[3].left).toBeGreaterThanOrEqual(flagsLayout[2].right)
   await expect(light.locator('.spell-meta-table .lucide-fingerprint-pattern')).toBeVisible()
   await light.getByLabel('Концентрация', { exact: true }).hover()
   await expect(page.getByText('Концентрация', { exact: true })).toBeVisible()

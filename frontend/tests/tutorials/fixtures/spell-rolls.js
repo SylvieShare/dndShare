@@ -36,7 +36,7 @@ if (new URLSearchParams(location.search).has('presentation')) {
 if (new URLSearchParams(location.search).has('long-name')) items.find(item => item.id === 8).name += ' — заклинание с очень длинным названием, которое должно полностью переноситься на следующие строки'
 if (new URLSearchParams(location.search).has('covers')) {
   Object.assign(items.find(item => item.id === 8), { coverImageUrl: '/tests/tutorials/fixtures/spell-covers/custom.webp' })
-  Object.assign(items.find(item => item.id === 8).data, { components: { v: true, s: true, m: 'Крошечный серебряный молот' } })
+  Object.assign(items.find(item => item.id === 8).data, { concentration: true, ritual: true, duration: 'Концентрация, вплоть до 1 минуты', components: { v: true, s: true, m: 'Крошечный серебряный молот' } })
   items.find(item => item.id === 3).coverImageUrl = '/missing-spell-cover.webp'
 }
 itemsApi.byIds = async ids => ({ items: items.filter(item => ids.map(Number).includes(item.id)) })
