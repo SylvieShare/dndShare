@@ -2,6 +2,7 @@ import {expect,test} from '@playwright/test'
 import {fixture} from './fixtures/character-layout.js'
 
 test('status cards retain semantic fills and readable captions while their menu is open',async({page},info)=>{
+  const errors=[];page.on('pageerror',error=>errors.push(error.message))
   await page.setViewportSize({width:834,height:700})
   const api=await fixture(page)
   api.document().values.states=[951,952,953,954].map((id,index)=>({uid:`effect-${id}`,effect_id:id,duration:{kind:'minutes',value:index+1}}))
@@ -42,6 +43,16 @@ test('status cards retain semantic fills and readable captions while their menu 
   expect((await color('Благословение')).contrast).toBeGreaterThanOrEqual(4.5)
   await page.keyboard.press('Escape')
   await expect(page.getByRole('menu')).toHaveCount(0)
+  const row=header.locator('.dsov-row:visible')
+  await page.setViewportSize({width:1920,height:700})
+  await expect(row).toHaveClass(/dsov-row--fits/)
+  await expect(row).toHaveCSS('overflow-x','visible')
+  await expect(row).toHaveCSS('padding-bottom','0px')
+  await page.setViewportSize({width:390,height:700})
+  await expect(row).toHaveClass(/dsov-row--scrollable/)
+  await expect(row).toHaveCSS('overflow-x','auto')
+  await expect(row).toHaveCSS('padding-bottom','4px')
   expect(api.writes).toEqual([])
+  expect(errors).toEqual([])
   await info.attach('semantic-status-cards',{body:await page.screenshot(),contentType:'image/png'})
 })

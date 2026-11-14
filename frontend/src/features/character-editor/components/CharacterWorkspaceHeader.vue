@@ -87,6 +87,9 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
 .heading-editors {position:absolute;width:0;height:0}
 .heading-tools {display:flex;align-items:center;gap:2px;flex:none}
 .character-summary-strip {position:relative;z-index:1}
+.character-workspace-header.workspace-header--context:not(.workspace-header--context-inline):has(.dsov-row--fits) {
+  --workspace-header-bottom-inset: 0px;
+}
 .character-workspace-header:not(.workspace-header--context-inline) .character-summary-strip {
   --status-scroll-inset-start: var(--workspace-context-inset-start, var(--spacing-page));
   --status-scroll-inset-end: var(--workspace-context-inset-end, var(--spacing-page));

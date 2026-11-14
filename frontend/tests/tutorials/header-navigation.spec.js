@@ -155,6 +155,10 @@ for(const width of [390,834,1440])for(const withCondition of [false,true])test(`
   await expect(page.locator('.workspace-subheader .workspace-row-divider')).toBeVisible()
   const separate=withCondition && !(await header.evaluate(n=>n.classList.contains('workspace-header--context-inline')))
   await expect(page.locator('.workspace-row-divider:visible')).toHaveCount(separate?2:1)
+  if(separate){
+    await expect(header.locator('.dsov-row:visible')).toHaveClass(/dsov-row--fits/)
+    await expect(header.locator('.workspace-header-inner')).toHaveCSS('padding-bottom','0px')
+  }
   for(const divider of await page.locator('.workspace-row-divider:visible').all())await expect(divider).toHaveCSS('pointer-events','none')
   const before=await bar.boundingBox()
   await page.locator('[data-sheet-navigation]').getByRole('button',{name:'Магия',exact:true}).click()

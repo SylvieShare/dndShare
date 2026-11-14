@@ -3,7 +3,7 @@
      class="stat-view" :class="{ 'stat-view--mobile': mobileVariant }">
     <template #decoration><TileAccentStrip v-if="mode !== 'panel'" :color="color" /></template>
 
-    <div class="stat-summary" :class="{ 'stat-summary--icon': hasIcon }">
+    <div class="stat-summary" :class="{ 'stat-summary--icon': hasIcon, 'stat-summary--mode': hasSummaryMode }">
       <ItemIcon v-if="hasIcon" class="stat-icon" :item="iconItem" :fallback-to-type="false" :size="iconSize" :color="color" />
       <div class="stat-identity">
         <MorphTileHeader :title="title" :show-edit="showEdit" :show-edit-icon="false"
@@ -43,7 +43,8 @@
         >
           <StatRollValue stacked :compact="mobileVariant" :mode="saveMode" :source="saveModeSource" :cancelled="saveModeCancelled" :active="rollMenu?.kind === 'save'">
             <span class="save-number">
-              <span class="save-label">Спас</span>
+              <span class="save-label">СПАС</span>
+              <span class="save-divider" aria-hidden="true">|</span>
               <span v-if="saveUp" class="proficiency-dot" aria-hidden="true"></span>
               <span class="save-chip-val">{{ signed(save) }}</span>
             </span>
@@ -172,6 +173,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['edit', 'roll-stat', 'roll-save', 'roll-skill'])
 const rollMenu = shallowRef(null)
+const hasSummaryMode = computed(() => props.checkModeCancelled || props.saveModeCancelled || [props.checkMode, props.saveMode].some(mode => ['advantage', 'disadvantage'].includes(mode)))
 const hasIcon = computed(() => !!(props.iconItem?.iconImageUrl || props.iconItem?.svg || props.iconItem?.iconSvgId || props.iconItem?.svgId))
 const iconSize = computed(() => layoutTokens[props.mobileVariant ? 'sheet-stat-compact-icon' : 'sheet-stat-icon'])
 

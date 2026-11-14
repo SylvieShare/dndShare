@@ -1,6 +1,6 @@
 <template>
   <div v-if="items.length || showAddAction" class="dsov" :class="{ 'dsov--icons-only': iconsOnly, 'dsov--header': header }" :style="iconsOnly ? { '--status-icon-size': `${iconSize}px` } : null">
-    <div class="dsov-row" data-sheet-horizontal-scroll>
+    <div ref="row" class="dsov-row" :class="{ 'dsov-row--scrollable': rowOverflows === true, 'dsov-row--fits': rowOverflows === false }" data-sheet-horizontal-scroll>
       <RowActionMenu
         v-for="item in items"
         :key="item.id"
@@ -88,7 +88,7 @@
 
 <script setup>
 import StatusMechanicsMenu from './StatusMechanicsMenu.vue'
-import { reactive } from 'vue'
+import { onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { BatteryLow, Clock3, Hourglass, Minus, Plus, Sparkles } from '@lucide/vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
@@ -100,7 +100,7 @@ import { layoutTokens } from '@/app/design-tokens'
 const failedIcons=reactive(new Set())
 const headerIconSize = layoutTokens['sheet-header-status-icon']
 
-defineProps({
+const props = defineProps({
   items: { type: Array, default: () => [] },
   editable: { type: Boolean, default: false },
   showAddAction: { type: Boolean, default: false },
@@ -110,6 +110,26 @@ defineProps({
   header: Boolean,
 })
 const emit = defineEmits(['add', 'view', 'remove', 'edit-duration', 'increase-level', 'decrease-level', 'show-tooltip', 'hide-tooltip'])
+const row = ref(null), rowOverflows = ref(null)
+let rowObserver, rowMeasureFrame
+function measureOverflow() {
+  rowOverflows.value = props.header && row.value ? row.value.scrollWidth > row.value.clientWidth + 1 : null
+}
+function scheduleOverflowMeasure() {
+  cancelAnimationFrame(rowMeasureFrame)
+  rowMeasureFrame = requestAnimationFrame(measureOverflow)
+}
+function observeRow() {
+  rowObserver?.disconnect()
+  cancelAnimationFrame(rowMeasureFrame)
+  if (!rowObserver || !props.header || !row.value) { rowOverflows.value = null; return }
+  rowObserver.observe(row.value)
+  for (const item of row.value.children) rowObserver.observe(item)
+  measureOverflow()
+}
+onMounted(() => { rowObserver = new ResizeObserver(scheduleOverflowMeasure); observeRow() })
+watch([row, () => props.header, () => props.items, () => props.showAddAction], observeRow, { flush: 'post' })
+onBeforeUnmount(() => { rowObserver?.disconnect(); cancelAnimationFrame(rowMeasureFrame) })
 
 function select(item, close, action) {
   close()
@@ -125,6 +145,7 @@ function monogram(value) {
 .dsov.dsov--header {padding:0;gap:var(--spacing-small)}
 .dsov--header .dsov-row {gap:var(--spacing-small);flex-wrap:nowrap;max-width:100%;box-sizing:border-box;padding-block:var(--spacing-xs);padding-inline:var(--status-scroll-inset-start,0px) var(--status-scroll-inset-end,0px);margin-block:calc(-1 * var(--spacing-xs));overscroll-behavior-x:contain}
 .dsov--header .dsov-row > * {flex:none}
+.dsov--header .dsov-row--fits {overflow:visible;padding-block:0;margin-block:0}
 .dsov--header .dsov-effect {width:auto;max-width:100%;flex:0 0 auto;grid-template-columns:var(--layout-sheet-header-status-icon) minmax(0,1fr);gap:calc(var(--spacing-xs) / 2);min-height:var(--layout-sheet-header-status-icon);padding:0 calc(var(--spacing-large) + var(--spacing-xs)) 0 var(--spacing-medium);border-radius:var(--radius-tile)}
 .dsov--header .dsov-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon);min-width:var(--layout-sheet-header-status-icon)}
 .dsov--header .dsov-item-icon {width:var(--layout-sheet-header-status-icon);height:var(--layout-sheet-header-status-icon)}
@@ -200,6 +221,7 @@ function monogram(value) {
   outline: 2px solid var(--accent-soft);
   outline-offset: 2px;
 }
+.dsov--header .dsov-row--fits .dsov-effect:focus-visible {outline-offset:-2px}
 .dsov-icon {
   display: grid;
   width: 64px;

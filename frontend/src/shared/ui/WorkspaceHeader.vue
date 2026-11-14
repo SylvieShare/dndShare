@@ -112,6 +112,7 @@ onBeforeUnmount(() => observer?.disconnect());
   width: 100%;
   margin-inline: auto;
   padding: var(--spacing-small) var(--spacing-page);
+  padding-block-end: var(--workspace-header-bottom-inset, var(--spacing-small));
   transition: max-width var(--motion-navigation);
 }
 .workspace-header-inner--page { padding-inline: var(--spacing-page); }

@@ -10,7 +10,9 @@ for (const width of [390, 834, 1920]) {
     test.beforeEach(async ({ page }) => {
       page.on('pageerror', error => { throw error })
       await page.setViewportSize({ width, height: 900 })
-      await page.goto('/tests/tutorials/fixtures/stat-rolls.html')
+      await page.goto('/tests/tutorials/fixtures/stat-rolls.html',{waitUntil:'domcontentloaded'})
+      await expect(page.locator('.stat-view')).toBeVisible()
+      await page.evaluate(()=>document.fonts.ready)
     })
 
     test('checks, saves and skills require confirmation and preserve bonuses and roll effects', async ({ page }) => {
@@ -80,7 +82,7 @@ for (const width of [390, 834, 1920]) {
         const original = await number.boundingBox()
         const stacked = effects !== 'skillEffects'
         const numberHeight = effects === 'checkEffects' ? (width < 640 ? 36 : 30) : effects === 'saveEffects' ? 48 : (width < 640 ? 32 : 28)
-        const expectedHeight = numberHeight + (stacked ? 24 : 0)
+        const expectedHeight = numberHeight + (stacked ? await control.locator('.stat-roll-value').evaluate(n=>parseFloat(getComputedStyle(n).paddingBottom)) : 0)
         const group = control.locator('.stat-roll-value')
         const originalGroup = await group.boundingBox()
         expect(originalGroup.height).toBeGreaterThanOrEqual(expectedHeight)
@@ -92,7 +94,9 @@ for (const width of [390, 834, 1920]) {
           const current = await number.boundingBox()
           for (const dimension of ['x', 'y', 'width', 'height']) expect(Math.abs(current[dimension] - original[dimension])).toBeLessThan(1)
           const badge = await control.locator('.roll-badge').boundingBox()
-          expect((await group.boundingBox()).height).toBe(originalGroup.height)
+          const expectedGroupHeight=stacked ? numberHeight+24 : originalGroup.height
+          expect((await group.boundingBox()).height).toBeGreaterThanOrEqual(expectedGroupHeight)
+          expect((await group.boundingBox()).height).toBeLessThanOrEqual(expectedGroupHeight+1)
           expect(badge.height).toBeLessThanOrEqual(stacked ? 24 : numberHeight)
           expect(await group.evaluate(el => getComputedStyle(el, '::before').inset)).toBe('0px')
           if (stacked) expect(badge.y).toBeGreaterThanOrEqual(current.y + current.height)
