@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
-const read = name => readFileSync(fileURLToPath(new URL(`./${name}`, import.meta.url)), 'utf8')
+const read = name => readFileSync(fileURLToPath(new URL(`./${name}`, import.meta.url)), 'utf8').replace(/\r\n/g, '\n')
 const headerSource = read('ItemDetailHeader.vue') + read('ItemDetailHeader.css')
 const detailSource = read('HandbookItemDetail.vue')
 const coverStatCardSource = read('../../items/components/cover/CoverStatCard.vue')
@@ -74,7 +74,8 @@ describe('handbook item detail cover', () => {
     expect(spellSummarySource).toContain('<CoverStatCard')
     expect(spellSummarySource).toContain('class="spell-summary-components-card"')
     expect(spellSummarySource).toContain('align-self: flex-end;')
-    expect(spellSummarySource).toContain('width: min(180px, 100%);')
+    expect(spellSummarySource).toContain('width: min(var(--layout-spell-component-popup-width), 100%);')
+    expect(spellSummarySource).toContain('<SpellComponentBadge')
     expect(spellSummarySource).toContain('Компоненты')
     expect(spellSummarySource).toContain('Время')
     expect(spellSummarySource).toContain('Дистанция')

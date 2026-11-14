@@ -1,5 +1,5 @@
 <template>
-  <div class="cover-stat-card" :class="[`cover-stat-card-${tone}`, `cover-stat-card-${size}`]">
+  <div class="cover-stat-card" :class="[`cover-stat-card-${tone}`, `cover-stat-card-${size}`, { 'cover-stat-card-with-icon': icon }]">
     <div class="cover-stat-card-body">
       <div class="cover-stat-card-label">{{ label }}</div>
       <div class="cover-stat-card-value">
@@ -69,8 +69,9 @@ defineProps({
 
 .cover-stat-card-body {
   min-width: 0;
-  padding-right: 34px;
+  padding-right: 0;
 }
+.cover-stat-card-with-icon .cover-stat-card-body {padding-right:34px}
 
 .cover-stat-card-label {
   overflow: hidden;
@@ -131,7 +132,7 @@ defineProps({
 
 @media (max-width: 520px) {
   .cover-stat-card { padding: 7px 8px; }
-  .cover-stat-card-body { padding-right: 24px; }
+  .cover-stat-card-with-icon .cover-stat-card-body { padding-right: 24px; }
   .cover-stat-card-mark { right: 8px; width: 20px; height: 20px; }
   .cover-stat-card-large .cover-stat-card-value { font-size: 24px; }
   .cover-stat-card-medium .cover-stat-card-value { font-size: 17px; }

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "source": "design/tokens.json",
-  "sourceSha256": "eeb6cee83c016276c7c4a9e339fae950eea01634b1dd310589d66ab079d54823",
+  "sourceSha256": "86aa7083885ddf09e1356d78287a098bef23507f0011b85730d7909bbfac5307",
   "outputs": {
-    "frontend/src/app/design-tokens.css": "60c8cb8d23abe112dff25d89460b9f0444e6427b1d2c520762a81e2f17bfa8b1",
-    "frontend/src/app/design-tokens.js": "dfd0f1cd4ba75976b1e4f5c06d80db0f84b394472c203121ca1351a83d6a49ca"
+    "frontend/src/app/design-tokens.css": "c3ab11a1e30d6472ddf09ae429b07f5ec729a58c285eabdcc077af75a088954e",
+    "frontend/src/app/design-tokens.js": "8899506e88df35bc21d97905e6ee14097103c34731bd87b642bdecfa978a6d18"
   }
 }

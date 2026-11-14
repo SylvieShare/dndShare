@@ -8,26 +8,12 @@
     </div>
 
     <div class="spell-summary-casting">
-      <CoverStatCard
-        v-if="hasComponents"
-        :icon="Shapes"
-        label="Компоненты"
-        size="compact"
-        class="spell-summary-components-card"
-      >
-        <template #value>
-          <span class="spell-summary-components" :aria-label="componentAriaLabel">
-            <span
-              v-for="component in componentBadges"
-              :key="component.short"
-              :title="component.title"
-              aria-hidden="true"
-            >{{ component.short }}</span>
-          </span>
-        </template>
-      </CoverStatCard>
+      <div v-if="hasComponents" class="spell-summary-components-card">
+        <span class="spell-summary-components-label">Компоненты</span>
+        <SpellComponentBadge class="spell-summary-component-badge" :components="data.components" />
+      </div>
       <div class="spell-summary-grid">
-        <CoverStatCard v-if="data.time" :icon="Clock3" label="Время" :value="timeLabel(data.time)" size="compact" />
+        <CoverStatCard v-if="data.time" class="spell-summary-time-card" label="Время" size="compact"><template #value><ActionTiming :time="data.time" size="inherit" /></template></CoverStatCard>
         <CoverStatCard v-if="data.range" :icon="LocateFixed" label="Дистанция" :value="rangeLabel(data.range)" size="compact" />
         <CoverStatCard v-if="data.duration" :icon="Hourglass" label="Длительность" :value="spellDurationLabel(data.duration)" size="compact" />
       </div>
@@ -36,9 +22,11 @@
 </template>
 
 <script setup>
-import { timeLabel, rangeLabel } from '@/shared/lib/spellPresentation'
+import { rangeLabel, spellComponentDetails } from '@/shared/lib/spellPresentation'
 import { computed } from 'vue'
-import { Clock3, Hourglass, LocateFixed, Shapes } from '@lucide/vue'
+import { Hourglass, LocateFixed } from '@lucide/vue'
+import ActionTiming from '@/shared/ui/ActionTiming.vue'
+import SpellComponentBadge from '@/features/items/components/SpellComponentBadge.vue'
 import CoverStatCard from '@/features/items/components/cover/CoverStatCard.vue'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
 import { spellDurationLabel } from '@/features/character-editor/blocks/dnd/composables/useSpellCalc'
@@ -58,16 +46,7 @@ const levelLabel = computed(() => {
   return `${level} уровень`
 })
 
-const componentBadges = computed(() => {
-  const components = data.value.components || {}
-  return [
-    components.v && { short: 'В', title: 'Вербальный компонент' },
-    components.s && { short: 'С', title: 'Соматический компонент' },
-    components.m && { short: 'М', title: 'Материальный компонент' },
-  ].filter(Boolean)
-})
-const hasComponents = computed(() => componentBadges.value.length > 0)
-const componentAriaLabel = computed(() => componentBadges.value.map(component => component.title).join(', '))
+const hasComponents = computed(() => spellComponentDetails(data.value.components).length > 0)
 </script>
 
 <style scoped>
@@ -126,28 +105,17 @@ const componentAriaLabel = computed(() => componentBadges.value.map(component =>
   gap: 9px;
 }
 
-.spell-summary-components {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
 .spell-summary-components-card {
   align-self: flex-end;
-  width: min(180px, 100%);
+  width: min(var(--layout-spell-component-popup-width), 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:var(--spacing-xs);
 }
-
-.spell-summary-components span {
-  min-width: 21px;
-  height: 21px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;
-  background: color-mix(in srgb, var(--text-on-accent) 10%, transparent);
-  font-size: 11px;
-  line-height: 1;
-}
+.spell-summary-component-badge {width:100%;--spell-material-width:100%}
+.spell-summary-components-label {color:var(--text-2);font-size:var(--type-context-size);line-height:var(--type-context-line-height)}
+@media (--ui-phone){.spell-summary-grid{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}.spell-summary-time-card{grid-column:1 / -1}}
 
 @media (max-width: 520px) {
   .spell-summary { gap: 9px; }
@@ -156,8 +124,5 @@ const componentAriaLabel = computed(() => componentBadges.value.map(component =>
   .spell-summary-kind span { font-size: 9px; }
   .spell-summary-casting { gap: 5px; }
   .spell-summary-grid { gap: 7px; }
-  .spell-summary-components-card { width: min(150px, 100%); }
-  .spell-summary-components { gap: 3px; }
-  .spell-summary-components span { min-width: 18px; height: 18px; font-size: 10px; }
 }
 </style>

@@ -39,6 +39,9 @@ if (new URLSearchParams(location.search).has('covers')) {
   Object.assign(items.find(item => item.id === 8).data, { concentration: true, ritual: true, duration: 'Концентрация, вплоть до 1 минуты', components: { v: true, s: true, m: 'Крошечный серебряный молот' } })
   items.find(item => item.id === 3).coverImageUrl = '/missing-spell-cover.webp'
 }
+if (new URLSearchParams(location.search).has('materials')) {
+  items.push({id:863,typeId:5,name:'Возрождение',data:{lvl:3,time:{kind:'action'},range:{kind:'touch'},duration:'Мгновенная',components:{v:true,s:true,m:'бриллианты, стоящие в сумме 300 зм, расходуемые заклинанием'}}})
+}
 itemsApi.byIds = async ids => ({ items: items.filter(item => ids.map(Number).includes(item.id)) })
 window.rolls = []; window.writes = []; window.events = []
 const dice = useDiceStore(pinia)

@@ -16,13 +16,16 @@
     </div>
 
     <SpellMetadata v-if="!summaryInHeader" :data="data" />
-    <div v-if="materialComponent" class="sdc-comp-m"><strong>Материальный компонент:</strong> {{ materialComponent }}</div>
+    <div v-if="materialComponent && (!summaryInHeader || !pricedMaterial)" class="sdc-comp-m"><strong>Материальный компонент:</strong> {{ materialComponent }}</div>
 
     <div v-if="classes.length" class="sdc-refs">
       <span class="sdc-ref-label">Доступно классам</span>
       <span class="sdc-classes">{{ classes.join(', ') }}</span>
     </div>
 
+    <DetailSection v-if="timeCondition" label="Особенность времени применения">
+      <template #icon><Clock3 /></template><p class="sdc-time-condition">{{ timeCondition }}</p>
+    </DetailSection>
     <DetailSection label="Описание заклинания">
       <template #icon><ScrollText /></template>
       <RichContent v-if="data.description" class="sdc-desc" :html="data.description" :item="item" :calculation-context="calculationContext" />
@@ -34,12 +37,13 @@
 <script setup>
 import SpellMetadata from '@/features/items/components/SpellMetadata.vue'
 import { computed, ref, watch } from 'vue'
-import { ScrollText } from '@lucide/vue'
+import { Clock3, ScrollText } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { DetailSection } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
 import { itemsApi } from '@/shared/api/itemsApi'
+import {spellMaterialRequirement} from '@/features/items/lib/spellMaterialRequirement'
 
 const props = defineProps({
   item: { type: Object, required: true },
@@ -73,6 +77,8 @@ const school = computed(() => schoolDetails.value.value || '')
 const schoolStyle = computed(() => ({ '--school-color': schoolDetails.value.color || 'var(--text-2)' }))
 const classes = computed(() => classIds.value.map(id => classNames.value[id]).filter(Boolean))
 const materialComponent = computed(() => typeof data.value.components?.m === 'string' ? data.value.components.m : '')
+const pricedMaterial = computed(() => spellMaterialRequirement(data.value.components))
+const timeCondition = computed(() => String(data.value.time?.condition || '').trim())
 const nameEnFormatted = computed(() =>
   (props.item.nameEn || '')
     .replace(/_/g, ' ')
@@ -123,6 +129,7 @@ const nameEnFormatted = computed(() =>
 .sdc-name-en { font-size: 13px; color: var(--text-muted); }
 
 .sdc-comp-m { font-size: 12px; color: var(--text-muted); }
+.sdc-time-condition {margin:0;color:var(--text-1);font-size:var(--type-group-size);line-height:var(--type-group-line-height);white-space:pre-wrap}
 
 .sdc-refs { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .sdc-ref-label { flex: 0 0 auto; color: var(--text-muted); font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }

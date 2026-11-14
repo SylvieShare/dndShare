@@ -28,7 +28,7 @@ defineProps({ item: Object, nameEn: String, rangeOverride: String, grantSummary:
 .sp-card-main,.sp-meta,.sp-metrics,.sp-effects,.sp-scaling-hint {position:relative;z-index:1;min-width:0}
 .sp-card-main {display:grid;grid-template-columns:minmax(0,65%) max-content;justify-content:space-between;align-items:start;gap:var(--spacing-small)}
 .sp-info {min-width:0;display:flex;flex-direction:column;gap:var(--spacing-small)}
-.sp-components {margin-block:calc(-1 * var(--spacing-compact))}
+.sp-components {margin-block:calc(-1 * var(--spacing-compact));--spell-material-width:min(var(--layout-spell-material-width),45cqw)}
 .sp-name-row {display:flex;align-items:baseline;gap:var(--spacing-compact);min-width:0}
 .sp-name {flex-shrink:0;max-width:100%;min-width:0;color:var(--text-1);font-family:var(--type-spell-name-family);font-size:var(--type-spell-name-size);font-weight:var(--type-spell-name-weight);line-height:var(--type-spell-name-line-height);overflow-wrap:anywhere}
 .sp-name-en {min-width:0;color:var(--text-muted);font-size:var(--type-context-size);line-height:var(--type-context-line-height);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
