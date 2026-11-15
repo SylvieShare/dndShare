@@ -1,7 +1,7 @@
 <template>
   <RowActionMenu block related :disabled="disabled" title="Добавить предмет">
     <template #trigger="{ open }">
-      <button type="button" class="inventory-bag-add" :class="{ 'inventory-bag-add--open': open }" :disabled="disabled"
+      <button type="button" class="inventory-bag-add" data-sheet-swipe :class="{ 'inventory-bag-add--open': open }" :disabled="disabled"
         :aria-label="`Добавить предмет в ячейку ${index + 1}`" :aria-expanded="open" aria-haspopup="menu">
         <InventoryEmptyArtwork class="inventory-bag-add__bag" />
         <Plus class="inventory-bag-add__plus" :size="28" aria-hidden="true" />
