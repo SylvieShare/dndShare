@@ -22,7 +22,7 @@
     </div></template>
     </CharacterMenuActions>
     <div class="stat-roll-mode-label">Режим броска</div>
-    <D20RollControls :scope="scope" :mode="mode" :cancelled="cancelled" @roll="(mode, excluded) => emit('roll', mode, excluded)" />
+    <D20RollControls :scope="scope" :mode="mode" :cancelled="cancelled" :bonus="total" :color="color" @roll="(mode, excluded) => emit('roll', mode, excluded)" />
   </BasePopover>
 </template>
 <script setup>

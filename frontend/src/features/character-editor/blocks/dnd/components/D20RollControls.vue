@@ -5,13 +5,20 @@
       <RollBonusOptions v-if="scope" :scope="scope" :character-context="characterContext" :roll-context="rollContext" v-model="excludedBonuses" />
     </div>
     <ActionButton v-if="dialog" :disabled="disabled" @click="!disabled && emit('roll', rollMode, excludedBonuses)">{{ rollLabel }}</ActionButton>
-    <RowActionItem v-else :action="action" :disabled="disabled" @click="!disabled && emit('roll', rollMode, excludedBonuses)">{{ rollLabel }}</RowActionItem>
+    <RowActionItem v-else :action="action" :disabled="disabled" :aria-description="expression ? `Формула броска: ${expression}` : undefined" @click="!disabled && emit('roll', rollMode, excludedBonuses)">
+      {{ rollLabel }}
+      <template v-if="expression" #suffix>
+        <DamageFormulaPreview unframed label="" :size="26" :expression="expression" :default-color="color" :title="expression" aria-hidden="true" />
+      </template>
+    </RowActionItem>
   </div>
 </template>
 <script setup>
 import RollBonusOptions from './RollBonusOptions.vue'
-import { ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { ActionButton } from '@sylvieshare/share-ui'
+import { d20Expression } from '@/shared/lib/pendingDice'
+import DamageFormulaPreview from './DamageFormulaPreview.vue'
 import RollModePicker from './RollModePicker.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 const props = defineProps({
@@ -19,6 +26,8 @@ const props = defineProps({
   scope: String,
   characterContext: Object,
   rollContext: Object,
+  bonus: Number,
+  color: String,
   cancelled: Boolean,
   disabled: Boolean,
   dialog: Boolean,
@@ -29,6 +38,9 @@ const emit = defineEmits(['roll', 'preview'])
 const excludedBonuses = ref([])
 // Each opening snapshots the resolved sheet settings for this roll only.
 const rollMode = ref(props.cancelled ? 'normal' : props.mode)
+const ctx = inject('charCtx', {})
+const expression = computed(() => props.bonus == null ? '' : d20Expression(props.bonus, rollMode.value,
+  (props.characterContext || ctx).characterDerivedEffects?.rollBonus?.({ kind: props.scope, ...props.rollContext }, excludedBonuses.value)))
 watch([rollMode, excludedBonuses], ([mode, excluded]) => emit('preview', { mode, excluded }), { immediate: true, flush: 'sync' })
 </script>
 <style scoped>
