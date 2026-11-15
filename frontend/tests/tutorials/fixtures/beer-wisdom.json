@@ -1,0 +1,16 @@
+{
+  "id": 900001,
+  "typeId": 15,
+  "name": "Пиво (2 мудрости)",
+  "data": {
+    "code": "beer_wisdom_2",
+    "effect_source": "basic",
+    "desc": "<p>Пока состояние активно, значение вашей Мудрости увеличивается на 2. Модификатор Мудрости и связанные показатели пересчитываются автоматически.</p><p>Состояние действует до ручного снятия. Повторное наложение не увеличивает бонус.</p>",
+    "thesis": "Мудрость +2",
+    "polarity": "positive",
+    "stacking": "single",
+    "duration": { "kind": "manual" },
+    "concentration": false,
+    "derived_effects": [{ "kind": "ability_bonus", "ability_ids": [5], "value": 2 }]
+  }
+}

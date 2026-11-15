@@ -82,7 +82,9 @@ const numData = computed(() => {
 })
 
 const statDisplayValue = computed(() =>
-  Math.max((numData.value.base || 0) + sumBonuses(numData.value.bonuses), resolveNumValue(charCtx.values?.[props.block.id]?.value))
+  charCtx.values?.[props.block.id]?.value != null
+    ? resolveNumValue(charCtx.values[props.block.id].value)
+    : (numData.value.base || 0) + sumBonuses(numData.value.bonuses)
 )
 
 const titleConfig = computed(() => props.block.content.title)

@@ -1,8 +1,29 @@
 import { describe, expect, it } from 'vitest'
 import { statusValueProjection } from './statusValueProjection'
 import { collectCharacterDerivedEffects, derivedSpeedBonuses, matchingDerivedEffects } from './characterDerivedEffects'
+import beer from '../../../../tests/tutorials/fixtures/beer-wisdom.json'
+import { addStatusInstance, removeStatusInstance } from './characterStatuses'
+import { resolveNumValue } from '@/shared/lib/dnd'
+import { participantDefenses } from '@/features/sessions/lib/participantDefenses'
 
 describe('potion status mechanics', () => {
+  it('adds two Wisdom once, recalculates passives and restores saved scores when removed', () => {
+    const values = { WIS: { value: { base: 14, bonuses: [{ value: 2 }] }, skills: { 10: { up: 1 } } },
+      INT: { value: 12 }, lvl: { level: 1 }, states: [] }
+    const items = new Map([[String(beer.id), beer]])
+    values.states = addStatusInstance(values, beer)
+    values.states = addStatusInstance(values, beer)
+    expect(values.states).toHaveLength(1)
+    expect(resolveNumValue(statusValueProjection(values, items).WIS.value)).toBe(18)
+    expect(statusValueProjection(values, items).INT).toBe(values.INT)
+    expect(participantDefenses(values, items).passives[0].value).toBe(16)
+    expect(participantDefenses(values, items).passives[1].value).toBe(11)
+    expect(values.WIS.value).toEqual({ base: 14, bonuses: [{ value: 2 }] })
+    values.states = removeStatusInstance(values, values.states[0].uid)
+    expect(statusValueProjection(values, items)).toBe(values)
+    expect(resolveNumValue(values.WIS.value)).toBe(16)
+    expect(participantDefenses(values, items).passives[0].value).toBe(15)
+  })
   it('raises strength without changing the saved base, and restores it on removal', () => {
     const values = { STR: { value: { base: 14, bonuses: [{ value: 2 }] } }, states: [{ effect_id: 1 }] }
     const items = new Map([['1', { id: 1, data: { derived_effects: [{ kind: 'ability_minimum', ability_ids: [1], value: 21 }] } }]])

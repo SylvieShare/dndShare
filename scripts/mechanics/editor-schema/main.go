@@ -82,7 +82,7 @@ func update(schema []any, id int, class []any) ([]any, error) {
 	return schema, nil
 }
 
-func run(apply, unarmed bool) error {
+func run(apply, unarmed, abilityBonus bool) error {
 	cfg, err := config.Load()
 	if err != nil {
 		return err
@@ -104,6 +104,9 @@ func run(apply, unarmed bool) error {
 		return err
 	}
 	defer tx.Rollback(ctx)
+	if abilityBonus {
+		return installAbilityBonus(ctx, tx, apply)
+	}
 	if unarmed {
 		return normalizeUnarmed(ctx, tx, apply)
 	}
@@ -162,8 +165,9 @@ func run(apply, unarmed bool) error {
 func main() {
 	apply := flag.Bool("apply", false, "update the affected item type definitions in one transaction")
 	unarmed := flag.Bool("unarmed-2014", false, "normalize the base damage of the 2014 catalogue record instead")
+	abilityBonus := flag.Bool("status-ability-bonus", false, "enable additive ability score effects in the status editor")
 	flag.Parse()
-	if err := run(*apply, *unarmed); err != nil {
+	if err := run(*apply, *unarmed, *abilityBonus); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}

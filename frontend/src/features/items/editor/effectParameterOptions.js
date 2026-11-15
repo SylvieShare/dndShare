@@ -3,6 +3,7 @@ const derivedLabels = {
   check_bonus: 'Бонус проверки', skill_bonus: 'Бонус навыка', save_bonus: 'Бонус спасброска',
   weapon_attack_bonus: 'Бонус к атаке', weapon_damage_bonus: 'Бонус к урону',
   speed_multiplier: 'Множитель скорости', ability_minimum: 'Минимальное значение характеристики',
+  ability_bonus: 'Бонус к характеристике',
 }
 
 export function effectParameterOptions(effect, bindings = []) {

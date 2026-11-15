@@ -5,6 +5,7 @@ import { collectCharacterDerivedEffects, derivedNumericBonus, derivedProficiency
 import { deriveEquippedArmor } from '@/features/character-editor/blocks/dnd/lib/equippedArmor'
 import { armorAbilityRollEffects, resolveRollMode } from '@/features/character-editor/blocks/dnd/lib/rollMode'
 import { abilityModifier, proficiencyBonus, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
+import { abilityScoreWithEffects } from '@/features/character-editor/lib/abilityScoreEffects'
 
 export const SAVE_ABILITIES = ['Сила', 'Ловкость', 'Телосложение', 'Интеллект', 'Мудрость', 'Харизма']
 const keys = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA']
@@ -22,12 +23,12 @@ export function sessionSaveProfile(target, ability, items, manualMode = 'auto', 
   if (!npc && snapshot.rulesVersion === '2024') rules.push(...dndRules('2024').exhaustionEffects(values.exhaustion?.level))
   const stat = values[key] || {}
   const npcData = { ...data.stats, ...combatant.override }
-  let score = npc ? Number(npcData[key?.toLowerCase()] ?? 10) : resolveNumValue(stat.value ?? 10)
-  for (const rule of matchingDerivedEffects(rules, 'ability_minimum', context)) score = Math.max(score, Number(rule.value) || 0)
+  const baseScore = npc ? Number(npcData[key?.toLowerCase()] ?? 10) : resolveNumValue(stat.value ?? 10)
+  const score = abilityScoreWithEffects(baseScore, ability, rules)
   let bonus = abilityModifier(score)
   if (npc) {
     const save = (combatant.override?.saving_throws || data.saving_throws)?.[key?.toLowerCase()]
-    if (save != null && save !== '') bonus = Number(save) || 0
+    if (save != null && save !== '') bonus = (Number(save) || 0) + abilityModifier(score) - abilityModifier(baseScore)
   } else {
     const mastery = values.prof_bonus || {}
     const prof = (mastery.auto === false ? Number(mastery.v) || 0 : proficiencyBonus(values.lvl?.level || 1)) + sumBonuses(mastery.bonuses)

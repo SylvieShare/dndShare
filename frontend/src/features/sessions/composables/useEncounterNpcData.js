@@ -5,6 +5,8 @@ import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { ref } from 'vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { npcArmorClass } from '../lib/npcArmorClass'
+import { abilityScoreWithEffects } from '@/features/character-editor/lib/abilityScoreEffects'
+import { abilityModifier } from '@/shared/lib/dnd'
 
 export function useEncounterNpcData() {
   const npcItemCache = ref({})
@@ -36,17 +38,21 @@ export function useEncounterNpcData() {
     return npcItemCache.value[c.itemId] || null
   }
 
-  function npcData(c) {
+  function npcBaseData(c) {
     const it = npcItem(c)?.data || {}
     const flat = {
       ...(it.identity || {}),
       ...(it.combat || {}),
       ...(it.stats || {}),
     }
-    const result = { ...flat, ...(c?.override || {}) }
-    for (const rule of effects(c)) if (rule.kind === 'ability_minimum') for (const id of rule.ability_ids || []) {
-      const key = SUGGEST16_TO_STAT[id]?.toLowerCase()
-      if (key) result[key] = Math.max(Number(result[key]) || 0, Number(rule.value) || 0)
+    return { ...flat, ...(c?.override || {}) }
+  }
+  function npcData(c) {
+    const result = npcBaseData(c), rules = effects(c)
+    for (const [id, stat] of Object.entries(SUGGEST16_TO_STAT)) {
+      const key = stat.toLowerCase(), base = Number(result[key] ?? 10)
+      const score = abilityScoreWithEffects(base, id, rules)
+      if (score !== base) result[key] = score
     }
     return result
   }
@@ -86,7 +92,10 @@ export function useEncounterNpcData() {
       : npcItem(c)?.data?.saving_throws?.[key]
     if (value == null || value === '') return null
     const bonus = Number(value)
-    return Number.isFinite(bonus) ? bonus : null
+    if (!Number.isFinite(bonus)) return null
+    const base = Number(npcBaseData(c)[key] ?? 10)
+    const score = Number(npcData(c)[key] ?? 10)
+    return bonus + abilityModifier(score) - abilityModifier(base)
   }
 
   function npcHpFormula(c) {

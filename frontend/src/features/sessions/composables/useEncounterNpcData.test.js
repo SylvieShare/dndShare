@@ -3,6 +3,18 @@ import { encounterEventData } from '../lib/encounterEventData'
 import { useEncounterNpcData } from './useEncounterNpcData'
 
 describe('encounter NPC actor name', () => {
+  it('shows temporary Wisdom and adjusts an explicit save, then restores both on removal', () => {
+    const data = useEncounterNpcData()
+    data.cacheItem({ id: 1, data: { stats: { wis: 16 }, saving_throws: { wis: 5 } } })
+    data.cacheItem({ id: 2, data: { derived_effects: [{ kind: 'ability_bonus', ability_ids: [5], value: 2 }] } })
+    const npc = { type: 'npc', itemId: 1, effectInstances: [{ effect_id: 2 }] }
+    expect(data.npcAbilityScore(npc, 'WIS')).toBe(18)
+    expect(data.npcSavingThrow(npc, 'WIS')).toBe(6)
+    expect(data.npcItem(npc).data.stats.wis).toBe(16)
+    npc.effectInstances = []
+    expect(data.npcAbilityScore(npc, 'WIS')).toBe(16)
+    expect(data.npcSavingThrow(npc, 'WIS')).toBe(5)
+  })
   it('keeps the name separate from the event marker snapshot', () => {
     const npcData = useEncounterNpcData()
     npcData.cacheItem({ id: 1635, name: 'Кобольд', data: {} })

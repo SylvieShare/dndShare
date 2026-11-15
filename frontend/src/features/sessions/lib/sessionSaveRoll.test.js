@@ -2,6 +2,17 @@ import { describe, expect, it } from 'vitest'
 import { sessionSaveProfile, saveTargetItemIds, saveTargetKey } from './sessionSaveRoll'
 const effect = (id, rules) => [String(id), { id, typeId: 15, data: { derived_effects: rules } }]
 describe('chronicle saving throws', () => {
+  it('applies temporary Wisdom to character and explicit NPC saving throws without changing snapshots', () => {
+    const items = new Map([effect(10, [{ kind: 'ability_bonus', ability_ids: [5], value: 2 }])])
+    const target = { kind: 'character', snapshot: { values: { WIS: { value: 16, save_up: true }, lvl: { level: 1 }, states: [{ effect_id: 10 }] } } }
+    expect(sessionSaveProfile(target, 5, items).bonus).toBe(6)
+    expect(sessionSaveProfile(target, 4, items).bonus).toBe(0)
+    expect(target.snapshot.values.WIS.value).toBe(16)
+    const npc = { kind: 'npc', snapshot: { item: { stats: { wis: 16 }, saving_throws: { wis: 5 } }, combatant: { effectInstances: [{ effect_id: 10 }] } } }
+    expect(sessionSaveProfile(npc, 5, items).bonus).toBe(6)
+    npc.snapshot.combatant.effectInstances = []
+    expect(sessionSaveProfile(npc, 5, items).bonus).toBe(5)
+  })
   it('combines proficiency, manual and active effect bonuses with scoped dice', () => {
     const target = { kind: 'character', charUuid: 'hero', snapshot: { values: { DEX: { value: 16, save_up: true, save_bonuses: [{ value: 1 }] }, lvl: { level: 5 }, states: [{ effect_id: 10 }] } } }
     const items = new Map([effect(10, [{ kind: 'save_bonus', value: 2 }, { kind: 'roll_bonus', scopes: ['saving_throw'], formula: '1d4' }, { kind: 'roll_mode', mode: 'advantage', scopes: ['saving_throw'], ability_ids: [2] }])])

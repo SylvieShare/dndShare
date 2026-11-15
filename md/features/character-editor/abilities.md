@@ -181,6 +181,21 @@ The common status tiles tint their backgrounds by catalogue polarity: green for
 positive, red for negative and blue for neutral or unspecified effects. Inspiration
 is positive and exhaustion negative. The tint is retained while the action menu
 is open; duration and level use readable neutral text.
+
+`derived_effects.kind=ability_bonus` временно прибавляет `value` к значениям
+характеристик из `ability_ids`. Прибавки складываются с исходным значением и
+постоянными бонусами, после чего применяются `ability_minimum`; порядок состояний
+не меняет результат. Исходные значения не переписываются: снятие состояния
+сразу убирает прибавку. Лист, пассивные показатели и спасброски в хронике
+используют пересчитанную характеристику. У NPC явный бонус спасброска сохраняет
+владение и остальные прибавки, меняясь на разницу модификаторов характеристики.
+«Пиво (2 мудрости)» использует одну прибавку +2 к Мудрости, положительную
+полярность, `stacking=single` и ручное снятие; это увеличивает её модификатор на 1.
+Редактор типа 15 получает новый вид правила отдельной операцией:
+`go run ./scripts/mechanics/editor-schema --status-ability-bonus` показывает
+изменение, добавление `--apply` сохраняет его идемпотентно. Сама запись эффекта
+создаётся через MCP, без startup-наполнения.
+
 Abilities, feats and spells declare zero or more links in `status_effects`;
 several links are presented as independent choices. A link may bind the owning
 ability's current scaling value into a named effect parameter.

@@ -11,6 +11,7 @@ const EFFECT_TITLES = {
   roll_bonus: 'Кости к броску',
   speed_multiplier: 'Множитель скорости',
   ability_minimum: 'Характеристика не ниже',
+  ability_bonus: 'Бонус к характеристике',
   armor_bonus: 'Класс доспеха',
   armor_minimum: 'КД не ниже',
   speed_bonus: 'Скорость',
