@@ -63,7 +63,7 @@ button.heading-armor {cursor:pointer}
 .heading-armor-icon,.heading-armor-value {grid-area:1/1}
 .heading-armor-icon {width:100%;height:100%;color:var(--text-muted)}
 .heading-armor-value {padding-bottom:2px;font-weight:700;line-height:1}
-.heading-metrics {display:flex;flex:none;flex-direction:column;justify-content:center;color:var(--text-muted);font-size:var(--type-context-size);line-height:calc(var(--layout-sheet-health-height) / 2)}
+.heading-metrics {display:flex;flex:none;flex-direction:column;justify-content:center;color:color-mix(in srgb,var(--text-muted) 80%,var(--subheader));font-size:var(--type-context-size);line-height:calc(var(--layout-sheet-health-height) / 2)}
 .heading-metric {display:inline-flex;align-items:center;gap:2px;white-space:nowrap}
 button.portrait:focus-visible,button.heading-armor:focus-visible {outline:2px solid var(--accent-soft);outline-offset:2px}
 button.heading-armor:hover {background:var(--surface-raised)}
