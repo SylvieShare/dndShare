@@ -3,21 +3,21 @@
     <PageHeaderPortal>
       <HeaderCreateAction v-if="loading || hasAnything" label="Создать сессию" @click="showModal = true" />
     </PageHeaderPortal>
-    <SessionsListToolbar v-model:filter="filter" v-model:join-code="joinCode" :items="filterItems" :joining="joining" :error="joinError" :show-join="loading || !!hasAnything" @join="handleJoin" />
+    <SessionsListToolbar v-if="loading || hasAnything" v-model:join-code="joinCode" :joining="joining" :error="joinError" @join="handleJoin" />
 
     <LoadingState v-if="loading" label="Загружаем сессии…" />
 
     <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="loadSessions()">Повторить</button></div>
 
     <template v-else-if="hasAnything">
-      <template v-if="showGm && gmSessions.length">
-        <div v-if="showPlayer && playerSessions.length" class="section-title">Я веду</div>
+      <template v-if="gmSessions.length">
+        <div v-if="playerSessions.length" class="section-title">Я веду</div>
         <div class="cards-list">
           <SessionCard v-for="s in gmSessions" :key="s.id" :session="s" @delete="confirmDelete" />
         </div>
       </template>
 
-      <template v-if="showPlayer && playerSessions.length">
+      <template v-if="playerSessions.length">
         <div class="section-title">Я играю</div>
         <div class="cards-list">
           <SessionCard v-for="s in playerSessions" :key="s.id" :session="s" @leave="confirmLeave" />
@@ -27,8 +27,8 @@
 
     <div v-else class="empty-state">
       <div class="empty-heading">
-        <span class="empty-kicker">{{ sessions.length ? 'В ЭТОЙ КАТЕГОРИИ ПОКА ПУСТО' : 'ВАШЕ СЛЕДУЮЩЕЕ ПРИКЛЮЧЕНИЕ' }}</span>
-        <h2>{{ sessions.length ? 'Выберите, как продолжить' : 'С чего начнём?' }}</h2>
+        <span class="empty-kicker">ВАШЕ СЛЕДУЮЩЕЕ ПРИКЛЮЧЕНИЕ</span>
+        <h2>С чего начнём?</h2>
         <p>Станьте мастером новой истории или присоединитесь к уже начатой.</p>
       </div>
 
@@ -121,13 +121,6 @@ import { BaseTile, ConfirmDialog, FormTextInput } from '@sylvieshare/share-ui'
 import { consumePrefetch } from '@/app/router'
 import { createSession, deleteSession, getSessionByCode, getSessions, leaveSession } from '@/shared/api/sessionsApi'
 
-const FILTERS = [
-  { key: 'all',     label: 'Все' },
-  { key: 'gm',      label: 'Я веду' },
-  { key: 'player',  label: 'Я играю' },
-]
-const filterItems=computed(()=>FILTERS.map(item=>({...item,label:`${item.label} (${filterCount(item.key)})`,icon:item.key==='gm'?Sparkles:item.key==='player'?ArrowRight:KeyRound})))
-
 const router = useRouter()
 const route = useRoute()
 const sessions = ref([])
@@ -140,7 +133,6 @@ const joinError = ref('')
 const joinSession = ref(null)
 const pendingDelete = ref(null)
 const pendingLeave = ref(null)
-const filter = ref('all')
 
 function applySessionsResponse(res) {
   const items = Array.isArray(res) ? res : (res?.sessions ?? [])
@@ -213,26 +205,9 @@ async function handleCreate(payload) {
   }
 }
 
-const allGm     = computed(() => sessions.value.filter(s => s.myRole === 'gm'))
-const allPlayer = computed(() => sessions.value.filter(s => s.myRole === 'player'))
-
-const gmSessions     = computed(() => allGm.value)
-const playerSessions = computed(() => allPlayer.value)
-
-const showGm     = computed(() => filter.value !== 'player')
-const showPlayer = computed(() => filter.value !== 'gm')
-
-const hasAnything = computed(() =>
-  (showGm.value && gmSessions.value.length) ||
-  (showPlayer.value && playerSessions.value.length)
-)
-
-function filterCount(key) {
-  if (key === 'all')     return sessions.value.length
-  if (key === 'gm')      return allGm.value.length
-  if (key === 'player')  return allPlayer.value.length
-  return 0
-}
+const gmSessions = computed(() => sessions.value.filter(s => s.myRole === 'gm'))
+const playerSessions = computed(() => sessions.value.filter(s => s.myRole === 'player'))
+const hasAnything = computed(() => sessions.value.length > 0)
 
 onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
 </script>

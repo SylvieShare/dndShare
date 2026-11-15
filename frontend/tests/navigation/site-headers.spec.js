@@ -34,7 +34,8 @@ test('page navigation portals switch cleanly when returning to the cached charac
   await api(page);await page.goto('/chars')
   await expect(page.locator('#app-header-actions').getByRole('button',{name:'Новый персонаж',exact:true})).toBeVisible()
   await page.locator('.app-sidebar').getByText('Сессии',{exact:true}).click()
-  await expect(page.getByRole('navigation',{name:'Категории сессий'})).toBeVisible()
+  await expect(page.getByRole('heading',{name:'С чего начнём?',exact:true})).toBeVisible()
+  await expect(page.getByRole('navigation',{name:'Категории сессий'})).toHaveCount(0)
   await expect(page.locator('.app-header').getByRole('navigation',{name:'Категории сессий'})).toHaveCount(0)
   await expect(page.getByRole('button',{name:'Новый персонаж',exact:true})).toHaveCount(0)
   await page.goBack()
@@ -72,9 +73,12 @@ test('nested content columns keep elevation while either visible column is scrol
   await expect(header).not.toHaveAttribute('data-workspace-scrolled')
 })
 
-for(const width of [390,1440])test(`session list actions and joining stay usable at ${width}`,async({page})=>{
+for(const width of [475,704,1440])test(`session list always shows both roles and keeps joining usable at ${width}`,async({page},info)=>{
   await page.setViewportSize({width,height:750});await api(page)
-  await page.route(url=>url.pathname==='/api/sessions',route=>route.fulfill({json:[{session:{id:1,uuid:'test',name:'Пепельная корона',status:'stopped',systemId:1},participants:[],myRole:'gm'}]}))
+  await page.route(url=>url.pathname==='/api/sessions',route=>route.fulfill({json:[
+    {session:{id:1,uuid:'test',name:'Пепельная корона',status:'stopped',systemId:1},participants:[],myRole:'gm'},
+    {session:{id:2,uuid:'played',name:'Путь к перевалу',status:'active',systemId:1},participants:[],myRole:'player',ownerLogin:'Мастер'},
+  ]}))
   let requested=''
   await page.route(url=>url.pathname.startsWith('/api/sessions/by-code/'),route=>{requested=new URL(route.request().url()).pathname;return route.fulfill({status:404,json:{desc:'Сессия не найдена'}})})
   await page.goto('/sessions')
@@ -82,9 +86,33 @@ for(const width of [390,1440])test(`session list actions and joining stay usable
   await expect(header.getByRole('heading',{name:'Сессии',level:1,exact:true})).toBeVisible()
   await expect(header.getByRole('button',{name:'Создать сессию',exact:true})).toBeVisible()
   await expect(header.getByRole('textbox')).toHaveCount(0)
+  await expect(page.getByRole('navigation',{name:'Категории сессий'})).toHaveCount(0)
+  await expect(page.locator('.s-card')).toHaveCount(2)
+  await expect(page.locator('.section-title')).toHaveText(['Я веду','Я играю'])
+  await expect(page.locator('.card-name')).toHaveText(['Пепельная корона','Путь к перевалу'])
+  await expect(page.locator('.page-forward-enter-active,.page-backward-enter-active')).toHaveCount(0)
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
+  await info.attach(`session-list-${width}`,{body:await page.screenshot(),contentType:'image/png'})
   await code.fill('ABCDE-12345');await code.press('Enter')
   await expect(page.getByRole('alert')).toHaveText('Сессия с таким кодом не найдена')
   expect(requested).toBe('/api/sessions/by-code/ABCDE-12345')
   await header.getByRole('button',{name:'Создать сессию',exact:true}).click()
-  await expect(page.getByRole('dialog')).toBeVisible()
+  await expect(page.getByRole('dialog',{name:'Новая сессия',exact:true})).toBeVisible()
+  await page.keyboard.press('Escape')
+  await page.reload()
+  await expect(page.locator('.s-card')).toHaveCount(2)
+  await expect(page.getByRole('navigation',{name:'Категории сессий'})).toHaveCount(0)
+})
+
+test('empty session list keeps create and join controls without an empty filter toolbar',async({page})=>{
+  await page.setViewportSize({width:475,height:751})
+  await api(page)
+  await page.route(url=>url.pathname==='/api/sessions',route=>route.fulfill({json:[]}))
+  await page.goto('/sessions')
+  await expect(page.getByRole('heading',{name:'С чего начнём?',exact:true})).toBeVisible()
+  await expect(page.locator('.sessions-list-toolbar')).toHaveCount(0)
+  await expect(page.getByRole('navigation',{name:'Категории сессий'})).toHaveCount(0)
+  await expect(page.getByRole('button',{name:'Создать сессию',exact:true})).toBeVisible()
+  await expect(page.getByRole('textbox',{name:'Код приглашения',exact:true})).toBeVisible()
+  await expect(page.getByRole('button',{name:'Войти в сессию',exact:true})).toBeDisabled()
 })
