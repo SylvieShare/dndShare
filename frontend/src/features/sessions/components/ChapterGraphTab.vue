@@ -23,7 +23,7 @@
       @session-updated="emit('session-updated', $event)"
       @open-combat="openCombat"
     >
-      <template #tools><SessionToolbarTools v-if="isDm" ref="toolsRail" :session-uuid="sessionUuid" :presentation="presentation" :timers="timers" :show-shortcut-hints="showShortcutHints" /></template>
+      <template #tools="{ compact }"><SessionToolbarTools v-if="isDm" ref="toolsRail" :compact="compact" :session-uuid="sessionUuid" :presentation="presentation" :timers="timers" :show-shortcut-hints="showShortcutHints" /></template>
     </ChapterGraphToolbar>
 
     <div class="chapter-canvas-stage share-app-canvas" :class="{ 'chapter-canvas-stage--story': primaryView === 'story' }" data-tutorial="session-content" @scroll.capture="trackWorkspaceScroll">

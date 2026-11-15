@@ -68,9 +68,10 @@ It uses:
 
 No local modal backdrop, browser prompt/confirm or separate drag engine should
 be added. Tag/album pickers remain nested dialogs inside the workspace and obey
-the shared modal stack's Escape ordering. The session header's `Музыка` tab is
-also the compact player: it shows track progress and exposes pause/resume and
-next-track actions without changing the selected workspace. There is no
+the shared modal stack's Escape ordering. On phones and tablets the session header shows one `Музыка` button opening
+the workspace; the track name, progress and transport controls stay inside it.
+On desktop the header's music control remains a mini-player with track progress,
+pause/resume and next-track actions without changing the selected workspace. There is no
 right-rail music panel.
 
 The selected track immediately enters `ЗАГРУЗКА…` while obtaining its signed

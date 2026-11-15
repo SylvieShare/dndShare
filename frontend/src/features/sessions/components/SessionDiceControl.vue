@@ -40,7 +40,7 @@ const shortcutLabels = sessionShortcutLabels()
 function toggle() { open.value = !open.value }
 function rollDie(sides) { controller.rollDie(sides) }
 
-defineExpose({ toggle, rollDie })
+defineExpose({ open, toggle, rollDie })
 </script>
 
 <style scoped>

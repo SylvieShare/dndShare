@@ -3,11 +3,18 @@
     class="chapter-music-tab"
     :class="{
       'chapter-music-tab--active': primaryView === 'music',
+      'chapter-music-tab--compact': compact,
       'chapter-music-tab--playing': musicState.playing && !musicState.loading,
     }"
     role="group"
     :aria-label="musicTabTitle"
   >
+    <ActionButton v-if="compact" class="chapter-music-open" variant="quiet" icon-only aria-label="Музыка" :title="musicTabTitle"
+      :aria-current="primaryView === 'music' ? 'page' : undefined" :aria-busy="musicState.loading" aria-keyshortcuts="Alt+6" @click="emit('select-view', 'music')">
+      <template #icon><MusicLoadingIndicator v-if="musicState.loading" :size="24" /><Music2 v-else :size="24" aria-hidden="true" /></template>
+      <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.alt }}+6</kbd>
+    </ActionButton>
+    <template v-else>
     <button
       type="button"
       class="chapter-primary-tab chapter-primary-tab--music"
@@ -48,16 +55,18 @@
     <span v-if="currentMusicTrack" class="chapter-music-progress" aria-hidden="true">
       <span :style="{ width: `${musicProgressPct}%` }" />
     </span>
+    </template>
   </div>
 </template>
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { ActionButton } from '@sylvieshare/share-ui'
 import { storeToRefs } from 'pinia'
 import { Music2, Pause, Play, SkipForward } from '@lucide/vue'
 import { useMusicStore } from '@/stores/music'
 import { sessionShortcutLabels } from '../lib/sessionShortcuts'
 import MusicLoadingIndicator from './MusicLoadingIndicator.vue'
-defineProps({ primaryView: String, showShortcutHints: Boolean })
+defineProps({ primaryView: String, showShortcutHints: Boolean, compact: Boolean })
 const emit = defineEmits(['select-view'])
 const shortcutLabels = sessionShortcutLabels()
 const musicStore = useMusicStore()
@@ -87,12 +96,15 @@ let observer
 const measure = () => { overflow.value = Math.max(0, (trackLabel.value?.scrollWidth || 0) - (trackViewport.value?.clientWidth || 0)) }
 const marqueeStyle = computed(() => ({ '--track-overflow': `${-overflow.value}px`, '--track-duration': `${Math.max(6, overflow.value / 22 + 3)}s` }))
 watch(() => currentMusicTrack.value?.name, async () => { await nextTick(); measure() })
-onMounted(() => {
-  observer = new ResizeObserver(measure)
-  observer.observe(trackViewport.value)
-  observer.observe(trackLabel.value)
+watch([trackViewport, trackLabel], () => {
+  observer?.disconnect()
+  if (trackViewport.value && trackLabel.value) {
+    observer ??= new ResizeObserver(measure)
+    observer.observe(trackViewport.value)
+    observer.observe(trackLabel.value)
+  }
   measure()
-})
+}, { flush: 'post' })
 onBeforeUnmount(() => observer?.disconnect())
 function toggleMusicPlayback() {
   if (!currentMusicTrack.value) return
@@ -102,6 +114,8 @@ function toggleMusicPlayback() {
 </script>
 <style scoped>
 .chapter-music-tab { justify-self: end; align-self: center; }
+.chapter-music-tab.chapter-music-tab--compact { overflow:visible; }
+.chapter-music-open { position:relative; }
 .chapter-primary-tab--music { position: relative; display: inline-flex; align-items: center; gap: 6px; min-height: 31px; padding: 6px 9px; border: 0; background: transparent; color: var(--text-2); font: 700 11px var(--font-ui); cursor: pointer; }
 .chapter-primary-tab--music:hover { color: var(--text-1); }
 .chapter-music-title { width: 48px; overflow: hidden; text-align: left; }

@@ -11,7 +11,7 @@ for (const mobile of [false, true]) test(`world maps, curved routes and annotati
   const tools = page.locator('[data-tutorial="session-tools"]')
   await expect(tools.getByRole('button', { name: 'Сокровища', exact: true })).toHaveCount(0)
   const toolbar = await page.locator('.workspace-header').boundingBox()
-  const toolButton = await page.getByRole('button', { name: 'Инструменты', exact: true }).boundingBox()
+  const toolButton = await tools.getByRole('button', { name: 'Кубики', exact: true }).boundingBox()
   expect(toolButton.y).toBeLessThan(toolbar.y + toolbar.height)
   await expect(page.locator('.workspace-tools-rail')).toHaveCount(0)
   const canvasBounds = await page.locator('.global-map-canvas').boundingBox()

@@ -114,7 +114,7 @@ async function submit() {
     broadcast.value = false
   } catch { /* the composable exposes a localized error */ }
 }
-defineExpose({ toggle: () => { open.value = !open.value } })
+defineExpose({ open, toggle: () => { open.value = !open.value } })
 </script>
 
 <style scoped>

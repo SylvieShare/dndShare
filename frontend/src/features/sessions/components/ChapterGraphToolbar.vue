@@ -25,7 +25,15 @@
 
     </div>
     </template>
-    <template #actions><slot name="tools" /><SessionToolbarMusic v-if="isDm" :primary-view="primaryView" :show-shortcut-hints="showShortcutHints" @select-view="emit('select-view', $event)" />
+    <template #actions><div v-if="isDm" ref="inlineActions" v-show="format !== 'phone'" /></template>
+    <template #between>
+      <div v-if="isDm" ref="phoneActions" v-show="format === 'phone'" class="chapter-toolbar-phone-actions" />
+      <Teleport v-if="isDm && actionsTarget" :to="actionsTarget" defer>
+        <div class="chapter-toolbar-actions">
+          <slot name="tools" :compact="format !== 'desktop'" />
+          <SessionToolbarMusic :compact="format !== 'desktop'" :primary-view="primaryView" :show-shortcut-hints="showShortcutHints" @select-view="emit('select-view', $event)" />
+        </div>
+      </Teleport>
     </template>
   </WorkspaceHeader>
 </template>
@@ -62,6 +70,8 @@ const emit = defineEmits([
 const shortcutLabels = sessionShortcutLabels()
 const { format } = useAppLayout()
 const workspace=ref(null)
+const inlineActions=ref(null),phoneActions=ref(null)
+const actionsTarget=computed(()=>format.value==='phone'?phoneActions.value:inlineActions.value)
 defineExpose({setScrollPosition:value=>workspace.value?.setScrollPosition(value)})
 const navigationItems = computed(() => sessionNavigationItems(props))
 const navigationKey = computed(() => selectedSessionNavigation(props.primaryView, props.combatActive))
@@ -73,6 +83,8 @@ function selectView(key) {
 
 <style scoped>
 .chapter-toolbar-center { display:flex;align-items:center;justify-content:center;min-width:0;max-width:100%;width:100%; }
+.chapter-toolbar-actions { display:flex;align-items:center;gap:var(--spacing-xs); }
+.chapter-toolbar-phone-actions { padding:0 var(--spacing-small) var(--spacing-xs); }
 .chapter-shortcut-hint {
   position: absolute;
   z-index: 2;

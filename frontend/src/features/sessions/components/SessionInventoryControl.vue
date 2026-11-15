@@ -68,7 +68,7 @@ function viewItem(row) {
   view.value = { id, typeId, item: id ? art(row) || null : { name: row.name, typeId, data: row.entry?.override || {} } }
   open.value = false
 }
-defineExpose({ toggle: () => { open.value = !open.value } })
+defineExpose({ open, toggle: () => { open.value = !open.value } })
 </script>
 <style scoped>
 .inventory-trigger { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; min-height: 54px; padding: 5px 0; border: 0; background: transparent; color: var(--text-muted); cursor: pointer; }

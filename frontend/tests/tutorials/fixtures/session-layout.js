@@ -2,8 +2,12 @@ import { fixture } from './character-layout.js'
 import { TUTORIAL_REVISION } from '../../../src/features/tutorials/lib/tutorialIdentity.js'
 import { applyDocumentPatches } from '../../../src/shared/lib/documentPatch.js'
 
-export async function sessionLayout(page, {url='/tests/tutorials/fixtures/tutorials.html?page=/sessions/test',participants:customParticipants,encounter:initialEncounter} = {}) {
+export async function sessionLayout(page, {url='/tests/tutorials/fixtures/tutorials.html?page=/sessions/test',participants:customParticipants,encounter:initialEncounter,music} = {}) {
   await fixture(page)
+  if(music)await page.route(url=>['/api/music/tracks','/api/music/albums','/api/music/tags'].includes(url.pathname),route=>{
+    const key=new URL(route.request().url()).pathname.split('/').at(-1)
+    return route.fulfill({json:{[key]:music[key]||[]}})
+  })
   await page.route('**/api/handbook/sync?**',route=>route.fulfill({json:{protocol:1,entries:[],hasMore:false,cursor:'empty',visibleIds:[],metadata:{types:[],suggests:{},suggestTypes:[],books:[]}}}))
   await page.addInitScript(() => {
     window.EventSource = class {
@@ -34,6 +38,7 @@ export async function sessionLayout(page, {url='/tests/tutorials/fixtures/tutori
     if(path.endsWith('/scene-graph'))json={scenes:[{id:31,chapterId:12,name:'Встреча',status:'planned',positionX:0,positionY:0}],edges:[]}
     if(path.endsWith('/block-graph'))json={items:[],edges:[]}
     if(path.endsWith('/encounter'))json={data:encounter,version:encounterVersion}
+    if(path.endsWith('/music'))json=music?.state||{}
     if(path.endsWith('/global-maps'))json={maps:[]}
     if(path.endsWith('/maps'))json={maps:[],display:{mapId:null,visible:false,revision:0,camera:{x:0,y:0,cellPixels:64,rotation:0,fit:true}}}
     if(path==='/api/items/by-ids')json={items:[{id:701,typeId:15,name:'Благословение',data:{polarity:'positive'}},{id:702,typeId:15,name:'Отравление',data:{polarity:'negative'}}].map(item=>({...item,svg:'<svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20" /></svg>'}))}

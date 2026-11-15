@@ -200,7 +200,7 @@ function setHealthDisplay(mode) { run(() => props.presentation.setHealthDisplay(
 function updateScaleDraft(event) { scaleDraft.value = normalizeScale(event.target.value) }
 function commitDisplayScale() { run(() => props.presentation.setDisplayScale(scaleDraft.value), false) }
 function resetDisplayScale() { scaleDraft.value = 100; commitDisplayScale() }
-defineExpose({ toggle: () => { open.value = !open.value } })
+defineExpose({ open, toggle: () => { open.value = !open.value } })
 </script>
 
 <style scoped>
