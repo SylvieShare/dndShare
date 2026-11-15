@@ -17,7 +17,7 @@ export async function checkSortableSwipe(page, width, rootUrl = '') {
   try {
     for (const [tab, selector, release, next] of [
       ['Оружие', '.mobile-swipe-pane:not([inert]) .w-name', 'touchEnd', 'Магия'],
-      ['Предметы', '[data-sortable-container="sec_bag"] .inventory-bag-item', 'touchCancel', 'Способности'],
+      ['Предметы', '[data-sortable-container="sec_bag"] .inventory-bag-item', 'touchCancel', 'Личность'],
     ]) {
       await nav.getByRole('button', { name: tab, exact: true }).click()
       await expect(pager).not.toHaveClass(/dragging|settling/)
