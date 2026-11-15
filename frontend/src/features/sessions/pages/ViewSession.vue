@@ -154,6 +154,9 @@
 
 
       <SessionWorkspaceSidebar :controller="sidebar">
+        <template #reserve-title><EncounterReserveHeader :ui="reserveSidebar" /></template>
+        <template #reserve-actions><EncounterReserveHeader :ui="reserveSidebar" actions /></template>
+        <template #panels><EncounterReservePanel v-if="workspaceMode === 'combat'" :encounter="encounter" :ui="reserveSidebar" /></template>
         <template #players-actions>
           <SessionPlayersMenu :live-status="liveStatus" :sync-status="syncStatus" :syncing="syncRunning || liveCatchingUp"
             @join="openJoinOwn" @create="openCreate" @copy-code="copyCode" @copy-link="copyLink" />
@@ -259,7 +262,7 @@
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent, provide, watch } from 'vue'
+import { computed, defineAsyncComponent, provide, reactive, watch } from 'vue'
 import { onBeforeRouteLeave, useRoute } from 'vue-router'
 import { ref } from 'vue'
 import PageTutorial from '@/features/tutorials/components/PageTutorial.vue'
@@ -276,6 +279,9 @@ import SessionJoinModal from '@/features/sessions/components/SessionJoinModal.vu
 import SessionCenterWorkspace from '@/features/sessions/components/SessionCenterWorkspace.vue'
 import SessionPlayersMenu from '@/features/sessions/components/SessionPlayersMenu.vue'
 import SessionWorkspaceSidebar from '@/features/sessions/components/SessionWorkspaceSidebar.vue'
+import EncounterReserveHeader from '@/features/sessions/components/EncounterReserveHeader.vue'
+import EncounterReservePanel from '@/features/sessions/components/EncounterReservePanel.vue'
+import { useEncounterReserveSidebar } from '../composables/useEncounterReserveSidebar'
 import { useSessionSidebar } from '../composables/useSessionSidebar'
 import SessionParticipantCard from '@/features/sessions/components/SessionParticipantCard'
 import SessionPlayerView from '@/features/sessions/components/SessionPlayerView.vue'
@@ -314,6 +320,7 @@ const {
   workspaceMode, workspaceMotionMode, workspaceScene, worldLayer,
 } = useSessionPage()
 const sidebar = useSessionSidebar(primaryView)
+const reserveSidebar = reactive(useEncounterReserveSidebar(encounter,sidebar,()=>workspaceMode.value==='combat'))
 const route = useRoute()
 const requestedOccurrenceId = computed(() => Number(route.query.occurrence) || null)
 provide('applicationEncounter', encounter)

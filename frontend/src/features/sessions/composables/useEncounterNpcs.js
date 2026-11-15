@@ -1,6 +1,7 @@
 import { ref, unref } from 'vue'
 import { ensureCombatantLetters, makeUid, nextTieBreak } from '@/features/sessions/lib/encounterHelpers'
 import { parseDiceExpression, rollDiceExpression } from '@/shared/lib/dice'
+import { reserveAssignment } from '../lib/encounterReserves'
 
 function averageFromFormula(raw) {
   const formula = String(raw || '').replace(/[()]/g, '')
@@ -29,7 +30,7 @@ export function resolveStartHp(item, autoRoll = false) {
   return { hp: 1, fromFormula: true }
 }
 
-export function useEncounterNpcs({ encounter, unselect, pruneToExisting, selectedUids, cacheItem, autoRollHp }) {
+export function useEncounterNpcs({ encounter, unselect, pruneToExisting, selectedUids, cacheItem, autoRollHp, getReserveTabId }) {
   const showNpcPicker = ref(false)
   const showSimpleForm = ref(false)
   const detailNpc = ref(null)
@@ -55,6 +56,7 @@ export function useEncounterNpcs({ encounter, unselect, pruneToExisting, selecte
         itemId: item.id,
         override: fromFormula ? { hp: hpVal } : {},
         position: 'reserve',
+        ...reserveAssignment(getReserveTabId?.()),
         initiative: null,
         hpCurrent: hpVal,
         hpTemp: 0,
@@ -84,6 +86,7 @@ export function useEncounterNpcs({ encounter, unselect, pruneToExisting, selecte
       itemId: null,
       override,
       position: 'reserve',
+      ...reserveAssignment(getReserveTabId?.()),
       initiative: null,
       hpCurrent: hpCur || hpMax,
       hpTemp: 0,

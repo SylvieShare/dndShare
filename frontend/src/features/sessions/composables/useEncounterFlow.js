@@ -9,6 +9,8 @@ export function useEncounterFlow({
   selectedUids,
   unselect,
   rollInitiativeFor,
+  reserveTabMatches,
+  onReserveDrop,
 }) {
   function setInitiative(c, val) {
     mutate(() => {
@@ -227,13 +229,14 @@ export function useEncounterFlow({
       if (!t) return
       const newPos = toGroup === 'combat' ? 'combat' : (toGroup === 'dead' ? 'dead' : 'reserve')
       t.position = newPos
+      if (toGroup === 'reserve-npc' && t.type === 'npc') onReserveDrop?.(t)
       if (newPos === 'dead') t.initiative = null
 
       const arr = encounter.value.combatants
       const srcIdx = arr.findIndex(c => c.uid === item.uid)
       if (srcIdx !== -1) {
         const [moved] = arr.splice(srcIdx, 1)
-        const groupList = arr.filter(c => matchesGroup(c, toGroup))
+        const groupList = arr.filter(c => matchesGroup(c, toGroup) && (toGroup !== 'reserve-npc' || !reserveTabMatches || reserveTabMatches(c)))
         let insertAt
         if (toIndex >= groupList.length) {
           insertAt = groupList.length === 0 ? arr.length : arr.indexOf(groupList[groupList.length - 1]) + 1

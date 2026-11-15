@@ -262,7 +262,54 @@ func TestDocumentMutationsPostgres(t *testing.T) {
 		if err != nil || version != 1 || !strings.Contains(string(data), `"round":1`) {
 			t.Fatal(version, string(data), err)
 		}
+		testEncounterReserveMetadata(t, st, request)
 	})
+}
+
+func testEncounterReserveMetadata(t *testing.T, st *store.Store, request func(int64, string, string, string) *httptest.ResponseRecorder) {
+	t.Helper()
+	path := "/api/sessions/" + documentTestSession + "/encounter"
+	create := `{"baseVersion":1,"mutationId":"65000000-0000-4000-8000-000000000010","patches":[{"op":"set","path":["reserveTabs"],"value":[{"id":"wolves","name":"Волки"}]},{"op":"insert","path":["combatants",{"idField":"uid","id":"wolf"}],"value":{"uid":"wolf","type":"npc","position":"reserve","reserveTabId":"wolves","hpCurrent":14,"initiative":12}}]}`
+	first := request(2, "PATCH", path, create)
+	if first.Code != 200 {
+		t.Fatal(first.Code, first.Body.String())
+	}
+	retry := request(2, "PATCH", path, create)
+	if retry.Code != 200 || !bytes.Equal(first.Body.Bytes(), retry.Body.Bytes()) {
+		t.Fatal("reserve retry", retry.Code, retry.Body.String())
+	}
+	if w := request(1, "PATCH", path, create); w.Code != 403 {
+		t.Fatal("reserve permission", w.Code, w.Body.String())
+	}
+	rename := `{"baseVersion":2,"mutationId":"65000000-0000-4000-8000-000000000011","patches":[{"op":"set","path":["reserveTabs",{"idField":"id","id":"wolves"},"name"],"value":"Стая"}]}`
+	if w := request(2, "PATCH", path, rename); w.Code != 200 {
+		t.Fatal(w.Code, w.Body.String())
+	}
+	stale := strings.ReplaceAll(rename, "000000000011", "000000000015")
+	if w := request(2, "PATCH", path, stale); w.Code != 409 {
+		t.Fatal("stale reserve edit", w.Code, w.Body.String())
+	}
+	// A core edit from a client which does not manage reserve metadata preserves it.
+	core := `{"baseVersion":3,"mutationId":"65000000-0000-4000-8000-000000000012","patches":[{"op":"set","path":["combatants",{"idField":"uid","id":"wolf"},"hpCurrent"],"value":9}]}`
+	if w := request(2, "PATCH", path, core); w.Code != 200 {
+		t.Fatal(w.Code, w.Body.String())
+	}
+	data, version, err := st.EncounterDocument(context.Background(), 10)
+	if err != nil || version != 4 || !strings.Contains(string(data), `"name":"Стая"`) || !strings.Contains(string(data), `"reserveTabId":"wolves"`) {
+		t.Fatal(version, string(data), err)
+	}
+	invalid := `{"baseVersion":4,"mutationId":"65000000-0000-4000-8000-000000000013","patches":[{"op":"insert","path":["reserveTabs",{"idField":"id","id":"default"}],"value":{"id":"default","name":"Changed"}}]}`
+	if w := request(2, "PATCH", path, invalid); w.Code != 400 {
+		t.Fatal("default reserve", w.Code, w.Body.String())
+	}
+	remove := `{"baseVersion":4,"mutationId":"65000000-0000-4000-8000-000000000014","patches":[{"op":"remove","path":["reserveTabs",{"idField":"id","id":"wolves"}]},{"op":"remove","path":["combatants",{"idField":"uid","id":"wolf"},"reserveTabId"]}]}`
+	if w := request(2, "PATCH", path, remove); w.Code != 200 {
+		t.Fatal(w.Code, w.Body.String())
+	}
+	data, version, err = st.EncounterDocument(context.Background(), 10)
+	if err != nil || version != 5 || strings.Contains(string(data), `"reserveTabId"`) || !strings.Contains(string(data), `"hpCurrent":9`) || !strings.Contains(string(data), `"uid":"wolf"`) {
+		t.Fatal("reserve deletion", version, string(data), err)
+	}
 }
 func testDocumentLiveRoster(t *testing.T, s *Server) {
 	ctx := context.Background()

@@ -162,6 +162,31 @@ and removes duplicate legacy player entries. This prevents combatants from
 remaining outside every current group and persists the repaired state through
 the normal encounter save queue.
 
+### Reserve tabs
+
+The combat workspace uses a plain background; the story dot pattern remains
+on the plot canvas. NPC reserves live in the persistent left sidebar after
+the players/context tabs and a separator. The first tab is always `Запас`
+(`default`), with a fixed name and no delete action. The last dashed plus adds
+a custom tab. Its heading pencil edits the name inline; Enter/blur saves and
+Escape cancels. Deleting a custom tab returns its creatures to `Запас` without
+deleting combatants or changing HP, initiative, round, positions or turn order.
+
+Optional `reserveTabs: [{id,name}]` stores only custom tab definitions in the
+existing encounter JSON. An NPC's optional `reserveTabId` selects its home;
+absence or an unknown/removed ID means the permanent default. Existing documents
+without metadata remain valid and loading them does not create writes. The first
+custom tab adds the metadata through the usual versioned patch queue; no SQL
+migration is needed. Definitions use stable IDs, names of 1–255 characters and
+cannot claim the reserved `default` ID. Metadata remains private to the DM's
+encounter document; public display DTOs do not include it.
+
+The active tab scopes reserve selection, sorting and new creatures. Dragging
+into its roster assigns that tab; the `Другой запас` row submenu moves an NPC
+between tabs. Entering combat or the graveyard retains the home tab, so returning
+to reserve restores its original grouping. The sidebar tabs exist while the
+combat workspace is open, including preparation before the encounter starts.
+
 Canonical combatants:
 
 - player row references the session participant/character;

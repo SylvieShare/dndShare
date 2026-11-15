@@ -18,7 +18,8 @@ async function openEncounter(page,reserveCount=2) {
   const root=page.locator('.enc-wrap--workspace')
   await expect(root).toBeVisible()
   await expect(page.locator('.page-forward-enter-active,.page-backward-enter-active')).toHaveCount(0)
-  const row=uid=>root.locator(`.enc-row-shell[data-encounter-uid="${uid}"]`)
+  await page.getByRole('navigation',{name:'Боковые вкладки сессии'}).getByRole('button',{name:'Запас',exact:true}).click()
+  const row=uid=>page.locator(`.enc-row-shell:not(.sortable-ghost)[data-encounter-uid="${uid}"]`)
   await expect(row('reserve-1')).toContainText('Запас 1')
   return {api,root,row,reserveOrder:()=>api.encounter().combatants.filter(c=>c.position==='reserve').map(c=>c.uid)}
 }
@@ -71,7 +72,7 @@ test('mouse hold reorders and transfers creatures while click and Escape keep th
   await page.mouse.move(start.x,start.y)
   await page.mouse.down()
   await expect(ghost).toBeVisible()
-  await page.mouse.move(start.x,current.y+2,{steps:5})
+  await page.mouse.move(current.x+current.width/2,current.y+2,{steps:5})
   await page.mouse.up()
   await expect.poll(()=>api.encounter().combatants.find(c=>c.uid==='reserve-2').position).toBe('combat')
   await expect(root.locator('.enc-row-shell[data-encounter-section="combat"]')).toHaveCount(2)
@@ -101,7 +102,7 @@ test.describe('touch encounter gestures',()=>{
   test('vertical touch movement before hold scrolls the list and preserves creature order',async({page})=>{
     await page.setViewportSize({width:932,height:704})
     const {api,root,row,reserveOrder}=await openEncounter(page,12)
-    const original=reserveOrder(),primary=root.locator('.enc-combat-primary'),touch=await page.context().newCDPSession(page)
+    const original=reserveOrder(),primary=page.locator('.enc-reserve-roster'),touch=await page.context().newCDPSession(page)
     const start=await point(row('reserve-1').locator('.p-name-text'))
     await touch.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[start]})
     for(let step=1;step<=5;step++)await touch.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:start.x,y:start.y-step*24}]})

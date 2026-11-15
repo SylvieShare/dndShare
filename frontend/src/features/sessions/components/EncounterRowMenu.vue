@@ -25,6 +25,12 @@
         :icon="Archive"
         @click="enc.sendToReserve(combatant); close()"
       >В запас</RowActionItem>
+      <RowActionSubmenu v-if="isNpc && section === 'reserve-npc' && enc.reserveTabs.length > 1" label="Выбрать запас">
+        <template #trigger="{ open }"><RowActionItem :icon="Archive" submenu :submenu-open="open">Другой запас</RowActionItem></template>
+        <template #default="{ close: closeReserves }">
+          <RowActionItem v-for="tab in enc.reserveTabs" :key="tab.id" :disabled="enc.reserveIdFor(combatant) === tab.id" @click="enc.moveNpcToReserve(combatant, tab.id); closeReserves(); close()">{{ tab.name }}</RowActionItem>
+        </template>
+      </RowActionSubmenu>
       <RowActionItem
         v-if="canRerollHp"
         :icon="Dices"

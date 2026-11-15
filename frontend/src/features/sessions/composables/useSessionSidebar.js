@@ -15,8 +15,16 @@ export function useSessionSidebar(activeView) {
   const tabs = computed(() => [
     { key: 'players', label: 'Игроки', icon: Users },
     ...(clients.get(activeView.value)?.tabs() || []).map(tab => ({ ...tab, key: key(activeView.value, tab.key) })),
+    ...(clients.get('reserves')?.tabs() || []).map(tab => ({ ...tab, key: key(tab.action ? 'reserveActions' : 'reserves', tab.key) })),
   ])
   function select(scope, tab) { sidebar.value?.openTab(key(scope, tab)) }
+  function action(tabKey) {
+    const index = tabKey.indexOf(':')
+    if (index > 0) {
+      const scope = tabKey.slice(0, index)
+      clients.get(scope === 'reserveActions' ? 'reserves' : scope)?.action?.(tabKey.slice(index + 1))
+    }
+  }
   function resize(size, navigation) {
     width.value = size
     if (navigation > 0) rail.value = navigation
@@ -35,5 +43,5 @@ export function useSessionSidebar(activeView) {
     select, collapse: () => sidebar.value?.collapse(), bounds: () => sidebar.value?.bounds(),
   }
   provide(workspaceSidebarContext, context)
-  return { selected, target, sidebar, width, rail, tabs, resize, safeLeft, moving }
+  return { selected, target, sidebar, width, rail, tabs, resize, safeLeft, moving, select, action, register: context.register }
 }

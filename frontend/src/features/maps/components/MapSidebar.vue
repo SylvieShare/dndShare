@@ -39,11 +39,13 @@
       :aria-hidden="collapsed || undefined"
     >
       <header class="map-sidebar-heading">
+        <slot name="header-title" :tab="tab">
         <Transition name="map-sidebar-title" mode="out-in"
           ><strong :key="tab">{{
             tabs.find((item) => item.key === tab)?.label
           }}</strong></Transition
         >
+        </slot>
         <div class="map-sidebar-heading-actions">
         <slot name="header-actions" />
         <ActionButton
@@ -91,7 +93,7 @@ const props = defineProps({
   collapseLabel: { type: String, default: 'Свернуть панель карты' },
   compactPeek: { type: Number, default: layoutTokens['map-compact-peek'] },
 });
-const emit = defineEmits(["update:tab", "select", "resize"]);
+const emit = defineEmits(["update:tab", "select", "resize", "action"]);
 const host = inject(workspaceSidebarContext, null);
 const hosted = !!host && !!props.workspaceKey;
 if (hosted) {
@@ -174,6 +176,7 @@ function toggleTab(key) {
   else openTab(key);
 }
 function openTab(key) {
+  if (props.tabs.find(tab => tab.key === key)?.action) { emit('action', key); return; }
   if (hosted) { host.select(props.workspaceKey, key); return; }
   const reveal = collapsed.value;
   if (reveal) {

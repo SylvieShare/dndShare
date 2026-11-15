@@ -213,52 +213,7 @@
             </div>
           </Transition>
 
-          <!-- ── NPC reserve ── -->
-          <div class="enc-block enc-block--npc" :class="{ 'enc-block--disabled': enc.npcReserveCollapsed }">
-            <div class="enc-section-title-row">
-              <div class="enc-section-title-group">
-                <span class="enc-section-title">
-                  <span class="enc-section-dot" />ЗАПАС НПС<span v-if="enc.npcReserveCollapsed" class="enc-section-disabled-hint"> · недоступно для игроков</span>
-                </span>
-                <button
-                  type="button"
-                  class="enc-section-icon-btn"
-                  :class="{ 'enc-section-icon-btn--active': allSelectedInNpcs }"
-                  :disabled="npcItems.length === 0"
-                  :title="allSelectedInNpcs ? 'Снять выбор' : 'Выбрать весь запас'"
-                  :aria-label="allSelectedInNpcs ? 'Снять выбор' : 'Выбрать весь запас'"
-                  aria-keyshortcuts="Shift+N"
-                  @click="enc.selectAllInGroup('reserve-npc')"
-                >
-                  <ListChecks :size="17" />
-                  <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+N</kbd>
-                </button>
-              </div>
-            </div>
-            <div class="enc-section">
-              <div
-                v-if="npcItems.length"
-                class="enc-reserve-list"
-                data-sortable-container="reserve-npc"
-              >
-                <EncounterRow
-                  v-for="c in npcItems"
-                  :key="c.uid"
-                  :combatant="c"
-                  section="reserve-npc"
-                />
-              </div>
-              <div
-                v-else-if="!enc.npcReserveCollapsed"
-                class="enc-reserve-empty"
-                data-sortable-container="reserve-npc"
-              >Запас пуст</div>
-              <div class="enc-add-row">
-                <button class="enc-add-dashed" @click="enc.showNpcPicker = true"><BookOpen :size="17" />Добавить из бестиария</button>
-                <button class="enc-add-dashed enc-add-dashed--simple" @click="enc.showSimpleForm = true"><Plus :size="17" />Создать упрощённо</button>
-              </div>
-            </div>
-          </div>
+
         </div>
 
         <Transition name="enc-turn-preview" :css="hasPreviewSpace">
@@ -346,7 +301,6 @@
 import { computed, provide, reactive, ref } from 'vue'
 import {
   ArchiveRestore,
-  BookOpen,
   BookOpenText,
   ChevronLeft,
   ChevronRight,
@@ -354,7 +308,6 @@ import {
   Dices,
   ListChecks,
   LogIn,
-  Plus,
   Skull,
   Square,
   Swords,
@@ -410,7 +363,6 @@ const {
 provide('encounter', enc)
 
 const combatItems = computed(() => enc.sortable.displayItems('combat'))
-const npcItems = computed(() => enc.sortable.displayItems('reserve-npc'))
 
 const currentTurnUid = computed(() => enc.currentTurnUid)
 const currentTurnCombatant = computed(() => enc.inCombat.find(combatant => combatant.uid === currentTurnUid.value) ?? null)
@@ -429,14 +381,12 @@ const contextParentTitle = computed(() => props.scene
 const allSelectedInCombat = computed(() =>
   combatItems.value.length > 0 && combatItems.value.every(combatant => enc.isSelected(combatant))
 )
-const allSelectedInNpcs = computed(() =>
-  npcItems.value.length > 0 && enc.selectedCountInGroup('reserve-npc') === npcItems.value.length
-)
+
 
 const encounterSummary = computed(() => {
   if (enc.encounter.active) return `Раунд ${enc.encounter.round} · ${enc.inCombat.length} участников`
   if (startSelectionCount.value) return `Выбрано участников: ${startSelectionCount.value}`
-  return `${npcItems.value.length} существ в запасе`
+  return `${enc.allReserveNpcs.length} существ в запасе`
 })
 
 function toggleVisibleSelection(items) {

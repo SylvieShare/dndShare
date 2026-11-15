@@ -13,6 +13,7 @@ import { useEncounterPlayers } from '@/features/sessions/composables/useEncounte
 import { useEncounterPersistence } from '@/features/sessions/composables/useEncounterPersistence'
 import { useEncounterSelection } from '@/features/sessions/composables/useEncounterSelection'
 import { useEncounterStates } from '@/features/sessions/composables/useEncounterStates'
+import { useEncounterReserves } from './useEncounterReserves'
 import {
   ICON_COLOR_SWATCHES,
   ENCOUNTER_LETTERS,
@@ -153,9 +154,8 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     return list[currentTurnIdx.value]?.uid ?? null
   })
 
-  const reserveNpcs = computed(() =>
-    encounter.value.combatants.filter(c => c.type === 'npc' && c.position === 'reserve')
-  )
+  const reserves = useEncounterReserves({ encounter, loaded, mutate, getCombatant })
+  const { reserveNpcs } = reserves
   const reservePlayers = computed(() =>
     encounter.value.combatants.filter(c => c.type === 'player' && c.position === 'reserve')
   )
@@ -222,6 +222,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     selectedUids: selection.selectedUids,
     cacheItem: npcData.cacheItem,
     autoRollHp: autoRollNpcHp,
+    getReserveTabId: () => reserves.activeReserveId.value,
   })
 
   const flow = useEncounterFlow({
@@ -233,6 +234,8 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     selectedUids: selection.selectedUids,
     unselect: selection.unselect,
     rollInitiativeFor,
+    reserveTabMatches: c => reserves.reserveIdFor(c) === reserves.activeReserveId.value,
+    onReserveDrop: reserves.stampActiveReserve,
   })
 
   const reviveTargetName = computed(() => {
@@ -392,7 +395,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     currentTurnIdx,
     currentTurnUid,
     isActiveInTurn,
-    reserveNpcs,
+    ...reserves,
     reservePlayers,
     deadCombatants,
     npcReserveCollapsed,

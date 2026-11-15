@@ -69,6 +69,10 @@ func (s *Server) handleEncounterMutation(w http.ResponseWriter, r *http.Request)
 		badRequest(w, "Некорректное состояние боя")
 		return
 	}
+	if err := validateEncounterReserves(next); err != nil {
+		badRequest(w, err.Error())
+		return
+	}
 	status := "pending"
 	if meta.Active {
 		status = "active"

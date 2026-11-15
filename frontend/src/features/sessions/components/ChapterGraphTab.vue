@@ -26,7 +26,7 @@
       <template #tools="{ compact }"><SessionToolbarTools v-if="isDm" ref="toolsRail" :compact="compact" :session-uuid="sessionUuid" :presentation="presentation" :timers="timers" :show-shortcut-hints="showShortcutHints" /></template>
     </ChapterGraphToolbar>
 
-    <div class="chapter-canvas-stage share-app-canvas" :class="{ 'chapter-canvas-stage--story': primaryView === 'story' }" data-tutorial="session-content" @scroll.capture="trackWorkspaceScroll">
+    <div class="chapter-canvas-stage share-app-canvas" :class="{ 'chapter-canvas-stage--story': primaryView === 'story' && workspaceLayoutMode !== 'combat' }" data-tutorial="session-content" @scroll.capture="trackWorkspaceScroll">
       <div v-if="actionError" class="chapter-action-error" role="alert">{{ actionError }}</div>
       <LoadingState v-if="primaryView === 'story' && graph.loading.value" class="chapter-graph-loading" label="Загружаем карту кампании…" compact />
       <SessionGraphCanvas

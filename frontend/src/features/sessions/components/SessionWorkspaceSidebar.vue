@@ -3,10 +3,13 @@
     <MapSidebar :ref="node => controller.sidebar.value = node" :tab="controller.selected.value" :tabs="controller.tabs.value"
       persistent-content :padded="false" tabs-label="Боковые вкладки сессии" collapse-label="Свернуть боковую панель"
       :compact-peek="layoutTokens['session-sidebar-peek']"
-      @update:tab="controller.selected.value = $event" @resize="controller.resize">
+      @update:tab="controller.selected.value = $event" @resize="controller.resize" @action="controller.action">
+      <template v-if="controller.selected.value.startsWith('reserves:')" #header-title><slot name="reserve-title" /></template>
       <template v-if="controller.selected.value === 'players'" #header-actions><slot name="players-actions" /></template>
+      <template v-else-if="controller.selected.value.startsWith('reserves:')" #header-actions><slot name="reserve-actions" /></template>
       <div :ref="node => controller.target.value = node" class="session-sidebar-panels">
         <div v-show="controller.selected.value === 'players'" class="session-sidebar-players" data-tutorial="session-players"><slot /></div>
+        <slot name="panels" />
       </div>
     </MapSidebar>
   </div>
