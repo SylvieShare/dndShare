@@ -17,10 +17,12 @@ export async function sessionLayout(page, {url='/tests/tutorials/fixtures/tutori
   const participants = customParticipants || ['Лира','Тиф'].map((name,i) => ({ charId:i+1,charUuid:`player-${i}`,templateId:1,sourceVersionId:1,version:1,
     data:{values:{name,hp:{current:18,max:{base:24,bonuses:[]}},lvl:{level:3},DEX:{value:14},armor:{},states:i?[]:states}} }))
   let encounter=initialEncounter || {active:false,round:1,turnIndex:0,combatants:[]},encounterVersion=1
+  const encounterWrites=[]
   await page.route(url => url.pathname.startsWith('/api/sessions/') || ['/api/templates','/api/items/by-ids','/api/account/tutorials'].includes(url.pathname), async route => {
     const path = new URL(route.request().url()).pathname
     if(path.endsWith('/encounter')&&route.request().method()==='PATCH') {
       const packet=route.request().postDataJSON()
+      encounterWrites.push(packet)
       encounter=applyDocumentPatches(encounter,packet.patches)
       return route.fulfill({json:{fromVersion:encounterVersion,version:++encounterVersion,patches:packet.patches,mutationId:packet.mutationId}})
     }
@@ -39,4 +41,5 @@ export async function sessionLayout(page, {url='/tests/tutorials/fixtures/tutori
   })
   await page.goto(url)
   await page.addStyleTag({content:'html,body,#app{margin:0;height:100%;overflow:hidden}body{background:var(--bg);color:var(--text-1);font-family:var(--font-ui)}'})
+  return {encounter:()=>encounter,writes:encounterWrites}
 }

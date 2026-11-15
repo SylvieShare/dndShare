@@ -29,6 +29,7 @@ import {
 import { getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import { getEncounter, saveEncounter, getEncounterChanges } from '@/shared/api/sessionsApi'
 import { useSortable } from '@sylvieshare/share-ui'
+import { motionTokens } from '@/app/design-tokens'
 import { useSuggestStore } from '@/stores/suggest'
 
 export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRollNpcHp }) {
@@ -275,6 +276,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
   }
 
   const sortable = useSortable({
+    activationDelay: motionTokens['encounter-drag-hold'],
     groups: {
       'combat':         { items: inCombat,        accepts: () => true },
       'reserve-npc':    { items: reserveNpcs,     accepts: (item) => item?.type === 'npc' },

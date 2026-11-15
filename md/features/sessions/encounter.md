@@ -93,6 +93,12 @@ anchored surfaces select the library-owned `action-menu` transition preset, so
 they share enter/leave motion with other row-action menus without depending on
 another component's CSS.
 
+Dragging creatures uses the shared sortable with EncounterDragHold (350ms).
+Hold a non-interactive part of the tile before moving. Motion before activation
+keeps native vertical scrolling; release, cancellation and Escape clear the
+hold. Completed dragging suppresses its trailing click. Initiative, markers,
+HP and selection controls keep their own actions.
+
 Clicking a non-interactive area of a combat or reserve row, or pressing
 Enter/Space on the focused tile, opens its action menu below that tile,
 aligned with its right edge. The shared `RowActionMenu` anchors to the actual

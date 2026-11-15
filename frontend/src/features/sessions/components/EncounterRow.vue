@@ -198,8 +198,8 @@ function commitNoteEdit() {
 }
 .enc-row-shell[data-encounter-section="combat"] { width: 100%; max-width: 100%; }
 .enc-row-shell--placeholder :deep(.enc-row-order) { opacity: .25; }
-.enc-row { flex: 1; cursor: grab; touch-action: none; }
-.enc-row:active { cursor: grabbing; }
+.enc-row { flex: 1; cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.enc-row--placeholder { cursor: grabbing; }
 .enc-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .enc-row.enc-row--placeholder { border: 2px dashed var(--accent); }
 .enc-row--placeholder :deep(*) { visibility: hidden; }

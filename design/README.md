@@ -44,6 +44,9 @@ EncounterPreviewMinWidth (280). Между колонками оставлен L
 рабочей области — Page. Для двух колонок требуется 788 px свободного содержимого;
 порог проверяется после учёта панелей и боковых отступов.
 
+Перенос существ в бою использует EncounterDragHold (350 мс). До удержания
+вертикальное движение остаётся прокруткой; таймером и отменой владеет share-ui/useSortable.
+
 В шапке листа группа показателей использует SheetHeaderMetricsWidth (400),
 SheetHeaderMetricHeight (64) и SheetHeaderMetricDie (32). Увеличенные HP используют
 SheetHeaderHealthHeight (40), SheetHeaderHealthMinWidth (112),
