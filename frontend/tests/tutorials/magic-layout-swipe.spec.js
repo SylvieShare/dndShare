@@ -81,7 +81,7 @@ test.describe('magic touch interactions',()=>{
    await magic(page)
    const target=page.locator('.mobile-swipe-pane:not([inert])').locator(selector).first()
    await touch(page,target,-Math.min(180,width*.4))
-   await expect(page.locator('[data-sheet-navigation] [aria-current="page"]')).toHaveText('Предметы')
+   await expect(page.locator('[data-sheet-navigation] [aria-current="page"]')).toHaveText('Способности')
    await expect(page.getByRole('menu')).toHaveCount(0)
    await expect(page.getByRole('dialog')).toHaveCount(0)
    expect(api.document().values.spells.slot_pools.long_rest[0].used).toBe(0)
