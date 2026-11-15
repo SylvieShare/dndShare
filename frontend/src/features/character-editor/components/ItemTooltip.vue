@@ -1,5 +1,6 @@
 <template>
-  <FloatingTooltip v-if="!blocked" :anchor="anchor" :x="x" :top="top" :bottom="bottom" :width="width" :z-index="zIndex" tooltip-class="itt-box">
+  <component :is="interactive ? BasePopover : FloatingTooltip" v-if="interactive || !blocked" v-bind="surfaceProps">
+    <div class="itt-content" :class="{ 'itt-content--interactive': interactive }" :style="interactive ? { '--itt-width': (width || 360) + 'px' } : undefined">
         <div class="itt-title" :class="{ 'itt-title--separated': displayDesc || $slots.details }">{{ title }}</div>
         <RichContent v-if="displayDesc" class="itt-desc dnd-rich-content" :html="displayDesc" />
         <template v-if="$slots.details">
@@ -8,12 +9,13 @@
             <slot name="details" />
           </div>
         </template>
-  </FloatingTooltip>
+    </div>
+  </component>
 </template>
 
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { FloatingTooltip, RichContent } from '@sylvieshare/share-ui'
+import { BasePopover, FloatingTooltip, RichContent } from '@sylvieshare/share-ui'
 import { isTouchActiveOrRecent } from '@/shared/lib/touchGuard'
 
 function truncateHtml(html, max) {
@@ -66,6 +68,7 @@ onUnmounted(() => {
 })
 
 const props = defineProps({
+  interactive: Boolean,
   zIndex: { type: Number, default: 4000 },
   anchor: { type: Object, default: null },
   title: { type: String, required: true },
@@ -76,6 +79,12 @@ const props = defineProps({
   maxDesc: { type: Number, default: 300 },
   width: { type: Number, default: null },
 })
+const emit = defineEmits(['close'])
+const surfaceProps = computed(() => props.interactive ? {
+  open: true, anchor: props.anchor, minWidth: 0, offset: 8, zIndex: props.zIndex,
+  transitionPreset: 'action-menu', role: 'dialog', ariaLabel: props.title, popoverClass: 'itt-popup',
+  'onUpdate:open': open => { if (!open) emit('close') },
+} : { anchor: props.anchor, x: props.x, top: props.top, bottom: props.bottom, width: props.width, zIndex: props.zIndex, tooltipClass: 'itt-box' })
 
 const displayDesc = computed(() => {
   if (!props.desc) return ''
@@ -86,7 +95,9 @@ const displayDesc = computed(() => {
 </script>
 
 <style scoped>
+.itt-content--interactive {box-sizing:border-box;width:min(var(--itt-width),calc(100vw - 2 * var(--spacing-large) - var(--spacing-small)));max-height:calc(100dvh - 4 * var(--spacing-large));overflow:auto;padding:var(--spacing-small)}
 .itt-title {
+  overflow-wrap: anywhere;
   color: var(--text-1);
   font-family: var(--font-display);
   font-size: 20px;

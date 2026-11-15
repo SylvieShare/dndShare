@@ -16,14 +16,9 @@
   </EditorPanel>
 </template>
 <script setup>
-import { CircleCheck, Minus, Gem } from '@lucide/vue'
+import { skillProficiencyOptions as ranks } from './skillProficiencyOptions'
 import { EditorPanel, EditorSection, FormField, FormTextInput, IconNavigation, RemoveButton } from '@sylvieshare/share-ui'
 import BonusList from '@/shared/ui/BonusList.vue'
 defineProps({ skill: { type: Object, required: true } })
 defineEmits(['change', 'remove'])
-const ranks = [
-  { key: 0, label: 'Без владения', icon: Minus },
-  { key: 1, label: 'Владение', icon: CircleCheck },
-  { key: 2, label: 'Компетентность', icon: Gem },
-]
 </script>

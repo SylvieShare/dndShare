@@ -1,0 +1,48 @@
+import { expect, test } from '@playwright/test'
+import { checkSkillDescriptions, prepareSkillDescriptions } from './fixtures/skill-descriptions.js'
+
+test.describe('touch skill descriptions', () => {
+  test.use({ hasTouch: true })
+  for (const width of [475, 704]) test(`skill name taps show descriptions and preserve swipes at ${width}`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 751 })
+    const errors = []; page.on('pageerror', error => errors.push(error.message))
+    await checkSkillDescriptions(page, width)
+    expect(errors).toEqual([])
+  })
+  test('reader can tap descriptions without receiving edit actions', async ({ page }) => {
+    await page.setViewportSize({ width: 704, height: 751 })
+    const api = await prepareSkillDescriptions(page, '', false)
+    await page.getByRole('button', { name: 'Описание навыка История', exact: true }).tap()
+    await expect(page.getByRole('dialog', { name: 'История', exact: true })).toContainText('древних цивилизациях')
+    await page.keyboard.press('Escape')
+    await page.getByRole('button', { name: 'История — проверка', exact: true }).tap()
+    await expect(page.getByRole('menu', { name: 'История', exact: true }).getByRole('button', { name: 'Изменить', exact: true })).toHaveCount(0)
+    expect(api.writes).toEqual([])
+  })
+})
+
+test('desktop skills retain hover descriptions and share icons with the editor', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 })
+  const api = await prepareSkillDescriptions(page)
+  const history = page.getByRole('button', { name: 'Описание навыка История', exact: true })
+  await history.hover()
+  await expect(page.getByRole('tooltip')).toContainText('древних цивилизациях')
+  await page.mouse.move(4, 4); await expect(page.getByRole('tooltip')).toHaveCount(0)
+  await history.click()
+  await expect(page.getByRole('dialog', { name: 'История', exact: true })).toBeVisible()
+  await page.mouse.move(4, 4)
+  await expect(page.getByRole('dialog', { name: 'История', exact: true })).toBeVisible()
+  await page.keyboard.press('Escape')
+  expect(api.writes).toEqual([])
+  const magic = page.getByRole('button', { name: 'Описание навыка Магия', exact: true })
+  const gem = await magic.locator('.lucide-gem').innerHTML()
+  await page.getByRole('button', { name: 'Магия — проверка', exact: true }).click()
+  await page.getByRole('menu', { name: 'Магия', exact: true }).getByRole('button', { name: 'Изменить', exact: true }).click()
+  const editor = page.getByRole('dialog', { name: 'Магия', exact: true })
+  expect(await editor.getByRole('button', { name: 'Компетентность', exact: true }).locator('.lucide-gem').innerHTML()).toBe(gem)
+  const circle = await editor.getByRole('button', { name: 'Владение', exact: true }).locator('.lucide-circle-check').innerHTML()
+  await editor.getByRole('button', { name: 'Владение', exact: true }).click()
+  await expect.poll(() => api.document().values.INT.skills[131].up).toBe(1)
+  await page.keyboard.press('Escape')
+  expect(await magic.locator('.lucide-circle-check').innerHTML()).toBe(circle)
+})

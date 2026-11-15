@@ -6,7 +6,7 @@ const source = readFileSync(fileURLToPath(new URL('./ItemTooltip.vue', import.me
 
 describe('ItemTooltip presentation', () => {
   it('animates its appearance and respects reduced-motion preferences', () => {
-    expect(source).toContain('<FloatingTooltip')
+    expect(source).toContain('FloatingTooltip')
     const styles = readFileSync(fileURLToPath(import.meta.resolve('@sylvieshare/share-ui/styles.css')), 'utf8')
     expect(styles).toContain('.share-tooltip')
     expect(styles).toContain('prefers-reduced-motion:reduce')

@@ -45,7 +45,7 @@
             <span class="save-number">
               <span class="save-label">СПАС</span>
               <span class="save-divider" aria-hidden="true">|</span>
-              <span v-if="saveUp" class="proficiency-dot" aria-hidden="true"></span>
+              <component v-if="saveUp" :is="skillProficiencyOptions[1].icon" class="proficiency-icon" aria-hidden="true" />
               <span class="save-chip-val">{{ signed(save) }}</span>
             </span>
           </StatRollValue>
@@ -67,15 +67,16 @@
         :key="skill.id"
         class="skill-item"
         @mouseenter="showTooltip($event, skill)"
-        @mouseleave="hideTooltip"
+        @mouseleave="hideHoverTooltip"
+        @touchmove.passive="hideTooltip"
       >
-        <span class="skill-label">
+        <button type="button" class="skill-label" data-sheet-swipe
+          :class="{ 'action-menu-source--open': tooltip.pinned && tooltip.id === skill.id }"
+          :aria-label="`Описание навыка ${skill.title}`" aria-haspopup="dialog" :aria-expanded="tooltip.pinned && tooltip.id === skill.id"
+          @click.stop="toggleDescription($event, skill)">
           <span class="skill-name">{{ skill.title }}</span>
-          <span v-if="skill.up > 0" class="skill-proficiency" aria-hidden="true">
-            <span class="proficiency-dot"></span>
-            <span v-if="skill.up >= 2" class="proficiency-dot"></span>
-          </span>
-        </span>
+          <component v-if="skill.up > 0" :is="skillProficiencyOptions[skill.up >= 2 ? 2 : 1].icon" class="skill-proficiency proficiency-icon" aria-hidden="true" />
+        </button>
         <span
           class="skill-chip"
           role="button"
@@ -118,6 +119,9 @@
       :bottom="tooltip.bottom"
       :max-desc="tooltipMaxDesc"
       :width="tooltipWidth"
+      :interactive="tooltip.pinned"
+      :anchor="tooltip.anchor"
+      @close="hideTooltip"
     >
       <template #details>
         <div class="skill-tooltip-breakdown">
@@ -137,7 +141,7 @@
 
 <script setup>
 import { MorphTile, MorphTileHeader, SkeletonBlock, TileAccentStrip } from '@sylvieshare/share-ui'
-import { computed, onBeforeUnmount, ref, shallowRef } from 'vue'
+import { computed, ref, shallowRef } from 'vue'
 import { layoutTokens } from '@/app/design-tokens'
 import { formatBonus as signed } from '@/shared/lib/dnd'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
@@ -145,6 +149,8 @@ import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import DndStatRollMenu from './DndStatRollMenu.vue'
 import StatRollValue from './StatRollValue.vue'
 import { useStatTitleFit } from './useStatTitleFit'
+import { skillProficiencyOptions } from './skillProficiencyOptions'
+import { useSkillDescription } from '../composables/useSkillDescription'
 
 const props = defineProps({
   title: { type: String, default: '' },
@@ -174,6 +180,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['edit', 'roll-stat', 'roll-save', 'roll-skill'])
 const rollMenu = shallowRef(null)
+const { tooltip, showTooltip, hideTooltip, hideHoverTooltip, toggleDescription } = useSkillDescription(rollMenu)
 const titleElement = ref(null), titleContainer = ref(null)
 useStatTitleFit(titleElement, titleContainer, () => props.title, () => props.mobileVariant)
 const hasIcon = computed(() => !!(props.iconItem?.iconImageUrl || props.iconItem?.svg || props.iconItem?.iconSvgId || props.iconItem?.svgId))
@@ -217,35 +224,6 @@ function confirmRoll(mode, excluded) {
   else emit(`roll-${selection.kind}`, mode, excluded)
 }
 
-const TOOLTIP_DELAY_MS = 450
-const tooltip = ref({ visible: false, title: '', desc: '', bonuses: [], total: 0, x: 0, top: null, bottom: null })
-let tooltipTimer = null
-
-function showTooltip(event, skill) {
-  hideTooltip()
-  if (rollMenu.value) return
-  const rect = event.currentTarget.getBoundingClientRect()
-  const placeAbove = window.innerHeight - rect.bottom < 180
-  tooltipTimer = window.setTimeout(() => {
-    tooltip.value = {
-      visible: true,
-      title: skill.title,
-      desc: skill.desc,
-      bonuses: skill.bonusDetails || [],
-      total: skill.bonus,
-      x: Math.max(8, Math.min(rect.left, window.innerWidth - 380)),
-      top: placeAbove ? null : rect.bottom + 8,
-      bottom: placeAbove ? window.innerHeight - rect.top + 8 : null,
-    }
-    tooltipTimer = null
-  }, TOOLTIP_DELAY_MS)
-}
-function hideTooltip() {
-  if (tooltipTimer != null) window.clearTimeout(tooltipTimer)
-  tooltipTimer = null
-  tooltip.value.visible = false
-}
-onBeforeUnmount(hideTooltip)
 </script>
 
 <style scoped src="./DndStatView.css" />

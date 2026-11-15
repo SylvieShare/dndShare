@@ -21,7 +21,7 @@ REQUIRED = {
                'spell-slot-hit-size', 'spell-slot-touch-hit-size', 'spell-slot-orb-size', 'spell-slot-touch-orb-size',
                'spell-stat-tile-height', 'spell-stat-compact-height', 'spell-settings-icon', 'spell-card-min-height', 'spell-component-popup-width', 'spell-component-icon-size', 'spell-material-width',
                'sheet-header-icon', 'sheet-header-action-icon', 'sheet-header-status-icon', 'status-compact-icon', 'sheet-header-tile-max', 'sheet-header-armor', 'sheet-health-height', 'sheet-health-icon', 'workspace-navigation-item', 'workspace-navigation-height', 'workspace-navigation-icon', 'workspace-navigation-selected', 'workspace-navigation-compact', 'workspace-navigation-desktop-icon', 'workspace-navigation-desktop-height',
-               'sheet-max', 'sheet-stat-min', 'sheet-stat-icon', 'sheet-stat-compact-icon', 'sheet-base-min', 'sheet-stats-column', 'sheet-utilities-column',
+               'sheet-max', 'sheet-stat-min', 'sheet-stat-icon', 'sheet-proficiency-icon', 'sheet-stat-compact-icon', 'sheet-base-min', 'sheet-stats-column', 'sheet-utilities-column',
                'sheet-stats-column-min', 'sheet-utilities-column-min',
                'input-height', 'number-input-height', 'number-input-width', 'input-stepper-width',
                'input-padding-horizontal', 'input-padding-vertical', 'toggle-width', 'toggle-height', 'toggle-thumb',

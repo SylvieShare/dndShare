@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 
 const source = readFileSync(fileURLToPath(new URL('./DndStatView.vue', import.meta.url)), 'utf8')
   + readFileSync(fileURLToPath(new URL('./DndStatView.css', import.meta.url)), 'utf8')
+  + readFileSync(fileURLToPath(new URL('../composables/useSkillDescription.js', import.meta.url)), 'utf8')
 
 describe('DndStatView presentation', () => {
   it('labels the saving throw without the shield icon', () => {
