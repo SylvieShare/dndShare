@@ -13,7 +13,7 @@
       <RowActionMenu title="Кубики" :z-index="4200" follow-anchor block :trigger-attrs="{ style: { display: 'grid', width: '100%' } }">
         <template #trigger="{ open }">
           <ActionButton variant="quiet" layout="stacked" aria-label="Кубики персонажа" aria-haspopup="menu" :aria-expanded="open">
-            <template #icon><SystemDie :sides="20" :size="layoutTokens['sheet-header-metric-die']" color="var(--accent-soft)" aria-hidden="true" /></template>Кубики
+            <template #icon><SystemDie :sides="20" value="" :size="layoutTokens['sheet-header-metric-die']" color="var(--accent-soft)" aria-hidden="true" /></template>Кубики
           </ActionButton>
         </template>
         <template #default="{ close }">

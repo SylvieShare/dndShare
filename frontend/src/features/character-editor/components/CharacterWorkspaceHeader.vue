@@ -94,6 +94,9 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
 .heading-editors {position:absolute;width:0;height:0}
 .heading-tools {display:flex;align-items:center;gap:2px;flex:none}
 .character-summary-strip {position:relative;z-index:1}
+.character-workspace-header.workspace-header--details:not(.workspace-header--details-inline) {
+  --workspace-header-bottom-inset: var(--spacing-xs);
+}
 .character-workspace-header.workspace-header--context:not(.workspace-header--context-inline):not(.workspace-header--context-details-row) {
   --workspace-header-bottom-inset: 0px;
 }
