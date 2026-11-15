@@ -154,8 +154,10 @@ for(const width of [390,834,1440])for(const withCondition of [false,true])test(`
   const bar=page.locator('[data-sheet-navigation]').locator('xpath=..')
   const navDividers=width>=1200?0:1
   await expect(page.locator('.workspace-subheader .workspace-row-divider')).toHaveCount(navDividers)
-  const separate=withCondition && !(await header.evaluate(n=>n.classList.contains('workspace-header--context-inline')))
-  await expect(page.locator('.workspace-row-divider:visible')).toHaveCount(navDividers+(separate?1:0))
+  const classes=await header.getAttribute('class')
+  const detailsSeparate=!classes.includes('workspace-header--details-inline')
+  const separate=withCondition && !classes.includes('workspace-header--context-inline') && !classes.includes('workspace-header--context-details-row')
+  await expect(page.locator('.workspace-row-divider:visible')).toHaveCount(4+navDividers+(detailsSeparate?1:0)+(separate?1:0))
   if(separate){
     await expect(header.locator('.dsov-row:visible')).toHaveClass(/dsov-row--fits/)
     await expect(header.locator('.workspace-header-inner')).toHaveCSS('padding-bottom','0px')

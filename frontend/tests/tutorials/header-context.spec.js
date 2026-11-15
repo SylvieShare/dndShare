@@ -15,7 +15,7 @@ async function open(page,width,{longName=false,owner=true,withCondition=true,def
   await page.evaluate(()=>document.fonts.ready)
   return state
 }
-for(const [width,longName,inline] of [[390,false,false],[700,false,true],[834,false,true],[834,true,false],[1440,true,true]]) {
+for(const [width,longName,inline] of [[390,false,false],[700,false,false],[834,false,false],[834,true,false],[1440,false,true],[1440,true,false]]) {
   test(`conditions use available header space at ${width} (long name=${longName})`,async({page},testInfo)=>{
     await open(page,width,{longName,duration:{kind:'minutes',value:10}})
     const header=page.locator('.character-workspace-header')
@@ -98,18 +98,17 @@ test('long condition durations wrap within a phone header',async({page})=>{
 })
 
 test('the inline gap participates in fitting and remains stable near the wrap boundary',async({page})=>{
-  await open(page,1000,{longName:true})
+  await open(page,1920,{longName:true})
   const header=page.locator('.character-workspace-header')
   await expect(header).toHaveClass(/workspace-header--context-inline/)
   const minimum=await header.evaluate(node=>{
     const main=node.querySelector('.workspace-header-inner'),style=getComputedStyle(main)
-    return parseFloat(style.paddingLeft)+parseFloat(style.paddingRight)+2*parseFloat(style.columnGap)
+    return parseFloat(style.paddingLeft)+parseFloat(style.paddingRight)+3*parseFloat(style.columnGap)+parseFloat(style.getPropertyValue('--workspace-context-inline-offset'))
       +node.querySelector('.workspace-header-identity').offsetWidth+node.querySelector('.workspace-header-actions').offsetWidth
-      +node.querySelector('.dsov-effect').offsetWidth
+      +node.querySelector('.dsov-effect').offsetWidth+node.querySelector('.workspace-header-details').offsetWidth
   })
-  const narrow=Math.ceil(minimum+8)
-  expect(narrow).toBeGreaterThanOrEqual(768)
-  await page.setViewportSize({width:narrow,height:650})
+  await page.addStyleTag({content:'.character-workspace-header > .workspace-header-inner{max-width:var(--test-header-width)!important}'})
+  await page.evaluate(width=>document.documentElement.style.setProperty('--test-header-width',width+'px'),Math.ceil(minimum-8))
   await expect(header).not.toHaveClass(/workspace-header--context-inline/)
   const placements=await header.evaluate(node=>new Promise(resolve=>{
     const frames=[]
@@ -117,7 +116,7 @@ test('the inline gap participates in fitting and remains stable near the wrap bo
     requestAnimationFrame(frame)
   }))
   expect(placements.every(value=>!value)).toBe(true)
-  await page.setViewportSize({width:narrow+32,height:650})
+  await page.evaluate(width=>document.documentElement.style.setProperty('--test-header-width',width+'px'),Math.ceil(minimum+24))
   await expect(header).toHaveClass(/workspace-header--context-inline/)
   await expect(page.locator('.dsov-effect')).toHaveCount(1)
 })

@@ -1,8 +1,10 @@
 <template>
-  <header ref="element" class="workspace-header" :class="{ 'workspace-header--solid': solid, 'workspace-header--navigation-joined': navigationJoined && !!navigationTarget, 'workspace-header--context': !!$slots.context, 'workspace-header--context-inline': contextInline, 'workspace-header--navigation-inline': navigationPlacement === 'inline' && navigationVisible }">
+  <header ref="element" class="workspace-header" :class="{ 'workspace-header--solid': solid, 'workspace-header--navigation-joined': navigationJoined && !!navigationTarget, 'workspace-header--context': !!$slots.context, 'workspace-header--context-inline': contextInline, 'workspace-header--details': !!$slots.details, 'workspace-header--details-inline': detailsInline, 'workspace-header--context-details-row': contextInDetailsRow, 'workspace-header--navigation-inline': navigationPlacement === 'inline' && navigationVisible }">
     <BlurBackdrop v-if="!solid" class="workspace-header-backdrop" radius="var(--chrome-blur)" />
     <div ref="main" class="workspace-header-inner" :class="{ 'workspace-header-inner--page': page }" :style="{ maxWidth: contentWidth || (page ? 'var(--layout-content-max)' : undefined) }">
     <div ref="identity" class="workspace-header-identity"><slot name="identity" /></div>
+    <div v-if="$slots.details" ref="details" class="workspace-header-details"><slot name="details" /></div>
+    <WorkspaceRowDivider v-if="$slots.details && rowDividers && !detailsInline" class="workspace-header-details-divider" />
     <div :id="navigationId" v-show="navigationPlacement === 'inline' && navigationVisible" class="workspace-header-navigation" />
     <div v-if="$slots.context" ref="context" class="workspace-header-context" :class="{ 'workspace-header-context--divided': rowDividers }">
       <WorkspaceRowDivider v-if="rowDividers" class="workspace-header-context-divider" />
@@ -28,8 +30,9 @@ const props = defineProps({ page: Boolean, contentWidth: String, fitNavigation: 
 const navigationId = `workspace-navigation-${useId()}`
 const element = ref(null),
   emit = defineEmits(["resize"]);
-const main=ref(null), identity=ref(null), context=ref(null), actions=ref(null), navigation=ref(null)
-const contextInline=useWorkspaceContextLayout(main,identity,context,actions,props)
+const main=ref(null), identity=ref(null), details=ref(null), context=ref(null), actions=ref(null), navigation=ref(null)
+const { contextInline, detailsInline, contextInDetailsRow }=useWorkspaceContextLayout(main,identity,context,actions,props,details)
+watch([contextInline, detailsInline, contextInDetailsRow], () => nextTick(updateSize), { flush: 'post' })
 watch([()=>props.navigationPlacement,()=>props.navigationTarget],async()=>{
   const focused=document.activeElement
   if(!navigation.value?.$el?.contains(focused))return
@@ -67,6 +70,7 @@ function updateSize() {
   element.value.style.setProperty('--workspace-context-inset-start', `${Math.max(0, start)}px`)
   element.value.style.setProperty('--workspace-context-inset-end', `${Math.max(0, end)}px`)
   element.value.style.setProperty('--workspace-main-height', `${main.value.offsetHeight}px`)
+  if(details.value) element.value.style.setProperty('--workspace-details-top', `${details.value.offsetTop - parseFloat(style.rowGap || 0) / 2}px`)
   if(props.navigationJoined && props.navigationTarget){
     const header=element.value.getBoundingClientRect(),target=props.navigationTarget.getBoundingClientRect()
     element.value.style.setProperty('--workspace-navigation-left',`${target.left-header.left}px`)
@@ -171,4 +175,18 @@ onBeforeUnmount(() => observer?.disconnect());
 .workspace-header--context-inline .workspace-header-identity {max-width:100%}
 .workspace-header--navigation-inline .workspace-header-inner {grid-template-columns:fit-content(var(--layout-workspace-inline-identity-max)) minmax(0,1fr) auto}
 @media (prefers-reduced-motion:reduce) {.workspace-header::after{transition:none}}
+.workspace-header--details .workspace-header-inner {grid-template-columns:minmax(0,max-content) minmax(0,max-content) minmax(0,1fr) auto;row-gap:var(--workspace-header-context-gap,var(--spacing-xs))}
+.workspace-header--details .workspace-header-identity {grid-column:1/4;grid-row:1}
+.workspace-header--details .workspace-header-actions {grid-column:4;grid-row:1}
+.workspace-header-details {grid-column:1/-1;grid-row:2;min-width:0}
+.workspace-header--details-inline .workspace-header-identity {grid-column:1}
+.workspace-header--details-inline .workspace-header-details {grid-column:2;grid-row:1}
+.workspace-header--details .workspace-header-context {grid-column:1/-1;grid-row:3}
+.workspace-header--details-inline .workspace-header-context {grid-row:2}
+.workspace-header--details.workspace-header--context-inline .workspace-header-context {grid-column:3;grid-row:1}
+.workspace-header--details.workspace-header--context-inline:not(.workspace-header--details-inline) .workspace-header-identity {grid-column:1/3}
+.workspace-header--context-details-row .workspace-header-details {grid-column:1;grid-row:2}
+.workspace-header--context-details-row .workspace-header-context {grid-column:2/-1;grid-row:2;align-self:center;margin-inline-start:var(--workspace-context-inline-offset,0px)}
+.workspace-header--context-details-row .workspace-header-context-divider {display:none}
+.workspace-header-details-divider {top:var(--workspace-details-top,0px)}
 </style>

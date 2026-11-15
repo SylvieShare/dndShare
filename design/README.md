@@ -39,6 +39,11 @@ StatusCompactIcon (40) используется в вертикальных со
 сохраняют SheetHeaderStatusIcon (56). JS экспортирует `spacingTokens` из того же
 источника, что CSS: динамический safe-left холста использует Page без разбора calc().
 
+В шапке листа группа показателей использует SheetHeaderMetricsWidth (400),
+SheetHeaderMetricHeight (64) и SheetHeaderMetricDie (32). Увеличенные HP используют
+SheetHeaderHealthHeight (40), SheetHeaderHealthMinWidth (112),
+SheetHeaderHealthIcon (20) и типографику SheetHeaderHealth (30/32).
+
 Фиксированные метки режимов броска — системная графика интерфейса: прозрачные
 WebP входят в общий frontend и доступны без отдельного запроса к справочнику.
 Их происхождение описывает [манифест](roll-mode-icons.json). Иконки записей

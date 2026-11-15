@@ -7,7 +7,7 @@ async function sheetFixture(page) {
   return api
 }
 
-for (const width of [390, 834, 1440]) test(`HP and shield fit without overlap; passives stay in the menu at ${width}`, async ({ page }, testInfo) => {
+for (const width of [390, 834, 1440]) test(`large HP and separate header AC fit without overlap; passives stay in the menu at ${width}`, async ({ page }, testInfo) => {
   const errors = []
   page.on('pageerror', error => errors.push(error.message))
   await page.setViewportSize({ width, height: 900 })
@@ -23,32 +23,26 @@ for (const width of [390, 834, 1440]) test(`HP and shield fit without overlap; p
   await expect(health.locator('.health-beat')).toBeVisible()
   await expect(health.locator('.health-heart')).toBeVisible()
   await expect(health.locator('.health-heart')).toHaveAttribute('aria-hidden', 'true')
-  await expect(heading.locator('.heading-armor-value')).toHaveText('11')
-  const shieldCenter = await heading.locator('.heading-armor').evaluate(node => {
-    const shield = node.querySelector('svg').getBoundingClientRect()
-    const number = node.querySelector('.heading-armor-value').getBoundingClientRect()
-    return { x: number.x + number.width / 2 - shield.x - shield.width / 2, y: number.y + number.height / 2 - shield.y - shield.height / 2 }
-  })
-  expect(Math.abs(shieldCenter.x)).toBeLessThan(1)
-  expect(Math.abs(shieldCenter.y)).toBeLessThan(2)
+  await expect(heading.locator('.heading-armor')).toHaveCount(0)
+  await expect(page.locator('[data-header-metric="armor"] strong')).toHaveText('11')
+  await expect(health).toHaveClass(/heading-health--enlarged/)
+  expect((await health.boundingBox()).height).toBeGreaterThanOrEqual(39.5)
   await expect(health).toHaveCSS('border-top-width', '1px')
   await expect(health.locator('.health-beat')).toHaveAttribute('aria-hidden', 'true')
   await expect(health.locator('[role="meter"]')).toHaveCount(0)
   await expect(heading.locator('canvas')).toHaveCount(0)
-  const { numbers, temp, avatar, name, combat, armor, hp } = await heading.evaluate(node => {
+  const { numbers, temp, avatar, name, combat, hp } = await heading.evaluate(node => {
     const box = selector => node.querySelector(selector).getBoundingClientRect().toJSON()
     return {
       numbers: box('.health-summary'), temp: box('.health-temporary'),
       avatar: box('.portrait'), name: box('.identity'),
-      combat: box('.heading-combat'), armor: box('.heading-armor'), hp: box('.heading-health'),
+      combat: box('.heading-combat'), hp: box('.heading-health'),
 
     }
   })
   await testInfo.attach('header-composition', { body: await page.locator('.character-workspace-header').screenshot(), contentType: 'image/png' })
-  expect(numbers.x + numbers.width).toBeLessThan(temp.x)
-  expect(hp.x).toBeGreaterThan(armor.x + armor.width)
-  expect(hp.x - armor.x - armor.width).toBeCloseTo(8, 1)
-  expect(Math.abs(hp.y + hp.height / 2 - armor.y - armor.height / 2)).toBeLessThan(1)
+  expect(numbers.right <= temp.left + .5 || numbers.bottom <= temp.top + .5).toBe(true)
+  expect(hp.x).toBeGreaterThan(avatar.x + avatar.width)
   expect(combat.top).toBeGreaterThanOrEqual(name.bottom - .5)
   await expect(heading.locator('.heading-metrics')).toHaveCount(0)
   await expect(health.locator('strong')).toHaveCSS('font-weight', '700')
@@ -62,6 +56,26 @@ for (const width of [390, 834, 1440]) test(`HP and shield fit without overlap; p
   expect((await heading.boundingBox()).width).toBeLessThanOrEqual(420.5)
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
   expect(errors).toEqual([])
+})
+
+test('large header HP values remain fully visible in a narrow phone', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 932 })
+  const api = await sheetFixture(page)
+  api.document().values.hp = { current: 9999, max: { base: 9999, bonuses: [] }, temp: 123 }
+  await page.goto('/char/test', { waitUntil: 'networkidle' })
+  const health = page.locator('.dnd-heading .heading-health')
+  await expect(health.locator('.health-readout')).toHaveText('9999/9999')
+  await expect(health.locator('.health-temporary')).toHaveText('+123')
+  await page.evaluate(() => document.fonts.ready)
+  const contained = await health.evaluate(health => {
+    const bounds = health.getBoundingClientRect()
+    return [...health.querySelectorAll('.health-heart,.health-readout strong,.health-readout small,.health-temporary')].every(node => {
+      const box = node.getBoundingClientRect()
+      return box.left >= bounds.left - .5 && box.right <= bounds.right + .5 && box.top >= bounds.top - .5 && box.bottom <= bounds.bottom + .5
+    })
+  })
+  expect(contained).toBe(true)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
 })
 
 test('the simple counter retains menu edits and death saves', async ({ page }) => {

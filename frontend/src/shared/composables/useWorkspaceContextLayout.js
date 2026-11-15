@@ -1,8 +1,9 @@
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { workspaceHeaderGroups } from '@/shared/lib/workspaceHeaderGroups'
 
-// Context shares the identity row only when its real content fits beside it.
-export function useWorkspaceContextLayout(main, identity, context, actions, props) {
-  const inline = ref(false)
+// Fit whole details and context groups in order without moving their live DOM.
+export function useWorkspaceContextLayout(main, identity, context, actions, props, details) {
+  const contextInline = ref(false), detailsInline = ref(false), contextInDetailsRow = ref(false)
   let observer, mutations, frame, fonts
   function intrinsicWidth(node) {
     // Resizing the live context resets nested scroll positions and closes menus.
@@ -18,21 +19,28 @@ export function useWorkspaceContextLayout(main, identity, context, actions, prop
     try { return measure.offsetWidth } finally { measure.remove() }
   }
   function measure() {
-    if (!main.value || !context.value || !identity.value || !actions.value) return
-    if (props.contextPlacement !== 'auto') { inline.value = props.contextPlacement === 'inline'; return }
+    if (!main.value || !identity.value || !actions.value) return
     const style = getComputedStyle(main.value)
     // offsetWidth excludes the context's inline margin; reserve it before fitting.
     const inlineOffset = Math.max(0, parseFloat(style.getPropertyValue('--workspace-context-inline-offset')) || 0)
-    const available = main.value.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight)
-      - actions.value.offsetWidth - intrinsicWidth(identity.value) - 2 * parseFloat(style.columnGap || 0) - inlineOffset
-    inline.value = available >= intrinsicWidth(context.value)
+    const layout = workspaceHeaderGroups({
+      width: main.value.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight),
+      identity: intrinsicWidth(identity.value), actions: actions.value.offsetWidth,
+      details: details?.value ? intrinsicWidth(details.value) : null,
+      context: context.value ? intrinsicWidth(context.value) : null,
+      gap: parseFloat(style.columnGap || 0), offset: inlineOffset, placement: props.contextPlacement,
+    })
+    contextInline.value = layout.contextInline; detailsInline.value = layout.detailsInline; contextInDetailsRow.value = layout.contextInDetailsRow
   }
   function schedule() { cancelAnimationFrame(frame); frame = requestAnimationFrame(measure) }
   function observe() {
     observer?.disconnect(); mutations?.disconnect()
-    if (!main.value || !context.value) { inline.value = false; return }
-    for (const node of [main.value, identity.value, context.value, actions.value]) if (node) observer.observe(node)
-    for (const node of [identity.value, context.value]) if (node) mutations.observe(node, { childList: true, characterData: true, subtree: true })
+    if (!main.value || (!context.value && !details?.value)) {
+      contextInline.value = false; detailsInline.value = false; contextInDetailsRow.value = false
+      return
+    }
+    for (const node of [main.value, identity.value, details?.value, context.value, actions.value]) if (node) observer.observe(node)
+    for (const node of [identity.value, details?.value, context.value]) if (node) mutations.observe(node, { childList: true, characterData: true, subtree: true })
     schedule()
   }
   onMounted(() => {
@@ -40,10 +48,10 @@ export function useWorkspaceContextLayout(main, identity, context, actions, prop
     fonts = document.fonts; fonts?.addEventListener('loadingdone', schedule)
     observe()
   })
-  watch([context, () => props.contextPlacement], () => { if (observer) observe() }, { flush: 'post' })
+  watch([context, () => details?.value, () => props.contextPlacement], () => { if (observer) observe() }, { flush: 'post' })
   onBeforeUnmount(() => {
     cancelAnimationFrame(frame); observer?.disconnect(); mutations?.disconnect()
     fonts?.removeEventListener('loadingdone', schedule)
   })
-  return inline
+  return { contextInline, detailsInline, contextInDetailsRow }
 }

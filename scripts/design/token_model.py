@@ -17,6 +17,8 @@ REQUIRED = {
     'layout': {'tablet', 'desktop', 'sidebar-collapsed', 'sidebar-expanded', 'drawer', 'content-max', 'header', 'border', 'touch-min', 'map-sidebar', 'map-rail', 'map-compact-peek', 'session-sidebar-peek', 'map-navigation-item',
                'workspace-header-shadow-distance', 'workspace-header-shadow-height', 'workspace-row-divider-height', 'workspace-inline-identity-max',
                'sheet-gallery-height', 'sheet-gallery-add-width', 'sheet-header-menu-width', 'sheet-header-menu-cell-height',
+               'sheet-header-metrics-width', 'sheet-header-metric-height', 'sheet-header-metric-die',
+               'sheet-header-health-height', 'sheet-header-health-min-width', 'sheet-header-health-icon',
                'sheet-value-height', 'sheet-value-width', 'sheet-value-compact-height', 'sheet-value-compact-width',
                'spell-slot-hit-size', 'spell-slot-touch-hit-size', 'spell-slot-orb-size', 'spell-slot-touch-orb-size',
                'spell-stat-tile-height', 'spell-stat-compact-height', 'spell-settings-icon', 'spell-card-min-height', 'spell-component-popup-width', 'spell-component-icon-size', 'spell-material-width',

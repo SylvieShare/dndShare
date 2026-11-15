@@ -1,5 +1,5 @@
 <template>
-  <WorkspaceHeader ref="workspace" v-bind="$attrs" class="character-workspace-header" :scroll-source="null" :context-placement="format === 'phone' ? 'row' : 'auto'"
+  <WorkspaceHeader ref="workspace" v-bind="$attrs" class="character-workspace-header" :scroll-source="null"
     :class="{ 'character-workspace-header--compact': compact }" :content-width="contentWidth" :fit-navigation="format !== 'phone'"
     :navigation-placement="dnd && format === 'desktop' ? 'external' : 'below'"
     row-dividers
@@ -21,6 +21,7 @@
         </div>
       </div>
     </template>
+    <template v-if="dnd" #details><DndHeaderMetrics :compact="format === 'phone'" @open="openHeading" /></template>
     <template v-if="dnd && hasConditions" #context>
       <div class="character-summary-strip">
         <DndSheetStrip />
@@ -64,6 +65,7 @@ import SettingsMenuTile from '../blocks/generic/SettingsMenuTile.vue'
 import CharacterSheetTabs from './sheet/CharacterSheetTabs.vue'
 import DndSheetHeading from './sheet/DndSheetHeading.vue'
 import DndSheetStrip from './sheet/DndSheetStrip.vue'
+import DndHeaderMetrics from './sheet/DndHeaderMetrics.vue'
 import { isInspirationActive } from '../blocks/dnd/lib/mobileStatus'
 const props = defineProps({ dnd: Boolean, format: String, modal: Boolean, contentWidth: String, name: String, subtitle: String, iconUrl: String, session: Object, transfers: Object, compact: Boolean, showMenu: Boolean,
   navigationTarget: Object, selection: Array, animateNavigation: { type: Boolean, default: true },
@@ -92,10 +94,10 @@ watch(() => props.iconUrl, () => { iconFailed.value = false })
 .heading-editors {position:absolute;width:0;height:0}
 .heading-tools {display:flex;align-items:center;gap:2px;flex:none}
 .character-summary-strip {position:relative;z-index:1}
-.character-workspace-header.workspace-header--context:not(.workspace-header--context-inline) {
+.character-workspace-header.workspace-header--context:not(.workspace-header--context-inline):not(.workspace-header--context-details-row) {
   --workspace-header-bottom-inset: 0px;
 }
-.character-workspace-header:not(.workspace-header--context-inline) .character-summary-strip {
+.character-workspace-header:not(.workspace-header--context-inline):not(.workspace-header--context-details-row) .character-summary-strip {
   --status-scroll-inset-start: var(--workspace-context-inset-start, var(--spacing-page));
   --status-scroll-inset-end: var(--workspace-context-inset-end, var(--spacing-page));
   margin-inline-start: calc(-1 * var(--status-scroll-inset-start));

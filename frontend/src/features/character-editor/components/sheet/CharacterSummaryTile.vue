@@ -16,7 +16,7 @@
             <Shield class="heading-armor-icon" :stroke-width="1.35" aria-hidden="true" /><span class="heading-armor-value">{{ armor }}</span>
           </component>
           <slot name="health">
-            <SheetHealth v-if="healthVisible" :interactive="editHealth" :current="current" :maximum="maximum" :temporary="temporary"
+            <SheetHealth v-if="healthVisible" :enlarged="enlargedHealth" :interactive="editHealth" :current="current" :maximum="maximum" :temporary="temporary"
               :aria-haspopup="editHealth ? 'dialog' : undefined" @click="metric($event, 'health', editHealth)" />
           </slot>
           <span v-if="showPassives" class="heading-metrics" aria-label="Пассивные показатели">
@@ -36,7 +36,7 @@ import SheetHealth from './SheetHealth.vue'
 const props = defineProps({
   name: String, iconUrl: String, actionLabel: String, expanded: Boolean, compact: Boolean,
   armor: Number, current: Number, maximum: Number, temporary: Number,
-  healthVisible: { type: Boolean, default: true }, armorControl: Boolean, editArmor: Boolean, editHealth: Boolean,
+  healthVisible: { type: Boolean, default: true }, armorControl: Boolean, editArmor: Boolean, editHealth: Boolean, enlargedHealth: Boolean,
   showPassives: Boolean, perception: Number, investigation: Number,
 })
 const emit = defineEmits(['armor', 'health'])

@@ -16,7 +16,8 @@ export async function checkHeadingActions(page, { width, owner = true, rootUrl =
   const before = structuredClone(api.writes)
   await expect(heading.locator('button button')).toHaveCount(0)
   await expect(page.locator('.heading-editors .armor-tile,.heading-editors .util-tile')).toHaveCount(0)
-  const armor = heading.getByRole('button', { name: /^Класс доспеха / })
+  await expect(heading.locator('.heading-armor')).toHaveCount(0)
+  const armor = page.locator('.dnd-header-metrics').getByRole('button', { name: 'КД', exact: true })
   if (owner) {
     await armor.click()
     const editor = page.getByRole('dialog', { name: 'Класс доспеха', exact: true })
@@ -59,7 +60,7 @@ export async function checkHeadingActions(page, { width, owner = true, rootUrl =
   await expect(menu).toHaveCount(0)
   expect(api.writes).toEqual(afterHealth)
   if (!owner || width !== 475) expect(api.writes).toEqual(before)
-  const controls = await heading.locator('.heading-armor,.heading-health,.heading-metrics').evaluateAll(nodes => nodes.map(node => {
+  const controls = await page.locator('.character-workspace-header .heading-health,.character-workspace-header .dnd-header-metrics').evaluateAll(nodes => nodes.map(node => {
     const rect = node.getBoundingClientRect(); return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom }
   }))
   for (const control of controls) expect(control.right).toBeLessThanOrEqual(width)
