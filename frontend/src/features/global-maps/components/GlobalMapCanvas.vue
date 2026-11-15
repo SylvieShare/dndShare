@@ -17,8 +17,7 @@
           <span class="global-map-route-name">{{ route.name }}</span>
           <span class="global-map-party-avatars">
             <span v-for="player in routePlayers(route)" :key="player.charId" class="global-map-avatar" role="img" :aria-label="pvName(player) || 'Игрок'" :title="pvName(player) || 'Игрок'">
-              <img v-if="pvAvatar(player)" :src="pvAvatar(player)" alt="" draggable="false" />
-              <UserRound v-else :size="20" />
+              <CharacterAvatar :src="pvAvatar(player)" :name="pvName(player)" size="100%" />
             </span>
           </span>
         </div>
@@ -37,7 +36,7 @@
 </template>
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref, shallowRef, watch } from 'vue'
-import { UserRound } from '@lucide/vue'
+import CharacterAvatar from '@/features/character-editor/components/CharacterAvatar.vue'
 import { ActionButton, BasePopover, LoadingState, useIsMobile } from '@sylvieshare/share-ui'
 import { pvAvatar, pvName } from '@/features/sessions/lib/participantView'
 import GlobalMapMarker from './GlobalMapMarker.vue'

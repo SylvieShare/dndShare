@@ -58,10 +58,7 @@
             @click="selectChar(char)"
           >
             <div class="tile-ava">
-              <img v-if="avaUrl(char)" :src="avaUrl(char)" class="ava-img" alt="" />
-              <div v-else class="ava-placeholder">
-                <span class="ava-letter">{{ initial(char) }}</span>
-              </div>
+              <CharacterAvatar :src="avaUrl(char)" :name="displayName(char)" size="100%" />
             </div>
             <div class="tile-info">
               <div class="tile-name">{{ displayName(char) }}</div>
@@ -110,6 +107,7 @@
 </template>
 
 <script setup>
+import CharacterAvatar from '@/features/character-editor/components/CharacterAvatar.vue'
 import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -156,7 +154,6 @@ function templateName(templateId) {
 function displayName(char) {
   return pvName(char) || '(без имени)'
 }
-function initial(char) { return (displayName(char)[0] || '?').toUpperCase() }
 function avaUrl(char) {
   return pvAvatar(char)
 }
@@ -412,16 +409,6 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
 }
-.ava-img { width: 100%; height: 100%; object-fit: cover; object-position: center 15%; }
-.ava-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--accent-hover), var(--surface-raised));
-}
-.ava-letter { font-size: 22px; font-weight: 700; color: var(--text-on-accent); }
 
 .tile-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .tile-name {

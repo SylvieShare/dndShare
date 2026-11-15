@@ -10,7 +10,7 @@ const source = readFileSync(
 describe('EncounterAvatar', () => {
   it('delegates portrait and icon geometry to the common avatar', () => {
     expect(source).toContain('<SessionCreatureAvatar')
-    expect(source).toContain(':icon="!isPlayer || isPlayerIcon"')
-    expect(source).toContain('enc.findParticipant(props.combatant.charId)?.iconImageUrl')
+    expect(source).toContain('<CharacterAvatar v-if="isPlayer"')
+    expect(source).toContain(':src="playerAva"')
   })
 })

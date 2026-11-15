@@ -116,11 +116,12 @@
                   class="initiative-card__portrait"
                   :class="{
                     'initiative-card__portrait--npc': combatant.type === 'npc',
-                    'initiative-card__portrait--icon': combatant.type === 'player' && (combatant.iconImageUrl || (!combatant.avatarUrl && !combatant.avatarSvg)),
+                    'initiative-card__portrait--icon': combatant.type === 'player',
                   }"
                 >
-                  <img v-if="queueCombatantImage(combatant)" :src="queueCombatantImage(combatant)" alt="" />
-                  <span v-else-if="combatant.avatarSvg" v-html="combatant.avatarSvg" />
+                  <CharacterAvatar v-if="combatant.type === 'player'" :src="queueCombatantImage(combatant)" :name="combatant.name" size="100%" />
+                  <img v-else-if="queueCombatantImage(combatant)" :src="queueCombatantImage(combatant)" alt="" />
+                  <span v-else-if="combatant.avatarSvg" class="initiative-card__svg" v-html="combatant.avatarSvg" />
                   <UserRound v-else :size="45" :stroke-width="1.15" aria-hidden="true" />
                   <span v-if="combatant.markerLetter" class="initiative-card__corner-marker">{{ combatant.markerLetter }}</span>
                   <span
@@ -192,6 +193,7 @@
 </template>
 
 <script setup>
+import CharacterAvatar from '@/features/character-editor/components/CharacterAvatar.vue'
 import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'

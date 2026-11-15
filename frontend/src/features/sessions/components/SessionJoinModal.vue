@@ -12,8 +12,7 @@
         @click="selectChar(char)"
       >
         <div class="tile-ava">
-          <img v-if="avaUrl(char)" :src="avaUrl(char)" class="ava-img" alt="" />
-          <div v-else class="ava-placeholder" />
+          <CharacterAvatar :src="avaUrl(char)" :name="displayName(char)" size="100%" />
         </div>
         <div class="tile-info">
           <div class="tile-name">{{ displayName(char) }}</div>
@@ -42,6 +41,7 @@
 </template>
 
 <script setup>
+import CharacterAvatar from '@/features/character-editor/components/CharacterAvatar.vue'
 import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -181,19 +181,6 @@ onMounted(async () => {
   height: 52px;
   border-radius: 8px;
   overflow: hidden;
-}
-
-.ava-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top center;
-}
-
-.ava-placeholder {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, var(--accent-hover), var(--accent));
 }
 
 .tile-info {

@@ -13,7 +13,7 @@
         <template #default="{ close: closeRecipients }">
           <p v-if="!players.length" class="inventory-no-players">В сессии пока нет игроков</p>
           <RowActionItem v-for="player in players" :key="player.charUuid" :disabled="busy" class="inventory-player" @click="send(player, closeRecipients, close)">
-            <template #icon><img v-if="pvAvatar(player)" :src="pvAvatar(player)" alt="" /><UserRound v-else :size="36" /></template>
+            <template #icon><CharacterAvatar :src="pvAvatar(player)" :name="pvName(player)" :size="48" /></template>
             {{ pvName(player) || 'Без имени' }}
           </RowActionItem>
         </template>
@@ -26,7 +26,8 @@
 <script setup>
 import { itemConsumable } from '@/features/items/lib/itemInstance'
 import { computed, watch } from 'vue'
-import { Send, UserRound } from '@lucide/vue'
+import { Send } from '@lucide/vue'
+import CharacterAvatar from '@/features/character-editor/components/CharacterAvatar.vue'
 import { RowActionMenu, RowActionSubmenu } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import InventoryItemMenuHeader from '@/features/inventory/components/InventoryItemMenuHeader.vue'
@@ -52,6 +53,6 @@ watch(display, value => { if (tooltip.visible) showTooltip({ currentTarget: tool
 async function send(player, closeRecipients, close) { if (await props.controller.send(props.row, player)) { closeRecipients(); close() } }
 </script>
 <style scoped>
-.inventory-player :deep(.ram-item__icon), .inventory-player img { width: 48px; height: 48px; flex: 0 0 48px; object-fit: contain; }
+.inventory-player :deep(.ram-item__icon) { width: 48px; height: 48px; flex: 0 0 48px; }
 .inventory-no-players { margin: 8px; color: var(--text-muted); font-size: 12px; }
 </style>

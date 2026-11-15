@@ -12,8 +12,7 @@
         <p v-if="!controller.recipients.length && purpose !== 'use'" class="transfer-menu-message">В сессии пока нет других игроков.</p>
         <RowActionItem v-for="player in controller.recipients" :key="player.charUuid" class="transfer-recipient" :disabled="disabled || controller?.state.busy" @click="send(player, close)">
           <template #icon>
-            <img v-if="pvAvatar(player)" :src="pvAvatar(player)" alt="" />
-            <span v-else>{{ (pvName(player) || '?').slice(0, 1) }}</span>
+            <CharacterAvatar :src="pvAvatar(player)" :name="pvName(player)" :size="48" />
           </template>
           {{ pvName(player) || 'Без имени' }}
         </RowActionItem>
@@ -22,6 +21,7 @@
   </RowActionSubmenu>
 </template>
 <script setup>
+import CharacterAvatar from './CharacterAvatar.vue'
 import { computed, inject } from 'vue'
 import { Crown, Hand, Send, UserRound } from '@lucide/vue'
 import { LoadingIndicator, RowActionSubmenu } from '@sylvieshare/share-ui'
@@ -38,7 +38,6 @@ async function send(player, close) {
 </script>
 <style scoped>
 .transfer-recipient :deep(.ram-item__icon) { width: 48px; height: 48px; flex: 0 0 48px; }
-.transfer-recipient img { width: 48px; height: 48px; object-fit: contain; }
 .transfer-recipient :deep(.ram-item__icon) > span { color: var(--accent-soft); font-size: 26px; font-weight: 700; }
 .transfer-menu-message { margin: 8px; font-size: 12px; color: var(--text-muted); }
 .transfer-menu-error { color: var(--danger); }

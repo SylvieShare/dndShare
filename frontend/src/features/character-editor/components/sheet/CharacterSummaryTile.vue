@@ -5,8 +5,7 @@
       <component :is="actionLabel ? 'button' : 'span'" class="portrait" :type="actionLabel ? 'button' : undefined"
         :aria-label="actionLabel || name" :aria-haspopup="actionLabel ? 'menu' : undefined" :aria-expanded="actionLabel ? expanded : undefined"
         :aria-description="description">
-        <img v-if="iconUrl && !failed" :src="iconUrl" alt="" @error="failed = true" />
-        <span v-else>{{ Array.from(name || '?')[0] }}</span>
+        <CharacterAvatar :src="iconUrl" :name="name" size="100%" />
       </component>
       <div class="summary-content" :inert="compact" :aria-hidden="compact || undefined">
         <div class="identity"><strong>{{ name || 'Персонаж' }}</strong><slot name="name-suffix" /></div>
@@ -30,9 +29,10 @@
   </div>
 </template>
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 import { Eye, Search, Shield } from '@lucide/vue'
 import SheetHealth from './SheetHealth.vue'
+import CharacterAvatar from '../CharacterAvatar.vue'
 const props = defineProps({
   name: String, iconUrl: String, actionLabel: String, expanded: Boolean, compact: Boolean,
   armor: Number, current: Number, maximum: Number, temporary: Number,
@@ -40,8 +40,6 @@ const props = defineProps({
   showPassives: Boolean, perception: Number, investigation: Number,
 })
 const emit = defineEmits(['armor', 'health'])
-const failed = ref(false)
-watch(() => props.iconUrl, () => { failed.value = false })
 const description = computed(() => [props.name,
   props.healthVisible ? `здоровье ${props.current} из ${props.maximum}${props.temporary ? ', временные HP ' + props.temporary : ''}` : '',
   props.armor != null ? `класс доспеха ${props.armor}` : '',
@@ -53,7 +51,6 @@ function metric(event, key, enabled) { if (enabled) { event.stopPropagation(); e
 .summary-main {display:grid;grid-template-columns:var(--layout-sheet-header-icon) minmax(0,1fr);gap:var(--spacing-small);align-items:center;flex:1;min-width:0}
 .portrait {display:grid;place-items:center;width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);padding:0;border:0;background:transparent;overflow:hidden;border-radius:var(--radius-input);color:var(--accent-soft);font:inherit;font-size:var(--type-sheet-header-size)}
 button.portrait {cursor:pointer}
-.portrait img {width:100%;height:100%;object-fit:cover}
 .summary-content {display:flex;flex-direction:column;gap:calc(var(--spacing-xs) / 2);min-width:0}
 .identity {display:flex;align-items:center;gap:var(--spacing-xs);min-width:0}
 .identity>strong {min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:var(--type-sheet-header-size);line-height:var(--type-sheet-header-line-height)}

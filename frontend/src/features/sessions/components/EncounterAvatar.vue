@@ -1,10 +1,12 @@
 <template>
-  <SessionCreatureAvatar class="enc-avatar" :class="isPlayer ? 'enc-avatar--player' : 'enc-avatar--npc'" :url="imgSrc" :svg="inlineSvg" :icon="!isPlayer || isPlayerIcon" :color="tintColor" />
+  <CharacterAvatar v-if="isPlayer" class="enc-avatar enc-avatar--player" :src="playerAva" :name="combatant.name" size="var(--encounter-avatar-size, 64px)" />
+  <SessionCreatureAvatar v-else class="enc-avatar enc-avatar--npc" :url="imgSrc" :svg="inlineSvg" icon :color="tintColor" />
 </template>
 
 <script setup>
 import { computed, inject } from 'vue'
 import SessionCreatureAvatar from './SessionCreatureAvatar.vue'
+import CharacterAvatar from '@/features/character-editor/components/CharacterAvatar.vue'
 
 const props = defineProps({
   combatant: { type: Object, required: true },
@@ -13,7 +15,6 @@ const props = defineProps({
 const enc = inject('encounter', null) || inject('applicationEncounter', null)
 
 const isPlayer = computed(() => props.combatant.type === 'player')
-const isPlayerIcon = computed(() => isPlayer.value && !!enc.findParticipant(props.combatant.charId)?.iconImageUrl)
 const isNpc    = computed(() => props.combatant.type === 'npc')
 
 const playerAva = computed(() => isPlayer.value ? enc.getPlayerAva(props.combatant.charId) : null)

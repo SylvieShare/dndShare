@@ -222,7 +222,8 @@ const abilities = computed(() => {
     radial-gradient(circle at 8% 0%, color-mix(in srgb, var(--turn-preview-accent) 18%, transparent), transparent 52%),
     var(--surface-raised);
 }
-.turn-preview-hero :deep(.enc-avatar) { width: 78px; height: 78px; flex: 0 0 78px; }
+.turn-preview-hero { --encounter-avatar-size:78px; }
+.turn-preview-hero :deep(.enc-avatar--npc) { width: 78px; height: 78px; flex: 0 0 78px; }
 
 .turn-preview-identity { min-width: 0; display: flex; flex-direction: column; gap: 3px; padding-right: 44px; }
 .turn-preview-name { display: flex; align-items: baseline; gap: 6px; }

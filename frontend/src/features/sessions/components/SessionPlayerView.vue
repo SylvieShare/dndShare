@@ -74,8 +74,7 @@
               :style="participantStyle(participant)"
             >
               <div class="party-member__avatar" :class="{ 'party-member__avatar--image': participantAvatar(participant) }">
-                <img v-if="participantAvatar(participant)" :src="participantAvatar(participant)" alt="" />
-                <span v-else>{{ participantInitial(participant) }}</span>
+                <CharacterAvatar :src="participantAvatar(participant)" :name="participantName(participant)" size="100%" />
               </div>
 
               <div class="party-member__copy">
@@ -114,6 +113,7 @@
 </template>
 
 <script setup>
+import CharacterAvatar from '@/features/character-editor/components/CharacterAvatar.vue'
 import SessionTutorialSettings from '@/features/tutorials/components/SessionTutorialSettings.vue'
 import SessionBackButton from './SessionBackButton.vue'
 import { computed, ref } from 'vue'
@@ -171,10 +171,6 @@ function participantAvatar(participant) {
 
 function participantSubtitle(participant) {
   return pvSubtitle(participant)
-}
-
-function participantInitial(participant) {
-  return participantName(participant).charAt(0).toUpperCase()
 }
 
 function isMine(participant) {

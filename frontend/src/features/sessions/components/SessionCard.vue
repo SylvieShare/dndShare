@@ -72,7 +72,7 @@
               :class="{ 'my-char--initial': !participantImageUrl(myParticipant) }"
               :style="myAvatarStyle"
             >
-              <span v-if="!participantImageUrl(myParticipant)" class="my-char-initial">{{ initialOf(myParticipant) }}</span>
+              <CharacterAvatar :src="participantImageUrl(myParticipant)" :name="initialOf(myParticipant)" size="100%" />
             </span>
             <span class="my-char-label">Мой персонаж</span>
           </template>
@@ -85,7 +85,7 @@
                 :class="{ 'avatar--initial': !participantImageUrl(participant) }"
                 :style="avatarStyle(participant)"
               >
-                <span v-if="!participantImageUrl(participant)" class="avatar-initial">{{ initialOf(participant) }}</span>
+                <CharacterAvatar :src="participantImageUrl(participant)" :name="initialOf(participant)" size="100%" />
               </span>
             </div>
             <span class="part-count">{{ participantLabel }}</span>
@@ -99,6 +99,7 @@
 </template>
 
 <script setup>
+import CharacterAvatar from '@/features/character-editor/components/CharacterAvatar.vue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { BasePopover } from '@sylvieshare/share-ui'
@@ -167,7 +168,7 @@ const myParticipant = computed(() => {
 
 function avatarStyle(participant) {
   const imageUrl = participantImageUrl(participant)
-  if (imageUrl) return { backgroundImage: `url(${imageUrl})` }
+  if (imageUrl) return null
   return { background: uuidColor(participant.charUuid) }
 }
 
@@ -443,7 +444,7 @@ const relativeDate = computed(() => {
 .my-char {
   width: 28px;
   height: 28px;
-  border-radius: 50%;
+  border-radius: var(--radius-input);
   flex-shrink: 0;
   background-size: cover;
   background-position: top center;
@@ -469,7 +470,7 @@ const relativeDate = computed(() => {
 .avatars .avatar {
   width: 26px;
   height: 26px;
-  border-radius: 50%;
+  border-radius: var(--radius-input);
   border: 2px solid var(--surface);
   margin-left: -6px;
   flex-shrink: 0;

@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 
 const pageSource = readFileSync(fileURLToPath(new URL('./ViewEncounterScreen.vue', import.meta.url)), 'utf8')
 const mainStyles = readFileSync(fileURLToPath(new URL('./styles/ViewEncounterScreen.css', import.meta.url)), 'utf8')
-const initiativeStyles = readFileSync(fileURLToPath(new URL('./styles/ViewEncounterScreenInitiative.css', import.meta.url)), 'utf8')
+const initiativeStyles = readFileSync(fileURLToPath(new URL('./styles/ViewEncounterScreenInitiative.css', import.meta.url)), 'utf8').replace(/\r\n/g, '\n')
 
 describe('public encounter portraits', () => {
   it('uses the creature cover as the full active-turn artwork', () => {
@@ -26,8 +26,9 @@ describe('public encounter portraits', () => {
     expect(initiativeStyles).toContain('background: transparent;')
   })
 
-  it('leaves the fallback player icon unframed while keeping image portraits unchanged', () => {
-    expect(pageSource).toContain("'initiative-card__portrait--icon': combatant.type === 'player' && (combatant.iconImageUrl || (!combatant.avatarUrl && !combatant.avatarSvg))")
+  it('uses the shared square frame for every player queue avatar', () => {
+    expect(pageSource).toContain("'initiative-card__portrait--icon': combatant.type === 'player'")
+    expect(pageSource).toContain('<CharacterAvatar v-if="combatant.type === \'player\'"')
     expect(initiativeStyles).toContain('.initiative-card__portrait--npc,\n.initiative-card__portrait--icon { border: 0; border-radius: 0; background: transparent; }')
     expect(pageSource).toContain("return combatant?.iconImageUrl || combatant?.avatarUrl || ''")
   })

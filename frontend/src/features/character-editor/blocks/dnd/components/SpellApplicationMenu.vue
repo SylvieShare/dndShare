@@ -27,10 +27,10 @@
             <template v-for="player in controller?.recipients || []" :key="player.charUuid">
               <label v-if="maximum(cast) > 1" class="spell-target-option">
                 <input type="checkbox" :checked="selected.includes(player.charUuid)" :disabled="blocked(player.charUuid, cast)" @change="toggle(player.charUuid)" />
-                <img v-if="pvAvatar(player)" :src="pvAvatar(player)" alt="" /><UserRound v-else :size="22" />{{ pvName(player) }}
+                <CharacterAvatar :src="pvAvatar(player)" :name="pvName(player)" :size="32" />{{ pvName(player) }}
               </label>
               <RowActionItem v-else :disabled="cannotApply(cast)" @click="apply(cast, [player.charUuid], 0, close)">
-                <template #icon><img v-if="pvAvatar(player)" class="spell-target-avatar" :src="pvAvatar(player)" alt="" /><UserRound v-else :size="22" /></template>{{ pvName(player) }}
+                <template #icon><CharacterAvatar :src="pvAvatar(player)" :name="pvName(player)" :size="32" /></template>{{ pvName(player) }}
               </RowActionItem>
             </template>
           </template>
@@ -42,6 +42,7 @@
   </RowActionSubmenu>
 </template>
 <script setup>
+import CharacterAvatar from '@/features/character-editor/components/CharacterAvatar.vue'
 import { computed, inject, ref, watch } from 'vue'
 import { Crown, UserRound, WandSparkles } from '@lucide/vue'
 import { ActionButton, FormNumberInput, LoadingIndicator, RowActionSubmenu, ToggleSwitch } from '@sylvieshare/share-ui'
@@ -87,7 +88,6 @@ async function apply(cast, targets, count, close) {
 .spell-application-options label, .spell-target-option { display: flex; align-items: center; gap: 10px; padding: 7px 4px; font-size: 13px; cursor: pointer; }
 .spell-target-option:has(input:disabled) { opacity: .45; cursor: default; }
 .spell-target-option input { accent-color: var(--accent); width: 16px; height: 16px; }
-.spell-target-option img, .spell-target-avatar { width: 32px; height: 32px; object-fit: contain; }
 .spell-target-caption { color: var(--text-muted); font-size: 12px; }
 .spell-dm-count { border: 0; padding: 0; margin: 4px 0; }
 .spell-dm-count { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 13px; }

@@ -6,7 +6,7 @@
 .global-map-party { position: absolute; display: flex; gap: 6px; align-items: center; transform-origin: 0 0; pointer-events: none; z-index: 3; padding: 5px 8px; background: var(--surface); border: 1px solid var(--route-color); border-radius: 999px; box-shadow: var(--shadow-sm); }
 .global-map-route-name { white-space: nowrap; color: var(--text-2); font-size: 11px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; }
 .global-map-party-avatars { display: flex; padding-left: 4px; }
-.global-map-avatar { width: 30px; height: 30px; display: grid; place-items: center; margin-left: -4px; overflow: hidden; border: 2px solid var(--surface); border-radius: 50%; background: var(--surface-raised); color: var(--text-muted); }
+.global-map-avatar { width: 30px; height: 30px; display: grid; place-items: center; margin-left: -4px; overflow: hidden; border: 2px solid var(--surface); border-radius: var(--radius-input); background: var(--surface-raised); color: var(--text-muted); }
 .global-map-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .global-map-message { position: absolute; inset: 35% 10%; display: grid; place-items: center; color: var(--text-muted); padding: 16px; background: var(--surface); border-radius: 12px; cursor: auto; }
 

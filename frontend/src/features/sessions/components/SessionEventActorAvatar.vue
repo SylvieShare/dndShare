@@ -5,7 +5,8 @@
     :title="label || fallbackLabel"
     aria-hidden="true"
   >
-    <img v-if="imageUrl" :src="imageUrl" alt="" />
+    <CharacterAvatar v-if="kind === 'character'" :src="imageUrl" :name="label || event.actorName" size="100%" />
+    <img v-else-if="imageUrl" :src="imageUrl" alt="" />
     <span v-else-if="actorSvg" class="session-event-actor-svg" v-html="actorSvg" />
     <template v-else-if="kind === 'dm'">
       <Crown :size="25" :stroke-width="1.8" />
@@ -20,6 +21,7 @@
 <script setup>
 import { computed } from 'vue'
 import { Crown, PawPrint, UserRound } from '@lucide/vue'
+import CharacterAvatar from '@/features/character-editor/components/CharacterAvatar.vue'
 import { pvAvatar } from '@/features/sessions/lib/participantView'
 import { sessionEventActorKind } from '@/features/sessions/lib/sessionEventView'
 

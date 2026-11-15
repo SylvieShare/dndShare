@@ -1,8 +1,7 @@
 <template>
   <BaseTile class="char-card" :outlined="false" @click="navigate">
     <div class="char-ava">
-      <img v-if="avaUrl" :src="avaUrl" class="ava-img" alt="" />
-      <div v-else class="ava-placeholder" />
+      <CharacterAvatar :src="avaUrl" :name="displayName" :size="84" />
     </div>
 
     <div class="char-body">
@@ -45,6 +44,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
+import CharacterAvatar from '@/features/character-editor/components/CharacterAvatar.vue'
 import { useRouter } from 'vue-router'
 import { BasePopover } from '@sylvieshare/share-ui'
 import { BaseTile } from '@sylvieshare/share-ui'
@@ -162,29 +162,11 @@ function doDelete() {
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 28%, var(--border));
 }
 
-/* Inset from the left edge with a rounded frame; the inner radius is chosen so
-   the corner curve stays concentric with the tile's own --r-lg rounding. */
 .char-ava {
   flex-shrink: 0;
   width: 84px;
-  align-self: stretch;
+  align-self: center;
   margin: 12px 0 12px 12px;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.ava-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top center;
-  display: block;
-}
-
-.ava-placeholder {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--accent-hover) 72%, var(--bg)), var(--accent));
 }
 
 .char-body {

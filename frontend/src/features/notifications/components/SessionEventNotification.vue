@@ -2,7 +2,7 @@
   <div class="session-event-notification">
     <div class="session-event-notification-author">
       <SessionEventActorAvatar :event="event" :label="actorLabel" />
-      <div><strong class="session-event-notification-name"><NpcMarker v-if="event.data?.npcActor?.letter" :letter="event.data.npcActor.letter" :color="event.data.npcActor.color" />{{ actorLabel }}</strong><small v-if="sessionEventActorKind(event) !== 'creature'">{{ event.authorName }}</small></div>
+      <div class="session-event-notification-copy"><strong class="session-event-notification-name"><NpcMarker v-if="event.data?.npcActor?.letter" :letter="event.data.npcActor.letter" :color="event.data.npcActor.color" />{{ actorLabel }}</strong><small v-if="sessionEventActorKind(event) !== 'creature'">{{ event.authorName }}</small></div>
     </div>
     <p class="session-event-notification-action">{{ event.action }}<template v-if="transition"> ({{ transition }})</template></p>
     <RpsResult v-if="event.type === 'rps_challenge' && event.data.status === 'completed'" :event="event" compact />
@@ -31,7 +31,7 @@ const transition = computed(() => sessionEventTransition(event.value))
 .session-event-notification { display: grid; gap: 8px; min-width: 0; overflow-wrap: anywhere; }
 .session-event-notification-author { display: flex; align-items: center; gap: 9px; padding-right: 24px; }
 .session-event-notification-name { display: flex; align-items: baseline; gap: 6px; }
-.session-event-notification-author > div { display: grid; gap: 3px; min-width: 0; }
+.session-event-notification-copy { display: grid; gap: 3px; min-width: 0; }
 .session-event-notification-author small, .session-event-notification-detail { color: var(--text-muted); font-size: 12px; }
 .session-event-notification-action, .session-event-notification-detail { margin: 0; }
 .session-event-notification-action { font-size: 14px; color: var(--text-1); }
