@@ -3,7 +3,7 @@
     <div class="spell-parameters-grid" role="group" aria-label="Параметры вкладки магии">
       <BaseTile :outlined="false" class="spell-parameter spell-parameter--base">
         <span class="spell-parameter-label">Базовая хар-ка</span>
-        <strong class="spell-parameter-value spell-parameter-value--name">{{ statLabel || '—' }}</strong>
+        <strong ref="nameElement" class="spell-parameter-value spell-parameter-value--name">{{ statLabel || '—' }}</strong>
       </BaseTile>
       <BaseTile :outlined="false" class="spell-parameter spell-parameter--attack" :title="attackFormula">
         <span class="spell-parameter-label">Атака заклинанием</span>
@@ -26,7 +26,11 @@
 import { ActionButton, BaseTile } from '@sylvieshare/share-ui'
 import { Settings } from '@lucide/vue'
 import { layoutTokens } from '@/app/design-tokens'
-defineProps({ statLabel:String,saveDC:Number,attackBonus:Number,saveFormula:String,attackFormula:String,editable:Boolean })
+import { ref } from 'vue'
+import { useStatTitleFit } from './useStatTitleFit'
+const props = defineProps({ statLabel:String,saveDC:Number,attackBonus:Number,saveFormula:String,attackFormula:String,editable:Boolean })
+const nameElement = ref(null)
+useStatTitleFit(nameElement, nameElement, () => props.statLabel || '—', () => false)
 defineEmits(['settings'])
 </script>
 <style scoped>
@@ -37,9 +41,9 @@ defineEmits(['settings'])
 .spell-parameter--base {--spell-parameter-art:url('@/assets/ui/spell-stat-base.webp')}
 .spell-parameter--attack {--spell-parameter-art:url('@/assets/ui/spell-stat-attack.webp')}
 .spell-parameter--save {--spell-parameter-art:url('@/assets/ui/spell-stat-save.webp')}
-.spell-parameter-label {color:var(--text-2);font-family:var(--type-spell-parameter-label-family);font-size:var(--type-spell-parameter-label-size);line-height:var(--type-spell-parameter-label-line-height);font-weight:var(--type-spell-parameter-label-weight)}
+.spell-parameter-label {color:var(--text-muted);font-family:var(--type-spell-parameter-label-family);font-size:var(--type-spell-parameter-label-size);line-height:var(--type-spell-parameter-label-line-height);font-weight:var(--type-spell-parameter-label-weight)}
 .spell-parameter-value {color:var(--text-1);font-family:var(--type-spell-parameter-value-family);font-size:var(--type-spell-parameter-value-size);line-height:var(--type-spell-parameter-value-line-height);font-weight:var(--type-spell-parameter-value-weight);font-variant-numeric:tabular-nums}
-.spell-parameter-value--name {font-family:var(--type-spell-parameter-name-family);font-size:var(--type-spell-parameter-name-size);line-height:var(--type-spell-parameter-name-line-height);font-weight:var(--type-spell-parameter-name-weight);overflow-wrap:anywhere}
+.spell-parameter-value--name {--stat-title-max-size:var(--type-spell-parameter-name-size);font-family:var(--type-spell-parameter-name-family);font-size:var(--stat-title-fitted-size,var(--type-spell-parameter-name-size));line-height:var(--type-spell-parameter-name-line-height);font-weight:var(--type-spell-parameter-name-weight);white-space:nowrap}
 .spell-parameter-settings-cell {display:flex;min-width:0}
 .spell-parameter-settings {flex:1;min-width:0}
 .spell-parameter-settings-icon {flex:none}
@@ -47,7 +51,7 @@ defineEmits(['settings'])
 @media (--ui-phone){
   .spell-parameter{min-height:var(--layout-spell-stat-compact-height);padding:var(--spacing-label) var(--spacing-medium)}
   .spell-parameter::before{background-position:right center;background-size:auto 100%;opacity:.42}
-  .spell-parameter-label{color:var(--text-1);font-size:var(--type-spell-parameter-label-compact-size);line-height:var(--type-spell-parameter-label-compact-line-height);font-weight:var(--type-spell-parameter-label-compact-weight)}
+  .spell-parameter-label{font-size:var(--type-spell-parameter-label-compact-size);line-height:var(--type-spell-parameter-label-compact-line-height);font-weight:var(--type-spell-parameter-label-compact-weight)}
   .spell-parameter-value{line-height:var(--type-spell-parameter-value-compact-line-height)}
   .spell-parameter-value:not(.spell-parameter-value--name){font-size:var(--type-spell-parameter-value-compact-size)}
 }
