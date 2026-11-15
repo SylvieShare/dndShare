@@ -2,7 +2,7 @@ import { fixture } from './character-layout.js'
 import { TUTORIAL_REVISION } from '../../../src/features/tutorials/lib/tutorialIdentity.js'
 import { applyDocumentPatches } from '../../../src/shared/lib/documentPatch.js'
 
-export async function sessionLayout(page, {url='/tests/tutorials/fixtures/tutorials.html?page=/sessions/test',participants:customParticipants} = {}) {
+export async function sessionLayout(page, {url='/tests/tutorials/fixtures/tutorials.html?page=/sessions/test',participants:customParticipants,encounter:initialEncounter} = {}) {
   await fixture(page)
   await page.route('**/api/handbook/sync?**',route=>route.fulfill({json:{protocol:1,entries:[],hasMore:false,cursor:'empty',visibleIds:[],metadata:{types:[],suggests:{},suggestTypes:[],books:[]}}}))
   await page.addInitScript(() => {
@@ -16,7 +16,7 @@ export async function sessionLayout(page, {url='/tests/tutorials/fixtures/tutori
   const states = [{ uid:'bless', effect_id:701, duration:{kind:'minutes',value:1} }, { uid:'poison',effect_id:702 }]
   const participants = customParticipants || ['Лира','Тиф'].map((name,i) => ({ charId:i+1,charUuid:`player-${i}`,templateId:1,sourceVersionId:1,version:1,
     data:{values:{name,hp:{current:18,max:{base:24,bonuses:[]}},lvl:{level:3},DEX:{value:14},armor:{},states:i?[]:states}} }))
-  let encounter={active:false,round:1,turnIndex:0,combatants:[]},encounterVersion=1
+  let encounter=initialEncounter || {active:false,round:1,turnIndex:0,combatants:[]},encounterVersion=1
   await page.route(url => url.pathname.startsWith('/api/sessions/') || ['/api/templates','/api/items/by-ids','/api/account/tutorials'].includes(url.pathname), async route => {
     const path = new URL(route.request().url()).pathname
     if(path.endsWith('/encounter')&&route.request().method()==='PATCH') {

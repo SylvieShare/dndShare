@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 import { initialState, newMap } from "../../src/features/maps/lib/mapModel";
 
 for (const mobile of [false, true])
-  test(`combat keeps its original columns and hides the map ${mobile ? "mobile" : "desktop"}`, async ({
+  test(`combat fits its columns and hides the map ${mobile ? "mobile" : "desktop"}`, async ({
     page,
   }) => {
     await page.setViewportSize(
@@ -149,9 +149,9 @@ for (const mobile of [false, true])
     await expect(page.locator(".map-tile-sidebar")).not.toBeVisible();
     await expect(page.locator(".enc-combat-layout--active")).toBeVisible();
     await expect(page.getByText("ЗАПАС НПС", { exact: true })).toBeVisible();
-    await expect(
-      page.getByRole("complementary", { name: "Текущий ход" }),
-    ).toContainText("Гоблин");
+    if(mobile)await expect(page.getByRole("complementary", { name: "Текущий ход" })).toHaveCount(0);
+    else await expect(page.getByRole("complementary", { name: "Текущий ход" })).toContainText("Гоблин");
+    await expect(page.locator('.enc-row--current')).toContainText('Гоблин');
     expect(await before.evaluate((element) => element.isConnected)).toBe(true);
     const nextTurn = page.getByRole("button", {
       name: "Следующий ход",
@@ -161,9 +161,8 @@ for (const mobile of [false, true])
       await nextTurn.focus();
       await nextTurn.press("Enter");
     } else await nextTurn.click();
-    await expect(
-      page.getByRole("complementary", { name: "Текущий ход" }),
-    ).toContainText("Орк");
+    await expect(page.locator('.enc-row--current')).toContainText('Орк');
+    if(!mobile)await expect(page.getByRole("complementary", { name: "Текущий ход" })).toContainText("Орк");
     await page.getByRole("button", { name: "Карта", exact: true }).click();
     await expect(page.locator(".session-center-workspace")).not.toBeVisible();
     expect(await before.evaluate((element) => element.isConnected)).toBe(true);

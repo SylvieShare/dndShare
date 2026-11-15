@@ -35,7 +35,7 @@ defineProps({
 })
 </script>
 <style scoped>
-.creature-tile { width: 100%; min-width: 0; box-sizing: border-box; display: flex; align-items: center; gap: var(--participant-card-gap, 9px); min-height: 72px; padding: 4px 14px 4px 4px; overflow: hidden; user-select: none; transition: min-height .42s cubic-bezier(.22,1,.36,1), gap .42s, padding .42s, background .18s, box-shadow .18s; }
+.creature-tile { width: 100%; min-width: 0; box-sizing: border-box; display: flex; align-items: center; gap: var(--participant-card-gap, 9px); min-height: 72px; padding: var(--creature-tile-padding,4px 14px 4px 4px); overflow: hidden; user-select: none; transition: min-height .42s cubic-bezier(.22,1,.36,1), gap .42s, padding .42s, background .18s, box-shadow .18s; }
 .creature-tile.base-tile, .creature-tile.base-tile--interactive:hover { box-shadow: inset 0 0 0 var(--participant-frame-width) var(--participant-color); }
 .creature-tile--statuses { min-height: 112px; }
 .creature-tile-body { display: flex; align-items: center; flex: 1; min-width: 0; flex-wrap: wrap; column-gap: 12px; row-gap: 8px; }

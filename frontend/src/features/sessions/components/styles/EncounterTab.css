@@ -97,8 +97,8 @@
 .enc-block--disabled .enc-reserve-list { pointer-events: none; }
 
 .enc-combat-layout {
-  --enc-roster-width: 480px;
-  --enc-scroll-gap: 12px;
+  --enc-roster-width: var(--layout-encounter-roster-width);
+  --enc-scroll-gap: var(--layout-encounter-scroll-gap);
   --enc-primary-width: calc(var(--enc-roster-width) + var(--enc-scroll-gap));
   min-width: 0;
   opacity: 1;
@@ -110,12 +110,15 @@
   display: grid;
   height: 100%;
   min-height: 0;
-  grid-template-columns: minmax(0, var(--enc-primary-width)) minmax(280px, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: stretch;
-  gap: 16px;
+  gap: var(--spacing-large);
 }
+.enc-combat-layout--active.enc-combat-layout--preview {grid-template-columns:minmax(0,var(--enc-primary-width)) minmax(var(--layout-encounter-preview-min-width),1fr)}
+.enc-combat-layout:not(.enc-combat-layout--preview) > .turn-preview {display:none}
 
 .enc-combat-primary { min-width: 0; max-width: var(--enc-primary-width); box-sizing: border-box; padding-inline-end: var(--enc-scroll-gap); }
+.enc-wrap--compact-roster .enc-combat-primary {--creature-avatar-size:var(--layout-touch-min);--encounter-avatar-size:var(--layout-touch-min);--participant-card-gap:var(--spacing-xs);--creature-tile-padding:var(--spacing-xs) var(--spacing-small) var(--spacing-xs) var(--spacing-xs)}
 .enc-combat-primary .enc-section-title-row,
 .enc-combat-primary .enc-add-row,
 .enc-combat-primary .enc-empty,

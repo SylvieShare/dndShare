@@ -4,12 +4,14 @@
     class="enc-wrap"
     :class="{
       'enc-wrap--workspace': workspace,
+      'enc-wrap--narrow': !hasPreviewSpace,
+      'enc-wrap--compact-roster': compactRoster,
       'enc-wrap--combat-starting': combatTransitionPhase === 'starting',
       'enc-wrap--combat-ending': combatTransitionPhase === 'ending',
     }"
   >
 
-    <BaseTile class="enc-toolbar">
+    <BaseTile ref="encounterToolbar" class="enc-toolbar">
       <div class="enc-context-art" :class="{ 'enc-context-art--image': contextImageUrl }">
         <img v-if="contextImageUrl" :src="contextImageUrl" alt="" />
         <Clapperboard v-else-if="scene" :size="36" />
@@ -140,7 +142,7 @@
     >
       <div
         class="enc-combat-layout"
-        :class="{ 'enc-combat-layout--active': enc.encounter.active || combatTransitionPhase === 'ending' }"
+        :class="{ 'enc-combat-layout--active': enc.encounter.active || combatTransitionPhase === 'ending', 'enc-combat-layout--preview': hasPreviewSpace }"
       >
         <div class="enc-combat-primary">
           <!-- ── Combat ── -->
@@ -259,9 +261,9 @@
           </div>
         </div>
 
-        <Transition name="enc-turn-preview">
+        <Transition name="enc-turn-preview" :css="hasPreviewSpace">
           <EncounterTurnPreview
-            v-if="enc.encounter.active"
+            v-if="enc.encounter.active && hasPreviewSpace"
             :combatant="currentTurnCombatant"
             @view-participant="$emit('view-participant', $event)"
           />
@@ -368,6 +370,7 @@ import EncounterRow from '@/features/sessions/components/EncounterRow'
 import EncounterScenarioCombatMenu from '@/features/sessions/components/EncounterScenarioCombatMenu.vue'
 import EncounterTurnPreview from '@/features/sessions/components/EncounterTurnPreview.vue'
 import { useEncounterCombatTransition } from '@/features/sessions/composables/useEncounterCombatTransition'
+import { useEncounterWorkspaceLayout } from '@/features/sessions/composables/useEncounterWorkspaceLayout'
 import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 import { sessionImageUrl } from '@/features/sessions/lib/sessionImages'
 import { sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
@@ -395,6 +398,8 @@ defineEmits(['view-participant', 'import-combat-block'])
 const enc = props.encounter
 const shortcutLabels = sessionShortcutLabels()
 const encounterRoot = ref(null)
+const encounterToolbar = ref(null)
+const { hasPreviewSpace, compactRoster } = useEncounterWorkspaceLayout(encounterRoot, encounterToolbar, () => props.workspace)
 
 const {
   transitioning: combatTransitioning,

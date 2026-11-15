@@ -18,17 +18,27 @@ load/save, players, NPC item cache, HP, initiative, flow, states and dice.
 
 The encounter workspace has no shared backing surface. Its header and every NPC
 row are separate `BaseTile` surfaces. The map and its inspector are not shown
-in Combat. During active combat, the workspace uses two columns. The left roster, capped at 480px, contains the initiative queue and
+in Combat. During active combat, two columns appear only when the actual content
+width can hold the roster (480px), its scrollbar gap (12px), the column gap
+(Large, 16px) and at least 280px for the turn preview. Otherwise the preview is
+not mounted, and the roster remains the only column. The left roster, capped at 480px, contains the initiative queue and
 NPC reserve. Its scroll container reserves an additional 12px of inline-end padding before the scrollbar; the content width remains capped at 480px. The sticky right column follows the current turn: bestiary NPCs
 show live combat values plus their reference abilities and actions; simplified
 NPCs show the encounter values and description; players show a compact combat
 profile with a link to the full character sheet. Selection does not change this
-preview. In the chapter canvas the header is fixed
+preview.
+The workspace keeps Page padding on both sides and starts after the players'
+navigation rail even in compact windows. At narrow widths the combat header
+retains a compact context title and wraps its controls; the rows start below
+the measured header height with a Large gap. Resizing does not change the turn.
+In the chapter canvas the header is fixed
 beside the focused chapter while only the rows area scrolls. Row strips use the
 explicitly selected participant color for players or `iconColor` for NPCs; rows
 without an assigned color have no strip in either combat or the NPC reserve.
-NPC artwork uses its native 64×64 geometry and is centered vertically while
-player portraits retain their compact framed crop. Session dice pass the default accent color
+NPC artwork normally uses 64×64 geometry and is centered vertically. If the
+roster has less than its preferred 492px, avatars use TouchMin (48px), smaller
+gaps and padding, retaining names beside initiative. Player
+portraits retain their compact framed crop. Session dice pass the default accent color
 explicitly to every `SystemDie`. Master rolls made from the session dice panel
 enable critical presentation for d20 only: a kept natural 20 shows the shared
 critical-success visual, while a kept natural 1 shows the shared critical-failure

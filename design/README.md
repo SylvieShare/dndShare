@@ -39,6 +39,11 @@ StatusCompactIcon (40) используется в вертикальных со
 сохраняют SheetHeaderStatusIcon (56). JS экспортирует `spacingTokens` из того же
 источника, что CSS: динамический safe-left холста использует Page без разбора calc().
 
+Бой использует EncounterRosterWidth (480), EncounterScrollGap (12) и
+EncounterPreviewMinWidth (280). Между колонками оставлен Large (16), по краям
+рабочей области — Page. Для двух колонок требуется 788 px свободного содержимого;
+порог проверяется после учёта панелей и боковых отступов.
+
 В шапке листа группа показателей использует SheetHeaderMetricsWidth (400),
 SheetHeaderMetricHeight (64) и SheetHeaderMetricDie (32). Увеличенные HP используют
 SheetHeaderHealthHeight (40), SheetHeaderHealthMinWidth (112),

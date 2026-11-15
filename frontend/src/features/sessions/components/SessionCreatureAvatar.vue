@@ -11,7 +11,7 @@ import { Image as ImageIcon } from '@lucide/vue'
 defineProps({ name: String, url: String, svg: String, icon: Boolean, color: String, background: String })
 </script>
 <style scoped>
-.p-avatar { flex: 0 0 64px; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; overflow: hidden; }
+.p-avatar { flex: 0 0 var(--creature-avatar-size,64px); width: var(--creature-avatar-size,64px); height: var(--creature-avatar-size,64px); border-radius: 50%; display: grid; place-items: center; overflow: hidden; }
 .p-avatar--icon { border-radius: 0; }
 .ava-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; mask-image: radial-gradient(ellipse 82% 84% at 50% 44%, var(--text-on-accent) 54%, transparent 100%); }
 .p-avatar--icon .ava-img { object-fit: contain; object-position: center; mask-image: none; }

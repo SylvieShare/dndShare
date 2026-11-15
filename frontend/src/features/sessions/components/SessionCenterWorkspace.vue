@@ -83,7 +83,7 @@ defineExpose({ toggleCombat: () => encounterTab.value?.toggleCombat() })
     top: calc(var(--chapter-chrome-height, 0px) + 14px);
     right: 0;
     bottom: 0;
-    left: 0;
+    left: var(--chapter-safe-left, 0px);
   }
 }
 </style>

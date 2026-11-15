@@ -1,21 +1,21 @@
 .enc-wrap--workspace > .enc-toolbar {
   position: absolute;
   top: 0;
-  right: 0;
-  left: 0;
+  right: var(--spacing-page);
+  left: var(--spacing-page);
   box-sizing: border-box;
   min-height: 156px;
-  max-height: 156px;
+  max-height: none;
 }
 
 .enc-wrap--workspace > .enc-content {
   position: absolute;
   top: var(--session-workspace-content-top, 172px);
-  right: 0;
+  right: var(--spacing-page);
   bottom: 0;
-  left: 0;
+  left: var(--spacing-page);
   overflow-y: auto;
-  padding: 0 2px 24px;
+  padding: 0 0 var(--spacing-page);
   scrollbar-gutter: stable;
 }
 
@@ -23,6 +23,14 @@
   overflow: hidden;
   scrollbar-gutter: auto;
 }
+
+.enc-wrap--narrow > .enc-toolbar {grid-template-columns:minmax(0,1fr);min-height:0;max-height:none}
+.enc-wrap--narrow .enc-context-art {min-height:0;padding:var(--spacing-small) var(--spacing-label);border-right:0;border-bottom:var(--layout-border) solid var(--border);place-items:start}
+.enc-wrap--narrow .enc-context-art > img,.enc-wrap--narrow .enc-context-art > svg,.enc-wrap--narrow .enc-context-art::after {display:none}
+.enc-wrap--narrow .enc-context-art-copy {position:static;max-width:100%;text-shadow:none}
+.enc-wrap--narrow .enc-toolbar-body {padding:var(--spacing-small);gap:var(--spacing-small)}
+.enc-toolbar-top,.enc-toolbar-flow,.enc-toolbar-actions,.enc-action-group,.enc-action-group-controls {flex-wrap:wrap;max-width:100%}
+.enc-wrap--narrow .enc-toolbar-top {gap:var(--spacing-small)}
 
 .enc-toolbar {
   position: sticky;
