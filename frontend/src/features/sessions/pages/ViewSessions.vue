@@ -3,7 +3,7 @@
     <PageHeaderPortal>
       <HeaderCreateAction v-if="loading || hasAnything" label="Создать сессию" @click="showModal = true" />
     </PageHeaderPortal>
-    <SessionsListToolbar v-model:filter="filter" v-model:join-code="joinCode" :items="filterItems" :count="sessions.length" :joining="joining" :error="joinError" :show-join="loading || !!hasAnything" @join="handleJoin" />
+    <SessionsListToolbar v-model:filter="filter" v-model:join-code="joinCode" :items="filterItems" :joining="joining" :error="joinError" :show-join="loading || !!hasAnything" @join="handleJoin" />
 
     <LoadingState v-if="loading" label="Загружаем сессии…" />
 
