@@ -1,8 +1,8 @@
 <template>
   <div v-if="photos.length || owner" class="photo-gallery" aria-label="Галерея персонажа" :aria-busy="uploading">
     <MorphTileHeader title="Галерея" :show-edit="false"><template #aside><CharacterCoverControls :owner="ownerId" :photos="photos" /></template></MorphTileHeader>
-    <div class="photo-strip" data-sheet-horizontal-scroll>
-      <RowActionMenu v-for="(photo, index) in photos" :key="photo.uid" title="Действия с фотографией">
+    <div class="photo-strip">
+      <RowActionMenu v-for="(photo, index) in photos" :key="photo.uid" follow-anchor title="Действия с фотографией" :trigger-attrs="{ style: { maxWidth: '100%' } }">
         <template #trigger="{ open }">
           <button class="photo-thumb" :class="{ 'photo-thumb--displayed': displayed(photo) }" type="button" :aria-label="`Фотография ${index + 1}`" :aria-description="displayed(photo) ? 'Сейчас на внешнем экране' : undefined" aria-haspopup="menu" :aria-expanded="open">
             <CharacterPhotoImage :src="photo.thumbnailUrl || photo.url" :alt="photo.name || `Фотография ${index + 1}`" fit="natural" />
@@ -108,10 +108,10 @@ watch(() => JSON.stringify(photos.value.map(photo => [photo.uid, photo.url, phot
 
 <style scoped>
 .photo-gallery { display:grid;gap:var(--spacing-small);min-width:0 }
-.photo-strip { display:flex;align-items:stretch;gap:var(--spacing-small);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:thin;padding-block:var(--spacing-xs);max-width:100% }
-.photo-strip > * { flex:none;scroll-snap-align:start }
-.photo-thumb { position:relative;display:grid;place-items:center;height:var(--layout-sheet-gallery-height);padding:0;border:0;border-radius:var(--r-md);background:var(--surface-raised);overflow:hidden;cursor:pointer }
-.photo-thumb > * { grid-area:1/1;min-width:0 }
+.photo-strip { display:flex;flex-wrap:wrap;align-items:stretch;gap:var(--spacing-small);padding-block:var(--spacing-xs);min-width:0;max-width:100% }
+.photo-strip > * { flex:none;max-width:100% }
+.photo-thumb { position:relative;display:grid;place-items:center;height:var(--layout-sheet-gallery-height);max-width:100%;padding:0;border:0;border-radius:var(--r-md);background:var(--surface-raised);overflow:hidden;cursor:pointer }
+.photo-thumb > * { grid-area:1/1;min-width:0;max-width:100% }
 .photo-thumb:focus-visible { outline:2px solid var(--accent);outline-offset:-2px }
 .photo-thumb--displayed::after {content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 2px var(--accent-soft);pointer-events:none}
 .photo-display-label {position:absolute;inset-inline:var(--spacing-xs);bottom:var(--spacing-xs);padding:var(--spacing-xs);border-radius:var(--radius-small);background:color-mix(in srgb,var(--subheader) 94%,transparent);color:var(--accent-soft);font-size:var(--type-badge-compact-size);line-height:var(--type-badge-compact-line-height);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}

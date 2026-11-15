@@ -31,17 +31,19 @@ function visible(id) {
   const value = ctx.values?.[id]
   return id === 'ava' ? Boolean(value?.url) : Boolean(String(value ?? '').trim())
 }
-const groups = computed(() => sections.flatMap(section => {
-  const group = {
-    ...section,
-    fields: section.fields.filter(visible),
-    portrait: section.appearance && visible('ava'),
-    description: section.appearance && visible('person_appearance'),
-  }
-  const result = group.fields.length || group.portrait || group.description ? [group] : []
-  if (section.appearance && visible('person_photos')) result.push({ title: 'Фотографии', fields: [], photos: true })
+const groups = computed(() => {
+  const result = sections.flatMap(section => {
+    const group = {
+      ...section,
+      fields: section.fields.filter(visible),
+      portrait: section.appearance && visible('ava'),
+      description: section.appearance && visible('person_appearance'),
+    }
+    return group.fields.length || group.portrait || group.description ? [group] : []
+  })
+  if (visible('person_photos')) result.push({ title: 'Фотографии', fields: [], photos: true })
   return result
-}))
+})
 const portraitSize = computed(() => props.format === 'desktop' ? {width:'148px',height:'174px'} : {width:'84px',height:'96px'})
 </script>
 <style scoped>

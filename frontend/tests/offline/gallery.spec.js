@@ -4,10 +4,11 @@ import { fixture } from '../tutorials/fixtures/character-layout'
 const photoUrl = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="180" height="240"><rect width="180" height="240" fill="#35313f"/><circle cx="90" cy="85" r="43" fill="#b79cec"/><path d="M20 240a70 90 0 01140 0" fill="#766098"/></svg>')
 const landscapeUrl = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="180"><rect width="360" height="180" fill="#35313f"/></svg>')
 const squareUrl = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" fill="#766098"/></svg>')
+const panoramaUrl = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="200"><rect width="800" height="200" fill="#577c9d"/></svg>')
 async function open(page, width, owner = true, count = 7) {
   await page.setViewportSize({ width, height: 1000 })
   const api = await fixture(page, 'DND5', owner)
-  api.document().values.person_photos = Array.from({ length: count }, (_, index) => ({ uid: `photo-${index}`, imageId: index + 1, url: [photoUrl, landscapeUrl, squareUrl][index % 3], name: `Фото ${index + 1}` }))
+  api.document().values.person_photos = Array.from({ length: count }, (_, index) => ({ uid: `photo-${index}`, imageId: index + 1, url: [photoUrl, landscapeUrl, squareUrl, panoramaUrl][index % 4], name: `Фото ${index + 1}` }))
   await page.route('**/api/handbook/sync?**', route => route.fulfill({ json: { protocol: 1, entries: [], hasMore: false, cursor: 'empty', visibleIds: [], metadata: { types: [], suggests: {}, suggestTypes: [], books: [] } } }))
   await page.route('**/api/storage/images', route => route.fulfill({ json: { upload_id: 801, url: photoUrl, key: 'gallery-photo.webp' } }))
   await page.goto('/char/test')
@@ -16,13 +17,13 @@ async function open(page, width, owner = true, count = 7) {
   return api
 }
 
-for (const width of [390, 834, 1440]) test(`gallery scrolls horizontally, opens fullscreen and persists uploads/deletion at ${width}`, async ({ page }) => {
+for (const width of [390, 834, 1440]) test(`gallery wraps in order at the bottom and persists uploads/deletion at ${width}`, async ({ page }) => {
   const api = await open(page, width)
   const gallery = page.locator('[data-sheet-field="person_photos"]:visible')
   const strip = gallery.locator('.photo-strip')
   await expect(gallery.getByText('Галерея', { exact: true })).toBeVisible()
   await gallery.scrollIntoViewIfNeeded()
-  for (let index = 0; index < 3; index++) await expect(gallery.locator('.photo-thumb img').nth(index)).toHaveClass(/loaded/)
+  for (const image of await gallery.locator('.photo-thumb img').all()) await expect(image).toHaveClass(/loaded/)
   const addHeight = (await gallery.getByRole('button', { name: 'Добавить', exact: true }).boundingBox()).height
   const dimensions = await gallery.locator('.photo-thumb img').evaluateAll(images => images.slice(0, 3).map(image => ({
     width: image.getBoundingClientRect().width, height: image.getBoundingClientRect().height,
@@ -39,13 +40,21 @@ for (const width of [390, 834, 1440]) test(`gallery scrolls horizontally, opens 
     return {
       separate: appearance !== tile,
       belowAppearance: tile.getBoundingClientRect().top >= appearance.getBoundingClientRect().bottom,
+      last: sheet.lastElementChild === tile,
       columns: new Set([...sheet.children].map(block => Math.round(block.getBoundingClientRect().left))).size,
     }
   })
   expect(layout.separate).toBe(true)
   expect(layout.belowAppearance).toBe(true)
+  expect(layout.last).toBe(true)
   if (width >= 600 && width < 1200) expect(layout.columns).toBe(1)
-  expect(await strip.evaluate(element => element.scrollWidth > element.clientWidth)).toBe(true)
+  expect(await strip.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+  const cells = await gallery.locator('.photo-thumb').evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().toJSON()))
+  expect(new Set(cells.map(cell => Math.round(cell.top))).size).toBeGreaterThan(1)
+  for (let index = 1; index < cells.length; index++) {
+    expect(cells[index].top).toBeGreaterThanOrEqual(cells[index - 1].top)
+    if (Math.abs(cells[index].top - cells[index - 1].top) < 1) expect(cells[index].left).toBeGreaterThanOrEqual(cells[index - 1].right)
+  }
   await gallery.getByRole('button', { name: 'Фотография 1', exact: true }).click()
   await page.getByRole('button', { name: 'Посмотреть', exact: true }).click()
   const viewer = page.getByRole('dialog', { name: 'Фотография персонажа', exact: true })
