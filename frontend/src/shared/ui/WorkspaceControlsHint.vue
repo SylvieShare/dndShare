@@ -1,9 +1,9 @@
 <template>
-  <div ref="element" class="workspace-controls-hint" :data-expanded="!collapsed" @pointerdown.stop @wheel.stop @dblclick.stop>
+  <div v-if="!touchOnly || $slots.actions" ref="element" class="workspace-controls-hint" :data-expanded="!collapsed" @pointerdown.stop @wheel.stop @dblclick.stop>
     <BaseTile class="workspace-controls-hint-panel">
       <div v-if="$slots.actions" class="workspace-controls-hint-actions"><slot name="actions" /></div>
       <ActionButton
-        v-if="collapsed"
+        v-if="!touchOnly && collapsed"
         ref="button"
         variant="quiet"
         :aria-expanded="false"
@@ -17,7 +17,7 @@
         />
       </ActionButton>
       <ul
-        v-else
+        v-else-if="!touchOnly"
         ref="commands"
         tabindex="0"
         :aria-label="commandsLabel"
@@ -34,9 +34,10 @@
 </template>
 <script setup>
 import { nextTick, onBeforeUnmount, ref } from "vue";
-import { ActionButton, BaseTile } from "@sylvieshare/share-ui";
+import { ActionButton, BaseTile, useMediaQuery } from "@sylvieshare/share-ui";
 import { ChevronDown, Keyboard } from "@lucide/vue";
 const props = defineProps({ lines: { type: Array, required: true }, label: { type: String, default: "Управление" }, commandsLabel: { type: String, default: "Команды управления" }, initiallyCollapsed: Boolean });
+const touchOnly = useMediaQuery("(pointer: coarse) and (hover: none) and (any-hover: none)");
 const collapsed = ref(props.initiallyCollapsed),
   element = ref(null),
   commands = ref(null),
