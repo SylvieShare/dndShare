@@ -266,7 +266,8 @@ ability-resource binding and links to standard combat-action codes from suggest
 type 24. Hovering those linked names shows the suggest description. The block
 merges source rows with editable custom actions from `values.actions`;
 source-provided rows use the ability icon, omit a duplicate textual source label
-and cannot be edited on the character. The row menu offers «Посмотреть источник», opening the original
+and cannot be edited on the character. The row menu offers a compact «Источник»
+button (accessible name and tooltip «Посмотреть источник»), opening the original
 ability, feat or magic-item handbook card. This view command is available to
 readers and also makes source rows without dice or other commands clickable.
 Viewing never spends charges or changes the character; gameplay commands stay

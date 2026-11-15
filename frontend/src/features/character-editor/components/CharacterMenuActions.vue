@@ -7,7 +7,7 @@
     <div v-if="actionCount" class="character-menu-actions" role="group" aria-label="Действия с объектом">
     <ActionButton v-if="view" class="character-menu-action character-menu-action--view" layout="stacked" variant="secondary" :aria-label="viewLabel" :title="viewLabel" :disabled="viewDisabled" @click.stop="view">
       <template #icon><component :is="viewIcon" :size="18" aria-hidden="true" /></template>
-      <span class="character-menu-action-label">{{ viewLabel }}</span>
+      <span class="character-menu-action-label">{{ viewCaption || viewLabel }}</span>
     </ActionButton>
     <ActionButton v-if="edit" class="character-menu-action character-menu-action--edit" layout="stacked" variant="secondary" :aria-label="editLabel" :title="editLabel" :disabled="editDisabled" @click.stop="edit">
       <template #icon><Pencil :size="18" aria-hidden="true" /></template>
@@ -29,6 +29,7 @@ const props = defineProps({
   view: Function, edit: Function, remove: Function,
   viewDisabled: Boolean, editDisabled: Boolean, removeDisabled: Boolean,
   viewLabel: {type:String,default:'Открыть описание'},
+  viewCaption: String,
   editLabel: {type:String,default:'Изменить'},
   removeLabel: {type:String,default:'Удалить'},
   viewIcon: {type:[Object,Function],default:()=>Eye},

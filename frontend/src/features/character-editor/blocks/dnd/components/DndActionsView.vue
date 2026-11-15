@@ -97,7 +97,7 @@
         </template>
 
         <template #default="{ close }">
-          <CharacterMenuActions :view="action.item ? () => viewSource(action, close) : undefined" view-label="Посмотреть источник"
+          <CharacterMenuActions :view="action.item ? () => viewSource(action, close) : undefined" view-label="Посмотреть источник" view-caption="Источник"
             :edit="manage && !action.readonly ? () => edit(action, close) : undefined" edit-label="Редактировать"
             :remove="manage && !action.readonly ? () => remove(action, close) : undefined" />
           <RowActionItem

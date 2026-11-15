@@ -115,6 +115,7 @@ for (const width of [390, 704, 1280]) {
         await expect(menu).toBeVisible()
         await expect(menu.getByRole('button', { name: 'Редактировать', exact: true })).toHaveCount(0)
         await expect(menu.getByRole('button', { name: 'Удалить', exact: true })).toHaveCount(0)
+        await expect(menu.getByRole('button', { name: 'Посмотреть источник', exact: true })).toHaveText('Источник')
         await menu.getByRole('button', { name: 'Посмотреть источник', exact: true }).click()
         const modal = page.getByRole('dialog', { name: source, exact: true })
         await expect(modal).toBeVisible()
