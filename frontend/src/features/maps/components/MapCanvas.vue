@@ -76,6 +76,7 @@ import MapDownloadManager from "./MapDownloadManager.vue";
 import { useMapCanvasPointer } from "../composables/useMapCanvasPointer";
 import { useCanvasUpdates } from "../composables/useCanvasUpdates";
 import { useCameraPan } from "../composables/useCameraPan";
+import { useCanvasPinch } from '@/shared/composables/useCanvasPinch';
 const props = defineProps({
   document: { type: Object, required: true },
   editCameras: Boolean,
@@ -137,7 +138,7 @@ const props = defineProps({
   },
 });
 const hintLines = computed(() =>
-  Array.isArray(props.hint) ? props.hint : (props.hint || "").split(/\s*·\s*/),
+  [...(Array.isArray(props.hint) ? props.hint : (props.hint || "").split(/\s*·\s*/)), 'Двумя пальцами — масштаб'],
 );
 const emit = defineEmits([
   "gesture",
@@ -171,6 +172,9 @@ const pointer = useMapCanvasPointer(
   pointerEvent,
   setView,
 );
+useCanvasPinch(host, { enabled: () => !props.readonly && props.active && !!renderer,
+  onStart: event => pointer.cancel(event),
+  onChange: ({ factor, center, previousCenter }) => zoomAt(factor, center, previousCenter) });
 const keyboardPan = useCameraPan(
   () => renderer?.getView(),
   setView,
@@ -255,10 +259,13 @@ function zoom(factor) {
     });
 }
 function wheel(event) {
+  zoomAt(Math.exp(-event.deltaY * 0.001), event);
+}
+function zoomAt(factor, center, previousCenter = center) {
   if (props.readonly || !renderer) return;
-  const before = renderer.world(event);
-  zoom(Math.exp(-event.deltaY * 0.001));
-  const after = renderer.world(event),
+  const before = renderer.world(previousCenter);
+  zoom(factor);
+  const after = renderer.world(center),
     view = renderer.getView();
   setView({
     ...view,

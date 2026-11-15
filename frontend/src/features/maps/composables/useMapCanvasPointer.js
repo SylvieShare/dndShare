@@ -173,8 +173,10 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
         start(event);
         emit("gesture", { phase: "hold", point: drag.point, hit, event });
       }, 500);
-    } else if (!delayed && (!drag.pan || drag.emptyPan) && !drag.orbit)
-      start(event);
+    } else if (!delayed && (!drag.pan || drag.emptyPan) && !drag.orbit) {
+      if (event.pointerType === 'touch') drag.deferStart = true;
+      else start(event);
+    }
   }
   function move(event) {
     pendingMove = event;
@@ -218,6 +220,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
       drag.moved = true;
       clearHold();
     }
+    if (drag.deferStart && !drag.started && drag.moved && !drag.pan && !drag.orbit) start(event);
     if (drag.delayed && drag.pan && !drag.moved) return;
     if (drag.orbit) {
       setView({
@@ -262,7 +265,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     flushMove();
     if (!drag || event.pointerId !== drag.id) return;
     clearHold();
-    if (drag.delayed && !drag.started && !drag.moved) start(event);
+    if (!drag.started && (drag.deferStart || drag.delayed && !drag.moved)) start(event);
     if (drag.started && !drag.orbit) {
       const inside = pointAt(event);
       const point =

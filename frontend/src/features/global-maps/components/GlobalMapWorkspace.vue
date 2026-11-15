@@ -56,6 +56,7 @@ const { routeId, pointId, addMode, routeFocus, route, point, inspectorRoute, ind
 const hintLines = computed(() => [
   addMode.value ? 'Клик по карте — добавить точку' : 'Перенос фона — перемещение карты',
   'Колесо · + / − — масштаб',
+  'Двумя пальцами — масштаб',
   ...(route.value ? ['Cmd/Ctrl + клик — продолжить маршрут', 'Клик по точке с Cmd/Ctrl — повторное посещение'] : []),
   'Перенос маркера — переместить точку',
   'Потянуть линию — добавить узел изгиба',

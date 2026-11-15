@@ -159,6 +159,7 @@
 </template>
 
 <script setup>
+import { useCanvasPinch } from '@/shared/composables/useCanvasPinch'
 import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import GraphSelectionBar from '@/features/narrative-graph/components/GraphSelectionBar.vue'
 import { useNarrativeNodeGeometry } from '../composables/useNarrativeNodeGeometry'
@@ -243,7 +244,10 @@ const contentBounds = computed(() => graphContentBounds(props.nodes, nodeDimensi
 const { schedule: emitPositionPreview, cancel: clearPositionPreviewFrame } = useRafLatest(
   positions => emit('preview-positions', positions),
 )
-const { viewKey, constrainPan, clampCurrentPan, loadView, prepareView, pointInWorld, safeFrame, onWheel, zoomBy, viewportCenter, focusNode, saveView, fitContent, hasSavedView } = useNarrativeViewport({ props, viewport, pan, zoom, contentBounds, nodeDimensions, preparedGraphKey })
+const { viewKey, constrainPan, clampCurrentPan, loadView, prepareView, pointInWorld, safeFrame, onWheel, zoomAt, zoomBy, viewportCenter, focusNode, saveView, fitContent, hasSavedView } = useNarrativeViewport({ props, viewport, pan, zoom, contentBounds, nodeDimensions, preparedGraphKey })
+useCanvasPinch(viewport, { enabled: () => !props.locked,
+  onStart: () => { cancelGesture(); lastNodeClick = null; if (props.linkingFrom) emit('start-link', null) },
+  onChange: ({ factor, center, previousCenter }) => zoomAt(factor, center, previousCenter) })
 useGraphHotkeys({
   element: viewport,
   enabled: () => props.canEdit && !props.locked && props.spotlightNodeId == null,
@@ -335,6 +339,12 @@ function onNodeDown(event, node) {
   if (props.locked || event.button !== 0 || event.target.closest('button, input, textarea, [contenteditable="true"]')) return
   event.stopPropagation()
   if (props.linkingFrom && props.linkingFrom.id !== node.id) {
+    if (event.pointerType === 'touch') {
+      viewport.value.setPointerCapture(event.pointerId)
+      gesture.value = { type: 'link-target', pointerId: event.pointerId, node,
+        startClientX: event.clientX, startClientY: event.clientY, moved: false }
+      return
+    }
     emit('finish-link', node)
     return
   }
@@ -392,6 +402,10 @@ function onPointerMove(event) {
   }
   const active = gesture.value
   if (!active || active.pointerId !== event.pointerId) return
+  if (active.type === 'link-target') {
+    active.moved ||= Math.hypot(event.clientX - active.startClientX, event.clientY - active.startClientY) > 4
+    return
+  }
   if (active.type === 'pan') {
     pan.value = constrainPan({
       x: active.panX + event.clientX - active.startX,
@@ -436,6 +450,11 @@ function onPointerMove(event) {
 function onPointerUp(event) {
   const active = gesture.value
   if (!active || active.pointerId !== event.pointerId) return
+  if (active.type === 'link-target') {
+    if (!active.moved && props.linkingFrom) emit('finish-link', active.node)
+    cancelGesture(false)
+    return
+  }
   if (active.type === 'selection') {
     if (!active.moved && active.node) lastNodeClick = null
     finishFrameSelection(active)

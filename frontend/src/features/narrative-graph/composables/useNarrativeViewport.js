@@ -63,18 +63,20 @@ export function useNarrativeViewport({ props, viewport, pan, zoom, contentBounds
     return { left, right, width: Math.max(0, rect.width - left - right), height: rect.height }
   }
 
-  function onWheel(event) {
+  function zoomAt(factor, center, previousCenter = center) {
     if (props.locked) return
     const rect = viewport.value.getBoundingClientRect()
-    const before = pointInWorld(event)
-    const next = Math.max(props.minZoom, Math.min(props.maxZoom, zoom.value * Math.exp(-event.deltaY * 0.0012)))
+    const before = pointInWorld(previousCenter)
+    const next = Math.max(props.minZoom, Math.min(props.maxZoom, zoom.value * factor))
     zoom.value = next
     pan.value = constrainPan({
-      x: event.clientX - rect.left - before.x * next,
-      y: event.clientY - rect.top - before.y * next,
+      x: center.clientX - rect.left - before.x * next,
+      y: center.clientY - rect.top - before.y * next,
     }, next)
     saveView()
   }
+
+  function onWheel(event) { zoomAt(Math.exp(-event.deltaY * 0.0012), event) }
 
   function zoomBy(factor) {
     if (props.locked || !viewport.value) return
@@ -126,5 +128,5 @@ export function useNarrativeViewport({ props, viewport, pan, zoom, contentBounds
     saveView()
   }
 
-  return { viewKey, constrainPan, clampCurrentPan, loadView, prepareView, pointInWorld, safeFrame, onWheel, zoomBy, viewportCenter, focusNode, saveView, fitContent, hasSavedView }
+  return { viewKey, constrainPan, clampCurrentPan, loadView, prepareView, pointInWorld, safeFrame, onWheel, zoomAt, zoomBy, viewportCenter, focusNode, saveView, fitContent, hasSavedView }
 }

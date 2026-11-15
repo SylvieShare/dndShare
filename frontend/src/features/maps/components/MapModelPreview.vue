@@ -2,6 +2,7 @@
   <BaseTile
     class="model-preview"
     :data-preview-yaw="snapshot.view?.yaw"
+    :data-preview-zoom="snapshot.view?.zoom"
     :data-wall-mode="model.wallMode"
     role="figure"
     aria-label="3D-превью параметров тайла"
@@ -79,6 +80,7 @@
     <ul class="model-preview-hint">
       <li>ЛКМ — вращение</li>
       <li>Колесо — масштаб</li>
+      <li>Двумя пальцами — масштаб</li>
       <li v-if="model.wallMode !== 'none'">
         Клик по {{ model.wallMode === "edge" ? "стороне" : "точке" }} — стык
       </li>
@@ -110,10 +112,11 @@
   </BaseTile>
 </template>
 <script setup>
-import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { ActionButton, BaseTile, LoadingState } from "@sylvieshare/share-ui";
 import { Maximize } from "@lucide/vue";
 import { createModelPreview } from "../rendering/modelPreviewRenderer";
+import { useCanvasPinch } from '@/shared/composables/useCanvasPinch';
 const props = defineProps({
   model: Object,
   source: Object,
@@ -132,6 +135,8 @@ let renderer,
   observer,
   drag = null,
   epoch = 0;
+useCanvasPinch(computed(() => host.value?.parentElement), { enabled: () => !!renderer, onStart: () => { drag = null; },
+  onChange: ({ factor }) => renderer.zoom(-Math.log(factor) * 1000) });
 const options = () => ({
   behaviour: props.behaviour,
   activeField: props.activeField,
@@ -248,6 +253,7 @@ onBeforeUnmount(() => {
 </script>
 <style scoped>
 .model-preview {
+  touch-action: none;
   overflow: hidden;
 }
 .model-preview-host {

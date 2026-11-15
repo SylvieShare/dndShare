@@ -55,6 +55,17 @@ function setup(
   const event = { pointerId: 1, button: 0, clientX: 20, clientY: 30 };
   return { pointer, event, emit, setView };
 }
+it("touch placement waits for a single tap and a second-finger cancellation never starts an edit", () => {
+  const { pointer, event, emit } = setup(undefined, { tool: "paste", holdToDrag: false });
+  const touch = { ...event, pointerType: "touch" };
+  pointer.down(touch);
+  expect(emit).not.toHaveBeenCalled();
+  pointer.cancel({ ...touch, pointerId: 2 });
+  pointer.up(touch);
+  expect(emit).not.toHaveBeenCalled();
+  pointer.down(touch); pointer.up(touch);
+  expect(emit.mock.calls.map(([, payload]) => payload.phase)).toEqual(["start", "end"]);
+});
 it("decal placement preserves the projected surface through pointer start and end", () => {
   const surface = {
     x: 2,

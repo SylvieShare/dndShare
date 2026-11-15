@@ -1,6 +1,7 @@
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { clamp, uid } from '../lib/routes'
 import { pointIndex, resolvePoint } from '../lib/routePoints'
+import { useCanvasPinch } from '@/shared/composables/useCanvasPinch'
 
 export function useGlobalMapViewport(host, props, emit) {
   const image = reactive({ width: 1200, height: 800 }), view = reactive({ x: 0, y: 0, scale: 1 })
@@ -34,6 +35,11 @@ export function useGlobalMapViewport(host, props, emit) {
     const scale = clamp(view.scale * factor, .01, 8), ratio = scale / view.scale
     view.x = x - (x - view.x) * ratio; view.y = y - (y - view.y) * ratio; view.scale = scale
   }
+  useCanvasPinch(host, { enabled: () => loaded.value, onStart: cancelDrag,
+    onChange: ({ factor, center, previousCenter }) => {
+      zoom(factor, previousCenter)
+      view.x += center.clientX - previousCenter.clientX; view.y += center.clientY - previousCenter.clientY
+    } })
   function down(event) {
     if (drag || !loaded.value || ![0, 1].includes(event.button) || event.target.closest('[data-map-callout]')) return
     host.value.focus({ preventScroll: true })
@@ -43,6 +49,13 @@ export function useGlobalMapViewport(host, props, emit) {
     const entry = route?.points.find(point => point.id === id)
     const selected = resolvePoint(entry, pointIndex(props.routes))
     if (selected && props.addMode && !selected.control && !props.readonly) {
+      if (event.pointerType === 'touch') {
+        drag = { pointerId: event.pointerId, addPoint: { x: selected.x, y: selected.y }, sourceId: selected.id,
+          x: event.clientX, y: event.clientY, moved: false }
+        host.value.setPointerCapture(event.pointerId)
+        event.preventDefault()
+        return
+      }
       emit('add', { x: selected.x, y: selected.y }, selected.id)
       event.preventDefault()
       return
@@ -61,6 +74,7 @@ export function useGlobalMapViewport(host, props, emit) {
   function move(event) {
     if (!drag || drag.pointerId !== event.pointerId) return
     drag.moved ||= Math.hypot(event.clientX - drag.x, event.clientY - drag.y) > 4
+    if (drag.addPoint) return
     if (drag.segment !== null && drag.moved && !props.readonly && !drag.created) {
       drag.id = uid(); drag.created = true
       emit('drag-start')
@@ -71,7 +85,9 @@ export function useGlobalMapViewport(host, props, emit) {
   }
   function end(event, cancel = false) {
     if (!drag || drag.pointerId !== event.pointerId) return
-    if (drag.id && !props.readonly) {
+    if (drag.addPoint) {
+      if (!cancel && !drag.moved) emit('add', drag.addPoint, drag.sourceId)
+    } else if (drag.id && !props.readonly) {
       if (cancel && drag.created) emit('cancel-control', drag.routeId, drag.id)
       else if (cancel) emit('move', drag.routeId, drag.id, drag.before)
       emit('drag-end', !cancel && drag.moved)
