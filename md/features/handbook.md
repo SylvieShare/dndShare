@@ -144,6 +144,17 @@ Imports must supply current bindings and metadata; startup does not convert rows
 read adapter still accepts singular `choice` on externally imported item data,
 but all editors and writes use `choices`; there are no admin migration jobs.
 
+Описания черт — самостоятельная справка: все преимущества, требования,
+действия, дистанции, ресурсы, условия и исключения сохраняются в `description`.
+Краткие `passive_effects` служат памятками на листе и не заменяют полный текст.
+Версии 2014/2024 сверяются отдельно. Наличие действия с условиями не означает
+автоматического применения его числовых эффектов: реальные ограничения
+перечисляются в `automationNote` по [контракту поддержки](item-automation.md).
+Проверенные батчи публикуются отдельной операцией
+`scripts/feat-review/apply.py`; она сверяет исходные поля, сохраняет посторонние
+правки и проверяет чтением данные, источники и медиа после записи.
+Границы первой сверки — [аудит черт](../reports/catalogue/feat-review-2026-11-15.md).
+
 ## UI
 
 Веб и Android развивают [общий адаптивный дизайн](../frontend/responsive-design.md).
