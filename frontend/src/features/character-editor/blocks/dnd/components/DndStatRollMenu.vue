@@ -8,7 +8,8 @@
     :aria-label="title"
     @update:open="!$event && emit('close')"
   >
-    <div class="stat-roll-summary">
+    <CharacterMenuActions :edit="editable ? () => emit('edit') : undefined">
+    <template #summary><div class="stat-roll-summary">
       <SystemDie :sides="20" :color="color" aria-hidden="true" />
       <div>
         <h3 class="stat-roll-heading"><span>{{ title }}</span><b>{{ signed(total) }}</b></h3>
@@ -18,8 +19,8 @@
           </template>
         </dl>
       </div>
-    </div>
-    <CharacterMenuActions :edit="editable ? () => emit('edit') : undefined" />
+    </div></template>
+    </CharacterMenuActions>
     <div class="stat-roll-mode-label">Режим броска</div>
     <D20RollControls :scope="scope" :mode="mode" :cancelled="cancelled" @roll="(mode, excluded) => emit('roll', mode, excluded)" />
   </BasePopover>
@@ -50,8 +51,7 @@ const emit = defineEmits(['close', 'roll', 'edit'])
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: var(--spacing-label);
-  padding: var(--spacing-small) var(--spacing-label) var(--spacing-medium);
-  border-bottom: 1px solid var(--border-strong);
+  min-width: 0;
 }
 .stat-roll-heading { margin: 0; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font-size: 14px; }
 .stat-roll-heading span, .stat-roll-details dt { min-width: 0; overflow-wrap: anywhere; }

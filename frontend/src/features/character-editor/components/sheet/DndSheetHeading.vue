@@ -1,5 +1,5 @@
 <template>
-  <RowActionMenu ref="actions" title="Действия персонажа" :heading="menuSummary" :width="layoutTokens['sheet-header-menu-width']" :trigger-attrs="{ style: { maxWidth: 'var(--layout-sheet-header-tile-max)' } }" block>
+  <RowActionMenu ref="actions" title="Действия персонажа" :width="layoutTokens['sheet-header-menu-width']" :trigger-attrs="{ style: { maxWidth: 'var(--layout-sheet-header-tile-max)' } }" block>
     <template #trigger="{ open }">
       <CharacterSummaryTile class="dnd-heading action-menu-source" :class="{ 'action-menu-source--open': open }"
         :name="name" :icon-url="iconUrl" action-label="Действия персонажа" :expanded="open"
@@ -7,7 +7,7 @@
         :edit-armor="canEdit" armor-control edit-health @armor="openPanel('armor')" @health="openPanel('health')" />
     </template>
     <template #default="{ close }">
-      <CharacterMenuActions :edit="() => select('profile', close)" :edit-disabled="!canEdit" edit-label="Изменить персонажа" />
+      <CharacterMenuActions :summary="menuSummary" :edit="() => select('profile', close)" :edit-disabled="!canEdit" edit-label="Изменить персонажа" />
       <RowActionItem :icon="TrendingUp" :disabled="!canEdit" @click="select('experience', close)">
         <span class="experience-action"><span>Опыт <small>{{ experience }}<template v-if="nextExperience !== null"> / {{ nextExperience }}</template></small></span>
           <span class="experience-track" role="progressbar" aria-label="Прогресс уровня" :aria-valuenow="Math.round(progress)" :aria-valuemin="0" :aria-valuemax="100"><i :style="{ width: progress + '%' }" /></span>

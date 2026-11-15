@@ -32,7 +32,7 @@ REQUIRED = {
                'stat-editor-width', 'roll-mode-menu-width', 'roll-mode-card-min-height', 'roll-mode-badge-die', 'roll-mode-marker', 'roll-mode-marker-compact', 'roll-mode-menu-die', 'weapon-damage-die',
                'weapon-metric-min', 'weapon-card-icon', 'weapon-card-padding', 'weapon-grip-icon', 'character-roll-width',
                'weapon-roll-option-width', 'weapon-roll-option-icon', 'weapon-roll-option-height', 'roll-effect-option-width',
-               'money-calculator-width', 'inventory-cell-min', 'inventory-cell-gap', 'menu-action-size'},
+               'money-calculator-width', 'inventory-cell-min', 'inventory-cell-gap', 'menu-action-size', 'menu-summary-min', 'inventory-menu-width'},
     'collection': {'min-height', 'padding', 'emblem', 'art-inset', 'grid-gap'},
     'canvas': {'step', 'radius', 'opacity'},
     'spacing': {'xs', 'compact', 'small', 'label', 'medium', 'large', 'page', 'section'},

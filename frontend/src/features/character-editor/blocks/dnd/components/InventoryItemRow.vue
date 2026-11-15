@@ -2,6 +2,7 @@
 <SkeletonBlock v-if="entry.loading" width="100%" height="72px" aria-label="Загружаем предмет" />
 <RowActionMenu v-else
   block
+  :width="layoutTokens['inventory-menu-width']"
   :title="`Действия: ${entry.display.name}`"
   :disabled="draggedThisGesture || (!canManage && entry.item_id == null)"
 >
@@ -15,6 +16,10 @@
   </template>
 
   <template #default="{ close }">
+    <CharacterMenuActions :view="entry.item_id != null ? () => viewEntry(entry, close) : undefined"
+      :edit="canManage && entry.item_id == null ? () => editEntry(sectionId, entry, close) : undefined"
+      :remove="canManage ? () => deleteEntry(sectionId, entry, close) : undefined" remove-label="Удалить предмет">
+    <template #summary>
     <span class="di-item-meta">Количество: {{ entry.count }}</span>
     <div v-if="isToolEntry(entry) || entryHasProficiency(entry) || armorMeta(entry)" class="di-item-meta">
       <span v-if="isToolEntry(entry)">{{ toolCategoryLabel(entry) }}</span>
@@ -29,15 +34,14 @@
     <p v-if="!entry.params?.magic?.lost && entryTypeId(entry) === MAGIC_ITEM_TYPE_ID && entry.display.base?.data?.attunement !== 'none'" class="di-item-meta">{{ entry.params?.magic?.attuned ? 'Настроен' : 'Требует настройки' }}</p>
     <p v-if="entry.display.base?.data?.armor_base && !entry.display.base.data.armor_base.base_item_id && !entry.params?.armor_base_item_id" class="di-item-meta">Выберите основу доспеха в меню предмета</p>
     <p v-if="entry.display.base?.data?.weapon && !entry.display.base.data.weapon.base_item_id && !entry.params?.weapon_base_item_id && !entry.magic_item_id" class="di-item-meta">Выберите оружейную основу в меню предмета</p>
+    </template>
+    </CharacterMenuActions>
     <CreatedItemStatus :entry="entry" />
     <WeaponNotePanels :notes="notes" :item="entry.display.base" />
     <SelectedTargetPanel :uid="entry.uid" />
     <WeaponBonusTransferPanel v-if="entry.params?.magic?.bonus_transfer" :uid="entry.uid" />
     <WeaponUsePanel v-if="entry.params?.magic?.weapon_use?.status === 'active'" :uid="entry.uid" />
     <ItemLastChargeCheck v-if="entry.params?.magic?.last_charge_check" :uid="entry.uid" />
-    <CharacterMenuActions :view="entry.item_id != null ? () => viewEntry(entry, close) : undefined"
-      :edit="canManage && entry.item_id == null ? () => editEntry(sectionId, entry, close) : undefined"
-      :remove="canManage ? () => deleteEntry(sectionId, entry, close) : undefined" remove-label="Удалить предмет" />
     <RowActionItem v-if="canEquip(entry)" :icon="isEquipped(entry) ? Shirt : ShieldCheck" tone="accent" @click="toggleEquipment(entry, close)">
       {{ isEquipped(entry) ? 'Снять' : 'Экипировать' }}
     </RowActionItem>
@@ -84,6 +88,7 @@
 
 <script setup>
 import CharacterMenuActions from '@/features/character-editor/components/CharacterMenuActions.vue'
+import { layoutTokens } from '@/app/design-tokens'
 import InventoryBagItem from '@/features/inventory/components/InventoryBagItem.vue'
 import CreatedItemStatus from '@/features/character-editor/components/CreatedItemStatus.vue'
 import CreatedItemActions from '@/features/character-editor/components/CreatedItemActions.vue'
