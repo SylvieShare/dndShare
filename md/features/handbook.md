@@ -207,7 +207,13 @@ Landing использует систему и редакцию из глоба�
 родительской расы/класса и выбор в визарде остаются доступны. Остальные
 родительские группы строятся из `parentTypeId`.
 Schema filter groups without available
-options are not shown. `ItemEditModal` is schema-driven and uses shared form primitives; its
+options are not shown. Варианты item-фильтров (в том числе классы заклинаний)
+загружаются в редакции текущей коллекции или picker, с его разрешением `allowLegacy`.
+При смене редакции прежние варианты сразу убираются, а запоздалый ответ не может
+подменить новый список. Фильтр книг ограничивает искомые записи, но не справочник
+вариантов: класс из PHB остаётся доступен при поиске заклинаний из другой книги.
+Одинаковые названия разных записей не объединяются: фильтрация использует их ID.
+`ItemEditModal` is schema-driven and uses shared form primitives; its
 create title uses the current item type name. The spell form also accepts a
 transparent PNG/WebP icon on create or edit; upload is committed after the item
 has an id. `components/ItemPickerModal.vue`

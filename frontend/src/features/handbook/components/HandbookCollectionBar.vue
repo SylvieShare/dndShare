@@ -148,9 +148,9 @@
 <script setup>
 import { AddButton } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
-import { fetchGet } from '@/shared/api/http'
+import { useItemFilterOptions } from '@/features/handbook/composables/useItemFilterOptions'
 import { groupContentSources } from '@/shared/lib/contentSourceKinds'
 import { BasePopover } from '@sylvieshare/share-ui'
 import { MultiToggle } from '@sylvieshare/share-ui'
@@ -163,6 +163,8 @@ const boolFilterOptions = [
 
 const props = defineProps({
   type: { type: Object, required: true },
+  sourceVersionId: { type: [Number, String], default: null },
+  allowLegacy: { type: Boolean, default: false },
   search: { type: String, default: '' },
   groupBy: { type: String, default: null },
   filters: { type: Object, default: () => ({}) },
@@ -195,16 +197,7 @@ const filterOpen = ref(false)
 const filterBtnRef = ref(null)
 const contentSourceFilterOpen = ref(false)
 const contentSourceBtnRef = ref(null)
-const itemFilterOptions = ref({})
-
-watch(() => props.filterFields, async fields => {
-  const next = {}
-  await Promise.all((fields || []).filter(field => field.filter_item_type).map(async field => {
-    const response = await fetchGet(`/items?typeId=${field.filter_item_type}&limit=500`).catch(() => null)
-    next[field.path] = (response?.items || []).map(item => ({ value: item.id, label: item.name }))
-  }))
-  itemFilterOptions.value = next
-}, { immediate: true })
+const itemFilterOptions = useItemFilterOptions(props)
 
 const activeFilterCount = computed(() =>
   Object.values(props.filters).reduce((sum, val) => {

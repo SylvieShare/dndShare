@@ -7,6 +7,8 @@
       <HandbookCollectionBar
         v-if="showControls"
         :type="type"
+        :source-version-id="sourceVersionId"
+        :allow-legacy="allowLegacy"
         :search="search"
         :filters="filters"
         :locked-filters="lockedFilters"
@@ -99,6 +101,8 @@ import { dieLabel } from '@/shared/lib/systemDice'
 
 const props = defineProps({
   type: { type: Object, default: null },
+  sourceVersionId: { type: [Number, String], default: null },
+  allowLegacy: { type: Boolean, default: false },
   selectedItem: { type: Object, default: null },
   items: { type: Array, default: () => [] },
   loadError: { type: String, default: '' },

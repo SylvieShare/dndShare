@@ -27,6 +27,8 @@
         <div class="picker-body" :class="{ 'picker-body--detail': !!selectedItem }">
           <HandbookItemList
             :type="itemType"
+            :source-version-id="effectiveSourceVersionId"
+            :allow-legacy="contentSourceSettings.allowLegacy"
             :selected-item="selectedItem"
             :items="filteredItems"
             :loading="loading"

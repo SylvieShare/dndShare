@@ -29,6 +29,7 @@
 
           <HandbookItemList
             :type="selectedType"
+            :source-version-id="sourceVersionId"
             :selected-item="selectedItem"
             :items="filteredItems"
             :loading="loading"
