@@ -1,5 +1,6 @@
 <template>
   <div v-if="actionCount || summary || $slots.summary" class="character-menu-header"
+    :data-action-menu-size="actionCount && !summary && !$slots.summary ? 'content' : undefined"
     :class="{ 'character-menu-header--summary': summary || $slots.summary, 'character-menu-header--actions': actionCount }"
     :style="{ '--character-menu-action-count': actionCount }">
     <div v-if="summary || $slots.summary" class="character-menu-summary"><slot name="summary">{{ summary }}</slot></div>
@@ -42,7 +43,7 @@ const actionCount = computed(() => [props.view, props.edit, props.remove].filter
 .character-menu-header--summary.character-menu-header--actions {display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:var(--spacing-label);align-items:center;min-width:min(calc(var(--layout-menu-summary-min) + var(--character-menu-actions-width) + 2 * var(--spacing-label) + 2 * var(--spacing-small) + var(--layout-border)), calc(100vw - 2 * var(--spacing-large) - 2 * var(--spacing-small)))}
 .character-menu-summary {min-width:0;overflow-wrap:anywhere;color:var(--text-1)}
 .character-menu-divider {width:var(--layout-border);align-self:stretch;background:var(--border-strong)}
-.character-menu-actions {display:grid;grid-template-columns:repeat(var(--character-menu-action-count),minmax(0,1fr));gap:var(--spacing-xs);width:min(100%,var(--character-menu-actions-width));min-width:0}
+.character-menu-actions {display:grid;grid-template-columns:repeat(var(--character-menu-action-count),minmax(0,1fr));gap:var(--spacing-xs);width:var(--character-menu-actions-width);max-width:100%;min-width:0}
 .character-menu-header--summary .character-menu-actions {width:var(--character-menu-actions-width)}
 .character-menu-action {--action-button-height:var(--layout-menu-action-size);--action-button-bg:var(--surface-active);--action-button-hover-bg:color-mix(in srgb,var(--action-button-fg) 7%,var(--surface-active));--action-button-hover-fg:var(--action-button-fg)}
 .character-menu-action-label {display:block;max-width:100%;overflow-wrap:anywhere;text-wrap:balance;color:var(--text-1)}
