@@ -5,6 +5,7 @@ import { STAT_KEYS } from '@/shared/lib/dndStats'
 import { MULTICLASS_PROFICIENCY_GRANTS, multiclassProficiencyKey } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import {
   featAbilityBonuses,
+  featAbilityScoreLimit,
   featEntry,
   featGrantedSpellIds,
   featGrants,
@@ -144,7 +145,7 @@ export function buildLevelUpUpdates({
         const bonuses = oldValue && typeof oldValue === 'object' && Array.isArray(oldValue.bonuses)
           ? oldValue.bonuses
           : []
-        const applied = Math.max(0, Math.min(Number(bonus) || 0, 20 - resolveNumValue(oldValue)))
+        const applied = Math.max(0, Math.min(Number(bonus) || 0, featAbilityScoreLimit(featPick) - resolveNumValue(oldValue)))
         if (applied) updates[stat] = { ...block, value: { base, bonuses: [...bonuses, { name: title, title, value: applied, readonly: true, sourceFeatKey: `feat:${featPick.id}` }] } }
       }
       for (const bonus of featAbilityBonuses(featPick, featPick.selectedChoices || {})) {

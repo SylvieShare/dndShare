@@ -14,7 +14,7 @@ import { createWeaponInstance } from '@/features/character-editor/lib/magicWeapo
 import { abilityModifier } from '@/shared/lib/dnd'
 import { STAT_KEYS, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { computeSpellSlotPools } from '../../../blocks/dnd/lib/multiclassSpellcasting.js'
-import { featAbilityBonuses, featEntry, featGrantedSpellIds, featGrants } from '@/features/items/lib/featRules'
+import { featAbilityBonuses, featAbilityScoreLimit, featEntry, featGrantedSpellIds, featGrants } from '@/features/items/lib/featRules'
 import { abilityUseTotal } from '@/shared/lib/dndAbilityUses'
 import { defaultEntry as defaultWeaponEntry } from '../../../blocks/dnd/lib/weaponEntry.js'
 import { blankValues } from '../newCharacter.js'
@@ -160,7 +160,7 @@ export function buildCharacterData(input) {
     for (const bonus of featAbilityBonuses(item, featChoices)) {
       const block = { ...(values[bonus.stat] || {}) }
       const score = block.value && typeof block.value === 'object' ? block.value : { base: Number(block.value) || 10, bonuses: [] }
-      const applied = Math.max(0, Math.min(bonus.bonus, 20 - (finalScore[bonus.stat] || 0)))
+      const applied = Math.max(0, Math.min(bonus.bonus, featAbilityScoreLimit(item) - (finalScore[bonus.stat] || 0)))
       if (!applied) continue
       block.value = { ...score, bonuses: [...(score.bonuses || []), { name: item.name || 'Черта', title: item.name || 'Черта', value: applied, readonly: true, sourceFeatKey }] }
       values[bonus.stat] = block

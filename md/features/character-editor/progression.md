@@ -20,6 +20,12 @@ show the current and selected resulting scores, disable bonuses exceeding 20
 before selection, and prevent choosing more abilities than the ASI mode permits.
 The existing choice between +2, +1/+1 and a feat remains unchanged.
 
+Прибавка характеристики от черты ограничивается её категорией: обычные черты
+увеличивают значение максимум до 20, эпические дары (`epic_boon`) — до 30.
+Создание и повышение используют общий `featAbilityScoreLimit`. Уже имеющееся
+значение выше предела обычной черты не уменьшается; недопустимая прибавка равна
+нулю. Получение дара не пересчитывает ранее сохранённые повышения задним числом.
+
 The editor keeps a separate draft of classes, subclasses and levels. It allows
 replacing, adding and deleting class rows, clearing a subclass, and changing the
 level of any class, including a single class. Changing a class clears its former

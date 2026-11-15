@@ -136,6 +136,10 @@ export function featAbilityBonuses(item, selections = {}) {
   return bonuses
 }
 
+export function featAbilityScoreLimit(item) {
+  return featData(item).category === 'epic_boon' ? 30 : 20
+}
+
 export function featGrants(item, selections = {}) {
   const grants = featData(item).grants
   const result = grants && typeof grants === 'object' && !Array.isArray(grants)
