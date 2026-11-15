@@ -66,7 +66,7 @@ const actionGroups = computed(() => {
 .canvas-action-dock {
   position: absolute;
   z-index: 24;
-  top: 16px;
+  top: calc(var(--chapter-chrome-height, 64px) + var(--spacing-large));
   right: calc(var(--chapter-safe-right, 0px) + 8px);
   display: flex;
   flex-direction: column;

@@ -2,6 +2,45 @@ import { test, expect } from '@playwright/test'
 import { sessionLayout } from './fixtures/session-layout.js'
 import { layoutTokens } from '../../src/app/design-tokens.js'
 
+test('creation dock follows the session header across graph levels and window formats',async({page},info)=>{
+  const samples=[]
+  page.on('pageerror',error=>{throw error})
+  await page.setViewportSize({width:704,height:932})
+  await sessionLayout(page,{url:'/sessions/test'})
+  await expect(page.locator('.page-forward-enter-active,.page-backward-enter-active')).toHaveCount(0)
+  const canvas=page.locator('.session-graph-canvas'),dock=page.getByRole('navigation',{name:'Действия холста'})
+  for(const level of ['chapters','scenes','blocks']) {
+    if(level==='scenes')await page.locator('.nested-graph-node[data-graph-node-id="12"]').dblclick()
+    if(level==='blocks')await page.locator('.nested-graph-node[data-graph-node-id="31"]').dblclick()
+    await expect(canvas).toHaveAttribute('data-level',level)
+    for(const width of [390,704,1440]) {
+      await page.setViewportSize({width,height:932})
+      await expect.poll(async()=>{
+        const header=await page.locator('.chapter-toolbar').boundingBox(),button=await dock.getByRole('button').first().boundingBox()
+        return {gap:Math.round(button.y-header.y-header.height),left:button.x>=0,right:button.x+button.width<=width}
+      }).toEqual({gap:16,left:true,right:true})
+      const header=await page.locator('.chapter-toolbar').boundingBox(),buttons=await dock.getByRole('button').all()
+      for(const button of buttons) {
+        const rect=await button.boundingBox()
+        expect(rect.y).toBeGreaterThanOrEqual(header.y+header.height+15)
+        expect(rect.y+rect.height).toBeLessThanOrEqual(932)
+        expect(rect.x).toBeGreaterThanOrEqual(0)
+        expect(rect.x+rect.width).toBeLessThanOrEqual(width)
+      }
+      samples.push({level,width,headerBottom:header.y+header.height,firstButtonTop:(await buttons[0].boundingBox()).y,count:buttons.length})
+      if(width===704)await info.attach(`dock-${level}`,{body:await page.screenshot(),contentType:'image/png'})
+      if(level==='scenes'&&width===704) {
+        await dock.getByRole('button',{name:/Новый сценарий/}).click()
+        const dialog=page.getByRole('dialog',{name:'Новый сценарий',exact:true})
+        await expect(dialog).toBeVisible()
+        await page.keyboard.press('Escape')
+        await expect(dialog).toHaveCount(0)
+      }
+    }
+  }
+  await info.attach('dock-positions',{body:Buffer.from(JSON.stringify(samples)),contentType:'application/json'})
+})
+
 for (const width of [390,834,1440]) test(`session player header and chapter safe area at ${width}`, async ({page},info) => {
   page.on('pageerror',error=>{throw error})
   await page.setViewportSize({width,height:900})
