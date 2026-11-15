@@ -15,6 +15,51 @@ async function open(page,width,{longName=false,owner=true,withCondition=true,def
   await page.evaluate(()=>document.fonts.ready)
   return state
 }
+test('vertical fold dividers separate shared header groups and disappear on wrap',async({page},info)=>{
+  page.on('pageerror',error=>{throw error})
+  await open(page,1440,{duration:{kind:'minutes',value:10}})
+  await expect(page.locator('.page-forward-enter-active,.page-backward-enter-active')).toHaveCount(0)
+  const header=page.locator('.character-workspace-header'),samples=[]
+  for(const [width,count] of [[1440,2],[704,1],[390,0],[1440,2]]) {
+    await page.setViewportSize({width,height:932})
+    await expect(header.locator('.workspace-header-group-divider')).toHaveCount(count)
+    let geometry
+    await expect.poll(async()=>{
+      geometry=await header.evaluate(node=>{
+        const rect=selector=>node.querySelector(selector).getBoundingClientRect().toJSON()
+        const column=kind=>{
+          const element=node.querySelector(`.workspace-header-group-divider--${kind}`)
+          return element ? {box:element.getBoundingClientRect().toJSON(),hidden:element.getAttribute('aria-hidden'),pointerEvents:getComputedStyle(element).pointerEvents} : null
+        }
+        return {identity:rect('.workspace-header-identity'),details:rect('.workspace-header-details'),context:rect('.workspace-header-context'),columns:{details:column('details'),context:column('context')}}
+      })
+      return [['details',geometry.identity,geometry.details],['context',geometry.details,geometry.context]].every(([kind,left,right])=>{
+        const shared=Math.abs((left.top+left.bottom)/2-(right.top+right.bottom)/2)<1,column=geometry.columns[kind]
+        return shared ? !!column && column.box.left>=left.right-.5 && column.box.right<=right.left+.5 && column.box.height>=Math.max(left.height,right.height)-.5 : !column
+      })
+    }).toBe(true)
+    for(const [kind,left,right] of [['details',geometry.identity,geometry.details],['context',geometry.details,geometry.context]]) {
+      const shared=Math.abs((left.top+left.bottom)/2-(right.top+right.bottom)/2)<1
+      const divider=geometry.columns[kind]
+      if(shared) {
+        expect(divider.hidden).toBe('true')
+        expect(divider.pointerEvents).toBe('none')
+        const box=divider.box
+        expect(box.left).toBeGreaterThanOrEqual(left.right-.5)
+        expect(box.right).toBeLessThanOrEqual(right.left+.5)
+        expect(box.height).toBeGreaterThanOrEqual(Math.max(left.height,right.height)-.5)
+        expect(box.width).toBeLessThan(box.height)
+      }else expect(divider).toBeNull()
+    }
+    expect(await header.locator('.workspace-header-details-divider').isVisible()).toBe(width!==1440)
+    expect(await header.locator('.workspace-header-context-divider').isVisible()).toBe(width===390)
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
+    samples.push({width,count,geometry})
+    await info.attach(`groups-${width}-${samples.length}`,{body:await header.screenshot({animations:'disabled'}),contentType:'image/png'})
+  }
+  await info.attach('group-divider-geometry',{body:Buffer.from(JSON.stringify(samples)),contentType:'application/json'})
+})
+
 for(const [width,longName,inline] of [[390,false,false],[700,false,false],[834,false,false],[834,true,false],[1440,false,true],[1440,true,false]]) {
   test(`conditions use available header space at ${width} (long name=${longName})`,async({page},testInfo)=>{
     await open(page,width,{longName,duration:{kind:'minutes',value:10}})

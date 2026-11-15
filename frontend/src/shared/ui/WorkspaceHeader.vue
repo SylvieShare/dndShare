@@ -3,10 +3,14 @@
     <BlurBackdrop v-if="!solid" class="workspace-header-backdrop" radius="var(--chrome-blur)" />
     <div ref="main" class="workspace-header-inner" :class="{ 'workspace-header-inner--page': page }" :style="{ maxWidth: contentWidth || (page ? 'var(--layout-content-max)' : undefined) }">
     <div ref="identity" class="workspace-header-identity"><slot name="identity" /></div>
-    <div v-if="$slots.details" ref="details" class="workspace-header-details"><slot name="details" /></div>
+    <div v-if="$slots.details" ref="details" class="workspace-header-details">
+      <span v-if="rowDividers && detailsInline" class="workspace-header-group-divider workspace-header-group-divider--details" aria-hidden="true"><WorkspaceRowDivider /></span>
+      <slot name="details" />
+    </div>
     <WorkspaceRowDivider v-if="$slots.details && rowDividers && !detailsInline" class="workspace-header-details-divider" />
     <div :id="navigationId" v-show="navigationPlacement === 'inline' && navigationVisible" class="workspace-header-navigation" />
     <div v-if="$slots.context" ref="context" class="workspace-header-context" :class="{ 'workspace-header-context--divided': rowDividers }">
+      <span v-if="rowDividers && $slots.details && (contextInline || contextInDetailsRow)" class="workspace-header-group-divider workspace-header-group-divider--context" aria-hidden="true"><WorkspaceRowDivider /></span>
       <WorkspaceRowDivider v-if="rowDividers" class="workspace-header-context-divider" />
       <slot name="context" />
     </div>
@@ -70,6 +74,11 @@ function updateSize() {
   element.value.style.setProperty('--workspace-context-inset-start', `${Math.max(0, start)}px`)
   element.value.style.setProperty('--workspace-context-inset-end', `${Math.max(0, end)}px`)
   element.value.style.setProperty('--workspace-main-height', `${main.value.offsetHeight}px`)
+  const detailsHeight=details.value?.offsetHeight || 0, contextHeight=context.value?.offsetHeight || 0
+  const primaryHeight=Math.max(identity.value?.offsetHeight || 0,actions.value?.offsetHeight || 0,detailsInline.value?detailsHeight:0,contextInline.value?contextHeight:0)
+  element.value.style.setProperty('--workspace-header-measured-column-gap', `${parseFloat(style.columnGap) || 0}px`)
+  element.value.style.setProperty('--workspace-details-column-height', `${primaryHeight}px`)
+  element.value.style.setProperty('--workspace-context-column-height', `${contextInline.value?primaryHeight:Math.max(detailsHeight,contextHeight)}px`)
   if(details.value) element.value.style.setProperty('--workspace-details-top', `${details.value.offsetTop - parseFloat(style.rowGap || 0) / 2}px`)
   if(props.navigationJoined && props.navigationTarget){
     const header=element.value.getBoundingClientRect(),target=props.navigationTarget.getBoundingClientRect()
@@ -178,7 +187,7 @@ onBeforeUnmount(() => observer?.disconnect());
 .workspace-header--details .workspace-header-inner {grid-template-columns:minmax(0,max-content) minmax(0,max-content) minmax(0,1fr) auto;row-gap:var(--workspace-header-context-gap,var(--spacing-xs))}
 .workspace-header--details .workspace-header-identity {grid-column:1/4;grid-row:1}
 .workspace-header--details .workspace-header-actions {grid-column:4;grid-row:1}
-.workspace-header-details {grid-column:1/-1;grid-row:2;min-width:0}
+.workspace-header-details {position:relative;grid-column:1/-1;grid-row:2;min-width:0}
 .workspace-header--details-inline .workspace-header-identity {grid-column:1}
 .workspace-header--details-inline .workspace-header-details {grid-column:2;grid-row:1}
 .workspace-header--details .workspace-header-context {grid-column:1/-1;grid-row:3}
@@ -189,4 +198,7 @@ onBeforeUnmount(() => observer?.disconnect());
 .workspace-header--context-details-row .workspace-header-context {grid-column:2/-1;grid-row:2;align-self:center;margin-inline-start:var(--workspace-context-inline-offset,0px)}
 .workspace-header--context-details-row .workspace-header-context-divider {display:none}
 .workspace-header-details-divider {top:var(--workspace-details-top,0px)}
+.workspace-header-group-divider {--workspace-group-divider-gap:var(--workspace-header-measured-column-gap,var(--spacing-medium));position:absolute;z-index:1;left:calc(var(--workspace-group-divider-gap) / -2 + var(--layout-workspace-row-divider-height) / 2);top:calc((100% - var(--workspace-group-divider-length)) / 2);width:var(--workspace-group-divider-length);height:var(--layout-workspace-row-divider-height);transform:rotate(90deg);transform-origin:0 0;pointer-events:none}
+.workspace-header-group-divider--details {--workspace-group-divider-length:var(--workspace-details-column-height,var(--layout-header))}
+.workspace-header-group-divider--context {--workspace-group-divider-length:var(--workspace-context-column-height,var(--layout-header));--workspace-group-divider-gap:calc(var(--workspace-header-measured-column-gap,var(--spacing-medium)) + var(--workspace-context-inline-offset,0px))}
 </style>
