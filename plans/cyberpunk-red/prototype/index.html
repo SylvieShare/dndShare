@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>RED · Проектирование dndShare</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #151518;
+        color: #ececef;
+        font:
+          15px system-ui,
+          sans-serif;
+      }
+      header {
+        padding: 24px 32px;
+        background: #1e1e22;
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      h1 {
+        font-size: 22px;
+        margin: 0;
+      }
+      p {
+        color: #bdbdc6;
+        margin: 6px 0 0;
+      }
+      nav {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-left: auto;
+      }
+      button,
+      a {
+        font: inherit;
+        color: inherit;
+        background: #303035;
+        border: 0;
+        border-radius: 10px;
+        padding: 12px 16px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      button[aria-pressed="true"] {
+        background: #7c5ce2;
+      }
+      main {
+        padding: 28px 16px;
+        overflow: auto;
+      }
+      .frame {
+        margin: auto;
+        transition: width 0.2s;
+        width: 1440px;
+        max-width: none;
+      }
+      iframe {
+        display: block;
+        width: 100%;
+        height: 1000px;
+        border: 1px solid #45454d;
+        border-radius: 14px;
+        background: #1a1a1e;
+      }
+      .meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        margin: 0 0 12px;
+        color: #bdbdc6;
+        font-size: 13px;
+      }
+      .note {
+        padding: 0 32px 24px;
+        font-size: 13px;
+      }
+      a {
+        padding: 0;
+        background: none;
+        text-decoration: underline;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .frame {
+          transition: none;
+        }
+      }
+      :focus-visible {
+        outline: 3px solid #b9a8ff;
+        outline-offset: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>Cyberpunk RED / dndShare</h1>
+        <p>Проект листа, создания персонажа и справочника</p>
+      </div>
+      <nav aria-label="Размер макета">
+        <button data-width="390">Телефон</button
+        ><button data-width="840">Планшет / Fold</button
+        ><button data-width="1440" aria-pressed="true">Desktop</button
+        ><a href="screen.html" target="_blank">Открыть на весь экран ↗</a>
+      </nav>
+    </header>
+    <main>
+      <div class="frame">
+        <div class="meta">
+          <span id="size">1440 × 1000 · широкая композиция</span
+          ><span>Интерактивный прототип · данные демонстрационные</span>
+        </div>
+        <iframe
+          title="Макет интерфейса Cyberpunk RED"
+          src="screen.html"
+        ></iframe>
+      </div>
+    </main>
+    <p class="note">
+      Внутри доступны лист, справочник и восемь шагов создания. Изменения
+      сохраняются только в этом браузере. Числа и наборы визарда служат
+      демонстрацией интерфейса; сверка полного набора правил — отдельный этап.
+    </p>
+    <script>
+      document.querySelectorAll("[data-width]").forEach(
+        (b) =>
+          (b.onclick = () => {
+            document
+              .querySelectorAll("[data-width]")
+              .forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+            document.querySelector(".frame").style.width =
+              b.dataset.width + "px";
+            document.querySelector("#size").textContent =
+              b.dataset.width + " × 1000 · " + b.textContent;
+          }),
+      );
+    </script>
+  </body>
+</html>

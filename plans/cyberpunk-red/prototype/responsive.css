@@ -1,0 +1,212 @@
+@media (min-width: 1200px) {
+  .main-pane {
+    max-height: calc(100vh - 245px);
+    overflow: auto;
+    scrollbar-width: thin;
+  }
+  .desktop-hidden {
+    display: none;
+  }
+}
+@media (min-width: 600px) and (max-width: 1199px) {
+  .sheet-grid {
+    grid-template-columns: 1fr;
+  }
+  .side {
+    display: none;
+  }
+  .base-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .wizard-layout {
+    grid-template-columns: 160px minmax(0, 1fr);
+    gap: 20px;
+  }
+  .workspace {
+    padding: 20px;
+  }
+  .catalog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .app-logo {
+    font-size: 18px;
+  }
+  .sheet-head .actions {
+    display: none;
+  }
+}
+@media (max-width: 720px) {
+  .wizard-layout {
+    grid-template-columns: 1fr;
+  }
+  .wizard-rail {
+    display: none;
+  }
+  .wizard-mini {
+    display: flex;
+    margin: 0 0 16px;
+  }
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 599px) {
+  body {
+    font-size: 14px;
+  }
+  .app-header {
+    height: auto;
+    min-height: 64px;
+    padding: 10px 16px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .app-logo {
+    font-size: 18px;
+  }
+  .topnav {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .topnav button {
+    min-height: 40px;
+    padding: 8px 10px;
+  }
+  .app-header > .pill {
+    display: none;
+  }
+  .workspace {
+    padding: 16px 12px;
+  }
+  .sheet-head {
+    margin-bottom: 12px;
+  }
+  .sheet-head h1 {
+    font-size: 22px;
+  }
+  .sheet-head .avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+  .sheet-head .actions {
+    display: none;
+  }
+  .sheet-head .caption {
+    font-size: 11px;
+  }
+  .compact-resources {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .compact-resources button {
+    flex: 1;
+    text-align: left;
+    padding: 10px;
+    background: var(--surface);
+    font-size: 12px;
+  }
+  .compact-resources b {
+    display: block;
+    font-size: 18px;
+  }
+  .tabs {
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+  }
+  .tabs button {
+    padding: 8px 12px;
+  }
+  .sheet-grid {
+    grid-template-columns: 1fr;
+  }
+  .side {
+    display: none;
+  }
+  .panel {
+    padding: 16px;
+  }
+  .two,
+  .three,
+  .choice-grid,
+  .review-grid,
+  .catalog-grid {
+    grid-template-columns: 1fr;
+  }
+  .weapon-metrics {
+    gap: 8px;
+  }
+  .weapon-metrics b {
+    font-size: 22px;
+  }
+  .wizard-body {
+    min-height: 360px;
+  }
+  .wizard-footer {
+    padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
+  }
+  .wizard-heading h1 {
+    font-size: 25px;
+  }
+  .budget {
+    padding: 14px;
+    gap: 12px;
+  }
+  .budget strong {
+    font-size: 22px;
+  }
+  .catalog-header .row {
+    flex-wrap: wrap;
+  }
+  .choice {
+    padding: 18px;
+  }
+  .demo-strip {
+    font-size: 10px;
+  }
+  .list-row {
+    gap: 8px;
+  }
+  .weapon {
+    padding: 16px;
+  }
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}
+@media (max-width: 599px) {
+  .base-grid {
+    display: grid;
+    gap: 16px;
+  }
+  .base-grid > .panel:first-child {
+    display: none;
+  }
+  .base-grid .two,
+  .main-pane > .stack > .panel > .three {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .main-pane > .stack > .panel > .three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .main-pane > .stack > .panel > .three .number {
+    padding: 8px;
+    font-size: 18px;
+  }
+  .main-pane > .stack > .panel > .three .metric {
+    font-size: 25px;
+  }
+}

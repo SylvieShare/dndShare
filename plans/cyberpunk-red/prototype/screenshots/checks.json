@@ -1,0 +1,42 @@
+{
+  "results": [
+    {
+      "name": "phone",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "tabs": 9,
+      "wizard": "passed",
+      "roll": "passed",
+      "draft": "passed"
+    },
+    {
+      "name": "tablet",
+      "width": 840,
+      "height": 1000,
+      "overflow": false,
+      "tabs": 9,
+      "wizard": "passed",
+      "roll": "passed",
+      "draft": "passed"
+    },
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "overflow": false,
+      "tabs": 9,
+      "wizard": "passed",
+      "roll": "passed",
+      "draft": "passed"
+    }
+  ],
+  "errors": [],
+  "boundaries": [
+    320,
+    599,
+    600,
+    1199,
+    1200
+  ]
+}

@@ -1,0 +1,72 @@
+dialog {
+  width: min(520px, calc(100% - 24px));
+  max-height: 90dvh;
+  overflow: auto;
+  background: #2b2b30;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 20px 80px #0009;
+}
+dialog::backdrop {
+  background: #0009;
+}
+dialog h2 {
+  padding-right: 32px;
+  margin-bottom: 16px;
+}
+dialog .close {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  background: transparent;
+  font-size: 26px;
+}
+dialog .primary {
+  width: 100%;
+  margin-top: 20px;
+}
+#toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 32px);
+  background: #3b334e;
+  border: 1px solid #655381;
+  border-radius: 12px;
+  padding: 12px 18px;
+  z-index: 10;
+  display: none;
+}
+.roll-result {
+  font-size: 56px;
+  text-align: center;
+  font-weight: 650;
+  color: var(--soft);
+  margin: 12px;
+}
+.modal-grid {
+  display: grid;
+  gap: 16px;
+}
+.errors {
+  color: var(--bad);
+  font-size: 13px;
+}
+.demo-strip {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  padding: 6px 16px;
+  background: #222126;
+}
+.story-lead {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #d6d2e0;
+}
+.hide {
+  display: none !important;
+}
