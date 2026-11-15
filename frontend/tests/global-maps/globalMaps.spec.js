@@ -20,11 +20,18 @@ for (const mobile of [false, true]) test(`world maps, curved routes and annotati
   await page.getByRole('button', { name: 'Добавить маршрут', exact: true }).click()
   await page.getByRole('button', { name: 'Добавить точку на карту', exact: true }).click()
   if (mobile) {
-    const navigation = await page.locator('.global-map-sidebar .map-sidebar-tabs').boundingBox()
-    await expect.poll(async () => (await page.locator('.global-map-sidebar').boundingBox()).width).toBeLessThanOrEqual(navigation.width + 1)
+    const navigation = await page.locator('.session-sidebar-host .map-sidebar-tabs').boundingBox()
+    await expect.poll(async () => (await page.locator('.session-sidebar-host .map-sidebar').boundingBox()).width).toBeLessThanOrEqual(navigation.width + 1)
   }
   const image = await page.locator('.global-map-image').boundingBox()
-  for (const [x, y] of [[.15, .18], [.45, .4], [.75, .22]]) await page.mouse.click(image.x + image.width * x, image.y + image.height * y)
+  for (const [index, [x, y]] of [[.15, .18], [.45, .4], [.75, .22]].entries()) {
+    if (index) {
+      await page.getByRole('complementary', { name: 'Настройки точки', exact: true }).getByRole('button', { name: 'Открыть маршрут Маршрут 1', exact: true }).click()
+      await page.getByRole('button', { name: 'Добавить точку на карту', exact: true }).click()
+    }
+    await page.mouse.click(image.x + image.width * x, image.y + image.height * y)
+    await expect(page.getByRole('complementary', { name: 'Настройки точки', exact: true })).toBeVisible()
+  }
   await expect(page.locator('.global-map-point')).toHaveCount(3)
   await page.locator('.global-map-canvas').focus()
   await page.keyboard.press('Escape')

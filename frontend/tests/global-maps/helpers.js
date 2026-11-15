@@ -30,6 +30,7 @@ export async function setup(page) {
       participants: [41, 42].map((id, index) => ({ charId: id, charUuid: `hero-${id}`, templateId: 1, iconImageUrl: image, data: { values: { name: ['Лира', 'Торин'][index], classes: [], hp: { current: 10, max: { base: 10, bonuses: [] } }, DEX: { value: 10 }, WIS: { value: 10 }, INT: { value: 10 }, armor: {} } } })),
     }
     else if (path === '/api/templates') json = { templates: [{ id: 1, name: 'DND5' }] }
+    else if (path === '/api/handbook/sync') json = { protocol: 1, entries: [], hasMore: false, cursor: 'empty', visibleIds: [], metadata: { types: [], suggests: {}, suggestTypes: [], books: [] } }
     else if (path.endsWith('/chapter-graph')) json = { arcs: [{ id: 1, order: 1, name: 'Путь' }], chapters, edges: [] }
     else if (path === '/api/sessions/test/world') json = { locations, npcs: [], quests: [], materials: [], relations: [] }
     else if (path === '/api/sessions/test/encounter') {
@@ -103,12 +104,11 @@ export async function renameWorldPoint(page, name) {
 export async function reuseWorldPoint(page, id) {
   await page.getByRole('button', { name: 'Добавить точку на карту', exact: true }).click()
   await page.locator(`button[data-source-id="${id}"]`).click()
-  await page.getByRole('button', { name: 'Готово', exact: true }).click()
-  await page.locator('.global-route-point-open').last().click()
+  await expect(page.getByRole('complementary', { name: 'Настройки точки', exact: true })).toBeVisible()
 }
 
 export async function openWorldTab(page, name) {
-  const button = page.locator('.global-map-sidebar').getByRole('button', { name, exact: true })
+  const button = page.getByRole('navigation', { name: 'Боковые вкладки сессии', exact: true }).getByRole('button', { name, exact: true })
   if (await button.getAttribute('aria-pressed') !== 'true') await button.click()
   await expect(button).toHaveAttribute('aria-pressed', 'true')
 }

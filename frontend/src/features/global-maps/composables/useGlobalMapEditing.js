@@ -43,7 +43,7 @@ export function useGlobalMapEditing(c, canvas, sidebar, mobile, props) {
         route.value.points.push(added)
       }
     })
-    if (added) { pointId.value = added.id; routeFocus.value = false }
+    if (added) select(routeId.value, added.id)
   }
   function move(id, entryId, position) {
     const entry = c.selected?.routes.find(route => route.id === id)?.points.find(point => point.id === entryId)
