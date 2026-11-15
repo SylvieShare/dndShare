@@ -1,10 +1,11 @@
 import { createRenderer, defineComponent, h, nextTick, ref } from 'vue'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useTabSwipe } from './useTabSwipe'
 
 const sortable = vi.hoisted(() => ({ active: false }))
 vi.mock('@sylvieshare/share-ui', () => ({ isSortableGestureActive: () => sortable.active }))
 afterEach(() => { sortable.active = false; vi.unstubAllGlobals() })
+beforeEach(() => vi.stubGlobal('window', { innerWidth: 704, matchMedia: () => ({ matches: true }), addEventListener: vi.fn(), removeEventListener: vi.fn() }))
 
 function hostNode(type, text = '') {
   return {
@@ -52,7 +53,6 @@ const testRenderer = createRenderer({
 
 describe('character swipe geometry', () => {
   function mountedSwipe() {
-    vi.stubGlobal('window', { innerWidth: 704, matchMedia: () => ({ matches: true }) })
     let swipe
     const app = testRenderer.createApp(defineComponent({ setup() {
       swipe = useTabSwipe(ref([{ id: 'stats' }, { id: 'weapons' }]), ref(true))
@@ -138,5 +138,43 @@ describe('character swipe geometry', () => {
 
     expect(swipe.mobileSwipeTrackStyle.value.transform).toBe('translate3d(-200%, 0, 0)')
     app.unmount()
+  })
+
+  it('blocks the complete touch that dismisses a menu and allows the next swipe', () => {
+    let open = true
+    vi.stubGlobal('document', { querySelectorAll: () => open ? [{ closest: () => null, getClientRects: () => [{}] }] : [] })
+    vi.stubGlobal('getComputedStyle', () => ({ pointerEvents: 'auto' }))
+    const { app, swipe, event } = mountedSwipe()
+    const listener = window.addEventListener.mock.calls.find(([type]) => type === 'pointerdown')[1]
+    try {
+      listener()
+      open = false // document pointerdown closed the menu before the sheet's touchstart
+      swipe.onTouchStart(event(300), { clientWidth: 704 })
+      swipe.onTouchMove(event(150)); swipe.onTouchEnd(event(150))
+      expect(swipe.activeTab.value).toBe(0)
+      expect(swipe.tabDragActive.value).toBe(false)
+      swipe.onTouchStart(event(300), { clientWidth: 704 })
+      swipe.onTouchMove(event(150)); swipe.onTouchEnd(event(150))
+      expect(swipe.activeTab.value).toBe(1)
+    } finally { app.unmount() }
+    expect(window.removeEventListener).toHaveBeenCalledWith('pointerdown', listener, true)
+  })
+
+  it('returns an active drag to its tab when a menu appears, ignoring leaving menu nodes', () => {
+    let open = false, leaving = false
+    vi.stubGlobal('document', { querySelectorAll: () => open ? [{ closest: () => leaving ? {} : null, getClientRects: () => [{}] }] : [] })
+    vi.stubGlobal('getComputedStyle', () => ({ pointerEvents: 'auto' }))
+    const { app, swipe, event } = mountedSwipe()
+    try {
+      swipe.onTouchStart(event(300), { clientWidth: 704 }); swipe.onTouchMove(event(250))
+      expect(swipe.tabDragActive.value).toBe(true)
+      open = true
+      swipe.onTouchMove(event(150))
+      expect(swipe.tabDragActive.value).toBe(false)
+      swipe.onTouchEnd(event(150)); expect(swipe.activeTab.value).toBe(0)
+      leaving = true
+      swipe.onTouchStart(event(300), { clientWidth: 704 }); swipe.onTouchMove(event(150)); swipe.onTouchEnd(event(150))
+      expect(swipe.activeTab.value).toBe(1)
+    } finally { app.unmount() }
   })
 })

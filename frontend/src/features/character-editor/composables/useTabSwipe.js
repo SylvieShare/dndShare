@@ -1,4 +1,4 @@
-import { ref, computed, watch, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { isSortableGestureActive } from '@sylvieshare/share-ui'
 
 import { tabSelectionWeights } from './tabSelection'
@@ -22,6 +22,21 @@ export function useTabSwipe(activeTabs, swipeEnabled) {
   let touchStartX = null
   let touchStartY = null
   let suppressSwipeClick = false
+  let menuOpenAtPointerDown = false
+
+  function hasOpenMenu() {
+    if (typeof document === 'undefined') return false
+    return [...document.querySelectorAll('[role="menu"], [role="listbox"], .ram-popover, .share-popover')].some(node =>
+      !node.closest('[inert], [aria-hidden="true"]') && node.getClientRects().length > 0 &&
+      getComputedStyle(node).pointerEvents !== 'none')
+  }
+
+  function recordMenuAtPointerDown() {
+    // Outside pointerdown dismisses shared menus before touchstart reaches the sheet.
+    // Keep that gesture blocked even when its menu has already disappeared.
+    menuOpenAtPointerDown = hasOpenMenu()
+  }
+  onMounted(() => window.addEventListener('pointerdown', recordMenuAtPointerDown, true))
 
   // ── Tab pane cache (stable component instances per tab) ──────────────
   const tabPaneCache = {}
@@ -80,6 +95,7 @@ export function useTabSwipe(activeTabs, swipeEnabled) {
   })
 
   onBeforeUnmount(() => {
+    window.removeEventListener('pointerdown', recordMenuAtPointerDown, true)
     swipeGeneration++
     clearTimeout(swipeSettleTimer)
   })
@@ -165,8 +181,11 @@ export function useTabSwipe(activeTabs, swipeEnabled) {
   }
 
   function onTouchStart(event, containerEl) {
+    const menuWasOpen = menuOpenAtPointerDown
+    menuOpenAtPointerDown = false
     if (!swipeEnabled.value || activeTabs.value.length < 2) return
     suppressSwipeClick = false
+    if (menuWasOpen || hasOpenMenu()) { cancelTouch(); return }
     if (isSortableGestureActive()) { resetSwipe(); return }
     if (isSwipeBlocked(event.target)) return
     if (tabDragSettling.value) return
@@ -187,6 +206,7 @@ export function useTabSwipe(activeTabs, swipeEnabled) {
   function onTouchMove(event) {
     if (isSortableGestureActive()) { resetSwipe(); return }
     if (!swipeEnabled.value || activeTabs.value.length < 2 || touchStartX == null) return
+    if (hasOpenMenu()) { cancelTouch(); return }
     const touch = event.changedTouches?.[0]
     if (!touch) return
     const dx = touch.clientX - touchStartX
@@ -212,6 +232,7 @@ export function useTabSwipe(activeTabs, swipeEnabled) {
   function onTouchEnd(event) {
     if (isSortableGestureActive()) { resetSwipe(); return }
     if (!swipeEnabled.value || activeTabs.value.length < 2 || touchStartX == null) return
+    if (hasOpenMenu()) { cancelTouch(); return }
     const touch = event.changedTouches?.[0]
     if (!touch) return
     const dx = tabDragActive.value ? tabDragX.value : touch.clientX - touchStartX
