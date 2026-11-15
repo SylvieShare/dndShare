@@ -18,6 +18,14 @@ for(const width of [390,834,1440])test(`session tabs use a local surface at ${wi
     return {inMain:!!node.closest('.workspace-header-inner'),top:nav.top-main.top,bottom:main.bottom-nav.bottom}
   })
   expect(placement.inMain).toBe(width>=1200)
+  const divider=header.locator('.workspace-subheader > .workspace-row-divider')
+  await expect(divider).toHaveCount(width>=1200?0:1)
+  if(width<1200){
+    await expect(divider).toBeVisible()
+    await expect(divider).toHaveCSS('pointer-events','none')
+    const main=await header.locator('.workspace-header-inner').boundingBox(),line=await divider.boundingBox()
+    expect(line.y).toBeCloseTo(main.y+main.height,0)
+  }
   if(width>=1200){expect(placement.top).toBeGreaterThanOrEqual(0);expect(placement.bottom).toBeGreaterThanOrEqual(0);await expect(navigation).toHaveClass(/share-icon-navigation--stacked/)}
   await navigation.getByRole('button',{name:'Карта',exact:true}).click()
   await expect(page.locator('.session-header-test-body h1')).toHaveText('maps')
@@ -35,11 +43,13 @@ test('session navigation keeps one DOM instance and its selection across formats
   await page.evaluate(()=>{window.originalSessionNavigation=document.querySelector('[data-tutorial="session-navigation"]')})
   await page.setViewportSize({width:834,height:700})
   await expect(page.locator('.chapter-toolbar')).not.toHaveClass(/workspace-header--navigation-inline/)
+  await expect(page.locator('.chapter-toolbar .workspace-row-divider')).toHaveCount(1)
   await expect(map).toHaveAttribute('aria-current','page')
   await expect(map).toBeFocused()
   expect(await page.evaluate(()=>window.originalSessionNavigation===document.querySelector('[data-tutorial="session-navigation"]'))).toBe(true)
   await page.setViewportSize({width:1440,height:700})
   await expect(page.locator('.chapter-toolbar')).toHaveClass(/workspace-header--navigation-inline/)
+  await expect(page.locator('.chapter-toolbar .workspace-row-divider')).toHaveCount(0)
   await expect(map).toHaveAttribute('aria-current','page')
   await expect(map).toBeFocused()
   expect(await page.evaluate(()=>window.originalSessionNavigation===document.querySelector('[data-tutorial="session-navigation"]'))).toBe(true)

@@ -24,7 +24,7 @@ import { useWorkspaceContextLayout } from '@/shared/composables/useWorkspaceCont
 import { useWorkspaceScrollPosition } from '@/shared/composables/useWorkspaceScrollPosition'
 import { layoutTokens } from '@/app/design-tokens'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from "vue";
-const props = defineProps({ page: Boolean, contentWidth: String, fitNavigation: {type:Boolean,default:true}, solid: {type:Boolean,default:true}, navigationVisible:{type:Boolean,default:true}, navigationPlacement:{type:String,default:'below'}, navigationTarget:Object, navigationJoined:Boolean, rowDividers:Boolean, scrollSource:{type:Object,default:undefined}, contextPlacement:{type:String,default:'auto'} });
+const props = defineProps({ page: Boolean, contentWidth: String, fitNavigation: {type:Boolean,default:true}, solid: {type:Boolean,default:true}, navigationVisible:{type:Boolean,default:true}, navigationPlacement:{type:String,default:'below'}, navigationTarget:Object, navigationJoined:Boolean, rowDividers:{type:Boolean,default:true}, scrollSource:{type:Object,default:undefined}, contextPlacement:{type:String,default:'auto'} });
 const navigationId = `workspace-navigation-${useId()}`
 const element = ref(null),
   emit = defineEmits(["resize"]);
