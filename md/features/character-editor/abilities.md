@@ -266,7 +266,11 @@ ability-resource binding and links to standard combat-action codes from suggest
 type 24. Hovering those linked names shows the suggest description. The block
 merges source rows with editable custom actions from `values.actions`;
 source-provided rows use the ability icon, omit a duplicate textual source label
-and cannot be edited on the character. Existing stable row-key order from
+and cannot be edited on the character. The row menu offers «Посмотреть источник», opening the original
+ability, feat or magic-item handbook card. This view command is available to
+readers and also makes source rows without dice or other commands clickable.
+Viewing never spends charges or changes the character; gameplay commands stay
+owner-only. Custom actions without a source do not show this command. Existing stable row-key order from
 `values.action_order` is respected, but row menus do not offer manual reordering. Each group header
 is rendered only when it contains actions. The shared block-title pencil opens
 one morph editor for the complete block: custom actions are created, edited and

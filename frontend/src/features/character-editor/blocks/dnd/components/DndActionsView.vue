@@ -97,10 +97,11 @@
         </template>
 
         <template #default="{ close }">
-          <CharacterMenuActions :edit="!action.readonly ? () => edit(action, close) : undefined" edit-label="Редактировать"
-            :remove="!action.readonly ? () => remove(action, close) : undefined" />
+          <CharacterMenuActions :view="action.item ? () => viewSource(action, close) : undefined" view-label="Посмотреть источник"
+            :edit="manage && !action.readonly ? () => edit(action, close) : undefined" edit-label="Редактировать"
+            :remove="manage && !action.readonly ? () => remove(action, close) : undefined" />
           <RowActionItem
-            v-for="roll in action.dice_rolls || []"
+            v-for="roll in manage ? action.dice_rolls || [] : []"
             :key="roll.key"
             :icon="Dices"
             @click="rollDice(action, roll, close)"
@@ -108,7 +109,7 @@
             Бросить {{ roll.label }}
           </RowActionItem>
           <RowActionItem
-            v-if="canActivateTarget(action)"
+            v-if="manage && canActivateTarget(action)"
             :icon="Sparkles"
             tone="accent"
             :disabled="targetActivationDisabled(action)"
@@ -118,7 +119,7 @@
             <template v-if="action.resource" #suffix>{{ action.resource.value }}/{{ action.resource.total }}</template>
           </RowActionItem>
           <RowActionItem
-            v-for="effect in action.menu_effects || []"
+            v-for="effect in manage ? action.menu_effects || [] : []"
             :key="effect.key"
             :icon="BatteryLow"
             :tone="effect.tone || 'danger'"
@@ -168,13 +169,18 @@ const props = defineProps({
   panel: { type: Boolean, default: false },
   actionSuggestions: { type: Array, default: () => [] },
 })
-const emit = defineEmits(['manage', 'edit', 'remove', 'apply-effect', 'roll-dice', 'activate-target', 'toggle-resource'])
+const emit = defineEmits(['manage', 'edit', 'remove', 'view-source', 'apply-effect', 'roll-dice', 'activate-target', 'toggle-resource'])
 const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
 const suggestionsByCode = computed(() => new Map(props.actionSuggestions.map(item => [String(item.code || ''), item])))
 const RESOURCE_ORB_SIZE = 30
 
 function linkedActions(action) {
   return (action.suggest_action_codes || []).map(code => suggestionsByCode.value.get(String(code))).filter(Boolean)
+}
+
+function viewSource(action, close) {
+  close()
+  emit('view-source', action.item)
 }
 
 function edit(action, close) {
@@ -202,7 +208,7 @@ function targetActivationDisabled(action) {
 }
 
 function canOpenActionMenu(action) {
-  return props.manage && (!action.readonly || !!action.dice_rolls?.length || canActivateTarget(action) || !!action.menu_effects?.length)
+  return !!action.item || props.manage && (!action.readonly || !!action.dice_rolls?.length || canActivateTarget(action) || !!action.menu_effects?.length)
 }
 
 function resourceTotal(action) {

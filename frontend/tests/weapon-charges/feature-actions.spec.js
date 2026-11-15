@@ -78,13 +78,59 @@ for (const width of [390, 1280]) {
     await page.keyboard.press('Escape')
     const empty = page.locator('.dav-action').filter({ hasText: 'Только заряд' })
     await empty.click()
-    await expect(page.getByRole('menu')).toHaveCount(0)
-    await expect(empty).not.toHaveClass(/dav-action--clickable/)
+    await expect(page.getByRole('button', { name: 'Посмотреть источник', exact: true })).toBeVisible()
+    await expect(empty).toHaveClass(/dav-action--clickable/)
+    await page.keyboard.press('Escape')
     await page.evaluate(() => window.fixture.ctx.ownerMode = false)
     await row.locator('strong').click()
+    await expect(page.getByRole('button', { name: 'Посмотреть источник', exact: true })).toBeVisible()
+    await expect(page.getByRole('menuitem')).toHaveCount(0)
+    await page.keyboard.press('Escape')
     await row.locator('.ss').click()
     await expect(page.getByRole('menu')).toHaveCount(0)
     expect(await page.evaluate(() => window.fixture.resources[0].value)).toBe(0)
+  })
+}
+
+for (const width of [390, 704, 1280]) {
+  test(`source action opens the original ability or item without mutations (${width}px)`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 932 })
+    await page.route(url => url.pathname.startsWith('/api/'), route => route.fulfill({ json: { items: [] } }))
+    await page.goto(url)
+    await page.waitForFunction(() => !!window.fixture)
+    await page.evaluate(() => {
+      window.fixture.ctx.characterResources.itemsById.set('7001', { id: 7001, typeId: 19, name: 'Булава ужаса', data: {
+        activation: 'carried', attunement: 'none', desc: '<p>Описание магического источника.</p>',
+        feature_actions: [{ key: 'terror', title: 'Волна ужаса', action_type: 'action', description: '<p>Существа испуганы.</p>' }],
+      } })
+      window.fixture.values.items = { equipped: [{ uid: 'mace', item_id: 7001, count: 1 }] }
+    })
+    for (const owner of [true, false]) {
+      await page.evaluate(value => { window.fixture.ctx.ownerMode = value }, owner)
+      for (const [title, source] of [['Только заряд', 'Дьявольское наследие'], ['Волна ужаса', 'Булава ужаса']]) {
+        const row = page.locator('.dav-action').filter({ hasText: title })
+        await row.focus()
+        await page.keyboard.press('Enter')
+        const menu = page.getByRole('menu', { name: `Действия: ${title}`, exact: true })
+        await expect(menu).toBeVisible()
+        await expect(menu.getByRole('button', { name: 'Редактировать', exact: true })).toHaveCount(0)
+        await expect(menu.getByRole('button', { name: 'Удалить', exact: true })).toHaveCount(0)
+        await menu.getByRole('button', { name: 'Посмотреть источник', exact: true }).click()
+        const modal = page.getByRole('dialog', { name: source, exact: true })
+        await expect(modal).toBeVisible()
+        await expect(menu).toHaveCount(0)
+        await expect(modal).toContainText(source === 'Булава ужаса' ? 'Описание магического источника.' : 'Описание источника расового действия.')
+        await modal.getByRole('button', { name: 'Закрыть', exact: true }).click()
+        await expect(modal).toHaveCount(0)
+      }
+    }
+    await page.evaluate(() => { window.fixture.ctx.ownerMode = true })
+    await page.locator('.dav-action').filter({ hasText: 'Своё действие' }).click()
+    await expect(page.getByRole('button', { name: 'Посмотреть источник', exact: true })).toHaveCount(0)
+    await expect(page.getByRole('button', { name: 'Редактировать', exact: true })).toBeVisible()
+    expect(await page.evaluate(() => window.fixture.resources.map(row => row.value))).toEqual([1, 1])
+    expect(await page.evaluate(() => window.fixture.dice.stack.length)).toBe(0)
+    expect(await page.evaluate(() => window.fixture.writes)).toEqual([])
   })
 }
 

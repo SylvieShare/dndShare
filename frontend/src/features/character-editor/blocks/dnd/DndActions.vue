@@ -9,6 +9,7 @@
     @manage="openEditor"
     @edit="editAction"
     @remove="removeAction"
+    @view-source="sourceItem = $event"
     @apply-effect="applyActionEffect"
     @roll-dice="rollActionDice"
     @activate-target="openTargetPicker"
@@ -35,6 +36,9 @@
     @select="activateTargetAction"
     @close="closeTargetPicker"
   />
+
+  <ItemViewModal v-if="sourceItem" :item="sourceItem" :item-id="sourceItem.id" :item-type-id="sourceItem.typeId"
+    :z-index="4200" @close="sourceItem = null" />
 </template>
 
 <script setup>
@@ -44,6 +48,7 @@ import { computed, inject, onMounted, ref, watch } from 'vue'
 import DndActionsEditor from '@/features/character-editor/blocks/dnd/components/DndActionsEditor.vue'
 import DndActionsView from '@/features/character-editor/blocks/dnd/components/DndActionsView.vue'
 import CharacterEntryPickerModal from '@/features/character-editor/components/CharacterEntryPickerModal.vue'
+import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { collectCharacterFeatureActions, featureActionEffectPatch, groupCharacterFeatureActions } from '@/features/character-editor/lib/characterFeatureActions'
 import { resolveWeaponItem, intrinsicWeaponBonus } from '@/features/character-editor/lib/magicWeapons'
@@ -62,6 +67,7 @@ const editingUid = ref(null)
 const targetAction = ref(null)
 const targetLoading = ref(false)
 const editorOpen = ref(false)
+const sourceItem = ref(null)
 
 const ownerMode = computed(() => !!charCtx.ownerMode)
 const manualActions = computed(() => Array.isArray(props.value) ? props.value : [])

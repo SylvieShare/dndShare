@@ -10,7 +10,7 @@ import { useDiceStore } from '../../src/stores/dice'
 
 const damage = createRichNodeHtml('dice', { formula: '3d10{огонь}', label: 'Урон огнём' }, '3к10')
 const description = `<p>Цель получает ${damage} урона.</p>`
-const item = { id: 1443, name: 'Дьявольское наследие', data: { feature_actions: [
+const item = { id: 1443, typeId: 4, name: 'Дьявольское наследие', data: { desc: '<p>Описание источника расового действия.</p>', feature_actions: [
   { key: 'rebuke', title: 'Адское возмездие', action_type: 'reaction', description, requirements: ['Сл спасброска = 8 + бонус мастерства + модификатор Харизмы.'], resource_key: 'rebuke', resource_cost: 1 },
   { key: 'passive', title: 'Только заряд', action_type: 'special', resource_key: 'passive', resource_cost: 1 },
 ] } }
@@ -20,7 +20,7 @@ const ctx = reactive({ ownerMode: true, characterResources: {
   itemsById: new Map([['1443', item]]), resources,
   setAvailable(key, value) { resources.find(row => row.key === key).value = value; return { charges: value } },
 } })
-window.fixture = { ctx, resources, values, richDescriptionRolls, createRichNodeHtml,
+window.fixture = { ctx, resources, values, writes: [], richDescriptionRolls, createRichNodeHtml,
   actions: () => collectCharacterFeatureActions(values, ctx.characterResources.itemsById, resources),
 }
 const app = createApp({ setup() {
@@ -28,7 +28,7 @@ const app = createApp({ setup() {
   window.fixture.dice = dice
   return () => h('main', { style: 'max-width:600px;margin:8px' }, [h(DndActions, {
     block: { id: 'actions' }, value: values.actions, values,
-    'onUpdate:value': (key, value) => values[key] = value,
+    'onUpdate:value': (key, value) => { window.fixture.writes.push({ key, value }); values[key] = value },
   }), h('output', { 'data-testid': 'rolls' }, String(dice.stack.length))])
 } })
 app.use(createPinia())
