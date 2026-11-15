@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
+import { dndStatusSummary } from '../../lib/dndStatusSummary'
 
 const source = readFileSync(fileURLToPath(new URL('./DndStatusOverview.vue', import.meta.url)), 'utf8')
 const viewSource = readFileSync(fileURLToPath(new URL('./components/DndStatusOverviewView.vue', import.meta.url)), 'utf8')
@@ -42,15 +43,13 @@ describe('desktop status overview', () => {
     expect(schemaFieldSource).toContain("field.type === 'textarea'")
     expect(viewSource).toContain('{{ item.value }}')
     expect(viewSource).toContain('Уровень {{ item.level }}')
-    expect(source).toContain('status.params?.level ?? status.item?.data?.level')
+    expect(dndStatusSummary({statuses:[{uid:'effect',params:{level:3},item:{data:{level:1}}}]} )[0].level).toBe(3)
   })
 
   it('presents exhaustion and inspiration as effects in the same display list', () => {
-    expect(source).toContain("kind: 'exhaustion'")
-    expect(source).toContain("kind: 'inspiration'")
-    expect(source).toContain('level: exhaustionLevel.value')
-    expect(source).toContain("itemByCode?.('exhaustion')")
-    expect(source).toContain("itemByCode?.('inspiration')")
+    const rows=dndStatusSummary({values:{exhaustion:{level:2},inspiration:true}})
+    expect(rows.map(row=>row.kind)).toEqual(['exhaustion','inspiration'])
+    expect(rows[0].level).toBe(2)
     expect(viewSource).toContain("item.kind === 'exhaustion'")
     expect(viewSource).toContain("item.kind === 'inspiration'")
   })

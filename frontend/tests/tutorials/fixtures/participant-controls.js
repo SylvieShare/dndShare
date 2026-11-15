@@ -32,6 +32,8 @@ const encounter = reactive({
   hpPercent: () => 100, hpColor: () => 'var(--success)', hpTempValue: () => 0, hpTempPercent: () => 0, hpLabel: () => '10 / 10', npcDsHp: () => ({ current: 10 }), SIDE_OPTIONS: [],
 })
 const statusItems = [
+  { id:703,typeId:15,name:'Истощение',compatibility:[{sourceVersionId:1,status:'native'}],data:{code:'exhaustion',polarity:'negative'} },
+  { id:704,typeId:15,name:'Вдохновение',compatibility:[{sourceVersionId:1,status:'native'}],data:{code:'inspiration',polarity:'positive'} },
   { id: 701, typeId: 15, name: 'Благословение', svg: '<svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20" /></svg>', data: { polarity: 'positive', level: 1, max_level: 3, desc: '<p>Добавьте к броскам атаки и спасброскам 1d4.</p>' } },
   { id: 702, typeId: 15, name: 'Отравление', svg: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" /></svg>', data: { polarity: 'negative', repeat_save: { ability: 3, dc: 12, timing: 'turn_end' }, desc: '<p>Помеха броскам атаки и проверкам характеристик.</p>' } },
 ]

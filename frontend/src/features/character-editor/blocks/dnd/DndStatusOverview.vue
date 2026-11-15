@@ -61,10 +61,8 @@ import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { normalizeExhaustion } from '@/features/character-editor/blocks/dnd/lib/exhaustion'
-import { isInspirationActive } from '@/features/character-editor/blocks/dnd/lib/mobileStatus'
+import { dndStatusSummary } from '@/features/character-editor/lib/dndStatusSummary'
 import StatusDurationModal from './components/StatusDurationModal.vue'
-import { dndRules } from '@/shared/lib/dndRules'
-import { statusDuration } from '@/shared/lib/statusDuration'
 
 const props = defineProps({
   block: { type: Object, required: true },
@@ -90,55 +88,15 @@ const statuses = computed(() => {
   const value = charCtx.characterStatuses?.entries
   return Array.isArray(value) ? value : Array.isArray(value?.value) ? value.value : []
 })
-const activeItems = computed(() => statuses.value.map(status => ({
-  id: status.uid,
-  kind: 'states',
-  value: status.title,
-  desc: status.description,
-  thesis: status.item?.data?.thesis || status.description,
-  color: status.color,
-  item: status.item,
-  level: Math.max(0, Number(status.params?.level ?? status.item?.data?.level) || 0),
-  adjustableLevel: Number(status.item?.data?.level) > 0,
-  maxLevel: Math.max(0, Number(status.item?.data?.max_level) || 0),
-  polarity: status.polarity,
-  duration: statusDuration(status.duration) + (status.requires_concentration && status.concentration_owner ? ' · концентрация отправителя' : ''),
-})))
 const durationStatus = computed(() => statuses.value.find(status => status.uid === durationUid.value))
 const exhaustionValue = computed(() => props.values?.[ids.value.exhaustion] || { level: 0 })
 const normalizedExhaustion = computed(() => normalizeExhaustion(exhaustionValue.value, charCtx.rulesVersion))
 const exhaustionLevel = computed(() => normalizedExhaustion.value.level)
-const exhaustionEffects = computed(() => normalizedExhaustion.value.effects.slice(0, exhaustionLevel.value))
-const inspirationValue = computed(() => props.values?.[ids.value.inspiration] ?? false)
-const inspirationActive = computed(() => isInspirationActive(inspirationValue.value))
-const exhaustionItem = computed(() => charCtx.characterStatuses?.itemByCode?.('exhaustion') || null)
-const inspirationItem = computed(() => charCtx.characterStatuses?.itemByCode?.('inspiration') || null)
-const displayItems = computed(() => [
-  ...activeItems.value,
-  ...(exhaustionLevel.value > 0 ? [{
-    id: 'exhaustion',
-    kind: 'exhaustion',
-    polarity: 'negative',
-    value: exhaustionItem.value?.name || 'Истощение',
-    desc: exhaustionEffects.value.join(' · '),
-    thesis: exhaustionItem.value?.data?.thesis || '- Уровни накапливают штрафы\n- Продолжительный отдых снимает один уровень',
-    color: exhaustionItem.value?.data?.color || 'var(--danger)',
-    level: exhaustionLevel.value,
-    adjustableLevel: true,
-    maxLevel: 6,
-    item: exhaustionItem.value,
-  }] : []),
-  ...(inspirationActive.value ? [{
-    id: 'inspiration',
-    kind: 'inspiration',
-    polarity: 'positive',
-    value: inspirationItem.value?.name || dndRules(charCtx.rulesVersion).inspirationName,
-    desc: inspirationItem.value?.data?.desc || '',
-    thesis: inspirationItem.value?.data?.thesis || dndRules(charCtx.rulesVersion).inspirationDescription,
-    color: inspirationItem.value?.data?.color || 'var(--accent)',
-    item: inspirationItem.value,
-  }] : []),
-])
+const displayItems = computed(() => dndStatusSummary({
+  statuses: statuses.value, values: props.values, rulesVersion: charCtx.rulesVersion,
+  exhaustionId: ids.value.exhaustion, inspirationId: ids.value.inspiration,
+  itemByCode: code => charCtx.characterStatuses?.itemByCode?.(code),
+}))
 const canInteract = computed(() => !!charCtx.ownerMode)
 const displayMode = computed(() => props.block.content?.display || 'all')
 const summaryItems = computed(() => (displayMode.value === 'trigger' ? [] : displayItems.value))

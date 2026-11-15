@@ -83,7 +83,7 @@ import { computed, defineAsyncComponent, inject } from 'vue'
 import { useTemplateStore } from '@/stores/template'
 import { settingAccessors } from '@/features/character-editor/settings'
 import { handleCtrlSelection } from '@/shared/lib/ctrlSelection'
-import { normalizeStatusInstances } from '@/features/character-editor/lib/characterStatuses'
+import { hasDndStatusSummary } from '@/features/character-editor/lib/dndStatusSummary'
 import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 import { Calculator, HeartPulse, Palette } from '@lucide/vue'
 import { CompactCheckbox } from '@sylvieshare/share-ui'
@@ -118,8 +118,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['view', 'kick', 'color', 'revive', 'drag-start', 'update:combat-selected'])
 
-const statusInstances = computed(() => normalizeStatusInstances(props.participant.data?.values?.states))
-const hasStatuses = computed(() => props.isDm && isDnd.value && statusInstances.value.length > 0)
+const hasStatuses = computed(() => props.isDm && isDnd.value && hasDndStatusSummary(props.participant.data?.values || {}))
 
 const REORDER_IGNORE = 'button, input, textarea, select, a, [contenteditable="true"], .p-combat-controls'
 

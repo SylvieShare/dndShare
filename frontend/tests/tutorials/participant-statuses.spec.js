@@ -1,5 +1,60 @@
 import { test, expect } from '@playwright/test'
 
+test('participant lists intrinsic and applied statuses with confirmed edits',async({page},info)=>{
+  page.on('pageerror',error=>{throw error})
+  await page.setViewportSize({width:704,height:932})
+  await page.goto('/tests/tutorials/fixtures/participant-controls.html')
+  await page.evaluate(()=>{
+    const values=window.controls.participant.data.values
+    values.name='Варвар Варвар';values.states=[];values.inspiration=true
+  })
+  const card=page.locator('.p-card'),statuses=card.getByLabel('Эффекты и состояния')
+  await expect(statuses.getByRole('button',{name:'Вдохновение',exact:true})).toBeVisible()
+  await expect(statuses.locator('.dsov-effect')).toHaveCount(1)
+  await page.evaluate(()=>{
+    const values=window.controls.participant.data.values
+    values.inspiration=false;values.exhaustion={level:1}
+  })
+  await expect(statuses.getByRole('button',{name:'Истощение',exact:true})).toBeVisible()
+  await expect(statuses.locator('.dsov-effect')).toHaveCount(1)
+  await page.evaluate(()=>{
+    const values=window.controls.participant.data.values
+    values.inspiration=true
+    values.exhaustion={level:2,max:6,effects:['Первый','Второй','Третий'],note:'Сохранить настройку'}
+    values.states=[{uid:'bless',effect_id:701}]
+  })
+  for(const width of [390,704,1440]) {
+    await page.setViewportSize({width,height:932})
+    await expect(statuses.locator('.dsov-effect')).toHaveCount(3)
+    const boxes=await statuses.locator('.dsov-effect').evaluateAll(nodes=>nodes.map(node=>node.getBoundingClientRect().toJSON()))
+    for(let i=1;i<boxes.length;i++)expect(boxes[i].top).toBeGreaterThanOrEqual(boxes[i-1].bottom-.5)
+    await info.attach(`all-statuses-${width}`,{body:await card.screenshot({animations:'disabled'}),contentType:'image/png'})
+  }
+  await statuses.getByRole('button',{name:'Вдохновение',exact:true}).click()
+  await page.getByRole('menu',{name:'Действия: Вдохновение',exact:true}).getByText('Убрать',{exact:true}).click()
+  await expect.poll(()=>page.evaluate(()=>window.controls.participant.data.values.inspiration)).toBe(false)
+  await expect(statuses.locator('.dsov-effect')).toHaveCount(2)
+  const exhaustion=statuses.getByRole('button',{name:'Истощение',exact:true})
+  await exhaustion.click()
+  await page.getByRole('menu',{name:'Действия: Истощение',exact:true}).getByText('Повысить уровень',{exact:true}).click()
+  await expect.poll(()=>page.evaluate(()=>window.controls.participant.data.values.exhaustion.level)).toBe(3)
+  expect(await page.evaluate(()=>window.controls.participant.data.values.exhaustion)).toEqual({level:3,max:6,effects:['Первый','Второй','Третий'],note:'Сохранить настройку'})
+  expect(await page.evaluate(()=>window.controls.participant.data.values.states.map(row=>row.uid))).toEqual(['bless'])
+  const version=await page.evaluate(()=>window.controls.participant.version)
+  await page.evaluate(()=>{window.controls.state.rejectStatusSave=true})
+  await exhaustion.click()
+  await page.getByRole('menu',{name:'Действия: Истощение',exact:true}).getByText('Убрать',{exact:true}).click()
+  const error=page.getByRole('dialog',{name:'Не удалось сохранить эффект',exact:true})
+  await expect(error).toBeVisible()
+  expect(await page.evaluate(()=>window.controls.participant.data.values.exhaustion.level)).toBe(3)
+  expect(await page.evaluate(()=>window.controls.participant.version)).toBe(version)
+  await error.getByRole('button',{name:'Закрыть',exact:true}).click()
+  const writes=await page.evaluate(()=>window.controls.writes)
+  expect(writes.map(packet=>packet.patches.map(patch=>patch.path.join('.')))).toEqual([['values.inspiration'],['values.exhaustion.level'],['values.exhaustion.level']])
+  await page.evaluate(()=>{window.controls.state.dm=false})
+  await expect(card.locator('.p-statuses-area')).toHaveCount(0)
+})
+
 for (const mobile of [false, true]) test(`participant status icons ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
   page.on('pageerror', error => { throw error })
   await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1200, height: 900 })
