@@ -4,6 +4,7 @@ import { createPinia } from 'pinia'
 import DndRest from '../../../src/features/character-editor/blocks/dnd/DndRest.vue'
 import DndSpells from '../../../src/features/character-editor/blocks/dnd/DndSpells.vue'
 import { useDiceStore } from '../../../src/stores/dice'
+import { useSessionEventsStore } from '../../../src/stores/sessionEvents'
 import { useSuggestStore } from '../../../src/stores/suggest'
 import { useItemTypesStore } from '../../../src/stores/itemTypes'
 import { itemsApi } from '../../../src/shared/api/itemsApi'
@@ -12,9 +13,11 @@ import '@sylvieshare/share-ui/styles.css'
 import '../../../src/app/theme.css'
 
 const pinia = createPinia()
+if (new URLSearchParams(location.search).has('session')) useSessionEventsStore(pinia).sessionUuid = 'spell-roll-test-session'
 useItemTypesStore(pinia).types = [{ id: 5, name: 'Заклинания', coverImageUrl: '/tests/tutorials/fixtures/spell-covers/default.webp' }]
 useSuggestStore(pinia).set(16, [{ id: 4, value: 'Интеллект' }])
 useSuggestStore(pinia).set(12, [{ id: 10, value: new URLSearchParams(location.search).has('long-type') ? 'Некротической энергией' : 'Некротический' }])
+if (new URLSearchParams(location.search).has('eldritch')) useSuggestStore(pinia).set(12, [{ id: 12, value: 'Силовое поле' }])
 useSuggestStore(pinia).set(7, [])
 const items = [
   { id: 495, name: 'Леденящее прикосновение', data: { lvl: 0, damage: { range_attack: true, scaling: 'cantrip',
@@ -29,6 +32,11 @@ const items = [
   ] } },
   { id: 7, name: 'Расовое возмездие', data: { lvl: 1, damage: { scaling: 'slot', dices: [{ count: 2, dice_id: 'd10' }], addon: [{ count: 1, dice_id: 'd10' }] } } },
 ]
+if (new URLSearchParams(location.search).has('eldritch')) items.push({ id: 500, name: 'Мистический заряд', data: {
+  lvl: 0, time: { kind: 'action' }, range: { kind: 'ranged', distance: 120, unit: 'feet' },
+  damage: { dices: [{ type: 12, count: 1, dice_id: 'd10' }], addon: [], scaling: 'cantrip',
+    instances: 1, addon_instances: 1, range_attack: true, attack_chain: { unique: 'none', trigger: 'none' } },
+} })
 if (new URLSearchParams(location.search).has('presentation')) {
   Object.assign(items.find(item => item.id === 4).data, { concentration: true, ritual: true })
   items.push({ id: 8, name: 'Божественное оружие', nameEn: 'Spiritual Weapon with a deliberately long English title', data: { lvl: 2, time: { kind: 'bonus_action' }, range: { kind: 'ranged', distance: 60 }, duration: '1 минута', components: { v: true, s: true }, damage: { range_attack: true, add_mod: true, scaling: 'slot', scaling_step: 2, dices: [{ count: 1, dice_id: 'd8' }], addon: [{ count: 1, dice_id: 'd8' }] } } })
