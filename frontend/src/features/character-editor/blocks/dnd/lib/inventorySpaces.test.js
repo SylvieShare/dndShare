@@ -64,9 +64,13 @@ describe('inventory spaces and equipment', () => {
     expect(next.sections[0].slots).toEqual({ b: 1, worn: 2 })
     expect(next.sections[1].slots).toEqual({ c: 1, a: 0 })
   })
-  it('offers equipment only for weapons, armor and magic requiring equipment', () => {
+  it('offers equipment for armor and wearable magic, with weapons reserved for the weapons section', () => {
     expect(canEquipInventoryItem({ typeId: 12 })).toBe(true)
-    expect(canEquipInventoryItem({ typeId: 1 })).toBe(true)
+    expect(canEquipInventoryItem({ typeId: 1 })).toBe(false)
+    expect(canEquipInventoryItem({ typeId: 1, data: { confirmed_uses: [{ activation: 'equipped' }] } })).toBe(false)
+    expect(canEquipInventoryItem({ typeId: 19, data: { weapon: { base_item_id: 49 }, activation: 'equipped' } })).toBe(false)
+    expect(canEquipInventoryItem({ typeId: 19, data: { weapon: { allowed_base_item_ids: [49,50] }, confirmed_uses: [{ activation: 'equipped' }] } })).toBe(false)
+    expect(canEquipInventoryItem({ typeId: 19, data: { armor_base: { base_item_id: 12 }, activation: 'equipped' } })).toBe(true)
     expect(canEquipInventoryItem({ typeId: 19, data: { activation: 'equipped' } })).toBe(true)
     expect(canEquipInventoryItem({ typeId: 19, data: { activation: 'carried', confirmed_uses: [{ activation: 'equipped' }] } })).toBe(true)
     expect(canEquipInventoryItem({ typeId: 19, data: { activation: 'carried' } })).toBe(false)

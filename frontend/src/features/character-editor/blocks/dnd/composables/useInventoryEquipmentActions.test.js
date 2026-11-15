@@ -9,7 +9,7 @@ function setup(variable = false) {
   const catalog = reactive({ 100: { id: 100, typeId: 19, data: { weapon: variable ? { allowed_base_item_ids: [49, 50] } : { base_item_id: 49 } } }, 49: { id: 49, typeId: 1, data: {} } })
   const charCtx = { values: { weapon: [] }, updateValues: vi.fn(patch => { Object.assign(charCtx.values, patch); model.value = patch.items }) }
   const scope = effectScope()
-  const actions = scope.run(() => useInventoryEquipmentActions({ model, catalog, specializedDestinations: ref([]), canManage: ref(true), charCtx, entryTypeId: e => catalog[e.item_id]?.typeId }))
+  const actions = scope.run(() => useInventoryEquipmentActions({ model, catalog, specializedDestinations: ref([{ type_id: 1, value_id: 'weapon', label: 'Оружие' }]), canManage: ref(true), charCtx, entryTypeId: e => catalog[e.item_id]?.typeId }))
   return { row, model, catalog, charCtx, actions, scope }
 }
 it('moves the same instance to weapons and back with both sources and all state', () => {
@@ -40,5 +40,28 @@ it('waits for a base and reads current charges at confirmation', () => {
   expect(charCtx.values.weapon[0]).toMatchObject({ uid: 'first', item_id: 49, magic_item_id: 100, params: { magic: { remaining: 1 } } })
   expect(charCtx.values.weapon[0].params.weapon_base_item_id).toBeUndefined()
   expect(actions.pendingWeapon.value).toBeNull()
+  scope.stop()
+})
+
+it('moves every weapon in a carried stack once, preserving notes and instance parameters', () => {
+  const { row, model, actions, charCtx, scope } = setup()
+  Object.assign(row, { item_id: 49, count: 2, params: { magic_bonus: 1 }, proficient: true })
+  actions.moveToSpecialized('bag', row, vi.fn())
+  expect(model.value.equipped).toEqual([])
+  expect(model.value.sections[0].items.map(entry => entry.uid)).toEqual(['second'])
+  expect(charCtx.values.weapon).toHaveLength(2)
+  expect(new Set(charCtx.values.weapon.map(entry => entry.uid)).size).toBe(2)
+  expect(charCtx.values.weapon[0].uid).toBe('first')
+  for (const entry of charCtx.values.weapon) expect(entry).toMatchObject({ item_id: 49, desc: 'Заметка', params: { magic_bonus: 1 }, proficient: true })
+  scope.stop()
+})
+
+it('moves an already equipped weapon directly without losing its remaining charges', () => {
+  const { model, actions, charCtx, scope } = setup()
+  model.value.equipped.push(model.value.sections[0].items.shift())
+  actions.moveToSpecialized('equipped', model.value.equipped[0], vi.fn())
+  expect(model.value.equipped).toEqual([])
+  expect(charCtx.values.weapon).toHaveLength(1)
+  expect(charCtx.values.weapon[0]).toMatchObject({ uid: 'first', item_id: 49, magic_item_id: 100, params: { magic: { attuned: true, remaining: 3 } }, desc: 'Заметка' })
   scope.stop()
 })

@@ -18,5 +18,7 @@ describe('inventory cell capabilities', () => {
   it('recognizes equipment without depending on owner permissions', () => {
     expect(inventoryCellTraits({ typeId: 12 }, { item_id: 42 }).wearable).toBe(true)
     expect(inventoryCellTraits(null, { item_id: 42 }, true).wearable).toBe(true)
+    expect(inventoryCellTraits({ typeId: 1 }, { item_id: 42 }).wearable).toBe(false)
+    expect(inventoryCellTraits({ typeId: 19, data: { weapon: { base_item_id: 1 }, activation: 'equipped' } }, { item_id: 42 }).wearable).toBe(false)
   })
 })

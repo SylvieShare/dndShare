@@ -25,7 +25,8 @@ export function normalizeInventorySpaces(model) {
 
 export function canEquipInventoryItem(item) {
   const data = item?.data || {}
-  return [1, 12].includes(Number(item?.typeId)) || !!data.armor || !!data.armor_base || !!data.weapon
+  if (Number(item?.typeId) === 1 || data.weapon) return false
+  return Number(item?.typeId) === 12 || !!data.armor || !!data.armor_base
     || Number(item?.typeId) === 19 && data.activation !== 'carried'
     || Object.values(data).some(value => Array.isArray(value) && value.some(rule => rule?.activation === 'equipped'))
 }
