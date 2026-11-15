@@ -53,6 +53,9 @@ SSE-поток на сессию в окне. Он передаёт готовы
 
 ## Хроника сессии
 
+Хроника начинается под общей шапкой сессии с обычным отступом вкладки;
+высота шапки не добавляется повторно внутри журнала.
+
 `session_event` stores semantic gameplay actions rather than arbitrary sheet
 JSON changes. The current producers are dice rolls, short/long rests, resource
 use and manual replenishment, spell-slot spending/recovery, potion/inventory spending and replenishment, manual inventory removal, HP-calculator damage/healing, spell use,
