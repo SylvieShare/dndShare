@@ -23,7 +23,7 @@ for (const width of [390, 834, 1440]) for (const inspiration of [false, true]) {
     const scroller = page.locator(width < 1200 ? '.mobile-swipe-pane:not([inert]) .mobile-pane-scroll' : '.sheet-scroll')
     await expect.poll(() => scroller.evaluate(node => node.scrollHeight - node.clientHeight)).toBeGreaterThan(180)
     await expect(strip).toHaveCount(inspiration ? 1 : 0)
-    await expect(header.getByRole('button',{name:'Добавить состояние',exact:true})).toHaveCount(0)
+    await expect(header.getByRole('button',{name:'Добавить состояние',exact:true})).toBeEnabled()
     const initial = await header.boundingBox()
     await scroller.evaluate(node => { node.scrollTop = 180 })
     await expect(header).toHaveAttribute('data-workspace-scrolled', '')

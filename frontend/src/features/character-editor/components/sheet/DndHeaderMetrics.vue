@@ -24,12 +24,19 @@
         </template>
       </RowActionMenu>
     </div>
+    <div class="header-metric" data-header-metric="add-status">
+      <span class="header-metric-divider" aria-hidden="true"><WorkspaceRowDivider /></span>
+      <ActionButton variant="quiet" layout="stacked" aria-label="Добавить состояние" aria-haspopup="dialog" :disabled="!canEdit" @click="emit('open', 'add-status')">
+        <template #icon><Activity :size="layoutTokens['sheet-header-action-icon']" aria-hidden="true" /></template>
+        <span class="header-metric-label">+ состояние</span>
+      </ActionButton>
+    </div>
   </div>
 </template>
 <script setup>
 import { computed, inject } from 'vue'
 import { ActionButton, RowActionMenu } from '@sylvieshare/share-ui'
-import { Award, Footprints, Shield, Zap } from '@lucide/vue'
+import { Activity, Award, Footprints, Shield, Zap } from '@lucide/vue'
 import { layoutTokens } from '@/app/design-tokens'
 import WorkspaceRowDivider from '@/shared/ui/WorkspaceRowDivider.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
@@ -52,7 +59,7 @@ const metrics = computed(() => [
 function roll(die, close) { close(); dice.roll(die.value, die.id, { crit_mode: die.sides === 20 }) }
 </script>
 <style scoped>
-.dnd-header-metrics {display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) var(--layout-sheet-header-metric-height);width:var(--layout-sheet-header-metrics-width);max-width:100%;min-width:0;--action-button-height:var(--layout-sheet-header-metric-height)}
+.dnd-header-metrics {display:grid;grid-template-columns:repeat(auto-fit,minmax(var(--layout-sheet-header-metric-min-width),1fr));width:var(--layout-sheet-header-metrics-width);max-width:100%;min-width:0;--action-button-height:var(--layout-sheet-header-metric-height)}
 .header-metric {position:relative;display:grid;align-items:center;min-width:0}
 .header-metric-readout {display:flex;align-items:center;justify-content:center;gap:var(--spacing-xs);font-family:var(--type-sheet-header-family);font-size:var(--type-sheet-header-size);line-height:var(--type-sheet-header-line-height);font-variant-numeric:tabular-nums;color:var(--text-1);white-space:nowrap}
 .header-metric-readout svg {flex:none;color:var(--text-muted)}

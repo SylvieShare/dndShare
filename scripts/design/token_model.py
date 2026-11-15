@@ -18,7 +18,7 @@ REQUIRED = {
                'workspace-header-shadow-distance', 'workspace-header-shadow-height', 'workspace-row-divider-height', 'workspace-inline-identity-max',
                'encounter-roster-width', 'encounter-preview-min-width', 'encounter-scroll-gap',
                'sheet-gallery-height', 'sheet-gallery-add-width', 'sheet-header-menu-width', 'sheet-header-menu-cell-height',
-               'sheet-header-metrics-width', 'sheet-header-metric-height', 'sheet-header-metric-die',
+               'sheet-header-metrics-width', 'sheet-header-metric-min-width', 'sheet-header-metric-height', 'sheet-header-metric-die',
                'sheet-header-health-height', 'sheet-header-health-min-width', 'sheet-header-health-icon',
                'sheet-value-height', 'sheet-value-width', 'sheet-value-compact-height', 'sheet-value-compact-width',
                'spell-slot-hit-size', 'spell-slot-touch-hit-size', 'spell-slot-orb-size', 'spell-slot-touch-orb-size',

@@ -47,8 +47,9 @@ EncounterPreviewMinWidth (280). Между колонками оставлен L
 Перенос существ в бою использует EncounterDragHold (350 мс). До удержания
 вертикальное движение остаётся прокруткой; таймером и отменой владеет share-ui/useSortable.
 
-В шапке листа группа показателей использует SheetHeaderMetricsWidth (400),
-SheetHeaderMetricHeight (64) и SheetHeaderMetricDie (32). Увеличенные HP используют
+В шапке листа группа показателей с кубиками и добавлением состояния использует SheetHeaderMetricsWidth (480),
+SheetHeaderMetricHeight (64), SheetHeaderMetricMinWidth (56) и SheetHeaderMetricDie (32).
+В узком окне кнопки переносятся, сохраняя минимальную ширину. Увеличенные HP используют
 SheetHeaderHealthHeight (40), SheetHeaderHealthMinWidth (112),
 SheetHeaderHealthIcon (20) и типографику SheetHeaderHealth (30/32).
 

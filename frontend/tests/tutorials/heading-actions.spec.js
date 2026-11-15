@@ -23,5 +23,8 @@ test('modal sheet header opens metric dialogs and its dice menu', async ({ page 
   await expect(dice.getByRole('menuitem')).toHaveCount(7)
   await dice.getByRole('menuitem', { name: 'Бросить d6', exact: true }).click()
   await expect(dice).toHaveCount(0)
+  await header.getByRole('button', { name: 'Добавить состояние', exact: true }).click()
+  await expect(page.getByRole('dialog', { name: 'Эффекты и состояния', exact: true })).toBeVisible()
+  await page.keyboard.press('Escape')
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(834)
 })

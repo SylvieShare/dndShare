@@ -20,7 +20,7 @@ test('vertical fold dividers separate shared header groups and disappear on wrap
   await open(page,1440,{duration:{kind:'minutes',value:10}})
   await expect(page.locator('.page-forward-enter-active,.page-backward-enter-active')).toHaveCount(0)
   const header=page.locator('.character-workspace-header'),samples=[]
-  for(const [width,count] of [[1440,2],[704,1],[390,0],[1440,2]]) {
+  for(const [width,count] of [[1440,2],[704,0],[390,0],[1440,2]]) {
     await page.setViewportSize({width,height:932})
     await expect(header.locator('.workspace-header-group-divider')).toHaveCount(count)
     let geometry
@@ -52,7 +52,7 @@ test('vertical fold dividers separate shared header groups and disappear on wrap
       }else expect(divider).toBeNull()
     }
     expect(await header.locator('.workspace-header-details-divider').isVisible()).toBe(width!==1440)
-    expect(await header.locator('.workspace-header-context-divider').isVisible()).toBe(width===390)
+    expect(await header.locator('.workspace-header-context-divider').isVisible()).toBe(width!==1440)
     expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
     samples.push({width,count,geometry})
     await info.attach(`groups-${width}-${samples.length}`,{body:await header.screenshot({animations:'disabled'}),contentType:'image/png'})
@@ -102,7 +102,7 @@ for(const [width,longName,inline] of [[390,false,false],[700,false,false],[834,f
     await character.click()
     await expect(characterTile).toHaveClass(/action-menu-source--open/)
     await expect(characterTile).toHaveCSS('border-bottom-right-radius','12px')
-    await expect(header.getByRole('button',{name:'Добавить состояние',exact:true})).toHaveCount(0)
+    await expect(header.getByRole('button',{name:'Добавить состояние',exact:true})).toBeEnabled()
     const add=page.getByRole('menuitem',{name:'Добавить состояние',exact:true})
     await add.click();await expect(page.getByRole('dialog',{name:'Эффекты и состояния',exact:true})).toBeVisible()
     await page.keyboard.press('Escape')
@@ -120,7 +120,7 @@ test('an empty phone sheet adds conditions through the character tile without an
 })
 test('read-only characters expose icons but cannot add conditions',async({page})=>{
   await open(page,834,{owner:false})
-  await expect(page.getByRole('button',{name:'Добавить состояние',exact:true})).toHaveCount(0)
+  await expect(page.getByRole('button',{name:'Добавить состояние',exact:true})).toBeDisabled()
   await expect(page.locator('.dsov-icon .item-icon')).toBeVisible()
   await expect(page.locator('.dsov-duration')).toHaveText('До ручного снятия')
   await page.getByRole('button',{name:'Действия персонажа',exact:true}).click()
