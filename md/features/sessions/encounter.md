@@ -411,11 +411,14 @@ and `SheetHealth` as the character header: portrait, name, shield AC, numeric HP
 with temporary HP, and two passive values for D&D participants viewed by the DM.
 `SessionRosterTile` owns the shared visual composition of player and NPC-reserve
 summaries: portrait, shield AC, numeric HP, states and a masked purple brush
-selection underlay with dry strokes and uneven ink density. Rows have no radius
+selection underlay with fine dry scuffs and soft, uneven ink density. Texture
+contrast is reduced across the name and metrics area. Rows have no radius
 or external vertical gaps. Sidebar lists have no horizontal outer padding. The
 rough variant of `WorkspaceRowDivider` reaches both edges without fading.
-`roughRowSeam` supplies one contour for that line and both adjoining selection
-edges; paint is allowed to extend across the nominal row box to follow it.
+`roughRowSeam` cycles five stable contours by row position. Each row uses its
+own upper contour and the following row’s contour for its lower edge, keeping
+paint docked to the visible separator at different row heights. Paint is allowed
+to extend across the nominal row box to follow it.
 `SessionNpcTile` supplies encounter data and retains creature marker,
 initiative, menus and drag ordering. Race/class remain in the sheet/menu,
 not the card. Player and NPC names retain their full text: `useCreatureNameFit`

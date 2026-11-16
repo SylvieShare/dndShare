@@ -164,6 +164,7 @@
             v-for="(p, participantIndex) in displayedParticipants"
             :key="p.charId"
             :divided="participantIndex > 0"
+            :seam-index="participantIndex"
             :data-sortable-key="p.charId"
             :participant="p"
             :is-dm="isDm"

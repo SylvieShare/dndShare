@@ -1,6 +1,7 @@
 <template>
   <div
     class="p-card-menu"
+    :style="roughRowPaintStyle(seamIndex)"
     :class="{ 'p-card-menu--placeholder': reorderPlaceholder }"
     :role="selectionMode ? 'checkbox' : undefined" :aria-checked="selectionMode ? combatSelected : undefined"
     :aria-label="selectionMode ? `Выбрать: ${displayName}` : undefined" :tabindex="selectionMode ? 0 : undefined"
@@ -9,7 +10,7 @@
     @click.capture="suppressReorderClick"
     @contextmenu.capture="suppressReorderClick"
   >
-    <WorkspaceRowDivider v-if="divided" rough class="roster-divider" />
+    <WorkspaceRowDivider v-if="divided" rough :rough-variant="seamIndex" class="roster-divider" />
     <RowActionMenu :trigger-attrs="{ inert: selectionMode || undefined }">
       <template #trigger>
         <SessionPlayerTile
@@ -87,6 +88,7 @@ import EncounterInitiativeMenu from './EncounterInitiativeMenu.vue'
 import SessionPlayerTile from './SessionPlayerTile.vue'
 import SessionPlayerDeathState from './SessionPlayerDeathState.vue'
 import WorkspaceRowDivider from '@/shared/ui/WorkspaceRowDivider.vue'
+import { roughRowPaintStyle } from '@/shared/ui/roughRowSeam'
 import { pvAvatar, pvHp, pvHpPath, pvName } from '@/features/sessions/lib/participantView'
 
 const ParticipantStatuses = defineAsyncComponent(() => import('./ParticipantStatuses.vue'))
@@ -111,6 +113,7 @@ const props = defineProps({
   combatEditable: { type: Boolean, default: false },
   selectionMode: Boolean,
   divided: Boolean,
+  seamIndex: { type:Number, default:0 },
 })
 const emit = defineEmits(['view', 'kick', 'color', 'revive', 'drag-start', 'update:combat-selected', 'start-selection'])
 

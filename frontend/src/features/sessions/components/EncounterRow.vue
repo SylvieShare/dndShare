@@ -12,8 +12,8 @@
   >
     <div class="enc-row-main">
       <EncounterOrderMarker v-if="order != null" :order="order" :current="isCurrent" />
-      <div class="enc-row-tile">
-        <WorkspaceRowDivider v-if="divided" rough class="roster-divider" />
+      <div class="enc-row-tile" :style="roughRowPaintStyle(idx)">
+        <WorkspaceRowDivider v-if="divided" rough :rough-variant="idx" class="roster-divider" />
         <component :is="section === 'reserve-npc' ? SessionNpcTile : section === 'combat' ? SessionEncounterTile : SessionCombatantTile"
           class="enc-row" :class="rowClasses" :combatant="combatant" :section="section" :current="isCurrent"
           :selectable="showCheckbox" :editable="canEdit" :selected="enc.isSelected(combatant)"
@@ -87,6 +87,7 @@ import SessionCombatantTile from './SessionCombatantTile.vue'
 import SessionNpcTile from './SessionNpcTile.vue'
 import SessionEncounterTile from './SessionEncounterTile.vue'
 import WorkspaceRowDivider from '@/shared/ui/WorkspaceRowDivider.vue'
+import { roughRowPaintStyle } from '@/shared/ui/roughRowSeam'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import EncounterChallengeResult from '@/features/sessions/components/EncounterChallengeResult.vue'
 import EncounterOrderMarker from '@/features/sessions/components/EncounterOrderMarker.vue'

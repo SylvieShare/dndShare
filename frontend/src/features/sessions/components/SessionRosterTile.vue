@@ -1,7 +1,7 @@
 <template>
   <BaseTile :outlined="false" interactive :color="color || 'var(--text-muted)'" class="session-roster-tile"
     :class="{'session-roster-tile--current':current,'session-roster-tile--compact':compact,'session-roster-tile--selecting':selectionMode,'session-roster-tile--selected':selected}"
-    :style="{'--player-color':color || 'transparent','--roster-paint-clip':roughRowPaintClip,'--roster-ink-position':inkPosition}">
+    :style="{'--player-color':color || 'transparent','--roster-paint-default':defaultPaintClip,'--roster-ink-position':inkPosition}">
     <CharacterSummaryTile :name="name" :icon-url="avatarUrl" :action-label="`Действия: ${name}`" :compact="compact" :armor="armor"
       :health-visible="healthVisible" :current="hp?.current" :maximum="hp?.max" :temporary="hp?.temp" :edit-health="editHealth"
       :show-passives="showPassives" :perception="perception" :investigation="investigation" @health="$emit('health')">
@@ -18,10 +18,11 @@
 <script setup>
 import { BaseTile } from '@sylvieshare/share-ui'
 import { computed } from 'vue'
-import { roughRowPaintClip } from '@/shared/ui/roughRowSeam'
+import { roughRowPaintStyle } from '@/shared/ui/roughRowSeam'
 import CharacterSummaryTile from '@/features/character-editor/components/sheet/CharacterSummaryTile.vue'
 const props=defineProps({name:String,avatarUrl:String,color:String,hp:Object,armor:Number,healthVisible:Boolean,editHealth:Boolean,
   showPassives:Boolean,perception:Number,investigation:Number,current:Boolean,compact:Boolean,hasStatuses:Boolean,selectionMode:Boolean,selected:Boolean,surprised:Boolean})
+const defaultPaintClip=roughRowPaintStyle(0)['--roster-paint-clip']
 const inkPosition=computed(()=>{
   let hash=0
   for(const letter of props.name || '')hash=(Math.imul(hash,31)+letter.codePointAt(0))>>>0
@@ -34,8 +35,8 @@ defineEmits(['health'])
 .session-roster-tile--current.base-tile {--tile-surface:color-mix(in srgb,var(--accent) 12%,transparent)}
 .session-roster-tile--compact.base-tile {padding:calc(var(--spacing-medium) / 2);width:var(--layout-touch-min);height:var(--layout-touch-min)}
 .session-roster-tile--selecting.base-tile {cursor:pointer}
-.session-roster-tile.base-tile::before,.session-roster-tile.base-tile::after {content:'';position:absolute;inset:calc(var(--spacing-small) / -2) 0;z-index:-1;pointer-events:none;background:var(--accent);opacity:0;clip-path:var(--roster-paint-clip);transition:opacity var(--motion-feedback)}
-.session-roster-tile.base-tile::after {mask:url('@/assets/ui/roster-selection-stroke.svg') var(--roster-ink-position)/145% 165% no-repeat;-webkit-mask:url('@/assets/ui/roster-selection-stroke.svg') var(--roster-ink-position)/145% 165% no-repeat}
+.session-roster-tile.base-tile::before,.session-roster-tile.base-tile::after {content:'';position:absolute;inset:calc(var(--spacing-small) / -2) 0;z-index:-1;pointer-events:none;background:var(--accent);opacity:0;clip-path:var(--roster-paint-clip,var(--roster-paint-default));transition:opacity var(--motion-feedback)}
+.session-roster-tile.base-tile::after {background:linear-gradient(to right,var(--accent),color-mix(in srgb,var(--accent) 25%,transparent) 32%,color-mix(in srgb,var(--accent) 25%,transparent) 86%,var(--accent));mask:url('@/assets/ui/roster-selection-stroke.svg') var(--roster-ink-position)/145% 165% no-repeat;-webkit-mask:url('@/assets/ui/roster-selection-stroke.svg') var(--roster-ink-position)/145% 165% no-repeat}
 .session-roster-tile--selected.session-roster-tile--selecting.base-tile::before {opacity:.13}
 .session-roster-tile--selected.session-roster-tile--selecting.base-tile::after {opacity:.34}
 .p-statuses-area {margin-top:var(--spacing-small);min-width:0;--status-scroll-inset-start:0px;--status-scroll-inset-end:0px}

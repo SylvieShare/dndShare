@@ -1,13 +1,20 @@
-// A shared contour for a separator and both edges of the adjoining row paint.
-// Y is relative to the row boundary, in hundredths of --spacing-small.
-const points = [[0,6],[19,-8],[37,12],[65,-22],[91,-10],[114,19],[139,3],[157,-15],
-  [193,8],[224,-27],[243,-5],[278,15],[303,-14],[337,-4],[359,23],[388,2],
-  [411,-18],[443,9],[469,-7],[496,25],[527,-9],[550,-24],[578,5],[609,-12],
-  [636,17],[657,-3],[684,-20],[718,13],[747,4],[771,-14],[803,22],[827,-2],
-  [856,-25],[882,7],[913,-9],[941,17],[967,-13],[985,5],[1000,-4]]
-
-export const roughRowSeamPath = points.map(([x,y],i)=>`${i?'L':'M'}${x} ${y}`).join(' ')
-export const roughRowPaintClip = `polygon(${[
+// Contours are generated once from fixed seeds, never while rendering or selecting.
+// Y is relative to a row boundary, in hundredths of --spacing-small.
+function contour(seed) {
+  const next=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed}
+  const points=[]
+  for(let x=0;x<1000;x+=18+next()%25)points.push([x,(next()%57)-28])
+  points.push([1000,(next()%57)-28])
+  return points
+}
+const contours=[173,521,947,1381,2017].map(contour)
+const index=value=>{const i=Number.isFinite(value)?Math.trunc(value):0;return (i%contours.length+contours.length)%contours.length}
+const paths=contours.map(points=>points.map(([x,y],i)=>`${i?'L':'M'}${x} ${y}`).join(' '))
+const paintStyles=contours.map((points,i)=>Object.freeze({'--roster-paint-clip':`polygon(${[
   ...points.map(([x,y])=>`${x/10}% calc(var(--spacing-small) * ${(50+y)/100})`),
-  ...[...points].reverse().map(([x,y])=>`${x/10}% calc(100% - var(--spacing-small) * ${(50-y)/100})`),
-].join(',')})`
+  ...[...contours[index(i+1)]].reverse().map(([x,y])=>`${x/10}% calc(100% - var(--spacing-small) * ${(50-y)/100})`),
+].join(',')})`}))
+
+export const roughRowSeamPath=variant=>paths[index(variant)]
+// The lower edge uses the next boundary, shared with the following row's upper edge.
+export const roughRowPaintStyle=rowIndex=>paintStyles[index(rowIndex)]

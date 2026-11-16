@@ -1,11 +1,13 @@
 <template>
-  <svg v-if="rough" class="workspace-row-divider workspace-row-divider--rough" viewBox="0 -50 1000 100" preserveAspectRatio="none" aria-hidden="true"><path :d="roughRowSeamPath" vector-effect="non-scaling-stroke" /></svg>
+  <svg v-if="rough" class="workspace-row-divider workspace-row-divider--rough" viewBox="0 -50 1000 100" preserveAspectRatio="none" aria-hidden="true"><path :d="path" vector-effect="non-scaling-stroke" /></svg>
   <span v-else class="workspace-row-divider" aria-hidden="true" />
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { roughRowSeamPath } from './roughRowSeam'
-defineProps({rough:Boolean})
+const props=defineProps({rough:Boolean,roughVariant:{type:Number,default:0}})
+const path=computed(()=>roughRowSeamPath(props.roughVariant))
 </script>
 
 <style scoped>
