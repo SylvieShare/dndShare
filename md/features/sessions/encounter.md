@@ -84,7 +84,9 @@ NPC relations are optional. Reserve summaries have no visible enemy/ally/minion/
 
 Each NPC also receives the nearest free Latin marker from `A` through `Z`.
 The marker sits inside the avatar’s upper-right corner in reserves, combat rows
-and the turn preview, with a dark text shadow for contrast over artwork. Its
+and the turn preview, with a dark text shadow and a compact dark backing with
+Badge-radius corners for contrast over artwork. Inline markers in the timeline
+retain their plain text presentation. Its
 identity is persisted in `markerLetter`. The marker control is a sibling of the
 portrait button, so it never nests interactive buttons.
 Clicking it opens one popover with the full letter list and the marker color

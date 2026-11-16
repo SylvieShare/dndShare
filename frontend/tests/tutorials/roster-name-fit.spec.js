@@ -16,8 +16,10 @@ async function markerOnAvatar(marker,avatar) {
   expect(m.y).toBeCloseTo(a.y,0)
   expect(m.x).toBeGreaterThanOrEqual(a.x)
   const glyph=marker.locator('.npc-marker')
-  if(await glyph.count())await expect(glyph).not.toHaveCSS('text-shadow','none')
-  else await expect(marker).not.toHaveCSS('text-shadow','none')
+  const letter=await glyph.count()?glyph:marker
+  await expect(letter).not.toHaveCSS('text-shadow','none')
+  await expect(letter).not.toHaveCSS('background-color','rgba(0, 0, 0, 0)')
+  await expect(letter).toHaveCSS('border-radius','5px')
 }
 
 for(const width of [390,834,1440])test(`full player and NPC names fit dynamically with avatar markers at ${width}`,async({page},info)=>{

@@ -13,7 +13,7 @@
 
     <template v-else>
       <header class="turn-preview-hero" :style="accentStyle">
-        <div class="turn-preview-avatar"><EncounterAvatar :combatant="combatant" /><NpcMarker v-if="isNpc" class="turn-preview-avatar-marker" :letter="combatant.markerLetter" :color="enc.avatarStyle(combatant)?.color" shadow /></div>
+        <div class="turn-preview-avatar"><EncounterAvatar :combatant="combatant" /><NpcMarker v-if="isNpc" class="turn-preview-avatar-marker" :letter="combatant.markerLetter" :color="enc.avatarStyle(combatant)?.color" shadow backed /></div>
         <div class="turn-preview-identity" aria-live="polite">
           <span>{{ kindLabel }}</span>
           <strong ref="nameRow" class="turn-preview-name"><span ref="nameText" class="turn-preview-name-text">{{ displayName }}</span></strong>

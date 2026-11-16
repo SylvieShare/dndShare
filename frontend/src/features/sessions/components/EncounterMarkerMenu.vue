@@ -10,7 +10,7 @@
     title="Изменить букву и цвет"
     @click.stop="toggle"
     @pointerdown.stop
-  ><NpcMarker :letter="combatant.markerLetter" :color="markerColor" :shadow="overlay" /></button>
+  ><NpcMarker :letter="combatant.markerLetter" :color="markerColor" :shadow="overlay" :backed="overlay" /></button>
 
   <BasePopover v-model:open="open" :anchor="anchorEl" placement="bottom-start" :min-width="246" transition-preset="action-menu">
     <div class="emm-panel">
