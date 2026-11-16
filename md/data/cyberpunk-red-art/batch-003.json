@@ -1,0 +1,283 @@
+{
+  "batch": 3,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-03",
+  "sourceAudit": "Read live RED item types before generation: all six selected icon and cover slots empty. Mounted Combatant inspected as style-only reference; artwork is original cyberpunk.",
+  "assets": [
+    {
+      "key": "ammo-icon",
+      "target": {
+        "kind": "item_type",
+        "typeId": 20,
+        "name": "Боеприпасы"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Create a single Cyberpunk RED 2045 catalogue icon. Thick dark plum outer contour, sparse inner lines, broad clean cel shading with two shadow planes and one broad highlight, matte surfaces. Restrained palette, readable silhouette at 64px, square composition and 8% clear margins. Genuine transparent alpha background. No background tile, badge, frame, text, logo, watermark, cast shadow, detached glow, particles, microdetails, photorealism, glossy 3D, fantasy or medieval motifs. Subject: A compact open graphite ammunition tray holding three oversized brass cartridges with copper tips, one broad teal latch; unified silhouette.",
+      "original": "originals/ammo-icon-v1.png",
+      "final": "final/ammo-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-1dc3c351-3bdb-4c85-b339-87cc8d63ff32.png",
+      "originalSha256": "ea994bdb9fcc6447c9281fd43d5b29a3a76ad5cdfe30553ba6855257a00af926",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "7d1be60c52656e81820ed9695c950ca5685b76f6c2a8c1a9336b7fc10ba8971c",
+      "bytes": 15086,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "note": "Originals and final covers inspected; consistent object identity, clean cel shading and complete subjects. Icon alpha and silhouettes inspected at 128/64 px on light and dark backgrounds.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49628,
+        "objectKey": "system-item-media/v1/item-types/20/icon/7d1be60c52656e81820ed9695c950ca5685b76f6c2a8c1a9336b7fc10ba8971c.webp",
+        "fileSize": 15086
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/20/icon/7d1be60c52656e81820ed9695c950ca5685b76f6c2a8c1a9336b7fc10ba8971c.webp"
+    },
+    {
+      "key": "armor-icon",
+      "target": {
+        "kind": "item_type",
+        "typeId": 21,
+        "name": "Броня"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Create a single Cyberpunk RED 2045 catalogue icon. Thick dark plum outer contour, sparse inner lines, broad clean cel shading with two shadow planes and one broad highlight, matte surfaces. Restrained palette, readable silhouette at 64px, square composition and 8% clear margins. Genuine transparent alpha background. No background tile, badge, frame, text, logo, watermark, cast shadow, detached glow, particles, microdetails, photorealism, glossy 3D, fantasy or medieval motifs. Subject: One empty graphite armored street jacket with ivory segmented chest panels and muted scarlet shoulder inserts, short raised collar. No wearer, complete jacket.",
+      "original": "originals/armor-icon-v1.png",
+      "final": "final/armor-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ec1403c1-4584-4609-b66e-b1634d37b1c6.png",
+      "originalSha256": "d919a3790872027eff0dea6c46bd7a09b258ba3ffe2d2f905931587c346f6e3f",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "2825c66084d44c0b6d5605cb0b1f2c31fc9c2b18f853a686d506549a9f120829",
+      "bytes": 16020,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "note": "Originals and final covers inspected; consistent object identity, clean cel shading and complete subjects. Icon alpha and silhouettes inspected at 128/64 px on light and dark backgrounds.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49629,
+        "objectKey": "system-item-media/v1/item-types/21/icon/2825c66084d44c0b6d5605cb0b1f2c31fc9c2b18f853a686d506549a9f120829.webp",
+        "fileSize": 16020
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/21/icon/2825c66084d44c0b6d5605cb0b1f2c31fc9c2b18f853a686d506549a9f120829.webp"
+    },
+    {
+      "key": "mods-icon",
+      "target": {
+        "kind": "item_type",
+        "typeId": 35,
+        "name": "Модификации"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Create a single Cyberpunk RED 2045 catalogue icon. Thick dark plum outer contour, sparse inner lines, broad clean cel shading with two shadow planes and one broad highlight, matte surfaces. Restrained palette, readable silhouette at 64px, square composition and 8% clear margins. Genuine transparent alpha background. No background tile, badge, frame, text, logo, watermark, cast shadow, detached glow, particles, microdetails, photorealism, glossy 3D, fantasy or medieval motifs. Subject: One compact modular smartgun optic, ivory angular shell, amber lens, graphite rail mount and a single scarlet adjustment knob. No gun.",
+      "original": "originals/mods-icon-v1.png",
+      "final": "final/mods-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-14f1c0ed-b0e4-42fc-86c5-83e76e9fb763.png",
+      "originalSha256": "151155acda1ca94f3cae33d3c7a3c16f7562cb524ded4534406a95618797757a",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "5d25795fd94d8620e078910748be8eb267aa67ef7c3859762021dcd025bbb112",
+      "bytes": 15606,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "note": "Originals and final covers inspected; consistent object identity, clean cel shading and complete subjects. Icon alpha and silhouettes inspected at 128/64 px on light and dark backgrounds.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49630,
+        "objectKey": "system-item-media/v1/item-types/35/icon/5d25795fd94d8620e078910748be8eb267aa67ef7c3859762021dcd025bbb112.webp",
+        "fileSize": 15606
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/35/icon/5d25795fd94d8620e078910748be8eb267aa67ef7c3859762021dcd025bbb112.webp"
+    },
+    {
+      "batch": 3,
+      "key": "ammo-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 20,
+        "name": "Боеприпасы"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Create an opaque 3:2 Cyberpunk RED 2045 catalogue cover. Image 1 is exact object identity and palette reference. Image 2 is STYLE ONLY: its variable dark-plum outlines, natural scale, broad clean cel-painted light/shadow planes, minimal surface texture and softer simpler lower-contrast background. Do not copy fantasy subjects or composition. Clear light local colors, coherent directional light. Entire main object with comfortable margins, no cropping. No text, logo, watermark, border, UI, gritty realism, glossy 3D or magical motifs. Scene: The exact ammunition tray with brass cartridges sits on a battered but clean arms-dealer counter, teal latch toward the viewer. Larger industrial storage shapes and warm overhead strip lighting form a softly simplified background. No hands, no weapons, no labels. The tray is the focal object, cartridges fully visible.",
+      "original": "originals/ammo-cover-v1.png",
+      "final": "final/ammo-cover.jpg",
+      "width": 1536,
+      "height": 1024,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f11cedfd-b01e-4099-85b2-27ef8b4ff5e6.png",
+      "originalSha256": "8835c4906805af3d9da952357a6aa1739a34d44881e8e2e7e7146d8f2ae91120",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "7b039655c120936f98917c35f6c08e52e9ff638cf3289b5a53b898eb1d18164b",
+      "bytes": 159900,
+      "mimeType": "image/jpeg",
+      "exportedDimensions": {
+        "width": 1536,
+        "height": 1024,
+        "alpha": false
+      },
+      "visualReview": {
+        "note": "Originals and final covers inspected; consistent object identity, clean cel shading and complete subjects. Icon alpha and silhouettes inspected at 128/64 px on light and dark backgrounds.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49631,
+        "objectKey": "system-item-media/v1/item-types/20/cover/7b039655c120936f98917c35f6c08e52e9ff638cf3289b5a53b898eb1d18164b.jpg",
+        "fileSize": 159900
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/20/cover/7b039655c120936f98917c35f6c08e52e9ff638cf3289b5a53b898eb1d18164b.jpg"
+    },
+    {
+      "batch": 3,
+      "key": "armor-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 21,
+        "name": "Броня"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Create an opaque 3:2 Cyberpunk RED 2045 catalogue cover. Image 1 is exact object identity and palette reference. Image 2 is STYLE ONLY: its variable dark-plum outlines, natural scale, broad clean cel-painted light/shadow planes, minimal surface texture and softer simpler lower-contrast background. Do not copy fantasy subjects or composition. Clear light local colors, coherent directional light. Entire main object with comfortable margins, no cropping. No text, logo, watermark, border, UI, gritty realism, glossy 3D or magical motifs. Scene: The exact armored street jacket is displayed on a headless torso mannequin in a compact armored clothing workshop, ivory segmented panels and scarlet shoulders clearly visible. Fabric rolls and a simplified city window in background. Complete jacket comfortably inside the composition.",
+      "original": "originals/armor-cover-v1.png",
+      "final": "final/armor-cover.jpg",
+      "width": 1536,
+      "height": 1024,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-1fd0104c-3088-4f94-994a-1b9c5b1f1947.png",
+      "originalSha256": "151bb96c684341b1f4b6b2abef4a61c66e56391a855dadac05e63203c845dda0",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "a9755e2867adff1bfcb49ad0cc0f331d008093f9d3326046f476e143fabf57e7",
+      "bytes": 183025,
+      "mimeType": "image/jpeg",
+      "exportedDimensions": {
+        "width": 1536,
+        "height": 1024,
+        "alpha": false
+      },
+      "visualReview": {
+        "note": "Originals and final covers inspected; consistent object identity, clean cel shading and complete subjects. Icon alpha and silhouettes inspected at 128/64 px on light and dark backgrounds.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49632,
+        "objectKey": "system-item-media/v1/item-types/21/cover/a9755e2867adff1bfcb49ad0cc0f331d008093f9d3326046f476e143fabf57e7.jpg",
+        "fileSize": 183025
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/21/cover/a9755e2867adff1bfcb49ad0cc0f331d008093f9d3326046f476e143fabf57e7.jpg"
+    },
+    {
+      "batch": 3,
+      "key": "mods-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 35,
+        "name": "Модификации"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Create an opaque 3:2 Cyberpunk RED 2045 catalogue cover. Image 1 is exact object identity and palette reference. Image 2 is STYLE ONLY: its variable dark-plum outlines, natural scale, broad clean cel-painted light/shadow planes, minimal surface texture and softer simpler lower-contrast background. Do not copy fantasy subjects or composition. Clear light local colors, coherent directional light. Entire main object with comfortable margins, no cropping. No text, logo, watermark, border, UI, gritty realism, glossy 3D or magical motifs. Scene: The exact ivory smartgun optic rests beside a plain graphite assembly cradle on a cyberpunk weapons technician bench. Amber lens faces viewer, rail and scarlet adjustment knob readable. Blurred simple tools in background, no firearm or diagram. The optic is large enough to read.",
+      "original": "originals/mods-cover-v1.png",
+      "final": "final/mods-cover.jpg",
+      "width": 1536,
+      "height": 1024,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5e19d3d7-0a29-4989-8eb2-6110c55844e5.png",
+      "originalSha256": "18ac1b3306849c7287ce436db4af636659b6bf2f1deb4e02f84bced26ff91ab1",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "e5b7d2638964fc69de3a541c1301c98b4d592ab4f88bc0b2e9fb657d9eb87b6a",
+      "bytes": 146356,
+      "mimeType": "image/jpeg",
+      "exportedDimensions": {
+        "width": 1536,
+        "height": 1024,
+        "alpha": false
+      },
+      "visualReview": {
+        "note": "Originals and final covers inspected; consistent object identity, clean cel shading and complete subjects. Icon alpha and silhouettes inspected at 128/64 px on light and dark backgrounds.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49633,
+        "objectKey": "system-item-media/v1/item-types/35/cover/e5b7d2638964fc69de3a541c1301c98b4d592ab4f88bc0b2e9fb657d9eb87b6a.jpg",
+        "fileSize": 146356
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/35/cover/e5b7d2638964fc69de3a541c1301c98b4d592ab4f88bc0b2e9fb657d9eb87b6a.jpg"
+    }
+  ],
+  "liveReview": {
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-03/live-qa.json",
+    "scenarios": 9,
+    "checkedAt": "2026-11-16T14:11:11.874Z",
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "note": "Real production API; all six type covers verified across three widths, images loaded, no page errors or horizontal overflow. Representative phone and desktop screenshots inspected.",
+    "passed": true
+  }
+}

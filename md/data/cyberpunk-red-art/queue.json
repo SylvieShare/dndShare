@@ -14,32 +14,44 @@
       "id": 20,
       "name": "Боеприпасы",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 3,
+      "sha256": "7d1be60c52656e81820ed9695c950ca5685b76f6c2a8c1a9336b7fc10ba8971c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/20/icon/7d1be60c52656e81820ed9695c950ca5685b76f6c2a8c1a9336b7fc10ba8971c.webp"
     },
     {
       "kind": "item_type",
       "id": 20,
       "name": "Боеприпасы",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 3,
+      "sha256": "7b039655c120936f98917c35f6c08e52e9ff638cf3289b5a53b898eb1d18164b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/20/cover/7b039655c120936f98917c35f6c08e52e9ff638cf3289b5a53b898eb1d18164b.jpg"
     },
     {
       "kind": "item_type",
       "id": 21,
       "name": "Броня",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 3,
+      "sha256": "2825c66084d44c0b6d5605cb0b1f2c31fc9c2b18f853a686d506549a9f120829",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/21/icon/2825c66084d44c0b6d5605cb0b1f2c31fc9c2b18f853a686d506549a9f120829.webp"
     },
     {
       "kind": "item_type",
       "id": 21,
       "name": "Броня",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 3,
+      "sha256": "a9755e2867adff1bfcb49ad0cc0f331d008093f9d3326046f476e143fabf57e7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/21/cover/a9755e2867adff1bfcb49ad0cc0f331d008093f9d3326046f476e143fabf57e7.jpg"
     },
     {
       "kind": "item_type",
@@ -100,16 +112,22 @@
       "id": 35,
       "name": "Модификации",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 3,
+      "sha256": "5d25795fd94d8620e078910748be8eb267aa67ef7c3859762021dcd025bbb112",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/35/icon/5d25795fd94d8620e078910748be8eb267aa67ef7c3859762021dcd025bbb112.webp"
     },
     {
       "kind": "item_type",
       "id": 35,
       "name": "Модификации",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 3,
+      "sha256": "e5b7d2638964fc69de3a541c1301c98b4d592ab4f88bc0b2e9fb657d9eb87b6a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/35/cover/e5b7d2638964fc69de3a541c1301c98b4d592ab4f88bc0b2e9fb657d9eb87b6a.jpg"
     },
     {
       "kind": "item_type",
@@ -132,16 +150,22 @@
       "id": 23,
       "name": "Одежда",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 4,
+      "sha256": "f533c8abd0c270f8fef1e71515d69a880a25a402637152f928a9090b70c94f37",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/23/icon/f533c8abd0c270f8fef1e71515d69a880a25a402637152f928a9090b70c94f37.webp"
     },
     {
       "kind": "item_type",
       "id": 23,
       "name": "Одежда",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 4,
+      "sha256": "2e3db9b9a68e2dfb88ae78d6e65fae24c74afbf567aacc363e079f9d544de074",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/23/cover/2e3db9b9a68e2dfb88ae78d6e65fae24c74afbf567aacc363e079f9d544de074.jpg"
     },
     {
       "kind": "item_type",
@@ -224,16 +248,22 @@
       "id": 29,
       "name": "Снаряжение",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 4,
+      "sha256": "cabd90b1fde5eb7829260e58375adaaca44c21cf1ae068418f208bcf4c195a5b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/29/icon/cabd90b1fde5eb7829260e58375adaaca44c21cf1ae068418f208bcf4c195a5b.webp"
     },
     {
       "kind": "item_type",
       "id": 29,
       "name": "Снаряжение",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 4,
+      "sha256": "f273a15723facb06edef3e3b6565e5a3ecad84ce15fe7747d4504ddd98b579c7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/29/cover/f273a15723facb06edef3e3b6565e5a3ecad84ce15fe7747d4504ddd98b579c7.jpg"
     },
     {
       "kind": "item_type",
@@ -272,16 +302,22 @@
       "id": 36,
       "name": "Транспорт",
       "slot": "icon",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 4,
+      "sha256": "18b26983c154cfc90408544bd5466bd39cd1177eac83fa7ad7c9201ca7bdd171",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/36/icon/18b26983c154cfc90408544bd5466bd39cd1177eac83fa7ad7c9201ca7bdd171.webp"
     },
     {
       "kind": "item_type",
       "id": 36,
       "name": "Транспорт",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 4,
+      "sha256": "f7633ac46fbab950b293be3ec9a78ed296b947def5616c29217fe25bf9603c30",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/36/cover/f7633ac46fbab950b293be3ec9a78ed296b947def5616c29217fe25bf9603c30.jpg"
     },
     {
       "kind": "item_type",
@@ -16071,7 +16107,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 28,
+    "publishedSlots": 40,
     "readySlots": 0,
     "totalSlots": 1848
   }

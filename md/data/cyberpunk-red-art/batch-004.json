@@ -1,0 +1,283 @@
+{
+  "batch": 4,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-04",
+  "sourceAudit": "Read live RED item types before generation: all six selected icon and cover slots empty. Mounted Combatant inspected as style-only reference; artwork is original cyberpunk.",
+  "assets": [
+    {
+      "key": "gear-icon",
+      "target": {
+        "kind": "item_type",
+        "typeId": 29,
+        "name": "Снаряжение"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Create a single Cyberpunk RED 2045 catalogue icon. Thick dark plum outer contour, sparse inner lines, broad clean cel shading with two shadow planes and one broad highlight, matte surfaces. Restrained palette, readable silhouette at 64px, square composition and 8% clear margins. Genuine transparent alpha background. No background tile, badge, frame, text, logo, watermark, cast shadow, detached glow, particles, microdetails, photorealism, glossy 3D, fantasy or medieval motifs. Subject: One rugged teal field toolkit case half open, with a chunky yellow multitool nested inside, charcoal molded grips. Unified compact silhouette.",
+      "original": "originals/gear-icon-v1.png",
+      "final": "final/gear-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f705831b-f7c9-4704-ba50-4d053bf411de.png",
+      "originalSha256": "8d9061c71104c185647c6a4557c8bfcdbc5eda66961dc66ec41cee598eb7fb98",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "cabd90b1fde5eb7829260e58375adaaca44c21cf1ae068418f208bcf4c195a5b",
+      "bytes": 17664,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "note": "Originals and final covers inspected; consistent object identity, clean cel shading and complete subjects. Icon alpha and silhouettes inspected at 128/64 px on light and dark backgrounds.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49634,
+        "objectKey": "system-item-media/v1/item-types/29/icon/cabd90b1fde5eb7829260e58375adaaca44c21cf1ae068418f208bcf4c195a5b.webp",
+        "fileSize": 17664
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/29/icon/cabd90b1fde5eb7829260e58375adaaca44c21cf1ae068418f208bcf4c195a5b.webp"
+    },
+    {
+      "key": "clothes-icon",
+      "target": {
+        "kind": "item_type",
+        "typeId": 23,
+        "name": "Одежда"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Create a single Cyberpunk RED 2045 catalogue icon. Thick dark plum outer contour, sparse inner lines, broad clean cel shading with two shadow planes and one broad highlight, matte surfaces. Restrained palette, readable silhouette at 64px, square composition and 8% clear margins. Genuine transparent alpha background. No background tile, badge, frame, text, logo, watermark, cast shadow, detached glow, particles, microdetails, photorealism, glossy 3D, fantasy or medieval motifs. Subject: One cropped oxblood streetwear motorcycle jacket with ivory lapels and a charcoal diagonal zipper, empty garment, no armor plates, complete sleeves.",
+      "original": "originals/clothes-icon-v1.png",
+      "final": "final/clothes-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6893521e-d2fa-41df-a344-402fe4291f66.png",
+      "originalSha256": "cb7dce20ec64556612c999e9dea4cb64a5b955780de6c2c68ce741144ea81679",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "f533c8abd0c270f8fef1e71515d69a880a25a402637152f928a9090b70c94f37",
+      "bytes": 13904,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "note": "Originals and final covers inspected; consistent object identity, clean cel shading and complete subjects. Icon alpha and silhouettes inspected at 128/64 px on light and dark backgrounds.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49635,
+        "objectKey": "system-item-media/v1/item-types/23/icon/f533c8abd0c270f8fef1e71515d69a880a25a402637152f928a9090b70c94f37.webp",
+        "fileSize": 13904
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/23/icon/f533c8abd0c270f8fef1e71515d69a880a25a402637152f928a9090b70c94f37.webp"
+    },
+    {
+      "key": "transport-icon",
+      "target": {
+        "kind": "item_type",
+        "typeId": 36,
+        "name": "Транспорт"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Create a single Cyberpunk RED 2045 catalogue icon. Thick dark plum outer contour, sparse inner lines, broad clean cel shading with two shadow planes and one broad highlight, matte surfaces. Restrained palette, readable silhouette at 64px, square composition and 8% clear margins. Genuine transparent alpha background. No background tile, badge, frame, text, logo, watermark, cast shadow, detached glow, particles, microdetails, photorealism, glossy 3D, fantasy or medieval motifs. Subject: One original compact angular teal urban coupe, cream roof and graphite wheels, three-quarter front view. Retro-futurist 2045 road car, no brands.",
+      "original": "originals/transport-icon-v1.png",
+      "final": "final/transport-icon.webp",
+      "width": 128,
+      "height": 128,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-48114cdf-ecf6-4cd8-83d9-c5eeb0a685cb.png",
+      "originalSha256": "d077429f2ef631cc398a111ed5fb81b712e7b1be432378c6708e088554f5d952",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "18b26983c154cfc90408544bd5466bd39cd1177eac83fa7ad7c9201ca7bdd171",
+      "bytes": 10410,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "note": "Originals and final covers inspected; consistent object identity, clean cel shading and complete subjects. Icon alpha and silhouettes inspected at 128/64 px on light and dark backgrounds.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49636,
+        "objectKey": "system-item-media/v1/item-types/36/icon/18b26983c154cfc90408544bd5466bd39cd1177eac83fa7ad7c9201ca7bdd171.webp",
+        "fileSize": 10410
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/36/icon/18b26983c154cfc90408544bd5466bd39cd1177eac83fa7ad7c9201ca7bdd171.webp"
+    },
+    {
+      "batch": 4,
+      "key": "gear-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 29,
+        "name": "Снаряжение"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Create an opaque 3:2 Cyberpunk RED 2045 catalogue cover. Image 1 is exact object identity and palette reference. Image 2 is STYLE ONLY: its variable dark-plum outlines, natural scale, broad clean cel-painted light/shadow planes, minimal surface texture and softer simpler lower-contrast background. Do not copy fantasy subjects or composition. Clear light local colors, coherent directional light. Entire main object with comfortable margins, no cropping. No text, logo, watermark, border, UI, gritty realism, glossy 3D or magical motifs. Scene: The exact open teal field toolkit with yellow multitool rests on a service bench at a cyberpunk maintenance kiosk. Warm daylight and soft slate architectural shapes, a simple coiled cable in the far background. The complete case is the hero object.",
+      "original": "originals/gear-cover-v1.png",
+      "final": "final/gear-cover.jpg",
+      "width": 1536,
+      "height": 1024,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-803dbf75-6339-4792-9038-587655309efe.png",
+      "originalSha256": "b849b04c2cefe59cad27a36a31026849070a25efff1d8c8a99e08e7bd5028fd6",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "f273a15723facb06edef3e3b6565e5a3ecad84ce15fe7747d4504ddd98b579c7",
+      "bytes": 182931,
+      "mimeType": "image/jpeg",
+      "exportedDimensions": {
+        "width": 1536,
+        "height": 1024,
+        "alpha": false
+      },
+      "visualReview": {
+        "note": "Originals and final covers inspected; consistent object identity, clean cel shading and complete subjects. Icon alpha and silhouettes inspected at 128/64 px on light and dark backgrounds.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49637,
+        "objectKey": "system-item-media/v1/item-types/29/cover/f273a15723facb06edef3e3b6565e5a3ecad84ce15fe7747d4504ddd98b579c7.jpg",
+        "fileSize": 182931
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/29/cover/f273a15723facb06edef3e3b6565e5a3ecad84ce15fe7747d4504ddd98b579c7.jpg"
+    },
+    {
+      "batch": 4,
+      "key": "clothes-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 23,
+        "name": "Одежда"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Create an opaque 3:2 Cyberpunk RED 2045 catalogue cover. Image 1 is exact object identity and palette reference. Image 2 is STYLE ONLY: its variable dark-plum outlines, natural scale, broad clean cel-painted light/shadow planes, minimal surface texture and softer simpler lower-contrast background. Do not copy fantasy subjects or composition. Clear light local colors, coherent directional light. Entire main object with comfortable margins, no cropping. No text, logo, watermark, border, UI, gritty realism, glossy 3D or magical motifs. Scene: The exact oxblood street jacket with ivory lapels hangs on a simple charcoal hanger in a compact Night City clothes shop. Full garment visible with no armor plates, soft background rails, one warm overhead light and restrained cyan reflected light. No mannequin body needed.",
+      "original": "originals/clothes-cover-v1.png",
+      "final": "final/clothes-cover.jpg",
+      "width": 1536,
+      "height": 1024,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-1b9f7d8c-4610-40a8-be89-eace1b86cc55.png",
+      "originalSha256": "ec5cac02bdd163059f54544eacd68ba41a53f0010520ab42deb4c1682fae0478",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "2e3db9b9a68e2dfb88ae78d6e65fae24c74afbf567aacc363e079f9d544de074",
+      "bytes": 131185,
+      "mimeType": "image/jpeg",
+      "exportedDimensions": {
+        "width": 1536,
+        "height": 1024,
+        "alpha": false
+      },
+      "visualReview": {
+        "note": "Originals and final covers inspected; consistent object identity, clean cel shading and complete subjects. Icon alpha and silhouettes inspected at 128/64 px on light and dark backgrounds.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49638,
+        "objectKey": "system-item-media/v1/item-types/23/cover/2e3db9b9a68e2dfb88ae78d6e65fae24c74afbf567aacc363e079f9d544de074.jpg",
+        "fileSize": 131185
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/23/cover/2e3db9b9a68e2dfb88ae78d6e65fae24c74afbf567aacc363e079f9d544de074.jpg"
+    },
+    {
+      "batch": 4,
+      "key": "transport-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 36,
+        "name": "Транспорт"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Create an opaque 3:2 Cyberpunk RED 2045 catalogue cover. Image 1 is exact object identity and palette reference. Image 2 is STYLE ONLY: its variable dark-plum outlines, natural scale, broad clean cel-painted light/shadow planes, minimal surface texture and softer simpler lower-contrast background. Do not copy fantasy subjects or composition. Clear light local colors, coherent directional light. Entire main object with comfortable margins, no cropping. No text, logo, watermark, border, UI, gritty realism, glossy 3D or magical motifs. Scene: The exact teal compact coupe with cream roof is parked at a street-level 2045 cyberpunk repair garage, three-quarter front angle, all wheels and entire vehicle comfortably framed. Large soft industrial structures, warm late-afternoon light and cool shadows. No people in front of the car.",
+      "original": "originals/transport-cover-v1.png",
+      "final": "final/transport-cover.jpg",
+      "width": 1536,
+      "height": 1024,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b0dac725-b0d2-4c0f-9e8b-4e37719934c7.png",
+      "originalSha256": "c6fc5ed59e262ed697f1f3bf86e83c11df4128804188907d56622c97700a571a",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "f7633ac46fbab950b293be3ec9a78ed296b947def5616c29217fe25bf9603c30",
+      "bytes": 236063,
+      "mimeType": "image/jpeg",
+      "exportedDimensions": {
+        "width": 1536,
+        "height": 1024,
+        "alpha": false
+      },
+      "visualReview": {
+        "note": "Originals and final covers inspected; consistent object identity, clean cel shading and complete subjects. Icon alpha and silhouettes inspected at 128/64 px on light and dark backgrounds.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49639,
+        "objectKey": "system-item-media/v1/item-types/36/cover/f7633ac46fbab950b293be3ec9a78ed296b947def5616c29217fe25bf9603c30.jpg",
+        "fileSize": 236063
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/36/cover/f7633ac46fbab950b293be3ec9a78ed296b947def5616c29217fe25bf9603c30.jpg"
+    }
+  ],
+  "liveReview": {
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-04/live-qa.json",
+    "scenarios": 9,
+    "checkedAt": "2026-11-16T14:11:37.755Z",
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "note": "Real production API; all six type covers verified across three widths, images loaded, no page errors or horizontal overflow. Representative phone and desktop screenshots inspected.",
+    "passed": true
+  }
+}
