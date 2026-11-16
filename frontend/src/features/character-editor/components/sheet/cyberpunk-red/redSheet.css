@@ -37,7 +37,8 @@
 .red-panel h3 {
   font-size: var(--type-row-size);
 }
-.red-sheet small {
+.red-sheet small,
+.red-panel small {
   display: block;
   color: var(--text-muted);
   font-size: var(--type-group-size);

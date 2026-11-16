@@ -15,10 +15,7 @@
         >
           <div>
             <strong>{{ item.name }}</strong
-            ><small
-              >{{ item.nameEn }} · {{ item.facts.price }} eb{{
-                item.facts.quantity > 1 ? ` / ${item.facts.quantity} шт.` : ""
-              }}</small
+            ><small>{{ item.nameEn }}<template v-if="item.facts.price != null"> · {{ item.facts.price }} eb{{ item.facts.quantity > 1 ? ` / ${item.facts.quantity} шт.` : "" }}</template></small
             ><small v-if="item.facts.damage"
               >{{ item.facts.damage }} · ROF {{ item.facts.rof }}</small
             >
