@@ -174,10 +174,15 @@ the normal encounter save queue.
 ### Sidebar selection and prepared scene
 
 `useRosterSelection` scopes selected combatants to its current player/reserve
-list; `SessionSelectionToolbar` shares mode, damage/XP dialogs and move actions.
+list; `SessionSelectionToolbar` owns damage/XP dialogs and move actions. Player
+and all named reserve tabs share one mode ref and retain selected actors between
+tabs. “Режим выбора” shows the selected count in the open list; toggling it off
+clears the complete sidebar scope. The scene keeps its own mode. The toolbar
+belongs to the highlighted sidebar header, outside `SessionRosterList` scrolling.
 The group-action row stays visible when selection is off, with unavailable
 actions disabled. Ordinary tile actions are inert during selection; keyboard focus stays on the
-accessible selectable row. Scope changes prune invisible reserve targets.
+accessible selectable row. Only actors leaving the complete mode scope are pruned;
+changing the visible reserve tab preserves its selection.
 Damage calls `useEncounterImpacts` with an explicit snapshot of this list's
 eligible targets, preserving its stable retry key and authoritative server HP.
 D&D experience uses the semantic `experiencePath` and the existing versioned
@@ -404,7 +409,9 @@ the sidebar use `SessionPlayerTile`, which composes the same `CharacterSummaryTi
 and `SheetHealth` as the character header: portrait, name, shield AC, numeric HP
 with temporary HP, and two passive values for D&D participants viewed by the DM.
 `SessionRosterTile` owns the shared visual composition of player and NPC-reserve
-summaries: portrait, shield AC, numeric HP, states and selection frames.
+summaries: portrait, shield AC, numeric HP, states and a masked purple brush
+selection underlay. Rows have no radius or external vertical gaps. The shared
+`WorkspaceRowDivider` draws the same creased separators as the character header.
 `SessionNpcTile` supplies encounter data and retains creature marker,
 initiative, menus and drag ordering. Race/class remain in the sheet/menu,
 not the card. Player and NPC names retain their full text: `useCreatureNameFit`

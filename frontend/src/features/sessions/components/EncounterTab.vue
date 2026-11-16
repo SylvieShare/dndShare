@@ -45,6 +45,7 @@
                   :combatant="c"
                   section="combat"
                   :idx="idx"
+                  :divided="idx > 0"
                   :order="idx + 1"
                   :is-current="enc.encounter.active && c.uid === currentTurnUid"
                       :selection-mode="sceneSelection.selecting"

@@ -87,9 +87,9 @@
       >
         <template #full-workspace>
           <GlobalMapWorkspace v-if="globalMapsVisited" v-show="primaryView === 'globalMaps'" ref="globalMapWorkspace"
-            :session-uuid="sessionUuid" :participants="participants" :chapters="chapterGraph.chapters.value"
-            :current-chapter-id="workspaceChapter?.id ?? chapterGraph.currentChapter.value?.id ?? null" :locations="sessionWorld.locations.value"
-            @open-chapter="openGlobalChapter" @open-location="selectLocation($event.id)" />
+                              :session-uuid="sessionUuid" :participants="participants" :chapters="chapterGraph.chapters.value"
+                              :current-chapter-id="workspaceChapter?.id ?? chapterGraph.currentChapter.value?.id ?? null" :locations="sessionWorld.locations.value"
+                              @open-chapter="openGlobalChapter" @open-location="selectLocation($event.id)" />
           <SessionMapWorkspace
             v-if="mapVisited && isDm"
             v-show="mapVisible"
@@ -106,7 +106,7 @@
         </template>
         <template #primary-workspace>
           <SessionSettingsWorkspace v-if="primaryView === 'settings'" :session-uuid="sessionUuid" :settings="sessionSettings"
-            :saving="settingsSaving" :error="settingsError" :shortcut-hints="showShortcutHints" @toggle-shortcuts="showShortcutHints = !showShortcutHints" @update-setting="updateSessionSetting" />
+                                    :saving="settingsSaving" :error="settingsError" :shortcut-hints="showShortcutHints" @toggle-shortcuts="showShortcutHints = !showShortcutHints" @update-setting="updateSessionSetting" />
           <SessionMusicWorkspace v-else-if="primaryView === 'music'" :is-dm="isDm" />
           <SessionJournalWorkspace v-else-if="primaryView === 'journal'" :session-uuid="sessionUuid" :is-dm="isDm" :occurrence-id="requestedOccurrenceId" />
           <SessionChronicleWorkspace v-else-if="primaryView === 'events'" :live-status="liveStatus" />
@@ -118,17 +118,17 @@
             :is-dm="isDm"
             :selected-location-id="selectedLocationId"
             :selected-npc-id="selectedNpcId"
-			:selected-quest-id="selectedQuestId"
-			:selected-material-id="selectedMaterialId"
-			:world="sessionWorld"
+            :selected-quest-id="selectedQuestId"
+            :selected-material-id="selectedMaterialId"
+            :world="sessionWorld"
             :materials="sessionMaterials"
             :presentation="presentation"
-			:show-shortcut-hints="showShortcutHints"
+            :show-shortcut-hints="showShortcutHints"
             @select-location="selectLocation"
             @select-npc="selectNpc"
             @select-quest="selectQuest"
-			@select-material="selectMaterial"
-			@open-scene="openRelatedScene"
+            @select-material="selectMaterial"
+            @open-scene="openRelatedScene"
           />
         </template>
         <SessionCenterWorkspace
@@ -153,17 +153,17 @@
       <SessionWorkspaceSidebar :controller="sidebar">
         <template #reserve-title><EncounterReserveHeader :encounter="encounter" :ui="reserveSidebar" /></template>
         <template #reserve-actions><EncounterReserveHeader :encounter="encounter" :ui="reserveSidebar" actions /></template>
-        <template #panels><EncounterReservePanel :encounter="encounter" :ui="reserveSidebar" :combat-workspace="playersRailMode === 'combat'" /></template>
+        <template #panels><EncounterReservePanel :encounter="encounter" :ui="reserveSidebar" :selection="reserveSelection" /></template>
+        <template #selection-header><SessionSelectionToolbar :encounter="encounter" :selection="sidebar.selected.value === 'players' ? playerSelection : reserveSelection" :combat-workspace="playersRailMode === 'combat'" /></template>
         <template #players-actions>
           <SessionPlayersMenu :live-status="liveStatus" :sync-status="syncStatus" :syncing="syncRunning || liveCatchingUp"
-            @join="openJoinOwn" @create="openCreate" @copy-code="copyCode" @copy-link="copyLink" />
+                              @join="openJoinOwn" @create="openCreate" @copy-code="copyCode" @copy-link="copyLink" />
         </template>
-        <SessionSelectionToolbar :encounter="encounter" :selection="playerSelection" :combat-workspace="playersRailMode === 'combat'" label="Выбор игроков" />
-
-        <div v-if="participants.length" class="participants-list" data-sortable-container="participants">
+        <SessionRosterList class="participants-list" data-sortable-container="participants">
           <SessionParticipantCard
             v-for="(p, participantIndex) in displayedParticipants"
             :key="p.charId"
+            :divided="participantIndex > 0"
             :data-sortable-key="p.charId"
             :participant="p"
             :is-dm="isDm"
@@ -184,11 +184,11 @@
             @drag-start="startParticipantDrag($event, p, participantIndex)"
             @update:combat-selected="setEncounterPlayerSelected(p.charId, $event)"
           />
-        </div>
-        <div v-else class="no-participants">Участников пока нет</div>
-        <div v-if="kickError || colorError || participantOrderError" class="participant-action-error" role="alert">
-          {{ kickError || colorError || participantOrderError }}
-        </div>
+          <div v-if="!participants.length" class="no-participants">Участников пока нет</div>
+          <div v-if="kickError || colorError || participantOrderError" class="participant-action-error" role="alert">
+            {{ kickError || colorError || participantOrderError }}
+          </div>
+        </SessionRosterList>
       </SessionWorkspaceSidebar>
 
       <EncounterNpcDialogs :encounter="encounter" />
@@ -250,6 +250,7 @@ import SessionEditModal from '@/features/sessions/components/SessionEditModal.vu
 import SessionJoinModal from '@/features/sessions/components/SessionJoinModal.vue'
 import SessionCenterWorkspace from '@/features/sessions/components/SessionCenterWorkspace.vue'
 import SessionSelectionToolbar from '@/features/sessions/components/SessionSelectionToolbar.vue'
+import SessionRosterList from '@/features/sessions/components/SessionRosterList.vue'
 import { useRosterSelection } from '../composables/useRosterSelection'
 import SessionPlayersMenu from '@/features/sessions/components/SessionPlayersMenu.vue'
 import SessionWorkspaceSidebar from '@/features/sessions/components/SessionWorkspaceSidebar.vue'
@@ -293,7 +294,10 @@ const {
   updateSessionSetting, updateWorkspaceContext, workspaceChapter, workspaceClosing, workspaceLevel,
   workspaceMode, workspaceMotionMode, workspaceScene, worldLayer,
 } = useSessionPage()
-const playerSelection = reactive(useRosterSelection(encounter,()=>encounterPlayers.value))
+const sidebarSelectionMode = ref(false)
+const sidebarSelectionOptions = { selecting: sidebarSelectionMode, getModeItems: () => [...encounterPlayers.value, ...encounter.allReserveNpcs] }
+const playerSelection = reactive(useRosterSelection(encounter,()=>encounterPlayers.value,sidebarSelectionOptions))
+const reserveSelection = reactive(useRosterSelection(encounter,()=>encounter.sortable.displayItems('reserve-npc'),sidebarSelectionOptions))
 const sidebar = useSessionSidebar(primaryView)
 const reserveSidebar = reactive(useEncounterReserveSidebar(encounter,sidebar))
 const route = useRoute()

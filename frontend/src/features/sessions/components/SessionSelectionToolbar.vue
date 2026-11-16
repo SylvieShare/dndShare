@@ -3,9 +3,8 @@
     <div class="roster-selection-heading">
       <ActionButton :variant="selection.selecting ? 'secondary' : 'quiet'" :disabled="!selection.selecting && (!encounter.canManageReserves || !selection.items.length)" :aria-pressed="selection.selecting" @click="selection.toggle">
         <template #icon><Check v-if="selection.selecting" :size="18" /><ListChecks v-else :size="18" /></template>
-        {{ selection.selecting ? 'Готово' : 'Выбрать' }}
+        Режим выбора <span class="roster-selection-count" role="status" title="Выбрано в этой вкладке">{{ selection.selected.length }}</span>
       </ActionButton>
-      <span v-if="selection.selecting" class="roster-selection-count" role="status">{{ selection.selected.length }} / {{ selection.items.length }}</span>
       <slot />
     </div>
     <div v-if="actionsVisible" class="roster-actions-reveal roster-actions-reveal--open">
@@ -57,7 +56,8 @@ async function apply() {
 <style scoped>
 .roster-selection {min-width:0}
 .roster-selection-heading {display:flex;align-items:center;flex-wrap:wrap;gap:var(--spacing-xs)}
-.roster-selection-count,.roster-action-summary {font-size:var(--type-caption-size);color:var(--text-muted)}
+.roster-action-summary {font-size:var(--type-caption-size);color:var(--text-muted)}
+.roster-selection-count {min-width:var(--spacing-large);padding-inline:var(--spacing-xs);border-radius:var(--radius-badge);background:var(--background);font-variant-numeric:tabular-nums}
 .roster-selection-actions {display:flex;align-items:center;gap:var(--spacing-xs);padding-top:var(--spacing-xs)}
 .roster-actions-reveal {display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows var(--motion-enter),opacity var(--motion-feedback)}
 .roster-actions-reveal--open {grid-template-rows:1fr;opacity:1}

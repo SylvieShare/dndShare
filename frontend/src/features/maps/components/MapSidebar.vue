@@ -38,30 +38,33 @@
       :inert="collapsed"
       :aria-hidden="collapsed || undefined"
     >
-      <header class="map-sidebar-heading">
-        <div class="map-sidebar-heading-title">
-          <slot name="header-title" :tab="tab">
-            <Transition name="map-sidebar-title" mode="out-in"
-            ><strong :key="tab">{{
-              tabs.find((item) => item.key === tab)?.label
-            }}</strong></Transition
+      <div class="map-sidebar-header">
+        <header class="map-sidebar-heading">
+          <div class="map-sidebar-heading-title">
+            <slot name="header-title" :tab="tab">
+              <Transition name="map-sidebar-title" mode="out-in"
+              ><strong :key="tab">{{
+                tabs.find((item) => item.key === tab)?.label
+              }}</strong></Transition
+              >
+            </slot>
+          </div>
+          <div class="map-sidebar-heading-actions">
+            <slot name="header-actions" />
+            <ActionButton
+              variant="quiet"
+              icon-only
+              :aria-label="collapseLabel"
+              :title="collapseLabel"
+              :aria-expanded="!collapsed"
+              @click="collapse"
             >
-          </slot>
-        </div>
-        <div class="map-sidebar-heading-actions">
-          <slot name="header-actions" />
-          <ActionButton
-            variant="quiet"
-            icon-only
-            :aria-label="collapseLabel"
-            :title="collapseLabel"
-            :aria-expanded="!collapsed"
-            @click="collapse"
-          >
-            <template #icon><PanelLeftClose :size="20" /></template>
-          </ActionButton>
-        </div>
-      </header>
+              <template #icon><PanelLeftClose :size="20" /></template>
+            </ActionButton>
+          </div>
+        </header>
+        <slot name="header-content" />
+      </div>
       <div class="map-sidebar-viewport">
         <Transition
           name="map-sidebar-page"
@@ -299,12 +302,13 @@ defineExpose({
   transform: translateX(-8px);
 }
 .map-sidebar-heading {
-  margin-bottom: 12px;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 6px;
 }
+.map-sidebar-header {flex:none;background:var(--surface)}
 .map-sidebar-heading-title {flex:1;min-width:0;padding-inline-start:calc(var(--spacing-medium) / 2);font-size:16px}
 .map-sidebar-heading-title strong {
   font-size: inherit;

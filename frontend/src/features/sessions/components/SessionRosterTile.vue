@@ -23,11 +23,13 @@ defineProps({name:String,avatarUrl:String,color:String,hp:Object,armor:Number,he
 defineEmits(['health'])
 </script>
 <style scoped>
-.session-roster-tile.base-tile {padding:var(--spacing-small) var(--spacing-xs);min-width:0;width:100%;box-sizing:border-box;--tile-surface:transparent;background:var(--tile-surface);border-radius:var(--radius-tile);box-shadow:inset 3px 0 0 var(--player-color);overflow:hidden}
+.session-roster-tile.base-tile {padding:var(--spacing-small) var(--spacing-xs);min-width:0;width:100%;box-sizing:border-box;--tile-surface:transparent;background:var(--tile-surface);border-radius:0;box-shadow:inset 3px 0 0 var(--player-color);overflow:hidden;isolation:isolate}
 .session-roster-tile--current.base-tile {--tile-surface:color-mix(in srgb,var(--accent) 12%,transparent)}
 .session-roster-tile--compact.base-tile {padding:calc(var(--spacing-medium) / 2);width:var(--layout-touch-min);height:var(--layout-touch-min)}
-.session-roster-tile--selecting.base-tile {box-shadow:inset 0 0 0 var(--layout-border) var(--border-strong);cursor:pointer}
-.session-roster-tile--selected.session-roster-tile--selecting.base-tile {box-shadow:inset 0 0 0 calc(var(--layout-border) * 2) var(--accent);--tile-surface:color-mix(in srgb,var(--accent) 7%,transparent)}
+.session-roster-tile--selecting.base-tile {cursor:pointer}
+.session-roster-tile.base-tile::before {content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:var(--accent);opacity:0;mask:url('@/assets/ui/roster-selection-stroke.svg') center/100% 100% no-repeat;-webkit-mask:url('@/assets/ui/roster-selection-stroke.svg') center/100% 100% no-repeat;transition:opacity var(--motion-feedback)}
+.session-roster-tile--selected.session-roster-tile--selecting.base-tile::before {opacity:.24}
 .p-statuses-area {margin-top:var(--spacing-small);min-width:0;--status-scroll-inset-start:0px;--status-scroll-inset-end:0px}
 .roster-surprised {flex:none;color:var(--warning);font-size:var(--type-context-size)}
+@media(prefers-reduced-motion:reduce){.session-roster-tile.base-tile::before{transition:none}}
 </style>

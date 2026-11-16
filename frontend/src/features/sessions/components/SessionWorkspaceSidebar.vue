@@ -7,6 +7,7 @@
       <template v-if="controller.selected.value.startsWith('reserves:')" #header-title><slot name="reserve-title" /></template>
       <template v-if="controller.selected.value === 'players'" #header-actions><slot name="players-actions" /></template>
       <template v-else-if="controller.selected.value.startsWith('reserves:')" #header-actions><slot name="reserve-actions" /></template>
+      <template v-if="controller.selected.value === 'players' || controller.selected.value.startsWith('reserves:')" #header-content><div class="session-sidebar-header-controls"><slot name="selection-header" /></div></template>
       <div :ref="node => controller.target.value = node" class="session-sidebar-panels">
         <div v-show="controller.selected.value === 'players'" class="session-sidebar-players" data-tutorial="session-players"><slot /></div>
         <slot name="panels" />
@@ -34,5 +35,6 @@ onBeforeUnmount(() => unregister?.())
 <style scoped>
 .session-sidebar-host {position:absolute;z-index:20;inset:var(--session-toolbar-height,64px) 0 0;pointer-events:none}
 .session-sidebar-panels {display:flex;flex:1;min-height:0;min-width:0;flex-direction:column}
-.session-sidebar-players {display:flex;flex:1;min-height:0;flex-direction:column;gap:var(--spacing-medium);padding:var(--spacing-small) var(--spacing-medium) var(--spacing-large)}
+.session-sidebar-players {display:flex;flex:1;min-height:0;flex-direction:column;padding-inline-start:var(--spacing-medium)}
+.session-sidebar-header-controls {padding:0 var(--spacing-medium) var(--spacing-small)}
 </style>

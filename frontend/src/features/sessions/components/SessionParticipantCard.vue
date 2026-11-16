@@ -9,6 +9,7 @@
     @click.capture="suppressReorderClick"
     @contextmenu.capture="suppressReorderClick"
   >
+    <WorkspaceRowDivider v-if="divided" class="roster-divider" />
     <RowActionMenu :trigger-attrs="{ inert: selectionMode || undefined }">
       <template #trigger>
         <SessionPlayerTile
@@ -85,6 +86,7 @@ import { RowActionSubmenu } from '@sylvieshare/share-ui'
 import EncounterInitiativeMenu from './EncounterInitiativeMenu.vue'
 import SessionPlayerTile from './SessionPlayerTile.vue'
 import SessionPlayerDeathState from './SessionPlayerDeathState.vue'
+import WorkspaceRowDivider from '@/shared/ui/WorkspaceRowDivider.vue'
 import { pvAvatar, pvHp, pvHpPath, pvName } from '@/features/sessions/lib/participantView'
 
 const ParticipantStatuses = defineAsyncComponent(() => import('./ParticipantStatuses.vue'))
@@ -108,6 +110,7 @@ const props = defineProps({
   combatCurrent: { type: Boolean, default: false },
   combatEditable: { type: Boolean, default: false },
   selectionMode: Boolean,
+  divided: Boolean,
 })
 const emit = defineEmits(['view', 'kick', 'color', 'revive', 'drag-start', 'update:combat-selected', 'start-selection'])
 
@@ -185,8 +188,10 @@ const isDead = computed(() => showHp.value && hp.value.current <= 0)
 
 .p-card-menu {
   width: 100%;
-  border-radius: var(--radius-tile);
+  position:relative;
+  border-radius:0;
 }
+.roster-divider {z-index:2}
 .p-card-menu[role="checkbox"]:focus-visible {outline:2px solid var(--accent-soft);outline-offset:2px}
 
 .p-card-menu :deep(.ram-custom-trigger) {

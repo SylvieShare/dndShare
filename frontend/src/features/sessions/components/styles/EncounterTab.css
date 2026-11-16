@@ -11,8 +11,7 @@
 .enc-section-title-row {display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--spacing-small);min-height:var(--layout-touch-min)}
 .enc-section-title {display:flex;align-items:center;gap:var(--spacing-small);color:var(--text-muted);font:600 var(--type-caption-size)/var(--type-caption-line-height) var(--font-ui)}
 .enc-section-dot {width:var(--spacing-xs);height:var(--spacing-xs);border-radius:50%;background:var(--accent)}
-.enc-rows {display:flex;flex-direction:column;gap:var(--spacing-small)}
-.enc-rows > :deep(.enc-row-shell + .enc-row-shell) {border-top:var(--layout-border) solid var(--border-strong);padding-top:var(--spacing-small)}
+.enc-rows {display:flex;flex-direction:column;gap:0}
 .enc-empty {padding:var(--spacing-page) var(--spacing-small);color:var(--text-muted);font-size:var(--type-caption-size);line-height:var(--type-caption-line-height)}
 .enc-combat-scene {opacity:1;transform:translateY(0);transition:opacity var(--motion-enter),transform var(--motion-enter)}
 .enc-wrap--combat-ending .enc-combat-scene,.enc-wrap--combat-ending :deep(.turn-preview) {opacity:0;transform:translateY(var(--spacing-small));pointer-events:none}
