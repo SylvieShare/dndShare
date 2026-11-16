@@ -3,6 +3,8 @@
 .enc-wrap--columns {grid-template-areas:"roster controls";grid-template-columns:minmax(calc(var(--layout-encounter-roster-min-width) + var(--layout-encounter-scroll-gap)),calc(var(--layout-encounter-roster-width) + var(--layout-encounter-scroll-gap))) minmax(var(--layout-encounter-controls-min-width),var(--layout-encounter-controls-max-width));grid-template-rows:minmax(0,1fr);justify-content:center}
 .enc-content {grid-area:roster;min-height:0;min-width:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-inline-end:var(--layout-encounter-scroll-gap)}
 .enc-secondary {grid-area:controls;display:flex;flex-direction:column;gap:var(--spacing-large);min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-inline-end:var(--spacing-xs)}
+.enc-secondary > :deep(.enc-toolbar),.enc-secondary > :deep(.turn-preview) {flex:none}
+.enc-secondary :deep(.turn-preview) {height:auto;overflow:hidden}
 .enc-wrap:not(.enc-wrap--columns) .enc-secondary {max-height:40dvh}
 .enc-combat-primary,.enc-combat-scene,.enc-block,.enc-section {min-width:0}
 .enc-wrap--compact-roster .enc-combat-primary {--creature-avatar-size:var(--layout-touch-min);--encounter-avatar-size:var(--layout-touch-min);--participant-card-gap:var(--spacing-xs);--creature-tile-padding:var(--spacing-xs) var(--spacing-small) var(--spacing-xs) var(--spacing-xs)}
