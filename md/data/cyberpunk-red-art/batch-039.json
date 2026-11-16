@@ -16,12 +16,43 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
-      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A mature adult netrunner avatar in a practical graphite jacket is surrounded by a TRANSPARENT GOLDEN ARMOR projection following their torso and limbs. Fine geometric gold plates hover just above the avatar silhouette, clearly a defensive program rather than physical medieval plate. Calm three-quarter protective stance on a dark data platform, gold glow localized and face/hands readable.",
+      "status": "published",
+      "prompt": "Use case: style-transfer. IMAGE 1 is the edit target. IMAGE 2 is the APPROVED MATURE RENDERING STYLE ONLY; do not copy its character identity, haircut, pose, clothing or physical city background. Redraw the human avatar in image 1 to match image 2's adult facial structure and material detail: clearly mature adult around 35–45, natural smaller eyes, convincing eyelids/nose/jaw, nuanced facial planes, realistic body proportions and plausible hands. Replace the simplified youthful anime treatment with sophisticated detailed graphic RPG illustration. Fine varied ink lines, broad decisive CEL-SHADED light/shadow planes, subtle reflected light; believable fabric seams, folds, buckles and interface hardware, restrained detailed surfaces. Preserve image 1's exact program effect, its shape and color, action, main pose, hair color, overall palette and story. Keep the clearly virtual NET grid environment; do NOT turn the scene into a physical workshop or add grime to holographic effects. Retain opaque 5:2 composition with faces, hands, effect and important tools safely in frame. No text, logos, numbers, labels, banners, watermark, photorealism or glossy 3D. No extra people or unrelated props.",
       "width": 1600,
       "height": 640,
-      "original": "originals/net-armor-cover-v1.png",
-      "final": "final/net-armor-cover.webp"
+      "original": "originals/net-armor-cover-v2.png",
+      "final": "final/net-armor-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-44d54205-bd6a-4138-a24e-1326599b219b.png",
+      "originalSha256": "fc07486b5a850e4e17a7989e4bba7459e92446b01084488aa69478d17667f106",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "897ad2739dec014dea62d5b03b6f33bf496f622baab59e58a765433f5209dfcc",
+      "bytes": 191894,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/net-armor-cover.webp",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-fef2fc9c-3ea7-4ba4-be04-c93dad0baeb6.png",
+        "sha256": "669ac0c733cd4470f017a5fcb40eeba2a0b2d0611b1328a535fdee94e7fe2dfe",
+        "original": "originals/net-armor-cover-v1.png",
+        "originalSha256": "c65279c3a61f2908b29d58e97b09999fc319cb09100e413b622d5645b171db3d",
+        "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A mature adult netrunner avatar in a practical graphite jacket is surrounded by a TRANSPARENT GOLDEN ARMOR projection following their torso and limbs. Fine geometric gold plates hover just above the avatar silhouette, clearly a defensive program rather than physical medieval plate. Calm three-quarter protective stance on a dark data platform, gold glow localized and face/hands readable.",
+        "reason": "Human avatars too youthful and simplified for approved mature direction"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Final NET program forms/colors checked against Core. Twelve human scenes restyled to mature facial anatomy/material detail using approved style reference; effects and clearly virtual environment retained. Coherent hands and clean crops, no text.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49857,
+        "objectKey": "system-item-media/v1/items/7907/cover/897ad2739dec014dea62d5b03b6f33bf496f622baab59e58a765433f5209dfcc.webp",
+        "fileSize": 191894
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7907/cover/897ad2739dec014dea62d5b03b6f33bf496f622baab59e58a765433f5209dfcc.webp"
     },
     {
       "key": "net-banhammer-cover",
@@ -33,12 +64,43 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
-      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A mature adult netrunner avatar holds a huge WHITE LUMINOUS HAMMER made of segmented data-light diagonally across the wide frame. The hammer emits controlled white plasma-like wisps, no strike or victim. Practical cyberpunk clothing and plausible two-hand grip, dark blue geometric NET chamber, whole hammer head/handle visible.",
+      "status": "published",
+      "prompt": "Use case: style-transfer. IMAGE 1 is the edit target. IMAGE 2 is the APPROVED MATURE RENDERING STYLE ONLY; do not copy its character identity, haircut, pose, clothing or physical city background. Redraw the human avatar in image 1 to match image 2's adult facial structure and material detail: clearly mature adult around 35–45, natural smaller eyes, convincing eyelids/nose/jaw, nuanced facial planes, realistic body proportions and plausible hands. Replace the simplified youthful anime treatment with sophisticated detailed graphic RPG illustration. Fine varied ink lines, broad decisive CEL-SHADED light/shadow planes, subtle reflected light; believable fabric seams, folds, buckles and interface hardware, restrained detailed surfaces. Preserve image 1's exact program effect, its shape and color, action, main pose, hair color, overall palette and story. Keep the clearly virtual NET grid environment; do NOT turn the scene into a physical workshop or add grime to holographic effects. Retain opaque 5:2 composition with faces, hands, effect and important tools safely in frame. No text, logos, numbers, labels, banners, watermark, photorealism or glossy 3D. No extra people or unrelated props.",
       "width": 1600,
       "height": 640,
-      "original": "originals/net-banhammer-cover-v1.png",
-      "final": "final/net-banhammer-cover.webp"
+      "original": "originals/net-banhammer-cover-v2.png",
+      "final": "final/net-banhammer-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f03ffa94-8319-455e-86c0-aa30aab1fee1.png",
+      "originalSha256": "8a803bbacef02b797b4bb5553fcbb4613db19788f99e7188571d63992a3b3494",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "39a98c31ba7b803483b8b8cff988adb487125576d7cb86f32f3572d188504be0",
+      "bytes": 215298,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/net-banhammer-cover.webp",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f3f656d5-0502-4af8-9206-18651e280fcb.png",
+        "sha256": "c99e45bce0e0896c4621b6a8e840fb86a92114251423ddf25d66be47ac8d8882",
+        "original": "originals/net-banhammer-cover-v1.png",
+        "originalSha256": "ac3fb6d87c64c2c1f33465828b51f8187160e0cfddbb704df17b54cddfbf067d",
+        "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A mature adult netrunner avatar holds a huge WHITE LUMINOUS HAMMER made of segmented data-light diagonally across the wide frame. The hammer emits controlled white plasma-like wisps, no strike or victim. Practical cyberpunk clothing and plausible two-hand grip, dark blue geometric NET chamber, whole hammer head/handle visible.",
+        "reason": "Human avatars too youthful and simplified for approved mature direction"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Final NET program forms/colors checked against Core. Twelve human scenes restyled to mature facial anatomy/material detail using approved style reference; effects and clearly virtual environment retained. Coherent hands and clean crops, no text.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49858,
+        "objectKey": "system-item-media/v1/items/7908/cover/39a98c31ba7b803483b8b8cff988adb487125576d7cb86f32f3572d188504be0.webp",
+        "fileSize": 215298
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7908/cover/39a98c31ba7b803483b8b8cff988adb487125576d7cb86f32f3572d188504be0.webp"
     },
     {
       "key": "net-deckkrash-cover",
@@ -50,12 +112,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A stylized RED SOFTWARE CAPSULE shaped like a cartoon dynamite stick with a short luminous digital fuse, hovering in a NET pathway where a connection line breaks into harmless square light fragments behind it. Clearly an abstract virtual program token, no physical explosive detail, assembly, real person or explosion. Mature graphic rendering of a deliberately stylized software avatar, restrained red/white light.",
       "width": 1600,
       "height": 640,
       "original": "originals/net-deckkrash-cover-v1.png",
-      "final": "final/net-deckkrash-cover.webp"
+      "final": "final/net-deckkrash-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a0802ba5-00e9-4d9c-9da1-a1a504040f34.png",
+      "originalSha256": "ba5eca86935a3fd7443c499b23bfd3a05c71860c0f62edd9c4cc1655c3ad5560",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "21fef3bcf49326d2e04cb28ffdfdf8d4e383b850b93f6aef7a92456cc96a5354",
+      "bytes": 152456,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "note": "Final NET program forms/colors checked against Core. Twelve human scenes restyled to mature facial anatomy/material detail using approved style reference; effects and clearly virtual environment retained. Coherent hands and clean crops, no text.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49859,
+        "objectKey": "system-item-media/v1/items/7909/cover/21fef3bcf49326d2e04cb28ffdfdf8d4e383b850b93f6aef7a92456cc96a5354.webp",
+        "fileSize": 152456
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7909/cover/21fef3bcf49326d2e04cb28ffdfdf8d4e383b850b93f6aef7a92456cc96a5354.webp"
     },
     {
       "key": "net-eraser-cover",
@@ -67,12 +151,43 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
-      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A PINK luminous sphere program releases a trail of tiny transparent iridescent SOAP-BUBBLE shapes that dissolve a netrunner avatar's footprints into the virtual floor. Clearly digital cloaking, not a physical cleaning product. Sophisticated light refraction and geometric NET depth, quiet pink and slate palette, no text.",
+      "status": "published",
+      "prompt": "Use case: style-transfer. IMAGE 1 is the edit target. IMAGE 2 is the APPROVED MATURE RENDERING STYLE ONLY; do not copy its character identity, haircut, pose, clothing or physical city background. Redraw the human avatar in image 1 to match image 2's adult facial structure and material detail: clearly mature adult around 35–45, natural smaller eyes, convincing eyelids/nose/jaw, nuanced facial planes, realistic body proportions and plausible hands. Replace the simplified youthful anime treatment with sophisticated detailed graphic RPG illustration. Fine varied ink lines, broad decisive CEL-SHADED light/shadow planes, subtle reflected light; believable fabric seams, folds, buckles and interface hardware, restrained detailed surfaces. Preserve image 1's exact program effect, its shape and color, action, main pose, hair color, overall palette and story. Keep the clearly virtual NET grid environment; do NOT turn the scene into a physical workshop or add grime to holographic effects. Retain opaque 5:2 composition with faces, hands, effect and important tools safely in frame. No text, logos, numbers, labels, banners, watermark, photorealism or glossy 3D. No extra people or unrelated props.",
       "width": 1600,
       "height": 640,
-      "original": "originals/net-eraser-cover-v1.png",
-      "final": "final/net-eraser-cover.webp"
+      "original": "originals/net-eraser-cover-v2.png",
+      "final": "final/net-eraser-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4c8a174f-ea0a-43b6-9f0c-f5ee7a6193e2.png",
+      "originalSha256": "a1128b452098a4c1b6874d346052b80d8fb5d00d5a2ad5251bc74cf836c2f17c",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "cc6b46db46e4b5a68ca5d1758806edfd8e01d4e7d311dce2437f8494834f2d5b",
+      "bytes": 203980,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/net-eraser-cover.webp",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b75f7f84-3c6f-4c06-b374-35eaeeeb9997.png",
+        "sha256": "fa4960a6962d36ff27fa3c564784d6e0cb4b3fc5e4278fcda53bf01ccf2602eb",
+        "original": "originals/net-eraser-cover-v1.png",
+        "originalSha256": "9733d71e402f240a4d422ca0ab20aa4ef3a4fe848d9381f28f1622e604aa46a7",
+        "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A PINK luminous sphere program releases a trail of tiny transparent iridescent SOAP-BUBBLE shapes that dissolve a netrunner avatar's footprints into the virtual floor. Clearly digital cloaking, not a physical cleaning product. Sophisticated light refraction and geometric NET depth, quiet pink and slate palette, no text.",
+        "reason": "Human avatars too youthful and simplified for approved mature direction"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Final NET program forms/colors checked against Core. Twelve human scenes restyled to mature facial anatomy/material detail using approved style reference; effects and clearly virtual environment retained. Coherent hands and clean crops, no text.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49860,
+        "objectKey": "system-item-media/v1/items/7910/cover/cc6b46db46e4b5a68ca5d1758806edfd8e01d4e7d311dce2437f8494834f2d5b.webp",
+        "fileSize": 203980
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7910/cover/cc6b46db46e4b5a68ca5d1758806edfd8e01d4e7d311dce2437f8494834f2d5b.webp"
     },
     {
       "key": "net-flak-cover",
@@ -84,12 +199,55 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
-      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A cloud of bright MULTICOLORED LIGHT POINTS and geometric luminous arcs circles a mature adult netrunner avatar, forming a distracting protective field. No fireworks rockets, guns or real explosion. Carefully controlled colored highlights on graphite clothing, readable adult face and hands, dark virtual architecture and broad cel shadows.",
+      "status": "published",
+      "prompt": "Use case: style-transfer. IMAGE 1 is the edit target. IMAGE 2 is the APPROVED MATURE RENDERING STYLE ONLY; do not copy its character identity, haircut, pose, clothing or physical city background. Redraw the human avatar in image 1 to match image 2's adult facial structure and material detail: clearly mature adult around 35–45, natural smaller eyes, convincing eyelids/nose/jaw, nuanced facial planes, realistic body proportions and plausible hands. Replace the simplified youthful anime treatment with sophisticated detailed graphic RPG illustration. Fine varied ink lines, broad decisive CEL-SHADED light/shadow planes, subtle reflected light; believable fabric seams, folds, buckles and interface hardware, restrained detailed surfaces. Preserve image 1's exact program effect, its shape and color, action, main pose, hair color, overall palette and story. Keep the clearly virtual NET grid environment; do NOT turn the scene into a physical workshop or add grime to holographic effects. Retain opaque 5:2 composition with faces, hands, effect and important tools safely in frame. No text, logos, numbers, labels, banners, watermark, photorealism or glossy 3D. No extra people or unrelated props.",
       "width": 1600,
       "height": 640,
-      "original": "originals/net-flak-cover-v1.png",
-      "final": "final/net-flak-cover.webp"
+      "original": "originals/net-flak-cover-v2.png",
+      "final": "final/net-flak-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-24bd220c-d196-4094-ab56-28f81ce8daa2.png",
+      "originalSha256": "566ecbfa56118cbed2d884bdbd570833a00c1b3a43d0ff5ef090e1db7dc15300",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "ee3be4c293b5be58171d7cfaa9ce89e026d52cac26bfbba5c458ed1a0b0f06f0",
+      "bytes": 270382,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "final": "final/net-flak-cover.webp",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-44954305-6c52-43b2-9e27-513afaf162b9.png",
+        "sha256": "ecc5b7bbcc2141b5770445490dc313f20800aa032967ac49311823c5283eb10a",
+        "original": "originals/net-flak-cover-v1.png",
+        "originalSha256": "8571b7ac496e331cfdd28d1516f099d0c945a119ab2e96daf095c81ec00b10d2",
+        "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A cloud of bright MULTICOLORED LIGHT POINTS and geometric luminous arcs circles a mature adult netrunner avatar, forming a distracting protective field. No fireworks rockets, guns or real explosion. Carefully controlled colored highlights on graphite clothing, readable adult face and hands, dark virtual architecture and broad cel shadows.",
+        "reason": "Human avatars too youthful and simplified for approved mature direction"
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Final NET program forms/colors checked against Core. Twelve human scenes restyled to mature facial anatomy/material detail using approved style reference; effects and clearly virtual environment retained. Coherent hands and clean crops, no text.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49861,
+        "objectKey": "system-item-media/v1/items/7911/cover/ee3be4c293b5be58171d7cfaa9ce89e026d52cac26bfbba5c458ed1a0b0f06f0.webp",
+        "fileSize": 270382
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7911/cover/ee3be4c293b5be58171d7cfaa9ce89e026d52cac26bfbba5c458ed1a0b0f06f0.webp"
     }
-  ]
+  ],
+  "liveReview": {
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-39/live-qa.json",
+    "note": "Every real NET item loads its own expected cover at all three widths; no JavaScript errors or horizontal page overflow.",
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "passed": true,
+    "checkedAt": "2026-11-16T18:23:50.922Z",
+    "scenarios": 15
+  }
 }

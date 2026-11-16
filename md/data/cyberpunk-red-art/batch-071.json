@@ -1,0 +1,112 @@
+{
+  "batch": 71,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-71",
+  "sourceAudit": "Live own media slots empty. Core163–165,343–344,368 and category checked. Finished fictional hardware, no technical instructions. Icons unchanged.",
+  "assets": [
+    {
+      "key": "mod-7973-cover",
+      "target": {
+        "kind": "item",
+        "id": 7973,
+        "typeId": 35,
+        "name": "Бортовое оружие ближнего боя"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional ONBOARD MELEE attachment mounted beside a stationary rugged nomad car: a heavy compact blade-like industrial armature folded in its parked position. No combat, collision, victim or operating diagrams. Entire vehicle-side attachment visible, material detail and restrained wear.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7973-cover-v1.png",
+      "final": "final/mod-7973-cover.jpg"
+    },
+    {
+      "key": "mod-7974-cover",
+      "target": {
+        "kind": "item",
+        "id": 7974,
+        "typeId": 35,
+        "name": "Бортовой ракетный блок"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional ONBOARD ROCKET POD integrated into the FRONT of a stationary heavy-chassis vehicle. Three closed protective launch-tube caps in one armored pod, no loose rockets or firing. No targets, diagrams or instructions. Mature detailed cel-shaded industrial exhibit in a hangar.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7974-cover-v1.png",
+      "final": "final/mod-7974-cover.jpg"
+    },
+    {
+      "key": "mod-7976-cover",
+      "target": {
+        "kind": "item",
+        "id": 7976,
+        "typeId": 35,
+        "name": "Дополнительные сиденья"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A PAIR of additional passenger SEATS installed inside a roomy cyberpunk nomad van. Two complete rugged padded seats with seatbelts and overhead emergency hatches, storage behind them. No ejection action, no technical procedure, practical adult-scale interior, rich fabric and metal materials.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7976-cover-v1.png",
+      "final": "final/mod-7976-cover.jpg"
+    },
+    {
+      "key": "mod-7977-cover",
+      "target": {
+        "kind": "item",
+        "id": 7977,
+        "typeId": 35,
+        "name": "Дополнительная безопасность"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A VEHICLE SECURITY upgrade represented by a biometric sensor beside the door handle of a parked retrofuturist car, small perimeter camera modules and subtle adaptive camouflage panels reflecting the surrounding garage wall. No electrical trap action, bypass scene or instructions. Clear grounded scene.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7977-cover-v1.png",
+      "final": "final/mod-7977-cover.jpg"
+    },
+    {
+      "key": "mod-7980-cover",
+      "target": {
+        "kind": "item",
+        "id": 7980,
+        "typeId": 35,
+        "name": "Отсек для контрабанды"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A nomad vehicle STORAGE upgrade shown as a closed unmarked robust storage case in the open rear cargo bay of a parked futuristic van. Mundane empty storage context only; no contraband, weapons, hidden-location cutaway or concealment instructions. Detailed clean hinges and textured floor.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7980-cover-v1.png",
+      "final": "final/mod-7980-cover.jpg"
+    },
+    {
+      "key": "mod-7982-cover",
+      "target": {
+        "kind": "item",
+        "id": 7982,
+        "typeId": 35,
+        "name": "Крепление для тяжёлого оружия"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. An EMPTY rotating HEAVY-WEAPON MOUNT replacing a passenger seat in a parked nomad vehicle. Robust circular swivel base, two support grips and an empty cradle, protective clear ballistic glass bubble. No weapon or operator, no installation diagram. Complete mount visible in hangar light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7982-cover-v1.png",
+      "final": "final/mod-7982-cover.jpg"
+    }
+  ]
+}

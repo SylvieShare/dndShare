@@ -16,12 +16,43 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
-      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A ROBOT SAMURAI software avatar with RED EYES holds a LUMINOUS KATANA in a low guarded stance on a NET platform. Futuristic segmented black and ivory armor, mechanical joints, no historical clan insignia, no real person, no attack or injury. Full blade inside frame, cool digital architectural depth.",
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Reframe this virtual robot-samurai illustration slightly WIDER so the complete helmet including both top fin tips, both feet and the entire luminous katana are inside the image with comfortable 7% margins. Preserve the exact robot design, pose, colors, red eyes, mechanical detail, cel shading and NET backdrop. Expand empty virtual surroundings naturally, no cropping of the hero. Opaque 5:2 panorama, no text, logos, labels or UI.",
       "width": 1600,
       "height": 640,
-      "original": "originals/ice-killer-cover-v1.png",
-      "final": "final/ice-killer-cover.webp"
+      "original": "originals/ice-killer-cover-v2.png",
+      "final": "final/ice-killer-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-066990b0-a1d4-4b80-9132-43627b09c18e.png",
+      "originalSha256": "ba6f76fc8272a11cd6d6f313d60abff0d9a07c8b8b7bb0cd2c981f49817c9f72",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "e162ee801e5e7887eb660d6b78368e3648d36edc21f185a65161a46ba605ccd3",
+      "bytes": 155974,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "reason": "Wing/helmet tips too close to frame edge",
+        "final": "final/ice-killer-cover.webp",
+        "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A ROBOT SAMURAI software avatar with RED EYES holds a LUMINOUS KATANA in a low guarded stance on a NET platform. Futuristic segmented black and ivory armor, mechanical joints, no historical clan insignia, no real person, no attack or injury. Full blade inside frame, cool digital architectural depth.",
+        "sha256": "7a11ea77f971a93a413fbec53584673980e84e1ebcc8cff37d40ff3427d86704",
+        "original": "originals/ice-killer-cover-v1.png",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c680edcd-a891-4ac7-8f20-d569f435cada.png",
+        "originalSha256": "2f185cc19e94db0cf6c8faf120f5604afc2e9b9477aaba0da4cd8e3c21f3399a"
+      },
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Core software-avatar appearance verified in final exports. Raven/killer framing widened to include full tips. Deliberately stylized virtual skunk and artificial eye retained; daemon forms and colors match source, no real injuries or text.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49877,
+        "objectKey": "system-item-media/v1/items/8127/cover/e162ee801e5e7887eb660d6b78368e3648d36edc21f185a65161a46ba605ccd3.webp",
+        "fileSize": 155974
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8127/cover/e162ee801e5e7887eb660d6b78368e3648d36edc21f185a65161a46ba605ccd3.webp"
     },
     {
       "key": "ice-sabertooth-cover",
@@ -33,12 +64,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A HUGE HEAVYSET CAT software avatar with two prominent GLOWING WHITE SABER FANGS stands in a virtual corridor. Clumsy powerful proportions, four coherent legs and thick tail, mature stylized fur rendered as angular digital planes; no cute cub features, no blood or victim. Silver-brown body against dark cyan architecture.",
       "width": 1600,
       "height": 640,
       "original": "originals/ice-sabertooth-cover-v1.png",
-      "final": "final/ice-sabertooth-cover.webp"
+      "final": "final/ice-sabertooth-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ae98bac2-c71a-4730-a20e-56dae1f1febe.png",
+      "originalSha256": "825536789b615aa62b06cd340dc04e045cf39e54b3d6763fe5ef21defcbb2da9",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "a3566f729b97fe1518f2ab539cf65b9ce62fbf89018aea76df49393e0379c764",
+      "bytes": 169660,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Core software-avatar appearance verified in final exports. Raven/killer framing widened to include full tips. Deliberately stylized virtual skunk and artificial eye retained; daemon forms and colors match source, no real injuries or text.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49878,
+        "objectKey": "system-item-media/v1/items/8128/cover/a3566f729b97fe1518f2ab539cf65b9ce62fbf89018aea76df49393e0379c764.webp",
+        "fileSize": 169660
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8128/cover/a3566f729b97fe1518f2ab539cf65b9ce62fbf89018aea76df49393e0379c764.webp"
     },
     {
       "key": "daemon-imp-cover",
@@ -50,12 +103,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A SMALL ORANGE SPHERE with TWO RED HORN-LIKE PROJECTIONS floats above a virtual security control node. It is a simple autonomous software avatar, not a supernatural demon. Precise segmented luminous surface, orange local light and dark network architecture, camera/turret control pathways implied through abstract geometric connections, no text.",
       "width": 1600,
       "height": 640,
       "original": "originals/daemon-imp-cover-v1.png",
-      "final": "final/daemon-imp-cover.webp"
+      "final": "final/daemon-imp-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2b0039d2-1ede-4c54-afd0-6914a7b1481a.png",
+      "originalSha256": "162fded85162729719b761da525aa16fa3641b92531552fe52d2801794b1d469",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "5752cade81fc023b32263ecd2124d2a88e2ed1bef076c861dbea57d0e426c8d9",
+      "bytes": 169536,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Core software-avatar appearance verified in final exports. Raven/killer framing widened to include full tips. Deliberately stylized virtual skunk and artificial eye retained; daemon forms and colors match source, no real injuries or text.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49879,
+        "objectKey": "system-item-media/v1/items/8129/cover/5752cade81fc023b32263ecd2124d2a88e2ed1bef076c861dbea57d0e426c8d9.webp",
+        "fileSize": 169536
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8129/cover/5752cade81fc023b32263ecd2124d2a88e2ed1bef076c861dbea57d0e426c8d9.webp"
     },
     {
       "key": "daemon-efreet-cover",
@@ -67,12 +142,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A TALL STRONGLY BUILT BLACK MALE ADULT software avatar wears an ELEGANT BLACK TUXEDO and a BURGUNDY FEZ, holding a small plain dagger LOW at his side in a composed guard stance. Distinguished mature face, natural human proportions and plausible hands, sophisticated fabric detail; he stands within a clearly virtual security-node chamber. No caricature, magic smoke, real target, injury or cultural emblems.",
       "width": 1600,
       "height": 640,
       "original": "originals/daemon-efreet-cover-v1.png",
-      "final": "final/daemon-efreet-cover.webp"
+      "final": "final/daemon-efreet-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-040c6b96-e38b-4e26-9077-86dbd5b298c0.png",
+      "originalSha256": "f1887852018b0d27fb7552a843923d2aa1788f3443429dc933c0f98c9416cf16",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "360c02c72e6bf32272d0728f0e74c0d9572822a0f33e6cb130f600d35f7c98c9",
+      "bytes": 183036,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Core software-avatar appearance verified in final exports. Raven/killer framing widened to include full tips. Deliberately stylized virtual skunk and artificial eye retained; daemon forms and colors match source, no real injuries or text.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49880,
+        "objectKey": "system-item-media/v1/items/8130/cover/360c02c72e6bf32272d0728f0e74c0d9572822a0f33e6cb130f600d35f7c98c9.webp",
+        "fileSize": 183036
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8130/cover/360c02c72e6bf32272d0728f0e74c0d9572822a0f33e6cb130f600d35f7c98c9.webp"
     },
     {
       "key": "daemon-balron-cover",
@@ -84,12 +181,46 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A HUGE MONSTROUS SOFTWARE AVATAR in FUTURISTIC BLACK ARMOR is covered with LUMINOUS GREEN TENDRILS resembling controlled data cables. Imposing broad engineered silhouette, coherent two legs and two main arms, tendrils separate from limbs, no flesh, gore, pentagrams or real occult scene. It guards a deep virtual security hub; fine armor detail and localized green light.",
       "width": 1600,
       "height": 640,
       "original": "originals/daemon-balron-cover-v1.png",
-      "final": "final/daemon-balron-cover.webp"
+      "final": "final/daemon-balron-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8b557e74-8105-401e-8d38-b3bf6a622b66.png",
+      "originalSha256": "cc281a603b1a38b1882cb7e3c6cfa010adaebd33981c12d02581d3a5cd872055",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "68c4dd3f0b954435110cf95411cf73d91d836c43a6f6d4e43687e3ccf7775c39",
+      "bytes": 296956,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Core software-avatar appearance verified in final exports. Raven/killer framing widened to include full tips. Deliberately stylized virtual skunk and artificial eye retained; daemon forms and colors match source, no real injuries or text.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49881,
+        "objectKey": "system-item-media/v1/items/8131/cover/68c4dd3f0b954435110cf95411cf73d91d836c43a6f6d4e43687e3ccf7775c39.webp",
+        "fileSize": 296956
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8131/cover/68c4dd3f0b954435110cf95411cf73d91d836c43a6f6d4e43687e3ccf7775c39.webp"
     }
-  ]
+  ],
+  "liveReview": {
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-44/live-qa.json",
+    "note": "Every real NET item loads its own expected cover at all three widths; no JavaScript errors or horizontal page overflow.",
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "passed": true,
+    "checkedAt": "2026-11-16T18:41:56.633Z",
+    "scenarios": 15
+  }
 }

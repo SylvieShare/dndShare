@@ -1,0 +1,112 @@
+{
+  "batch": 67,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-67",
+  "sourceAudit": "Live cyberware own slots empty. Core364–367 and structured category reviewed. Limb materials and paired options distinguished; biological limbs remain attached to intact adults. Static fictional hardware, no instructions or icon changes.",
+  "assets": [
+    {
+      "key": "cyber-7800-cover",
+      "target": {
+        "kind": "item",
+        "id": 7800,
+        "typeId": 26,
+        "name": "Пластиковое покрытие (кибернога)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A complete cybernetic leg with colored matte PLASTIC cosmetic casing, muted cream and teal molded panels with graphite joints. Show hip connector, knee, ankle and five-toe foot on fitting stand. Salon interior, no chrome-like reflection, fine seam details.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7800-cover-v1.png",
+      "final": "final/cyber-7800-cover.jpg"
+    },
+    {
+      "key": "cyber-7812-cover",
+      "target": {
+        "kind": "item",
+        "id": 7812,
+        "typeId": 26,
+        "name": "Покрытие Realskinn (кибернога)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fully clothed mature adult seated in a prosthetic-fitting salon wearing knee-length shorts, one cybernetic lower leg has lifelike synthetic skin and a subtle neat ankle seam. Normal warm skin texture and five toes; intact person, no cutaway or wound. Focus on natural-looking covering.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7812-cover-v1.png",
+      "final": "final/cyber-7812-cover.jpg"
+    },
+    {
+      "key": "cyber-7820-cover",
+      "target": {
+        "kind": "item",
+        "id": 7820,
+        "typeId": 26,
+        "name": "Ступни-ролики"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A MATCHED PAIR of cybernetic feet with deployed compact inline skate wheels integrated into the soles, resting side by side on a maintenance bench. Both ankle connectors and full wheels visible, distinct from ordinary footwear. No body/attack, warm industrial lamp.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7820-cover-v1.png",
+      "final": "final/cyber-7820-cover.jpg"
+    },
+    {
+      "key": "cyber-7832-cover",
+      "target": {
+        "kind": "item",
+        "id": 7832,
+        "typeId": 26,
+        "name": "Покрытие «Суперхром®» (кибернога)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A complete cybernetic leg on a showroom fitting stand covered in mirror-polished SUPERCHROME, silver plates reflecting broad violet and amber cel-painted light. Graphite joint gaps, full hip connector to five-toe foot inside frame. No text or brand.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7832-cover-v1.png",
+      "final": "final/cyber-7832-cover.jpg"
+    },
+    {
+      "key": "cyber-7834-cover",
+      "target": {
+        "kind": "item",
+        "id": 7834,
+        "typeId": 26,
+        "name": "Коготь в ступне"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One artificial cybernetic foot on a manufactured display stand with a single small retractable blade extending beside the toes, inert fictional prop. Whole ankle connector and foot within frame, no combat, blood, target or operation diagram. Matte ceramic and graphite.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7834-cover-v1.png",
+      "final": "final/cyber-7834-cover.jpg"
+    },
+    {
+      "key": "cyber-7844-cover",
+      "target": {
+        "kind": "item",
+        "id": 7844,
+        "typeId": 26,
+        "name": "Перепончатые ступни"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A MATCHED PAIR of cybernetic feet with thin flexible webbing BETWEEN the articulated toes, not full swim fins. Both ankle connectors visible on a waterproof equipment bench, subtle water droplets and aquatic blue reflection. Clear five-toe anatomy per foot, no extra appendages.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7844-cover-v1.png",
+      "final": "final/cyber-7844-cover.jpg"
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "batch": 70,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-70",
+  "sourceAudit": "Live own media slots empty. Core163–165,343–344,368 and category checked. Finished fictional hardware, no technical instructions. Icons unchanged.",
+  "assets": [
+    {
+      "key": "mod-7964-cover",
+      "target": {
+        "kind": "item",
+        "id": 7964,
+        "typeId": 35,
+        "name": "Утяжелённая рама"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A HEAVY VEHICLE CHASSIS on a workshop lift, robust reinforced longitudinal frame rails and beefier crossmembers beneath a rugged van, towing eye and neatly coiled towing cable visible. No body armor plating emphasis, distinguish strong structural skeleton from armor. Warm garage and cool daylight.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7964-cover-v1.png",
+      "final": "final/mod-7964-cover.jpg"
+    },
+    {
+      "key": "mod-7965-cover",
+      "target": {
+        "kind": "item",
+        "id": 7965,
+        "typeId": 35,
+        "name": "Жилой отсек"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A compact HOUSING COMPARTMENT built into a nomad vehicle: ONE narrow bed, tiny kitchenette, and a small enclosed bathroom/shower door. View through open side door, practical packed storage and lived-in cloth, adult scale. No people necessary, no logos or labels.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7965-cover-v1.png",
+      "final": "final/mod-7965-cover.jpg"
+    },
+    {
+      "key": "mod-7966-cover",
+      "target": {
+        "kind": "item",
+        "id": 7966,
+        "typeId": 35,
+        "name": "Воздушная подушка"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A retrofuturist land car converted with an AIR-CUSHION HOVER upgrade, parked on a wet dock with clearly visible powerful downward-facing ducted fans under chassis and flexible perimeter skirt. Plausible hovercraft, no flying high, no jet flames or levitation magic. Warm/cool reflected light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7966-cover-v1.png",
+      "final": "final/mod-7966-cover.jpg"
+    },
+    {
+      "key": "mod-7970-cover",
+      "target": {
+        "kind": "item",
+        "id": 7970,
+        "typeId": 35,
+        "name": "Система закиси азота"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional vehicle NITROUS BOOST module shown as one sealed metal canister secured in a padded bracket within a retrofuturist car's rear compartment. Closed finished hardware with protected opaque connectors; no exposed plumbing, gauges, chemistry, diagrams or installation instructions. Workshop illustration.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7970-cover-v1.png",
+      "final": "final/mod-7970-cover.jpg"
+    },
+    {
+      "key": "mod-7971-cover",
+      "target": {
+        "kind": "item",
+        "id": 7971,
+        "typeId": 35,
+        "name": "Бортовой огнемёт"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional ONBOARD FLAMETHROWER module built into the side of a rugged parked retrofuturist vehicle. Static inert compact nozzle housing and protected rounded reservoir visible as closed housings; no flame, firing, human target or construction/operating details. Industrial garage, mature cel shading.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7971-cover-v1.png",
+      "final": "final/mod-7971-cover.jpg"
+    },
+    {
+      "key": "mod-7972-cover",
+      "target": {
+        "kind": "item",
+        "id": 7972,
+        "typeId": 35,
+        "name": "Бортовой пулемёт"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional fixed ONBOARD MACHINE-GUN housing integrated into the FRONT of a parked rugged vehicle, short dark barrel behind armored fairing, no rotating rooftop turret. Static inert equipment, no ammunition, firing, human target or instructions. Wide garage view with complete front of car.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7972-cover-v1.png",
+      "final": "final/mod-7972-cover.jpg"
+    }
+  ]
+}

@@ -1,0 +1,256 @@
+{
+  "batch": 56,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-56",
+  "sourceAudit": "Live own media empty. Eye/audio/neural categories and paired flags checked against Core359–362 and imported facts. Components shown as manufactured clinical displays, no implantation instructions or icon changes.",
+  "assets": [
+    {
+      "key": "cyber-7735-cover",
+      "target": {
+        "kind": "item",
+        "id": 7735,
+        "typeId": 26,
+        "name": "Усиленный слух"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One miniature amplified-hearing implant module, a small curved graphite audio processor with a fine silver acoustic collector grille and copper contact tabs. On a clinical microhardware tray near a neutral synthetic ear training model, no external headset or exposed tissue.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7735-cover-v1.png",
+      "final": "final/cyber-7735-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-83aeea51-e6b8-4a9b-beda-082921939d8e.png",
+      "originalSha256": "db1a52ba0154320c79fa272172b3354c4b0a088d893cce809b40c98bae87c583",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "450d4f013524425ad1d002ff689c4a88c21513e84ca46e245b03f2bc09a1d3db",
+      "bytes": 341934,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49967,
+        "objectKey": "system-item-media/v1/items/7735/cover/450d4f013524425ad1d002ff689c4a88c21513e84ca46e245b03f2bc09a1d3db.jpg",
+        "fileSize": 341934
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7735/cover/450d4f013524425ad1d002ff689c4a88c21513e84ca46e245b03f2bc09a1d3db.jpg"
+    },
+    {
+      "key": "cyber-7738-cover",
+      "target": {
+        "kind": "item",
+        "id": 7738,
+        "typeId": 26,
+        "name": "Диктофон"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One miniature internal audio-recorder implant module: a compact slate chip with a tiny microphone grille, copper contacts and a subtle amber light. A nonverbal waveform glows softly on a separate distant diagnostic cradle, no readable text. No handheld recorder or person.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7738-cover-v1.png",
+      "final": "final/cyber-7738-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6fee61bd-cade-4e85-9496-60b1432b03fc.png",
+      "originalSha256": "6fe398491e068b716b28d5d27dda43c97017aa4347948ba3c382582f0d686ab6",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "a4a198d220776e9c712144328efd5583706f88ac203ad50d18e4e013760ca868",
+      "bytes": 339610,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49968,
+        "objectKey": "system-item-media/v1/items/7738/cover/a4a198d220776e9c712144328efd5583706f88ac203ad50d18e4e013760ca868.jpg",
+        "fileSize": 339610
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7738/cover/a4a198d220776e9c712144328efd5583706f88ac203ad50d18e4e013760ca868.jpg"
+    },
+    {
+      "key": "cyber-7743-cover",
+      "target": {
+        "kind": "item",
+        "id": 7743,
+        "typeId": 26,
+        "name": "Обнаружитель жучков"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One tiny implanted bug-detector receiver module, a shielded graphite microcase with a short loop antenna trace and three small colored status points. On an audio-implant service tray, no surveillance target, map, frequencies, operational instructions or person.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7743-cover-v1.png",
+      "final": "final/cyber-7743-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-97e43f60-5a3c-4e28-a680-4376a845d912.png",
+      "originalSha256": "7c0e7d88e6cda012d9703cc5aa6292cda11070d12b182ad6ea31e88442758025",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "8c2ad88ff639d49991fd5c5e46a4f4cf0918cfda7e4fb5f89c9ff3dff4268351",
+      "bytes": 414698,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49969,
+        "objectKey": "system-item-media/v1/items/7743/cover/8c2ad88ff639d49991fd5c5e46a4f4cf0918cfda7e4fb5f89c9ff3dff4268351.jpg",
+        "fileSize": 414698
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7743/cover/8c2ad88ff639d49991fd5c5e46a4f4cf0918cfda7e4fb5f89c9ff3dff4268351.jpg"
+    },
+    {
+      "key": "cyber-7770-cover",
+      "target": {
+        "kind": "item",
+        "id": 7770,
+        "typeId": 26,
+        "name": "Радиопеленгатор"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One compact implanted tracking-receiver micro-module beside its tiny button-shaped beacon, paired as a device set in a padded clinic tray. Fine loop antenna and copper contacts, muted amber accents. No tracking scene, identifiable target, map or readable data.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7770-cover-v1.png",
+      "final": "final/cyber-7770-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ca4f5d04-83c2-47a2-a95f-3435fd10d05d.png",
+      "originalSha256": "4a8eaf19b41bc71646bd245ea99f568bd4898ced98e564cdd3fcd2ee8aded955",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "7d4a0a854c4e0a8c6e74c48f9beee0d966d80e7a6ac55dd982357ad4bceb5078",
+      "bytes": 367967,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49970,
+        "objectKey": "system-item-media/v1/items/7770/cover/7d4a0a854c4e0a8c6e74c48f9beee0d966d80e7a6ac55dd982357ad4bceb5078.jpg",
+        "fileSize": 367967
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7770/cover/7d4a0a854c4e0a8c6e74c48f9beee0d966d80e7a6ac55dd982357ad4bceb5078.jpg"
+    },
+    {
+      "key": "cyber-7776-cover",
+      "target": {
+        "kind": "item",
+        "id": 7776,
+        "typeId": 26,
+        "name": "Внутренний агент"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One internal Agent audio-assistant processor capsule, very compact graphite/ivory microelectronics with a sealed memory housing and fine connector leads. A small separate diagnostic cradle shows only a simple nonverbal profile silhouette. This is an implanted voice-system component, not a smartphone. No open skull or surgery.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7776-cover-v1.png",
+      "final": "final/cyber-7776-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0e795f35-2e6f-42dc-b9b0-5fbbc5bb6b3a.png",
+      "originalSha256": "3387aab0a502eab916c3b7da5b52432b2dc44bb46419f3c877660eb99f9800c6",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "4f04220c5afb5533f703461f805d88f04b7d77ce8f7f3b808c7025e174c01a9a",
+      "bytes": 365223,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49971,
+        "objectKey": "system-item-media/v1/items/7776/cover/4f04220c5afb5533f703461f805d88f04b7d77ce8f7f3b808c7025e174c01a9a.jpg",
+        "fileSize": 365223
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7776/cover/4f04220c5afb5533f703461f805d88f04b7d77ce8f7f3b808c7025e174c01a9a.jpg"
+    },
+    {
+      "key": "cyber-7779-cover",
+      "target": {
+        "kind": "item",
+        "id": 7779,
+        "typeId": 26,
+        "name": "Шумопоглотитель"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One miniature sound-dampening implant module: a compact curved attenuation unit with layered acoustic mesh and a smooth graphite housing, subtle teal indicator. Displayed near a synthetic ear model on a clinic bench; no external earmuffs, loud incident or medical claims.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7779-cover-v1.png",
+      "final": "final/cyber-7779-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8d41d1a3-ce00-467f-93ea-bbfdf03ae736.png",
+      "originalSha256": "cc21cddcca9ded03eefee2b24a935af238ee287f3a040957f15084fadc54d591",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "0615cd440a395b46fc1effb2211023cd5070a2a0a55b6114bd98133fe1be5b2b",
+      "bytes": 397156,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49972,
+        "objectKey": "system-item-media/v1/items/7779/cover/0615cd440a395b46fc1effb2211023cd5070a2a0a55b6114bd98133fe1be5b2b.jpg",
+        "fileSize": 397156
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7779/cover/0615cd440a395b46fc1effb2211023cd5070a2a0a55b6114bd98133fe1be5b2b.jpg"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T20:17:38.954Z",
+    "scenarios": 18,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-56\\live-qa.json",
+    "note": "Public URL loaded; no JavaScript errors or horizontal page overflow."
+  }
+}

@@ -1,0 +1,256 @@
+{
+  "batch": 54,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-54",
+  "sourceAudit": "Live own media empty. Eye/audio/neural categories and paired flags checked against Core359–362 and imported facts. Components shown as manufactured clinical displays, no implantation instructions or icon changes.",
+  "assets": [
+    {
+      "key": "cyber-7736-cover",
+      "target": {
+        "kind": "item",
+        "id": 7736,
+        "typeId": 26,
+        "name": "Антиблик"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A MATCHED PAIR of miniature anti-dazzle optical filter modules for artificial eyes, two identical dark amber lens discs with fine protective shutter rings and ivory/graphite housings, side by side in a precision clinic tray. Compact eye-scale components, no organic eyes or face, clear material distinction between transparent filter and metal.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7736-cover-v1.png",
+      "final": "final/cyber-7736-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2892f902-1700-4803-ba6a-99e29c54daff.png",
+      "originalSha256": "ae8b977907242c7b92febc866720968773fbe7a52dba53f8f7c69f2e0fa8d1b8",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "e582769082e9294e52874171d28cef045c99b6356cfd9b253085a38f5ba060a7",
+      "bytes": 388193,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49955,
+        "objectKey": "system-item-media/v1/items/7736/cover/e582769082e9294e52874171d28cef045c99b6356cfd9b253085a38f5ba060a7.jpg",
+        "fileSize": 388193
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7736/cover/e582769082e9294e52874171d28cef045c99b6356cfd9b253085a38f5ba060a7.jpg"
+    },
+    {
+      "key": "cyber-7747-cover",
+      "target": {
+        "kind": "item",
+        "id": 7747,
+        "typeId": 26,
+        "name": "Хирон"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A miniature Chyron retinal-display module beside a manufactured cybereye shell: tiny rectangular microdisplay and optical projection prism inside a compact ivory connector housing. An abstract unlit rectangle is visible in the optic, no readable message or floating UI. Clean calibration cradle, no surgery.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7747-cover-v1.png",
+      "final": "final/cyber-7747-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-29d6b5cc-61a6-4a21-aa82-2667050a1f84.png",
+      "originalSha256": "43e1299903a04759cdb77a84e4bf083884829116a16f20b7cc102228590dc41f",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "f288722f60864db4310af816e0136313c28350d5f049500eb671111abbe45b15",
+      "bytes": 367944,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49956,
+        "objectKey": "system-item-media/v1/items/7747/cover/f288722f60864db4310af816e0136313c28350d5f049500eb671111abbe45b15.jpg",
+        "fileSize": 367944
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7747/cover/f288722f60864db4310af816e0136313c28350d5f049500eb671111abbe45b15.jpg"
+    },
+    {
+      "key": "cyber-7748-cover",
+      "target": {
+        "kind": "item",
+        "id": 7748,
+        "typeId": 26,
+        "name": "Смена цвета"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One artificial-eye cosmetic color-shift module, a precisely constructed iris ring with coordinated teal/amber/violet segments and a compact graphite connector. Displayed beside an intact empty cybereye housing on a clinic bench, no natural eyeball or face, no magic glow.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7748-cover-v1.png",
+      "final": "final/cyber-7748-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b355cdf6-1bef-48a7-a11b-84a234307130.png",
+      "originalSha256": "c4fc1368c66b5d2057ad61dde93026489a44a2a9bf57a9d56fd095616157d152",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "2fc5c059b2146ffded56868e13b0fccdaf07efd83d5d1303aaef38bce3f864f4",
+      "bytes": 358340,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49957,
+        "objectKey": "system-item-media/v1/items/7748/cover/2fc5c059b2146ffded56868e13b0fccdaf07efd83d5d1303aaef38bce3f864f4.jpg",
+        "fileSize": 358340
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7748/cover/2fc5c059b2146ffded56868e13b0fccdaf07efd83d5d1303aaef38bce3f864f4.jpg"
+    },
+    {
+      "key": "cyber-7756-cover",
+      "target": {
+        "kind": "item",
+        "id": 7756,
+        "typeId": 26,
+        "name": "Дротикомёт"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional artificial-eye auxiliary-port module displayed as an INERT SEALED optic component, graphite/ivory spherical shell with a small capped secondary aperture and amber iris lens. No projectile, exposed weapon internals, assembly diagram, target or person. Compact clinic product study, all caps closed.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7756-cover-v1.png",
+      "final": "final/cyber-7756-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-499e43ef-073d-4580-8572-1f1eb863d1c4.png",
+      "originalSha256": "6e67a129e3000ce0805143b97572b5b70812235a282267748731ce73cc8b306f",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "35aab23bf915b6238f03e7d997223e2d003f5af6b72067c9f78d28dcf1a6a15a",
+      "bytes": 282190,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49958,
+        "objectKey": "system-item-media/v1/items/7756/cover/35aab23bf915b6238f03e7d997223e2d003f5af6b72067c9f78d28dcf1a6a15a.jpg",
+        "fileSize": 282190
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7756/cover/35aab23bf915b6238f03e7d997223e2d003f5af6b72067c9f78d28dcf1a6a15a.jpg"
+    },
+    {
+      "key": "cyber-7771-cover",
+      "target": {
+        "kind": "item",
+        "id": 7771,
+        "typeId": 26,
+        "name": "Улучшение изображения"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A MATCHED PAIR of image-enhancement optics for cybereyes: two identical precision multilayer clear lens modules with fine focusing rings and ivory ceramic mounts, on a padded calibration tray. Sharp engineered surfaces, no organic anatomy or readable test chart.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7771-cover-v1.png",
+      "final": "final/cyber-7771-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-702cb1ef-c244-4d86-af64-acb68aa3dac8.png",
+      "originalSha256": "29d7bd7b8cca16522adf143b4bbe1b3c55af26033302076a23773205d85be369",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "625abf476d37262546772ddc726c9f90ba64138d15488fe21c30681467f3a936",
+      "bytes": 361451,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49959,
+        "objectKey": "system-item-media/v1/items/7771/cover/625abf476d37262546772ddc726c9f90ba64138d15488fe21c30681467f3a936.jpg",
+        "fileSize": 361451
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7771/cover/625abf476d37262546772ddc726c9f90ba64138d15488fe21c30681467f3a936.jpg"
+    },
+    {
+      "key": "cyber-7781-cover",
+      "target": {
+        "kind": "item",
+        "id": 7781,
+        "typeId": 26,
+        "name": "Слабое освещение/ИК/УФ"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A MATCHED PAIR of low-light/infrared/ultraviolet cybereye optical modules, each a compact dark optic with layered violet, amber and clear filter rings. Two equal modules side by side, subtle colored reflections rather than magical light, clinic calibration bench, no text or real-world performance claims.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7781-cover-v1.png",
+      "final": "final/cyber-7781-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-09c61aa2-ed30-4d52-b139-a9886867fc36.png",
+      "originalSha256": "b716d8a5fead59d5d9fd1d64797cf6d3c9d7c3aedbaedec8017d2f853a680f24",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "a1f39990e27ebac66a165f4091df542558607bf59ee9febe869983b2f63bbc1a",
+      "bytes": 349943,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49960,
+        "objectKey": "system-item-media/v1/items/7781/cover/a1f39990e27ebac66a165f4091df542558607bf59ee9febe869983b2f63bbc1a.jpg",
+        "fileSize": 349943
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7781/cover/a1f39990e27ebac66a165f4091df542558607bf59ee9febe869983b2f63bbc1a.jpg"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T20:15:43.299Z",
+    "scenarios": 18,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-54\\live-qa.json",
+    "note": "Public URL loaded; no JavaScript errors or horizontal page overflow."
+  }
+}

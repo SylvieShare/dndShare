@@ -16,12 +16,43 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
-      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A RAVEN-shaped robotic software avatar in segmented futuristic metal armor grips a GLOWING WHITE SPEAR across the panorama. Black mechanical feathers, fine joint construction and white data-light weapon, whole bird and spear safely framed. Perched on a virtual platform, no attack or victim, no medieval armor emblems.",
+      "status": "published",
+      "prompt": "Use case: precise-object-edit. Reframe this virtual robotic raven illustration slightly WIDER so both wings, all feather tips, feet, tail and the entire luminous spear are fully visible with comfortable 7% margins. Keep the existing design, pose, colors, detailed cel shading, artificial NET backdrop and lighting. Do not alter anatomy or add limbs. Expand the surrounding virtual architecture naturally instead of cropping the subject. Opaque 5:2 panorama, no text, logos, labels or UI.",
       "width": 1600,
       "height": 640,
-      "original": "originals/ice-raven-cover-v1.png",
-      "final": "final/ice-raven-cover.webp"
+      "original": "originals/ice-raven-cover-v2.png",
+      "final": "final/ice-raven-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a81e493d-ce24-4904-b585-fe9c1e48bdf7.png",
+      "originalSha256": "d7c262aede873fb85f1ee15d38a910ed89d01fa5534976a7959d16416b2c42ca",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "cc6e29812b59de3bf096c6fcccff6d6d774a4b03b9275266d45be5ad3d867cdf",
+      "bytes": 205280,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "rejectedAttempt": {
+        "reason": "Wing/helmet tips too close to frame edge",
+        "final": "final/ice-raven-cover.webp",
+        "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A RAVEN-shaped robotic software avatar in segmented futuristic metal armor grips a GLOWING WHITE SPEAR across the panorama. Black mechanical feathers, fine joint construction and white data-light weapon, whole bird and spear safely framed. Perched on a virtual platform, no attack or victim, no medieval armor emblems.",
+        "sha256": "c579b66cd29888326f0f2dcba91d3b13ec1ef15a85b1351c7a524279db70aef8",
+        "original": "originals/ice-raven-cover-v1.png",
+        "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-060fcf59-dfcc-4073-b25e-d7dd020b3afc.png",
+        "originalSha256": "2e4a7c78c8a77f08dff0eece32040de032bd6b0a5ec71d98825d86c4fe3b7dae"
+      },
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Core software-avatar appearance verified in final exports. Raven/killer framing widened to include full tips. Deliberately stylized virtual skunk and artificial eye retained; daemon forms and colors match source, no real injuries or text.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49872,
+        "objectKey": "system-item-media/v1/items/8122/cover/cc6e29812b59de3bf096c6fcccff6d6d774a4b03b9275266d45be5ad3d867cdf.webp",
+        "fileSize": 205280
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8122/cover/cc6e29812b59de3bf096c6fcccff6d6d774a4b03b9275266d45be5ad3d867cdf.webp"
     },
     {
       "key": "ice-scorpion-cover",
@@ -33,12 +64,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A SMALL BLACK SCORPION software construct on a dark reflective NET tile, detailed articulated legs, two pincers and a curved segmented tail, all limbs physically coherent. Its tiny scale is conveyed by surrounding huge data architecture; subtle white electrical hiss-like wisps, no victim or organic venom depiction.",
       "width": 1600,
       "height": 640,
       "original": "originals/ice-scorpion-cover-v1.png",
-      "final": "final/ice-scorpion-cover.webp"
+      "final": "final/ice-scorpion-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3fbbc85d-0c5e-4b54-acf9-a072f54f05fb.png",
+      "originalSha256": "2e3eb7723d6252905a94cb6355f264e66517db052cb8113862a17fb8396b18a5",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "218dd72091c72071cc4b4b490f0f7ed1cbf98c45e2bc81fdc5bf54fb27817db7",
+      "bytes": 189786,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Core software-avatar appearance verified in final exports. Raven/killer framing widened to include full tips. Deliberately stylized virtual skunk and artificial eye retained; daemon forms and colors match source, no real injuries or text.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49873,
+        "objectKey": "system-item-media/v1/items/8123/cover/218dd72091c72071cc4b4b490f0f7ed1cbf98c45e2bc81fdc5bf54fb27817db7.webp",
+        "fileSize": 189786
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8123/cover/218dd72091c72071cc4b4b490f0f7ed1cbf98c45e2bc81fdc5bf54fb27817db7.webp"
     },
     {
       "key": "ice-skunk-cover",
@@ -50,12 +103,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. An intentionally STYLIZED BLACK-AND-WHITE SKUNK software avatar stands on its hind legs, watching a distant adult netrunner silhouette very intently. Retain the source's cartoon-avatar concept but render it with sophisticated mature cel shading, restrained eyes and detailed digital fur-like planes rather than cute baby proportions. Full bushy tail, clearly virtual grid environment, no smell cloud or toilet humor.",
       "width": 1600,
       "height": 640,
       "original": "originals/ice-skunk-cover-v1.png",
-      "final": "final/ice-skunk-cover.webp"
+      "final": "final/ice-skunk-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c5a605fb-eba9-45ee-b115-6f724f02ad25.png",
+      "originalSha256": "accd9493eed9b8a2f02404830da65a00ee426c25f02b0749c2b9f6fda75e5739",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "c52713315cf6c6ac6ad0aa213bdebc9c8a98f8f83bfd597dc34782caa6ec64cd",
+      "bytes": 194390,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Core software-avatar appearance verified in final exports. Raven/killer framing widened to include full tips. Deliberately stylized virtual skunk and artificial eye retained; daemon forms and colors match source, no real injuries or text.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49874,
+        "objectKey": "system-item-media/v1/items/8124/cover/c52713315cf6c6ac6ad0aa213bdebc9c8a98f8f83bfd597dc34782caa6ec64cd.webp",
+        "fileSize": 194390
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8124/cover/c52713315cf6c6ac6ad0aa213bdebc9c8a98f8f83bfd597dc34782caa6ec64cd.webp"
     },
     {
       "key": "ice-wisp-cover",
@@ -67,12 +142,34 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A GLOWING ORB software avatar with ONE SMALL EYE floats in a deep NET corridor, faint blue-white electrical arcs crackle around its surface. The eye is a clean artificial sensor, no organic eyeball horror. Precise light falloff, broad painted reflections and small geometric facets, mature restrained cyberspace mood.",
       "width": 1600,
       "height": 640,
       "original": "originals/ice-wisp-cover-v1.png",
-      "final": "final/ice-wisp-cover.webp"
+      "final": "final/ice-wisp-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a11df081-7f0d-4630-915f-e689522dfd83.png",
+      "originalSha256": "a5a1426cfa29abc58451a0c2bcb197f14b40ca7bfae5c967ef858c17cb0b3675",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "f06231ad314da7281ca881275a54917296546d3888a09373cdf8e73baf6d1dfd",
+      "bytes": 138144,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Core software-avatar appearance verified in final exports. Raven/killer framing widened to include full tips. Deliberately stylized virtual skunk and artificial eye retained; daemon forms and colors match source, no real injuries or text.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49875,
+        "objectKey": "system-item-media/v1/items/8125/cover/f06231ad314da7281ca881275a54917296546d3888a09373cdf8e73baf6d1dfd.webp",
+        "fileSize": 138144
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8125/cover/f06231ad314da7281ca881275a54917296546d3888a09373cdf8e73baf6d1dfd.webp"
     },
     {
       "key": "ice-dragon-cover",
@@ -84,12 +181,46 @@
       },
       "slot": "cover",
       "expectedPreviousImageId": null,
-      "status": "queued",
+      "status": "published",
       "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration of a fictional SOFTWARE AVATAR in a cyberpunk NET simulation, not a real creature or physical weapon. Wide opaque 5:2 scene, mature detailed cel shading, fine variable ink lines, broad crisp light/shadow planes, selective reflected light, functional-looking geometric construction and convincing scale. The environment is clearly virtual: polygon data platforms, wireframe architectural depth and subtle luminous pathways without any readable code. Main form entirely inside safe frame, coherent anatomy/mechanics, no cute childish proportions. No typography, labels, numbers, logos, title, banner, watermark or UI overlays; no gore, real injury, photorealism or glossy 3D. No medieval castles or real-world battle. A ROBOTIC DRAGON software avatar with GOLDEN SEGMENTED SCALES is surrounded by controlled blue electrical data discharges. Four clearly articulated legs, two mechanical wings folded partly back and a long tail, complete silhouette across the wide frame. It stands on a polygon platform, no medieval castle, fire breath, real animal or victim.",
       "width": 1600,
       "height": 640,
       "original": "originals/ice-dragon-cover-v1.png",
-      "final": "final/ice-dragon-cover.webp"
+      "final": "final/ice-dragon-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f1f55095-a164-455f-b44c-e0d470da58b6.png",
+      "originalSha256": "3b142d8414c95f74d9df1f8c5b53d8b29baa3c7c17c67d70454ce5d9e62937d6",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "20b31c3d722cfb9d46e984298f0f083809b2fabb0923403614f01ce76699949d",
+      "bytes": 264582,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Core software-avatar appearance verified in final exports. Raven/killer framing widened to include full tips. Deliberately stylized virtual skunk and artificial eye retained; daemon forms and colors match source, no real injuries or text.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49876,
+        "objectKey": "system-item-media/v1/items/8126/cover/20b31c3d722cfb9d46e984298f0f083809b2fabb0923403614f01ce76699949d.webp",
+        "fileSize": 264582
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/8126/cover/20b31c3d722cfb9d46e984298f0f083809b2fabb0923403614f01ce76699949d.webp"
     }
-  ]
+  ],
+  "liveReview": {
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-43/live-qa.json",
+    "note": "Every real NET item loads its own expected cover at all three widths; no JavaScript errors or horizontal page overflow.",
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "passed": true,
+    "checkedAt": "2026-11-16T18:41:07.339Z",
+    "scenarios": 15
+  }
 }

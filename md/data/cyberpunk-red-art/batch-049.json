@@ -1,0 +1,339 @@
+{
+  "batch": 49,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-49",
+  "sourceAudit": "Live own cover slots empty. Physical equipment forms checked in supplied Core pp.351–355 and item metadata; no rule or usage diagrams, original unbranded designs, icons unchanged.",
+  "assets": [
+    {
+      "key": "gear-7883-cover",
+      "target": {
+        "kind": "item",
+        "id": 7883,
+        "typeId": 29,
+        "name": "Прямоходный остов ∑ (сигма)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A lighter external linear-frame exoskeleton displayed EMPTY on a rack: slim open silver/graphite frame with compact joint actuators, torso harness and limb cuffs. Clearly a wearable strength-assist support frame rather than rigid body armor or a robot; no occupant, weapons or logos.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7883-cover-v1.png",
+      "final": "final/gear-7883-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ca4e1971-66b1-479d-885e-2ce5a28566e7.png",
+      "originalSha256": "a315308570ac28410141071944eacf7b818439ff5a4170ecce89d67c805f29e0",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "213bca45618ae8ad63e61e99edbcbba59d080bcb4e6350843af6423875fbdbbe",
+      "bytes": 303081,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "All final utility equipment exports inspected against source forms. External frames differ in bulk, medical kit/communication/camping objects complete, no usage diagrams; rejected open locksmith-kit scene replaced with closed pouch. No text/logos or icon changes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49914,
+        "objectKey": "system-item-media/v1/items/7883/cover/213bca45618ae8ad63e61e99edbcbba59d080bcb4e6350843af6423875fbdbbe.jpg",
+        "fileSize": 303081
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7883/cover/213bca45618ae8ad63e61e99edbcbba59d080bcb4e6350843af6423875fbdbbe.jpg"
+    },
+    {
+      "key": "gear-7884-cover",
+      "target": {
+        "kind": "item",
+        "id": 7884,
+        "typeId": 29,
+        "name": "Набор медвежатника"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY mature detailed cel-shaded illustration for an app. A small CLOSED dark leather roll-up utility pouch with two plain retaining straps, a compact buckle and a short carrying loop, resting on a neutral workshop bench. No contents visible, no tools, keys, locks, diagrams or actions depicted. Practical worn but cared-for unbranded object in a retrofuturist 2045 city workshop, thin varied ink lines, broad painted shadow planes, fine leather seams and soft background. Opaque 3:2, complete pouch inside safe margins. No text, logos, labels, title, banner, watermark or UI.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7884-cover-v1.png",
+      "final": "final/gear-7884-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6122685a-5c46-4142-b67e-942d99ea307d.png",
+      "rejectedAttempt": {
+        "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A small mechanical locksmith tool kit rolled open on a clean workbench: a handful of thin unmarked steel picks and tension tools held in neat fabric loops. No lock being opened, no step-by-step diagram, no key codes or readable labels; neutral professional object study.",
+        "error": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID a48e94c5-6cac-4fd3-8e8d-9e0ec7b4e358. safety_violations=[illicit].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"illicit\\\"\\n      ]\\n    }\\n  }\\n}\")",
+        "resolution": "Closed empty-view utility roll; tools and locks omitted."
+      },
+      "originalSha256": "f6f1a83595bc06442d113577422cd8fa5fa8266e4fc9c3b5c9e19f0ff69cb446",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "c7f8d35b6cbb85afb350a63250331ef5fe124db8b50e98548386343f02bc506d",
+      "bytes": 254353,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "All final utility equipment exports inspected against source forms. External frames differ in bulk, medical kit/communication/camping objects complete, no usage diagrams; rejected open locksmith-kit scene replaced with closed pouch. No text/logos or icon changes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49915,
+        "objectKey": "system-item-media/v1/items/7884/cover/c7f8d35b6cbb85afb350a63250331ef5fe124db8b50e98548386343f02bc506d.jpg",
+        "fileSize": 254353
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7884/cover/c7f8d35b6cbb85afb350a63250331ef5fe124db8b50e98548386343f02bc506d.jpg"
+    },
+    {
+      "key": "gear-7885-cover",
+      "target": {
+        "kind": "item",
+        "id": 7885,
+        "typeId": 29,
+        "name": "Медсканер"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A portable medical scanner with a compact sensor head, contact lead and a small screen showing abstract colored health-like bars without letters or numbers. Ivory/teal casing in a clean clinic tray, no patient, diagnosis claim or operating instructions.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7885-cover-v1.png",
+      "final": "final/gear-7885-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c7801712-60b2-4352-bd8e-1f2b87bb2dd1.png",
+      "originalSha256": "f8bb4b420e30b5555aeb62e4e67067da3f4145a30f462dbe8c950c0587be322a",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "aaec788f4c765691121a3205f090c1cb9342be7e9b9a53db126f1d62ea284dfe",
+      "bytes": 283668,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "All final utility equipment exports inspected against source forms. External frames differ in bulk, medical kit/communication/camping objects complete, no usage diagrams; rejected open locksmith-kit scene replaced with closed pouch. No text/logos or icon changes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49916,
+        "objectKey": "system-item-media/v1/items/7885/cover/aaec788f4c765691121a3205f090c1cb9342be7e9b9a53db126f1d62ea284dfe.jpg",
+        "fileSize": 283668
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7885/cover/aaec788f4c765691121a3205f090c1cb9342be7e9b9a53db126f1d62ea284dfe.jpg"
+    },
+    {
+      "key": "gear-7886-cover",
+      "target": {
+        "kind": "item",
+        "id": 7886,
+        "typeId": 29,
+        "name": "Сумка медтехника"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A medtech field bag open enough to show neatly sealed dressings, capped applicators and sterile tool pouches in organized compartments. Dark teal reinforced fabric, practical handles, no red-cross emblem or text. Clean emergency treatment bench, no injured person.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7886-cover-v1.png",
+      "final": "final/gear-7886-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7de46136-ab0d-446c-ace7-e4688474ab8b.png",
+      "originalSha256": "fd36f6d939e75723cc875daaabfe0f87635967a614068184801a2c282faf1108",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "423adb63092b43bf1a6640a5059eae81dac8c733ce16eb86dc81a6310621e6d8",
+      "bytes": 362463,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "All final utility equipment exports inspected against source forms. External frames differ in bulk, medical kit/communication/camping objects complete, no usage diagrams; rejected open locksmith-kit scene replaced with closed pouch. No text/logos or icon changes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49917,
+        "objectKey": "system-item-media/v1/items/7886/cover/423adb63092b43bf1a6640a5059eae81dac8c733ce16eb86dc81a6310621e6d8.jpg",
+        "fileSize": 362463
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7886/cover/423adb63092b43bf1a6640a5059eae81dac8c733ce16eb86dc81a6310621e6d8.jpg"
+    },
+    {
+      "key": "gear-7887-cover",
+      "target": {
+        "kind": "item",
+        "id": 7887,
+        "typeId": 29,
+        "name": "Щепка памяти"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A single small digital memory chip, a slim graphite cartridge with copper contact tabs and one muted violet inset, lying beside a simple protective sleeve. Macro view on a computer desk, precise engineered detail, no labels or code.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7887-cover-v1.png",
+      "final": "final/gear-7887-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-20067c6f-e76a-47a1-941c-85939cc7b041.png",
+      "originalSha256": "8df38021ab797a26269ec87cc0d597dda87426aabc47cf1a0fac43dc49d3b8c0",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "0519d4319c11dd35bf731a4366d882d2d597ca6c578c1e4fb75abbcc8fd0a2db",
+      "bytes": 243500,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "All final utility equipment exports inspected against source forms. External frames differ in bulk, medical kit/communication/camping objects complete, no usage diagrams; rejected open locksmith-kit scene replaced with closed pouch. No text/logos or icon changes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49918,
+        "objectKey": "system-item-media/v1/items/7887/cover/0519d4319c11dd35bf731a4366d882d2d597ca6c578c1e4fb75abbcc8fd0a2db.jpg",
+        "fileSize": 243500
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7887/cover/0519d4319c11dd35bf731a4366d882d2d597ca6c578c1e4fb75abbcc8fd0a2db.jpg"
+    },
+    {
+      "key": "gear-7888-cover",
+      "target": {
+        "kind": "item",
+        "id": 7888,
+        "typeId": 29,
+        "name": "ИРП"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A compact ready-to-eat field ration pack with a sealed self-heating meal pouch, plain foldable spoon and small unmarked accessory packets. On a nomad camp table, ordinary practical meal packaging, no stepwise heating instructions or people.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7888-cover-v1.png",
+      "final": "final/gear-7888-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8d1481d2-65e6-48fb-8964-f6022cb896b7.png",
+      "originalSha256": "612b294f9d76cda03c845bf4d45151d80fb2c7f75865f37f24c1795c9e2ae5f6",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "123f50d3a4bcc39deeb7def6d0dd226d56459237802ac51621474796ac6c6f1e",
+      "bytes": 299814,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "All final utility equipment exports inspected against source forms. External frames differ in bulk, medical kit/communication/camping objects complete, no usage diagrams; rejected open locksmith-kit scene replaced with closed pouch. No text/logos or icon changes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49919,
+        "objectKey": "system-item-media/v1/items/7888/cover/123f50d3a4bcc39deeb7def6d0dd226d56459237802ac51621474796ac6c6f1e.jpg",
+        "fileSize": 299814
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7888/cover/123f50d3a4bcc39deeb7def6d0dd226d56459237802ac51621474796ac6c6f1e.jpg"
+    },
+    {
+      "key": "gear-7889-cover",
+      "target": {
+        "kind": "item",
+        "id": 7889,
+        "typeId": 29,
+        "name": "Набор личной гигиены"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A personal hygiene kit opened on a modest bathroom shelf: toothbrush, plain toothpaste tube, comb, sealed wet-wipe packet and a small unmarked cream tube in a washable pouch. Clean adult everyday belongings, futuristic city glimpsed through a small window.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7889-cover-v1.png",
+      "final": "final/gear-7889-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0dd2914c-a9a8-47b9-966f-4f5f6f6cee9d.png",
+      "originalSha256": "b471848f4f67dac9cbf2eb6bc0ebf2ab0df499501d50aea9b3018e758fe6a3ad",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "baa5df58db48c038ff2eef106c3ba4192861849c0e689b6c0496e1bd7b0633e5",
+      "bytes": 394903,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "All final utility equipment exports inspected against source forms. External frames differ in bulk, medical kit/communication/camping objects complete, no usage diagrams; rejected open locksmith-kit scene replaced with closed pouch. No text/logos or icon changes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49920,
+        "objectKey": "system-item-media/v1/items/7889/cover/baa5df58db48c038ff2eef106c3ba4192861849c0e689b6c0496e1bd7b0633e5.jpg",
+        "fileSize": 394903
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7889/cover/baa5df58db48c038ff2eef106c3ba4192861849c0e689b6c0496e1bd7b0633e5.jpg"
+    },
+    {
+      "key": "gear-7890-cover",
+      "target": {
+        "kind": "item",
+        "id": 7890,
+        "typeId": 29,
+        "name": "Карманный усилитель"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A pocket audio amplifier about the size of a thick book, sturdy dark casing with speaker grille, two simple input sockets and a few unmarked physical knobs. A coiled instrument cable beside it on a rehearsal-room bench; no logos or readable controls.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7890-cover-v1.png",
+      "final": "final/gear-7890-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-928021d5-0598-4533-baf8-b6e38cefef83.png",
+      "originalSha256": "e56a580133523dc88a75170273a4d9125ab7145b1c55905d062ac8a5c498f37c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "8837aa2e03d5f53b49c220ccda79c88baffeaee456ee1e3064ab55ce7098359a",
+      "bytes": 305095,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "All final utility equipment exports inspected against source forms. External frames differ in bulk, medical kit/communication/camping objects complete, no usage diagrams; rejected open locksmith-kit scene replaced with closed pouch. No text/logos or icon changes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49921,
+        "objectKey": "system-item-media/v1/items/7890/cover/8837aa2e03d5f53b49c220ccda79c88baffeaee456ee1e3064ab55ce7098359a.jpg",
+        "fileSize": 305095
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7890/cover/8837aa2e03d5f53b49c220ccda79c88baffeaee456ee1e3064ab55ce7098359a.jpg"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T19:36:13.215Z",
+    "scenarios": 24,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-49\\live-qa.json",
+    "note": "Public cover URL loaded; no JS error or horizontal overflow."
+  }
+}

@@ -1,0 +1,334 @@
+{
+  "batch": 45,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-45",
+  "sourceAudit": "Live own cover slots empty. Physical equipment forms checked in supplied Core pp.351–355 and item metadata; no rule or usage diagrams, original unbranded designs, icons unchanged.",
+  "assets": [
+    {
+      "key": "gear-7851-cover",
+      "target": {
+        "kind": "item",
+        "id": 7851,
+        "typeId": 29,
+        "name": "Кибердека"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A normal-quality portable cyberdeck: rugged graphite modular slab with a fold-up small blank screen, replaceable cartridge covers, physical input keys without markings and an interface cable. Reliable ordinary street hardware, restrained teal accents, on a repair desk in soft city light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7851-cover-v1.png",
+      "final": "final/gear-7851-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d279792d-3dee-4420-a70a-6a6a6e4f5065.png",
+      "originalSha256": "517c04900a5e46e5153f8c4bbd9463b79ea934ed42b5590fbfb50f33b3cc93f3",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "4f24c648ce7e2dcdeb2338f00fd447cd3e60ac68562bb92569ee91deabb5fd52",
+      "bytes": 313279,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every exported equipment scene inspected. Distinct cyberdeck quality, five-finger wearable glove, clear smart glasses, pneumatic injector, optics/audio devices and cryopump versus capsule forms match source. Whole objects, no branding or readable instructions.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49882,
+        "objectKey": "system-item-media/v1/items/7851/cover/4f24c648ce7e2dcdeb2338f00fd447cd3e60ac68562bb92569ee91deabb5fd52.jpg",
+        "fileSize": 313279
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7851/cover/4f24c648ce7e2dcdeb2338f00fd447cd3e60ac68562bb92569ee91deabb5fd52.jpg"
+    },
+    {
+      "key": "gear-7852-cover",
+      "target": {
+        "kind": "item",
+        "id": 7852,
+        "typeId": 29,
+        "name": "Кибердека (отличное)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A premium portable cyberdeck: precise ivory composite shell, compact fold-out unmarked display, orderly modular cartridge bays, refined copper connector details and a neatly coiled interface lead. Sophisticated high-quality construction, dark professional workshop with controlled warm light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7852-cover-v1.png",
+      "final": "final/gear-7852-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-74fc33e0-e6d7-435b-a0dc-12e705a35c78.png",
+      "originalSha256": "c0b589a43e59479c13f8461067ff51b5af2698922b1177cfb02fecbf05ad0e26",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "bdfe26a59dc75a341ae06159d3a1b658e2048ecdda32a3e13ecbfb4a68d72e85",
+      "bytes": 303409,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every exported equipment scene inspected. Distinct cyberdeck quality, five-finger wearable glove, clear smart glasses, pneumatic injector, optics/audio devices and cryopump versus capsule forms match source. Whole objects, no branding or readable instructions.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49883,
+        "objectKey": "system-item-media/v1/items/7852/cover/bdfe26a59dc75a341ae06159d3a1b658e2048ecdda32a3e13ecbfb4a68d72e85.jpg",
+        "fileSize": 303409
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7852/cover/bdfe26a59dc75a341ae06159d3a1b658e2048ecdda32a3e13ecbfb4a68d72e85.jpg"
+    },
+    {
+      "key": "gear-7853-cover",
+      "target": {
+        "kind": "item",
+        "id": 7853,
+        "typeId": 29,
+        "name": "Кибердека (плохое)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A poor-quality portable cyberdeck: a bulky repaired charcoal slab with mismatched panels, taped cable strain relief, worn blank keys and a small intact screen showing only abstract light shapes. Functional cheap street hardware, not broken junk, on a secondhand tech counter.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7853-cover-v1.png",
+      "final": "final/gear-7853-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5a20d5c0-1511-487b-9a3a-83dac0470603.png",
+      "originalSha256": "ed98812cdf84d23b614512de5ca875fef1d59f629622e3e6f9fb765ef51dd8b1",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "bdd6790293aebb8b61fe32850aa009b019b85ae5967a0d352942cf58a628c592",
+      "bytes": 278036,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every exported equipment scene inspected. Distinct cyberdeck quality, five-finger wearable glove, clear smart glasses, pneumatic injector, optics/audio devices and cryopump versus capsule forms match source. Whole objects, no branding or readable instructions.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49884,
+        "objectKey": "system-item-media/v1/items/7853/cover/bdd6790293aebb8b61fe32850aa009b019b85ae5967a0d352942cf58a628c592.jpg",
+        "fileSize": 278036
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7853/cover/bdd6790293aebb8b61fe32850aa009b019b85ae5967a0d352942cf58a628c592.jpg"
+    },
+    {
+      "key": "gear-7854-cover",
+      "target": {
+        "kind": "item",
+        "id": 7854,
+        "typeId": 29,
+        "name": "Боевая перчатка"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. One wearable battle glove: a heavy EMPTY graphite mechanical gauntlet with five articulated finger shells, three closed modular attachment covers and a padded wrist cuff. A worn external glove rather than a severed cybernetic arm; no blades or weapons installed. On a service stand in a cyberpunk gear shop.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7854-cover-v1.png",
+      "final": "final/gear-7854-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-12a3c250-c49d-4e70-80a2-b9d858147d4b.png",
+      "originalSha256": "a9313667d1d6e3d57341567a427a6d45794d953935e8e43f02c87fd9db015e1f",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "f2394bbb74bbfb957c966a09bec6846c4a3ec964de4b9a13a9cc71c2b7e788c7",
+      "bytes": 310733,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every exported equipment scene inspected. Distinct cyberdeck quality, five-finger wearable glove, clear smart glasses, pneumatic injector, optics/audio devices and cryopump versus capsule forms match source. Whole objects, no branding or readable instructions.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49885,
+        "objectKey": "system-item-media/v1/items/7854/cover/f2394bbb74bbfb957c966a09bec6846c4a3ec964de4b9a13a9cc71c2b7e788c7.jpg",
+        "fileSize": 310733
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7854/cover/f2394bbb74bbfb957c966a09bec6846c4a3ec964de4b9a13a9cc71c2b7e788c7.jpg"
+    },
+    {
+      "key": "gear-7855-cover",
+      "target": {
+        "kind": "item",
+        "id": 7855,
+        "typeId": 29,
+        "name": "Умные очки"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. One pair of smart glasses with clear lenses, thick practical graphite temples containing two closed modular optical housings, a tiny amber status light and visible nose pads. Entire frame and unfolded temples on a clean counter, near-future utility rather than fashion jewelry.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7855-cover-v1.png",
+      "final": "final/gear-7855-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-028acbef-5ccd-4982-95af-155ffb99a29b.png",
+      "originalSha256": "56019ee4f1fd77a2c8b66c8d5f1bc5fa4cf968b7063beca244c2e74870351816",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "b56f072afd564bbd915a08bc5db4f3c4e4446dbf6c82c481eca2e93edeab3a2d",
+      "bytes": 253299,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every exported equipment scene inspected. Distinct cyberdeck quality, five-finger wearable glove, clear smart glasses, pneumatic injector, optics/audio devices and cryopump versus capsule forms match source. Whole objects, no branding or readable instructions.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49886,
+        "objectKey": "system-item-media/v1/items/7855/cover/b56f072afd564bbd915a08bc5db4f3c4e4446dbf6c82c481eca2e93edeab3a2d.jpg",
+        "fileSize": 253299
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7855/cover/b56f072afd564bbd915a08bc5db4f3c4e4446dbf6c82c481eca2e93edeab3a2d.jpg"
+    },
+    {
+      "key": "gear-7856-cover",
+      "target": {
+        "kind": "item",
+        "id": 7856,
+        "typeId": 29,
+        "name": "Агент"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A personal AI Agent device represented by an original compact smartphone, brushed slate casing and a screen with a simple nonverbal assistant silhouette plus abstract colored blocks. Beside a plain charging puck on a lived-in city apartment desk. No readable interface text or brand.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7856-cover-v1.png",
+      "final": "final/gear-7856-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2b27880d-8a7a-4c3f-85eb-b215e706d71e.png",
+      "originalSha256": "61b0a80c52dde061d4c266f23c2603378afa7943eb7f94949da38c21a858ed36",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "c9d0e167efb4acc08d040fa09b1bdcdbb37e5f27b52fc03b75f6d45d4bb451e9",
+      "bytes": 322388,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every exported equipment scene inspected. Distinct cyberdeck quality, five-finger wearable glove, clear smart glasses, pneumatic injector, optics/audio devices and cryopump versus capsule forms match source. Whole objects, no branding or readable instructions.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49887,
+        "objectKey": "system-item-media/v1/items/7856/cover/c9d0e167efb4acc08d040fa09b1bdcdbb37e5f27b52fc03b75f6d45d4bb451e9.jpg",
+        "fileSize": 322388
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7856/cover/c9d0e167efb4acc08d040fa09b1bdcdbb37e5f27b52fc03b75f6d45d4bb451e9.jpg"
+    },
+    {
+      "key": "gear-7857-cover",
+      "target": {
+        "kind": "item",
+        "id": 7857,
+        "typeId": 29,
+        "name": "Пневмошприц"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A compact needleless pneumatic medical injector with a capped pressure nozzle, small replaceable cartridge housing and an ivory/teal grip. Resting in a sterile tray, no exposed needle, person or administration. Fine clinical construction and soft practical light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7857-cover-v1.png",
+      "final": "final/gear-7857-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-aea752b2-cd60-459a-b983-36abb5316030.png",
+      "originalSha256": "70738289be7bfb38683a8cd1dcbded31f5840d775a4408b8da193a895b7f195b",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "9e334661f6b354d7c0b75331de8a1433a842c6b5ebcb248a81fbf63cccf66c73",
+      "bytes": 270851,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every exported equipment scene inspected. Distinct cyberdeck quality, five-finger wearable glove, clear smart glasses, pneumatic injector, optics/audio devices and cryopump versus capsule forms match source. Whole objects, no branding or readable instructions.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49888,
+        "objectKey": "system-item-media/v1/items/7857/cover/9e334661f6b354d7c0b75331de8a1433a842c6b5ebcb248a81fbf63cccf66c73.jpg",
+        "fileSize": 270851
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7857/cover/9e334661f6b354d7c0b75331de8a1433a842c6b5ebcb248a81fbf63cccf66c73.jpg"
+    },
+    {
+      "key": "gear-7858-cover",
+      "target": {
+        "kind": "item",
+        "id": 7858,
+        "typeId": 29,
+        "name": "Антисмоговый респиратор"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A practical anti-smog respirator mask with two replaceable filter pods, flexible dark face seal, adjustable straps and muted olive shell. Empty mask on a support at an urban supply counter, visible material layers, no skull design or warning lettering.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7858-cover-v1.png",
+      "final": "final/gear-7858-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d9a8c4fb-2a76-4fa7-8cf9-77fbfd321230.png",
+      "originalSha256": "220cc9618b320c3e39becdeb546752c4db71cd56d91998e770a5def03ee0607e",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "6e6550d5d2a67e300725840def4f48f4ce64263a5e48f713d3085725b8676a02",
+      "bytes": 278797,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every exported equipment scene inspected. Distinct cyberdeck quality, five-finger wearable glove, clear smart glasses, pneumatic injector, optics/audio devices and cryopump versus capsule forms match source. Whole objects, no branding or readable instructions.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49889,
+        "objectKey": "system-item-media/v1/items/7858/cover/6e6550d5d2a67e300725840def4f48f4ce64263a5e48f713d3085725b8676a02.jpg",
+        "fileSize": 278797
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7858/cover/6e6550d5d2a67e300725840def4f48f4ce64263a5e48f713d3085725b8676a02.jpg"
+    }
+  ],
+  "liveReview": {
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-45/live-qa.json",
+    "passed": true,
+    "checkedAt": "2026-11-16T18:47:28.727Z",
+    "scenarios": 24,
+    "note": "Each actual equipment item loads its own expected cover in all three layouts; no JavaScript errors or page overflow.",
+    "widths": [
+      390,
+      840,
+      1440
+    ]
+  }
+}

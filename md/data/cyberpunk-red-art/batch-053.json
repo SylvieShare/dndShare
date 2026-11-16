@@ -1,0 +1,373 @@
+{
+  "batch": 53,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-53",
+  "sourceAudit": "Live cyberware own media slots empty. Core358–367 and item categories reviewed. Base components are manufactured displays, fashionware on intact adult skin/fully clothed adults; no surgical imagery or icon changes.",
+  "assets": [
+    {
+      "key": "cyber-7741-cover",
+      "target": {
+        "kind": "item",
+        "id": 7741,
+        "typeId": 26,
+        "name": "Биомонитор"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. Close view of a mature adult's ordinary healthy forearm resting on a clinic counter, a small flush UNDER-SKIN biomonitor window shows a simple cyan pulse curve and abstract colored bars with no readable numbers or letters. Intact skin, subtle seamless implant edge, natural hand proportions and clean practical lighting.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7741-cover-v1.png",
+      "final": "final/cyber-7741-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9d08005c-491c-4de7-80a2-4985ec82b850.png",
+      "originalSha256": "aeda5f6521fa00e6d58cc2ca0e924b59f378821af2555e18d23ab463d5658b21",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "d42382e850c2521e38af0685d9e8865247b08e83c540ba7e195cf0bdd5a3b00e",
+      "bytes": 304130,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49946,
+        "objectKey": "system-item-media/v1/items/7741/cover/d42382e850c2521e38af0685d9e8865247b08e83c540ba7e195cf0bdd5a3b00e.jpg",
+        "fileSize": 304130
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7741/cover/d42382e850c2521e38af0685d9e8865247b08e83c540ba7e195cf0bdd5a3b00e.jpg"
+    },
+    {
+      "key": "cyber-7745-cover",
+      "target": {
+        "kind": "item",
+        "id": 7745,
+        "typeId": 26,
+        "name": "Химкожа"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fully clothed mature woman in her forties with natural adult facial features and smoothly tinted muted TEAL skin examines her reflection in a modern cosmetic clinic mirror. The permanent cosmetic pigment is the focus, normal human ears/anatomy, no alien features or magic, no injection procedure. Restrained warm light and believable skin planes.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7745-cover-v1.png",
+      "final": "final/cyber-7745-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d7dbdbca-3fdf-4c4b-a8bd-89f5cb154d7a.png",
+      "originalSha256": "12a6da641a961c4a8ef8943e68f4a389e3cbd123ee31672c171064f1491e03e1",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "5e92f4d8f1a3c942289f9ae202227f4ee6ca76e489190f7fb4d0c909042b83b5",
+      "bytes": 268326,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49947,
+        "objectKey": "system-item-media/v1/items/7745/cover/5e92f4d8f1a3c942289f9ae202227f4ee6ca76e489190f7fb4d0c909042b83b5.jpg",
+        "fileSize": 268326
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7745/cover/5e92f4d8f1a3c942289f9ae202227f4ee6ca76e489190f7fb4d0c909042b83b5.jpg"
+    },
+    {
+      "key": "cyber-7758-cover",
+      "target": {
+        "kind": "item",
+        "id": 7758,
+        "typeId": 26,
+        "name": "Шелкография от ЭМИ"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A mature adult's healthy forearm and relaxed hand display very THIN SILVER LINES running under the skin in an elegant geometric circuit-like fashion pattern. A purely decorative body modification, no forcefield, radiation demonstration or medical claim. Intact skin, no needles, scars or readable symbols, softly lit urban salon.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7758-cover-v1.png",
+      "final": "final/cyber-7758-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ca98c3e5-14ed-45ce-9b63-ed6b4259d46b.png",
+      "originalSha256": "1f94a3efbb851e22e7c719fdd703460157fb55178a9dfbbcc22176ba0edf62ab",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "5ec3dccf7ef8c4dff04c52fb84806e5d936ce7ab0ca4c8fdc69f7259c641bf30",
+      "bytes": 336667,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49948,
+        "objectKey": "system-item-media/v1/items/7758/cover/5ec3dccf7ef8c4dff04c52fb84806e5d936ce7ab0ca4c8fdc69f7259c641bf30.jpg",
+        "fileSize": 336667
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7758/cover/5ec3dccf7ef8c4dff04c52fb84806e5d936ce7ab0ca4c8fdc69f7259c641bf30.jpg"
+    },
+    {
+      "key": "cyber-7760-cover",
+      "target": {
+        "kind": "item",
+        "id": 7760,
+        "typeId": 26,
+        "name": "Exotic Bodysculpt"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fully clothed mature adult in their late thirties at a futuristic body-sculpt consultation has deliberately unusual but subtle biological cosmetic features: slightly feline outer-ear contours and catlike iris shapes, otherwise natural adult human face and posture. No fur suit, nudity, erotic pose or magic. A clinician and neutral mirror in a clean biotech salon, detailed realistic mature anatomy.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7760-cover-v1.png",
+      "final": "final/cyber-7760-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a6543071-7e74-4477-b383-83df75ff311a.png",
+      "originalSha256": "285bee24bd7d569884f903634719b4a00fd2b6f752823275b56c01d677e1a466",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "9630b1cf776c5a8bcb8538a75d560d85de2eb014d35d2739ae0865c81f0ac72e",
+      "bytes": 375658,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49949,
+        "objectKey": "system-item-media/v1/items/7760/cover/9630b1cf776c5a8bcb8538a75d560d85de2eb014d35d2739ae0865c81f0ac72e.jpg",
+        "fileSize": 375658
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7760/cover/9630b1cf776c5a8bcb8538a75d560d85de2eb014d35d2739ae0865c81f0ac72e.jpg"
+    },
+    {
+      "key": "cyber-7780-cover",
+      "target": {
+        "kind": "item",
+        "id": 7780,
+        "typeId": 26,
+        "name": "Светотату"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. Close view of a mature adult's healthy forearm bearing a luminous abstract cyan-and-violet light tattoo composed of clean interlocking geometric bands. Local light gently illuminates intact skin, no words, symbols, logos, needles or procedure. Modern street fashion sleeve rolled back, soft city salon background, mature detailed skin and cloth.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7780-cover-v1.png",
+      "final": "final/cyber-7780-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-349a2558-0922-4c18-bd06-526e47641d81.png",
+      "originalSha256": "d293d74d9a3159a5664d4f294249b51bce87ae8a10ccb971b5dc2736ea1547ba",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "8be375fb4a45e087ae353e292ab8676a8f8cb6b118a8eaf029f714d44fd47708",
+      "bytes": 301974,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49950,
+        "objectKey": "system-item-media/v1/items/7780/cover/8be375fb4a45e087ae353e292ab8676a8f8cb6b118a8eaf029f714d44fd47708.jpg",
+        "fileSize": 301974
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7780/cover/8be375fb4a45e087ae353e292ab8676a8f8cb6b118a8eaf029f714d44fd47708.jpg"
+    },
+    {
+      "key": "cyber-7818-cover",
+      "target": {
+        "kind": "item",
+        "id": 7818,
+        "typeId": 26,
+        "name": "Цветные линзы"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A mature adult woman around forty with normal human facial proportions looks into a small salon mirror; her two eyes have coordinated unusual amber-and-violet cosmetic iris tints with subtle patterned color rings. These are cosmetic implanted color-shifting contacts, no mechanical eye hardware or supernatural glow. Fully clothed, no procedure, detailed natural eyelids and reflected light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7818-cover-v1.png",
+      "final": "final/cyber-7818-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b3d10090-1432-4399-9409-6f9c55665f52.png",
+      "originalSha256": "9cedca2d506a08e4c2f3ee0cce4b59831b36ada8dd34cc9f82d501338bd8cc00",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "f8249f0530e6f864f1aed1ccbc9922526c645ac5bdd60959b5c1d8078e0c75dd",
+      "bytes": 330939,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49951,
+        "objectKey": "system-item-media/v1/items/7818/cover/f8249f0530e6f864f1aed1ccbc9922526c645ac5bdd60959b5c1d8078e0c75dd.jpg",
+        "fileSize": 330939
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7818/cover/f8249f0530e6f864f1aed1ccbc9922526c645ac5bdd60959b5c1d8078e0c75dd.jpg"
+    },
+    {
+      "key": "cyber-7823-cover",
+      "target": {
+        "kind": "item",
+        "id": 7823,
+        "typeId": 26,
+        "name": "Часы на коже"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. Close-up of an adult wrist with an embedded under-skin LED watch display, represented by four groups of dim inactive rectangular segment outlines and a tiny central separator; NO readable digits, letters or date text. Intact natural skin, subtle flush window, ordinary rolled sleeve, practical futuristic daily wear on a city apartment counter.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7823-cover-v1.png",
+      "final": "final/cyber-7823-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-061de15c-7afb-47a1-bcb2-a299f6811139.png",
+      "originalSha256": "265a3330706c86dccfcb4886e4fc000867812142ca16e6537253a0578ba83176",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "4c6d40ca37ab1d4dcd46bc9af29e89e19420d24443511dcf258b91c6690a1458",
+      "bytes": 286278,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49952,
+        "objectKey": "system-item-media/v1/items/7823/cover/4c6d40ca37ab1d4dcd46bc9af29e89e19420d24443511dcf258b91c6690a1458.jpg",
+        "fileSize": 286278
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7823/cover/4c6d40ca37ab1d4dcd46bc9af29e89e19420d24443511dcf258b91c6690a1458.jpg"
+    },
+    {
+      "key": "cyber-7825-cover",
+      "target": {
+        "kind": "item",
+        "id": 7825,
+        "typeId": 26,
+        "name": "Standard Bodysculpt"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A non-graphic standard body-sculpt consultation: a fully clothed mature man in his forties with ordinary human features thoughtfully examines his reflection in a clinic mirror while a mature clinician listens. Emphasize natural adult facial structure and subtle cosmetic refinement, no exotic features, bandages, before/after labels or surgery. Calm professional biotech salon.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7825-cover-v1.png",
+      "final": "final/cyber-7825-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-640a42d6-d1ab-43f5-af95-4979f42c7503.png",
+      "originalSha256": "f10e72ea680b0c0556d6355215970101f56164fd6b0da1f66e8fc9be02079730",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "da0c92e16c4699045135653cca048cd6a9bb57c6e267b4a7403b21968cb5e584",
+      "bytes": 306293,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49953,
+        "objectKey": "system-item-media/v1/items/7825/cover/da0c92e16c4699045135653cca048cd6a9bb57c6e267b4a7403b21968cb5e584.jpg",
+        "fileSize": 306293
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7825/cover/da0c92e16c4699045135653cca048cd6a9bb57c6e267b4a7403b21968cb5e584.jpg"
+    },
+    {
+      "key": "cyber-7836-cover",
+      "target": {
+        "kind": "item",
+        "id": 7836,
+        "typeId": 26,
+        "name": "Техволосы"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A mature woman in her forties in a city style studio has artificial TECHHAIR: natural-looking dark hair threaded with fine luminous magenta and warm gold synthetic strands, with tiny subtle mechanical roots at the temple. Detailed individual grouped locks, restrained localized light, realistic mature face and fully clothed shoulders, no fantasy ears, magic or text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7836-cover-v1.png",
+      "final": "final/cyber-7836-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c753ec4c-d97c-4988-a11f-478b37150254.png",
+      "originalSha256": "dcec10b5b57685cb9201d63e1711d5cee8c3052f32073f2cd4c5d99e71dba907",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "9ae89a8d8b97d4861c8596a9e6e3379ff6d28cd927fb8f98969daf7da2312fe2",
+      "bytes": 355904,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Final contact sheets inspected. Mature cel shading, complete manufactured hardware, paired optics matched, adult fashionware on intact bodies. No operative imagery, readable labels or icon changes. Exotic sculpt and inactive skinwatch inspected for identity.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49954,
+        "objectKey": "system-item-media/v1/items/7836/cover/9ae89a8d8b97d4861c8596a9e6e3379ff6d28cd927fb8f98969daf7da2312fe2.jpg",
+        "fileSize": 355904
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7836/cover/9ae89a8d8b97d4861c8596a9e6e3379ff6d28cd927fb8f98969daf7da2312fe2.jpg"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T20:14:46.527Z",
+    "scenarios": 27,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-53\\live-qa.json",
+    "note": "Public URL loaded; no JavaScript errors or horizontal page overflow."
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "batch": 69,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-69",
+  "sourceAudit": "Live own media slots empty. Core163–165,343–344,368 and category checked. Finished fictional hardware, no technical instructions. Icons unchanged.",
+  "assets": [
+    {
+      "key": "mod-7932-cover",
+      "target": {
+        "kind": "item",
+        "id": 7932,
+        "typeId": 35,
+        "name": "Армированная рама"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. Reinforced ARMORED VEHICLE CHASSIS: a rugged retrofuturist car on a workshop lift, focus on layered steel armor panels around its body and undercarriage. Vehicle's ordinary glass windows remain unarmored. No guns, combat or damage. Detailed bolts, weld seams and matte plated metal, varied cel shading.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7932-cover-v1.png",
+      "final": "final/mod-7932-cover.jpg"
+    },
+    {
+      "key": "mod-7933-cover",
+      "target": {
+        "kind": "item",
+        "id": 7933,
+        "typeId": 35,
+        "name": "Двигатели AV-4"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. An AV-4 ENGINE UPGRADE on a retrofuturist ground car in a hangar: compact vectored-thrust turbojet units integrated into the body, vehicle stationary on maintenance jacks. Clearly aircraft-like jet hardware, not wheels or magical hover glow. Entire car and engine units comfortably framed, no text/brands.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7933-cover-v1.png",
+      "final": "final/mod-7933-cover.jpg"
+    },
+    {
+      "key": "mod-7936-cover",
+      "target": {
+        "kind": "item",
+        "id": 7936,
+        "typeId": 35,
+        "name": "Пуленепробиваемое стекло"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A thick BULLETPROOF VEHICLE WINDOW panel in a padded rack beside an armored car, laminated glass edge visible and subtle blue-green reflections. No bullet impact or target. Entire window and mounting rim visible, warm automotive workshop lighting.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7936-cover-v1.png",
+      "final": "final/mod-7936-cover.jpg"
+    },
+    {
+      "key": "mod-7937-cover",
+      "target": {
+        "kind": "item",
+        "id": 7937,
+        "typeId": 35,
+        "name": "Боевой кенгурятник"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A COMBAT PLOW attachment on the front of a parked rugged retrofuturist car: heavy angled steel push-plow with reinforced ribs, visible weight and grounded mounting. No collision, people in path or blood. Garage setting, whole attachment visible with ample margin.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7937-cover-v1.png",
+      "final": "final/mod-7937-cover.jpg"
+    },
+    {
+      "key": "mod-7938-cover",
+      "target": {
+        "kind": "item",
+        "id": 7938,
+        "typeId": 35,
+        "name": "Центр связи"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A COMMUNICATIONS CENTER inside a nomad vehicle cabin: robust touchscreen console showing abstract map shapes without labels, organized storage bays containing SIX small handheld radios and other compact recording/scrambler units. Practical cabin installation, mature detailed illustrated engineering, no typography.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7938-cover-v1.png",
+      "final": "final/mod-7938-cover.jpg"
+    },
+    {
+      "key": "mod-7939-cover",
+      "target": {
+        "kind": "item",
+        "id": 7939,
+        "typeId": 35,
+        "name": "Развёртываемая полоса с шипами"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional vehicle deployable SPIKE-STRIP module shown as a closed rectangular transport housing on a workshop trolley, with one short folded strip segment safely displayed behind clear protective glass. No road deployment, pursuit, targets, construction details or instructions.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7939-cover-v1.png",
+      "final": "final/mod-7939-cover.jpg"
+    },
+    {
+      "key": "mod-7951-cover",
+      "target": {
+        "kind": "item",
+        "id": 7951,
+        "typeId": 35,
+        "name": "Улучшенная интеграция разъёмов интерфейса"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. ENHANCED MOTORCYCLE INTERFACE integration: parked cyberpunk motorcycle with two neat connection ports near the rider controls and protected short cables routed into its chassis. Mature rider's gloved hand rests beside handlebars, no action/combat. Focus on integrated connection hardware, no diagrams.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7951-cover-v1.png",
+      "final": "final/mod-7951-cover.jpg"
+    }
+  ]
+}

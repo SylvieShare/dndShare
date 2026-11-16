@@ -1,0 +1,112 @@
+{
+  "batch": 68,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-68",
+  "sourceAudit": "Live own media slots empty. Core163–165,343–344,368 and category checked. Finished fictional hardware, no technical instructions. Icons unchanged.",
+  "assets": [
+    {
+      "key": "mod-7934-cover",
+      "target": {
+        "kind": "item",
+        "id": 7934,
+        "typeId": 35,
+        "name": "Резервный диск"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A rugged compact cyberdeck BACKUP DRIVE module, thick dark rectangular solid-state cartridge with two broad connector banks, on an antistatic electronics mat beside its host deck. Restrained cobalt status light, closed casing and functional seams, no screen code. Nighttime netrunner repair room.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7934-cover-v1.png",
+      "final": "final/mod-7934-cover.jpg"
+    },
+    {
+      "key": "mod-7940-cover",
+      "target": {
+        "kind": "item",
+        "id": 7940,
+        "typeId": 35,
+        "name": "Блокировка на ДНК"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A biometric DNA-LOCK module fitted flush into a rugged cyberdeck casing, an oval fingerprint sensor and small iris-scanning lens. Mature adult hand resting near sensor without procedural detail. No blood sample, code, bypass scene or lock diagram. Warm workbench with cool city reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7940-cover-v1.png",
+      "final": "final/mod-7940-cover.jpg"
+    },
+    {
+      "key": "mod-7963-cover",
+      "target": {
+        "kind": "item",
+        "id": 7963,
+        "typeId": 35,
+        "name": "Экранирование схем"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A cyberdeck HARDENED CIRCUITRY module, compact electronics block protected by a grounded metal shell with fine copper shielding braid, closed protective housings and sealed ports. Displayed on dark antistatic mat. No lightning magic, circuit schematic or readable chips.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7963-cover-v1.png",
+      "final": "final/mod-7963-cover.jpg"
+    },
+    {
+      "key": "mod-7968-cover",
+      "target": {
+        "kind": "item",
+        "id": 7968,
+        "typeId": 35,
+        "name": "Изолированная проводка"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A small cyberdeck insulated-wiring bundle: thick heat-resistant woven sleeves around short internal cables, neat high-temperature connectors, beside a rugged deck on a repair mat. Material-focused black ceramic, burgundy fiber and steel, no flames or instructions.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7968-cover-v1.png",
+      "final": "final/mod-7968-cover.jpg"
+    },
+    {
+      "key": "mod-7969-cover",
+      "target": {
+        "kind": "item",
+        "id": 7969,
+        "typeId": 35,
+        "name": "Барьер KRASH"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A cyberdeck KRASH-BARRIER module, sturdy two-section signal-buffer hardware cartridge with two protected connector banks and a tiny steady amber status light. On a netrunner's service tray, functional enclosed electronic design, no magical wall or virtual monster, no code or labels.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7969-cover-v1.png",
+      "final": "final/mod-7969-cover.jpg"
+    },
+    {
+      "key": "mod-7975-cover",
+      "target": {
+        "kind": "item",
+        "id": 7975,
+        "typeId": 35,
+        "name": "Улучшение дальности"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A cyberdeck RANGE-UPGRADE module: compact folding antenna and protected signal amplifier fitted beside a rugged portable deck. All hardware visible on a worn electronics bench, cool teal edge light and warm desk lamp. No wireless hacking scene, network diagram or numbers.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7975-cover-v1.png",
+      "final": "final/mod-7975-cover.jpg"
+    }
+  ]
+}

@@ -1,0 +1,256 @@
+{
+  "batch": 58,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-58",
+  "sourceAudit": "Live own media empty. Eye/audio/neural categories and paired flags checked against Core359–362 and imported facts. Components shown as manufactured clinical displays, no implantation instructions or icon changes.",
+  "assets": [
+    {
+      "key": "cyber-7742-cover",
+      "target": {
+        "kind": "item",
+        "id": 7742,
+        "typeId": 26,
+        "name": "Имплант записи брейндансов"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A compact neural braindance-recorder implant with a small sealed processor, fine flexible lead ribbon and removable-looking memory interface, displayed beside a neutral synthetic head-and-neck model. Clear difference from a playback headset, no brain tissue, operation or sensory content shown.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7742-cover-v1.png",
+      "final": "final/cyber-7742-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-673a3cbd-f32a-4122-a708-d92553001c0a.png",
+      "originalSha256": "dbc35578583c1673b453d6f4e91186a6dd54c84a2f4357ca616411c01d211f51",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "d95a1bb2d3c39df63d19c796e86de54ac6d50da8b40a0772aa283ced433b129a",
+      "bytes": 371259,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: compact audio/neural modules, chip identity, adult anatomical proportions and mature cel shading. No readable labels, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49978,
+        "objectKey": "system-item-media/v1/items/7742/cover/d95a1bb2d3c39df63d19c796e86de54ac6d50da8b40a0772aa283ced433b129a.jpg",
+        "fileSize": 371259
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7742/cover/d95a1bb2d3c39df63d19c796e86de54ac6d50da8b40a0772aa283ced433b129a.jpg"
+    },
+    {
+      "key": "cyber-7744-cover",
+      "target": {
+        "kind": "item",
+        "id": 7744,
+        "typeId": 26,
+        "name": "Химический анализатор"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One neural chemical-analysis skillchip, a slim cobalt-and-silver memory cartridge with copper contact tabs and a subtle abstract multiband pattern on its casing. In a clean protective implant-chip case, no chemical mixing, substances, formulas or whole analyzer machine.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7744-cover-v1.png",
+      "final": "final/cyber-7744-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-47f94dd6-6761-496f-a71d-d28fade98b0b.png",
+      "originalSha256": "5291f846b314dd77ec20b210ab26a0353429ddd66582e3bbf3ea97863dca4f4d",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "ad5e4fa5291faf9a87341e42ab17d616d90b0fa6908fea7796ea4b10e9d77a13",
+      "bytes": 382305,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: compact audio/neural modules, chip identity, adult anatomical proportions and mature cel shading. No readable labels, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49979,
+        "objectKey": "system-item-media/v1/items/7744/cover/ad5e4fa5291faf9a87341e42ab17d616d90b0fa6908fea7796ea4b10e9d77a13.jpg",
+        "fileSize": 382305
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7744/cover/ad5e4fa5291faf9a87341e42ab17d616d90b0fa6908fea7796ea4b10e9d77a13.jpg"
+    },
+    {
+      "key": "cyber-7746-cover",
+      "target": {
+        "kind": "item",
+        "id": 7746,
+        "typeId": 26,
+        "name": "Разъём для щепок"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A chipware socket installed at the NAPE of a neutral synthetic training head: a small flush graphite slot with an intact smooth skin-like surrounding panel, a single plain memory chip resting separately on the stand. No insertion step, living tissue, surgery or text, clinical close-up.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7746-cover-v1.png",
+      "final": "final/cyber-7746-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-bf085dff-bbb9-44a9-b24f-ffda38935134.png",
+      "originalSha256": "e1a037c87a7c4dbb9cd0211b4c9219201594a7be32c657a97ed8ad48a1f2f2b4",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "6463db45c6159980084a7e878fffe7f7dc94bf31e14df5ee1926f884c7a1d51c",
+      "bytes": 322624,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: compact audio/neural modules, chip identity, adult anatomical proportions and mature cel shading. No readable labels, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49980,
+        "objectKey": "system-item-media/v1/items/7746/cover/6463db45c6159980084a7e878fffe7f7dc94bf31e14df5ee1926f884c7a1d51c.jpg",
+        "fileSize": 322624
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7746/cover/6463db45c6159980084a7e878fffe7f7dc94bf31e14df5ee1926f884c7a1d51c.jpg"
+    },
+    {
+      "key": "cyber-7757-cover",
+      "target": {
+        "kind": "item",
+        "id": 7757,
+        "typeId": 26,
+        "name": "Щепка со сложным навыком"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One complex-skill neural chip, a slim violet graphite cartridge with fine dense branching circuit-like traces under a clear cover and a standard copper contact edge. On a padded chip service tray, sophisticated compact construction, no readable skill name, numbers or code.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7757-cover-v1.png",
+      "final": "final/cyber-7757-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-02c9878a-095e-4245-8b60-464fcd3687e6.png",
+      "originalSha256": "a466b604371a68cc716522978a793df4fc70f963326d9a315cfcdd0813205e9e",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "1546564a8d0334635019792168ce6b48f053c80b59d53b12bc2310e075bff795",
+      "bytes": 375018,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: compact audio/neural modules, chip identity, adult anatomical proportions and mature cel shading. No readable labels, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49981,
+        "objectKey": "system-item-media/v1/items/7757/cover/1546564a8d0334635019792168ce6b48f053c80b59d53b12bc2310e075bff795.jpg",
+        "fileSize": 375018
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7757/cover/1546564a8d0334635019792168ce6b48f053c80b59d53b12bc2310e075bff795.jpg"
+    },
+    {
+      "key": "cyber-7775-cover",
+      "target": {
+        "kind": "item",
+        "id": 7775,
+        "typeId": 26,
+        "name": "Разъём интерфейса"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A personal interface port shown on an intact neutral synthetic wrist model, a small flush metal socket with a plain matching cable plug resting beside it. Smooth manufactured surface, no skin wound, surgery, weapon or connection instructions. Fine graphite/ivory hardware in a calm clinic.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7775-cover-v1.png",
+      "final": "final/cyber-7775-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-40b93cdb-744b-4a68-b6bf-a97fad843a3b.png",
+      "originalSha256": "52a4773cd0753de883a48686194ca5d0bfc3ebf2654dfa16dd106e52e4b0c1d0",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "ac2b0845d934ce66a7e71fd7d85029d7cf0a291d9ea2a7987b3a5db957987073",
+      "bytes": 290608,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: compact audio/neural modules, chip identity, adult anatomical proportions and mature cel shading. No readable labels, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49982,
+        "objectKey": "system-item-media/v1/items/7775/cover/ac2b0845d934ce66a7e71fd7d85029d7cf0a291d9ea2a7987b3a5db957987073.jpg",
+        "fileSize": 290608
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7775/cover/ac2b0845d934ce66a7e71fd7d85029d7cf0a291d9ea2a7987b3a5db957987073.jpg"
+    },
+    {
+      "key": "cyber-7778-cover",
+      "target": {
+        "kind": "item",
+        "id": 7778,
+        "typeId": 26,
+        "name": "Керензиков"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A Kerenzikov neural speedware module interpreted as a compact curved graphite processor unit with continuous blue status light, fine heat-spreading fins and an insulated connector ribbon. On a clinical service mount, no real brain or anatomy, no performance numbers or wiring diagram.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7778-cover-v1.png",
+      "final": "final/cyber-7778-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4e2ab1cb-2281-450a-91d4-28f39f2710c2.png",
+      "originalSha256": "4ba658172ed245e37a0237e8d7a79c3c88a56d5e21f43b4b188892a39d24a75a",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "0cfeef14ab1c4a2d653974572871da70535e429a261527dab3df6f63d3d8686a",
+      "bytes": 346142,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: compact audio/neural modules, chip identity, adult anatomical proportions and mature cel shading. No readable labels, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49983,
+        "objectKey": "system-item-media/v1/items/7778/cover/0cfeef14ab1c4a2d653974572871da70535e429a261527dab3df6f63d3d8686a.jpg",
+        "fileSize": 346142
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7778/cover/0cfeef14ab1c4a2d653974572871da70535e429a261527dab3df6f63d3d8686a.jpg"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T20:17:58.335Z",
+    "scenarios": 18,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-58\\live-qa.json",
+    "note": "Public URL loaded; no JavaScript errors or horizontal page overflow."
+  }
+}

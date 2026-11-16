@@ -1,0 +1,112 @@
+{
+  "batch": 72,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-72",
+  "sourceAudit": "Live own media slots empty. Core163–165,343–344,368 and category checked. Finished fictional hardware, no technical instructions. Icons unchanged.",
+  "assets": [
+    {
+      "key": "mod-7935-cover",
+      "target": {
+        "kind": "item",
+        "id": 7935,
+        "typeId": 35,
+        "name": "Штык-нож"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A single fictional BAYONET in a fitted display case, short clean steel blade, dark textured grip and sturdy mounting ring; no gun, combat or target. Matte metal and worn fabric, whole blade safely inside frame. Cyberpunk armory storage illustration, no assembly detail or labels.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7935-cover-v1.png",
+      "final": "final/mod-7935-cover.jpg"
+    },
+    {
+      "key": "mod-7962-cover",
+      "target": {
+        "kind": "item",
+        "id": 7962,
+        "typeId": 35,
+        "name": "Подствольный гранатомёт"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional UNDERBARREL GRENADE-LAUNCHER attachment displayed as one inert compact short tube housing on a padded armory cradle. External finished shell and top mounting rail only, no ammunition, firearm, firing, target or instructional diagram. Whole module inside frame, dark graphite and muted amber.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7962-cover-v1.png",
+      "final": "final/mod-7962-cover.jpg"
+    },
+    {
+      "key": "mod-7967-cover",
+      "target": {
+        "kind": "item",
+        "id": 7967,
+        "typeId": 35,
+        "name": "ИК прицел ночного видения"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One INFRARED NIGHT-VISION SCOPE resting on a padded bench, large dark coated objective lens, rugged sensor housing and rubber eyecup. No weapon or through-scope target, no reticle, labels or diagrams. Fine optics and broad cel-painted reflections, cyberpunk armory.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7967-cover-v1.png",
+      "final": "final/mod-7967-cover.jpg"
+    },
+    {
+      "key": "mod-7978-cover",
+      "target": {
+        "kind": "item",
+        "id": 7978,
+        "typeId": 35,
+        "name": "Подствольный дробовик"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional UNDERBARREL SHOTGUN attachment, compact narrow two-shot housing on a padded armory cradle, external finished casing and mounting rail only. No ammunition, firing, targets, construction or operating details. Full module comfortably inside frame, graphite and worn polymer.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7978-cover-v1.png",
+      "final": "final/mod-7978-cover.jpg"
+    },
+    {
+      "key": "mod-7979-cover",
+      "target": {
+        "kind": "item",
+        "id": 7979,
+        "typeId": 35,
+        "name": "Смартлинк"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A SMARTGUN LINK electronic connector module, compact rugged adapter with a short protected interface lead and sealed contact plate on a service tray. No weapon, targeting scene, code or wiring diagram. Rich cel-shaded metal/rubber/glass materials, warm bench lamp and cool room.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7979-cover-v1.png",
+      "final": "final/mod-7979-cover.jpg"
+    },
+    {
+      "key": "mod-7981-cover",
+      "target": {
+        "kind": "item",
+        "id": 7981,
+        "typeId": 35,
+        "name": "Снайперский прицел"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "queued",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One long SNIPING SCOPE on a padded optics bench, elongated dark tube with large objective lens, subtle adjustment housings and rubber eyecup. No firearm, target view or reticle, no readable scales. Entire optical instrument visible, detailed cel shading, graphite and plum highlights.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/mod-7981-cover-v1.png",
+      "final": "final/mod-7981-cover.jpg"
+    }
+  ]
+}

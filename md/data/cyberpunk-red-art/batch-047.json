@@ -1,0 +1,334 @@
+{
+  "batch": 47,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-47",
+  "sourceAudit": "Live own cover slots empty. Physical equipment forms checked in supplied Core pp.351–355 and item metadata; no rule or usage diagrams, original unbranded designs, icons unchanged.",
+  "assets": [
+    {
+      "key": "gear-7867-cover",
+      "target": {
+        "kind": "item",
+        "id": 7867,
+        "typeId": 29,
+        "name": "Криопомпа"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A portable cryopump kit: a suitcase-size medical pump connected by thick insulated hoses to an EMPTY folded adult-size flexible treatment bag with a transparent upper window and integrated glove sleeves. Clean emergency clinic bench, no body, corpse, surgery or injury.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7867-cover-v1.png",
+      "final": "final/gear-7867-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-cf3536d5-c9f8-451d-a932-db1d6c6f9003.png",
+      "originalSha256": "2eb1cc3c903fae988234d42a9989e59af69539709145a7043b3809f413e2fd10",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "85c54f114f54720c0f0928a5f5c71a7e2826452350fc3984a52d238b73b76ab3",
+      "bytes": 315149,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every exported equipment scene inspected. Distinct cyberdeck quality, five-finger wearable glove, clear smart glasses, pneumatic injector, optics/audio devices and cryopump versus capsule forms match source. Whole objects, no branding or readable instructions.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49898,
+        "objectKey": "system-item-media/v1/items/7867/cover/85c54f114f54720c0f0928a5f5c71a7e2826452350fc3984a52d238b73b76ab3.jpg",
+        "fileSize": 315149
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7867/cover/85c54f114f54720c0f0928a5f5c71a7e2826452350fc3984a52d238b73b76ab3.jpg"
+    },
+    {
+      "key": "gear-7868-cover",
+      "target": {
+        "kind": "item",
+        "id": 7868,
+        "typeId": 29,
+        "name": "Криокапсула"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A full adult-size EMPTY cryogenic medical capsule with a transparent curved lid, padded interior rest, insulated base and restrained blue status lights. Upright perspective in a well-kept street clinic, whole pod visible, no patient or readable screen.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7868-cover-v1.png",
+      "final": "final/gear-7868-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d7b70f6b-a55a-4ab7-86d1-0359544fb5b2.png",
+      "originalSha256": "d1681136f2fedb42d8500b77d22a3ed576b92e1ac9d71b2fe20a38f583237eee",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "f14da938b1b2bcbacb2d9116d4c79c953489755998399442752b6fc3059da8b5",
+      "bytes": 298720,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every exported equipment scene inspected. Distinct cyberdeck quality, five-finger wearable glove, clear smart glasses, pneumatic injector, optics/audio devices and cryopump versus capsule forms match source. Whole objects, no branding or readable instructions.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49899,
+        "objectKey": "system-item-media/v1/items/7868/cover/f14da938b1b2bcbacb2d9116d4c79c953489755998399442752b6fc3059da8b5.jpg",
+        "fileSize": 298720
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7868/cover/f14da938b1b2bcbacb2d9116d4c79c953489755998399442752b6fc3059da8b5.jpg"
+    },
+    {
+      "key": "gear-7869-cover",
+      "target": {
+        "kind": "item",
+        "id": 7869,
+        "typeId": 29,
+        "name": "Одноразовая мобила"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A cheap disposable mobile phone: small tough charcoal brick-shaped handset with a plain tiny screen, blank square keypad buttons and a simple charging socket. Resting on a modest market counter, no identity concealment scenario, no text or manufacturer marks.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7869-cover-v1.png",
+      "final": "final/gear-7869-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-07847795-ceb5-410e-b6e8-03f297924092.png",
+      "originalSha256": "26970dbc17e8f62e2d97bbdbcf5a77230b58ca72c071ab1e94328e156b68c7da",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "37d90cd55a6290ead838d0248f443bace9f91b832c1df9af5cdb13a204d4bf2a",
+      "bytes": 290913,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every exported equipment scene inspected. Distinct cyberdeck quality, five-finger wearable glove, clear smart glasses, pneumatic injector, optics/audio devices and cryopump versus capsule forms match source. Whole objects, no branding or readable instructions.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49900,
+        "objectKey": "system-item-media/v1/items/7869/cover/37d90cd55a6290ead838d0248f443bace9f91b832c1df9af5cdb13a204d4bf2a.jpg",
+        "fileSize": 290913
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7869/cover/37d90cd55a6290ead838d0248f443bace9f91b832c1df9af5cdb13a204d4bf2a.jpg"
+    },
+    {
+      "key": "gear-7870-cover",
+      "target": {
+        "kind": "item",
+        "id": 7870,
+        "typeId": 29,
+        "name": "Драм-машина"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. An electronic drum machine made of several flat round and polygonal plastic drum pads of different sizes linked by cables to a central sound module. Arranged plausibly on a studio table, muted graphite/red surfaces, no readable controls or performer.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7870-cover-v1.png",
+      "final": "final/gear-7870-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-aff23290-86aa-479a-b454-99484e987ef3.png",
+      "originalSha256": "a07758b119887e95b9c7e52eaf5185d1d7ab65e7b5db8d6fc9e3491664dac610",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "809c03555de44b02905cfc21c269284f46bca9613d8b4a95708510a5f6e312e2",
+      "bytes": 262854,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every exported equipment scene inspected. Distinct cyberdeck quality, five-finger wearable glove, clear smart glasses, pneumatic injector, optics/audio devices and cryopump versus capsule forms match source. Whole objects, no branding or readable instructions.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49901,
+        "objectKey": "system-item-media/v1/items/7870/cover/809c03555de44b02905cfc21c269284f46bca9613d8b4a95708510a5f6e312e2.jpg",
+        "fileSize": 262854
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7870/cover/809c03555de44b02905cfc21c269284f46bca9613d8b4a95708510a5f6e312e2.jpg"
+    },
+    {
+      "key": "gear-7871-cover",
+      "target": {
+        "kind": "item",
+        "id": 7871,
+        "typeId": 29,
+        "name": "Клейкая лента"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. One roll of sturdy multipurpose adhesive tape with a short peeled end revealing its adhesive underside, graphite outer surface with a faint teal edge. On a technician's workbench beside a plain repair cloth; no branding or lettering.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7871-cover-v1.png",
+      "final": "final/gear-7871-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-95f272bf-0dc3-4e3e-8216-80f318fd9d2c.png",
+      "originalSha256": "c6a26f686857b9b683c09b355a190a9bb49a109afc0783c49d4d37b42f8c087e",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "b8c5b73aaedf715125ae24f92e7ef867ea38937ad8f78f961846764f9f5df092",
+      "bytes": 330346,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every exported equipment scene inspected. Distinct cyberdeck quality, five-finger wearable glove, clear smart glasses, pneumatic injector, optics/audio devices and cryopump versus capsule forms match source. Whole objects, no branding or readable instructions.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49902,
+        "objectKey": "system-item-media/v1/items/7871/cover/b8c5b73aaedf715125ae24f92e7ef867ea38937ad8f78f961846764f9f5df092.jpg",
+        "fileSize": 330346
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7871/cover/b8c5b73aaedf715125ae24f92e7ef867ea38937ad8f78f961846764f9f5df092.jpg"
+    },
+    {
+      "key": "gear-7872-cover",
+      "target": {
+        "kind": "item",
+        "id": 7872,
+        "typeId": 29,
+        "name": "Электрогитара/иной инструмент"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. An original angular electric guitar resting fully visible on a guitar stand backstage: burgundy and charcoal body, plausible strings, pickups, tuning pegs and cable socket. A plain coiled audio cable nearby, no brand, performer, lettering or weapons.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7872-cover-v1.png",
+      "final": "final/gear-7872-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c59ad7e3-e56b-4548-9f56-293894e40d9f.png",
+      "originalSha256": "e7e57cd980bc2c667cc6ff8959095baab27a00060229446a7754194407ba9b15",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "74eb21a3c2af08c3fd42ab83678d9e8db12f7edc40d9d5245ac49d036b798bd2",
+      "bytes": 254521,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every exported equipment scene inspected. Distinct cyberdeck quality, five-finger wearable glove, clear smart glasses, pneumatic injector, optics/audio devices and cryopump versus capsule forms match source. Whole objects, no branding or readable instructions.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49903,
+        "objectKey": "system-item-media/v1/items/7872/cover/74eb21a3c2af08c3fd42ab83678d9e8db12f7edc40d9d5245ac49d036b798bd2.jpg",
+        "fileSize": 254521
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7872/cover/74eb21a3c2af08c3fd42ab83678d9e8db12f7edc40d9d5245ac49d036b798bd2.jpg"
+    },
+    {
+      "key": "gear-7873-cover",
+      "target": {
+        "kind": "item",
+        "id": 7873,
+        "typeId": 29,
+        "name": "Фонарик"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A rugged rechargeable flashlight, cylindrical graphite metal housing with ribbed grip and a broad clear front lens, resting on an equipment counter. A modest focused pale beam illuminates a nearby wall without text, entire flashlight visible.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7873-cover-v1.png",
+      "final": "final/gear-7873-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-cf5398a1-f9a7-40b7-bc1b-e421a2adc0c4.png",
+      "originalSha256": "a15cec2cb93fb65270164a7ab9c10c77245859862f4f5b686a9d6178c0216329",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "83c12a4361a1a9bc8d455bdd07b23d3bc12fece569fa84bfed2f60009d5810b4",
+      "bytes": 271330,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every exported equipment scene inspected. Distinct cyberdeck quality, five-finger wearable glove, clear smart glasses, pneumatic injector, optics/audio devices and cryopump versus capsule forms match source. Whole objects, no branding or readable instructions.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49904,
+        "objectKey": "system-item-media/v1/items/7873/cover/83c12a4361a1a9bc8d455bdd07b23d3bc12fece569fa84bfed2f60009d5810b4.jpg",
+        "fileSize": 271330
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7873/cover/83c12a4361a1a9bc8d455bdd07b23d3bc12fece569fa84bfed2f60009d5810b4.jpg"
+    },
+    {
+      "key": "gear-7874-cover",
+      "target": {
+        "kind": "item",
+        "id": 7874,
+        "typeId": 29,
+        "name": "Питательный батончик"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A plain dry grain nutrition bar partly unwrapped from unmarked foil, dense compressed cereal texture clearly visible, on a small transit-stop counter. One compact bar only, no advertising, labels or person eating it; mundane cyberpunk daily object.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7874-cover-v1.png",
+      "final": "final/gear-7874-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-1381621c-5f1c-43ec-b9be-f4084dabce01.png",
+      "originalSha256": "e2cb50cb362f9d9a3fc6b49de13587cdddea29a6ec4a89aab26dd72e1cb45fb5",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "b3596e13c972b743b4c2dc79c447684c5eb57c2ebb5544d313dcc5d9ded5d769",
+      "bytes": 276709,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Every exported equipment scene inspected. Distinct cyberdeck quality, five-finger wearable glove, clear smart glasses, pneumatic injector, optics/audio devices and cryopump versus capsule forms match source. Whole objects, no branding or readable instructions.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49905,
+        "objectKey": "system-item-media/v1/items/7874/cover/b3596e13c972b743b4c2dc79c447684c5eb57c2ebb5544d313dcc5d9ded5d769.jpg",
+        "fileSize": 276709
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7874/cover/b3596e13c972b743b4c2dc79c447684c5eb57c2ebb5544d313dcc5d9ded5d769.jpg"
+    }
+  ],
+  "liveReview": {
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-47/live-qa.json",
+    "passed": true,
+    "checkedAt": "2026-11-16T18:50:11.571Z",
+    "scenarios": 24,
+    "note": "Each actual equipment item loads its own expected cover in all three layouts; no JavaScript errors or page overflow.",
+    "widths": [
+      390,
+      840,
+      1440
+    ]
+  }
+}

@@ -1,0 +1,217 @@
+{
+  "batch": 57,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-57",
+  "sourceAudit": "Live own media empty. Eye/audio/neural categories and paired flags checked against Core359–362 and imported facts. Components shown as manufactured clinical displays, no implantation instructions or icon changes.",
+  "assets": [
+    {
+      "key": "cyber-7806-cover",
+      "target": {
+        "kind": "item",
+        "id": 7806,
+        "typeId": 26,
+        "name": "Антирадар"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One miniature implanted radar-detector module with a dark sensor window, a fine compact antenna loop and tiny amber indicator, in a clinic microhardware tray. No radar frequencies, tracking target, traffic scene or instructions. Clearly implant-sized, not a dashboard device.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7806-cover-v1.png",
+      "final": "final/cyber-7806-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-32b77947-cc93-4f9f-95ed-d6542a73b2fb.png",
+      "originalSha256": "a484e8ede4e7bcf05ae0ab121404e118561aab6ac7fcd37ac1bfa77339c7aefc",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "797d18244fa14258756af665b51382b295f3fa7b0695f6d236ca298480411aa6",
+      "bytes": 354158,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: compact audio/neural modules, chip identity, adult anatomical proportions and mature cel shading. No readable labels, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49973,
+        "objectKey": "system-item-media/v1/items/7806/cover/797d18244fa14258756af665b51382b295f3fa7b0695f6d236ca298480411aa6.jpg",
+        "fileSize": 354158
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7806/cover/797d18244fa14258756af665b51382b295f3fa7b0695f6d236ca298480411aa6.jpg"
+    },
+    {
+      "key": "cyber-7809-cover",
+      "target": {
+        "kind": "item",
+        "id": 7809,
+        "typeId": 26,
+        "name": "Радиокоммуникатор"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One compact implanted radio-communicator micro-module with a small transceiver chip, miniature speaker contact and a short insulated connector lead. Graphite and teal, displayed near a neutral synthetic ear model, no whole external headset, frequencies or readable labels.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7809-cover-v1.png",
+      "final": "final/cyber-7809-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-91166284-938f-430a-ba48-affe5b95f8fd.png",
+      "originalSha256": "89bbb2db469bd9da718a0375d44348294fa8c83115fd732f5efa61ce394d8f21",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "7dbc07ff80eec2b37fa05324a02b1960e8c1c159de4c81c5926c3a9bb6def93c",
+      "bytes": 362336,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: compact audio/neural modules, chip identity, adult anatomical proportions and mature cel shading. No readable labels, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49974,
+        "objectKey": "system-item-media/v1/items/7809/cover/7dbc07ff80eec2b37fa05324a02b1960e8c1c159de4c81c5926c3a9bb6def93c.jpg",
+        "fileSize": 362336
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7809/cover/7dbc07ff80eec2b37fa05324a02b1960e8c1c159de4c81c5926c3a9bb6def93c.jpg"
+    },
+    {
+      "key": "cyber-7810-cover",
+      "target": {
+        "kind": "item",
+        "id": 7810,
+        "typeId": 26,
+        "name": "Радиоприёмник/Музыкальный плеер"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One implanted radio/music-receiver module, a tiny elegant graphite microboard with an enclosed memory connector and fine acoustic grille, a faint blue status light. On a padded audio-service tray, no physical tuning knobs or full portable radio, no text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7810-cover-v1.png",
+      "final": "final/cyber-7810-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-14ec99fd-366b-42ed-b254-33ae474daf67.png",
+      "originalSha256": "b910f3ae0b518e2f1fcc103b9b744141bc7ce0143a9f363b03f55b9e35bb9a40",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "796bd1d238f4d092da537fe79a9554c2c77f14f2dd84ede0af9e0c1c9bb511a7",
+      "bytes": 401976,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: compact audio/neural modules, chip identity, adult anatomical proportions and mature cel shading. No readable labels, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49975,
+        "objectKey": "system-item-media/v1/items/7810/cover/796bd1d238f4d092da537fe79a9554c2c77f14f2dd84ede0af9e0c1c9bb511a7.jpg",
+        "fileSize": 401976
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7810/cover/796bd1d238f4d092da537fe79a9554c2c77f14f2dd84ede0af9e0c1c9bb511a7.jpg"
+    },
+    {
+      "key": "cyber-7815-cover",
+      "target": {
+        "kind": "item",
+        "id": 7815,
+        "typeId": 26,
+        "name": "Скремблер/Дескремблер"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One implanted communications scrambler/descrambler module: two tiny complementary processor blocks on a SINGLE compact carrier board with a short protected internal link, amber and cyan accents. No readable code, algorithms, frequencies or diagrams, no surveillance scene; neutral clinic product illustration.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7815-cover-v1.png",
+      "final": "final/cyber-7815-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0ffe6234-74c7-4424-ad6c-c97c329927ea.png",
+      "originalSha256": "9888242e4be1248ae4ef52814f082db13d43af8ef498b2218121ccebd1b13800",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "4c55982415b8ee6ee4175bcea3bdf3f507e7aa1addeb96e9113024791c1dedd7",
+      "bytes": 312101,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: compact audio/neural modules, chip identity, adult anatomical proportions and mature cel shading. No readable labels, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49976,
+        "objectKey": "system-item-media/v1/items/7815/cover/4c55982415b8ee6ee4175bcea3bdf3f507e7aa1addeb96e9113024791c1dedd7.jpg",
+        "fileSize": 312101
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7815/cover/4c55982415b8ee6ee4175bcea3bdf3f507e7aa1addeb96e9113024791c1dedd7.jpg"
+    },
+    {
+      "key": "cyber-7843-cover",
+      "target": {
+        "kind": "item",
+        "id": 7843,
+        "typeId": 26,
+        "name": "Анализатор стрессовых изменений голоса"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One voice-stress-analysis audio implant micro-module, a small sound-processing chip with a fine sensor grille and a plain diagnostic cradle showing only abstract waveform bands. No person being judged, interrogation, truth/lie labels or real-world efficacy claim. Detailed tiny hardware in a calm clinic.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7843-cover-v1.png",
+      "final": "final/cyber-7843-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-513c1b3b-ffbb-41d1-97fc-d6ff9944dc7c.png",
+      "originalSha256": "0a351f54a01584e09aa054283f777ffb4bd2b9cc58ed9c0dc71dd4edcd911052",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "e86b096cb9bbb43f9874a03a9806cdbbb35abd001e855043105480d8e2852e83",
+      "bytes": 390647,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected: compact audio/neural modules, chip identity, adult anatomical proportions and mature cel shading. No readable labels, gore, critical crop or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49977,
+        "objectKey": "system-item-media/v1/items/7843/cover/e86b096cb9bbb43f9874a03a9806cdbbb35abd001e855043105480d8e2852e83.jpg",
+        "fileSize": 390647
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7843/cover/e86b096cb9bbb43f9874a03a9806cdbbb35abd001e855043105480d8e2852e83.jpg"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T20:17:00.962Z",
+    "scenarios": 15,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-57\\live-qa.json",
+    "note": "Public URL loaded; no JavaScript errors or horizontal page overflow."
+  }
+}

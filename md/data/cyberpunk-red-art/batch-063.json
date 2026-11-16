@@ -1,0 +1,253 @@
+{
+  "batch": 63,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-63",
+  "sourceAudit": "Live cyberware own slots empty. Core364–367 and structured category reviewed. Limb materials and paired options distinguished; biological limbs remain attached to intact adults. Static fictional hardware, no instructions or icon changes.",
+  "assets": [
+    {
+      "key": "cyber-7740-cover",
+      "target": {
+        "kind": "item",
+        "id": 7740,
+        "typeId": 26,
+        "name": "Большие костяшки"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A relaxed complete five-finger cybernetic hand on a padded maintenance cradle, reinforced broad steel knuckle caps and dense graphite finger joints. Show the reinforced knuckles clearly, no clenched attack, blood or target. Workshop with dim burgundy wall and warm bench light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7740-cover-v1.png",
+      "final": "final/cyber-7740-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0e19034c-b4b8-4fe8-9760-c0513227742e.png",
+      "originalSha256": "1298a1e7526a195a5aa46fc1a7cde9145c2af9c6eadca437da1aefa4d26a1e6c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "8a4bce7bee32e0c00609fa57e6a194e0795bee213e30e91978aafec5a63486ad",
+      "bytes": 349392,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "cyber-7752-cover",
+      "target": {
+        "kind": "item",
+        "id": 7752,
+        "typeId": 26,
+        "name": "Кибердека (встроенная)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A complete ivory and graphite cybernetic forearm on a maintenance stand with a compact HARDWIRED cyberdeck flush inside its forearm casing, small closed service-panel seams and connector ports, a dim screen with abstract blocks only. No external laptop, loose weapon or diagrams. Nighttime electronics bench.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7752-cover-v1.png",
+      "final": "final/cyber-7752-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-703e9baa-52fb-4a67-92c0-358433096559.png",
+      "originalSha256": "cde54e7ccbc9577746cb48595a8e8d57e43a2f356b7fb651dd3da55356f25fc7",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "716a4c0d1d51daa1f522f67867842247947ff53ecab21b4a7e65933ae7996719",
+      "bytes": 330873,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "cyber-7761-cover",
+      "target": {
+        "kind": "item",
+        "id": 7761,
+        "typeId": 26,
+        "name": "Exposed Covering (Cyber Arm)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A complete cybernetic arm from shoulder connector to five-finger hand, outer casing deliberately absent: exposed manufactured actuators, tendons, wiring and skeletal mechanical frame, no tissue. On a museum-like prosthetics service stand, warm light and dark plum background.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7761-cover-v1.png",
+      "final": "final/cyber-7761-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-58334552-13b2-4a8e-87af-357fa0760ecc.png",
+      "originalSha256": "aa2679bc028bbfc31fd228c7a1075e4c0e1db5428f51fb2a9df6ce605adb006b",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "ec1601df36c9cd70571fce9984b5d8189f9df3ffdce5bb6787c174a66b179bed",
+      "bytes": 363559,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "cyber-7765-cover",
+      "target": {
+        "kind": "item",
+        "id": 7765,
+        "typeId": 26,
+        "name": "Рука-кошка"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A cybernetic hand on a maintenance stand with an integrated compact grappling attachment and a short slack length of sturdy retrieval cable lying safely on the bench. Fictional climbing utility, inert display; no firing, target, weapon, construction diagram or instructions. Industrial maintenance room.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7765-cover-v1.png",
+      "final": "final/cyber-7765-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-75fcce3e-29b4-4d08-a29e-79f33647bc03.png",
+      "originalSha256": "25be074442930fdc4d11251d472d7f9673d54e031cdf1fbc30009e48795072b1",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "0405bc6b46438de86c0da44fd503950d3cf6cdaacafa4dfbded8fc385b382919",
+      "bytes": 364420,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "cyber-7767-cover",
+      "target": {
+        "kind": "item",
+        "id": 7767,
+        "typeId": 26,
+        "name": "Усиленное экранирование (киберрука)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A complete cybernetic arm with graphite protective casing, sealed joints, fine copper-colored shielding mesh visible in one small manufactured inspection panel. Ivory edge armor, no electrical energy shield or lightning. Technical illustration on a ripperdoc bench.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7767-cover-v1.png",
+      "final": "final/cyber-7767-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0aa676ef-73d6-4cac-8576-d1be6a7e98ab.png",
+      "originalSha256": "eb2b316a9198615febf4abd09fc02d24ff4093cd9b1054997be5325ae700ecc5",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "ee8721203ef4ece41a1af22973011d8147003b439e323027c50e8ff313236ace",
+      "bytes": 402321,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "cyber-7782-cover",
+      "target": {
+        "kind": "item",
+        "id": 7782,
+        "typeId": 26,
+        "name": "Мясная рука"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. Close scene of an intact natural adult human ARM from rolled shirt sleeve to hand, belonging to a fully clothed middle-aged man leaning on a city diner counter. Natural skin and anatomy, no implant, machinery, wound or detached body part. Focus on the ordinary biological arm, cyberpunk street softly visible beyond window.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7782-cover-v1.png",
+      "final": "final/cyber-7782-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ded37fbd-7d63-44a2-97c1-468b63e27794.png",
+      "originalSha256": "b6c8cddbea7f513f68a2d31acdc9c4f6f7bbe2322ff8d89d9c0e72986164bde5",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "ed920e3d9b4e748f973410c4c14273140731d0b27a2d01f55c1aa8c3503f2661",
+      "bytes": 334036,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "cyber-7784-cover",
+      "target": {
+        "kind": "item",
+        "id": 7784,
+        "typeId": 26,
+        "name": "Meat Hand"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. Close scene of an intact natural adult human HAND resting on a worn cafe table, connected to its wrist and forearm continuing to a fully clothed adult. Five natural fingers, natural nails and skin texture. No implants, injury or detached part. Muted neon reflections and warm cafe lamp.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7784-cover-v1.png",
+      "final": "final/cyber-7784-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6a9892e3-2160-4118-ad62-ee46c1d820a2.png",
+      "originalSha256": "698c588c56984446b37220e4ca55c114587b7ef3a0cceb7907fde468de49110a",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "15cddf9bd34a4c7ed494fb387fe21e696a7f4d7f6692f0d9c3be13f68205f1e9",
+      "bytes": 331822,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "cyber-7786-cover",
+      "target": {
+        "kind": "item",
+        "id": 7786,
+        "typeId": 26,
+        "name": "Киберрука медицинского назначения"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. One basic medical replacement cybernetic arm, complete shoulder connector to five-finger hand, smooth modest ivory polymer with simple rounded graphite joints, no combat additions or elaborate modules. Displayed on a clinic prosthetic fitting cradle; mature cel-shaded illustration.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7786-cover-v1.png",
+      "final": "final/cyber-7786-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b60b6e37-45d3-42ee-9321-9fbd11f4caf4.png",
+      "originalSha256": "597f33485d6dd01964a887f90ef7fd44e682c604c69982ee13348a5ca1cfff8e",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "c7b1d7ce96971b0c08449563b4bda951e7e702809dee30dcfefe29e0a4384e25",
+      "bytes": 311857,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "cyber-7788-cover",
+      "target": {
+        "kind": "item",
+        "id": 7788,
+        "typeId": 26,
+        "name": "Медсканер"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A cybernetic forearm with integrated medical scanner, compact smooth diagnostic sensor in palm and a small dim screen inset on the forearm showing only abstract waveform bars. Resting on a neutral synthetic arm test model, no patient injury or medical procedure. Amber and teal examination light.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7788-cover-v1.png",
+      "final": "final/cyber-7788-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0fd4f74e-5d25-47c3-829d-a47a82760ebb.png",
+      "originalSha256": "de76b98c51eafce2111109753aaed25b8757e3e0ef3c741d4a4eb95462e459a9",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "8e5ced685516953e1b3bdc1fee4e266dbbaad791861993764441cfaf2e569049",
+      "bytes": 323014,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    }
+  ]
+}

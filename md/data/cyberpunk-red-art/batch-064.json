@@ -1,0 +1,226 @@
+{
+  "batch": 64,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-64",
+  "sourceAudit": "Live cyberware own slots empty. Core364–367 and structured category reviewed. Limb materials and paired options distinguished; biological limbs remain attached to intact adults. Static fictional hardware, no instructions or icon changes.",
+  "assets": [
+    {
+      "key": "cyber-7799-cover",
+      "target": {
+        "kind": "item",
+        "id": 7799,
+        "typeId": 26,
+        "name": "Пластиковое покрытие (киберрука)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A complete cybernetic arm in smooth colored PLASTIC cosmetic panels, burgundy and muted cream with graphite mechanical joints. Shoulder to all five fingers visible on a salon maintenance stand. Clearly matte molded polymer, few broad clean shapes, detailed panel seams, no metal chrome reflections.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7799-cover-v1.png",
+      "final": "final/cyber-7799-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-5fc58c1b-7e18-49ce-8c87-98ed95a93353.png",
+      "originalSha256": "dd50a30ce6db8686d6ba6fe01e6521d107ce1c5494e1096f3d75696d354496b7",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "905a3af97e12258aac4ae51839048d02337a1194c45e138bcceebc26c8086ba3",
+      "bytes": 281127,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "cyber-7801-cover",
+      "target": {
+        "kind": "item",
+        "id": 7801,
+        "typeId": 26,
+        "name": "Выдвижной гранатомёт"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional cybernetic arm with an inert integrated pop-up grenade-launcher module displayed on a secure maintenance cradle. One short broad closed protective muzzle housing aligned with forearm, no ammunition or loading, no firing, no target, no mechanics diagram. Mature detailed cyberpunk illustration, entire arm visible.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7801-cover-v1.png",
+      "final": "final/cyber-7801-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-45910201-a86d-4002-bd22-80fe721f064e.png",
+      "originalSha256": "0a28aa094b6ba397e721cc8a348135fe25048f4e3310bf004d2e05069e085ba2",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "2a0c6bd5896671710e63f492f5f060fa34238cfef6a50cf23c2e8908adb99738",
+      "bytes": 390411,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "cyber-7802-cover",
+      "target": {
+        "kind": "item",
+        "id": 7802,
+        "typeId": 26,
+        "name": "Выдвижное оружие ближнего боя"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional cybernetic forearm on a maintenance cradle with one integrated short retractable blade shown in a static display position. A single clean blade, hand relaxed and empty, no combat, target, blood, operating instructions or mechanism diagram. Industrial clinic materials and soft plum background.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7802-cover-v1.png",
+      "final": "final/cyber-7802-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c30e2b0f-03bc-4d41-8cdb-6a878610c68d.png",
+      "originalSha256": "b7fb0a791ffb77491dfdefdbe04826ea3f421ee59482eb780e963bce74bd3fc6",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "dfb3230345cd0e53fc02cad1c37fa90462b29f9cd8080604f580258eb0327bb2",
+      "bytes": 272326,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "cyber-7803-cover",
+      "target": {
+        "kind": "item",
+        "id": 7803,
+        "typeId": 26,
+        "name": "Выдвижное оружие дальнего боя"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fictional cybernetic forearm with a compact integrated pop-up ranged-weapon housing shown as an inert manufactured exhibit, muzzle safely directed sideways away from viewer. Empty relaxed hand, no firing/ammunition/targets/operating instructions. Balanced ivory graphite and subdued teal.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7803-cover-v1.png",
+      "final": "final/cyber-7803-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e2a323ff-8abf-4246-a4f6-9d794e837b00.png",
+      "originalSha256": "7d08d2c10797dd064b71ec796d356c503e817b1b566c5d2a584a0382317f7b4e",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "04ae8c11a17083493d2ad66ee104f6db642127936c8f92d29b2b0597904e626b",
+      "bytes": 341772,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "cyber-7804-cover",
+      "target": {
+        "kind": "item",
+        "id": 7804,
+        "typeId": 26,
+        "name": "Выдвижной щит"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A complete cybernetic arm on a maintenance cradle with an integrated deployable ballistic SHIELD unfolded beside the forearm. Transparent smoked protective panel with reinforced thin dark rim, clearly attached to the arm. No gun or combat scene, main shield and whole arm visible.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7804-cover-v1.png",
+      "final": "final/cyber-7804-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b58bcf16-fd09-4bcd-9632-42b788242f3d.png",
+      "originalSha256": "9c0ab7b8bcd7bc8e8387389e885d3fb4f98862579776259547fa1c3793b9421b",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "9a31ac7339f67d8ae0c421b7e3abd4c09cbf1d94d7af99e9e689b5bb297bc4bc",
+      "bytes": 337416,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "cyber-7805-cover",
+      "target": {
+        "kind": "item",
+        "id": 7805,
+        "typeId": 26,
+        "name": "Быстросменный шарнир"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. Close view of a cyberarm quick-change SHOULDER coupling: two complementary circular manufactured socket components just separated on padded bench mounts, robust locking collar and sealed interfaces. No torso, flesh, installation instructions or exploded diagrams. Fine functional material detail.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7805-cover-v1.png",
+      "final": "final/cyber-7805-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9f41b276-77ed-48e6-8b38-a8900c5e53c7.png",
+      "originalSha256": "d09078a9a459a6b17a7216a8e978d692a2dc5ff5371d3b41fb2ec9286c61bf28",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "6981170d9b8c38af817a1c2c77c0dcbdf995cfd048d2ee4e92df9f830b7c29cb",
+      "bytes": 350838,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "cyber-7811-cover",
+      "target": {
+        "kind": "item",
+        "id": 7811,
+        "typeId": 26,
+        "name": "Покрытие Realskinn (киберрука)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A fully clothed middle-aged adult with a cybernetic arm covered in lifelike synthetic skin, subtle neat wrist/upper-arm seam reveals manufactured identity. Natural warm skin surface and five fingers resting relaxed on salon counter. No cutaway, wound or dismemberment; real-skin-like covering is the focus.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7811-cover-v1.png",
+      "final": "final/cyber-7811-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2913e61f-5d6e-42d2-ba7a-d4e256f99235.png",
+      "originalSha256": "eff3114727f5d442423323def21162a7b35d53035c25159d5f1120aea46e998b",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "10aafbb3837be09c629f088b4a256e40ff1bd152cf815e129c946aefeb864ecf",
+      "bytes": 335804,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    },
+    {
+      "key": "cyber-7813-cover",
+      "target": {
+        "kind": "item",
+        "id": 7813,
+        "typeId": 26,
+        "name": "Потрошители"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A cybernetic five-finger hand on a neutral display cradle with extendable carbon-glass FINGERTIP claws visible. Thin translucent dark blades emerge from finger ends, distinguish from knuckle claws; static inert prop, no victims, blood or action. All fingertips comfortably within frame.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7813-cover-v1.png",
+      "final": "final/cyber-7813-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0a59f58f-ae02-4f5d-887e-1b9ef7add81a.png",
+      "originalSha256": "e5d3eff737c0dace19684a0f6fd8aee9c8fb4b678770934e5b1b0871bef13762",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "ed714b52578308cbaef1b5e9e09503b3028c4090f732b0a32b82a86f10c7dc83",
+      "bytes": 360907,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits"
+    }
+  ]
+}

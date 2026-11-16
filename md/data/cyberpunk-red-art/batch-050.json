@@ -1,0 +1,334 @@
+{
+  "batch": 50,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-50",
+  "sourceAudit": "Live own cover slots empty. Physical equipment forms checked in supplied Core pp.351–355 and item metadata; no rule or usage diagrams, original unbranded designs, icons unchanged.",
+  "assets": [
+    {
+      "key": "gear-7891-cover",
+      "target": {
+        "kind": "item",
+        "id": 7891,
+        "typeId": 29,
+        "name": "Антирадар"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A compact radar detector unit with a dark sensor window, tiny amber indicator lights and a simple mounting bracket, resting unused on a utility counter. No traffic scene, police target, instructions, frequencies or readable displays; original near-future hardware.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7891-cover-v1.png",
+      "final": "final/gear-7891-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8e606e4a-5e8c-44d9-864c-da55b1325195.png",
+      "originalSha256": "de6e57a7e0a8c69cb1da3f152d226c11637807a09c551cdfdfa5d658deb46f15",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "2f323c0c6a3890bff7a37060d524a67e89a2137f9582e2fd7aaaad9e29acdfcd",
+      "bytes": 225585,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "All final utility equipment exports inspected against source forms. External frames differ in bulk, medical kit/communication/camping objects complete, no usage diagrams; rejected open locksmith-kit scene replaced with closed pouch. No text/logos or icon changes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49922,
+        "objectKey": "system-item-media/v1/items/7891/cover/2f323c0c6a3890bff7a37060d524a67e89a2137f9582e2fd7aaaad9e29acdfcd.jpg",
+        "fileSize": 225585
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7891/cover/2f323c0c6a3890bff7a37060d524a67e89a2137f9582e2fd7aaaad9e29acdfcd.jpg"
+    },
+    {
+      "key": "gear-7892-cover",
+      "target": {
+        "kind": "item",
+        "id": 7892,
+        "typeId": 29,
+        "name": "Радиационный костюм"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A complete radiation-protection suit on a neutral adult mannequin: sealed pale yellow protective garment, clear visor hood, connected gloves and boots, layered seams and a compact air filter module. Clean industrial safety locker, no radiation symbols, labels, person or hazardous incident.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7892-cover-v1.png",
+      "final": "final/gear-7892-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-76e73310-342a-4406-885a-8f4afe7e1d88.png",
+      "originalSha256": "0f3eef49cf1ae4e0c2fe727f25f60407f25c76e0a30dced2341e1b915e5fca8c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "e0fc82a4312e5b0ad3aa8b619ec0c9f61c8db7ec31f12fedb2f89c5d1d26648e",
+      "bytes": 320022,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "All final utility equipment exports inspected against source forms. External frames differ in bulk, medical kit/communication/camping objects complete, no usage diagrams; rejected open locksmith-kit scene replaced with closed pouch. No text/logos or icon changes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49923,
+        "objectKey": "system-item-media/v1/items/7892/cover/e0fc82a4312e5b0ad3aa8b619ec0c9f61c8db7ec31f12fedb2f89c5d1d26648e.jpg",
+        "fileSize": 320022
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7892/cover/e0fc82a4312e5b0ad3aa8b619ec0c9f61c8db7ec31f12fedb2f89c5d1d26648e.jpg"
+    },
+    {
+      "key": "gear-7893-cover",
+      "target": {
+        "kind": "item",
+        "id": 7893,
+        "typeId": 29,
+        "name": "Радиокоммуникатор"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A practical radio communicator headset with one earpiece, a small boom microphone, secure head band and a compact belt radio module connected by coiled cable. Empty device on a clean counter, graphite/teal materials, no frequencies, brands or text.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7893-cover-v1.png",
+      "final": "final/gear-7893-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-43ad2f8f-f6dd-49a2-a311-5b463675d7dd.png",
+      "originalSha256": "aacb1f367c5b25e1680e03f64b3aa413486dafe8d616a2661284d75aed83328c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "215a32dcb31ca6e0e63f9607cb614a3b186b32fe524e7c0854a6129349e60fe3",
+      "bytes": 250707,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "All final utility equipment exports inspected against source forms. External frames differ in bulk, medical kit/communication/camping objects complete, no usage diagrams; rejected open locksmith-kit scene replaced with closed pouch. No text/logos or icon changes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49924,
+        "objectKey": "system-item-media/v1/items/7893/cover/215a32dcb31ca6e0e63f9607cb614a3b186b32fe524e7c0854a6129349e60fe3.jpg",
+        "fileSize": 250707
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7893/cover/215a32dcb31ca6e0e63f9607cb614a3b186b32fe524e7c0854a6129349e60fe3.jpg"
+    },
+    {
+      "key": "gear-7894-cover",
+      "target": {
+        "kind": "item",
+        "id": 7894,
+        "typeId": 29,
+        "name": "Радиоприёмник/Музыкальный плеер"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A portable radio scanner and music player with a small speaker grille, physical unmarked tuning dial, blank abstract display and a memory-chip slot. Resting on a city apartment shelf with simple wired earphones, no readable station names or logos.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7894-cover-v1.png",
+      "final": "final/gear-7894-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4597e383-6fe6-4dcc-af63-f2a9cf797d6a.png",
+      "originalSha256": "399c72f786ccc8645cf4637392630338c879a80f5d5a122b579faedf9818160b",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "444193d1dc1ebbfbb7da499ef42ccd48e3e371be5dc843bdd5e96075c79f5ec5",
+      "bytes": 292490,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "All final utility equipment exports inspected against source forms. External frames differ in bulk, medical kit/communication/camping objects complete, no usage diagrams; rejected open locksmith-kit scene replaced with closed pouch. No text/logos or icon changes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49925,
+        "objectKey": "system-item-media/v1/items/7894/cover/444193d1dc1ebbfbb7da499ef42ccd48e3e371be5dc843bdd5e96075c79f5ec5.jpg",
+        "fileSize": 292490
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7894/cover/444193d1dc1ebbfbb7da499ef42ccd48e3e371be5dc843bdd5e96075c79f5ec5.jpg"
+    },
+    {
+      "key": "gear-7895-cover",
+      "target": {
+        "kind": "item",
+        "id": 7895,
+        "typeId": 29,
+        "name": "Сигнальная шашка"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. One unused capped emergency signaling flare, a plain sturdy orange cylinder with a protected end cap and short wrist loop, lying in an open safety pouch. Industrial supply counter, no flame, explosion, person, instructions or markings.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7895-cover-v1.png",
+      "final": "final/gear-7895-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0327e6c1-07fa-468a-9a2e-364321c90244.png",
+      "originalSha256": "4ca45d1238621a04844b7f0a810e521282a357dd07fc2eaa348807b78dbc8951",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "bba2da2e4e8a8bf650f70d71fa852127800451623de6b05812fe2e94bb238db8",
+      "bytes": 301883,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "All final utility equipment exports inspected against source forms. External frames differ in bulk, medical kit/communication/camping objects complete, no usage diagrams; rejected open locksmith-kit scene replaced with closed pouch. No text/logos or icon changes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49926,
+        "objectKey": "system-item-media/v1/items/7895/cover/bba2da2e4e8a8bf650f70d71fa852127800451623de6b05812fe2e94bb238db8.jpg",
+        "fileSize": 301883
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7895/cover/bba2da2e4e8a8bf650f70d71fa852127800451623de6b05812fe2e94bb238db8.jpg"
+    },
+    {
+      "key": "gear-7896-cover",
+      "target": {
+        "kind": "item",
+        "id": 7896,
+        "typeId": 29,
+        "name": "Верёвка (60 м/ярд)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A neatly coiled long nylon utility rope, muted ivory with thin blue fibers, secured by two simple straps on a workshop hook. Clear braided material and complete coil, no knot tutorial, climbing scenario, numbers or labels.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7896-cover-v1.png",
+      "final": "final/gear-7896-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-1bd1ca7e-a99c-4462-aa6e-d7743dffe716.png",
+      "originalSha256": "838a00e121125d762ddd0eddb131d256b74b9cebf1b645f0e2672e5b4bd42975",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "00e3c54ef29d7c9eff737b820a2cd4475e0097f22e7e5aadc6826adabfd7e9bc",
+      "bytes": 265891,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "All final utility equipment exports inspected against source forms. External frames differ in bulk, medical kit/communication/camping objects complete, no usage diagrams; rejected open locksmith-kit scene replaced with closed pouch. No text/logos or icon changes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49927,
+        "objectKey": "system-item-media/v1/items/7896/cover/00e3c54ef29d7c9eff737b820a2cd4475e0097f22e7e5aadc6826adabfd7e9bc.jpg",
+        "fileSize": 265891
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7896/cover/00e3c54ef29d7c9eff737b820a2cd4475e0097f22e7e5aadc6826adabfd7e9bc.jpg"
+    },
+    {
+      "key": "gear-7897-cover",
+      "target": {
+        "kind": "item",
+        "id": 7897,
+        "typeId": 29,
+        "name": "Скремблер/Дескремблер"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A paired communications scrambler/descrambler set: two compact graphite electronic modules linked by a plain short cable, small amber and cyan status lights, abstract unmarked displays. Professional electronics bench, no readable algorithms, instructions or targets.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7897-cover-v1.png",
+      "final": "final/gear-7897-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-d8ee20ea-2fac-471e-888e-86a0ddbc11f4.png",
+      "originalSha256": "9d570cd149d0c463feb5cf1104613ee967580be7a2d7aa53c6a25dc4deb998db",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "f9b9a91378391eb7d46a7623a9e0b9d0a9e7923d5666ac38e9618eb87db3d880",
+      "bytes": 243589,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "All final utility equipment exports inspected against source forms. External frames differ in bulk, medical kit/communication/camping objects complete, no usage diagrams; rejected open locksmith-kit scene replaced with closed pouch. No text/logos or icon changes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49928,
+        "objectKey": "system-item-media/v1/items/7897/cover/f9b9a91378391eb7d46a7623a9e0b9d0a9e7923d5666ac38e9618eb87db3d880.jpg",
+        "fileSize": 243589
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7897/cover/f9b9a91378391eb7d46a7623a9e0b9d0a9e7923d5666ac38e9618eb87db3d880.jpg"
+    },
+    {
+      "key": "gear-7898-cover",
+      "target": {
+        "kind": "item",
+        "id": 7898,
+        "typeId": 29,
+        "name": "Сумка техника"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY object illustration for an app, no page layout. Setting: a lived-in dystopian retrofuturist city circa 2045. Approved mature detailed CEL-SHADED visual language: thin varied ink contours, broad painted light/shadow planes, secondary reflected light, convincing full-size material construction, fine functional seams and hardware, selective wear. Main object completely inside generous safe margins, quieter softer background. Opaque 3:2 landscape. No letters, numbers, text, labels, logos, titles, banners, watermark or UI overlays anywhere. No photorealism, glossy 3D, toy proportions, magic or gratuitous grit. A technician's tool bag opened to show a folded multitool, electrical tape, insulated wire, small fastener boxes, two small pry bars and a compact hammer neatly secured in loops. Worn olive/graphite fabric, coherent practical compartments, no logos or readable labels.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-7898-cover-v1.png",
+      "final": "final/gear-7898-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-704dee2e-4b94-4ddc-a858-04d5e373f516.png",
+      "originalSha256": "9a6f34d5dd370f4b73627a31199c18525d3cc5b0cb3cc40b2e175a2fb14f495d",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "98d8ac38cdd14c4871676e2cb9416d673be8610ad4252da99cd127e6d297e35b",
+      "bytes": 375550,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "All final utility equipment exports inspected against source forms. External frames differ in bulk, medical kit/communication/camping objects complete, no usage diagrams; rejected open locksmith-kit scene replaced with closed pouch. No text/logos or icon changes.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49929,
+        "objectKey": "system-item-media/v1/items/7898/cover/98d8ac38cdd14c4871676e2cb9416d673be8610ad4252da99cd127e6d297e35b.jpg",
+        "fileSize": 375550
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7898/cover/98d8ac38cdd14c4871676e2cb9416d673be8610ad4252da99cd127e6d297e35b.jpg"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T19:37:25.579Z",
+    "scenarios": 24,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-50\\live-qa.json",
+    "note": "Public cover URL loaded; no JS error or horizontal overflow."
+  }
+}

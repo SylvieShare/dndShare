@@ -1,0 +1,334 @@
+{
+  "batch": 62,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-62",
+  "sourceAudit": "Core362–367 and categories reviewed. Internal/borg/external implants shown as manufactured models/components; intimate implant records use closed unmarked medical cases, no explicit anatomy. Icons unchanged.",
+  "assets": [
+    {
+      "key": "cyber-7769-cover",
+      "target": {
+        "kind": "item",
+        "id": 7769,
+        "typeId": 26,
+        "name": "Скрытая кобура"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. An EMPTY concealed storage/holster housing demonstrated inside a neutral synthetic thigh model with a smooth manufactured hinged viewing panel. No weapon or contents shown, no flesh or injury, no construction instructions. Compact graphite compartment and intact skin-like outer shell on a clinical stand.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7769-cover-v1.png",
+      "final": "final/cyber-7769-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-06766703-8951-48b5-91d2-253f6061411a.png",
+      "originalSha256": "b3882ac34a8ba80a5bfe25951e047efea608222e8af6d4ff7f8c9c6a08241461",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "2a135c6ea976e11c87dea63fd314ccb7ca30b3dc564074d070f157d1c22cd3de",
+      "bytes": 321032,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Synthetic medical models, complete inert hardware, five additional optic sockets and two sensor antennas. Beta denser than Sigma. Adult detailed cel shading, no labels/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50003,
+        "objectKey": "system-item-media/v1/items/7769/cover/2a135c6ea976e11c87dea63fd314ccb7ca30b3dc564074d070f157d1c22cd3de.jpg",
+        "fileSize": 321032
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7769/cover/2a135c6ea976e11c87dea63fd314ccb7ca30b3dc564074d070f157d1c22cd3de.jpg"
+    },
+    {
+      "key": "cyber-7772-cover",
+      "target": {
+        "kind": "item",
+        "id": 7772,
+        "typeId": 26,
+        "name": "Имплантированный прямоходный остов β (бета)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A full-size neutral synthetic training mannequin showing a ROBUST implanted internal support frame through smooth manufactured translucent panels: dense hydraulic support elements and many nylon muscle-like bundles along torso and limbs. Heavy-duty beta configuration, no external harness or pilot, no organs, surgery or labels. Entire model on a clinic display stand.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7772-cover-v1.png",
+      "final": "final/cyber-7772-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-457b7295-cf9a-4653-aad4-be3a9c7a12a7.png",
+      "originalSha256": "397ce44b4e46220c07fa205ea9b2a6836a32d235809eda831ca252d316abeb9b",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "25b34d9107628c7e880c83af622e46c341d57dcf8ac7193be155fd6838ee43f6",
+      "bytes": 399156,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Synthetic medical models, complete inert hardware, five additional optic sockets and two sensor antennas. Beta denser than Sigma. Adult detailed cel shading, no labels/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50004,
+        "objectKey": "system-item-media/v1/items/7772/cover/25b34d9107628c7e880c83af622e46c341d57dcf8ac7193be155fd6838ee43f6.jpg",
+        "fileSize": 399156
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7772/cover/25b34d9107628c7e880c83af622e46c341d57dcf8ac7193be155fd6838ee43f6.jpg"
+    },
+    {
+      "key": "cyber-7773-cover",
+      "target": {
+        "kind": "item",
+        "id": 7773,
+        "typeId": 26,
+        "name": "Имплантированный прямоходный остов ∑ (сигма)"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A full-size neutral synthetic training mannequin showing a SLIMMER implanted internal support frame through smooth manufactured translucent panels: fine silver support struts and restrained nylon muscle-like bundles along torso and limbs. Sigma configuration distinct from bulky beta, no external harness, organs, surgery or labels. Entire model safely framed.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7773-cover-v1.png",
+      "final": "final/cyber-7773-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2e499515-de31-44c6-a346-7bf18d7a48f7.png",
+      "originalSha256": "66fef8373e4eaa5682985934cc289cacfa0bc1dd2a99579524c214ff9c04b6e6",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "769c0c6ca5590c345fbb03a1b0ead60413dc6c2a53e9087f52aa42a78969865d",
+      "bytes": 378190,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Synthetic medical models, complete inert hardware, five additional optic sockets and two sensor antennas. Beta denser than Sigma. Adult detailed cel shading, no labels/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50005,
+        "objectKey": "system-item-media/v1/items/7773/cover/769c0c6ca5590c345fbb03a1b0ead60413dc6c2a53e9087f52aa42a78969865d.jpg",
+        "fileSize": 378190
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7773/cover/769c0c6ca5590c345fbb03a1b0ead60413dc6c2a53e9087f52aa42a78969865d.jpg"
+    },
+    {
+      "key": "cyber-7794-cover",
+      "target": {
+        "kind": "item",
+        "id": 7794,
+        "typeId": 26,
+        "name": "Крепление МультиОптик"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A multi-optic mounting bracket on a neutral synthetic training head with exactly FIVE EMPTY additional circular optic sockets: one above the brow and two on each temple, separate from the model's normal two eye positions. No cybereyes installed in those five sockets, no flesh or surgery. Fine graphite/ivory modular construction on a clinic stand.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7794-cover-v1.png",
+      "final": "final/cyber-7794-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-0da2dcae-c37b-4bbf-b567-d8c3fa033642.png",
+      "originalSha256": "f479cb22cc47af1ad5e4069e63efd3ea2ee2c4323ebfdf2dcab4847301f2910e",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "99de0f696b1bab5b9717d05848184f5649a68a485cf571a904286c13148b4318",
+      "bytes": 368950,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Synthetic medical models, complete inert hardware, five additional optic sockets and two sensor antennas. Beta denser than Sigma. Adult detailed cel shading, no labels/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50006,
+        "objectKey": "system-item-media/v1/items/7794/cover/99de0f696b1bab5b9717d05848184f5649a68a485cf571a904286c13148b4318.jpg",
+        "fileSize": 368950
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7794/cover/99de0f696b1bab5b9717d05848184f5649a68a485cf571a904286c13148b4318.jpg"
+    },
+    {
+      "key": "cyber-7817-cover",
+      "target": {
+        "kind": "item",
+        "id": 7817,
+        "typeId": 26,
+        "name": "Сенсорная установка"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A cyberaudio sensor array on a neutral synthetic training head: exactly TWO long FLAT ANTENNA panels rise above the head like technological rabbit ears, with precise graphite surfaces and small teal insets. No animal fur, fantasy ears or living person. Compact audio mounting base, mature industrial clinic display.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7817-cover-v1.png",
+      "final": "final/cyber-7817-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e403c7d7-2684-438f-9ca8-7b6abcf2738a.png",
+      "originalSha256": "56b72c384ca9000e9dfdb4c4847f96b0771eb07f30b54857e8e9be926404e165",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "78b709536f83e66e03df722edf35936e8cd32088eececc7843540d50d0e44642",
+      "bytes": 323435,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Synthetic medical models, complete inert hardware, five additional optic sockets and two sensor antennas. Beta denser than Sigma. Adult detailed cel shading, no labels/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50007,
+        "objectKey": "system-item-media/v1/items/7817/cover/78b709536f83e66e03df722edf35936e8cd32088eececc7843540d50d0e44642.jpg",
+        "fileSize": 323435
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7817/cover/78b709536f83e66e03df722edf35936e8cd32088eececc7843540d50d0e44642.jpg"
+    },
+    {
+      "key": "cyber-7822-cover",
+      "target": {
+        "kind": "item",
+        "id": 7822,
+        "typeId": 26,
+        "name": "Вплетение в кожу"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A macro clinical sample display of skinweave: a fine flexible protective mesh sheet inside a clear sealed holder, beside a neutral manufactured skin-layer sample showing the mesh beneath an intact translucent surface. No real body, surgery, wounds or tissue. Ivory/teal materials, distinct flexible weave rather than rigid plates.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7822-cover-v1.png",
+      "final": "final/cyber-7822-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-30f086f6-7450-4ee4-84ee-5e200b1d2b9e.png",
+      "originalSha256": "69df545ac3766db3a58ca43ca9624ec4660f8fe2e03e72b862179502acaf0c0e",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "95823d894a3fa4d346c36c8ce70e8370c9cdd3bd93ae330c3492a4988fb240e3",
+      "bytes": 365203,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Synthetic medical models, complete inert hardware, five additional optic sockets and two sensor antennas. Beta denser than Sigma. Adult detailed cel shading, no labels/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50008,
+        "objectKey": "system-item-media/v1/items/7822/cover/95823d894a3fa4d346c36c8ce70e8370c9cdd3bd93ae330c3492a4988fb240e3.jpg",
+        "fileSize": 365203
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7822/cover/95823d894a3fa4d346c36c8ce70e8370c9cdd3bd93ae330c3492a4988fb240e3.jpg"
+    },
+    {
+      "key": "cyber-7828-cover",
+      "target": {
+        "kind": "item",
+        "id": 7828,
+        "typeId": 26,
+        "name": "Подкожная броня"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A macro clinical sample display of subdermal armor: several thin curved overlapping composite plates in a fitted tray, beside a neutral manufactured skin-layer sample with an intact transparent viewing panel over the plates. No real body, wounds, flesh or installation diagram. Detailed protective layers, clean clinical scene.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7828-cover-v1.png",
+      "final": "final/cyber-7828-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c8e89327-673f-4894-acaf-632724b1f106.png",
+      "originalSha256": "906e841f7e8fd909a84b70520ed601494cd6d12e9f0f5f33ecf970b7e81ce28b",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "d81552a1147253a3f87c0342682b04135b8f0aa9086e04dc2aed5502ab281046",
+      "bytes": 388265,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Synthetic medical models, complete inert hardware, five additional optic sockets and two sensor antennas. Beta denser than Sigma. Adult detailed cel shading, no labels/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50009,
+        "objectKey": "system-item-media/v1/items/7828/cover/d81552a1147253a3f87c0342682b04135b8f0aa9086e04dc2aed5502ab281046.jpg",
+        "fileSize": 388265
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7828/cover/d81552a1147253a3f87c0342682b04135b8f0aa9086e04dc2aed5502ab281046.jpg"
+    },
+    {
+      "key": "cyber-7830-cover",
+      "target": {
+        "kind": "item",
+        "id": 7830,
+        "typeId": 26,
+        "name": "Подкожный карман"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. IMAGE-ONLY illustration for an app. Original mature detailed cel-shaded art in a lived-in retrofuturist city circa 2045: thin varied ink contours, broad painted light/shadow planes, fine material-specific engineering detail and secondary reflected light, softer lower-contrast background. For people use clearly mature adults around 35–50 with natural facial proportions, nuanced eyelids/nose/jaw and plausible hands, never youthful anime faces. Opaque 3:2 landscape, main object/face/hands safely framed. No text, numbers, labels, logos, titles, banners, watermark, UI overlays, photorealism, glossy 3D or toy-like shapes. No nudity, sexual activity, blood, surgery, exposed tissue or organic severed parts. A small concealed subdermal pocket demonstrated on a neutral synthetic forearm model: intact skin-like covering with a subtle closed seam and a small smooth manufactured viewing flap showing an EMPTY shallow compartment. No real skin wound, money, contraband, procedure or concealment instructions.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyber-7830-cover-v1.png",
+      "final": "final/cyber-7830-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f875b5d6-70af-4de1-9376-1fe6fba7e927.png",
+      "originalSha256": "7ea6617fae3b81b0fde7649b8f4222a9f98717e81b28d84b2ddf38e823efdcc2",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "212150b8e5353c12ba297e45f9114adab329115697ae77dccc88de5b2bf905f3",
+      "bytes": 348051,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "All final exports inspected. Synthetic medical models, complete inert hardware, five additional optic sockets and two sensor antennas. Beta denser than Sigma. Adult detailed cel shading, no labels/gore or icon changes.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 50010,
+        "objectKey": "system-item-media/v1/items/7830/cover/212150b8e5353c12ba297e45f9114adab329115697ae77dccc88de5b2bf905f3.jpg",
+        "fileSize": 348051
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7830/cover/212150b8e5353c12ba297e45f9114adab329115697ae77dccc88de5b2bf905f3.jpg"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "checkedAt": "2026-11-16T20:25:38.570Z",
+    "scenarios": 24,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:\\Projects\\dndshare\\build\\cyberpunk-red-art\\batch-62\\live-qa.json",
+    "note": "Public URL loaded; no JavaScript errors or horizontal page overflow."
+  }
+}
