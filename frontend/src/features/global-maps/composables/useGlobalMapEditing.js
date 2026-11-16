@@ -1,6 +1,6 @@
 import { computed, ref, watch } from 'vue'
 import { reorderVisits, ROUTE_COLORS, uid } from '../lib/routes'
-import { appendVisit, lastWaypoint, pointIndex, removeEntries, resolvePoint, routeVisits } from '../lib/routePoints'
+import { appendVisit, clearRouteLegControls, lastWaypoint, pointIndex, removeEntries, resolvePoint, routeVisits } from '../lib/routePoints'
 
 export function useGlobalMapEditing(c, canvas, sidebar, mobile, props) {
   const routeId = ref(''), pointId = ref(''), addMode = ref(false), routeFocus = ref(false)
@@ -64,6 +64,12 @@ export function useGlobalMapEditing(c, canvas, sidebar, mobile, props) {
   }
   function endDrag(changed) { c.editing = false; if (changed) c.persist() }
   function patchPoint(patch) { if (definition.value) c.change(() => Object.assign(definition.value, patch)) }
+  function clearLegControls(id, key) {
+    const target = c.selected?.routes.find(route => route.id === id)
+    if (!target || c.conflict || c.busy) return
+    c.change(() => clearRouteLegControls(target, key))
+    if (!target.points.some(point => point.id === pointId.value)) pointId.value = ''
+  }
   function reorder(ids) { c.change(() => reorderVisits(route.value, ids)) }
   function deletePoint(id, entryId) {
     c.change(map => removeEntries(map.routes, (route, point) => route.id === id && point.id === entryId))
@@ -77,5 +83,5 @@ export function useGlobalMapEditing(c, canvas, sidebar, mobile, props) {
     if (routeId.value === id) { routeId.value = c.selected.routes[0]?.id || ''; pointId.value = ''; addMode.value = false; routeFocus.value = false }
   }
   return { routeId, pointId, addMode, routeFocus, route, definition, point, inspectorRoute, index, select, selectRoute, selectPoint, startAdding, addRoute, addPoint, move,
-    insertControl, cancelControl, endDrag, patchPoint, reorder, deletePoint, deleteRoute }
+    insertControl, cancelControl, endDrag, patchPoint, clearLegControls, reorder, deletePoint, deleteRoute }
 }

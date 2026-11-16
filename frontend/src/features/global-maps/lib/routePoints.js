@@ -73,3 +73,14 @@ export function routeLegKey(route, position) {
   while (to < route.points.length && route.points[to].control) to++
   return from >= 0 && to < route.points.length ? `${route.id}:${route.points[from].id}:${route.points[to].id}` : ''
 }
+
+export function routeLegControls(route, key) {
+  if (!key) return []
+  return route?.points.filter((point, position) => point.control && routeLegKey(route, position) === key) || []
+}
+
+export function clearRouteLegControls(route, key) {
+  const controls = new Set(routeLegControls(route, key))
+  if (controls.size) route.points = route.points.filter(point => !controls.has(point))
+  return controls.size
+}

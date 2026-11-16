@@ -1,12 +1,12 @@
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { clamp, uid } from '../lib/routes'
-import { pointIndex, resolvePoint } from '../lib/routePoints'
+import { pointIndex, resolvePoint, routeLegKey } from '../lib/routePoints'
 import { useCanvasPinch } from '@/shared/composables/useCanvasPinch'
 
 export function useGlobalMapViewport(host, props, emit) {
   const image = reactive({ width: 1200, height: 800 }), view = reactive({ x: 0, y: 0, scale: 1 })
   const loaded = ref(false), imageError = ref(false), dragging = ref(false)
-  let observer, drag = null, initialized = false, lastWidth = 0, lastHeight = 0
+  let observer, drag = null, holdTimer, initialized = false, lastWidth = 0, lastHeight = 0
   const style = computed(() => ({ width: `${image.width}px`, height: `${image.height}px`, transform: `translate(${view.x}px, ${view.y}px) scale(${view.scale})` }))
   function fit() {
     if (!host.value) return
@@ -60,7 +60,7 @@ export function useGlobalMapViewport(host, props, emit) {
       event.preventDefault()
       return
     }
-    const segment = !id && !event.altKey && event.button === 0 && event.target.closest('[data-segment-index]')
+    const segment = !id && !props.addMode && !props.readonly && !event.altKey && event.button === 0 ? event.target.closest('[data-segment-index]') : null
     if (selected) emit('select', route.id, id)
     drag = { pointerId: event.pointerId, id, routeId: route?.id || segment?.dataset.routeId,
       segment: segment ? Number(segment.dataset.segmentIndex) : null, created: false, deselect: !id && !segment && !event.altKey && event.button === 0 && !props.addMode,
@@ -68,12 +68,24 @@ export function useGlobalMapViewport(host, props, emit) {
       viewX: view.x, viewY: view.y, moved: false, pan: !id && !segment && (!props.addMode || event.altKey || event.button === 1) }
     dragging.value = true
     host.value.setPointerCapture(event.pointerId)
+    if (segment) {
+      const legKey = segment.dataset.legKey
+      emit('select-leg', drag.routeId, drag.segment, segment)
+      holdTimer = setTimeout(() => {
+        if (!drag || drag.moved || props.readonly || props.addMode) return
+        if (segment.dataset.legKey !== legKey || routeLegKey(props.routes.find(route => route.id === drag.routeId), drag.segment) !== legKey) return
+        drag.menu = true
+        emit('leg-menu', drag.routeId, drag.segment, segment, { detail: 1, clientX: event.clientX, clientY: event.clientY })
+      }, 500)
+    }
     if (id && !props.readonly) emit('drag-start')
     event.preventDefault()
   }
   function move(event) {
     if (!drag || drag.pointerId !== event.pointerId) return
     drag.moved ||= Math.hypot(event.clientX - drag.x, event.clientY - drag.y) > 4
+    if (drag.moved) clearTimeout(holdTimer)
+    if (drag.menu) return
     if (drag.addPoint) return
     if (drag.segment !== null && drag.moved && !props.readonly && !drag.created) {
       drag.id = uid(); drag.created = true
@@ -85,6 +97,7 @@ export function useGlobalMapViewport(host, props, emit) {
   }
   function end(event, cancel = false) {
     if (!drag || drag.pointerId !== event.pointerId) return
+    clearTimeout(holdTimer)
     if (drag.addPoint) {
       if (!cancel && !drag.moved) emit('add', drag.addPoint, drag.sourceId)
     } else if (drag.id && !props.readonly) {
@@ -101,7 +114,7 @@ export function useGlobalMapViewport(host, props, emit) {
     dragging.value = false
     if (host.value.hasPointerCapture(id)) host.value.releasePointerCapture(id)
   }
-  function cancelDrag() { if (drag) end({ pointerId: drag.pointerId }, true) }
+  function cancelDrag() { if (drag) end({ pointerId: drag.pointerId }, true); emit('cancel-leg-menu') }
   function focusPoint(p) {
     const rect = host.value.getBoundingClientRect()
     view.x = rect.width / 2 - p.x * image.width * view.scale
@@ -117,6 +130,6 @@ export function useGlobalMapViewport(host, props, emit) {
     })
     observer.observe(host.value)
   })
-  onBeforeUnmount(() => observer?.disconnect())
+  onBeforeUnmount(() => { cancelDrag(); observer?.disconnect() })
   return { image, view, style, loaded, imageError, dragging, fit, load, point, zoom, down, move, end, cancelDrag, focusPoint }
 }

@@ -10,7 +10,7 @@
           :chapters="chapters" :locations="locations" :participants="participants" :selected-route="routeId" :selected-point="pointId"
           :readonly="c.conflict || c.busy" :add-mode="addMode && !!route"
           @select="select" @add="addPoint" @move="move" @drag-start="c.editing = true" @drag-end="endDrag" @insert-control="insertControl" @cancel-control="cancelControl" @continuation-active="continuing = $event"
-          @remove-point="requestPointDelete" @chapter="emit('open-chapter', $event)" @location="emit('open-location', $event)" @cancel-add="addMode = false" />
+          @remove-point="requestPointDelete" @clear-leg-controls="clearLegControls" @chapter="emit('open-chapter', $event)" @location="emit('open-location', $event)" @cancel-add="addMode = false" />
         <WorkspaceControlsHint class="global-map-controls-hint" :lines="hintLines" :initially-collapsed="mobile" label="Управление миром" commands-label="Команды управления миром">
           <template v-if="addMode && route" #actions><span>{{ route.name }}</span><ActionButton variant="quiet" @click="addMode = false; selectRoute(routeId)">Готово</ActionButton></template>
         </WorkspaceControlsHint>
@@ -52,7 +52,7 @@ const c = reactive(useGlobalMaps(props.sessionUuid))
 const sidebar = ref(null), canvas = ref(null), navigationWidth = ref(77), sidebarWidth = ref(77), continuing = ref(false)
 const pending = ref(null), reloadConfirm = ref(false), leaveConfirm = ref(false), mobile = useIsMobile(760)
 const { routeId, pointId, addMode, routeFocus, route, point, inspectorRoute, index, select, selectRoute, selectPoint, startAdding, addRoute, addPoint, move,
-  insertControl, cancelControl, endDrag, patchPoint, reorder, deletePoint, deleteRoute } = useGlobalMapEditing(c, canvas, sidebar, mobile, props)
+  insertControl, cancelControl, endDrag, patchPoint, clearLegControls, reorder, deletePoint, deleteRoute } = useGlobalMapEditing(c, canvas, sidebar, mobile, props)
 const hintLines = computed(() => [
   addMode.value ? 'Клик по карте — добавить точку' : 'Перенос фона — перемещение карты',
   'Колесо · + / − — масштаб',
@@ -60,6 +60,7 @@ const hintLines = computed(() => [
   ...(route.value ? ['Cmd/Ctrl + клик — продолжить маршрут', 'Клик по точке с Cmd/Ctrl — повторное посещение'] : []),
   'Перенос маркера — переместить точку',
   'Потянуть линию — добавить узел изгиба',
+  'Клик по линии — выделить, удержание — меню узлов',
   'Список маршрута — изменить порядок точек',
   'Delete — удалить выбранное',
   'Esc — отменить добавление или закрыть фокус',

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { appendVisit, lastWaypoint, mapMarkers, removeEntries, routePoints, routeVisits, routeLegKey } from './routePoints'
+import { appendVisit, clearRouteLegControls, lastWaypoint, mapMarkers, removeEntries, routePoints, routeVisits, routeLegKey } from './routePoints'
 import { reorderVisits } from './routes'
 
 const fixture = () => [{ id: 'route', name: 'Путь', color: '#ffffff', points: [
@@ -51,6 +51,25 @@ describe('shared world route points', () => {
 })
 
 describe('world route legs', () => {
+  it('clears only the chosen leg bends and preserves visits, shared references and other legs', () => {
+    const route = { id: 'route', points: [{ id: 'a', name: 'Начало', note: 'Важно', chapterId: 11 }, { id: 'x', control: true }, { id: 'y', control: true }, { id: 'b' }, { id: 'z', control: true }, { id: 'again', refId: 'a' }] }
+    const retained = route.points.filter(point => !['x', 'y'].includes(point.id))
+    expect(clearRouteLegControls(route, 'route:a:b')).toBe(2)
+    expect(route.points).toEqual(retained)
+    expect(clearRouteLegControls(route, 'route:a:b')).toBe(0)
+    expect(route.points).toEqual(retained)
+  })
+  it('does not remove bends for an empty or stale leg after reordering visits', () => {
+    const routes = fixture(), route = routes[0], before = structuredClone(route.points)
+    expect(clearRouteLegControls(route, '')).toBe(0)
+    expect(route.points).toEqual(before)
+    reorderVisits(route, ['b', 'a'])
+    const reordered = structuredClone(route.points)
+    expect(clearRouteLegControls(route, 'route:a:b')).toBe(0)
+    expect(route.points).toEqual(reordered)
+    expect(clearRouteLegControls(route, 'route:b:a')).toBe(1)
+    expect(route.points.map(point => point.id)).toEqual(['b', 'a'])
+  })
   it('shares hover identity across all bends between the same two visits', () => {
     const route = { id: 'route', points: [{ id: 'a' }, { id: 'x', control: true }, { id: 'y', control: true }, { id: 'b' }, { id: 'z', control: true }, { id: 'again', refId: 'a' }] }
     expect([0, 1, 2].map(position => routeLegKey(route, position))).toEqual(['route:a:b', 'route:a:b', 'route:a:b'])
