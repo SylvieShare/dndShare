@@ -3,7 +3,7 @@ package web
 func mcpToolDefs() []map[string]any {
 
 	defs := []map[string]any{
-		mcpDefinition("cyberpunk_red_install", "Preview or explicitly install the pinned Cyberpunk RED Core catalogue, system, template and dictionaries. Existing records are preserved. Requires write access; apply requires the hash returned by preview.", mcpObjectSchema(map[string]any{"apply":map[string]any{"type":"boolean"},"expectedHash":mcpStringProperty("Hash returned by preview")})),
+		mcpDefinition("cyberpunk_red_install", "Preview or explicitly install the pinned Cyberpunk RED Core catalogue, system, template and dictionaries. Existing records are preserved. Requires write access; apply requires the hash returned by preview.", mcpObjectSchema(map[string]any{"apply": map[string]any{"type": "boolean"}, "expectedHash": mcpStringProperty("Hash returned by preview")})),
 		mcpDefinition("sessions_list",
 			"List active sessions owned by one exact user login. Returns session metadata without participants or character sheets.",
 			mcpObjectSchema(map[string]any{"ownerLogin": mcpStringProperty("Exact owner login")}, "ownerLogin")),
@@ -146,6 +146,7 @@ func mcpToolDefs() []map[string]any {
 				"desc":   mcpStringProperty("Optional description/tooltip"),
 			}, "typeId", "id", "value")),
 		suggestImageDefinition(),
+		suggestTypeImageDefinition(),
 		mcpDefinition("handbook_suggest_set_svg",
 			"Set or replace the svg icon of a suggest by id+typeId (admin: works for any owner including base). Pass raw <svg> markup; an empty string clears the icon. Stores the markup in svg_storage, repoints the suggest, and removes the previous svg row.",
 			mcpObjectSchema(map[string]any{

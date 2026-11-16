@@ -11,12 +11,13 @@ import (
 )
 
 func suggestImageDefinition() map[string]any {
-	return mcpDefinition("handbook_suggest_set_system_image", "Install a PNG/WebP icon on a base dictionary entry identified by (typeId,id). Stores the image in S3 and its shared storage_image ID on the suggest; raster icons take precedence over SVG. Requires MCP writes.", mcpObjectSchema(map[string]any{
+	return mcpDefinition("handbook_suggest_set_system_image", "Install an independent icon or cover on a base dictionary entry (typeId,id). Slot defaults to icon; icon allows PNG/WebP, cover allows JPEG/PNG/WebP. Stores the shared storage_image ID, preserving the other slot. Requires MCP writes.", mcpObjectSchema(map[string]any{
+		"slot":             map[string]any{"type": "string", "enum": []string{"icon", "cover"}, "default": "icon"},
 		"typeId":           mcpIntegerProperty("Positive suggest type id"),
 		"id":               mcpIntegerProperty("Positive suggest id within that type"),
 		"fileName":         mcpStringProperty("Original image file name"),
-		"mimeType":         mcpStringProperty("image/png or image/webp"),
-		"dataBase64":       mcpStringProperty("Plain standard base64, at most 5 MB"),
+		"mimeType":         mcpStringProperty("Exact MIME: PNG/WebP icon or JPEG/PNG/WebP cover"),
+		"dataBase64":       mcpStringProperty("Plain standard base64; icon at most 5 MB, cover at most 10 MB"),
 		"preservePrevious": mcpBooleanProperty("Keep replaced image; default false"),
 	}, "typeId", "id", "fileName", "mimeType", "dataBase64"))
 }
@@ -41,7 +42,9 @@ func parseMCPSuggestImage(args map[string]json.RawMessage) (int64, mcpSystemItem
 		imageArgs[key] = value
 	}
 	imageArgs["itemId"] = json.RawMessage(fmt.Sprintf("%d", id))
-	imageArgs["slot"] = json.RawMessage(`"icon"`)
+	if len(imageArgs["slot"]) == 0 {
+		imageArgs["slot"] = json.RawMessage(`"icon"`)
+	}
 	upload, err := parseMCPSystemItemImage(imageArgs)
 	return typeID, upload, err
 }
@@ -61,12 +64,12 @@ func (s *Server) toolSuggestSetSystemImage(ctx context.Context, args map[string]
 	if old.UserID != nil {
 		return nil, errors.New("system image target must be a base suggest")
 	}
-	key := systemMediaKey(fmt.Sprintf("suggests/%d/%d", typeID, upload.ItemID), "icon", upload.MIMEType, upload.Data)
+	key := systemMediaKey(fmt.Sprintf("suggests/%d/%d", typeID, upload.ItemID), upload.Slot, upload.MIMEType, upload.Data)
 	stored, err := s.s3.UploadSystemItemMedia(ctx, bytes.NewReader(upload.Data), int64(len(upload.Data)), key, upload.MIMEType)
 	if err != nil {
 		return nil, err
 	}
-	imageID, previous, err := s.store.SetSystemSuggestImage(ctx, typeID, upload.ItemID, stored.Key, stored.URL, upload.FileName, upload.MIMEType, int64(len(upload.Data)))
+	imageID, previous, err := s.store.SetSystemSuggestImage(ctx, typeID, upload.ItemID, upload.Slot, stored.Key, stored.URL, upload.FileName, upload.MIMEType, int64(len(upload.Data)))
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			return nil, fmt.Errorf("base suggest (%d,%d) not found", typeID, upload.ItemID)

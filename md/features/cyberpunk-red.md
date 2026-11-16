@@ -117,6 +117,6 @@ DDL. Миграция `020_origin_system_scope` ограничивает ста�
 
 ## Связанные страницы
 
-[Персонажи](character-list.md) · [API](../api/characters.md) ·
+[Иллюстрации и батчи](cyberpunk-red-art.md) · [Персонажи](character-list.md) · [API](../api/characters.md) ·
 [Справочник](handbook.md) · [План и макеты](../../plans/cyberpunk-red/README.md) ·
 [Проверки](../testing.md) · [Отчёт интеграции](../reports/cyberpunk-red-integration-2026-11-16.md)

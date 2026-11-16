@@ -1,0 +1,849 @@
+{
+  "batch": 2,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-02",
+  "sourceAudit": "All ten base RED stat records were inspected via public dictionary API. No prior raster icons or covers. Mounted Combatant used only as cover-style reference.",
+  "assets": [
+    {
+      "key": "stat-int-icon",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 385,
+        "code": "INT",
+        "name": "Интеллект"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. One compact transparent Cyberpunk RED character-stat icon for dndShare, original near-future 2045 street-tech design. Consistent set: thick deep-plum outside contour, sparse thinner inner lines, broad clean cel-painted shapes, restrained two-step shadows, one broad upper-left highlight, matte surfaces. Strong recognizable silhouette, not a miniature scene. Center the complete object in a square with even 8% transparent margins; readability at 40–64 pixels is paramount. GENUINE transparent alpha, no surrounding frame, circle, badge or background tile, no cast shadow, no detached particles, no floating glow, no labels, letters, words, numbers, logo or watermark. No medieval or magical motifs, no photorealism, no glossy 3D, no texture noise or micro components. Subject: one compact brain-shaped neural processor module. Two broad silver-gray lobes with only three large clean separation grooves, a graphite mechanical lower connector and three broad copper contact tabs. Restrained cyan inset channels connect the lobes, while pale ceramic surfaces stay bright. The silhouette reads as an engineered brain, not organic tissue. Three-quarter front view, no gore, no skull and no extra objects.",
+      "original": "originals/stat-int-icon-v1.png",
+      "final": "final/stat-int-icon.webp",
+      "width": 256,
+      "height": 256,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6784c1af-1db2-4829-99a3-eb16e76f4d11.png",
+      "originalSha256": "413c987b60ec75169a10f1dc0e2f6ea51652413427d7835f2e2b1ea7cd27b381",
+      "sourceDimensions": {
+        "width": 1312,
+        "height": 1199
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "af0dd790f1ddcbf522d37f40e6d2c0637f9d7b2631ab7552d91aa7954671a286",
+      "bytes": 38868,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 256,
+        "height": 256,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-int-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 385,
+        "code": "INT",
+        "name": "Интеллект"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Transform the visual concept in image 1 into an independent narrative illustration for a Cyberpunk RED character-stat cover, not an enlarged icon. Image 1 provides the stat's prop and palette; image 2 is PRIMARY STYLE ONLY, never its medieval subjects or layout. Wide 5:2 panoramic illustration, composed all the way to the edges. Graphic 2D cel-painted art: natural adult proportions and mature faces, visible variable dark-plum outlines, broad clean light/shadow planes, angular simplified folds, very little texture, readable pale local colors. Softer simpler lower-contrast industrial background. Authentic original retrofuturist 2045 cyberpunk clothing, equipment and city architecture; no medieval costume, magic, fantasy creatures or corporate logos. Keep the face, working hands and central mechanism comfortably inside the central 55–60%, away from edges. No title, words, numbers, readable screen text, borders, UI overlays, watermark, photorealism, glossy 3D, chibi, gore or exaggerated anatomy. Show intelligence through a concrete moment of deduction: a mature woman technician in her late thirties, warm brown skin, short dark hair and a muted teal utility jacket, studies a brain-shaped silver neural processor held safely in a work cradle. Her expression is thoughtful recognition as she traces a single branching connection with a plain stylus. One hand uses the stylus and the other steadies the cradle; anatomically plausible fingers. The recognizable silver twin-lobed processor and cyan channels echo image 1, but are life-sized hardware rather than a giant symbol. A softly simplified repair lab and slate city window complete the panorama, one warm work light, restrained cyan accents. No actual diagram labels or instructions.",
+      "original": "originals/stat-int-cover-v1.png",
+      "final": "final/stat-int-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f1f8c921-0a23-4d38-97d5-8285aa2a160b.png",
+      "originalSha256": "e212b61767ca2d468815dcb9f138ea407f43cafc557fb9a44efafd6209034c61",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "0fec0253d71a568247e6d13294d4686e9c75f3bf56bae0a833f4d4629d603b3f",
+      "bytes": 124286,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 1600,
+        "height": 640,
+        "alpha": false
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-ref-icon",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 386,
+        "code": "REF",
+        "name": "Реакция"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. One compact transparent Cyberpunk RED character-stat icon for dndShare, original near-future 2045 street-tech design. Consistent set: thick deep-plum outside contour, sparse thinner inner lines, broad clean cel-painted shapes, restrained two-step shadows, one broad upper-left highlight, matte surfaces. Strong recognizable silhouette, not a miniature scene. Center the complete object in a square with even 8% transparent margins; readability at 40–64 pixels is paramount. GENUINE transparent alpha, no surrounding frame, circle, badge or background tile, no cast shadow, no detached particles, no floating glow, no labels, letters, words, numbers, logo or watermark. No medieval or magical motifs, no photorealism, no glossy 3D, no texture noise or micro components. Subject: one cybernetic optical reflex sensor, a strong almond-shaped silver housing around a large bright amber iris and graphite pupil. A single broad streamlined scarlet fin integrated into the rear housing suggests rapid reaction; it is part of the object, not a motion streak or particle. Compact angular eye silhouette, matte silver and dark gunmetal with one warm amber focus. Entire sensor visible, not part of a human face. Minimal internal rings.",
+      "original": "originals/stat-ref-icon-v1.png",
+      "final": "final/stat-ref-icon.webp",
+      "width": 256,
+      "height": 256,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e5fcee3d-b593-4840-9f65-d23ede4bdfd2.png",
+      "originalSha256": "5b00f74974ff9a48cdc47518c0bd7ef3297fb397d707a10d8e308aa4c6991aa5",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "3737c3eb4aa5b1062261c0b016055f13adca9f5890f2871ca3801733319b373a",
+      "bytes": 27576,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 256,
+        "height": 256,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-ref-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 386,
+        "code": "REF",
+        "name": "Реакция"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Transform the visual concept in image 1 into an independent narrative illustration for a Cyberpunk RED character-stat cover, not an enlarged icon. Image 1 provides the stat's prop and palette; image 2 is PRIMARY STYLE ONLY, never its medieval subjects or layout. Wide 5:2 panoramic illustration, composed all the way to the edges. Graphic 2D cel-painted art: natural adult proportions and mature faces, visible variable dark-plum outlines, broad clean light/shadow planes, angular simplified folds, very little texture, readable pale local colors. Softer simpler lower-contrast industrial background. Authentic original retrofuturist 2045 cyberpunk clothing, equipment and city architecture; no medieval costume, magic, fantasy creatures or corporate logos. Keep the face, working hands and central mechanism comfortably inside the central 55–60%, away from edges. No title, words, numbers, readable screen text, borders, UI overlays, watermark, photorealism, glossy 3D, chibi, gore or exaggerated anatomy. Show rapid reaction: an adult man around forty, short dark hair and subtle stubble, wearing a charcoal armored street jacket with a restrained scarlet shoulder panel, snaps his attention toward a sudden moving training target in a deserted industrial practice bay. His single amber cybernetic eye and subtle silver orbital housing echo the optical sensor in image 1 without a giant external fin. Dynamic three-quarter torso pose, alert focused face, both hands visible in a plausible ready stance. No bullets hitting anyone and no wounds. Broad diagonal architecture and a single warm warning light convey the instant of reaction; a softer teal/navy background and a restrained amber focal accent.",
+      "original": "originals/stat-ref-cover-v1.png",
+      "final": "final/stat-ref-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-641cab17-c136-4e17-b7cf-0883882de5d5.png",
+      "originalSha256": "6f3289c72d58a91ce94502c91d30fc19b13a376c23d92b89a44906d84af82179",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "11bc6d652d0cdfde04e2ccf12bd678b183c93d7f2a3a7af5b86c50d595608ef2",
+      "bytes": 115112,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 1600,
+        "height": 640,
+        "alpha": false
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-dex-icon",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 387,
+        "code": "DEX",
+        "name": "Ловкость"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. One compact transparent Cyberpunk RED character-stat icon for dndShare, original near-future 2045 street-tech design. Consistent set: thick deep-plum outside contour, sparse thinner inner lines, broad clean cel-painted shapes, restrained two-step shadows, one broad upper-left highlight, matte surfaces. Strong recognizable silhouette, not a miniature scene. Center the complete object in a square with even 8% transparent margins; readability at 40–64 pixels is paramount. GENUINE transparent alpha, no surrounding frame, circle, badge or background tile, no cast shadow, no detached particles, no floating glow, no labels, letters, words, numbers, logo or watermark. No medieval or magical motifs, no photorealism, no glossy 3D, no texture noise or micro components. Subject: one articulated cybernetic hand in a precise pinching gesture. The thumb and index finger hold ONE broad small titanium loop, with the other three fingers clearly grouped and curled inward. Five digits total; no forearm beyond the short wrist cuff. Light cool-gray finger plates over dark charcoal joints, restrained violet cuff accent and one teal broad knuckle panel. Natural adult hand proportions and plausible pinching grip. Strong compact rounded silhouette, not a clenched fist, not a full long arm.",
+      "original": "originals/stat-dex-icon-v1.png",
+      "final": "final/stat-dex-icon.webp",
+      "width": 256,
+      "height": 256,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b3f9e2a3-f697-4c2d-8527-8a15a582d451.png",
+      "originalSha256": "5696235c2047f57355db3b09040f13fc107303c8a7299b778380f7e88ea565ea",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "e1d3cf187bbc1b04a1bdc17368ea8c4b8061bebb2fd4241d2177ea866fa7801d",
+      "bytes": 40854,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 256,
+        "height": 256,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-dex-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 387,
+        "code": "DEX",
+        "name": "Ловкость"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Transform the visual concept in image 1 into an independent narrative illustration for a Cyberpunk RED character-stat cover, not an enlarged icon. Image 1 provides the stat's prop and palette; image 2 is PRIMARY STYLE ONLY, never its medieval subjects or layout. Wide 5:2 panoramic illustration, composed all the way to the edges. Graphic 2D cel-painted art: natural adult proportions and mature faces, visible variable dark-plum outlines, broad clean light/shadow planes, angular simplified folds, very little texture, readable pale local colors. Softer simpler lower-contrast industrial background. Authentic original retrofuturist 2045 cyberpunk clothing, equipment and city architecture; no medieval costume, magic, fantasy creatures or corporate logos. Keep the face, working hands and central mechanism comfortably inside the central 55–60%, away from edges. No title, words, numbers, readable screen text, borders, UI overlays, watermark, photorealism, glossy 3D, chibi, gore or exaggerated anatomy. Show fine dexterity: an adult street courier with an athletic ordinary build, medium-brown skin, short silver hair and a muted violet jacket calmly balances a small broad titanium access loop between the thumb and index finger of a pale-gray articulated cyberhand, closely matching the five-digit hand and teal knuckle panel in image 1. The hand and loop are clearly visible near the center, not cropped or hidden; the courier's concentrated half-smile is visible behind them. A softly simplified night-market service entrance and suspended cables provide cyberpunk context, with muted plum/cyan lighting. One person only. No giant ring, no extra fingers, no readable signs.",
+      "original": "originals/stat-dex-cover-v1.png",
+      "final": "final/stat-dex-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-db8bf467-36d4-4076-ae35-93148c9484de.png",
+      "originalSha256": "76b608afdde0de04cfc0aa9f0325c5a227a83e05b9a175d2cda0c3df58630796",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "8d386fa95d17d2eb98ae72789cdd236614b3533481962f9ac07c878e3e0038d4",
+      "bytes": 100448,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 1600,
+        "height": 640,
+        "alpha": false
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-tech-icon",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 388,
+        "code": "TECH",
+        "name": "Техника"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. One compact transparent Cyberpunk RED character-stat icon for dndShare, original near-future 2045 street-tech design. Consistent set: thick deep-plum outside contour, sparse thinner inner lines, broad clean cel-painted shapes, restrained two-step shadows, one broad upper-left highlight, matte surfaces. Strong recognizable silhouette, not a miniature scene. Center the complete object in a square with even 8% transparent margins; readability at 40–64 pixels is paramount. GENUINE transparent alpha, no surrounding frame, circle, badge or background tile, no cast shadow, no detached particles, no floating glow, no labels, letters, words, numbers, logo or watermark. No medieval or magical motifs, no photorealism, no glossy 3D, no texture noise or micro components. Subject: one rugged powered adjustable wrench for a cyberpunk technician. A broad simple steel open jaw, angular graphite motor housing, warm mustard-yellow grip panels, one short copper power-coupling detail built into the handle end. The complete tool sits diagonally, a single clean silhouette with only a few broad seams. Looks electrically powered and retrofuturist rather than a medieval hammer. No hand, no separate gear wheel, no extra tools.",
+      "original": "originals/stat-tech-icon-v1.png",
+      "final": "final/stat-tech-icon.webp",
+      "width": 256,
+      "height": 256,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2b2e7593-919d-4a9e-988f-b1be49ff9757.png",
+      "originalSha256": "8a1c6d574b7e6c792ad46d9757fb4d2380dee3ac9eee1d60ce0cce7006a70efc",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "544ff5d732d78cd165b5a1a87e135cb46fdb1b8b04b99b122c6aa4ea42857795",
+      "bytes": 29918,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 256,
+        "height": 256,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-tech-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 388,
+        "code": "TECH",
+        "name": "Техника"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Transform the visual concept in image 1 into an independent narrative illustration for a Cyberpunk RED character-stat cover, not an enlarged icon. Image 1 provides the stat's prop and palette; image 2 is PRIMARY STYLE ONLY, never its medieval subjects or layout. Wide 5:2 panoramic illustration, composed all the way to the edges. Graphic 2D cel-painted art: natural adult proportions and mature faces, visible variable dark-plum outlines, broad clean light/shadow planes, angular simplified folds, very little texture, readable pale local colors. Softer simpler lower-contrast industrial background. Authentic original retrofuturist 2045 cyberpunk clothing, equipment and city architecture; no medieval costume, magic, fantasy creatures or corporate logos. Keep the face, working hands and central mechanism comfortably inside the central 55–60%, away from edges. No title, words, numbers, readable screen text, borders, UI overlays, watermark, photorealism, glossy 3D, chibi, gore or exaggerated anatomy. Show technical expertise: an experienced adult technician in his fifties, salt-and-pepper beard, believable weathered face and mustard work jacket, uses the same broad steel and yellow powered adjustable wrench from image 1 to repair the hinge motor of an open urban transit access panel. The wrench's copper power connector and chunky jaw remain recognizable. Credible hands, weight and grip, a patient focused expression rather than a grimace. One technician, one active tool, a few broad cable shapes in the panel, no blueprint or wiring instructions. A softer industrial maintenance bay, dark slate metal and warm amber task light complete the panorama.",
+      "original": "originals/stat-tech-cover-v1.png",
+      "final": "final/stat-tech-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-50250682-d8c1-434e-8b81-32c7b38bab16.png",
+      "originalSha256": "6c3a675a06dcef65e7ded040036f5db1c7b903a9a7532e30a7c91e2369a25a5e",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "0e6c6654e3b0df72c2b4e7c3ba74430c308e3a0d1b33d0850c5ec751251e3f8e",
+      "bytes": 139408,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 1600,
+        "height": 640,
+        "alpha": false
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-cool-icon",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 389,
+        "code": "COOL",
+        "name": "Хладнокровие"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "ONE clean cutout UI icon of angular futuristic sunglasses. SQUARE canvas, actual transparent background. The sunglasses are the ONLY visible pixels. MATTE IVORY metal frame, OPAQUE DARK BURGUNDY lenses, one SMALL MATTE violet side insert. Dark-plum outline and simple two-step cel shading. Entire pair of sunglasses including both short arms visible, three-quarter front view, centered with 10% empty transparent margin. Cyberpunk streetwear, practical industrial construction. ABSOLUTELY NO GLOW OR LIGHT EMISSION. No aura, bloom, halo, ambient lighting, haze, shadow or backdrop whatsoever. Flat sharply bounded object silhouette; background and gaps must be alpha zero. The lenses are opaque colored material, not illuminated screens. No letters, words, logos, text, skin, face, scenery, patterns or photorealism. A crisp restrained cartoon game inventory icon that reads at 64 pixels.",
+      "rejectedRevisions": [
+        "originals/stat-cool-icon-v1.png",
+        "originals/stat-cool-icon-v2-rejected.png"
+      ],
+      "rejectionReason": "Unwanted glow outside the object",
+      "original": "originals/stat-cool-icon-v3.png",
+      "final": "final/stat-cool-icon.webp",
+      "width": 256,
+      "height": 256,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9dc60f66-2d58-453c-9df5-553bced45d81.png",
+      "originalSha256": "1731e30df7168a2879aa2de8e799c3adec6744f3a5b28699c5a45f204560cfc1",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "8f7acee60fb3de223c4590c9e309ef86cc361acdb04e0b025b3bc85d91b12f15",
+      "bytes": 20270,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 256,
+        "height": 256,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      },
+      "initialPrompt": "Use case: stylized-concept. One compact transparent Cyberpunk RED character-stat icon for dndShare, original near-future 2045 street-tech design. Consistent set: thick deep-plum outside contour, sparse thinner inner lines, broad clean cel-painted shapes, restrained two-step shadows, one broad upper-left highlight, matte surfaces. Strong recognizable silhouette, not a miniature scene. Center the complete object in a square with even 8% transparent margins; readability at 40–64 pixels is paramount. GENUINE transparent alpha, no surrounding frame, circle, badge or background tile, no cast shadow, no detached particles, no floating glow, no labels, letters, words, numerals, logo or watermark. No medieval or magical motifs, no photorealism, no glossy 3D, no texture noise or micro components. Subject: one pair of angular streetwear smart sunglasses, open enough to show short side arms, viewed three-quarter from the front. Pale titanium frame, broad dark oxblood-red lenses, a single small violet temple inset. Strong calm confident silhouette, simple large planes; practical cyberpunk eyewear rather than an ornate mask. No face or head, no writing on the lenses.",
+      "revisionMode": "New generation after two glow-bearing variants were rejected"
+    },
+    {
+      "key": "stat-cool-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 389,
+        "code": "COOL",
+        "name": "Хладнокровие"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Create an independent wide 5:2 narrative cover for the COOL / composure statistic in Cyberpunk RED. Image 1 is the identity reference for the matte ivory angular smart sunglasses with opaque burgundy lenses and one violet side insert; image 2 is PRIMARY STYLE ONLY, not its medieval cast or layout. A mature adult woman fixer in her early forties, close-cropped dark hair, warm brown skin and a graphite tailored street coat, calmly negotiates across a small table with one wary adult courier in a cyberpunk night-market back room. She wears those same sunglasses naturally, one hand open on the table and the other casually resting near a closed anonymous data case. Her posture and faint assured smile convey composure and authority rather than aggression. Her counterpart listens, shoulders tense but gradually relaxing. Both adult faces and all important hands remain inside the central 60% with generous margins. Natural proportions and believable finger anatomy. Graphic 2D cel-painted illustration: variable deep-plum outlines, broad clear light/shadow planes, angular simplified clothing folds, minimal material texture, a softer lower-contrast industrial backdrop. Restrained slate, ivory and oxblood accents, one warm light, a quiet rain-dark window. Authentic original 2045 cyberpunk environment, no fantasy costumes or magic. No text, signs, readable screens, letters, numerals, brands, logos, watermark, border, painted UI, weapons, gore, photorealism, glossy 3D or chibi. Full composition to the edges, no blank title band.",
+      "original": "originals/stat-cool-cover-v1.png",
+      "final": "final/stat-cool-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f4266c41-4a34-446f-8d5d-37792ff342cb.png",
+      "originalSha256": "8a5b800d554fc0bfcea48bea192c76a600499cd424a4d4fa56f57bf1c1509c2b",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "f2975a2d67f2346184d31269200b1769c2609f93e583c563a57f57bd93f5103b",
+      "bytes": 102828,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 1600,
+        "height": 640,
+        "alpha": false
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-will-icon",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 390,
+        "code": "WILL",
+        "name": "Воля"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. One compact transparent Cyberpunk RED character-stat icon for dndShare, original near-future 2045 street-tech design. Consistent set: thick deep-plum outside contour, sparse thinner inner lines, broad clean cel-painted shapes, restrained two-step shadows, one broad upper-left highlight, matte surfaces. Strong recognizable silhouette, not a miniature scene. Center the complete object in a square with even 8% transparent margins; readability at 40–64 pixels is paramount. GENUINE transparent alpha, no surrounding frame, circle, badge or background tile, no cast shadow, no detached particles, no floating glow, no labels, letters, words, numerals, logo or watermark. No medieval or magical motifs, no photorealism, no glossy 3D, no texture noise or micro components. Subject: one upright firmly clenched cybernetic fist with four broad knuckles and a thumb visibly braced across the curled fingers. Short squared wrist cuff only. Ivory metal knuckle plates, dark graphite joints, deep crimson wrist armor with a small pale highlight. Compact powerful silhouette communicates determination and resolve, not a long forearm. Exactly five fingers with plausible anatomy. No weapon, no background shield or extra symbols.",
+      "original": "originals/stat-will-icon-v1.png",
+      "final": "final/stat-will-icon.webp",
+      "width": 256,
+      "height": 256,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-39c6b4e4-1927-4706-9191-077c35094230.png",
+      "originalSha256": "65de51443dc05c7a9d2c5d59422cd6336dcb4ecebd3d1b4923f876b90ca9b8b9",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "f08de0f05120317f1a027a3b3af83e443debd25e887c9e26d09da125ef04bbb4",
+      "bytes": 37948,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 256,
+        "height": 256,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-will-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 390,
+        "code": "WILL",
+        "name": "Воля"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Create an independent narrative cover for one Cyberpunk RED character statistic. Image 1 supplies the motif/prop and color identity; image 2 is PRIMARY STYLE ONLY, not its medieval cast, setting or composition. Wide 5:2 panoramic, fully composed scene. Graphic 2D cel shading with visible variable dark-plum linework, broad clean light/shadow planes, natural adult proportions, mature stylized faces, restrained highlights and minimal texture. Main action sharp and readable; industrial city background softer, simpler and lower-contrast. Original retrofuturist 2045 cyberpunk clothing and architecture. Faces and working hands must be comfortably inside the central 55–60% with safe margins. No text, letters, readable numerals, logos, watermark, frame, infographic or painted web UI. No chibi, giant heads, glossy 3D, photorealism, medieval costume, fantasy magic or gore. Show willpower under pressure: a woman in her forties with tightly braided dark hair and a charcoal street coat remains steady behind a damaged transparent security barrier in an industrial corridor. A broad warning lamp casts a controlled amber accent; she does not panic. Her ivory-plated cybernetic fist with deep crimson wrist cuff, matching image 1, is clenched near her waist, while her natural hand is held open in a calm stop gesture. Natural weight and plausible fingers. Determined composed expression. No active assault or injury, no attacker in the foreground; pressure is conveyed by the damaged barrier, dim corridor and her resolve.",
+      "original": "originals/stat-will-cover-v1.png",
+      "final": "final/stat-will-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8aa1cdbd-ab34-4d9f-8b5f-455211000239.png",
+      "originalSha256": "c2427209b45efddc4e48d42e71fa8203cd5102ab9ce4cf4f8e086814049d444b",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "6a267d8bc74ae890a64b8937b8014b5a92461220e15e4df5cc359a3d561cae13",
+      "bytes": 128204,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 1600,
+        "height": 640,
+        "alpha": false
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-luck-icon",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 391,
+        "code": "LUCK",
+        "name": "Удача"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. One compact transparent Cyberpunk RED character-stat icon for dndShare, original near-future 2045 street-tech design. Consistent set: thick deep-plum outside contour, sparse thinner inner lines, broad clean cel-painted shapes, restrained two-step shadows, one broad upper-left highlight, matte surfaces. Strong recognizable silhouette, not a miniature scene. Center the complete object in a square with even 8% transparent margins; readability at 40–64 pixels is paramount. GENUINE transparent alpha, no surrounding frame, circle, badge or background tile, no cast shadow, no detached particles, no floating glow, no labels, letters, words, numerals, logo or watermark. No medieval or magical motifs, no photorealism, no glossy 3D, no texture noise or micro components. Subject: one thick small emerald-green futuristic casino token, a physical object with a broken-corner octagonal titanium edge and one large simple four-leaf clover shape inset in the green face. One broad warm ivory highlight on the metal edge, graphite shadow underneath the bevel. A single compact token with a shallow three-quarter angle; clover is flat engraved geometry, not a real plant or magic. No readable value or denomination, no lettering or numerals, no other tokens.",
+      "original": "originals/stat-luck-icon-v1.png",
+      "final": "final/stat-luck-icon.webp",
+      "width": 256,
+      "height": 256,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-ae28d758-f519-43f6-8960-e0b73434fcfb.png",
+      "originalSha256": "7ae8e12710f1ec69e526605348d9cdaaa3485f6a802e3a0232ca921e5eaad69b",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "3a07b5395d83787fc8492170b9ef1c15fec7384ea80182322d41869622d36f01",
+      "bytes": 43368,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 256,
+        "height": 256,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-luck-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 391,
+        "code": "LUCK",
+        "name": "Удача"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Create an independent narrative cover for one Cyberpunk RED character statistic. Image 1 supplies the motif/prop and color identity; image 2 is PRIMARY STYLE ONLY, not its medieval cast, setting or composition. Wide 5:2 panoramic, fully composed scene. Graphic 2D cel shading with visible variable dark-plum linework, broad clean light/shadow planes, natural adult proportions, mature stylized faces, restrained highlights and minimal texture. Main action sharp and readable; industrial city background softer, simpler and lower-contrast. Original retrofuturist 2045 cyberpunk clothing and architecture. Faces and working hands must be comfortably inside the central 55–60% with safe margins. No text, letters, readable numerals, logos, watermark, frame, infographic or painted web UI. No chibi, giant heads, glossy 3D, photorealism, medieval costume, fantasy magic or gore. Show an improbable lucky escape: an adult street courier around thirty, dark brown skin and close-cropped curls, pauses with a surprised relieved smile while a heavy loose hanging freight sign has fallen safely just behind him. No injuries or collision. In his foreground hand is a palm-sized emerald octagonal casino token with the bold four-leaf clover motif and titanium edge from image 1. Keep the whole token and hand clearly visible and natural in scale. A softly simplified night-market alley with industrial stalls and distant colored windows extends across the scene; muted green, slate and warm ivory accents. No readable signage, no debris cloud, one main person only.",
+      "original": "originals/stat-luck-cover-v1.png",
+      "final": "final/stat-luck-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7976d0ad-e36b-4a41-8819-c37da0ff9a81.png",
+      "originalSha256": "1a215d3b997ea86cd01ebd973c5190c126a502670583fbd26c0078011854a4e1",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "e6d4b5aa23ece66f5ce39540d905c3bd865aa51722664c7907c2ae6becdb14d0",
+      "bytes": 144830,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 1600,
+        "height": 640,
+        "alpha": false
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-move-icon",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 392,
+        "code": "MOVE",
+        "name": "Движение"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. One compact transparent Cyberpunk RED character-stat icon for dndShare, original near-future 2045 street-tech design. Consistent set: thick deep-plum outside contour, sparse thinner inner lines, broad clean cel-painted shapes, restrained two-step shadows, one broad upper-left highlight, matte surfaces. Strong recognizable silhouette, not a miniature scene. Center the complete object in a square with even 8% transparent margins; readability at 40–64 pixels is paramount. GENUINE transparent alpha, no surrounding frame, circle, badge or background tile, no cast shadow, no detached particles, no floating glow, no labels, letters, words, numerals, logo or watermark. No medieval or magical motifs, no photorealism, no glossy 3D, no texture noise or micro components. Subject: one sleek runner's shoe from a cyberpunk city, seen in a clear three-quarter side profile, toe pointing right and slightly upward. Chunky charcoal segmented sole, pale gray toe guard, broad teal upper, one short amber mechanical heel support. No laces with tiny detail: use two broad strap panels. Clear fast horizontal silhouette, entire shoe visible with no foot or leg, no propulsion flames or motion streaks.",
+      "original": "originals/stat-move-icon-v1.png",
+      "final": "final/stat-move-icon.webp",
+      "width": 256,
+      "height": 256,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b5351b2e-0671-493b-b837-e537ae7ac70c.png",
+      "originalSha256": "84cae472d6069c911ab2714e8397636d409741c1b3e8a736fc6320d98074d1ab",
+      "sourceDimensions": {
+        "width": 1312,
+        "height": 1199
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "2443ae1a0c4488f2f5ca694d34715faed81feaebdec67ed2d92ddd4d627c9dfd",
+      "bytes": 36026,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 256,
+        "height": 256,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-move-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 392,
+        "code": "MOVE",
+        "name": "Движение"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Create an independent narrative cover for one Cyberpunk RED character statistic. Image 1 supplies the motif/prop and color identity; image 2 is PRIMARY STYLE ONLY, not its medieval cast, setting or composition. Wide 5:2 panoramic, fully composed scene. Graphic 2D cel shading with visible variable dark-plum linework, broad clean light/shadow planes, natural adult proportions, mature stylized faces, restrained highlights and minimal texture. Main action sharp and readable; industrial city background softer, simpler and lower-contrast. Original retrofuturist 2045 cyberpunk clothing and architecture. Faces and working hands must be comfortably inside the central 55–60% with safe margins. No text, letters, readable numerals, logos, watermark, frame, infographic or painted web UI. No chibi, giant heads, glossy 3D, photorealism, medieval costume, fantasy magic or gore. Show movement through the city: one athletic adult courier in a slate jacket and practical cargo trousers sprints across an elevated transit platform, full person visible, including both feet, safely within the central part of the frame. The forward shoe clearly echoes image 1: teal upper, pale toe guard, chunky charcoal sole and amber mechanical heel support. Credible running anatomy and balance, no exaggerated stretching. The face is focused and alert. Broad architectural diagonals and a softened city skyline establish momentum without comic speed lines. Cool teal ambient light with a restrained warm edge highlight, no crowd or vehicle collision.",
+      "original": "originals/stat-move-cover-v1.png",
+      "final": "final/stat-move-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6852579f-70cf-426f-91b0-575b75456a1c.png",
+      "originalSha256": "4c7c316d1071b77704d5bc734566530dd405dbe4072b73ae2a305363c13cac92",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "473e8a212273d715c8d64478a8ef3652d86a359e2ac3ebc9eb4f18300b82d20a",
+      "bytes": 156612,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 1600,
+        "height": 640,
+        "alpha": false
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-body-icon",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 393,
+        "code": "BODY",
+        "name": "Телосложение"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. One compact transparent Cyberpunk RED character-stat icon for dndShare, original near-future 2045 street-tech design. Consistent set: thick deep-plum outside contour, sparse thinner inner lines, broad clean cel-painted shapes, restrained two-step shadows, one broad upper-left highlight, matte surfaces. Strong recognizable silhouette, not a miniature scene. Center the complete object in a square with even 8% transparent margins; readability at 40–64 pixels is paramount. GENUINE transparent alpha, no surrounding frame, circle, badge or background tile, no cast shadow, no detached particles, no floating glow, no labels, letters, words, numerals, logo or watermark. No medieval or magical motifs, no photorealism, no glossy 3D, no texture noise or micro components. Subject: one muscular flexed cybernetic arm forming a compact C-shaped biceps-flex silhouette. Large rounded copper-orange bicep plate, dark gunmetal elbow joint, broad warm-ivory forearm guard and one short ochre synthetic tendon segment, with the small closed fist at the upper end. Mechanical adult proportions, robust and weighty rather than exaggerated bodybuilding. Complete shoulder connector, elbow and hand visible, no torso, no detached pieces or surrounding emblem.",
+      "original": "originals/stat-body-icon-v1.png",
+      "final": "final/stat-body-icon.webp",
+      "width": 256,
+      "height": 256,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4b3396dd-5a4d-4e4f-bff6-f5f482f40983.png",
+      "originalSha256": "05516e965c42fee9e39966b34fcdcc3973c818932563803b500c307df046f921",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "869522eeb54f283be16e82651c4209b32de196392a38966179671553d81f0e21",
+      "bytes": 41014,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 256,
+        "height": 256,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-body-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 393,
+        "code": "BODY",
+        "name": "Телосложение"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Create an independent narrative cover for one Cyberpunk RED character statistic. Image 1 supplies the motif/prop and color identity; image 2 is PRIMARY STYLE ONLY, not its medieval cast, setting or composition. Wide 5:2 panoramic, fully composed scene. Graphic 2D cel shading with visible variable dark-plum linework, broad clean light/shadow planes, natural adult proportions, mature stylized faces, restrained highlights and minimal texture. Main action sharp and readable; industrial city background softer, simpler and lower-contrast. Original retrofuturist 2045 cyberpunk clothing and architecture. Faces and working hands must be comfortably inside the central 55–60% with safe margins. No text, letters, readable numerals, logos, watermark, frame, infographic or painted web UI. No chibi, giant heads, glossy 3D, photorealism, medieval costume, fantasy magic or gore. Show physical strength: a sturdy athletic adult woman with short dark hair and a graphite work vest braces her feet and lifts a jammed heavy metal security shutter with both hands so one adult teammate can pass safely behind. One copper-orange reinforced cybernetic arm has the ivory forearm guard, dark round elbow joint and broad ochre tendon detail of image 1. Human adult proportions, convincing weight and leverage, not exaggerated bodybuilding. Her face shows effort without a caricatured grimace. An industrial loading bay, subdued slate containers and a warm work light fill the background. Both hands and the shutter edge are clear; no injury or crushed body parts.",
+      "original": "originals/stat-body-cover-v1.png",
+      "final": "final/stat-body-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-df973cea-62dd-4022-ac56-63e279e6b54b.png",
+      "originalSha256": "30ba96bbcff6df3dded564c95b6c7549ee96fe4b825c1b24e4c5dc89e658b805",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "26fef4cda58e76711eeacbf4ce73d07af3854fb5ee9a9d32466f09b0b9cf147d",
+      "bytes": 147334,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 1600,
+        "height": 640,
+        "alpha": false
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-emp-icon",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 394,
+        "code": "EMP",
+        "name": "Эмпатия"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Use case: stylized-concept. One compact transparent Cyberpunk RED character-stat icon for dndShare, original near-future 2045 street-tech design. Consistent set: thick deep-plum outside contour, sparse thinner inner lines, broad clean cel-painted shapes, restrained two-step shadows, one broad upper-left highlight, matte surfaces. Strong recognizable silhouette, not a miniature scene. Center the complete object in a square with even 8% transparent margins; readability at 40–64 pixels is paramount. GENUINE transparent alpha, no surrounding frame, circle, badge or background tile, no cast shadow, no detached particles, no floating glow, no labels, letters, words, numerals, logo or watermark. No medieval or magical motifs, no photorealism, no glossy 3D, no texture noise or micro components. Subject: one heart-shaped cybernetic empathy-link module, formed by two interlocking curved titanium halves around a broad warm coral-red inset. A dark-plum seam joins the halves; two short copper connector tabs at the bottom clearly make this a piece of near-future technology, not a fantasy jewel. One broad ivory highlight, restrained salmon and burgundy cel shadows. Simple instantly readable heart silhouette with only a few large internal divisions. No organic tissue, no blood, no wires floating outside, no wings.",
+      "original": "originals/stat-emp-icon-v1.png",
+      "final": "final/stat-emp-icon.webp",
+      "width": 256,
+      "height": 256,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6627d789-63dc-44b8-8077-d87c352a6e1f.png",
+      "originalSha256": "8b2bb7d6febcade0435a50055b54e1a1161e65e86c49cfc3260e43b29f464e04",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "24ddc3360fb61319b42b3af7fd9a30f9fbf577ea739e954088a7aee3b0c9c6aa",
+      "bytes": 36434,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 256,
+        "height": 256,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stat-emp-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 394,
+        "code": "EMP",
+        "name": "Эмпатия"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "exported",
+      "prompt": "Create an independent narrative cover for one Cyberpunk RED character statistic. Image 1 supplies the motif/prop and color identity; image 2 is PRIMARY STYLE ONLY, not its medieval cast, setting or composition. Wide 5:2 panoramic, fully composed scene. Graphic 2D cel shading with visible variable dark-plum linework, broad clean light/shadow planes, natural adult proportions, mature stylized faces, restrained highlights and minimal texture. Main action sharp and readable; industrial city background softer, simpler and lower-contrast. Original retrofuturist 2045 cyberpunk clothing and architecture. Faces and working hands must be comfortably inside the central 55–60% with safe margins. No text, letters, readable numerals, logos, watermark, frame, infographic or painted web UI. No chibi, giant heads, glossy 3D, photorealism, medieval costume, fantasy magic or gore. Show empathy and human connection: a mature gray-haired woman medtech in a practical muted coral-and-slate jacket listens attentively to a tired adult man seated in a small street clinic after a difficult day. They face each other naturally; she gently rests one hand over his hand on the table, with credible anatomy and no extra fingers. Her expression is warm and understanding, his shoulders begin to relax. The small heart-shaped silver/coral neural-link module with two copper contacts from image 1 rests between them as ordinary biofeedback equipment, not a giant floating symbol. Soft warm task light, simplified cool cyberpunk clinic equipment and a quiet city window. Both people fully clothed, no wounds, no gore, no readable screens.",
+      "original": "originals/stat-emp-cover-v1.png",
+      "final": "final/stat-emp-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-93ad05f5-565e-4ccc-98af-6b66e8971d99.png",
+      "originalSha256": "c82dea3a8889e5bf368388936a5da2c9a0aae0d469e2ba371f21c16cc0a946b5",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "e342ff5d3958e14ddcf83d2919193ddc76915ed343eebd45868fbe92f31d3c79",
+      "bytes": 146368,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 1600,
+        "height": 640,
+        "alpha": false
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stats-type-icon",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 34,
+        "name": "Характеристики"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "original": "originals/stats-type-icon-v1.png",
+      "final": "final/stats-type-icon.webp",
+      "width": 128,
+      "height": 128,
+      "status": "exported",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7a45f553-6399-4c60-985d-9c60cb8ea45b.png",
+      "prompt": "One isolated compact transparent Cyberpunk RED catalogue emblem for the CHARACTER STATISTICS dictionary. Original retrofuturist handheld biometric profile scanner, upright broad rounded-rectangular silhouette with a short thick grip, matte pearl-gray case over graphite housing, restrained violet side panel and one copper connector. Its inset dark screen contains only a large simple teal head-and-shoulders pictogram and THREE broad indicator blocks, no letters or digits. The physical device is the single subject, not a background tile or web interface. Polished graphic 2D cel shading, thick deep-plum contour, broad clean planes, minimal internal lines, two-step shadows and an upper-left highlight. Centered square composition with even 8% transparent margins, complete silhouette, readable at 64px. Genuine alpha outside and around the object. Absolutely no ambient glow, halo, cast shadow, haze, particles, scenery, text, logos, border frame, photorealistic texture or glossy 3D. Practical 2045 cyberpunk technology, no fantasy motif.",
+      "originalSha256": "357eb128bc21f34e101677e2980709705d4f495d921c2d1b686239d7126f4372",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "67b02094bfe6ba9f2e8719d52a314b49afc8d173bf7a9b81fdc95dd419828051",
+      "bytes": 8748,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    },
+    {
+      "key": "stats-type-cover",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 34,
+        "name": "Характеристики"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "original": "originals/stats-type-cover-v1.png",
+      "final": "final/stats-type-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "status": "exported",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-fb91d183-23aa-4079-838f-fe6a1357e96b.png",
+      "prompt": "Create an independent wide 5:2 cover for the Character Statistics dictionary in Cyberpunk RED. Image 1 is the identity reference for a practical handheld profile scanner: pearl-gray and graphite body, violet side panel, copper side connector, a large teal head-and-shoulders pictogram and three broad indicator blocks without text. Image 2 is PRIMARY STYLE ONLY: variable dark-plum outlines, broad cel-painted light/shadow planes, natural adult proportions, mature stylized faces and minimal texture, not its medieval setting, characters or layout. Scene: an adult edgerunner in ordinary slate streetwear stands calmly beside a compact diagnostic station in a city clinic, while one mature technician holds that same scanner near the edgerunner's shoulder. Both faces and the technician's scanning hand are clearly visible in the central 60%, comfortably away from the edges; the device is believable handheld size, not giant. This illustrates a whole person's profile and abilities. Softer simplified industrial clinic backdrop, frosted city window, restrained cyan/violet light with warm copper accents, clear light local colors. Full panorama without an empty title strip. No readable monitor text, words, letters, numerals, logos, watermark, UI overlays, borders, magic, medieval gear, chibi, photorealism, glossy 3D, nudity, injuries or gore. Clothing is practical and complete. Anatomically plausible hands and stance.",
+      "originalSha256": "5e6653c1e782ca70f5b9089e36d68ffdac40bd100efc30c41b71e0c9df42d8ec",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "c2855ade63a155853fafb62eb1a51ebd789c0a25b1f6d25af508fb1208a72f21",
+      "bytes": 137470,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 1600,
+        "height": 640,
+        "alpha": false
+      },
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "Inspected original covers and exported images; complete cel-shaded subjects, mature proportions and plausible hands. All icon silhouettes and alpha checked at 128/64 px on light and dark backgrounds. COOL v1/v2 rejected for glow; selected v3 has clean alpha."
+      }
+    }
+  ]
+}

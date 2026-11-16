@@ -220,7 +220,7 @@ describe('handbook item detail cover', () => {
   })
 
   it('limits cover dimming for abilities and feats to the title panel', () => {
-    expect(headerSource).toContain('const titleOnlyShade = computed(() => [3, 4, 7, 18].includes(props.type?.id))')
+    expect(headerSource).toContain("const titleOnlyShade = computed(() => props.shade === 'title-only' || [3, 4, 7, 18].includes(props.type?.id))")
     expect(headerSource).toContain("'item-detail-header-title-only-shade': titleOnlyShade")
     expect(headerSource).toContain('.item-detail-header-covered.item-detail-header-title-only-shade .item-detail-shade')
     expect(headerSource).toContain('.item-detail-header-covered.item-detail-header-title-only-shade .item-detail-title')

@@ -24,7 +24,7 @@
         @click="$emit('select', type)"
       >
         <div class="sidebar-row-main">
-          <span class="sidebar-row-name">{{ type.name }}</span>
+          <ItemIcon v-if="type.iconImageUrl" :item="type" :size="24" :fallback-to-type="false"/><span class="sidebar-row-name">{{ type.name }}</span>
           <span v-if="type.count != null" class="sidebar-row-count">{{ type.count }}</span>
         </div>
         <div v-if="type.description" class="sidebar-row-desc">{{ type.description }}</div>
@@ -34,6 +34,7 @@
 </template>
 
 <script setup>
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { computed, ref } from 'vue'
 
 const props = defineProps({

@@ -1,7 +1,11 @@
 <template>
   <div class="dict-view" data-workspace-scroll>
     <template v-if="item">
-      <div
+      <template v-if="hasCover"><ItemDetailHeader :item="coverItem" :type="coverType" flush shade="title-only">
+        <template #actions><ActionButton v-if="canEdit" variant="quiet" @click="emit('edit')">Редактировать</ActionButton><ActionButton v-if="isAdmin&&item.userId!=null" variant="quiet" @click="makeBase">Сохранить общим</ActionButton><ActionButton v-if="canEdit" variant="quiet" @click="deleteItem">Удалить</ActionButton></template>
+
+      </ItemDetailHeader><div class="dict-cover-meta"><ItemIcon :item="item" :type="type" :size="48"/><span v-if="item.code">{{item.code}}</span></div></template>
+      <div v-else
         class="view-head"
         :style="item.color ? { '--item-color': item.color } : {}"
       >
@@ -11,7 +15,7 @@
           class="view-icon"
           :style="item.color ? { background: item.color + '22', borderColor: item.color + '55', color: item.color } : {}"
         >
-          <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :size="32" :fallback-to-type="false" />
+          <ItemIcon v-if="item.iconImageUrl || item.svg || type?.iconImageUrl" :item="item" :type="type" :size="32" />
           <span v-else class="view-icon-placeholder">{{ (item.value || '?')[0]?.toUpperCase() }}</span>
         </div>
 
@@ -55,13 +59,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {computed,ref} from 'vue'
+import {ActionButton} from '@sylvieshare/share-ui'
+import ItemDetailHeader from '@/features/handbook/components/ItemDetailHeader.vue'
 import { fetchPost } from '@/shared/api/http'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 const props = defineProps({
   item: { type: Object, default: null },
+  type: { type: Object, default: null },
   typeId: { type: Number, default: null },
   canEdit: { type: Boolean, default: false },
   isAdmin: { type: Boolean, default: false },
@@ -70,6 +77,9 @@ const props = defineProps({
 const emit = defineEmits(['edit', 'saved', 'deleted'])
 
 const menuOpen = ref(false)
+const hasCover=computed(()=>!!(props.item?.coverImageUrl||props.type?.coverImageUrl))
+const coverItem=computed(()=>({...props.item,name:props.item?.value||''}))
+const coverType=computed(()=>({coverImageUrl:props.type?.coverImageUrl}))
 
 async function makeBase() {
   if (!props.item || !props.isAdmin) return
@@ -90,6 +100,7 @@ async function deleteItem() {
 </script>
 
 <style scoped>
+.dict-cover-meta{padding:var(--spacing-large);display:flex;align-items:center;gap:var(--spacing-medium);color:var(--text-1)}
 .dict-view {
   width: 360px;
   flex-shrink: 0;

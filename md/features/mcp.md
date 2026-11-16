@@ -296,6 +296,13 @@ placementPoints; `cells` — соответствующие целые `{x,y}` �
 допустим. Геометрические позиции, ресурсы и behaviour сохраняются. Требуется
 MCP_WRITE_ENABLED. [Координатный контракт](maps-cameras-and-images.md#логическая-клетка-точки).
 
+## Медиа словарей и Cyberpunk RED
+
+`handbook_suggest_set_system_image` поддерживает `slot=icon|cover` (по
+умолчанию `icon`). `handbook_suggest_type_set_system_image` устанавливает
+независимые иконку/обложку словаря. Параметры MIME, base64, preservePrevious
+и лимиты общие с медиа items. Подробнее: [иллюстрации RED](cyberpunk-red-art.md).
+
 ## Связанные страницы
 
 [Оглавление wiki](../README.md)

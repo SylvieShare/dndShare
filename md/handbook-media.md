@@ -474,6 +474,11 @@ lower area. «Меч мести» is recorded in
   reachable in the vertically scrollable panel. Decorative covers use empty
   alt text because the item name already labels the header.
 
+## Медиа словарей и Cyberpunk RED
+
+Иконки и обложки RED создаются отдельными батчами в cel shading. Состав,
+профили экспорта, очередь и слоты словарей — [иллюстрации RED](features/cyberpunk-red-art.md).
+
 ## Связанные страницы
 
 [Оглавление wiki](README.md) · [Стиль иллюстраций справочника](handbook-art-style.md) · [Маскоты DnD Share](mascot.md) · [Справочные записи: UI и схемы](features/items.md) · [MCP endpoint](features/mcp.md)

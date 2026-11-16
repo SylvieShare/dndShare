@@ -19,6 +19,8 @@
   min-height: 0;
 }
 
+.item-detail-header.item-detail-header-flush { margin: 0; }
+
 .item-detail-header-summary {
   align-items: stretch;
 }

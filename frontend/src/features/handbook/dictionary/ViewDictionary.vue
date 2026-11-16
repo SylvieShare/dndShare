@@ -30,6 +30,7 @@
 
         <DictItemView
           :item="selectedItem"
+          :type="selectedType"
           :type-id="selectedType && selectedType.id"
           :can-edit="canEditSelected"
           :is-admin="isAdmin"

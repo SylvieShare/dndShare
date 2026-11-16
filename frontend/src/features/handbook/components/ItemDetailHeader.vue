@@ -5,6 +5,7 @@
       'item-detail-header-summary': $slots.summary,
       'item-detail-header-title-only-shade': titleOnlyShade,
       'item-detail-header-model': modelMode,
+      'item-detail-header-flush': flush,
     }"
     :data-item-type-id="type?.id || undefined"
     :style="coverStyle"
@@ -64,6 +65,8 @@ import ItemModelPreview from '@/features/items/components/ItemModelPreview.vue'
 const props = defineProps({
   item: { type: Object, required: true },
   type: { type: Object, default: null },
+  flush: { type: Boolean, default: false },
+  shade: { type: String, default: 'auto', validator: value => ['auto', 'title-only'].includes(value) },
 })
 const modelMode = ref(false), summary = ref(null)
 const modelFrame = () => summary.value?.querySelector('.cover-summary-safe-zone')
@@ -130,7 +133,7 @@ const coverLoading = ref(false)
 let coverRequestVersion = 0
 
 const coverImageAvailable = computed(() => Boolean(displayedCoverUrl.value) && !coverFailed.value)
-const titleOnlyShade = computed(() => [3, 4, 7, 18].includes(props.type?.id))
+const titleOnlyShade = computed(() => props.shade === 'title-only' || [3, 4, 7, 18].includes(props.type?.id))
 const coverStyle = computed(() => ({
   ...(TYPE_COVER_STYLES[props.type?.id] || {}),
   ...(modelMode.value ? { '--cover-aspect-ratio': '4 / 3' } : coverAspectRatio.value ? { '--cover-aspect-ratio': coverAspectRatio.value } : {}),

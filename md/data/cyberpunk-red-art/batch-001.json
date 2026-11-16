@@ -1,0 +1,269 @@
+{
+  "batch": 1,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "styleReference": "md/handbook-art-style.md + md/handbook-media.md; setting override: Cyberpunk RED 2045, cel shading",
+  "sourceAudit": "All 18 RED collection image slots and all 582 item image slots were empty at read-only audit. Fantasy references reviewed for line, shading and composition rules only.",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-01",
+  "assets": [
+    {
+      "key": "cyberware-icon",
+      "target": {
+        "kind": "item_type",
+        "typeId": 26,
+        "name": "Киберимпланты"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Asset type: ONE transparent game UI icon for the Cyberpunk RED cyberware catalogue in dndShare. New original artwork. One isolated complete modular cybernetic forearm with an articulated five-fingered hand, in a clear three-quarter view, wrist slightly bent and fingers relaxed into a strong readable silhouette. Adult human hand proportions; exposed mechanical knuckle joints, three broad ceramic armor plates, a dark wrist connector. Gunmetal and pale cool gray ceramic, restrained teal accent panels and a single amber status light. Practical street cyberware from a 2045 cyberpunk setting, no medieval armor or magic. Polished graphic 2D cel shading matching the project's inventory icons: thick continuous deep-plum outer contour, sparse confident inner lines, broad clean color planes, two-step shading and one broad upper-left highlight, matte materials, almost no surface texture. Entire object centered in a square canvas, occupies 82–86%, comfortable even transparent margin; readable at 64 pixels. Genuine transparent alpha, no background, no checkerboard, no enclosing tile, no disc, no frame, no separate shadow, no floating particles, no glow halo, no scenery, no words, letters, numbers, logos or watermark. No photorealism, no glossy 3D, no micro circuitry.",
+      "original": "originals/cyberware-icon-v1.png",
+      "final": "final/cyberware-icon.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "8323148bfcdd9c1de636ad7af008290445b1ffcdbb1f5ff6d3992a0b8cff2be9",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "b4a7df1d01f922bb5ea88bc8d70ae5f598db9afa12ae332bb5ceb70c2980d75a",
+      "bytes": 11144,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Original and final inspected. Icon alpha and silhouette checked at 128/64 px on dark and light surfaces. Covers retain icon identity, clear cel shading, no lettering or UI, and safe complete subjects.",
+        "publicBytesVerified": true,
+        "reviewer": "agent"
+      },
+      "receipt": {
+        "imageId": 49600,
+        "objectKey": "system-item-media/v1/item-types/26/icon/b4a7df1d01f922bb5ea88bc8d70ae5f598db9afa12ae332bb5ceb70c2980d75a.webp",
+        "fileSize": 11144
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/26/icon/b4a7df1d01f922bb5ea88bc8d70ae5f598db9afa12ae332bb5ceb70c2980d75a.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c0cb22cf-a1d7-45b3-8a52-12803e2772a4.png"
+    },
+    {
+      "key": "cyberware-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 26,
+        "name": "Киберимпланты"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit / expand into a catalogue cover. Image 1 is the identity anchor for the SAME object; preserve construction, proportions, materials, distinctive panels and color placement. Image 2 is STYLE ONLY: variable dark-plum outlines, broad clean cel-painted light and shadow planes, restrained highlights and minimal texture; do NOT copy its people, pose, medieval setting or composition. Make a new independent full scene in Cyberpunk RED's retrofuturist 2045 setting. Mature polished graphic 2D illustration, not a thick-outline enlarged icon, not photorealism or glossy 3D. Main subject clean and readable, background softer with large simplified shapes. No text, words, letters, numbers, logos, watermark, border, badge or painted UI overlays. Opaque artwork. Make a 3:2 landscape illustration. The same pearl-gray, teal-inset cybernetic forearm with gunmetal articulated hand and small amber wrist light lies at a new three-quarter diagonal angle on a low repair cradle in a street ripperdoc clinic. Its complete five-fingered hand and entire arm stay in the central 60% of the frame, occupying about 70% of image height with comfortable margins. A single service cable attaches at the rear wrist connector. Background: subdued metal cabinets, a rounded examination lamp, frosted night window and broad silhouettes of clinic equipment, no readable screens. Cold slate/plum room, warm focused work light makes pale ceramic and skin-free mechanical construction bright and clear. Quiet low-detail lower corners for the site's own title controls. No people, no detached extra limbs, no blood, no gore. Transform the source icon into a more resolved full scene while keeping its recognizable object.",
+      "original": "originals/cyberware-cover-v1.png",
+      "final": "final/cyberware-cover.jpg",
+      "width": 1536,
+      "height": 1024,
+      "originalSha256": "54fd0a585226268797309afcbd0db87cd4e69dd1eef3d6a0aa5b0042fd2bca91",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "c8a12c836a7ceb4f11556d175a38eef2aad51a7b286a8717d960a04d4a20f989",
+      "bytes": 173924,
+      "mimeType": "image/jpeg",
+      "exportedDimensions": {
+        "width": 1536,
+        "height": 1024,
+        "alpha": false
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Original and final inspected. Icon alpha and silhouette checked at 128/64 px on dark and light surfaces. Covers retain icon identity, clear cel shading, no lettering or UI, and safe complete subjects.",
+        "publicBytesVerified": true,
+        "reviewer": "agent"
+      },
+      "receipt": {
+        "imageId": 49601,
+        "objectKey": "system-item-media/v1/item-types/26/cover/c8a12c836a7ceb4f11556d175a38eef2aad51a7b286a8717d960a04d4a20f989.jpg",
+        "fileSize": 173924
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/26/cover/c8a12c836a7ceb4f11556d175a38eef2aad51a7b286a8717d960a04d4a20f989.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-3662eae5-eb4b-4246-8282-8f50c869c37d.png"
+    },
+    {
+      "key": "weapons-icon",
+      "target": {
+        "kind": "item_type",
+        "typeId": 37,
+        "name": "Оружие"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent Cyberpunk RED weapons catalogue icon, original fictional 2045 street-tech design for dndShare. Subject: ONE compact heavy semi-automatic pistol, complete silhouette in a clean three-quarter side view with the muzzle pointing diagonally toward the upper right. Broad blunt gunmetal barrel shroud, pearl-gray upper panel, oxblood-red grip insert, simple squared trigger guard and one tiny amber indicator integrated into the body. Clearly a practical near-future pistol, no weapon accessories, no hands, no loose cartridges. Do not add real manufacturer or game logos. Render as polished 2D inventory art: thick deep-plum outer contour, sparse clean inner lines, broad color planes, exactly two main cel-shadow steps, one broad upper-left highlight, matte simplified metal. No glossy 3D, photorealism, textures or micro machinery. Center the whole object with even transparent margin, occupying roughly 84 percent of the square. Must read at 64 px. Genuine transparent alpha, no scenery, floor, cast shadow, frame, enclosing badge or tile, letters, words, numbers, text, watermark, glow halo or detached particles. Not medieval or magical.",
+      "original": "originals/weapons-icon-v1.png",
+      "final": "final/weapons-icon.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "7efa357d0e5fc87957ee1083ff8b27688558bf246d46c6c32c14f915f4b0b093",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "a89c3649482a4c355b80d6a40f8aeb6340fd141fe83f0e233e5e03f63b5e5113",
+      "bytes": 11080,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Original and final inspected. Icon alpha and silhouette checked at 128/64 px on dark and light surfaces. Covers retain icon identity, clear cel shading, no lettering or UI, and safe complete subjects.",
+        "publicBytesVerified": true,
+        "reviewer": "agent"
+      },
+      "receipt": {
+        "imageId": 49602,
+        "objectKey": "system-item-media/v1/item-types/37/icon/a89c3649482a4c355b80d6a40f8aeb6340fd141fe83f0e233e5e03f63b5e5113.webp",
+        "fileSize": 11080
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/37/icon/a89c3649482a4c355b80d6a40f8aeb6340fd141fe83f0e233e5e03f63b5e5113.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b20c1854-eb89-49bd-861d-084e858ce924.png"
+    },
+    {
+      "key": "weapons-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 37,
+        "name": "Оружие"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit / expand into a catalogue cover. Image 1 is the identity anchor for the SAME object; preserve construction, proportions, materials, distinctive panels and color placement. Image 2 is STYLE ONLY: variable dark-plum outlines, broad clean cel-painted light and shadow planes, restrained highlights and minimal texture; do NOT copy its people, pose, medieval setting or composition. Make a new independent full scene in Cyberpunk RED's retrofuturist 2045 setting. Mature polished graphic 2D illustration, not a thick-outline enlarged icon, not photorealism or glossy 3D. Main subject clean and readable, background softer with large simplified shapes. No text, words, letters, numbers, logos, watermark, border, badge or painted UI overlays. Opaque artwork. Make a 4:3 landscape weapon showcase, full canvas illustration. Show the SAME fictional heavy pistol, its broad pearl-gray upper shroud, graphite frame, oxblood grip insert and amber status light, resting at a fresh diagonal three-quarter angle on a matte dark armorer's service mat. Complete muzzle, trigger guard and grip within central 55% of width, strong silhouette occupying 70% of frame height. Background is a believable cyberpunk street gunsmith workshop: simplified storage lockers, one work light, broad industrial conduits, a small rain-dark window with distant muted city lights. One restrained amber work light plus cool slate/teal ambient fill. The pistol is the only weapon and there are no hands, no people, no disassembly diagrams, no labels. It must feel like a tangible functional cyberpunk object, not a medieval or fantasy weapon. Darker calmer outer sides and bottom corners, fully composed background rather than empty bands.",
+      "original": "originals/weapons-cover-v1.png",
+      "final": "final/weapons-cover.jpg",
+      "width": 1536,
+      "height": 1152,
+      "originalSha256": "7585af734d68596a18065a730fdd8307276875a74b64e70097b87d9b17ab35e8",
+      "sourceDimensions": {
+        "width": 1448,
+        "height": 1086
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "7f520d93e72d978123eefcbd3984fce5627fd138b6adbb918186cac57826f106",
+      "bytes": 177836,
+      "mimeType": "image/jpeg",
+      "exportedDimensions": {
+        "width": 1536,
+        "height": 1152,
+        "alpha": false
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Original and final inspected. Icon alpha and silhouette checked at 128/64 px on dark and light surfaces. Covers retain icon identity, clear cel shading, no lettering or UI, and safe complete subjects.",
+        "publicBytesVerified": true,
+        "reviewer": "agent"
+      },
+      "receipt": {
+        "imageId": 49603,
+        "objectKey": "system-item-media/v1/item-types/37/cover/7f520d93e72d978123eefcbd3984fce5627fd138b6adbb918186cac57826f106.jpg",
+        "fileSize": 177836
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/37/cover/7f520d93e72d978123eefcbd3984fce5627fd138b6adbb918186cac57826f106.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f8bc4200-5c7c-4723-8029-6a9e419c593b.png"
+    },
+    {
+      "key": "programs-icon",
+      "target": {
+        "kind": "item_type",
+        "typeId": 33,
+        "name": "Программы"
+      },
+      "slot": "icon",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent Cyberpunk RED software catalogue icon for dndShare. One isolated chunky near-future software cartridge: an angular dark-plum and graphite chip case with a broad silver bevel, three large exposed copper connector teeth on the lower edge, a single bold cyan branching circuit symbol with three large endpoint nodes inset into a muted violet faceplate. A physical retrofuturist 2045 data module, shown at a shallow three-quarter angle, complete object centered. The circuit is abstract geometry, not writing or letters. Polished 2D cel-shaded inventory art, thick dark-plum contour, broad clear matte color planes, restrained two-step shading, upper-left highlight, very few inner lines. Strong unified silhouette, 84 percent of square canvas with comfortable even transparent padding, readable at 64 px. Genuine transparent alpha background. No background tile or frame around the object, no scenery, no hands, no separate devices, no luminous cloud, no detached particles, no cast shadow, no labels, text, letters, numbers, logos or watermark. No photorealism, no 3D render, no micro-detail.",
+      "original": "originals/programs-icon-v1.png",
+      "final": "final/programs-icon.webp",
+      "width": 128,
+      "height": 128,
+      "originalSha256": "48c0765a8f15e643c4a4dafcf8640fdb8e702b48d30d5d20de148c058c6ae42e",
+      "sourceDimensions": {
+        "width": 1254,
+        "height": 1254
+      },
+      "exportRecipe": "Alpha bounds, 6.25% safe margin, Lanczos3 contain, lossless RGBA WebP",
+      "sha256": "4a44e9ff683c7016f22d2944637620092bb6f20bac890ea2ae6a49f7af88458b",
+      "bytes": 15184,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 128,
+        "height": 128,
+        "alpha": true
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Original and final inspected. Icon alpha and silhouette checked at 128/64 px on dark and light surfaces. Covers retain icon identity, clear cel shading, no lettering or UI, and safe complete subjects.",
+        "publicBytesVerified": true,
+        "reviewer": "agent"
+      },
+      "receipt": {
+        "imageId": 49604,
+        "objectKey": "system-item-media/v1/item-types/33/icon/4a44e9ff683c7016f22d2944637620092bb6f20bac890ea2ae6a49f7af88458b.webp",
+        "fileSize": 15184
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/33/icon/4a44e9ff683c7016f22d2944637620092bb6f20bac890ea2ae6a49f7af88458b.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e7d5e2d2-1b8c-4afa-a8fa-7769c1eceab9.png"
+    },
+    {
+      "key": "programs-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 33,
+        "name": "Программы"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: precise-object-edit / expand into a catalogue cover. Image 1 is the identity anchor for the SAME object; preserve construction, proportions, materials, distinctive panels and color placement. Image 2 is STYLE ONLY: variable dark-plum outlines, broad clean cel-painted light and shadow planes, restrained highlights and minimal texture; do NOT copy its people, pose, medieval setting or composition. Make a new independent full scene in Cyberpunk RED's retrofuturist 2045 setting. Mature polished graphic 2D illustration, not a thick-outline enlarged icon, not photorealism or glossy 3D. Main subject clean and readable, background softer with large simplified shapes. No text, words, letters, numbers, logos, watermark, border, badge or painted UI overlays. Opaque artwork. Make a wide 5:2 panoramic cover for software and NET programs. The SAME violet-faced software cartridge with silver border, cyan three-node branching circuit motif and three copper connector teeth is the dominant foreground object, half inserted into an original angular portable cyberdeck on a technician's desk. All recognition-critical cartridge details are centrally framed, complete and unobstructed; the module and deck form one readable cluster in central 55% of width. A softly simplified cyberpunk network-lab backdrop continues to both edges, with vertical server silhouettes, a few broad blue-violet cables and an abstract geometric light-path reflected on the desk. This is physical equipment with a restrained hint of the digital network, not fantasy magic, not an infographic and not a UI screenshot. Muted navy/plum base with local cyan light and warm copper accents. Keep the lower 12% quieter for HTML title overlays, with no empty or blank title band. No people, no holographic words or glyph text, no clutter or micro-components.",
+      "original": "originals/programs-cover-v1.png",
+      "final": "final/programs-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "originalSha256": "4e8fcb9fe6200e71c3b50f300e7d76728dc406ce6c999581fabacdbfb762b55d",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "exportRecipe": "Centered aspect crop, Lanczos3 resize, opaque quality 88 export; crop requires visual review",
+      "sha256": "74d4a269e55ed52aac72a51980eeb40bdfaa3618f7168e9d35bcb98d12c2639b",
+      "bytes": 77398,
+      "mimeType": "image/webp",
+      "exportedDimensions": {
+        "width": 1600,
+        "height": 640,
+        "alpha": false
+      },
+      "visualReview": {
+        "passed": true,
+        "note": "Original and final inspected. Icon alpha and silhouette checked at 128/64 px on dark and light surfaces. Covers retain icon identity, clear cel shading, no lettering or UI, and safe complete subjects.",
+        "publicBytesVerified": true,
+        "reviewer": "agent"
+      },
+      "receipt": {
+        "imageId": 49605,
+        "objectKey": "system-item-media/v1/item-types/33/cover/74d4a269e55ed52aac72a51980eeb40bdfaa3618f7168e9d35bcb98d12c2639b.webp",
+        "fileSize": 77398
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/33/cover/74d4a269e55ed52aac72a51980eeb40bdfaa3618f7168e9d35bcb98d12c2639b.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-b9e80570-e9e3-4726-9b13-acef946fa2da.png"
+    }
+  ]
+}

@@ -12,39 +12,46 @@ import (
 // Suggest — строка dndshare.suggest (порт model/Suggest). Jackson NON_NULL: nullable-поля —
 // указатели с omitempty, non-null примитивы — plain. svg приезжает из JOIN svg_storage.
 type Suggest struct {
-	ID           int64   `json:"id"`
-	TypeID       int64   `json:"typeId"`
-	UserID       *int64  `json:"userId,omitempty"`
-	Value        string  `json:"value"`
-	Code         *string `json:"code,omitempty"`
-	Color        *string `json:"color,omitempty"`
-	Desc         *string `json:"desc,omitempty"`
-	SvgID        *int64  `json:"svgId,omitempty"`
-	Svg          *string `json:"svg,omitempty"`
-	IconImageID  *int64  `json:"iconImageId,omitempty"`
-	IconImageURL *string `json:"iconImageUrl,omitempty"`
+	ID            int64   `json:"id"`
+	TypeID        int64   `json:"typeId"`
+	UserID        *int64  `json:"userId,omitempty"`
+	Value         string  `json:"value"`
+	Code          *string `json:"code,omitempty"`
+	Color         *string `json:"color,omitempty"`
+	Desc          *string `json:"desc,omitempty"`
+	SvgID         *int64  `json:"svgId,omitempty"`
+	Svg           *string `json:"svg,omitempty"`
+	IconImageID   *int64  `json:"iconImageId,omitempty"`
+	IconImageURL  *string `json:"iconImageUrl,omitempty"`
+	CoverImageID  *int64  `json:"coverImageId,omitempty"`
+	CoverImageURL *string `json:"coverImageUrl,omitempty"`
 }
 
 // SuggestType — строка dndshare.suggest_type (порт model/SuggestType) с source_name и svg из JOIN.
 type SuggestType struct {
-	ID         int64   `json:"id"`
-	Name       string  `json:"name"`
-	SourceID   *int64  `json:"sourceId,omitempty"`
-	SourceName *string `json:"sourceName,omitempty"`
-	Color      *string `json:"color,omitempty"`
-	Svg        *string `json:"svg,omitempty"`
-	CountItems int64   `json:"countItems"`
+	IconImageID   *int64  `json:"iconImageId,omitempty"`
+	IconImageURL  *string `json:"iconImageUrl,omitempty"`
+	CoverImageID  *int64  `json:"coverImageId,omitempty"`
+	CoverImageURL *string `json:"coverImageUrl,omitempty"`
+	ID            int64   `json:"id"`
+	Name          string  `json:"name"`
+	SourceID      *int64  `json:"sourceId,omitempty"`
+	SourceName    *string `json:"sourceName,omitempty"`
+	Color         *string `json:"color,omitempty"`
+	Svg           *string `json:"svg,omitempty"`
+	CountItems    int64   `json:"countItems"`
 }
 
 const suggestSelect = `SELECT s.id, s.type_id, s.user_id, s.value, s.code, s.color, s."desc", s.svg_id, ss.data AS svg,
-s.icon_image_id, image.url AS icon_image_url
+s.icon_image_id, image.url AS icon_image_url,s.cover_image_id,cover_image.url AS cover_image_url
 FROM dndshare.suggest s
 LEFT JOIN dndshare.svg_storage ss ON ss.id = s.svg_id
-LEFT JOIN dndshare.storage_image image ON image.id = s.icon_image_id AND NOT image.deleted`
+LEFT JOIN dndshare.storage_image image ON image.id = s.icon_image_id AND NOT image.deleted
+LEFT JOIN dndshare.storage_image cover_image ON cover_image.id=s.cover_image_id AND NOT cover_image.deleted`
 
 func scanSuggest(row pgx.Row) (Suggest, error) {
 	var s Suggest
-	err := row.Scan(&s.ID, &s.TypeID, &s.UserID, &s.Value, &s.Code, &s.Color, &s.Desc, &s.SvgID, &s.Svg, &s.IconImageID, &s.IconImageURL)
+	err := row.Scan(&s.ID, &s.TypeID, &s.UserID, &s.Value, &s.Code, &s.Color, &s.Desc, &s.SvgID, &s.Svg, &s.IconImageID, &s.IconImageURL, &s.CoverImageID, &s.CoverImageURL)
 	return s, err
 }
 
@@ -284,10 +291,12 @@ func (s *Store) DeleteSuggest(ctx context.Context, id, typeID, userID int64, isA
 func (s *Store) GetAllSuggestTypes(ctx context.Context, sourceID *int64) ([]SuggestType, error) {
 	query := `SELECT st.id, st.name, st.source_id, st.color, st.count_items,
 	       src.name AS source_name,
-	       ss.data AS svg_data
+	       ss.data AS svg_data,st.icon_image_id,icon_image.url,st.cover_image_id,cover_image.url
 	FROM dndshare.suggest_type st
 	LEFT JOIN dndshare."source" src ON src.id = st.source_id
-	LEFT JOIN dndshare.svg_storage ss ON ss.id = st.svg_id`
+	LEFT JOIN dndshare.svg_storage ss ON ss.id = st.svg_id
+	LEFT JOIN dndshare.storage_image icon_image ON icon_image.id=st.icon_image_id AND NOT icon_image.deleted
+	LEFT JOIN dndshare.storage_image cover_image ON cover_image.id=st.cover_image_id AND NOT cover_image.deleted`
 	var rows pgx.Rows
 	var err error
 	if sourceID != nil {
@@ -302,7 +311,7 @@ func (s *Store) GetAllSuggestTypes(ctx context.Context, sourceID *int64) ([]Sugg
 	out := []SuggestType{}
 	for rows.Next() {
 		var t SuggestType
-		if err := rows.Scan(&t.ID, &t.Name, &t.SourceID, &t.Color, &t.CountItems, &t.SourceName, &t.Svg); err != nil {
+		if err := rows.Scan(&t.ID, &t.Name, &t.SourceID, &t.Color, &t.CountItems, &t.SourceName, &t.Svg, &t.IconImageID, &t.IconImageURL, &t.CoverImageID, &t.CoverImageURL); err != nil {
 			return nil, err
 		}
 		out = append(out, t)

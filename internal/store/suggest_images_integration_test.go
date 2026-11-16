@@ -22,9 +22,10 @@ func TestSuggestImagesPostgres(t *testing.T) {
         CREATE TABLE dndshare.suggest(type_id bigint,id bigint,user_id bigint,value text,code text,color text,"desc" text,svg_id bigint,PRIMARY KEY(type_id,id));
         INSERT INTO dndshare.suggest(type_id,id,value,user_id) VALUES(17,1,'мм',NULL),(18,1,'other',NULL),(17,2,'custom',10);`)
 	exec(testSchemaColumns(t, "suggest", "icon_image_id"))
+	exec(`ALTER TABLE dndshare.suggest ADD COLUMN cover_image_id bigint; CREATE TABLE dndshare.suggest_type(icon_image_id bigint,cover_image_id bigint);`)
 	s := &Store{pool: pool}
 	install := func(typeID, id int64, suffix string) (int64, *int64, error) {
-		return s.SetSystemSuggestImage(t.Context(), typeID, id, "system-item-media/"+suffix+".webp", "/"+suffix+".webp", suffix+".webp", "image/webp", 100)
+		return s.SetSystemSuggestImage(t.Context(), typeID, id, "icon", "system-item-media/"+suffix+".webp", "/"+suffix+".webp", suffix+".webp", "image/webp", 100)
 	}
 	first, old, err := install(17, 1, "copper")
 	if err != nil || old != nil || first == 0 {

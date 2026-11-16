@@ -4,6 +4,7 @@
       <div class="empty-hint">Выберите словарь</div>
     </template>
     <template v-else>
+      <ItemDetailHeader v-if="type.coverImageUrl" :item="type" :type="null" flush shade="title-only"/>
       <!-- Item grid -->
       <LoadingState v-if="loading" class="empty-hint" label="Загрузка..." compact />
       <div v-else-if="loadError && !items.length" class="empty-hint" role="alert">{{ loadError }} <button type="button" @click="$emit('retry')">Повторить</button></div>
@@ -27,7 +28,7 @@
             class="card-icon"
             :style="item.color ? { background: item.color + '22', borderColor: item.color + '55', color: item.color } : {}"
           >
-            <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :size="32" :fallback-to-type="false" />
+            <ItemIcon v-if="item.iconImageUrl || item.svg || type?.iconImageUrl" :item="item" :type="type" :size="32" />
             <span v-else class="card-icon-placeholder">{{ (item.value || '?')[0] }}</span>
           </div>
 
@@ -46,6 +47,7 @@
 </template>
 
 <script setup>
+import ItemDetailHeader from '@/features/handbook/components/ItemDetailHeader.vue'
 import { LoadingState } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 

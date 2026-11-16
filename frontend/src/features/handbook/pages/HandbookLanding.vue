@@ -47,7 +47,7 @@
               class="hb-dict-icon"
               :style="dict.color ? { background: dict.color + '1F', color: dict.color, borderColor: dict.color + '59' } : {}"
             >
-              <span v-if="dict.svg" class="hb-dict-icon-svg" aria-hidden="true" v-html="dict.svg"></span>
+              <ItemIcon v-if="dict.iconImageUrl" :item="dict" :size="30" :fallback-to-type="false"/><span v-else-if="dict.svg" class="hb-dict-icon-svg" aria-hidden="true" v-html="dict.svg"></span>
               <span v-else class="hb-dict-icon-placeholder" aria-hidden="true"></span>
             </div>
             <div class="hb-dict-info">
@@ -71,6 +71,7 @@
 </template>
 
 <script setup>
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import HandbookCollectionTile from '@/features/handbook/components/HandbookCollectionTile.vue'
 import { LoadingState } from '@sylvieshare/share-ui'
 import { visibleHandbookType } from "@/shared/lib/abilityTypes"

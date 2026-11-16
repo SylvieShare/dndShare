@@ -41,3 +41,15 @@ func TestSuggestImageUploadRequiresWriteAuthorization(t *testing.T) {
 		t.Fatalf("unauthorized image upload: %v", err)
 	}
 }
+
+func TestDictionaryCoverAllowsJPEGAndProtectsTypeWrites(t *testing.T) {
+	args := map[string]json.RawMessage{"typeId": json.RawMessage(`34`), "id": json.RawMessage(`385`), "slot": json.RawMessage(`"cover"`), "fileName": json.RawMessage(`"int.jpg"`), "mimeType": json.RawMessage(`"image/jpeg"`), "dataBase64": json.RawMessage(`"` + base64.StdEncoding.EncodeToString([]byte{0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0}) + `"`)}
+	_, upload, err := parseMCPSuggestImage(args)
+	if err != nil || upload.Slot != "cover" {
+		t.Fatal(upload, err)
+	}
+	_, err = (&Server{}).toolSuggestTypeSetSystemImage(t.Context(), args)
+	if err == nil || !strings.Contains(err.Error(), "write operations") {
+		t.Fatal(err)
+	}
+}

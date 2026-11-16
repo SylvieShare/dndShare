@@ -243,6 +243,12 @@ Item DTO содержит `compatibility[]` (`sourceVersionId`, `version`, `stat
 сотворением и не расходует ячейку. Сл из `repeat_save` сохраняется в плане
 наложения до передачи эффекта другому участнику.
 
+## Медиа словарей и Cyberpunk RED
+
+Suggest и SuggestType проецируют независимые `iconImageId/Url` и
+`coverImageId/Url`. Обложка значения важнее обложки типа; metadata sync
+передаёт эти поля. Контракт медиа — [иллюстрации RED](../features/cyberpunk-red-art.md).
+
 ## Связанные страницы
 
 [Оглавление wiki](../README.md) · [HTTP API](../api.md) · [Handbook](../features/handbook.md) · [БД: справочник](../database/handbook.md)
