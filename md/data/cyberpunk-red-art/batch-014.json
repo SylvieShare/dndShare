@@ -1,0 +1,212 @@
+{
+  "batch": 14,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-14",
+  "sourceAudit": "Live dictionary type names/empty media slots and member values inspected. New section covers in approved mature cel shading; no icon changes.",
+  "assets": [
+    {
+      "key": "dict-skills-cover",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 38,
+        "name": "Навыки"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Mature detailed Cyberpunk RED 2045 RPG dictionary cover, wide 5:2 panorama. Premium drawn cel shading: fine variable ink lines, large angular shadow planes, secondary reflected light, convincing materials and functional details. Natural adult proportions and mature expressive faces, plausible hands, safely framed faces and tools, atmosphere and perspective. Detailed focal action, softer lower-contrast background. Repaired practical technology in a lived-in city, no toy-like forms, photorealism, glossy 3D, uniform grit, gore, text, numbers, logos, watermark, borders or UI overlays. Original scene, subtle neon restricted to lighting and equipment. An adult apprentice concentrates on repairing a small household drone with a precision screwdriver while a mature mentor watches. Tool grip, small mechanical fixture and focused expressions make learned practical skill clear. Distinct clothing, ordinary repair workshop near a city window, clear neutral daylight with warm work lamp, no weapon or schematic text.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-skills-cover-v1.png",
+      "final": "final/dict-skills-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-505d00b9-d8f1-45d2-94af-6a83fa0eba54.png",
+      "originalSha256": "cd3fc9dc974bcdb4fbdf00cedceec8fcb15fa649285a9d61989646b7761489ea",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "18ded5bb90295a7620ca9cdf1bc7755249b7403a46824eef98a7d4722c2cf718",
+      "bytes": 245008,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final panoramas inspected: correct section meaning including installation venues and urban districts, mature figures, coherent gestures/equipment, no critical crop losses or graphic injury.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49679,
+        "objectKey": "system-item-media/v1/suggest-types/38/cover/18ded5bb90295a7620ca9cdf1bc7755249b7403a46824eef98a7d4722c2cf718.webp",
+        "fileSize": 245008
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/38/cover/18ded5bb90295a7620ca9cdf1bc7755249b7403a46824eef98a7d4722c2cf718.webp"
+    },
+    {
+      "key": "dict-sciences-cover",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 32,
+        "name": "Науки"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Mature detailed Cyberpunk RED 2045 RPG dictionary cover, wide 5:2 panorama. Premium drawn cel shading: fine variable ink lines, large angular shadow planes, secondary reflected light, convincing materials and functional details. Natural adult proportions and mature expressive faces, plausible hands, safely framed faces and tools, atmosphere and perspective. Detailed focal action, softer lower-contrast background. Repaired practical technology in a lived-in city, no toy-like forms, photorealism, glossy 3D, uniform grit, gore, text, numbers, logos, watermark, borders or UI overlays. Original scene, subtle neon restricted to lighting and equipment. A mature researcher in practical lab clothing examines a mineral sample under a compact optical microscope beside sealed biological sample tubes and a simple mechanical measuring instrument. Plausible hand and eye position, detailed optics and clean organized bench, urban research cooperative with bright window, muted teal and cream, no formula text or hazardous experiment.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-sciences-cover-v1.png",
+      "final": "final/dict-sciences-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7512ffbb-d3d0-42f7-b32d-26a8c68272c6.png",
+      "originalSha256": "479f8261248f108fdd256621bba577f4128a98bd09f343fd62c32128141db1fd",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "85ce07aeaf103a07ae9411479429c01cc3b1b2c19f1c2bce1e205ae8500f3957",
+      "bytes": 243418,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final panoramas inspected: correct section meaning including installation venues and urban districts, mature figures, coherent gestures/equipment, no critical crop losses or graphic injury.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49680,
+        "objectKey": "system-item-media/v1/suggest-types/32/cover/85ce07aeaf103a07ae9411479429c01cc3b1b2c19f1c2bce1e205ae8500f3957.webp",
+        "fileSize": 243418
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/32/cover/85ce07aeaf103a07ae9411479429c01cc3b1b2c19f1c2bce1e205ae8500f3957.webp"
+    },
+    {
+      "key": "dict-role-list-cover",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 35,
+        "name": "Роли"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Mature detailed Cyberpunk RED 2045 RPG dictionary cover, wide 5:2 panorama. Premium drawn cel shading: fine variable ink lines, large angular shadow planes, secondary reflected light, convincing materials and functional details. Natural adult proportions and mature expressive faces, plausible hands, safely framed faces and tools, atmosphere and perspective. Detailed focal action, softer lower-contrast background. Repaired practical technology in a lived-in city, no toy-like forms, photorealism, glossy 3D, uniform grit, gore, text, numbers, logos, watermark, borders or UI overlays. Original scene, subtle neon restricted to lighting and equipment. Four distinct adult professionals meet at a safehouse doorway: a weary paramedic with a medical bag, a media reporter carrying a compact camera, a nomad wearing a patched driving jacket holding a vehicle key, and a netrunner carrying a small deck. Natural varied mature faces, conversational action, each tool readable. Wide composition, dawn street background, no insignia or text.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-role-list-cover-v1.png",
+      "final": "final/dict-role-list-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-dd12a34a-28cf-450a-a691-4e847ba2c99e.png",
+      "originalSha256": "bed150cfa01413909f319fe01d1e81f18f72ea49747910fe15e7a7fd6fad878c",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "157590ca4819449f65b2e8331ea28a0a247aecb5a59c348436de80b00ae64a91",
+      "bytes": 262316,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final panoramas inspected: correct section meaning including installation venues and urban districts, mature figures, coherent gestures/equipment, no critical crop losses or graphic injury.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49681,
+        "objectKey": "system-item-media/v1/suggest-types/35/cover/157590ca4819449f65b2e8331ea28a0a247aecb5a59c348436de80b00ae64a91.webp",
+        "fileSize": 262316
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/35/cover/157590ca4819449f65b2e8331ea28a0a247aecb5a59c348436de80b00ae64a91.webp"
+    },
+    {
+      "key": "dict-wound-states-cover",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 28,
+        "name": "Состояния ранений"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Mature detailed Cyberpunk RED 2045 RPG dictionary cover, wide 5:2 panorama. Premium drawn cel shading: fine variable ink lines, large angular shadow planes, secondary reflected light, convincing materials and functional details. Natural adult proportions and mature expressive faces, plausible hands, safely framed faces and tools, atmosphere and perspective. Detailed focal action, softer lower-contrast background. Repaired practical technology in a lived-in city, no toy-like forms, photorealism, glossy 3D, uniform grit, gore, text, numbers, logos, watermark, borders or UI overlays. Original scene, subtle neon restricted to lighting and equipment. A medtech assesses two adult patients in a modest clinic: one sits upright with a small clean forearm dressing, the other rests fully clothed on a treatment couch with an arm supported in a brace. Focused care and different degrees of discomfort, intact skin, no blood, no dead or unconscious bodies. Cool examination light, layered clinic depth, no UI labels.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-wound-states-cover-v1.png",
+      "final": "final/dict-wound-states-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6ec5fe18-865b-49fe-b87c-e8940d24dabb.png",
+      "originalSha256": "9c805bcacd63c86ff813cb2a48001e04c89631e650a020cb15a2ad3aadbc71c0",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "de267a0c8547afac1bdde64efcce612290fd4d6fac0c3c7db368220e0b48e27c",
+      "bytes": 222902,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final panoramas inspected: correct section meaning including installation venues and urban districts, mature figures, coherent gestures/equipment, no critical crop losses or graphic injury.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49682,
+        "objectKey": "system-item-media/v1/suggest-types/28/cover/de267a0c8547afac1bdde64efcce612290fd4d6fac0c3c7db368220e0b48e27c.webp",
+        "fileSize": 222902
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/28/cover/de267a0c8547afac1bdde64efcce612290fd4d6fac0c3c7db368220e0b48e27c.webp"
+    },
+    {
+      "key": "dict-ammo-types-cover",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 42,
+        "name": "Типы боеприпасов"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Mature detailed Cyberpunk RED 2045 RPG dictionary cover, wide 5:2 panorama. Premium drawn cel shading: fine variable ink lines, large angular shadow planes, secondary reflected light, convincing materials and functional details. Natural adult proportions and mature expressive faces, plausible hands, safely framed faces and tools, atmosphere and perspective. Detailed focal action, softer lower-contrast background. Repaired practical technology in a lived-in city, no toy-like forms, photorealism, glossy 3D, uniform grit, gore, text, numbers, logos, watermark, borders or UI overlays. Original scene, subtle neon restricted to lighting and equipment. A professional inventory scene: a gloved hand arranges sealed ammunition boxes distinguished by muted red, blue and amber latch inserts, with a few visually distinct inert cartridges on padded holders. Conventional brass rounds, rounded training rounds and a sealed cylindrical canister visible without cutaways. Practical depot workbench, no manufacturing instructions, symbols, labels or numbers.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-ammo-types-cover-v1.png",
+      "final": "final/dict-ammo-types-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7f6df632-7c85-4526-919f-a7ec9213cc76.png",
+      "originalSha256": "620bab735fe2f0a29b9d39a87326462fc739555ffdf76f08d43373c53b5660b2",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "880874a43dd82257e104e792bc883f922a263cd95ef7e68a5f6a7f8e185b6f25",
+      "bytes": 214446,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "note": "Final panoramas inspected: correct section meaning including installation venues and urban districts, mature figures, coherent gestures/equipment, no critical crop losses or graphic injury.",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49683,
+        "objectKey": "system-item-media/v1/suggest-types/42/cover/880874a43dd82257e104e792bc883f922a263cd95ef7e68a5f6a7f8e185b6f25.webp",
+        "fileSize": 214446
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/42/cover/880874a43dd82257e104e792bc883f922a263cd95ef7e68a5f6a7f8e185b6f25.webp"
+    }
+  ],
+  "liveReview": {
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-14/live-qa.json",
+    "note": "Actual public dictionary type cover and mobile value fallback verified; no JS errors or horizontal overflow.",
+    "scenarios": 15,
+    "checkedAt": "2026-11-16T15:03:34.287Z",
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "passed": true
+  }
+}

@@ -66,8 +66,11 @@
       "id": 27,
       "name": "Демоны",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 8,
+      "sha256": "65d856632b9c4f1c87fd76621463cf9ed073ae264ee233bb0f7df3ddaaf3da40",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/27/cover/65d856632b9c4f1c87fd76621463cf9ed073ae264ee233bb0f7df3ddaaf3da40.webp"
     },
     {
       "kind": "item_type",
@@ -82,8 +85,11 @@
       "id": 30,
       "name": "Жильё",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 9,
+      "sha256": "b75a2031929a470fccc9b86a7d4dcc9b6f492ddff5efa17a7978d3f1196a2b2a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/30/cover/b75a2031929a470fccc9b86a7d4dcc9b6f492ddff5efa17a7978d3f1196a2b2a.jpg"
     },
     {
       "kind": "item_type",
@@ -142,8 +148,11 @@
       "id": 31,
       "name": "Образ жизни",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 9,
+      "sha256": "738d5a8b48ad56bf5a5fe65d831b4c140d38b9ed1df1dd5d26a942988b0fdc14",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/31/cover/738d5a8b48ad56bf5a5fe65d831b4c140d38b9ed1df1dd5d26a942988b0fdc14.jpg"
     },
     {
       "kind": "item_type",
@@ -202,8 +211,11 @@
       "id": 28,
       "name": "Препараты",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 10,
+      "sha256": "ae7084a5644eb1134de390a5f182f1cd122d505b55bd08572239411a474c3914",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/28/cover/ae7084a5644eb1134de390a5f182f1cd122d505b55bd08572239411a474c3914.jpg"
     },
     {
       "kind": "item_type",
@@ -240,8 +252,11 @@
       "id": 34,
       "name": "Роли",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 8,
+      "sha256": "a979323f1f9e13cd2883047e0f6d4d01652111719b2b9bae3e67ff4b8ece4083",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/34/cover/a979323f1f9e13cd2883047e0f6d4d01652111719b2b9bae3e67ff4b8ece4083.webp"
     },
     {
       "kind": "item_type",
@@ -278,8 +293,11 @@
       "id": 25,
       "name": "Травмы головы",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 10,
+      "sha256": "27e988fd335b1383c8f3da81b627f2b9532947d87ac7f2e9a075f31f9683a11e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/25/cover/27e988fd335b1383c8f3da81b627f2b9532947d87ac7f2e9a075f31f9683a11e.webp"
     },
     {
       "kind": "item_type",
@@ -294,8 +312,11 @@
       "id": 24,
       "name": "Травмы тела",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 10,
+      "sha256": "d51e0676c2e24669e911ec746efd301c77eaeb6a83a6cca192c8d881a8795ff5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/24/cover/d51e0676c2e24669e911ec746efd301c77eaeb6a83a6cca192c8d881a8795ff5.webp"
     },
     {
       "kind": "item_type",
@@ -332,8 +353,11 @@
       "id": 32,
       "name": "Фармацевтика",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 9,
+      "sha256": "8401fbeb5e2b471366df0ad7e93028602f1003e51d39b97faa9b025db3e53a6a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/32/cover/8401fbeb5e2b471366df0ad7e93028602f1003e51d39b97faa9b025db3e53a6a.jpg"
     },
     {
       "kind": "item_type",
@@ -348,8 +372,11 @@
       "id": 22,
       "name": "Чёрный ЛЁД",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 8,
+      "sha256": "a8e5f79bb2853d7e8b24d96a88715726ad0d02bf444729695962feb7a2249d44",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/22/cover/a8e5f79bb2853d7e8b24d96a88715726ad0d02bf444729695962feb7a2249d44.webp"
     },
     {
       "kind": "item",
@@ -9676,8 +9703,11 @@
       "id": 50,
       "name": "NET-действия",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 11,
+      "sha256": "21fbdebb0c92423a884dc95ff1ed5f23e604d7d3099ca4d6c843a1a499497e92",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/50/cover/21fbdebb0c92423a884dc95ff1ed5f23e604d7d3099ca4d6c843a1a499497e92.webp"
     },
     {
       "kind": "suggest_type",
@@ -9692,8 +9722,11 @@
       "id": 33,
       "name": "Боевые искусства",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 11,
+      "sha256": "6979ffbb80a4b6452b5f41f0342294c1417b7cbff71d1304915116ec5e497f7b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/33/cover/6979ffbb80a4b6452b5f41f0342294c1417b7cbff71d1304915116ec5e497f7b.webp"
     },
     {
       "kind": "suggest_type",
@@ -9708,8 +9741,11 @@
       "id": 48,
       "name": "Валюта",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 11,
+      "sha256": "0b9976ab7b08b8a8e7d072752a2320ec1fe6048463907d60f089e2e0a47ff53c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/48/cover/0b9976ab7b08b8a8e7d072752a2320ec1fe6048463907d60f089e2e0a47ff53c.webp"
     },
     {
       "kind": "suggest_type",
@@ -9724,8 +9760,11 @@
       "id": 26,
       "name": "Группы навыков",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 11,
+      "sha256": "3be19b92d10e24c8d6a2a66dd152507e6c601ab00c0faa80fdbde87c7ad8add5",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/26/cover/3be19b92d10e24c8d6a2a66dd152507e6c601ab00c0faa80fdbde87c7ad8add5.webp"
     },
     {
       "kind": "suggest_type",
@@ -9740,8 +9779,11 @@
       "id": 49,
       "name": "Действия",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 11,
+      "sha256": "34f18ff08ec3b301f4874c9ca861d84a4474b3fdc9c7dcec461a7bc5d6b6f543",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/49/cover/34f18ff08ec3b301f4874c9ca861d84a4474b3fdc9c7dcec461a7bc5d6b6f543.webp"
     },
     {
       "kind": "suggest_type",
@@ -9756,8 +9798,11 @@
       "id": 43,
       "name": "Калибры и совместимость",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 12,
+      "sha256": "1c2d1bb30c5842673a67cf04db1c0c999d8dbb763a64579296e78f82f3c6b328",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/43/cover/1c2d1bb30c5842673a67cf04db1c0c999d8dbb763a64579296e78f82f3c6b328.webp"
     },
     {
       "kind": "suggest_type",
@@ -9772,8 +9817,11 @@
       "id": 30,
       "name": "Категории киберимплантов",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 12,
+      "sha256": "e2652b46f0b51f03d20357c3cfcf4f83f557f6c27e77a9026126be2873639683",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/30/cover/e2652b46f0b51f03d20357c3cfcf4f83f557f6c27e77a9026126be2873639683.webp"
     },
     {
       "kind": "suggest_type",
@@ -9788,8 +9836,11 @@
       "id": 40,
       "name": "Категории цен",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 12,
+      "sha256": "8c3d139c21b17bebbdb6c03aebacffba4cc353909fd564e3b8a002d52f84f0fb",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/40/cover/8c3d139c21b17bebbdb6c03aebacffba4cc353909fd564e3b8a002d52f84f0fb.webp"
     },
     {
       "kind": "suggest_type",
@@ -9804,8 +9855,11 @@
       "id": 39,
       "name": "Качество оружия",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 12,
+      "sha256": "115f10277fea46af2b2105b35bf3f898306ba83ad3f663eeafcd5c617af7b4aa",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/39/cover/115f10277fea46af2b2105b35bf3f898306ba83ad3f663eeafcd5c617af7b4aa.webp"
     },
     {
       "kind": "suggest_type",
@@ -9820,8 +9874,11 @@
       "id": 44,
       "name": "Классы программ",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 12,
+      "sha256": "d99731320ebf2473818665d0f047349e1187b2870cb63da7579091198c80e2d7",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/44/cover/d99731320ebf2473818665d0f047349e1187b2870cb63da7579091198c80e2d7.webp"
     },
     {
       "kind": "suggest_type",
@@ -9836,8 +9893,11 @@
       "id": 29,
       "name": "Локализации",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 13,
+      "sha256": "a0c6ebbf0b2eb102ef01533d366e4173c2a6c7244cf463c975c46720b58b0384",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/29/cover/a0c6ebbf0b2eb102ef01533d366e4173c2a6c7244cf463c975c46720b58b0384.webp"
     },
     {
       "kind": "suggest_type",
@@ -9852,8 +9912,11 @@
       "id": 27,
       "name": "Места установки",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 13,
+      "sha256": "718154289df0071a42e40ac7b807e3d6db9d86e325e1159defe18647201ce694",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/27/cover/718154289df0071a42e40ac7b807e3d6db9d86e325e1159defe18647201ce694.webp"
     },
     {
       "kind": "suggest_type",
@@ -9868,8 +9931,11 @@
       "id": 47,
       "name": "Местности",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 13,
+      "sha256": "648c9dd48705411db8c5bc4e22ad1f29533be40f4ee20a3559184b265bb9b9f8",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/47/cover/648c9dd48705411db8c5bc4e22ad1f29533be40f4ee20a3559184b265bb9b9f8.webp"
     },
     {
       "kind": "suggest_type",
@@ -9884,8 +9950,11 @@
       "id": 36,
       "name": "Методы создания",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 13,
+      "sha256": "de58d0fd703e5bcecc5feace7be35b8f6ff6e4e4174643073b55b349219b25e2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/36/cover/de58d0fd703e5bcecc5feace7be35b8f6ff6e4e4174643073b55b349219b25e2.webp"
     },
     {
       "kind": "suggest_type",
@@ -9900,8 +9969,11 @@
       "id": 25,
       "name": "Музыкальные инструменты",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 13,
+      "sha256": "8289f65ab88c10978963909b35c5cd13850c5ccf42b690674ef07281547bedd1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/25/cover/8289f65ab88c10978963909b35c5cd13850c5ccf42b690674ef07281547bedd1.webp"
     },
     {
       "kind": "suggest_type",
@@ -9916,8 +9988,11 @@
       "id": 38,
       "name": "Навыки",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 14,
+      "sha256": "18ded5bb90295a7620ca9cdf1bc7755249b7403a46824eef98a7d4722c2cf718",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/38/cover/18ded5bb90295a7620ca9cdf1bc7755249b7403a46824eef98a7d4722c2cf718.webp"
     },
     {
       "kind": "suggest_type",
@@ -9932,8 +10007,11 @@
       "id": 32,
       "name": "Науки",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 14,
+      "sha256": "85ce07aeaf103a07ae9411479429c01cc3b1b2c19f1c2bce1e205ae8500f3957",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/32/cover/85ce07aeaf103a07ae9411479429c01cc3b1b2c19f1c2bce1e205ae8500f3957.webp"
     },
     {
       "kind": "suggest_type",
@@ -9948,8 +10026,11 @@
       "id": 35,
       "name": "Роли",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 14,
+      "sha256": "157590ca4819449f65b2e8331ea28a0a247aecb5a59c348436de80b00ae64a91",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/35/cover/157590ca4819449f65b2e8331ea28a0a247aecb5a59c348436de80b00ae64a91.webp"
     },
     {
       "kind": "suggest_type",
@@ -9964,8 +10045,11 @@
       "id": 28,
       "name": "Состояния ранений",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 14,
+      "sha256": "de267a0c8547afac1bdde64efcce612290fd4d6fac0c3c7db368220e0b48e27c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/28/cover/de267a0c8547afac1bdde64efcce612290fd4d6fac0c3c7db368220e0b48e27c.webp"
     },
     {
       "kind": "suggest_type",
@@ -9980,8 +10064,11 @@
       "id": 42,
       "name": "Типы боеприпасов",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 14,
+      "sha256": "880874a43dd82257e104e792bc883f922a263cd95ef7e68a5f6a7f8e185b6f25",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/42/cover/880874a43dd82257e104e792bc883f922a263cd95ef7e68a5f6a7f8e185b6f25.webp"
     },
     {
       "kind": "suggest_type",
@@ -9996,8 +10083,11 @@
       "id": 37,
       "name": "Типы оружия",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 15,
+      "sha256": "adf7f5b1b63d33c23c5bec23a2227d78aad571fb9f086c5b7514a8d882e214b3",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/37/cover/adf7f5b1b63d33c23c5bec23a2227d78aad571fb9f086c5b7514a8d882e214b3.webp"
     },
     {
       "kind": "suggest_type",
@@ -10012,8 +10102,11 @@
       "id": 31,
       "name": "Узлы NET",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 15,
+      "sha256": "df2e5eaa3f3a56da60c966b62fd856ef4438bc77ea3c70b4400cf6e133fae96e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/31/cover/df2e5eaa3f3a56da60c966b62fd856ef4438bc77ea3c70b4400cf6e133fae96e.webp"
     },
     {
       "kind": "suggest_type",
@@ -10028,8 +10121,11 @@
       "id": 45,
       "name": "Фазы препаратов",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 15,
+      "sha256": "29b64150ae3b9e18430e6adf0ade2b0765d0710e91ad1b5deaa50669b7e2fbe3",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/45/cover/29b64150ae3b9e18430e6adf0ade2b0765d0710e91ad1b5deaa50669b7e2fbe3.webp"
     },
     {
       "kind": "suggest_type",
@@ -10044,8 +10140,11 @@
       "id": 41,
       "name": "Фармацевтические препараты",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 15,
+      "sha256": "8065b54bed309f6c822a754e7189a9619e77a5ef016f7014e870e0799625a333",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/41/cover/8065b54bed309f6c822a754e7189a9619e77a5ef016f7014e870e0799625a333.webp"
     },
     {
       "kind": "suggest_type",
@@ -10065,9 +10164,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 2,
-      "sha256": "c2855ade63a155853fafb62eb1a51ebd789c0a25b1f6d25af508fb1208a72f21",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/34/cover/c2855ade63a155853fafb62eb1a51ebd789c0a25b1f6d25af508fb1208a72f21.webp"
+      "batch": 7,
+      "sha256": "7268978ba18f4b70a96329ffb079465f1533839f0c77646965d8195497b0b613",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/34/cover/7268978ba18f4b70a96329ffb079465f1533839f0c77646965d8195497b0b613.webp"
     },
     {
       "kind": "suggest_type",
@@ -10082,8 +10181,11 @@
       "id": 46,
       "name": "Языки",
       "slot": "cover",
-      "status": "pending",
-      "sourceId": 3
+      "status": "published",
+      "sourceId": 3,
+      "batch": 15,
+      "sha256": "2f7b116eec9eb8dfe329ced036bc8ccdcb8e2d27a131912a89bd3c924aaae29b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/46/cover/2f7b116eec9eb8dfe329ced036bc8ccdcb8e2d27a131912a89bd3c924aaae29b.webp"
     },
     {
       "kind": "suggest",
@@ -11207,9 +11309,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 2,
-      "sha256": "6a267d8bc74ae890a64b8937b8014b5a92461220e15e4df5cc359a3d561cae13",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/390/cover/6a267d8bc74ae890a64b8937b8014b5a92461220e15e4df5cc359a3d561cae13.webp"
+      "batch": 7,
+      "sha256": "1171aacb35d9da8ec344035d943435345403294a3fd4b83c21ca3978ec5c2afd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/390/cover/1171aacb35d9da8ec344035d943435345403294a3fd4b83c21ca3978ec5c2afd.webp"
     },
     {
       "kind": "suggest",
@@ -11233,9 +11335,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 2,
-      "sha256": "473e8a212273d715c8d64478a8ef3652d86a359e2ac3ebc9eb4f18300b82d20a",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/392/cover/473e8a212273d715c8d64478a8ef3652d86a359e2ac3ebc9eb4f18300b82d20a.webp"
+      "batch": 7,
+      "sha256": "d25d2c27e8d5a01bb586fd41a0882f37ad2e2de0b217ba48e7ffb13c5d09e79c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/392/cover/d25d2c27e8d5a01bb586fd41a0882f37ad2e2de0b217ba48e7ffb13c5d09e79c.webp"
     },
     {
       "kind": "suggest",
@@ -11259,9 +11361,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 2,
-      "sha256": "0fec0253d71a568247e6d13294d4686e9c75f3bf56bae0a833f4d4629d603b3f",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/385/cover/0fec0253d71a568247e6d13294d4686e9c75f3bf56bae0a833f4d4629d603b3f.webp"
+      "batch": 7,
+      "sha256": "6e472e143f2bd6782536c1ceb457b3c26ac7dee87d73bcdb628becd40b2191a4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/385/cover/6e472e143f2bd6782536c1ceb457b3c26ac7dee87d73bcdb628becd40b2191a4.webp"
     },
     {
       "kind": "suggest",
@@ -11285,9 +11387,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 2,
-      "sha256": "8d386fa95d17d2eb98ae72789cdd236614b3533481962f9ac07c878e3e0038d4",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/387/cover/8d386fa95d17d2eb98ae72789cdd236614b3533481962f9ac07c878e3e0038d4.webp"
+      "batch": 7,
+      "sha256": "d9b03758811e53647c20f212828a01fe885bc939e182104313ef9961c8f44d1e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/387/cover/d9b03758811e53647c20f212828a01fe885bc939e182104313ef9961c8f44d1e.webp"
     },
     {
       "kind": "suggest",
@@ -11311,9 +11413,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 2,
-      "sha256": "11bc6d652d0cdfde04e2ccf12bd678b183c93d7f2a3a7af5b86c50d595608ef2",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/386/cover/11bc6d652d0cdfde04e2ccf12bd678b183c93d7f2a3a7af5b86c50d595608ef2.webp"
+      "batch": 7,
+      "sha256": "ff1111903c0e12c453350dd0588936ed05171ed5c78864e98b841c791c2a5966",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/386/cover/ff1111903c0e12c453350dd0588936ed05171ed5c78864e98b841c791c2a5966.webp"
     },
     {
       "kind": "suggest",
@@ -11337,9 +11439,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 2,
-      "sha256": "26fef4cda58e76711eeacbf4ce73d07af3854fb5ee9a9d32466f09b0b9cf147d",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/393/cover/26fef4cda58e76711eeacbf4ce73d07af3854fb5ee9a9d32466f09b0b9cf147d.webp"
+      "batch": 7,
+      "sha256": "5332be5cdb8dc919b32c017cd8ff9e8b07a130ea38506cc17f357f3e3188d564",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/393/cover/5332be5cdb8dc919b32c017cd8ff9e8b07a130ea38506cc17f357f3e3188d564.webp"
     },
     {
       "kind": "suggest",
@@ -11363,9 +11465,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 2,
-      "sha256": "0e6c6654e3b0df72c2b4e7c3ba74430c308e3a0d1b33d0850c5ec751251e3f8e",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/388/cover/0e6c6654e3b0df72c2b4e7c3ba74430c308e3a0d1b33d0850c5ec751251e3f8e.webp"
+      "batch": 7,
+      "sha256": "ac26c48d0755a23cfc816da6959f6a5a1e0d885f6a97e3c68ef2e5e17fef89a9",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/388/cover/ac26c48d0755a23cfc816da6959f6a5a1e0d885f6a97e3c68ef2e5e17fef89a9.webp"
     },
     {
       "kind": "suggest",
@@ -11389,9 +11491,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 2,
-      "sha256": "e6d4b5aa23ece66f5ce39540d905c3bd865aa51722664c7907c2ae6becdb14d0",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/391/cover/e6d4b5aa23ece66f5ce39540d905c3bd865aa51722664c7907c2ae6becdb14d0.webp"
+      "batch": 7,
+      "sha256": "1bad1643b0b75623982373a38ba58fdb80e52c20c853f356f8f7824f5aec9c81",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/391/cover/1bad1643b0b75623982373a38ba58fdb80e52c20c853f356f8f7824f5aec9c81.webp"
     },
     {
       "kind": "suggest",
@@ -11415,9 +11517,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 2,
-      "sha256": "f2975a2d67f2346184d31269200b1769c2609f93e583c563a57f57bd93f5103b",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/389/cover/f2975a2d67f2346184d31269200b1769c2609f93e583c563a57f57bd93f5103b.webp"
+      "batch": 7,
+      "sha256": "648b60b651161d5723cc56cd3dc586fa0202f3627359166ea87c8407034aadb9",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/389/cover/648b60b651161d5723cc56cd3dc586fa0202f3627359166ea87c8407034aadb9.webp"
     },
     {
       "kind": "suggest",
@@ -11441,9 +11543,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 2,
-      "sha256": "e342ff5d3958e14ddcf83d2919193ddc76915ed343eebd45868fbe92f31d3c79",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/394/cover/e342ff5d3958e14ddcf83d2919193ddc76915ed343eebd45868fbe92f31d3c79.webp"
+      "batch": 7,
+      "sha256": "2555a56ebbb066d4eb74e804bbe67086e3ebf72e75158f741eb21cc266dbb18b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/394/cover/2555a56ebbb066d4eb74e804bbe67086e3ebf72e75158f741eb21cc266dbb18b.webp"
     },
     {
       "kind": "suggest",
@@ -16107,7 +16209,7 @@
     }
   ],
   "progress": {
-    "publishedSlots": 40,
+    "publishedSlots": 74,
     "readySlots": 0,
     "totalSlots": 1848
   }

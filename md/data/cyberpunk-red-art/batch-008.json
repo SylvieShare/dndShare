@@ -1,0 +1,136 @@
+{
+  "batch": 8,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-08",
+  "sourceAudit": "Live section media slots were empty. Section names and example catalogue descriptions reviewed for meaning. New covers use approved mature detailed cel shading; icons untouched.",
+  "assets": [
+    {
+      "key": "demons-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 27,
+        "name": "Демоны"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Premium mature Cyberpunk RED 2045 RPG catalogue illustration, detailed hand-drawn CEL SHADING. Fine varied ink contour and crisp large shadow planes, realistic adult proportions and engineered construction, secondary reflected-light shapes, clear differentiation of cloth, metal, polymer and glass. Restrained local wear, materially convincing details concentrated around the subject, softer lower-contrast atmospheric background. Lived-in retrofuturist city after economic collapse, repaired practical technology. Cinematic light, readable main subject and generous safe margins. Never cute or toy-like, no thick uniform icon outline, no photoreal photograph or glossy 3D render, no uniform grain, no unreadable pseudo-text, no letters, logos, watermark, borders or UI. Wide 5:2 scene of a powerful autonomous security daemon: a tangible dark server control core in a secure utility room, a small angular amber artificial face made of lit segmented planes on its front, three substantial cables running from the core to visible camera and turret control hardware behind it. The daemon is software managing a security network, not an occult monster. Tense amber/cool cyan light. No supernatural fire, pentagrams or fantasy creatures.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/demons-cover-v1.png",
+      "final": "final/demons-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-91b774fb-7290-4a64-ba4a-0605e9801cdd.png",
+      "originalSha256": "38b47d3a3b3ee0acd02492553ea9e8e588c24f2c9064e7e0ec49cebb5e9cae01",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "65d856632b9c4f1c87fd76621463cf9ed073ae264ee233bb0f7df3ddaaf3da40",
+      "bytes": 232438,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final exports reviewed. Category meaning, mature proportions, hands and equipment checked; medical scenes use intact skin and care, NET software is technological. Clean crops and no embedded labels.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49660,
+        "objectKey": "system-item-media/v1/item-types/27/cover/65d856632b9c4f1c87fd76621463cf9ed073ae264ee233bb0f7df3ddaaf3da40.webp",
+        "fileSize": 232438
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/27/cover/65d856632b9c4f1c87fd76621463cf9ed073ae264ee233bb0f7df3ddaaf3da40.webp"
+    },
+    {
+      "key": "black-ice-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 22,
+        "name": "Чёрный ЛЁД"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Premium mature Cyberpunk RED 2045 RPG catalogue illustration, detailed hand-drawn CEL SHADING. Fine varied ink contour and crisp large shadow planes, realistic adult proportions and engineered construction, secondary reflected-light shapes, clear differentiation of cloth, metal, polymer and glass. Restrained local wear, materially convincing details concentrated around the subject, softer lower-contrast atmospheric background. Lived-in retrofuturist city after economic collapse, repaired practical technology. Cinematic light, readable main subject and generous safe margins. Never cute or toy-like, no thick uniform icon outline, no photoreal photograph or glossy 3D render, no uniform grain, no unreadable pseudo-text, no letters, logos, watermark, borders or UI. Wide 5:2 scene in abstract cyberspace: an intimidating black angular defensive software construct in the form of a sleek cybernetic hunting hound, built of graphite polygon plates with thin crimson light seams and a pale visor. It blocks a branching data passage rendered as distant structural lines, precise and dark, not psychedelic. Whole hound, four plausible articulated legs, readable silhouette; intrusion countermeasure rather than a real animal, no gore, no demonic anatomy.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/black-ice-cover-v1.png",
+      "final": "final/black-ice-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-14c327e6-cfd7-4fdd-a194-d1818e202fbc.png",
+      "originalSha256": "cd77e2a9d16f4d00dc70bd2be8ff1f163877eb5574b7e4ddc89f6c8162312d7d",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "a8e5f79bb2853d7e8b24d96a88715726ad0d02bf444729695962feb7a2249d44",
+      "bytes": 166564,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final exports reviewed. Category meaning, mature proportions, hands and equipment checked; medical scenes use intact skin and care, NET software is technological. Clean crops and no embedded labels.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49661,
+        "objectKey": "system-item-media/v1/item-types/22/cover/a8e5f79bb2853d7e8b24d96a88715726ad0d02bf444729695962feb7a2249d44.webp",
+        "fileSize": 166564
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/22/cover/a8e5f79bb2853d7e8b24d96a88715726ad0d02bf444729695962feb7a2249d44.webp"
+    },
+    {
+      "key": "roles-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 34,
+        "name": "Роли"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Premium mature Cyberpunk RED 2045 RPG catalogue illustration, detailed hand-drawn CEL SHADING. Fine varied ink contour and crisp large shadow planes, realistic adult proportions and engineered construction, secondary reflected-light shapes, clear differentiation of cloth, metal, polymer and glass. Restrained local wear, materially convincing details concentrated around the subject, softer lower-contrast atmospheric background. Lived-in retrofuturist city after economic collapse, repaired practical technology. Cinematic light, readable main subject and generous safe margins. Never cute or toy-like, no thick uniform icon outline, no photoreal photograph or glossy 3D render, no uniform grain, no unreadable pseudo-text, no letters, logos, watermark, borders or UI. Wide 5:2 narrative scene: three mature adult edgerunners planning a job around a compact table in a night diner: a female fixer in a tailored worn burgundy jacket, an older male tech with a compact toolkit, and a female netrunner with a closed cyberdeck and temple interface. Distinct adult faces and natural anatomy, quiet serious conversation and meaningful plausible hand gestures. Through the window a worn megacity street. Varied muted clothing, warm booth light and cool street reflections. No readable plans or text.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/roles-cover-v1.png",
+      "final": "final/roles-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-29fc6882-7c56-4c09-aa15-49ae37954649.png",
+      "originalSha256": "e2931c970ec67e81dbf0cd9dad2187fc45940f7b5803ce28810f322507fef37a",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "a979323f1f9e13cd2883047e0f6d4d01652111719b2b9bae3e67ff4b8ece4083",
+      "bytes": 271674,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final exports reviewed. Category meaning, mature proportions, hands and equipment checked; medical scenes use intact skin and care, NET software is technological. Clean crops and no embedded labels.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49662,
+        "objectKey": "system-item-media/v1/item-types/34/cover/a979323f1f9e13cd2883047e0f6d4d01652111719b2b9bae3e67ff4b8ece4083.webp",
+        "fileSize": 271674
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/34/cover/a979323f1f9e13cd2883047e0f6d4d01652111719b2b9bae3e67ff4b8ece4083.webp"
+    }
+  ],
+  "liveReview": {
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "scenarios": 9,
+    "checkedAt": "2026-11-16T14:48:25.627Z",
+    "note": "Actual public API, all expected covers loaded at three widths without JS errors or horizontal overflow.",
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-08/live-qa.json",
+    "passed": true
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "batch": 10,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-10",
+  "sourceAudit": "Live section media slots were empty. Section names and example catalogue descriptions reviewed for meaning. New covers use approved mature detailed cel shading; icons untouched.",
+  "assets": [
+    {
+      "key": "drugs-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 28,
+        "name": "Препараты"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Premium mature Cyberpunk RED 2045 RPG catalogue illustration, detailed hand-drawn CEL SHADING. Fine varied ink contour and crisp large shadow planes, realistic adult proportions and engineered construction, secondary reflected-light shapes, clear differentiation of cloth, metal, polymer and glass. Restrained local wear, materially convincing details concentrated around the subject, softer lower-contrast atmospheric background. Lived-in retrofuturist city after economic collapse, repaired practical technology. Cinematic light, readable main subject and generous safe margins. Never cute or toy-like, no thick uniform icon outline, no photoreal photograph or glossy 3D render, no uniform grain, no unreadable pseudo-text, no letters, logos, watermark, borders or UI. 3:2 depiction of fictional illicit street substances as catalogue still life: a compact tarnished graphite stash box on a worn alley-market counter containing two tiny violet and blue sealed vials and a plain blister strip of amber tablets. Entire objects readable, hardware with cyan latch. Mood uneasy and subdued, closed shutters and blurred city light behind. No person consuming, no recipes, no labels, no real brands, no glamorized party scene.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/drugs-cover-v1.png",
+      "final": "final/drugs-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-628c23a4-4a00-4b4e-8178-e20560841102.png",
+      "originalSha256": "7425f42743708e57d45736e1ecf3c32adbcbb69ca8cced04a3abd0503522a95e",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "ae7084a5644eb1134de390a5f182f1cd122d505b55bd08572239411a474c3914",
+      "bytes": 311769,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final exports reviewed. Category meaning, mature proportions, hands and equipment checked; medical scenes use intact skin and care, NET software is technological. Clean crops and no embedded labels.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49666,
+        "objectKey": "system-item-media/v1/item-types/28/cover/ae7084a5644eb1134de390a5f182f1cd122d505b55bd08572239411a474c3914.jpg",
+        "fileSize": 311769
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/28/cover/ae7084a5644eb1134de390a5f182f1cd122d505b55bd08572239411a474c3914.jpg"
+    },
+    {
+      "key": "head-injury-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 25,
+        "name": "Травмы головы"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Premium mature Cyberpunk RED 2045 RPG catalogue illustration, detailed hand-drawn CEL SHADING. Fine varied ink contour and crisp large shadow planes, realistic adult proportions and engineered construction, secondary reflected-light shapes, clear differentiation of cloth, metal, polymer and glass. Restrained local wear, materially convincing details concentrated around the subject, softer lower-contrast atmospheric background. Lived-in retrofuturist city after economic collapse, repaired practical technology. Cinematic light, readable main subject and generous safe margins. Never cute or toy-like, no thick uniform icon outline, no photoreal photograph or glossy 3D render, no uniform grain, no unreadable pseudo-text, no letters, logos, watermark, borders or UI. 5:2 narrative clinical scene, no gore: a mature adult edgerunner seated in a worn but clean street clinic, an intact white dressing across one temple and a medical collar; an older female medtech checks a small handheld optical scanner near the patient's face without touching the eye. Concern and focused care, natural adult anatomy and plausible hands. Clean closed skin, absolutely no exposed wounds, blood or surgical violence. Cool examination light with amber background.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/head-injury-cover-v1.png",
+      "final": "final/head-injury-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e8d6fb72-a7a6-4a3f-9cda-d75a31f948aa.png",
+      "originalSha256": "a17aca357355ff2ff607689158b6d006194b93987aa8f348062bb2a3d7ad87ba",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "27e988fd335b1383c8f3da81b627f2b9532947d87ac7f2e9a075f31f9683a11e",
+      "bytes": 265182,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final exports reviewed. Category meaning, mature proportions, hands and equipment checked; medical scenes use intact skin and care, NET software is technological. Clean crops and no embedded labels.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49667,
+        "objectKey": "system-item-media/v1/item-types/25/cover/27e988fd335b1383c8f3da81b627f2b9532947d87ac7f2e9a075f31f9683a11e.webp",
+        "fileSize": 265182
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/25/cover/27e988fd335b1383c8f3da81b627f2b9532947d87ac7f2e9a075f31f9683a11e.webp"
+    },
+    {
+      "key": "body-injury-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 24,
+        "name": "Травмы тела"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Premium mature Cyberpunk RED 2045 RPG catalogue illustration, detailed hand-drawn CEL SHADING. Fine varied ink contour and crisp large shadow planes, realistic adult proportions and engineered construction, secondary reflected-light shapes, clear differentiation of cloth, metal, polymer and glass. Restrained local wear, materially convincing details concentrated around the subject, softer lower-contrast atmospheric background. Lived-in retrofuturist city after economic collapse, repaired practical technology. Cinematic light, readable main subject and generous safe margins. Never cute or toy-like, no thick uniform icon outline, no photoreal photograph or glossy 3D render, no uniform grain, no unreadable pseudo-text, no letters, logos, watermark, borders or UI. 5:2 narrative clinical scene, no gore: a mature adult courier seated on a treatment bench, one forearm supported in an adjustable graphite medical brace and sling; a focused adult medtech gently checks the brace latch. Scuffed street clothes, breathing steady, natural believable adult anatomy and hands. Detailed straps, layered textile, brace hinges; clean closed skin, no blood or exposed wounds. Worn cyberpunk street clinic with cool city window and warm task lamp.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/body-injury-cover-v1.png",
+      "final": "final/body-injury-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f125df7a-6563-47a9-ba5a-15751a75e0e3.png",
+      "originalSha256": "4205c2ac5b5af28d00fca90fe0ba7a6366269e131f526b14588c101b0427d146",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "d51e0676c2e24669e911ec746efd301c77eaeb6a83a6cca192c8d881a8795ff5",
+      "bytes": 262862,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final exports reviewed. Category meaning, mature proportions, hands and equipment checked; medical scenes use intact skin and care, NET software is technological. Clean crops and no embedded labels.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49668,
+        "objectKey": "system-item-media/v1/item-types/24/cover/d51e0676c2e24669e911ec746efd301c77eaeb6a83a6cca192c8d881a8795ff5.webp",
+        "fileSize": 262862
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/24/cover/d51e0676c2e24669e911ec746efd301c77eaeb6a83a6cca192c8d881a8795ff5.webp"
+    }
+  ],
+  "liveReview": {
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "scenarios": 9,
+    "checkedAt": "2026-11-16T14:49:21.175Z",
+    "note": "Actual public API, all expected covers loaded at three widths without JS errors or horizontal overflow.",
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-10/live-qa.json",
+    "passed": true
+  }
+}

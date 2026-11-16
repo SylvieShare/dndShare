@@ -1,0 +1,212 @@
+{
+  "batch": 11,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-11",
+  "sourceAudit": "Live dictionary type names/empty media slots and member values inspected. New section covers in approved mature cel shading; no icon changes.",
+  "assets": [
+    {
+      "key": "dict-net-actions-cover",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 50,
+        "name": "NET-действия"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. A distinct mature detailed Cyberpunk RED 2045 RPG handbook cover, WIDE 5:2 panorama. Sophisticated hand-drawn cel shading with fine variable ink lines, broad angular light and shadow planes, selective reflected light, realistically constructed technology and natural adult anatomy. Rich material-specific detail at the focal action, carefully drawn plausible hands, softer simpler less contrasty background with atmospheric perspective. Original practical retrofuturism and lived-in city, repaired gear but not dirt everywhere. Serious nuanced adult faces, readable lighting and clear safe framing of face/hands/tools. No oversized icon object, no cartoonish big heads, no photorealism or glossy 3D, no text, logos, brands, labels, watermark, borders or UI overlay; in-universe screens may only show nonverbal abstract shapes. A mature netrunner woman in a charcoal coat plugs a physical interface lead from a compact cyberdeck into a secured access panel while watching a subtle abstract blue branching network reflected in her visor. Close narrative action, hands and connector visible, worn maintenance corridor at dawn, cyan and muted rust palette.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-net-actions-cover-v1.png",
+      "final": "final/dict-net-actions-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2d8886ba-aba4-4a68-a27d-0f05269957ac.png",
+      "originalSha256": "1259c9588b2c9d60e347ee0ae8e4ddeb656b9879fd27d43206434c2cd1ff3bac",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "21fbdebb0c92423a884dc95ff1ed5f23e604d7d3099ca4d6c843a1a499497e92",
+      "bytes": 247704,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "note": "Final panoramas inspected: category-specific action, mature anatomy, readable hand interactions, no lost faces/tools in crop.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49669,
+        "objectKey": "system-item-media/v1/suggest-types/50/cover/21fbdebb0c92423a884dc95ff1ed5f23e604d7d3099ca4d6c843a1a499497e92.webp",
+        "fileSize": 247704
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/50/cover/21fbdebb0c92423a884dc95ff1ed5f23e604d7d3099ca4d6c843a1a499497e92.webp"
+    },
+    {
+      "key": "dict-martial-arts-cover",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 33,
+        "name": "Боевые искусства"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. A distinct mature detailed Cyberpunk RED 2045 RPG handbook cover, WIDE 5:2 panorama. Sophisticated hand-drawn cel shading with fine variable ink lines, broad angular light and shadow planes, selective reflected light, realistically constructed technology and natural adult anatomy. Rich material-specific detail at the focal action, carefully drawn plausible hands, softer simpler less contrasty background with atmospheric perspective. Original practical retrofuturism and lived-in city, repaired gear but not dirt everywhere. Serious nuanced adult faces, readable lighting and clear safe framing of face/hands/tools. No oversized icon object, no cartoonish big heads, no photorealism or glossy 3D, no text, logos, brands, labels, watermark, borders or UI overlay; in-universe screens may only show nonverbal abstract shapes. Two adult martial artists in practical dark training clothes spar under supervision implied by a modest rooftop gym. One executes a controlled forearm parry while the other maintains a balanced guard, no impact or injury. Full upper bodies and grounded bent legs, anatomically correct distinct limbs. Rooftop city and repaired training mats, crisp afternoon side light, muted ochre and steel blue.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-martial-arts-cover-v1.png",
+      "final": "final/dict-martial-arts-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9d195bd9-0c1c-46dd-8479-8bc41246a5b3.png",
+      "originalSha256": "ddbac0b5f7e94cda35872e23b4a708d5dbff2bd4cd17e5f3fc5bdfa79085f582",
+      "sourceDimensions": {
+        "width": 2172,
+        "height": 724
+      },
+      "sha256": "6979ffbb80a4b6452b5f41f0342294c1417b7cbff71d1304915116ec5e497f7b",
+      "bytes": 248746,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "note": "Final panoramas inspected: category-specific action, mature anatomy, readable hand interactions, no lost faces/tools in crop.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49670,
+        "objectKey": "system-item-media/v1/suggest-types/33/cover/6979ffbb80a4b6452b5f41f0342294c1417b7cbff71d1304915116ec5e497f7b.webp",
+        "fileSize": 248746
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/33/cover/6979ffbb80a4b6452b5f41f0342294c1417b7cbff71d1304915116ec5e497f7b.webp"
+    },
+    {
+      "key": "dict-currency-cover",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 48,
+        "name": "Валюта"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. A distinct mature detailed Cyberpunk RED 2045 RPG handbook cover, WIDE 5:2 panorama. Sophisticated hand-drawn cel shading with fine variable ink lines, broad angular light and shadow planes, selective reflected light, realistically constructed technology and natural adult anatomy. Rich material-specific detail at the focal action, carefully drawn plausible hands, softer simpler less contrasty background with atmospheric perspective. Original practical retrofuturism and lived-in city, repaired gear but not dirt everywhere. Serious nuanced adult faces, readable lighting and clear safe framing of face/hands/tools. No oversized icon object, no cartoonish big heads, no photorealism or glossy 3D, no text, logos, brands, labels, watermark, borders or UI overlay; in-universe screens may only show nonverbal abstract shapes. A close view of an adult street merchant's two hands passing a silver electronic credchip across a market counter to a customer's open palm. A small plain money pouch and stacked blank polymer payment tokens beside a simple reader. Believable finger grip, warm shop light, blurred urban market depth, emerald and amber accents. No currency signs, denominations or text.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-currency-cover-v1.png",
+      "final": "final/dict-currency-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-e6187212-ca5f-43a8-a8ce-f27835b3a028.png",
+      "originalSha256": "c14e26e61765b309dc202d50bae54702de1111f84831e95ce4053d01e45f795b",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "0b9976ab7b08b8a8e7d072752a2320ec1fe6048463907d60f089e2e0a47ff53c",
+      "bytes": 221108,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "note": "Final panoramas inspected: category-specific action, mature anatomy, readable hand interactions, no lost faces/tools in crop.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49671,
+        "objectKey": "system-item-media/v1/suggest-types/48/cover/0b9976ab7b08b8a8e7d072752a2320ec1fe6048463907d60f089e2e0a47ff53c.webp",
+        "fileSize": 221108
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/48/cover/0b9976ab7b08b8a8e7d072752a2320ec1fe6048463907d60f089e2e0a47ff53c.webp"
+    },
+    {
+      "key": "dict-skill-groups-cover",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 26,
+        "name": "Группы навыков"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. A distinct mature detailed Cyberpunk RED 2045 RPG handbook cover, WIDE 5:2 panorama. Sophisticated hand-drawn cel shading with fine variable ink lines, broad angular light and shadow planes, selective reflected light, realistically constructed technology and natural adult anatomy. Rich material-specific detail at the focal action, carefully drawn plausible hands, softer simpler less contrasty background with atmospheric perspective. Original practical retrofuturism and lived-in city, repaired gear but not dirt everywhere. Serious nuanced adult faces, readable lighting and clear safe framing of face/hands/tools. No oversized icon object, no cartoonish big heads, no photorealism or glossy 3D, no text, logos, brands, labels, watermark, borders or UI overlay; in-universe screens may only show nonverbal abstract shapes. A mature instructor in an olive utility jacket reviews three practical training stations with an adult apprentice: a mechanical repair bench in the foreground, a padded practice area and a small communications booth in the background. Focus on the instructor indicating a tool with a natural hand gesture. Daylight warehouse school, not an infographic; no text or icons floating in air.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-skill-groups-cover-v1.png",
+      "final": "final/dict-skill-groups-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c2095007-0631-4b7d-965f-0097267a33c9.png",
+      "originalSha256": "11e14955c686c1e72972b81624624cbe7d3f47b7427d7b29afd5463357de9e6f",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "3be19b92d10e24c8d6a2a66dd152507e6c601ab00c0faa80fdbde87c7ad8add5",
+      "bytes": 327896,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "note": "Final panoramas inspected: category-specific action, mature anatomy, readable hand interactions, no lost faces/tools in crop.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49672,
+        "objectKey": "system-item-media/v1/suggest-types/26/cover/3be19b92d10e24c8d6a2a66dd152507e6c601ab00c0faa80fdbde87c7ad8add5.webp",
+        "fileSize": 327896
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/26/cover/3be19b92d10e24c8d6a2a66dd152507e6c601ab00c0faa80fdbde87c7ad8add5.webp"
+    },
+    {
+      "key": "dict-actions-cover",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 49,
+        "name": "Действия"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. A distinct mature detailed Cyberpunk RED 2045 RPG handbook cover, WIDE 5:2 panorama. Sophisticated hand-drawn cel shading with fine variable ink lines, broad angular light and shadow planes, selective reflected light, realistically constructed technology and natural adult anatomy. Rich material-specific detail at the focal action, carefully drawn plausible hands, softer simpler less contrasty background with atmospheric perspective. Original practical retrofuturism and lived-in city, repaired gear but not dirt everywhere. Serious nuanced adult faces, readable lighting and clear safe framing of face/hands/tools. No oversized icon object, no cartoonish big heads, no photorealism or glossy 3D, no text, logos, brands, labels, watermark, borders or UI overlay; in-universe screens may only show nonverbal abstract shapes. A mature female edgerunner moving swiftly between concrete cover positions while reaching for a secured utility pouch at her belt, a teammate watching the corridor behind. Tactical movement with believable weight and no firing or injured people, abandoned transit platform, cool dawn and amber emergency strips. Complete hands and recognizable action silhouette.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-actions-cover-v1.png",
+      "final": "final/dict-actions-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-171013df-7ad1-46f0-930d-74ffa8b7874f.png",
+      "originalSha256": "918d546989b0fd490469fe2584bd1b7e65aa3fdf8130dffbf92a8170ca8d5e72",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "34f18ff08ec3b301f4874c9ca861d84a4474b3fdc9c7dcec461a7bc5d6b6f543",
+      "bytes": 279400,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "note": "Final panoramas inspected: category-specific action, mature anatomy, readable hand interactions, no lost faces/tools in crop.",
+        "reviewer": "agent",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49673,
+        "objectKey": "system-item-media/v1/suggest-types/49/cover/34f18ff08ec3b301f4874c9ca861d84a4474b3fdc9c7dcec461a7bc5d6b6f543.webp",
+        "fileSize": 279400
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/49/cover/34f18ff08ec3b301f4874c9ca861d84a4474b3fdc9c7dcec461a7bc5d6b6f543.webp"
+    }
+  ],
+  "liveReview": {
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-11/live-qa.json",
+    "note": "Actual public dictionary type cover and mobile value fallback verified; no JS errors or horizontal overflow.",
+    "scenarios": 15,
+    "checkedAt": "2026-11-16T14:59:57.279Z",
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "passed": true
+  }
+}

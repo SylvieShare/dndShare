@@ -1,0 +1,136 @@
+{
+  "batch": 9,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-09",
+  "sourceAudit": "Live section media slots were empty. Section names and example catalogue descriptions reviewed for meaning. New covers use approved mature detailed cel shading; icons untouched.",
+  "assets": [
+    {
+      "key": "housing-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 30,
+        "name": "Жильё"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Premium mature Cyberpunk RED 2045 RPG catalogue illustration, detailed hand-drawn CEL SHADING. Fine varied ink contour and crisp large shadow planes, realistic adult proportions and engineered construction, secondary reflected-light shapes, clear differentiation of cloth, metal, polymer and glass. Restrained local wear, materially convincing details concentrated around the subject, softer lower-contrast atmospheric background. Lived-in retrofuturist city after economic collapse, repaired practical technology. Cinematic light, readable main subject and generous safe margins. Never cute or toy-like, no thick uniform icon outline, no photoreal photograph or glossy 3D render, no uniform grain, no unreadable pseudo-text, no letters, logos, watermark, borders or UI. 3:2 scene of a modest converted cargo-container apartment in a dense cyberpunk district. A narrow bed, compact kitchenette, repaired ventilation duct, folding table, one worn chair and a window overlooking stacked containers and towers. Personal but economical, no people; inhabited practical space, believable room layout, clear foreground and depth. Warm task lamp against cool evening city.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/housing-cover-v1.png",
+      "final": "final/housing-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-357ec90f-acca-4eef-bff3-2aa7a8667be2.png",
+      "originalSha256": "a7f944182a407564e131cc67aab69e089e2fb0a049b3697a712439d8cc232c1e",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "b75a2031929a470fccc9b86a7d4dcc9b6f492ddff5efa17a7978d3f1196a2b2a",
+      "bytes": 414908,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final exports reviewed. Category meaning, mature proportions, hands and equipment checked; medical scenes use intact skin and care, NET software is technological. Clean crops and no embedded labels.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49663,
+        "objectKey": "system-item-media/v1/item-types/30/cover/b75a2031929a470fccc9b86a7d4dcc9b6f492ddff5efa17a7978d3f1196a2b2a.jpg",
+        "fileSize": 414908
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/30/cover/b75a2031929a470fccc9b86a7d4dcc9b6f492ddff5efa17a7978d3f1196a2b2a.jpg"
+    },
+    {
+      "key": "lifestyle-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 31,
+        "name": "Образ жизни"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Premium mature Cyberpunk RED 2045 RPG catalogue illustration, detailed hand-drawn CEL SHADING. Fine varied ink contour and crisp large shadow planes, realistic adult proportions and engineered construction, secondary reflected-light shapes, clear differentiation of cloth, metal, polymer and glass. Restrained local wear, materially convincing details concentrated around the subject, softer lower-contrast atmospheric background. Lived-in retrofuturist city after economic collapse, repaired practical technology. Cinematic light, readable main subject and generous safe margins. Never cute or toy-like, no thick uniform icon outline, no photoreal photograph or glossy 3D render, no uniform grain, no unreadable pseudo-text, no letters, logos, watermark, borders or UI. 3:2 still-life narrative of everyday living costs in a cyberpunk city: a simple reusable bowl of kibble-like prepared food, a steaming cup, a plain silver payment chip and a worn utility bag on a compact diner counter. A mature diner owner softly out of focus behind it, crowded city outside. Mundane believable meal, no brands, no menus or readable screens. Warm practical lighting and cool urban shadows.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/lifestyle-cover-v1.png",
+      "final": "final/lifestyle-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-862111c8-a285-43b5-b0bd-a463ffab190c.png",
+      "originalSha256": "c0b09399e13d1a732f93afd2ccf9fb3ec02fe70fffa3348e627126bf6f816a73",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "738d5a8b48ad56bf5a5fe65d831b4c140d38b9ed1df1dd5d26a942988b0fdc14",
+      "bytes": 335829,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final exports reviewed. Category meaning, mature proportions, hands and equipment checked; medical scenes use intact skin and care, NET software is technological. Clean crops and no embedded labels.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49664,
+        "objectKey": "system-item-media/v1/item-types/31/cover/738d5a8b48ad56bf5a5fe65d831b4c140d38b9ed1df1dd5d26a942988b0fdc14.jpg",
+        "fileSize": 335829
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/31/cover/738d5a8b48ad56bf5a5fe65d831b4c140d38b9ed1df1dd5d26a942988b0fdc14.jpg"
+    },
+    {
+      "key": "pharma-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 32,
+        "name": "Фармацевтика"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Premium mature Cyberpunk RED 2045 RPG catalogue illustration, detailed hand-drawn CEL SHADING. Fine varied ink contour and crisp large shadow planes, realistic adult proportions and engineered construction, secondary reflected-light shapes, clear differentiation of cloth, metal, polymer and glass. Restrained local wear, materially convincing details concentrated around the subject, softer lower-contrast atmospheric background. Lived-in retrofuturist city after economic collapse, repaired practical technology. Cinematic light, readable main subject and generous safe margins. Never cute or toy-like, no thick uniform icon outline, no photoreal photograph or glossy 3D render, no uniform grain, no unreadable pseudo-text, no letters, logos, watermark, borders or UI. 3:2 image of a professional street-clinic pharmaceutical kit: an ivory and teal temperature-controlled medical case opened to reveal three sealed small medicine ampoules, a capped precision injector and a neat package of sterile dressings. Detailed hinges, seals, machined injector parts and glass depth. Clean treatment workbench in a worn but responsibly maintained clinic. Clinical cool light and soft amber lamp. No labels or medical claims, no exposed needle touching skin.",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/pharma-cover-v1.png",
+      "final": "final/pharma-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7eace40d-f463-498b-84ef-93d0c05b388b.png",
+      "originalSha256": "2c7af4d3de8140bc15ee271f08b2d7200115711a25ae3fbcd11e4040cdb985c3",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "8401fbeb5e2b471366df0ad7e93028602f1003e51d39b97faa9b025db3e53a6a",
+      "bytes": 402699,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final exports reviewed. Category meaning, mature proportions, hands and equipment checked; medical scenes use intact skin and care, NET software is technological. Clean crops and no embedded labels.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49665,
+        "objectKey": "system-item-media/v1/item-types/32/cover/8401fbeb5e2b471366df0ad7e93028602f1003e51d39b97faa9b025db3e53a6a.jpg",
+        "fileSize": 402699
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/32/cover/8401fbeb5e2b471366df0ad7e93028602f1003e51d39b97faa9b025db3e53a6a.jpg"
+    }
+  ],
+  "liveReview": {
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "scenarios": 9,
+    "checkedAt": "2026-11-16T14:48:53.361Z",
+    "note": "Actual public API, all expected covers loaded at three widths without JS errors or horizontal overflow.",
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-09/live-qa.json",
+    "passed": true
+  }
+}

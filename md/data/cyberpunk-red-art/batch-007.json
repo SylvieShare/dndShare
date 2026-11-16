@@ -1,0 +1,471 @@
+{
+  "batch": 7,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-07",
+  "sourceAudit": "Eleven existing dictionary covers inspected and redrawn in the user-approved mature style, original narrative/prop identity retained; icon slots unchanged.",
+  "assets": [
+    {
+      "key": "stat-int-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 385,
+        "code": "INT",
+        "name": "Интеллект"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49607,
+      "status": "published",
+      "prompt": "Use case: style-transfer. IMAGE 1 is the edit target: redraw its complete narrative scene for a Cyberpunk RED character-stat cover in the mature, detailed CEL-SHADED visual style of IMAGE 2. IMAGE 2 is rendering STYLE ONLY, not the subject. Preserve image 1's people, genders, clothing palette, recognizable props, narrative action, facial emotion and interaction. Upgrade anatomy to natural mature adult proportions, nuanced facial structure and plausible hands, clothing seams and material construction, detailed functional cybernetics. Fine variable ink lines, broad painted cel-shadow planes, reflected light and deeper cinematic lighting. Detailed main action with softer atmospheric urban background, worn practical near-future 2045 equipment; no toy-like shapes, no doll faces, no heavy uniform outline, no photorealism, glossy 3D, gritty texture noise, text, logos, watermark or UI. Keep faces, hands and key tools fully within frame. 5:2 panoramic composition, opaque, full-bleed scene. Preserve the meaning of this stat: Интеллект. Do not add weapons or unrelated objects. No blood or graphic injuries. The original scene concept to retain: intelligence through a concrete moment of deduction: a mature woman technician in her late thirties, warm brown skin, short dark hair and a muted teal utility jacket, studies a brain-shaped silver neural processor held safely in a work cradle. Her expression is thoughtful recognition as she traces a single branching connection with a plain stylus. One hand uses the stylus and the other steadies the cradle; anatomically plausible fingers. The recognizable silver twin-lobed processor and cyan channels echo image 1, but are life-sized hardware rather than a giant symbol. A softly simplified repair lab and slate city window complete the panorama, one warm work light, restrained cyan accents. No actual diagram labels or instructions.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-02/final/stat-int-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/stat-int-cover-v2.png",
+      "final": "final/stat-int-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-04032537-dcb3-4950-a879-7949b1444b1b.png",
+      "originalSha256": "fd97db5a652ffab803377ab612240b805645168c41ed0e66c726b7545723e4e7",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "6e472e143f2bd6782536c1ceb457b3c26ac7dee87d73bcdb628becd40b2191a4",
+      "bytes": 177060,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All final panoramas inspected. Mature faces, coherent anatomy/hand gestures, retained stat narrative and palette, no edge crop of faces or key tools. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49649,
+        "objectKey": "system-item-media/v1/suggests/34/385/cover/6e472e143f2bd6782536c1ceb457b3c26ac7dee87d73bcdb628becd40b2191a4.webp",
+        "fileSize": 177060
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/385/cover/6e472e143f2bd6782536c1ceb457b3c26ac7dee87d73bcdb628becd40b2191a4.webp"
+    },
+    {
+      "key": "stat-ref-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 386,
+        "code": "REF",
+        "name": "Реакция"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49609,
+      "status": "published",
+      "prompt": "Use case: style-transfer. IMAGE 1 is the edit target: redraw its complete narrative scene for a Cyberpunk RED character-stat cover in the mature, detailed CEL-SHADED visual style of IMAGE 2. IMAGE 2 is rendering STYLE ONLY, not the subject. Preserve image 1's people, genders, clothing palette, recognizable props, narrative action, facial emotion and interaction. Upgrade anatomy to natural mature adult proportions, nuanced facial structure and plausible hands, clothing seams and material construction, detailed functional cybernetics. Fine variable ink lines, broad painted cel-shadow planes, reflected light and deeper cinematic lighting. Detailed main action with softer atmospheric urban background, worn practical near-future 2045 equipment; no toy-like shapes, no doll faces, no heavy uniform outline, no photorealism, glossy 3D, gritty texture noise, text, logos, watermark or UI. Keep faces, hands and key tools fully within frame. 5:2 panoramic composition, opaque, full-bleed scene. Preserve the meaning of this stat: Реакция. Do not add weapons or unrelated objects. No blood or graphic injuries. The original scene concept to retain: rapid reaction: an adult man around forty, short dark hair and subtle stubble, wearing a charcoal armored street jacket with a restrained scarlet shoulder panel, snaps his attention toward a sudden moving training target in a deserted industrial practice bay. His single amber cybernetic eye and subtle silver orbital housing echo the optical sensor in image 1 without a giant external fin. Dynamic three-quarter torso pose, alert focused face, both hands visible in a plausible ready stance. No bullets hitting anyone and no wounds. Broad diagonal architecture and a single warm warning light convey the instant of reaction; a softer teal/navy background and a restrained amber focal accent.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-02/final/stat-ref-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/stat-ref-cover-v2.png",
+      "final": "final/stat-ref-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-dac9dd51-282d-45ad-b726-e8005e31f9fe.png",
+      "originalSha256": "8733a9f3fc42143d957c5236080ce330e47ff2f8d0246cb7d9ae2772b89a3717",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "ff1111903c0e12c453350dd0588936ed05171ed5c78864e98b841c791c2a5966",
+      "bytes": 161108,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All final panoramas inspected. Mature faces, coherent anatomy/hand gestures, retained stat narrative and palette, no edge crop of faces or key tools. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49650,
+        "objectKey": "system-item-media/v1/suggests/34/386/cover/ff1111903c0e12c453350dd0588936ed05171ed5c78864e98b841c791c2a5966.webp",
+        "fileSize": 161108
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/386/cover/ff1111903c0e12c453350dd0588936ed05171ed5c78864e98b841c791c2a5966.webp"
+    },
+    {
+      "key": "stat-dex-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 387,
+        "code": "DEX",
+        "name": "Ловкость"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49611,
+      "status": "published",
+      "prompt": "Use case: style-transfer. IMAGE 1 is the edit target: redraw its complete narrative scene for a Cyberpunk RED character-stat cover in the mature, detailed CEL-SHADED visual style of IMAGE 2. IMAGE 2 is rendering STYLE ONLY, not the subject. Preserve image 1's people, genders, clothing palette, recognizable props, narrative action, facial emotion and interaction. Upgrade anatomy to natural mature adult proportions, nuanced facial structure and plausible hands, clothing seams and material construction, detailed functional cybernetics. Fine variable ink lines, broad painted cel-shadow planes, reflected light and deeper cinematic lighting. Detailed main action with softer atmospheric urban background, worn practical near-future 2045 equipment; no toy-like shapes, no doll faces, no heavy uniform outline, no photorealism, glossy 3D, gritty texture noise, text, logos, watermark or UI. Keep faces, hands and key tools fully within frame. 5:2 panoramic composition, opaque, full-bleed scene. Preserve the meaning of this stat: Ловкость. Do not add weapons or unrelated objects. No blood or graphic injuries. The original scene concept to retain: fine dexterity: an adult street courier with an athletic ordinary build, medium-brown skin, short silver hair and a muted violet jacket calmly balances a small broad titanium access loop between the thumb and index finger of a pale-gray articulated cyberhand, closely matching the five-digit hand and teal knuckle panel in image 1. The hand and loop are clearly visible near the center, not cropped or hidden; the courier's concentrated half-smile is visible behind them. A softly simplified night-market service entrance and suspended cables provide cyberpunk context, with muted plum/cyan lighting. One person only. No giant ring, no extra fingers, no readable signs.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-02/final/stat-dex-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/stat-dex-cover-v2.png",
+      "final": "final/stat-dex-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2a095615-3c6b-47cb-8237-930786c5b2d2.png",
+      "originalSha256": "4c4cae4e6bd2ea7b77112919787e0055470c601b0700d9e839006941bda933a2",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "d9b03758811e53647c20f212828a01fe885bc939e182104313ef9961c8f44d1e",
+      "bytes": 142494,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All final panoramas inspected. Mature faces, coherent anatomy/hand gestures, retained stat narrative and palette, no edge crop of faces or key tools. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49651,
+        "objectKey": "system-item-media/v1/suggests/34/387/cover/d9b03758811e53647c20f212828a01fe885bc939e182104313ef9961c8f44d1e.webp",
+        "fileSize": 142494
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/387/cover/d9b03758811e53647c20f212828a01fe885bc939e182104313ef9961c8f44d1e.webp"
+    },
+    {
+      "key": "stat-tech-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 388,
+        "code": "TECH",
+        "name": "Техника"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49613,
+      "status": "published",
+      "prompt": "Use case: style-transfer. IMAGE 1 is the edit target: redraw its complete narrative scene for a Cyberpunk RED character-stat cover in the mature, detailed CEL-SHADED visual style of IMAGE 2. IMAGE 2 is rendering STYLE ONLY, not the subject. Preserve image 1's people, genders, clothing palette, recognizable props, narrative action, facial emotion and interaction. Upgrade anatomy to natural mature adult proportions, nuanced facial structure and plausible hands, clothing seams and material construction, detailed functional cybernetics. Fine variable ink lines, broad painted cel-shadow planes, reflected light and deeper cinematic lighting. Detailed main action with softer atmospheric urban background, worn practical near-future 2045 equipment; no toy-like shapes, no doll faces, no heavy uniform outline, no photorealism, glossy 3D, gritty texture noise, text, logos, watermark or UI. Keep faces, hands and key tools fully within frame. 5:2 panoramic composition, opaque, full-bleed scene. Preserve the meaning of this stat: Техника. Do not add weapons or unrelated objects. No blood or graphic injuries. The original scene concept to retain: technical expertise: an experienced adult technician in his fifties, salt-and-pepper beard, believable weathered face and mustard work jacket, uses the same broad steel and yellow powered adjustable wrench from image 1 to repair the hinge motor of an open urban transit access panel. The wrench's copper power connector and chunky jaw remain recognizable. Credible hands, weight and grip, a patient focused expression rather than a grimace. One technician, one active tool, a few broad cable shapes in the panel, no blueprint or wiring instructions. A softer industrial maintenance bay, dark slate metal and warm amber task light complete the panorama.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-02/final/stat-tech-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/stat-tech-cover-v2.png",
+      "final": "final/stat-tech-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-45fef55b-08b3-476f-be83-707b8fdfb7bf.png",
+      "originalSha256": "3b068e535a5b9037af9ac4892680e4a86e3dd6c2f3d78940125a938707b96e8a",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "ac26c48d0755a23cfc816da6959f6a5a1e0d885f6a97e3c68ef2e5e17fef89a9",
+      "bytes": 199142,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All final panoramas inspected. Mature faces, coherent anatomy/hand gestures, retained stat narrative and palette, no edge crop of faces or key tools. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49652,
+        "objectKey": "system-item-media/v1/suggests/34/388/cover/ac26c48d0755a23cfc816da6959f6a5a1e0d885f6a97e3c68ef2e5e17fef89a9.webp",
+        "fileSize": 199142
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/388/cover/ac26c48d0755a23cfc816da6959f6a5a1e0d885f6a97e3c68ef2e5e17fef89a9.webp"
+    },
+    {
+      "key": "stat-cool-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 389,
+        "code": "COOL",
+        "name": "Хладнокровие"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49615,
+      "status": "published",
+      "prompt": "Use case: style-transfer. IMAGE 1 is the edit target: redraw its complete narrative scene for a Cyberpunk RED character-stat cover in the mature, detailed CEL-SHADED visual style of IMAGE 2. IMAGE 2 is rendering STYLE ONLY, not the subject. Preserve image 1's people, genders, clothing palette, recognizable props, narrative action, facial emotion and interaction. Upgrade anatomy to natural mature adult proportions, nuanced facial structure and plausible hands, clothing seams and material construction, detailed functional cybernetics. Fine variable ink lines, broad painted cel-shadow planes, reflected light and deeper cinematic lighting. Detailed main action with softer atmospheric urban background, worn practical near-future 2045 equipment; no toy-like shapes, no doll faces, no heavy uniform outline, no photorealism, glossy 3D, gritty texture noise, text, logos, watermark or UI. Keep faces, hands and key tools fully within frame. 5:2 panoramic composition, opaque, full-bleed scene. Preserve the meaning of this stat: Хладнокровие. Do not add weapons or unrelated objects. No blood or graphic injuries. The original scene concept to retain: ",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-02/final/stat-cool-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/stat-cool-cover-v2.png",
+      "final": "final/stat-cool-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-6a5a168a-5835-4969-ae49-d63961f87226.png",
+      "originalSha256": "4bd1036eea839690d36d84c321a975328540c6298682a7f61e2c04842ceb15e3",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "648b60b651161d5723cc56cd3dc586fa0202f3627359166ea87c8407034aadb9",
+      "bytes": 187026,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All final panoramas inspected. Mature faces, coherent anatomy/hand gestures, retained stat narrative and palette, no edge crop of faces or key tools. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49653,
+        "objectKey": "system-item-media/v1/suggests/34/389/cover/648b60b651161d5723cc56cd3dc586fa0202f3627359166ea87c8407034aadb9.webp",
+        "fileSize": 187026
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/389/cover/648b60b651161d5723cc56cd3dc586fa0202f3627359166ea87c8407034aadb9.webp"
+    },
+    {
+      "key": "stat-will-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 390,
+        "code": "WILL",
+        "name": "Воля"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49617,
+      "status": "published",
+      "prompt": "Use case: style-transfer. IMAGE 1 is the edit target: redraw its complete narrative scene for a Cyberpunk RED character-stat cover in the mature, detailed CEL-SHADED visual style of IMAGE 2. IMAGE 2 is rendering STYLE ONLY, not the subject. Preserve image 1's people, genders, clothing palette, recognizable props, narrative action, facial emotion and interaction. Upgrade anatomy to natural mature adult proportions, nuanced facial structure and plausible hands, clothing seams and material construction, detailed functional cybernetics. Fine variable ink lines, broad painted cel-shadow planes, reflected light and deeper cinematic lighting. Detailed main action with softer atmospheric urban background, worn practical near-future 2045 equipment; no toy-like shapes, no doll faces, no heavy uniform outline, no photorealism, glossy 3D, gritty texture noise, text, logos, watermark or UI. Keep faces, hands and key tools fully within frame. 5:2 panoramic composition, opaque, full-bleed scene. Preserve the meaning of this stat: Воля. Do not add weapons or unrelated objects. No blood or graphic injuries. The original scene concept to retain: willpower under pressure: a woman in her forties with tightly braided dark hair and a charcoal street coat remains steady behind a damaged transparent security barrier in an industrial corridor. A broad warning lamp casts a controlled amber accent; she does not panic. Her ivory-plated cybernetic fist with deep crimson wrist cuff, matching image 1, is clenched near her waist, while her natural hand is held open in a calm stop gesture. Natural weight and plausible fingers. Determined composed expression. No active assault or injury, no attacker in the foreground; pressure is conveyed by the damaged barrier, dim corridor and her resolve.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-02/final/stat-will-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/stat-will-cover-v2.png",
+      "final": "final/stat-will-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-34001aed-4c99-499b-ac63-6ce43ec62b1f.png",
+      "originalSha256": "5e31e1942284ab52b4a21b297700b9051630334e2ea2b8803a9dc39514836a5a",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "1171aacb35d9da8ec344035d943435345403294a3fd4b83c21ca3978ec5c2afd",
+      "bytes": 179216,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All final panoramas inspected. Mature faces, coherent anatomy/hand gestures, retained stat narrative and palette, no edge crop of faces or key tools. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49654,
+        "objectKey": "system-item-media/v1/suggests/34/390/cover/1171aacb35d9da8ec344035d943435345403294a3fd4b83c21ca3978ec5c2afd.webp",
+        "fileSize": 179216
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/390/cover/1171aacb35d9da8ec344035d943435345403294a3fd4b83c21ca3978ec5c2afd.webp"
+    },
+    {
+      "key": "stat-luck-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 391,
+        "code": "LUCK",
+        "name": "Удача"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49619,
+      "status": "published",
+      "prompt": "Use case: style-transfer. IMAGE 1 is the edit target: redraw its complete narrative scene for a Cyberpunk RED character-stat cover in the mature, detailed CEL-SHADED visual style of IMAGE 2. IMAGE 2 is rendering STYLE ONLY, not the subject. Preserve image 1's people, genders, clothing palette, recognizable props, narrative action, facial emotion and interaction. Upgrade anatomy to natural mature adult proportions, nuanced facial structure and plausible hands, clothing seams and material construction, detailed functional cybernetics. Fine variable ink lines, broad painted cel-shadow planes, reflected light and deeper cinematic lighting. Detailed main action with softer atmospheric urban background, worn practical near-future 2045 equipment; no toy-like shapes, no doll faces, no heavy uniform outline, no photorealism, glossy 3D, gritty texture noise, text, logos, watermark or UI. Keep faces, hands and key tools fully within frame. 5:2 panoramic composition, opaque, full-bleed scene. Preserve the meaning of this stat: Удача. Do not add weapons or unrelated objects. No blood or graphic injuries. The original scene concept to retain: an improbable lucky escape: an adult street courier around thirty, dark brown skin and close-cropped curls, pauses with a surprised relieved smile while a heavy loose hanging freight sign has fallen safely just behind him. No injuries or collision. In his foreground hand is a palm-sized emerald octagonal casino token with the bold four-leaf clover motif and titanium edge from image 1. Keep the whole token and hand clearly visible and natural in scale. A softly simplified night-market alley with industrial stalls and distant colored windows extends across the scene; muted green, slate and warm ivory accents. No readable signage, no debris cloud, one main person only.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-02/final/stat-luck-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/stat-luck-cover-v2.png",
+      "final": "final/stat-luck-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-2bc85644-2d46-4c30-b188-bf45a9e09080.png",
+      "originalSha256": "6ac08e19d339a371a52a60cbab0a55558b7d369580925c66ed882225464b6181",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "1bad1643b0b75623982373a38ba58fdb80e52c20c853f356f8f7824f5aec9c81",
+      "bytes": 199700,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All final panoramas inspected. Mature faces, coherent anatomy/hand gestures, retained stat narrative and palette, no edge crop of faces or key tools. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49655,
+        "objectKey": "system-item-media/v1/suggests/34/391/cover/1bad1643b0b75623982373a38ba58fdb80e52c20c853f356f8f7824f5aec9c81.webp",
+        "fileSize": 199700
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/391/cover/1bad1643b0b75623982373a38ba58fdb80e52c20c853f356f8f7824f5aec9c81.webp"
+    },
+    {
+      "key": "stat-move-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 392,
+        "code": "MOVE",
+        "name": "Движение"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49621,
+      "status": "published",
+      "prompt": "Use case: style-transfer. IMAGE 1 is the edit target: redraw its complete narrative scene for a Cyberpunk RED character-stat cover in the mature, detailed CEL-SHADED visual style of IMAGE 2. IMAGE 2 is rendering STYLE ONLY, not the subject. Preserve image 1's people, genders, clothing palette, recognizable props, narrative action, facial emotion and interaction. Upgrade anatomy to natural mature adult proportions, nuanced facial structure and plausible hands, clothing seams and material construction, detailed functional cybernetics. Fine variable ink lines, broad painted cel-shadow planes, reflected light and deeper cinematic lighting. Detailed main action with softer atmospheric urban background, worn practical near-future 2045 equipment; no toy-like shapes, no doll faces, no heavy uniform outline, no photorealism, glossy 3D, gritty texture noise, text, logos, watermark or UI. Keep faces, hands and key tools fully within frame. 5:2 panoramic composition, opaque, full-bleed scene. Preserve the meaning of this stat: Движение. Do not add weapons or unrelated objects. No blood or graphic injuries. The original scene concept to retain: movement through the city: one athletic adult courier in a slate jacket and practical cargo trousers sprints across an elevated transit platform, full person visible, including both feet, safely within the central part of the frame. The forward shoe clearly echoes image 1: teal upper, pale toe guard, chunky charcoal sole and amber mechanical heel support. Credible running anatomy and balance, no exaggerated stretching. The face is focused and alert. Broad architectural diagonals and a softened city skyline establish momentum without comic speed lines. Cool teal ambient light with a restrained warm edge highlight, no crowd or vehicle collision.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-02/final/stat-move-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/stat-move-cover-v2.png",
+      "final": "final/stat-move-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-7def3dd8-3ab8-4720-85cf-41a7387d5fda.png",
+      "originalSha256": "5f57312aab37b3ad1b429fa62563152abbb11e05f446c7301b775e8a3c5dd60d",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "d25d2c27e8d5a01bb586fd41a0882f37ad2e2de0b217ba48e7ffb13c5d09e79c",
+      "bytes": 186270,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All final panoramas inspected. Mature faces, coherent anatomy/hand gestures, retained stat narrative and palette, no edge crop of faces or key tools. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49656,
+        "objectKey": "system-item-media/v1/suggests/34/392/cover/d25d2c27e8d5a01bb586fd41a0882f37ad2e2de0b217ba48e7ffb13c5d09e79c.webp",
+        "fileSize": 186270
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/392/cover/d25d2c27e8d5a01bb586fd41a0882f37ad2e2de0b217ba48e7ffb13c5d09e79c.webp"
+    },
+    {
+      "key": "stat-body-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 393,
+        "code": "BODY",
+        "name": "Телосложение"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49623,
+      "status": "published",
+      "prompt": "Use case: style-transfer. IMAGE 1 is the edit target: redraw its complete narrative scene for a Cyberpunk RED character-stat cover in the mature, detailed CEL-SHADED visual style of IMAGE 2. IMAGE 2 is rendering STYLE ONLY, not the subject. Preserve image 1's people, genders, clothing palette, recognizable props, narrative action, facial emotion and interaction. Upgrade anatomy to natural mature adult proportions, nuanced facial structure and plausible hands, clothing seams and material construction, detailed functional cybernetics. Fine variable ink lines, broad painted cel-shadow planes, reflected light and deeper cinematic lighting. Detailed main action with softer atmospheric urban background, worn practical near-future 2045 equipment; no toy-like shapes, no doll faces, no heavy uniform outline, no photorealism, glossy 3D, gritty texture noise, text, logos, watermark or UI. Keep faces, hands and key tools fully within frame. 5:2 panoramic composition, opaque, full-bleed scene. Preserve the meaning of this stat: Телосложение. Do not add weapons or unrelated objects. No blood or graphic injuries. The original scene concept to retain: physical strength: a sturdy athletic adult woman with short dark hair and a graphite work vest braces her feet and lifts a jammed heavy metal security shutter with both hands so one adult teammate can pass safely behind. One copper-orange reinforced cybernetic arm has the ivory forearm guard, dark round elbow joint and broad ochre tendon detail of image 1. Human adult proportions, convincing weight and leverage, not exaggerated bodybuilding. Her face shows effort without a caricatured grimace. An industrial loading bay, subdued slate containers and a warm work light fill the background. Both hands and the shutter edge are clear; no injury or crushed body parts.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-02/final/stat-body-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/stat-body-cover-v2.png",
+      "final": "final/stat-body-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9552432f-f174-4299-a688-61ca68d1d2c2.png",
+      "originalSha256": "d64f980a2686fbb4ea6c0ea3bebff777e85f04030db67d4d3b90c55d12b2e918",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "5332be5cdb8dc919b32c017cd8ff9e8b07a130ea38506cc17f357f3e3188d564",
+      "bytes": 196982,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All final panoramas inspected. Mature faces, coherent anatomy/hand gestures, retained stat narrative and palette, no edge crop of faces or key tools. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49657,
+        "objectKey": "system-item-media/v1/suggests/34/393/cover/5332be5cdb8dc919b32c017cd8ff9e8b07a130ea38506cc17f357f3e3188d564.webp",
+        "fileSize": 196982
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/393/cover/5332be5cdb8dc919b32c017cd8ff9e8b07a130ea38506cc17f357f3e3188d564.webp"
+    },
+    {
+      "key": "stat-emp-cover",
+      "target": {
+        "kind": "suggest",
+        "typeId": 34,
+        "id": 394,
+        "code": "EMP",
+        "name": "Эмпатия"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49625,
+      "status": "published",
+      "prompt": "Use case: style-transfer. IMAGE 1 is the edit target: redraw its complete narrative scene for a Cyberpunk RED character-stat cover in the mature, detailed CEL-SHADED visual style of IMAGE 2. IMAGE 2 is rendering STYLE ONLY, not the subject. Preserve image 1's people, genders, clothing palette, recognizable props, narrative action, facial emotion and interaction. Upgrade anatomy to natural mature adult proportions, nuanced facial structure and plausible hands, clothing seams and material construction, detailed functional cybernetics. Fine variable ink lines, broad painted cel-shadow planes, reflected light and deeper cinematic lighting. Detailed main action with softer atmospheric urban background, worn practical near-future 2045 equipment; no toy-like shapes, no doll faces, no heavy uniform outline, no photorealism, glossy 3D, gritty texture noise, text, logos, watermark or UI. Keep faces, hands and key tools fully within frame. 5:2 panoramic composition, opaque, full-bleed scene. Preserve the meaning of this stat: Эмпатия. Do not add weapons or unrelated objects. No blood or graphic injuries. The original scene concept to retain: empathy and human connection: a mature gray-haired woman medtech in a practical muted coral-and-slate jacket listens attentively to a tired adult man seated in a small street clinic after a difficult day. They face each other naturally; she gently rests one hand over his hand on the table, with credible anatomy and no extra fingers. Her expression is warm and understanding, his shoulders begin to relax. The small heart-shaped silver/coral neural-link module with two copper contacts from image 1 rests between them as ordinary biofeedback equipment, not a giant floating symbol. Soft warm task light, simplified cool cyberpunk clinic equipment and a quiet city window. Both people fully clothed, no wounds, no gore, no readable screens.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-02/final/stat-emp-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/stat-emp-cover-v2.png",
+      "final": "final/stat-emp-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-cb4bc168-7212-4da8-89b5-6cf7852ccb8c.png",
+      "originalSha256": "9220d89dd73a9acdfe85f44bda53eaacf1cb7ebc001550cb084929031d46c86a",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "2555a56ebbb066d4eb74e804bbe67086e3ebf72e75158f741eb21cc266dbb18b",
+      "bytes": 188726,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All final panoramas inspected. Mature faces, coherent anatomy/hand gestures, retained stat narrative and palette, no edge crop of faces or key tools. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49658,
+        "objectKey": "system-item-media/v1/suggests/34/394/cover/2555a56ebbb066d4eb74e804bbe67086e3ebf72e75158f741eb21cc266dbb18b.webp",
+        "fileSize": 188726
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/394/cover/2555a56ebbb066d4eb74e804bbe67086e3ebf72e75158f741eb21cc266dbb18b.webp"
+    },
+    {
+      "key": "stats-type-cover",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 34,
+        "name": "Характеристики"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49627,
+      "status": "published",
+      "prompt": "Use case: style-transfer. IMAGE 1 is the edit target: redraw its complete narrative scene for a Cyberpunk RED character-stat cover in the mature, detailed CEL-SHADED visual style of IMAGE 2. IMAGE 2 is rendering STYLE ONLY, not the subject. Preserve image 1's people, genders, clothing palette, recognizable props, narrative action, facial emotion and interaction. Upgrade anatomy to natural mature adult proportions, nuanced facial structure and plausible hands, clothing seams and material construction, detailed functional cybernetics. Fine variable ink lines, broad painted cel-shadow planes, reflected light and deeper cinematic lighting. Detailed main action with softer atmospheric urban background, worn practical near-future 2045 equipment; no toy-like shapes, no doll faces, no heavy uniform outline, no photorealism, glossy 3D, gritty texture noise, text, logos, watermark or UI. Keep faces, hands and key tools fully within frame. 5:2 panoramic composition, opaque, full-bleed scene. Preserve the meaning of this stat: Характеристики. Do not add weapons or unrelated objects. No blood or graphic injuries. The original scene concept to retain: ",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-02/final/stats-type-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/stats-type-cover-v2.png",
+      "final": "final/stats-type-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-694b2217-b4b1-4986-af29-a85308719220.png",
+      "originalSha256": "0e70dad08ebc0af08cae58e1933e0b2c3379d1fb823d3650e335d29720699e72",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "7268978ba18f4b70a96329ffb079465f1533839f0c77646965d8195497b0b613",
+      "bytes": 191432,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "passed": true,
+        "reviewer": "agent",
+        "note": "All final panoramas inspected. Mature faces, coherent anatomy/hand gestures, retained stat narrative and palette, no edge crop of faces or key tools. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49659,
+        "objectKey": "system-item-media/v1/suggest-types/34/cover/7268978ba18f4b70a96329ffb079465f1533839f0c77646965d8195497b0b613.webp",
+        "fileSize": 191432
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/34/cover/7268978ba18f4b70a96329ffb079465f1533839f0c77646965d8195497b0b613.webp"
+    }
+  ],
+  "liveReview": {
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "scenarios": 30,
+    "checkedAt": "2026-11-16T14:44:09.828Z",
+    "note": "Actual public API, all expected covers loaded at three widths without JS errors or horizontal overflow.",
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-07/live-qa.json",
+    "passed": true
+  }
+}

@@ -1,0 +1,222 @@
+{
+  "batch": 12,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-12",
+  "sourceAudit": "Live dictionary type names/empty media slots and member values inspected. New section covers in approved mature cel shading; no icon changes.",
+  "assets": [
+    {
+      "key": "dict-calibers-cover",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 43,
+        "name": "Калибры и совместимость"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Mature detailed cel-shaded Cyberpunk RED dictionary cover, 5:2 panorama. A logistics clerk's organized inventory counter with three size groups of sealed graphite storage boxes, each group identified only by a small colored latch: amber, teal, burgundy. A single capped battery cell sits beside a matching padded socket in a storage tray. Convey size compatibility and organized supplies through physical proportions, no diagrams or labels. No visible ammunition, weapons, assembly, technical measurements or manipulation. Fine varied ink lines, broad painted shadows, believable metal/polymer/fabric detail, soft urban depot background, adult serious RPG art, no text, logos, watermark, UI, photorealism or glossy 3D.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-calibers-cover-v1.png",
+      "final": "final/dict-calibers-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-4424f803-2dd1-455a-b72c-7f8be8e8d56c.png",
+      "rejectedAttempt": {
+        "prompt": "Use case: stylized-concept. A distinct mature detailed Cyberpunk RED 2045 RPG handbook cover, WIDE 5:2 panorama. Sophisticated hand-drawn cel shading with fine variable ink lines, broad angular light and shadow planes, selective reflected light, realistically constructed technology and natural adult anatomy. Rich material-specific detail at the focal action, carefully drawn plausible hands, softer simpler less contrasty background with atmospheric perspective. Original practical retrofuturism and lived-in city, repaired gear but not dirt everywhere. Serious nuanced adult faces, readable lighting and clear safe framing of face/hands/tools. No oversized icon object, no cartoonish big heads, no photorealism or glossy 3D, no text, logos, brands, labels, watermark, borders or UI overlay; in-universe screens may only show nonverbal abstract shapes. A technician's hands compare two different-sized inert brass cartridges against a practical metal sorting gauge on a gunshop service mat, with separated trays of shotgun shells and a compact battery cartridge behind. Detailed machined surfaces, no readable gauges or numbers, no cutaway or assembly instructions. Warm local worklight, cool industrial background.",
+        "error": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 0c9b9384-ff2d-4c90-8bd6-a94972cfe101. safety_violations=[violence].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"violence\\\"\\n      ]\\n    }\\n  }\\n}\")",
+        "resolution": "Changed scene to closed equipment cases and organized storage; no visible weapons or ammunition."
+      },
+      "originalSha256": "4ccd5aed1e4b297f0b52d46af5f03c2d054c334c740d0de411d931c7d512264f",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "1c2d1bb30c5842673a67cf04db1c0c999d8dbb763a64579296e78f82f3c6b328",
+      "bytes": 268626,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final compositions inspected. Two rejected technical-inspection scenes replaced with benign closed-case/storage illustrations. Fine cel shading, mature figures and clear materials; no icon changes.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49689,
+        "objectKey": "system-item-media/v1/suggest-types/43/cover/1c2d1bb30c5842673a67cf04db1c0c999d8dbb763a64579296e78f82f3c6b328.webp",
+        "fileSize": 268626
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/43/cover/1c2d1bb30c5842673a67cf04db1c0c999d8dbb763a64579296e78f82f3c6b328.webp"
+    },
+    {
+      "key": "dict-cyberware-categories-cover",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 30,
+        "name": "Категории киберимплантов"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. A distinct mature detailed Cyberpunk RED 2045 RPG handbook cover, WIDE 5:2 panorama. Sophisticated hand-drawn cel shading with fine variable ink lines, broad angular light and shadow planes, selective reflected light, realistically constructed technology and natural adult anatomy. Rich material-specific detail at the focal action, carefully drawn plausible hands, softer simpler less contrasty background with atmospheric perspective. Original practical retrofuturism and lived-in city, repaired gear but not dirt everywhere. Serious nuanced adult faces, readable lighting and clear safe framing of face/hands/tools. No oversized icon object, no cartoonish big heads, no photorealism or glossy 3D, no text, logos, brands, labels, watermark, borders or UI overlay; in-universe screens may only show nonverbal abstract shapes. A clean ripperdoc display with three distinct life-size components on separate padded mounts: an articulated ivory cyberhand, a small amber cyberoptic and a compact audio implant. A mature clinic technician in the back evaluates the arrangement, focus on the engineered implants. Cyan clinic lighting, restrained red accent, no exposed tissue or surgery.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-cyberware-categories-cover-v1.png",
+      "final": "final/dict-cyberware-categories-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-cc1c4908-c9de-4aaf-91b6-b55950d60d1a.png",
+      "originalSha256": "f25c330f5c3ec1582915681cf12978057dd8a81d7fdb94ef98e10978c0cce8b7",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "e2652b46f0b51f03d20357c3cfcf4f83f557f6c27e77a9026126be2873639683",
+      "bytes": 214368,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final compositions inspected. Two rejected technical-inspection scenes replaced with benign closed-case/storage illustrations. Fine cel shading, mature figures and clear materials; no icon changes.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49690,
+        "objectKey": "system-item-media/v1/suggest-types/30/cover/e2652b46f0b51f03d20357c3cfcf4f83f557f6c27e77a9026126be2873639683.webp",
+        "fileSize": 214368
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/30/cover/e2652b46f0b51f03d20357c3cfcf4f83f557f6c27e77a9026126be2873639683.webp"
+    },
+    {
+      "key": "dict-price-tiers-cover",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 40,
+        "name": "Категории цен"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. A distinct mature detailed Cyberpunk RED 2045 RPG handbook cover, WIDE 5:2 panorama. Sophisticated hand-drawn cel shading with fine variable ink lines, broad angular light and shadow planes, selective reflected light, realistically constructed technology and natural adult anatomy. Rich material-specific detail at the focal action, carefully drawn plausible hands, softer simpler less contrasty background with atmospheric perspective. Original practical retrofuturism and lived-in city, repaired gear but not dirt everywhere. Serious nuanced adult faces, readable lighting and clear safe framing of face/hands/tools. No oversized icon object, no cartoonish big heads, no photorealism or glossy 3D, no text, logos, brands, labels, watermark, borders or UI overlay; in-universe screens may only show nonverbal abstract shapes. A fixer and a market dealer examine three quality tiers of practical pocket radios arranged on cloth: a repaired scuffed model, a sound ordinary unit, and a refined ceramic premium unit. Mature faces, restrained bargaining gesture, distinct finish and construction rather than price labels. Street night market, warm local light and cool towers beyond.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-price-tiers-cover-v1.png",
+      "final": "final/dict-price-tiers-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-8fa6e43e-21bf-43a2-8092-4469a8ed52ef.png",
+      "originalSha256": "88b280b6bd1bacf630068c99608079e02fd805b2374bb1783c3d3e470d7f0680",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "8c3d139c21b17bebbdb6c03aebacffba4cc353909fd564e3b8a002d52f84f0fb",
+      "bytes": 297074,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final compositions inspected. Two rejected technical-inspection scenes replaced with benign closed-case/storage illustrations. Fine cel shading, mature figures and clear materials; no icon changes.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49691,
+        "objectKey": "system-item-media/v1/suggest-types/40/cover/8c3d139c21b17bebbdb6c03aebacffba4cc353909fd564e3b8a002d52f84f0fb.webp",
+        "fileSize": 297074
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/40/cover/8c3d139c21b17bebbdb6c03aebacffba4cc353909fd564e3b8a002d52f84f0fb.webp"
+    },
+    {
+      "key": "dict-weapon-quality-cover",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 39,
+        "name": "Качество оружия"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. Mature detailed cel-shaded Cyberpunk RED catalogue panorama, 5:2. Three CLOSED protective equipment carrying cases on a shop counter demonstrate different quality: one repaired cloth case with mismatched stitching, one ordinary well-made graphite case, and one refined ivory composite case with precision hinges and neatly fitted handle. No contents visible, no weapon, ammunition or manipulation. A mature shopkeeper behind the counter, natural adult face and hands resting on the countertop, warm display light with cool city outside. Detailed materials, fine variable ink lines, broad cel-shadow planes, elegant serious illustrated RPG art. No labels, numbers, symbols, logos, watermark, borders or UI, no photo or glossy 3D.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-weapon-quality-cover-v1.png",
+      "final": "final/dict-weapon-quality-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-88940282-dc71-420e-a9e3-723bb1f15d01.png",
+      "rejectedAttempt": {
+        "prompt": "Use case: stylized-concept. A distinct mature detailed Cyberpunk RED 2045 RPG handbook cover, WIDE 5:2 panorama. Sophisticated hand-drawn cel shading with fine variable ink lines, broad angular light and shadow planes, selective reflected light, realistically constructed technology and natural adult anatomy. Rich material-specific detail at the focal action, carefully drawn plausible hands, softer simpler less contrasty background with atmospheric perspective. Original practical retrofuturism and lived-in city, repaired gear but not dirt everywhere. Serious nuanced adult faces, readable lighting and clear safe framing of face/hands/tools. No oversized icon object, no cartoonish big heads, no photorealism or glossy 3D, no text, logos, brands, labels, watermark, borders or UI overlay; in-universe screens may only show nonverbal abstract shapes. A mature gunsmith with inspection goggles examines the external slide fit of a safely unloaded handgun on a padded bench; two other closed complete handguns with clearly different finish quality lie spaced apart. Focus on external workmanship, screws, polished versus worn surfaces; no internal diagram, disassembly steps or readable markings. Ivory light, dark plum shadows.",
+        "error": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID a0568ca8-6c9e-4557-81ac-f730fa8db343. safety_violations=[violence].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"violence\\\"\\n      ]\\n    }\\n  }\\n}\")",
+        "resolution": "Changed scene to closed equipment cases and organized storage; no visible weapons or ammunition."
+      },
+      "originalSha256": "c7911abb27f11d54c53aca06155f2b379edde3a154be3cf4649ce6a1c266256d",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "115f10277fea46af2b2105b35bf3f898306ba83ad3f663eeafcd5c617af7b4aa",
+      "bytes": 273970,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final compositions inspected. Two rejected technical-inspection scenes replaced with benign closed-case/storage illustrations. Fine cel shading, mature figures and clear materials; no icon changes.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49692,
+        "objectKey": "system-item-media/v1/suggest-types/39/cover/115f10277fea46af2b2105b35bf3f898306ba83ad3f663eeafcd5c617af7b4aa.webp",
+        "fileSize": 273970
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/39/cover/115f10277fea46af2b2105b35bf3f898306ba83ad3f663eeafcd5c617af7b4aa.webp"
+    },
+    {
+      "key": "dict-program-classes-cover",
+      "target": {
+        "kind": "suggest_type",
+        "typeId": 44,
+        "name": "Классы программ"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": null,
+      "status": "published",
+      "prompt": "Use case: stylized-concept. A distinct mature detailed Cyberpunk RED 2045 RPG handbook cover, WIDE 5:2 panorama. Sophisticated hand-drawn cel shading with fine variable ink lines, broad angular light and shadow planes, selective reflected light, realistically constructed technology and natural adult anatomy. Rich material-specific detail at the focal action, carefully drawn plausible hands, softer simpler less contrasty background with atmospheric perspective. Original practical retrofuturism and lived-in city, repaired gear but not dirt everywhere. Serious nuanced adult faces, readable lighting and clear safe framing of face/hands/tools. No oversized icon object, no cartoonish big heads, no photorealism or glossy 3D, no text, logos, brands, labels, watermark, borders or UI overlay; in-universe screens may only show nonverbal abstract shapes. Four distinct practical software cartridges seated in a compact cyberdeck rack, each with a different simple nonverbal motif and accent: red angled strike shape, violet paired circuitry shape, blue barrier shape and amber rising bars. A netrunner's gloved hand reaches toward one cartridge. Detailed contacts and rack hardware, abstract server background, no floating infographic or readable text.",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/dict-program-classes-cover-v1.png",
+      "final": "final/dict-program-classes-cover.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-83e4115b-d018-4ca7-b2ce-18a26fc64328.png",
+      "originalSha256": "e47d9d47303b90d93641fe72f5d2c9d2df830cf5d876c4176e686fa9cd8e5a35",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "d99731320ebf2473818665d0f047349e1187b2870cb63da7579091198c80e2d7",
+      "bytes": 267070,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "note": "Final compositions inspected. Two rejected technical-inspection scenes replaced with benign closed-case/storage illustrations. Fine cel shading, mature figures and clear materials; no icon changes.",
+        "reviewer": "agent",
+        "passed": true,
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49693,
+        "objectKey": "system-item-media/v1/suggest-types/44/cover/d99731320ebf2473818665d0f047349e1187b2870cb63da7579091198c80e2d7.webp",
+        "fileSize": 267070
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/44/cover/d99731320ebf2473818665d0f047349e1187b2870cb63da7579091198c80e2d7.webp"
+    }
+  ],
+  "liveReview": {
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-12/live-qa.json",
+    "note": "Actual public dictionary type cover and mobile value fallback verified; no JS errors or horizontal overflow.",
+    "scenarios": 15,
+    "checkedAt": "2026-11-16T15:04:11.449Z",
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "passed": true
+  }
+}
