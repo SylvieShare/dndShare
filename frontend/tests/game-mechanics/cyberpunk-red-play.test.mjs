@@ -79,3 +79,11 @@ test('starting cyberweapons expose their installed identity in combat',()=>{
  assert.ok(implant)
  assert.equal(v.inventory.entries.find(e=>e.linkedCyberUid===implant.uid)?.key,implant.key)
 })
+test('injury MOVE has a floor of one before armor can immobilize at zero',()=>{
+ const v=finishRedCreation(draft('solo','complete'),items).values
+ v.stats.MOVE=2
+ v.health.injuries=[{uid:'leg',key:'criticalinjury-broken-leg'}]
+ assert.equal(redEffectiveStats(v,items).MOVE,1)
+ v.inventory.entries.push({uid:'heavy-armor',key:items.find(i=>i.kind==='armor'&&i.facts.penalty===-2)?.key||items.find(i=>i.kind==='armor'&&Math.abs(i.facts.penalty)===2).key,equipped:true})
+ assert.equal(redEffectiveStats(v,items).MOVE,0)
+})

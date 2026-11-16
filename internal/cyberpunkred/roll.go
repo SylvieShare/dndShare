@@ -121,7 +121,11 @@ func Resolve(raw json.RawMessage, r RollRequest, facts map[string]map[string]any
 	}
 	for key := range effective {
 		if key != "BODY" {
-			effective[key] = max(0, effective[key]+bonuses["stat:"+key])
+			minimum := 0
+			if key == "MOVE" && bonuses["stat:"+key] < 0 {
+				minimum = 1 // Injury/NET loss precedes armor, which can immobilize at zero.
+			}
+			effective[key] = max(minimum, effective[key]+bonuses["stat:"+key])
 		}
 	}
 	lace, frame := 0, 0

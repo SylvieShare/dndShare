@@ -72,7 +72,7 @@ export function redEffectiveStats(values, items) {
     bonuses = redBonuses(values, items);
   for (const key of Object.keys(stats))
     if (key !== "BODY")
-      stats[key] = Math.max(0, stats[key] + (bonuses["stat:" + key] || 0));
+      stats[key] = Math.max(key === "MOVE" && bonuses["stat:" + key] < 0 ? 1 : 0, stats[key] + (bonuses["stat:" + key] || 0));
   const lace = installed.filter(
     (e) => e.key === "cyberware-grafted-muscle-and-bone-lace",
   ).length;
