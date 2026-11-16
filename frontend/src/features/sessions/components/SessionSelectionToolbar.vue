@@ -3,7 +3,7 @@
     <div class="roster-selection-heading">
       <ActionButton :variant="selection.selecting ? 'secondary' : 'quiet'" :disabled="!selection.selecting && (!encounter.canManageReserves || !selection.items.length)" :aria-pressed="selection.selecting" @click="selection.toggle">
         <template #icon><Check v-if="selection.selecting" :size="18" /><ListChecks v-else :size="18" /></template>
-        Режим выбора <span class="roster-selection-count" role="status" title="Выбрано в этой вкладке">{{ selection.selected.length }}</span>
+        Режим выбора <span class="roster-selection-count" role="status" title="Всего выбрано">{{ selection.selected.length }}</span>
       </ActionButton>
       <slot />
     </div>

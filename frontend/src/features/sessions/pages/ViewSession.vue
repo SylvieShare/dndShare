@@ -153,8 +153,8 @@
       <SessionWorkspaceSidebar :controller="sidebar">
         <template #reserve-title><EncounterReserveHeader :encounter="encounter" :ui="reserveSidebar" /></template>
         <template #reserve-actions><EncounterReserveHeader :encounter="encounter" :ui="reserveSidebar" actions /></template>
-        <template #panels><EncounterReservePanel :encounter="encounter" :ui="reserveSidebar" :selection="reserveSelection" /></template>
-        <template #selection-header><SessionSelectionToolbar :encounter="encounter" :selection="sidebar.selected.value === 'players' ? playerSelection : reserveSelection" :combat-workspace="playersRailMode === 'combat'" /></template>
+        <template #panels><EncounterReservePanel :encounter="encounter" :ui="reserveSidebar" :selection="sidebarSelection" /></template>
+        <template #selection-header><SessionSelectionToolbar :encounter="encounter" :selection="sidebarSelection" :combat-workspace="playersRailMode === 'combat'" /></template>
         <template #players-actions>
           <SessionPlayersMenu :live-status="liveStatus" :sync-status="syncStatus" :syncing="syncRunning || liveCatchingUp"
                               @join="openJoinOwn" @create="openCreate" @copy-code="copyCode" @copy-link="copyLink" />
@@ -169,14 +169,14 @@
             :is-dm="isDm"
             :kick-pending="kickingIds.has(p.charId)"
             :color-pending="coloringIds.has(p.charId)"
-            :reorder-enabled="isDm && !playerSelection.selecting && participants.length > 1 && !participantOrderSaving"
+            :reorder-enabled="isDm && !sidebarSelection.selecting && participants.length > 1 && !participantOrderSaving"
             :reorder-placeholder="participantSortable.isSource(p)"
             :should-suppress-reorder-click="participantSortable.shouldSuppressClick"
             :combat-mode="playersRailMode === 'combat'"
             :combatant="encounterPlayer(p.charId)"
             :combat-selected="isEncounterPlayerSelected(p.charId)"
             :combat-current="isEncounterPlayerCurrent(p.charId)"
-            :combat-editable="isDm" :selection-mode="playerSelection.selecting" @start-selection="playerSelection.selecting = true"
+            :combat-editable="isDm" :selection-mode="sidebarSelection.selecting" @start-selection="sidebarSelection.selecting = true"
             @view="openParticipant"
             @color="setParticipantColor"
             @kick="requestKickParticipant"
@@ -294,10 +294,7 @@ const {
   updateSessionSetting, updateWorkspaceContext, workspaceChapter, workspaceClosing, workspaceLevel,
   workspaceMode, workspaceMotionMode, workspaceScene, worldLayer,
 } = useSessionPage()
-const sidebarSelectionMode = ref(false)
-const sidebarSelectionOptions = { selecting: sidebarSelectionMode, getModeItems: () => [...encounterPlayers.value, ...encounter.allReserveNpcs] }
-const playerSelection = reactive(useRosterSelection(encounter,()=>encounterPlayers.value,sidebarSelectionOptions))
-const reserveSelection = reactive(useRosterSelection(encounter,()=>encounter.sortable.displayItems('reserve-npc'),sidebarSelectionOptions))
+const sidebarSelection = reactive(useRosterSelection(encounter,()=>[...encounterPlayers.value,...encounter.allReserveNpcs]))
 const sidebar = useSessionSidebar(primaryView)
 const reserveSidebar = reactive(useEncounterReserveSidebar(encounter,sidebar))
 const route = useRoute()

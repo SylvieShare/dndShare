@@ -16,6 +16,7 @@ for(const width of [390,834,1440])test(`roster header, edge scrollbar and brush 
   await expect(header).toHaveCSS('border-bottom-width','0px')
   expect(await header.evaluate(n=>getComputedStyle(n).backgroundColor)).not.toBe(await sidebar.locator('.map-sidebar-panel').evaluate(n=>getComputedStyle(n).backgroundColor))
   await mode.click()
+  let count=0
   for(const tab of ['Игроки','Запас']){
     if(tab==='Запас')await nav.getByRole('button',{name:tab,exact:true}).click()
     const list=sidebar.locator('.session-roster-list:visible')
@@ -26,7 +27,7 @@ for(const width of [390,834,1440])test(`roster header, edge scrollbar and brush 
     const row=list.getByRole('checkbox').first(),tile=row.locator('.session-roster-tile'),before=await row.boundingBox()
     await row.click()
     await expect(row).toBeChecked()
-    await expect(mode).toContainText('1')
+    await expect(mode).toContainText(String(++count))
     await expect(tile).toHaveCSS('border-radius','0px')
     await expect.poll(()=>tile.evaluate(n=>getComputedStyle(n,'::before').opacity)).toBe('0.24')
     expect((await row.boundingBox()).height).toBeCloseTo(before.height,1)

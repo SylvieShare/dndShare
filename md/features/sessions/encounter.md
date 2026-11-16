@@ -173,17 +173,18 @@ the normal encounter save queue.
 
 ### Sidebar selection and prepared scene
 
-`useRosterSelection` scopes selected combatants to its current player/reserve
-list; `SessionSelectionToolbar` owns damage/XP dialogs and move actions. Player
-and all named reserve tabs share one mode ref and retain selected actors between
-tabs. “Режим выбора” shows the selected count in the open list; toggling it off
-clears the complete sidebar scope. The scene keeps its own mode. The toolbar
-belongs to the highlighted sidebar header, outside `SessionRosterList` scrolling.
+`useRosterSelection` scopes the sidebar to all players plus all NPC reserves,
+independently of the open tab. One controller serves every Players/Reserves tab:
+“Режим выбора” shows their combined selected count, and toggling it off clears
+that complete scope. Damage and move actions target eligible actors across all
+these tabs; experience targets characters only. The scene keeps its own mode.
+`SessionSelectionToolbar` owns the dialogs and belongs to the highlighted sidebar
+header, outside `SessionRosterList` scrolling.
 The group-action row stays visible when selection is off, with unavailable
 actions disabled. Ordinary tile actions are inert during selection; keyboard focus stays on the
 accessible selectable row. Only actors leaving the complete mode scope are pruned;
 changing the visible reserve tab preserves its selection.
-Damage calls `useEncounterImpacts` with an explicit snapshot of this list's
+Damage calls `useEncounterImpacts` with an explicit snapshot of the shared scope’s
 eligible targets, preserving its stable retry key and authoritative server HP.
 D&D experience uses the semantic `experiencePath` and the existing versioned
 character document queue; the batch remembers confirmed targets on retry.

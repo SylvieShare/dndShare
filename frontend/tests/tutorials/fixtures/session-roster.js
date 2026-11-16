@@ -20,7 +20,7 @@ export async function rosterSelectionFixture(page,width,{url='/sessions/test'}={
     }
     await route.fulfill({json:{fromVersion:p.version,version:p.version,patches:[]}})
   })
-  await page.route('**/api/sessions/test/save-targets',route=>route.fulfill({json:{targets:[...participants.map(p=>({kind:'character',charUuid:p.charUuid})),{kind:'npc',npcUid:'wolf',encounterId:1}]}}))
+  await page.route('**/api/sessions/test/save-targets',route=>route.fulfill({json:{targets:[...participants.map(p=>({kind:'character',charUuid:p.charUuid})),...api.encounter().combatants.filter(row=>row.type==='npc'&&row.position!=='dead').map(row=>({kind:'npc',npcUid:row.uid,encounterId:1}))]}}))
   await page.route('**/api/sessions/test/impacts',async route=>{
     const packet=route.request().postDataJSON();impacts.push(packet)
     const rows=packet.targets.map(({target})=>{
