@@ -47,7 +47,7 @@ for (const width of [390, 834, 1440]) test(`large HP and separate header AC fit 
   await expect(heading.locator('.heading-metrics')).toHaveCount(0)
   await expect(health.locator('strong')).toHaveCSS('font-weight', '700')
   expect(await health.locator('strong').evaluate(node => getComputedStyle(node).fontFamily)).toContain('Cormorant Garamond')
-  const uiFamily = await heading.locator('.identity strong').evaluate(node => getComputedStyle(node).fontFamily)
+  const uiFamily = await page.locator('body').evaluate(node => getComputedStyle(node).fontFamily)
   expect(await health.locator('.health-readout small').evaluate(node => getComputedStyle(node).fontFamily)).toBe(uiFamily)
   expect(await health.locator('.health-temporary').evaluate(node => getComputedStyle(node).fontFamily)).toBe(uiFamily)
   await expect(health).toHaveCSS('padding-left', '10px')
