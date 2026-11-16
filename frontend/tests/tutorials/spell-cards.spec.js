@@ -21,6 +21,17 @@ for (const width of [320, 390, 834, 1440]) test(`spell cards use two columns and
   const healing = page.locator('.spell-row').filter({ hasText: 'Cure Wounds' })
   await expect(healing.locator('[data-metric-kind=healing] svg')).toHaveClass(/heart-plus/)
   await expect(healing.locator('.weapon-damage .system-die')).toHaveCount(1)
+  const attacking = page.locator('.spell-row').filter({ hasText: 'Chill Touch' })
+  const attackBox = await attacking.getByRole('button', { name: 'Настроить бросок атаки', exact: true }).boundingBox()
+  const damageBox = await attacking.getByRole('button', { name: 'Настроить бросок урона', exact: true }).boundingBox()
+  expect(damageBox.y).toBeGreaterThanOrEqual(attackBox.y + attackBox.height)
+  expect(damageBox.x).toBeCloseTo(attackBox.x, 0)
+  expect(damageBox.width).toBeCloseTo(attackBox.width, 0)
+  if (width >= 834) {
+    const base = await healing.locator('.weapon-damage').boundingBox(), scaling = await healing.locator('.spell-scaling').boundingBox()
+    expect(Math.abs(base.y - scaling.y)).toBeLessThan(2)
+    expect(scaling.x).toBeGreaterThanOrEqual(base.x + base.width)
+  }
   const temporary = page.locator('.spell-row').filter({ hasText: 'False Life' })
   await expect(temporary.locator('[data-metric-kind=temporary_hp] svg')).toHaveClass(/shield-plus/)
   await expect(page.locator('.spell-row').filter({ hasText: 'Sleep' }).getByRole('button', { name: 'Настроить: Запас хитов' })).toBeVisible()

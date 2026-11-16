@@ -8,7 +8,6 @@
       <span class="combat-metric__label">{{ label }}</span>
     </span>
     <div class="combat-metric__formula"><slot /></div>
-    <div v-if="$slots.footnote" class="combat-metric__footnote"><slot name="footnote" /></div>
   </component>
 </template>
 <script setup>
@@ -33,7 +32,6 @@ button.combat-metric:focus-visible {outline:2px solid var(--accent-soft);outline
 .combat-metric--compact {grid-template-columns:calc(var(--layout-spell-metric-icon) + var(--spacing-small) * 4) minmax(0,1fr);min-height:var(--layout-spell-metric-height)}
 .combat-metric--compact .combat-metric__label {overflow-wrap:normal}
 .combat-metric {container-type:inline-size}
-.combat-metric__footnote {grid-column:1/-1;min-width:0}
 @container (max-width:160px) {
   .combat-metric--compact>.combat-metric__identity {grid-column:1/-1;flex-direction:row;justify-content:flex-start;align-self:auto;padding-inline-end:0;padding-block-end:var(--spacing-xs);border-inline-end:0;border-block-end:var(--layout-border) solid var(--border-strong)}
   .combat-metric--compact>.combat-metric__formula {grid-column:1/-1}

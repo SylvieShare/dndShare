@@ -8,10 +8,11 @@
       :interactive="metric.interactive" :action-label="metric.actionLabel" @roll="emit('roll', metric.key, $event)">
       <small v-if="!metric.primary" class="spell-metric-title">{{ metric.title }}</small>
       <strong v-if="metric.kind === 'save'" class="spell-metric-attack">Сл {{ ctx.spellSaveDC(metric.entry) }}</strong>
-      <WeaponDamageBreakdown v-else :rows="metric.rows" :show-sources="false" :damage-color="metric.color" :label="metric.title" />
-      <template v-if="!entry.ref?.slotless && metric.rule.scaling === 'slot' && hasInlineSpellScaling(metric.rule)" #footnote>
-        <SpellScalingFormula :rule="metric.rule" :base-level="Number(entry.item.data.lvl)" :color="metric.color" :size="32" />
-      </template>
+      <div v-else class="spell-metric-formula-row">
+        <WeaponDamageBreakdown :rows="metric.rows" :show-sources="false" :damage-color="metric.color" :label="metric.title" />
+        <SpellScalingFormula v-if="!entry.ref?.slotless && metric.rule.scaling === 'slot' && hasInlineSpellScaling(metric.rule)"
+          :rule="metric.rule" :base-level="Number(entry.item.data.lvl)" :color="metric.color" :size="32" />
+      </div>
     </CharacterCombatMetric>
   </div>
 </template>
@@ -41,8 +42,9 @@ const metrics = computed(() => spellRollOptions(props.entry).map(option => {
 }))
 </script>
 <style scoped>
-.spell-metrics {display:flex;flex-wrap:wrap;gap:var(--layout-weapon-metrics-gap);min-width:0;width:100%}
-.spell-metrics>.combat-metric {flex:1 1 var(--layout-spell-metric-min);min-width:min(100%,var(--layout-spell-metric-min))}
+.spell-metrics {display:grid;grid-template-columns:minmax(0,1fr);gap:var(--layout-weapon-metrics-gap);min-width:0;width:100%}
+.spell-metric-formula-row {display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--spacing-small);min-width:0;max-width:100%}
+.spell-metric-formula-row>.spell-scaling {flex:0 1 auto;min-width:0;max-width:100%}
 .spell-metric-attack {color:var(--accent-soft);font-family:var(--type-weapon-attack-family);font-size:var(--type-weapon-attack-size);font-weight:var(--type-weapon-attack-weight);line-height:var(--type-weapon-attack-line-height)}
 .spell-metric-title {color:var(--text-muted);font-size:var(--type-context-size);line-height:var(--type-context-line-height);overflow-wrap:anywhere}
 </style>
