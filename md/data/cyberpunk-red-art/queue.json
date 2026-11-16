@@ -10016,20 +10016,22 @@
       "id": 34,
       "name": "Характеристики",
       "slot": "icon",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "67b02094bfe6ba9f2e8719d52a314b49afc8d173bf7a9b81fdc95dd419828051"
+      "sha256": "67b02094bfe6ba9f2e8719d52a314b49afc8d173bf7a9b81fdc95dd419828051",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/34/icon/67b02094bfe6ba9f2e8719d52a314b49afc8d173bf7a9b81fdc95dd419828051.webp"
     },
     {
       "kind": "suggest_type",
       "id": 34,
       "name": "Характеристики",
       "slot": "cover",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "c2855ade63a155853fafb62eb1a51ebd789c0a25b1f6d25af508fb1208a72f21"
+      "sha256": "c2855ade63a155853fafb62eb1a51ebd789c0a25b1f6d25af508fb1208a72f21",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggest-types/34/cover/c2855ade63a155853fafb62eb1a51ebd789c0a25b1f6d25af508fb1208a72f21.webp"
     },
     {
       "kind": "suggest_type",
@@ -11154,10 +11156,11 @@
       "name": "Воля",
       "code": "WILL",
       "slot": "icon",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "f08de0f05120317f1a027a3b3af83e443debd25e887c9e26d09da125ef04bbb4"
+      "sha256": "f08de0f05120317f1a027a3b3af83e443debd25e887c9e26d09da125ef04bbb4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/390/icon/f08de0f05120317f1a027a3b3af83e443debd25e887c9e26d09da125ef04bbb4.webp"
     },
     {
       "kind": "suggest",
@@ -11166,10 +11169,11 @@
       "name": "Воля",
       "code": "WILL",
       "slot": "cover",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "6a267d8bc74ae890a64b8937b8014b5a92461220e15e4df5cc359a3d561cae13"
+      "sha256": "6a267d8bc74ae890a64b8937b8014b5a92461220e15e4df5cc359a3d561cae13",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/390/cover/6a267d8bc74ae890a64b8937b8014b5a92461220e15e4df5cc359a3d561cae13.webp"
     },
     {
       "kind": "suggest",
@@ -11178,10 +11182,11 @@
       "name": "Движение",
       "code": "MOVE",
       "slot": "icon",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "2443ae1a0c4488f2f5ca694d34715faed81feaebdec67ed2d92ddd4d627c9dfd"
+      "sha256": "2443ae1a0c4488f2f5ca694d34715faed81feaebdec67ed2d92ddd4d627c9dfd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/392/icon/2443ae1a0c4488f2f5ca694d34715faed81feaebdec67ed2d92ddd4d627c9dfd.webp"
     },
     {
       "kind": "suggest",
@@ -11190,10 +11195,11 @@
       "name": "Движение",
       "code": "MOVE",
       "slot": "cover",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "473e8a212273d715c8d64478a8ef3652d86a359e2ac3ebc9eb4f18300b82d20a"
+      "sha256": "473e8a212273d715c8d64478a8ef3652d86a359e2ac3ebc9eb4f18300b82d20a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/392/cover/473e8a212273d715c8d64478a8ef3652d86a359e2ac3ebc9eb4f18300b82d20a.webp"
     },
     {
       "kind": "suggest",
@@ -11202,10 +11208,11 @@
       "name": "Интеллект",
       "code": "INT",
       "slot": "icon",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "af0dd790f1ddcbf522d37f40e6d2c0637f9d7b2631ab7552d91aa7954671a286"
+      "sha256": "af0dd790f1ddcbf522d37f40e6d2c0637f9d7b2631ab7552d91aa7954671a286",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/385/icon/af0dd790f1ddcbf522d37f40e6d2c0637f9d7b2631ab7552d91aa7954671a286.webp"
     },
     {
       "kind": "suggest",
@@ -11214,10 +11221,11 @@
       "name": "Интеллект",
       "code": "INT",
       "slot": "cover",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "0fec0253d71a568247e6d13294d4686e9c75f3bf56bae0a833f4d4629d603b3f"
+      "sha256": "0fec0253d71a568247e6d13294d4686e9c75f3bf56bae0a833f4d4629d603b3f",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/385/cover/0fec0253d71a568247e6d13294d4686e9c75f3bf56bae0a833f4d4629d603b3f.webp"
     },
     {
       "kind": "suggest",
@@ -11226,10 +11234,11 @@
       "name": "Ловкость",
       "code": "DEX",
       "slot": "icon",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "e1d3cf187bbc1b04a1bdc17368ea8c4b8061bebb2fd4241d2177ea866fa7801d"
+      "sha256": "e1d3cf187bbc1b04a1bdc17368ea8c4b8061bebb2fd4241d2177ea866fa7801d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/387/icon/e1d3cf187bbc1b04a1bdc17368ea8c4b8061bebb2fd4241d2177ea866fa7801d.webp"
     },
     {
       "kind": "suggest",
@@ -11238,10 +11247,11 @@
       "name": "Ловкость",
       "code": "DEX",
       "slot": "cover",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "8d386fa95d17d2eb98ae72789cdd236614b3533481962f9ac07c878e3e0038d4"
+      "sha256": "8d386fa95d17d2eb98ae72789cdd236614b3533481962f9ac07c878e3e0038d4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/387/cover/8d386fa95d17d2eb98ae72789cdd236614b3533481962f9ac07c878e3e0038d4.webp"
     },
     {
       "kind": "suggest",
@@ -11250,10 +11260,11 @@
       "name": "Реакция",
       "code": "REF",
       "slot": "icon",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "3737c3eb4aa5b1062261c0b016055f13adca9f5890f2871ca3801733319b373a"
+      "sha256": "3737c3eb4aa5b1062261c0b016055f13adca9f5890f2871ca3801733319b373a",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/386/icon/3737c3eb4aa5b1062261c0b016055f13adca9f5890f2871ca3801733319b373a.webp"
     },
     {
       "kind": "suggest",
@@ -11262,10 +11273,11 @@
       "name": "Реакция",
       "code": "REF",
       "slot": "cover",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "11bc6d652d0cdfde04e2ccf12bd678b183c93d7f2a3a7af5b86c50d595608ef2"
+      "sha256": "11bc6d652d0cdfde04e2ccf12bd678b183c93d7f2a3a7af5b86c50d595608ef2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/386/cover/11bc6d652d0cdfde04e2ccf12bd678b183c93d7f2a3a7af5b86c50d595608ef2.webp"
     },
     {
       "kind": "suggest",
@@ -11274,10 +11286,11 @@
       "name": "Телосложение",
       "code": "BODY",
       "slot": "icon",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "869522eeb54f283be16e82651c4209b32de196392a38966179671553d81f0e21"
+      "sha256": "869522eeb54f283be16e82651c4209b32de196392a38966179671553d81f0e21",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/393/icon/869522eeb54f283be16e82651c4209b32de196392a38966179671553d81f0e21.webp"
     },
     {
       "kind": "suggest",
@@ -11286,10 +11299,11 @@
       "name": "Телосложение",
       "code": "BODY",
       "slot": "cover",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "26fef4cda58e76711eeacbf4ce73d07af3854fb5ee9a9d32466f09b0b9cf147d"
+      "sha256": "26fef4cda58e76711eeacbf4ce73d07af3854fb5ee9a9d32466f09b0b9cf147d",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/393/cover/26fef4cda58e76711eeacbf4ce73d07af3854fb5ee9a9d32466f09b0b9cf147d.webp"
     },
     {
       "kind": "suggest",
@@ -11298,10 +11312,11 @@
       "name": "Техника",
       "code": "TECH",
       "slot": "icon",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "544ff5d732d78cd165b5a1a87e135cb46fdb1b8b04b99b122c6aa4ea42857795"
+      "sha256": "544ff5d732d78cd165b5a1a87e135cb46fdb1b8b04b99b122c6aa4ea42857795",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/388/icon/544ff5d732d78cd165b5a1a87e135cb46fdb1b8b04b99b122c6aa4ea42857795.webp"
     },
     {
       "kind": "suggest",
@@ -11310,10 +11325,11 @@
       "name": "Техника",
       "code": "TECH",
       "slot": "cover",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "0e6c6654e3b0df72c2b4e7c3ba74430c308e3a0d1b33d0850c5ec751251e3f8e"
+      "sha256": "0e6c6654e3b0df72c2b4e7c3ba74430c308e3a0d1b33d0850c5ec751251e3f8e",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/388/cover/0e6c6654e3b0df72c2b4e7c3ba74430c308e3a0d1b33d0850c5ec751251e3f8e.webp"
     },
     {
       "kind": "suggest",
@@ -11322,10 +11338,11 @@
       "name": "Удача",
       "code": "LUCK",
       "slot": "icon",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "3a07b5395d83787fc8492170b9ef1c15fec7384ea80182322d41869622d36f01"
+      "sha256": "3a07b5395d83787fc8492170b9ef1c15fec7384ea80182322d41869622d36f01",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/391/icon/3a07b5395d83787fc8492170b9ef1c15fec7384ea80182322d41869622d36f01.webp"
     },
     {
       "kind": "suggest",
@@ -11334,10 +11351,11 @@
       "name": "Удача",
       "code": "LUCK",
       "slot": "cover",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "e6d4b5aa23ece66f5ce39540d905c3bd865aa51722664c7907c2ae6becdb14d0"
+      "sha256": "e6d4b5aa23ece66f5ce39540d905c3bd865aa51722664c7907c2ae6becdb14d0",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/391/cover/e6d4b5aa23ece66f5ce39540d905c3bd865aa51722664c7907c2ae6becdb14d0.webp"
     },
     {
       "kind": "suggest",
@@ -11346,10 +11364,11 @@
       "name": "Хладнокровие",
       "code": "COOL",
       "slot": "icon",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "8f7acee60fb3de223c4590c9e309ef86cc361acdb04e0b025b3bc85d91b12f15"
+      "sha256": "8f7acee60fb3de223c4590c9e309ef86cc361acdb04e0b025b3bc85d91b12f15",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/389/icon/8f7acee60fb3de223c4590c9e309ef86cc361acdb04e0b025b3bc85d91b12f15.webp"
     },
     {
       "kind": "suggest",
@@ -11358,10 +11377,11 @@
       "name": "Хладнокровие",
       "code": "COOL",
       "slot": "cover",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "f2975a2d67f2346184d31269200b1769c2609f93e583c563a57f57bd93f5103b"
+      "sha256": "f2975a2d67f2346184d31269200b1769c2609f93e583c563a57f57bd93f5103b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/389/cover/f2975a2d67f2346184d31269200b1769c2609f93e583c563a57f57bd93f5103b.webp"
     },
     {
       "kind": "suggest",
@@ -11370,10 +11390,11 @@
       "name": "Эмпатия",
       "code": "EMP",
       "slot": "icon",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "24ddc3360fb61319b42b3af7fd9a30f9fbf577ea739e954088a7aee3b0c9c6aa"
+      "sha256": "24ddc3360fb61319b42b3af7fd9a30f9fbf577ea739e954088a7aee3b0c9c6aa",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/394/icon/24ddc3360fb61319b42b3af7fd9a30f9fbf577ea739e954088a7aee3b0c9c6aa.webp"
     },
     {
       "kind": "suggest",
@@ -11382,10 +11403,11 @@
       "name": "Эмпатия",
       "code": "EMP",
       "slot": "cover",
-      "status": "ready",
+      "status": "published",
       "sourceId": 3,
       "batch": 2,
-      "sha256": "e342ff5d3958e14ddcf83d2919193ddc76915ed343eebd45868fbe92f31d3c79"
+      "sha256": "e342ff5d3958e14ddcf83d2919193ddc76915ed343eebd45868fbe92f31d3c79",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/suggests/34/394/cover/e342ff5d3958e14ddcf83d2919193ddc76915ed343eebd45868fbe92f31d3c79.webp"
     },
     {
       "kind": "suggest",
@@ -16049,8 +16071,8 @@
     }
   ],
   "progress": {
-    "publishedSlots": 6,
-    "readySlots": 22,
+    "publishedSlots": 28,
+    "readySlots": 0,
     "totalSlots": 1848
   }
 }
