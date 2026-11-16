@@ -15,6 +15,18 @@ for(const width of [390,834,1440])test(`roster header, edge scrollbar and brush 
   await expect(header.locator('.roster-selection')).toBeVisible()
   await expect(header).toHaveCSS('border-bottom-width','0px')
   expect(await header.evaluate(n=>getComputedStyle(n).backgroundColor)).not.toBe(await sidebar.locator('.map-sidebar-panel').evaluate(n=>getComputedStyle(n).backgroundColor))
+  for(const tab of ['Игроки','Запас']){
+    if(tab==='Запас')await nav.getByRole('button',{name:tab,exact:true}).click()
+    const hovered=sidebar.locator('.session-roster-list:visible .session-roster-tile').nth(1)
+    await hovered.hover()
+    await expect(hovered).toHaveCSS('background-color','rgba(0, 0, 0, 0)')
+    await expect.poll(()=>hovered.evaluate(n=>getComputedStyle(n,'::before').opacity)).toBe('0.11')
+    expect(await hovered.evaluate(n=>getComputedStyle(n,'::before').clipPath)).not.toBe('none')
+    await info.attach(`hover-${tab}-${width}`,{body:await sidebar.screenshot({animations:'disabled'}),contentType:'image/png'})
+    await header.hover()
+    await expect.poll(()=>hovered.evaluate(n=>getComputedStyle(n,'::before').opacity)).toBe('0')
+  }
+  await nav.getByRole('button',{name:'Игроки',exact:true}).click()
   await mode.click()
   let count=0
   for(const tab of ['Игроки','Запас']){
