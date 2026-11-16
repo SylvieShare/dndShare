@@ -2,7 +2,7 @@
   <div class="session-sidebar-host" aria-label="Боковая панель сессии">
     <MapSidebar :ref="node => controller.sidebar.value = node" :tab="controller.selected.value" :tabs="controller.tabs.value"
       persistent-content :padded="false" tabs-label="Боковые вкладки сессии" collapse-label="Свернуть боковую панель"
-      :compact-peek="layoutTokens['session-sidebar-peek']"
+      :preferred-width="layoutTokens['session-sidebar']" :compact-peek="format === 'phone' ? 0 : layoutTokens['session-sidebar-peek']"
       @update:tab="controller.selected.value = $event" @resize="controller.resize" @action="controller.action">
       <template v-if="controller.selected.value.startsWith('reserves:')" #header-title><slot name="reserve-title" /></template>
       <template v-if="controller.selected.value === 'players'" #header-actions><slot name="players-actions" /></template>
@@ -19,7 +19,9 @@
 import { inject, onBeforeUnmount } from 'vue'
 import MapSidebar from '@/features/maps/components/MapSidebar.vue'
 import { tutorialActionsKey } from '@/features/tutorials/lib/targets'
+import { useAppLayout } from '@/shared/composables/useAppLayout'
 import { layoutTokens } from '@/app/design-tokens'
+const {format}=useAppLayout()
 const props = defineProps({ controller: { type: Object, required: true } })
 const actions = inject(tutorialActionsKey, null)
 const unregister = actions?.register('session-players', context => {

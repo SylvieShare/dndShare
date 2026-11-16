@@ -3,34 +3,33 @@
     class="p-card-menu"
     :style="roughRowPaintStyle(seamIndex)"
     :class="{ 'p-card-menu--placeholder': reorderPlaceholder }"
-    :role="selectionMode ? 'checkbox' : undefined" :aria-checked="selectionMode ? combatSelected : undefined"
-    :aria-label="selectionMode ? `Выбрать: ${displayName}` : undefined" :tabindex="selectionMode ? 0 : undefined"
-    @keydown.enter.self.prevent="selectByKeyboard" @keydown.space.self.prevent="selectByKeyboard"
     @pointerdown="startReorder"
     @click.capture="suppressReorderClick"
     @contextmenu.capture="suppressReorderClick"
   >
     <WorkspaceRowDivider v-if="divided" rough :rough-variant="seamIndex" class="roster-divider" />
-    <RowActionMenu :trigger-attrs="{ inert: selectionMode || undefined }">
-      <template #trigger>
-        <SessionPlayerTile
-          class="p-card"
-          :class="{ 'p-card--combat': combatMode, 'p-card--statuses': hasStatuses, 'p-card--compact': compact, 'p-card--current': combatMode && combatCurrent, 'p-card--reorderable': reorderEnabled }"
-          :participant="participant" :name="displayName" :avatar-url="avaUrl" :hp="hp" :health-visible="showHp" :show-stats="isDm && isDnd"
-          :color="participant.color" :compact="compact" :current="combatMode && combatCurrent"
-          :has-statuses="hasStatuses" :selection-mode="selectionMode" :selected="combatSelected"
-        >
-          <template #name-suffix>
-            <span v-if="combatant?.position === 'reserve' && combatant.initiative != null" class="p-initiative-chip" title="Подготовленная инициатива" :aria-label="`Подготовленная инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span>
-          </template>
-          <template v-if="showHp && isDead" #health><SessionPlayerDeathState :hp="hp" :editable="isDm" @revive="$emit('revive')" /></template>
-          <template #statuses><ParticipantStatuses :participant="participant" :editable="isDm" detailed /></template>
-        </SessionPlayerTile>
+    <SessionPlayerTile
+      class="p-card"
+      :class="{ 'p-card--combat': combatMode, 'p-card--statuses': hasStatuses, 'p-card--compact': compact, 'p-card--current': combatMode && combatCurrent, 'p-card--reorderable': reorderEnabled }"
+      :participant="participant" :name="displayName" :avatar-url="avaUrl" :hp="hp" :health-visible="showHp" :show-stats="isDm && isDnd"
+      :color="participant.color" :compact="compact" :current="!!encounter?.encounter.active && combatCurrent"
+      :has-statuses="hasStatuses" :selectable="combatEditable && !!combatant && combatant.position !== 'dead'" :selected="combatSelected" :edit-health="canCalculateHp"
+      role="group" tabindex="0" :aria-label="`Действия: ${displayName}`" aria-haspopup="menu"
+      @click="onCardClick" @keydown.enter.self.prevent="openMenu" @keydown.space.self.prevent="openMenu"
+      @select="$emit('update:combat-selected', !combatSelected)" @health="encounter.openHpCalc(combatant)"
+    >
+      <template #name-suffix>
+        <span v-if="combatant?.position === 'reserve' && combatant.initiative != null" class="p-initiative-chip" title="Подготовленная инициатива" :aria-label="`Подготовленная инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span>
       </template>
-
+      <template #presence><SessionCombatPresence :combatant="combatant" :active="encounter?.encounter.active" :current="combatCurrent" /></template>
+      <template v-if="showHp && isDead" #health><SessionPlayerDeathState :hp="hp" :editable="isDm" @revive="$emit('revive')" /></template>
+      <template #statuses><ParticipantStatuses :participant="participant" :editable="isDm" detailed /></template>
+    </SessionPlayerTile>
+    <RowActionMenu ref="menuRef" :anchor="menuAnchor" :trigger-attrs="{style:{display:'none'}}">
       <template #default="{ close }">
         <EncounterInitiativeMenu v-if="isDm && combatant?.position === 'reserve' && encounter?.encounter.active" enter-combat :combatant="combatant" :encounter="encounter" @joined="close" />
-        <EncounterInitiativeMenu v-if="isDm && combatMode && combatant && encounter && !encounter.encounter.active && combatant.position !== 'dead'" :combatant="combatant" :encounter="encounter" />
+        <EncounterInitiativeMenu v-if="isDm && combatant && encounter && combatant.position !== 'dead' && (!encounter.encounter.active || combatant.position === 'combat')" :combatant="combatant" :encounter="encounter" />
+        <RowActionItem v-if="isDm && combatant?.position === 'combat'" :icon="LogOut" @click="encounter.sendToReserve(combatant);close()">{{ encounter.encounter.active ? 'Вывести из боя' : 'Убрать со сцены' }}</RowActionItem>
         <RowActionItem v-if="isDm || participant.canOpenSheet" action="view" @click="viewParticipant(close)">Открыть лист</RowActionItem>
         <RowActionItem v-if="canCalculateHp" :icon="Calculator" @click="encounter.openHpCalc(combatant); close()">Калькулятор ХП</RowActionItem>
         <RowActionSubmenu v-if="isDm" label="Цвет игрока" :disabled="colorPending">
@@ -73,18 +72,19 @@
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent, inject } from 'vue'
+import { computed, defineAsyncComponent, inject, nextTick, ref, shallowRef } from 'vue'
 import { useTemplateStore } from '@/stores/template'
 import { settingAccessors } from '@/features/character-editor/settings'
 import { handleCtrlSelection } from '@/shared/lib/ctrlSelection'
 import { hasDndStatusSummary } from '@/features/character-editor/lib/dndStatusSummary'
 import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
-import { Calculator, Palette } from '@lucide/vue'
+import { Calculator, LogOut, Palette } from '@lucide/vue'
 import { ColorPresetPicker } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'
 import EncounterInitiativeMenu from './EncounterInitiativeMenu.vue'
+import SessionCombatPresence from './SessionCombatPresence.vue'
 import SessionPlayerTile from './SessionPlayerTile.vue'
 import SessionPlayerDeathState from './SessionPlayerDeathState.vue'
 import WorkspaceRowDivider from '@/shared/ui/WorkspaceRowDivider.vue'
@@ -111,38 +111,32 @@ const props = defineProps({
   combatSelected: { type: Boolean, default: false },
   combatCurrent: { type: Boolean, default: false },
   combatEditable: { type: Boolean, default: false },
-  selectionMode: Boolean,
   divided: Boolean,
   seamIndex: { type:Number, default:0 },
 })
-const emit = defineEmits(['view', 'kick', 'color', 'revive', 'drag-start', 'update:combat-selected', 'start-selection'])
+const emit = defineEmits(['view', 'kick', 'color', 'revive', 'drag-start', 'update:combat-selected'])
 
 const hasStatuses = computed(() => props.isDm && isDnd.value && hasDndStatusSummary(props.participant.data?.values || {}))
 
 const REORDER_IGNORE = 'button, input, textarea, select, a, [contenteditable="true"], .p-combat-controls'
 
 function startReorder(event) {
-  if (!props.reorderEnabled || props.selectionMode || event.ctrlKey || event.metaKey) return
+  if (!props.reorderEnabled || event.ctrlKey || event.metaKey) return
   if (event.button !== undefined && event.button !== 0) return
   if (event.target.closest(REORDER_IGNORE)) return
   emit('drag-start', event)
 }
 
-function suppressReorderClick(event) {
-  if (props.selectionMode && props.combatEditable && props.combatant) {
-    event.preventDefault();event.stopPropagation()
-    emit('update:combat-selected', !props.combatSelected)
-    return
-  }
-  if (event.target.closest('.p-statuses-area')) return
-  if (handleCtrlSelection(event, props.combatEditable && !!props.combatant, () => {emit('start-selection');emit('update:combat-selected', !props.combatSelected)})) return
-  if (!props.shouldSuppressReorderClick?.()) return
-  event.preventDefault()
-  event.stopPropagation()
+const menuRef=ref(null),menuAnchor=shallowRef(null)
+async function openMenu(event){menuAnchor.value=event.currentTarget;await nextTick();menuRef.value?.toggle()}
+function onCardClick(event){
+  if(event.target.closest('button,input,textarea,a,[role="checkbox"],.p-statuses-area') && !event.target.closest('.portrait'))return
+  openMenu(event)
 }
-
-function selectByKeyboard() {
-  if (props.selectionMode && props.combatEditable && props.combatant) emit('update:combat-selected', !props.combatSelected)
+function suppressReorderClick(event) {
+  if(event.target.closest('.roster-select-zone,.p-statuses-area'))return
+  if(handleCtrlSelection(event,props.combatEditable&&!!props.combatant,()=>emit('update:combat-selected',!props.combatSelected)))return
+  if(props.shouldSuppressReorderClick?.()){event.preventDefault();event.stopPropagation()}
 }
 
 function viewParticipant(close) {
@@ -186,7 +180,7 @@ const isDead = computed(() => showHp.value && hp.value.current <= 0)
 </script>
 
 <style scoped>
-.p-card.p-card--reorderable { cursor: grab; touch-action: none; }
+.p-card.p-card--reorderable { cursor: grab; touch-action: pan-y; }
 .p-card.p-card--reorderable:active { cursor: grabbing; }
 
 .p-card-menu {
@@ -195,14 +189,14 @@ const isDead = computed(() => showHp.value && hp.value.current <= 0)
   border-radius:0;
 }
 .roster-divider {z-index:2}
-.p-card-menu[role="checkbox"]:focus-visible {outline:2px solid var(--accent-soft);outline-offset:2px}
+.p-card-menu :deep(.session-roster-tile:focus-visible) {outline:2px solid var(--accent-soft);outline-offset:2px}
 
 .p-card-menu :deep(.ram-custom-trigger) {
   display: flex;
   width: 100%;
 }
 
-.p-card-menu--placeholder :deep(.ram-custom-trigger) {
+.p-card-menu--placeholder :deep(.session-roster-tile) {
   visibility: hidden;
 }
 

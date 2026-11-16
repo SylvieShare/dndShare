@@ -12,6 +12,7 @@
     ref="element"
     class="map-sidebar map-sidebar--overlay"
     :style="{
+      '--map-sidebar-preferred-width': `${preferredWidth}px`,
       '--map-sidebar-panel-width':
         panelWidth == null ? undefined : `${panelWidth}px`,
       '--map-sidebar-compact-peek': `${compactPeek}px`,
@@ -97,6 +98,7 @@ const props = defineProps({
   padded: { type: Boolean, default: true },
   collapseLabel: { type: String, default: 'Свернуть панель карты' },
   compactPeek: { type: Number, default: layoutTokens['map-compact-peek'] },
+  preferredWidth: { type: Number, default: layoutTokens['map-sidebar'] },
 });
 const emit = defineEmits(["update:tab", "select", "resize", "action"]);
 const host = inject(workspaceSidebarContext, null);
@@ -236,7 +238,7 @@ defineExpose({
   --workspace-sidebar-border: var(--border);
   box-sizing: border-box;
   border-top: var(--layout-border) solid var(--workspace-sidebar-border);
-  --map-sidebar-width: min(var(--layout-map-sidebar), calc(100vw - var(--map-sidebar-compact-peek,var(--layout-map-compact-peek))));
+  --map-sidebar-width: min(var(--map-sidebar-preferred-width,var(--layout-map-sidebar)), calc(100vw - var(--map-sidebar-compact-peek,var(--layout-map-compact-peek))));
   width: var(--map-sidebar-width);
   flex: none;
   min-height: 0;

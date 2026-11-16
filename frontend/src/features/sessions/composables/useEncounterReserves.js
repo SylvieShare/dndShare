@@ -7,7 +7,7 @@ export function useEncounterReserves({ encounter, loaded, mutate, getCombatant }
   const reserveTabs = computed(() => encounterReserveTabs(encounter.value))
   const ids = computed(() => new Set(reserveTabs.value.map(tab => tab.id)))
   const reserveIdFor = combatant => ids.value.has(combatant.reserveTabId) ? combatant.reserveTabId : DEFAULT_RESERVE_ID
-  const allReserveNpcs = computed(() => encounter.value.combatants.filter(c => c.type === 'npc' && c.position === 'reserve'))
+  const allReserveNpcs = computed(() => encounter.value.combatants.filter(c => c.type === 'npc' && c.position !== 'dead'))
   const reserveNpcs = computed(() => allReserveNpcs.value.filter(c => reserveIdFor(c) === activeReserveId.value))
   watch(ids, value => { if (!value.has(activeReserveId.value)) activeReserveId.value = DEFAULT_RESERVE_ID })
   function createReserve(name) {

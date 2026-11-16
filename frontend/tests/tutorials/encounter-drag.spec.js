@@ -19,7 +19,7 @@ async function openEncounter(page,reserveCount=2) {
   await expect(root).toBeVisible()
   await expect(page.locator('.page-forward-enter-active,.page-backward-enter-active')).toHaveCount(0)
   await page.getByRole('navigation',{name:'Боковые вкладки сессии'}).getByRole('button',{name:'Запас',exact:true}).click()
-  const row=uid=>page.locator(`.enc-row-shell:not(.sortable-ghost)[data-encounter-uid="${uid}"]`)
+  const row=uid=>page.locator(`${uid==='current'?'.enc-content':'.enc-reserve-roster'} .enc-row-shell:not(.sortable-ghost)[data-encounter-uid="${uid}"]`)
   await expect(row('reserve-1')).toContainText('Запас 1')
   return {api,root,row,reserveOrder:()=>api.encounter().combatants.filter(c=>c.position==='reserve').map(c=>c.uid)}
 }
@@ -77,6 +77,14 @@ test('mouse hold reorders and transfers creatures while click and Escape keep th
   await expect.poll(()=>api.encounter().combatants.find(c=>c.uid==='reserve-2').position).toBe('combat')
   await expect(root.locator('.enc-row-shell[data-encounter-section="combat"]')).toHaveCount(2)
   await expect(menu).toHaveCount(0)
+  start=await point(row('reserve-2').locator('.identity-name-text'))
+  const existing=await root.locator('[data-encounter-uid="reserve-2"]').boundingBox()
+  await page.mouse.move(start.x,start.y);await page.mouse.down();await expect(ghost).toBeVisible()
+  await page.mouse.move(existing.x+existing.width/2,existing.y+existing.height/2,{steps:5})
+  await expect(root.locator('[data-encounter-uid="reserve-2"]')).toHaveCount(1)
+  await page.mouse.up()
+  expect(api.encounter().combatants.filter(c=>c.uid==='reserve-2')).toHaveLength(1)
+  await expect(row('reserve-2')).toBeVisible()
   await info.attach('held-mouse-result',{body:await root.screenshot(),contentType:'image/png'})
 })
 

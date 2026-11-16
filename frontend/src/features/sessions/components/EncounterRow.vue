@@ -5,10 +5,7 @@
     :data-sortable-key="combatant.uid"
     :data-encounter-uid="combatant.uid"
     :data-encounter-section="section"
-    :role="selectionMode ? 'checkbox' : undefined" :aria-checked="selectionMode ? enc.isSelected(combatant) : undefined"
-    :aria-label="selectionMode ? `Выбрать: ${displayName}` : undefined" :tabindex="selectionMode ? 0 : undefined"
     @click.capture="onSelectionClick" @contextmenu.capture="onSelectionClick"
-    @keydown.enter.self.prevent="onSelectionClick" @keydown.space.self.prevent="onSelectionClick"
   >
     <div class="enc-row-main">
       <EncounterOrderMarker v-if="order != null" :order="order" :current="isCurrent" />
@@ -17,7 +14,6 @@
         <component :is="section === 'reserve-npc' ? SessionNpcTile : section === 'combat' ? SessionEncounterTile : SessionCombatantTile"
           class="enc-row" :class="rowClasses" :combatant="combatant" :section="section" :current="isCurrent"
           :selectable="showCheckbox" :editable="canEdit" :selected="enc.isSelected(combatant)"
-          :selection-mode="selectionMode" :inert="selectionMode"
           @select="enc.toggleSelected(combatant)" @pointerdown="onRowPointerDown"
           :tabindex="rowMenuVisible ? 0 : undefined" aria-haspopup="menu"
           @keydown.enter.self="onRowClick" @keydown.space.self.prevent="onRowClick"
@@ -102,7 +98,6 @@ const props = defineProps({
   idx: { type: Number, default: -1 },
   order: { type: Number, default: null },
   isCurrent: { type: Boolean, default: false },
-  selectionMode: Boolean,
   divided: Boolean,
 })
 
@@ -136,7 +131,6 @@ const rowClasses = computed(() => ({
 // interactive control so clicks/typing still work there.
 const DRAG_IGNORE = 'input, textarea, button, a, [role="button"], .p-combat-controls, .enc-hp-area, .p-statuses-area'
 function onRowPointerDown(e) {
-  if (props.selectionMode) return
   if (e.ctrlKey || e.metaKey) return
   if (e.button !== undefined && e.button !== 0) return
   if (e.target.closest(DRAG_IGNORE)) return
@@ -153,8 +147,7 @@ const rowMenuVisible = computed(() => canEdit.value)
 const rowMenuRef = ref(null)
 
 function onSelectionClick(event) {
-  if(props.selectionMode && canEdit.value){event.preventDefault();event.stopPropagation();enc.toggleSelected(props.combatant);return}
-  if (event.target.closest('.p-statuses-area')) return
+  if (event.target.closest('.p-statuses-area,.roster-select-zone')) return
   handleCtrlSelection(event, showCheckbox.value, () => enc.toggleSelected(props.combatant))
 }
 
@@ -196,8 +189,6 @@ function commitNoteEdit() {
 <style scoped>
 .enc-row-shell { position:relative;display: flex; min-width: 0; align-items: stretch; }
 .roster-divider {z-index:2}
-.enc-row-shell[role="checkbox"] {cursor:pointer}
-.enc-row-shell[role="checkbox"]:focus-visible {outline:2px solid var(--accent-soft);outline-offset:2px}
 .enc-row-main { display: flex; align-items: stretch; gap: 10px; min-width: 0; flex: 1; max-width: var(--enc-roster-width, 480px); }
 .enc-row-tile { position: relative; flex: 1; min-width: 0; overflow: hidden; border-radius: var(--r-lg); }
 .enc-row-roll-overlay { position: absolute; z-index: 2; inset: 2px 2px 2px auto; width: min(248px, calc(100% - 40px)); display: flex; align-items: center; overflow: hidden; border-radius: 0 calc(var(--r-lg) - 2px) calc(var(--r-lg) - 2px) 0; background: var(--surface); box-shadow: -8px 0 16px color-mix(in srgb, var(--scrim) 20%, transparent); }

@@ -44,7 +44,7 @@
       <div class="enc-toolbar-actions">
         <div v-if="props.isDm" class="enc-action-group" aria-label="Действия с выбранными участниками">
           <span class="enc-action-group-label">Выбранные</span>
-          <SessionSelectionToolbar :encounter="enc" :selection="selection" :actions-visible="false" label="Выбор на боевой сцене" />
+          <SessionSelectionToolbar :encounter="enc" :selection="selection" :actions-visible="false" :visible-items="combatItems" visible-label="Выбрать всех на сцене" label="Выбор на боевой сцене" />
           <div class="enc-action-group-controls">
             <EncounterChallengeMenu label="Испытание" />
             <EncounterBulkDamageMenu label="Урон" />
@@ -69,17 +69,16 @@
         <div v-if="props.isDm" class="enc-action-group" aria-label="Состав сцены">
           <span class="enc-action-group-label">Состав сцены</span>
           <div class="enc-action-group-controls">
-            <button type="button" class="enc-icon-btn" :class="{'enc-icon-btn--selected':allSelectedInCombat}" :disabled="!combatItems.length" :aria-pressed="allSelectedInCombat" aria-label="Выбрать всех существ" @click="toggleVisibleSelection(combatItems)"><ListChecks :size="18" /><span class="enc-control-label">Выбрать сцену</span></button>
             <button type="button" class="enc-icon-btn" :disabled="!combatMoveCount" aria-label="Добавить выбранных на сцену" @click="enc.sendSelectedTo('combat')"><LogIn :size="18" /><span class="enc-control-label">На сцену</span><span v-if="combatMoveCount" class="enc-icon-count">{{combatMoveCount}}</span></button>
             <button
               type="button"
               class="enc-icon-btn"
               :disabled="reserveMoveCount === 0"
-              title="Вернуть выбранных в запас"
-              aria-label="Вернуть выбранных в запас"
+              title="Вывести выбранных из боя"
+              aria-label="Вывести выбранных из боя"
               @click="enc.sendSelectedTo('reserve')"
             >
-              <ArchiveRestore :size="18" /><span class="enc-control-label">В запас</span>
+              <ArchiveRestore :size="18" /><span class="enc-control-label">Из боя</span>
               <span v-if="reserveMoveCount" class="enc-icon-count">{{ reserveMoveCount }}</span>
             </button>
             <button
@@ -122,7 +121,7 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import { ArchiveRestore, ChevronLeft, ChevronRight, Dices, ListChecks, LogIn, Skull, Square, Swords, Trash2 } from '@lucide/vue'
+import { ArchiveRestore, ChevronLeft, ChevronRight, Dices, LogIn, Skull, Square, Swords, Trash2 } from '@lucide/vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import EncounterBulkDamageMenu from './EncounterBulkDamageMenu.vue'
 import EncounterChallengeMenu from './EncounterChallengeMenu.vue'
@@ -135,11 +134,9 @@ defineEmits(['toggle-combat','view-participant','import-combat-block'])
 const enc=props.encounter
 const shortcutLabels=sessionShortcutLabels()
 const combatItems=computed(()=>enc.sortable.displayItems('combat'))
-const startSelectionCount=computed(()=>enc.inCombat.length+enc.encounter.combatants.filter(row=>row.position!=='combat'&&row.position!=='dead'&&enc.isSelected(row)).length)
+const startSelectionCount=computed(()=>enc.inCombat.length)
 const combatMoveCount=computed(()=>enc.selectedToMoveTo('combat'))
 const reserveMoveCount=computed(()=>enc.selectedToMoveTo('reserve'))
 const deadMoveCount=computed(()=>enc.selectedToMoveTo('dead'))
-const allSelectedInCombat=computed(()=>combatItems.value.length>0&&combatItems.value.every(row=>enc.isSelected(row)))
-function toggleVisibleSelection(items){const select=!items.every(row=>enc.isSelected(row));for(const row of items)if(enc.isSelected(row)!==select)enc.toggleSelected(row)}
 </script>
 <style scoped src="./styles/EncounterToolbar.css"></style>

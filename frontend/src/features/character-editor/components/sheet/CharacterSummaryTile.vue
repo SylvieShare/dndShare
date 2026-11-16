@@ -53,9 +53,9 @@ function metric(event, key, enabled) { if (enabled) { event.stopPropagation(); e
 </script>
 <style scoped>
 .character-summary-tile {display:flex;align-items:center;min-width:0;gap:var(--spacing-small);width:100%;border-radius:var(--radius-tile);color:var(--text-1);font:inherit;text-align:left}
-.summary-main {display:grid;grid-template-columns:var(--layout-sheet-header-icon) minmax(0,1fr);gap:var(--spacing-small);align-items:center;flex:1;min-width:0}
-.portrait-wrap {position:relative;width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);flex:none}
-.portrait {display:grid;place-items:center;width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);padding:0;border:0;background:transparent;overflow:hidden;border-radius:var(--radius-input);color:var(--accent-soft);font:inherit;font-size:var(--type-sheet-header-size)}
+.summary-main {display:grid;grid-template-columns:var(--summary-avatar-size,var(--layout-sheet-header-icon)) minmax(0,1fr);gap:var(--spacing-small);align-items:center;flex:1;min-width:0}
+.portrait-wrap {position:relative;width:var(--summary-avatar-size,var(--layout-sheet-header-icon));height:var(--summary-avatar-size,var(--layout-sheet-header-icon));flex:none}
+.portrait {display:grid;place-items:center;width:var(--summary-avatar-size,var(--layout-sheet-header-icon));height:var(--summary-avatar-size,var(--layout-sheet-header-icon));padding:0;border:0;background:transparent;overflow:hidden;border-radius:var(--radius-input);color:var(--accent-soft);font:inherit;font-size:var(--type-sheet-header-size)}
 button.portrait {cursor:pointer}
 .summary-content {display:flex;flex-direction:column;gap:calc(var(--spacing-xs) / 2);min-width:0}
 .identity {display:flex;align-items:center;gap:var(--spacing-xs);min-width:0}

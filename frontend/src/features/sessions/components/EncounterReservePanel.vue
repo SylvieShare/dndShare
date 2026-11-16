@@ -5,7 +5,7 @@
       <template v-if="!enc.canManageReserves && !enc.loadError"><SkeletonBlock v-for="index in 3" :key="index" width="100%" height="72px" aria-label="Загружаем существ" /></template>
       <p v-else-if="enc.npcReserveCollapsed" class="enc-reserve-hint">Запас недоступен для игроков</p>
       <template v-else>
-        <EncounterRow v-for="(combatant,index) in items" :key="combatant.uid" :combatant="combatant" section="reserve-npc" :idx="index" :divided="index > 0" :selection-mode="selection.selecting" />
+        <EncounterRow v-for="(combatant,index) in items" :key="combatant.uid" :combatant="combatant" section="reserve-npc" :idx="index" :divided="index > 0" />
         <p v-if="!items.length" class="enc-reserve-hint">Запас пуст</p>
       </template>
     </SessionRosterList>
@@ -18,7 +18,7 @@ import { computed, provide } from 'vue'
 import { ActionButton, ConfirmDialog, SkeletonBlock } from '@sylvieshare/share-ui'
 import EncounterRow from './EncounterRow.vue'
 import SessionRosterList from './SessionRosterList.vue'
-const props=defineProps({encounter:{type:Object,required:true},ui:{type:Object,required:true},selection:{type:Object,required:true}})
+const props=defineProps({encounter:{type:Object,required:true},ui:{type:Object,required:true}})
 const enc=props.encounter
 provide('encounter',enc)
 const items=computed(()=>enc.sortable.displayItems('reserve-npc'))

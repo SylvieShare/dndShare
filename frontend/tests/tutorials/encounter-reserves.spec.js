@@ -13,7 +13,7 @@ async function open(page,width){
   await expect(page.locator('.chapter-canvas-stage')).toHaveCSS('background-image','none')
   const nav=page.getByRole('navigation',{name:'Боковые вкладки сессии'}),sidebar=page.locator('aside.map-sidebar')
   await nav.getByRole('button',{name:'Запас',exact:true}).click()
-  await expect(sidebar.locator('.enc-row-shell')).toHaveCount(2)
+  await expect(sidebar.locator('.enc-row-shell')).toHaveCount(3)
   return{api,nav,sidebar}
 }
 async function addCreature(page,sidebar,label){
@@ -68,7 +68,7 @@ for(const width of [475,704,1440])test(`reserve sidebar tabs create rename and r
     await dialog.getByRole('button',{name:'Удалить вкладку',exact:true}).click()
     await expect(nav.getByRole('button',{name:'Волки',exact:true})).toHaveCount(0)
     await expect.poll(()=>api.encounter().reserveTabs.length).toBe(0)
-    await expect(sidebar.locator('.enc-row-shell')).toHaveCount(2)
+    await expect(sidebar.locator('.enc-row-shell')).toHaveCount(3)
     expect(core(api.encounter())).toEqual(before)
     expect(api.encounter().combatants.every(row=>!row.reserveTabId)).toBe(true)
     await page.reload()

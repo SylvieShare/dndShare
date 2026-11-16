@@ -1,17 +1,17 @@
 <template>
   <div class="roster-selection" :aria-label="label">
     <div class="roster-selection-heading">
-      <ActionButton :variant="selection.selecting ? 'secondary' : 'quiet'" :disabled="!selection.selecting && (!encounter.canManageReserves || !selection.items.length)" :aria-pressed="selection.selecting" @click="selection.toggle">
-        <template #icon><Check v-if="selection.selecting" :size="18" /><ListChecks v-else :size="18" /></template>
-        Режим выбора <span class="roster-selection-count" role="status" title="Всего выбрано">{{ selection.selected.length }}</span>
-      </ActionButton>
+      <label class="roster-all-check"><CompactCheckbox :model-value="allVisible" :indeterminate="someVisible && !allVisible" :size="layoutTokens['roster-checkbox-icon']" :hit-size="layoutTokens['touch-min']" :disabled="!encounter.canManageReserves || !visibleRows.length" :label="visibleLabel" @update:model-value="selection.setVisibleSelection(visibleRows,$event)" /><span>Все</span></label>
+      <span class="roster-selection-count" role="status">Выбрано: {{ selection.selected.length }}</span>
+      <ActionButton variant="quiet" icon-only :disabled="!selection.selected.length" aria-label="Снять весь выбор" title="Снять весь выбор" @click="selection.clear"><template #icon><X :size="18" /></template></ActionButton>
       <slot />
     </div>
     <div v-if="actionsVisible" class="roster-actions-reveal roster-actions-reveal--open">
       <div class="roster-actions-clip"><div class="roster-selection-actions" role="group" aria-label="Действия с выбранными">
-        <ActionButton variant="quiet" layout="stacked" :disabled="!selection.damageTargets.length" aria-label="Нанести урон" @click="open('damage')"><template #icon><HeartCrack :size="20" /></template>Урон</ActionButton>
-        <ActionButton v-if="selection.supportsExperience" variant="quiet" layout="stacked" :disabled="!selection.experienceTargets.length" :aria-label="encounter.isRed?'Добавить IP':'Добавить опыт'" @click="open('experience')"><template #icon><Sparkles :size="20" /></template>{{encounter.isRed?'IP':'Опыт'}}</ActionButton>
-        <ActionButton v-if="combatWorkspace && selection.moveTargets.length" variant="quiet" layout="stacked" aria-label="Переместить в бой" @click="encounter.sendCombatantsTo(selection.moveTargets,'combat')"><template #icon><Swords :size="20" /></template>В бой</ActionButton>
+        <ActionButton variant="quiet" layout="stacked" :disabled="!selection.damageTargets.length" :aria-label="`Нанести урон: ${selection.damageTargets.length}`" @click="open('damage')"><template #icon><span class="roster-action-icon"><HeartCrack :size="20" /><span class="roster-action-count" aria-hidden="true">{{selection.damageTargets.length}}</span></span></template>Урон</ActionButton>
+        <ActionButton v-if="selection.supportsExperience" variant="quiet" layout="stacked" :disabled="!selection.experienceTargets.length" :aria-label="`${encounter.isRed?'Добавить IP':'Добавить опыт'}: ${selection.experienceTargets.length}`" @click="open('experience')"><template #icon><span class="roster-action-icon"><Sparkles :size="20" /><span class="roster-action-count" aria-hidden="true">{{selection.experienceTargets.length}}</span></span></template>{{encounter.isRed?'IP':'Опыт'}}</ActionButton>
+        <ActionButton variant="quiet" layout="stacked" :disabled="!selection.moveTargets.length" :aria-label="`${encounter.encounter.active?'Ввести в бой':'Добавить на сцену'}: ${selection.moveTargets.length}`" @click="encounter.sendCombatantsTo(selection.moveTargets,'combat')"><template #icon><span class="roster-action-icon"><Swords :size="20" /><span class="roster-action-count" aria-hidden="true">{{selection.moveTargets.length}}</span></span></template>{{encounter.encounter.active?'В бой':'На сцену'}}</ActionButton>
+        <ActionButton variant="quiet" layout="stacked" :disabled="!selection.returnTargets.length" :aria-label="`${encounter.encounter.active?'Вывести из боя':'Убрать со сцены'}: ${selection.returnTargets.length}`" @click="encounter.sendCombatantsTo(selection.returnTargets,'reserve')"><template #icon><span class="roster-action-icon"><LogOut :size="20" /><span class="roster-action-count" aria-hidden="true">{{selection.returnTargets.length}}</span></span></template>{{encounter.encounter.active?'Из боя':'Со сцены'}}</ActionButton>
       </div></div>
     </div>
   </div>
@@ -26,13 +26,17 @@
   </AppModalFrame>
 </template>
 <script setup>
-import { ref, shallowRef } from 'vue'
-import { ActionButton, AppModalFrame, FormActionButtons, FormField, FormNumberInput } from '@sylvieshare/share-ui'
-import { Check, HeartCrack, ListChecks, Sparkles, Swords } from '@lucide/vue'
+import { computed, ref, shallowRef } from 'vue'
+import { ActionButton, AppModalFrame, CompactCheckbox, FormActionButtons, FormField, FormNumberInput } from '@sylvieshare/share-ui'
+import { HeartCrack, LogOut, Sparkles, Swords, X } from '@lucide/vue'
+import { layoutTokens } from '@/app/design-tokens'
 import { charactersApi } from '@/shared/api/charactersApi'
 import { pvExperiencePath } from '../lib/participantView'
 import { experiencePlan, saveExperiencePlan } from '../lib/rosterExperience'
-const props=defineProps({encounter:{type:Object,required:true},selection:{type:Object,required:true},combatWorkspace:Boolean,actionsVisible:{type:Boolean,default:true},label:{type:String,default:'Выбор участников'}})
+const props=defineProps({encounter:{type:Object,required:true},selection:{type:Object,required:true},visibleItems:{type:Array,default:()=>[]},visibleLabel:{type:String,default:'Выбрать всех в этой вкладке'},actionsVisible:{type:Boolean,default:true},label:{type:String,default:'Выбор участников'}})
+const visibleRows=computed(()=>{const ids=new Set(props.selection.items.map(row=>row.uid));return [...new Map(props.visibleItems.filter(row=>ids.has(row.uid)).map(row=>[row.uid,row])).values()]})
+const allVisible=computed(()=>visibleRows.value.length>0&&visibleRows.value.every(row=>props.encounter.isSelected(row)))
+const someVisible=computed(()=>visibleRows.value.some(row=>props.encounter.isSelected(row)))
 const action=ref(null),amount=ref(1),pending=ref(false),error=ref(''),locked=ref(false),targets=shallowRef([]),plan=ref(null)
 function open(kind) {
   targets.value=[...(kind==='damage'?props.selection.damageTargets:props.selection.experienceTargets)]
@@ -57,11 +61,14 @@ async function apply() {
 .roster-selection {min-width:0}
 .roster-selection-heading {display:flex;align-items:center;flex-wrap:wrap;gap:var(--spacing-xs)}
 .roster-action-summary {font-size:var(--type-caption-size);color:var(--text-muted)}
-.roster-selection-count {min-width:var(--spacing-large);padding-inline:var(--spacing-xs);border-radius:var(--radius-badge);background:var(--background);font-variant-numeric:tabular-nums}
-.roster-selection-actions {display:flex;align-items:center;gap:var(--spacing-xs);padding-top:var(--spacing-xs)}
+.roster-all-check {display:inline-flex;align-items:center;gap:var(--spacing-small);min-height:var(--layout-touch-min);margin-inline-start:var(--spacing-medium);cursor:pointer}
+.roster-selection-count {margin-inline-start:auto;min-width:var(--spacing-large);padding-inline:var(--spacing-xs);border-radius:var(--radius-badge);background:var(--background);font-variant-numeric:tabular-nums}
+.roster-selection-actions {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;gap:var(--spacing-xs);padding-top:var(--spacing-xs)}
 .roster-actions-reveal {display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows var(--motion-enter),opacity var(--motion-feedback)}
 .roster-actions-reveal--open {grid-template-rows:1fr;opacity:1}
 .roster-actions-clip {overflow:hidden;min-height:0}
+.roster-action-icon {position:relative;display:inline-flex}
+.roster-action-count {position:absolute;left:calc(100% - var(--spacing-xs));top:calc(var(--spacing-xs) * -1);min-width:var(--spacing-large);height:var(--spacing-large);box-sizing:border-box;padding-inline:var(--spacing-xs);border-radius:var(--radius-small);background:var(--surface-active);color:var(--text-1);font:600 var(--type-context-size)/var(--spacing-large) var(--font-ui)}
 .roster-action-error {color:var(--danger)}
 @media(prefers-reduced-motion:reduce){.roster-actions-reveal{transition:none}}
 </style>

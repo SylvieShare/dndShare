@@ -69,7 +69,7 @@ click.
 
 Players have no separate encounter reserve section. The persistent workspace sidebar
 keeps the Players panel available on every tab. Players and NPC reserves use the
-same explicit selection mode and frame indicators, without sidebar checkboxes;
+same permanent checkbox targets and shared selected UID state;
 AC, HP and passive skills use the common character summary tile.
 A prepared initiative remains a chip beside the name while the player is in reserve.
 Selection and current-turn highlights retain the encounter commands and permissions.
@@ -123,13 +123,11 @@ action because they have no handbook record. There is no separate HP-reroll butt
 the action is hidden once that NPC is on the combat scene. NPC
 color is not duplicated in the row action menu and remains part of the
 letter-marker popover. The combat scene stays mounted during preparation and active combat; its
-select-all action lives in the command column. Sidebar reserves retain their shared selection-mode toolbar. State editing uses the character setting's state
+select-all action lives in the command column. Sidebar groups and the command column use the same global selection with constant checkboxes. State editing uses the character setting's state
 value path and suggestion dictionary (the `states` part of the combined D&D
 status overview), so the same condition list is available for players and NPCs.
-When combat starts, selected NPC reserve rows fade out with a short stagger and
-the combat-scene block then expands smoothly into the layout. Ending combat
-collapses the scene and softly reveals the returned NPC reserve. Player tiles do
-not move between rails. Controls stay locked for the short transition, while
+Starting and ending combat animate the scene state while home rows remain
+visible. Neither player nor NPC home rows fade out or move between groups. Controls stay locked for the short transition, while
 reduced-motion users get the direct state change.
 
 When the combat rail changes the canvas safe-left inset, `NarrativeGraphCanvas`
@@ -173,26 +171,26 @@ the normal encounter save queue.
 
 ### Sidebar selection and prepared scene
 
-`useRosterSelection` scopes the sidebar to all players plus all NPC reserves,
-independently of the open tab. One controller serves every Players/Reserves tab:
-“Режим выбора” shows their combined selected count, and toggling it off clears
-that complete scope. Damage and move actions target eligible actors across all
-these tabs; experience targets characters only. The scene keeps its own mode.
-`SessionSelectionToolbar` owns the dialogs and belongs to the highlighted sidebar
-header, outside `SessionRosterList` scrolling.
-The group-action row stays visible when selection is off, with unavailable
-actions disabled. Ordinary tile actions are inert during selection; keyboard focus stays on the
-accessible selectable row. Only actors leaving the complete mode scope are pruned;
-changing the visible reserve tab preserves its selection.
-Damage calls `useEncounterImpacts` with an explicit snapshot of the shared scope’s
-eligible targets, preserving its stable retry key and authoritative server HP.
-D&D experience uses the semantic `experiencePath` and the existing versioned
-character document queue; the batch remembers confirmed targets on retry.
-The amount is added to each character, without automatic level-up.
-The move action is shown in the combat workspace for eligible selected rows,
-even before combat is active. The scene roster remains visible in preparation;
-starting combat includes already prepared rows even if their selection was cleared.
-Drag/drop can also populate the prepared scene without enforcing active-turn rank.
+`useRosterSelection` derives one selection from canonical live combatant UIDs,
+shared across Players, every reserve group and the scene. Its input is deduplicated
+by UID; a creature shown in two views receives damage or XP only once. Constant
+leading checkboxes separate selection from body menus. Checkbox targets are 48px
+with 22px glyphs; pointer/key events do not open menus or claim drag. Vertical
+touch movement scrolls both lists. HP and state controls stay interactive.
+There is no selection mode. The header shows a global count and clear action,
+plus an All checkbox scoped to the open tab with a mixed state. Each group action
+shows its eligible count, including separate add-to-scene and remove-from-scene
+counts for mixed selections. The row remains visible with unavailable actions disabled.
+Damage captures explicit eligible targets for the idempotent authoritative impact
+command. D&D XP/IP targets characters only and retries only unconfirmed writes.
+Starting combat uses only prepared scene members. Selecting a reserve actor alone
+never adds it to combat; unchecking a participant never removes it. A home group
+keeps live actors even while they participate in combat. Membership, HP and states
+are shared, while the badge changes from “На сцене” to “В бою”. The current turn
+has its own arrow/text and warm tint, independent of purple selection.
+Dragging within a home group retains combat participation. Cross-view previews
+exclude an already present UID before insertion. Returning an actor from the
+scene keeps its home group and selection; graveyard/removal prunes selection.
 
 ### Reserve tabs
 
@@ -218,10 +216,9 @@ migration is needed. Definitions use stable IDs, names of 1–255 characters and
 cannot claim the reserved `default` ID. Metadata remains private to the DM's
 encounter document; public display DTOs do not include it.
 
-The active tab scopes reserve selection, sorting and new creatures. Dragging
+The active tab scopes the All checkbox, home sorting and new creatures; individual selection remains global. Dragging
 into its roster assigns that tab; the `Другой запас` row submenu moves an NPC
-between tabs. Entering combat or the graveyard retains the home tab, so returning
-to reserve restores its original grouping. The sidebar tabs exist while the
+between tabs. Entering combat retains both the home reference and its visible home row. Graveyard actors retain the home reference but leave the live list; restoring them returns the original grouping. The sidebar tabs exist while the
 combat workspace is open, including preparation before the encounter starts.
 
 Canonical combatants:
@@ -373,8 +370,8 @@ menu before combat. `rollCombatantInitiative` changes only that creature; combat
 start preserves an already assigned initiative. Existing mass initiative actions
 remain available.
 
-Ctrl + click (Cmd + click on macOS) enters selection mode and toggles a sidebar
-player/reserve tile on every session tab. Combat rows and `SessionTargetPicker`
+Ctrl + click (Cmd + click on macOS) directly toggles a sidebar
+player/group tile on every session tab without changing the body interaction mode. Combat rows and `SessionTargetPicker`
 retain their existing Ctrl/Cmd selection. The shared
 `handleCtrlSelection` consumes the gesture before menus, native checkbox
 activation and drag start, including macOS's Cmd-click and Ctrl-contextmenu events. Locked or
@@ -452,12 +449,13 @@ reserves and combat, compact 32px in maps/catalogues.
 `EncounterInitiativeMenu` remains shared with creature rows. `handleCtrlSelection`
 handles Ctrl/Cmd selection in the player list, encounter rows and target picker;
 macOS Ctrl-contextmenu toggles once. Drag ignores these modifiers and form controls.
-`CompactCheckbox` remains in the combat queue and target picker, using size=20;
-sidebar lists and the combat scene use accessible checkbox roles on framed
-selectable rows. Scene selection mode is controlled from the right command column. The former floating player rail and
+`CompactCheckbox` is a permanent secondary action in sidebar and scene tiles,
+with size=22 and hitSize=48. Bodies keep menu semantics while HP/state controls
+remain interactive. Header selection is global, with an All checkbox scoped
+to its visible list; there is no mode switch. The former floating player rail and
 its independent collapsed-state preference are removed; one sidebar owns collapse.
 `ArmorClassChip` and `SessionHpBar` remain the compact AC/HP presentations for
-encounter rows, chronicle result rows and target pickers.
+chronicle result rows and target pickers. Sidebar/scene summaries use `SheetHealth`.
 
 ## Связанные страницы
 

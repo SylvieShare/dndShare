@@ -48,7 +48,7 @@
                   :divided="idx > 0"
                   :order="idx + 1"
                   :is-current="enc.encounter.active && c.uid === currentTurnUid"
-                      :selection-mode="sceneSelection.selecting"
+
                 />
               </div>
             </div>
@@ -95,12 +95,12 @@ const {
   transitioning: combatTransitioning,
   phase: combatTransitionPhase,
   toggleCombat,
-} = useEncounterCombatTransition(enc, encounterRoot)
+} = useEncounterCombatTransition(enc)
 
 provide('encounter', enc)
 
 const combatItems = computed(() => enc.sortable.displayItems('combat'))
-const sceneSelection=reactive(useRosterSelection(enc,()=>combatItems.value))
+const sceneSelection=reactive(useRosterSelection(enc,()=>enc.encounter.combatants))
 
 const currentTurnUid = computed(() => enc.currentTurnUid)
 const currentTurnCombatant = computed(() => enc.inCombat.find(combatant => combatant.uid === currentTurnUid.value) ?? null)

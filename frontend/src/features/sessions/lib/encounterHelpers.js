@@ -32,7 +32,7 @@ export function initRank(c) {
 
 export function matchesGroup(c, group) {
   if (group === 'combat') return c.position === 'combat'
-  if (group === 'reserve-npc') return c.position === 'reserve' && c.type === 'npc'
+  if (group === 'reserve-npc') return c.position !== 'dead' && c.type === 'npc'
   if (group === 'reserve-player') return c.position === 'reserve' && c.type === 'player'
   if (group === 'dead') return c.position === 'dead'
   return false

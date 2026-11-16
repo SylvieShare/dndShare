@@ -7,7 +7,7 @@ import { workspaceSidebarContext } from '@/shared/lib/workspaceSidebarContext'
 export function useSessionSidebar(activeView) {
   const clients = shallowReactive(new Map())
   const selected = ref('players'), target = shallowRef(null), sidebar = shallowRef(null)
-  const width = ref(layoutTokens['map-sidebar']), rail = ref(layoutTokens['map-rail'])
+  const width = ref(layoutTokens['session-sidebar']), rail = ref(layoutTokens['map-rail'])
   const { format } = useAppLayout()
   const safeLeft = computed(() => (format.value === 'desktop' ? width.value : rail.value) + spacingTokens.page)
   const moving = computed(() => !!sidebar.value?.moving)

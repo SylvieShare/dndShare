@@ -1,4 +1,4 @@
-import { createApp, h, reactive } from 'vue'
+import { createApp, h, reactive, watch } from 'vue'
 import { createPinia } from 'pinia'
 import SessionParticipantCard from '../../../src/features/sessions/components/SessionParticipantCard.vue'
 import EncounterRow from '../../../src/features/sessions/components/EncounterRow.vue'
@@ -13,7 +13,7 @@ import '../../../src/features/sessions/components/styles/EncounterTab.css'
 const pinia = createPinia()
 useTemplateStore(pinia).templates = [{ id: 1, name: 'DND5' }]
 useSuggestStore(pinia).set(3, [])
-const state = reactive({ combat: true, selecting: false, npcSelecting: false, compact: false, dm: true, rejectStatusSave: false, selected: false, npcSelected: false, npcSection: 'reserve-npc', active: false, challenge: false, drags: 0, rerolls: [] })
+const state = reactive({ combat: true, compact: false, dm: true, rejectStatusSave: false, selected: false, npcSelected: false, npcSection: 'reserve-npc', active: false, challenge: false, drags: 0, rerolls: [] })
 const player = reactive({ uid: 'player', type: 'player', charId: 1, initiative: null, position: 'reserve' })
 const npc = reactive({ uid: 'npc', type: 'npc', name: 'Гоблин', initiative: null, position: 'reserve', markerLetter: 'Б' })
 const participant = reactive({ charId: 1, charUuid: 'participant-status-test', templateId: 1, sourceVersionId: 1, version: 1, data: { values: { name: 'Тиф', race: { name: 'Эльф' }, classes: [{ name: 'Плут' }], hp: { current: 18, max: 24 }, lvl: { level: 5 }, WIS: { value: 16, skills: { 10: { up: 1 } } }, INT: { value: 14, skills: { 9: { up: 2 } } }, DEX: { value: 14 }, armor: {} } } })
@@ -22,7 +22,7 @@ const encounter = reactive({
   reserveTabs: [{id:"default",name:"Запас",permanent:true}],
   reserveIdFor: () => "default",
   sortable: { isSource: () => false, shouldSuppressClick: () => false, startDrag: () => { state.drags++ } },
-  isSelected: () => state.npcSelected, toggleSelected: () => { state.npcSelected = !state.npcSelected; state.npcSelecting = true },
+  isSelected: () => state.npcSelected, toggleSelected: () => { state.npcSelected = !state.npcSelected },
   sendCombatantsTo: rows => rows.forEach(c => { c.position = 'combat'; c.initiative ??= 12 }),
   setInitiative: (c, value) => { c.initiative = value }, rollCombatantInitiative: c => { c.initiative = 17 },
   setSide: (c, value) => { if (value) c.side = value; else delete c.side },
@@ -56,8 +56,9 @@ window.fetch = async (input, options = {}) => {
   }
   return Response.json({ items: [] })
 }
+watch(()=>state.npcSection,value=>{npc.position=value==='combat'?'combat':value==='dead'?'dead':'reserve'},{flush:'sync'})
 window.controls = { state, encounter, player, participant, npc, writes }
 createApp({ render: () => h('main', { style: 'padding:20px;max-width:850px' }, [
-  h('div', { class: ['campaign-workspace', state.combat && 'campaign-workspace--combat'], style: 'height:auto;overflow:visible' }, h('div', { class: 'participant-test-column', style: `position:relative;display:flex;max-height:70vh;overflow-y:auto;width:${state.combat ? 309 : 264}px` }, h(SessionParticipantCard, { participant, isDm: state.dm, compact: state.compact, combatMode: state.combat, selectionMode: state.selecting, combatEditable: true, combatant: player, combatSelected: state.selected, reorderEnabled: true, 'onUpdate:combat-selected': value => { state.selected = value; state.selecting = true }, 'onDrag-start': () => { state.drags++ } }))),
-  h('div', { class: 'enc-combat-layout', style: 'margin-top:24px' }, h('div', { class: 'enc-combat-primary' }, h(EncounterRow, { combatant: npc, section: state.npcSection, selectionMode: state.npcSelecting }))),
+  h('div', { class: ['campaign-workspace', state.combat && 'campaign-workspace--combat'], style: 'height:auto;overflow:visible' }, h('div', { class: 'participant-test-column', style: `position:relative;display:flex;max-height:70vh;overflow-y:auto;width:${state.combat ? 309 : 264}px` }, h(SessionParticipantCard, { participant, isDm: state.dm, compact: state.compact, combatMode: state.combat, combatEditable: true, combatant: player, combatSelected: state.selected, reorderEnabled: true, 'onUpdate:combat-selected': value => { state.selected = value }, 'onDrag-start': () => { state.drags++ } }))),
+  h('div', { class: 'enc-combat-layout', style: 'margin-top:24px' }, h('div', { class: 'enc-combat-primary' }, h(EncounterRow, { combatant: npc, section: state.npcSection }))),
 ]) }).use(pinia).provide('applicationEncounter', encounter).provide('encounter', encounter).mount('#app')

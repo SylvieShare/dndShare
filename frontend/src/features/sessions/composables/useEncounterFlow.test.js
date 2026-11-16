@@ -43,6 +43,7 @@ describe('encounter group movement', () => {
     expect(player.initiative).toBe(12)
     expect(encounter.value.combatants[1].initiative).toBeNull()
     flow.setInitiative(player, 18)
+    flow.sendCombatantsTo([player],'combat')
     flow.toggleCombat()
     expect(player.initiative).toBe(18)
     flow.rollCombatantInitiative(player)
@@ -88,3 +89,17 @@ it('sets all NPC relations and removes the tag without accepting unknown values'
   flow.setSide(npc, null);
   expect(npc).not.toHaveProperty('side');
 });
+
+it('starting combat never adds selected actors that were not put on the scene',()=>{
+  const {encounter,flow}=createFlow();encounter.value.active=false
+  flow.toggleCombat();expect(encounter.value.active).toBe(false)
+  flow.sendCombatantsTo([encounter.value.combatants[0]],'combat');flow.toggleCombat()
+  expect(encounter.value.combatants[1].position).toBe('reserve')
+})
+it('reordering a home group retains combat participation and its canonical actor',()=>{
+  const {encounter,flow}=createFlow(),npc=encounter.value.combatants[1]
+  npc.position='combat';npc.reserveTabId='wolves'
+  flow.performSortDrop({item:npc,fromGroup:'reserve-npc',toGroup:'reserve-npc',toIndex:0})
+  expect(encounter.value.combatants.filter(row=>row.uid===npc.uid)).toHaveLength(1)
+  expect(npc).toMatchObject({position:'combat',reserveTabId:'wolves'})
+})

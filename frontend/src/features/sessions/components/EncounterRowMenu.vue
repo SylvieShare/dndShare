@@ -24,7 +24,7 @@
         v-if="canReserve"
         :icon="Archive"
         @click="enc.sendToReserve(combatant); close()"
-      >В запас</RowActionItem>
+      >{{ enc.encounter.active ? 'Вывести из боя' : 'Убрать со сцены' }}</RowActionItem>
       <RowActionSubmenu v-if="isNpc && section === 'reserve-npc' && enc.reserveTabs.length > 1" label="Выбрать запас">
         <template #trigger="{ open }"><RowActionItem :icon="Archive" submenu :submenu-open="open">Другой запас</RowActionItem></template>
         <template #default="{ close: closeReserves }">
@@ -95,9 +95,9 @@ const enc = inject('encounter')
 
 const isNpc = computed(() => props.combatant.type === 'npc')
 const canOpenCard = computed(() => isNpc.value && props.combatant.itemId != null)
-const canReserve = computed(() => props.section === 'combat')
+const canReserve = computed(() => props.combatant.position === 'combat')
 const canRerollHp = computed(() =>
-  isNpc.value && props.section !== 'combat' && !!enc.npcHpFormula(props.combatant)
+  isNpc.value && props.combatant.position !== 'combat' && !!enc.npcHpFormula(props.combatant)
 )
 const canDelete = computed(() => isNpc.value)
 const canRevive = computed(() => props.section === 'dead' && enc.canEditPlayerHp())

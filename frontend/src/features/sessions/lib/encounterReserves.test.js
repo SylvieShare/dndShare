@@ -85,6 +85,7 @@ describe('encounter reserve tabs',()=>{
     expect(reserves.reserveNpcs.value.map(c=>c.uid)).toEqual(['b','a'])
     flow.performSortDrop({item:getCombatant('a'),toGroup:'combat',toIndex:0})
     expect(getCombatant('a')).toMatchObject({position:'combat',reserveTabId:'wolves',hpCurrent:14})
+    expect(reserves.reserveNpcs.value.some(row=>row.uid==='a')).toBe(true)
     await flow.sendToReserve(getCombatant('a'))
     expect(getCombatant('a')).toMatchObject({position:'reserve',reserveTabId:'wolves'})
     reserves.removeReserve('wolves');await nextTick()

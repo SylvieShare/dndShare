@@ -85,10 +85,11 @@ export function useEncounterFlow({
       })
       encounter.value = { ...encounter.value, active: false, round: 0, turnIndex: 0 }
     } else {
+      if(!inCombat.value.length)return
       mutate(() => {
         let tb = nextTieBreak(encounter.value.combatants)
         for (const c of encounter.value.combatants) {
-          if (!selectedUids.value.has(c.uid) && c.position !== 'combat') continue
+          if (c.position !== 'combat') continue
           if (c.position === 'dead') continue
           c.position = 'combat'
           if (c.initiative == null) c.initiative = rollInitiativeFor(c)
@@ -172,7 +173,6 @@ export function useEncounterFlow({
       t.initiative = null
       t.surprised = false
     })
-    unselect(c.uid)
   }
 
   function reviveCombatant(c, hpAmount) {
@@ -217,7 +217,7 @@ export function useEncounterFlow({
     }
   }
 
-  function performSortDrop({ item, toGroup, toIndex }) {
+  function performSortDrop({ item, fromGroup, toGroup, toIndex }) {
     let newCombatOrder = null
     if (toGroup === 'combat' && encounter.value.active) {
       const filtered = inCombat.value.filter(c => c.uid !== item.uid)
@@ -227,7 +227,7 @@ export function useEncounterFlow({
     mutate(() => {
       const t = getCombatant(item.uid)
       if (!t) return
-      const newPos = toGroup === 'combat' ? 'combat' : (toGroup === 'dead' ? 'dead' : 'reserve')
+      const newPos = toGroup === 'combat' ? 'combat' : (toGroup === 'dead' ? 'dead' : fromGroup === 'reserve-npc' && toGroup === 'reserve-npc' ? t.position : 'reserve')
       t.position = newPos
       if (toGroup === 'reserve-npc' && t.type === 'npc') onReserveDrop?.(t)
       if (newPos === 'dead') t.initiative = null
