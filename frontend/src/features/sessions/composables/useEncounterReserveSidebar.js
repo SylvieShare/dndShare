@@ -2,18 +2,18 @@ import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { Archive, Plus } from '@lucide/vue'
 import { DEFAULT_RESERVE_ID } from '../lib/encounterReserves'
 
-export function useEncounterReserveSidebar(encounter, sidebar, visible) {
+export function useEncounterReserveSidebar(encounter, sidebar) {
   const editing = ref(false), draftName = ref(''), pendingDelete = ref(null)
   const active = computed(() => encounter.reserveTabs.find(tab => tab.id === encounter.activeReserveId) || encounter.reserveTabs[0])
   const selected = computed(() => sidebar.selected.value.startsWith('reserves:'))
   const unregister = sidebarContextRegister()
   function sidebarContextRegister() {
     return sidebar.register('reserves', {
-      tabs: () => visible() ? [
+      tabs: () => [
         ...encounter.reserveTabs.map((tab,index) => ({key:tab.id,label:tab.name,icon:Archive,divider:index===0,dividerLabel:index===0?'Запасы существ':undefined})),
         {key:'add',label:'Добавить вкладку',shortLabel:'Добавить',icon:Plus,action:true,disabled:!encounter.canManageReserves,
           attrs:{style:{borderStyle:'dashed',borderColor:'var(--border-strong)'}}},
-      ] : [],
+      ],
       resize() {},
       action: async key => {
         if (key !== 'add') return

@@ -156,7 +156,7 @@
       <SessionWorkspaceSidebar :controller="sidebar">
         <template #reserve-title><EncounterReserveHeader :ui="reserveSidebar" /></template>
         <template #reserve-actions><EncounterReserveHeader :ui="reserveSidebar" actions /></template>
-        <template #panels><EncounterReservePanel v-if="workspaceMode === 'combat'" :encounter="encounter" :ui="reserveSidebar" /></template>
+        <template #panels><EncounterReservePanel :encounter="encounter" :ui="reserveSidebar" /></template>
         <template #players-actions>
           <SessionPlayersMenu :live-status="liveStatus" :sync-status="syncStatus" :syncing="syncRunning || liveCatchingUp"
             @join="openJoinOwn" @create="openCreate" @copy-code="copyCode" @copy-link="copyLink" />
@@ -223,6 +223,7 @@
         </div>
       </SessionWorkspaceSidebar>
 
+      <EncounterNpcDialogs :encounter="encounter" />
       <DndHpCalcModal
         v-if="encounter.hpCalcPlayer"
         :key="encounter.hpCalcPlayer.uid"
@@ -272,6 +273,7 @@ import { ConfirmDialog } from '@sylvieshare/share-ui'
 import CharacterCreateWizardModal from '@/features/character-list/components/CharacterCreateWizardModal.vue'
 import CharacterSheetModal from '@/features/character-editor/components/CharacterSheetModal.vue'
 import ChapterGraphTab from '@/features/sessions/components/ChapterGraphTab.vue'
+import EncounterNpcDialogs from '@/features/sessions/components/EncounterNpcDialogs.vue'
 import EncounterReviveModal from '@/features/sessions/components/EncounterReviveModal.vue'
 import SessionChronicleWorkspace from '@/features/sessions/components/SessionChronicleWorkspace.vue'
 import SessionEditModal from '@/features/sessions/components/SessionEditModal.vue'
@@ -320,7 +322,7 @@ const {
   workspaceMode, workspaceMotionMode, workspaceScene, worldLayer,
 } = useSessionPage()
 const sidebar = useSessionSidebar(primaryView)
-const reserveSidebar = reactive(useEncounterReserveSidebar(encounter,sidebar,()=>workspaceMode.value==='combat'))
+const reserveSidebar = reactive(useEncounterReserveSidebar(encounter,sidebar))
 const route = useRoute()
 const requestedOccurrenceId = computed(() => Number(route.query.occurrence) || null)
 provide('applicationEncounter', encounter)

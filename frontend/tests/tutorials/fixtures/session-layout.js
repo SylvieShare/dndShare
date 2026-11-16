@@ -31,7 +31,7 @@ export async function sessionLayout(page, {url='/tests/tutorials/fixtures/tutori
       return route.fulfill({json:{fromVersion:encounterVersion,version:++encounterVersion,patches:packet.patches,mutationId:packet.mutationId}})
     }
     let json = {}
-    if(path==='/api/sessions/test')json={session:{uuid:'test',name:'Поход',ownerUserId:1,systemId:1,status:'active',displayCode:'TEST'},participants,myRole:'gm'}
+    if(path==='/api/sessions/test')json={session:{uuid:'test',name:'Поход',ownerUserId:1,systemId:1,sourceVersionId:1,status:'active',displayCode:'TEST'},participants,myRole:'gm'}
     if(path==='/api/templates')json={templates:[{id:1,name:'DND5'}]}
     if(path==='/api/account/tutorials')json={tutorials:['desktop','mobile'].flatMap(device=>['session-dm','character'].map(flowId=>({flowId,sourceKey:flowId==='character'?'edition:1':'source:1',device,status:'completed',revision:TUTORIAL_REVISION})))}
     if(path.endsWith('/chapter-graph'))json={arcs:[{id:3,name:'Начало пути',order:1}],chapters:[{id:12,arcId:3,number:1,name:'Перевал',status:'planned',positionX:0,positionY:0}],edges:[]}

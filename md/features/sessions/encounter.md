@@ -21,8 +21,8 @@ row are separate `BaseTile` surfaces. The map and its inspector are not shown
 in Combat. During active combat, two columns appear only when the actual content
 width can hold the roster (480px), its scrollbar gap (12px), the column gap
 (Large, 16px) and at least 280px for the turn preview. Otherwise the preview is
-not mounted, and the roster remains the only column. The left roster, capped at 480px, contains the initiative queue and
-NPC reserve. Its scroll container reserves an additional 12px of inline-end padding before the scrollbar; the content width remains capped at 480px. The sticky right column follows the current turn: bestiary NPCs
+not mounted, and the roster remains the only column. The left roster, capped at 480px, contains the initiative queue;
+NPC reserves use the persistent sidebar. Its scroll container reserves an additional 12px of inline-end padding before the scrollbar; the content width remains capped at 480px. The sticky right column follows the current turn: bestiary NPCs
 show live combat values plus their reference abilities and actions; simplified
 NPCs show the encounter values and description; players show a compact combat
 profile with a link to the full character sheet. Selection does not change this
@@ -165,8 +165,12 @@ the normal encounter save queue.
 ### Reserve tabs
 
 The combat workspace uses a plain background; the story dot pattern remains
-on the plot canvas. NPC reserves live in the persistent left sidebar after
-the players/context tabs and a separator. The first tab is always `Запас`
+on the plot canvas. NPC reserves live in the persistent left sidebar on every
+session tab, after the players/context tabs and a separator, even before opening
+combat. The selected reserve and its panel stay mounted across workspace changes.
+`EncounterNpcDialogs` is hosted by the session page: adding handbook/simple NPCs,
+editing HP and opening NPC details work from any tab, with one shared dialog host
+also used by the combat roster. The first tab is always `Запас`
 (`default`), with a fixed name and no delete action. The last dashed plus adds
 a custom tab. Its heading pencil edits the name inline; Enter/blur saves and
 Escape cancels. Deleting a custom tab returns its creatures to `Запас` without
