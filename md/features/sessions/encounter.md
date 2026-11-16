@@ -16,23 +16,28 @@ Encounter state is split into composables under `features/sessions/composables`:
 load/save, players, NPC item cache, HP, initiative, flow, states and dice.
 `useEncounter.js` composes them; row components remain presentation-only.
 
-The encounter workspace has no shared backing surface. Its header and every NPC
-row are separate `BaseTile` surfaces. The map and its inspector are not shown
-in Combat. During active combat, two columns appear only when the actual content
-width can hold the roster (480px), its scrollbar gap (12px), the column gap
-(Large, 16px) and at least 280px for the turn preview. Otherwise the preview is
-not mounted, and the roster remains the only column. The left roster, capped at 480px, contains the initiative queue;
-NPC reserves use the persistent sidebar. Its scroll container reserves an additional 12px of inline-end padding before the scrollbar; the content width remains capped at 480px. The sticky right column follows the current turn: bestiary NPCs
-show live combat values plus their reference abilities and actions; simplified
-NPCs show the encounter values and description; players show a compact combat
-profile with a link to the full character sheet. Selection does not change this
-preview.
-The workspace keeps Page padding on both sides and starts after the players'
-navigation rail even in compact windows. At narrow widths the combat header
-retains a compact context title and wraps its controls; the rows start below
-the measured header height with a Large gap. Resizing does not change the turn.
-In the chapter canvas the header is fixed
-beside the focused chapter while only the rows area scrolls. Row strips use the
+The combat workspace is one responsive grid under the session header. Its left
+column contains the prepared/active roster; the right column contains all combat
+commands in `EncounterControls`, followed by the current-turn reference when the
+encounter is active. There is no current chapter title/cover card in this workspace.
+The chapter/scenario context is still retained for returning to the story and
+importing scenario combat blocks.
+
+Columns fit from the actual available width: RosterMin (320), its scroll gap (12),
+ControlsMin (280) and Large (16). The roster grows to RosterWidth (480), controls
+to ControlsMax (420); the composition is centered in the workspace. The two
+columns scroll independently. Below that width, controls appear above the roster
+and scroll within a maximum 40dvh, leaving the roster usable in short windows.
+Resizing preserves the current turn and prepared roster. Controls stay in the
+same column before and after starting combat; section-select and move-to-scene
+commands are there too, rather than beside the roster title. All command buttons
+have visible captions and accessible names.
+
+The sidebar remains available, while map canvas/inspector are hidden in combat.
+The workspace keeps Page padding on both sides and starts after the participant
+safe area, including the permanent rail on compact windows. The roster uses its
+own scroll gap; the current-turn reference keeps its existing NPC/player detail.
+Row strips use the
 explicitly selected participant color for players or `iconColor` for NPCs; rows
 without an assigned color have no strip in either combat or the NPC reserve.
 NPC artwork normally uses 64×64 geometry and is centered vertically. If the
@@ -78,8 +83,10 @@ preference is used.
 NPC relations are optional. Reserve summaries have no visible enemy/ally/minion/neutral caption; the relation stays in the row menu and accessible description. Combat/map tiles show relations as subtle diagonal `/` stripes tiled over the entire tile (7px colored stripe followed by a 14px transparent gap, a 1:2 rhythm), with separate colors for enemy, ally, minion and neutral. There is no relation chip. Clearing the relation removes the stripes; `aria-description` retains the relation label for assistive technology. The row menu’s «Отношение» submenu sets enemy, ally, minion or neutral and offers «Убрать тег». The tile background is not a separate picker; newly added NPCs have no relation tag. The map roster uses the same submenu. Surprised status is changed from the row menu.
 
 Each NPC also receives the nearest free Latin marker from `A` through `Z`.
-The marker sits immediately to the left of the NPC name above the HP bar and is
-persisted in `markerLetter`.
+The marker sits inside the avatar’s upper-right corner in reserves, combat rows
+and the turn preview, with a dark text shadow for contrast over artwork. Its
+identity is persisted in `markerLetter`. The marker control is a sibling of the
+portrait button, so it never nests interactive buttons.
 Clicking it opens one popover with the full letter list and the marker color
 palette; choosing an occupied letter swaps the two NPC markers, preserving
 uniqueness. Creature artwork and the letter marker render directly on the row
@@ -112,10 +119,8 @@ opens the standard handbook `ItemViewModal`; simplified creatures omit that
 action because they have no handbook record. There is no separate HP-reroll button on a row, and
 the action is hidden once that NPC is on the combat scene. NPC
 color is not duplicated in the row action menu and remains part of the
-letter-marker popover. The combat-scene block is mounted only while combat is
-active; its select-all control sits beside the section title and no duplicate
-live-status chip is shown. The NPC-reserve select-all control follows the same
-left-aligned title placement. State editing uses the character setting's state
+letter-marker popover. The combat scene stays mounted during preparation and active combat; its
+select-all action lives in the command column. Sidebar reserves retain their shared selection-mode toolbar. State editing uses the character setting's state
 value path and suggestion dictionary (the `states` part of the combined D&D
 status overview), so the same condition list is available for players and NPCs.
 When combat starts, selected NPC reserve rows fade out with a short stagger and
@@ -393,7 +398,13 @@ with temporary HP, and two passive values for D&D participants viewed by the DM.
 summaries: portrait, shield AC, numeric HP, states and selection frames.
 `SessionReserveTile` supplies encounter data and retains creature marker,
 initiative, menus and drag ordering. Race/class remain in the sheet/menu,
-not the card. Long names truncate within the available width; metrics wrap as a group.
+not the card. Player and NPC names retain their full text: `useCreatureNameFit`
+proportionally reduces the glyph size from the wrapper's token-driven base size.
+It remeasures width, sibling indicators, name updates and loaded fonts, and restores
+the base size when the name becomes shorter or more room appears. Names use
+the shared ParticipantName role: locally packaged Cormorant Garamond, 22/26 px,
+weight 500, rather than bold interface text. No ellipsis is
+used. The same fitter serves the combat roster and turn preview; metrics wrap as a group.
 `useParticipantDefenses` owns asynchronous hydration for both this card and the
 compact encounter `ParticipantStats`; ready name and HP stay visible while numeric
 mechanics show a skeleton. Passive skill math is shared with the sheet's menu table.

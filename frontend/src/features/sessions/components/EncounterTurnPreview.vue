@@ -13,10 +13,10 @@
 
     <template v-else>
       <header class="turn-preview-hero" :style="accentStyle">
-        <EncounterAvatar :combatant="combatant" />
+        <div class="turn-preview-avatar"><EncounterAvatar :combatant="combatant" /><NpcMarker v-if="isNpc" class="turn-preview-avatar-marker" :letter="combatant.markerLetter" :color="enc.avatarStyle(combatant)?.color" shadow /></div>
         <div class="turn-preview-identity" aria-live="polite">
           <span>{{ kindLabel }}</span>
-          <strong class="turn-preview-name"><NpcMarker v-if="isNpc" :letter="combatant.markerLetter" :color="enc.avatarStyle(combatant)?.color" />{{ displayName }}</strong>
+          <strong ref="nameRow" class="turn-preview-name"><span ref="nameText" class="turn-preview-name-text">{{ displayName }}</span></strong>
           <small v-if="subtitle">{{ subtitle }}</small>
         </div>
         <span v-if="isNpc && enc.badgeLabel(combatant)" class="turn-preview-side" :class="enc.badgeClass(combatant)">
@@ -92,6 +92,8 @@ import { Hourglass, UserRoundSearch } from '@lucide/vue'
 import EnemyDetailContent from '@/features/items/detail-components/EnemyDetailContent.vue'
 import EncounterAvatar from '@/features/sessions/components/EncounterAvatar.vue'
 import EncounterHpBar from '@/features/sessions/components/EncounterHpBar.vue'
+import { useCreatureNameFit } from '../composables/useCreatureNameFit'
+const { nameRow,nameText } = useCreatureNameFit()
 import { useItemReferenceMap } from '@/features/items/composables/useItemReferenceMap'
 import { abilityModifier } from '@/shared/lib/dnd'
 import { useItemTypesStore } from '@/stores/itemTypes'
@@ -223,12 +225,15 @@ const abilities = computed(() => {
     var(--surface-raised);
 }
 .turn-preview-hero { --encounter-avatar-size:78px; }
+.turn-preview-avatar {position:relative;flex:none}
+.turn-preview-avatar-marker {position:absolute;top:0;right:0}
 .turn-preview-hero :deep(.enc-avatar--npc) { width: 78px; height: 78px; flex: 0 0 78px; }
 
 .turn-preview-identity { min-width: 0; display: flex; flex-direction: column; gap: 3px; padding-right: 44px; }
 .turn-preview-name { display: flex; align-items: baseline; gap: 6px; }
 .turn-preview-identity > span { color: var(--text-muted); font-size: 9px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
-.turn-preview-identity strong { overflow: hidden; color: var(--text-1); font-size: 19px; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
+.turn-preview-identity strong { overflow: hidden; color: var(--text-1); font-family:var(--type-participant-name-family);font-size:var(--type-participant-name-size);font-weight:var(--type-participant-name-weight);line-height:var(--type-participant-name-line-height); white-space: nowrap; }
+.turn-preview-name-text {display:inline-block;width:max-content;flex:none}
 .turn-preview-identity small { overflow: hidden; color: var(--text-2); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
 
 .turn-preview-side { position: absolute; top: 12px; right: 12px; font-size: 8px; font-weight: 850; letter-spacing: .07em; }

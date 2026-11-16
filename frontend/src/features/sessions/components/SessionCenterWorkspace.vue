@@ -8,11 +8,8 @@
       ref="encounterTab"
       workspace
       :session-uuid="sessionUuid"
-      :session="session"
-      :participants="participants"
       :is-dm="isDm"
       :encounter="encounter"
-      :chapter="chapter"
       :scene="scene"
       :show-shortcut-hints="showShortcutHints"
       @view-participant="$emit('view-participant', $event)"
@@ -28,11 +25,8 @@ import EncounterTab from '@/features/sessions/components/EncounterTab'
 defineProps({
   closing: { type: Boolean, default: false },
   sessionUuid: { type: String, required: true },
-  session: { type: Object, required: true },
-  participants: { type: Array, default: () => [] },
   isDm: { type: Boolean, default: false },
   encounter: { type: Object, required: true },
-  chapter: { type: Object, default: null },
   scene: { type: Object, default: null },
   showShortcutHints: { type: Boolean, default: false },
 })
@@ -44,7 +38,6 @@ defineExpose({ toggleCombat: () => encounterTab.value?.toggleCombat() })
 
 <style scoped>
 .session-center-workspace {
-  --session-workspace-content-top: 172px;
   position: absolute;
   z-index: 12;
   top: calc(var(--chapter-chrome-height, 0px) + 14px);

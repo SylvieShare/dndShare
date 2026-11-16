@@ -4,7 +4,7 @@
     :data-relation="SIDE_COLOR[combatant.side] ? combatant.side : undefined" :aria-description="SIDE_LABEL[combatant.side] ? `Отношение: ${SIDE_LABEL[combatant.side]}` : undefined"
     :selection-mode="selectionMode" :selected="selected" @health="enc.openNpcHpEdit(combatant)">
     <template #portrait><EncounterAvatar :combatant="combatant" /></template>
-    <template #name-prefix><EncounterMarkerMenu :combatant="combatant" :editable="editable" /></template>
+    <template #portrait-overlay><EncounterMarkerMenu :combatant="combatant" :editable="editable" overlay /></template>
     <template #name-suffix><span v-if="combatant.initiative != null" class="reserve-initiative" :aria-label="`Инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span></template>
     <template #statuses><EncounterStatuses :combatant="combatant" :editable="editable" detailed /></template>
   </SessionRosterTile>

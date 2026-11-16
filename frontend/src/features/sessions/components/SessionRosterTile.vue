@@ -6,6 +6,7 @@
       :health-visible="healthVisible" :current="hp?.current" :maximum="hp?.max" :temporary="hp?.temp" :edit-health="editHealth"
       :show-passives="showPassives" :perception="perception" :investigation="investigation" @health="$emit('health')">
       <template v-if="$slots.portrait" #portrait><slot name="portrait" /></template>
+      <template v-if="$slots['portrait-overlay']" #portrait-overlay><slot name="portrait-overlay" /></template>
       <template #name-prefix><slot name="name-prefix" /></template>
       <template #name-suffix><slot name="name-suffix" /></template>
       <template #metrics><slot name="metrics" /></template>

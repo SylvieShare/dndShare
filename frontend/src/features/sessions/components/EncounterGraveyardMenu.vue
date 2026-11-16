@@ -9,7 +9,7 @@
     :aria-expanded="open"
     @click="open = !open"
   >
-    <Bone :size="18" />
+    <Bone :size="18" /><span v-if="label" class="enc-control-label">{{ label }}</span>
     <span v-if="deadItems.length" class="enc-graveyard-count">{{ deadItems.length }}</span>
   </button>
 
@@ -105,7 +105,9 @@ import { BasePopover } from '@sylvieshare/share-ui'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 
 defineProps({
+  label: String,
   isDm: { type: Boolean, default: false },
+  label:String,
 })
 const emit = defineEmits(['view-participant'])
 

@@ -9,7 +9,7 @@
     :aria-expanded="open"
     @click="open = !open"
   >
-    <HeartCrack :size="18" />
+    <HeartCrack :size="18" /><span v-if="label" class="enc-control-label">{{ label }}</span>
     <span v-if="enc.selectedDamageCount" class="enc-icon-count">{{ enc.selectedDamageCount }}</span>
   </button>
 
@@ -36,6 +36,7 @@ import { inject, ref, watch } from 'vue'
 import { HeartCrack } from '@lucide/vue'
 import { BasePopover, FormField, FormNumberInput } from '@sylvieshare/share-ui'
 
+defineProps({label:String})
 const enc = inject('encounter')
 const anchorEl = ref(null)
 const open = ref(false)

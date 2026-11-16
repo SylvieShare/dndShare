@@ -3,14 +3,14 @@
     ref="anchorEl"
     type="button"
     class="enc-marker"
-    :class="{ 'enc-marker--editable': editable }"
+    :class="{ 'enc-marker--editable': editable, 'enc-marker--overlay': overlay }"
     :style="markerStyle"
     :aria-label="`Метка существа ${combatant.markerLetter || '—'}`"
     :aria-expanded="open"
     title="Изменить букву и цвет"
     @click.stop="toggle"
     @pointerdown.stop
-  ><NpcMarker :letter="combatant.markerLetter" :color="markerColor" /></button>
+  ><NpcMarker :letter="combatant.markerLetter" :color="markerColor" :shadow="overlay" /></button>
 
   <BasePopover v-model:open="open" :anchor="anchorEl" placement="bottom-start" :min-width="246" transition-preset="action-menu">
     <div class="emm-panel">
@@ -51,6 +51,7 @@ import { ColorPresetPicker } from '@sylvieshare/share-ui'
 const props = defineProps({
   combatant: { type: Object, required: true },
   editable: { type: Boolean, default: false },
+  overlay: Boolean,
 })
 
 const enc = inject('encounter', null) || inject('applicationEncounter', null)
@@ -94,6 +95,7 @@ function pickLetter(letter) {
 }
 
 .enc-marker--editable { cursor: pointer; transition: transform 0.12s, opacity 0.12s; }
+.enc-marker--overlay {position:absolute;top:0;right:0;z-index:1}
 .enc-marker--editable:hover { transform: translateY(-1px) scale(1.06); opacity: 0.78; }
 
 .emm-panel { display: flex; flex-direction: column; gap: 9px; padding: 2px; }

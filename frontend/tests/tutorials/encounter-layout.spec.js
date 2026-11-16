@@ -1,65 +1,57 @@
-import { test,expect } from '@playwright/test'
-import { sessionLayout } from './fixtures/session-layout.js'
-import { encounterColumnsMinWidth } from '../../src/features/sessions/lib/encounterLayout.js'
-import { layoutTokens,spacingTokens } from '../../src/app/design-tokens.js'
+import {test,expect} from '@playwright/test'
+import {sessionLayout} from './fixtures/session-layout.js'
+import {encounterColumnsMinWidth} from '../../src/features/sessions/lib/encounterLayout.js'
+import {spacingTokens} from '../../src/app/design-tokens.js'
 
-test('combat preview follows available workspace width and preserves turn controls',async({page},info)=>{
+test('combat commands occupy their own column and both columns scroll independently',async({page},info)=>{
   page.on('pageerror',error=>{throw error})
-  await page.setViewportSize({width:704,height:932})
+  await page.setViewportSize({width:834,height:932})
   const encounter={active:true,round:1,turnIndex:0,combatants:[
-    {uid:'goblin',type:'npc',override:{name:'Гоблин',hp:12,ac:13},position:'combat',initiative:18,hpCurrent:12},
-    {uid:'orc',type:'npc',override:{name:'Орк',hp:16,ac:12},position:'combat',initiative:12,hpCurrent:16},
+    {uid:'goblin',type:'npc',override:{name:'Гоблин',hp:12,ac:13},position:'combat',initiative:18,hpCurrent:12,markerLetter:'A'},
+    {uid:'orc',type:'npc',override:{name:'Орк',hp:16,ac:12},position:'combat',initiative:12,hpCurrent:16,markerLetter:'B'},
   ]}
-  await sessionLayout(page,{url:'/sessions/test',encounter})
+  const api=await sessionLayout(page,{url:'/sessions/test',participants:[],encounter})
   await page.locator('.nested-graph-node[data-graph-node-id="12"]').dblclick()
   await page.locator('.nested-graph-node[data-graph-node-id="31"]').dblclick()
   await expect(page.locator('.session-graph-canvas')).toHaveAttribute('data-level','blocks')
   await page.getByRole('button',{name:/Открыть бой/}).click()
-  const root=page.locator('.enc-wrap--workspace'),preview=page.getByRole('complementary',{name:'Текущий ход'})
-  await expect(root).toBeVisible()
-  await expect(root.getByRole('button',{name:'Бои сценария',exact:true})).toBeVisible()
-  await expect(page.locator('.page-forward-enter-active,.page-backward-enter-active')).toHaveCount(0)
-  await expect(preview).toHaveCount(0)
-  await page.getByRole('button',{name:'Следующий ход',exact:true}).click()
-  await expect(page.locator('.enc-row--current')).toContainText('Орк')
-  const samples=[]
-  for(const [width,visible] of [[390,false],[704,false],[1440,true],[704,false]]) {
+  const root=page.locator('.enc-wrap--workspace'),roster=root.locator('.enc-content'),controls=root.locator('.enc-secondary')
+  const preview=page.getByRole('complementary',{name:'Текущий ход'})
+  await expect(root.locator('.enc-context-art')).toHaveCount(0)
+  await expect(controls.getByRole('button',{name:'Бои сценария',exact:true})).toBeVisible()
+  await expect(roster.locator('.enc-icon-btn,.enc-section-icon-btn')).toHaveCount(0)
+  await controls.getByRole('button',{name:'Следующий ход',exact:true}).click()
+  await expect(root.locator('.enc-row--current')).toContainText('Орк')
+  for(const width of [390,704,834,1440,704]) {
     await page.setViewportSize({width,height:932})
-    await expect(preview).toHaveCount(visible?1:0)
-    let geometry
+    const columns=await root.evaluate((n,gap)=>n.clientWidth-2*gap>=628,spacingTokens.page)
+    expect(columns).toBe(width>=834)
+    await expect(preview).toHaveCount(columns?1:0)
     await expect.poll(async()=>{
-      geometry=await root.evaluate((node,gutter)=>{
-        const rect=selector=>node.querySelector(selector).getBoundingClientRect().toJSON()
-        const bounds=node.getBoundingClientRect().toJSON(),header=rect('.enc-toolbar'),content=rect('.enc-content'),primary=rect('.enc-combat-primary')
-        const buttons=[...node.querySelectorAll('.enc-toolbar button')].filter(button=>button.getClientRects().length).map(button=>button.getBoundingClientRect().toJSON())
-        return {bounds,header,content,primary,buttons,aside:node.querySelector('.turn-preview')?.getBoundingClientRect().toJSON() || null,available:node.clientWidth-2*gutter}
-      },spacingTokens.page)
-      return Math.abs(geometry.header.left-geometry.bounds.left-spacingTokens.page)<1
-        && Math.abs(geometry.bounds.right-geometry.header.right-spacingTokens.page)<1
-        && Math.abs(geometry.content.left-geometry.bounds.left-spacingTokens.page)<1
-        && geometry.content.top>=geometry.header.bottom+spacingTokens.large-1
-        && geometry.buttons.every(box=>box.left>=geometry.header.left-.5&&box.right<=geometry.header.right+.5&&box.top>=geometry.header.top-.5&&box.bottom<=geometry.header.bottom+.5)
+      const a=await roster.boundingBox(),b=await controls.boundingBox()
+      return columns?b.x>=a.x+a.width+spacingTokens.large-.5:a.y>=b.y+b.height+spacingTokens.large-.5
     }).toBe(true)
-    const rail=await page.getByRole('navigation',{name:'Боковые вкладки сессии'}).boundingBox()
-    expect(geometry.bounds.left).toBeGreaterThanOrEqual(rail.x+rail.width-.5)
-    expect(geometry.available>=encounterColumnsMinWidth).toBe(visible)
-    await expect(page.locator('.enc-row--current')).toContainText('Орк')
-    await expect.poll(()=>page.locator('.enc-rows .p-name-text').evaluateAll(nodes=>Math.min(...nodes.map(node=>parseFloat(getComputedStyle(node).fontSize))))).toBeGreaterThanOrEqual(10)
-    if(visible){
-      await expect(preview).toContainText('Орк')
-      expect(geometry.aside.width).toBeGreaterThanOrEqual(layoutTokens['encounter-preview-min-width'])
-      expect(geometry.aside.left).toBeGreaterThanOrEqual(geometry.primary.right+spacingTokens.large-.5)
-      expect(geometry.aside.right).toBeLessThanOrEqual(geometry.content.right+.5)
+    await expect(root.locator('.enc-row--current')).toContainText('Орк')
+    const box=await roster.boundingBox()
+    expect(box.height).toBeGreaterThan(48)
+    for(const button of await controls.locator('.enc-toolbar button').all()) {
+      await button.scrollIntoViewIfNeeded()
+      const b=await button.boundingBox(),c=await controls.boundingBox()
+      expect(b.x).toBeGreaterThanOrEqual(c.x-.5)
+      expect(b.x+b.width).toBeLessThanOrEqual(c.x+c.width+.5)
     }
-    samples.push({width,preview:visible,...geometry})
-    await info.attach(`combat-${width}-${samples.length}`,{body:await root.screenshot({animations:'disabled'}),contentType:'image/png'})
+    await controls.evaluate(n=>{n.scrollTop=0})
+    await info.attach(`combat-columns-${width}`,{body:await page.screenshot({animations:'disabled'}),contentType:'image/png'})
   }
-  await page.setViewportSize({width:900,height:932})
-  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))))
-  const available=await root.evaluate((node,gutter)=>node.clientWidth-2*gutter,spacingTokens.page),boundary=900+encounterColumnsMinWidth-available
-  for(const [width,visible] of [[boundary-1,false],[boundary,true],[boundary+1,true]]){
-    await page.setViewportSize({width,height:932})
-    await expect(preview).toHaveCount(visible?1:0)
-  }
-  await info.attach('combat-layout-geometry',{body:Buffer.from(JSON.stringify({samples,boundary})),contentType:'application/json'})
+  await page.setViewportSize({width:1440,height:932})
+  await expect(root).toHaveClass(/enc-wrap--columns/)
+  await roster.locator('.enc-combat-primary').evaluate(n=>{const extra=document.createElement('div');extra.style.height='3000px';n.append(extra)})
+  await roster.evaluate(n=>{n.scrollTop=500})
+  expect(await controls.evaluate(n=>n.scrollTop)).toBe(0)
+  await controls.evaluate(n=>{n.scrollTop=200})
+  expect(await roster.evaluate(n=>n.scrollTop)).toBe(500)
+  expect(await page.evaluate(()=>document.documentElement.scrollTop)).toBe(0)
+  await controls.getByRole('button',{name:'Следующий ход',exact:true}).click()
+  await expect.poll(()=>api.encounter().round).toBe(2)
+  expect(encounterColumnsMinWidth).toBe(628)
 })

@@ -7,9 +7,9 @@
     <div class="creature-tile-body">
       <div class="p-content">
         <div class="p-summary">
-          <slot name="avatar">
+          <div class="creature-avatar-wrap"><slot name="avatar">
             <SessionCreatureAvatar :name="name" :url="avatarUrl" :icon="icon" :background="avatarColor" />
-          </slot>
+          </slot><slot name="avatar-overlay" /></div>
           <div class="p-info" :class="{ 'p-info--stats': !!$slots.stats }" :inert="compact" :aria-hidden="compact">
             <div ref="nameRow" class="p-name-row"><slot name="name-prefix" /><span class="p-name" :title="name"><span ref="nameText" class="p-name-text">{{ name }}</span></span><slot name="name-suffix" /></div>
             <div class="creature-tile-health"><slot name="health" /></div>
@@ -41,10 +41,11 @@ defineProps({
 .creature-tile-body { display: flex; align-items: center; flex: 1; min-width: 0; flex-wrap: wrap; column-gap: 12px; row-gap: 8px; }
 .p-content { flex: 1 1 200px; min-width: 0; max-width: 100%; }
 .p-summary { display: flex; align-items: center; gap: var(--participant-card-gap, 9px); height: 64px; min-width: 0; transition: height .42s, gap .42s; }
+.creature-avatar-wrap {position:relative;flex:none;display:grid;place-items:center}
 .p-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; transition: opacity .2s, transform .42s; }
 .p-info--stats { align-self: stretch; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 0; margin-bottom: -4px; }
 .p-name-row { display: flex; align-items: center; min-width: 0; gap: 6px; }
-.p-name { flex: 0 1 auto; min-width: 0; font-size: 13px; line-height: 16px; font-weight: 600; color: var(--text-1); white-space: nowrap; overflow: hidden; }
+.p-name { flex: 0 1 auto; min-width: 0; font-family:var(--type-participant-name-family);font-size:var(--type-participant-name-size);line-height:var(--type-participant-name-line-height);font-weight:var(--type-participant-name-weight); color: var(--text-1); white-space: nowrap; overflow: hidden; }
 .p-name-text { display: inline-block; width: max-content; vertical-align: top; }
 .creature-tile { isolation: isolate; }
 .creature-tile--relation::after { content: ''; position: absolute; z-index: -1; inset: 0; border-radius: inherit; pointer-events: none; background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--creature-relation-color) 9%, transparent) 0 7px, transparent 7px 21px); }

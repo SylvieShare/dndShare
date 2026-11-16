@@ -10,7 +10,7 @@
     :aria-expanded="open"
     @click="onButtonClick"
   >
-    <Target :size="18" />
+    <Target :size="18" /><span v-if="label" class="enc-control-label">{{ label }}</span>
   </button>
 
   <BasePopover
@@ -54,6 +54,7 @@ import { FormField } from '@sylvieshare/share-ui'
 import { FormSelect } from '@sylvieshare/share-ui'
 import { ToggleSwitch } from '@sylvieshare/share-ui'
 
+defineProps({label:String})
 const enc = inject('encounter')
 const anchorEl = ref(null)
 const open = ref(false)

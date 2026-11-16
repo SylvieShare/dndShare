@@ -2,13 +2,16 @@
   <div class="character-summary-tile" :class="{ 'character-summary-tile--compact': compact }">
     <slot name="before" />
     <div class="summary-main">
+      <div class="portrait-wrap">
       <component :is="actionLabel ? 'button' : 'span'" class="portrait" :type="actionLabel ? 'button' : undefined"
         :aria-label="actionLabel || name" :aria-haspopup="actionLabel ? 'menu' : undefined" :aria-expanded="actionLabel ? expanded : undefined"
         :aria-description="description">
         <slot name="portrait"><CharacterAvatar :src="iconUrl" :name="name" size="100%" /></slot>
       </component>
+      <slot name="portrait-overlay" />
+      </div>
       <div class="summary-content" :inert="compact" :aria-hidden="compact || undefined">
-        <div class="identity"><slot name="name-prefix" /><strong>{{ name || 'Персонаж' }}</strong><slot name="name-suffix" /></div>
+        <div ref="nameRow" class="identity"><slot name="name-prefix" /><strong :title="name"><span ref="nameText" class="identity-name-text">{{ name || 'Персонаж' }}</span></strong><slot name="name-suffix" /></div>
         <div class="heading-combat">
           <component v-if="armor != null" :is="armorControl || editArmor ? 'button' : 'span'" class="heading-armor" :type="armorControl || editArmor ? 'button' : undefined" :disabled="armorControl && !editArmor"
             :aria-label="`Класс доспеха ${armor}`" :aria-haspopup="editArmor ? 'dialog' : undefined" @click="metric($event, 'armor', editArmor)">
@@ -33,6 +36,8 @@ import { computed } from 'vue'
 import { Eye, Search, Shield } from '@lucide/vue'
 import SheetHealth from './SheetHealth.vue'
 import CharacterAvatar from '../CharacterAvatar.vue'
+import { useCreatureNameFit } from '@/features/sessions/composables/useCreatureNameFit'
+const { nameRow,nameText } = useCreatureNameFit()
 const props = defineProps({
   name: String, iconUrl: String, actionLabel: String, expanded: Boolean, compact: Boolean,
   armor: Number, current: Number, maximum: Number, temporary: Number,
@@ -49,11 +54,13 @@ function metric(event, key, enabled) { if (enabled) { event.stopPropagation(); e
 <style scoped>
 .character-summary-tile {display:flex;align-items:center;min-width:0;gap:var(--spacing-small);width:100%;border-radius:var(--radius-tile);color:var(--text-1);font:inherit;text-align:left}
 .summary-main {display:grid;grid-template-columns:var(--layout-sheet-header-icon) minmax(0,1fr);gap:var(--spacing-small);align-items:center;flex:1;min-width:0}
+.portrait-wrap {position:relative;width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);flex:none}
 .portrait {display:grid;place-items:center;width:var(--layout-sheet-header-icon);height:var(--layout-sheet-header-icon);padding:0;border:0;background:transparent;overflow:hidden;border-radius:var(--radius-input);color:var(--accent-soft);font:inherit;font-size:var(--type-sheet-header-size)}
 button.portrait {cursor:pointer}
 .summary-content {display:flex;flex-direction:column;gap:calc(var(--spacing-xs) / 2);min-width:0}
 .identity {display:flex;align-items:center;gap:var(--spacing-xs);min-width:0}
-.identity>strong {min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:var(--type-sheet-header-size);line-height:var(--type-sheet-header-line-height)}
+.identity>strong {min-width:0;overflow:hidden;white-space:nowrap;font-family:var(--type-participant-name-family);font-size:var(--type-participant-name-size);font-weight:var(--type-participant-name-weight);line-height:var(--type-participant-name-line-height)}
+.identity-name-text {display:inline-block;width:max-content;vertical-align:top}
 .heading-combat {display:flex;align-items:center;flex-wrap:wrap;gap:var(--spacing-xs) var(--spacing-small);min-width:0;font-size:var(--type-context-size);line-height:var(--type-context-line-height);font-variant-numeric:lining-nums tabular-nums}
 .heading-armor {display:grid;place-items:center;flex:none;position:relative;width:var(--layout-sheet-header-armor);height:var(--layout-sheet-header-armor);padding:0;border:0;background:transparent;color:inherit;font:inherit;border-radius:var(--radius-input)}
 button.heading-armor {cursor:pointer}
@@ -66,6 +73,7 @@ button.portrait:focus-visible,button.heading-armor:focus-visible {outline:2px so
 button.heading-armor:hover {background:var(--surface-raised)}
 .character-summary-tile--compact .summary-main {grid-template-columns:minmax(0,1fr)}
 .character-summary-tile--compact .portrait {width:36px;height:36px}
+.character-summary-tile--compact .portrait-wrap {width:36px;height:36px}
 .character-summary-tile--compact .summary-content {display:none}
 @media (--ui-phone) {.summary-main {gap:var(--spacing-xs)}}
 </style>

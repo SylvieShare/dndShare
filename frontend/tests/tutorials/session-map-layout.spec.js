@@ -147,8 +147,8 @@ for (const mobile of [false, true])
     await page.getByRole("button", { name: /^Открыть бой/ }).click();
     await expect(page.locator(".session-map-workspace")).not.toBeVisible();
     await expect(page.locator(".map-tile-sidebar")).not.toBeVisible();
-    await expect(page.locator(".enc-combat-layout--active")).toBeVisible();
-    await expect(page.getByText("ЗАПАС НПС", { exact: true })).toBeVisible();
+    await expect(page.locator(".enc-wrap--workspace")).toBeVisible();
+    await expect(page.getByRole("navigation",{name:"Боковые вкладки сессии"}).getByRole("button",{name:"Запас",exact:true})).toBeVisible();
     if(mobile)await expect(page.getByRole("complementary", { name: "Текущий ход" })).toHaveCount(0);
     else await expect(page.getByRole("complementary", { name: "Текущий ход" })).toContainText("Гоблин");
     await expect(page.locator('.enc-row--current')).toContainText('Гоблин');

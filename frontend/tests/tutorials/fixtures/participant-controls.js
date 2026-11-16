@@ -7,6 +7,7 @@ import { useSuggestStore } from '../../../src/stores/suggest'
 import { applyDocumentPatches } from '../../../src/shared/lib/documentPatch'
 import '@sylvieshare/share-ui/styles.css'
 import '../../../src/app/theme.css'
+import '../../../src/app/fonts.css'
 import '../../../src/features/sessions/pages/styles/ViewSession.css'
 import '../../../src/features/sessions/components/styles/EncounterTab.css'
 const pinia = createPinia()

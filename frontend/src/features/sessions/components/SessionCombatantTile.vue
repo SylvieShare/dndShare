@@ -2,7 +2,7 @@
   <SessionCreatureTile :name="name" :color="color" :relation="isNpc ? combatant.side : undefined" :current="current" :controls-visible="selectable" :has-statuses="hasStatuses">
     <template v-if="selectable" #controls><CompactCheckbox :size="20" :model-value="selected" :label="`Выбрать: ${name}`" @update:model-value="$emit('select')" /></template>
     <template #avatar><EncounterAvatar :combatant="combatant" /></template>
-    <template #name-prefix><EncounterMarkerMenu v-if="isNpc" :combatant="combatant" :editable="editable" /></template>
+    <template #avatar-overlay><EncounterMarkerMenu v-if="isNpc" :combatant="combatant" :editable="editable" overlay /></template>
     <template #name-suffix>
       <span v-if="combatant.initiative != null" class="combatant-initiative" :aria-label="`Инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span>
       <span v-if="combatant.surprised && (!enc.encounter.active || enc.encounter.round === 0)" class="combatant-surprised" title="Застигнут врасплох">врасплох</span>
