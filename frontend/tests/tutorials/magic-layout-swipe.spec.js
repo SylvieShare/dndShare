@@ -121,7 +121,7 @@ test.describe('magic touch interactions',()=>{
   await second.scrollIntoViewIfNeeded()
   await first.scrollIntoViewIfNeeded();const a=await first.boundingBox(),b=await second.boundingBox()
   expect(b.y+b.height*.75).toBeLessThan(1100)
-  await touch(page,first,0,b.y+b.height*.75-(a.y+a.height/2),450)
+  await touch(page,first,b.x+b.width/2-(a.x+a.width/2),b.y+b.height*.75-(a.y+a.height/2),450)
   await expect(page.locator('[data-sheet-navigation] [aria-current="page"]')).toHaveText('Магия')
   await expect.poll(()=>api.document().values.spells.tabs[0].spells.map(s=>s.id)).toEqual([552,551])
   await expect(page.getByRole('menu')).toHaveCount(0);expect(errors).toEqual([])

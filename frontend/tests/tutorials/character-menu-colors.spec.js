@@ -7,7 +7,7 @@ function paletteProbe(node){
   const luminance=color=>rgb(color).map(value=>{value/=255;return value<=.04045?value/12.92:((value+.055)/1.055)**2.4}).reduce((sum,value,index)=>sum+value*[.2126,.7152,.0722][index],0)
   const contrast=(left,right)=>{const a=luminance(left),b=luminance(right);return (Math.max(a,b)+.05)/(Math.min(a,b)+.05)}
   const style=getComputedStyle(node)
-  if(node.classList.contains('weapon-metrics__identity')){
+  if(node.classList.contains('combat-metric__identity')){
     return {width:parseFloat(style.borderInlineEndWidth),contrast:contrast(style.borderInlineEndColor,getComputedStyle(node.closest('.weapon-metrics__cell')).backgroundColor)}
   }
   let surface=node.parentElement
@@ -20,7 +20,7 @@ for(const width of [390,834,1440])test(`menu actions and weapon dividers remain 
   await weaponSheetFixture(page)
   await page.goto('/char/test?tab=weapons',{waitUntil:'networkidle'})
   const card=page.locator('.w-card:visible').first()
-  for(const divider of await card.locator('.weapon-metrics__identity').all()){
+  for(const divider of await card.locator('.combat-metric__identity').all()){
     const line=await divider.evaluate(paletteProbe)
     expect(line.width).toBeGreaterThanOrEqual(1)
     expect(line.contrast).toBeGreaterThan(1.25)

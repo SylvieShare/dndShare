@@ -24,29 +24,15 @@
     <SpellCardContent :item="entry.item" :name-en="nameEn" :grant-summary="grantSummary"
       :range-override="ctx.spellRangeOverride?.(entry.item)" :scaling-hint="scalingHint">
     <template v-if="hasMetrics" #metrics>
+      <div v-if="saveTag || instances > 1" class="sp-roll-summary">
       <span v-if="saveTag" class="sp-save" title="Спасбросок">
         <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6l7-3z" /></svg>
         {{ saveTag }}
       </span>
       <span v-if="instances > 1" class="sp-mul">×{{ instances }}</span>
-      <AttackDamage rollable
-        @roll-attack="openDirectRoll('attack', $event)" @roll-damage="openDirectRoll('damage', $event)" @roll-heal="openDirectRoll('heal', $event)"
-        :attack="entry.item?.data?.damage?.range_attack ? ctx.formatBonus(ctx.spellAttackBonus(entry)) : null"
-        :damage-parts="damageParts"
-        :modifier="damageModifier"
-        :heal-parts="healParts"
-        :heal-kind="data.heal?.kind"
-        :heal-modifier="healModifier"
-      >
-        <template v-if="canUpcast && hasInlineSpellScaling(data.damage)" #damage-suffix>
-          <SpellScalingFormula :rule="data.damage" :base-level="baseLvl" />
-        </template>
-        <template v-if="canUpcast && hasInlineSpellScaling(data.heal)" #heal-suffix>
-          <SpellScalingFormula :rule="data.heal" :base-level="baseLvl" :color="data.heal?.kind === 'temporary_hp' ? 'var(--info)' : 'var(--success)'" />
-        </template>
-      </AttackDamage>
+      </div>
+      <SpellMetricsTable :entry="entry" :cast-level="castLevel" @roll="openMetricRoll" />
     </template>
-      <template #effects><SpellEffectFormulas :entry="entry" :cast-level="castLevel" /></template>
     </SpellCardContent>
       </BaseTile>
     </template>
@@ -111,8 +97,7 @@ import SpellCardContent from './SpellCardContent.vue'
 import SpellApplicationMenu from './SpellApplicationMenu.vue'
 import SpellCreationMenu from './SpellCreationMenu.vue'
 import { Focus, Sprout } from '@lucide/vue'
-import SpellEffectFormulas from './SpellEffectFormulas.vue'
-import SpellScalingFormula from './SpellScalingFormula.vue'
+import SpellMetricsTable from './SpellMetricsTable.vue'
 import { hasInlineSpellScaling, spellScalingHint, spellInstances } from '../lib/spellScaling'
 import { computed, inject, nextTick, ref, toRef, watch } from 'vue'
 
@@ -120,7 +105,6 @@ import SpellRollMenu from './SpellRollMenu.vue'
 import SpellRollDialog from './SpellRollDialog.vue'
 import { useSpellRollOptions } from '../composables/useSpellRollOptions'
 import CharacterItemSkeleton from '@/features/character-editor/components/sheet/CharacterItemSkeleton.vue'
-import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
 import PreparedSpellBrackets from '@/features/character-editor/blocks/dnd/components/PreparedSpellBrackets.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { BaseTile, RowActionMenu } from '@sylvieshare/share-ui'
@@ -138,6 +122,10 @@ const ctx = inject('spellsBlockCtx')
 const actionMenu = ref(null), applicationMenu = ref(null), rollSelection = ref(null)
 const { options: rollOptions } = useSpellRollOptions(toRef(props, 'entry'))
 function openRoll(selection, close = () => {}) { close(); rollSelection.value = selection }
+function openMetricRoll(selection, event) {
+  if (['attack', 'damage', 'heal'].includes(selection)) openDirectRoll(selection, event)
+  else openRoll(selection)
+}
 async function openDirectRoll(kind, event) {
   if (kind === 'heal' && props.entry.item?.data?.heal?.apply !== false) {
     actionMenu.value?.open(event)
@@ -168,9 +156,6 @@ const grantSummary = computed(() => {
 const fixedCastLevel = computed(() => Number(props.entry.ref.cast_level) || null)
 const castLevel = computed(() => fixedCastLevel.value || baseLvl.value)
 
-const damageParts = computed(() => ctx.damageDiceParts(props.entry.item, castLevel.value, ctx.charLevel, ctx.spellAbilityModifier?.(props.entry) || 0))
-const healParts = computed(() => ctx.healDiceParts(props.entry.item, castLevel.value, ctx.charLevel, ctx.spellAbilityModifier?.(props.entry) || 0))
-const healModifier = computed(() => healParts.value.reduce((sum, part) => sum + (part.bonus || 0), 0))
 const canUpcast = computed(() => !props.entry.ref?.slotless && ctx.maxSlotLevel > baseLvl.value)
 const needsScalingHint = rule => !hasInlineSpellScaling(rule) && (rule?.scaling !== 'slot' || canUpcast.value)
 const scalingHint = computed(() => props.entry.ref?.slotless ? '' : spellScalingHint({ data: {
@@ -179,8 +164,7 @@ const scalingHint = computed(() => props.entry.ref?.slotless ? '' : spellScaling
   heal: needsScalingHint(data.value.heal) ? data.value.heal : undefined,
   rolls: (data.value.rolls || []).filter(needsScalingHint),
 } }))
-const damageModifier = computed(() => damageParts.value.reduce((s, p) => s + (p.bonus || 0), 0))
-const hasMetrics = computed(() => ctx.hasSpellMetrics(props.entry.item))
+const hasMetrics = computed(() => ctx.hasSpellMetrics(props.entry.item) || data.value.rolls?.length)
 
 const saveTag = computed(() => {
   const a = dmg.value.save_ability
@@ -242,13 +226,14 @@ function removeSpell(close) {
 </script>
 
 <style scoped>
-.spell-row {position:relative;isolation:isolate;overflow:hidden;min-width:0;container-type:inline-size}
+.spell-row {position:relative;isolation:isolate;overflow:hidden;min-width:0;height:100%;container-type:inline-size}
 .spell-row-clickable {cursor:pointer}
 .spell-row-draggable {cursor:grab;touch-action:pan-y}
 .spell-row-draggable:active {cursor:grabbing}
 .sp-prepared-brackets {position:absolute;z-index:2;inset:var(--spacing-compact);color:color-mix(in srgb,var(--accent) 62%,transparent);pointer-events:none}
 .sp-save {display:inline-flex;align-items:center;gap:var(--spacing-xs);color:var(--text-2);font-size:var(--type-context-size);font-weight:700;white-space:nowrap}
 .sp-mul {color:var(--text-2);font-size:var(--type-group-size);font-weight:700}
+.sp-roll-summary {display:flex;align-items:center;flex-wrap:wrap;gap:var(--spacing-small)}
 .sortable-placeholder {background:color-mix(in srgb,var(--accent) 8%,transparent)!important;outline:2px dashed color-mix(in srgb,var(--accent) 50%,transparent);outline-offset:-2px}
 .sortable-placeholder>* {visibility:hidden}
 </style>

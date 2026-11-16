@@ -24,7 +24,7 @@
                 </span>
               </template>
             </span>
-            <small class="weapon-damage__source">{{ column.source }}</small>
+            <small v-if="showSources" class="weapon-damage__source">{{ column.source }}</small>
           </span>
         </span>
       </span>
@@ -42,7 +42,7 @@ import WeaponGripIcon from './WeaponGripIcon.vue'
 import { weaponDamageDisplay } from '../lib/weaponDamageDisplay'
 import { useWeaponFormulaFlash } from '../composables/useWeaponFormulaFlash'
 const props = defineProps({ rows: { type: Array, default: () => [] }, alternatives: { type: Array, default: () => [] }, damageType: String, damageColor: String,
-  label: { type: String, default: 'Состав урона' }, rollColor: String })
+  label: { type: String, default: 'Состав урона' }, rollColor: String, showSources: { type: Boolean, default: true } })
 const groups = computed(() => weaponDamageDisplay(props.rows, props.alternatives, { type: props.damageType, color: props.damageColor }))
 const root = ref(null)
 const { flashes, removeFlash } = useWeaponFormulaFlash(root)

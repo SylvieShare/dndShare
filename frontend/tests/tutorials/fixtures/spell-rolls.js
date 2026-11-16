@@ -11,12 +11,15 @@ import { itemsApi } from '../../../src/shared/api/itemsApi'
 import { resolveRollMode } from '../../../src/features/character-editor/blocks/dnd/lib/rollMode'
 import '@sylvieshare/share-ui/styles.css'
 import '../../../src/app/theme.css'
+import '../../../src/app/fonts.css'
+
+document.body.style.cssText = 'margin:0;background:var(--bg);color:var(--text-1);font-family:var(--font-ui,system-ui,sans-serif)'
 
 const pinia = createPinia()
 if (new URLSearchParams(location.search).has('session')) useSessionEventsStore(pinia).sessionUuid = 'spell-roll-test-session'
 useItemTypesStore(pinia).types = [{ id: 5, name: 'Заклинания', coverImageUrl: '/tests/tutorials/fixtures/spell-covers/default.webp' }]
 useSuggestStore(pinia).set(16, [{ id: 4, value: 'Интеллект' }])
-useSuggestStore(pinia).set(12, [{ id: 10, value: new URLSearchParams(location.search).has('long-type') ? 'Некротической энергией' : 'Некротический' }])
+useSuggestStore(pinia).set(12, [{ id: 10, value: new URLSearchParams(location.search).has('long-type') ? 'Некротической энергией древнего проклятия' : 'Некротический' }])
 if (new URLSearchParams(location.search).has('eldritch')) useSuggestStore(pinia).set(12, [{ id: 12, value: 'Силовое поле' }])
 useSuggestStore(pinia).set(7, [])
 const items = [
@@ -49,6 +52,17 @@ if (new URLSearchParams(location.search).has('covers')) {
 }
 if (new URLSearchParams(location.search).has('materials')) {
   items.push({id:863,typeId:5,name:'Возрождение',data:{lvl:3,time:{kind:'action'},range:{kind:'touch'},duration:'Мгновенная',components:{v:true,s:true,m:'бриллианты, стоящие в сумме 300 зм, расходуемые заклинанием'}}})
+}
+if (new URLSearchParams(location.search).has('cards')) {
+  const english = { 495: 'Chill Touch', 2: 'Damage with a Saving Throw', 3: 'Cure Wounds', 4: 'Light', 5: 'Attack Ray', 6: 'Ice Knife', 7: 'Innate Retribution' }
+  items.forEach(item => {
+    item.nameEn ||= english[item.id] || 'Spiritual Weapon'
+    item.data.time ||= { kind: 'action' }
+    item.data.range ||= { kind: 'ranged', distance: 60 }
+    item.data.components ||= { v: true, s: true }
+  })
+  items.push({ id: 9, name: 'Ложная жизнь', nameEn: 'False Life', data: { lvl: 1, heal: { kind: 'temporary_hp', dices: [{ count: 1, dice_id: 'd4', bonus: 4 }] } } })
+  items.push({ id: 10, name: 'Усыпление', nameEn: 'Sleep', data: { lvl: 1, rolls: [{ kind: 'effect', label: 'Запас хитов', dices: [{ count: 5, dice_id: 'd8' }] }] } })
 }
 itemsApi.byIds = async ids => ({ items: items.filter(item => ids.map(Number).includes(item.id)) })
 window.rolls = []; window.writes = []; window.events = []

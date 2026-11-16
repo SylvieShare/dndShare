@@ -39,7 +39,7 @@ for(const width of [320,390,834,1440])test(`quiet spell covers and component ove
   const b=selector=>row.querySelector(selector).getBoundingClientRect().toJSON()
   return{row:row.getBoundingClientRect().toJSON(),name:b('.sp-name'),components:b('.spell-component-badge'),metrics:b('.sp-metrics')}
  })
- expect(boxes.name.right).toBeLessThanOrEqual(boxes.components.left+1)
+ expect(boxes.name.bottom).toBeLessThanOrEqual(boxes.components.top+1)
  expect(boxes.metrics.right).toBeLessThanOrEqual(boxes.row.right)
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
  expect(await page.evaluate(()=>window.writes)).toEqual([])

@@ -20,7 +20,8 @@
   font-size: 13px;
   padding: 8px 4px;
 }
-.spells-level-list {display:flex;flex-direction:column;gap:var(--spacing-small);min-width:0}
+.spells-level-list {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--layout-spell-card-gap);align-items:stretch;min-width:0}
+.spells-level-list>* {min-width:0}
 
 .sp-standalone { margin-bottom: 18px; }
 .sp-standalone-title {
@@ -104,20 +105,6 @@
     gap: 12px;
   }
 
-  .spell-row {
-    grid-template-columns: 18px minmax(0, 1fr) auto;
-    gap: 10px;
-    align-items: start;
-  }
-
-  .sp-metrics {
-    grid-column: 2 / -1;
-    justify-content: flex-start;
-  }
-
-  .sp-name {
-    font-size: 16px;
-  }
 }
 
 .drag-handle {
