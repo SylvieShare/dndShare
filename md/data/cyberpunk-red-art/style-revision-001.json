@@ -1,0 +1,54 @@
+{
+  "revision": 1,
+  "status": "style-preview",
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/style-revision-01",
+  "reason": "User approved icons and requested more mature, more detailed covers. Mass generation paused for style discussion.",
+  "assets": [
+    {
+      "key": "transport-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 36,
+        "name": "Транспорт"
+      },
+      "prompt": "Use case: style-transfer. Redraw this Cyberpunk RED catalogue cover with a substantially more mature, sophisticated and detailed art direction, retaining strong CEL SHADING. The attached image is the EDIT TARGET and object identity reference, NOT the desired rendering style. Preserve the recognizable subject, major silhouette, palette and three-quarter orientation. Replace the oversized uniform icon-like contour with fine varied ink linework and selective edge accents. Use realistically engineered adult-scale proportions, richly designed construction details, broad decisive cel-shaded shadow shapes with secondary reflected-light planes. Materials must be differentiated: brushed metal, coated polymer, woven fabric, glass and rubber where appropriate, restrained localized wear and repaired details. Cinematic directional lighting, atmospheric depth, lived-in 2045 cyberpunk environment. Serious premium illustrated RPG art, not cute, not toy-like, not a children's cartoon. Detailed focal object, background less sharp and less contrasty, no uniform noise or overdrawn scratches. Opaque 3:2 landscape, complete main subject with safe margins. No logos, typography, watermark, borders or UI. Preserve cel-shaded drawn look: no photograph or glossy 3D render. Keep the teal compact road coupe with ivory roof. Re-engineer its wheels with plausible tires, brakes and hubs, add headlights with real housings, panel seams, door hardware, grille vents, wipers and visible interior forms. It must read as a full-size working vehicle. Low eye-level three-quarter view in a cramped urban repair forecourt after light rain; grounded contact shadows, muted warm garage worklight and cool city light, believable reflections broken into painted planes. No new weapons or racing decals.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-04/final/transport-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-36860665-b5a9-42a7-a2fe-68abaa754abf.png",
+      "original": "originals/transport-cover-v2.png",
+      "final": "final/transport-cover-v2.jpg",
+      "sha256": "0400aa1bed0b935bb443eae99de785ac971d289a029ee8232fcd58a0d34fcf49",
+      "bytes": 373542
+    },
+    {
+      "key": "armor-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 21,
+        "name": "Броня"
+      },
+      "prompt": "Use case: style-transfer. Redraw this Cyberpunk RED catalogue cover with a substantially more mature, sophisticated and detailed art direction, retaining strong CEL SHADING. The attached image is the EDIT TARGET and object identity reference, NOT the desired rendering style. Preserve the recognizable subject, major silhouette, palette and three-quarter orientation. Replace the oversized uniform icon-like contour with fine varied ink linework and selective edge accents. Use realistically engineered adult-scale proportions, richly designed construction details, broad decisive cel-shaded shadow shapes with secondary reflected-light planes. Materials must be differentiated: brushed metal, coated polymer, woven fabric, glass and rubber where appropriate, restrained localized wear and repaired details. Cinematic directional lighting, atmospheric depth, lived-in 2045 cyberpunk environment. Serious premium illustrated RPG art, not cute, not toy-like, not a children's cartoon. Detailed focal object, background less sharp and less contrasty, no uniform noise or overdrawn scratches. Opaque 3:2 landscape, complete main subject with safe margins. No logos, typography, watermark, borders or UI. Preserve cel-shaded drawn look: no photograph or glossy 3D render. Keep the charcoal armored jacket, segmented ivory chest plates and scarlet shoulder armor on a torso display. Rebuild it as believable technical protective clothing: articulated plate attachment, layered seams, durable woven sleeve panels, zipper teeth, flex gussets, subtle abrasion at real contact points. Use a dim practical armor repair workshop with cold window light and a warm bench lamp. Adult-size functional garment, three-quarter mannequin instead of flat symmetric product icon. Preserve all jacket parts in frame.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-03/final/armor-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-42b8bd90-fbd7-4e69-8ae6-007487e06551.png",
+      "original": "originals/armor-cover-v2.png",
+      "final": "final/armor-cover-v2.jpg",
+      "sha256": "63a9efd7d31ee3bda814467f444fd52d150f9f5352a5f582c527dbdb46edd0dd",
+      "bytes": 277251
+    },
+    {
+      "key": "mods-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 35,
+        "name": "Модификации"
+      },
+      "prompt": "Use case: style-transfer. Redraw this Cyberpunk RED catalogue cover with a substantially more mature, sophisticated and detailed art direction, retaining strong CEL SHADING. The attached image is the EDIT TARGET and object identity reference, NOT the desired rendering style. Preserve the recognizable subject, major silhouette, palette and three-quarter orientation. Replace the oversized uniform icon-like contour with fine varied ink linework and selective edge accents. Use realistically engineered adult-scale proportions, richly designed construction details, broad decisive cel-shaded shadow shapes with secondary reflected-light planes. Materials must be differentiated: brushed metal, coated polymer, woven fabric, glass and rubber where appropriate, restrained localized wear and repaired details. Cinematic directional lighting, atmospheric depth, lived-in 2045 cyberpunk environment. Serious premium illustrated RPG art, not cute, not toy-like, not a children's cartoon. Detailed focal object, background less sharp and less contrasty, no uniform noise or overdrawn scratches. Opaque 3:2 landscape, complete main subject with safe margins. No logos, typography, watermark, borders or UI. Preserve cel-shaded drawn look: no photograph or glossy 3D render. Keep the ivory angular smartgun optic with amber front glass, scarlet side adjustment knob and graphite mounting rail. Design believable machined fasteners, fine knurling, layered optical elements, lens depth and restrained coating reflections, rail clamp and service seams. Human-scale tabletop perspective, not a giant toy. Place it on a worn service mat in an electronics repair bay with an unfocused calibration fixture and a few precise tools. Cool overhead fill with one focused warm worklight, subtle contact shadows. Do not add a firearm.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-03/final/mods-cover.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-f91c27ab-786d-450c-ae72-bf0b6751f83c.png",
+      "original": "originals/mods-cover-v2.png",
+      "final": "final/mods-cover-v2.jpg",
+      "sha256": "144aee61137b41d539947eae35474701ed8072874315c290f123d01a859f6cd1",
+      "bytes": 312835
+    }
+  ]
+}
