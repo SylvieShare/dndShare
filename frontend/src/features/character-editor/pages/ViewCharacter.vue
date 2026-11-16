@@ -1,5 +1,5 @@
 <template>
-  <div ref="tutorialRoot" class="view" :class="'view--' + format" :style="viewStyle" :inert="transfers.busy || edition.busy">
+  <div ref="tutorialRoot" class="view" :class="'view--' + format" :style="viewStyle" :inert="transfers.busy || edition.busy || redCommands.busy.value">
     <CharacterEditionDialog :controller="edition" />
     <CharacterTransferDialogs :controller="transfers" :character-uuid="uuid" />
     <PageTutorial :tutorial="characterTutorial" :mobile="isMobile" />
@@ -47,6 +47,7 @@
 </template>
 
 <script setup>
+import {useRedCommands} from '../composables/useRedCommands'
 import { provideSheetFields } from '../lib/sheetContext'
 import { useWorkspaceScrollPosition } from '@/shared/composables/useWorkspaceScrollPosition'
 import CharacterWorkspaceHeader from '@/features/character-editor/components/CharacterWorkspaceHeader.vue'
@@ -135,6 +136,8 @@ const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dism
 })
 
 Object.assign(charCtx, { historyState, undo: () => documentSync.undo(), redo: () => documentSync.redo() })
+const redCommands=useRedCommands({uuid,version,canEdit:isOwner,flushSave,sync:documentSync})
+charCtx.redCommands=redCommands
 
 useCharacterLive({ uuid, sessionUuid: computed(() => activeSession.value?.uuid), sync: documentSync, onMetadata: applyMetadata })
 

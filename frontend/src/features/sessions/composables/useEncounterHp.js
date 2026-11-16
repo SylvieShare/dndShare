@@ -196,6 +196,7 @@ export function useEncounterHp({
       { path: `${hpPath}.ds_success`, value: Number(hp.ds_success) || 0 },
       { path: `${hpPath}.ds_failure`, value: Number(hp.ds_failure) || 0 },
     ]
+    if(p.data?.system==='cyberpunk-red')updates.splice(1)
     const saving = charactersApi.patchData(p.charUuid, updates, p)
     applyLocalPatches(c.charId, updates)
     const result = await saving
@@ -223,6 +224,7 @@ export function useEncounterHp({
       { path: `${hpPath}.ds_success`, value: Number(hp.ds_success) || 0 },
       { path: `${hpPath}.ds_failure`, value: Number(hp.ds_failure) || 0 },
     ]
+    if(p.data?.system==='cyberpunk-red')updates.splice(1)
     const saving = charactersApi.patchData(p.charUuid, updates, p)
     applyLocalPatches(c.charId, updates)
     const result = await saving
@@ -239,6 +241,7 @@ export function useEncounterHp({
       { path: `${hpPath}.ds_success`, value: 0 },
       { path: `${hpPath}.ds_failure`, value: 0 },
     ]
+    if(p.data?.system==='cyberpunk-red'){updates.splice(1);updates.push({path:`${hpPath}.dead`,value:false},{path:`${hpPath}.deathSavePenalty`,value:0})}
     const result = await charactersApi.patchData(p.charUuid, updates, p)
     applyLocalPatches(c.charId, updates)
     if (result?.version > p.version) p.version = result.version

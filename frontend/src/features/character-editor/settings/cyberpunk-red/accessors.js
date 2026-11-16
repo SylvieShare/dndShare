@@ -1,9 +1,10 @@
 import { RED_ROLES } from './catalogue.js'
-import { redHealthMaximum } from './derived.js'
+import {redMaximumHealth} from './equipment.js'
 
 export const redAccessors = {
   system: 'cyberpunk-red',
   hpPath: 'values.health',
+  experiencePath: 'values.progression.ipAvailable',
   displayName: data => String(data?.values?.identity?.handle || ''),
   avatar: data => data?.values?.identity?.avatar?.url || null,
   race: () => '',
@@ -20,7 +21,7 @@ export const redAccessors = {
     const values = data?.values
     if (!values?.health || !values?.stats) return null
     try {
-      return { current: values.health.current, max: redHealthMaximum(values.stats.BODY, values.stats.WILL) }
+      return { current: values.health.current, max: redMaximumHealth(values),dead:!!values.health.dead }
     } catch { return null }
   },
   initiativeBonus: data => Number(data?.values?.stats?.REF) || 0,

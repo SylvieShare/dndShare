@@ -36,7 +36,7 @@
         </FormSelect>
       </FormField>
 
-      <ToggleSwitch v-model="draft.savingThrow" label="Спасбросок" />
+      <ToggleSwitch v-if="enc.challengeSupportsSaves!==false" v-model="draft.savingThrow" label="Спасбросок" />
 
       <button class="ecm-roll" type="submit" :disabled="enc.challengeBusy">
         <Dices :size="17" />

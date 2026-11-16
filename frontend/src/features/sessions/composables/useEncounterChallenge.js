@@ -1,5 +1,7 @@
 import { encounterEventData } from '../lib/encounterEventData'
-import { computed, ref } from 'vue'
+import { computed, ref, unref } from 'vue'
+import {RED_STATS} from '@/features/character-editor/settings/cyberpunk-red/catalogue'
+import {resolveRedSkillCheck} from '@/features/character-editor/settings/cyberpunk-red/checks'
 import {
   abilityModifier,
   d20Expr,
@@ -55,6 +57,7 @@ export function npcChallengeBonus(score, explicitSave, savingThrow = false) {
 }
 
 export function useEncounterChallenge({
+  systemName,
   encounter,
   selectedUids,
   findParticipant,
@@ -65,6 +68,8 @@ export function useEncounterChallenge({
   npcRollEffects = () => ({}),
   flushSave = async () => true,
 }) {
+  const isRed=computed(()=>unref(systemName)==='Cyberpunk')
+  const abilities=computed(()=>isRed.value?RED_STATS.map(s=>({value:s.key,label:s.name,short:s.key,id:s.key})):ENCOUNTER_CHALLENGE_ABILITIES)
   const challengeBusy = ref(false)
   const pendingChallenge = ref(null)
   const challenge = computed(() => {
@@ -82,6 +87,7 @@ export function useEncounterChallenge({
   const selectedChallengeCount = computed(() => selectedChallengeCombatants.value.length)
 
   function abilityMeta(ability = challenge.value?.ability) {
+    if(isRed.value)return abilities.value.find(s=>s.value===ability)||abilities.value[0]
     const key = normalizedAbility(ability)
     return ENCOUNTER_CHALLENGE_ABILITIES.find(item => item.value === key)
   }
@@ -111,6 +117,19 @@ export function useEncounterChallenge({
     challengeBusy.value = true
     try {
       if (!await flushSave()) return
+      if(isRed.value){
+        const key=abilityMeta(ability).value,results={}
+        for(const combatant of combatants){
+          const participant=combatant.type==='player'?findParticipant(combatant.charId):null
+          const bonus=Number(participant?.data?.values?.stats?.[key]??combatant.override?.redStats?.[key])||0
+          const die=1+Math.floor(Math.random()*10),extraDie=die===1||die===10?1+Math.floor(Math.random()*10):null
+          const roll=resolveRedSkillCheck({stat:bonus,skill:0,die,extraDie,availableLuck:0})
+          results[combatant.uid]={roll:die,bonus:bonus+roll.breakdown.extra,total:roll.total,sides:10}
+          useDiceStore().pushEntry({action:`${abilityMeta(key).label}: RED`,actor:{name:displayName(combatant),charUuid:participant?.charUuid||null},eventData:{system:'cyberpunk-red'},result:{total:roll.total,expression:`1d10+${bonus}`,parts:[{kind:'dice',n:1,sides:10,rolls:[die],sum:die},{kind:'flat',value:bonus+roll.breakdown.extra,sum:bonus+roll.breakdown.extra}],byType:[]}})
+        }
+        encounter.value={...encounter.value,challenge:{ability:key,savingThrow:false,system:'cyberpunk-red',results}}
+        return
+      }
       const key = normalizedAbility(ability)
       const meta = abilityMeta(key)
       const results = {}
@@ -163,6 +182,7 @@ export function useEncounterChallenge({
   }
 
   async function rerollChallenge(combatant, mode) {
+    if(isRed.value)return
     if (challengeBusy.value) return
     const currentChallenge = challenge.value
     const currentResult = currentChallenge?.results?.[combatant.uid]
@@ -280,7 +300,8 @@ export function useEncounterChallenge({
     challengeBusy,
     challengeActive,
     selectedChallengeCount,
-    challengeAbilities: ENCOUNTER_CHALLENGE_ABILITIES,
+    challengeAbilities: abilities,
+    challengeSupportsSaves:computed(()=>!isRed.value),
     challengeAbilityMeta: abilityMeta,
     challengeResult,
     runChallenge,

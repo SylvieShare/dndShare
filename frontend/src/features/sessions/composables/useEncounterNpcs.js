@@ -76,6 +76,7 @@ export function useEncounterNpcs({ encounter, unselect, pruneToExisting, selecte
     const hpMax = Math.max(0, Math.floor(Number(form?.hpMax) || 0))
     const hpCur = Math.max(0, Math.floor(Number(form?.hp ?? form?.hpMax) || 0))
     const override = { name }
+    if(form.redStats){override.redStats={...form.redStats};override.redArmor={body:form.ac||0,head:form.headSP||0}}
     if (form?.ac != null && form.ac !== '') override.ac = Math.max(0, Math.floor(Number(form.ac) || 0))
     if (hpMax || hpCur) override.hp = hpMax || hpCur
     const desc = String(form?.description ?? '').trim()

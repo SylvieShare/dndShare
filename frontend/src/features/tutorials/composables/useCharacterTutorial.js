@@ -1,6 +1,7 @@
 import { computed, nextTick, provide } from 'vue'
 import { usePageTutorial } from './usePageTutorial'
 import { characterSteps } from '../flows/character'
+import {cyberpunkRedSteps} from '../flows/cyberpunkRed'
 import { createTutorialActions, tutorialActionsKey, visibleTarget } from '../lib/targets'
 
 export function useCharacterTutorial({ root, mobile, ready, template, sourceVersionId, activeTab, activeTabs, format, isOwner }) {
@@ -24,7 +25,7 @@ export function useCharacterTutorial({ root, mobile, ready, template, sourceVers
     flowId: computed(() => 'character'),
     sourceKey: computed(() => sourceVersionId.value ? `edition:${sourceVersionId.value}` : null),
     mobile, layout: format, ready: computed(() => ready.value && isOwner.value),
-    createSteps: () => characterSteps({ mobile: mobile.value, tablet: format.value === 'tablet', dnd: template.value?.system === 'dnd5e',
+    createSteps: () => template.value?.system==='cyberpunk-red'?cyberpunkRedSteps({target:name=>visibleTarget(root.value,name),action}):characterSteps({ mobile: mobile.value, tablet: format.value === 'tablet', dnd: template.value?.system === 'dnd5e',
       target: name => visibleTarget(['character-hp-editor', 'character-menu'].includes(name) ? document : root.value, name), action }),
   })
 }

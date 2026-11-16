@@ -68,6 +68,7 @@
 </template>
 
 <script setup>
+import {useRedCommands} from '../composables/useRedCommands'
 import { provideSheetFields } from '../lib/sheetContext'
 import { useWorkspaceScrollPosition } from '@/shared/composables/useWorkspaceScrollPosition'
 import CharacterSheetSkeleton from './sheet/CharacterSheetSkeleton.vue'
@@ -121,6 +122,7 @@ const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dism
 })
 
 Object.assign(charCtx, { historyState, undo: () => documentSync.undo(), redo: () => documentSync.redo() })
+charCtx.redCommands=useRedCommands({uuid:computed(()=>props.uuid),version,canEdit:computed(()=>(isOwner.value||props.isDm)&&!previewMode.value),flushSave,sync:documentSync})
 
 useCharacterLive({ uuid: computed(() => props.uuid), sessionUuid: computed(() => previewMode.value ? null : sessionEventsStore.sessionUuid), sync: documentSync, onMetadata: applyMetadata })
 

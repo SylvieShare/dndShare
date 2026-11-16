@@ -19,7 +19,7 @@
       </span>
     </div>
 
-    <div v-if="dsVisible && isPlayer" class="enc-ds-overlay" @click.stop>
+    <div v-if="dsVisible && isPlayer && !enc.isRed" class="enc-ds-overlay" @click.stop>
       <div class="enc-ds-side enc-ds-side--fail">
         <span
           v-for="i in [3, 2, 1]"
@@ -41,6 +41,7 @@
       </div>
     </div>
 
+    <div v-else-if="dsVisible&&isPlayer&&enc.isRed" class="enc-ds-overlay" @click.stop="enc.openHpCalc(combatant)"><span>Проверка смерти · d10</span></div>
     <div v-else-if="npcDead" class="enc-ds-overlay enc-ds-overlay--npc" @click.stop>
       <span class="enc-skull">💀</span>
       <button

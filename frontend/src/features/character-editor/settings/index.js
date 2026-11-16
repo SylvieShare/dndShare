@@ -8,6 +8,8 @@
 import dndDefinition from './dnd/definition'
 import { dndAccessors } from '@/features/character-editor/settings/dnd/accessors'
 import vtmDefinition from './vtm/definition'
+import redDefinition from './cyberpunk-red/definition'
+import {redAccessors} from './cyberpunk-red/accessors'
 
 const vtmAccessors = {
   system: 'vtm-v20',
@@ -30,6 +32,7 @@ const vtmAccessors = {
 }
 
 const SETTINGS = [
+  {system:'cyberpunk-red',names:['CYBERPUNK_RED'],sheet:redDefinition,accessors:redAccessors,sourceName:'Cyberpunk',sourceVersion:'RED'},
   {
     system: 'dnd5e',
     // char_template.name values that map to this setting.

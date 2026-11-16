@@ -529,6 +529,11 @@ and `defenses` for the creation grant. Only the selected variant contributes to
 The separate resistance ability is retired from new choices; its ID remains
 resolvable for existing characters. No resistance is added before ancestry selection.
 
+## Создание RED
+
+Системный визард, формат документа и команды описаны в [контракте RED](cyberpunk-red.md).
+
+
 ## Связанные страницы
 
 [Оглавление wiki](../README.md)

@@ -191,6 +191,8 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 	}
 	ctx := r.Context()
 	switch name {
+	case "cyberpunk_red_install":
+		return s.toolRedInstall(r,args)
 	case "creature_model_archive_list", "creature_model_archive_get", "creature_model_archive_prepare_upload", "creature_model_archive_complete_upload":
 		return s.toolCreatureArchive(r, name, args)
 	case "item_models_list", "item_model_bind", "item_model_unbind":

@@ -33,7 +33,8 @@ import { useSortable } from '@sylvieshare/share-ui'
 import { motionTokens } from '@/app/design-tokens'
 import { useSuggestStore } from '@/stores/suggest'
 
-export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRollNpcHp }) {
+export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRollNpcHp, systemName }) {
+  const isRed=computed(()=>String(systemName?.value||systemName||'').toLowerCase()==='cyberpunk')
   const encounter = ref({ active: false, round: 0, turnIndex: 0, combatants: [] })
   const reviveTarget = ref(null)
   const reviveSaving = ref(false)
@@ -192,6 +193,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
   })
 
   const { initiativeBonus, rollInitiativeFor } = useEncounterInitiative({
+    systemName,
     findParticipant,
     playerDisplayName,
     npcDex:  npcData.npcDex,
@@ -204,6 +206,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
   })
 
   const challenge = useEncounterChallenge({
+    systemName,
     encounter,
     selectedUids: selection.selectedUids,
     findParticipant,
@@ -377,6 +380,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
   })
 
   return {
+    isRed,
     encounter,
     load,
     async flushApplicationSave() { await persistence.flushSave(); return !persistence.saveError.value && !persistence.loadError.value },
@@ -427,6 +431,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     hpCalcNpc:              hp.hpCalcNpc,
     hpEditNpc:              hp.hpEditNpc,
     hpCalcPlayer:           hp.hpCalcPlayer,
+    redHpParticipant:computed(()=>{const c=hp.hpCalcPlayer.value;const p=c?findParticipant(c.charId):null;return p?.data?.system==='cyberpunk-red'?p:null}),
     selectedDamageCount:    hp.selectedDamageCount,
     applyDamageToSelected:  hp.applyDamageToSelected,
     applyDamageToCombatant: hp.applyDamageToCombatant,
@@ -463,6 +468,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     challengeActive:         challenge.challengeActive,
     selectedChallengeCount:  challenge.selectedChallengeCount,
     challengeAbilities:      challenge.challengeAbilities,
+    challengeSupportsSaves: challenge.challengeSupportsSaves,
     challengeAbilityMeta:    challenge.challengeAbilityMeta,
     challengeResult:         challenge.challengeResult,
     runChallenge:            challenge.runChallenge,

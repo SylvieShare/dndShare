@@ -1,7 +1,7 @@
 <template>
   <section v-show="ui.selected" class="enc-reserve-panel" aria-label="Запас существ" :data-reserve-id="enc.activeReserveId">
     <SessionSelectionToolbar :encounter="enc" :selection="selection" :combat-workspace="combatWorkspace" label="Выбор существ запаса">
-      <ActionButton variant="quiet" icon-only :disabled="!enc.canManageReserves" aria-label="Добавить из бестиария" title="Добавить из бестиария" @click="enc.showNpcPicker = true"><template #icon><BookOpen :size="20" /></template></ActionButton>
+      <ActionButton v-if="!enc.isRed" variant="quiet" icon-only :disabled="!enc.canManageReserves" aria-label="Добавить из бестиария" title="Добавить из бестиария" @click="enc.showNpcPicker = true"><template #icon><BookOpen :size="20" /></template></ActionButton>
       <ActionButton variant="dashed" icon-only :disabled="!enc.canManageReserves" aria-label="Создать упрощённое существо" title="Создать упрощённое существо" @click="enc.showSimpleForm = true"><template #icon><Plus :size="20" /></template></ActionButton>
     </SessionSelectionToolbar>
     <p v-if="enc.loadError || enc.saveError" role="alert">{{ enc.loadError || enc.saveError }} <ActionButton v-if="enc.loadError" variant="quiet" @click="enc.load">Повторить</ActionButton></p>

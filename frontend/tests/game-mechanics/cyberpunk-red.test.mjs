@@ -27,10 +27,11 @@ test('luck, modifiers and limits are explicit; no resource is mutated', () => {
   for(const die of [0,11,NaN,'5',1.5]) assert.throws(()=>check({die}),RangeError)
   assert.throws(()=>check({skill:11}),RangeError)
 })
-test('opposed ties favor the defender and initiative never explodes', () => {
+test('opposed ties favor defender; initiative critical follows the official FAQ', () => {
   assert.equal(resolveRedOpposedCheck(20,20).winner,'defender')
   assert.equal(resolveRedOpposedCheck(21,20).winner,'attacker')
-  assert.equal(resolveRedInitiative({reflexes:8,die:10}).total,18)
+  assert.equal(resolveRedInitiative({reflexes:8,die:10,extraDie:5}).total,23)
+  assert.equal(resolveRedInitiative({reflexes:8,die:1,extraDie:5}).total,4)
 })
 test('normal armor: blocked/equal damage does not ablate; penetration does', () => {
   assert.equal(previewRedBodyHit({damageDice:[5,5],sp:11}).hpLoss,0)

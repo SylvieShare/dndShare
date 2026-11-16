@@ -45,6 +45,7 @@ export function pvHp(entry) {
   const a = accessorsFor(entry)
   const v = a?.hp(entry?.data)
   if (!v || typeof v !== 'object') return null
+  if(a.system==='cyberpunk-red')return {current:Number(v.current)||0,max:Number(v.max)||0,dead:!!v.dead,temp:0}
   const hitDice = normalizeHitDice(v)
   return {
     current: Number(v.current) || 0,

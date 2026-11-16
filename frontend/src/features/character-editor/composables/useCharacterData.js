@@ -87,7 +87,7 @@ export function useCharacterData(uuid, format) {
     iconImageId.value = res.iconImageId ?? null
     iconImageUrl.value = res.iconImageUrl ?? null
     sourceVersionId.value = res.sourceVersionId ?? null
-    rulesVersion.value = (res.templateName === 'DND5' || res.sourceName?.toLowerCase() === 'dnd5e') ? (res.sourceVersion || '2014') : '2014'
+    rulesVersion.value = res.sourceVersion || ((res.templateName === 'DND5' || res.sourceName?.toLowerCase() === 'dnd5e') ? '2014' : '')
     charCtx.dictionaries = template.value.dictionaries || {}
     charCtx.var = data.value.var || {}
 
@@ -96,7 +96,7 @@ export function useCharacterData(uuid, format) {
     charCtx.ownerMode = isOwner.value
     loading.value = false
 
-    if (updateDocumentTitle) document.title = data.value.values?.name || 'Персонаж'
+    if (updateDocumentTitle) document.title = accessors.value?.displayName(data.value) || 'Персонаж'
 
     return res
   }

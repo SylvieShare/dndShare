@@ -8,6 +8,7 @@ const ViewDnd5e2014Rules = () => import('@/features/handbook/rules/pages/ViewDnd
 const ViewDnd5e2024Rules = () => import('@/features/handbook/rules/pages/ViewDnd5e2024Rules.vue')
 const ViewRulesEditionFallback = () => import('@/features/handbook/rules/pages/ViewRulesEditionFallback.vue')
 const ViewRulesEntry = () => import('@/features/handbook/rules/pages/ViewRulesEntry.vue')
+const ViewCyberpunkRedRules = () => import('@/features/handbook/rules/pages/ViewCyberpunkRedRules.vue')
 const ViewVtmV20Rules = () => import('@/features/handbook/rules/pages/ViewVtmV20Rules.vue')
 const ViewCreateCharacter = () => import('@/features/character-list/pages/ViewCreateCharacter')
 const ViewListCharacters = () => import('@/features/character-list/pages/ViewListCharacters')
@@ -230,6 +231,12 @@ const routes = [
         name: 'RulesEntry',
         component: ViewRulesEntry,
         meta: { title: 'Правила', section: 'rules', depth: 0 },
+    },
+    {
+        path: '/rules/cyberpunk/red',
+        name: 'CyberpunkRedRules',
+        component: ViewCyberpunkRedRules,
+        meta: { title: 'Правила Cyberpunk RED', section: 'rules', depth: 0 },
     },
     {
         path: '/rules/dnd5e/2014',

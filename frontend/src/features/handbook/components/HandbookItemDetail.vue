@@ -44,8 +44,9 @@
       <ItemEditionNotice :item="item" :z-index="nestedViewZIndex" />
 
       <!-- Custom renderer (Weapon, Spell, Enemy…) -->
+      <CyberpunkItemDetails v-if="(item.data?.red_key||item.data?.red_kind)" :item="item" :type="type" />
       <component
-        v-if="customRenderer"
+        v-else-if="customRenderer"
         :is="customRenderer"
         :item="item"
         :type="type"
@@ -136,6 +137,7 @@
 </template>
 
 <script setup>
+import CyberpunkItemDetails from '@/features/items/detail-components/CyberpunkItemDetails.vue'
 import UsableDetail from '@/features/items/detail-components/UsableDetail.vue'
 import ItemCreationDetail from '@/features/items/detail-components/ItemCreationDetail.vue'
 import ItemEditionNotice from '@/features/items/components/ItemEditionNotice.vue'

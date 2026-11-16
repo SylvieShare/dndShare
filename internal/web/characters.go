@@ -421,6 +421,8 @@ func templateNamePath(t store.CharacterTemplate) string {
 		return "values.name"
 	case "VTM20":
 		return "values.char_name"
+	case "CYBERPUNK_RED":
+		return "values.identity.handle"
 	default:
 		return ""
 	}

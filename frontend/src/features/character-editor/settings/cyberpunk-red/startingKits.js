@@ -1,0 +1,267 @@
+// Core pp. 98, 103, 117. Alternatives are resolved explicitly by the wizard.
+const gear = (name, count = 1) => ({ key: `gear-${name}`, count });
+const weapon = (name) => ({ key: `weapon-${name}`, count: 1 });
+const ammo = (name, count) => ({ key: `ammo-${name}-basic`, count });
+const cyber = (name) => ({ key: `cyberware-${name}`, count: 1 });
+const clothes = (style, entries) =>
+  Object.entries(entries).map(([name, count]) => ({
+    key: `clothing-${style}-${name}`,
+    count,
+  }));
+const armor = [
+  { key: "armor-light-armorjack-body", count: 1 },
+  { key: "armor-light-armorjack-head", count: 1 },
+];
+const shield = { key: "armor-bullet-proof-shield", count: 1 };
+const choose = (id, options) => ({ choice: id, options });
+const longGun = choose("longGun", [
+  [weapon("shotgun"), ammo("shotgun-slug", 100)],
+  [weapon("assault-rifle"), ammo("rifle", 100)],
+]);
+const pistol = choose("pistol", [
+  [weapon("heavy-pistol"), ammo("heavy-pistol", 100)],
+  [weapon("very-heavy-pistol"), ammo("very-heavy-pistol", 100)],
+]);
+export const RED_STARTING_KITS = {
+  rockerboy: [
+    weapon("very-heavy-pistol"),
+    ammo("very-heavy-pistol", 50),
+    choose("backup", [
+      [weapon("heavy-melee")],
+      [{ key: "ammo-grenade-flashbang", count: 1 }],
+    ]),
+    { key: "ammo-grenade-teargas", count: 2 },
+    gear("agent"),
+    gear("glow-paint", 5),
+    gear("pocket-amplifier"),
+    gear("radio-scanner-music-player"),
+    gear("video-camera"),
+    gear("computer"),
+    gear("electric-guitar-other-instrument"),
+    cyber("cyberaudio-suite"),
+    cyber("audio-recorder"),
+    cyber("chemskin"),
+    cyber("techhair"),
+    ...clothes("generic-chic", { jacket: 1, jewelry: 3, top: 4 }),
+    ...clothes("leisurewear", { jewelry: 1, glasses: 1, footwear: 1 }),
+    ...clothes("urban-flash", { bottoms: 1, top: 1 }),
+  ],
+  solo: [
+    weapon("assault-rifle"),
+    weapon("very-heavy-pistol"),
+    shield,
+    ammo("very-heavy-pistol", 30),
+    ammo("rifle", 70),
+    gear("agent"),
+    gear("bug-detector"),
+    cyber("biomonitor"),
+    cyber("neural-link"),
+    cyber("sandevistan"),
+    cyber("wolvers"),
+    ...clothes("leisurewear", {
+      footwear: 2,
+      jacket: 3,
+      glasses: 1,
+      bottoms: 2,
+      top: 2,
+    }),
+  ],
+  netrunner: [
+    weapon("very-heavy-pistol"),
+    ammo("very-heavy-pistol", 30),
+    gear("agent"),
+    { key: "cyberdeck-cyberdeck", count: 1 },
+    gear("virtuality-goggles"),
+    { key: "program-armor", count: 1 },
+    { key: "program-sword", count: 1 },
+    choose("program1", [
+      [{ key: "program-see-ya", count: 1 }],
+      [{ key: "program-eraser", count: 1 }],
+    ]),
+    choose("program2", [
+      [{ key: "program-sword", count: 1 }],
+      [{ key: "program-vrizzbolt", count: 1 }],
+    ]),
+    choose("program3", [
+      [{ key: "program-worm", count: 1 }],
+      [{ key: "program-sword", count: 1 }],
+    ]),
+    cyber("neural-link"),
+    cyber("interface-plugs"),
+    cyber("shift-tacts"),
+    ...clothes("generic-chic", { top: 10 }),
+    ...clothes("leisurewear", { footwear: 2, jewelry: 1, bottoms: 2 }),
+    ...clothes("urban-flash", { jacket: 1 }),
+  ],
+  tech: [
+    longGun,
+    { key: "ammo-grenade-flashbang", count: 1 },
+    gear("agent"),
+    gear("anti-smog-breathing-mask"),
+    gear("disposable-cell-phone"),
+    gear("duct-tape", 5),
+    gear("flashlight"),
+    gear("road-flare", 6),
+    gear("tech-bag"),
+    cyber("cybereye"),
+    cyber("microoptics"),
+    cyber("skinwatch"),
+    cyber("tool-hand"),
+    ...clothes("generic-chic", { bottoms: 8, top: 10 }),
+    ...clothes("leisurewear", { footwear: 2 }),
+  ],
+  medtech: [
+    longGun,
+    choose("incendiary", [
+      [{ key: "ammo-rifle-incendiary", count: 10 }],
+      [{ key: "ammo-shotgun-slug-incendiary", count: 10 }],
+    ]),
+    { key: "ammo-grenade-smoke", count: 2 },
+    gear("agent"),
+    gear("airhypo"),
+    gear("handcuffs"),
+    gear("flashlight"),
+    gear("glow-paint"),
+    gear("medtech-bag"),
+    cyber("biomonitor"),
+    cyber("cybereye"),
+    choose("filter", [[cyber("nasal-filters")], [cyber("toxin-binders")]]),
+    cyber("teleoptics"),
+    ...clothes("generic-chic", { jacket: 3 }),
+    ...clothes("leisurewear", { footwear: 1, bottoms: 3, top: 5 }),
+  ],
+  media: [
+    shield,
+    weapon("very-heavy-pistol"),
+    ammo("very-heavy-pistol", 50),
+    gear("agent"),
+    gear("audio-recorder"),
+    gear("binoculars"),
+    gear("disposable-cell-phone", 2),
+    gear("grapple-gun"),
+    gear("flashlight"),
+    gear("computer"),
+    gear("radio-scanner-music-player"),
+    gear("scrambler-descrambler"),
+    gear("video-camera"),
+    cyber("cyberaudio-suite"),
+    cyber("amplified-hearing"),
+    cyber("voice-stress-analyzer"),
+    cyber("light-tattoo"),
+    ...clothes("generic-chic", { footwear: 1, bottoms: 1, top: 1 }),
+    ...clothes("leisurewear", { jacket: 1 }),
+    ...clothes("urban-flash", { glasses: 1 }),
+  ],
+  lawman: [
+    longGun,
+    weapon("medium-pistol"),
+    ammo("medium-pistol", 30),
+    choose("shield", [[shield], [{ key: "ammo-grenade-smoke", count: 2 }]]),
+    gear("agent"),
+    gear("flashlight"),
+    gear("handcuffs", 2),
+    gear("radio-communicator"),
+    gear("road-flare", 10),
+    cyber("hidden-holster"),
+    cyber("subdermal-pocket"),
+    ...clothes("generic-chic", { jacket: 1, bottoms: 2, top: 3 }),
+    ...clothes("leisurewear", {
+      footwear: 2,
+      jacket: 2,
+      bottoms: 2,
+      glasses: 1,
+      top: 2,
+    }),
+  ],
+  exec: [
+    weapon("very-heavy-pistol"),
+    ammo("very-heavy-pistol", 50),
+    gear("radio-communicator", 4),
+    gear("scrambler-descrambler"),
+    cyber("biomonitor"),
+    cyber("techhair"),
+    cyber("cyberaudio-suite"),
+    cyber("internal-agent"),
+    choose("filter", [[cyber("nasal-filters")], [cyber("toxin-binders")]]),
+    ...clothes("businesswear", {
+      footwear: 1,
+      jacket: 1,
+      bottoms: 1,
+      glasses: 1,
+      top: 1,
+      jewelry: 2,
+    }),
+  ],
+  fixer: [
+    pistol,
+    choose("secondPistol", [
+      [weapon("heavy-pistol")],
+      [weapon("very-heavy-pistol")],
+    ]),
+    weapon("light-melee"),
+    gear("agent"),
+    gear("bug-detector"),
+    gear("computer"),
+    gear("disposable-cell-phone", 2),
+    cyber("cyberaudio-suite"),
+    cyber("internal-agent"),
+    cyber("subdermal-pocket"),
+    cyber("voice-stress-analyzer"),
+    cyber("amplified-hearing"),
+    ...clothes("generic-chic", { "contact-lenses": 1, jewelry: 1 }),
+    ...clothes("urban-flash", { footwear: 1, jacket: 1, bottoms: 1, top: 1 }),
+    ...clothes("leisurewear", { glasses: 1 }),
+  ],
+  nomad: [
+    pistol,
+    choose("backup", [[weapon("heavy-melee")], [weapon("heavy-pistol")]]),
+    gear("agent"),
+    gear("anti-smog-breathing-mask"),
+    gear("duct-tape"),
+    gear("flashlight"),
+    gear("grapple-gun"),
+    gear("inflatable-bed-sleep-bag"),
+    gear("medtech-bag"),
+    gear("radio-communicator", 2),
+    gear("rope-60m-yd"),
+    gear("techtool"),
+    gear("tent-and-camping-equipment"),
+    cyber("neural-link"),
+    cyber("interface-plugs"),
+    cyber("wolvers"),
+    ...clothes("bohemian", { jewelry: 1 }),
+    ...clothes("nomad-leathers", {
+      top: 4,
+      bottoms: 2,
+      footwear: 2,
+      jacket: 1,
+      hat: 1,
+    }),
+  ],
+};
+// Fixed creation Humanity losses from the Core kit table (errata fixes EMP labels).
+export const RED_KIT_HUMANITY = {
+  rockerboy: 9,
+  solo: 14,
+  netrunner: 14,
+  tech: 12,
+  medtech: 12,
+  media: 10,
+  lawman: 10,
+  exec: 12,
+  fixer: 16,
+  nomad: 14,
+};
+export function redKitRows(role, choices = {}) {
+  if (!RED_STARTING_KITS[role]) throw new RangeError("Unknown role");
+  return [
+    ...armor,
+    ...RED_STARTING_KITS[role].flatMap((row) => {
+      if (!row.choice) return [row];
+      const option = choices[row.choice];
+      if (!Number.isInteger(option) || !row.options[option])
+        throw new RangeError(`Выберите: ${row.choice}`);
+      return row.options[option];
+    }),
+  ];
+}

@@ -1,5 +1,6 @@
 <template>
   <MorphSheet
+    v-if="!isRedTemplate"
     ref="sheetRef"
     :origin-rect="originRect"
     :origin-el="originEl"
@@ -51,9 +52,12 @@
     </div>
     </template>
   </MorphSheet>
+  <AppModal v-else fullscreen @close="emit('close')"><RedCreateCharacterWorkspace ref="wizardRef" embedded :creating="creating" :source-version-id="sourceVersionId" @cancel="emit('close')" @create="onWizardCreate"/></AppModal>
 </template>
 
 <script setup>
+import RedCreateCharacterWorkspace from '../pages/RedCreateCharacterWorkspace.vue'
+import {AppModal} from '@sylvieshare/share-ui'
 import { computed, onMounted, ref } from 'vue'
 import DndCreateWizard from '@/features/character-list/components/wizard/DndCreateWizard.vue'
 import { FormActionButtons } from '@sylvieshare/share-ui'
@@ -90,6 +94,7 @@ const selectedTemplate = computed(() =>
 )
 const setting = computed(() => resolveSetting(selectedTemplate.value))
 const isDndTemplate = computed(() => setting.value?.system === 'dnd5e')
+const isRedTemplate=computed(()=>setting.value?.system==='cyberpunk-red')
 const sourceVersionId = computed(() => {
   const source = sources.value.find(item => item.name.toLowerCase() === setting.value?.sourceName?.toLowerCase())
   return findSourceVersion(source, setting.value?.sourceVersion)?.id ?? null

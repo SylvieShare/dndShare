@@ -294,11 +294,17 @@ func (s *Store) UpdateCharacterDataWithEvents(ctx context.Context, userID int64,
 func characterName(data json.RawMessage) string {
 	var character struct {
 		Values struct {
+			Identity struct {
+				Handle string `json:"handle"`
+			} `json:"identity"`
 			Name     string `json:"name"`
 			CharName string `json:"char_name"`
 		} `json:"values"`
 	}
 	if json.Unmarshal(data, &character) == nil {
+		if name := strings.TrimSpace(character.Values.Identity.Handle); name != "" {
+			return truncateRunes(name, 160)
+		}
 		if name := strings.TrimSpace(character.Values.Name); name != "" {
 			return truncateRunes(name, 160)
 		}

@@ -196,7 +196,7 @@
 
       <EncounterNpcDialogs :encounter="encounter" />
       <DndHpCalcModal
-        v-if="encounter.hpCalcPlayer"
+        v-if="encounter.hpCalcPlayer && !encounter.redHpParticipant"
         :key="encounter.hpCalcPlayer.uid"
         :hp="encounter.playerHpObj(encounter.hpCalcPlayer)"
         :damage-handler="amount => encounter.applyDamageToCombatant(encounter.hpCalcPlayer, amount)"
@@ -204,6 +204,7 @@
         @change="encounter.onPlayerHpChange"
       />
 
+      <CharacterSheetModal v-if="encounter.redHpParticipant" :uuid="encounter.redHpParticipant.charUuid" :is-dm="isDm" @close="encounter.closeHpCalcPlayer" />
       <CharacterSheetModal
         v-if="sheetUuid"
         :uuid="sheetUuid"
@@ -216,6 +217,8 @@
         ref="createModalRef"
         :creating="creating"
         :error="createError"
+        :source-name="session.systemName"
+        :source-version-id="session.sourceVersionId"
         @close="closeCreate"
         @create="createChar"
       />

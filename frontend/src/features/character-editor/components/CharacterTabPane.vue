@@ -5,6 +5,7 @@
       <DndSection v-else :section="section" :format="format" />
     </template>
     <VtmSheet v-else-if="definition?.system === 'vtm-v20'" :section="section" :format="format" />
+    <RedSheet v-else-if="definition?.system === 'cyberpunk-red'" :section="section" :format="format" />
   </div>
 </template>
 
@@ -14,6 +15,7 @@ import { characterSheetContext } from '../lib/sheetContext'
 import DndDesktopBody from './sheet/DndDesktopBody.vue'
 import DndSection from './sheet/DndSection.vue'
 import VtmSheet from './sheet/VtmSheet.vue'
+import RedSheet from './sheet/cyberpunk-red/RedSheet.vue'
 
 const props = defineProps({
   definition: Object,

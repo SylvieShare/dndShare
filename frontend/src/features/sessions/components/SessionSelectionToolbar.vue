@@ -11,7 +11,7 @@
     <div class="roster-actions-reveal" :class="{'roster-actions-reveal--open':selection.selecting}" :inert="!selection.selecting" :aria-hidden="!selection.selecting">
       <div class="roster-actions-clip"><div class="roster-selection-actions" role="group" aria-label="Действия с выбранными">
         <ActionButton variant="quiet" layout="stacked" :disabled="!selection.damageTargets.length" aria-label="Нанести урон" @click="open('damage')"><template #icon><HeartCrack :size="20" /></template>Урон</ActionButton>
-        <ActionButton v-if="selection.supportsExperience" variant="quiet" layout="stacked" :disabled="!selection.experienceTargets.length" aria-label="Добавить опыт" @click="open('experience')"><template #icon><Sparkles :size="20" /></template>Опыт</ActionButton>
+        <ActionButton v-if="selection.supportsExperience" variant="quiet" layout="stacked" :disabled="!selection.experienceTargets.length" :aria-label="encounter.isRed?'Добавить IP':'Добавить опыт'" @click="open('experience')"><template #icon><Sparkles :size="20" /></template>{{encounter.isRed?'IP':'Опыт'}}</ActionButton>
         <ActionButton v-if="combatWorkspace && selection.moveTargets.length" variant="quiet" layout="stacked" aria-label="Переместить в бой" @click="encounter.sendCombatantsTo(selection.moveTargets,'combat')"><template #icon><Swords :size="20" /></template>В бой</ActionButton>
       </div></div>
     </div>

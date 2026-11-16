@@ -9,7 +9,7 @@ import (
 
 func (s *Store) CharacterEditionMatchesTemplate(ctx context.Context, templateID, editionID int64) (bool, error) {
 	var valid bool
-	err := s.pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.char_template t JOIN dndshare.source_version v ON v.id=$2 JOIN dndshare.source s ON s.id=v.source_id WHERE t.id=$1 AND ((upper(t.name)='DND5' AND lower(s.name)='dnd5e') OR (upper(t.name)='VTM20' AND lower(s.name)='vampire: tm')))`, templateID, editionID).Scan(&valid)
+	err := s.pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.char_template t JOIN dndshare.source_version v ON v.id=$2 JOIN dndshare.source s ON s.id=v.source_id WHERE t.id=$1 AND ((upper(t.name)='DND5' AND lower(s.name)='dnd5e') OR (upper(t.name)='VTM20' AND lower(s.name)='vampire: tm') OR (upper(t.name)='CYBERPUNK_RED' AND lower(s.name)='cyberpunk' AND v.version='RED')))`, templateID, editionID).Scan(&valid)
 	return valid, err
 }
 func (s *Store) CloneOwnCharacter(ctx context.Context, userID, originalID int64, data json.RawMessage) (string, error) {

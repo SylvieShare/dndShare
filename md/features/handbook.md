@@ -496,6 +496,11 @@ The 32 base [Warlock invocations](warlock-invocations.md) are authored through M
 единый SQL scope до пагинации. Прежние версии можно показать для чтения, но
 добавление в лист требует native/compatible. [Модель и покрытие](rules-editions.md).
 
+## Каталог RED
+
+Системный визард, формат документа и команды описаны в [контракте RED](cyberpunk-red.md).
+
+
 ## Связанные страницы
 
 [Оглавление wiki](../README.md) · [API: справочник и MCP](../api/handbook.md) · [БД: справочник](../database/handbook.md) · [Компоненты справочника и создания](../frontend/catalogue-components.md)

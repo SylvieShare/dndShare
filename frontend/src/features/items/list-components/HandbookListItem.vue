@@ -9,6 +9,7 @@ import EnemyListItem from './EnemyListItem.vue'
 import FeatListItem from './FeatListItem.vue'
 import ItemListItem from './ItemListItem.vue'
 import ObjectListItem from './ObjectListItem.vue'
+import CyberpunkListItem from './CyberpunkListItem.vue'
 import OriginListItem from './OriginListItem.vue'
 import PotionListItem from './PotionListItem.vue'
 import SpellListItem from './SpellListItem.vue'
@@ -25,5 +26,5 @@ const renderers = {
   11: RuleSummaryListItem, 15: RuleSummaryListItem,
   16: OriginListItem, 17: OriginListItem,
 }
-const renderer = computed(() => renderers[props.type?.id || props.item.typeId] || ObjectListItem)
+const renderer = computed(() => (props.item.data?.red_key||props.item.data?.red_kind) ? CyberpunkListItem : renderers[props.type?.id || props.item.typeId] || ObjectListItem)
 </script>

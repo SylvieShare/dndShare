@@ -152,6 +152,7 @@ export function useSessionPage() {
   }
 
   const encounter = reactive(useEncounter({
+    systemName:computed(()=>session.value?.systemName),
     sessionUuid,
     participants,
     canEditPlayers: isDm,

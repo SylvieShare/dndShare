@@ -68,11 +68,13 @@ import { fetchGet, fetchPost, fetchDelete } from '@/shared/api/http'
 import { resolveSetting, settingAccessors } from '@/features/character-editor/settings'
 import { useAccountStore } from '@/stores/account'
 import { useTemplateStore } from '@/stores/template'
+import { useGameContextStore } from '@/stores/gameContext'
 
 const router = useRouter()
 const route = useRoute()
 const accountStore = useAccountStore()
 const templateStore = useTemplateStore()
+const gameContext=useGameContextStore()
 const chars = ref([])
 const sessionsByChar = ref({})
 const loadError = ref('')
@@ -135,6 +137,7 @@ function topSession(uuid) {
 }
 
 function openCreateModal(e) {
+  if(gameContext.context?.sourceName==='Cyberpunk'){router.push('/chars/new?system=cyberpunk-red');return}
   // D&D creation has a dedicated full-page wizard; other registered systems use the compact modal.
   const dnd = templates.value.find(t => resolveSetting(t)?.system === 'dnd5e')
   if (dnd) { router.push('/chars/new'); return }

@@ -5,6 +5,8 @@
       embedded
       :creating="creating"
       :error="error"
+      :source-name="sourceName"
+      :source-version-id="sourceVersionId"
       @cancel="requestClose"
       @create="emit('create', $event)"
     />
@@ -17,6 +19,8 @@ import CharacterCreateWizardWorkspace from '@/features/character-list/pages/View
 import { AppModal } from '@sylvieshare/share-ui'
 
 const props = defineProps({
+  sourceName:String,
+  sourceVersionId:Number,
   creating: { type: Boolean, default: false },
   error: { type: String, default: '' },
 })

@@ -38,13 +38,10 @@ export function resolveRedOpposedCheck(attacker, defender) {
   return { winner: attacker > defender ? 'attacker' : 'defender', margin: attacker - defender }
 }
 
-export function resolveRedInitiative({ reflexes, modifier = 0, die }) {
-  integer(reflexes, 'reflexes', 0)
-  integer(modifier, 'modifier')
-  integer(die, 'die', 1, 10)
-  const total = reflexes + modifier + die
-  integer(total, 'total')
-  return { total, reflexes, modifier, die }
+export function resolveRedInitiative({ reflexes, modifier = 0, die, extraDie = null, luck = 0, availableLuck = 0 }) {
+  // RTG Core FAQ v1.3 p.2: initiative uses critical success/failure and LUCK,
+  // but does not receive wound-state or critical-injury penalties.
+  return resolveRedSkillCheck({stat:reflexes,skill:0,modifiers:modifier,die,extraDie,luck,availableLuck})
 }
 
 // Standard body-hit preview only. Shields, cover, headshots, special ammunition,

@@ -2,7 +2,7 @@
   <div
     class="ecr-result"
     :class="{
-      'ecr-result--critical': !result.pending && result.roll === 20 && !isRolling(animationId),
+      'ecr-result--critical': !result.pending && result.roll === (result.sides||20) && !isRolling(animationId),
       'ecr-result--fumble': !result.pending && result.roll === 1 && !isRolling(animationId),
       'ecr-result--rolling': isRolling(animationId),
     }"
@@ -11,7 +11,7 @@
   >
     <div class="ecr-event">
       <span class="ecr-title">{{ eventTitle }}</span>
-      <div class="ecr-rerolls" aria-label="Докинуть кубик">
+      <div v-if="challenge.system!=='cyberpunk-red'" class="ecr-rerolls" aria-label="Докинуть кубик">
         <button
           class="ecr-reroll-btn ecr-reroll-btn--advantage"
           type="button"
@@ -46,7 +46,7 @@
         }"
       >
         <SystemDie
-          :sides="20"
+          :sides="result.sides||20"
           :value="displayedNatural(rollIndex, natural)"
           :size="hasExtraRoll ? 34 : 48"
           :color="resultColor"
@@ -110,7 +110,7 @@ const rollEntry = computed(() => {
   const parts = [{
     sign: '+',
     kind: 'dice',
-    sides: 20,
+    sides: props.result.sides||20,
     rolls: naturalRolls.value,
     dropped: droppedRolls.value,
   }]
@@ -166,7 +166,7 @@ const eventTitle = computed(() => {
 
 const resultColor = computed(() => {
   if (props.result.pending || isRolling(animationId)) return 'var(--accent)'
-  if (props.result.roll === 20) return 'var(--warning)'
+  if (props.result.roll === (props.result.sides||20)) return 'var(--warning)'
   if (props.result.roll === 1) return 'var(--danger)'
   return 'var(--accent)'
 })

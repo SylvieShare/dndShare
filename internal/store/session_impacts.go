@@ -16,6 +16,7 @@ type SessionImpactTarget struct {
 	Outcome string            `json:"outcome,omitempty"`
 }
 type SessionImpactRequest struct {
+	Red            *RedDamageOptions     `json:"red,omitempty"`
 	EventID        int64                 `json:"eventId"`
 	SequenceIndex  *int                  `json:"sequenceIndex,omitempty"`
 	ClientActionID string                `json:"clientActionId"`
@@ -103,6 +104,14 @@ func (s *Store) ApplySessionImpact(ctx context.Context, userID, sessionID int64,
 		data["impactRequests"] = receipts
 	}
 	rootData := data
+	if req.Red == nil && data["redDamage"] != nil {
+		encoded, _ := json.Marshal(data["redDamage"])
+		var red RedDamageOptions
+		if json.Unmarshal(encoded, &red) != nil {
+			return out, ErrApplication
+		}
+		req.Red = &red
+	}
 	if req.SequenceIndex != nil {
 		index := *req.SequenceIndex
 		hits := array(object(data["sequence"])["hits"])
@@ -181,20 +190,27 @@ func (s *Store) ApplySessionImpact(ctx context.Context, userID, sessionID int64,
 			return out, err
 		}
 		maximum := 0
+		isRed := doc["system"] == "cyberpunk-red"
 		if npc != nil {
 			maximum = number(object(doc.values()["hp"])["max"])
-		} else {
+		} else if !isRed {
 			maximum, err = applicationHPMaximum(ctx, tx, doc.values())
 			if err != nil {
 				return out, err
 			}
 			out.CharacterIDs = append(out.CharacterIDs, target.CharID)
 		}
+		if isRed && npc == nil {
+			out.CharacterIDs = append(out.CharacterIDs, target.CharID)
+		}
 		var manualStates []any
 		if npc != nil {
 			manualStates = array(npc.combatant["states"])
 		}
-		defenses, err := impactDefenses(ctx, tx, doc.values(), npcData, manualStates)
+		var defenses []any
+		if !isRed {
+			defenses, err = impactDefenses(ctx, tx, doc.values(), npcData, manualStates)
+		}
 		if err != nil {
 			return out, err
 		}
@@ -205,7 +221,18 @@ func (s *Store) ApplySessionImpact(ctx context.Context, userID, sessionID int64,
 				multiplier = 0.5
 			}
 		}
-		result := applyImpactDamage(doc, parts, defenses, multiplier, maximum)
+		var result ImpactResult
+		if isRed {
+			if len(plan.Effects) > 0 || choice.Outcome != "" {
+				return out, ErrApplication
+			}
+			result, err = applyRedImpact(ctx, tx, doc, target.CharID, parts, req.Red)
+			if err != nil {
+				return out, err
+			}
+		} else {
+			result = applyImpactDamage(doc, parts, defenses, multiplier, maximum)
+		}
 		if len(plan.Effects) > 0 && choice.Outcome != "success" {
 			applied, err := applyApplication(doc, plan, fmt.Sprintf("impact-%s-%d", req.ClientActionID, index), secureApplicationDie)
 			if err != nil {
@@ -226,6 +253,13 @@ func (s *Store) ApplySessionImpact(ctx context.Context, userID, sessionID int64,
 		_ = json.Unmarshal(encoded, &record)
 		record["outcome"] = choice.Outcome
 		if npc != nil {
+			if isRed {
+				v := doc.values()
+				v["hp"] = map[string]any{"current": result.After.Current, "max": result.After.Max, "temp": 0}
+				override := object(npc.combatant["override"])
+				override["redArmor"] = v["npcArmor"]
+				npc.combatant["override"] = override
+			}
 			appendNPCHistory(npc.combatant, record)
 			npc.historyHandled = true
 			err = npc.save(ctx, tx, doc)
@@ -258,6 +292,14 @@ func impactTargetDocument(ctx context.Context, tx pgx.Tx, sessionID int64, targe
 			return nil, nil, nil, err
 		}
 		data := map[string]any{}
+		if override := object(npc.combatant["override"]); override["redStats"] != nil {
+			v := npc.document.values()
+			npc.document["system"] = "cyberpunk-red"
+			v["stats"] = override["redStats"]
+			v["health"] = map[string]any{"current": number(npc.combatant["hpCurrent"])}
+			v["npcArmor"] = object(override["redArmor"])
+			v["npcHPMax"] = number(override["hp"])
+		}
 		if id := int64(number(npc.combatant["itemId"])); id > 0 {
 			_, data, _, err = applicationItem(ctx, tx, id)
 			if err != nil {

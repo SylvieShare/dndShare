@@ -13,6 +13,7 @@
 | `cyberpunk-red-character-sheet-fillable.pdf` | [RTG](https://rtalsoriangames.com/wp-content/uploads/2020/11/RTG-CPR-CharacterSheet-Fillable.pdf) | Заполняемый лист |
 | `cyberpunk-red-core-errata-v1.25.pdf` | [RTG](https://rtalsoriangames.com/wp-content/uploads/2021/08/RTG-CPR-CoreBookErratav1.25.pdf) | Исправления Core |
 | `cyberpunk-red-jumpstart-rules-ru.pdf` | [Hobby Games CDN](https://hobbygames.cdnvideo.ru/download/rules/CyberpunkRED_JumpstartKit_rules.pdf) | Русский стартер 2019; не Core |
+| `cyberpunk-red-core-faq-v1.3.pdf` | [RTG FAQ](https://rtalsoriangames.com/wp-content/uploads/2021/07/RTG-CPR-CoreBookFAQv1.3.pdf) | Официальные уточнения Core |
 | `cyberpunk-red-core-rulebook-1.25-ru.pdf` | Предоставлен пользователем из локальной папки Downloads/Telegram Desktop | Полная книга, русский фанатский перевод; 458 PDF-страниц |
 
 Полная книга **получена от пользователя** и скопирована в указанную папку.
@@ -22,7 +23,7 @@
 не нужен. Оригинальный файл пользователя сохранён без изменения.
 
 Доступные стартовые правила не заменяют Core. После таймаута основного домена
-русский Jumpstart успешно загружен с CDN Hobby Games. У всех пяти файлов
+русский Jumpstart успешно загружен с CDN Hobby Games. У файлов
 проверены PDF-сигнатура и SHA-256.
 
 ## Контрольные суммы SHA-256
@@ -32,6 +33,7 @@ character-sheet-fillable: 95085ae1ec70442cb2ec26113016dfea049bf1e25bfdac7449ff8d
 character-sheet: d9e426cfa124a6c478a46e47ac84eaeea539dfbfa415ea35c9edd0a5a599598e
 core-errata-v1.25: d9c16d315872567e17d953b067d636dea1cea0ac0504f1635b0a5b35f0e54129
 jumpstart-rules-ru: 4a1aa68da0a63453449892d9803d44511431e3fe55f2fb6ff96625d15b4f755d
+core-faq-v1.3: e05af57307715ebe0562f8c022fff91dc6f48a2606c71370f8dfcbfd63b16423
 core-rulebook-1.25-ru: aece6513e81347acecb06e1544ec281d44b9eed2e99ec7c4ecfc766b6856b295
 ```
 
@@ -60,3 +62,15 @@ core-rulebook-1.25-ru: aece6513e81347acecb06e1544ec281d44b9eed2e99ec7c4ecfc766b6
 ## Связанные страницы
 
 [План](../plans/cyberpunk-red/README.md) · [Реестр контента](../plans/cyberpunk-red/content.md)
+
+## Дополнительная сверка Core
+
+При интеграции проверены разделы боя, NET, медицины, ролей и экономики,
+включая страницы 147–165, 173–180, 187–188, 201–212, 347–358, 377–378.
+[Официальный FAQ 1.3](https://rtalsoriangames.com/wp-content/uploads/2021/07/RTG-CPR-CoreBookFAQv1.3.pdf)
+уточняет инициативу, автоогонь/Spot Weakness, EMP и ряд ситуационных правил.
+Вторичный числовой индекс — [Project RED](https://gitlab.com/cyberpunk-red-team/fvtt-cyberpunk-red-core),
+commit `165701e886aacf50983e12875db57ae047de6fa5`. Использованы игровые числа и
+названия; код, полный текст описаний, графика и Foundry-эффекты не переносились.
+Собственная нормализация: `scripts/cyberpunk-red/import_facts.py`, дополнительные
+фактологические таблицы и словари: `scripts/cyberpunk-red/*.mjs`.

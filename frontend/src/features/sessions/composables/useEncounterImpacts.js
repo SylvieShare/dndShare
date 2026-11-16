@@ -28,7 +28,7 @@ export function useEncounterImpacts({ sessionUuid, persistence, load, findPartic
       for (const impact of response.event?.data?.impacts || []) {
         const combatant = combatants.find(row => row.type === 'player' && findParticipant(row.charId)?.charUuid === impact.target.charUuid)
         const path = combatant && pvHpPath(findParticipant(combatant.charId))
-        if (path) applyLocalPatches(combatant.charId, [{ path: `${path}.current`, value: impact.after.current }, { path: `${path}.temp`, value: impact.after.temp }])
+        if (path) applyLocalPatches(combatant.charId, [{ path: `${path}.current`, value: impact.after.current }, ...(findParticipant(combatant.charId)?.data?.system==='cyberpunk-red'?[]:[{ path: `${path}.temp`, value: impact.after.temp }])])
       }
       pending = null
       await load()

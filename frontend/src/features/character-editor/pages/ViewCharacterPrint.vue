@@ -15,6 +15,7 @@
       <div class="paper-message paper-message--error"><strong>Не удалось открыть персонажа</strong><span>{{ error }}</span></div>
     </PrintPage>
 
+    <RedPrintDocument v-else-if="response?.data?.system==='cyberpunk-red'" :values="values" :items="redItems" />
     <div v-else class="print-document">
       <PrintPage number="01">
         <header class="identity">
@@ -176,6 +177,8 @@
 </template>
 
 <script setup>
+import RedPrintDocument from '../components/sheet/cyberpunk-red/RedPrintDocument.vue'
+import {redCatalogueItem} from '../settings/cyberpunk-red/equipment'
 import { Shield } from '@lucide/vue'
 import { grantedTags, proficiencyDictionaries } from '@/features/character-editor/lib/proficiencyTags'
 import { LoadingState } from '@sylvieshare/share-ui'
@@ -236,6 +239,7 @@ const loading = ref(true)
 const error = ref('')
 const response = ref(null)
 const catalog = ref({})
+const redItems=ref([])
 const suggest = useSuggestStore()
 const values = computed(() => response.value?.data?.values || {})
 
@@ -527,6 +531,7 @@ async function load() {
   try {
     const res = await fetchGet('/char/' + route.params.uuid); if (!res?.data || res?.type) throw new Error(res?.desc || 'Персонаж не найден или недоступен.')
     response.value = res; const itemIds = collectItemIds(res.data?.values || {})
+    if(res.data.system==='cyberpunk-red'){redItems.value=(await fetchGet('/cyberpunk-red/catalogue')).items.map(redCatalogueItem);document.title=`${res.data.values.identity.handle} — лист RED`;return}
     const tasks = [3, 4, 5, 6, 7, 12, 14, 15, 17].map(id => suggest.ensure(id).catch(() => null))
     if (itemIds.length) tasks.push(itemsApi.byIds(itemIds).then(result => { catalog.value = Object.fromEntries((result?.items || []).map(item => [String(item.id), item])) }).catch(() => null))
     await Promise.all(tasks);

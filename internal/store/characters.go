@@ -2,8 +2,10 @@ package store
 
 import (
 	"context"
+	"dndshare/internal/cyberpunkred"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -128,6 +130,9 @@ func (s *Store) HasCharacters(ctx context.Context, userID int64) (bool, error) {
 func (s *Store) CreateCharacter(ctx context.Context, userID, templateID int64, sourceVersionID, iconImageUploadID *int64, data json.RawMessage) (string, error) {
 	if len(data) == 0 {
 		data = json.RawMessage("{}")
+	}
+	if err := cyberpunkred.ValidateDocument(data); err != nil {
+		return "", fmt.Errorf("%w: %v", ErrApplication, err)
 	}
 	if iconImageUploadID != nil {
 		image, err := s.GetActiveUserStorageImage(ctx, *iconImageUploadID, userID)

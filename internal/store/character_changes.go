@@ -2,9 +2,11 @@ package store
 
 import (
 	"context"
+	"dndshare/internal/cyberpunkred"
 	"dndshare/internal/documentpatch"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/jackc/pgx/v5"
 	"time"
 )
@@ -38,6 +40,9 @@ type CharacterChange struct {
 }
 
 func persistCharacterDocument(ctx context.Context, tx pgx.Tx, charID int64, data json.RawMessage, expected *int64) (int64, error) {
+	if err := cyberpunkred.ValidateDocument(data); err != nil {
+		return 0, fmt.Errorf("%w: %v", ErrApplication, err)
+	}
 	var previous json.RawMessage
 	var version int64
 	if err := tx.QueryRow(ctx, `SELECT data,version FROM dndshare."char" WHERE id=$1 AND NOT deleted FOR UPDATE`, charID).Scan(&previous, &version); err != nil {

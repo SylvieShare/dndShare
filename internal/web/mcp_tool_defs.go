@@ -3,6 +3,7 @@ package web
 func mcpToolDefs() []map[string]any {
 
 	defs := []map[string]any{
+		mcpDefinition("cyberpunk_red_install", "Preview or explicitly install the pinned Cyberpunk RED Core catalogue, system, template and dictionaries. Existing records are preserved. Requires write access; apply requires the hash returned by preview.", mcpObjectSchema(map[string]any{"apply":map[string]any{"type":"boolean"},"expectedHash":mcpStringProperty("Hash returned by preview")})),
 		mcpDefinition("sessions_list",
 			"List active sessions owned by one exact user login. Returns session metadata without participants or character sheets.",
 			mcpObjectSchema(map[string]any{"ownerLogin": mcpStringProperty("Exact owner login")}, "ownerLogin")),

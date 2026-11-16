@@ -2,6 +2,7 @@ import { RED_ROLES, RED_STATS, RED_SKILLS_BY_KEY, RED_SYSTEM } from './catalogue
 import { RED_STAT_TABLES, RED_ROLE_SKILLS, RED_BASIC_SKILLS } from './creationTables.js'
 import { validateRedSkillAllocation, validateRedStatAllocation } from './creationValidation.js'
 import { redHealthMaximum } from './derived.js'
+import {redRoleChoiceErrors,redInitialRoleChoices} from './roleChoices.js'
 
 export const RED_CORE_REVISION = 'core-1.25'
 export const RED_METHODS = Object.freeze(['streetrat', 'edgerunner', 'complete'])
@@ -40,6 +41,7 @@ export function validateRedCreation(draft) {
   if (!draft || !RED_METHODS.includes(draft.method)) return { valid: false, errors: [{ path: 'method', code: 'method-required' }] }
   if (!RED_ROLES.some(r => r.key === draft.role)) return { valid: false, errors: [{ path: 'role', code: 'role-required' }] }
   if (!draft.name?.trim()) add('name', 'name-required')
+  for(const code of redRoleChoiceErrors(draft.role,4,draft.roleChoices||redInitialRoleChoices(draft.role)))add('roleChoices',code)
   if (!draft.nativeLanguage?.trim() || draft.nativeLanguage.trim().toLowerCase() === 'streetslang') add('nativeLanguage', 'native-language-required')
   if (draft.method === 'complete') errors.push(...validateRedStatAllocation(draft.stats, RED_CORE_PROFILE).errors)
   else {
@@ -78,14 +80,14 @@ export function assembleRedBaseDocument(draft) {
     identity: { handle: draft.name.trim(), avatar: null },
     rules: { profile: 'core-2045', revision: RED_CORE_REVISION, contentSourceIds: [...(draft.contentSourceIds || [])] },
     creation: { method: draft.method, complete: false, statRolls: [...(draft.statRolls || [])] },
-    stats: { ...draft.stats }, skills: structuredClone(draft.skills),
-    roles: [{ uid: uid(), key: draft.role, rank: 4, choices: structuredClone(draft.roleChoices || {}) }],
+    stats: { ...draft.stats }, skills: JSON.parse(JSON.stringify(draft.skills)),
+    roles: [{ uid: uid(), key: draft.role, rank: 4, choices: JSON.parse(JSON.stringify(draft.roleChoices || redInitialRoleChoices(draft.role))) }],
     health: { current: maximum, deathSavePenalty: 0, injuries: [], conditions: [], addictions: [] },
     humanity: { current: draft.stats.EMP * 10, adjustments: [] }, luck: { current: draft.stats.LUCK },
     inventory: { spaces: [{ uid: uid(), name: 'С собой' }], entries: [] },
     cyberware: { installations: [] }, netrunning: { deckUid: null, loadedPrograms: [], encounter: null },
     economy: { cashEb: draft.method === 'complete' ? 2550 : 500, housingKey: draft.role === 'exec' ? 'corporate-conapt' : 'cargo-container', lifestyleKey: draft.role === 'exec' ? 'good-prepak' : 'kibble', ledger: [] },
     progression: { ipAvailable: 0, ipSpent: 0, reputation: 0, transactions: [] },
-    lifepath: { general: structuredClone(draft.lifepath || {}), roleSpecific: {}, contacts: [], notes: '' },
+    lifepath: { general: JSON.parse(JSON.stringify(draft.lifepath || {})), roleSpecific: {}, contacts: [], notes: '' },
   } }
 }
