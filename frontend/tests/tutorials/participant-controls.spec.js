@@ -133,6 +133,8 @@ for (const mobile of [false, true]) test(`NPC relation is optional and edited th
     await page.getByRole('menuitem', { name: label, exact: true }).click()
     await expect(tile).toHaveAttribute('data-relation', value)
     await expect(tile).toHaveAttribute('aria-description', `Отношение: ${label.toUpperCase()}`)
+    await expect(tile.getByText(label,{exact:true})).toHaveCount(0)
+    await expect(tile.getByText(label.toUpperCase(),{exact:true})).toHaveCount(0)
     expect(await page.evaluate(() => window.controls.npc.side)).toBe(value)
     await page.keyboard.press('Escape')
   }
