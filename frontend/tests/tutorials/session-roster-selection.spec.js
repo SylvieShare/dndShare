@@ -30,7 +30,7 @@ for(const width of [390,834,1440])test(`shared roster selection, global damage, 
   await expect(second).not.toBeChecked()
   await expect(toolbar.getByRole('button',{name:/Режим выбора/})).toContainText('2')
   await info.attach(`player-selection-${width}`,{body:await sidebar.screenshot({animations:'disabled'}),contentType:'image/png'})
-  await expect.poll(()=>first.locator('.session-roster-tile').evaluate(n=>getComputedStyle(n,'::before').opacity)).toBe('0.24')
+  await expect.poll(()=>first.locator('.session-roster-tile').evaluate(n=>getComputedStyle(n,'::before').opacity)).toBe('0.13')
   await expect(first.locator('.session-roster-tile')).toHaveCSS('border-radius','0px')
   await expect(page.getByRole('menu')).toHaveCount(0)
   await expect(toolbar.getByRole('button',{name:'Переместить в бой',exact:true})).toHaveCount(0)

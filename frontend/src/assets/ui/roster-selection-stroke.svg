@@ -1,8 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 200" preserveAspectRatio="none">
-  <defs><mask id="stroke" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="200">
-  <path fill="white" d="M0 16 42 10 93 13 152 8 214 12 279 7 337 13 402 9 466 12 528 6 589 12 655 9 714 13 781 8 844 14 907 10 966 16 1000 12V184L955 189 897 184 835 192 772 187 708 193 647 187 581 192 519 186 451 193 390 187 326 191 264 185 197 192 135 186 71 191 23 184 0 188Z"/>
-  <path fill="white" opacity=".48" d="m7 7 113-4 96 2 138-3 134 4-231 3-143-1-107 4zm544-2 127-4 95 3 121-2 99 5-161 2-101-2-180 2zM0 194l127 2 113-3 143 3 120-2-151 6-126-2-113 2L0 198zm533 2 126-3 118 3 131-3 90 2-133 5-117-2-215 2z"/>
-  <path fill="black" opacity=".18" d="m17 31 153-6 214 2-170 3-197 5zm401 14 204-4 274 2-199 3-279 2zM70 161l225 3 177-1-188 5-214-3zm498 17 148-4 254 2-228 3-174 2z"/>
-  <g fill="white" opacity=".5"><circle cx="11" cy="4" r="2"/><circle cx="74" cy="7" r="1.5"/><circle cx="391" cy="3" r="1"/><circle cx="705" cy="7" r="2"/><circle cx="985" cy="5" r="1.5"/><circle cx="45" cy="197" r="1.5"/><circle cx="442" cy="196" r="2"/><circle cx="923" cy="196" r="1.5"/></g>
-  </mask></defs><rect width="1000" height="200" fill="white" mask="url(#stroke)" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 360" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="ink" x2=".8" y2="1"><stop stop-color="white" stop-opacity=".24"/><stop offset=".34" stop-color="white" stop-opacity=".9"/><stop offset=".72" stop-color="white" stop-opacity=".4"/><stop offset="1" stop-color="white" stop-opacity=".7"/></linearGradient>
+    <mask id="dry" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="360">
+      <path fill="white" d="M0 0h1000v360H0z"/>
+      <g fill="black">
+        <path d="m28 61 127-19-78 25 110-8-154 22Zm239 45 187-15-114 22 94-2-155 15Zm348-65 196-15-112 21 83-3-152 16ZM55 225l172-21-119 26 160-6-200 20Zm431-37 135-24-83 25 172-9-214 26Zm235 69 190-26-111 27 134-6-200 20ZM166 319l171-19-92 22 158-7-229 18Z"/>
+        <path d="m132 122 15-3-9 9-13 2Zm51 26 8-6 17 1-10 8Zm348-76 22-5-13 11-18 3Zm-66 197 15-8 23 1-12 10Zm318-118 20-8 13 3-18 11Zm-47 151 15-4 9 5-20 8Z"/>
+        <ellipse cx="98" cy="166" rx="5" ry="2"/><ellipse cx="420" cy="69" rx="8" ry="2"/><ellipse cx="586" cy="222" rx="6" ry="3"/><ellipse cx="861" cy="181" rx="12" ry="2"/>
+      </g>
+    </mask>
+  </defs>
+  <g mask="url(#dry)">
+    <path fill="url(#ink)" d="M0 12 86 0l83 28 149-15 76 28 165-35 103 19 125-17 76 32 137-18v83l-92 9-86-18-170 22-130-14-114 30-129-12-116 18-81-28-91 15Z"/>
+    <path fill="white" opacity=".23" d="m0 107 146 18 112-21 124 25 93-18 151 24 121-16 253 9v66l-142-15-132 21-116-17-150 14-108-22-164 19L0 181Z"/>
+    <path fill="white" opacity=".68" d="m0 171 118 16 89-11 147 23 97-17 138 26 141-19 123 16 147-10v75l-129-8-111 22-138-17-132 24-100-13-135 21-110-18-145 13Z"/>
+    <path fill="url(#ink)" opacity=".67" d="m0 262 167 29 154-20 117 30 151-19 110 30 163-18 138 13v53H0Z"/>
+    <g fill="white" opacity=".5">
+      <path d="m0 76 175-25-87 23 96-9-184 31Zm309 94 213-23-134 25 95-5-174 19Zm343-96 221-18-153 22 93-5-161 14ZM17 283l147-17-96 23 112-10-163 22Zm548 39 211-23-143 26 112-9-180 20Z"/>
+      <path d="m221 16 31-7-14 13-24 2Zm182 211 26-8-10 13-27 4Zm314-89 30-8-13 13-25 2Zm176 162 37-10-15 15-31 4Z"/>
+    </g>
+  </g>
 </svg>

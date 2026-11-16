@@ -24,6 +24,6 @@ provide('encounter',enc)
 const items=computed(()=>enc.sortable.displayItems('reserve-npc'))
 </script>
 <style scoped>
-.enc-reserve-panel {display:flex;flex-direction:column;flex:1;min-height:0;min-width:0;padding-inline-start:var(--spacing-medium)}
+.enc-reserve-panel {display:flex;flex-direction:column;flex:1;min-height:0;min-width:0}
 .enc-reserve-hint {margin:0;padding:var(--spacing-large) var(--spacing-small);color:var(--text-muted);font-size:var(--type-context-size)}
 </style>

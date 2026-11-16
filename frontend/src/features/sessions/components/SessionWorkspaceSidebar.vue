@@ -35,6 +35,6 @@ onBeforeUnmount(() => unregister?.())
 <style scoped>
 .session-sidebar-host {position:absolute;z-index:20;inset:var(--session-toolbar-height,64px) 0 0;pointer-events:none}
 .session-sidebar-panels {display:flex;flex:1;min-height:0;min-width:0;flex-direction:column}
-.session-sidebar-players {display:flex;flex:1;min-height:0;flex-direction:column;padding-inline-start:var(--spacing-medium)}
+.session-sidebar-players {display:flex;flex:1;min-height:0;flex-direction:column}
 .session-sidebar-header-controls {padding:0 var(--spacing-medium) var(--spacing-small)}
 </style>

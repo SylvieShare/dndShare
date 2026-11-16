@@ -9,7 +9,7 @@
     @click.capture="suppressReorderClick"
     @contextmenu.capture="suppressReorderClick"
   >
-    <WorkspaceRowDivider v-if="divided" class="roster-divider" />
+    <WorkspaceRowDivider v-if="divided" rough class="roster-divider" />
     <RowActionMenu :trigger-attrs="{ inert: selectionMode || undefined }">
       <template #trigger>
         <SessionPlayerTile
