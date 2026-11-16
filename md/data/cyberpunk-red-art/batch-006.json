@@ -1,0 +1,256 @@
+{
+  "batch": 6,
+  "system": "Cyberpunk RED",
+  "sourceId": 3,
+  "generator": "Built-in image_gen",
+  "assetRoot": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-06",
+  "sourceAudit": "Six existing type covers inspected; user-approved mature style supersedes previous rendering. Preserve icon identities and every icon slot.",
+  "assets": [
+    {
+      "key": "cyberware-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 26,
+        "name": "Киберимпланты"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49601,
+      "status": "published",
+      "prompt": "Use case: style-transfer. Redraw IMAGE 1, the edit target, in the mature detailed Cyberpunk RED style approved in IMAGE 2. Image 2 is STYLE ONLY; never copy its subject. Preserve image 1 subject identity, number of parts, important silhouette, palette and depicted activity. Strong sophisticated CEL SHADING, fine variable dark linework rather than thick icon outlines, realistically engineered construction, material-specific detail and selective wear. Broad decisive shadow shapes, secondary reflected-light planes, cinematic practical lighting, layered atmospheric depth. Adult illustrated RPG concept art, believable 2045 retrofuturism, lived-in industrial city, no toy-like simplification. Details concentrated on the hero object, softer background; no uniform grit/noise, no photograph, no glossy 3D, no labels or text, branding, watermark, border or UI overlay. Main subject completely inside frame with safe margins. Aspect ratio 1536:1024. Articulate all five fingers plausibly, add service fasteners, joint bearings, soft cable conduits, ceramic plate seams and actuator housings. The detached arm rests safely in a ripperdoc cradle, no gore.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-01/final/cyberware-cover.jpg",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/cyberware-cover-v2.png",
+      "final": "final/cyberware-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-de66a07d-0e0c-4af6-b9db-a49b84cb7ec4.png",
+      "originalSha256": "e0046c48cac3d7b47a80b9124f01e76a78c50c4e554f5e19bbb2f951b7748d6c",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "0a6fc440877dc223ca3192a3d349c395e47178f933f66acb25af8dadbdb9195b",
+      "bytes": 284238,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Inspected source covers, generated outputs and final contact sheet. Mature approved style, object identity retained, complete silhouettes and clean final crops. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49643,
+        "objectKey": "system-item-media/v1/item-types/26/cover/0a6fc440877dc223ca3192a3d349c395e47178f933f66acb25af8dadbdb9195b.jpg",
+        "fileSize": 284238
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/26/cover/0a6fc440877dc223ca3192a3d349c395e47178f933f66acb25af8dadbdb9195b.jpg"
+    },
+    {
+      "key": "weapons-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 37,
+        "name": "Оружие"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49603,
+      "status": "published",
+      "prompt": "Use case: style-transfer. Redraw IMAGE 1, the edit target, in the mature detailed Cyberpunk RED style approved in IMAGE 2. Image 2 is STYLE ONLY; never copy its subject. Preserve image 1 subject identity, number of parts, important silhouette, palette and depicted activity. Strong sophisticated CEL SHADING, fine variable dark linework rather than thick icon outlines, realistically engineered construction, material-specific detail and selective wear. Broad decisive shadow shapes, secondary reflected-light planes, cinematic practical lighting, layered atmospheric depth. Adult illustrated RPG concept art, believable 2045 retrofuturism, lived-in industrial city, no toy-like simplification. Details concentrated on the hero object, softer background; no uniform grit/noise, no photograph, no glossy 3D, no labels or text, branding, watermark, border or UI overlay. Main subject completely inside frame with safe margins. Aspect ratio 1536:1152. Keep the silver and graphite heavy pistol with oxblood grip. Add believable slide seams, sights, textured grip, screws and surface finish; no internal cutaways or exploded diagram. Ground it on the work mat.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-01/final/weapons-cover.jpg",
+      "width": 1536,
+      "height": 1152,
+      "original": "originals/weapons-cover-v2.png",
+      "final": "final/weapons-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-9c193586-551b-4a6f-be9f-890c89457cbe.png",
+      "originalSha256": "038e3d0ff1b69264e7d89869c3f22965941a725f5e35d88ad756b8c2abb080eb",
+      "sourceDimensions": {
+        "width": 1448,
+        "height": 1086
+      },
+      "sha256": "07af54bf3028f5b08fcd1b2d9bddd3cdf91e5347b2e385e342e5e31eee0325a1",
+      "bytes": 317914,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Inspected source covers, generated outputs and final contact sheet. Mature approved style, object identity retained, complete silhouettes and clean final crops. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49644,
+        "objectKey": "system-item-media/v1/item-types/37/cover/07af54bf3028f5b08fcd1b2d9bddd3cdf91e5347b2e385e342e5e31eee0325a1.jpg",
+        "fileSize": 317914
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/37/cover/07af54bf3028f5b08fcd1b2d9bddd3cdf91e5347b2e385e342e5e31eee0325a1.jpg"
+    },
+    {
+      "key": "programs-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 33,
+        "name": "Программы"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49605,
+      "status": "published",
+      "prompt": "Use case: style-transfer. Redraw IMAGE 1, the edit target, in the mature detailed Cyberpunk RED style approved in IMAGE 2. Image 2 is STYLE ONLY; never copy its subject. Preserve image 1 subject identity, number of parts, important silhouette, palette and depicted activity. Strong sophisticated CEL SHADING, fine variable dark linework rather than thick icon outlines, realistically engineered construction, material-specific detail and selective wear. Broad decisive shadow shapes, secondary reflected-light planes, cinematic practical lighting, layered atmospheric depth. Adult illustrated RPG concept art, believable 2045 retrofuturism, lived-in industrial city, no toy-like simplification. Details concentrated on the hero object, softer background; no uniform grit/noise, no photograph, no glossy 3D, no labels or text, branding, watermark, border or UI overlay. Main subject completely inside frame with safe margins. Aspect ratio 1600:640. Keep the violet software cartridge, copper contacts and cyan branching motif as an in-universe design, in a practical cyberdeck cradle. Fine connector hardware, vents, cable routing and circuitry in the deck, sophisticated perspective and realistic scale, no readable interface.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-01/final/programs-cover.webp",
+      "width": 1600,
+      "height": 640,
+      "original": "originals/programs-cover-v2.png",
+      "final": "final/programs-cover-v2.webp",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-a99625f2-800a-4462-8731-afbcb4b413e1.png",
+      "originalSha256": "fe457953b6486e33393505c85539886ce2195b9b182bda99735fc66dd37dd0f7",
+      "sourceDimensions": {
+        "width": 1983,
+        "height": 793
+      },
+      "sha256": "4198f48ae38f346db8f5f18d5dd2671ede6bfaf99b04be8c8351a1ef637b4be2",
+      "bytes": 210520,
+      "mimeType": "image/webp",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Inspected source covers, generated outputs and final contact sheet. Mature approved style, object identity retained, complete silhouettes and clean final crops. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49645,
+        "objectKey": "system-item-media/v1/item-types/33/cover/4198f48ae38f346db8f5f18d5dd2671ede6bfaf99b04be8c8351a1ef637b4be2.webp",
+        "fileSize": 210520
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/33/cover/4198f48ae38f346db8f5f18d5dd2671ede6bfaf99b04be8c8351a1ef637b4be2.webp"
+    },
+    {
+      "key": "ammo-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 20,
+        "name": "Боеприпасы"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49631,
+      "status": "published",
+      "prompt": "Use case: style-transfer. Redraw IMAGE 1, the edit target, in the mature detailed Cyberpunk RED style approved in IMAGE 2. Image 2 is STYLE ONLY; never copy its subject. Preserve image 1 subject identity, number of parts, important silhouette, palette and depicted activity. Strong sophisticated CEL SHADING, fine variable dark linework rather than thick icon outlines, realistically engineered construction, material-specific detail and selective wear. Broad decisive shadow shapes, secondary reflected-light planes, cinematic practical lighting, layered atmospheric depth. Adult illustrated RPG concept art, believable 2045 retrofuturism, lived-in industrial city, no toy-like simplification. Details concentrated on the hero object, softer background; no uniform grit/noise, no photograph, no glossy 3D, no labels or text, branding, watermark, border or UI overlay. Main subject completely inside frame with safe margins. Aspect ratio 1536:1024. Keep exactly three brass cartridges with copper tips in the graphite case with teal latch. Correct machined case rims and seams, believable metal surfaces, molded foam and latch hardware; do not turn ammunition into giant shells.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-03/final/ammo-cover.jpg",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/ammo-cover-v2.png",
+      "final": "final/ammo-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-55c53bf6-b6a1-4754-8a14-c7047398338e.png",
+      "originalSha256": "0afb2a59aa6d39b26f60d0ca56debf082410a5e14519074281843c3458a5f9ee",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "118775c0fd9973ebbec1988fdc517767578bcb56f5587051618465740b2005a4",
+      "bytes": 298595,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Inspected source covers, generated outputs and final contact sheet. Mature approved style, object identity retained, complete silhouettes and clean final crops. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49646,
+        "objectKey": "system-item-media/v1/item-types/20/cover/118775c0fd9973ebbec1988fdc517767578bcb56f5587051618465740b2005a4.jpg",
+        "fileSize": 298595
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/20/cover/118775c0fd9973ebbec1988fdc517767578bcb56f5587051618465740b2005a4.jpg"
+    },
+    {
+      "key": "gear-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 29,
+        "name": "Снаряжение"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49637,
+      "status": "published",
+      "prompt": "Use case: style-transfer. Redraw IMAGE 1, the edit target, in the mature detailed Cyberpunk RED style approved in IMAGE 2. Image 2 is STYLE ONLY; never copy its subject. Preserve image 1 subject identity, number of parts, important silhouette, palette and depicted activity. Strong sophisticated CEL SHADING, fine variable dark linework rather than thick icon outlines, realistically engineered construction, material-specific detail and selective wear. Broad decisive shadow shapes, secondary reflected-light planes, cinematic practical lighting, layered atmospheric depth. Adult illustrated RPG concept art, believable 2045 retrofuturism, lived-in industrial city, no toy-like simplification. Details concentrated on the hero object, softer background; no uniform grit/noise, no photograph, no glossy 3D, no labels or text, branding, watermark, border or UI overlay. Main subject completely inside frame with safe margins. Aspect ratio 1536:1024. Keep teal toolkit and yellow folded multitool. Add plausible hinge pivots, layered folded implements, molded case liners, hinges and latch parts. Mature functional industrial equipment, not a toy.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-04/final/gear-cover.jpg",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/gear-cover-v2.png",
+      "final": "final/gear-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-c1a1db65-ff2d-4811-a4c1-c19a952ec115.png",
+      "originalSha256": "f0b99491dcf235a19f41d51685b2a37ff0e71c09566e24068dc88569d703f5fb",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "330d390e389ebd415e117a4182e94b71a585cb0347cd536c47c33e039ee19933",
+      "bytes": 331256,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Inspected source covers, generated outputs and final contact sheet. Mature approved style, object identity retained, complete silhouettes and clean final crops. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49647,
+        "objectKey": "system-item-media/v1/item-types/29/cover/330d390e389ebd415e117a4182e94b71a585cb0347cd536c47c33e039ee19933.jpg",
+        "fileSize": 331256
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/29/cover/330d390e389ebd415e117a4182e94b71a585cb0347cd536c47c33e039ee19933.jpg"
+    },
+    {
+      "key": "clothes-cover",
+      "target": {
+        "kind": "item_type",
+        "typeId": 23,
+        "name": "Одежда"
+      },
+      "slot": "cover",
+      "expectedPreviousImageId": 49638,
+      "status": "published",
+      "prompt": "Use case: style-transfer. Redraw IMAGE 1, the edit target, in the mature detailed Cyberpunk RED style approved in IMAGE 2. Image 2 is STYLE ONLY; never copy its subject. Preserve image 1 subject identity, number of parts, important silhouette, palette and depicted activity. Strong sophisticated CEL SHADING, fine variable dark linework rather than thick icon outlines, realistically engineered construction, material-specific detail and selective wear. Broad decisive shadow shapes, secondary reflected-light planes, cinematic practical lighting, layered atmospheric depth. Adult illustrated RPG concept art, believable 2045 retrofuturism, lived-in industrial city, no toy-like simplification. Details concentrated on the hero object, softer background; no uniform grit/noise, no photograph, no glossy 3D, no labels or text, branding, watermark, border or UI overlay. Main subject completely inside frame with safe margins. Aspect ratio 1536:1024. Keep the oxblood street jacket and ivory lapels, civilian fashion rather than armor. Develop believable seams, zipper, leather thickness, folds, lining and subtle wear. Dim lived-in cyberpunk shop with cool street reflections and local warm light.",
+      "previousFile": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-04/final/clothes-cover.jpg",
+      "width": 1536,
+      "height": 1024,
+      "original": "originals/clothes-cover-v2.png",
+      "final": "final/clothes-cover-v2.jpg",
+      "generatedSourcePath": "C:\\Users\\wrz2\\.codex\\generated_images\\01a1e108-777d-7dd2-90a7-f077faace7ae\\exec-fe27cdae-ed2a-4144-9bb7-de9f0600c849.png",
+      "originalSha256": "05437dfa54df4201ec7c6ec180d01ff64bdd9d05d22b9fcddcfbd65126591113",
+      "sourceDimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "d086b893e1689781fb6d23076919a0a0fe06b910fd8138cea94ad2a04118921c",
+      "bytes": 221404,
+      "mimeType": "image/jpeg",
+      "exportRecipe": "Centered crop and Lanczos3 resize; opaque quality 88, no creative edits",
+      "visualReview": {
+        "reviewer": "agent",
+        "passed": true,
+        "note": "Inspected source covers, generated outputs and final contact sheet. Mature approved style, object identity retained, complete silhouettes and clean final crops. Icons unchanged.",
+        "publicBytesVerified": true
+      },
+      "receipt": {
+        "imageId": 49648,
+        "objectKey": "system-item-media/v1/item-types/23/cover/d086b893e1689781fb6d23076919a0a0fe06b910fd8138cea94ad2a04118921c.jpg",
+        "fileSize": 221404
+      },
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/23/cover/d086b893e1689781fb6d23076919a0a0fe06b910fd8138cea94ad2a04118921c.jpg"
+    }
+  ],
+  "liveReview": {
+    "passed": true,
+    "widths": [
+      390,
+      840,
+      1440
+    ],
+    "evidence": "C:/Projects/dndshare/build/cyberpunk-red-art/batch-06/live-qa.json",
+    "scenarios": 18,
+    "checkedAt": "2026-11-16T14:37:42.658Z",
+    "note": "Actual public API and covers loaded at three widths; no JS errors or horizontal overflow. Original 20 icon IDs/URLs verified unchanged."
+  }
+}

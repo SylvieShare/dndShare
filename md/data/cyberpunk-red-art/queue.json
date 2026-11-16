@@ -27,9 +27,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 3,
-      "sha256": "7b039655c120936f98917c35f6c08e52e9ff638cf3289b5a53b898eb1d18164b",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/20/cover/7b039655c120936f98917c35f6c08e52e9ff638cf3289b5a53b898eb1d18164b.jpg"
+      "batch": 6,
+      "sha256": "118775c0fd9973ebbec1988fdc517767578bcb56f5587051618465740b2005a4",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/20/cover/118775c0fd9973ebbec1988fdc517767578bcb56f5587051618465740b2005a4.jpg"
     },
     {
       "kind": "item_type",
@@ -49,9 +49,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 3,
-      "sha256": "a9755e2867adff1bfcb49ad0cc0f331d008093f9d3326046f476e143fabf57e7",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/21/cover/a9755e2867adff1bfcb49ad0cc0f331d008093f9d3326046f476e143fabf57e7.jpg"
+      "batch": 5,
+      "sha256": "63a9efd7d31ee3bda814467f444fd52d150f9f5352a5f582c527dbdb46edd0dd",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/21/cover/63a9efd7d31ee3bda814467f444fd52d150f9f5352a5f582c527dbdb46edd0dd.jpg"
     },
     {
       "kind": "item_type",
@@ -103,9 +103,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 1,
-      "sha256": "c8a12c836a7ceb4f11556d175a38eef2aad51a7b286a8717d960a04d4a20f989",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/26/cover/c8a12c836a7ceb4f11556d175a38eef2aad51a7b286a8717d960a04d4a20f989.jpg"
+      "batch": 6,
+      "sha256": "0a6fc440877dc223ca3192a3d349c395e47178f933f66acb25af8dadbdb9195b",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/26/cover/0a6fc440877dc223ca3192a3d349c395e47178f933f66acb25af8dadbdb9195b.jpg"
     },
     {
       "kind": "item_type",
@@ -125,9 +125,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 3,
-      "sha256": "e5b7d2638964fc69de3a541c1301c98b4d592ab4f88bc0b2e9fb657d9eb87b6a",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/35/cover/e5b7d2638964fc69de3a541c1301c98b4d592ab4f88bc0b2e9fb657d9eb87b6a.jpg"
+      "batch": 5,
+      "sha256": "144aee61137b41d539947eae35474701ed8072874315c290f123d01a859f6cd1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/35/cover/144aee61137b41d539947eae35474701ed8072874315c290f123d01a859f6cd1.jpg"
     },
     {
       "kind": "item_type",
@@ -163,9 +163,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 4,
-      "sha256": "2e3db9b9a68e2dfb88ae78d6e65fae24c74afbf567aacc363e079f9d544de074",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/23/cover/2e3db9b9a68e2dfb88ae78d6e65fae24c74afbf567aacc363e079f9d544de074.jpg"
+      "batch": 6,
+      "sha256": "d086b893e1689781fb6d23076919a0a0fe06b910fd8138cea94ad2a04118921c",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/23/cover/d086b893e1689781fb6d23076919a0a0fe06b910fd8138cea94ad2a04118921c.jpg"
     },
     {
       "kind": "item_type",
@@ -185,9 +185,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 1,
-      "sha256": "7f520d93e72d978123eefcbd3984fce5627fd138b6adbb918186cac57826f106",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/37/cover/7f520d93e72d978123eefcbd3984fce5627fd138b6adbb918186cac57826f106.jpg"
+      "batch": 6,
+      "sha256": "07af54bf3028f5b08fcd1b2d9bddd3cdf91e5347b2e385e342e5e31eee0325a1",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/37/cover/07af54bf3028f5b08fcd1b2d9bddd3cdf91e5347b2e385e342e5e31eee0325a1.jpg"
     },
     {
       "kind": "item_type",
@@ -223,9 +223,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 1,
-      "sha256": "74d4a269e55ed52aac72a51980eeb40bdfaa3618f7168e9d35bcb98d12c2639b",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/33/cover/74d4a269e55ed52aac72a51980eeb40bdfaa3618f7168e9d35bcb98d12c2639b.webp"
+      "batch": 6,
+      "sha256": "4198f48ae38f346db8f5f18d5dd2671ede6bfaf99b04be8c8351a1ef637b4be2",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/33/cover/4198f48ae38f346db8f5f18d5dd2671ede6bfaf99b04be8c8351a1ef637b4be2.webp"
     },
     {
       "kind": "item_type",
@@ -261,9 +261,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 4,
-      "sha256": "f273a15723facb06edef3e3b6565e5a3ecad84ce15fe7747d4504ddd98b579c7",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/29/cover/f273a15723facb06edef3e3b6565e5a3ecad84ce15fe7747d4504ddd98b579c7.jpg"
+      "batch": 6,
+      "sha256": "330d390e389ebd415e117a4182e94b71a585cb0347cd536c47c33e039ee19933",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/29/cover/330d390e389ebd415e117a4182e94b71a585cb0347cd536c47c33e039ee19933.jpg"
     },
     {
       "kind": "item_type",
@@ -315,9 +315,9 @@
       "slot": "cover",
       "status": "published",
       "sourceId": 3,
-      "batch": 4,
-      "sha256": "f7633ac46fbab950b293be3ec9a78ed296b947def5616c29217fe25bf9603c30",
-      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/36/cover/f7633ac46fbab950b293be3ec9a78ed296b947def5616c29217fe25bf9603c30.jpg"
+      "batch": 5,
+      "sha256": "0400aa1bed0b935bb443eae99de785ac971d289a029ee8232fcd58a0d34fcf49",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/item-types/36/cover/0400aa1bed0b935bb443eae99de785ac971d289a029ee8232fcd58a0d34fcf49.jpg"
     },
     {
       "kind": "item_type",
