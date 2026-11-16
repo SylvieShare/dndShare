@@ -25,7 +25,7 @@ importing scenario combat blocks.
 
 Columns fit from the actual available width: RosterMin (320), its scroll gap (12),
 ControlsMin (280) and Large (16). The roster grows to RosterWidth (480), controls
-to ControlsMax (420); the composition is centered in the workspace. The two
+to ControlsMax (420); the composition is aligned with the left workspace padding. The two
 columns scroll independently. Below that width, controls appear above the roster
 and scroll within a maximum 40dvh, leaving the roster usable in short windows.
 Resizing preserves the current turn and prepared roster. Controls stay in the
@@ -80,12 +80,13 @@ controls independent HP rolls when adding handbook creatures and synchronizes
 across browsers through the session live stream. It starts disabled; no browser
 preference is used.
 
-NPC relations are optional. Reserve summaries have no visible enemy/ally/minion/neutral caption; the relation stays in the row menu and accessible description. Combat/map tiles show relations as subtle diagonal `/` stripes tiled over the entire tile (7px colored stripe followed by a 14px transparent gap, a 1:2 rhythm), with separate colors for enemy, ally, minion and neutral. There is no relation chip. Clearing the relation removes the stripes; `aria-description` retains the relation label for assistive technology. The row menu’s «Отношение» submenu sets enemy, ally, minion or neutral and offers «Убрать тег». The tile background is not a separate picker; newly added NPCs have no relation tag. The map roster uses the same submenu. Surprised status is changed from the row menu.
+NPC relations are optional. Reserve and combat summaries have no visible enemy/ally/minion/neutral caption; the relation stays in the row menu and accessible description. Map/catalogue tiles show relations as subtle diagonal `/` stripes tiled over the entire tile (7px colored stripe followed by a 14px transparent gap, a 1:2 rhythm), with separate colors for enemy, ally, minion and neutral. There is no relation chip. Clearing the relation removes the stripes; `aria-description` retains the relation label for assistive technology. The row menu’s «Отношение» submenu sets enemy, ally, minion or neutral and offers «Убрать тег». The tile background is not a separate picker; newly added NPCs have no relation tag. The map roster uses the same submenu. Surprised status is changed from the row menu.
 
 Each NPC also receives the nearest free Latin marker from `A` through `Z`.
 The marker sits inside the avatar’s upper-right corner in reserves, combat rows
-and the turn preview, with a dark text shadow and a compact dark backing with
-Badge-radius corners for contrast over artwork. Inline markers in the timeline
+and the turn preview, with a dark text shadow and a translucent backing with
+Badge-radius corners and 4px backdrop blur. `backdropBlurStyle` supplies both
+filter properties inline so the effect survives minification. Inline markers in the timeline
 retain their plain text presentation. Its
 identity is persisted in `markerLetter`. The marker control is a sibling of the
 portrait button, so it never nests interactive buttons.
@@ -174,7 +175,8 @@ the normal encounter save queue.
 
 `useRosterSelection` scopes selected combatants to its current player/reserve
 list; `SessionSelectionToolbar` shares mode, damage/XP dialogs and move actions.
-Ordinary tile actions are inert during selection; keyboard focus stays on the
+The group-action row stays visible when selection is off, with unavailable
+actions disabled. Ordinary tile actions are inert during selection; keyboard focus stays on the
 accessible selectable row. Scope changes prune invisible reserve targets.
 Damage calls `useEncounterImpacts` with an explicit snapshot of this list's
 eligible targets, preserving its stable retry key and authoritative server HP.
@@ -194,7 +196,8 @@ session tab, immediately below Players and above contextual map/world tools, eve
 combat. The selected reserve and its panel stay mounted across workspace changes.
 `EncounterNpcDialogs` is hosted by the session page: adding handbook/simple NPCs,
 editing HP and opening NPC details work from any tab, with one shared dialog host
-also used by the combat roster. The first tab is always `Запас`
+also used by the combat roster. A single header plus opens the handbook/simple
+creature menu; creation controls are not duplicated inside the list. The first tab is always `Запас`
 (`default`), with a fixed name and no delete action. The last dashed plus adds
 a custom tab. Its heading pencil edits the name inline; Enter/blur saves and
 Escape cancels. Deleting a custom tab returns its creatures to `Запас` without
@@ -392,13 +395,17 @@ Chronicle attack target controls share the roll's row on the right, with chosen 
 `SessionAttackTargets` сохраняет выбор в событии через API; цели видны в хронике мастера,
 права доступа к событиям не расширяются. Сравнения атаки с КД в этом компоненте нет.
 
-`SessionCreatureTile` remains the shared NPC/encounter-row composition. Player cards in
+`SessionCreatureTile` remains the map/catalogue composition. Combat rows use
+`SessionEncounterTile`, adapting the same `SessionPlayerTile`/`SessionNpcTile`
+as sidebar lists. `SessionPlayerDeathState` is shared by both player views;
+HP clicks retain the authoritative calculator commands. Sidebar creation/edit
+uses the existing simple form and reserve HP fields. Player cards in
 the sidebar use `SessionPlayerTile`, which composes the same `CharacterSummaryTile`
 and `SheetHealth` as the character header: portrait, name, shield AC, numeric HP
 with temporary HP, and two passive values for D&D participants viewed by the DM.
 `SessionRosterTile` owns the shared visual composition of player and NPC-reserve
 summaries: portrait, shield AC, numeric HP, states and selection frames.
-`SessionReserveTile` supplies encounter data and retains creature marker,
+`SessionNpcTile` supplies encounter data and retains creature marker,
 initiative, menus and drag ordering. Race/class remain in the sheet/menu,
 not the card. Player and NPC names retain their full text: `useCreatureNameFit`
 proportionally reduces the glyph size from the wrapper's token-driven base size.
@@ -416,7 +423,8 @@ Active character states below the summary use `DndStatusOverviewView(header, sta
 40px icons, a minimum 48px touch target, name, duration and polarity-colored parchment.
 States form a vertical list inside the scrolling player panel. Character-header
 states keep their existing 56px horizontal presentation. NPC reserves use the
-same detailed 40px vertical states; combat/map NPC icon-only states remain 32px.
+same detailed 40px vertical states in the sidebar and combat; map/catalogue
+icon-only states remain 32px.
 They use the same handbook tooltip and action menu as the sheet: viewing, duration,
 levels, removal and effect-specific mechanics. The menu follows its source during
 panel scrolling and closes when the source leaves that panel's viewport.
@@ -425,13 +433,14 @@ queue; rejected saves show an error and do not apply unconfirmed data. Status ac
 do not open the participant menu, reorder the card or change combat selection.
 Card height follows content; compact summaries hide their information and states.
 NPC numeric conditions and effect instances retain shared menus: detailed in
-reserves, compact 32px in combat and maps.
+reserves and combat, compact 32px in maps/catalogues.
 
 `EncounterInitiativeMenu` remains shared with creature rows. `handleCtrlSelection`
 handles Ctrl/Cmd selection in the player list, encounter rows and target picker;
 macOS Ctrl-contextmenu toggles once. Drag ignores these modifiers and form controls.
 `CompactCheckbox` remains in the combat queue and target picker, using size=20;
-sidebar lists use accessible checkbox roles on their framed selectable rows. The former floating player rail and
+sidebar lists and the combat scene use accessible checkbox roles on framed
+selectable rows. Scene selection mode is controlled from the right command column. The former floating player rail and
 its independent collapsed-state preference are removed; one sidebar owns collapse.
 `ArmorClassChip` and `SessionHpBar` remain the compact AC/HP presentations for
 encounter rows, chronicle result rows and target pickers.

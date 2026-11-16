@@ -8,7 +8,7 @@
       <template v-if="$slots.portrait" #portrait><slot name="portrait" /></template>
       <template v-if="$slots['portrait-overlay']" #portrait-overlay><slot name="portrait-overlay" /></template>
       <template #name-prefix><slot name="name-prefix" /></template>
-      <template #name-suffix><slot name="name-suffix" /></template>
+      <template #name-suffix><slot name="name-suffix" /><span v-if="surprised" class="roster-surprised">врасплох</span></template>
       <template #metrics><slot name="metrics" /></template>
       <template v-if="$slots.health" #health><slot name="health" /></template>
     </CharacterSummaryTile>
@@ -19,7 +19,7 @@
 import { BaseTile } from '@sylvieshare/share-ui'
 import CharacterSummaryTile from '@/features/character-editor/components/sheet/CharacterSummaryTile.vue'
 defineProps({name:String,avatarUrl:String,color:String,hp:Object,armor:Number,healthVisible:Boolean,editHealth:Boolean,
-  showPassives:Boolean,perception:Number,investigation:Number,current:Boolean,compact:Boolean,hasStatuses:Boolean,selectionMode:Boolean,selected:Boolean})
+  showPassives:Boolean,perception:Number,investigation:Number,current:Boolean,compact:Boolean,hasStatuses:Boolean,selectionMode:Boolean,selected:Boolean,surprised:Boolean})
 defineEmits(['health'])
 </script>
 <style scoped>
@@ -29,4 +29,5 @@ defineEmits(['health'])
 .session-roster-tile--selecting.base-tile {box-shadow:inset 0 0 0 var(--layout-border) var(--border-strong);cursor:pointer}
 .session-roster-tile--selected.session-roster-tile--selecting.base-tile {box-shadow:inset 0 0 0 calc(var(--layout-border) * 2) var(--accent);--tile-surface:color-mix(in srgb,var(--accent) 7%,transparent)}
 .p-statuses-area {margin-top:var(--spacing-small);min-width:0;--status-scroll-inset-start:0px;--status-scroll-inset-end:0px}
+.roster-surprised {flex:none;color:var(--warning);font-size:var(--type-context-size)}
 </style>

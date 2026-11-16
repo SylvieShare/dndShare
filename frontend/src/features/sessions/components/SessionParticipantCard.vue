@@ -21,15 +21,7 @@
           <template #name-suffix>
             <span v-if="combatant?.position === 'reserve' && combatant.initiative != null" class="p-initiative-chip" title="Подготовленная инициатива" :aria-label="`Подготовленная инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span>
           </template>
-          <template v-if="showHp && isDead" #health>
-            <template v-if="showHp">
-              <div v-if="isDead" class="ds-row">
-                <span class="ds-label">При смерти</span>
-                <span class="ds-counts">(✓ {{ hp.ds_success }} / ✕ {{ hp.ds_failure }})</span>
-                <button v-if="isDm" type="button" class="ds-revive" title="Воскресить игрока" aria-label="Воскресить игрока" @click.stop="$emit('revive')"><HeartPulse :size="14" /></button>
-              </div>
-            </template>
-          </template>
+          <template v-if="showHp && isDead" #health><SessionPlayerDeathState :hp="hp" :editable="isDm" @revive="$emit('revive')" /></template>
           <template #statuses><ParticipantStatuses :participant="participant" :editable="isDm" detailed /></template>
         </SessionPlayerTile>
       </template>
@@ -85,13 +77,14 @@ import { settingAccessors } from '@/features/character-editor/settings'
 import { handleCtrlSelection } from '@/shared/lib/ctrlSelection'
 import { hasDndStatusSummary } from '@/features/character-editor/lib/dndStatusSummary'
 import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
-import { Calculator, HeartPulse, Palette } from '@lucide/vue'
+import { Calculator, Palette } from '@lucide/vue'
 import { ColorPresetPicker } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'
 import EncounterInitiativeMenu from './EncounterInitiativeMenu.vue'
 import SessionPlayerTile from './SessionPlayerTile.vue'
+import SessionPlayerDeathState from './SessionPlayerDeathState.vue'
 import { pvAvatar, pvHp, pvHpPath, pvName } from '@/features/sessions/lib/participantView'
 
 const ParticipantStatuses = defineAsyncComponent(() => import('./ParticipantStatuses.vue'))
@@ -220,36 +213,4 @@ const isDead = computed(() => showHp.value && hp.value.current <= 0)
 
 .p-initiative-chip { display: inline-flex; flex: none; align-items: center; gap: 4px; padding: 2px 5px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface-raised); color: var(--text-1); font-size: 12px; font-weight: 750; }
 
-.ds-row {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.ds-label {
-  font-size: 10px;
-  color: var(--danger);
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  flex-shrink: 0;
-}
-
-.ds-counts { overflow: hidden; color: var(--text-muted); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
-
-.ds-revive {
-  width: 24px;
-  height: 24px;
-  display: grid;
-  flex: 0 0 24px;
-  place-items: center;
-  margin-left: auto;
-  padding: 0;
-  border: 1px solid color-mix(in srgb, var(--success) 42%, var(--border));
-  border-radius: 7px;
-  background: color-mix(in srgb, var(--success) 11%, transparent);
-  color: var(--success);
-  cursor: pointer;
-}
-
-.ds-revive:hover { border-color: var(--success); background: color-mix(in srgb, var(--success) 18%, transparent); }
 </style>

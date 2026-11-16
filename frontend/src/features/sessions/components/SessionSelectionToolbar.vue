@@ -8,7 +8,7 @@
       <span v-if="selection.selecting" class="roster-selection-count" role="status">{{ selection.selected.length }} / {{ selection.items.length }}</span>
       <slot />
     </div>
-    <div class="roster-actions-reveal" :class="{'roster-actions-reveal--open':selection.selecting}" :inert="!selection.selecting" :aria-hidden="!selection.selecting">
+    <div v-if="actionsVisible" class="roster-actions-reveal roster-actions-reveal--open">
       <div class="roster-actions-clip"><div class="roster-selection-actions" role="group" aria-label="Действия с выбранными">
         <ActionButton variant="quiet" layout="stacked" :disabled="!selection.damageTargets.length" aria-label="Нанести урон" @click="open('damage')"><template #icon><HeartCrack :size="20" /></template>Урон</ActionButton>
         <ActionButton v-if="selection.supportsExperience" variant="quiet" layout="stacked" :disabled="!selection.experienceTargets.length" :aria-label="encounter.isRed?'Добавить IP':'Добавить опыт'" @click="open('experience')"><template #icon><Sparkles :size="20" /></template>{{encounter.isRed?'IP':'Опыт'}}</ActionButton>
@@ -33,7 +33,7 @@ import { Check, HeartCrack, ListChecks, Sparkles, Swords } from '@lucide/vue'
 import { charactersApi } from '@/shared/api/charactersApi'
 import { pvExperiencePath } from '../lib/participantView'
 import { experiencePlan, saveExperiencePlan } from '../lib/rosterExperience'
-const props=defineProps({encounter:{type:Object,required:true},selection:{type:Object,required:true},combatWorkspace:Boolean,label:{type:String,default:'Выбор участников'}})
+const props=defineProps({encounter:{type:Object,required:true},selection:{type:Object,required:true},combatWorkspace:Boolean,actionsVisible:{type:Boolean,default:true},label:{type:String,default:'Выбор участников'}})
 const action=ref(null),amount=ref(1),pending=ref(false),error=ref(''),locked=ref(false),targets=shallowRef([]),plan=ref(null)
 function open(kind) {
   targets.value=[...(kind==='damage'?props.selection.damageTargets:props.selection.experienceTargets)]

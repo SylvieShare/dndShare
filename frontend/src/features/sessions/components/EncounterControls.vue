@@ -44,6 +44,7 @@
       <div class="enc-toolbar-actions">
         <div v-if="props.isDm" class="enc-action-group" aria-label="Действия с выбранными участниками">
           <span class="enc-action-group-label">Выбранные</span>
+          <SessionSelectionToolbar :encounter="enc" :selection="selection" :actions-visible="false" label="Выбор на боевой сцене" />
           <div class="enc-action-group-controls">
             <EncounterChallengeMenu label="Испытание" />
             <EncounterBulkDamageMenu label="Урон" />
@@ -127,8 +128,9 @@ import EncounterBulkDamageMenu from './EncounterBulkDamageMenu.vue'
 import EncounterChallengeMenu from './EncounterChallengeMenu.vue'
 import EncounterGraveyardMenu from './EncounterGraveyardMenu.vue'
 import EncounterScenarioCombatMenu from './EncounterScenarioCombatMenu.vue'
+import SessionSelectionToolbar from './SessionSelectionToolbar.vue'
 import { sessionShortcutLabels } from '../lib/sessionShortcuts'
-const props=defineProps({sessionUuid:String,isDm:Boolean,encounter:{type:Object,required:true},scene:Object,showShortcutHints:Boolean,transitioning:Boolean})
+const props=defineProps({sessionUuid:String,isDm:Boolean,encounter:{type:Object,required:true},selection:{type:Object,required:true},scene:Object,showShortcutHints:Boolean,transitioning:Boolean})
 defineEmits(['toggle-combat','view-participant','import-combat-block'])
 const enc=props.encounter
 const shortcutLabels=sessionShortcutLabels()

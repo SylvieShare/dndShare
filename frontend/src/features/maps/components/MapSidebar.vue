@@ -1,7 +1,7 @@
 <template>
   <Teleport v-if="hosted" :to="host.target.value || 'body'" :disabled="!host.target.value">
     <div v-show="host.target.value && host.activeView.value === workspaceKey && host.selected.value.startsWith(workspaceKey + ':')"
-      v-bind="$attrs" class="map-sidebar-content map-sidebar-hosted-content" :data-sidebar-owner="workspaceKey"><slot /></div>
+         v-bind="$attrs" class="map-sidebar-content map-sidebar-hosted-content" :data-sidebar-owner="workspaceKey"><slot /></div>
   </Teleport>
   <aside
     v-else
@@ -39,25 +39,27 @@
       :aria-hidden="collapsed || undefined"
     >
       <header class="map-sidebar-heading">
-        <slot name="header-title" :tab="tab">
-        <Transition name="map-sidebar-title" mode="out-in"
-          ><strong :key="tab">{{
-            tabs.find((item) => item.key === tab)?.label
-          }}</strong></Transition
-        >
-        </slot>
+        <div class="map-sidebar-heading-title">
+          <slot name="header-title" :tab="tab">
+            <Transition name="map-sidebar-title" mode="out-in"
+            ><strong :key="tab">{{
+              tabs.find((item) => item.key === tab)?.label
+            }}</strong></Transition
+            >
+          </slot>
+        </div>
         <div class="map-sidebar-heading-actions">
-        <slot name="header-actions" />
-        <ActionButton
-          variant="quiet"
-          icon-only
-          :aria-label="collapseLabel"
-          :title="collapseLabel"
-          :aria-expanded="!collapsed"
-          @click="collapse"
-        >
-          <template #icon><PanelLeftClose :size="20" /></template>
-        </ActionButton>
+          <slot name="header-actions" />
+          <ActionButton
+            variant="quiet"
+            icon-only
+            :aria-label="collapseLabel"
+            :title="collapseLabel"
+            :aria-expanded="!collapsed"
+            @click="collapse"
+          >
+            <template #icon><PanelLeftClose :size="20" /></template>
+          </ActionButton>
         </div>
       </header>
       <div class="map-sidebar-viewport">
@@ -303,9 +305,9 @@ defineExpose({
   justify-content: space-between;
   padding: 6px;
 }
-.map-sidebar-heading strong {
-  font-size: 16px;
-  padding-left: 6px;
+.map-sidebar-heading-title {flex:1;min-width:0;padding-inline-start:calc(var(--spacing-medium) / 2);font-size:16px}
+.map-sidebar-heading-title strong {
+  font-size: inherit;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -47,6 +47,7 @@
                   :idx="idx"
                   :order="idx + 1"
                   :is-current="enc.encounter.active && c.uid === currentTurnUid"
+                      :selection-mode="sceneSelection.selecting"
                 />
               </div>
             </div>
@@ -58,7 +59,7 @@
 
     </div>
     <aside class="enc-secondary" aria-label="Управление боем">
-      <EncounterControls :session-uuid="sessionUuid" :encounter="enc" :is-dm="isDm" :scene="scene" :show-shortcut-hints="showShortcutHints" :transitioning="combatTransitioning"
+      <EncounterControls :session-uuid="sessionUuid" :encounter="enc" :selection="sceneSelection" :is-dm="isDm" :scene="scene" :show-shortcut-hints="showShortcutHints" :transitioning="combatTransitioning"
                          @toggle-combat="toggleCombat" @view-participant="$emit('view-participant',$event)" @import-combat-block="$emit('import-combat-block',$event)" />
       <Transition name="enc-turn-preview"><EncounterTurnPreview v-if="enc.encounter.active && hasColumns" :combatant="currentTurnCombatant" @view-participant="$emit('view-participant',$event)" /></Transition>
     </aside>
@@ -67,7 +68,8 @@
 </template>
 
 <script setup>
-import { computed, provide, ref } from 'vue'
+import { computed, provide, reactive, ref } from 'vue'
+import { useRosterSelection } from '../composables/useRosterSelection'
 import EncounterControls from './EncounterControls.vue'
 import EncounterRow from '@/features/sessions/components/EncounterRow'
 import EncounterTurnPreview from '@/features/sessions/components/EncounterTurnPreview.vue'
@@ -97,6 +99,7 @@ const {
 provide('encounter', enc)
 
 const combatItems = computed(() => enc.sortable.displayItems('combat'))
+const sceneSelection=reactive(useRosterSelection(enc,()=>combatItems.value))
 
 const currentTurnUid = computed(() => enc.currentTurnUid)
 const currentTurnCombatant = computed(() => enc.inCombat.find(combatant => combatant.uid === currentTurnUid.value) ?? null)

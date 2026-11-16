@@ -1,6 +1,6 @@
 .enc-wrap {position:relative;box-sizing:border-box;display:grid;flex:1;min-width:0;min-height:0;height:100%;grid-template-areas:"controls" "roster";grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);gap:var(--spacing-large);padding:var(--spacing-page);overflow:hidden}
 .enc-wrap--workspace {position:absolute;inset:0}
-.enc-wrap--columns {grid-template-areas:"roster controls";grid-template-columns:minmax(calc(var(--layout-encounter-roster-min-width) + var(--layout-encounter-scroll-gap)),calc(var(--layout-encounter-roster-width) + var(--layout-encounter-scroll-gap))) minmax(var(--layout-encounter-controls-min-width),var(--layout-encounter-controls-max-width));grid-template-rows:minmax(0,1fr);justify-content:center}
+.enc-wrap--columns {grid-template-areas:"roster controls";grid-template-columns:minmax(calc(var(--layout-encounter-roster-min-width) + var(--layout-encounter-scroll-gap)),calc(var(--layout-encounter-roster-width) + var(--layout-encounter-scroll-gap))) minmax(var(--layout-encounter-controls-min-width),var(--layout-encounter-controls-max-width));grid-template-rows:minmax(0,1fr);justify-content:start}
 .enc-content {grid-area:roster;min-height:0;min-width:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-inline-end:var(--layout-encounter-scroll-gap)}
 .enc-secondary {grid-area:controls;display:flex;flex-direction:column;gap:var(--spacing-large);min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-inline-end:var(--spacing-xs)}
 .enc-secondary > :deep(.enc-toolbar),.enc-secondary > :deep(.turn-preview) {flex:none}
@@ -12,6 +12,7 @@
 .enc-section-title {display:flex;align-items:center;gap:var(--spacing-small);color:var(--text-muted);font:600 var(--type-caption-size)/var(--type-caption-line-height) var(--font-ui)}
 .enc-section-dot {width:var(--spacing-xs);height:var(--spacing-xs);border-radius:50%;background:var(--accent)}
 .enc-rows {display:flex;flex-direction:column;gap:var(--spacing-small)}
+.enc-rows > :deep(.enc-row-shell + .enc-row-shell) {border-top:var(--layout-border) solid var(--border-strong);padding-top:var(--spacing-small)}
 .enc-empty {padding:var(--spacing-page) var(--spacing-small);color:var(--text-muted);font-size:var(--type-caption-size);line-height:var(--type-caption-line-height)}
 .enc-combat-scene {opacity:1;transform:translateY(0);transition:opacity var(--motion-enter),transform var(--motion-enter)}
 .enc-wrap--combat-ending .enc-combat-scene,.enc-wrap--combat-ending :deep(.turn-preview) {opacity:0;transform:translateY(var(--spacing-small));pointer-events:none}

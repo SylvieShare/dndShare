@@ -16,6 +16,10 @@ async function open(page,width){
   await expect(sidebar.locator('.enc-row-shell')).toHaveCount(2)
   return{api,nav,sidebar}
 }
+async function addCreature(page,sidebar,label){
+  await sidebar.locator('.map-sidebar-heading').getByRole('button',{name:'Добавить существо',exact:true}).click()
+  await page.getByRole('menu',{name:'Добавить существо',exact:true}).getByRole('menuitem',{name:label,exact:true}).click()
+}
 function core(data){
   const value=structuredClone(data);delete value.reserveTabs
   for(const row of value.combatants)delete row.reserveTabId
@@ -112,7 +116,7 @@ for(const width of [390,834,1440])test(`reserves work on every session tab witho
   expect(api.encounter()).toEqual(before)
   expect(api.writes).toHaveLength(0)
   await page.locator('.chapter-toolbar').getByRole('button',{name:'Хроника',exact:true}).click()
-  await panel.getByRole('button',{name:'Создать упрощённое существо',exact:true}).click()
+  await addCreature(page,sidebar,'Создать упрощённое существо')
   const create=page.getByRole('dialog',{name:'Своё существо',exact:true})
   await expect(create).toHaveCount(1)
   await create.getByPlaceholder('Гоблин-вожак').fill('Сова')
@@ -130,7 +134,7 @@ for(const width of [390,834,1440])test(`reserves work on every session tab witho
   await page.keyboard.press('Escape')
   await expect(hp).toHaveCount(0)
   await expect.poll(()=>api.encounter().combatants.find(row=>row.override?.name==='Сова')?.hpCurrent).toBe(9)
-  await panel.getByRole('button',{name:'Добавить из бестиария',exact:true}).click()
+  await addCreature(page,sidebar,'Добавить из справочника')
   const picker=page.getByRole('dialog',{name:'Бестиарий',exact:true})
   await expect(picker).toHaveCount(1)
   await page.keyboard.press('Escape')
@@ -139,7 +143,7 @@ for(const width of [390,834,1440])test(`reserves work on every session tab witho
   await page.getByRole('button',{name:/Открыть бой/}).click()
   await expect(page.locator('.enc-wrap--workspace')).toBeVisible()
   await expect(panel.getByText('Сова',{exact:true})).toBeVisible()
-  await panel.getByRole('button',{name:'Создать упрощённое существо',exact:true}).click()
+  await addCreature(page,sidebar,'Создать упрощённое существо')
   await expect(create).toHaveCount(1)
   await page.keyboard.press('Escape')
   await expect(create).toHaveCount(0)

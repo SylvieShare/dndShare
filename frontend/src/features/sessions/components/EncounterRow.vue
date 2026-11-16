@@ -13,7 +13,7 @@
     <div class="enc-row-main">
       <EncounterOrderMarker v-if="order != null" :order="order" :current="isCurrent" />
       <div class="enc-row-tile">
-        <component :is="section === 'reserve-npc' ? SessionReserveTile : SessionCombatantTile"
+        <component :is="section === 'reserve-npc' ? SessionNpcTile : section === 'combat' ? SessionEncounterTile : SessionCombatantTile"
           class="enc-row" :class="rowClasses" :combatant="combatant" :section="section" :current="isCurrent"
           :selectable="showCheckbox" :editable="canEdit" :selected="enc.isSelected(combatant)"
           :selection-mode="selectionMode" :inert="selectionMode"
@@ -83,7 +83,8 @@ import { handleCtrlSelection } from '@/shared/lib/ctrlSelection'
 import { computed, inject, nextTick, ref, watch } from 'vue'
 import { ChevronRight, Dices } from '@lucide/vue'
 import SessionCombatantTile from './SessionCombatantTile.vue'
-import SessionReserveTile from './SessionReserveTile.vue'
+import SessionNpcTile from './SessionNpcTile.vue'
+import SessionEncounterTile from './SessionEncounterTile.vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import EncounterChallengeResult from '@/features/sessions/components/EncounterChallengeResult.vue'
 import EncounterOrderMarker from '@/features/sessions/components/EncounterOrderMarker.vue'
@@ -197,6 +198,7 @@ function commitNoteEdit() {
 .enc-row-roll-overlay { position: absolute; z-index: 2; inset: 2px 2px 2px auto; width: min(248px, calc(100% - 40px)); display: flex; align-items: center; overflow: hidden; border-radius: 0 calc(var(--r-lg) - 2px) calc(var(--r-lg) - 2px) 0; background: var(--surface); box-shadow: -8px 0 16px color-mix(in srgb, var(--scrim) 20%, transparent); }
 .enc-row-result { width: 100%; }
 .enc-row-tile:has(:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.enc-row-shell[data-encounter-section="combat"] .enc-row-tile,.enc-row-shell[data-encounter-section="reserve-npc"] .enc-row-tile {border-radius:var(--radius-tile)}
 .enc-row-shell--placeholder .enc-row-roll-overlay, .enc-row-shell--placeholder .enc-row-roll-toggle { visibility: hidden; }
 .enc-row-roll-toggle { position: absolute; right: 4px; bottom: 3px; z-index: 3; display: grid; place-items: center; width: 22px; height: 18px; padding: 0; border: 0; border-radius: var(--r-sm); background: var(--surface-raised); color: var(--text-muted); cursor: pointer; transition: color .16s, background .16s; }
 .enc-row-roll-toggle:hover { color: var(--accent); background: var(--surface-active); }

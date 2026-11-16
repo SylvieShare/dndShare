@@ -94,9 +94,9 @@ function pickLetter(letter) {
   line-height: 1;
 }
 
-.enc-marker--editable { cursor: pointer; transition: transform 0.12s, opacity 0.12s; }
+.enc-marker--editable { cursor: pointer; transition: transform 0.12s; }
 .enc-marker--overlay {position:absolute;top:0;right:0;z-index:1}
-.enc-marker--editable:hover { transform: translateY(-1px) scale(1.06); opacity: 0.78; }
+.enc-marker--editable:hover { transform: translateY(-1px) scale(1.06); }
 
 .emm-panel { display: flex; flex-direction: column; gap: 9px; padding: 2px; }
 .emm-label {

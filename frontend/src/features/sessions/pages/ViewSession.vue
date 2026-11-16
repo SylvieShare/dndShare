@@ -151,8 +151,8 @@
 
 
       <SessionWorkspaceSidebar :controller="sidebar">
-        <template #reserve-title><EncounterReserveHeader :ui="reserveSidebar" /></template>
-        <template #reserve-actions><EncounterReserveHeader :ui="reserveSidebar" actions /></template>
+        <template #reserve-title><EncounterReserveHeader :encounter="encounter" :ui="reserveSidebar" /></template>
+        <template #reserve-actions><EncounterReserveHeader :encounter="encounter" :ui="reserveSidebar" actions /></template>
         <template #panels><EncounterReservePanel :encounter="encounter" :ui="reserveSidebar" :combat-workspace="playersRailMode === 'combat'" /></template>
         <template #players-actions>
           <SessionPlayersMenu :live-status="liveStatus" :sync-status="syncStatus" :syncing="syncRunning || liveCatchingUp"
