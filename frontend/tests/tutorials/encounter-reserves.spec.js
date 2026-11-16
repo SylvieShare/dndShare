@@ -101,6 +101,9 @@ for(const width of [390,834,1440])test(`reserves work on every session tab witho
   const before=structuredClone(api.encounter())
   for(const label of ['Локации','NPC','Задания','Материалы','Дневник','Хроника','Настройки','Мир','Карта','Сюжет']) {
     await page.locator('.chapter-toolbar').getByRole('button',{name:label,exact:true}).click()
+    await expect(nav.getByRole('button').nth(0)).toHaveAccessibleName('Игроки')
+    await expect(nav.getByRole('button').nth(1)).toHaveAccessibleName('Запас')
+    await expect(nav.getByRole('button').nth(2)).toHaveAccessibleName('Лес')
     await expect(nav.getByRole('button',{name:'Запас',exact:true})).toBeVisible()
     await expect(nav.getByRole('button',{name:'Лес',exact:true})).toHaveAttribute('aria-current','page')
     await expect(panel.getByText('Волк',{exact:true})).toBeVisible()

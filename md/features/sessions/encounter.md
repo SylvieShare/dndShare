@@ -166,7 +166,7 @@ the normal encounter save queue.
 
 The combat workspace uses a plain background; the story dot pattern remains
 on the plot canvas. NPC reserves live in the persistent left sidebar on every
-session tab, after the players/context tabs and a separator, even before opening
+session tab, immediately below Players and above contextual map/world tools, even before opening
 combat. The selected reserve and its panel stay mounted across workspace changes.
 `EncounterNpcDialogs` is hosted by the session page: adding handbook/simple NPCs,
 editing HP and opening NPC details work from any tab, with one shared dialog host
